@@ -4,6 +4,9 @@ import path from "path"
 
 function getRegistry() {
   const registryPath = path.join(process.cwd(), "registry.json")
+  if (!fs.existsSync(registryPath)) {
+    throw new Error("registry.json not found")
+  }
   const raw = fs.readFileSync(registryPath, "utf-8")
   return JSON.parse(raw)
 }
@@ -16,7 +19,7 @@ export async function GET() {
       $schema: "https://ui.shadcn.com/schema/registry.json",
       name: registry.name,
       homepage: registry.homepage,
-      items: registry.items.map(
+      items: (registry.items ?? []).map(
         (item: {
           name: string
           type: string
@@ -40,7 +43,7 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error("Registry index error:", error)
+    console.error("[mukoko] Registry index error:", error)
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
