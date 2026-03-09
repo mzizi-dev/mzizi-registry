@@ -96,6 +96,28 @@ export function Footer() {
             </div>
 
             <div className="flex flex-col gap-2">
+              <span className="text-xs font-medium text-foreground">Brand</span>
+              <a
+                href="/brand"
+                className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Overview
+              </a>
+              <a
+                href="/brand/colors"
+                className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Colors
+              </a>
+              <a
+                href="/brand/guidelines"
+                className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Guidelines
+              </a>
+            </div>
+
+            <div className="flex flex-col gap-2">
               <span className="text-xs font-medium text-foreground">Registry</span>
               <a
                 href="#components"
@@ -135,7 +157,7 @@ export function Footer() {
               Nyuchi
             </a>
           </span>
-          <span className="font-mono text-[10px] text-muted-foreground">v6.0.0</span>
+          <span className="font-mono text-[10px] text-muted-foreground">v7.0.0</span>
         </div>
       </div>
     </footer>
