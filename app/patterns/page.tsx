@@ -1,4 +1,4 @@
-import { Layers, Shield, Activity, Puzzle } from "lucide-react"
+import { Layers, Shield, Activity, Puzzle, Zap, Clock, Lock, FlaskConical } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const patterns = [
@@ -57,6 +57,62 @@ const patterns = [
       "Radix + Slot polymorphism",
       "cn() composition",
       "data-slot attributes",
+    ],
+  },
+  {
+    title: "Resilience",
+    description:
+      "Netflix Hystrix circuit breakers, retry with exponential backoff, and fallback chains — prevent cascading failures.",
+    href: "/patterns/resilience",
+    icon: Zap,
+    mineral: "terracotta" as const,
+    items: [
+      "Circuit breaker (Hystrix)",
+      "Retry + exponential backoff",
+      "Fallback chains",
+      "Timeout wrappers",
+    ],
+  },
+  {
+    title: "Lazy Loading",
+    description:
+      "TikTok-style sequential mounting — one section at a time through a FIFO queue, with memory pressure monitoring.",
+    href: "/patterns/lazy-loading",
+    icon: Clock,
+    mineral: "cobalt" as const,
+    items: [
+      "Sequential mount queue",
+      "IntersectionObserver",
+      "Memory reclaim (1500px)",
+      "useMemoryPressure hook",
+    ],
+  },
+  {
+    title: "AI Safety",
+    description:
+      "Input validation, prompt injection detection, and rate limiting — mandatory for every Claude/Shamwari integration.",
+    href: "/patterns/ai-safety",
+    icon: Lock,
+    mineral: "tanzanite" as const,
+    items: [
+      "Slug + input validation",
+      "Prompt injection detection",
+      "Sliding-window rate limiter",
+      "Allowlist validation",
+    ],
+  },
+  {
+    title: "Chaos Testing",
+    description:
+      "Netflix chaos engineering — inject random errors and latency to verify circuit breakers and error boundaries work.",
+    href: "/patterns/chaos",
+    icon: FlaskConical,
+    mineral: "malachite" as const,
+    items: [
+      "Error injection",
+      "Latency injection",
+      "Chaos middleware",
+      "Disabled by default",
     ],
   },
 ]
