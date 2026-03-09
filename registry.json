@@ -751,6 +751,44 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "observability",
+      "type": "registry:lib",
+      "description": "Structured logging, performance measurement, and error tracking with the [mukoko] prefix.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "lib/observability.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "error-boundary",
+      "type": "registry:ui",
+      "description": "A React error boundary component that catches render errors and displays a fallback.",
+      "dependencies": [],
+      "registryDependencies": ["observability"],
+      "files": [
+        {
+          "path": "components/error-boundary.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "section-error-boundary",
+      "type": "registry:ui",
+      "description": "Section-level error boundary for the 5-layer architecture with retry, named sections, and observability logging.",
+      "dependencies": [],
+      "registryDependencies": ["observability", "utils", "button"],
+      "files": [
+        {
+          "path": "components/section-error-boundary.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

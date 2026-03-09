@@ -1,6 +1,7 @@
 "use client"
 
 import { Component, type ReactNode } from "react"
+import { log } from "@/lib/observability"
 
 interface Props {
   children: ReactNode
@@ -22,7 +23,10 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error) {
-    console.error("[mukoko] Component error caught by boundary:", error.message)
+    log.error("Component error caught by boundary", {
+      module: "error-boundary",
+      error,
+    })
   }
 
   render() {

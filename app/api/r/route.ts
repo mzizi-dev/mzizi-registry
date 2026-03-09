@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
+import { createLogger } from "@/lib/observability"
+
+const logger = createLogger("registry")
 
 function getRegistry() {
   const registryPath = path.join(process.cwd(), "registry.json")
@@ -36,6 +39,10 @@ export async function GET() {
       ),
     }
 
+    logger.info("Registry index served", {
+      data: { itemCount: index.items.length },
+    })
+
     return NextResponse.json(index, {
       headers: {
         "Cache-Control": "public, max-age=3600, s-maxage=86400",
@@ -43,7 +50,9 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error("[mukoko] Registry index error:", error)
+    logger.error("Registry index error", {
+      error: error instanceof Error ? error : new Error(String(error)),
+    })
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
