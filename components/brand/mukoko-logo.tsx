@@ -32,7 +32,7 @@ export function MukokoLogo({
       </svg>
 
       {showWordmark && (
-        <span className="text-sm font-black tracking-tight text-foreground">
+        <span className="text-xl font-black tracking-tight text-foreground">
           mukoko{suffix ? ` ${suffix}` : ""}
         </span>
       )}

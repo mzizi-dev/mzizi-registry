@@ -1,0 +1,148 @@
+import { COMPONENT_SPECS, ACCESSIBILITY } from "@/lib/brand"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+
+export const metadata = {
+  title: "Component Specs — mukoko brand",
+  description: "Visual specifications for mukoko design system components: dimensions, padding, radii, and touch targets.",
+}
+
+export default function ComponentSpecsPage() {
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+      {/* Header */}
+      <div className="space-y-4">
+        <h1 className="font-serif text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+          Component Specs
+        </h1>
+        <p className="max-w-2xl text-lg text-muted-foreground">
+          Visual specifications for core components. These define the physical dimensions,
+          spacing, and interactive boundaries that every mukoko component follows.
+        </p>
+      </div>
+
+      {/* Global specs */}
+      <section className="mt-12">
+        <h2 className="font-serif text-xl font-semibold text-foreground">Global Standards</h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-xl border border-border p-4">
+            <p className="font-mono text-2xl font-bold text-foreground">{ACCESSIBILITY.minTouchTarget}px</p>
+            <p className="mt-1 text-sm text-muted-foreground">Minimum touch target</p>
+          </div>
+          <div className="rounded-xl border border-border p-4">
+            <p className="font-mono text-2xl font-bold text-foreground">12px</p>
+            <p className="mt-1 text-sm text-muted-foreground">Base border radius</p>
+          </div>
+          <div className="rounded-xl border border-border p-4">
+            <p className="font-mono text-2xl font-bold text-foreground">{ACCESSIBILITY.standard}</p>
+            <p className="mt-1 text-sm text-muted-foreground">Contrast standard</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Component cards */}
+      <section className="mt-16">
+        <h2 className="font-serif text-xl font-semibold text-foreground">Component Dimensions</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Each component has defined sizes and variants. Install any component via the registry.
+        </p>
+
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+          {COMPONENT_SPECS.map((spec) => (
+            <Card key={spec.name}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span className="capitalize">{spec.name}</span>
+                  <code className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs text-muted-foreground">
+                    radius: {spec.borderRadius}px
+                  </code>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Heights */}
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    Heights
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(spec.heights).map(([size, px]) => (
+                      <span
+                        key={size}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-xs"
+                      >
+                        <span className="text-muted-foreground">{size}:</span>
+                        <span className="font-mono font-medium text-foreground">{px}px</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Padding */}
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    Padding
+                  </p>
+                  <code className="font-mono text-sm text-muted-foreground">{spec.padding}</code>
+                </div>
+
+                {/* Variants */}
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    Variants
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {spec.variants.map((variant) => (
+                      <span
+                        key={variant}
+                        className="rounded-full border border-border px-2 py-0.5 font-mono text-xs text-muted-foreground"
+                      >
+                        {variant}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Install link */}
+                <div className="border-t border-border pt-3">
+                  <code className="font-mono text-xs text-muted-foreground">
+                    npx shadcn@latest add https://registry.mukoko.com/api/r/{spec.name}
+                  </code>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Touch targets */}
+      <section className="mt-16">
+        <h2 className="font-serif text-xl font-semibold text-foreground">Touch Targets</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          All interactive elements maintain a minimum {ACCESSIBILITY.minTouchTarget}px touch target
+          for accessibility, even when visually smaller.
+        </p>
+        <div className="mt-6 flex items-end gap-6">
+          {[24, 32, 36, 48].map((size) => (
+            <div key={size} className="flex flex-col items-center gap-2">
+              <div className="relative">
+                {size < ACCESSIBILITY.minTouchTarget && (
+                  <div
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border border-dashed border-[var(--color-malachite)]"
+                    style={{ width: `${ACCESSIBILITY.minTouchTarget}px`, height: `${ACCESSIBILITY.minTouchTarget}px` }}
+                  />
+                )}
+                <div
+                  className="rounded-lg bg-muted"
+                  style={{ width: `${size}px`, height: `${size}px` }}
+                />
+              </div>
+              <span className="font-mono text-xs text-muted-foreground">{size}px</span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-xs text-muted-foreground">
+          Dashed outline shows the {ACCESSIBILITY.minTouchTarget}px minimum hit area for elements smaller than the target.
+        </p>
+      </section>
+    </div>
+  )
+}
