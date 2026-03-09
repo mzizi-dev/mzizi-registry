@@ -47,6 +47,12 @@ export function Header() {
             Patterns
           </a>
           <a
+            href="/brand"
+            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Brand
+          </a>
+          <a
             href="/api/r"
             className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >
@@ -103,6 +109,13 @@ export function Header() {
             className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >
             Patterns
+          </a>
+          <a
+            href="/brand"
+            onClick={() => setMobileOpen(false)}
+            className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Brand
           </a>
           <a
             href="/api/r"
