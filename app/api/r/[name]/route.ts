@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
+import { createLogger } from "@/lib/observability"
+
+const logger = createLogger("registry")
 
 function getRegistry() {
   const registryPath = path.join(process.cwd(), "registry.json")
@@ -31,6 +34,7 @@ export async function GET(
     )
 
     if (!item) {
+      logger.warn("Component not found", { data: { name } })
       return NextResponse.json(
         { error: `Component "${name}" not found in registry` },
         { status: 404 }
@@ -43,14 +47,18 @@ export async function GET(
       try {
         const filePath = path.join(process.cwd(), file.path)
         if (!fs.existsSync(filePath)) {
-          console.warn(`[mukoko] File not found, skipping: ${filePath}`)
+          logger.warn("File not found, skipping", {
+            data: { filePath, component: name },
+          })
           continue
         }
         const content = fs.readFileSync(filePath, "utf-8")
         files.push({ path: file.path, type: file.type, content })
       } catch (fileError) {
-        console.error(`[mukoko] Error reading file ${file.path}:`, fileError)
-        // Skip this file but continue serving the rest
+        logger.error(`Error reading file ${file.path}`, {
+          error: fileError instanceof Error ? fileError : new Error(String(fileError)),
+          data: { component: name },
+        })
       }
     }
 
@@ -60,6 +68,10 @@ export async function GET(
         { status: 404 }
       )
     }
+
+    logger.info("Component served", {
+      data: { name, fileCount: files.length },
+    })
 
     const registryItem = {
       $schema: "https://ui.shadcn.com/schema/registry-item.json",
@@ -78,7 +90,9 @@ export async function GET(
       },
     })
   } catch (error) {
-    console.error("[mukoko] Registry item error:", error)
+    logger.error("Registry item error", {
+      error: error instanceof Error ? error : new Error(String(error)),
+    })
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

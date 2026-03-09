@@ -751,6 +751,146 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "observability",
+      "type": "registry:lib",
+      "description": "Structured logging, performance measurement, and error tracking with the [mukoko] prefix.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "lib/observability.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "error-boundary",
+      "type": "registry:ui",
+      "description": "A React error boundary component that catches render errors and displays a fallback.",
+      "dependencies": [],
+      "registryDependencies": ["observability"],
+      "files": [
+        {
+          "path": "components/error-boundary.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "section-error-boundary",
+      "type": "registry:ui",
+      "description": "Section-level error boundary for the 5-layer architecture with retry, named sections, and observability logging.",
+      "dependencies": [],
+      "registryDependencies": ["observability", "utils", "button"],
+      "files": [
+        {
+          "path": "components/section-error-boundary.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "timeout",
+      "type": "registry:lib",
+      "description": "Promise timeout wrapper. Rejects with TimeoutError if an async operation exceeds the specified duration.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "lib/timeout.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "circuit-breaker",
+      "type": "registry:lib",
+      "description": "Netflix Hystrix-inspired circuit breaker with CLOSED/OPEN/HALF_OPEN state machine, per-provider configs, and observability.",
+      "dependencies": [],
+      "registryDependencies": ["timeout", "observability"],
+      "files": [
+        {
+          "path": "lib/circuit-breaker.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "retry",
+      "type": "registry:lib",
+      "description": "Retry with exponential backoff, jitter, and configurable retry predicates.",
+      "dependencies": [],
+      "registryDependencies": ["observability"],
+      "files": [
+        {
+          "path": "lib/retry.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "fallback-chain",
+      "type": "registry:lib",
+      "description": "Sequential fallback strategy — try stages in order, return first success. Each stage has independent timeout.",
+      "dependencies": [],
+      "registryDependencies": ["timeout", "observability"],
+      "files": [
+        {
+          "path": "lib/fallback-chain.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "ai-safety",
+      "type": "registry:lib",
+      "description": "AI safety utilities: input validation, prompt injection detection, and sliding-window rate limiting.",
+      "dependencies": [],
+      "registryDependencies": ["observability"],
+      "files": [
+        {
+          "path": "lib/ai-safety.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "chaos",
+      "type": "registry:lib",
+      "description": "Chaos testing utilities for injecting random errors and latency to test resilience. Disabled by default.",
+      "dependencies": [],
+      "registryDependencies": ["observability"],
+      "files": [
+        {
+          "path": "lib/chaos.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "lazy-section",
+      "type": "registry:ui",
+      "description": "TikTok-style sequential mounting component. FIFO queue ensures one section mounts at a time with memory reclaim.",
+      "dependencies": [],
+      "registryDependencies": ["use-mobile", "observability"],
+      "files": [
+        {
+          "path": "components/lazy-section.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "use-memory-pressure",
+      "type": "registry:hook",
+      "description": "Monitor JS heap memory pressure via Performance Memory API. Chrome-only with graceful fallback.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "hooks/use-memory-pressure.ts",
+          "type": "registry:hook"
+        }
+      ]
     }
   ]
 }
