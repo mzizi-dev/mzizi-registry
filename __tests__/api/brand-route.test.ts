@@ -14,7 +14,7 @@ vi.mock("next/server", () => ({
 describe("GET /api/brand", () => {
   it("returns brand system data with correct headers", async () => {
     const { GET } = await import("@/app/api/brand/route")
-    const response = (await GET()) as { data: Record<string, unknown>; headers: Record<string, string>; status: number }
+    const response = (await GET()) as unknown as { data: Record<string, unknown>; headers: Record<string, string>; status: number }
 
     expect(response.status).toBe(200)
     expect(response.headers["Cache-Control"]).toBe("public, max-age=3600, s-maxage=86400")
@@ -23,7 +23,7 @@ describe("GET /api/brand", () => {
 
   it("returns valid brand system JSON", async () => {
     const { GET } = await import("@/app/api/brand/route")
-    const response = (await GET()) as { data: Record<string, unknown> }
+    const response = (await GET()) as unknown as { data: Record<string, unknown> }
 
     expect(response.data).toHaveProperty("version", "7.0.0")
     expect(response.data).toHaveProperty("minerals")
@@ -36,7 +36,7 @@ describe("GET /api/brand", () => {
 
   it("includes all 5 minerals", async () => {
     const { GET } = await import("@/app/api/brand/route")
-    const response = (await GET()) as { data: { minerals: Array<{ name: string }> } }
+    const response = (await GET()) as unknown as { data: { minerals: Array<{ name: string }> } }
 
     expect(response.data.minerals).toHaveLength(5)
     const names = response.data.minerals.map((m) => m.name)
