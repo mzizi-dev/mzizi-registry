@@ -10,7 +10,6 @@ import {
   ACCESSIBILITY,
   VOICE_AND_TONE,
   PHILOSOPHY,
-  RADII,
   TYPOGRAPHY_FONTS,
   BRAND_SYSTEM,
 } from "@/lib/brand"

@@ -22,7 +22,9 @@ This project follows [Semantic Versioning](https://semver.org/).
   - Component rendering tests (BrandCard, MineralStrip, ColorSwatch, etc.)
   - Navigation tests (header links)
 - **GitHub Actions CI** — lint, typecheck, test, build on PRs and pushes
+- **GitHub Actions Claude Review** — AI code review on every PR using `anthropics/claude-code-action@v1`
 - **GitHub Actions Release** — automated releases on version tags
+- **ESLint configuration** — flat config (`eslint.config.mjs`) with typescript-eslint
 - **Repository documentation** — README, CONTRIBUTING, SECURITY, CHANGELOG, issue templates
 
 ### Changed

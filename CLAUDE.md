@@ -556,13 +556,19 @@ pnpm test:watch       # Watch mode for development
 
 ### GitHub Actions
 
-Two workflows in `.github/workflows/`:
+Three workflows in `.github/workflows/`:
 
 **`ci.yml`** — Runs on every push to `main` and all PRs:
-1. **Lint** — `pnpm lint`
+1. **Lint** — `pnpm lint` (ESLint with typescript-eslint, flat config in `eslint.config.mjs`)
 2. **Type Check** — `pnpm typecheck`
 3. **Test** — `pnpm test`
 4. **Build** — `pnpm build` (runs after lint, typecheck, test pass)
+
+**`claude-review.yml`** — AI code review on every PR and `@claude` mentions:
+- Triggers on PR open/sync, issue comments, review comments, and reviews
+- Uses `anthropics/claude-code-action@v1` with OAuth token
+- Reviews for: code quality, design system adherence, accessibility (APCA 3.0 AAA, 48px touch targets), security, registry compatibility
+- Secret required: `CLAUDE_CODE_OAUTH_TOKEN`
 
 **`release.yml`** — Runs on version tags (`v*`):
 1. Validates (lint + typecheck + test + build)
