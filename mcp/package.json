@@ -1,0 +1,23 @@
+{
+  "name": "@mukoko/mcp-server",
+  "version": "7.0.0",
+  "description": "MCP server for the Mukoko Registry — exposes component registry, brand system, and design tokens",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mukoko-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.3"
+  }
+}
