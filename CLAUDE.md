@@ -8,17 +8,21 @@
 
 ## 1. Project Identity
 
-**Mukoko Registry** is the component registry and design system hub for the Mukoko ecosystem. It serves 70+ production-ready React UI components built on the **Five African Minerals** design system, installable via the shadcn CLI:
+**Mukoko Registry** is the component registry, brand documentation hub, and design system for the Mukoko ecosystem. It serves 70+ production-ready React UI components built on the **Five African Minerals** design system, installable via the shadcn CLI:
 
 ```
 npx shadcn@latest add https://registry.mukoko.com/api/r/<component>
 ```
 
+**Version:** 7.0.0
+
 **Live at:** registry.mukoko.com
+
+**Repository:** `github.com/nyuchitech/mukoko-registry`
 
 **Organization:** Nyuchi Africa (PVT) Ltd — `github.com/nyuchitech`
 
-**Ecosystem context:** This registry is consumed by all Mukoko apps (weather, news, events, the super app) and any new app built under the Nyuchi/Mukoko brand. It is the single source of truth for the design system.
+**Ecosystem context:** This registry is consumed by all Mukoko apps (weather, news, events, the super app) and any new app built under the Nyuchi/Mukoko brand. It is the single source of truth for both the design system and brand documentation (replacing the legacy assets.nyuchi.com).
 
 ---
 
@@ -72,6 +76,8 @@ mukoko-registry (this repo)
 | Theming | next-themes | 0.4.6 |
 | Forms | react-hook-form + zod | 7.54.1 / 3.24.1 |
 | Charts | Recharts | 2.15.0 |
+| Testing | Vitest + Testing Library | 4.0.18 |
+| CI/CD | GitHub Actions + Vercel | — |
 | Deployment | Vercel | — |
 
 ---
@@ -82,6 +88,9 @@ mukoko-registry (this repo)
 pnpm dev              # Start dev server (Next.js)
 pnpm build            # Production build
 pnpm lint             # ESLint
+pnpm test             # Run Vitest test suite
+pnpm test:watch       # Run tests in watch mode
+pnpm typecheck        # TypeScript type checking
 pnpm start            # Start production server
 pnpm registry:build   # Generate static registry JSON files into public/r/
 ```
@@ -92,10 +101,28 @@ pnpm registry:build   # Generate static registry JSON files into public/r/
 
 ```
 mukoko-registry/
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                # CI: lint, typecheck, test, build on PRs
+│       └── release.yml           # Release: validate + create GitHub release on tags
+├── __tests__/                    # Vitest test suite
+│   ├── api/                      # API route tests
+│   ├── brand/                    # Brand data integrity tests
+│   └── components/               # Component rendering tests
 ├── app/                          # Next.js App Router
-│   ├── api/r/                    # Registry API routes
-│   │   ├── route.ts              # GET /api/r — registry index
-│   │   └── [name]/route.ts       # GET /api/r/[name] — individual component
+│   ├── api/
+│   │   ├── r/                    # Registry API routes
+│   │   │   ├── route.ts          # GET /api/r — registry index
+│   │   │   └── [name]/route.ts   # GET /api/r/[name] — individual component
+│   │   └── brand/
+│   │       └── route.ts          # GET /api/brand — brand system JSON (v7.0.0)
+│   ├── brand/                    # Brand documentation pages
+│   │   ├── layout.tsx            # Shared brand layout (Header + Footer)
+│   │   ├── loading.tsx           # Skeleton loading state
+│   │   ├── page.tsx              # /brand — ecosystem overview
+│   │   ├── colors/page.tsx       # /brand/colors — Five African Minerals palette
+│   │   ├── components/page.tsx   # /brand/components — component visual specs
+│   │   └── guidelines/page.tsx   # /brand/guidelines — usage rules, accessibility
 │   ├── layout.tsx                # Root layout (fonts, ThemeProvider)
 │   ├── page.tsx                  # Landing page
 │   ├── globals.css               # Theme tokens + Tailwind imports (SOURCE OF TRUTH)
@@ -103,8 +130,14 @@ mukoko-registry/
 │   ├── global-error.tsx          # Global error handler
 │   └── not-found.tsx             # 404 page
 ├── components/
-│   ├── brand/                    # Brand assets
-│   │   └── mukoko-logo.tsx       # Official beehive logo with wordmark
+│   ├── brand/                    # Brand components
+│   │   ├── mukoko-logo.tsx       # Official beehive logo with wordmark
+│   │   ├── brand-card.tsx        # Ecosystem brand card
+│   │   ├── color-swatch.tsx      # Interactive color swatch (copy-to-clipboard)
+│   │   ├── mineral-strip.tsx     # 4px mineral stripe (5 colors)
+│   │   ├── spacing-scale.tsx     # Spacing scale visualization
+│   │   ├── token-table.tsx       # Design token table (copy-on-click)
+│   │   └── type-scale.tsx        # Typography scale display
 │   ├── landing/                  # Landing page sections
 │   │   ├── header.tsx            # Navigation with theme toggle
 │   │   ├── hero.tsx              # Hero with mineral color showcase
@@ -122,18 +155,21 @@ mukoko-registry/
 │   ├── use-toast.ts              # Toast notification state (reducer pattern)
 │   └── use-mobile.ts             # Mobile breakpoint detection (768px)
 ├── lib/
-│   └── utils.ts                  # cn() utility (clsx + tailwind-merge)
+│   ├── utils.ts                  # cn() utility (clsx + tailwind-merge)
+│   └── brand.ts                  # Brand data module (SOURCE OF TRUTH for brand system)
 ├── scripts/
 │   └── build-registry.js         # Static registry builder → public/r/
 ├── public/
 │   ├── r/                        # Generated static registry JSON (gitignored)
 │   └── icons/                    # Favicon assets
 ├── registry.json                 # Component registry manifest (SOURCE OF TRUTH)
+├── vitest.config.ts              # Vitest configuration
+├── vitest.setup.ts               # Test setup (jest-dom matchers)
 ├── components.json               # shadcn CLI configuration
 ├── next.config.mjs               # Next.js config
 ├── tsconfig.json                 # TypeScript config (strict, path aliases)
 ├── postcss.config.mjs            # PostCSS with @tailwindcss/postcss
-└── package.json                  # Dependencies and scripts
+└── package.json                  # Dependencies and scripts (v7.0.0)
 ```
 
 ---
@@ -432,6 +468,16 @@ Returns a single component with inline source code.
 
 **Error responses:** 400 (invalid name), 404 (not found), 500 (server error)
 
+### GET /api/brand
+
+Returns the complete brand system as JSON. Replaces the legacy `assets.nyuchi.com/api/v6/brand` endpoint.
+
+**Response:** Brand system object with `version`, `minerals`, `ecosystem`, `typography`, `spacing`, `radii`, `semanticColors`, `backgrounds`, `componentSpecs`, `accessibility`, `voiceAndTone`, `philosophy`
+
+**Headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *`
+
+**Data source:** `lib/brand.ts` — the single source of truth for all brand data
+
 ---
 
 ## 10. Component Categories
@@ -466,16 +512,85 @@ The 70+ components are organized by function:
 
 ---
 
-## 12. Deployment
+## 12. Testing
+
+### Test Framework
+
+- **Runner:** Vitest 4.x with jsdom environment
+- **Libraries:** @testing-library/react, @testing-library/jest-dom
+- **Config:** `vitest.config.ts` with `@` path alias, React plugin, jsdom environment
+- **Setup:** `vitest.setup.ts` loads jest-dom matchers
+
+### Test Structure
+
+```
+__tests__/
+├── api/
+│   ├── brand-route.test.ts       # Brand API response, headers, data
+│   └── registry-route.test.ts    # Registry JSON integrity, file existence
+├── brand/
+│   └── brand-data.test.ts        # Brand data integrity (35 tests)
+└── components/
+    ├── brand-components.test.tsx  # BrandCard, MineralStrip, TypeScale, SpacingScale
+    ├── color-swatch.test.tsx      # ColorSwatch copy-to-clipboard
+    └── navigation.test.tsx        # Header nav links
+```
+
+### What Tests Cover
+
+- **Brand data integrity:** All 5 minerals match globals.css hex values, ecosystem brands have required fields, type scale ordering, spacing scale, semantic colors, accessibility standards (APCA 3.0 AAA, 48px touch targets)
+- **API routes:** Brand API returns correct headers/status/data, registry.json schema validation, all component files exist on disk
+- **Component rendering:** Brand components render correct content, mineral strip orientation, copy-to-clipboard behavior
+- **Navigation:** Header contains all nav links including Brand, footer links
+
+### Running Tests
+
+```bash
+pnpm test             # Run all tests once
+pnpm test:watch       # Watch mode for development
+```
+
+---
+
+## 13. CI/CD & Versioning
+
+### GitHub Actions
+
+Two workflows in `.github/workflows/`:
+
+**`ci.yml`** — Runs on every push to `main` and all PRs:
+1. **Lint** — `pnpm lint`
+2. **Type Check** — `pnpm typecheck`
+3. **Test** — `pnpm test`
+4. **Build** — `pnpm build` (runs after lint, typecheck, test pass)
+
+**`release.yml`** — Runs on version tags (`v*`):
+1. Validates (lint + typecheck + test + build)
+2. Verifies tag version matches `package.json` version
+3. Creates a GitHub release with auto-generated release notes
+
+### Versioning
+
+- **Current version:** 7.0.0 (in `package.json`, `lib/brand.ts`, and footer)
+- **Scheme:** Semantic versioning (major.minor.patch)
+- **Release process:**
+  1. Update version in `package.json`
+  2. Update `BRAND_SYSTEM.version` in `lib/brand.ts`
+  3. Update footer version in `components/landing/footer.tsx`
+  4. Commit: `git commit -m "Release v7.x.x"`
+  5. Tag: `git tag v7.x.x`
+  6. Push: `git push && git push --tags`
+  7. GitHub Actions creates the release automatically
+
+### Deployment
 
 - **Platform:** Vercel (automatic deploys from main branch)
-- **No CI/CD workflows** — Vercel handles build + deploy
-- **No test framework configured** — manual verification via API and build
+- **CI gates:** All PRs must pass lint, typecheck, and tests before merge
 - **Static registry:** Run `pnpm registry:build` before deploy if static serving is needed
 
 ---
 
-## 13. LLM Instructions
+## 14. LLM Instructions
 
 When working on this codebase as an AI assistant:
 
@@ -484,8 +599,12 @@ When working on this codebase as an AI assistant:
 3. **Use the Five African Minerals palette** — never introduce colors outside the token system
 4. **Follow the CVA + Radix + cn() pattern** — every component uses this stack
 5. **Keep components self-contained** — each file should be independently installable via the registry
-6. **Preserve accessibility** — Radix primitives handle focus, keyboard, and screen reader behavior
+6. **Preserve accessibility** — APCA 3.0 AAA contrast, 48px touch targets, Radix primitives for keyboard/screen reader
 7. **Test API output** — after modifying a component, verify it serves correctly via `/api/r/[name]`
 8. **Respect the layered architecture** — primitives don't import page-level code
-9. **All brand wordmarks lowercase** — `mukoko`, `nyuchi`, `shamwari`
+9. **All brand wordmarks lowercase** — `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`
 10. **This is the canonical design system** — changes here propagate to all Mukoko apps
+11. **Run tests before committing** — `pnpm test` must pass; add tests for new features
+12. **Brand data lives in `lib/brand.ts`** — update brand data there, not in individual pages
+13. **Keep versions in sync** — `package.json`, `lib/brand.ts` (BRAND_SYSTEM.version), and `footer.tsx` must match
+14. **The mineral strip uses 5 mineral colors** — not flag colors; it's the brand identity element
