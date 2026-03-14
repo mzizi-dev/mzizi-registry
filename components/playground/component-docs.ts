@@ -842,4 +842,56 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Configurable nav items and header actions",
     ],
   },
+  "data-table": {
+    useCases: [
+      "Displaying tabular data with sorting and filtering",
+      "Admin panels with paginated records",
+      "User management tables",
+      "Financial transaction lists",
+      "Any dataset requiring column visibility controls",
+    ],
+    features: [
+      "Column sorting (ascending/descending)",
+      "Text filtering on any column",
+      "Pagination with configurable page size",
+      "Column visibility toggle dropdown",
+      "Row selection with checkbox support",
+      "Powered by @tanstack/react-table",
+      "Composes Table, Input, Button, DropdownMenu primitives",
+    ],
+  },
+  "date-picker": {
+    useCases: [
+      "Form fields requiring date input",
+      "Event scheduling and booking flows",
+      "Report date range selection",
+      "Birthday and anniversary inputs",
+      "Filter panels with date constraints",
+    ],
+    features: [
+      "Single date selection (DatePicker)",
+      "Date range selection (DateRangePicker) with two-month calendar",
+      "Popover-based calendar with keyboard navigation",
+      "Customizable date format via date-fns",
+      "Controlled and uncontrolled modes",
+      "Composes Calendar, Popover, and Button primitives",
+    ],
+  },
+  "typography": {
+    useCases: [
+      "Consistent heading styles across pages",
+      "Blog and article content formatting",
+      "Documentation prose sections",
+      "Marketing and landing page copy",
+      "Any text-heavy content requiring typographic hierarchy",
+    ],
+    features: [
+      "H1–H4 heading components with scroll margin",
+      "Paragraph, Lead, Large, Small, and Muted text styles",
+      "Blockquote with left border accent",
+      "Inline code with monospace styling",
+      "Unordered list with proper spacing",
+      "Uses Noto Serif for display headings (H1, H2)",
+    ],
+  },
 }

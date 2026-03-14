@@ -33,6 +33,9 @@ export const DEMO_NAMES = new Set([
   "mukoko-bottom-nav",
   "detail-layout",
   "dashboard-layout",
+  "data-table",
+  "date-picker",
+  "typography",
 ])
 
 export function hasDemoFor(name: string): boolean {

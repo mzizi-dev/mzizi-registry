@@ -721,4 +721,76 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       </div>
     </div>
   ),
+
+  "data-table": (
+    <div className="w-full max-w-md space-y-3">
+      <div className="flex items-center gap-2">
+        <div className="h-9 flex-1 rounded-lg border border-border bg-background px-3 text-xs text-muted-foreground leading-9">
+          Filter emails...
+        </div>
+        <div className="rounded-lg border border-border bg-background px-3 py-2 text-xs">
+          Columns ▾
+        </div>
+      </div>
+      <div className="rounded-xl border border-border">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="border-b">
+              <th className="p-2 text-left font-medium">Status</th>
+              <th className="p-2 text-left font-medium">Email</th>
+              <th className="p-2 text-right font-medium">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b">
+              <td className="p-2"><span className="rounded-full bg-[var(--color-malachite)]/20 px-2 py-0.5 text-[10px] text-[var(--color-malachite)]">Success</span></td>
+              <td className="p-2">ken@example.com</td>
+              <td className="p-2 text-right">$316.00</td>
+            </tr>
+            <tr className="border-b">
+              <td className="p-2"><span className="rounded-full bg-[var(--color-malachite)]/20 px-2 py-0.5 text-[10px] text-[var(--color-malachite)]">Success</span></td>
+              <td className="p-2">abe@example.com</td>
+              <td className="p-2 text-right">$242.00</td>
+            </tr>
+            <tr>
+              <td className="p-2"><span className="rounded-full bg-muted px-2 py-0.5 text-[10px]">Processing</span></td>
+              <td className="p-2">monse@example.com</td>
+              <td className="p-2 text-right">$837.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+        <span>0 of 3 row(s) selected.</span>
+        <div className="flex gap-1">
+          <span className="rounded border border-border px-2 py-1">Previous</span>
+          <span className="rounded border border-border px-2 py-1">Next</span>
+        </div>
+      </div>
+    </div>
+  ),
+
+  "date-picker": (
+    <div className="flex flex-col gap-3">
+      <button className="inline-flex h-10 w-[280px] items-center rounded-lg border border-border bg-background px-3 text-left text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 text-muted-foreground"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        <span className="text-muted-foreground">Pick a date</span>
+      </button>
+      <button className="inline-flex h-10 w-[280px] items-center rounded-lg border border-border bg-background px-3 text-left text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 text-muted-foreground"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        <span>Mar 14, 2026</span>
+      </button>
+    </div>
+  ),
+
+  "typography": (
+    <div className="w-full max-w-sm space-y-4 text-left">
+      <h1 className="scroll-m-20 font-serif text-3xl font-extrabold tracking-tight">The Mukoko Platform</h1>
+      <p className="text-xl text-muted-foreground">A unified design system for the African digital ecosystem.</p>
+      <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">Typography</h2>
+      <p className="leading-7">The typography system uses <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">Noto Sans</code> for body and <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">Noto Serif</code> for display.</p>
+      <blockquote className="border-l-2 pl-6 italic">&ldquo;Built for Africa, by Africa.&rdquo;</blockquote>
+      <p className="text-sm text-muted-foreground">Every mineral tells a story.</p>
+    </div>
+  ),
 }

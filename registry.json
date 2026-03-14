@@ -716,6 +716,44 @@
       ]
     },
     {
+      "name": "data-table",
+      "type": "registry:ui",
+      "description": "A powerful table with sorting, filtering, pagination, and column visibility powered by TanStack Table.",
+      "dependencies": ["@tanstack/react-table", "lucide-react"],
+      "registryDependencies": ["button", "dropdown-menu", "input", "table"],
+      "files": [
+        {
+          "path": "components/ui/data-table.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "description": "A date picker component with calendar popover, supporting single date and date range selection.",
+      "dependencies": ["date-fns", "lucide-react"],
+      "registryDependencies": ["button", "calendar", "popover"],
+      "files": [
+        {
+          "path": "components/ui/date-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "typography",
+      "type": "registry:ui",
+      "description": "A set of typographic components for consistent text styling — headings, paragraphs, blockquotes, lists, and inline code.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/typography.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "use-mobile",
       "type": "registry:hook",
       "description": "A hook to detect if the current device is mobile.",

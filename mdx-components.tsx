@@ -342,6 +342,8 @@ import {
 } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Slider } from "@/components/ui/slider"
+import { DataTable, DataTableColumnHeader } from "@/components/ui/data-table"
+import { DatePicker, DateRangePicker } from "@/components/ui/date-picker"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
@@ -375,6 +377,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import {
+  TypographyH1,
+  TypographyH2,
+  TypographyH3,
+  TypographyH4,
+  TypographyP,
+  TypographyBlockquote,
+  TypographyInlineCode,
+  TypographyLead,
+  TypographyLarge,
+  TypographySmall,
+  TypographyMuted,
+  TypographyList,
+} from "@/components/ui/typography"
 
 // ── Mukoko higher-level components ──────────────────────────────────
 import { MukokoSidebar } from "@/components/mukoko/mukoko-sidebar"
@@ -772,6 +788,14 @@ export function useMDXComponents(
     // ── Slider ────────────────────────────────────────────────────
     Slider,
 
+    // ── Data Table ─────────────────────────────────────────────────
+    DataTable,
+    DataTableColumnHeader,
+
+    // ── Date Picker ───────────────────────────────────────────────
+    DatePicker,
+    DateRangePicker,
+
     // ── Sonner (toast notifications) ──────────────────────────────
     SonnerToaster,
 
@@ -822,6 +846,20 @@ export function useMDXComponents(
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
+
+    // ── Typography ────────────────────────────────────────────────
+    TypographyH1,
+    TypographyH2,
+    TypographyH3,
+    TypographyH4,
+    TypographyP,
+    TypographyBlockquote,
+    TypographyInlineCode,
+    TypographyLead,
+    TypographyLarge,
+    TypographySmall,
+    TypographyMuted,
+    TypographyList,
 
     // ── Mukoko higher-level components ────────────────────────────
     MukokoSidebar,
