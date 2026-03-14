@@ -1,0 +1,113 @@
+---
+title: Principles — mukoko registry
+description: "Architecture principles and philosophy behind the Mukoko ecosystem."
+---
+
+import { ARCHITECTURE_PRINCIPLES, FRAMEWORK_DECISION } from '@/lib/architecture'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+
+# principles & philosophy
+
+The architectural principles that guide every technology decision across the Mukoko ecosystem.
+
+## Core Principles
+
+Each principle carries a name, rationale, and concrete implementation guidance.
+
+<div className="mt-8 grid gap-6 sm:grid-cols-2">
+  {ARCHITECTURE_PRINCIPLES.map((principle) => (
+    <Card key={principle.name}>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="font-serif text-lg">
+            {principle.title}
+          </CardTitle>
+          <Badge variant="outline" className="shrink-0 font-mono text-xs">
+            {principle.name}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <p className="text-sm text-muted-foreground">
+          {principle.description}
+        </p>
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-foreground">
+            Rationale
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {principle.rationale}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-foreground">
+            Implementation
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {principle.implementation}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  ))}
+</div>
+
+## Framework Decision
+
+{FRAMEWORK_DECISION.rationale}
+
+<div className="mt-6 rounded-xl border border-border p-4">
+  <div className="flex items-center gap-3">
+    <span className="text-sm font-medium text-foreground">Approach:</span>
+    <Badge variant="outline">{FRAMEWORK_DECISION.approach}</Badge>
+    <span className="text-sm font-medium text-foreground">Framework:</span>
+    <Badge variant="outline">{FRAMEWORK_DECISION.framework}</Badge>
+  </div>
+  <p className="mt-3 text-sm text-muted-foreground">
+    <span className="font-medium text-foreground">Sovereignty advantage:</span>{" "}
+    {FRAMEWORK_DECISION.sovereigntyAdvantage}
+  </p>
+</div>
+
+<div className="mt-8 overflow-x-auto rounded-xl border border-border">
+  <table className="w-full text-sm">
+    <thead>
+      <tr className="border-b border-border bg-muted/50">
+        <th className="px-4 py-3 text-left font-medium text-foreground">Platform</th>
+        <th className="px-4 py-3 text-left font-medium text-foreground">Strategy</th>
+        <th className="px-4 py-3 text-left font-medium text-foreground">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {FRAMEWORK_DECISION.platforms.map((target) => (
+        <tr key={target.name} className="border-b border-border last:border-0">
+          <td className="px-4 py-3 font-medium text-foreground">{target.name}</td>
+          <td className="px-4 py-3 text-muted-foreground">{target.strategy}</td>
+          <td className="px-4 py-3">
+            <Badge variant="outline">{target.status}</Badge>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+## HarmonyOS Compatibility
+
+<div className="mt-6 rounded-xl border border-border bg-card p-6">
+  <div className="space-y-3">
+    <div className="flex gap-3">
+      <span className="text-sm font-medium text-foreground">Approach:</span>
+      <span className="text-sm text-muted-foreground">{FRAMEWORK_DECISION.harmonyOs.approach}</span>
+    </div>
+    <div className="flex gap-3">
+      <span className="text-sm font-medium text-foreground">Rationale:</span>
+      <span className="text-sm text-muted-foreground">{FRAMEWORK_DECISION.harmonyOs.rationale}</span>
+    </div>
+    <div className="flex gap-3">
+      <span className="text-sm font-medium text-foreground">Status:</span>
+      <Badge variant="outline">{FRAMEWORK_DECISION.harmonyOs.status}</Badge>
+    </div>
+  </div>
+</div>
