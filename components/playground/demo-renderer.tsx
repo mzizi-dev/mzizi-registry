@@ -6,10 +6,6 @@ interface DemoRendererProps {
   name: string
 }
 
-export function hasDemoFor(name: string): boolean {
-  return name in COMPONENT_DEMOS
-}
-
 export function DemoRenderer({ name }: DemoRendererProps) {
   const demo = COMPONENT_DEMOS[name]
 
