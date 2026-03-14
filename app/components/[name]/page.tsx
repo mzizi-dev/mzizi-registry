@@ -6,6 +6,7 @@ import { ApiTester } from "@/components/playground/api-tester"
 import { DemoRenderer } from "@/components/playground/demo-renderer"
 import { hasDemoFor } from "@/components/playground/demo-names"
 import { ComponentDocSection } from "@/components/playground/component-doc-section"
+import { SafeSection } from "@/components/error-boundary"
 import { Badge } from "@/components/ui/badge"
 
 interface RegistryItem {
@@ -66,7 +67,7 @@ export default async function ComponentPage({
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-8 py-8">
-      {/* Header */}
+      {/* Header — always renders (no boundary needed, pure server markup) */}
       <div className="space-y-3">
         <div className="flex items-center gap-3">
           <h1 className="font-serif text-3xl font-bold tracking-tight">
@@ -80,65 +81,75 @@ export default async function ComponentPage({
       </div>
 
       {/* Use cases, variants, sizes, features */}
-      <ComponentDocSection name={item.name} />
+      <SafeSection section="Documentation">
+        <ComponentDocSection name={item.name} />
+      </SafeSection>
 
       {/* Preview + Code */}
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">
-          {hasDemo ? "Preview" : "Source Code"}
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          {hasDemo
-            ? "Interactive preview with light/dark mode toggle. Switch to Code tab to view the full source."
-            : "View the full component source code below."}
-        </p>
-        <ComponentPreview code={sourceCode} hasDemo={hasDemo}>
-          <DemoRenderer name={item.name} />
-        </ComponentPreview>
-      </section>
+      <SafeSection section="Preview">
+        <section className="space-y-3">
+          <h2 className="text-xl font-semibold">
+            {hasDemo ? "Preview" : "Source Code"}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {hasDemo
+              ? "Interactive preview with light/dark mode toggle. Switch to Code tab to view the full source."
+              : "View the full component source code below."}
+          </p>
+          <ComponentPreview code={sourceCode} hasDemo={hasDemo}>
+            <DemoRenderer name={item.name} />
+          </ComponentPreview>
+        </section>
+      </SafeSection>
 
       {/* Install */}
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">Installation</h2>
-        <div className="rounded-xl border border-border bg-muted/50 p-4">
-          <code className="text-sm text-foreground">
-            npx shadcn@latest add {installUrl}
-          </code>
-        </div>
-      </section>
+      <SafeSection section="Installation">
+        <section className="space-y-3">
+          <h2 className="text-xl font-semibold">Installation</h2>
+          <div className="rounded-xl border border-border bg-muted/50 p-4">
+            <code className="text-sm text-foreground">
+              npx shadcn@latest add {installUrl}
+            </code>
+          </div>
+        </section>
+      </SafeSection>
 
       {/* Dependencies */}
       {((item.dependencies && item.dependencies.length > 0) ||
         (item.registryDependencies &&
           item.registryDependencies.length > 0)) && (
-        <section className="space-y-3">
-          <h2 className="text-xl font-semibold">Dependencies</h2>
-          <div className="flex flex-wrap gap-2">
-            {item.dependencies?.map((dep) => (
-              <Badge key={dep} variant="secondary">
-                {dep}
-              </Badge>
-            ))}
-            {item.registryDependencies?.map((dep) => (
-              <Badge key={dep} variant="outline">
-                <a href={`/components/${dep}`} className="hover:underline">
+        <SafeSection section="Dependencies">
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold">Dependencies</h2>
+            <div className="flex flex-wrap gap-2">
+              {item.dependencies?.map((dep) => (
+                <Badge key={dep} variant="secondary">
                   {dep}
-                </a>
-              </Badge>
-            ))}
-          </div>
-        </section>
+                </Badge>
+              ))}
+              {item.registryDependencies?.map((dep) => (
+                <Badge key={dep} variant="outline">
+                  <a href={`/components/${dep}`} className="hover:underline">
+                    {dep}
+                  </a>
+                </Badge>
+              ))}
+            </div>
+          </section>
+        </SafeSection>
       )}
 
       {/* API Tester */}
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">API</h2>
-        <p className="text-sm text-muted-foreground">
-          Fetch this component&apos;s metadata and source code from the registry
-          API.
-        </p>
-        <ApiTester name={item.name} />
-      </section>
+      <SafeSection section="API Tester">
+        <section className="space-y-3">
+          <h2 className="text-xl font-semibold">API</h2>
+          <p className="text-sm text-muted-foreground">
+            Fetch this component&apos;s metadata and source code from the registry
+            API.
+          </p>
+          <ApiTester name={item.name} />
+        </section>
+      </SafeSection>
 
       {/* Source file path */}
       <section className="space-y-2">
