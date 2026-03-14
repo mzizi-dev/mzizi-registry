@@ -52,6 +52,11 @@ export async function GET() {
             href: "/api/v1/health",
             description: "Service health check — registry and filesystem status.",
           },
+          db: {
+            href: "/api/v1/db",
+            description:
+              "Document store status and seeding — PouchDB/CouchDB registry backend.",
+          },
         },
       },
       {

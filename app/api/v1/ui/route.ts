@@ -2,27 +2,50 @@ import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { createLogger } from "@/lib/observability"
+import { getAllComponents, isSeeded } from "@/lib/db"
 
 const logger = createLogger("registry")
 
-function getRegistry() {
-  const registryPath = path.join(process.cwd(), "registry.json")
-  if (!fs.existsSync(registryPath)) {
-    throw new Error("registry.json not found")
-  }
-  const raw = fs.readFileSync(registryPath, "utf-8")
-  return JSON.parse(raw)
-}
-
+/**
+ * GET /api/v1/ui — Registry index
+ *
+ * Reads from PouchDB document store if seeded, falls back to registry.json.
+ * This ensures backward compatibility while enabling the document store.
+ */
 export async function GET() {
   try {
-    const registry = getRegistry()
+    let items: Array<{
+      name: string
+      type: string
+      description: string
+      dependencies: string[]
+      registryDependencies: string[]
+    }>
 
-    const index = {
-      $schema: "https://ui.shadcn.com/schema/registry.json",
-      name: registry.name,
-      homepage: registry.homepage,
-      items: (registry.items ?? []).map(
+    const dbSeeded = await isSeeded().catch(() => false)
+
+    if (dbSeeded) {
+      // Read from document store
+      const components = await getAllComponents()
+      items = components.map((c) => ({
+        name: c.name,
+        type: c.registryType,
+        description: c.description,
+        dependencies: c.dependencies,
+        registryDependencies: c.registryDependencies,
+      }))
+      logger.info("Registry index served from document store", {
+        data: { itemCount: items.length },
+      })
+    } else {
+      // Fallback to filesystem
+      const registryPath = path.join(process.cwd(), "registry.json")
+      if (!fs.existsSync(registryPath)) {
+        throw new Error("registry.json not found and database not seeded")
+      }
+      const raw = fs.readFileSync(registryPath, "utf-8")
+      const registry = JSON.parse(raw)
+      items = (registry.items ?? []).map(
         (item: {
           name: string
           type: string
@@ -36,12 +59,18 @@ export async function GET() {
           dependencies: item.dependencies || [],
           registryDependencies: item.registryDependencies || [],
         })
-      ),
+      )
+      logger.info("Registry index served from filesystem (db not seeded)", {
+        data: { itemCount: items.length },
+      })
     }
 
-    logger.info("Registry index served", {
-      data: { itemCount: index.items.length },
-    })
+    const index = {
+      $schema: "https://ui.shadcn.com/schema/registry.json",
+      name: "mukoko",
+      homepage: "https://registry.mukoko.com",
+      items,
+    }
 
     return NextResponse.json(index, {
       headers: {
