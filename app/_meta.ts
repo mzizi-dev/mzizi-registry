@@ -18,14 +18,17 @@ export default {
     title: "Architecture",
     type: "page",
   },
+  components: {
+    title: "Components",
+    type: "page",
+  },
   patterns: {
     title: "Patterns",
     type: "page",
   },
-  api: {
+  "api-docs": {
     title: "API",
     type: "page",
-    href: "/api/v1",
   },
   "---": {
     type: "separator",
