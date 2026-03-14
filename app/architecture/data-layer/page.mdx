@@ -1,0 +1,116 @@
+---
+title: Data Layer — mukoko registry
+description: "Local-first data architecture with RxDB, SQLite, and cloud synchronization."
+---
+
+import { LOCAL_DATA_LAYER, CLOUD_LAYER, DATA_OWNERSHIP_RULES } from '@/lib/architecture'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+
+# data layer architecture
+
+A local-first data architecture that works offline and syncs when connected, with clear ownership rules for every byte.
+
+## Local Data Layer
+
+Data lives on the device first. These technologies power the local storage and query layer.
+
+<div className="mt-8 grid gap-6 sm:grid-cols-2">
+  {LOCAL_DATA_LAYER.map((tech) => (
+    <Card key={tech.name}>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="font-serif text-lg">
+            {tech.name}
+          </CardTitle>
+          <Badge variant="outline" className="shrink-0 font-mono text-xs">
+            {tech.role}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <p className="text-sm text-muted-foreground">
+          {tech.description}
+        </p>
+        {tech.platform && (
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium text-foreground">Platform:</span>{" "}
+            {tech.platform}
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  ))}
+</div>
+
+## Cloud Layer
+
+Cloud services provide synchronization, authentication, and eventual consistency across devices.
+
+<div className="mt-8 grid gap-6 sm:grid-cols-2">
+  {CLOUD_LAYER.map((service) => (
+    <Card key={service.name}>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="font-serif text-lg">
+            {service.name}
+          </CardTitle>
+          <Badge variant="outline" className="shrink-0 font-mono text-xs">
+            {service.consistencyModel}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">
+          {service.description}
+        </p>
+      </CardContent>
+    </Card>
+  ))}
+</div>
+
+## Data Ownership Rules
+
+Clear rules govern who owns what data across the ecosystem.
+
+<div className="mt-8 overflow-x-auto rounded-xl border border-border">
+  <table className="w-full text-sm">
+    <thead>
+      <tr className="border-b border-border bg-muted/50">
+        <th className="px-4 py-3 text-left font-medium text-foreground">Data Type</th>
+        <th className="px-4 py-3 text-left font-medium text-foreground">Owner</th>
+        <th className="px-4 py-3 text-left font-medium text-foreground">Storage</th>
+        <th className="px-4 py-3 text-left font-medium text-foreground">Sync</th>
+      </tr>
+    </thead>
+    <tbody>
+      {DATA_OWNERSHIP_RULES.map((rule) => (
+        <tr key={rule.category} className="border-b border-border last:border-0">
+          <td className="px-4 py-3 font-medium text-foreground">{rule.category}</td>
+          <td className="px-4 py-3 text-muted-foreground">{rule.ownership}</td>
+          <td className="px-4 py-3 text-muted-foreground">{rule.database}</td>
+          <td className="px-4 py-3">
+            <Badge variant="outline">{rule.consistencyModel}</Badge>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+## Environment-Aware Storage
+
+Storage selection adapts automatically based on the runtime environment.
+
+```typescript
+import { Capacitor } from '@capacitor/core';
+
+export function getMukokoStorage() {
+  if (Capacitor.isNativePlatform()) {
+    return getRxStorageSQLite({ /* config */ });
+  }
+  return getRxStorageDexie();
+}
+```
+
+Native platforms use SQLite for performance; web uses IndexedDB via Dexie for broad browser support.
