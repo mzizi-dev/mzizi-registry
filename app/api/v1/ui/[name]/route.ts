@@ -2,18 +2,16 @@ import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { createLogger } from "@/lib/observability"
+import { getComponent, isSeeded } from "@/lib/db"
 
 const logger = createLogger("registry")
 
-function getRegistry() {
-  const registryPath = path.join(process.cwd(), "registry.json")
-  if (!fs.existsSync(registryPath)) {
-    throw new Error("registry.json not found")
-  }
-  const raw = fs.readFileSync(registryPath, "utf-8")
-  return JSON.parse(raw)
-}
-
+/**
+ * GET /api/v1/ui/[name] — Individual component with inline source
+ *
+ * Reads metadata from PouchDB if seeded, falls back to registry.json.
+ * Source code is always read from the filesystem (git-managed files).
+ */
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ name: string }> }
@@ -28,10 +26,45 @@ export async function GET(
       )
     }
 
-    const registry = getRegistry()
-    const item = registry.items.find(
-      (i: { name: string }) => i.name === name
-    )
+    let item: {
+      name: string
+      type: string
+      description: string
+      dependencies: string[]
+      registryDependencies: string[]
+      files: Array<{ path: string; type: string }>
+    } | null = null
+
+    const dbSeeded = await isSeeded().catch(() => false)
+
+    if (dbSeeded) {
+      // Read from document store
+      const component = await getComponent(name)
+      if (component) {
+        item = {
+          name: component.name,
+          type: component.registryType,
+          description: component.description,
+          dependencies: component.dependencies,
+          registryDependencies: component.registryDependencies,
+          files: component.files,
+        }
+      }
+    }
+
+    if (!item) {
+      // Fallback to filesystem
+      const registryPath = path.join(process.cwd(), "registry.json")
+      if (!fs.existsSync(registryPath)) {
+        return NextResponse.json(
+          { error: "Registry not available" },
+          { status: 500 }
+        )
+      }
+      const raw = fs.readFileSync(registryPath, "utf-8")
+      const registry = JSON.parse(raw)
+      item = registry.items.find((i: { name: string }) => i.name === name)
+    }
 
     if (!item) {
       logger.warn("Component not found", { data: { name } })
@@ -41,6 +74,7 @@ export async function GET(
       )
     }
 
+    // Source code is always from the filesystem (git-managed)
     const files: Array<{ path: string; type: string; content: string }> = []
 
     for (const file of item.files) {
@@ -73,7 +107,7 @@ export async function GET(
     }
 
     logger.info("Component served", {
-      data: { name, fileCount: files.length },
+      data: { name, fileCount: files.length, source: dbSeeded ? "db" : "fs" },
     })
 
     const registryItem = {

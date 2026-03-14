@@ -11,7 +11,9 @@
     "registry:build": "node scripts/build-registry.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:seed": "tsx lib/db/seed.ts",
+    "db:reseed": "tsx lib/db/seed.ts --force"
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",
@@ -58,6 +60,8 @@
     "next-themes": "^0.4.6",
     "nextra": "^4.6.1",
     "nextra-theme-docs": "^4.6.1",
+    "pouchdb": "^9.0.0",
+    "pouchdb-find": "^9.0.0",
     "radix-ui": "1.4.3",
     "react": "19.2.4",
     "react-day-picker": "9.13.2",
@@ -76,6 +80,8 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^22",
+    "@types/pouchdb": "^6.4.2",
+    "@types/pouchdb-find": "^7.3.3",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
