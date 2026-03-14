@@ -8,7 +8,7 @@
  * Production example from mukoko-weather:
  *   MongoDB cache (15min TTL) → Tomorrow.io → Open-Meteo → seasonal estimates
  *
- * Install via: npx shadcn@latest add https://registry.mukoko.com/api/r/fallback-chain
+ * Install via: npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/fallback-chain
  */
 
 import { withTimeout, TimeoutError } from "@/lib/timeout"

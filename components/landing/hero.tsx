@@ -25,7 +25,7 @@ const products = [
 
 function CopyCommand() {
   const [copied, setCopied] = useState(false)
-  const command = "npx shadcn@latest add https://registry.mukoko.com/api/r/button"
+  const command = "npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button"
 
   return (
     <button

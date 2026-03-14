@@ -891,6 +891,18 @@
           "type": "registry:hook"
         }
       ]
+    },
+    {
+      "name": "architecture",
+      "type": "registry:lib",
+      "description": "Mukoko ecosystem architecture specification — local-first data strategy, cloud infrastructure, open data pipeline, and technology sovereignty assessment.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "lib/architecture.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }

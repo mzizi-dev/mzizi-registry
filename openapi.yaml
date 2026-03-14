@@ -1,0 +1,645 @@
+openapi: "3.1.0"
+info:
+  title: Mukoko Architecture API
+  version: "1.0.0"
+  description: |
+    Unified API for the Mukoko ecosystem — components, brand, architecture, and design system.
+
+    The Mukoko Architecture API follows resource-oriented design principles. All resources
+    are served as JSON with schema.org JSON-LD metadata, CORS headers, and CDN-friendly caching.
+
+    **Base URL:** `https://registry.mukoko.com/api/v1`
+  contact:
+    name: Nyuchi Africa
+    url: https://nyuchi.com
+  license:
+    name: MIT
+
+servers:
+  - url: https://registry.mukoko.com/api/v1
+    description: Production
+  - url: http://localhost:3000/api/v1
+    description: Development
+
+paths:
+  /:
+    get:
+      summary: API Discovery
+      description: Returns a discovery document listing all available resources.
+      operationId: getApiDiscovery
+      responses:
+        "200":
+          description: Discovery document
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=3600, s-maxage=86400"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDiscovery"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /brand:
+    get:
+      summary: Brand System
+      description: |
+        Returns the complete Mukoko brand system — Five African Minerals palette,
+        typography, spacing, ecosystem brands, accessibility standards, and voice & tone.
+      operationId: getBrandSystem
+      responses:
+        "200":
+          description: Complete brand system
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=3600, s-maxage=86400"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BrandSystem"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /ui:
+    get:
+      summary: Component Registry Index
+      description: Returns metadata for all 70+ registry components.
+      operationId: getRegistryIndex
+      responses:
+        "200":
+          description: Registry index
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegistryIndex"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /ui/{name}:
+    get:
+      summary: Individual Component
+      description: Returns a single component with inline source code.
+      operationId: getComponent
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Component name in kebab-case (e.g., "button", "use-toast")
+          schema:
+            type: string
+            pattern: "^[a-z][a-z0-9-]*$"
+      responses:
+        "200":
+          description: Component with source code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegistryItem"
+        "400":
+          description: Invalid component name
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Component not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /ecosystem:
+    get:
+      summary: Ecosystem Architecture
+      description: |
+        Returns architecture principles (Ubuntu, local-first, mobile-first,
+        open-source/sovereign, open-data) and the framework decision (Next.js + Capacitor).
+      operationId: getEcosystem
+      responses:
+        "200":
+          description: Ecosystem architecture
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EcosystemArchitecture"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /data-layer:
+    get:
+      summary: Data Layer Architecture
+      description: |
+        Returns the local-first data layer (RxDB, SQLite, IndexedDB),
+        cloud services (Supabase, CouchDB), and data ownership rules.
+      operationId: getDataLayer
+      responses:
+        "200":
+          description: Data layer specification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataLayerArchitecture"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /pipeline:
+    get:
+      summary: Open Data Pipeline
+      description: |
+        Returns the open data pipeline stages — Redpanda event streaming,
+        Apache Flink PII stripping, and Apache Doris analytics.
+      operationId: getPipeline
+      responses:
+        "200":
+          description: Pipeline stages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineArchitecture"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /sovereignty:
+    get:
+      summary: Technology Sovereignty
+      description: |
+        Returns sovereignty assessments for every technology in the Mukoko stack,
+        including removed technologies and migration notes.
+      operationId: getSovereignty
+      responses:
+        "200":
+          description: Sovereignty assessments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SovereigntyReport"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /health:
+    get:
+      summary: Health Check
+      description: |
+        Returns structured health status for monitoring.
+        Compatible with Vercel, Datadog, and standard health check protocols.
+      operationId: getHealth
+      responses:
+        "200":
+          description: All checks passing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+        "503":
+          description: One or more checks failing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    ApiDiscovery:
+      type: object
+      properties:
+        $schema:
+          type: string
+        "@context":
+          type: string
+          const: "https://schema.org"
+        "@type":
+          type: string
+          const: "WebAPI"
+        name:
+          type: string
+        version:
+          type: string
+        description:
+          type: string
+        homepage:
+          type: string
+          format: uri
+        resources:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              href:
+                type: string
+              description:
+                type: string
+
+    BrandSystem:
+      type: object
+      properties:
+        $schema:
+          type: string
+        version:
+          type: string
+        name:
+          type: string
+        minerals:
+          type: array
+          items:
+            $ref: "#/components/schemas/Mineral"
+        ecosystem:
+          type: array
+          items:
+            $ref: "#/components/schemas/EcosystemBrand"
+
+    Mineral:
+      type: object
+      properties:
+        name:
+          type: string
+        hex:
+          type: string
+          pattern: "^#[0-9A-Fa-f]{6}$"
+        cssVar:
+          type: string
+        origin:
+          type: string
+        symbolism:
+          type: string
+        usage:
+          type: string
+
+    EcosystemBrand:
+      type: object
+      properties:
+        name:
+          type: string
+        meaning:
+          type: string
+        language:
+          type: string
+        role:
+          type: string
+        mineral:
+          type: string
+        url:
+          type: string
+          format: uri
+
+    RegistryIndex:
+      type: object
+      properties:
+        $schema:
+          type: string
+        name:
+          type: string
+        homepage:
+          type: string
+          format: uri
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/RegistryItemSummary"
+
+    RegistryItemSummary:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: ["registry:ui", "registry:hook", "registry:lib"]
+        description:
+          type: string
+        dependencies:
+          type: array
+          items:
+            type: string
+        registryDependencies:
+          type: array
+          items:
+            type: string
+
+    RegistryItem:
+      type: object
+      properties:
+        $schema:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        dependencies:
+          type: array
+          items:
+            type: string
+        registryDependencies:
+          type: array
+          items:
+            type: string
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              type:
+                type: string
+              content:
+                type: string
+
+    EcosystemArchitecture:
+      type: object
+      properties:
+        "@context":
+          type: string
+          const: "https://schema.org"
+        "@type":
+          type: string
+          const: "TechArticle"
+        name:
+          type: string
+        principles:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArchitecturePrinciple"
+        frameworkDecision:
+          $ref: "#/components/schemas/FrameworkDecision"
+
+    ArchitecturePrinciple:
+      type: object
+      properties:
+        name:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        rationale:
+          type: string
+        implementation:
+          type: string
+      required:
+        - name
+        - title
+        - description
+        - rationale
+        - implementation
+
+    FrameworkDecision:
+      type: object
+      properties:
+        name:
+          type: string
+        approach:
+          type: string
+        framework:
+          type: string
+        rationale:
+          type: string
+        sovereigntyAdvantage:
+          type: string
+        platforms:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlatformTarget"
+        harmonyOs:
+          type: object
+          properties:
+            approach:
+              type: string
+            rationale:
+              type: string
+            status:
+              type: string
+
+    PlatformTarget:
+      type: object
+      properties:
+        name:
+          type: string
+        strategy:
+          type: string
+        status:
+          type: string
+          enum: ["production", "planned", "research"]
+
+    DataLayerArchitecture:
+      type: object
+      properties:
+        "@context":
+          type: string
+        "@type":
+          type: string
+        localDataLayer:
+          type: array
+          items:
+            $ref: "#/components/schemas/DataLayerTechnology"
+        cloudLayer:
+          type: array
+          items:
+            $ref: "#/components/schemas/CloudService"
+        dataOwnership:
+          type: array
+          items:
+            $ref: "#/components/schemas/DataOwnershipRule"
+
+    DataLayerTechnology:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        platform:
+          type: string
+          enum: ["native", "browser", "both"]
+        description:
+          type: string
+        sovereignty:
+          $ref: "#/components/schemas/SovereigntyAssessment"
+
+    CloudService:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        consistencyModel:
+          type: string
+          enum: ["strict", "eventual"]
+        database:
+          type: string
+        dataCategories:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        sovereignty:
+          $ref: "#/components/schemas/SovereigntyAssessment"
+
+    DataOwnershipRule:
+      type: object
+      properties:
+        category:
+          type: string
+        consistencyModel:
+          type: string
+          enum: ["strict", "eventual", "aggregate"]
+        database:
+          type: string
+        examples:
+          type: array
+          items:
+            type: string
+        conflictResolution:
+          type: string
+        ownership:
+          type: string
+          enum: ["user-private", "community-shared", "public-open"]
+        description:
+          type: string
+
+    PipelineArchitecture:
+      type: object
+      properties:
+        "@context":
+          type: string
+        "@type":
+          type: string
+        name:
+          type: string
+        stages:
+          type: array
+          items:
+            $ref: "#/components/schemas/PipelineStage"
+
+    PipelineStage:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        description:
+          type: string
+        sovereignty:
+          $ref: "#/components/schemas/SovereigntyAssessment"
+
+    SovereigntyReport:
+      type: object
+      properties:
+        "@context":
+          type: string
+        "@type":
+          type: string
+        assessments:
+          type: array
+          items:
+            $ref: "#/components/schemas/SovereigntyAssessment"
+        removedTechnologies:
+          type: array
+          items:
+            $ref: "#/components/schemas/RemovedTechnology"
+
+    SovereigntyAssessment:
+      type: object
+      properties:
+        technology:
+          type: string
+        role:
+          type: string
+        license:
+          type: string
+        governance:
+          type: string
+        sovereigntyRisk:
+          type: string
+          enum: ["none", "low", "removed"]
+        forkable:
+          type: boolean
+        selfHostable:
+          type: boolean
+        rationale:
+          type: string
+      required:
+        - technology
+        - role
+        - license
+        - sovereigntyRisk
+
+    RemovedTechnology:
+      type: object
+      properties:
+        name:
+          type: string
+        previousRole:
+          type: string
+        reason:
+          type: string
+        replacement:
+          type: string
+        migrationPath:
+          type: string
+
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["healthy", "degraded", "unhealthy"]
+        timestamp:
+          type: string
+          format: date-time
+        checks:
+          type: object
+          properties:
+            registry:
+              $ref: "#/components/schemas/HealthCheck"
+            filesystem:
+              $ref: "#/components/schemas/HealthCheck"
+        version:
+          type: string
+
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["pass", "fail"]
+        latencyMs:
+          type: integer
+        message:
+          type: string
+        itemCount:
+          type: integer
+
+  responses:
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

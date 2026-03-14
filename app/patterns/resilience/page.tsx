@@ -25,10 +25,10 @@ export default function ResiliencePage() {
         {/* Install */}
         <div className="mb-12 rounded-2xl border border-border bg-secondary/30 p-6">
           <h3 className="mb-3 text-sm font-medium text-foreground">Install from registry</h3>
-          <CodeBlock code={`npx shadcn@latest add https://registry.mukoko.com/api/r/circuit-breaker
-npx shadcn@latest add https://registry.mukoko.com/api/r/retry
-npx shadcn@latest add https://registry.mukoko.com/api/r/fallback-chain
-npx shadcn@latest add https://registry.mukoko.com/api/r/timeout`} />
+          <CodeBlock code={`npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/circuit-breaker
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/retry
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/fallback-chain
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/timeout`} />
         </div>
 
         {/* Circuit Breaker */}

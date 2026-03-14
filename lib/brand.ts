@@ -4,7 +4,7 @@
  * Powers both the documentation pages (/brand/*) and the brand API (/api/brand).
  * All hex values match the CSS custom properties in app/globals.css.
  *
- * Install via: npx shadcn@latest add https://registry.mukoko.com/api/r/utils
+ * Install via: npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/utils
  */
 
 // ─── Types ───────────────────────────────────────────────────────────────────

@@ -11,9 +11,9 @@ vi.mock("next/server", () => ({
   },
 }))
 
-describe("GET /api/brand", () => {
+describe("GET /api/v1/brand", () => {
   it("returns brand system data with correct headers", async () => {
-    const { GET } = await import("@/app/api/brand/route")
+    const { GET } = await import("@/app/api/v1/brand/route")
     const response = (await GET()) as unknown as { data: Record<string, unknown>; headers: Record<string, string>; status: number }
 
     expect(response.status).toBe(200)
@@ -22,7 +22,7 @@ describe("GET /api/brand", () => {
   })
 
   it("returns valid brand system JSON", async () => {
-    const { GET } = await import("@/app/api/brand/route")
+    const { GET } = await import("@/app/api/v1/brand/route")
     const response = (await GET()) as unknown as { data: Record<string, unknown> }
 
     expect(response.data).toHaveProperty("version", "7.0.0")
@@ -35,7 +35,7 @@ describe("GET /api/brand", () => {
   })
 
   it("includes all 5 minerals", async () => {
-    const { GET } = await import("@/app/api/brand/route")
+    const { GET } = await import("@/app/api/v1/brand/route")
     const response = (await GET()) as unknown as { data: { minerals: Array<{ name: string }> } }
 
     expect(response.data.minerals).toHaveLength(5)

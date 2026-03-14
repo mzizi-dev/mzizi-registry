@@ -72,17 +72,13 @@ export default function GuidelinesPage() {
         </p>
         <div className="mt-6 flex gap-8">
           <div className="flex items-center gap-4 rounded-xl border border-border p-6">
-            <MineralStrip orientation="vertical" className="h-24" />
+            <MineralStrip className="h-24" />
             <div>
               <p className="text-sm font-medium text-foreground">Left edge accent</p>
-              <p className="text-xs text-muted-foreground">Cards, sidebars, brand elements</p>
-            </div>
-          </div>
-          <div className="flex flex-col items-center gap-4 rounded-xl border border-border p-6">
-            <MineralStrip orientation="horizontal" className="w-32" />
-            <div className="text-center">
-              <p className="text-sm font-medium text-foreground">Top/bottom accent</p>
-              <p className="text-xs text-muted-foreground">Headers, footers, dividers</p>
+              <p className="text-xs text-muted-foreground">
+                The mineral strip is always vertical, always on the left edge.
+                Used on cards, sidebars, page borders, and brand elements.
+              </p>
             </div>
           </div>
         </div>

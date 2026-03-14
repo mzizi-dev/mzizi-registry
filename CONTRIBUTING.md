@@ -42,7 +42,7 @@ Every component in `components/ui/` must have:
 2. Add an entry to `registry.json`
 3. Run `pnpm registry:build` to generate static files
 4. Add tests in `__tests__/`
-5. Verify: `curl http://localhost:3000/api/r/<component-name>`
+5. Verify: `curl http://localhost:3000/api/v1/ui/<component-name>`
 
 ## Testing
 

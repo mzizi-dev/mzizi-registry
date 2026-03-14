@@ -13,7 +13,7 @@ vi.mock("next/server", () => ({
   },
 }))
 
-describe("GET /api/r", () => {
+describe("GET /api/v1/ui", () => {
   it("registry.json exists and is valid JSON", () => {
     const registryPath = path.join(process.cwd(), "registry.json")
     expect(fs.existsSync(registryPath)).toBe(true)

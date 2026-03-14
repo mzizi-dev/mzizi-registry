@@ -51,7 +51,7 @@ async function checkFilesystem(): Promise<HealthCheck> {
 }
 
 /**
- * GET /api/health
+ * GET /api/v1/health
  *
  * Returns structured health status for monitoring.
  * Compatible with Vercel, Datadog, and standard health check protocols.

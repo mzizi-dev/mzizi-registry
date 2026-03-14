@@ -126,7 +126,7 @@ export function Footer() {
                 Components
               </a>
               <a
-                href="/api/r"
+                href="/api/v1/ui"
                 className="text-xs text-muted-foreground transition-colors hover:text-foreground"
               >
                 API

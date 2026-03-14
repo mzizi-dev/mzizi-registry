@@ -43,13 +43,14 @@ export default function ColorsPage() {
           The signature brand element — a 4px stripe of all five minerals, used as a visual identity marker.
         </p>
         <div className="mt-6 flex items-center gap-8">
-          <div className="flex flex-col items-center gap-2">
-            <MineralStrip orientation="vertical" className="h-32" />
-            <span className="text-xs text-muted-foreground">Vertical</span>
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <MineralStrip orientation="horizontal" className="w-48" />
-            <span className="text-xs text-muted-foreground">Horizontal</span>
+          <div className="flex items-center gap-4">
+            <MineralStrip className="h-32" />
+            <div>
+              <p className="text-sm font-medium text-foreground">Vertical left border</p>
+              <p className="text-xs text-muted-foreground">
+                Always used as a vertical left-edge accent — cards, sidebars, page borders.
+              </p>
+            </div>
           </div>
         </div>
       </section>

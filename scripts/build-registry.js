@@ -5,7 +5,7 @@
  * Run: pnpm registry:build (or node scripts/build-registry.js)
  *
  * This is for static hosting / CDN scenarios.
- * For dynamic serving, the API routes at /api/r/ handle it at runtime.
+ * For dynamic serving, the API routes at /api/v1/ui/ handle it at runtime.
  */
 
 const fs = require("fs");
