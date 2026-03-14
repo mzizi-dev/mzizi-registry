@@ -104,7 +104,7 @@ export default function ComponentSpecsPage() {
                 {/* Install link */}
                 <div className="border-t border-border pt-3">
                   <code className="font-mono text-xs text-muted-foreground">
-                    npx shadcn@latest add https://registry.mukoko.com/api/r/{spec.name}
+                    npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/{spec.name}
                   </code>
                 </div>
               </CardContent>

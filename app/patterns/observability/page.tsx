@@ -35,7 +35,7 @@ export default function ObservabilityPage() {
             Install from registry
           </h3>
           <CodeBlock
-            code={`npx shadcn@latest add https://registry.mukoko.com/api/r/observability`}
+            code={`npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/observability`}
           />
         </div>
 
@@ -94,7 +94,7 @@ log.error("Failed to fetch weather", {
                 files that log frequently — avoids repeating the module name.
               </p>
               <CodeBlock
-                filename="app/api/r/route.ts"
+                filename="app/api/v1/ui/route.ts"
                 code={`import { createLogger } from "@/lib/observability"
 
 const logger = createLogger("registry")

@@ -7,7 +7,7 @@
  *
  * State machine: CLOSED → OPEN → HALF_OPEN → CLOSED (success) or OPEN (failure)
  *
- * Install via: npx shadcn@latest add https://registry.mukoko.com/api/r/circuit-breaker
+ * Install via: npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/circuit-breaker
  */
 
 import { withTimeout, TimeoutError } from "@/lib/timeout"

@@ -264,10 +264,10 @@ export default function GlobalError({
           </h3>
           <CodeBlock
             code={`# SectionErrorBoundary (recommended for page sections)
-npx shadcn@latest add https://registry.mukoko.com/api/r/section-error-boundary
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/section-error-boundary
 
 # Basic ErrorBoundary (for component previews)
-npx shadcn@latest add https://registry.mukoko.com/api/r/error-boundary`}
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/error-boundary`}
           />
         </div>
       </div>

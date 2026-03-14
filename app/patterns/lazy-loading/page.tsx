@@ -26,8 +26,8 @@ export default function LazyLoadingPage() {
         {/* Install */}
         <div className="mb-12 rounded-2xl border border-border bg-secondary/30 p-6">
           <h3 className="mb-3 text-sm font-medium text-foreground">Install from registry</h3>
-          <CodeBlock code={`npx shadcn@latest add https://registry.mukoko.com/api/r/lazy-section
-npx shadcn@latest add https://registry.mukoko.com/api/r/use-memory-pressure`} />
+          <CodeBlock code={`npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/lazy-section
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/use-memory-pressure`} />
         </div>
 
         {/* Live demo */}

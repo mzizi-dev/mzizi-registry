@@ -56,7 +56,10 @@ export async function GET(
         files.push({ path: file.path, type: file.type, content })
       } catch (fileError) {
         logger.error(`Error reading file ${file.path}`, {
-          error: fileError instanceof Error ? fileError : new Error(String(fileError)),
+          error:
+            fileError instanceof Error
+              ? fileError
+              : new Error(String(fileError)),
           data: { component: name },
         })
       }

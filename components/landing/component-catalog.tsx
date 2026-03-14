@@ -95,7 +95,7 @@ const categoryDots: Record<string, string> = {
 
 function CatalogItem({ name, category }: { name: string; category: string }) {
   const [copied, setCopied] = useState(false)
-  const installCmd = `npx shadcn@latest add https://registry.mukoko.com/api/r/${name}`
+  const installCmd = `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${name}`
 
   return (
     <button

@@ -12,6 +12,7 @@
  *   - mukoko://component/{name}  — Individual component source code
  *   - mukoko://design-tokens     — Five African Minerals palette + semantic tokens
  *   - mukoko://guidelines        — Design system usage guidelines
+ *   - mukoko://architecture      — Ecosystem architecture and data layer info
  *
  * Tools:
  *   - list_components       — List all registry components with filtering
@@ -20,6 +21,7 @@
  *   - get_design_tokens     — Get color palette, typography, spacing tokens
  *   - scaffold_component    — Generate a new component following Mukoko patterns
  *   - get_install_command   — Get the shadcn CLI install command for a component
+ *   - get_architecture_info — Get architecture, data layer, pipeline, or sovereignty info
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -262,7 +264,94 @@ server.resource(
   }
 );
 
+server.resource(
+  "architecture",
+  "mukoko://architecture",
+  { description: "Mukoko ecosystem architecture, data layer, and sovereignty information" },
+  async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/v1/ecosystem");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return {
+        contents: [{
+          uri: "mukoko://architecture",
+          mimeType: "application/json",
+          text: JSON.stringify(data, null, 2),
+        }],
+      };
+    } catch {
+      return {
+        contents: [{
+          uri: "mukoko://architecture",
+          mimeType: "text/plain",
+          text: "Architecture API not available. Ensure the dev server is running at localhost:3000.",
+        }],
+      };
+    }
+  }
+);
+
 // ─── Tools ─────────────────────────────────────────────────────────────────
+
+server.tool(
+  "get_architecture_info",
+  "Get Mukoko ecosystem architecture information: principles, data layer, pipeline, or sovereignty details.",
+  {
+    category: z.enum(["principles", "framework", "local-data-layer", "cloud-layer", "open-data-pipeline", "data-ownership", "sovereignty", "removed", "all"]).describe("Architecture category to retrieve"),
+  },
+  async ({ category }) => {
+    const endpointMap: Record<string, string> = {
+      "principles": "/api/v1/ecosystem",
+      "framework": "/api/v1/ecosystem",
+      "local-data-layer": "/api/v1/data-layer",
+      "cloud-layer": "/api/v1/data-layer",
+      "data-ownership": "/api/v1/data-layer",
+      "open-data-pipeline": "/api/v1/pipeline",
+      "sovereignty": "/api/v1/sovereignty",
+      "removed": "/api/v1/sovereignty",
+    };
+
+    try {
+      if (category === "all") {
+        const endpoints = ["/api/v1/ecosystem", "/api/v1/data-layer", "/api/v1/pipeline", "/api/v1/sovereignty"];
+        const results = await Promise.all(
+          endpoints.map(async (ep) => {
+            const res = await fetch(`http://localhost:3000${ep}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status} from ${ep}`);
+            return res.json();
+          })
+        );
+        const merged = {
+          ecosystem: results[0],
+          dataLayer: results[1],
+          pipeline: results[2],
+          sovereignty: results[3],
+        };
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(merged, null, 2) }],
+        };
+      }
+
+      const endpoint = endpointMap[category];
+      const res = await fetch(`http://localhost:3000${endpoint}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      return {
+        content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
+      };
+    } catch {
+      return {
+        content: [{
+          type: "text" as const,
+          text: "Architecture API not available. Ensure the dev server is running at localhost:3000.",
+        }],
+        isError: true,
+      };
+    }
+  }
+);
 
 server.tool(
   "list_components",
@@ -324,7 +413,7 @@ server.tool(
     const result = {
       ...item,
       files: filesWithContent,
-      installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/r/${item.name}`,
+      installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${item.name}`,
     };
 
     return {
@@ -364,7 +453,7 @@ server.tool(
       name: item.name,
       type: item.type,
       description: item.description || "",
-      installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/r/${item.name}`,
+      installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${item.name}`,
     }));
 
     return {
@@ -502,7 +591,7 @@ ${JSON.stringify(registryEntry, null, 2)}
 2. Customize the CVA variant classes with appropriate Tailwind utilities
 3. Add the registry entry to \`registry.json\`
 4. Run \`pnpm registry:build\` to regenerate static files
-5. Verify: \`curl http://localhost:3000/api/r/${name}\`
+5. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\`
 `,
       }],
     };
@@ -529,7 +618,7 @@ server.tool(
     }
 
     const commands = valid.map(
-      name => `npx shadcn@latest add https://registry.mukoko.com/api/r/${name}`
+      name => `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${name}`
     );
 
     let text = "";
@@ -537,7 +626,7 @@ server.tool(
       text += "## Install Commands\n\n";
       text += commands.map(cmd => `\`\`\`bash\n${cmd}\n\`\`\``).join("\n\n");
       text += "\n\n### Install all at once\n\n```bash\n";
-      text += valid.map(name => `npx shadcn@latest add https://registry.mukoko.com/api/r/${name}`).join(" && \\\n");
+      text += valid.map(name => `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${name}`).join(" && \\\n");
       text += "\n```";
     }
     if (invalid.length > 0) {

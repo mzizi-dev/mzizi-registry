@@ -11,7 +11,7 @@
 **Mukoko Registry** is the component registry, brand documentation hub, and design system for the Mukoko ecosystem. It serves 70+ production-ready React UI components built on the **Five African Minerals** design system, installable via the shadcn CLI:
 
 ```
-npx shadcn@latest add https://registry.mukoko.com/api/r/<component>
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/<component>
 ```
 
 **Version:** 7.0.0
@@ -119,13 +119,24 @@ mukoko-registry/
 │   └── components/               # Component rendering tests
 ├── app/                          # Next.js App Router
 │   ├── api/
-│   │   ├── r/                    # Registry API routes
-│   │   │   ├── route.ts          # GET /api/r — registry index
-│   │   │   └── [name]/route.ts   # GET /api/r/[name] — individual component
-│   │   ├── brand/
-│   │   │   └── route.ts          # GET /api/brand — brand system JSON (v7.0.0)
-│   │   └── health/
-│   │       └── route.ts          # GET /api/health — structured health check
+│   │   └── v1/                   # Mukoko Architecture API v1
+│   │       ├── route.ts          # GET /api/v1 — discovery document
+│   │       ├── brand/route.ts    # GET /api/v1/brand — brand system JSON
+│   │       ├── ui/
+│   │       │   ├── route.ts      # GET /api/v1/ui — registry index
+│   │       │   └── [name]/route.ts # GET /api/v1/ui/{name} — component
+│   │       ├── ecosystem/route.ts  # GET /api/v1/ecosystem — principles
+│   │       ├── data-layer/route.ts # GET /api/v1/data-layer — data layer spec
+│   │       ├── pipeline/route.ts   # GET /api/v1/pipeline — open data pipeline
+│   │       ├── sovereignty/route.ts # GET /api/v1/sovereignty — tech sovereignty
+│   │       └── health/route.ts     # GET /api/v1/health — health check
+│   ├── architecture/             # Architecture documentation pages
+│   │   ├── layout.tsx            # Shared layout (Header + Footer)
+│   │   ├── page.tsx              # /architecture — overview
+│   │   ├── principles/page.tsx   # /architecture/principles
+│   │   ├── data-layer/page.tsx   # /architecture/data-layer
+│   │   ├── pipeline/page.tsx     # /architecture/pipeline
+│   │   └── sovereignty/page.tsx  # /architecture/sovereignty
 │   ├── brand/                    # Brand documentation pages
 │   │   ├── layout.tsx            # Shared brand layout (Header + Footer)
 │   │   ├── loading.tsx           # Skeleton loading state
@@ -177,6 +188,7 @@ mukoko-registry/
 ├── lib/
 │   ├── utils.ts                  # cn() utility (clsx + tailwind-merge)
 │   ├── brand.ts                  # Brand data module (SOURCE OF TRUTH for brand system)
+│   ├── architecture.ts           # Architecture data module (SOURCE OF TRUTH for ecosystem architecture)
 │   ├── observability.ts          # Structured logging with [mukoko] prefix
 │   ├── circuit-breaker.ts        # Circuit breaker pattern for external calls
 │   ├── retry.ts                  # Retry with exponential backoff
@@ -196,6 +208,7 @@ mukoko-registry/
 │   ├── r/                        # Generated static registry JSON (gitignored)
 │   └── icons/                    # Favicon assets
 ├── registry.json                 # Component registry manifest (SOURCE OF TRUTH)
+├── openapi.yaml                  # OpenAPI 3.1 specification for /api/v1/
 ├── vitest.config.ts              # Vitest configuration
 ├── vitest.setup.ts               # Test setup (jest-dom matchers)
 ├── components.json               # shadcn CLI configuration
@@ -215,7 +228,7 @@ mukoko-registry/
 
 Components are served two ways:
 
-1. **Dynamic API** (`app/api/r/`): Reads `registry.json` at runtime, inlines component source code, serves with CORS headers and 1-hour cache
+1. **Dynamic API** (`app/api/v1/ui/`): Reads `registry.json` at runtime, inlines component source code, serves with CORS headers and 1-hour cache
 2. **Static build** (`scripts/build-registry.js`): Pre-generates JSON files into `public/r/` for CDN serving
 
 **Registry item schema:**
@@ -434,7 +447,7 @@ Every component in `components/ui/` MUST have:
 3. Add an entry to `registry.json` with: `name`, `type`, `description`, `dependencies`, `registryDependencies`, `files`
 4. Run `pnpm registry:build` to regenerate static files
 5. The dynamic API picks up changes from `registry.json` automatically
-6. Verify with: `curl http://localhost:3000/api/r/<component-name>`
+6. Verify with: `curl http://localhost:3000/api/v1/ui/<component-name>`
 
 ### 8.4 Modifying Existing Components
 
@@ -447,7 +460,7 @@ Every component in `components/ui/` MUST have:
 
 This registry is the template. New apps MUST:
 
-1. **Install components from this registry** via `npx shadcn@latest add https://registry.mukoko.com/api/r/<component>`
+1. **Install components from this registry** via `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/<component>`
 2. **Copy `globals.css` theme tokens** — the `:root`, `.dark`, and `@theme` blocks are the canonical design system
 3. **Use the same typography stack** — Noto Sans, Noto Serif, JetBrains Mono
 4. **Follow the layered architecture** — primitives → composites → orchestrators → error boundaries → server pages
@@ -483,45 +496,31 @@ This registry is the template. New apps MUST:
 
 ---
 
-## 9. API Reference
+## 9. Mukoko Architecture API (v1)
 
-### GET /api/r
+All endpoints are under `/api/v1/` and documented in `openapi.yaml` (OpenAPI 3.1).
 
-Returns the full registry index with all component metadata.
+All responses include schema.org JSON-LD metadata (`@context`, `@type`) where applicable.
 
-**Response:** shadcn registry schema with `$schema`, `name`, `homepage`, `items[]`
+**Common headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *`
 
-**Headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *`
+| Endpoint | Description | Data Source |
+|---|---|---|
+| `GET /api/v1` | Discovery document — lists all resources | — |
+| `GET /api/v1/brand` | Brand system (minerals, typography, spacing) | `lib/brand.ts` |
+| `GET /api/v1/ui` | Component registry index | `registry.json` |
+| `GET /api/v1/ui/{name}` | Individual component with source code | `registry.json` + file system |
+| `GET /api/v1/ecosystem` | Architecture principles & framework decision | `lib/architecture.ts` |
+| `GET /api/v1/data-layer` | Local-first + cloud layer specification | `lib/architecture.ts` |
+| `GET /api/v1/pipeline` | Open data pipeline (Redpanda → Flink → Doris) | `lib/architecture.ts` |
+| `GET /api/v1/sovereignty` | Technology sovereignty assessments | `lib/architecture.ts` |
+| `GET /api/v1/health` | Service health check (`no-cache, no-store`) | Runtime checks |
 
-### GET /api/r/[name]
+**Error responses:** 400 (invalid input), 404 (not found), 500 (server error)
 
-Returns a single component with inline source code.
-
-**Response:** shadcn registry-item schema with `$schema`, `name`, `type`, `description`, `dependencies`, `registryDependencies`, `files[]` (each file includes `content` with full source)
-
-**Error responses:** 400 (invalid name), 404 (not found), 500 (server error)
-
-### GET /api/brand
-
-Returns the complete brand system as JSON. Replaces the legacy `assets.nyuchi.com/api/v6/brand` endpoint.
-
-**Response:** Brand system object with `version`, `minerals`, `ecosystem`, `typography`, `spacing`, `radii`, `semanticColors`, `backgrounds`, `componentSpecs`, `accessibility`, `voiceAndTone`, `philosophy`
-
-**Headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *`
-
-**Data source:** `lib/brand.ts` — the single source of truth for all brand data
-
-### GET /api/health
-
-Returns structured health status for monitoring. Compatible with Vercel, Datadog, and standard health check protocols.
-
-**Response:** `{ status: "healthy" | "degraded" | "unhealthy", timestamp, checks: { registry, filesystem }, version }`
-
-**Status codes:** 200 (healthy), 503 (unhealthy/degraded)
-
-**Headers:** `Cache-Control: no-cache, no-store`, `Access-Control-Allow-Origin: *`
-
-**Checks:** Registry JSON readability (with item count), filesystem access (package.json readable)
+**Data sources:**
+- `lib/brand.ts` — single source of truth for brand system
+- `lib/architecture.ts` — single source of truth for ecosystem architecture
 
 ---
 
@@ -552,6 +551,10 @@ Configured in `.claude/settings.json`:
 | `mukoko://component/{name}` | Individual component source code |
 | `mukoko://design-tokens` | Five African Minerals palette + semantic tokens |
 | `mukoko://guidelines` | Design system usage guidelines |
+| `mukoko://architecture` | Ecosystem architecture (principles, framework) |
+| `mukoko://data-layer` | Data layer specification |
+| `mukoko://pipeline` | Open data pipeline |
+| `mukoko://sovereignty` | Technology sovereignty assessments |
 
 ### Tools (callable actions)
 
@@ -564,6 +567,7 @@ Configured in `.claude/settings.json`:
 | `scaffold_component` | Generate a new component following CVA + Radix + cn() patterns |
 | `get_install_command` | Get shadcn CLI install command for components |
 | `get_brand_info` | Get information about a specific ecosystem brand |
+| `get_architecture_info` | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty) |
 
 ### Development
 
@@ -624,8 +628,12 @@ The 72 registry items (58 UI components, 3 hooks, 11 library utilities) are orga
 ```
 __tests__/
 ├── api/
-│   ├── brand-route.test.ts       # Brand API response, headers, data
-│   └── registry-route.test.ts    # Registry JSON integrity, file existence
+│   ├── brand-route.test.ts       # Brand API (/api/v1/brand) response, headers, data
+│   ├── registry-route.test.ts    # Registry JSON (/api/v1/ui) integrity, file existence
+│   └── v1/
+│       └── architecture-routes.test.ts  # v1 route file existence, old routes removed
+├── architecture/
+│   └── architecture-data.test.ts # Architecture data integrity tests
 ├── brand/
 │   └── brand-data.test.ts        # Brand data integrity (35 tests)
 └── components/
@@ -637,9 +645,10 @@ __tests__/
 ### What Tests Cover
 
 - **Brand data integrity:** All 5 minerals match globals.css hex values, ecosystem brands have required fields, type scale ordering, spacing scale, semantic colors, accessibility standards (APCA 3.0 AAA, 48px touch targets)
-- **API routes:** Brand API returns correct headers/status/data, registry.json schema validation, all component files exist on disk
-- **Component rendering:** Brand components render correct content, mineral strip orientation, copy-to-clipboard behavior
-- **Navigation:** Header contains all nav links including Brand, footer links
+- **Architecture data integrity:** 5 principles, framework decision, data layer technologies, cloud services, pipeline stages, data ownership rules, removed technologies, sovereignty assessments, aggregate system export
+- **API routes:** Brand API returns correct headers/status/data, registry.json schema validation, all component files exist on disk, all v1 route files exist, old routes removed
+- **Component rendering:** Brand components render correct content, mineral strip vertical-only orientation, copy-to-clipboard behavior
+- **Navigation:** Header contains all nav links including Brand, Architecture, footer links
 
 ### Running Tests
 
@@ -704,7 +713,7 @@ When working on this codebase as an AI assistant:
 4. **Follow the CVA + Radix + cn() pattern** — every component uses this stack
 5. **Keep components self-contained** — each file should be independently installable via the registry
 6. **Preserve accessibility** — APCA 3.0 AAA contrast, 48px touch targets, Radix primitives for keyboard/screen reader
-7. **Test API output** — after modifying a component, verify it serves correctly via `/api/r/[name]`
+7. **Test API output** — after modifying a component, verify it serves correctly via `/api/v1/ui/[name]`
 8. **Respect the layered architecture** — primitives don't import page-level code
 9. **All brand wordmarks lowercase** — `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`
 10. **This is the canonical design system** — changes here propagate to all Mukoko apps
@@ -712,5 +721,8 @@ When working on this codebase as an AI assistant:
 12. **Brand data lives in `lib/brand.ts`** — update brand data there, not in individual pages
 13. **Keep versions in sync** — `package.json`, `lib/brand.ts` (BRAND_SYSTEM.version), and `footer.tsx` must match
 14. **The mineral strip uses 5 mineral colors** — not flag colors; it's the brand identity element
-15. **Use the MCP server** — the `mcp/` server exposes registry data, brand info, and scaffolding tools; keep `mcp/src/index.ts` brand data in sync with `lib/brand.ts`
+15. **Use the MCP server** — the `mcp/` server exposes registry data, brand info, architecture data, and scaffolding tools; keep data in sync with `lib/brand.ts` and `lib/architecture.ts`
 16. **Resilience libraries are registry items** — `lib/observability.ts`, `lib/circuit-breaker.ts`, etc. are served via the registry as `registry:lib` items; follow the same patterns when adding new utilities
+17. **Architecture data lives in `lib/architecture.ts`** — update architecture data there, not in individual pages; follows the same pattern as `lib/brand.ts`
+18. **The mineral strip is always vertical** — used only as a left-edge accent (cards, sidebars, page borders); never horizontal
+19. **API is versioned under `/api/v1/`** — all endpoints documented in `openapi.yaml`; the OpenAPI spec is the contract

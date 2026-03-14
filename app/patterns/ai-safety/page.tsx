@@ -26,7 +26,7 @@ export default function AiSafetyPage() {
         {/* Install */}
         <div className="mb-12 rounded-2xl border border-border bg-secondary/30 p-6">
           <h3 className="mb-3 text-sm font-medium text-foreground">Install from registry</h3>
-          <CodeBlock code={`npx shadcn@latest add https://registry.mukoko.com/api/r/ai-safety`} />
+          <CodeBlock code={`npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/ai-safety`} />
         </div>
 
         {/* Live demo */}
