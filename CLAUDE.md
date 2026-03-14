@@ -77,6 +77,9 @@ mukoko-registry (this repo)
 | Forms | react-hook-form + zod | 7.54.1 / 3.24.1 |
 | Charts | Recharts | 2.15.0 |
 | Testing | Vitest + Testing Library | 4.0.18 |
+| Observability | Structured logging (`lib/observability.ts`) | Built-in |
+| Resilience | Circuit breaker, retry, timeout, fallback chain | Built-in (`lib/`) |
+| MCP Server | @modelcontextprotocol/sdk (stdio transport) | ^1.12.1 |
 | CI/CD | GitHub Actions + Vercel | — |
 | Deployment | Vercel | — |
 
@@ -101,9 +104,14 @@ pnpm registry:build   # Generate static registry JSON files into public/r/
 
 ```
 mukoko-registry/
+├── .claude/
+│   ├── settings.json             # MCP server configuration for Claude Code
+│   └── skills/
+│       └── mukoko-design-system.md  # Claude Code skill for design system guidance
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml                # CI: lint, typecheck, test, build on PRs
+│       ├── claude-review.yml     # AI code review on PRs via Claude
 │       └── release.yml           # Release: validate + create GitHub release on tags
 ├── __tests__/                    # Vitest test suite
 │   ├── api/                      # API route tests
@@ -114,8 +122,10 @@ mukoko-registry/
 │   │   ├── r/                    # Registry API routes
 │   │   │   ├── route.ts          # GET /api/r — registry index
 │   │   │   └── [name]/route.ts   # GET /api/r/[name] — individual component
-│   │   └── brand/
-│   │       └── route.ts          # GET /api/brand — brand system JSON (v7.0.0)
+│   │   ├── brand/
+│   │   │   └── route.ts          # GET /api/brand — brand system JSON (v7.0.0)
+│   │   └── health/
+│   │       └── route.ts          # GET /api/health — structured health check
 │   ├── brand/                    # Brand documentation pages
 │   │   ├── layout.tsx            # Shared brand layout (Header + Footer)
 │   │   ├── loading.tsx           # Skeleton loading state
@@ -145,10 +155,20 @@ mukoko-registry/
 │   │   ├── component-showcase.tsx
 │   │   ├── component-catalog.tsx # Searchable catalog with categories
 │   │   └── footer.tsx
+│   ├── patterns/                 # Pattern demo components
+│   │   ├── ai-safety-demo.tsx    # AI safety pattern demo
+│   │   ├── architecture-demo.tsx # Architecture pattern demo
+│   │   ├── chaos-demo.tsx        # Chaos engineering demo
+│   │   ├── circuit-breaker-demo.tsx # Circuit breaker pattern demo
+│   │   ├── code-block.tsx        # Code block display
+│   │   ├── component-pattern-demo.tsx # Component pattern demo
+│   │   ├── error-boundary-demo.tsx # Error boundary demo
+│   │   ├── lazy-loading-demo.tsx # Lazy loading demo
+│   │   └── observability-demo.tsx # Observability demo
 │   ├── ui/                       # 70+ shadcn-style UI components
 │   │   ├── button.tsx            # CVA variants, Slot polymorphism
 │   │   ├── card.tsx, dialog.tsx, input.tsx, ...
-│   │   └── [70+ component files]
+│   │   └── [60+ component files]
 │   ├── theme-provider.tsx        # next-themes wrapper
 │   └── theme-toggle.tsx          # Light/dark mode toggle
 ├── hooks/
@@ -156,7 +176,20 @@ mukoko-registry/
 │   └── use-mobile.ts             # Mobile breakpoint detection (768px)
 ├── lib/
 │   ├── utils.ts                  # cn() utility (clsx + tailwind-merge)
-│   └── brand.ts                  # Brand data module (SOURCE OF TRUTH for brand system)
+│   ├── brand.ts                  # Brand data module (SOURCE OF TRUTH for brand system)
+│   ├── observability.ts          # Structured logging with [mukoko] prefix
+│   ├── circuit-breaker.ts        # Circuit breaker pattern for external calls
+│   ├── retry.ts                  # Retry with exponential backoff
+│   ├── timeout.ts                # Request timeout utilities
+│   ├── fallback-chain.ts         # Fallback chain pattern
+│   ├── chaos.ts                  # Chaos engineering utilities
+│   ├── ai-safety.ts              # AI safety guardrails
+│   └── mcp-server.ts             # MCP server utilities
+├── mcp/                          # MCP (Model Context Protocol) server
+│   ├── package.json              # @mukoko/mcp-server package (v7.0.0)
+│   ├── tsconfig.json             # TypeScript config for MCP server
+│   └── src/
+│       └── index.ts              # MCP server entry point (stdio transport)
 ├── scripts/
 │   └── build-registry.js         # Static registry builder → public/r/
 ├── public/
@@ -478,11 +511,74 @@ Returns the complete brand system as JSON. Replaces the legacy `assets.nyuchi.co
 
 **Data source:** `lib/brand.ts` — the single source of truth for all brand data
 
+### GET /api/health
+
+Returns structured health status for monitoring. Compatible with Vercel, Datadog, and standard health check protocols.
+
+**Response:** `{ status: "healthy" | "degraded" | "unhealthy", timestamp, checks: { registry, filesystem }, version }`
+
+**Status codes:** 200 (healthy), 503 (unhealthy/degraded)
+
+**Headers:** `Cache-Control: no-cache, no-store`, `Access-Control-Allow-Origin: *`
+
+**Checks:** Registry JSON readability (with item count), filesystem access (package.json readable)
+
 ---
 
-## 10. Component Categories
+## 10. MCP Server
 
-The 70+ components are organized by function:
+The repository includes a **Model Context Protocol (MCP) server** (`mcp/`) that exposes the registry, brand system, and design tokens to AI assistants via stdio transport.
+
+### Setup
+
+Configured in `.claude/settings.json`:
+```json
+{
+  "mcpServers": {
+    "mukoko-registry": {
+      "command": "npx",
+      "args": ["--prefix", "mcp", "tsx", "mcp/src/index.ts"]
+    }
+  }
+}
+```
+
+### Resources (read-only data)
+
+| URI | Description |
+|---|---|
+| `mukoko://registry` | Full component registry index |
+| `mukoko://brand` | Complete brand system data |
+| `mukoko://component/{name}` | Individual component source code |
+| `mukoko://design-tokens` | Five African Minerals palette + semantic tokens |
+| `mukoko://guidelines` | Design system usage guidelines |
+
+### Tools (callable actions)
+
+| Tool | Description |
+|---|---|
+| `list_components` | List all registry components, optionally filter by type |
+| `get_component` | Get a component's source code and metadata |
+| `search_components` | Search components by name or description |
+| `get_design_tokens` | Get color palette, typography, spacing tokens |
+| `scaffold_component` | Generate a new component following CVA + Radix + cn() patterns |
+| `get_install_command` | Get shadcn CLI install command for components |
+| `get_brand_info` | Get information about a specific ecosystem brand |
+
+### Development
+
+```bash
+cd mcp && npx tsx src/index.ts   # Run MCP server directly
+cd mcp && pnpm build             # Build for distribution
+```
+
+**Package:** `@mukoko/mcp-server` (v7.0.0) — separate package.json in `mcp/`
+
+---
+
+## 11. Component Categories
+
+The 72 registry items (58 UI components, 3 hooks, 11 library utilities) are organized by function:
 
 | Category | Components |
 |---|---|
@@ -494,10 +590,11 @@ The 70+ components are organized by function:
 | **Navigation** | breadcrumb, menubar, navigation-menu, pagination, tabs |
 | **Overlay** | alert-dialog, context-menu, dialog, dropdown-menu, hover-card, popover, tooltip |
 | **Utility** | direction, use-mobile (hook), use-toast (hook), utils (lib) |
+| **Resilience** | ai-safety, chaos, circuit-breaker, fallback-chain, mcp-server, observability, retry, timeout (all `registry:lib`) |
 
 ---
 
-## 11. Notable Configuration
+## 12. Notable Configuration
 
 | File | Setting | Note |
 |---|---|---|
@@ -509,10 +606,11 @@ The 70+ components are organized by function:
 | `tsconfig.json` | `strict: true`, `target: "ES6"` | Strict TypeScript |
 | `tsconfig.json` | `paths: { "@/*": ["./*"] }` | Root-relative imports |
 | `postcss.config.mjs` | `@tailwindcss/postcss` | Tailwind CSS 4 PostCSS plugin |
+| `.claude/settings.json` | MCP server config | Connects Claude Code to local MCP server |
 
 ---
 
-## 12. Testing
+## 13. Testing
 
 ### Test Framework
 
@@ -552,7 +650,7 @@ pnpm test:watch       # Watch mode for development
 
 ---
 
-## 13. CI/CD & Versioning
+## 14. CI/CD & Versioning
 
 ### GitHub Actions
 
@@ -596,7 +694,7 @@ Three workflows in `.github/workflows/`:
 
 ---
 
-## 14. LLM Instructions
+## 15. LLM Instructions
 
 When working on this codebase as an AI assistant:
 
@@ -614,3 +712,5 @@ When working on this codebase as an AI assistant:
 12. **Brand data lives in `lib/brand.ts`** — update brand data there, not in individual pages
 13. **Keep versions in sync** — `package.json`, `lib/brand.ts` (BRAND_SYSTEM.version), and `footer.tsx` must match
 14. **The mineral strip uses 5 mineral colors** — not flag colors; it's the brand identity element
+15. **Use the MCP server** — the `mcp/` server exposes registry data, brand info, and scaffolding tools; keep `mcp/src/index.ts` brand data in sync with `lib/brand.ts`
+16. **Resilience libraries are registry items** — `lib/observability.ts`, `lib/circuit-breaker.ts`, etc. are served via the registry as `registry:lib` items; follow the same patterns when adding new utilities
