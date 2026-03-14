@@ -14,6 +14,11 @@ const nextConfig = {
     unoptimized: true,
   },
   transpilePackages: ["radix-ui"],
+  turbopack: {
+    resolveAlias: {
+      "next-mdx-import-source-file": "./mdx-components.tsx",
+    },
+  },
 }
 
 export default withNextra(nextConfig)
