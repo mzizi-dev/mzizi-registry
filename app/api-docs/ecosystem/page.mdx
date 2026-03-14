@@ -1,0 +1,55 @@
+---
+title: Ecosystem Architecture — mukoko registry API
+description: "GET /api/v1/ecosystem — architecture principles and framework decision for the Mukoko ecosystem."
+---
+
+# Ecosystem Architecture
+
+## `GET /api/v1/ecosystem`
+
+Returns the architecture principles that guide the Mukoko ecosystem and the framework decision with platform strategies.
+
+### Response Shape
+
+| Field | Type | Description |
+|---|---|---|
+| `principles` | `array` | Architecture guiding principles |
+| `frameworkDecision` | `object` | Framework choice, rationale, and platform strategies |
+
+### Example Principle
+
+```json
+{
+  "name": "local-first",
+  "title": "Local-First",
+  "description": "Data lives on the user's device. Cloud syncs when available.",
+  "icon": "smartphone"
+}
+```
+
+### Example Framework Decision
+
+```json
+{
+  "framework": "Next.js + Capacitor",
+  "rationale": "Single codebase targeting web, iOS, Android, and desktop.",
+  "platforms": [
+    {
+      "name": "web",
+      "strategy": "Next.js SSR/SSG",
+      "status": "production"
+    },
+    {
+      "name": "mobile",
+      "strategy": "Capacitor native shell",
+      "status": "beta"
+    }
+  ]
+}
+```
+
+### Example
+
+```bash
+curl https://registry.mukoko.com/api/v1/ecosystem
+```

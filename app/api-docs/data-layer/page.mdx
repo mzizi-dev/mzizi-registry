@@ -1,0 +1,57 @@
+---
+title: Data Layer — mukoko registry API
+description: "GET /api/v1/data-layer — local-first storage, cloud sync, and data ownership rules."
+---
+
+# Data Layer
+
+## `GET /api/v1/data-layer`
+
+Returns the local data layer specification, cloud layer configuration, and data ownership rules for the Mukoko ecosystem.
+
+### Response Shape
+
+| Field | Type | Description |
+|---|---|---|
+| `localLayer` | `object` | Local-first storage strategy (RxDB, SQLite, IndexedDB) |
+| `cloudLayer` | `object` | Cloud sync targets (CouchDB, Supabase) |
+| `dataOwnership` | `object` | Rules governing user data ownership and portability |
+
+### Example Local Layer
+
+```json
+{
+  "engine": "RxDB",
+  "backends": [
+    { "name": "SQLite", "platform": "native", "useCase": "Capacitor mobile/desktop apps" },
+    { "name": "IndexedDB", "platform": "browser", "useCase": "PWA and web apps" }
+  ],
+  "features": ["reactive-queries", "schema-validation", "replication"]
+}
+```
+
+### Example Cloud Layer
+
+```json
+{
+  "sync": [
+    { "name": "Apache CouchDB", "purpose": "Community data replication" },
+    { "name": "Supabase", "purpose": "Auth, wallet, transactions" }
+  ]
+}
+```
+
+### Example Data Ownership Rule
+
+```json
+{
+  "rule": "export-anywhere",
+  "description": "Users can export all their data in open formats at any time."
+}
+```
+
+### Example
+
+```bash
+curl https://registry.mukoko.com/api/v1/data-layer
+```
