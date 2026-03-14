@@ -36,6 +36,18 @@ export const DEMO_NAMES = new Set([
   "data-table",
   "date-picker",
   "typography",
+  "search-bar",
+  "user-menu",
+  "stats-card",
+  "filter-bar",
+  "share-dialog",
+  "notification-bell",
+  "file-upload",
+  "copy-button",
+  "status-indicator",
+  "timeline",
+  "pricing-card",
+  "rating",
 ])
 
 export function hasDemoFor(name: string): boolean {

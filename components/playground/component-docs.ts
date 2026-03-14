@@ -894,4 +894,186 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Uses Noto Serif for display headings (H1, H2)",
     ],
   },
+  "search-bar": {
+    useCases: [
+      "Global site/app search",
+      "Filtering component lists",
+      "Command palette trigger",
+      "Documentation search",
+    ],
+    features: [
+      "Keyboard shortcut support (⌘K by default)",
+      "Clear button when value is present",
+      "Escape key to clear and blur",
+      "Enter key to submit",
+      "Controlled and uncontrolled modes",
+    ],
+  },
+  "user-menu": {
+    useCases: [
+      "User profile dropdown in headers",
+      "Account management navigation",
+      "Sign-out action",
+      "Sidebar user section",
+    ],
+    features: [
+      "Avatar with fallback initials",
+      "Name and email display",
+      "Customizable menu items with icons",
+      "Sign-out action with separator",
+      "Extensible via children prop",
+      "Responsive — hides text on mobile",
+    ],
+  },
+  "stats-card": {
+    useCases: [
+      "Dashboard metrics overview",
+      "KPI displays",
+      "Weather data summaries",
+      "Analytics dashboards",
+    ],
+    features: [
+      "Trend indicator (up/down/neutral) with mineral colors",
+      "Optional icon in top-right corner",
+      "Description text below value",
+      "Composes Card primitive",
+    ],
+  },
+  "filter-bar": {
+    useCases: [
+      "Category filtering for news articles",
+      "Event type filtering",
+      "Tag-based content filtering",
+      "Search result refinement",
+    ],
+    features: [
+      "Single or multiple selection modes",
+      "Optional 'All' chip",
+      "Clear button when filters active",
+      "Optional item counts",
+      "Controlled and uncontrolled modes",
+    ],
+  },
+  "share-dialog": {
+    useCases: [
+      "Sharing news articles",
+      "Sharing event pages",
+      "Sharing component documentation",
+      "Social media distribution",
+    ],
+    features: [
+      "Copy-to-clipboard with feedback",
+      "X (Twitter), LinkedIn, Email share links",
+      "Customizable trigger element",
+      "Composes Dialog, Input, Button primitives",
+    ],
+  },
+  "notification-bell": {
+    useCases: [
+      "Header notification center",
+      "Real-time update alerts",
+      "System announcements",
+      "Activity notifications",
+    ],
+    features: [
+      "Unread count badge (9+ overflow)",
+      "Popover notification list with scroll area",
+      "Read/unread visual states with cobalt accent dot",
+      "Mark all as read action",
+      "View all link",
+      "Empty state message",
+    ],
+  },
+  "file-upload": {
+    useCases: [
+      "Profile picture upload",
+      "Event image upload",
+      "Document attachment",
+      "Bulk file import",
+    ],
+    features: [
+      "Drag-and-drop zone with visual feedback",
+      "Click-to-browse fallback",
+      "File size validation with configurable max",
+      "File type restriction via accept attribute",
+      "File list with remove actions",
+      "Multiple file support",
+    ],
+  },
+  "copy-button": {
+    useCases: [
+      "Code snippet copying",
+      "Install command copying",
+      "URL sharing",
+      "API key copying",
+    ],
+    features: [
+      "Clipboard API with legacy fallback",
+      "Visual feedback (checkmark) on copy",
+      "Configurable copied-state duration",
+      "Icon-only mode for compact layouts",
+      "Multiple size and variant options",
+    ],
+  },
+  "status-indicator": {
+    useCases: [
+      "User online/offline status",
+      "Service health indicators",
+      "Live event indicators",
+      "Device connection status",
+    ],
+    features: [
+      "Five status types: online, offline, busy, away, live",
+      "Pulse animation for live/online states",
+      "Mineral-colored dots (malachite for online, gold for away)",
+      "Three sizes (sm, md, lg)",
+      "Optional label text",
+    ],
+  },
+  "timeline": {
+    useCases: [
+      "Event history display",
+      "Activity feeds",
+      "Changelog visualization",
+      "Project milestones",
+    ],
+    features: [
+      "Vertical timeline with connecting lines",
+      "Mineral-colored dots (cobalt, tanzanite, malachite, gold, terracotta)",
+      "Heading, description, and time sub-components",
+      "Composable — nest any content inside TimelineContent",
+    ],
+  },
+  "pricing-card": {
+    useCases: [
+      "Subscription plan display",
+      "Feature comparison",
+      "Product tier selection",
+      "Marketplace listing pricing",
+    ],
+    features: [
+      "Plan name, price, period, and description",
+      "Feature checklist with malachite checkmarks",
+      "Highlighted/recommended variant with border and shadow",
+      "Optional badge (e.g., 'Most Popular')",
+      "CTA button with onClick or href",
+      "Composes Card, Badge, Button, Separator primitives",
+    ],
+  },
+  "rating": {
+    useCases: [
+      "Event/venue ratings",
+      "Product reviews",
+      "Service feedback",
+      "Content quality scoring",
+    ],
+    features: [
+      "Interactive star selection with hover preview",
+      "Read-only mode for display",
+      "Mineral gold accent color for filled stars",
+      "Configurable max rating",
+      "Three sizes (sm, md, lg)",
+      "Optional numeric value display",
+    ],
+  },
 }
