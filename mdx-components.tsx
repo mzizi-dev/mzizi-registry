@@ -392,6 +392,28 @@ import {
   TypographyList,
 } from "@/components/ui/typography"
 
+// ── Cross-app 2nd-level components ──────────────────────────────────
+import { SearchBar } from "@/components/ui/search-bar"
+import { UserMenu } from "@/components/ui/user-menu"
+import { StatsCard } from "@/components/ui/stats-card"
+import { FilterBar } from "@/components/ui/filter-bar"
+import { ShareDialog } from "@/components/ui/share-dialog"
+import { NotificationBell } from "@/components/ui/notification-bell"
+import { FileUpload } from "@/components/ui/file-upload"
+import { CopyButton } from "@/components/ui/copy-button"
+import { StatusIndicator } from "@/components/ui/status-indicator"
+import {
+  Timeline,
+  TimelineItem,
+  TimelineDot,
+  TimelineContent,
+  TimelineTime,
+  TimelineHeading,
+  TimelineDescription,
+} from "@/components/ui/timeline"
+import { PricingCard } from "@/components/ui/pricing-card"
+import { Rating } from "@/components/ui/rating"
+
 // ── Mukoko higher-level components ──────────────────────────────────
 import { MukokoSidebar } from "@/components/mukoko/mukoko-sidebar"
 import { MukokoHeader } from "@/components/mukoko/mukoko-header"
@@ -860,6 +882,26 @@ export function useMDXComponents(
     TypographySmall,
     TypographyMuted,
     TypographyList,
+
+    // ── Cross-app 2nd-level components ──────────────────────────
+    SearchBar,
+    UserMenu,
+    StatsCard,
+    FilterBar,
+    ShareDialog,
+    NotificationBell,
+    FileUpload,
+    CopyButton,
+    StatusIndicator,
+    Timeline,
+    TimelineItem,
+    TimelineDot,
+    TimelineContent,
+    TimelineTime,
+    TimelineHeading,
+    TimelineDescription,
+    PricingCard,
+    Rating,
 
     // ── Mukoko higher-level components ────────────────────────────
     MukokoSidebar,

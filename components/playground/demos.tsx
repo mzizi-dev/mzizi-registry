@@ -793,4 +793,209 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       <p className="text-sm text-muted-foreground">Every mineral tells a story.</p>
     </div>
   ),
+
+  "search-bar": (
+    <div className="w-full max-w-sm">
+      <div className="relative">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <div className="flex h-10 w-full rounded-lg border border-border bg-background pl-9 pr-16 text-sm text-muted-foreground items-center">
+          Search components...
+        </div>
+        <div className="absolute right-2 top-1/2 -translate-y-1/2">
+          <kbd className="inline-flex h-5 items-center rounded border bg-muted px-1.5 font-mono text-[10px] text-muted-foreground">⌘K</kbd>
+        </div>
+      </div>
+    </div>
+  ),
+
+  "user-menu": (
+    <div className="flex items-center gap-2 rounded-lg border border-border p-2">
+      <div className="flex size-8 items-center justify-center rounded-full bg-[var(--color-tanzanite)]/20 text-xs font-medium text-[var(--color-tanzanite)]">TN</div>
+      <div className="flex flex-col">
+        <span className="text-sm font-medium">Tinashe Nyuchi</span>
+        <span className="text-xs text-muted-foreground">tinashe@nyuchi.com</span>
+      </div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2 text-muted-foreground"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+    </div>
+  ),
+
+  "stats-card": (
+    <div className="grid w-full max-w-lg grid-cols-2 gap-3">
+      <div className="rounded-xl border border-border p-4">
+        <p className="text-xs text-muted-foreground">Total Revenue</p>
+        <p className="mt-1 text-2xl font-bold">$45,231</p>
+        <p className="mt-1 flex items-center gap-1 text-xs text-[var(--color-malachite)]">↑ +20.1% from last month</p>
+      </div>
+      <div className="rounded-xl border border-border p-4">
+        <p className="text-xs text-muted-foreground">Active Users</p>
+        <p className="mt-1 text-2xl font-bold">2,350</p>
+        <p className="mt-1 flex items-center gap-1 text-xs text-[var(--color-malachite)]">↑ +12.5% from last month</p>
+      </div>
+    </div>
+  ),
+
+  "filter-bar": (
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">All</span>
+      <span className="rounded-full border border-border px-3 py-1 text-xs">Weather</span>
+      <span className="rounded-full border border-border px-3 py-1 text-xs">News</span>
+      <span className="rounded-full border border-border px-3 py-1 text-xs">Events</span>
+      <span className="rounded-full border border-border px-3 py-1 text-xs">Sports</span>
+    </div>
+  ),
+
+  "share-dialog": (
+    <div className="w-full max-w-sm space-y-3 rounded-xl border border-border p-4">
+      <div>
+        <p className="text-sm font-semibold">Share</p>
+        <p className="text-xs text-muted-foreground">Mukoko Design System v7.0</p>
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="flex-1 truncate rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs">
+          https://registry.mukoko.com/...
+        </div>
+        <span className="rounded-lg border border-border px-3 py-2 text-xs">Copy</span>
+      </div>
+      <div className="flex gap-2">
+        <span className="flex-1 rounded-lg border border-border px-3 py-2 text-center text-xs">X</span>
+        <span className="flex-1 rounded-lg border border-border px-3 py-2 text-center text-xs">LinkedIn</span>
+        <span className="flex-1 rounded-lg border border-border px-3 py-2 text-center text-xs">Email</span>
+      </div>
+    </div>
+  ),
+
+  "notification-bell": (
+    <div className="flex flex-col items-center gap-3">
+      <div className="relative">
+        <div className="flex size-9 items-center justify-center rounded-lg border border-border">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        </div>
+        <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-white">3</span>
+      </div>
+      <p className="text-xs text-muted-foreground">3 unread notifications</p>
+    </div>
+  ),
+
+  "file-upload": (
+    <div className="w-full max-w-sm">
+      <div className="flex flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border p-6 text-center">
+        <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        </div>
+        <p className="text-sm font-medium">Click to upload or drag and drop</p>
+        <p className="text-xs text-muted-foreground">Any file type · Max 10MB</p>
+      </div>
+    </div>
+  ),
+
+  "copy-button": (
+    <div className="flex items-center gap-3">
+      <code className="rounded-lg bg-muted px-3 py-2 text-xs">npx shadcn@latest add https://registry.mukoko.com/api/r/button</code>
+      <span className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        Copy
+      </span>
+    </div>
+  ),
+
+  "status-indicator": (
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-1.5">
+        <span className="relative flex"><span className="size-2.5 rounded-full bg-[var(--color-malachite)]" /><span className="absolute inset-0 animate-ping rounded-full bg-[var(--color-malachite)] opacity-75" /></span>
+        <span className="text-xs text-muted-foreground">Online</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="size-2.5 rounded-full bg-[var(--color-gold)]" />
+        <span className="text-xs text-muted-foreground">Away</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="size-2.5 rounded-full bg-destructive" />
+        <span className="text-xs text-muted-foreground">Busy</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="size-2.5 rounded-full bg-muted-foreground" />
+        <span className="text-xs text-muted-foreground">Offline</span>
+      </div>
+    </div>
+  ),
+
+  "timeline": (
+    <div className="w-full max-w-sm space-y-0">
+      <div className="relative flex gap-4 pb-8">
+        <div className="relative flex flex-col items-center">
+          <div className="z-10 size-3 rounded-full bg-[var(--color-cobalt)]" />
+          <div className="w-px flex-1 bg-border" />
+        </div>
+        <div className="flex-1 space-y-1 pt-0">
+          <h4 className="text-sm font-medium">Registry v7.0 released</h4>
+          <p className="text-xs text-muted-foreground">Five African Minerals design system launched.</p>
+          <time className="text-xs text-muted-foreground">March 2026</time>
+        </div>
+      </div>
+      <div className="relative flex gap-4 pb-8">
+        <div className="relative flex flex-col items-center">
+          <div className="z-10 size-3 rounded-full bg-[var(--color-tanzanite)]" />
+          <div className="w-px flex-1 bg-border" />
+        </div>
+        <div className="flex-1 space-y-1 pt-0">
+          <h4 className="text-sm font-medium">90+ components</h4>
+          <p className="text-xs text-muted-foreground">Cross-app standardized components added.</p>
+          <time className="text-xs text-muted-foreground">March 2026</time>
+        </div>
+      </div>
+      <div className="relative flex gap-4">
+        <div className="relative flex flex-col items-center">
+          <div className="z-10 size-3 rounded-full bg-[var(--color-malachite)]" />
+        </div>
+        <div className="flex-1 space-y-1 pt-0">
+          <h4 className="text-sm font-medium">Error boundaries</h4>
+          <p className="text-xs text-muted-foreground">Layered fault isolation architecture.</p>
+          <time className="text-xs text-muted-foreground">March 2026</time>
+        </div>
+      </div>
+    </div>
+  ),
+
+  "pricing-card": (
+    <div className="flex gap-4">
+      <div className="w-48 rounded-xl border border-border p-4">
+        <div className="text-center">
+          <p className="text-sm font-semibold">Starter</p>
+          <p className="mt-2"><span className="text-3xl font-bold">Free</span></p>
+        </div>
+        <div className="my-3 h-px bg-border" />
+        <ul className="space-y-2 text-xs">
+          <li className="flex items-center gap-1.5">✓ 5 components</li>
+          <li className="flex items-center gap-1.5">✓ Community support</li>
+        </ul>
+        <button className="mt-4 w-full rounded-lg border border-border py-2 text-xs">Get started</button>
+      </div>
+      <div className="relative w-48 rounded-xl border-2 border-primary p-4 shadow-lg">
+        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-medium text-primary-foreground">Popular</div>
+        <div className="text-center">
+          <p className="text-sm font-semibold">Pro</p>
+          <p className="mt-2"><span className="text-3xl font-bold">$29</span><span className="text-xs text-muted-foreground">/mo</span></p>
+        </div>
+        <div className="my-3 h-px bg-border" />
+        <ul className="space-y-2 text-xs">
+          <li className="flex items-center gap-1.5">✓ All components</li>
+          <li className="flex items-center gap-1.5">✓ Priority support</li>
+        </ul>
+        <button className="mt-4 w-full rounded-lg bg-primary py-2 text-xs text-primary-foreground">Get started</button>
+      </div>
+    </div>
+  ),
+
+  "rating": (
+    <div className="flex flex-col items-center gap-3">
+      <div className="flex gap-0.5">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="var(--color-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="var(--color-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="var(--color-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="var(--color-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground/30"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <p className="text-xs text-muted-foreground">4.0 / 5.0</p>
+    </div>
+  ),
 }
