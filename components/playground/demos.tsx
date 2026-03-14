@@ -587,4 +587,138 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       </Tooltip>
     </TooltipProvider>
   ),
+
+  "mukoko-sidebar": (
+    <div className="w-full max-w-xs rounded-lg border border-border bg-muted/30 p-4">
+      <div className="mb-3 flex h-1 w-full gap-0.5 rounded-full overflow-hidden">
+        <span className="flex-1 bg-[var(--color-cobalt)]" />
+        <span className="flex-1 bg-[var(--color-tanzanite)]" />
+        <span className="flex-1 bg-[var(--color-malachite)]" />
+        <span className="flex-1 bg-[var(--color-gold)]" />
+        <span className="flex-1 bg-[var(--color-terracotta)]" />
+      </div>
+      <div className="mb-3 text-sm font-bold">mukoko registry</div>
+      <div className="space-y-0.5">
+        <div className="rounded-md bg-primary/10 px-3 py-1.5 text-xs font-medium text-foreground">Components</div>
+        <div className="rounded-md px-3 py-1.5 text-xs text-muted-foreground">Brand</div>
+        <div className="rounded-md px-3 py-1.5 text-xs text-muted-foreground">Architecture</div>
+        <div className="rounded-md px-3 py-1.5 text-xs text-muted-foreground">API</div>
+      </div>
+      <div className="mt-3 border-t border-border pt-2 text-[10px] text-muted-foreground">v7.0.0</div>
+    </div>
+  ),
+
+  "mukoko-header": (
+    <div className="w-full max-w-lg rounded-lg border border-border bg-background/80 px-4 py-2 backdrop-blur-xl">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-bold">mukoko registry</span>
+          <div className="hidden items-center gap-2 sm:flex">
+            <span className="text-xs text-muted-foreground">Components</span>
+            <span className="text-xs text-muted-foreground">Brand</span>
+            <span className="text-xs text-muted-foreground">API</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          <Badge variant="outline" className="text-[10px]">Theme</Badge>
+        </div>
+      </div>
+    </div>
+  ),
+
+  "mukoko-footer": (
+    <div className="w-full max-w-md rounded-lg border border-border p-4">
+      <div className="mb-3 text-sm font-bold">mukoko</div>
+      <p className="mb-2 text-xs text-muted-foreground">Built on the Five African Minerals palette.</p>
+      <div className="mb-3 flex items-center gap-1.5">
+        <span className="size-2 rounded-full bg-[var(--color-cobalt)]" />
+        <span className="size-2 rounded-full bg-[var(--color-tanzanite)]" />
+        <span className="size-2 rounded-full bg-[var(--color-malachite)]" />
+        <span className="size-2 rounded-full bg-[var(--color-gold)]" />
+        <span className="size-2 rounded-full bg-[var(--color-terracotta)]" />
+      </div>
+      <div className="flex gap-6 text-xs text-muted-foreground">
+        <div className="space-y-1">
+          <p className="font-medium text-foreground">Products</p>
+          <p>mukoko.com</p>
+          <p>Nhimbe</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-medium text-foreground">Services</p>
+          <p>News</p>
+          <p>Weather</p>
+        </div>
+      </div>
+      <div className="mt-3 border-t border-border pt-2 text-[10px] text-muted-foreground">Built by Nyuchi — v7.0.0</div>
+    </div>
+  ),
+
+  "mukoko-bottom-nav": (
+    <div className="w-full max-w-sm rounded-lg border border-border bg-background/80 px-2 py-2 backdrop-blur-xl">
+      <div className="flex items-center justify-around">
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="size-5 rounded bg-[var(--color-cobalt)]/20" />
+          <span className="text-[10px] font-medium text-[var(--color-cobalt)]">Home</span>
+        </div>
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="size-5 rounded bg-muted" />
+          <span className="text-[10px] text-muted-foreground">Explore</span>
+        </div>
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="size-5 rounded bg-muted" />
+          <span className="text-[10px] text-muted-foreground">Library</span>
+        </div>
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="size-5 rounded bg-muted" />
+          <span className="text-[10px] text-muted-foreground">Settings</span>
+        </div>
+      </div>
+    </div>
+  ),
+
+  "detail-layout": (
+    <div className="w-full max-w-md rounded-lg border border-border p-4">
+      <div className="mb-2 text-xs text-muted-foreground">← Back to events</div>
+      <div className="mb-1 aspect-video w-full rounded-lg bg-muted" />
+      <h3 className="mt-3 font-serif text-lg font-bold">Event Title</h3>
+      <p className="text-sm text-muted-foreground">A brief description of the event.</p>
+      <div className="mt-2 flex gap-2">
+        <Badge variant="outline">Category</Badge>
+        <span className="text-xs text-muted-foreground">March 14, 2026</span>
+      </div>
+      <div className="mt-3 border-t border-border pt-3 text-xs text-muted-foreground">
+        Content goes here with readable line length...
+      </div>
+    </div>
+  ),
+
+  "dashboard-layout": (
+    <div className="flex w-full max-w-lg overflow-hidden rounded-lg border border-border">
+      {/* Sidebar mockup */}
+      <div className="hidden w-40 shrink-0 border-r border-border bg-muted/30 p-3 sm:block">
+        <div className="mb-3 flex h-0.5 gap-0.5 rounded-full overflow-hidden">
+          <span className="flex-1 bg-[var(--color-cobalt)]" />
+          <span className="flex-1 bg-[var(--color-tanzanite)]" />
+          <span className="flex-1 bg-[var(--color-malachite)]" />
+          <span className="flex-1 bg-[var(--color-gold)]" />
+          <span className="flex-1 bg-[var(--color-terracotta)]" />
+        </div>
+        <div className="mb-2 text-xs font-bold">mukoko</div>
+        <div className="space-y-0.5 text-[10px]">
+          <div className="rounded bg-primary/10 px-2 py-1 font-medium">Dashboard</div>
+          <div className="rounded px-2 py-1 text-muted-foreground">Analytics</div>
+          <div className="rounded px-2 py-1 text-muted-foreground">Settings</div>
+        </div>
+      </div>
+      {/* Content area */}
+      <div className="flex-1">
+        <div className="border-b border-border bg-background/80 px-3 py-2 text-xs font-medium">Header</div>
+        <div className="grid grid-cols-2 gap-2 p-3">
+          <div className="rounded-lg bg-muted p-3 text-center text-xs text-muted-foreground">Card 1</div>
+          <div className="rounded-lg bg-muted p-3 text-center text-xs text-muted-foreground">Card 2</div>
+          <div className="col-span-2 rounded-lg bg-muted p-3 text-center text-xs text-muted-foreground">Chart</div>
+        </div>
+      </div>
+    </div>
+  ),
 }

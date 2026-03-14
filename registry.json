@@ -903,6 +903,83 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "mukoko-sidebar",
+      "type": "registry:ui",
+      "description": "Standardized sidebar for all Mukoko ecosystem apps. Wraps the sidebar primitive with Mukoko branding, mineral accent strip, section-based navigation, and automatic active state detection. Works across docs, dashboards, settings, and any other context.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["sidebar", "separator", "badge", "tooltip"],
+      "files": [
+        {
+          "path": "components/mukoko/mukoko-sidebar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mukoko-header",
+      "type": "registry:ui",
+      "description": "Standardized sticky header for all Mukoko ecosystem apps. Includes logo with app name suffix, desktop navigation, theme toggle, and mobile sidebar trigger.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "sidebar"],
+      "files": [
+        {
+          "path": "components/mukoko/mukoko-header.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mukoko-footer",
+      "type": "registry:ui",
+      "description": "Standardized footer for all Mukoko ecosystem apps. Includes mineral color dots, product links grid, and Nyuchi branding.",
+      "dependencies": [],
+      "registryDependencies": ["separator"],
+      "files": [
+        {
+          "path": "components/mukoko/mukoko-footer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mukoko-bottom-nav",
+      "type": "registry:ui",
+      "description": "Mobile-only bottom navigation bar for Mukoko ecosystem apps. Fixed to bottom with backdrop blur, active state indicator using mineral accent colors, and safe area padding.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/mukoko/mukoko-bottom-nav.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "detail-layout",
+      "type": "registry:ui",
+      "description": "Shared detail page layout for articles, events, and listings across the Mukoko ecosystem. Includes hero image, back navigation, metadata row, prose content area, and optional aside column.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["separator"],
+      "files": [
+        {
+          "path": "components/mukoko/detail-layout.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dashboard-layout",
+      "type": "registry:ui",
+      "description": "Full app shell composing MukokoHeader, MukokoSidebar, and MukokoBottomNav into a responsive dashboard layout with collapsible sidebar and mobile navigation.",
+      "dependencies": [],
+      "registryDependencies": ["mukoko-sidebar", "mukoko-header", "mukoko-bottom-nav", "sidebar"],
+      "files": [
+        {
+          "path": "components/mukoko/dashboard-layout.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
