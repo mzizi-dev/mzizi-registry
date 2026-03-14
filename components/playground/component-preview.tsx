@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Moon, Sun } from "lucide-react"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 interface ComponentPreviewProps {
   code: string
@@ -70,7 +71,9 @@ export function ComponentPreview({
             darkPreview ? "dark bg-[#0A0A0A] text-[#F5F5F4]" : "bg-background"
           )}
         >
-          {children}
+          <ErrorBoundary section="Demo render">
+            {children}
+          </ErrorBoundary>
         </div>
       ) : (
         <div className="max-h-[600px] overflow-auto">
