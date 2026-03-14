@@ -735,4 +735,111 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Provider for shared configuration",
     ],
   },
+
+  "mukoko-sidebar": {
+    useCases: [
+      "Documentation page navigation",
+      "Dashboard sidebar with sections",
+      "Settings and preferences navigation",
+      "Admin panel navigation",
+      "App-wide navigation for any Mukoko product",
+    ],
+    features: [
+      "Wraps sidebar primitive with Mukoko branding",
+      "Mineral accent strip at top (Five African Minerals)",
+      "Automatic active state detection from pathname",
+      "Section-based navigation with group labels",
+      "Nested menu support for hierarchical navigation",
+      "Collapsible to icon-only mode (Cmd+B)",
+      "Responsive — transforms to Sheet on mobile",
+      "Cookie-based state persistence",
+      "Theme toggle and version in footer",
+    ],
+  },
+
+  "mukoko-header": {
+    useCases: [
+      "Main navigation bar for all Mukoko apps",
+      "App header with branding and theme toggle",
+      "Desktop nav with mobile sidebar trigger",
+    ],
+    features: [
+      "Sticky positioning with backdrop blur",
+      "MukokoLogo with app name suffix",
+      "Desktop horizontal navigation links",
+      "Mobile sidebar trigger integration",
+      "Custom actions area (right side)",
+      "Theme toggle always present",
+      "External link indicators",
+    ],
+  },
+
+  "mukoko-footer": {
+    useCases: [
+      "Page footer for all Mukoko ecosystem apps",
+      "Brand consistency across products",
+      "Product and service link directory",
+    ],
+    features: [
+      "MukokoLogo with wordmark",
+      "Five mineral color dots (brand identity)",
+      "Configurable product and service links",
+      "Custom link groups support",
+      "Built by Nyuchi branding with version",
+      "Responsive layout — stacks vertically on mobile",
+    ],
+  },
+
+  "mukoko-bottom-nav": {
+    useCases: [
+      "Mobile navigation for Mukoko apps",
+      "Persistent bottom tab bar on small screens",
+      "Quick access to primary app sections",
+    ],
+    features: [
+      "Mobile-only (hidden on md+ breakpoint)",
+      "Fixed positioning with backdrop blur",
+      "Active state with mineral accent colors",
+      "Safe area padding for notched devices",
+      "Active icon variant support",
+      "Automatic pathname-based active detection",
+    ],
+  },
+
+  "detail-layout": {
+    useCases: [
+      "News article pages",
+      "Event detail pages",
+      "Marketplace listing pages",
+      "Blog post pages",
+      "Any content detail view",
+    ],
+    features: [
+      "Back navigation with customizable label",
+      "Hero image with gradient overlay",
+      "Serif title with subtitle",
+      "Metadata row for dates, authors, categories",
+      "Action buttons area (share, bookmark)",
+      "Prose content area with readable line length",
+      "Optional aside column (sticky on desktop)",
+      "Responsive — aside drops below on mobile",
+    ],
+  },
+
+  "dashboard-layout": {
+    useCases: [
+      "Admin dashboards",
+      "Analytics pages",
+      "Settings pages",
+      "Any app shell requiring sidebar navigation",
+    ],
+    features: [
+      "Composes MukokoHeader + MukokoSidebar + MukokoBottomNav",
+      "SidebarProvider wrapping for state management",
+      "SidebarInset for responsive content area",
+      "Collapsible sidebar on desktop",
+      "Mobile bottom nav integration",
+      "Configurable nav items and header actions",
+    ],
+  },
 }
