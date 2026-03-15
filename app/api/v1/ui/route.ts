@@ -2,15 +2,14 @@ import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { createLogger } from "@/lib/observability"
-import { getAllComponents, isSeeded } from "@/lib/db"
+import { getAllComponents, isSupabaseConfigured, isSeeded } from "@/lib/db"
 
 const logger = createLogger("registry")
 
 /**
  * GET /api/v1/ui — Registry index
  *
- * Reads from PouchDB document store if seeded, falls back to registry.json.
- * This ensures backward compatibility while enabling the document store.
+ * Reads from Supabase if configured and seeded, falls back to registry.json.
  */
 export async function GET() {
   try {
@@ -22,26 +21,26 @@ export async function GET() {
       registryDependencies: string[]
     }>
 
-    const dbSeeded = await isSeeded().catch(() => false)
+    const useDb =
+      isSupabaseConfigured() && (await isSeeded().catch(() => false))
 
-    if (dbSeeded) {
-      // Read from document store
+    if (useDb) {
       const components = await getAllComponents()
       items = components.map((c) => ({
         name: c.name,
-        type: c.registryType,
+        type: c.registry_type,
         description: c.description,
         dependencies: c.dependencies,
-        registryDependencies: c.registryDependencies,
+        registryDependencies: c.registry_dependencies,
       }))
-      logger.info("Registry index served from document store", {
+      logger.info("Registry index served from Supabase", {
         data: { itemCount: items.length },
       })
     } else {
       // Fallback to filesystem
       const registryPath = path.join(process.cwd(), "registry.json")
       if (!fs.existsSync(registryPath)) {
-        throw new Error("registry.json not found and database not seeded")
+        throw new Error("registry.json not found and database not available")
       }
       const raw = fs.readFileSync(registryPath, "utf-8")
       const registry = JSON.parse(raw)
@@ -60,7 +59,7 @@ export async function GET() {
           registryDependencies: item.registryDependencies || [],
         })
       )
-      logger.info("Registry index served from filesystem (db not seeded)", {
+      logger.info("Registry index served from filesystem", {
         data: { itemCount: items.length },
       })
     }

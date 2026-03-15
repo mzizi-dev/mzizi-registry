@@ -1,70 +1,95 @@
 /**
- * Document schemas for the Mukoko Registry document store.
+ * Database types for the Mukoko Registry Supabase document store.
  *
- * Every piece of registry data — component metadata, documentation, demos,
- * brand tokens — is a typed document in PouchDB/CouchDB. This replaces
- * hardcoded files (registry.json, component-docs.ts, demo-names.ts) with
- * a queryable, versionable, syncable document store.
- *
- * Document ID conventions:
- *   component:<name>       — Component metadata (registry entry)
- *   doc:<name>             — Component documentation (use cases, features)
- *   demo:<name>            — Demo configuration (has demo, demo type)
- *   brand:<key>            — Brand system tokens
- *   config:<key>           — System configuration
+ * These types mirror the Supabase tables defined in supabase/schema.sql.
+ * Components, docs, and demos are stored as rows in Postgres — queryable,
+ * indexable, and protected by RLS.
  */
 
-// ── Base document ───────────────────────────────────────────────────
+// ── Row types (what comes back from Supabase) ───────────────────────
 
-export interface BaseDocument {
-  _id: string
-  _rev?: string
-  type: DocumentType
-  createdAt: string
-  updatedAt: string
-}
-
-export type DocumentType =
-  | "component"
-  | "component-doc"
-  | "demo"
-  | "brand"
-  | "config"
-
-// ── Component document ──────────────────────────────────────────────
-// Replaces entries in registry.json
-
-export interface ComponentDocument extends BaseDocument {
-  type: "component"
-  /** Component name (e.g., "button", "mukoko-sidebar") */
+export interface ComponentRow {
+  id: number
   name: string
-  /** Registry type */
-  registryType: "registry:ui" | "registry:hook" | "registry:lib"
-  /** One-line description */
+  registry_type: string
   description: string
-  /** npm dependencies */
   dependencies: string[]
-  /** Other registry components this depends on */
-  registryDependencies: string[]
-  /** Source files */
+  registry_dependencies: string[]
   files: ComponentFile[]
-  /** Component category for catalog organization */
-  category?: ComponentCategory
-  /** Component layer in the architecture */
-  layer?: "primitive" | "composite" | "layout" | "infrastructure"
-  /** Whether this is a Mukoko ecosystem component (vs shadcn base) */
-  isMukokoComponent?: boolean
-  /** Source code (inlined for API responses) */
-  sourceCode?: string
-  /** Version when this component was added */
-  addedInVersion?: string
-  /** Tags for search and filtering */
-  tags?: string[]
+  category: string | null
+  layer: string | null
+  is_mukoko_component: boolean
+  tags: string[]
+  added_in_version: string | null
+  created_at: string
+  updated_at: string
 }
+
+export interface ComponentDocRow {
+  id: number
+  component_name: string
+  use_cases: string[]
+  variants: string[]
+  sizes: string[]
+  features: string[]
+  a11y: string[]
+  examples: CodeExample[]
+  created_at: string
+  updated_at: string
+}
+
+export interface ComponentDemoRow {
+  id: number
+  component_name: string
+  has_demo: boolean
+  demo_type: string | null
+  created_at: string
+  updated_at: string
+}
+
+// ── Insert types (what we send to Supabase) ─────────────────────────
+
+export interface ComponentInsert {
+  name: string
+  registry_type: string
+  description: string
+  dependencies?: string[]
+  registry_dependencies?: string[]
+  files?: ComponentFile[]
+  category?: string | null
+  layer?: string | null
+  is_mukoko_component?: boolean
+  tags?: string[]
+  added_in_version?: string | null
+}
+
+export interface ComponentDocInsert {
+  component_name: string
+  use_cases: string[]
+  variants?: string[]
+  sizes?: string[]
+  features?: string[]
+  a11y?: string[]
+  examples?: CodeExample[]
+}
+
+export interface ComponentDemoInsert {
+  component_name: string
+  has_demo: boolean
+  demo_type?: string | null
+}
+
+// ── Shared types ────────────────────────────────────────────────────
 
 export interface ComponentFile {
   path: string
   type: string
+}
+
+export interface CodeExample {
+  title: string
+  code: string
+  language?: string
 }
 
 export type ComponentCategory =
@@ -79,97 +104,43 @@ export type ComponentCategory =
   | "mukoko"
   | "infrastructure"
 
-// ── Component documentation document ────────────────────────────────
-// Replaces entries in component-docs.ts
+// ── Enriched types ──────────────────────────────────────────────────
 
-export interface ComponentDocDocument extends BaseDocument {
-  type: "component-doc"
-  /** Component name this doc belongs to */
-  componentName: string
-  /** Use case descriptions */
-  useCases: string[]
-  /** Available variants */
-  variants?: string[]
-  /** Available sizes */
-  sizes?: string[]
-  /** Feature descriptions */
-  features?: string[]
-  /** Props documentation (future: auto-extracted from source) */
-  props?: PropDoc[]
-  /** Code examples */
-  examples?: CodeExample[]
-  /** Accessibility notes */
-  a11y?: string[]
-}
-
-export interface PropDoc {
-  name: string
-  type: string
-  description: string
-  required?: boolean
-  defaultValue?: string
-}
-
-export interface CodeExample {
-  title: string
-  code: string
-  language?: string
-}
-
-// ── Demo document ───────────────────────────────────────────────────
-// Replaces demo-names.ts (demo JSX stays in demos.tsx for now)
-
-export interface DemoDocument extends BaseDocument {
-  type: "demo"
-  /** Component name */
-  componentName: string
-  /** Whether an interactive demo exists */
-  hasDemo: boolean
-  /** Demo category */
-  demoType?: "interactive" | "static" | "api"
-}
-
-// ── Brand document ──────────────────────────────────────────────────
-// Replaces hardcoded brand data for dynamic brand system management
-
-export interface BrandDocument extends BaseDocument {
-  type: "brand"
-  /** Brand data key (e.g., "minerals", "typography", "ecosystem") */
-  key: string
-  /** Brand data value (flexible JSON) */
-  data: Record<string, unknown>
-}
-
-// ── Config document ─────────────────────────────────────────────────
-// System-level configuration
-
-export interface ConfigDocument extends BaseDocument {
-  type: "config"
-  key: string
-  value: unknown
-}
-
-// ── Union type ──────────────────────────────────────────────────────
-
-export type RegistryDocument =
-  | ComponentDocument
-  | ComponentDocDocument
-  | DemoDocument
-  | BrandDocument
-  | ConfigDocument
-
-// ── Query result types ──────────────────────────────────────────────
-
-export interface ComponentWithDocs extends ComponentDocument {
-  docs?: ComponentDocDocument
-  demo?: DemoDocument
+export interface ComponentWithDocs extends ComponentRow {
+  docs?: ComponentDocRow | null
+  demo?: ComponentDemoRow | null
 }
 
 // ── Database info ───────────────────────────────────────────────────
 
 export interface DatabaseInfo {
-  name: string
-  docCount: number
-  updateSeq: number | string
-  adapter: string
+  provider: "supabase"
+  components: number
+  docs: number
+  demos: number
+  status: "connected" | "error"
+}
+
+// ── Supabase database type helper ───────────────────────────────────
+
+export interface Database {
+  public: {
+    Tables: {
+      components: {
+        Row: ComponentRow
+        Insert: ComponentInsert
+        Update: Partial<ComponentInsert>
+      }
+      component_docs: {
+        Row: ComponentDocRow
+        Insert: ComponentDocInsert
+        Update: Partial<ComponentDocInsert>
+      }
+      component_demos: {
+        Row: ComponentDemoRow
+        Insert: ComponentDemoInsert
+        Update: Partial<ComponentDemoInsert>
+      }
+    }
+  }
 }

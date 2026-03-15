@@ -1,19 +1,16 @@
 /**
- * Client-side PouchDB for browser caching and offline support.
+ * Client-side registry cache with localStorage persistence.
  *
- * Uses IndexedDB as the backing store. Can sync with the server's
- * PouchDB or a remote CouchDB instance for real-time updates.
+ * Fetches from /api/v1/ui (backed by Supabase) and caches in
+ * localStorage for 1 hour. Server components should use
+ * "@/lib/db" directly for Supabase queries.
  *
  * Usage:
- *   import { useRegistryDb } from "@/lib/db/client"
+ *   import { useRegistryCache } from "@/lib/db/client"
  *
  *   function MyComponent() {
- *     const { db, isReady } = useRegistryDb()
- *     // ... use db for local queries
+ *     const { components, isLoading, search } = useRegistryCache()
  *   }
- *
- * Note: This module is only imported on the client side ("use client").
- * Server components should use "@/lib/db" directly.
  */
 
 "use client"
