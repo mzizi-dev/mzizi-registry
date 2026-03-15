@@ -4,13 +4,14 @@
  * PouchDB-based document store that replaces hardcoded JSON files with a
  * queryable, versionable, syncable database. Works in three modes:
  *
- * 1. **Server (Node.js):** LevelDB-backed PouchDB for API routes and SSR
+ * 1. **Server (Node.js):** In-memory PouchDB for API routes and SSR
+ *    (auto-seeds from registry.json on cold start, persists via CouchDB sync)
  * 2. **Client (Browser):** IndexedDB-backed PouchDB for offline caching
  * 3. **Synced:** Bidirectional sync with remote CouchDB for multi-contributor
  *
  * Architecture:
- *   PouchDB (IndexedDB)  ←→  CouchDB (remote)  ←→  PouchDB (LevelDB)
- *        browser                  server                 build/API
+ *   PouchDB (IndexedDB)  ←→  CouchDB (remote)  ←→  PouchDB (memory)
+ *        browser                  server               serverless/API
  *
  * Usage:
  *   import { db, getComponent, getAllComponents } from "@/lib/db"
@@ -18,7 +19,11 @@
  *   const all = await getAllComponents()
  */
 
-import PouchDB from "pouchdb"
+import PouchDBCore from "pouchdb-core"
+import AdapterMemory from "pouchdb-adapter-memory"
+import AdapterHttp from "pouchdb-adapter-http"
+import Mapreduce from "pouchdb-mapreduce"
+import Replication from "pouchdb-replication"
 import PouchFind from "pouchdb-find"
 
 import type {
@@ -30,8 +35,12 @@ import type {
   DatabaseInfo,
 } from "./types"
 
-// Register the find plugin
-PouchDB.plugin(PouchFind)
+// Assemble PouchDB with only the plugins we need (no native leveldown)
+const PouchDB = PouchDBCore.plugin(AdapterMemory)
+  .plugin(AdapterHttp)
+  .plugin(Mapreduce)
+  .plugin(Replication)
+  .plugin(PouchFind)
 
 // ── Database instances ──────────────────────────────────────────────
 
@@ -43,12 +52,13 @@ const REMOTE_URL = process.env.COUCHDB_URL || null
 
 /**
  * Get or create the registry database instance.
- * Uses LevelDB on server, IndexedDB in browser.
+ * Uses in-memory adapter on server (serverless-safe, no native deps).
+ * On cold start the DB is empty — call seedDatabase() or hit POST /api/v1/db.
  */
 export function getDb(): PouchDB.Database<RegistryDocument> {
   if (!_registryDb) {
     _registryDb = new PouchDB<RegistryDocument>("mukoko-registry", {
-      // PouchDB auto-detects adapter: LevelDB (Node) or IndexedDB (browser)
+      adapter: "memory",
     })
   }
   return _registryDb
@@ -334,7 +344,9 @@ export async function getDatabaseInfo(): Promise<DatabaseInfo> {
     name: info.db_name,
     docCount: info.doc_count,
     updateSeq: info.update_seq,
-    adapter: String((info as unknown as Record<string, unknown>).adapter ?? "unknown"),
+    adapter: String(
+      (info as unknown as Record<string, unknown>).adapter ?? "memory"
+    ),
   }
 }
 
