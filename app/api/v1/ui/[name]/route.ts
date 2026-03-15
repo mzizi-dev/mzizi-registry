@@ -2,14 +2,14 @@ import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { createLogger } from "@/lib/observability"
-import { getComponent, isSeeded } from "@/lib/db"
+import { getComponent, isSupabaseConfigured, isSeeded } from "@/lib/db"
 
 const logger = createLogger("registry")
 
 /**
  * GET /api/v1/ui/[name] — Individual component with inline source
  *
- * Reads metadata from PouchDB if seeded, falls back to registry.json.
+ * Reads metadata from Supabase if configured, falls back to registry.json.
  * Source code is always read from the filesystem (git-managed files).
  */
 export async function GET(
@@ -35,18 +35,18 @@ export async function GET(
       files: Array<{ path: string; type: string }>
     } | null = null
 
-    const dbSeeded = await isSeeded().catch(() => false)
+    const useDb =
+      isSupabaseConfigured() && (await isSeeded().catch(() => false))
 
-    if (dbSeeded) {
-      // Read from document store
+    if (useDb) {
       const component = await getComponent(name)
       if (component) {
         item = {
           name: component.name,
-          type: component.registryType,
+          type: component.registry_type,
           description: component.description,
           dependencies: component.dependencies,
-          registryDependencies: component.registryDependencies,
+          registryDependencies: component.registry_dependencies,
           files: component.files,
         }
       }
@@ -107,7 +107,7 @@ export async function GET(
     }
 
     logger.info("Component served", {
-      data: { name, fileCount: files.length, source: dbSeeded ? "db" : "fs" },
+      data: { name, fileCount: files.length, source: useDb ? "supabase" : "fs" },
     })
 
     const registryItem = {

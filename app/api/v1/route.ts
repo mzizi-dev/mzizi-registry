@@ -55,7 +55,7 @@ export async function GET() {
           db: {
             href: "/api/v1/db",
             description:
-              "Document store status and seeding — PouchDB/CouchDB registry backend.",
+              "Document store status and seeding — Supabase (Postgres) registry backend.",
           },
         },
       },
