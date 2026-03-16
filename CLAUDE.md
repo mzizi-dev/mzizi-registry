@@ -8,7 +8,7 @@
 
 ## 1. Project Identity
 
-**Mukoko Registry** is the component registry, brand documentation hub, and design system for the Mukoko ecosystem. It serves 70+ production-ready React UI components built on the **Five African Minerals** design system, installable via the shadcn CLI:
+**Mukoko Registry** is the component registry, brand documentation hub, and design system for the Mukoko ecosystem. It serves 82 production-ready React UI components built on the **Five African Minerals** design system, installable via the shadcn CLI:
 
 ```
 npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/<component>
@@ -47,7 +47,7 @@ Mukoko Registry exists within a broader ecosystem. Understanding the relationshi
 mukoko-registry (this repo)
     │
     ├── Defines: Five African Minerals palette, typography, component API
-    ├── Serves: 70+ components via shadcn CLI / API / static JSON
+    ├── Serves: 94 registry items (82 UI, 3 hooks, 9 lib) via shadcn CLI / API / static JSON
     │
     └── Consumed by:
         ├── mukoko-weather  (weather.mukoko.com)
@@ -176,7 +176,7 @@ mukoko-registry/
 │   │   ├── error-boundary-demo.tsx # Error boundary demo
 │   │   ├── lazy-loading-demo.tsx # Lazy loading demo
 │   │   └── observability-demo.tsx # Observability demo
-│   ├── ui/                       # 70+ shadcn-style UI components
+│   ├── ui/                       # 82 shadcn-style UI components
 │   │   ├── button.tsx            # CVA variants, Slot polymorphism
 │   │   ├── card.tsx, dialog.tsx, input.tsx, ...
 │   │   └── [60+ component files]
@@ -224,7 +224,7 @@ mukoko-registry/
 
 ### 6.1 Registry System
 
-`registry.json` is the manifest defining all 70+ components with metadata, dependencies, and file paths. It follows the schema at `https://ui.shadcn.com/schema/registry.json`.
+`registry.json` is the manifest defining all 94 registry items with metadata, dependencies, and file paths. It follows the schema at `https://ui.shadcn.com/schema/registry.json`.
 
 Components are served two ways:
 
@@ -582,19 +582,21 @@ cd mcp && pnpm build             # Build for distribution
 
 ## 11. Component Categories
 
-The 72 registry items (58 UI components, 3 hooks, 11 library utilities) are organized by function:
+The 94 registry items (82 UI components, 3 hooks, 9 library utilities) are organized by function:
 
 | Category | Components |
 |---|---|
-| **Input** | calendar, checkbox, combobox, command, field, form, input, input-group, input-otp, label, native-select, radio-group, select, slider, switch, textarea |
-| **Action** | button, button-group, toggle, toggle-group |
-| **Data Display** | avatar, badge, chart, kbd, table |
+| **Input** | calendar, checkbox, combobox, command, date-picker, field, file-upload, form, input, input-group, input-otp, label, native-select, radio-group, search-bar, select, slider, switch, textarea |
+| **Action** | button, button-group, copy-button, rating, toggle, toggle-group |
+| **Data Display** | avatar, badge, chart, data-table, kbd, pricing-card, stats-card, status-indicator, table, timeline, typography |
 | **Feedback** | alert, empty, progress, skeleton, sonner, spinner, toast, toaster |
-| **Layout** | accordion, aspect-ratio, card, carousel, collapsible, drawer, item, resizable, scroll-area, separator, sheet, sidebar |
+| **Layout** | accordion, aspect-ratio, card, carousel, collapsible, dashboard-layout, detail-layout, drawer, item, resizable, scroll-area, separator, sheet, sidebar |
 | **Navigation** | breadcrumb, menubar, navigation-menu, pagination, tabs |
-| **Overlay** | alert-dialog, context-menu, dialog, dropdown-menu, hover-card, popover, tooltip |
-| **Utility** | direction, use-mobile (hook), use-toast (hook), utils (lib) |
-| **Resilience** | ai-safety, chaos, circuit-breaker, fallback-chain, mcp-server, observability, retry, timeout (all `registry:lib`) |
+| **Overlay** | alert-dialog, context-menu, dialog, dropdown-menu, filter-bar, hover-card, notification-bell, popover, share-dialog, tooltip, user-menu |
+| **Mukoko Ecosystem** | mukoko-bottom-nav, mukoko-footer, mukoko-header, mukoko-sidebar |
+| **Infrastructure** | error-boundary, lazy-section, section-error-boundary |
+| **Utility** | direction, use-memory-pressure (hook), use-mobile (hook), use-toast (hook), utils (lib) |
+| **Resilience** | ai-safety, architecture, chaos, circuit-breaker, fallback-chain, observability, retry, timeout (all `registry:lib`) |
 
 ---
 
