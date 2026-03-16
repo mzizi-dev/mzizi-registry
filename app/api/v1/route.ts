@@ -26,7 +26,7 @@ export async function GET() {
           ui: {
             href: "/api/v1/ui",
             description:
-              "Component registry index — 70+ production-ready React UI components.",
+              "Component registry index — 94 registry items (82 UI components, 3 hooks, 9 lib utilities).",
           },
           ecosystem: {
             href: "/api/v1/ecosystem",

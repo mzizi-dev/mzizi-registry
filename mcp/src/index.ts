@@ -198,7 +198,7 @@ const server = new McpServer({
 server.resource(
   "registry",
   "mukoko://registry",
-  { description: "Full Mukoko component registry index with all 70+ components" },
+  { description: "Full Mukoko component registry index with all 94 items (82 UI, 3 hooks, 9 lib)" },
   async () => {
     const registry = loadRegistry();
     return {

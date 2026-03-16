@@ -8,7 +8,7 @@
 
 ## What is this?
 
-mukoko registry serves 70+ production-ready React UI components built on the **Five African Minerals** design system. Install any component with a single command:
+mukoko registry serves 94 production-ready registry items (82 UI components, 3 hooks, 9 lib utilities) built on the **Five African Minerals** design system. Install any component with a single command:
 
 ```bash
 npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button
