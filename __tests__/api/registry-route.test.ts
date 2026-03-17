@@ -13,7 +13,7 @@ vi.mock("next/server", () => ({
   },
 }))
 
-describe("GET /api/r", () => {
+describe("GET /api/v1/ui", () => {
   it("registry.json exists and is valid JSON", () => {
     const registryPath = path.join(process.cwd(), "registry.json")
     expect(fs.existsSync(registryPath)).toBe(true)
@@ -66,10 +66,10 @@ describe("GET /api/r", () => {
     expect(button.type).toBe("registry:ui")
   })
 
-  it("has 70+ components", () => {
+  it("has 94 registry items", () => {
     const registryPath = path.join(process.cwd(), "registry.json")
     const registry = JSON.parse(fs.readFileSync(registryPath, "utf-8"))
 
-    expect(registry.items.length).toBeGreaterThanOrEqual(70)
+    expect(registry.items.length).toBe(94)
   })
 })

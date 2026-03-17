@@ -168,7 +168,7 @@ export function createMukokoMcpServer(): McpServer {
   server.resource(
     "registry",
     "mukoko://registry",
-    { description: "Full Mukoko component registry index with all 70+ components" },
+    { description: "Full Mukoko component registry index with all 94 items (82 UI, 3 hooks, 9 lib)" },
     async () => {
       const registry = loadRegistry()
       return {
@@ -230,7 +230,94 @@ export function createMukokoMcpServer(): McpServer {
     })
   )
 
+  server.resource(
+    "architecture",
+    "mukoko://architecture",
+    { description: "Mukoko ecosystem architecture, data layer, and sovereignty information" },
+    async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/v1/ecosystem")
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+        return {
+          contents: [{
+            uri: "mukoko://architecture",
+            mimeType: "application/json",
+            text: JSON.stringify(data, null, 2),
+          }],
+        }
+      } catch {
+        return {
+          contents: [{
+            uri: "mukoko://architecture",
+            mimeType: "text/plain",
+            text: "Architecture API not available. Ensure the dev server is running at localhost:3000.",
+          }],
+        }
+      }
+    }
+  )
+
   // ─── Tools ───────────────────────────────────────────────────────────
+
+  server.tool(
+    "get_architecture_info",
+    "Get Mukoko ecosystem architecture information: principles, data layer, pipeline, or sovereignty details.",
+    {
+      category: z.enum(["principles", "framework", "local-data-layer", "cloud-layer", "open-data-pipeline", "data-ownership", "sovereignty", "removed", "all"]).describe("Architecture category to retrieve"),
+    },
+    async ({ category }) => {
+      const endpointMap: Record<string, string> = {
+        "principles": "/api/v1/ecosystem",
+        "framework": "/api/v1/ecosystem",
+        "local-data-layer": "/api/v1/data-layer",
+        "cloud-layer": "/api/v1/data-layer",
+        "data-ownership": "/api/v1/data-layer",
+        "open-data-pipeline": "/api/v1/pipeline",
+        "sovereignty": "/api/v1/sovereignty",
+        "removed": "/api/v1/sovereignty",
+      }
+
+      try {
+        if (category === "all") {
+          const endpoints = ["/api/v1/ecosystem", "/api/v1/data-layer", "/api/v1/pipeline", "/api/v1/sovereignty"]
+          const results = await Promise.all(
+            endpoints.map(async (ep) => {
+              const res = await fetch(`http://localhost:3000${ep}`)
+              if (!res.ok) throw new Error(`HTTP ${res.status} from ${ep}`)
+              return res.json()
+            })
+          )
+          const merged = {
+            ecosystem: results[0],
+            dataLayer: results[1],
+            pipeline: results[2],
+            sovereignty: results[3],
+          }
+          return {
+            content: [{ type: "text" as const, text: JSON.stringify(merged, null, 2) }],
+          }
+        }
+
+        const endpoint = endpointMap[category]
+        const res = await fetch(`http://localhost:3000${endpoint}`)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
+        }
+      } catch {
+        return {
+          content: [{
+            type: "text" as const,
+            text: "Architecture API not available. Ensure the dev server is running at localhost:3000.",
+          }],
+          isError: true,
+        }
+      }
+    }
+  )
 
   server.tool(
     "list_components",
@@ -289,7 +376,7 @@ export function createMukokoMcpServer(): McpServer {
           text: JSON.stringify({
             ...item,
             files: filesWithContent,
-            installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/r/${item.name}`,
+            installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${item.name}`,
           }, null, 2),
         }],
       }
@@ -321,7 +408,7 @@ export function createMukokoMcpServer(): McpServer {
         name: item.name,
         type: item.type,
         description: item.description || "",
-        installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/r/${item.name}`,
+        installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${item.name}`,
       }))
 
       return {
@@ -428,7 +515,7 @@ export { ${pascalName}, ${camelVariants}Variants }
       return {
         content: [{
           type: "text" as const,
-          text: `## Scaffolded Component: ${pascalName}\n\n### Source Code (components/ui/${name}.tsx)\n\n\`\`\`tsx\n${componentSource}\`\`\`\n\n### Registry Entry (add to registry.json items array)\n\n\`\`\`json\n${JSON.stringify(registryEntry, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Save the source code to \`components/ui/${name}.tsx\`\n2. Customize the CVA variant classes with appropriate Tailwind utilities\n3. Add the registry entry to \`registry.json\`\n4. Run \`pnpm registry:build\` to regenerate static files\n5. Verify: \`curl http://localhost:3000/api/r/${name}\`\n`,
+          text: `## Scaffolded Component: ${pascalName}\n\n### Source Code (components/ui/${name}.tsx)\n\n\`\`\`tsx\n${componentSource}\`\`\`\n\n### Registry Entry (add to registry.json items array)\n\n\`\`\`json\n${JSON.stringify(registryEntry, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Save the source code to \`components/ui/${name}.tsx\`\n2. Customize the CVA variant classes with appropriate Tailwind utilities\n3. Add the registry entry to \`registry.json\`\n4. Run \`pnpm registry:build\` to regenerate static files\n5. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\`\n`,
         }],
       }
     }
@@ -456,9 +543,9 @@ export { ${pascalName}, ${camelVariants}Variants }
       let text = ""
       if (valid.length > 0) {
         text += "## Install Commands\n\n"
-        text += valid.map(n => `\`\`\`bash\nnpx shadcn@latest add https://registry.mukoko.com/api/r/${n}\n\`\`\``).join("\n\n")
+        text += valid.map(n => `\`\`\`bash\nnpx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${n}\n\`\`\``).join("\n\n")
         text += "\n\n### Install all at once\n\n```bash\n"
-        text += valid.map(n => `npx shadcn@latest add https://registry.mukoko.com/api/r/${n}`).join(" && \\\n")
+        text += valid.map(n => `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${n}`).join(" && \\\n")
         text += "\n```"
       }
       if (invalid.length > 0) {

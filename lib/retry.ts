@@ -4,7 +4,7 @@
  * Wraps async operations with configurable retry logic, exponential delays,
  * and jitter to prevent thundering herd problems.
  *
- * Install via: npx shadcn@latest add https://registry.mukoko.com/api/r/retry
+ * Install via: npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/retry
  */
 
 import { createLogger } from "@/lib/observability"

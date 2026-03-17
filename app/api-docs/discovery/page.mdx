@@ -1,0 +1,39 @@
+---
+title: "Discovery — mukoko registry API"
+description: "GET /api/v1 — API discovery document listing all available resources."
+---
+
+# Discovery
+
+## `GET /api/v1`
+
+Returns a discovery document listing all available API resources. This is the entry point for programmatic API exploration.
+
+### Response
+
+```json
+{
+  "$schema": "https://registry.mukoko.com/schema/api.json",
+  "@context": "https://schema.org",
+  "@type": "WebAPI",
+  "name": "Mukoko Architecture API",
+  "version": "1.0.0",
+  "description": "Unified API for the Mukoko ecosystem...",
+  "homepage": "https://registry.mukoko.com",
+  "resources": {
+    "brand": { "href": "/api/v1/brand", "description": "Brand system: minerals, typography, spacing, semantic colors" },
+    "ui": { "href": "/api/v1/ui", "description": "Component registry — 70+ production-ready React components" },
+    "ecosystem": { "href": "/api/v1/ecosystem", "description": "Architecture principles and framework decision" },
+    "dataLayer": { "href": "/api/v1/data-layer", "description": "Local-first and cloud data layer specification" },
+    "pipeline": { "href": "/api/v1/pipeline", "description": "Open data pipeline stages" },
+    "sovereignty": { "href": "/api/v1/sovereignty", "description": "Technology sovereignty assessments" },
+    "health": { "href": "/api/v1/health", "description": "Service health check" }
+  }
+}
+```
+
+### Example
+
+```bash
+curl https://registry.mukoko.com/api/v1
+```

@@ -1,0 +1,46 @@
+---
+title: "Sovereignty — mukoko registry API"
+description: "GET /api/v1/sovereignty — technology sovereignty assessments and removed dependencies."
+---
+
+# Sovereignty
+
+## `GET /api/v1/sovereignty`
+
+Returns technology sovereignty assessments for current dependencies and a list of removed technologies. Sovereignty evaluation ensures the Mukoko ecosystem avoids vendor lock-in and prioritizes open-source, self-hostable infrastructure.
+
+### Response Shape
+
+| Field | Type | Description |
+|---|---|---|
+| `assessments` | `array` | Sovereignty evaluations for current technologies |
+| `removed` | `array` | Technologies removed from the stack with rationale |
+
+### Example Assessment
+
+```json
+{
+  "technology": "Supabase",
+  "category": "cloud",
+  "verdict": "acceptable",
+  "rationale": "Open-source, self-hostable. Postgres underneath. Exit strategy: migrate to raw Postgres.",
+  "selfHostable": true,
+  "openSource": true
+}
+```
+
+### Example Removed Technology
+
+```json
+{
+  "technology": "Firebase",
+  "reason": "Proprietary lock-in. No self-hosting. Data stored on Google infrastructure outside Africa.",
+  "replacedBy": "Supabase + CouchDB"
+}
+```
+
+### Example
+
+```bash
+curl https://registry.mukoko.com/api/v1/sovereignty
+```
