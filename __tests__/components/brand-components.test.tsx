@@ -51,16 +51,10 @@ describe("MineralStrip", () => {
     expect(strip?.children).toHaveLength(5)
   })
 
-  it("defaults to vertical orientation", () => {
+  it("renders as vertical (left border only)", () => {
     const { container } = render(<MineralStrip />)
     const strip = container.querySelector("[data-slot='mineral-strip']")
     expect(strip?.className).toContain("flex-col")
-  })
-
-  it("supports horizontal orientation", () => {
-    const { container } = render(<MineralStrip orientation="horizontal" />)
-    const strip = container.querySelector("[data-slot='mineral-strip']")
-    expect(strip?.className).toContain("flex-row")
   })
 
   it("is aria-hidden", () => {

@@ -1,0 +1,1132 @@
+openapi: "3.1.0"
+info:
+  title: Mukoko Architecture API
+  version: "1.0.0"
+  description: |
+    Unified API for the Mukoko ecosystem — components, brand, architecture, and design system.
+
+    The Mukoko Architecture API follows resource-oriented design principles. All resources
+    are served as JSON with schema.org JSON-LD metadata, CORS headers, and CDN-friendly caching.
+
+    **Base URL:** `https://registry.mukoko.com/api/v1`
+
+    **Registry:** 94 items (82 UI components, 3 hooks, 9 lib utilities)
+  contact:
+    name: Nyuchi Africa
+    url: https://nyuchi.com
+  license:
+    name: MIT
+    identifier: MIT
+
+servers:
+  - url: https://registry.mukoko.com/api/v1
+    description: Production
+  - url: http://localhost:3000/api/v1
+    description: Development
+
+tags:
+  - name: Discovery
+    description: API metadata and health
+  - name: Brand
+    description: Five African Minerals design system
+  - name: Registry
+    description: Component registry (shadcn-compatible)
+  - name: Architecture
+    description: Ecosystem architecture, data layer, pipeline, sovereignty
+  - name: Database
+    description: Document store management (Supabase backend)
+
+paths:
+  /:
+    get:
+      summary: API Discovery
+      description: Returns a discovery document listing all available resources.
+      operationId: getApiDiscovery
+      tags: [Discovery]
+      responses:
+        "200":
+          description: Discovery document with schema.org WebAPI metadata
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDiscovery"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /brand:
+    get:
+      summary: Brand System
+      description: |
+        Returns the complete Mukoko brand system — Five African Minerals palette,
+        typography, spacing, ecosystem brands, accessibility standards, and voice & tone.
+
+        Includes schema.org JSON-LD metadata (`@context`, `@type: Brand`).
+      operationId: getBrandSystem
+      tags: [Brand]
+      responses:
+        "200":
+          description: Complete brand system
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BrandSystem"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /ui:
+    get:
+      summary: Component Registry Index
+      description: |
+        Returns metadata for all 94 registry items (82 UI components, 3 hooks, 9 lib utilities).
+        Reads from Supabase when configured, falls back to registry.json.
+      operationId: getRegistryIndex
+      tags: [Registry]
+      responses:
+        "200":
+          description: Registry index
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegistryIndex"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /ui/{name}:
+    get:
+      summary: Individual Component
+      description: |
+        Returns a single component with inline source code.
+        Metadata from Supabase (if configured), source code always from filesystem.
+      operationId: getComponent
+      tags: [Registry]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Component name in kebab-case (e.g., "button", "use-toast")
+          schema:
+            type: string
+            pattern: "^[a-z][a-z0-9-]*$"
+          examples:
+            ui:
+              value: button
+              summary: A UI component
+            hook:
+              value: use-toast
+              summary: A hook
+            lib:
+              value: utils
+              summary: A library utility
+      responses:
+        "200":
+          description: Component with source code
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegistryItem"
+        "400":
+          description: Invalid component name
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Component not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /ecosystem:
+    get:
+      summary: Ecosystem Architecture
+      description: |
+        Returns architecture principles (Ubuntu, local-first, mobile-first,
+        open-source/sovereign, open-data) and the framework decision (Next.js + Capacitor).
+
+        Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
+      operationId: getEcosystem
+      tags: [Architecture]
+      responses:
+        "200":
+          description: Ecosystem architecture
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EcosystemArchitecture"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /data-layer:
+    get:
+      summary: Data Layer Architecture
+      description: |
+        Returns the local-first data layer (RxDB, SQLite, IndexedDB),
+        cloud services (Supabase, CouchDB), and data ownership rules.
+
+        Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
+      operationId: getDataLayer
+      tags: [Architecture]
+      responses:
+        "200":
+          description: Data layer specification
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataLayerArchitecture"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /pipeline:
+    get:
+      summary: Open Data Pipeline
+      description: |
+        Returns the open data pipeline stages — Redpanda event streaming,
+        Apache Flink PII stripping, and Apache Doris analytics.
+
+        Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
+      operationId: getPipeline
+      tags: [Architecture]
+      responses:
+        "200":
+          description: Pipeline stages
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineArchitecture"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /sovereignty:
+    get:
+      summary: Technology Sovereignty
+      description: |
+        Returns sovereignty assessments for every technology in the Mukoko stack,
+        including removed technologies and migration notes.
+
+        Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
+      operationId: getSovereignty
+      tags: [Architecture]
+      responses:
+        "200":
+          description: Sovereignty assessments
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SovereigntyReport"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /health:
+    get:
+      summary: Health Check
+      description: |
+        Returns structured health status for monitoring.
+        Compatible with Vercel, Datadog, and standard health check protocols.
+        No caching — always returns live status.
+      operationId: getHealth
+      tags: [Discovery]
+      responses:
+        "200":
+          description: All checks passing
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "no-cache, no-store"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+        "503":
+          description: One or more checks failing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /db:
+    get:
+      summary: Database Status
+      description: |
+        Returns the status of the Supabase document store — connection status,
+        row counts, and whether the database has been seeded.
+      operationId: getDatabaseStatus
+      tags: [Database]
+      responses:
+        "200":
+          description: Database status
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "no-cache"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatabaseStatus"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      summary: Seed Database
+      description: |
+        Seeds the Supabase database from registry.json and other hardcoded sources.
+        Requires SUPABASE_SERVICE_ROLE_KEY for write access. Idempotent (uses upsert).
+      operationId: seedDatabase
+      tags: [Database]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum: ["seed"]
+                  default: "seed"
+      responses:
+        "200":
+          description: Database seeded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedResult"
+        "400":
+          description: Unknown action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "503":
+          description: Supabase not configured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  headers:
+    CachePublic:
+      schema:
+        type: string
+        example: "public, max-age=3600, s-maxage=86400"
+    CorsWildcard:
+      schema:
+        type: string
+        example: "*"
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+
+    # ── Discovery ──────────────────────────────────────────────────
+
+    ApiDiscovery:
+      type: object
+      required: ["@context", "@type", name, version, description, homepage, resources]
+      properties:
+        $schema:
+          type: string
+          example: "https://registry.mukoko.com/schema/api.json"
+        "@context":
+          type: string
+          const: "https://schema.org"
+        "@type":
+          type: string
+          const: "WebAPI"
+        name:
+          type: string
+          example: "Mukoko Architecture API"
+        version:
+          type: string
+          example: "1.0.0"
+        description:
+          type: string
+        homepage:
+          type: string
+          format: uri
+          example: "https://registry.mukoko.com"
+        resources:
+          type: object
+          additionalProperties:
+            type: object
+            required: [href, description]
+            properties:
+              href:
+                type: string
+              description:
+                type: string
+
+    # ── Brand ──────────────────────────────────────────────────────
+
+    BrandSystem:
+      type: object
+      required: [$schema, version, name, minerals, ecosystem, typography, spacing]
+      properties:
+        $schema:
+          type: string
+          example: "https://registry.mukoko.com/schema/brand.json"
+        "@context":
+          type: string
+          const: "https://schema.org"
+        "@type":
+          type: string
+          const: "Brand"
+        version:
+          type: string
+          example: "7.0.0"
+        name:
+          type: string
+          example: "Mukoko Brand System"
+        lastUpdated:
+          type: string
+          format: date
+          example: "2026-03-09"
+        homepage:
+          type: string
+          format: uri
+          example: "https://registry.mukoko.com/brand"
+        minerals:
+          type: array
+          minItems: 5
+          maxItems: 5
+          items:
+            $ref: "#/components/schemas/Mineral"
+        ecosystem:
+          type: array
+          items:
+            $ref: "#/components/schemas/EcosystemBrand"
+        typography:
+          type: object
+          required: [fonts, scale]
+          properties:
+            fonts:
+              type: object
+              additionalProperties:
+                $ref: "#/components/schemas/FontSpec"
+            scale:
+              type: array
+              items:
+                $ref: "#/components/schemas/TypeScaleEntry"
+        spacing:
+          type: array
+          items:
+            $ref: "#/components/schemas/SpacingToken"
+        radii:
+          type: object
+          additionalProperties:
+            type: string
+        semanticColors:
+          type: array
+          items:
+            $ref: "#/components/schemas/SemanticColor"
+        backgrounds:
+          type: array
+          items:
+            $ref: "#/components/schemas/BackgroundToken"
+        componentSpecs:
+          type: array
+          items:
+            $ref: "#/components/schemas/ComponentSpec"
+        accessibility:
+          $ref: "#/components/schemas/Accessibility"
+        voiceAndTone:
+          $ref: "#/components/schemas/VoiceAndTone"
+        philosophy:
+          $ref: "#/components/schemas/Philosophy"
+
+    Mineral:
+      type: object
+      required: [name, hex, lightHex, darkHex, cssVar, origin, symbolism, usage]
+      properties:
+        name:
+          type: string
+          example: "cobalt"
+        hex:
+          type: string
+          pattern: "^#[0-9A-Fa-f]{6}$"
+          example: "#0047AB"
+        lightHex:
+          type: string
+          pattern: "^#[0-9A-Fa-f]{6}$"
+        darkHex:
+          type: string
+          pattern: "^#[0-9A-Fa-f]{6}$"
+        containerLight:
+          type: string
+          description: Light theme container background for this mineral
+        containerDark:
+          type: string
+          description: Dark theme container background for this mineral
+        cssVar:
+          type: string
+          example: "--color-cobalt"
+        origin:
+          type: string
+          description: African origin of this mineral
+        symbolism:
+          type: string
+        usage:
+          type: string
+
+    EcosystemBrand:
+      type: object
+      required: [name, meaning, language, role, mineral, url]
+      properties:
+        name:
+          type: string
+          example: "mukoko"
+        meaning:
+          type: string
+        language:
+          type: string
+          example: "Shona"
+        role:
+          type: string
+        description:
+          type: string
+        voice:
+          type: string
+        mineral:
+          type: string
+        url:
+          type: string
+          format: uri
+
+    FontSpec:
+      type: object
+      required: [family, usage, reason]
+      properties:
+        family:
+          type: string
+          example: "Noto Sans"
+        usage:
+          type: string
+        reason:
+          type: string
+
+    TypeScaleEntry:
+      type: object
+      required: [name, sizePx, sizeRem, lineHeight, weight, font, usage]
+      properties:
+        name:
+          type: string
+        sizePx:
+          type: number
+        sizeRem:
+          type: string
+        lineHeight:
+          type: string
+        weight:
+          type: integer
+        font:
+          type: string
+          enum: ["sans", "serif", "mono"]
+        usage:
+          type: string
+
+    SpacingToken:
+      type: object
+      required: [name, px, rem, usage]
+      properties:
+        name:
+          type: string
+        px:
+          type: number
+        rem:
+          type: string
+        usage:
+          type: string
+
+    SemanticColor:
+      type: object
+      required: [name, light, dark, usage]
+      properties:
+        name:
+          type: string
+        light:
+          type: string
+        dark:
+          type: string
+        usage:
+          type: string
+
+    BackgroundToken:
+      type: object
+      required: [name, light, dark, usage]
+      properties:
+        name:
+          type: string
+        light:
+          type: string
+        dark:
+          type: string
+        usage:
+          type: string
+
+    ComponentSpec:
+      type: object
+      required: [name, heights, padding, borderRadius, minTouchTarget, variants]
+      properties:
+        name:
+          type: string
+        heights:
+          type: object
+          additionalProperties:
+            type: number
+        padding:
+          type: string
+        borderRadius:
+          type: number
+        minTouchTarget:
+          type: number
+          minimum: 48
+        variants:
+          type: array
+          items:
+            type: string
+
+    Accessibility:
+      type: object
+      required: [standard, minTouchTarget]
+      properties:
+        standard:
+          type: string
+          example: "APCA 3.0 AAA"
+        contrastDescription:
+          type: string
+        minTouchTarget:
+          type: integer
+          minimum: 48
+        focusIndicator:
+          type: string
+        keyboardNavigation:
+          type: string
+        screenReaders:
+          type: string
+
+    VoiceAndTone:
+      type: object
+      required: [principles, doList, dontList]
+      properties:
+        principles:
+          type: array
+          items:
+            type: string
+        doList:
+          type: array
+          items:
+            type: string
+        dontList:
+          type: array
+          items:
+            type: string
+
+    Philosophy:
+      type: object
+      required: [name, meaning, pillars]
+      properties:
+        name:
+          type: string
+          example: "Ubuntu"
+        meaning:
+          type: string
+          example: "I am because we are"
+        pillars:
+          type: array
+          items:
+            type: object
+            required: [name, description]
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+
+    # ── Registry ───────────────────────────────────────────────────
+
+    RegistryIndex:
+      type: object
+      required: [$schema, name, homepage, items]
+      properties:
+        $schema:
+          type: string
+          const: "https://ui.shadcn.com/schema/registry.json"
+        name:
+          type: string
+          example: "mukoko"
+        homepage:
+          type: string
+          format: uri
+          example: "https://registry.mukoko.com"
+        items:
+          type: array
+          minItems: 94
+          items:
+            $ref: "#/components/schemas/RegistryItemSummary"
+
+    RegistryItemSummary:
+      type: object
+      required: [name, type, description, dependencies, registryDependencies]
+      properties:
+        name:
+          type: string
+          example: "button"
+        type:
+          type: string
+          enum: ["registry:ui", "registry:hook", "registry:lib"]
+        description:
+          type: string
+        dependencies:
+          type: array
+          items:
+            type: string
+        registryDependencies:
+          type: array
+          items:
+            type: string
+
+    RegistryItem:
+      type: object
+      required: [$schema, name, type, description, dependencies, registryDependencies, files]
+      properties:
+        $schema:
+          type: string
+          const: "https://ui.shadcn.com/schema/registry-item.json"
+        name:
+          type: string
+        type:
+          type: string
+          enum: ["registry:ui", "registry:hook", "registry:lib"]
+        description:
+          type: string
+        dependencies:
+          type: array
+          items:
+            type: string
+        registryDependencies:
+          type: array
+          items:
+            type: string
+        files:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/RegistryFile"
+
+    RegistryFile:
+      type: object
+      required: [path, type, content]
+      properties:
+        path:
+          type: string
+          example: "components/ui/button.tsx"
+        type:
+          type: string
+          example: "registry:ui"
+        content:
+          type: string
+          description: Full source code of the component file
+
+    # ── Architecture ───────────────────────────────────────────────
+
+    EcosystemArchitecture:
+      type: object
+      required: ["@context", "@type", name, principles, frameworkDecision]
+      properties:
+        "@context":
+          type: string
+          const: "https://schema.org"
+        "@type":
+          type: string
+          const: "TechArticle"
+        name:
+          type: string
+          example: "Mukoko Ecosystem Architecture"
+        principles:
+          type: array
+          minItems: 5
+          items:
+            $ref: "#/components/schemas/ArchitecturePrinciple"
+        frameworkDecision:
+          $ref: "#/components/schemas/FrameworkDecision"
+
+    ArchitecturePrinciple:
+      type: object
+      required: [name, title, description, rationale, implementation]
+      properties:
+        name:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        rationale:
+          type: string
+        implementation:
+          type: string
+
+    FrameworkDecision:
+      type: object
+      required: [name, approach, framework, rationale, sovereigntyAdvantage, platforms, harmonyOs]
+      properties:
+        name:
+          type: string
+        approach:
+          type: string
+        framework:
+          type: string
+        rationale:
+          type: string
+        sovereigntyAdvantage:
+          type: string
+        platforms:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlatformTarget"
+        harmonyOs:
+          type: object
+          required: [approach, rationale, status]
+          properties:
+            approach:
+              type: string
+            rationale:
+              type: string
+            status:
+              type: string
+
+    PlatformTarget:
+      type: object
+      required: [name, strategy, status]
+      properties:
+        name:
+          type: string
+        strategy:
+          type: string
+        status:
+          type: string
+          enum: ["production", "planned", "research"]
+
+    DataLayerArchitecture:
+      type: object
+      required: ["@context", "@type", name, localDataLayer, cloudLayer, dataOwnership]
+      properties:
+        "@context":
+          type: string
+          const: "https://schema.org"
+        "@type":
+          type: string
+          const: "TechArticle"
+        name:
+          type: string
+          example: "Mukoko Data Layer Architecture"
+        localDataLayer:
+          type: array
+          items:
+            $ref: "#/components/schemas/DataLayerTechnology"
+        cloudLayer:
+          type: array
+          items:
+            $ref: "#/components/schemas/CloudService"
+        dataOwnership:
+          type: array
+          items:
+            $ref: "#/components/schemas/DataOwnershipRule"
+
+    DataLayerTechnology:
+      type: object
+      required: [name, role, platform, description, sovereignty]
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        platform:
+          type: string
+          enum: ["native", "browser", "both"]
+        description:
+          type: string
+        sovereignty:
+          $ref: "#/components/schemas/SovereigntyAssessment"
+
+    CloudService:
+      type: object
+      required: [name, role, consistencyModel, database, dataCategories, description, sovereignty]
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        consistencyModel:
+          type: string
+          enum: ["strict", "eventual"]
+        database:
+          type: string
+        dataCategories:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        sovereignty:
+          $ref: "#/components/schemas/SovereigntyAssessment"
+
+    DataOwnershipRule:
+      type: object
+      required: [category, consistencyModel, database, examples, ownership, description]
+      properties:
+        category:
+          type: string
+        consistencyModel:
+          type: string
+          enum: ["strict", "eventual", "aggregate"]
+        database:
+          type: string
+        examples:
+          type: array
+          items:
+            type: string
+        conflictResolution:
+          type: string
+        ownership:
+          type: string
+          enum: ["user-private", "community-shared", "public-open"]
+        description:
+          type: string
+
+    PipelineArchitecture:
+      type: object
+      required: ["@context", "@type", name, stages]
+      properties:
+        "@context":
+          type: string
+          const: "https://schema.org"
+        "@type":
+          type: string
+          const: "TechArticle"
+        name:
+          type: string
+          example: "Mukoko Open Data Pipeline"
+        stages:
+          type: array
+          items:
+            $ref: "#/components/schemas/PipelineStage"
+
+    PipelineStage:
+      type: object
+      required: [name, role, description, sovereignty]
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        description:
+          type: string
+        sovereignty:
+          $ref: "#/components/schemas/SovereigntyAssessment"
+
+    SovereigntyReport:
+      type: object
+      required: ["@context", "@type", name, assessments, removedTechnologies]
+      properties:
+        "@context":
+          type: string
+          const: "https://schema.org"
+        "@type":
+          type: string
+          const: "TechArticle"
+        name:
+          type: string
+          example: "Mukoko Technology Sovereignty"
+        assessments:
+          type: array
+          items:
+            $ref: "#/components/schemas/SovereigntyAssessment"
+        removedTechnologies:
+          type: array
+          items:
+            $ref: "#/components/schemas/RemovedTechnology"
+
+    SovereigntyAssessment:
+      type: object
+      required: [technology, role, license, governance, sovereigntyRisk, forkable, selfHostable, rationale]
+      properties:
+        technology:
+          type: string
+        role:
+          type: string
+        license:
+          type: string
+        governance:
+          type: string
+        sovereigntyRisk:
+          type: string
+          enum: ["none", "low", "removed"]
+        forkable:
+          type: boolean
+        selfHostable:
+          type: boolean
+        rationale:
+          type: string
+
+    RemovedTechnology:
+      type: object
+      required: [name, previousRole, reason, replacement, migrationPath]
+      properties:
+        name:
+          type: string
+        previousRole:
+          type: string
+        reason:
+          type: string
+        replacement:
+          type: string
+        migrationPath:
+          type: string
+
+    # ── Health ─────────────────────────────────────────────────────
+
+    HealthStatus:
+      type: object
+      required: [status, timestamp, checks, version]
+      properties:
+        status:
+          type: string
+          enum: ["healthy", "degraded", "unhealthy"]
+        timestamp:
+          type: string
+          format: date-time
+        checks:
+          type: object
+          required: [registry, filesystem]
+          properties:
+            registry:
+              $ref: "#/components/schemas/HealthCheck"
+            filesystem:
+              $ref: "#/components/schemas/HealthCheck"
+        version:
+          type: string
+
+    HealthCheck:
+      type: object
+      required: [status, latencyMs]
+      properties:
+        status:
+          type: string
+          enum: ["pass", "fail"]
+        latencyMs:
+          type: integer
+        message:
+          type: string
+        itemCount:
+          type: integer
+
+    # ── Database ───────────────────────────────────────────────────
+
+    DatabaseStatus:
+      type: object
+      required: [status, provider]
+      properties:
+        status:
+          type: string
+          enum: ["seeded", "empty", "not_configured"]
+        provider:
+          type: string
+          example: "supabase"
+        dbStatus:
+          type: string
+          enum: ["connected", "error"]
+        components:
+          type: integer
+        docs:
+          type: integer
+        demos:
+          type: integer
+        message:
+          type: string
+
+    SeedResult:
+      type: object
+      required: [action, result, message]
+      properties:
+        action:
+          type: string
+          example: "seed"
+        result:
+          type: object
+          required: [components, docs, demos, total, duration]
+          properties:
+            components:
+              type: integer
+            docs:
+              type: integer
+            demos:
+              type: integer
+            total:
+              type: integer
+            duration:
+              type: integer
+              description: Seed duration in milliseconds
+        message:
+          type: string
+
+  responses:
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

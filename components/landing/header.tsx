@@ -53,7 +53,13 @@ export function Header() {
             Brand
           </a>
           <a
-            href="/api/r"
+            href="/architecture"
+            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Architecture
+          </a>
+          <a
+            href="/api/v1"
             className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >
             API
@@ -118,7 +124,14 @@ export function Header() {
             Brand
           </a>
           <a
-            href="/api/r"
+            href="/architecture"
+            onClick={() => setMobileOpen(false)}
+            className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Architecture
+          </a>
+          <a
+            href="/api/v1"
             onClick={() => setMobileOpen(false)}
             className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >

@@ -716,6 +716,197 @@
       ]
     },
     {
+      "name": "data-table",
+      "type": "registry:ui",
+      "description": "A powerful table with sorting, filtering, pagination, and column visibility powered by TanStack Table.",
+      "dependencies": ["@tanstack/react-table", "lucide-react"],
+      "registryDependencies": ["button", "dropdown-menu", "input", "table"],
+      "files": [
+        {
+          "path": "components/ui/data-table.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "description": "A date picker component with calendar popover, supporting single date and date range selection.",
+      "dependencies": ["date-fns", "lucide-react"],
+      "registryDependencies": ["button", "calendar", "popover"],
+      "files": [
+        {
+          "path": "components/ui/date-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "typography",
+      "type": "registry:ui",
+      "description": "A set of typographic components for consistent text styling — headings, paragraphs, blockquotes, lists, and inline code.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/typography.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "search-bar",
+      "type": "registry:ui",
+      "description": "A search input with keyboard shortcut support, clear button, and command palette integration.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["input", "button", "kbd"],
+      "files": [
+        {
+          "path": "components/ui/search-bar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "user-menu",
+      "type": "registry:ui",
+      "description": "A user profile dropdown menu with avatar, name, email, navigation links, and sign-out action.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["avatar", "dropdown-menu"],
+      "files": [
+        {
+          "path": "components/ui/user-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stats-card",
+      "type": "registry:ui",
+      "description": "A metric card displaying a value with optional trend indicator, icon, and description.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["card"],
+      "files": [
+        {
+          "path": "components/ui/stats-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "filter-bar",
+      "type": "registry:ui",
+      "description": "A horizontal bar of toggleable filter chips with optional counts and a clear button.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["badge", "button"],
+      "files": [
+        {
+          "path": "components/ui/filter-bar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "share-dialog",
+      "type": "registry:ui",
+      "description": "A share dialog with copy-to-clipboard, social media links (X, LinkedIn, Email), and native share support.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["dialog", "button", "input", "separator"],
+      "files": [
+        {
+          "path": "components/ui/share-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "notification-bell",
+      "type": "registry:ui",
+      "description": "A notification bell icon with unread count badge and a popover panel listing notifications.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "popover", "scroll-area", "separator"],
+      "files": [
+        {
+          "path": "components/ui/notification-bell.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "file-upload",
+      "type": "registry:ui",
+      "description": "A drag-and-drop file upload zone with file list, size validation, and remove actions.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
+      "files": [
+        {
+          "path": "components/ui/file-upload.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "description": "A button that copies text to the clipboard with visual feedback on success.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
+      "files": [
+        {
+          "path": "components/ui/copy-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "status-indicator",
+      "type": "registry:ui",
+      "description": "A status dot with optional label indicating online, offline, busy, away, or live states.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/status-indicator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "type": "registry:ui",
+      "description": "A vertical timeline for displaying chronological events with mineral-colored dots.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/timeline.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pricing-card",
+      "type": "registry:ui",
+      "description": "A pricing tier card with plan name, price, feature list, CTA button, and optional highlight badge.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["badge", "button", "card", "separator"],
+      "files": [
+        {
+          "path": "components/ui/pricing-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "rating",
+      "type": "registry:ui",
+      "description": "An interactive star rating component with hover preview, read-only mode, and mineral gold accent.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "components/ui/rating.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "use-mobile",
       "type": "registry:hook",
       "description": "A hook to detect if the current device is mobile.",
@@ -889,6 +1080,95 @@
         {
           "path": "hooks/use-memory-pressure.ts",
           "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "architecture",
+      "type": "registry:lib",
+      "description": "Mukoko ecosystem architecture specification — local-first data strategy, cloud infrastructure, open data pipeline, and technology sovereignty assessment.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "lib/architecture.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "mukoko-sidebar",
+      "type": "registry:ui",
+      "description": "Standardized sidebar for all Mukoko ecosystem apps. Wraps the sidebar primitive with Mukoko branding, mineral accent strip, section-based navigation, and automatic active state detection. Works across docs, dashboards, settings, and any other context.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["sidebar", "separator", "badge", "tooltip"],
+      "files": [
+        {
+          "path": "components/mukoko/mukoko-sidebar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mukoko-header",
+      "type": "registry:ui",
+      "description": "Standardized sticky header for all Mukoko ecosystem apps. Includes logo with app name suffix, desktop navigation, theme toggle, and mobile sidebar trigger.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "sidebar"],
+      "files": [
+        {
+          "path": "components/mukoko/mukoko-header.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mukoko-footer",
+      "type": "registry:ui",
+      "description": "Standardized footer for all Mukoko ecosystem apps. Includes mineral color dots, product links grid, and Nyuchi branding.",
+      "dependencies": [],
+      "registryDependencies": ["separator"],
+      "files": [
+        {
+          "path": "components/mukoko/mukoko-footer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mukoko-bottom-nav",
+      "type": "registry:ui",
+      "description": "Mobile-only bottom navigation bar for Mukoko ecosystem apps. Fixed to bottom with backdrop blur, active state indicator using mineral accent colors, and safe area padding.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/mukoko/mukoko-bottom-nav.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "detail-layout",
+      "type": "registry:ui",
+      "description": "Shared detail page layout for articles, events, and listings across the Mukoko ecosystem. Includes hero image, back navigation, metadata row, prose content area, and optional aside column.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["separator"],
+      "files": [
+        {
+          "path": "components/mukoko/detail-layout.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dashboard-layout",
+      "type": "registry:ui",
+      "description": "Full app shell composing MukokoHeader, MukokoSidebar, and MukokoBottomNav into a responsive dashboard layout with collapsible sidebar and mobile navigation.",
+      "dependencies": [],
+      "registryDependencies": ["mukoko-sidebar", "mukoko-header", "mukoko-bottom-nav", "sidebar"],
+      "files": [
+        {
+          "path": "components/mukoko/dashboard-layout.tsx",
+          "type": "registry:ui"
         }
       ]
     }

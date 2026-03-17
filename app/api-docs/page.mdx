@@ -1,0 +1,51 @@
+---
+title: "API Reference — mukoko registry"
+description: "Mukoko Architecture API v1: unified, versioned, resource-oriented API for components, brand, and architecture."
+---
+
+# API Reference
+
+The Mukoko Architecture API is a unified, versioned, resource-oriented API. All endpoints live under `/api/v1/`.
+
+## Base URL
+
+| Environment | URL |
+|---|---|
+| Production | `https://registry.mukoko.com/api/v1` |
+| Development | `http://localhost:3000/api/v1` |
+
+## Common Headers
+
+All responses include the following headers:
+
+| Header | Value |
+|---|---|
+| `Content-Type` | `application/json` |
+| `Cache-Control` | `public, max-age=3600, s-maxage=86400` |
+| `Access-Control-Allow-Origin` | `*` |
+
+## Authentication
+
+No authentication required. All endpoints are public.
+
+## Endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | [`/api/v1`](/api-docs/discovery) | API discovery document |
+| `GET` | [`/api/v1/brand`](/api-docs/brand) | Brand system (minerals, typography, colors) |
+| `GET` | [`/api/v1/ui`](/api-docs/ui) | Component registry index |
+| `GET` | [`/api/v1/ui/{name}`](/api-docs/ui) | Individual component with source |
+| `GET` | [`/api/v1/ecosystem`](/api-docs/ecosystem) | Architecture principles and framework decision |
+| `GET` | [`/api/v1/data-layer`](/api-docs/data-layer) | Local-first and cloud data layer specification |
+| `GET` | [`/api/v1/pipeline`](/api-docs/pipeline) | Open data pipeline stages |
+| `GET` | [`/api/v1/sovereignty`](/api-docs/sovereignty) | Technology sovereignty assessments |
+| `GET` | [`/api/v1/health`](/api-docs/health) | Service health check |
+
+## JSON-LD
+
+All responses include schema.org `@context` and `@type` fields for semantic web compatibility.
+
+## OpenAPI Specification
+
+Full specification available in `openapi.yaml` at the repository root.

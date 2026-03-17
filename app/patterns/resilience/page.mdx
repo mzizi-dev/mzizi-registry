@@ -1,0 +1,196 @@
+---
+title: "Resilience"
+description: "Netflix Hystrix-inspired circuit breakers, retry with exponential backoff, and fallback chains. Prevent cascading failures."
+---
+
+import { CircuitBreakerDemo } from "@/components/patterns/circuit-breaker-demo"
+
+<div className="mb-4">
+  <a href="/patterns" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+    Patterns
+  </a>
+  <span className="mx-2 text-muted-foreground">/</span>
+</div>
+
+# Resilience
+
+Netflix Hystrix-inspired circuit breakers, retry with exponential backoff, and fallback chains. Prevent cascading failures when external APIs go down.
+
+## Install from registry
+
+```bash
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/circuit-breaker
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/retry
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/fallback-chain
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/timeout
+```
+
+## Circuit Breaker
+
+State machine that tracks failures per external provider. When failures exceed the threshold, the circuit "opens" and rejects all requests immediately — preventing wasted time and cascading failures. After a cooldown period, it enters HALF_OPEN to probe with one request.
+
+<CircuitBreakerDemo />
+
+### Usage
+
+```ts filename="lib/weather-client.ts"
+import { CircuitBreaker, CircuitOpenError, PROVIDER_CONFIGS } from "@/lib/circuit-breaker"
+
+// Create breakers for each external provider
+const tomorrowBreaker = new CircuitBreaker({
+  name: "tomorrow-io",
+  ...PROVIDER_CONFIGS["tomorrow-io"],
+  // 3 failures → open, 2min cooldown, 5s timeout
+})
+
+const openMeteoBreaker = new CircuitBreaker({
+  name: "open-meteo",
+  ...PROVIDER_CONFIGS["open-meteo"],
+  // 5 failures → open, 5min cooldown, 8s timeout
+})
+
+// Execute through the breaker
+try {
+  const data = await tomorrowBreaker.execute(async () => {
+    const res = await fetch("https://api.tomorrow.io/v4/weather/forecast")
+    return res.json()
+  })
+} catch (error) {
+  if (error instanceof CircuitOpenError) {
+    // Circuit is open — use fallback provider or cache
+    return openMeteoBreaker.execute(() => fetchOpenMeteo(lat, lon))
+  }
+  throw error
+}
+```
+
+### Pre-configured provider settings
+
+Based on production tuning from mukoko-weather. Import `PROVIDER_CONFIGS` for battle-tested defaults.
+
+| Provider | Threshold | Cooldown | Window | Timeout |
+|---|---|---|---|---|
+| `tomorrow-io` | 3 failures | 2 min | 5 min | 5s |
+| `open-meteo` | 5 failures | 5 min | 5 min | 8s |
+| `anthropic` | 3 failures | 5 min | 10 min | 15s |
+| `mongodb` | 5 failures | 1 min | 2 min | 10s |
+
+## Retry with Backoff
+
+Exponential backoff with jitter prevents thundering herd. Configurable retry predicate lets you skip retries for 4xx errors.
+
+```ts filename="retry example"
+import { withRetry } from "@/lib/retry"
+
+// Basic — 3 attempts, 1s base delay, exponential + jitter
+const data = await withRetry(() =>
+  fetch("/api/weather").then(r => r.json())
+)
+
+// Custom — don't retry client errors
+const result = await withRetry(
+  () => fetchProvider(),
+  {
+    maxAttempts: 5,
+    baseDelayMs: 500,
+    retryIf: (error) => {
+      // Only retry 5xx errors
+      if (error instanceof Response && error.status < 500) return false
+      return true
+    },
+  }
+)
+
+// Git push pattern (from CLAUDE.md)
+await withRetry(() => gitPush(), {
+  maxAttempts: 4,
+  baseDelayMs: 2000,  // 2s → 4s → 8s → 16s
+  jitter: false,
+})
+```
+
+## Fallback Chain
+
+Sequential fallback from mukoko-weather production: try each data source in order, return the first success. Each stage has its own timeout.
+
+```ts filename="fallback-chain example"
+import { withFallback, AllStagesFailedError } from "@/lib/fallback-chain"
+
+// Weather data fallback (production pattern from mukoko-weather)
+const weather = await withFallback([
+  {
+    name: "mongodb-cache",
+    execute: () => getCachedWeather(slug),
+    timeoutMs: 2000,
+  },
+  {
+    name: "tomorrow-io",
+    execute: () => tomorrowBreaker.execute(() => fetchTomorrowIO(lat, lon)),
+    timeoutMs: 5000,
+  },
+  {
+    name: "open-meteo",
+    execute: () => openMeteoBreaker.execute(() => fetchOpenMeteo(lat, lon)),
+    timeoutMs: 8000,
+  },
+  {
+    name: "seasonal-estimate",
+    execute: () => getSeasonalEstimate(lat, lon, month),
+    // No timeout — this is the last resort
+  },
+])
+
+// Logs automatically:
+// [mukoko:fallback] WARN Stage "mongodb-cache" failed (timeout)
+// [mukoko:fallback] INFO Stage "tomorrow-io" succeeded
+```
+
+## Timeout
+
+Promise timeout wrapper used by circuit breaker and fallback chain. Operations that exceed the timeout reject with `TimeoutError`.
+
+```ts filename="timeout example"
+import { withTimeout, TimeoutError } from "@/lib/timeout"
+
+try {
+  const data = await withTimeout(
+    () => fetch("https://api.tomorrow.io/v4/weather"),
+    5000,
+    "tomorrow-io"
+  )
+} catch (error) {
+  if (error instanceof TimeoutError) {
+    // error.durationMs === 5000
+    // error.label === "tomorrow-io"
+    log.warn("Provider timed out", { data: { ms: error.durationMs } })
+  }
+}
+```
+
+## Full resilience stack
+
+In production, combine all four utilities: circuit breaker wraps each provider, retry handles transient failures, fallback chain orchestrates multiple providers, timeout prevents hangs.
+
+```ts
+// The complete resilience stack
+const data = await withFallback([
+  {
+    name: "primary",
+    execute: () => withRetry(
+      () => primaryBreaker.execute(() => fetchPrimary()),
+      { maxAttempts: 2, baseDelayMs: 500 }
+    ),
+    timeoutMs: 10000,
+  },
+  {
+    name: "fallback",
+    execute: () => fallbackBreaker.execute(() => fetchFallback()),
+    timeoutMs: 8000,
+  },
+  {
+    name: "cache",
+    execute: () => getFromCache(),
+    timeoutMs: 2000,
+  },
+])
+```

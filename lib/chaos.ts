@@ -8,7 +8,7 @@
  * SAFETY: All chaos functions are disabled by default. You must explicitly
  * set `enabled: true` to activate them. Never enable in production.
  *
- * Install via: npx shadcn@latest add https://registry.mukoko.com/api/r/chaos
+ * Install via: npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/chaos
  */
 
 import { createLogger } from "@/lib/observability"
