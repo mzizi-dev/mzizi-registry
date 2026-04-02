@@ -22,7 +22,12 @@ export async function GET(
     if (!name || typeof name !== "string") {
       return NextResponse.json(
         { error: "Invalid component name" },
-        { status: 400 }
+        {
+          status: 400,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
       )
     }
 
@@ -58,7 +63,12 @@ export async function GET(
       if (!fs.existsSync(registryPath)) {
         return NextResponse.json(
           { error: "Registry not available" },
-          { status: 500 }
+          {
+            status: 500,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
         )
       }
       const raw = fs.readFileSync(registryPath, "utf-8")
@@ -70,7 +80,12 @@ export async function GET(
       logger.warn("Component not found", { data: { name } })
       return NextResponse.json(
         { error: `Component "${name}" not found in registry` },
-        { status: 404 }
+        {
+          status: 404,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
       )
     }
 
@@ -102,7 +117,12 @@ export async function GET(
     if (files.length === 0) {
       return NextResponse.json(
         { error: `No source files available for "${name}"` },
-        { status: 404 }
+        {
+          status: 404,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
       )
     }
 
@@ -132,7 +152,12 @@ export async function GET(
     })
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      {
+        status: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     )
   }
 }

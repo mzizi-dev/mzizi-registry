@@ -54,7 +54,13 @@ export async function GET() {
     })
     return NextResponse.json(
       { error: "Failed to get database info" },
-      { status: 500 }
+      {
+        status: 500,
+        headers: {
+          "Cache-Control": "no-cache",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     )
   }
 }
@@ -69,7 +75,12 @@ export async function POST(request: Request) {
     if (!isSupabaseConfigured()) {
       return NextResponse.json(
         { error: "Supabase not configured" },
-        { status: 503 }
+        {
+          status: 503,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
       )
     }
 
@@ -81,16 +92,28 @@ export async function POST(request: Request) {
 
       logger.info("Database seeded", { data: { ...result } })
 
-      return NextResponse.json({
-        action,
-        result,
-        message: "Database seeded successfully",
-      })
+      return NextResponse.json(
+        {
+          action,
+          result,
+          message: "Database seeded successfully",
+        },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
     }
 
     return NextResponse.json(
       { error: `Unknown action: ${action}. Use "seed".` },
-      { status: 400 }
+      {
+        status: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     )
   } catch (error) {
     logger.error("Database seed error", {
@@ -98,7 +121,12 @@ export async function POST(request: Request) {
     })
     return NextResponse.json(
       { error: "Failed to seed database" },
-      { status: 500 }
+      {
+        status: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     )
   }
 }

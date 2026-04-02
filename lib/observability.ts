@@ -39,7 +39,7 @@ function formatPrefix(level: LogLevel, module?: string): string {
  * ```ts
  * import { log } from "@/lib/observability"
  *
- * log.info("Server started", { module: "api", data: { port: 3000 } })
+ * log.info("Server started", { module: "api", data: { port: 11736 } })
  * log.error("Failed to fetch", { module: "weather", error: new Error("timeout") })
  * log.warn("Cache miss", { module: "registry", traceId: "req-123" })
  * ```
