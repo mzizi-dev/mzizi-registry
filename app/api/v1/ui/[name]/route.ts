@@ -10,7 +10,8 @@ const logger = createLogger("registry")
  * GET /api/v1/ui/[name] — Individual component with inline source
  *
  * Reads metadata from Supabase if configured, falls back to registry.json.
- * Source code is always read from the filesystem (git-managed files).
+ * Source code is served from DB (source_code column) if available,
+ * otherwise read from the filesystem (git-managed files).
  */
 export async function GET(
   _request: Request,
@@ -38,6 +39,7 @@ export async function GET(
       dependencies: string[]
       registryDependencies: string[]
       files: Array<{ path: string; type: string }>
+      sourceCode?: string | null
     } | null = null
 
     const useDb =
@@ -53,6 +55,7 @@ export async function GET(
           dependencies: component.dependencies,
           registryDependencies: component.registry_dependencies,
           files: component.files,
+          sourceCode: component.source_code,
         }
       }
     }
@@ -89,28 +92,57 @@ export async function GET(
       )
     }
 
-    // Source code is always from the filesystem (git-managed)
+    // Build files array with source content
     const files: Array<{ path: string; type: string; content: string }> = []
 
-    for (const file of item.files) {
-      try {
-        const filePath = path.join(process.cwd(), file.path)
-        if (!fs.existsSync(filePath)) {
-          logger.warn("File not found, skipping", {
-            data: { filePath, component: name },
+    if (item.sourceCode && item.files.length > 0) {
+      // Use source_code from DB for the primary file
+      files.push({
+        path: item.files[0].path,
+        type: item.files[0].type,
+        content: item.sourceCode,
+      })
+
+      // Read any additional files from filesystem
+      for (let i = 1; i < item.files.length; i++) {
+        const file = item.files[i]
+        try {
+          const filePath = path.join(process.cwd(), file.path)
+          if (!fs.existsSync(filePath)) continue
+          const content = fs.readFileSync(filePath, "utf-8")
+          files.push({ path: file.path, type: file.type, content })
+        } catch (fileError) {
+          logger.error(`Error reading file ${file.path}`, {
+            error:
+              fileError instanceof Error
+                ? fileError
+                : new Error(String(fileError)),
+            data: { component: name },
           })
-          continue
         }
-        const content = fs.readFileSync(filePath, "utf-8")
-        files.push({ path: file.path, type: file.type, content })
-      } catch (fileError) {
-        logger.error(`Error reading file ${file.path}`, {
-          error:
-            fileError instanceof Error
-              ? fileError
-              : new Error(String(fileError)),
-          data: { component: name },
-        })
+      }
+    } else {
+      // Read all files from filesystem
+      for (const file of item.files) {
+        try {
+          const filePath = path.join(process.cwd(), file.path)
+          if (!fs.existsSync(filePath)) {
+            logger.warn("File not found, skipping", {
+              data: { filePath, component: name },
+            })
+            continue
+          }
+          const content = fs.readFileSync(filePath, "utf-8")
+          files.push({ path: file.path, type: file.type, content })
+        } catch (fileError) {
+          logger.error(`Error reading file ${file.path}`, {
+            error:
+              fileError instanceof Error
+                ? fileError
+                : new Error(String(fileError)),
+            data: { component: name },
+          })
+        }
       }
     }
 
@@ -127,7 +159,12 @@ export async function GET(
     }
 
     logger.info("Component served", {
-      data: { name, fileCount: files.length, source: useDb ? "supabase" : "fs" },
+      data: {
+        name,
+        fileCount: files.length,
+        source: useDb ? "supabase" : "fs",
+        sourceCodeFromDb: Boolean(item.sourceCode),
+      },
     })
 
     const registryItem = {
