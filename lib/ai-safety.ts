@@ -5,7 +5,7 @@
  * mukoko-weather's production Python guards. Every Mukoko app that
  * integrates Claude or Shamwari AI must use these utilities.
  *
- * Install via: npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/ai-safety
+ * Install via: npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/ai-safety
  */
 
 import { createLogger } from "@/lib/observability"

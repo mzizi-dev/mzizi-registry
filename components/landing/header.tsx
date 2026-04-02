@@ -22,24 +22,21 @@ const products = [
   { label: "bundu", href: "https://bundu.family" },
   { label: "news", href: "https://news.mukoko.com" },
   { label: "weather", href: "https://weather.mukoko.com" },
+  { label: "shamwari", href: "https://shamwari.ai" },
 ]
 
 const navLinks = [
   { label: "Docs", href: "/docs" },
   { label: "Components", href: "/components" },
-  { label: "Blocks", href: "/blocks" },
-  { label: "Charts", href: "/charts" },
   { label: "Brand", href: "/brand" },
-  { label: "Foundations", href: "/foundations" },
-  { label: "Patterns", href: "/patterns" },
-  { label: "Architecture", href: "/architecture" },
 ]
 
 const mobileMoreLinks = [
-  { label: "Design", href: "/design" },
-  { label: "Content", href: "/content" },
-  { label: "Registry", href: "/registry" },
-  { label: "API", href: "/api/v1" },
+  { label: "Blocks", href: "/blocks" },
+  { label: "Charts", href: "/charts" },
+  { label: "Foundations", href: "/foundations" },
+  { label: "Patterns", href: "/patterns" },
+  { label: "Architecture", href: "/architecture" },
 ]
 
 export function Header() {
@@ -49,7 +46,7 @@ export function Header() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
         <a href="/" className="flex items-center">
-          <MukokoLogo size={26} suffix="registry" />
+          <MukokoLogo size={26} suffix="design" />
         </a>
 
         {/* Desktop nav */}
@@ -69,7 +66,7 @@ export function Header() {
           <ThemeToggle />
           <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
             <a
-              href="https://github.com/nyuchitech/mukoko-registry"
+              href="https://github.com/nyuchitech/design-portal"
               target="_blank"
               rel="noopener noreferrer"
               className="gap-2"
@@ -139,7 +136,7 @@ export function Header() {
 
           <div className="my-1 h-px bg-border" />
           <a
-            href="https://github.com/nyuchitech/mukoko-registry"
+            href="https://github.com/nyuchitech/design-portal"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"

@@ -15,9 +15,9 @@ const fontMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "mukoko — Component Registry",
+  title: "nyuchi — Design Portal",
   description:
-    "A curated collection of production-ready UI components built on the Five African Minerals design system. Install directly into your project with the shadcn CLI.",
+    "294 production-ready UI components, blocks, and charts built on the Five African Minerals design system. The design system for the nyuchi ecosystem. Install directly into your project with the shadcn CLI.",
 }
 
 export const viewport: Viewport = {
@@ -29,8 +29,8 @@ export const viewport: Viewport = {
 
 const navbar = (
   <Navbar
-    logo={<MukokoLogo size={24} suffix="registry" />}
-    projectLink="https://github.com/nyuchitech/mukoko-registry"
+    logo={<MukokoLogo size={24} suffix="design" />}
+    projectLink="https://github.com/nyuchitech/design-portal"
   />
 )
 
@@ -72,7 +72,7 @@ export default async function RootLayout({
         <Layout
           navbar={navbar}
           pageMap={await getPageMap()}
-          docsRepositoryBase="https://github.com/nyuchitech/mukoko-registry/tree/main"
+          docsRepositoryBase="https://github.com/nyuchitech/design-portal/tree/main"
           footer={footer}
         >
           {children}

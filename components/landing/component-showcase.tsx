@@ -37,7 +37,7 @@ function PreviewCard({
   children: React.ReactNode
 }) {
   const [copied, setCopied] = useState(false)
-  const installCmd = `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${name}`
+  const installCmd = `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${name}`
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-foreground/12">

@@ -18,21 +18,16 @@ describe("Header Navigation", () => {
     expect(brandLinks[0]).toHaveAttribute("href", "/brand")
   })
 
-  it("renders all main navigation links", () => {
+  it("renders primary navigation links in header", () => {
     render(<Header />)
     expect(screen.getAllByText("Docs").length).toBeGreaterThan(0)
     expect(screen.getAllByText("Components").length).toBeGreaterThan(0)
-    expect(screen.getAllByText("Blocks").length).toBeGreaterThan(0)
-    expect(screen.getAllByText("Charts").length).toBeGreaterThan(0)
     expect(screen.getAllByText("Brand").length).toBeGreaterThan(0)
-    expect(screen.getAllByText("Foundations").length).toBeGreaterThan(0)
-    expect(screen.getAllByText("Patterns").length).toBeGreaterThan(0)
-    expect(screen.getAllByText("Architecture").length).toBeGreaterThan(0)
   })
 
-  it("renders logo with registry suffix", () => {
+  it("renders logo with design suffix", () => {
     render(<Header />)
-    expect(screen.getByText(/mukoko/)).toBeInTheDocument()
-    expect(screen.getByText(/registry/)).toBeInTheDocument()
+    expect(screen.getByText(/nyuchi/)).toBeInTheDocument()
+    expect(screen.getByText(/design/)).toBeInTheDocument()
   })
 })

@@ -4,7 +4,7 @@
  * Powers both the documentation pages (/brand/*) and the brand API (/api/brand).
  * All hex values match the CSS custom properties in app/globals.css.
  *
- * Install via: npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/utils
+ * Install via: npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/utils
  */
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -357,13 +357,13 @@ export const TYPOGRAPHY_FONTS = {
 // ─── Full Brand System (for API serialization) ──────────────────────────────
 
 export const BRAND_SYSTEM = {
-  $schema: "https://registry.mukoko.com/schema/brand.json",
+  $schema: "https://design.nyuchi.com/schema/brand.json",
   "@context": "https://schema.org",
   "@type": "Brand",
   version: "4.0.1",
   name: "Mukoko Brand System",
   lastUpdated: "2026-03-09",
-  homepage: "https://registry.mukoko.com/brand",
+  homepage: "https://design.nyuchi.com/brand",
   minerals: MINERALS,
   ecosystem: ECOSYSTEM_BRANDS,
   typography: {
