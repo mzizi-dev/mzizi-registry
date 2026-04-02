@@ -41,6 +41,7 @@ function FeaturedCard({
 }: FeaturedCardProps) {
   const classes = cn(featuredCardVariants({ mineral, className }))
   const content = (
+    <>
       {image && (
         <div className="aspect-video w-full overflow-hidden">
           <img
