@@ -279,6 +279,9 @@ export function createMukokoMcpServer(): McpServer {
     },
     async ({ category }) => {
       const brand = await getBrandSystem()
+      if (!brand) {
+        return { content: [{ type: "text" as const, text: "Brand system not available. Database may not be seeded." }], isError: true }
+      }
       const data: Record<string, unknown> = {}
       if (category === "all" || category === "minerals") data.minerals = brand.minerals
       if (category === "all" || category === "semantic-colors") data.semanticColors = brand.semanticColors
@@ -397,6 +400,9 @@ export { ${pascalName}, ${camelVariants}Variants }
     },
     async ({ brand: brandName }) => {
       const brandData = await getBrandSystem()
+      if (!brandData) {
+        return { content: [{ type: "text" as const, text: "Brand system not available. Database may not be seeded." }], isError: true }
+      }
       const found = brandData.ecosystem.find(
         (b: { name: string }) => b.name === brandName.toLowerCase()
       )
