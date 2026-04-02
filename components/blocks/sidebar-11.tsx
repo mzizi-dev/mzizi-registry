@@ -1,18 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
   ChevronDown,
   Home,
-  BarChart3,
   Users,
-  FileText,
   Settings,
-  CreditCard,
-  Shield,
-  Bell,
   Zap,
 } from "lucide-react"
 

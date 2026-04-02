@@ -21,7 +21,9 @@ interface LogContext {
 }
 
 const LOG_METHODS: Record<LogLevel, (...args: unknown[]) => void> = {
+  // eslint-disable-next-line no-console -- logger implementation
   debug: console.debug,
+  // eslint-disable-next-line no-console -- logger implementation
   info: console.info,
   warn: console.warn,
   error: console.error,

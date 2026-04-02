@@ -10,8 +10,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod"
 import {
-  isSupabaseConfigured,
-  isSeeded,
   getAllComponents,
   getComponent,
   getBrandSystem,

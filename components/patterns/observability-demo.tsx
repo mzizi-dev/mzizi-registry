@@ -18,13 +18,6 @@ const LEVEL_STYLES: Record<string, string> = {
   error: "text-destructive",
 }
 
-const LEVEL_BADGES: Record<string, string> = {
-  debug: "secondary",
-  info: "outline",
-  warn: "outline",
-  error: "destructive",
-}
-
 export function ObservabilityDemo() {
   const [entries, setEntries] = useState<LogEntry[]>([])
 

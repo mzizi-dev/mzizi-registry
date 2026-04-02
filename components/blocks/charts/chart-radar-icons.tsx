@@ -1,6 +1,6 @@
 "use client"
 
-import { Sprout, Pickaxe, Plane, Monitor, ShoppingCart } from "lucide-react"
+import { Sprout } from "lucide-react"
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"

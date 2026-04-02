@@ -1,3 +1,5 @@
+/* eslint-disable no-console -- CLI seed script with intentional stdout logging */
+
 /**
  * Seed the Supabase database from existing hardcoded sources.
  *

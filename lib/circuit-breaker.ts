@@ -10,7 +10,7 @@
  * Install via: npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/circuit-breaker
  */
 
-import { withTimeout, TimeoutError } from "@/lib/timeout"
+import { withTimeout } from "@/lib/timeout"
 import { createLogger } from "@/lib/observability"
 
 const logger = createLogger("circuit-breaker")

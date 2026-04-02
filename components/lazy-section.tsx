@@ -7,7 +7,6 @@ import {
   useCallback,
   type ReactNode,
 } from "react"
-import { useIsMobile } from "@/hooks/use-mobile"
 import { createLogger } from "@/lib/observability"
 
 const logger = createLogger("lazy-section")
@@ -133,7 +132,7 @@ export function LazySection({
   className,
 }: LazySectionProps) {
   const [mounted, setMounted] = useState(disabled)
-  const [visible, setVisible] = useState(disabled)
+  const [_visible, setVisible] = useState(disabled)
   const containerRef = useRef<HTMLDivElement>(null)
   const idRef = useRef(`lazy-${sectionCounter++}-${section}`)
 

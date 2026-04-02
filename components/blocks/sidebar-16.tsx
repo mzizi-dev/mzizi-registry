@@ -23,7 +23,6 @@ import {
   Sun,
   LogOut,
   HelpCircle,
-  Zap,
 } from "lucide-react"
 
 const workspaces = [
