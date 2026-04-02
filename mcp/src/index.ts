@@ -270,14 +270,13 @@ server.resource(
   { description: "Mukoko ecosystem architecture, data layer, and sovereignty information" },
   async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/v1/ecosystem");
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      const archPath = join(PROJECT_ROOT, "lib", "architecture.ts");
+      const source = readFileSync(archPath, "utf-8");
       return {
         contents: [{
           uri: "mukoko://architecture",
-          mimeType: "application/json",
-          text: JSON.stringify(data, null, 2),
+          mimeType: "text/typescript",
+          text: source,
         }],
       };
     } catch {
@@ -285,7 +284,7 @@ server.resource(
         contents: [{
           uri: "mukoko://architecture",
           mimeType: "text/plain",
-          text: "Architecture API not available. Ensure the dev server is running at localhost:3000.",
+          text: "Architecture data not available. Ensure lib/architecture.ts exists in the project root.",
         }],
       };
     }
@@ -301,51 +300,45 @@ server.tool(
     category: z.enum(["principles", "framework", "local-data-layer", "cloud-layer", "open-data-pipeline", "data-ownership", "sovereignty", "removed", "all"]).describe("Architecture category to retrieve"),
   },
   async ({ category }) => {
-    const endpointMap: Record<string, string> = {
-      "principles": "/api/v1/ecosystem",
-      "framework": "/api/v1/ecosystem",
-      "local-data-layer": "/api/v1/data-layer",
-      "cloud-layer": "/api/v1/data-layer",
-      "data-ownership": "/api/v1/data-layer",
-      "open-data-pipeline": "/api/v1/pipeline",
-      "sovereignty": "/api/v1/sovereignty",
-      "removed": "/api/v1/sovereignty",
-    };
-
     try {
+      const archPath = join(PROJECT_ROOT, "lib", "architecture.ts");
+      const source = readFileSync(archPath, "utf-8");
+
       if (category === "all") {
-        const endpoints = ["/api/v1/ecosystem", "/api/v1/data-layer", "/api/v1/pipeline", "/api/v1/sovereignty"];
-        const results = await Promise.all(
-          endpoints.map(async (ep) => {
-            const res = await fetch(`http://localhost:3000${ep}`);
-            if (!res.ok) throw new Error(`HTTP ${res.status} from ${ep}`);
-            return res.json();
-          })
-        );
-        const merged = {
-          ecosystem: results[0],
-          dataLayer: results[1],
-          pipeline: results[2],
-          sovereignty: results[3],
-        };
         return {
-          content: [{ type: "text" as const, text: JSON.stringify(merged, null, 2) }],
+          content: [{ type: "text" as const, text: `# Mukoko Architecture System\n\nFull source from lib/architecture.ts:\n\n\`\`\`typescript\n${source}\n\`\`\`` }],
         };
       }
 
-      const endpoint = endpointMap[category];
-      const res = await fetch(`http://localhost:3000${endpoint}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      // Extract relevant section from the source
+      const sectionMap: Record<string, string> = {
+        "principles": "ARCHITECTURE_PRINCIPLES",
+        "framework": "FRAMEWORK_DECISION",
+        "local-data-layer": "LOCAL_DATA_LAYER",
+        "cloud-layer": "CLOUD_LAYER",
+        "open-data-pipeline": "OPEN_DATA_PIPELINE",
+        "data-ownership": "DATA_OWNERSHIP_RULES",
+        "sovereignty": "SOVEREIGNTY_SUMMARY",
+        "removed": "REMOVED_TECHNOLOGIES",
+      };
+
+      const exportName = sectionMap[category];
+      const pattern = new RegExp(`export const ${exportName}[\\s\\S]*?(?=\\n\\n// ───|\\nexport |$)`);
+      const match = source.match(pattern);
 
       return {
-        content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
+        content: [{
+          type: "text" as const,
+          text: match
+            ? `# ${exportName}\n\n\`\`\`typescript\n${match[0].trim()}\n\`\`\``
+            : `Section "${category}" not found in lib/architecture.ts. Available exports: ${Object.values(sectionMap).join(", ")}`,
+        }],
       };
     } catch {
       return {
         content: [{
           type: "text" as const,
-          text: "Architecture API not available. Ensure the dev server is running at localhost:3000.",
+          text: "Architecture data not available. Ensure lib/architecture.ts exists in the project root.",
         }],
         isError: true,
       };
@@ -591,7 +584,7 @@ ${JSON.stringify(registryEntry, null, 2)}
 2. Customize the CVA variant classes with appropriate Tailwind utilities
 3. Add the registry entry to \`registry.json\`
 4. Run \`pnpm registry:build\` to regenerate static files
-5. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\`
+5. Verify: \`curl http://localhost:11736/api/v1/ui/${name}\`
 `,
       }],
     };

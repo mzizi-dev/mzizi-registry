@@ -5,9 +5,9 @@
   "scripts": {
     "build": "next build",
     "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
-    "dev": "next dev",
+    "dev": "next dev --port ${PORT:-11736}",
     "lint": "eslint .",
-    "start": "next start",
+    "start": "next start --port ${PORT:-11736}",
     "registry:build": "node scripts/build-registry.js",
     "test": "vitest run",
     "test:watch": "vitest",

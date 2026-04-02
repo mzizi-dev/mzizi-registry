@@ -10,6 +10,17 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod"
 import fs from "fs"
 import path from "path"
+import {
+  ARCHITECTURE_PRINCIPLES,
+  FRAMEWORK_DECISION,
+  LOCAL_DATA_LAYER,
+  CLOUD_LAYER,
+  OPEN_DATA_PIPELINE,
+  DATA_OWNERSHIP_RULES,
+  SOVEREIGNTY_SUMMARY,
+  REMOVED_TECHNOLOGIES,
+  ARCHITECTURE_SYSTEM,
+} from "@/lib/architecture"
 
 // ─── Data Loading ──────────────────────────────────────────────────────────
 
@@ -234,28 +245,13 @@ export function createMukokoMcpServer(): McpServer {
     "architecture",
     "mukoko://architecture",
     { description: "Mukoko ecosystem architecture, data layer, and sovereignty information" },
-    async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/v1/ecosystem")
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = await res.json()
-        return {
-          contents: [{
-            uri: "mukoko://architecture",
-            mimeType: "application/json",
-            text: JSON.stringify(data, null, 2),
-          }],
-        }
-      } catch {
-        return {
-          contents: [{
-            uri: "mukoko://architecture",
-            mimeType: "text/plain",
-            text: "Architecture API not available. Ensure the dev server is running at localhost:3000.",
-          }],
-        }
-      }
-    }
+    async () => ({
+      contents: [{
+        uri: "mukoko://architecture",
+        mimeType: "application/json",
+        text: JSON.stringify(ARCHITECTURE_SYSTEM, null, 2),
+      }],
+    })
   )
 
   // ─── Tools ───────────────────────────────────────────────────────────
@@ -267,54 +263,21 @@ export function createMukokoMcpServer(): McpServer {
       category: z.enum(["principles", "framework", "local-data-layer", "cloud-layer", "open-data-pipeline", "data-ownership", "sovereignty", "removed", "all"]).describe("Architecture category to retrieve"),
     },
     async ({ category }) => {
-      const endpointMap: Record<string, string> = {
-        "principles": "/api/v1/ecosystem",
-        "framework": "/api/v1/ecosystem",
-        "local-data-layer": "/api/v1/data-layer",
-        "cloud-layer": "/api/v1/data-layer",
-        "data-ownership": "/api/v1/data-layer",
-        "open-data-pipeline": "/api/v1/pipeline",
-        "sovereignty": "/api/v1/sovereignty",
-        "removed": "/api/v1/sovereignty",
+      const dataMap: Record<string, unknown> = {
+        "principles": { principles: ARCHITECTURE_PRINCIPLES },
+        "framework": { frameworkDecision: FRAMEWORK_DECISION },
+        "local-data-layer": { localDataLayer: LOCAL_DATA_LAYER },
+        "cloud-layer": { cloudLayer: CLOUD_LAYER },
+        "open-data-pipeline": { openDataPipeline: OPEN_DATA_PIPELINE },
+        "data-ownership": { dataOwnership: DATA_OWNERSHIP_RULES },
+        "sovereignty": { sovereigntySummary: SOVEREIGNTY_SUMMARY },
+        "removed": { removedTechnologies: REMOVED_TECHNOLOGIES },
       }
 
-      try {
-        if (category === "all") {
-          const endpoints = ["/api/v1/ecosystem", "/api/v1/data-layer", "/api/v1/pipeline", "/api/v1/sovereignty"]
-          const results = await Promise.all(
-            endpoints.map(async (ep) => {
-              const res = await fetch(`http://localhost:3000${ep}`)
-              if (!res.ok) throw new Error(`HTTP ${res.status} from ${ep}`)
-              return res.json()
-            })
-          )
-          const merged = {
-            ecosystem: results[0],
-            dataLayer: results[1],
-            pipeline: results[2],
-            sovereignty: results[3],
-          }
-          return {
-            content: [{ type: "text" as const, text: JSON.stringify(merged, null, 2) }],
-          }
-        }
+      const data = category === "all" ? ARCHITECTURE_SYSTEM : dataMap[category]
 
-        const endpoint = endpointMap[category]
-        const res = await fetch(`http://localhost:3000${endpoint}`)
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = await res.json()
-
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
-        }
-      } catch {
-        return {
-          content: [{
-            type: "text" as const,
-            text: "Architecture API not available. Ensure the dev server is running at localhost:3000.",
-          }],
-          isError: true,
-        }
+      return {
+        content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
       }
     }
   )
@@ -515,7 +478,7 @@ export { ${pascalName}, ${camelVariants}Variants }
       return {
         content: [{
           type: "text" as const,
-          text: `## Scaffolded Component: ${pascalName}\n\n### Source Code (components/ui/${name}.tsx)\n\n\`\`\`tsx\n${componentSource}\`\`\`\n\n### Registry Entry (add to registry.json items array)\n\n\`\`\`json\n${JSON.stringify(registryEntry, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Save the source code to \`components/ui/${name}.tsx\`\n2. Customize the CVA variant classes with appropriate Tailwind utilities\n3. Add the registry entry to \`registry.json\`\n4. Run \`pnpm registry:build\` to regenerate static files\n5. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\`\n`,
+          text: `## Scaffolded Component: ${pascalName}\n\n### Source Code (components/ui/${name}.tsx)\n\n\`\`\`tsx\n${componentSource}\`\`\`\n\n### Registry Entry (add to registry.json items array)\n\n\`\`\`json\n${JSON.stringify(registryEntry, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Save the source code to \`components/ui/${name}.tsx\`\n2. Customize the CVA variant classes with appropriate Tailwind utilities\n3. Add the registry entry to \`registry.json\`\n4. Run \`pnpm registry:build\` to regenerate static files\n5. Verify: \`curl http://localhost:11736/api/v1/ui/${name}\`\n`,
         }],
       }
     }
