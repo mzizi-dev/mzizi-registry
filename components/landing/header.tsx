@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Github, ExternalLink, Menu, X } from "lucide-react"
+import { Github, ExternalLink, Menu, X, ChevronDown } from "lucide-react"
 import { MukokoLogo } from "@/components/brand/mukoko-logo"
 import { ThemeToggle } from "@/components/theme-toggle"
 
@@ -16,6 +16,24 @@ const products = [
   { label: "weather", href: "https://weather.mukoko.com" },
 ]
 
+const navLinks = [
+  { label: "Docs", href: "/docs" },
+  { label: "Components", href: "/components" },
+  { label: "Blocks", href: "/blocks" },
+  { label: "Charts", href: "/charts" },
+  { label: "Brand", href: "/brand" },
+  { label: "Foundations", href: "/foundations" },
+  { label: "Patterns", href: "/patterns" },
+  { label: "Architecture", href: "/architecture" },
+]
+
+const mobileMoreLinks = [
+  { label: "Design", href: "/design" },
+  { label: "Content", href: "/content" },
+  { label: "Registry", href: "/registry" },
+  { label: "API", href: "/api/v1" },
+]
+
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -27,43 +45,16 @@ export function Header() {
         </a>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-1 md:flex">
-          <a
-            href="#components"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Components
-          </a>
-          <a
-            href="#catalog"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Catalog
-          </a>
-          <a
-            href="/patterns"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Patterns
-          </a>
-          <a
-            href="/brand"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Brand
-          </a>
-          <a
-            href="/architecture"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Architecture
-          </a>
-          <a
-            href="/api/v1"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            API
-          </a>
+        <nav className="hidden items-center gap-0.5 lg:flex">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
 
         <div className="flex items-center gap-1">
@@ -83,7 +74,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
@@ -94,49 +85,32 @@ export function Header() {
 
       {/* Mobile nav drawer */}
       {mobileOpen && (
-        <nav className="flex flex-col gap-1 border-t border-border bg-background px-4 pb-4 pt-2 md:hidden">
-          <a
-            href="#components"
-            onClick={() => setMobileOpen(false)}
-            className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Components
-          </a>
-          <a
-            href="#catalog"
-            onClick={() => setMobileOpen(false)}
-            className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Catalog
-          </a>
-          <a
-            href="/patterns"
-            onClick={() => setMobileOpen(false)}
-            className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Patterns
-          </a>
-          <a
-            href="/brand"
-            onClick={() => setMobileOpen(false)}
-            className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Brand
-          </a>
-          <a
-            href="/architecture"
-            onClick={() => setMobileOpen(false)}
-            className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Architecture
-          </a>
-          <a
-            href="/api/v1"
-            onClick={() => setMobileOpen(false)}
-            className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            API
-          </a>
+        <nav className="flex flex-col gap-1 border-t border-border bg-background px-4 pb-4 pt-2 lg:hidden">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              {link.label}
+            </a>
+          ))}
+
+          <div className="my-1 h-px bg-border" />
+          <span className="px-3 py-1.5 text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
+            More
+          </span>
+          {mobileMoreLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              {link.label}
+            </a>
+          ))}
 
           <div className="my-1 h-px bg-border" />
           <span className="px-3 py-1.5 text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
