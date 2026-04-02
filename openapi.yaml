@@ -427,7 +427,7 @@ components:
           const: "Brand"
         version:
           type: string
-          example: "7.0.0"
+          example: "4.0.1"
         name:
           type: string
           example: "Mukoko Brand System"

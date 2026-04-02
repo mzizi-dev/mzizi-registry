@@ -4,7 +4,7 @@ All notable changes to the mukoko registry are documented here.
 
 This project follows [Semantic Versioning](https://semver.org/).
 
-## [7.0.0] - 2026-03-09
+## [4.0.1] - 2026-03-09
 
 ### Added
 - **Brand documentation hub** replacing legacy assets.nyuchi.com
@@ -12,7 +12,7 @@ This project follows [Semantic Versioning](https://semver.org/).
   - `/brand/colors` — Five African Minerals palette with interactive swatches
   - `/brand/components` — Component visual specifications
   - `/brand/guidelines` — Typography, spacing, accessibility, voice & tone
-- **Brand API** at `GET /api/brand` — complete brand system as JSON (v7.0.0)
+- **Brand API** at `GET /api/brand` — complete brand system as JSON (v4.0.1)
 - **Brand data module** (`lib/brand.ts`) — single source of truth for all brand data
 - **Brand components** — ColorSwatch, TokenTable, MineralStrip, BrandCard, TypeScale, SpacingScale
 - **Skeleton loading states** for brand pages
@@ -29,10 +29,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 - Header navigation — added "Brand" link
-- Footer — added Brand section links, bumped version to v7.0.0
+- Footer — added Brand section links, bumped version to v4.0.1
 - Wordmark sizing — increased from `text-sm` to `text-xl` to match icon height
 - Package name — `my-project` → `mukoko-registry`
-- Package version — `0.1.0` → `7.0.0`
+- Package version — `0.1.0` → `4.0.1`
 - CLAUDE.md — comprehensive update with testing, CI/CD, versioning, brand documentation sections
 
 ### Design Standards

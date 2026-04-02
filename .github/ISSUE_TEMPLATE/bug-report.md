@@ -28,7 +28,7 @@ What actually happens.
 
 - **Browser:** (e.g., Chrome 120)
 - **OS:** (e.g., macOS 14)
-- **Registry version:** (e.g., 7.0.0)
+- **Registry version:** (e.g., 4.0.1)
 - **Component:** (if applicable, e.g., button, card)
 
 ## Screenshots

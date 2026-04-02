@@ -14,7 +14,7 @@
 npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/<component>
 ```
 
-**Version:** 7.0.0
+**Version:** 4.0.1
 
 **Live at:** registry.mukoko.com
 
@@ -210,7 +210,7 @@ mukoko-registry/
 ├── next.config.mjs               # Next.js config
 ├── tsconfig.json                 # TypeScript config (strict, path aliases)
 ├── postcss.config.mjs            # PostCSS with @tailwindcss/postcss
-└── package.json                  # Dependencies and scripts (v7.0.0)
+└── package.json                  # Dependencies and scripts (v4.0.1)
 ```
 
 ---
@@ -678,7 +678,7 @@ Three workflows in `.github/workflows/`:
 
 ### Versioning
 
-- **Current version:** 7.0.0 (in `package.json`, `lib/brand.ts`, and footer)
+- **Current version:** 4.0.1 (in `package.json`, `lib/brand.ts`, and footer)
 - **Scheme:** Semantic versioning (major.minor.patch)
 - **Release process:**
   1. Update version in `package.json`

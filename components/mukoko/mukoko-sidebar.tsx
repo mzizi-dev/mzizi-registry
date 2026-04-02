@@ -151,7 +151,7 @@ export function MukokoSidebar({
           <div className="flex items-center justify-between px-2 py-1">
             <ThemeToggle />
             <span className="font-mono text-[10px] text-muted-foreground">
-              v7.0.0
+              v4.0.1
             </span>
           </div>
         )}

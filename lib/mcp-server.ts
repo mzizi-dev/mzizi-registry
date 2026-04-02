@@ -35,7 +35,7 @@ import {
 export function createMukokoMcpServer(): McpServer {
   const server = new McpServer({
     name: "mukoko-registry",
-    version: "7.0.0",
+    version: "4.0.1",
   })
 
   // ─── Resources ───────────────────────────────────────────────────────

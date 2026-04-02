@@ -402,7 +402,7 @@ export const ARCHITECTURE_SYSTEM = {
   $schema: "https://registry.mukoko.com/schema/architecture.json",
   "@context": "https://schema.org",
   "@type": "TechArticle",
-  version: "7.0.0",
+  version: "4.0.1",
   name: "Mukoko Architecture System",
   lastUpdated: "2026-03-14",
   homepage: "https://registry.mukoko.com/architecture",
