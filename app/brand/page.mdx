@@ -68,20 +68,68 @@ own brand with its own audience.
   ))}
 </div>
 
-## {PHILOSOPHY.name} Philosophy
+## {PHILOSOPHY.name} — *{PHILOSOPHY.shona}*
 
 <p className="mt-2 max-w-2xl text-lg italic text-muted-foreground">
   &ldquo;{PHILOSOPHY.meaning}&rdquo;
 </p>
 
-<div className="mt-8 grid gap-4 sm:grid-cols-5">
+<p className="mt-4 max-w-2xl text-sm text-muted-foreground">
+  {PHILOSOPHY.description}
+</p>
+
+### The Four Pillars
+
+<div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
   {PHILOSOPHY.pillars.map((pillar) => (
     <div
       key={pillar.name}
-      className="rounded-xl border border-border p-4 text-center"
+      className="rounded-xl border border-border p-4"
     >
       <p className="font-medium text-foreground">{pillar.name}</p>
       <p className="mt-1 text-xs text-muted-foreground">{pillar.description}</p>
+    </div>
+  ))}
+</div>
+
+### The Five Ubuntu Questions
+
+Every product decision runs through five questions. If the answer to any is no, we do not ship.
+
+<div className="mt-6 grid gap-2">
+  {PHILOSOPHY.ubuntuQuestions.map((q, i) => (
+    <div key={i} className="flex items-start gap-3 rounded-xl border border-border p-3">
+      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-xs text-muted-foreground">
+        {String(i + 1).padStart(2, "0")}
+      </span>
+      <p className="text-sm text-foreground">{q}</p>
+    </div>
+  ))}
+</div>
+
+### Musha · Basa · Nhaka
+
+Every mini-app operates in three modes simultaneously.
+
+<div className="mt-6 grid gap-4 sm:grid-cols-3">
+  {PHILOSOPHY.triMode.map((mode) => (
+    <div key={mode.name} className="rounded-xl border border-border p-4">
+      <p className="font-serif text-lg font-semibold text-foreground">{mode.name}</p>
+      <p className="font-mono text-xs text-muted-foreground">{mode.meaning}</p>
+      <p className="mt-2 text-xs text-muted-foreground">{mode.description}</p>
+    </div>
+  ))}
+</div>
+
+### The Seven Covenants
+
+<div className="mt-6 grid gap-2">
+  {PHILOSOPHY.covenants.map((c, i) => (
+    <div key={i} className="flex items-start gap-3 rounded-xl border border-border p-3">
+      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-xs text-muted-foreground">
+        {String(i + 1).padStart(2, "0")}
+      </span>
+      <p className="text-sm font-medium text-foreground">{c}</p>
     </div>
   ))}
 </div>

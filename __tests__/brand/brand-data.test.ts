@@ -230,10 +230,30 @@ describe("Brand Data Module", () => {
     it("is Ubuntu", () => {
       expect(PHILOSOPHY.name).toBe("Ubuntu")
       expect(PHILOSOPHY.meaning).toBe("I am because we are")
+      expect(PHILOSOPHY.shona).toBe("Ndiri nekuti tiri")
     })
 
-    it("has 5 pillars", () => {
-      expect(PHILOSOPHY.pillars).toHaveLength(5)
+    it("has 4 architectural pillars", () => {
+      expect(PHILOSOPHY.pillars).toHaveLength(4)
+      const names = PHILOSOPHY.pillars.map((p) => p.name)
+      expect(names).toContain("Local-First")
+      expect(names).toContain("Mobile-First")
+      expect(names).toContain("Open Source")
+      expect(names).toContain("Open Data")
+    })
+
+    it("has 5 Ubuntu questions", () => {
+      expect(PHILOSOPHY.ubuntuQuestions).toHaveLength(5)
+    })
+
+    it("has 3 tri-mode operations", () => {
+      expect(PHILOSOPHY.triMode).toHaveLength(3)
+      const names = PHILOSOPHY.triMode.map((m) => m.name)
+      expect(names).toEqual(["Musha", "Basa", "Nhaka"])
+    })
+
+    it("has 7 covenants", () => {
+      expect(PHILOSOPHY.covenants).toHaveLength(7)
     })
   })
 
