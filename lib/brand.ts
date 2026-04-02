@@ -361,12 +361,35 @@ export const VOICE_AND_TONE = {
 export const PHILOSOPHY = {
   name: "Ubuntu",
   meaning: "I am because we are",
+  shona: "Ndiri nekuti tiri",
+  description:
+    "Every decision we make, every feature we build, every line of code we write runs through a single filter: does this strengthen the community, or does it extract from it?",
   pillars: [
-    { name: "Family", description: "The foundation of community" },
-    { name: "Community", description: "Collective strength through shared purpose" },
-    { name: "Society", description: "Building systems that serve everyone" },
-    { name: "Environment", description: "Technology in harmony with nature" },
-    { name: "Spirituality", description: "Meaning and connection beyond the material" },
+    { name: "Local-First", description: "The device is the primary processing surface. Works in a village with 2G." },
+    { name: "Mobile-First", description: "Built for the reality of the African smartphone market, not San Francisco." },
+    { name: "Open Source", description: "Every critical dependency is sovereign. Speed is rented, truth is owned." },
+    { name: "Open Data", description: "Platform data belongs to Africa. Personal data stays sovereign in your pod." },
+  ],
+  ubuntuQuestions: [
+    "Does this strengthen community?",
+    "Does this respect human dignity?",
+    "Does this serve the collective good?",
+    "Would we explain this proudly to our elders?",
+    "Does this align with 'I am because we are'?",
+  ],
+  triMode: [
+    { name: "Musha", meaning: "Home", description: "The foreground experience — the app you open and dwell in." },
+    { name: "Basa", meaning: "Work", description: "The background service — data and capabilities other apps consume." },
+    { name: "Nhaka", meaning: "Heritage", description: "The open data contribution — anonymised data flowing into the continental knowledge commons." },
+  ],
+  covenants: [
+    "We will never sell your personal data.",
+    "We will never design for addiction.",
+    "We will never let advertisers control what you see.",
+    "We will never abandon African creators.",
+    "We will never choose proprietary when open source is adequate.",
+    "We will never treat African languages as an afterthought.",
+    "We will never abandon our values when growth demands it.",
   ],
 }
 
@@ -395,7 +418,7 @@ export const BRAND_SYSTEM = {
   "@context": "https://schema.org",
   "@type": "Brand",
   version: "4.0.1",
-  name: "Mukoko Brand System",
+  name: "The Bundu Brand System",
   lastUpdated: "2026-03-09",
   homepage: "https://design.nyuchi.com/brand",
   minerals: MINERALS,
