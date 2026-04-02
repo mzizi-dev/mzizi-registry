@@ -139,35 +139,38 @@ export const MINERALS: Mineral[] = [
 ]
 
 export const ECOSYSTEM_BRANDS: EcosystemBrand[] = [
+  // ── Tier 1: Ecosystem ─────────────────────────────────────────────────────
   {
     name: "bundu",
     meaning: "Wilderness",
     language: "Shona",
-    role: "Parent ecosystem",
+    role: "Ecosystem",
     description:
-      "The overarching ecosystem vision. Technology serving African communities through interconnected, sustainable approaches rooted in ancestral wisdom.",
+      "The overarching ecosystem brand. All products, infrastructure, and services live under the bundu umbrella — technology serving African communities through interconnected, sustainable approaches rooted in ancestral wisdom.",
     voice: "Visionary, grounded, inclusive",
     mineral: "terracotta",
     url: "https://bundu.family",
   },
+  // ── Tier 2: Infrastructure & Enterprise ────────────────────────────────────
   {
     name: "nyuchi",
     meaning: "Bee",
     language: "Shona",
-    role: "Action layer",
+    role: "Infrastructure & enterprise",
     description:
-      "Collective action, pollination, community building. The industrious African bee spirit — workers building together and spreading ideas across communities.",
-    voice: "Energetic, communal, industrious",
+      "The infrastructure and enterprise brand. Developer tools, design systems, APIs, cloud services, and B2B products. The industrious engine that powers every app in the ecosystem.",
+    voice: "Technical, reliable, industrious",
     mineral: "gold",
     url: "https://nyuchi.com",
   },
+  // ── Tier 3: Consumer apps ──────────────────────────────────────────────────
   {
     name: "mukoko",
     meaning: "Beehive",
     language: "Shona",
-    role: "Structure layer",
+    role: "Consumer apps",
     description:
-      "Community gathering and storage. The digital home where the community lives, stores resources, and finds protection. Identity, journalism, social, events.",
+      "The consumer-facing app family. The digital home where the community lives — weather, news, super app, and everyday tools. Mukoko and its sister apps bring the ecosystem to life for end users.",
     voice: "Welcoming, structured, protective",
     mineral: "tanzanite",
     url: "https://mukoko.com",
@@ -176,9 +179,9 @@ export const ECOSYSTEM_BRANDS: EcosystemBrand[] = [
     name: "shamwari",
     meaning: "Friend",
     language: "Shona",
-    role: "Intelligence layer",
+    role: "AI companion",
     description:
-      "AI companion service. A genuine companion designed to help, not replace. Emphasizes human connection and warmth over cold efficiency.",
+      "The localized African AI. A genuine companion designed to help, not replace. Serves across the ecosystem — inside mukoko apps, nyuchi tools, and standalone.",
     voice: "Helpful, warm, intelligent",
     mineral: "cobalt",
     url: "https://shamwari.ai",
@@ -187,9 +190,9 @@ export const ECOSYSTEM_BRANDS: EcosystemBrand[] = [
     name: "nhimbe",
     meaning: "Gathering",
     language: "Shona",
-    role: "Events layer",
+    role: "Events platform",
     description:
-      "Community event celebrations. Bringing people together for shared experiences, cultural events, and collaborative gatherings.",
+      "Community events and gatherings. A mukoko sister app bringing people together for shared experiences, cultural events, and collaborative celebrations.",
     voice: "Celebratory, communal, vibrant",
     mineral: "malachite",
     url: "https://nhimbe.com",

@@ -14,13 +14,18 @@ const minerals = [
 ]
 
 const products = [
-  { label: "mukoko.com", href: "https://www.mukoko.com" },
+  // Ecosystem
+  { label: "bundu", href: "https://bundu.family" },
+  // Infrastructure & enterprise
+  { label: "nyuchi", href: "https://nyuchi.com" },
+  { label: "bushtrade", href: "https://bushtrade.co.zw" },
+  // Consumer apps
+  { label: "mukoko", href: "https://www.mukoko.com" },
+  { label: "weather", href: "https://weather.mukoko.com" },
+  { label: "news", href: "https://news.mukoko.com" },
   { label: "lingo", href: "https://lingo.mukoko.com" },
   { label: "nhimbe", href: "https://nhimbe.com" },
-  { label: "bushtrade", href: "https://bushtrade.co.zw" },
-  { label: "bundu", href: "https://bundu.family" },
-  { label: "news", href: "https://news.mukoko.com" },
-  { label: "weather", href: "https://weather.mukoko.com" },
+  // AI
   { label: "shamwari", href: "https://shamwari.ai" },
 ]
 
