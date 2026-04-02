@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server"
-import fs from "fs"
-import path from "path"
 import { createLogger } from "@/lib/observability"
+import {
+  isSupabaseConfigured,
+  getDatabaseInfo,
+  isSeeded,
+} from "@/lib/db"
 
 const logger = createLogger("health")
 
@@ -9,37 +12,30 @@ interface HealthCheck {
   status: "pass" | "fail"
   latencyMs: number
   message?: string
+  itemCount?: number
 }
 
-async function checkRegistry(): Promise<HealthCheck & { itemCount?: number }> {
+async function checkDatabase(): Promise<HealthCheck & { seeded?: boolean }> {
   const start = performance.now()
   try {
-    const registryPath = path.join(process.cwd(), "registry.json")
-    const raw = fs.readFileSync(registryPath, "utf-8")
-    const registry = JSON.parse(raw)
-    const itemCount = registry.items?.length ?? 0
-    return {
-      status: "pass",
-      latencyMs: Math.round(performance.now() - start),
-      itemCount,
+    if (!isSupabaseConfigured()) {
+      return {
+        status: "fail",
+        latencyMs: Math.round(performance.now() - start),
+        message: "Supabase not configured",
+      }
     }
-  } catch (error) {
-    return {
-      status: "fail",
-      latencyMs: Math.round(performance.now() - start),
-      message: error instanceof Error ? error.message : "Unknown error",
-    }
-  }
-}
 
-async function checkFilesystem(): Promise<HealthCheck> {
-  const start = performance.now()
-  try {
-    const testPath = path.join(process.cwd(), "package.json")
-    fs.accessSync(testPath, fs.constants.R_OK)
+    const [info, seeded] = await Promise.all([
+      getDatabaseInfo(),
+      isSeeded(),
+    ])
+
     return {
-      status: "pass",
+      status: info.status === "connected" ? "pass" : "fail",
       latencyMs: Math.round(performance.now() - start),
+      itemCount: info.components,
+      seeded,
     }
   } catch (error) {
     return {
@@ -54,15 +50,11 @@ async function checkFilesystem(): Promise<HealthCheck> {
  * GET /api/v1/health
  *
  * Returns structured health status for monitoring.
- * Compatible with Vercel, Datadog, and standard health check protocols.
  */
 export async function GET() {
-  const [registry, filesystem] = await Promise.all([
-    checkRegistry(),
-    checkFilesystem(),
-  ])
+  const database = await checkDatabase()
 
-  const checks = { registry, filesystem }
+  const checks = { database }
   const allPassing = Object.values(checks).every((c) => c.status === "pass")
   const anyFailing = Object.values(checks).some((c) => c.status === "fail")
 

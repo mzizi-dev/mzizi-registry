@@ -1,8 +1,4 @@
 import { NextResponse } from "next/server"
-import {
-  ARCHITECTURE_PRINCIPLES,
-  FRAMEWORK_DECISION,
-} from "@/lib/architecture"
 import { createLogger } from "@/lib/observability"
 import {
   isSupabaseConfigured,
@@ -13,75 +9,70 @@ import {
 
 const logger = createLogger("architecture")
 
+const CORS_CACHE = {
+  "Cache-Control": "public, max-age=3600, s-maxage=86400",
+  "Access-Control-Allow-Origin": "*",
+}
+
 export async function GET() {
   try {
-    const useDb =
-      isSupabaseConfigured() && (await isSeeded().catch(() => false))
-
-    if (useDb) {
-      const [dbPrinciples, dbFramework] = await Promise.all([
-        getArchitecturePrinciples().catch(() => null),
-        getFrameworkDecision().catch(() => null),
-      ])
-
-      if (dbPrinciples && dbPrinciples.length > 0) {
-        const principles = dbPrinciples.map((p) => ({
-          name: p.name,
-          title: p.title,
-          description: p.description,
-          rationale: p.rationale,
-          implementation: p.implementation,
-        }))
-
-        const frameworkDecision = dbFramework
-          ? {
-              name: dbFramework.name,
-              approach: dbFramework.approach,
-              framework: dbFramework.framework,
-              rationale: dbFramework.rationale,
-              sovereigntyAdvantage: dbFramework.sovereignty_advantage,
-              platforms: dbFramework.platforms,
-              harmonyOs: dbFramework.harmony_os,
-            }
-          : FRAMEWORK_DECISION
-
-        logger.info("Ecosystem architecture served from Supabase")
-
-        return NextResponse.json(
-          {
-            "@context": "https://schema.org",
-            "@type": "TechArticle",
-            name: "Mukoko Ecosystem Architecture",
-            principles,
-            frameworkDecision,
-          },
-          {
-            headers: {
-              "Cache-Control": "public, max-age=3600, s-maxage=86400",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
-        )
-      }
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json(
+        {
+          error: "Database not configured",
+          message:
+            "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+        },
+        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
+      )
     }
 
-    // Fallback to hardcoded constants
-    logger.info("Ecosystem architecture served from constants")
+    if (!(await isSeeded().catch(() => false))) {
+      return NextResponse.json(
+        {
+          error: "Database not seeded",
+          message: "Run pnpm db:seed or POST /api/v1/db with action: seed.",
+        },
+        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
+      )
+    }
+
+    const [dbPrinciples, dbFramework] = await Promise.all([
+      getArchitecturePrinciples(),
+      getFrameworkDecision(),
+    ])
+
+    const principles = dbPrinciples.map((p) => ({
+      name: p.name,
+      title: p.title,
+      description: p.description,
+      rationale: p.rationale,
+      implementation: p.implementation,
+    }))
+
+    const frameworkDecision = dbFramework
+      ? {
+          name: dbFramework.name,
+          approach: dbFramework.approach,
+          framework: dbFramework.framework,
+          rationale: dbFramework.rationale,
+          sovereigntyAdvantage: dbFramework.sovereignty_advantage,
+          platforms: dbFramework.platforms,
+          harmonyOs: dbFramework.harmony_os,
+        }
+      : null
+
+    logger.info("Ecosystem architecture served")
 
     return NextResponse.json(
       {
         "@context": "https://schema.org",
         "@type": "TechArticle",
         name: "Mukoko Ecosystem Architecture",
-        principles: ARCHITECTURE_PRINCIPLES,
-        frameworkDecision: FRAMEWORK_DECISION,
+        principles,
+        frameworkDecision,
       },
-      {
-        headers: {
-          "Cache-Control": "public, max-age=3600, s-maxage=86400",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
+      { headers: CORS_CACHE }
     )
   } catch (error) {
     logger.error("Ecosystem API error", {
@@ -89,12 +80,7 @@ export async function GET() {
     })
     return NextResponse.json(
       { error: "Internal server error" },
-      {
-        status: 500,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
+      { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }
     )
   }
 }

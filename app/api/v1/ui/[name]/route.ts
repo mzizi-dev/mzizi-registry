@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server"
-import fs from "fs"
-import path from "path"
 import { createLogger } from "@/lib/observability"
 import { getComponent, isSupabaseConfigured, isSeeded } from "@/lib/db"
 
 const logger = createLogger("registry")
 
+const CORS_CACHE = {
+  "Cache-Control": "public, max-age=3600, s-maxage=86400",
+  "Access-Control-Allow-Origin": "*",
+}
+
 /**
  * GET /api/v1/ui/[name] — Individual component with inline source
  *
- * Reads metadata from Supabase if configured, falls back to registry.json.
- * Source code is served from DB (source_code column) if available,
- * otherwise read from the filesystem (git-managed files).
+ * Reads metadata and source code from Supabase.
  */
 export async function GET(
   _request: Request,
@@ -23,178 +24,77 @@ export async function GET(
     if (!name || typeof name !== "string") {
       return NextResponse.json(
         { error: "Invalid component name" },
-        {
-          status: 400,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
+        { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }
       )
     }
 
-    let item: {
-      name: string
-      type: string
-      description: string
-      dependencies: string[]
-      registryDependencies: string[]
-      files: Array<{ path: string; type: string }>
-      sourceCode?: string | null
-    } | null = null
-
-    const useDb =
-      isSupabaseConfigured() && (await isSeeded().catch(() => false))
-
-    if (useDb) {
-      const component = await getComponent(name)
-      if (component) {
-        item = {
-          name: component.name,
-          type: component.registry_type,
-          description: component.description,
-          dependencies: component.dependencies,
-          registryDependencies: component.registry_dependencies,
-          files: component.files,
-          sourceCode: component.source_code,
-        }
-      }
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json(
+        {
+          error: "Database not configured",
+          message:
+            "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+        },
+        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
+      )
     }
 
-    if (!item) {
-      // Fallback to filesystem
-      const registryPath = path.join(process.cwd(), "registry.json")
-      if (!fs.existsSync(registryPath)) {
-        return NextResponse.json(
-          { error: "Registry not available" },
-          {
-            status: 500,
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
-        )
-      }
-      const raw = fs.readFileSync(registryPath, "utf-8")
-      const registry = JSON.parse(raw)
-      item = registry.items.find((i: { name: string }) => i.name === name)
+    if (!(await isSeeded().catch(() => false))) {
+      return NextResponse.json(
+        {
+          error: "Database not seeded",
+          message: "Run pnpm db:seed or POST /api/v1/db with action: seed.",
+        },
+        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
+      )
     }
 
-    if (!item) {
+    const component = await getComponent(name)
+
+    if (!component) {
       logger.warn("Component not found", { data: { name } })
       return NextResponse.json(
         { error: `Component "${name}" not found in registry` },
-        {
-          status: 404,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
+        { status: 404, headers: { "Access-Control-Allow-Origin": "*" } }
       )
     }
 
-    // Build files array with source content
-    const files: Array<{ path: string; type: string; content: string }> = []
-
-    if (item.sourceCode && item.files.length > 0) {
-      // Use source_code from DB for the primary file
-      files.push({
-        path: item.files[0].path,
-        type: item.files[0].type,
-        content: item.sourceCode,
-      })
-
-      // Read any additional files from filesystem
-      for (let i = 1; i < item.files.length; i++) {
-        const file = item.files[i]
-        try {
-          const filePath = path.join(process.cwd(), file.path)
-          if (!fs.existsSync(filePath)) continue
-          const content = fs.readFileSync(filePath, "utf-8")
-          files.push({ path: file.path, type: file.type, content })
-        } catch (fileError) {
-          logger.error(`Error reading file ${file.path}`, {
-            error:
-              fileError instanceof Error
-                ? fileError
-                : new Error(String(fileError)),
-            data: { component: name },
-          })
-        }
-      }
-    } else {
-      // Read all files from filesystem
-      for (const file of item.files) {
-        try {
-          const filePath = path.join(process.cwd(), file.path)
-          if (!fs.existsSync(filePath)) {
-            logger.warn("File not found, skipping", {
-              data: { filePath, component: name },
-            })
-            continue
-          }
-          const content = fs.readFileSync(filePath, "utf-8")
-          files.push({ path: file.path, type: file.type, content })
-        } catch (fileError) {
-          logger.error(`Error reading file ${file.path}`, {
-            error:
-              fileError instanceof Error
-                ? fileError
-                : new Error(String(fileError)),
-            data: { component: name },
-          })
-        }
-      }
-    }
-
-    if (files.length === 0) {
+    if (!component.source_code) {
       return NextResponse.json(
-        { error: `No source files available for "${name}"` },
-        {
-          status: 404,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
+        { error: `No source code available for "${name}"` },
+        { status: 404, headers: { "Access-Control-Allow-Origin": "*" } }
       )
     }
+
+    const files = component.files.map((file, i) => ({
+      path: file.path,
+      type: file.type,
+      content: i === 0 ? component.source_code! : "",
+    }))
 
     logger.info("Component served", {
-      data: {
-        name,
-        fileCount: files.length,
-        source: useDb ? "supabase" : "fs",
-        sourceCodeFromDb: Boolean(item.sourceCode),
-      },
+      data: { name, fileCount: files.length },
     })
 
-    const registryItem = {
-      $schema: "https://ui.shadcn.com/schema/registry-item.json",
-      name: item.name,
-      type: item.type,
-      description: item.description || "",
-      dependencies: item.dependencies || [],
-      registryDependencies: item.registryDependencies || [],
-      files,
-    }
-
-    return NextResponse.json(registryItem, {
-      headers: {
-        "Cache-Control": "public, max-age=3600, s-maxage=86400",
-        "Access-Control-Allow-Origin": "*",
+    return NextResponse.json(
+      {
+        $schema: "https://ui.shadcn.com/schema/registry-item.json",
+        name: component.name,
+        type: component.registry_type,
+        description: component.description,
+        dependencies: component.dependencies,
+        registryDependencies: component.registry_dependencies,
+        files,
       },
-    })
+      { headers: CORS_CACHE }
+    )
   } catch (error) {
     logger.error("Registry item error", {
       error: error instanceof Error ? error : new Error(String(error)),
     })
     return NextResponse.json(
       { error: "Internal server error" },
-      {
-        status: 500,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
+      { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }
     )
   }
 }
