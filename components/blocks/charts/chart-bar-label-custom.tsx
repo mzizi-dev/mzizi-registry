@@ -29,7 +29,7 @@ export function ChartBarLabelCustom() {
           <BarChart data={data} layout="vertical" margin={{ left: 0, right: 16 }}>
             <CartesianGrid horizontal={false} />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-            <Bar dataKey="users" fill="var(--color-users)" radius={4} layout="vertical">
+            <Bar dataKey="users" fill="var(--color-users)" radius={4}>
               <LabelList dataKey="city" position="insideLeft" offset={8} className="fill-[--color-label]" fontSize={12} />
               <LabelList dataKey="users" position="right" offset={8} className="fill-foreground" fontSize={12} />
             </Bar>

@@ -31,7 +31,7 @@ export function ChartLineLabelCustom() {
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Line type="natural" dataKey="temperature" stroke="var(--color-temperature)" strokeWidth={2} dot={{ fill: "var(--color-temperature)" }} activeDot={{ r: 6 }}>
-              <LabelList position="top" offset={12} className="fill-foreground" fontSize={11} formatter={(value: number) => `${value}\u00B0C`} />
+              <LabelList position="top" offset={12} className="fill-foreground" fontSize={11} formatter={(value) => `${value}\u00B0C`} />
             </Line>
           </LineChart>
         </ChartContainer>

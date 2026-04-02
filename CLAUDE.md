@@ -689,6 +689,23 @@ Three workflows in `.github/workflows/`:
   6. Push: `git push && git push --tags`
   7. GitHub Actions creates the release automatically
 
+### Dependency Management — Upgrade-First Policy
+
+**This registry is the testing ground for major version upgrades.** All dependency upgrades happen here FIRST, before touching any production app. The workflow:
+
+1. **Upgrade here first** — always update to the latest version, including major versions
+2. **Run all CI gates** — lint, typecheck, test, build must all pass
+3. **If breaking changes exist** — fix them here in the registry components
+4. **If unfixable** — roll back here before it ever touches production
+5. **Once passing** — production apps (weather, news, events, super app) can safely upgrade
+
+**Why:** This registry defines the component API surface for the entire ecosystem. If a major version upgrade (e.g., Recharts 2→3, Zod 3→4) changes how components work, that change propagates to every app that installs from the registry. Better to catch and fix it here than discover it in production.
+
+**Rule:** Never leave packages outdated "because it's a major version." Upgrade, test, fix. If it breaks and can't be fixed, document why and pin the version with a comment explaining the blocker.
+
+**Current known pins:**
+- `@vitejs/plugin-react@5` — v6 requires vite 8, but vitest 4 bundles vite 7. Upgrade both together when vitest 5 ships.
+
 ### Deployment
 
 - **Platform:** Vercel (automatic deploys from main branch)
