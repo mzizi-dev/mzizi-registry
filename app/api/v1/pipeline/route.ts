@@ -1,61 +1,56 @@
 import { NextResponse } from "next/server"
-import { OPEN_DATA_PIPELINE } from "@/lib/architecture"
 import { createLogger } from "@/lib/observability"
 import { isSupabaseConfigured, isSeeded, getPipeline } from "@/lib/db"
 
 const logger = createLogger("architecture")
 
+const CORS_CACHE = {
+  "Cache-Control": "public, max-age=3600, s-maxage=86400",
+  "Access-Control-Allow-Origin": "*",
+}
+
 export async function GET() {
   try {
-    const useDb =
-      isSupabaseConfigured() && (await isSeeded().catch(() => false))
-
-    if (useDb) {
-      const dbPipeline = await getPipeline().catch(() => null)
-
-      if (dbPipeline && dbPipeline.length > 0) {
-        const stages = dbPipeline.map((p) => ({
-          name: p.name,
-          role: p.role,
-          description: p.description,
-          sovereignty: p.sovereignty,
-        }))
-
-        logger.info("Open data pipeline served from Supabase")
-
-        return NextResponse.json(
-          {
-            "@context": "https://schema.org",
-            "@type": "TechArticle",
-            name: "Mukoko Open Data Pipeline",
-            stages,
-          },
-          {
-            headers: {
-              "Cache-Control": "public, max-age=3600, s-maxage=86400",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
-        )
-      }
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json(
+        {
+          error: "Database not configured",
+          message:
+            "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+        },
+        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
+      )
     }
 
-    // Fallback to hardcoded constants
-    logger.info("Open data pipeline served from constants")
+    if (!(await isSeeded().catch(() => false))) {
+      return NextResponse.json(
+        {
+          error: "Database not seeded",
+          message: "Run pnpm db:seed or POST /api/v1/db with action: seed.",
+        },
+        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
+      )
+    }
+
+    const dbPipeline = await getPipeline()
+
+    const stages = dbPipeline.map((p) => ({
+      name: p.name,
+      role: p.role,
+      description: p.description,
+      sovereignty: p.sovereignty,
+    }))
+
+    logger.info("Open data pipeline served")
 
     return NextResponse.json(
       {
         "@context": "https://schema.org",
         "@type": "TechArticle",
         name: "Mukoko Open Data Pipeline",
-        stages: OPEN_DATA_PIPELINE,
+        stages,
       },
-      {
-        headers: {
-          "Cache-Control": "public, max-age=3600, s-maxage=86400",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
+      { headers: CORS_CACHE }
     )
   } catch (error) {
     logger.error("Pipeline API error", {
@@ -63,12 +58,7 @@ export async function GET() {
     })
     return NextResponse.json(
       { error: "Internal server error" },
-      {
-        status: 500,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
+      { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }
     )
   }
 }

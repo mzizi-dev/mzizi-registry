@@ -1,10 +1,25 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
+import { isSupabaseConfigured, isSeeded, getDatabaseInfo } from "@/lib/db"
 
 const logger = createLogger("api")
 
 export async function GET() {
   try {
+    let dbStatus = "not_configured"
+    let componentCount = 0
+
+    if (isSupabaseConfigured()) {
+      const seeded = await isSeeded().catch(() => false)
+      if (seeded) {
+        dbStatus = "connected"
+        const info = await getDatabaseInfo().catch(() => null)
+        componentCount = info?.components ?? 0
+      } else {
+        dbStatus = "not_seeded"
+      }
+    }
+
     logger.info("API discovery served")
 
     return NextResponse.json(
@@ -17,6 +32,10 @@ export async function GET() {
         description:
           "Unified API for the Mukoko ecosystem — components, brand, architecture, and design system.",
         homepage: "https://registry.mukoko.com",
+        database: {
+          status: dbStatus,
+          components: componentCount,
+        },
         resources: {
           brand: {
             href: "/api/v1/brand",
@@ -25,8 +44,7 @@ export async function GET() {
           },
           ui: {
             href: "/api/v1/ui",
-            description:
-              "Component registry index — 94 registry items (82 UI components, 3 hooks, 9 lib utilities).",
+            description: `Component registry — ${componentCount} items served from database.`,
           },
           ecosystem: {
             href: "/api/v1/ecosystem",
@@ -36,26 +54,31 @@ export async function GET() {
           dataLayer: {
             href: "/api/v1/data-layer",
             description:
-              "Local-first data layer (RxDB, SQLite, IndexedDB) and cloud services (Supabase, CouchDB).",
+              "Local-first data layer and cloud services.",
           },
           pipeline: {
             href: "/api/v1/pipeline",
             description:
-              "Open data pipeline — Redpanda event streaming, Flink PII stripping, Doris analytics.",
+              "Open data pipeline — Redpanda, Flink, Doris.",
           },
           sovereignty: {
             href: "/api/v1/sovereignty",
             description:
-              "Technology sovereignty assessments for every technology in the stack.",
+              "Technology sovereignty assessments.",
           },
           health: {
             href: "/api/v1/health",
-            description: "Service health check — registry and filesystem status.",
+            description: "Service health check — database and registry status.",
           },
           db: {
             href: "/api/v1/db",
             description:
-              "Document store status and seeding — Supabase (Postgres) registry backend.",
+              "Document store status and seeding — Supabase (Postgres) backend.",
+          },
+          mcp: {
+            href: "/mcp",
+            description:
+              "Model Context Protocol server — Streamable HTTP transport.",
           },
         },
       },
@@ -72,12 +95,7 @@ export async function GET() {
     })
     return NextResponse.json(
       { error: "Internal server error" },
-      {
-        status: 500,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
+      { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }
     )
   }
 }
