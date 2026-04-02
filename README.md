@@ -1,16 +1,16 @@
-# mukoko registry
+# nyuchi design portal
 
 > The Nyuchi Design Portal -- component registry, brand documentation hub, design system, and developer portal for the mukoko ecosystem.
 
-[![CI](https://github.com/nyuchitech/mukoko-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/nyuchitech/mukoko-registry/actions/workflows/ci.yml)
+[![CI](https://github.com/nyuchitech/design-portal/actions/workflows/ci.yml/badge.svg)](https://github.com/nyuchitech/design-portal/actions/workflows/ci.yml)
 
-**Version:** 4.0.1 | **Live:** [registry.mukoko.com](https://registry.mukoko.com) | **Docs:** [registry.mukoko.com/docs](https://registry.mukoko.com/docs) | **Brand:** [registry.mukoko.com/brand](https://registry.mukoko.com/brand)
+**Version:** 4.0.1 | **Live:** [design.nyuchi.com](https://design.nyuchi.com) | **Docs:** [design.nyuchi.com/docs](https://design.nyuchi.com/docs) | **Brand:** [design.nyuchi.com/brand](https://design.nyuchi.com/brand)
 
 ---
 
 ## What is this?
 
-mukoko registry is the Nyuchi Design Portal -- the single source of truth for the mukoko ecosystem's component library, design tokens, brand guidelines, and developer documentation.
+nyuchi design portal is the Nyuchi Design Portal -- the single source of truth for the mukoko ecosystem's component library, design tokens, brand guidelines, and developer documentation.
 
 It serves **294 production-ready registry items**:
 
@@ -29,8 +29,8 @@ Everything is installable via the shadcn CLI and backed by a **DB-first architec
 
 ```bash
 # Clone the repository
-git clone https://github.com/nyuchitech/mukoko-registry.git
-cd mukoko-registry
+git clone https://github.com/nyuchitech/design-portal.git
+cd design-portal
 
 # Install dependencies
 pnpm install
@@ -53,15 +53,15 @@ Visit [http://localhost:11736](http://localhost:11736) to see the portal.
 ## Install a Component
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
 ```
 
 Install multiple components at once:
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/card \
-  https://registry.mukoko.com/api/v1/ui/dialog \
-  https://registry.mukoko.com/api/v1/ui/input
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/card \
+  https://design.nyuchi.com/api/v1/ui/dialog \
+  https://design.nyuchi.com/api/v1/ui/input
 ```
 
 ---
@@ -98,7 +98,7 @@ npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/card \
 The portal hosts **71 documentation pages** across **11 sections**:
 
 ```
-registry.mukoko.com
+design.nyuchi.com
 ├── /                          Landing page
 ├── /docs                      Developer documentation
 │   ├── /docs/installation     Getting started
@@ -275,7 +275,7 @@ Available tools: `list_components`, `get_component`, `search_components`, `get_d
 
 ## Ecosystem
 
-mukoko registry is consumed by all apps in the mukoko ecosystem:
+nyuchi design portal is consumed by all apps in the mukoko ecosystem:
 
 | App | URL | Stack |
 |---|---|---|

@@ -29,7 +29,7 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           trigger_phrase: "@claude"
           prompt: |
-            Review this PR for the mukoko-registry project. Focus on:
+            Review this PR for the design-portal project. Focus on:
             - Code quality and adherence to existing patterns (CVA + Radix + cn())
             - No hardcoded colors — must use CSS custom properties from globals.css
             - Accessibility: APCA 3.0 AAA contrast, 48px touch targets

@@ -20,7 +20,7 @@ describe("GET /api/v1/ui", () => {
 
     const raw = fs.readFileSync(registryPath, "utf-8")
     const registry = JSON.parse(raw)
-    expect(registry.name).toBe("mukoko")
+    expect(registry.name).toBe("nyuchi")
     expect(registry.items).toBeDefined()
     expect(Array.isArray(registry.items)).toBe(true)
   })
@@ -30,7 +30,7 @@ describe("GET /api/v1/ui", () => {
     const registry = JSON.parse(fs.readFileSync(registryPath, "utf-8"))
 
     expect(registry.$schema).toBe("https://ui.shadcn.com/schema/registry.json")
-    expect(registry.homepage).toBe("https://registry.mukoko.com")
+    expect(registry.homepage).toBe("https://design.nyuchi.com")
   })
 
   it("all registry items have required fields", () => {

@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in the Mukoko Registry
+about: Report a bug in the Nyuchi Design Portal
 title: "[Bug] "
 labels: bug
 assignees: ""

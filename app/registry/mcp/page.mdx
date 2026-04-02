@@ -1,11 +1,11 @@
 ---
-title: "MCP Server — mukoko registry"
-description: "Model Context Protocol server for AI assistant integration with the Mukoko Registry."
+title: "MCP Server — nyuchi design portal"
+description: "Model Context Protocol server for AI assistant integration with the Nyuchi Design Portal."
 ---
 
 # MCP Server
 
-The Mukoko Registry includes a **Model Context Protocol (MCP) server** that exposes the registry, brand system, and design tokens to AI assistants. This enables tools like Claude Code to understand and work with the Mukoko design system natively.
+The Nyuchi Design Portal includes a **Model Context Protocol (MCP) server** that exposes the registry, brand system, and design tokens to AI assistants. This enables tools like Claude Code to understand and work with the Mukoko design system natively.
 
 ## What is MCP
 
@@ -20,10 +20,10 @@ The Model Context Protocol is an open standard for connecting AI assistants to e
 The MCP server is served at `/mcp` via Streamable HTTP transport:
 
 ```
-POST https://registry.mukoko.com/mcp    — JSON-RPC requests
-GET  https://registry.mukoko.com/mcp    — SSE stream
-DELETE https://registry.mukoko.com/mcp  — cleanup
-OPTIONS https://registry.mukoko.com/mcp — CORS preflight
+POST https://design.nyuchi.com/mcp    — JSON-RPC requests
+GET  https://design.nyuchi.com/mcp    — SSE stream
+DELETE https://design.nyuchi.com/mcp  — cleanup
+OPTIONS https://design.nyuchi.com/mcp — CORS preflight
 ```
 
 ## Configuration
@@ -35,9 +35,9 @@ Add to `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
-    "mukoko-registry": {
+    "nyuchi-design-portal": {
       "type": "url",
-      "url": "https://registry.mukoko.com/mcp"
+      "url": "https://design.nyuchi.com/mcp"
     }
   }
 }
@@ -45,7 +45,7 @@ Add to `.claude/settings.json`:
 
 ### Other MCP clients
 
-Any MCP-compatible client can connect using the Streamable HTTP transport at `https://registry.mukoko.com/mcp`.
+Any MCP-compatible client can connect using the Streamable HTTP transport at `https://design.nyuchi.com/mcp`.
 
 ## Resources
 

@@ -21,11 +21,12 @@ const products = [
   { label: "bundu", href: "https://bundu.family" },
   { label: "news", href: "https://news.mukoko.com" },
   { label: "weather", href: "https://weather.mukoko.com" },
+  { label: "shamwari", href: "https://shamwari.ai" },
 ]
 
 function CopyCommand() {
   const [copied, setCopied] = useState(false)
-  const command = "npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button"
+  const command = "npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button"
 
   return (
     <button
@@ -80,14 +81,14 @@ export function Hero() {
 
       <div className="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
         <h1 className="font-serif text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
-          The building blocks
+          The design system
           <br />
-          of mukoko
+          for the nyuchi ecosystem
         </h1>
         <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-          Production-ready UI components rooted in the Five African Minerals
-          palette. Install directly into your project with the shadcn CLI.
-          No packages, no lock-in -- just code you own.
+          294 production-ready components, blocks, and charts rooted in the
+          Five African Minerals palette. Install directly into your project
+          with the shadcn CLI. No packages, no lock-in — just code you own.
         </p>
       </div>
 
@@ -111,8 +112,10 @@ export function Hero() {
       {/* Stats */}
       <div className="flex flex-wrap items-center justify-center gap-6 pt-4 sm:gap-8">
         {[
-          { label: "Components", value: "59" },
-          { label: "Products", value: "7" },
+          { label: "Registry Items", value: "294" },
+          { label: "UI Components", value: "177" },
+          { label: "Blocks", value: "105" },
+          { label: "Products", value: "8" },
           { label: "Palette", value: "5 minerals" },
         ].map((stat) => (
           <div key={stat.label} className="flex flex-col items-center gap-0.5">

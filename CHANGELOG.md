@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the Mukoko Registry are documented here.
+All notable changes to the Nyuchi Design Portal are documented here.
 
 This project follows [Semantic Versioning](https://semver.org/).
 
@@ -84,7 +84,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Header navigation — added "Brand" link
 - Footer — added Brand section links, bumped version to v4.0.1
 - Wordmark sizing — increased from `text-sm` to `text-xl` to match icon height
-- Package name — `my-project` → `mukoko-registry`
+- Package name — `my-project` → `design-portal`
 - Package version — `0.1.0` → `4.0.1`
 - CLAUDE.md — comprehensive update with testing, CI/CD, versioning, brand documentation sections
 

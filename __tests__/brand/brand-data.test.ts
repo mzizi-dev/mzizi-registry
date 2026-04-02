@@ -251,7 +251,7 @@ describe("Brand Data Module", () => {
     it("has all required top-level keys", () => {
       expect(BRAND_SYSTEM.$schema).toBeTruthy()
       expect(BRAND_SYSTEM.name).toBeTruthy()
-      expect(BRAND_SYSTEM.homepage).toBe("https://registry.mukoko.com/brand")
+      expect(BRAND_SYSTEM.homepage).toBe("https://design.nyuchi.com/brand")
       expect(BRAND_SYSTEM.minerals).toBe(MINERALS)
       expect(BRAND_SYSTEM.ecosystem).toBe(ECOSYSTEM_BRANDS)
       expect(BRAND_SYSTEM.typography).toBeTruthy()

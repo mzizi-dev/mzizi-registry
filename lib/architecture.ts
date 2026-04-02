@@ -6,7 +6,7 @@
  *
  * Based on the Mukoko Platform Local-First Architecture & Data Strategy document.
  *
- * Install via: npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/architecture
+ * Install via: npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/architecture
  */
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -399,13 +399,13 @@ export const SOVEREIGNTY_SUMMARY: SovereigntyAssessment[] = [
 // ─── Full Architecture System (for API serialization) ────────────────────────
 
 export const ARCHITECTURE_SYSTEM = {
-  $schema: "https://registry.mukoko.com/schema/architecture.json",
+  $schema: "https://design.nyuchi.com/schema/architecture.json",
   "@context": "https://schema.org",
   "@type": "TechArticle",
   version: "4.0.1",
   name: "Mukoko Architecture System",
   lastUpdated: "2026-03-14",
-  homepage: "https://registry.mukoko.com/architecture",
+  homepage: "https://design.nyuchi.com/architecture",
   principles: ARCHITECTURE_PRINCIPLES,
   frameworkDecision: FRAMEWORK_DECISION,
   localDataLayer: LOCAL_DATA_LAYER,

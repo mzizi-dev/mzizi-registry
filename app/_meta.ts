@@ -1,6 +1,6 @@
 export default {
   index: {
-    title: "mukoko registry",
+    title: "nyuchi design portal",
     type: "page",
     theme: {
       layout: "full",

@@ -1,5 +1,5 @@
 /**
- * Mukoko Registry MCP Server
+ * Nyuchi Design Portal MCP Server
  *
  * Configures the McpServer instance with all tools and resources.
  * Served via the HTTP endpoint at /mcp (app/mcp/route.ts).
@@ -28,11 +28,11 @@ import {
 // ─── Server Factory ────────────────────────────────────────────────────────
 
 /**
- * Creates and configures a Mukoko Registry MCP server with all tools and resources.
+ * Creates and configures a Nyuchi Design Portal MCP server with all tools and resources.
  */
 export function createMukokoMcpServer(): McpServer {
   const server = new McpServer({
-    name: "mukoko-registry",
+    name: "design-portal",
     version: "4.0.1",
   })
 
@@ -58,7 +58,7 @@ export function createMukokoMcpServer(): McpServer {
           text: JSON.stringify({
             $schema: "https://ui.shadcn.com/schema/registry.json",
             name: "mukoko",
-            homepage: "https://registry.mukoko.com",
+            homepage: "https://design.nyuchi.com",
             items,
           }, null, 2),
         }],
@@ -175,7 +175,7 @@ export function createMukokoMcpServer(): McpServer {
 
   server.tool(
     "list_components",
-    "List all Mukoko registry components. Optionally filter by type or category.",
+    "List all Nyuchi design portal components. Optionally filter by type or category.",
     {
       type: z.enum(["all", "registry:ui", "registry:hook", "registry:lib"]).default("all").describe("Filter by component type"),
     },
@@ -201,7 +201,7 @@ export function createMukokoMcpServer(): McpServer {
 
   server.tool(
     "get_component",
-    "Get a component's full source code, metadata, and dependencies from the Mukoko registry.",
+    "Get a component's full source code, metadata, and dependencies from the Nyuchi design portal.",
     {
       name: z.string().describe("Component name (e.g., 'button', 'card', 'use-toast')"),
     },
@@ -228,7 +228,7 @@ export function createMukokoMcpServer(): McpServer {
             registryDependencies: component.registry_dependencies,
             files: component.files,
             sourceCode: component.source_code,
-            installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${component.name}`,
+            installCommand: `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${component.name}`,
           }, null, 2),
         }],
       }
@@ -237,7 +237,7 @@ export function createMukokoMcpServer(): McpServer {
 
   server.tool(
     "search_components",
-    "Search Mukoko registry components by name or description keyword.",
+    "Search Nyuchi design portal components by name or description keyword.",
     {
       query: z.string().describe("Search query to match against component names and descriptions"),
     },
@@ -260,7 +260,7 @@ export function createMukokoMcpServer(): McpServer {
         name: c.name,
         type: c.registry_type,
         description: c.description,
-        installCommand: `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${c.name}`,
+        installCommand: `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${c.name}`,
       }))
 
       return {
@@ -380,7 +380,7 @@ export { ${pascalName}, ${camelVariants}Variants }
 
       let text = ""
       if (valid.length > 0) {
-        text += valid.map(n => `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/${n}`).join("\n")
+        text += valid.map(n => `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${n}`).join("\n")
       }
       if (invalid.length > 0) {
         text += `\n\nNot found: ${invalid.join(", ")}`

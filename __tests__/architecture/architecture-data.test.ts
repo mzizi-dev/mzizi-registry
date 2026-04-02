@@ -223,7 +223,7 @@ describe("Architecture Data Module", () => {
 
     it("has correct $schema", () => {
       expect(ARCHITECTURE_SYSTEM.$schema).toBe(
-        "https://registry.mukoko.com/schema/architecture.json"
+        "https://design.nyuchi.com/schema/architecture.json"
       )
     })
 
