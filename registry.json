@@ -3914,6 +3914,582 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "agenda-view",
+      "type": "registry:ui",
+      "description": "Chronological event list grouped by date.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/agenda-view.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ai-feedback",
+      "type": "registry:ui",
+      "description": "Thumbs up/down rating for AI responses with optional text feedback.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/ai-feedback.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ai-response-card",
+      "type": "registry:ui",
+      "description": "Structured AI output card with markdown rendering and action buttons.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/ai-response-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "api-key-display",
+      "type": "registry:ui",
+      "description": "Masked/revealable API key with copy and regenerate actions.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/api-key-display.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "audio-player",
+      "type": "registry:ui",
+      "description": "Audio playback with progress bar, play/pause, and speed control.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/audio-player.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "audit-log-entry",
+      "type": "registry:ui",
+      "description": "Audit event display with actor, action, target, timestamp.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/audit-log-entry.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "calendar-day-view",
+      "type": "registry:ui",
+      "description": "Single-day time grid with hourly slots and event blocks.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/calendar-day-view.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "calendar-week-view",
+      "type": "registry:ui",
+      "description": "7-column weekly calendar view with hourly time slots.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/calendar-week-view.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "cart-item",
+      "type": "registry:ui",
+      "description": "Shopping cart line item with quantity controls and remove action.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/cart-item.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "changelog-entry",
+      "type": "registry:ui",
+      "description": "Version update card with categorized changes.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/changelog-entry.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chat-layout",
+      "type": "registry:ui",
+      "description": "Full chat page layout with sidebar conversations and main chat area.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/chat-layout.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "checklist",
+      "type": "registry:ui",
+      "description": "Interactive checklist with add, reorder, and completion tracking.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/checklist.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "code-tabs",
+      "type": "registry:ui",
+      "description": "Tabbed code display for multiple languages/frameworks.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/code-tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "comment-thread",
+      "type": "registry:ui",
+      "description": "Threaded comments with nested replies and actions.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/comment-thread.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "description-list",
+      "type": "registry:ui",
+      "description": "Semantic key-value display using dl/dt/dd elements.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/description-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "drag-handle",
+      "type": "registry:ui",
+      "description": "Grip indicator for drag-and-drop reordering.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/drag-handle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "env-editor",
+      "type": "registry:ui",
+      "description": "Key-value environment variable editor with secret masking.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/env-editor.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "event-card",
+      "type": "registry:ui",
+      "description": "Compact event display with mineral-category colored border.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/event-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "file-preview",
+      "type": "registry:ui",
+      "description": "File preview card with icon, name, and size display.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/file-preview.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "invoice-row",
+      "type": "registry:ui",
+      "description": "Invoice line item with date, amount, status badge, and download.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/invoice-row.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "lightbox",
+      "type": "registry:ui",
+      "description": "Full-screen image viewer with gallery navigation.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/lightbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "maintenance-page",
+      "type": "registry:ui",
+      "description": "Full-page maintenance mode display with estimated return time.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/maintenance-page.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "masonry-grid",
+      "type": "registry:ui",
+      "description": "CSS columns-based variable-height grid layout.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/masonry-grid.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mention-input",
+      "type": "registry:ui",
+      "description": "Text input with @mention autocomplete for users.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/mention-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "message-thread",
+      "type": "registry:ui",
+      "description": "Nested reply thread with indentation and collapse/expand.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/message-thread.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mfa-setup",
+      "type": "registry:ui",
+      "description": "MFA enrollment card with QR code and verification step.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/mfa-setup.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "note-card",
+      "type": "registry:ui",
+      "description": "Compact note display with title, excerpt, and timestamp.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/note-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "onboarding-tour",
+      "type": "registry:ui",
+      "description": "Step-by-step spotlight overlay guiding users through UI features.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/onboarding-tour.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "order-summary",
+      "type": "registry:ui",
+      "description": "Order total breakdown with line items and total.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/order-summary.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "payment-method-card",
+      "type": "registry:ui",
+      "description": "Payment method display with card brand and last four digits.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/payment-method-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "permission-badge",
+      "type": "registry:ui",
+      "description": "Role/permission indicator badge with color coding.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/permission-badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "price-display",
+      "type": "registry:ui",
+      "description": "Formatted price with currency, original price, and discount badge.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/price-display.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "product-card",
+      "type": "registry:ui",
+      "description": "Product display with image, title, price, and actions.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/product-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pull-to-refresh",
+      "type": "registry:ui",
+      "description": "Mobile pull-down-to-refresh gesture handler.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/pull-to-refresh.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "reaction-picker",
+      "type": "registry:ui",
+      "description": "Emoji reaction selector popover with counts.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/reaction-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "role-selector",
+      "type": "registry:ui",
+      "description": "Role picker with descriptions and permission previews.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/role-selector.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "schema-viewer",
+      "type": "registry:ui",
+      "description": "JSON schema tree display with type badges.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/schema-viewer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "session-list",
+      "type": "registry:ui",
+      "description": "Active session display with device, location, and revoke.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/session-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "source-citation",
+      "type": "registry:ui",
+      "description": "Citation card linking AI responses to source documents.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/source-citation.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticky-bar",
+      "type": "registry:ui",
+      "description": "Position-sticky container for headers or action bars.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/sticky-bar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "streaming-text",
+      "type": "registry:ui",
+      "description": "Typewriter effect text renderer for streaming LLM output.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/streaming-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "subscription-card",
+      "type": "registry:ui",
+      "description": "Plan comparison card with features, price, and CTA.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/subscription-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "suggested-prompts",
+      "type": "registry:ui",
+      "description": "Scrollable prompt chips for AI conversations.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/suggested-prompts.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "time-slot-picker",
+      "type": "registry:ui",
+      "description": "Selectable grid of available time slots for booking.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/time-slot-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "todo-item",
+      "type": "registry:ui",
+      "description": "Checkable task item with priority, due date, and assignee.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/todo-item.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "typing-indicator",
+      "type": "registry:ui",
+      "description": "Animated dots showing someone is typing.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/typing-indicator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "video-player",
+      "type": "registry:ui",
+      "description": "Themed video player wrapper with custom controls.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/video-player.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "webhook-card",
+      "type": "registry:ui",
+      "description": "Webhook endpoint configuration display with status.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/webhook-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
