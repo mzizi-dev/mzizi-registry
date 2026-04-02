@@ -18,11 +18,10 @@ describe("Header Navigation", () => {
     expect(brandLinks[0]).toHaveAttribute("href", "/brand")
   })
 
-  it("renders primary navigation links in header", () => {
+  it("renders 3 icon buttons (search, github, theme toggle)", () => {
     render(<Header />)
-    expect(screen.getAllByText("Docs").length).toBeGreaterThan(0)
-    expect(screen.getAllByText("Components").length).toBeGreaterThan(0)
-    expect(screen.getAllByText("Brand").length).toBeGreaterThan(0)
+    expect(screen.getByLabelText("Search components")).toBeInTheDocument()
+    expect(screen.getByLabelText("GitHub")).toBeInTheDocument()
   })
 
   it("renders logo with design suffix", () => {
