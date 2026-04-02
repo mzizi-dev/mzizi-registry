@@ -7,7 +7,8 @@ interface ListingMetadata {
   value: string
 }
 
-interface ListingCardProps extends React.ComponentProps<"div"> {
+interface ListingCardProps {
+  className?: string
   title: string
   description?: string
   image?: string
@@ -16,32 +17,15 @@ interface ListingCardProps extends React.ComponentProps<"div"> {
   href?: string
 }
 
-function ListingCard({
-  className,
+function ListingCardContent({
   title,
   description,
   image,
   metadata,
   badges,
-  href,
-  ...props
-}: ListingCardProps) {
-  const Wrapper = href ? "a" : "div"
-  const wrapperProps = href
-    ? { href, target: undefined, rel: undefined }
-    : {}
-
+}: Pick<ListingCardProps, "title" | "description" | "image" | "metadata" | "badges">) {
   return (
-    <Wrapper
-      data-slot="listing-card"
-      className={cn(
-        "ring-foreground/10 bg-card group flex flex-col overflow-hidden rounded-2xl text-sm ring-1 transition-shadow hover:shadow-md",
-        href && "cursor-pointer",
-        className
-      )}
-      {...wrapperProps}
-      {...(props as React.ComponentProps<"div">)}
-    >
+    <>
       {image && (
         <div className="bg-muted aspect-video overflow-hidden">
           <img
@@ -83,7 +67,49 @@ function ListingCard({
           </div>
         )}
       </div>
-    </Wrapper>
+    </>
+  )
+}
+
+function ListingCard({
+  className,
+  title,
+  description,
+  image,
+  metadata,
+  badges,
+  href,
+}: ListingCardProps) {
+  const sharedClasses = cn(
+    "ring-foreground/10 bg-card group flex flex-col overflow-hidden rounded-2xl text-sm ring-1 transition-shadow hover:shadow-md",
+    href && "cursor-pointer",
+    className
+  )
+
+  if (href) {
+    return (
+      <a data-slot="listing-card" href={href} className={sharedClasses}>
+        <ListingCardContent
+          title={title}
+          description={description}
+          image={image}
+          metadata={metadata}
+          badges={badges}
+        />
+      </a>
+    )
+  }
+
+  return (
+    <div data-slot="listing-card" className={sharedClasses}>
+      <ListingCardContent
+        title={title}
+        description={description}
+        image={image}
+        metadata={metadata}
+        badges={badges}
+      />
+    </div>
   )
 }
 

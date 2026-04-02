@@ -12,7 +12,7 @@ interface TreeNode {
   children?: TreeNode[]
 }
 
-interface TreeViewProps extends React.ComponentProps<"div"> {
+interface TreeViewProps extends Omit<React.ComponentProps<"div">, "onSelect"> {
   data: TreeNode[]
   onSelect?: (id: string) => void
   expandedIds?: Set<string>

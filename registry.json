@@ -3135,6 +3135,168 @@
           "type": "registry:block"
         }
       ]
+    },
+    {
+      "name": "profile-page",
+      "type": "registry:block",
+      "description": "Standard profile page with cover image, avatar, stats, tabs, and action buttons.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "avatar",
+        "badge",
+        "button",
+        "card",
+        "separator",
+        "tabs"
+      ],
+      "files": [
+        {
+          "path": "components/blocks/profile-page.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "profile-settings",
+      "type": "registry:block",
+      "description": "Standard settings page with sidebar navigation and content sections.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "avatar",
+        "button",
+        "card",
+        "input",
+        "label",
+        "separator",
+        "switch",
+        "textarea"
+      ],
+      "files": [
+        {
+          "path": "components/blocks/profile-settings.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "onboarding-flow",
+      "type": "registry:block",
+      "description": "Multi-step onboarding flow with progress indicator, profile setup, and interest selection.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "avatar",
+        "badge",
+        "button",
+        "card",
+        "input",
+        "label"
+      ],
+      "files": [
+        {
+          "path": "components/blocks/onboarding-flow.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "error-page",
+      "type": "registry:block",
+      "description": "Standard error page for 404, 500, and 503 states with mineral accent.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "components/blocks/error-page.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:block",
+      "description": "Standard empty state with icon, title, description, and call-to-action.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "components/blocks/empty-state.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "notification-center",
+      "type": "registry:block",
+      "description": "Notification center with tabs for all, unread, and mentions with grouped items.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "card",
+        "scroll-area",
+        "separator",
+        "tabs"
+      ],
+      "files": [
+        {
+          "path": "components/blocks/notification-center.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "search-results",
+      "type": "registry:block",
+      "description": "Standard search results page with filters, result items, and pagination.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "card",
+        "input",
+        "separator"
+      ],
+      "files": [
+        {
+          "path": "components/blocks/search-results.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "command-center",
+      "type": "registry:block",
+      "description": "Spotlight-style command palette with search, grouped results, and keyboard hints.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "command"
+      ],
+      "files": [
+        {
+          "path": "components/blocks/command-center.tsx",
+          "type": "registry:block"
+        }
+      ]
     }
   ]
 }
