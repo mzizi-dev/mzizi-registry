@@ -578,6 +578,73 @@ create policy "authenticated write architecture_removed"
   using (true)
   with check (true);
 
+-- ─── Blocks ───────────────────────────────────────────────────────
+
+create table if not exists blocks (
+  id bigint primary key generated always as identity,
+  name text not null unique,
+  block_type text not null default 'page',
+  category text not null,
+  description text not null default '',
+  dependencies jsonb not null default '[]'::jsonb,
+  registry_dependencies jsonb not null default '[]'::jsonb,
+  files jsonb not null default '[]'::jsonb,
+  source_code text,
+  tags text[] default '{}',
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+comment on table blocks is 'Pre-built page blocks (dashboard, login, signup, sidebar, chart examples).';
+
+create or replace trigger blocks_updated_at
+  before update on blocks
+  for each row execute function update_updated_at();
+
+alter table blocks enable row level security;
+
+create policy "public read blocks"
+  on blocks for select to anon, authenticated
+  using (true);
+
+create policy "authenticated write blocks"
+  on blocks for all to authenticated
+  using (true)
+  with check (true);
+
+-- ─── Portal Pages ─────────────────────────────────────────────────
+
+create table if not exists portal_pages (
+  id bigint primary key generated always as identity,
+  slug text not null unique,
+  section text not null,
+  title text not null,
+  description text not null default '',
+  content text not null default '',
+  sort_order int not null default 0,
+  is_published boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+comment on table portal_pages is 'Nyuchi Design Portal documentation pages — all content served from DB.';
+
+create or replace trigger portal_pages_updated_at
+  before update on portal_pages
+  for each row execute function update_updated_at();
+
+alter table portal_pages enable row level security;
+
+create policy "public read portal_pages"
+  on portal_pages for select to anon, authenticated
+  using (true);
+
+create policy "authenticated write portal_pages"
+  on portal_pages for all to authenticated
+  using (true)
+  with check (true);
+
 -- ─── Indexes ────────────────────────────────────────────────────────
 
 create index if not exists idx_components_category on components(category);
@@ -609,3 +676,13 @@ create index if not exists idx_arch_pipeline_sort on architecture_pipeline(sort_
 create index if not exists idx_arch_data_ownership_category on architecture_data_ownership(category);
 create index if not exists idx_arch_sovereignty_technology on architecture_sovereignty(technology);
 create index if not exists idx_arch_removed_name on architecture_removed(name);
+
+create index if not exists idx_blocks_name on blocks(name);
+create index if not exists idx_blocks_category on blocks(category);
+create index if not exists idx_blocks_type on blocks(block_type);
+create index if not exists idx_blocks_tags on blocks using gin(tags);
+create index if not exists idx_blocks_sort on blocks(sort_order);
+
+create index if not exists idx_portal_pages_slug on portal_pages(slug);
+create index if not exists idx_portal_pages_section on portal_pages(section);
+create index if not exists idx_portal_pages_sort on portal_pages(sort_order);
