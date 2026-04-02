@@ -1,8 +1,7 @@
 "use client"
 
-import * as React from "react"
 import { Pie, PieChart, Sector } from "recharts"
-import type { PieSectorDataItem } from "recharts/types/polar/Pie"
+import type { PieSectorDataItem } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
@@ -24,8 +23,6 @@ const config = {
 } satisfies ChartConfig
 
 export function ChartPieDonutActive() {
-  const [activeIndex, setActiveIndex] = React.useState(0)
-
   return (
     <Card>
       <CardHeader>
@@ -35,8 +32,8 @@ export function ChartPieDonutActive() {
       <CardContent>
         <ChartContainer config={config} className="mx-auto aspect-square max-h-[250px]">
           <PieChart>
-            <ChartTooltip content={<ChartTooltipContent nameKey="sector" hideLabel />} />
-            <Pie data={data} dataKey="value" nameKey="sector" innerRadius={60} strokeWidth={5} activeIndex={activeIndex} activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (<Sector {...props} outerRadius={outerRadius + 10} />)} onMouseEnter={(_, index) => setActiveIndex(index)} />
+            <ChartTooltip content={<ChartTooltipContent nameKey="sector" hideLabel />} defaultIndex={0} />
+            <Pie data={data} dataKey="value" nameKey="sector" innerRadius={60} strokeWidth={5} activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (<Sector {...props} outerRadius={outerRadius + 10} />)} />
           </PieChart>
         </ChartContainer>
       </CardContent>
