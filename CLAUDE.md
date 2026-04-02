@@ -79,7 +79,7 @@ mukoko-registry (this repo)
 | Testing | Vitest + Testing Library | 4.0.18 |
 | Observability | Structured logging (`lib/observability.ts`) | Built-in |
 | Resilience | Circuit breaker, retry, timeout, fallback chain | Built-in (`lib/`) |
-| MCP Server | @modelcontextprotocol/sdk (stdio transport) | ^1.12.1 |
+| MCP Server | @modelcontextprotocol/sdk (Streamable HTTP) | ^1.12.1 |
 | CI/CD | GitHub Actions + Vercel | — |
 | Deployment | Vercel | — |
 
@@ -196,12 +196,7 @@ mukoko-registry/
 │   ├── fallback-chain.ts         # Fallback chain pattern
 │   ├── chaos.ts                  # Chaos engineering utilities
 │   ├── ai-safety.ts              # AI safety guardrails
-│   └── mcp-server.ts             # MCP server utilities
-├── mcp/                          # MCP (Model Context Protocol) server
-│   ├── package.json              # @mukoko/mcp-server package (v7.0.0)
-│   ├── tsconfig.json             # TypeScript config for MCP server
-│   └── src/
-│       └── index.ts              # MCP server entry point (stdio transport)
+│   └── mcp-server.ts             # MCP server factory (served at /mcp)
 ├── scripts/
 │   └── build-registry.js         # Static registry builder → public/r/
 ├── public/
@@ -526,21 +521,25 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 
 ## 10. MCP Server
 
-The repository includes a **Model Context Protocol (MCP) server** (`mcp/`) that exposes the registry, brand system, and design tokens to AI assistants via stdio transport.
+The registry includes a **Model Context Protocol (MCP) server** served at `/mcp` via Streamable HTTP transport. It exposes the registry, brand system, and design tokens to AI assistants.
 
 ### Setup
+
+The MCP server is a Next.js API route at `app/mcp/route.ts`, powered by `lib/mcp-server.ts`.
 
 Configured in `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
     "mukoko-registry": {
-      "command": "npx",
-      "args": ["--prefix", "mcp", "tsx", "mcp/src/index.ts"]
+      "type": "url",
+      "url": "https://registry.mukoko.com/mcp"
     }
   }
 }
 ```
+
+**Endpoint:** `POST /mcp` (JSON-RPC), `GET /mcp` (SSE), `DELETE /mcp` (cleanup), `OPTIONS /mcp` (CORS preflight)
 
 ### Resources (read-only data)
 
@@ -548,13 +547,9 @@ Configured in `.claude/settings.json`:
 |---|---|
 | `mukoko://registry` | Full component registry index |
 | `mukoko://brand` | Complete brand system data |
-| `mukoko://component/{name}` | Individual component source code |
 | `mukoko://design-tokens` | Five African Minerals palette + semantic tokens |
 | `mukoko://guidelines` | Design system usage guidelines |
 | `mukoko://architecture` | Ecosystem architecture (principles, framework) |
-| `mukoko://data-layer` | Data layer specification |
-| `mukoko://pipeline` | Open data pipeline |
-| `mukoko://sovereignty` | Technology sovereignty assessments |
 
 ### Tools (callable actions)
 
@@ -569,14 +564,11 @@ Configured in `.claude/settings.json`:
 | `get_brand_info` | Get information about a specific ecosystem brand |
 | `get_architecture_info` | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty) |
 
-### Development
+### Architecture
 
-```bash
-cd mcp && npx tsx src/index.ts   # Run MCP server directly
-cd mcp && pnpm build             # Build for distribution
-```
-
-**Package:** `@mukoko/mcp-server` (v7.0.0) — separate package.json in `mcp/`
+- **`lib/mcp-server.ts`** — Server factory (`createMukokoMcpServer()`) with all tools and resources
+- **`app/mcp/route.ts`** — HTTP endpoint using `WebStandardStreamableHTTPServerTransport` (stateless)
+- Architecture data is read directly from `lib/architecture.ts` — no localhost dependency
 
 ---
 
@@ -612,7 +604,7 @@ The 94 registry items (82 UI components, 3 hooks, 9 library utilities) are organ
 | `tsconfig.json` | `strict: true`, `target: "ES6"` | Strict TypeScript |
 | `tsconfig.json` | `paths: { "@/*": ["./*"] }` | Root-relative imports |
 | `postcss.config.mjs` | `@tailwindcss/postcss` | Tailwind CSS 4 PostCSS plugin |
-| `.claude/settings.json` | MCP server config | Connects Claude Code to local MCP server |
+| `.claude/settings.json` | MCP server config | Connects Claude Code to URL-based MCP server at /mcp |
 
 ---
 
@@ -723,7 +715,7 @@ When working on this codebase as an AI assistant:
 12. **Brand data lives in `lib/brand.ts`** — update brand data there, not in individual pages
 13. **Keep versions in sync** — `package.json`, `lib/brand.ts` (BRAND_SYSTEM.version), and `footer.tsx` must match
 14. **The mineral strip uses 5 mineral colors** — not flag colors; it's the brand identity element
-15. **Use the MCP server** — the `mcp/` server exposes registry data, brand info, architecture data, and scaffolding tools; keep data in sync with `lib/brand.ts` and `lib/architecture.ts`
+15. **Use the MCP server** — served at `/mcp` via `lib/mcp-server.ts`; reads architecture data directly from `lib/architecture.ts` and brand data from `lib/brand.ts`
 16. **Resilience libraries are registry items** — `lib/observability.ts`, `lib/circuit-breaker.ts`, etc. are served via the registry as `registry:lib` items; follow the same patterns when adding new utilities
 17. **Architecture data lives in `lib/architecture.ts`** — update architecture data there, not in individual pages; follows the same pattern as `lib/brand.ts`
 18. **The mineral strip is always vertical** — used only as a left-edge accent (cards, sidebars, page borders); never horizontal
