@@ -16,7 +16,7 @@ interface ChatConversation {
   unreadCount?: number
 }
 
-interface ChatListProps extends React.ComponentProps<"div"> {
+interface ChatListProps extends Omit<React.ComponentProps<"div">, "onSelect"> {
   conversations: ChatConversation[]
   activeId?: string
   onSelect?: (id: string) => void
