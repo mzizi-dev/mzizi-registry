@@ -14,7 +14,7 @@ interface CategoryItem {
   mineral?: MineralColor
 }
 
-interface CategoryBrowserProps extends React.ComponentProps<"div"> {
+interface CategoryBrowserProps extends Omit<React.ComponentProps<"div">, "onSelect"> {
   categories: CategoryItem[]
   onSelect?: (name: string) => void
 }

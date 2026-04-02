@@ -4,7 +4,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-interface SplitViewProps extends React.ComponentProps<"div"> {
+interface SplitViewProps extends Omit<React.ComponentProps<"div">, "content"> {
   sidebar: React.ReactNode
   content: React.ReactNode
   sidebarWidth?: string
