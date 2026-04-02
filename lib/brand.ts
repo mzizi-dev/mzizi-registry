@@ -27,6 +27,7 @@ export interface EcosystemBrand {
   meaning: string
   language: string
   role: string
+  tier: "ecosystem" | "enterprise" | "consumer" | "sister"
   description: string
   voice: string
   mineral: string
@@ -139,38 +140,41 @@ export const MINERALS: Mineral[] = [
 ]
 
 export const ECOSYSTEM_BRANDS: EcosystemBrand[] = [
-  // ── Tier 1: Ecosystem ─────────────────────────────────────────────────────
+  // ── The Bundu Family ──────────────────────────────────────────────────────
   {
     name: "bundu",
     meaning: "Wilderness",
     language: "Shona",
-    role: "Ecosystem",
+    tier: "ecosystem",
+    role: "The ecosystem",
     description:
-      "The overarching ecosystem brand. All products, infrastructure, and services live under the bundu umbrella — technology serving African communities through interconnected, sustainable approaches rooted in ancestral wisdom.",
+      "The complete ecosystem built by Nyuchi Africa. Three pillars — mukoko (consumer super app), nyuchi (enterprise layer), and sister brands (specialist verticals) — all connected through one identity, one design system, and one open data commons.",
     voice: "Visionary, grounded, inclusive",
     mineral: "terracotta",
     url: "https://bundu.family",
   },
-  // ── Tier 2: Infrastructure & Enterprise ────────────────────────────────────
+  // ── Nyuchi — Enterprise Layer ─────────────────────────────────────────────
   {
     name: "nyuchi",
     meaning: "Bee",
     language: "Shona",
+    tier: "enterprise",
     role: "Infrastructure & enterprise",
     description:
-      "The infrastructure and enterprise brand. Developer tools, design systems, APIs, cloud services, and B2B products. The industrious engine that powers every app in the ecosystem.",
+      "Seven enterprise products, each with its own consumer interface and business-facing tools. API platform, web services, learning, medical, rentals, tools, and SEO manager. Every nyuchi product is a standalone product, a door into the mukoko platform, and a professional surface for the same ecosystem.",
     voice: "Technical, reliable, industrious",
     mineral: "gold",
     url: "https://nyuchi.com",
   },
-  // ── Tier 3: Consumer apps ──────────────────────────────────────────────────
+  // ── Mukoko — Consumer Super App ───────────────────────────────────────────
   {
     name: "mukoko",
     meaning: "Beehive",
     language: "Shona",
-    role: "Consumer apps",
+    tier: "consumer",
+    role: "Africa's super app",
     description:
-      "The consumer-facing app family. The digital home where the community lives — weather, news, super app, and everyday tools. Mukoko and its sister apps bring the ecosystem to life for end users.",
+      "Seventeen mini-apps, four substrate components, one unified identity. The digital home where a billion African users live their digital lives — messaging, news, commerce, events, publishing, payments, transport, health, and more.",
     voice: "Welcoming, structured, protective",
     mineral: "tanzanite",
     url: "https://mukoko.com",
@@ -179,9 +183,10 @@ export const ECOSYSTEM_BRANDS: EcosystemBrand[] = [
     name: "shamwari",
     meaning: "Friend",
     language: "Shona",
-    role: "AI companion",
+    tier: "consumer",
+    role: "Sovereign AI companion",
     description:
-      "The localized African AI. A genuine companion designed to help, not replace. Serves across the ecosystem — inside mukoko apps, nyuchi tools, and standalone.",
+      "The Digital Twin's conversational interface. Three layers of intelligence — personal (your pod data), community (anonymised platform data), and platform (base mukoko knowledge). A friend that serves; a friend that does not control.",
     voice: "Helpful, warm, intelligent",
     mineral: "cobalt",
     url: "https://shamwari.ai",
@@ -190,12 +195,38 @@ export const ECOSYSTEM_BRANDS: EcosystemBrand[] = [
     name: "nhimbe",
     meaning: "Gathering",
     language: "Shona",
-    role: "Events platform",
+    tier: "consumer",
+    role: "Events & gatherings",
     description:
-      "Community events and gatherings. A mukoko sister app bringing people together for shared experiences, cultural events, and collaborative celebrations.",
+      "Community events and cultural gatherings. Standalone brand calling the same platform API. Edge-first check-in via geographic Durable Objects for sub-10ms ticket validation at venue doors.",
     voice: "Celebratory, communal, vibrant",
     mineral: "malachite",
     url: "https://nhimbe.com",
+  },
+  // ── Sister Brands — Specialist Verticals ──────────────────────────────────
+  {
+    name: "bushtrade",
+    meaning: "Bush trade",
+    language: "English/Shona",
+    tier: "sister",
+    role: "Marketplace",
+    description:
+      "Rentals-first marketplace for Zimbabwe and beyond. Business verification through the platform's unified submissions pipeline. Escrow-backed payments via mukoko wallet. Seller conversations flow through Campfire.",
+    voice: "Practical, trustworthy, local",
+    mineral: "gold",
+    url: "https://bushtrade.co.zw",
+  },
+  {
+    name: "lingo",
+    meaning: "Language",
+    language: "English",
+    tier: "consumer",
+    role: "Language learning",
+    description:
+      "African language learning. Shona and Ndebele as primaries, English, French, Portuguese, and travel phrases. The product expression of mukoko's commitment to treating African languages as first-class citizens.",
+    voice: "Encouraging, cultural, playful",
+    mineral: "malachite",
+    url: "https://lingo.mukoko.com",
   },
 ]
 

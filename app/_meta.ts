@@ -62,23 +62,15 @@ export default {
     type: "separator",
   },
   ecosystem: {
-    title: "Ecosystem",
+    title: "The Bundu Family",
     type: "menu",
     items: {
       bundu: {
-        title: "bundu",
+        title: "bundu — the ecosystem",
         href: "https://bundu.family",
       },
-      nyuchi: {
-        title: "nyuchi",
-        href: "https://nyuchi.com",
-      },
-      bushtrade: {
-        title: "bushtrade",
-        href: "https://bushtrade.co.zw",
-      },
       mukoko: {
-        title: "mukoko",
+        title: "mukoko — super app",
         href: "https://www.mukoko.com",
       },
       weather: {
@@ -94,12 +86,20 @@ export default {
         href: "https://lingo.mukoko.com",
       },
       nhimbe: {
-        title: "nhimbe",
+        title: "nhimbe — events",
         href: "https://nhimbe.com",
       },
       shamwari: {
-        title: "shamwari",
+        title: "shamwari — AI",
         href: "https://shamwari.ai",
+      },
+      nyuchi: {
+        title: "nyuchi — enterprise",
+        href: "https://nyuchi.com",
+      },
+      bushtrade: {
+        title: "bushtrade — marketplace",
+        href: "https://bushtrade.co.zw",
       },
     },
   },
