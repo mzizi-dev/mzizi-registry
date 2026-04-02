@@ -1,0 +1,105 @@
+---
+title: "Getting Started — mukoko registry"
+description: "Welcome to the Mukoko Registry — the component library, brand documentation hub, and design system for the Mukoko ecosystem."
+---
+
+import { ArrowRight, Package, Palette, BookOpen, Terminal } from "lucide-react"
+
+# Getting Started
+
+Welcome to the **mukoko registry** — the canonical design system for the Mukoko ecosystem. This registry serves 82 production-ready React UI components, 3 hooks, and 9 library utilities, all built on the **Five African Minerals** design system.
+
+## What is the registry?
+
+The Mukoko Registry is three things in one:
+
+<div className="mt-6 grid gap-4 sm:grid-cols-3">
+  <Card>
+    <CardHeader className="pb-2">
+      <div className="flex size-10 items-center justify-center rounded-xl bg-secondary">
+        <Package className="size-5 text-foreground" />
+      </div>
+      <CardTitle className="text-base">Component Library</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p className="text-sm text-muted-foreground">
+        94 registry items installable via the shadcn CLI. Button, Card, Dialog, DataTable, and 78 more.
+      </p>
+    </CardContent>
+  </Card>
+  <Card>
+    <CardHeader className="pb-2">
+      <div className="flex size-10 items-center justify-center rounded-xl bg-secondary">
+        <Palette className="size-5 text-foreground" />
+      </div>
+      <CardTitle className="text-base">Brand Documentation</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p className="text-sm text-muted-foreground">
+        The Five African Minerals palette, typography, spacing, and component visual specifications.
+      </p>
+    </CardContent>
+  </Card>
+  <Card>
+    <CardHeader className="pb-2">
+      <div className="flex size-10 items-center justify-center rounded-xl bg-secondary">
+        <BookOpen className="size-5 text-foreground" />
+      </div>
+      <CardTitle className="text-base">Architecture Guide</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p className="text-sm text-muted-foreground">
+        Ecosystem architecture, data layer specs, and technology sovereignty documentation.
+      </p>
+    </CardContent>
+  </Card>
+</div>
+
+## Quick start
+
+### 1. Install a component
+
+```bash
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button
+```
+
+### 2. Set up theming
+
+Copy the Five African Minerals CSS custom properties into your `globals.css`. See the [Theming guide](/docs/theming) for the full token set.
+
+### 3. Use the component
+
+```tsx
+import { Button } from "@/components/ui/button"
+
+export function MyPage() {
+  return <Button variant="default">Get Started</Button>
+}
+```
+
+## Explore the docs
+
+<div className="mt-6 grid gap-3 sm:grid-cols-2">
+  {[
+    { title: "Installation", href: "/docs/installation", description: "Set up your project with the Mukoko design system" },
+    { title: "Theming", href: "/docs/theming", description: "Five African Minerals palette and CSS custom properties" },
+    { title: "Dark Mode", href: "/docs/dark-mode", description: "Configure dark mode with next-themes" },
+    { title: "CLI", href: "/docs/cli", description: "Using the shadcn CLI with the Mukoko registry" },
+    { title: "Foundations", href: "/foundations", description: "Accessibility, typography, layout, motion" },
+    { title: "Components", href: "/components", description: "Browse all 82 UI components" },
+    { title: "Patterns", href: "/patterns", description: "Architecture and resilience patterns" },
+    { title: "Registry", href: "/registry", description: "How the registry works under the hood" },
+  ].map((link) => (
+    <a
+      key={link.href}
+      href={link.href}
+      className="group flex items-center justify-between rounded-xl border border-border p-4 transition-colors hover:bg-muted"
+    >
+      <div>
+        <p className="font-medium text-foreground">{link.title}</p>
+        <p className="text-sm text-muted-foreground">{link.description}</p>
+      </div>
+      <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+    </a>
+  ))}
+</div>
