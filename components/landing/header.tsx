@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Menu, X } from "lucide-react"
+import { ExternalLink } from "lucide-react"
+import { MukokoLogo } from "@/components/brand/mukoko-logo"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -11,141 +12,64 @@ function GithubIcon({ className }: { className?: string }) {
     </svg>
   )
 }
-import { MukokoLogo } from "@/components/brand/mukoko-logo"
-import { ThemeToggle } from "@/components/theme-toggle"
 
-const products = [
-  { label: "mukoko.com", href: "https://www.mukoko.com" },
-  { label: "lingo", href: "https://lingo.mukoko.com" },
-  { label: "nhimbe", href: "https://nhimbe.com" },
-  { label: "bushtrade", href: "https://bushtrade.co.zw" },
-  { label: "bundu", href: "https://bundu.family" },
-  { label: "news", href: "https://news.mukoko.com" },
-  { label: "weather", href: "https://weather.mukoko.com" },
-  { label: "shamwari", href: "https://shamwari.ai" },
-]
-
-const navLinks = [
-  { label: "Docs", href: "/docs" },
-  { label: "Components", href: "/components" },
-  { label: "Brand", href: "/brand" },
-]
-
-const mobileMoreLinks = [
-  { label: "Blocks", href: "/blocks" },
-  { label: "Charts", href: "/charts" },
-  { label: "Foundations", href: "/foundations" },
-  { label: "Patterns", href: "/patterns" },
-  { label: "Architecture", href: "/architecture" },
-]
+function SearchIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  )
+}
 
 export function Header() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+        {/* Left: Icon + wordmark */}
         <a href="/" className="flex items-center">
           <MukokoLogo size={26} suffix="design" />
         </a>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-0.5 lg:flex">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-            >
-              {link.label}
-            </a>
-          ))}
+        {/* Center: Desktop-only nav links */}
+        <nav className="hidden items-center gap-1 md:flex">
+          <a
+            href="/brand"
+            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Brand
+          </a>
+          <a
+            href="https://www.mukoko.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            mukoko.com
+            <ExternalLink className="size-3 opacity-50" />
+          </a>
         </nav>
 
-        <div className="flex items-center gap-1">
-          <ThemeToggle />
-          <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
+        {/* Right: 3 icon buttons */}
+        <div className="flex items-center gap-0.5">
+          <Button variant="ghost" size="icon" className="size-8" asChild>
+            <a href="/components" aria-label="Search components">
+              <SearchIcon className="size-4" />
+            </a>
+          </Button>
+          <Button variant="ghost" size="icon" className="size-8" asChild>
             <a
               href="https://github.com/nyuchitech/design-portal"
               target="_blank"
               rel="noopener noreferrer"
-              className="gap-2"
+              aria-label="GitHub"
             >
               <GithubIcon className="size-4" />
-              <span className="text-sm">GitHub</span>
             </a>
           </Button>
-          {/* Mobile menu toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          >
-            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </Button>
+          <ThemeToggle />
         </div>
       </div>
-
-      {/* Mobile nav drawer */}
-      {mobileOpen && (
-        <nav className="flex flex-col gap-1 border-t border-border bg-background px-4 pb-4 pt-2 lg:hidden">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-            >
-              {link.label}
-            </a>
-          ))}
-
-          <div className="my-1 h-px bg-border" />
-          <span className="px-3 py-1.5 text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
-            More
-          </span>
-          {mobileMoreLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-            >
-              {link.label}
-            </a>
-          ))}
-
-          <div className="my-1 h-px bg-border" />
-          <span className="px-3 py-1.5 text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
-            Products
-          </span>
-          {products.map((p) => (
-            <a
-              key={p.label}
-              href={p.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-            >
-              {p.label}
-              <ExternalLink className="size-3 opacity-50" />
-            </a>
-          ))}
-
-          <div className="my-1 h-px bg-border" />
-          <a
-            href="https://github.com/nyuchitech/design-portal"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            <GithubIcon className="size-4" />
-            GitHub
-          </a>
-        </nav>
-      )}
     </header>
   )
 }
