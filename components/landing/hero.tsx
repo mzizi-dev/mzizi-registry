@@ -88,12 +88,13 @@ export function Hero() {
         <h1 className="font-serif text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
           The design system
           <br />
-          for the nyuchi ecosystem
+          for the bundu ecosystem
         </h1>
         <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
           294 production-ready components, blocks, and charts rooted in the
-          Five African Minerals palette. Install directly into your project
-          with the shadcn CLI. No packages, no lock-in — just code you own.
+          Five African Minerals palette. One design system powering mukoko,
+          nyuchi, and every app in the bundu family. Install with the shadcn
+          CLI — no packages, no lock-in.
         </p>
       </div>
 

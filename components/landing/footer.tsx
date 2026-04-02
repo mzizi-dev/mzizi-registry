@@ -93,8 +93,9 @@ export function Footer() {
           <div className="flex flex-col gap-3">
             <MukokoLogo size={24} showWordmark={true} suffix="design" />
             <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">
-              The design system and component registry for the bundu ecosystem.
-              Built by nyuchi on the Five African Minerals palette.
+              The design system for the bundu ecosystem — powering mukoko,
+              nyuchi, and every app in the family. Built on the Five African
+              Minerals palette.
             </p>
             <div className="flex items-center gap-1.5 pt-1">
               {minerals.map((m) => (
@@ -105,14 +106,7 @@ export function Footer() {
 
           <div className="flex flex-wrap gap-8 sm:gap-12">
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium text-foreground">bundu ecosystem</span>
-              <a href="https://bundu.family" target="_blank" rel="noopener noreferrer" className={footerLink}>bundu.family</a>
-              <a href="https://nyuchi.com" target="_blank" rel="noopener noreferrer" className={footerLink}>nyuchi</a>
-              <a href="https://bushtrade.co.zw" target="_blank" rel="noopener noreferrer" className={footerLink}>bushtrade</a>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium text-foreground">mukoko apps</span>
+              <span className="text-xs font-medium text-foreground">mukoko — consumer</span>
               <a href="https://www.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>mukoko.com</a>
               <a href="https://weather.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>weather</a>
               <a href="https://news.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>news</a>
@@ -122,7 +116,9 @@ export function Footer() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium text-foreground">Open Source</span>
+              <span className="text-xs font-medium text-foreground">nyuchi — enterprise</span>
+              <a href="https://nyuchi.com" target="_blank" rel="noopener noreferrer" className={footerLink}>nyuchi.com</a>
+              <a href="https://bushtrade.co.zw" target="_blank" rel="noopener noreferrer" className={footerLink}>bushtrade</a>
               <a href="https://github.com/nyuchitech/design-portal" target="_blank" rel="noopener noreferrer" className={footerLink}>GitHub</a>
               <a href="https://github.com/nyuchitech" target="_blank" rel="noopener noreferrer" className={footerLink}>Nyuchi on GitHub</a>
             </div>

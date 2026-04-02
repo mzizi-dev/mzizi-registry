@@ -60,17 +60,19 @@ describe("Brand Data Module", () => {
   })
 
   describe("ECOSYSTEM_BRANDS", () => {
-    it("has 5 brands", () => {
-      expect(ECOSYSTEM_BRANDS).toHaveLength(5)
+    it("has 7 brands", () => {
+      expect(ECOSYSTEM_BRANDS).toHaveLength(7)
     })
 
-    it("contains bundu, nyuchi, mukoko, shamwari, nhimbe", () => {
+    it("contains all ecosystem brands", () => {
       const names = ECOSYSTEM_BRANDS.map((b) => b.name)
       expect(names).toContain("bundu")
       expect(names).toContain("nyuchi")
       expect(names).toContain("mukoko")
       expect(names).toContain("shamwari")
       expect(names).toContain("nhimbe")
+      expect(names).toContain("bushtrade")
+      expect(names).toContain("lingo")
     })
 
     it("all brand names are lowercase", () => {
@@ -82,7 +84,7 @@ describe("Brand Data Module", () => {
     it("every brand has required fields", () => {
       for (const brand of ECOSYSTEM_BRANDS) {
         expect(brand.meaning).toBeTruthy()
-        expect(brand.language).toBe("Shona")
+        expect(brand.language).toBeTruthy()
         expect(brand.role).toBeTruthy()
         expect(brand.description).toBeTruthy()
         expect(brand.voice).toBeTruthy()

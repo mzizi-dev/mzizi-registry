@@ -22,12 +22,12 @@ describe("BrandCard", () => {
 
   it("renders role", () => {
     render(<BrandCard brand={testBrand} />)
-    expect(screen.getByText("Consumer apps")).toBeInTheDocument()
+    expect(screen.getByText("Africa's super app")).toBeInTheDocument()
   })
 
   it("renders description", () => {
     render(<BrandCard brand={testBrand} />)
-    expect(screen.getByText(/consumer-facing app family/)).toBeInTheDocument()
+    expect(screen.getByText(/Seventeen mini-apps/)).toBeInTheDocument()
   })
 
   it("renders voice", () => {
