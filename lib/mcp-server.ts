@@ -1,9 +1,8 @@
 /**
- * Mukoko Registry MCP Server — Shared Setup
+ * Mukoko Registry MCP Server
  *
  * Configures the McpServer instance with all tools and resources.
- * Used by both the stdio transport (mcp/src/index.ts) and
- * the HTTP endpoint (app/mcp/route.ts).
+ * Served via the HTTP endpoint at /mcp (app/mcp/route.ts).
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
