@@ -93,8 +93,8 @@ export function Footer() {
           <div className="flex flex-col gap-3">
             <MukokoLogo size={24} showWordmark={true} suffix="design" />
             <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">
-              The design system and component registry for the nyuchi ecosystem.
-              Built on the Five African Minerals palette.
+              The design system and component registry for the bundu ecosystem.
+              Built by nyuchi on the Five African Minerals palette.
             </p>
             <div className="flex items-center gap-1.5 pt-1">
               {minerals.map((m) => (
@@ -105,18 +105,19 @@ export function Footer() {
 
           <div className="flex flex-wrap gap-8 sm:gap-12">
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium text-foreground">Ecosystem</span>
-              <a href="https://www.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>mukoko.com</a>
-              <a href="https://lingo.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>lingo</a>
-              <a href="https://nhimbe.com" target="_blank" rel="noopener noreferrer" className={footerLink}>nhimbe</a>
+              <span className="text-xs font-medium text-foreground">bundu ecosystem</span>
+              <a href="https://bundu.family" target="_blank" rel="noopener noreferrer" className={footerLink}>bundu.family</a>
+              <a href="https://nyuchi.com" target="_blank" rel="noopener noreferrer" className={footerLink}>nyuchi</a>
               <a href="https://bushtrade.co.zw" target="_blank" rel="noopener noreferrer" className={footerLink}>bushtrade</a>
-              <a href="https://bundu.family" target="_blank" rel="noopener noreferrer" className={footerLink}>bundu</a>
             </div>
 
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium text-foreground">Services</span>
-              <a href="https://news.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>news</a>
+              <span className="text-xs font-medium text-foreground">mukoko apps</span>
+              <a href="https://www.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>mukoko.com</a>
               <a href="https://weather.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>weather</a>
+              <a href="https://news.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>news</a>
+              <a href="https://lingo.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>lingo</a>
+              <a href="https://nhimbe.com" target="_blank" rel="noopener noreferrer" className={footerLink}>nhimbe</a>
               <a href="https://shamwari.ai" target="_blank" rel="noopener noreferrer" className={footerLink}>shamwari</a>
             </div>
 

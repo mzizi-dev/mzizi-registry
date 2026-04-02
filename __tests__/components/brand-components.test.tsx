@@ -22,12 +22,12 @@ describe("BrandCard", () => {
 
   it("renders role", () => {
     render(<BrandCard brand={testBrand} />)
-    expect(screen.getByText("Structure layer")).toBeInTheDocument()
+    expect(screen.getByText("Consumer apps")).toBeInTheDocument()
   })
 
   it("renders description", () => {
     render(<BrandCard brand={testBrand} />)
-    expect(screen.getByText(/Community gathering/)).toBeInTheDocument()
+    expect(screen.getByText(/consumer-facing app family/)).toBeInTheDocument()
   })
 
   it("renders voice", () => {
