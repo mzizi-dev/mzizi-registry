@@ -34,6 +34,34 @@ import type {
   ComponentDocInsert,
   ComponentDemoInsert,
   DatabaseInfo,
+  BrandMineralRow,
+  BrandMineralInsert,
+  BrandSemanticColorRow,
+  BrandSemanticColorInsert,
+  BrandTypographyRow,
+  BrandTypographyInsert,
+  BrandSpacingRow,
+  BrandSpacingInsert,
+  BrandEcosystemRow,
+  BrandEcosystemInsert,
+  BrandMetaRow,
+  BrandMetaInsert,
+  ArchitecturePrincipleRow,
+  ArchitecturePrincipleInsert,
+  ArchitectureFrameworkRow,
+  ArchitectureFrameworkInsert,
+  ArchitectureDataLayerRow,
+  ArchitectureDataLayerInsert,
+  ArchitectureCloudLayerRow,
+  ArchitectureCloudLayerInsert,
+  ArchitecturePipelineRow,
+  ArchitecturePipelineInsert,
+  ArchitectureDataOwnershipRow,
+  ArchitectureDataOwnershipInsert,
+  ArchitectureSovereigntyRow,
+  ArchitectureSovereigntyInsert,
+  ArchitectureRemovedRow,
+  ArchitectureRemovedInsert,
 } from "./types"
 
 // ── Supabase clients ────────────────────────────────────────────────
@@ -384,4 +412,509 @@ export async function isSeeded(): Promise<boolean> {
     .select("*", { count: "exact", head: true })
 
   return (count ?? 0) > 0
+}
+
+// ── Brand queries ──────────────────────────────────────────────────
+
+/**
+ * Get all brand minerals, sorted by sort_order.
+ */
+export async function getMinerals(): Promise<BrandMineralRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("brand_minerals")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as BrandMineralRow[]
+}
+
+/**
+ * Get all semantic colors.
+ */
+export async function getSemanticColors(): Promise<BrandSemanticColorRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("brand_semantic_colors")
+    .select("*")
+    .order("name")
+
+  if (error) throw error
+  return (data ?? []) as unknown as BrandSemanticColorRow[]
+}
+
+/**
+ * Get semantic colors filtered by type (e.g. 'semantic' or 'background').
+ */
+export async function getSemanticColorsByType(
+  colorType: string
+): Promise<BrandSemanticColorRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("brand_semantic_colors")
+    .select("*")
+    .eq("color_type", colorType)
+    .order("name")
+
+  if (error) throw error
+  return (data ?? []) as unknown as BrandSemanticColorRow[]
+}
+
+/**
+ * Get all typography entries, sorted by sort_order.
+ */
+export async function getTypography(): Promise<BrandTypographyRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("brand_typography")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as BrandTypographyRow[]
+}
+
+/**
+ * Get typography entries by type ('font' or 'scale').
+ */
+export async function getTypographyByType(
+  entryType: string
+): Promise<BrandTypographyRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("brand_typography")
+    .select("*")
+    .eq("entry_type", entryType)
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as BrandTypographyRow[]
+}
+
+/**
+ * Get all spacing tokens, sorted by sort_order.
+ */
+export async function getSpacing(): Promise<BrandSpacingRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("brand_spacing")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as BrandSpacingRow[]
+}
+
+/**
+ * Get all ecosystem brands, sorted by sort_order.
+ */
+export async function getEcosystemBrands(): Promise<BrandEcosystemRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("brand_ecosystem")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as BrandEcosystemRow[]
+}
+
+/**
+ * Get brand metadata (single row).
+ */
+export async function getBrandMeta(): Promise<BrandMetaRow | null> {
+  const { data, error } = await getPublicClient()
+    .from("brand_meta")
+    .select("*")
+    .limit(1)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw error
+  }
+  return data as unknown as BrandMetaRow
+}
+
+/**
+ * Get the full brand system from DB, assembled into the same shape as BRAND_SYSTEM.
+ */
+export async function getBrandSystem(): Promise<{
+  minerals: BrandMineralRow[]
+  semanticColors: BrandSemanticColorRow[]
+  backgrounds: BrandSemanticColorRow[]
+  typography: BrandTypographyRow[]
+  spacing: BrandSpacingRow[]
+  ecosystem: BrandEcosystemRow[]
+  meta: BrandMetaRow | null
+} | null> {
+  try {
+    const [minerals, semanticColors, backgrounds, typography, spacing, ecosystem, meta] =
+      await Promise.all([
+        getMinerals(),
+        getSemanticColorsByType("semantic"),
+        getSemanticColorsByType("background"),
+        getTypography(),
+        getSpacing(),
+        getEcosystemBrands(),
+        getBrandMeta(),
+      ])
+
+    if (minerals.length === 0 && !meta) return null
+
+    return { minerals, semanticColors, backgrounds, typography, spacing, ecosystem, meta }
+  } catch {
+    return null
+  }
+}
+
+// ── Architecture queries ───────────────────────────────────────────
+
+/**
+ * Get all architecture principles, sorted by sort_order.
+ */
+export async function getArchitecturePrinciples(): Promise<ArchitecturePrincipleRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("architecture_principles")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as ArchitecturePrincipleRow[]
+}
+
+/**
+ * Get the framework decision (single row).
+ */
+export async function getFrameworkDecision(): Promise<ArchitectureFrameworkRow | null> {
+  const { data, error } = await getPublicClient()
+    .from("architecture_framework")
+    .select("*")
+    .limit(1)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw error
+  }
+  return data as unknown as ArchitectureFrameworkRow
+}
+
+/**
+ * Get local data layer technologies, sorted by sort_order.
+ */
+export async function getLocalDataLayer(): Promise<ArchitectureDataLayerRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("architecture_data_layer")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as ArchitectureDataLayerRow[]
+}
+
+/**
+ * Get cloud layer services, sorted by sort_order.
+ */
+export async function getCloudLayer(): Promise<ArchitectureCloudLayerRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("architecture_cloud_layer")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as ArchitectureCloudLayerRow[]
+}
+
+/**
+ * Get pipeline stages, sorted by sort_order.
+ */
+export async function getPipeline(): Promise<ArchitecturePipelineRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("architecture_pipeline")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as ArchitecturePipelineRow[]
+}
+
+/**
+ * Get data ownership rules, sorted by sort_order.
+ */
+export async function getDataOwnership(): Promise<ArchitectureDataOwnershipRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("architecture_data_ownership")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as ArchitectureDataOwnershipRow[]
+}
+
+/**
+ * Get sovereignty assessments, sorted by sort_order.
+ */
+export async function getSovereignty(): Promise<ArchitectureSovereigntyRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("architecture_sovereignty")
+    .select("*")
+    .order("sort_order")
+
+  if (error) throw error
+  return (data ?? []) as unknown as ArchitectureSovereigntyRow[]
+}
+
+/**
+ * Get removed technologies.
+ */
+export async function getRemovedTechnologies(): Promise<ArchitectureRemovedRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("architecture_removed")
+    .select("*")
+    .order("name")
+
+  if (error) throw error
+  return (data ?? []) as unknown as ArchitectureRemovedRow[]
+}
+
+// ── Brand write operations (server-only) ───────────────────────────
+
+/**
+ * Upsert a brand mineral.
+ */
+export async function upsertBrandMineral(
+  mineral: BrandMineralInsert
+): Promise<BrandMineralRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("brand_minerals")
+    .upsert(mineral, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as BrandMineralRow
+}
+
+/**
+ * Upsert a semantic color.
+ */
+export async function upsertBrandSemanticColor(
+  color: BrandSemanticColorInsert
+): Promise<BrandSemanticColorRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("brand_semantic_colors")
+    .upsert(color, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as BrandSemanticColorRow
+}
+
+/**
+ * Upsert a typography entry.
+ */
+export async function upsertBrandTypography(
+  entry: BrandTypographyInsert
+): Promise<BrandTypographyRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("brand_typography")
+    .upsert(entry, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as BrandTypographyRow
+}
+
+/**
+ * Upsert a spacing token.
+ */
+export async function upsertBrandSpacing(
+  spacing: BrandSpacingInsert
+): Promise<BrandSpacingRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("brand_spacing")
+    .upsert(spacing, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as BrandSpacingRow
+}
+
+/**
+ * Upsert an ecosystem brand.
+ */
+export async function upsertBrandEcosystem(
+  brand: BrandEcosystemInsert
+): Promise<BrandEcosystemRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("brand_ecosystem")
+    .upsert(brand, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as BrandEcosystemRow
+}
+
+/**
+ * Upsert brand metadata (single row — deletes existing then inserts).
+ */
+export async function upsertBrandMeta(
+  meta: BrandMetaInsert
+): Promise<BrandMetaRow> {
+  const admin = getAdminClient()
+
+  // Delete existing rows (single row table)
+  await admin.from("brand_meta").delete().neq("id", 0)
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (admin as any)
+    .from("brand_meta")
+    .insert(meta)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as BrandMetaRow
+}
+
+// ── Architecture write operations (server-only) ────────────────────
+
+/**
+ * Upsert an architecture principle.
+ */
+export async function upsertArchitecturePrinciple(
+  principle: ArchitecturePrincipleInsert
+): Promise<ArchitecturePrincipleRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("architecture_principles")
+    .upsert(principle, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as ArchitecturePrincipleRow
+}
+
+/**
+ * Upsert the framework decision.
+ */
+export async function upsertArchitectureFramework(
+  framework: ArchitectureFrameworkInsert
+): Promise<ArchitectureFrameworkRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("architecture_framework")
+    .upsert(framework, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as ArchitectureFrameworkRow
+}
+
+/**
+ * Upsert a data layer technology.
+ */
+export async function upsertArchitectureDataLayer(
+  tech: ArchitectureDataLayerInsert
+): Promise<ArchitectureDataLayerRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("architecture_data_layer")
+    .upsert(tech, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as ArchitectureDataLayerRow
+}
+
+/**
+ * Upsert a cloud layer service.
+ */
+export async function upsertArchitectureCloudLayer(
+  service: ArchitectureCloudLayerInsert
+): Promise<ArchitectureCloudLayerRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("architecture_cloud_layer")
+    .upsert(service, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as ArchitectureCloudLayerRow
+}
+
+/**
+ * Upsert a pipeline stage.
+ */
+export async function upsertArchitecturePipeline(
+  stage: ArchitecturePipelineInsert
+): Promise<ArchitecturePipelineRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("architecture_pipeline")
+    .upsert(stage, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as ArchitecturePipelineRow
+}
+
+/**
+ * Upsert a data ownership rule.
+ */
+export async function upsertArchitectureDataOwnership(
+  rule: ArchitectureDataOwnershipInsert
+): Promise<ArchitectureDataOwnershipRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("architecture_data_ownership")
+    .upsert(rule, { onConflict: "category" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as ArchitectureDataOwnershipRow
+}
+
+/**
+ * Upsert a sovereignty assessment.
+ */
+export async function upsertArchitectureSovereignty(
+  assessment: ArchitectureSovereigntyInsert
+): Promise<ArchitectureSovereigntyRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("architecture_sovereignty")
+    .upsert(assessment, { onConflict: "technology" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as ArchitectureSovereigntyRow
+}
+
+/**
+ * Upsert a removed technology.
+ */
+export async function upsertArchitectureRemoved(
+  removed: ArchitectureRemovedInsert
+): Promise<ArchitectureRemovedRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("architecture_removed")
+    .upsert(removed, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as ArchitectureRemovedRow
 }

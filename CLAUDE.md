@@ -8,13 +8,13 @@
 
 ## 1. Project Identity
 
-**Mukoko Registry** is the component registry, brand documentation hub, and design system for the Mukoko ecosystem. It serves 82 production-ready React UI components built on the **Five African Minerals** design system, installable via the shadcn CLI:
+**Mukoko Registry** is the Nyuchi Design Portal — the component registry, brand documentation hub, design system, and developer portal for the Mukoko ecosystem. It serves 294 production-ready registry items (169 UI components, 3 hooks, 11 lib utilities, 70 chart blocks, 35 page blocks) built on the **Five African Minerals** design system, installable via the shadcn CLI:
 
 ```
 npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/<component>
 ```
 
-**Version:** 7.0.0
+**Version:** 4.0.1
 
 **Live at:** registry.mukoko.com
 
@@ -47,7 +47,7 @@ Mukoko Registry exists within a broader ecosystem. Understanding the relationshi
 mukoko-registry (this repo)
     │
     ├── Defines: Five African Minerals palette, typography, component API
-    ├── Serves: 94 registry items (82 UI, 3 hooks, 9 lib) via shadcn CLI / API / static JSON
+    ├── Serves: 294 registry items (169 UI, 3 hooks, 11 lib, 70 chart blocks, 35 page blocks) via shadcn CLI / API
     │
     └── Consumed by:
         ├── mukoko-weather  (weather.mukoko.com)
@@ -65,21 +65,22 @@ mukoko-registry (this repo)
 
 | Layer | Technology | Version |
 |---|---|---|
-| Framework | Next.js (App Router) | 16.1.6 |
-| Language | TypeScript (strict mode) | 5.7.3 |
+| Framework | Next.js (App Router) | 16.2.2 |
+| Language | TypeScript (strict mode) | 6.0.2 |
 | Package Manager | pnpm | — |
-| Styling | Tailwind CSS + CSS custom properties | 4.2.0 |
-| Component Primitives | Radix UI + Base UI | radix-ui 1.4.3, @base-ui/react 1.0.0 |
+| Styling | Tailwind CSS + CSS custom properties | 4.2.2 |
+| Component Primitives | Radix UI + Base UI | radix-ui 1.4.3, @base-ui/react 1.3.0 |
 | Variant Management | class-variance-authority (CVA) | 0.7.1 |
 | Class Composition | clsx + tailwind-merge | via `cn()` in `lib/utils.ts` |
-| Icons | Lucide React | 0.564.0 |
+| Icons | Lucide React | 1.7.0 |
 | Theming | next-themes | 0.4.6 |
-| Forms | react-hook-form + zod | 7.54.1 / 3.24.1 |
-| Charts | Recharts | 2.15.0 |
-| Testing | Vitest + Testing Library | 4.0.18 |
+| Forms | react-hook-form + zod | 7.72.0 / 4.3.6 |
+| Charts | Recharts | 3.8.1 |
+| Testing | Vitest + Testing Library | 4.1.2 |
 | Observability | Structured logging (`lib/observability.ts`) | Built-in |
 | Resilience | Circuit breaker, retry, timeout, fallback chain | Built-in (`lib/`) |
-| MCP Server | @modelcontextprotocol/sdk (stdio transport) | ^1.12.1 |
+| Database | Supabase (PostgreSQL) | 2.101.1 |
+| MCP Server | @modelcontextprotocol/sdk (Streamable HTTP) | 1.29.0 |
 | CI/CD | GitHub Actions + Vercel | — |
 | Deployment | Vercel | — |
 
@@ -176,7 +177,7 @@ mukoko-registry/
 │   │   ├── error-boundary-demo.tsx # Error boundary demo
 │   │   ├── lazy-loading-demo.tsx # Lazy loading demo
 │   │   └── observability-demo.tsx # Observability demo
-│   ├── ui/                       # 82 shadcn-style UI components
+│   ├── ui/                       # 169 UI components
 │   │   ├── button.tsx            # CVA variants, Slot polymorphism
 │   │   ├── card.tsx, dialog.tsx, input.tsx, ...
 │   │   └── [60+ component files]
@@ -196,12 +197,7 @@ mukoko-registry/
 │   ├── fallback-chain.ts         # Fallback chain pattern
 │   ├── chaos.ts                  # Chaos engineering utilities
 │   ├── ai-safety.ts              # AI safety guardrails
-│   └── mcp-server.ts             # MCP server utilities
-├── mcp/                          # MCP (Model Context Protocol) server
-│   ├── package.json              # @mukoko/mcp-server package (v7.0.0)
-│   ├── tsconfig.json             # TypeScript config for MCP server
-│   └── src/
-│       └── index.ts              # MCP server entry point (stdio transport)
+│   └── mcp-server.ts             # MCP server factory (served at /mcp)
 ├── scripts/
 │   └── build-registry.js         # Static registry builder → public/r/
 ├── public/
@@ -215,7 +211,7 @@ mukoko-registry/
 ├── next.config.mjs               # Next.js config
 ├── tsconfig.json                 # TypeScript config (strict, path aliases)
 ├── postcss.config.mjs            # PostCSS with @tailwindcss/postcss
-└── package.json                  # Dependencies and scripts (v7.0.0)
+└── package.json                  # Dependencies and scripts (v4.0.1)
 ```
 
 ---
@@ -224,7 +220,7 @@ mukoko-registry/
 
 ### 6.1 Registry System
 
-`registry.json` is the manifest defining all 94 registry items with metadata, dependencies, and file paths. It follows the schema at `https://ui.shadcn.com/schema/registry.json`.
+`registry.json` is the manifest defining all 294 registry items with metadata, dependencies, and file paths. It follows the schema at `https://ui.shadcn.com/schema/registry.json`.
 
 Components are served two ways:
 
@@ -526,21 +522,25 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 
 ## 10. MCP Server
 
-The repository includes a **Model Context Protocol (MCP) server** (`mcp/`) that exposes the registry, brand system, and design tokens to AI assistants via stdio transport.
+The registry includes a **Model Context Protocol (MCP) server** served at `/mcp` via Streamable HTTP transport. It exposes the registry, brand system, and design tokens to AI assistants.
 
 ### Setup
+
+The MCP server is a Next.js API route at `app/mcp/route.ts`, powered by `lib/mcp-server.ts`.
 
 Configured in `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
     "mukoko-registry": {
-      "command": "npx",
-      "args": ["--prefix", "mcp", "tsx", "mcp/src/index.ts"]
+      "type": "url",
+      "url": "https://registry.mukoko.com/mcp"
     }
   }
 }
 ```
+
+**Endpoint:** `POST /mcp` (JSON-RPC), `GET /mcp` (SSE), `DELETE /mcp` (cleanup), `OPTIONS /mcp` (CORS preflight)
 
 ### Resources (read-only data)
 
@@ -548,13 +548,9 @@ Configured in `.claude/settings.json`:
 |---|---|
 | `mukoko://registry` | Full component registry index |
 | `mukoko://brand` | Complete brand system data |
-| `mukoko://component/{name}` | Individual component source code |
 | `mukoko://design-tokens` | Five African Minerals palette + semantic tokens |
 | `mukoko://guidelines` | Design system usage guidelines |
 | `mukoko://architecture` | Ecosystem architecture (principles, framework) |
-| `mukoko://data-layer` | Data layer specification |
-| `mukoko://pipeline` | Open data pipeline |
-| `mukoko://sovereignty` | Technology sovereignty assessments |
 
 ### Tools (callable actions)
 
@@ -569,34 +565,43 @@ Configured in `.claude/settings.json`:
 | `get_brand_info` | Get information about a specific ecosystem brand |
 | `get_architecture_info` | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty) |
 
-### Development
+### Architecture
 
-```bash
-cd mcp && npx tsx src/index.ts   # Run MCP server directly
-cd mcp && pnpm build             # Build for distribution
-```
-
-**Package:** `@mukoko/mcp-server` (v7.0.0) — separate package.json in `mcp/`
+- **`lib/mcp-server.ts`** — Server factory (`createMukokoMcpServer()`) with all tools and resources
+- **`app/mcp/route.ts`** — HTTP endpoint using `WebStandardStreamableHTTPServerTransport` (stateless)
+- All data read from Supabase — zero hardcoded content
 
 ---
 
 ## 11. Component Categories
 
-The 94 registry items (82 UI components, 3 hooks, 9 library utilities) are organized by function:
+The 294 registry items (169 UI components, 3 hooks, 11 library utilities, 70 chart blocks, 35 page blocks) are organized by function:
 
-| Category | Components |
-|---|---|
-| **Input** | calendar, checkbox, combobox, command, date-picker, field, file-upload, form, input, input-group, input-otp, label, native-select, radio-group, search-bar, select, slider, switch, textarea |
-| **Action** | button, button-group, copy-button, rating, toggle, toggle-group |
-| **Data Display** | avatar, badge, chart, data-table, kbd, pricing-card, stats-card, status-indicator, table, timeline, typography |
-| **Feedback** | alert, empty, progress, skeleton, sonner, spinner, toast, toaster |
-| **Layout** | accordion, aspect-ratio, card, carousel, collapsible, dashboard-layout, detail-layout, drawer, item, resizable, scroll-area, separator, sheet, sidebar |
-| **Navigation** | breadcrumb, menubar, navigation-menu, pagination, tabs |
-| **Overlay** | alert-dialog, context-menu, dialog, dropdown-menu, filter-bar, hover-card, notification-bell, popover, share-dialog, tooltip, user-menu |
-| **Mukoko Ecosystem** | mukoko-bottom-nav, mukoko-footer, mukoko-header, mukoko-sidebar |
-| **Infrastructure** | error-boundary, lazy-section, section-error-boundary |
-| **Utility** | direction, use-memory-pressure (hook), use-mobile (hook), use-toast (hook), utils (lib) |
-| **Resilience** | ai-safety, architecture, chaos, circuit-breaker, fallback-chain, observability, retry, timeout (all `registry:lib`) |
+| Category | Count | Components |
+|---|---|---|
+| **Forms & Input** | 28 | calendar, checkbox, combobox, command, date-picker, date-range-picker, field, file-upload, form, input, input-group, input-otp, label, native-select, radio-group, search-bar, select, slider, switch, textarea, phone-input, tag-input, time-picker, rich-text-editor, code-editor, color-picker, address-input, transfer-list, number-input, autocomplete, mention-input |
+| **Chat & Messaging** | 8 | chat-bubble, chat-list, chat-input, chat-layout, typing-indicator, message-thread, reaction-picker |
+| **AI & Chatbot** | 8 | ai-chat, prompt-input, streaming-text, ai-feedback, ai-response-card, source-citation, suggested-prompts |
+| **Data Display** | 14 | avatar, badge, chart, data-table, kbd, pricing-card, stats-card, status-indicator, table, timeline, typography, tree-view, kanban-board, virtual-list, property-list, json-viewer, schema-viewer, description-list |
+| **User & Profile** | 8 | avatar-group, user-card, profile-header, activity-feed, notification-list |
+| **E-commerce** | 7 | product-card, price-display, cart-item, order-summary, payment-method-card, subscription-card, invoice-row |
+| **Calendar & Scheduling** | 7 | calendar-week-view, calendar-day-view, event-card, time-slot-picker, agenda-view |
+| **Productivity** | 6 | todo-item, checklist, note-card, comment-thread, drag-handle |
+| **Developer Tools** | 7 | api-key-display, webhook-card, env-editor, code-tabs, code-block, endpoint-card, log-viewer |
+| **Security & Auth** | 5 | permission-badge, role-selector, mfa-setup, session-list, audit-log-entry |
+| **Content & Media** | 6 | markdown-renderer, lightbox, video-player, audio-player, file-preview |
+| **Action** | 6 | button, button-group, copy-button, rating, toggle, toggle-group |
+| **Feedback** | 10 | alert, empty, progress, skeleton, sonner, spinner, toast, toaster, announcement-bar, cookie-consent, password-strength, onboarding-tour, changelog-entry, maintenance-page |
+| **Navigation** | 8 | breadcrumb, menubar, navigation-menu, pagination, tabs, stepper, app-switcher, bottom-sheet, mega-menu |
+| **Layout** | 10 | accordion, aspect-ratio, card, carousel, collapsible, drawer, resizable, scroll-area, separator, sheet, sidebar, page-header, section-header, settings-layout, split-view, masonry-grid, sticky-bar, infinite-scroll, pull-to-refresh |
+| **Overlay** | 11 | alert-dialog, context-menu, dialog, dropdown-menu, filter-bar, hover-card, notification-bell, popover, share-dialog, tooltip, user-menu |
+| **Directory & Listings** | 6 | listing-card, category-browser, review-card, contact-card, featured-card, map-placeholder |
+| **Mukoko Ecosystem** | 4 | mukoko-bottom-nav, mukoko-footer, mukoko-header, mukoko-sidebar |
+| **Infrastructure** | 3 | error-boundary, lazy-section, section-error-boundary |
+| **Hooks** | 3 | use-memory-pressure, use-mobile, use-toast |
+| **Resilience (lib)** | 11 | utils, ai-safety, architecture, chaos, circuit-breaker, fallback-chain, observability, retry, timeout |
+| **Chart Blocks** | 70 | area (10), bar (10), line (10), pie (11), radar (14), radial (6), tooltip (9) |
+| **Page Blocks** | 35 | dashboard-01, login-01–05, signup-01–05, sidebar-01–16, profile-page, profile-settings, onboarding-flow, error-page, empty-state, notification-center, search-results, command-center |
 
 ---
 
@@ -612,7 +617,7 @@ The 94 registry items (82 UI components, 3 hooks, 9 library utilities) are organ
 | `tsconfig.json` | `strict: true`, `target: "ES6"` | Strict TypeScript |
 | `tsconfig.json` | `paths: { "@/*": ["./*"] }` | Root-relative imports |
 | `postcss.config.mjs` | `@tailwindcss/postcss` | Tailwind CSS 4 PostCSS plugin |
-| `.claude/settings.json` | MCP server config | Connects Claude Code to local MCP server |
+| `.claude/settings.json` | MCP server config | Connects Claude Code to URL-based MCP server at /mcp |
 
 ---
 
@@ -686,7 +691,7 @@ Three workflows in `.github/workflows/`:
 
 ### Versioning
 
-- **Current version:** 7.0.0 (in `package.json`, `lib/brand.ts`, and footer)
+- **Current version:** 4.0.1 (in `package.json`, `lib/brand.ts`, and footer)
 - **Scheme:** Semantic versioning (major.minor.patch)
 - **Release process:**
   1. Update version in `package.json`
@@ -696,6 +701,23 @@ Three workflows in `.github/workflows/`:
   5. Tag: `git tag v7.x.x`
   6. Push: `git push && git push --tags`
   7. GitHub Actions creates the release automatically
+
+### Dependency Management — Upgrade-First Policy
+
+**This registry is the testing ground for major version upgrades.** All dependency upgrades happen here FIRST, before touching any production app. The workflow:
+
+1. **Upgrade here first** — always update to the latest version, including major versions
+2. **Run all CI gates** — lint, typecheck, test, build must all pass
+3. **If breaking changes exist** — fix them here in the registry components
+4. **If unfixable** — roll back here before it ever touches production
+5. **Once passing** — production apps (weather, news, events, super app) can safely upgrade
+
+**Why:** This registry defines the component API surface for the entire ecosystem. If a major version upgrade (e.g., Recharts 2→3, Zod 3→4) changes how components work, that change propagates to every app that installs from the registry. Better to catch and fix it here than discover it in production.
+
+**Rule:** Never leave packages outdated "because it's a major version." Upgrade, test, fix. If it breaks and can't be fixed, document why and pin the version with a comment explaining the blocker.
+
+**Current known pins:**
+- `@vitejs/plugin-react@5` — v6 requires vite 8, but vitest 4 bundles vite 7. Upgrade both together when vitest 5 ships.
 
 ### Deployment
 
@@ -723,7 +745,7 @@ When working on this codebase as an AI assistant:
 12. **Brand data lives in `lib/brand.ts`** — update brand data there, not in individual pages
 13. **Keep versions in sync** — `package.json`, `lib/brand.ts` (BRAND_SYSTEM.version), and `footer.tsx` must match
 14. **The mineral strip uses 5 mineral colors** — not flag colors; it's the brand identity element
-15. **Use the MCP server** — the `mcp/` server exposes registry data, brand info, architecture data, and scaffolding tools; keep data in sync with `lib/brand.ts` and `lib/architecture.ts`
+15. **Use the MCP server** — served at `/mcp` via `lib/mcp-server.ts`; reads architecture data directly from `lib/architecture.ts` and brand data from `lib/brand.ts`
 16. **Resilience libraries are registry items** — `lib/observability.ts`, `lib/circuit-breaker.ts`, etc. are served via the registry as `registry:lib` items; follow the same patterns when adding new utilities
 17. **Architecture data lives in `lib/architecture.ts`** — update architecture data there, not in individual pages; follows the same pattern as `lib/brand.ts`
 18. **The mineral strip is always vertical** — used only as a left-edge accent (cards, sidebars, page borders); never horizontal

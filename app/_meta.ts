@@ -10,12 +10,20 @@ export default {
       breadcrumb: false,
     },
   },
-  brand: {
-    title: "Brand",
+  docs: {
+    title: "Docs",
     type: "page",
   },
-  architecture: {
-    title: "Architecture",
+  foundations: {
+    title: "Foundations",
+    type: "page",
+  },
+  design: {
+    title: "Design",
+    type: "page",
+  },
+  content: {
+    title: "Content",
     type: "page",
   },
   components: {
@@ -24,6 +32,26 @@ export default {
   },
   patterns: {
     title: "Patterns",
+    type: "page",
+  },
+  charts: {
+    title: "Charts",
+    type: "page",
+  },
+  blocks: {
+    title: "Blocks",
+    type: "page",
+  },
+  registry: {
+    title: "Registry",
+    type: "page",
+  },
+  brand: {
+    title: "Brand",
+    type: "page",
+  },
+  architecture: {
+    title: "Architecture",
     type: "page",
   },
   "api-docs": {
