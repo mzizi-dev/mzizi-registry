@@ -3297,6 +3297,414 @@
           "type": "registry:block"
         }
       ]
+    },
+    {
+      "name": "activity-feed",
+      "type": "registry:ui",
+      "description": "Chronological action list with timeline pattern for dashboards and profiles.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/activity-feed.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ai-chat",
+      "type": "registry:ui",
+      "description": "Complete AI conversation interface with message history, streaming, and suggested prompts.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/ai-chat.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "announcement-bar",
+      "type": "registry:ui",
+      "description": "Dismissible top-of-page banner for announcements with mineral-colored variants.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/announcement-bar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "autocomplete",
+      "type": "registry:ui",
+      "description": "Text input with async suggestion dropdown, loading states, and keyboard navigation.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/autocomplete.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "avatar-group",
+      "type": "registry:ui",
+      "description": "Overlapping avatar stack with +N overflow indicator for team displays.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/avatar-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "category-browser",
+      "type": "registry:ui",
+      "description": "Grid of browsable categories with icons, counts, and mineral-colored accents.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/category-browser.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chat-bubble",
+      "type": "registry:ui",
+      "description": "Single message display with sent/received variants, avatar, timestamp, and status.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/chat-bubble.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chat-input",
+      "type": "registry:ui",
+      "description": "Message composer with auto-growing textarea, send button, and keyboard shortcuts.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/chat-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chat-list",
+      "type": "registry:ui",
+      "description": "Scrollable conversation list with unread counts and active highlight.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/chat-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "code-block",
+      "type": "registry:ui",
+      "description": "Enhanced code display with language badge, line numbers, copy button, and filename.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/code-block.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "cookie-consent",
+      "type": "registry:ui",
+      "description": "GDPR/POPIA-compliant consent banner with accept, decline, and manage options.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/cookie-consent.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "date-range-picker",
+      "type": "registry:ui",
+      "description": "Dual-calendar popover for selecting date ranges with preset quick-selects.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/date-range-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "endpoint-card",
+      "type": "registry:ui",
+      "description": "API endpoint display with method badge, path, and description.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/endpoint-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "infinite-scroll",
+      "type": "registry:ui",
+      "description": "IntersectionObserver-based scroll sentinel for loading more content.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/infinite-scroll.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "json-viewer",
+      "type": "registry:ui",
+      "description": "Collapsible JSON tree view with syntax coloring and type indicators.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/json-viewer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "kanban-board",
+      "type": "registry:ui",
+      "description": "Column-based board for organizing items by status with drag indicators.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/kanban-board.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "listing-card",
+      "type": "registry:ui",
+      "description": "Directory listing card with image, title, metadata, and badges.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/listing-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "log-viewer",
+      "type": "registry:ui",
+      "description": "Scrollable filterable log output with severity coloring and auto-scroll.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/log-viewer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "markdown-renderer",
+      "type": "registry:ui",
+      "description": "Themed markdown-to-HTML renderer with design system typography and colors.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/markdown-renderer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "notification-list",
+      "type": "registry:ui",
+      "description": "Notification feed with read/unread states, timestamps, and date grouping.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/notification-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "page-header",
+      "type": "registry:ui",
+      "description": "Standard page header with breadcrumbs, title, description, and action slot.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/page-header.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "password-strength",
+      "type": "registry:ui",
+      "description": "Visual password strength meter with requirement checklist.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/password-strength.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "phone-input",
+      "type": "registry:ui",
+      "description": "Phone number input with country code selector, African countries prioritized.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/phone-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "profile-header",
+      "type": "registry:ui",
+      "description": "Full-width profile banner with avatar, name, bio, stats, and actions.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/profile-header.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "prompt-input",
+      "type": "registry:ui",
+      "description": "Expandable AI prompt input with send/stop buttons and streaming support.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/prompt-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "property-list",
+      "type": "registry:ui",
+      "description": "Key-value pair display with labels, values, and optional copy actions.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/property-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "section-header",
+      "type": "registry:ui",
+      "description": "Section divider with title, description, action, and mineral accent.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/section-header.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "settings-layout",
+      "type": "registry:ui",
+      "description": "Two-column settings page layout with sticky sidebar navigation.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/settings-layout.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "split-view",
+      "type": "registry:ui",
+      "description": "Responsive master-detail layout that collapses on mobile.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/split-view.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stepper",
+      "type": "registry:ui",
+      "description": "Multi-step wizard navigation with horizontal/vertical orientation variants.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/stepper.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tag-input",
+      "type": "registry:ui",
+      "description": "Token-based input for multiple values as dismissible badges.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/tag-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tree-view",
+      "type": "registry:ui",
+      "description": "Hierarchical expandable/collapsible node list for nested data.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/tree-view.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "user-card",
+      "type": "registry:ui",
+      "description": "Compact user profile card with avatar, name, role, and actions.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/user-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "virtual-list",
+      "type": "registry:ui",
+      "description": "Virtualized list for large datasets using CSS transforms.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/virtual-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
