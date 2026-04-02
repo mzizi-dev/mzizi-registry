@@ -3705,6 +3705,215 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "rich-text-editor",
+      "type": "registry:ui",
+      "description": "Simple WYSIWYG editor with toolbar for bold, italic, heading, list, and link formatting.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "components/ui/rich-text-editor.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "code-editor",
+      "type": "registry:ui",
+      "description": "Code input with line numbers, monospace font, and tab key support.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/code-editor.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:ui",
+      "description": "Color selector with hex input and preset swatches including Five African Minerals.",
+      "dependencies": [],
+      "registryDependencies": [
+        "input"
+      ],
+      "files": [
+        {
+          "path": "components/ui/color-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "time-picker",
+      "type": "registry:ui",
+      "description": "Hour and minute selector with optional AM/PM toggle.",
+      "dependencies": [],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "components/ui/time-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "address-input",
+      "type": "registry:ui",
+      "description": "Structured address form with street, city, state, postal code, and country fields with African countries prioritized.",
+      "dependencies": [],
+      "registryDependencies": [
+        "input"
+      ],
+      "files": [
+        {
+          "path": "components/ui/address-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "transfer-list",
+      "type": "registry:ui",
+      "description": "Dual-list selector with search filtering and arrow buttons to move items between panels.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button",
+        "input"
+      ],
+      "files": [
+        {
+          "path": "components/ui/transfer-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "number-input",
+      "type": "registry:ui",
+      "description": "Numeric input with increment and decrement buttons, min/max/step support.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "components/ui/number-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "app-switcher",
+      "type": "registry:ui",
+      "description": "Ecosystem app selector popover with grid of Mukoko app icons.",
+      "dependencies": [
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "popover",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "components/ui/app-switcher.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "bottom-sheet",
+      "type": "registry:ui",
+      "description": "Mobile slide-up panel with drag handle, backdrop, and slide-up animation.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "components/ui/bottom-sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mega-menu",
+      "type": "registry:ui",
+      "description": "Full-width flyout navigation with columns of links grouped by section.",
+      "dependencies": [
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "popover",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "components/ui/mega-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "review-card",
+      "type": "registry:ui",
+      "description": "Review or testimonial display with star rating, author info, and review text.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/review-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "contact-card",
+      "type": "registry:ui",
+      "description": "Contact information card with avatar, details, and action links for call and email.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/contact-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "featured-card",
+      "type": "registry:ui",
+      "description": "Promoted content card with mineral accent border, featured badge, and image.",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "badge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/featured-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
