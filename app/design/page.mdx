@@ -1,0 +1,43 @@
+---
+title: "Design — mukoko registry"
+description: "Design resources for the Mukoko ecosystem: design tokens, icons, and visual language."
+---
+
+import { ArrowRight, Paintbrush, Hexagon } from "lucide-react"
+
+# Design
+
+The visual language of the Mukoko ecosystem. This section covers the design tokens that power every component and the iconography conventions used across all apps.
+
+<div className="mt-8 grid gap-4 sm:grid-cols-2">
+  {[
+    { title: "Design Tokens", href: "/design/tokens", description: "Complete reference for all CSS custom properties — colors, spacing, radius, and typography tokens", icon: Paintbrush },
+    { title: "Icons", href: "/design/icons", description: "Lucide React icon conventions, sizing, and accessibility patterns", icon: Hexagon },
+  ].map((item) => (
+    <a
+      key={item.href}
+      href={item.href}
+      className="group flex flex-col gap-3 rounded-xl border border-border p-5 transition-colors hover:bg-muted"
+    >
+      <div className="flex items-center gap-3">
+        <div className="flex size-9 items-center justify-center rounded-lg bg-secondary">
+          <item.icon className="size-4 text-foreground" />
+        </div>
+        <h2 className="font-medium text-foreground">{item.title}</h2>
+      </div>
+      <p className="text-sm text-muted-foreground">{item.description}</p>
+      <span className="mt-auto flex items-center gap-1 text-sm text-muted-foreground transition-colors group-hover:text-foreground">
+        View reference <ArrowRight className="size-3" />
+      </span>
+    </a>
+  ))}
+</div>
+
+## Design principles
+
+The Mukoko design language is guided by:
+
+- **Mineral identity** — the Five African Minerals palette is the visual signature; it appears in every app through the mineral strip, accent colors, and chart palettes
+- **Warm neutrals** — light theme uses warm cream (`#FAF9F5`), not stark white; dark theme uses deep night (`#0A0A0A`), not pure black
+- **Subtle depth** — borders at 8% opacity, cards with minimal shadows, elevation through color rather than drop shadows
+- **Consistent radius** — the `--radius` system creates visual harmony across buttons, cards, inputs, and modals

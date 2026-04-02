@@ -8,4 +8,9 @@ export default {
   resilience: "Resilience",
   "ai-safety": "AI Safety",
   chaos: "Chaos Testing",
+  "resource-index": "Resource Index",
+  "resource-detail": "Resource Detail",
+  dashboard: "Dashboard",
+  authentication: "Authentication",
+  "mobile-first": "Mobile-First",
 }
