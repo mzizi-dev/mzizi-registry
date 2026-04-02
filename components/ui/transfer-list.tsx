@@ -88,7 +88,7 @@ function TransferList({ available, selected, onTransfer, className }: TransferLi
 
   function toggle(set: Set<string>, setFn: React.Dispatch<React.SetStateAction<Set<string>>>, id: string) {
     const next = new Set(set)
-    next.has(id) ? next.delete(id) : next.add(id)
+    if (next.has(id)) { next.delete(id) } else { next.add(id) }
     setFn(next)
   }
 

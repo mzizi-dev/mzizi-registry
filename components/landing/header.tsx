@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Github, ExternalLink, Menu, X, ChevronDown } from "lucide-react"
+import { Github, ExternalLink, Menu, X } from "lucide-react"
 import { MukokoLogo } from "@/components/brand/mukoko-logo"
 import { ThemeToggle } from "@/components/theme-toggle"
 

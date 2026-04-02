@@ -11,7 +11,6 @@ import {
   Settings,
   ChevronsUpDown,
   Check,
-  Zap,
 } from "lucide-react"
 
 const workspaces = [

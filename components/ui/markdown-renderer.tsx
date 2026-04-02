@@ -188,7 +188,7 @@ function parseMarkdown(content: string): string {
     }
 
     // Unordered list items
-    const ulMatch = line.match(/^[\-*]\s+(.+)$/)
+    const ulMatch = line.match(/^[-*]\s+(.+)$/)
     if (ulMatch) {
       flushBlockquote()
       if (inOrderedList) {
