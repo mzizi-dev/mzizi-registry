@@ -217,8 +217,8 @@ describe("Architecture Data Module", () => {
   })
 
   describe("ARCHITECTURE_SYSTEM", () => {
-    it("has version 7.0.0", () => {
-      expect(ARCHITECTURE_SYSTEM.version).toBe("7.0.0")
+    it("has version 4.0.1", () => {
+      expect(ARCHITECTURE_SYSTEM.version).toBe("4.0.1")
     })
 
     it("has correct $schema", () => {
@@ -247,7 +247,7 @@ describe("Architecture Data Module", () => {
       const json = JSON.stringify(ARCHITECTURE_SYSTEM)
       expect(json).toBeTruthy()
       const parsed = JSON.parse(json)
-      expect(parsed.version).toBe("7.0.0")
+      expect(parsed.version).toBe("4.0.1")
     })
   })
 })

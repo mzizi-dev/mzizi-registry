@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/nyuchitech/mukoko-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/nyuchitech/mukoko-registry/actions/workflows/ci.yml)
 
-**Version:** 7.0.0 | **Live:** [registry.mukoko.com](https://registry.mukoko.com) | **Brand:** [registry.mukoko.com/brand](https://registry.mukoko.com/brand)
+**Version:** 4.0.1 | **Live:** [registry.mukoko.com](https://registry.mukoko.com) | **Brand:** [registry.mukoko.com/brand](https://registry.mukoko.com/brand)
 
 ## What is this?
 
@@ -67,7 +67,7 @@ registry.mukoko.com
 │   └── /brand/guidelines  Typography, accessibility, usage rules
 ├── /api/r               Component registry API (shadcn compatible)
 ├── /api/r/[name]        Individual component source
-└── /api/brand           Brand system JSON (v7.0.0)
+└── /api/brand           Brand system JSON (v4.0.1)
 ```
 
 ## Tech Stack

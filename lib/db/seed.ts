@@ -190,7 +190,7 @@ async function seedComponents(): Promise<number> {
       layer: LAYER_MAP[item.name] ?? "primitive",
       is_mukoko_component: MUKOKO_COMPONENTS.has(item.name),
       tags: generateTags(item.name, item.description),
-      added_in_version: "7.0.0",
+      added_in_version: "4.0.1",
       source_code: sourceCode,
     }
 

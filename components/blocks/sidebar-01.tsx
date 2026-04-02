@@ -35,7 +35,7 @@ function Sidebar01() {
       </nav>
       <Separator />
       <div className="p-3">
-        <p className="px-3 text-xs text-muted-foreground">mukoko registry v7.0.0</p>
+        <p className="px-3 text-xs text-muted-foreground">mukoko registry v4.0.1</p>
       </div>
     </aside>
   )

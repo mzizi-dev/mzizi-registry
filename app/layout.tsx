@@ -49,7 +49,7 @@ const footer = (
         </a>
       </span>
       <span className="font-mono text-[10px] text-muted-foreground">
-        v7.0.0
+        v4.0.1
       </span>
     </div>
   </Footer>
