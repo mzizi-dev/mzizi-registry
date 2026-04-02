@@ -21,14 +21,13 @@ const featuredCardVariants = cva(
   }
 )
 
-interface FeaturedCardProps
-  extends React.ComponentProps<"div">,
-    VariantProps<typeof featuredCardVariants> {
+interface FeaturedCardProps extends VariantProps<typeof featuredCardVariants> {
   title: string
   description?: string
   image?: string
   badge?: string
   href?: string
+  className?: string
 }
 
 function FeaturedCard({
@@ -39,19 +38,9 @@ function FeaturedCard({
   href,
   mineral = "cobalt",
   className,
-  ...props
 }: FeaturedCardProps) {
-  const Wrapper = href ? "a" : "div"
-  const linkProps = href ? { href } : {}
-
-  return (
-    <Wrapper
-      {...linkProps}
-      data-slot="featured-card"
-      data-mineral={mineral}
-      className={cn(featuredCardVariants({ mineral, className }))}
-      {...(props as React.ComponentProps<"div">)}
-    >
+  const classes = cn(featuredCardVariants({ mineral, className }))
+  const content = (
       {image && (
         <div className="aspect-video w-full overflow-hidden">
           <img
@@ -74,7 +63,21 @@ function FeaturedCard({
           </p>
         )}
       </div>
-    </Wrapper>
+    </>
+  )
+
+  if (href) {
+    return (
+      <a href={href} data-slot="featured-card" data-mineral={mineral} className={classes}>
+        {content}
+      </a>
+    )
+  }
+
+  return (
+    <div data-slot="featured-card" data-mineral={mineral} className={classes}>
+      {content}
+    </div>
   )
 }
 
