@@ -12,7 +12,7 @@ interface StepItem {
   icon?: React.ReactNode
 }
 
-const stepperVariants = cva("flex gap-2", {
+const stepperVariants = cva("flex", {
   variants: {
     orientation: {
       horizontal: "flex-row items-start",
@@ -60,71 +60,71 @@ function Stepper({
             data-slot="stepper-item"
             data-status={status}
             className={cn(
-              "group/step flex gap-3",
+              "group/step flex",
               orientation === "horizontal"
                 ? "flex-1 flex-col items-center text-center"
-                : "flex-row items-start"
+                : "gap-3"
             )}
           >
+            {/* Circle + connector column */}
             <div
               className={cn(
-                "flex items-center gap-2",
-                orientation === "horizontal" ? "w-full flex-col" : "flex-col"
+                "flex shrink-0 items-center",
+                orientation === "horizontal" ? "w-full" : "flex-col"
               )}
             >
-              <div className="flex items-center gap-2">
-                {orientation === "horizontal" && index > 0 && (
-                  <div
-                    data-slot="stepper-connector"
-                    className={cn(
-                      "hidden h-0.5 flex-1 sm:block",
-                      index <= activeStep ? "bg-cobalt" : "bg-border"
-                    )}
-                  />
-                )}
-                <button
-                  type="button"
-                  onClick={() => onStepClick?.(index)}
-                  disabled={!onStepClick}
-                  aria-current={status === "active" ? "step" : undefined}
+              {orientation === "horizontal" && index > 0 && (
+                <div
+                  data-slot="stepper-connector"
                   className={cn(
-                    "inline-flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-medium transition-colors",
-                    "focus-visible:ring-ring/50 focus-visible:outline-none focus-visible:ring-[3px]",
-                    "disabled:cursor-default",
-                    status === "completed" && "bg-malachite/20 text-malachite",
-                    status === "active" && "bg-cobalt text-white",
-                    status === "upcoming" && "bg-muted text-muted-foreground"
+                    "h-0.5 flex-1",
+                    index <= activeStep ? "bg-cobalt" : "bg-border"
                   )}
-                >
-                  {status === "completed" ? (
-                    <CheckIcon className="size-4" />
-                  ) : step.icon ? (
-                    step.icon
-                  ) : (
-                    <span>{index + 1}</span>
-                  )}
-                </button>
-                {orientation === "horizontal" && index < steps.length - 1 && (
-                  <div
-                    data-slot="stepper-connector"
-                    className={cn(
-                      "hidden h-0.5 flex-1 sm:block",
-                      index < activeStep ? "bg-cobalt" : "bg-border"
-                    )}
-                  />
-                )}
-              </div>
-            </div>
-            {orientation === "vertical" && index < steps.length - 1 && (
-              <div
-                data-slot="stepper-connector"
+                />
+              )}
+              <button
+                type="button"
+                onClick={() => onStepClick?.(index)}
+                disabled={!onStepClick}
+                aria-current={status === "active" ? "step" : undefined}
                 className={cn(
-                  "ml-4 mt-1 w-0.5 self-stretch min-h-6",
-                  index < activeStep ? "bg-cobalt" : "bg-border"
+                  "inline-flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-medium transition-colors",
+                  "focus-visible:ring-ring/50 focus-visible:outline-none focus-visible:ring-[3px]",
+                  "disabled:cursor-default",
+                  status === "completed" && "bg-malachite/20 text-malachite",
+                  status === "active" && "bg-cobalt text-white",
+                  status === "upcoming" && "bg-muted text-muted-foreground"
                 )}
-              />
-            )}
-            <div className="flex flex-col gap-0.5">
+              >
+                {status === "completed" ? (
+                  <CheckIcon className="size-4" />
+                ) : step.icon ? (
+                  step.icon
+                ) : (
+                  <span>{index + 1}</span>
+                )}
+              </button>
+              {orientation === "horizontal" && index < steps.length - 1 && (
+                <div
+                  data-slot="stepper-connector"
+                  className={cn(
+                    "h-0.5 flex-1",
+                    index < activeStep ? "bg-cobalt" : "bg-border"
+                  )}
+                />
+              )}
+              {orientation === "vertical" && index < steps.length - 1 && (
+                <div
+                  data-slot="stepper-connector"
+                  className={cn(
+                    "my-1 w-0.5 flex-1 min-h-6",
+                    index < activeStep ? "bg-cobalt" : "bg-border"
+                  )}
+                />
+              )}
+            </div>
+            {/* Text content */}
+            <div className={cn("flex flex-col gap-0.5", orientation === "horizontal" && "mt-2")}>
               <span
                 className={cn(
                   "text-sm font-medium",
