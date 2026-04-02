@@ -8,7 +8,7 @@
 
 ## 1. Project Identity
 
-**Mukoko Registry** is the component registry, brand documentation hub, and design system for the Mukoko ecosystem. It serves 82 production-ready React UI components built on the **Five African Minerals** design system, installable via the shadcn CLI:
+**Mukoko Registry** is the Nyuchi Design Portal — the component registry, brand documentation hub, design system, and developer portal for the Mukoko ecosystem. It serves 294 production-ready registry items (169 UI components, 3 hooks, 11 lib utilities, 70 chart blocks, 35 page blocks) built on the **Five African Minerals** design system, installable via the shadcn CLI:
 
 ```
 npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/<component>
@@ -47,7 +47,7 @@ Mukoko Registry exists within a broader ecosystem. Understanding the relationshi
 mukoko-registry (this repo)
     │
     ├── Defines: Five African Minerals palette, typography, component API
-    ├── Serves: 94 registry items (82 UI, 3 hooks, 9 lib) via shadcn CLI / API / static JSON
+    ├── Serves: 294 registry items (169 UI, 3 hooks, 11 lib, 70 chart blocks, 35 page blocks) via shadcn CLI / API
     │
     └── Consumed by:
         ├── mukoko-weather  (weather.mukoko.com)
@@ -65,21 +65,22 @@ mukoko-registry (this repo)
 
 | Layer | Technology | Version |
 |---|---|---|
-| Framework | Next.js (App Router) | 16.1.6 |
-| Language | TypeScript (strict mode) | 5.7.3 |
+| Framework | Next.js (App Router) | 16.2.2 |
+| Language | TypeScript (strict mode) | 6.0.2 |
 | Package Manager | pnpm | — |
-| Styling | Tailwind CSS + CSS custom properties | 4.2.0 |
-| Component Primitives | Radix UI + Base UI | radix-ui 1.4.3, @base-ui/react 1.0.0 |
+| Styling | Tailwind CSS + CSS custom properties | 4.2.2 |
+| Component Primitives | Radix UI + Base UI | radix-ui 1.4.3, @base-ui/react 1.3.0 |
 | Variant Management | class-variance-authority (CVA) | 0.7.1 |
 | Class Composition | clsx + tailwind-merge | via `cn()` in `lib/utils.ts` |
-| Icons | Lucide React | 0.564.0 |
+| Icons | Lucide React | 1.7.0 |
 | Theming | next-themes | 0.4.6 |
-| Forms | react-hook-form + zod | 7.54.1 / 3.24.1 |
-| Charts | Recharts | 2.15.0 |
-| Testing | Vitest + Testing Library | 4.0.18 |
+| Forms | react-hook-form + zod | 7.72.0 / 4.3.6 |
+| Charts | Recharts | 3.8.1 |
+| Testing | Vitest + Testing Library | 4.1.2 |
 | Observability | Structured logging (`lib/observability.ts`) | Built-in |
 | Resilience | Circuit breaker, retry, timeout, fallback chain | Built-in (`lib/`) |
-| MCP Server | @modelcontextprotocol/sdk (Streamable HTTP) | ^1.12.1 |
+| Database | Supabase (PostgreSQL) | 2.101.1 |
+| MCP Server | @modelcontextprotocol/sdk (Streamable HTTP) | 1.29.0 |
 | CI/CD | GitHub Actions + Vercel | — |
 | Deployment | Vercel | — |
 
@@ -176,7 +177,7 @@ mukoko-registry/
 │   │   ├── error-boundary-demo.tsx # Error boundary demo
 │   │   ├── lazy-loading-demo.tsx # Lazy loading demo
 │   │   └── observability-demo.tsx # Observability demo
-│   ├── ui/                       # 82 shadcn-style UI components
+│   ├── ui/                       # 169 UI components
 │   │   ├── button.tsx            # CVA variants, Slot polymorphism
 │   │   ├── card.tsx, dialog.tsx, input.tsx, ...
 │   │   └── [60+ component files]
@@ -219,7 +220,7 @@ mukoko-registry/
 
 ### 6.1 Registry System
 
-`registry.json` is the manifest defining all 94 registry items with metadata, dependencies, and file paths. It follows the schema at `https://ui.shadcn.com/schema/registry.json`.
+`registry.json` is the manifest defining all 294 registry items with metadata, dependencies, and file paths. It follows the schema at `https://ui.shadcn.com/schema/registry.json`.
 
 Components are served two ways:
 
@@ -568,27 +569,39 @@ Configured in `.claude/settings.json`:
 
 - **`lib/mcp-server.ts`** — Server factory (`createMukokoMcpServer()`) with all tools and resources
 - **`app/mcp/route.ts`** — HTTP endpoint using `WebStandardStreamableHTTPServerTransport` (stateless)
-- Architecture data is read directly from `lib/architecture.ts` — no localhost dependency
+- All data read from Supabase — zero hardcoded content
 
 ---
 
 ## 11. Component Categories
 
-The 94 registry items (82 UI components, 3 hooks, 9 library utilities) are organized by function:
+The 294 registry items (169 UI components, 3 hooks, 11 library utilities, 70 chart blocks, 35 page blocks) are organized by function:
 
-| Category | Components |
-|---|---|
-| **Input** | calendar, checkbox, combobox, command, date-picker, field, file-upload, form, input, input-group, input-otp, label, native-select, radio-group, search-bar, select, slider, switch, textarea |
-| **Action** | button, button-group, copy-button, rating, toggle, toggle-group |
-| **Data Display** | avatar, badge, chart, data-table, kbd, pricing-card, stats-card, status-indicator, table, timeline, typography |
-| **Feedback** | alert, empty, progress, skeleton, sonner, spinner, toast, toaster |
-| **Layout** | accordion, aspect-ratio, card, carousel, collapsible, dashboard-layout, detail-layout, drawer, item, resizable, scroll-area, separator, sheet, sidebar |
-| **Navigation** | breadcrumb, menubar, navigation-menu, pagination, tabs |
-| **Overlay** | alert-dialog, context-menu, dialog, dropdown-menu, filter-bar, hover-card, notification-bell, popover, share-dialog, tooltip, user-menu |
-| **Mukoko Ecosystem** | mukoko-bottom-nav, mukoko-footer, mukoko-header, mukoko-sidebar |
-| **Infrastructure** | error-boundary, lazy-section, section-error-boundary |
-| **Utility** | direction, use-memory-pressure (hook), use-mobile (hook), use-toast (hook), utils (lib) |
-| **Resilience** | ai-safety, architecture, chaos, circuit-breaker, fallback-chain, observability, retry, timeout (all `registry:lib`) |
+| Category | Count | Components |
+|---|---|---|
+| **Forms & Input** | 28 | calendar, checkbox, combobox, command, date-picker, date-range-picker, field, file-upload, form, input, input-group, input-otp, label, native-select, radio-group, search-bar, select, slider, switch, textarea, phone-input, tag-input, time-picker, rich-text-editor, code-editor, color-picker, address-input, transfer-list, number-input, autocomplete, mention-input |
+| **Chat & Messaging** | 8 | chat-bubble, chat-list, chat-input, chat-layout, typing-indicator, message-thread, reaction-picker |
+| **AI & Chatbot** | 8 | ai-chat, prompt-input, streaming-text, ai-feedback, ai-response-card, source-citation, suggested-prompts |
+| **Data Display** | 14 | avatar, badge, chart, data-table, kbd, pricing-card, stats-card, status-indicator, table, timeline, typography, tree-view, kanban-board, virtual-list, property-list, json-viewer, schema-viewer, description-list |
+| **User & Profile** | 8 | avatar-group, user-card, profile-header, activity-feed, notification-list |
+| **E-commerce** | 7 | product-card, price-display, cart-item, order-summary, payment-method-card, subscription-card, invoice-row |
+| **Calendar & Scheduling** | 7 | calendar-week-view, calendar-day-view, event-card, time-slot-picker, agenda-view |
+| **Productivity** | 6 | todo-item, checklist, note-card, comment-thread, drag-handle |
+| **Developer Tools** | 7 | api-key-display, webhook-card, env-editor, code-tabs, code-block, endpoint-card, log-viewer |
+| **Security & Auth** | 5 | permission-badge, role-selector, mfa-setup, session-list, audit-log-entry |
+| **Content & Media** | 6 | markdown-renderer, lightbox, video-player, audio-player, file-preview |
+| **Action** | 6 | button, button-group, copy-button, rating, toggle, toggle-group |
+| **Feedback** | 10 | alert, empty, progress, skeleton, sonner, spinner, toast, toaster, announcement-bar, cookie-consent, password-strength, onboarding-tour, changelog-entry, maintenance-page |
+| **Navigation** | 8 | breadcrumb, menubar, navigation-menu, pagination, tabs, stepper, app-switcher, bottom-sheet, mega-menu |
+| **Layout** | 10 | accordion, aspect-ratio, card, carousel, collapsible, drawer, resizable, scroll-area, separator, sheet, sidebar, page-header, section-header, settings-layout, split-view, masonry-grid, sticky-bar, infinite-scroll, pull-to-refresh |
+| **Overlay** | 11 | alert-dialog, context-menu, dialog, dropdown-menu, filter-bar, hover-card, notification-bell, popover, share-dialog, tooltip, user-menu |
+| **Directory & Listings** | 6 | listing-card, category-browser, review-card, contact-card, featured-card, map-placeholder |
+| **Mukoko Ecosystem** | 4 | mukoko-bottom-nav, mukoko-footer, mukoko-header, mukoko-sidebar |
+| **Infrastructure** | 3 | error-boundary, lazy-section, section-error-boundary |
+| **Hooks** | 3 | use-memory-pressure, use-mobile, use-toast |
+| **Resilience (lib)** | 11 | utils, ai-safety, architecture, chaos, circuit-breaker, fallback-chain, observability, retry, timeout |
+| **Chart Blocks** | 70 | area (10), bar (10), line (10), pie (11), radar (14), radial (6), tooltip (9) |
+| **Page Blocks** | 35 | dashboard-01, login-01–05, signup-01–05, sidebar-01–16, profile-page, profile-settings, onboarding-flow, error-page, empty-state, notification-center, search-results, command-center |
 
 ---
 
