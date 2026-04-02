@@ -244,8 +244,8 @@ describe("Brand Data Module", () => {
   })
 
   describe("BRAND_SYSTEM (API payload)", () => {
-    it("has version 7.0.0", () => {
-      expect(BRAND_SYSTEM.version).toBe("7.0.0")
+    it("has version 4.0.1", () => {
+      expect(BRAND_SYSTEM.version).toBe("4.0.1")
     })
 
     it("has all required top-level keys", () => {
@@ -267,7 +267,7 @@ describe("Brand Data Module", () => {
     it("is JSON-serializable", () => {
       const json = JSON.stringify(BRAND_SYSTEM)
       const parsed = JSON.parse(json)
-      expect(parsed.version).toBe("7.0.0")
+      expect(parsed.version).toBe("4.0.1")
       expect(parsed.minerals).toHaveLength(5)
     })
   })

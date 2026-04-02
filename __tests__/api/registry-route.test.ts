@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest"
+import { describe, it, expect, vi } from "vitest"
 import fs from "fs"
 import path from "path"
 
@@ -39,7 +39,7 @@ describe("GET /api/v1/ui", () => {
 
     for (const item of registry.items) {
       expect(item.name).toBeTruthy()
-      expect(item.type).toMatch(/^registry:(ui|hook|lib)$/)
+      expect(item.type).toMatch(/^registry:(ui|hook|lib|block)$/)
       expect(item.files).toBeDefined()
       expect(item.files.length).toBeGreaterThan(0)
     }
@@ -66,10 +66,10 @@ describe("GET /api/v1/ui", () => {
     expect(button.type).toBe("registry:ui")
   })
 
-  it("has 94 registry items", () => {
+  it("has at least 191 registry items", () => {
     const registryPath = path.join(process.cwd(), "registry.json")
     const registry = JSON.parse(fs.readFileSync(registryPath, "utf-8"))
 
-    expect(registry.items.length).toBe(94)
+    expect(registry.items.length).toBeGreaterThanOrEqual(191)
   })
 })

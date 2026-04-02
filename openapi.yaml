@@ -8,9 +8,14 @@ info:
     The Mukoko Architecture API follows resource-oriented design principles. All resources
     are served as JSON with schema.org JSON-LD metadata, CORS headers, and CDN-friendly caching.
 
+    All data routes read from Supabase. If the database is not configured, endpoints return
+    503 with setup instructions. There are no hardcoded fallbacks.
+
     **Base URL:** `https://registry.mukoko.com/api/v1`
 
-    **Registry:** 94 items (82 UI components, 3 hooks, 9 lib utilities)
+    **Registry:** 294 items (169 UI components, 3 hooks, 11 lib utilities, 70 chart blocks, 35 page blocks, 6 standard blocks)
+
+    **MCP Server:** `https://registry.mukoko.com/mcp` (Streamable HTTP transport)
   contact:
     name: Nyuchi Africa
     url: https://nyuchi.com
@@ -35,6 +40,8 @@ tags:
     description: Ecosystem architecture, data layer, pipeline, sovereignty
   - name: Database
     description: Document store management (Supabase backend)
+  - name: MCP
+    description: Model Context Protocol server for AI assistants
 
 paths:
   /:
@@ -65,6 +72,8 @@ paths:
         Returns the complete Mukoko brand system — Five African Minerals palette,
         typography, spacing, ecosystem brands, accessibility standards, and voice & tone.
 
+        Reads from Supabase. Returns 503 if database is not configured.
+
         Includes schema.org JSON-LD metadata (`@context`, `@type: Brand`).
       operationId: getBrandSystem
       tags: [Brand]
@@ -82,13 +91,16 @@ paths:
                 $ref: "#/components/schemas/BrandSystem"
         "500":
           $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
   /ui:
     get:
       summary: Component Registry Index
       description: |
-        Returns metadata for all 94 registry items (82 UI components, 3 hooks, 9 lib utilities).
-        Reads from Supabase when configured, falls back to registry.json.
+        Returns metadata for all 294 registry items (169 UI components, 3 hooks, 11 lib utilities,
+        70 chart blocks, 35 page blocks, 6 standard blocks).
+        Reads from Supabase. Returns 503 if database is not configured.
       operationId: getRegistryIndex
       tags: [Registry]
       responses:
@@ -105,13 +117,15 @@ paths:
                 $ref: "#/components/schemas/RegistryIndex"
         "500":
           $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
   /ui/{name}:
     get:
       summary: Individual Component
       description: |
         Returns a single component with inline source code.
-        Metadata from Supabase (if configured), source code always from filesystem.
+        Reads from Supabase. Returns 503 if database is not configured.
       operationId: getComponent
       tags: [Registry]
       parameters:
@@ -158,6 +172,8 @@ paths:
                 $ref: "#/components/schemas/Error"
         "500":
           $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
   /ecosystem:
     get:
@@ -165,6 +181,8 @@ paths:
       description: |
         Returns architecture principles (Ubuntu, local-first, mobile-first,
         open-source/sovereign, open-data) and the framework decision (Next.js + Capacitor).
+
+        Reads from Supabase. Returns 503 if database is not configured.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
       operationId: getEcosystem
@@ -183,6 +201,8 @@ paths:
                 $ref: "#/components/schemas/EcosystemArchitecture"
         "500":
           $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
   /data-layer:
     get:
@@ -190,6 +210,8 @@ paths:
       description: |
         Returns the local-first data layer (RxDB, SQLite, IndexedDB),
         cloud services (Supabase, CouchDB), and data ownership rules.
+
+        Reads from Supabase. Returns 503 if database is not configured.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
       operationId: getDataLayer
@@ -208,6 +230,8 @@ paths:
                 $ref: "#/components/schemas/DataLayerArchitecture"
         "500":
           $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
   /pipeline:
     get:
@@ -215,6 +239,8 @@ paths:
       description: |
         Returns the open data pipeline stages — Redpanda event streaming,
         Apache Flink PII stripping, and Apache Doris analytics.
+
+        Reads from Supabase. Returns 503 if database is not configured.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
       operationId: getPipeline
@@ -233,6 +259,8 @@ paths:
                 $ref: "#/components/schemas/PipelineArchitecture"
         "500":
           $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
   /sovereignty:
     get:
@@ -240,6 +268,8 @@ paths:
       description: |
         Returns sovereignty assessments for every technology in the Mukoko stack,
         including removed technologies and migration notes.
+
+        Reads from Supabase. Returns 503 if database is not configured.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
       operationId: getSovereignty
@@ -258,6 +288,8 @@ paths:
                 $ref: "#/components/schemas/SovereigntyReport"
         "500":
           $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
   /health:
     get:
@@ -347,11 +379,90 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
         "503":
-          description: Supabase not configured
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /mcp:
+    post:
+      summary: MCP JSON-RPC
+      description: |
+        Model Context Protocol endpoint for AI assistants. Accepts JSON-RPC requests
+        using the Streamable HTTP transport. Exposes registry components, brand system,
+        design tokens, and architecture data as MCP resources and tools.
+      operationId: mcpJsonRpc
+      tags: [MCP]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, method]
+              properties:
+                jsonrpc:
+                  type: string
+                  const: "2.0"
+                method:
+                  type: string
+                  description: "MCP method (e.g., tools/list, tools/call, resources/read)"
+                id:
+                  oneOf:
+                    - type: string
+                    - type: integer
+                params:
+                  type: object
+      responses:
+        "200":
+          description: JSON-RPC response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                type: object
+                required: [jsonrpc]
+                properties:
+                  jsonrpc:
+                    type: string
+                    const: "2.0"
+                  id:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                  result:
+                    type: object
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+    get:
+      summary: MCP SSE Stream
+      description: Server-Sent Events stream for MCP notifications.
+      operationId: mcpSse
+      tags: [MCP]
+      responses:
+        "200":
+          description: SSE event stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+    delete:
+      summary: MCP Session Cleanup
+      description: Cleans up an MCP session.
+      operationId: mcpCleanup
+      tags: [MCP]
+      responses:
+        "200":
+          description: Session cleaned up
+    options:
+      summary: MCP CORS Preflight
+      description: CORS preflight for MCP endpoint.
+      operationId: mcpCors
+      tags: [MCP]
+      responses:
+        "204":
+          description: CORS headers returned
 
 components:
   headers:
@@ -371,6 +482,18 @@ components:
       properties:
         error:
           type: string
+
+    ServiceUnavailableError:
+      type: object
+      required: [error, setup]
+      properties:
+        error:
+          type: string
+          example: "Database not configured"
+        setup:
+          type: string
+          description: Instructions for configuring Supabase
+          example: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables"
 
     # ── Discovery ──────────────────────────────────────────────────
 
@@ -427,7 +550,7 @@ components:
           const: "Brand"
         version:
           type: string
-          example: "7.0.0"
+          example: "4.0.1"
         name:
           type: string
           example: "Mukoko Brand System"
@@ -714,7 +837,7 @@ components:
           example: "https://registry.mukoko.com"
         items:
           type: array
-          minItems: 94
+          minItems: 294
           items:
             $ref: "#/components/schemas/RegistryItemSummary"
 
@@ -1130,3 +1253,9 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
+    ServiceUnavailable:
+      description: Supabase not configured — returns setup instructions
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ServiceUnavailableError"

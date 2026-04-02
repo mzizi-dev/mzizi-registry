@@ -13,10 +13,28 @@ import { createMukokoMcpServer } from "@/lib/mcp-server"
  *   DELETE /mcp — Session cleanup
  */
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, MCP-Protocol-Version, MCP-Session-Id",
+}
+
 function createTransport() {
   return new WebStandardStreamableHTTPServerTransport({
     sessionIdGenerator: undefined, // stateless
     enableJsonResponse: true,
+  })
+}
+
+function withCors(response: Response): Response {
+  const headers = new Headers(response.headers)
+  for (const [key, value] of Object.entries(CORS_HEADERS)) {
+    headers.set(key, value)
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
   })
 }
 
@@ -28,7 +46,7 @@ export async function POST(request: Request) {
 
   const response = await transport.handleRequest(request)
 
-  return response
+  return withCors(response)
 }
 
 export async function GET(request: Request) {
@@ -37,7 +55,9 @@ export async function GET(request: Request) {
 
   await server.connect(transport)
 
-  return transport.handleRequest(request)
+  const response = await transport.handleRequest(request)
+
+  return withCors(response)
 }
 
 export async function DELETE(request: Request) {
@@ -46,7 +66,9 @@ export async function DELETE(request: Request) {
 
   await server.connect(transport)
 
-  return transport.handleRequest(request)
+  const response = await transport.handleRequest(request)
+
+  return withCors(response)
 }
 
 export async function OPTIONS() {

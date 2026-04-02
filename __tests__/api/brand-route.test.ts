@@ -12,34 +12,38 @@ vi.mock("next/server", () => ({
 }))
 
 describe("GET /api/v1/brand", () => {
-  it("returns brand system data with correct headers", async () => {
+  it("returns 503 when database is not configured", async () => {
     const { GET } = await import("@/app/api/v1/brand/route")
-    const response = (await GET()) as unknown as { data: Record<string, unknown>; headers: Record<string, string>; status: number }
+    const response = (await GET()) as unknown as {
+      data: Record<string, unknown>
+      headers: Record<string, string>
+      status: number
+    }
 
-    expect(response.status).toBe(200)
-    expect(response.headers["Cache-Control"]).toBe("public, max-age=3600, s-maxage=86400")
+    // Without Supabase env vars, the route returns 503
+    expect(response.status).toBe(503)
+    expect(response.data).toHaveProperty("error", "Database not configured")
     expect(response.headers["Access-Control-Allow-Origin"]).toBe("*")
   })
 
-  it("returns valid brand system JSON", async () => {
+  it("returns proper error message with setup instructions", async () => {
     const { GET } = await import("@/app/api/v1/brand/route")
-    const response = (await GET()) as unknown as { data: Record<string, unknown> }
+    const response = (await GET()) as unknown as {
+      data: { error: string; message: string }
+      status: number
+    }
 
-    expect(response.data).toHaveProperty("version", "7.0.0")
-    expect(response.data).toHaveProperty("minerals")
-    expect(response.data).toHaveProperty("ecosystem")
-    expect(response.data).toHaveProperty("typography")
-    expect(response.data).toHaveProperty("spacing")
-    expect(response.data).toHaveProperty("accessibility")
-    expect(response.data).toHaveProperty("$schema")
+    expect(response.status).toBe(503)
+    expect(response.data.message).toContain("NEXT_PUBLIC_SUPABASE_URL")
   })
 
-  it("includes all 5 minerals", async () => {
+  it("includes CORS header on error responses", async () => {
     const { GET } = await import("@/app/api/v1/brand/route")
-    const response = (await GET()) as unknown as { data: { minerals: Array<{ name: string }> } }
+    const response = (await GET()) as unknown as {
+      headers: Record<string, string>
+      status: number
+    }
 
-    expect(response.data.minerals).toHaveLength(5)
-    const names = response.data.minerals.map((m) => m.name)
-    expect(names).toEqual(["cobalt", "tanzanite", "malachite", "gold", "terracotta"])
+    expect(response.headers["Access-Control-Allow-Origin"]).toBe("*")
   })
 })

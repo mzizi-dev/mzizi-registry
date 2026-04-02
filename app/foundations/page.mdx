@@ -1,0 +1,48 @@
+---
+title: "Foundations — mukoko registry"
+description: "The foundational principles of the Mukoko design system: accessibility, typography, layout, internationalization, and motion."
+---
+
+import { ArrowRight, Eye, Globe, Layout, Type, Sparkles } from "lucide-react"
+
+# Foundations
+
+Foundations are the bedrock decisions that shape every component and pattern in the Mukoko design system. They define how we handle accessibility, typography, layout, internationalization, and motion across all ecosystem apps.
+
+<div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {[
+    { title: "Accessibility", href: "/foundations/accessibility", description: "APCA 3.0 AAA contrast, 48px touch targets, keyboard navigation", icon: Eye },
+    { title: "Internationalization", href: "/foundations/internationalization", description: "Noto Sans for African languages, RTL support, locale formatting", icon: Globe },
+    { title: "Layout", href: "/foundations/layout", description: "Responsive breakpoints, spacing scale, container patterns", icon: Layout },
+    { title: "Typography", href: "/foundations/typography", description: "Font stack, type scale, heading hierarchy", icon: Type },
+    { title: "Motion", href: "/foundations/motion", description: "Animation principles, transitions, reduced motion", icon: Sparkles },
+  ].map((item) => (
+    <a
+      key={item.href}
+      href={item.href}
+      className="group flex flex-col gap-3 rounded-xl border border-border p-5 transition-colors hover:bg-muted"
+    >
+      <div className="flex items-center gap-3">
+        <div className="flex size-9 items-center justify-center rounded-lg bg-secondary">
+          <item.icon className="size-4 text-foreground" />
+        </div>
+        <h2 className="font-medium text-foreground">{item.title}</h2>
+      </div>
+      <p className="text-sm text-muted-foreground">{item.description}</p>
+      <span className="mt-auto flex items-center gap-1 text-sm text-muted-foreground transition-colors group-hover:text-foreground">
+        Read more <ArrowRight className="size-3" />
+      </span>
+    </a>
+  ))}
+</div>
+
+## Guiding philosophy
+
+The Mukoko design system is built for **Africa's digital landscape**. This means:
+
+- **Mobile-first** — most users access Mukoko apps on mobile devices, often with limited bandwidth
+- **Language-inclusive** — the font stack supports African languages with full diacritics and extended character sets
+- **Accessible by default** — every component meets APCA 3.0 AAA contrast standards with 48px minimum touch targets
+- **Performant** — lazy loading, memory pressure monitoring, and sequential mount queues keep the experience smooth on lower-end devices
+
+These are not aspirational goals. They are enforced constraints that shape every component in the registry.

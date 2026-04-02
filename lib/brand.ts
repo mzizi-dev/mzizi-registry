@@ -360,7 +360,7 @@ export const BRAND_SYSTEM = {
   $schema: "https://registry.mukoko.com/schema/brand.json",
   "@context": "https://schema.org",
   "@type": "Brand",
-  version: "7.0.0",
+  version: "4.0.1",
   name: "Mukoko Brand System",
   lastUpdated: "2026-03-09",
   homepage: "https://registry.mukoko.com/brand",

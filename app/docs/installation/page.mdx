@@ -1,0 +1,150 @@
+---
+title: "Installation — mukoko registry"
+description: "Set up your project to use the Mukoko design system and component registry."
+---
+
+# Installation
+
+This guide walks you through setting up a new project with the Mukoko design system, or adding Mukoko components to an existing Next.js application.
+
+## Prerequisites
+
+- **Node.js** 18.17 or later
+- **pnpm** (recommended) or npm/yarn
+- **Next.js** 15+ with the App Router
+- **Tailwind CSS** 4.x with `@tailwindcss/postcss`
+
+## New project setup
+
+### 1. Create a Next.js project
+
+```bash
+pnpm create next-app@latest my-mukoko-app --typescript --tailwind --app --src-dir=false
+cd my-mukoko-app
+```
+
+### 2. Install Tailwind CSS 4
+
+Mukoko uses Tailwind CSS 4 with PostCSS. Ensure your `postcss.config.mjs` uses the new plugin:
+
+```js
+// postcss.config.mjs
+export default {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+}
+```
+
+### 3. Initialize shadcn
+
+```bash
+pnpm dlx shadcn@latest init
+```
+
+When prompted, select:
+- Style: **New York**
+- Base color: **Neutral**
+- CSS variables: **Yes**
+
+### 4. Set up the Five African Minerals tokens
+
+Replace the generated `globals.css` with the Mukoko design tokens. The critical sections are:
+
+```css
+:root {
+  --background: #FAF9F5;
+  --foreground: #141413;
+  --card: #FFFFFF;
+  --muted: #F3F2EE;
+  --muted-foreground: #5C5B58;
+  --border: rgba(10, 10, 10, 0.08);
+  --primary: #141413;
+  --primary-foreground: #FFFFFF;
+
+  /* Five African Minerals */
+  --color-cobalt: #0047AB;
+  --color-tanzanite: #B388FF;
+  --color-malachite: #64FFDA;
+  --color-gold: #FFD740;
+  --color-terracotta: #D4A574;
+}
+
+.dark {
+  --background: #0A0A0A;
+  --foreground: #F5F5F4;
+  --card: #141414;
+  --muted: #1E1E1E;
+  --muted-foreground: #9A9A95;
+  --border: rgba(255, 255, 255, 0.08);
+  --primary: #F5F5F4;
+  --primary-foreground: #141413;
+}
+```
+
+See the full token reference in [Design Tokens](/design/tokens).
+
+### 5. Install your first component
+
+```bash
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button
+```
+
+This creates `components/ui/button.tsx` with the Mukoko-styled button, including CVA variants and Radix UI integration.
+
+### 6. Set up the utility function
+
+Create `lib/utils.ts` if it does not already exist:
+
+```typescript
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+Install the dependencies:
+
+```bash
+pnpm add clsx tailwind-merge
+```
+
+## Adding to an existing project
+
+If you already have a Next.js project with Tailwind CSS:
+
+1. Copy the Five African Minerals CSS custom properties into your `globals.css` (both `:root` and `.dark` blocks)
+2. Register the tokens in Tailwind's `@theme inline` block
+3. Install components as needed:
+
+```bash
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/card
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/badge
+npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/input
+```
+
+## Typography setup
+
+Install the Mukoko font stack via `next/font/google`:
+
+```tsx
+import { Noto_Sans, Noto_Serif, JetBrains_Mono } from "next/font/google"
+
+const fontSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" })
+const fontSerif = Noto_Serif({ subsets: ["latin"], variable: "--font-serif" })
+const fontMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" })
+```
+
+Apply the font variables to the `<html>` element in your root layout.
+
+## Verify the installation
+
+Start the dev server and confirm components render correctly:
+
+```bash
+pnpm dev
+```
+
+Import a component and check that it uses the Five African Minerals tokens, responds to dark mode, and renders with the correct typography.
