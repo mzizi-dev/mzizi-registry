@@ -206,7 +206,8 @@ describe("Brand Data Module", () => {
       expect(ACCESSIBILITY.standard).toBe("APCA 3.0 AAA")
     })
 
-    it("has 48px minimum touch target", () => {
+    it("has 56px default and 48px minimum touch targets", () => {
+      expect(ACCESSIBILITY.defaultTouchTarget).toBe(56)
       expect(ACCESSIBILITY.minTouchTarget).toBe(48)
     })
   })

@@ -430,12 +430,13 @@ All brand wordmarks are **lowercase**: `mukoko`, `nyuchi`, `shamwari`.
 
 Every component in `components/ui/` MUST have:
 
-1. **Accessibility** — ARIA attributes where needed, semantic HTML, keyboard navigation via Radix primitives
-2. **Global styles only** — Tailwind classes backed by CSS custom properties from `globals.css`
-3. **`cn()` composition** — all className props composed through `cn()`
-4. **CVA variants** — use class-variance-authority for any component with visual variants
-5. **Radix primitives** — use Radix UI for accessible behavior (focus management, keyboard nav, screen readers)
-6. **`data-slot` attribute** — for component identification in CSS selectors
+1. **Touch targets** — 56px default height, 48px minimum for small variants. This is non-negotiable for the African mobile market (outdoor use, varied screen sizes, accessibility)
+2. **Accessibility** — ARIA attributes where needed, semantic HTML, keyboard navigation via Radix primitives
+3. **Global styles only** — Tailwind classes backed by CSS custom properties from `globals.css`
+4. **`cn()` composition** — all className props composed through `cn()`
+5. **CVA variants** — use class-variance-authority for any component with visual variants
+6. **Radix primitives** — use Radix UI for accessible behavior (focus management, keyboard nav, screen readers)
+7. **`data-slot` attribute** — for component identification in CSS selectors
 
 ### 8.3 Adding a New Component
 
@@ -652,7 +653,7 @@ __tests__/
 
 ### What Tests Cover
 
-- **Brand data integrity:** All 5 minerals match globals.css hex values, ecosystem brands have required fields, type scale ordering, spacing scale, semantic colors, accessibility standards (APCA 3.0 AAA, 48px touch targets)
+- **Brand data integrity:** All 5 minerals match globals.css hex values, ecosystem brands have required fields, type scale ordering, spacing scale, semantic colors, accessibility standards (APCA 3.0 AAA, 56px default / 48px minimum touch targets)
 - **Architecture data integrity:** 5 principles, framework decision, data layer technologies, cloud services, pipeline stages, data ownership rules, removed technologies, sovereignty assessments, aggregate system export
 - **API routes:** Brand API returns correct headers/status/data, registry.json schema validation, all component files exist on disk, all v1 route files exist, old routes removed
 - **Component rendering:** Brand components render correct content, mineral strip vertical-only orientation, copy-to-clipboard behavior
@@ -682,7 +683,7 @@ Three workflows in `.github/workflows/`:
 **`claude-review.yml`** — AI code review on every PR and `@claude` mentions:
 - Triggers on PR open/sync, issue comments, review comments, and reviews
 - Uses `anthropics/claude-code-action@v1` with OAuth token
-- Reviews for: code quality, design system adherence, accessibility (APCA 3.0 AAA, 48px touch targets), security, registry compatibility
+- Reviews for: code quality, design system adherence, accessibility (APCA 3.0 AAA, 56px default / 48px minimum touch targets), security, registry compatibility
 - Secret required: `CLAUDE_CODE_OAUTH_TOKEN`
 
 **`release.yml`** — Runs on version tags (`v*`):
@@ -737,7 +738,7 @@ When working on this codebase as an AI assistant:
 3. **Use the Five African Minerals palette** — never introduce colors outside the token system
 4. **Follow the CVA + Radix + cn() pattern** — every component uses this stack
 5. **Keep components self-contained** — each file should be independently installable via the registry
-6. **Preserve accessibility** — APCA 3.0 AAA contrast, 48px touch targets, Radix primitives for keyboard/screen reader
+6. **Preserve accessibility** — APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets, Radix primitives for keyboard/screen reader
 7. **Test API output** — after modifying a component, verify it serves correctly via `/api/v1/ui/[name]`
 8. **Respect the layered architecture** — primitives don't import page-level code
 9. **All brand wordmarks lowercase** — `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`
