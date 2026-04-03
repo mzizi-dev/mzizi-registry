@@ -55,7 +55,7 @@ function CopyCommand() {
 
 export function Hero() {
   return (
-    <section className="relative flex flex-col items-center gap-8 px-4 pt-28 pb-16 text-center sm:gap-10 sm:px-6 md:pt-44 md:pb-32">
+    <section className="relative flex flex-col items-center gap-8 px-4 pt-12 pb-16 text-center sm:gap-10 sm:px-6 md:pt-20 md:pb-32">
       {/* Subtle grid */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
