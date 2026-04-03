@@ -69,7 +69,7 @@ git checkout -b feature/your-feature
 
 ### Key Principles
 
-- The registry is the **single source of truth** for the entire mukoko ecosystem. Changes here propagate to every app that consumes the registry.
+- The registry is the **single source of truth** for the entire bundu ecosystem. Changes here propagate to every app that consumes the registry.
 - Every component must be **independently installable** via the shadcn CLI.
 - The **Five African Minerals palette** is the only approved color system. Never introduce colors outside the token system.
 - **Accessibility is mandatory** -- APCA 3.0 AAA contrast, 48px touch targets, keyboard navigation, screen reader support.

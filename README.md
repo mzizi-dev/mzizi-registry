@@ -1,6 +1,6 @@
 # nyuchi design portal
 
-> The Nyuchi Design Portal -- component registry, brand documentation hub, design system, and developer portal for the mukoko ecosystem.
+> The canonical design system for the bundu ecosystem — powering mukoko (17 consumer mini-apps), nyuchi (7 enterprise products), and sister brands. Component registry, brand documentation, architecture reference, and developer portal.
 
 [![CI](https://github.com/nyuchitech/design-portal/actions/workflows/ci.yml/badge.svg)](https://github.com/nyuchitech/design-portal/actions/workflows/ci.yml)
 
@@ -10,7 +10,7 @@
 
 ## What is this?
 
-nyuchi design portal is the Nyuchi Design Portal -- the single source of truth for the mukoko ecosystem's component library, design tokens, brand guidelines, and developer documentation.
+nyuchi design portal is the canonical design system for the bundu ecosystem — the single source of truth for component library, design tokens, brand guidelines, architecture documentation, and developer portal. It powers mukoko (Africa's super app — 17 mini-apps, 4 substrate components), nyuchi (7 enterprise products), and sister brands (Zimbabwe Information Platform, Barstool by Nyuchi).
 
 It serves **294 production-ready registry items**:
 
@@ -224,6 +224,20 @@ All data flows through Supabase. API routes read from the database -- there are 
          consumers   server    pages
 ```
 
+### Three Sources of Truth
+
+The mukoko platform has three authoritative databases:
+
+| Source | Database | Owner | Role |
+|---|---|---|---|
+| Relational | Supabase / PostgreSQL | Platform | Identity, places, events, commerce, wallet |
+| Non-relational | ScyllaDB | Platform | All content and streams — messages, articles, AI conversations |
+| Personal | Web3 Pod (TBD) | Individual | Digital Twin memory, preferences, AI context |
+
+Everything else — CouchDB (sync protocol), Cloudflare edge (KV + Durable Objects), RxDB/SQLite (device), Apache Doris (open data) — derives from these three sources.
+
+**Speed is rented. Truth is owned.**
+
 ### MCP Server
 
 The registry includes a Model Context Protocol server at `/mcp` via Streamable HTTP. It exposes components, brand data, design tokens, and architecture info to AI assistants.
@@ -275,16 +289,19 @@ Available tools: `list_components`, `get_component`, `search_components`, `get_d
 
 ## Ecosystem
 
-nyuchi design portal is consumed by all apps in the mukoko ecosystem:
+This design system powers every app in the bundu ecosystem:
 
-| App | URL | Stack |
+| App | URL | Role |
 |---|---|---|
-| mukoko weather | [weather.mukoko.com](https://weather.mukoko.com) | Next.js, FastAPI, Claude AI |
-| mukoko news | [news.mukoko.com](https://news.mukoko.com) | Next.js, Cloudflare Workers, Hono |
-| nhimbe | [nhimbe.com](https://nhimbe.com) | Next.js |
-| lingo | [lingo.mukoko.com](https://lingo.mukoko.com) | -- |
-| bundu | [bundu.family](https://bundu.family) | -- |
-| mukoko super app | [mukoko.com](https://mukoko.com) | Flutter, Preact, Turborepo |
+| mukoko | [mukoko.com](https://mukoko.com) | Africa's super app — 17 mini-apps, 4 substrate |
+| mukoko weather | [weather.mukoko.com](https://weather.mukoko.com) | Hyperlocal forecasts, farming intelligence |
+| mukoko news | [news.mukoko.com](https://news.mukoko.com) | Pan-African news aggregation |
+| nhimbe | [nhimbe.com](https://nhimbe.com) | Events and cultural gatherings |
+| lingo | [lingo.mukoko.com](https://lingo.mukoko.com) | African language learning |
+| shamwari | [shamwari.ai](https://shamwari.ai) | Sovereign AI companion |
+| bushtrade | [bushtrade.co.zw](https://bushtrade.co.zw) | Rentals-first marketplace |
+| nyuchi | [nyuchi.com](https://nyuchi.com) | Enterprise layer — 7 products |
+| bundu | [bundu.family](https://bundu.family) | The ecosystem |
 
 ---
 
