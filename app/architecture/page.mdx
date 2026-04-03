@@ -3,7 +3,7 @@ title: "Architecture — nyuchi design portal"
 description: "Mukoko ecosystem architecture: local-first data strategy, cloud infrastructure, open data pipeline, and technology sovereignty."
 ---
 
-import { ARCHITECTURE_PRINCIPLES, FRAMEWORK_DECISION } from '@/lib/architecture'
+import { SEED_ARCHITECTURE_PRINCIPLES, SEED_FRAMEWORK_DECISION } from '@/lib/architecture'
 import { MineralStrip } from '@/components/brand/mineral-strip'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -76,7 +76,7 @@ export const archLinks = [
 ## Guiding Principles
 
 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-  {ARCHITECTURE_PRINCIPLES.map((principle) => (
+  {SEED_ARCHITECTURE_PRINCIPLES.map((principle) => (
     <Card key={principle.name}>
       <CardHeader>
         <CardTitle className="text-base">{principle.title}</CardTitle>
@@ -95,15 +95,15 @@ export const archLinks = [
 <Card>
   <CardHeader>
     <CardTitle className="text-lg">
-      {FRAMEWORK_DECISION.framework}
+      {SEED_FRAMEWORK_DECISION.framework}
     </CardTitle>
   </CardHeader>
   <CardContent className="space-y-4">
     <p className="text-muted-foreground">
-      {FRAMEWORK_DECISION.rationale}
+      {SEED_FRAMEWORK_DECISION.rationale}
     </p>
     <div className="grid gap-3 sm:grid-cols-4">
-      {FRAMEWORK_DECISION.platforms.map((platform) => (
+      {SEED_FRAMEWORK_DECISION.platforms.map((platform) => (
         <div
           key={platform.name}
           className="rounded-lg border border-border p-3"
