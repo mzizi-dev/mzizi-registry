@@ -273,7 +273,7 @@ export function createMukokoMcpServer(): McpServer {
     "get_design_tokens",
     "Get Mukoko design tokens: Five African Minerals palette, semantic colors, typography, or spacing.",
     {
-      category: z.enum(["minerals", "semantic-colors", "typography", "spacing", "all"]).default("all").describe("Token category to retrieve"),
+      category: z.enum(["minerals", "semantic-colors", "typography", "spacing", "radii", "all"]).default("all").describe("Token category to retrieve"),
     },
     async ({ category }) => {
       const brand = await getBrandSystem()
@@ -285,6 +285,7 @@ export function createMukokoMcpServer(): McpServer {
       if (category === "all" || category === "semantic-colors") data.semanticColors = brand.semanticColors
       if (category === "all" || category === "typography") data.typography = brand.typography
       if (category === "all" || category === "spacing") data.spacing = brand.spacing
+      if (category === "all" || category === "radii") data.radii = brand.radii
 
       return {
         content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
