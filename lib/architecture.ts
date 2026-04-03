@@ -50,6 +50,24 @@ export interface SovereigntyAssessment {
   rationale: string
 }
 
+export interface DataLayer {
+  layer: number
+  name: string
+  technology: string
+  covenant: string
+  stakeholder: string
+  description: string
+  sovereignty: SovereigntyAssessment
+}
+
+export interface SourceOfTruth {
+  name: string
+  database: string
+  owner: "platform" | "personal"
+  description: string
+  dataTypes: string[]
+}
+
 export interface DataLayerTechnology {
   name: string
   role: string
@@ -223,6 +241,163 @@ export const LOCAL_DATA_LAYER: DataLayerTechnology[] = [
   },
 ]
 
+// ─── Sources of Truth ───────────────────────────────────────────────────────
+
+export const SOURCES_OF_TRUTH: SourceOfTruth[] = [
+  {
+    name: "relational",
+    database: "Supabase / PostgreSQL",
+    owner: "platform",
+    description: "The platform's relational source of truth. Structured data with schemas, foreign keys, and Row Level Security. Identity, places, events, commerce, news metadata, wallet metadata, service bus, system. Schema.org compliant at the column level. Primary project: mukoko_platform_cloud.",
+    dataTypes: ["identity", "places", "events", "commerce", "news-metadata", "wallet-metadata", "service-bus", "system"],
+  },
+  {
+    name: "non-relational",
+    database: "ScyllaDB",
+    owner: "platform",
+    description: "The platform's non-relational source of truth. All content and all streams in one database. Article bodies, novel chapters, event descriptions, BushTrade listing details, weather observations, place descriptions, Campfire messages, Circles messages, Shamwari AI conversations, wallet transaction ledgers, creator content. Wide-column storage with massive write throughput.",
+    dataTypes: ["article-bodies", "novel-chapters", "messages", "ai-conversations", "weather-observations", "creator-content", "transaction-ledgers"],
+  },
+  {
+    name: "personal",
+    database: "Web3 Pod (TBD)",
+    owner: "personal",
+    description: "The personal source of truth. Your sovereign data store in the decentralised web. Personal preferences, engagement history, Digital Twin memory, AI conversation context, learned interests. Cryptographically bound to your MIT token. Accessible only with your keys.",
+    dataTypes: ["preferences", "engagement-history", "digital-twin-memory", "ai-context", "learned-interests"],
+  },
+]
+
+// ─── Seven Data Layers ──────────────────────────────────────────────────────
+
+export const SEVEN_DATA_LAYERS: DataLayer[] = [
+  {
+    layer: 1,
+    name: "The Pod",
+    technology: "Web3 — Database TBD",
+    covenant: "Your data is yours.",
+    stakeholder: "The individual",
+    description: "The personal source of truth. Your sovereign data store in the decentralised web. Personal preferences, engagement history, Digital Twin memory, AI conversation context, learned interests. Cryptographically bound to your MIT token. Accessible only with your keys.",
+    sovereignty: {
+      technology: "Web3 Pod",
+      role: "Personal sovereign data store",
+      license: "TBD",
+      governance: "decentralised",
+      sovereigntyRisk: "none",
+      forkable: true,
+      selfHostable: true,
+      rationale: "TBD — will be selected based on sovereignty-first criteria.",
+    },
+  },
+  {
+    layer: 2,
+    name: "The Relational Layer",
+    technology: "Supabase / PostgreSQL",
+    covenant: "The platform is structured and trustworthy.",
+    stakeholder: "The platform",
+    description: "The platform's relational source of truth. Structured data with schemas, foreign keys, and Row Level Security. Identity, places, events, commerce, news metadata, wallet metadata, service bus, system.",
+    sovereignty: {
+      technology: "Supabase / PostgreSQL",
+      role: "Relational cloud database",
+      license: "Apache-2.0",
+      governance: "corporate-open",
+      sovereigntyRisk: "low",
+      forkable: true,
+      selfHostable: true,
+      rationale: "Apache 2.0 licensed, fully self-hostable. If Nyuchi Africa ever needs its own instance on African cloud infrastructure, that option exists.",
+    },
+  },
+  {
+    layer: 3,
+    name: "The Document Layer",
+    technology: "ScyllaDB",
+    covenant: "All content has a home.",
+    stakeholder: "The creator and the community",
+    description: "The platform's non-relational source of truth. All content and all streams in one database. Article bodies, novel chapters, event descriptions, BushTrade listing details, weather observations, place descriptions, Campfire messages, Circles messages, Shamwari AI conversations, wallet transaction ledgers, creator content.",
+    sovereignty: {
+      technology: "ScyllaDB",
+      role: "Non-relational source of truth",
+      license: "AGPL 3.0",
+      governance: "independent",
+      sovereigntyRisk: "none",
+      forkable: true,
+      selfHostable: true,
+      rationale: "AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
+    },
+  },
+  {
+    layer: 4,
+    name: "The Sync Layer",
+    technology: "Apache CouchDB",
+    covenant: "Data flows where it is needed.",
+    stakeholder: "The connected ecosystem",
+    description: "CouchDB is not a data store. It is the sync protocol. Its value is the replication protocol that PouchDB, RxDB, and offline-first libraries implement for bidirectional sync. CouchDB replicates data from the two platform sources of truth (Supabase and ScyllaDB) out to three targets: to Device (PouchDB/RxDB), to Edge (Durable Objects), and to Pod (Web3).",
+    sovereignty: {
+      technology: "Apache CouchDB",
+      role: "Sync protocol",
+      license: "Apache-2.0",
+      governance: "apache-foundation",
+      sovereigntyRisk: "none",
+      forkable: true,
+      selfHostable: true,
+      rationale: "Apache Foundation (non-profit). No corporate owner. Multi-master replication with no hierarchy.",
+    },
+  },
+  {
+    layer: 5,
+    name: "The Edge Layer",
+    technology: "Cloudflare KV + Two-Tier Durable Objects",
+    covenant: "Responses are instant.",
+    stakeholder: "The active web user",
+    description: "Three primitives: KV for global config and routing maps, Geographic Durable Objects for platform data snapshots by location, and User Durable Objects for personal operational data. All ephemeral caches — can be rebuilt from sovereign data stores in minutes.",
+    sovereignty: {
+      technology: "Cloudflare KV / Durable Objects",
+      role: "Edge cache",
+      license: "Proprietary / managed",
+      governance: "corporate-managed",
+      sovereigntyRisk: "low",
+      forkable: false,
+      selfHostable: false,
+      rationale: "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes.",
+    },
+  },
+  {
+    layer: 6,
+    name: "The Device Layer",
+    technology: "RxDB + SQLite / PouchDB",
+    covenant: "The app works without internet.",
+    stakeholder: "The user in the village",
+    description: "The local-first layer. RxDB with SQLite (native) or IndexedDB (browser) as the local database. Reads and writes happen locally without network round-trips. PouchDB speaks CouchDB's sync protocol for bidirectional replication.",
+    sovereignty: {
+      technology: "RxDB + SQLite",
+      role: "Device-local database",
+      license: "Apache-2.0 / Public Domain",
+      governance: "independent",
+      sovereigntyRisk: "none",
+      forkable: true,
+      selfHostable: true,
+      rationale: "RxDB is Apache-2.0 licensed. SQLite is public domain — no corporation owns it.",
+    },
+  },
+  {
+    layer: 7,
+    name: "The Open Data Layer",
+    technology: "Apache Doris",
+    covenant: "Africa's knowledge belongs to Africa.",
+    stakeholder: "The continent",
+    description: "Anonymised, aggregate platform intelligence. Not Mukoko's moat — Mukoko's gift to the continent. Researchers, journalists, governments, NGOs, and developers can query this data. MySQL-compatible SQL interface. Fed by Apache Flink's privacy-stripping stream processing.",
+    sovereignty: {
+      technology: "Apache Doris",
+      role: "Analytical / open data",
+      license: "Apache-2.0",
+      governance: "apache-foundation",
+      sovereigntyRisk: "none",
+      forkable: true,
+      selfHostable: true,
+      rationale: "Apache Foundation (non-profit). No corporate owner. MySQL-compatible interface.",
+    },
+  },
+]
+
 // ─── Cloud Layer ─────────────────────────────────────────────────────────────
 
 export const CLOUD_LAYER: CloudService[] = [
@@ -246,20 +421,56 @@ export const CLOUD_LAYER: CloudService[] = [
   },
   {
     name: "apache-couchdb",
-    role: "Document sync for community and content data",
+    role: "Sync protocol — replication to device, edge, and pod",
     consistencyModel: "eventual",
     database: "CouchDB",
     dataCategories: ["community-posts", "weather-observations", "campsite-listings", "event-details", "ai-conversation-histories", "feed-posts"],
-    description: "Apache 2.0 licensed, governed by the Apache Software Foundation. Designed around the principle that every node is equal — every CouchDB instance is a full peer that can accept writes and sync with any other instance. No single point of failure. Tracks changes through a changes feed with revision history. Conflict resolution preserves both versions rather than silently picking a winner.",
+    description: "CouchDB is not a data store. It is the sync protocol. Its value is the replication protocol that PouchDB, RxDB, and offline-first libraries implement for bidirectional sync. CouchDB replicates data from the two platform sources of truth (Supabase and ScyllaDB) out to three targets: to Device (PouchDB/RxDB), to Edge (Durable Objects), and to Pod (Web3). If CouchDB's data were lost entirely, it could be rebuilt from ScyllaDB and Supabase.",
     sovereignty: {
       technology: "Apache CouchDB",
-      role: "Cloud document sync",
+      role: "Sync protocol",
       license: "Apache-2.0",
       governance: "apache-foundation",
       sovereigntyRisk: "none",
       forkable: true,
       selfHostable: true,
       rationale: "Apache Foundation (non-profit). No corporate owner. Multi-master replication with no hierarchy.",
+    },
+  },
+  {
+    name: "scylladb",
+    role: "Non-relational source of truth — all content and streams",
+    consistencyModel: "eventual",
+    database: "ScyllaDB",
+    dataCategories: ["article-bodies", "novel-chapters", "event-descriptions", "listing-details", "weather-observations", "place-descriptions", "campfire-messages", "circles-messages", "ai-conversations", "transaction-ledgers", "creator-content"],
+    description: "The platform's non-relational source of truth. All content and all streams in one database. Wide-column storage with massive write throughput. AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
+    sovereignty: {
+      technology: "ScyllaDB",
+      role: "Non-relational source of truth",
+      license: "AGPL 3.0",
+      governance: "independent",
+      sovereigntyRisk: "none",
+      forkable: true,
+      selfHostable: true,
+      rationale: "AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
+    },
+  },
+  {
+    name: "cloudflare-edge",
+    role: "Edge cache — KV + two-tier Durable Objects",
+    consistencyModel: "eventual",
+    database: "SQLite (inside Durable Objects)",
+    dataCategories: ["session-tokens", "feature-flags", "geographic-data-snapshots", "user-profile-cache"],
+    description: "Three primitives: KV for global config and routing maps, Geographic Durable Objects for platform data snapshots by location, and User Durable Objects for personal operational data. All ephemeral caches — can be rebuilt from sovereign data stores in minutes.",
+    sovereignty: {
+      technology: "Cloudflare KV / Durable Objects",
+      role: "Edge cache",
+      license: "Proprietary / managed",
+      governance: "corporate-managed",
+      sovereigntyRisk: "low",
+      forkable: false,
+      selfHostable: false,
+      rationale: "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes.",
     },
   },
 ]
@@ -329,11 +540,20 @@ export const DATA_OWNERSHIP_RULES: DataOwnershipRule[] = [
   {
     category: "community",
     consistencyModel: "eventual",
-    database: "Apache CouchDB",
-    examples: ["community-posts", "weather-observations", "campsite-listings", "event-details", "ai-conversations", "feed-posts"],
+    database: "ScyllaDB",
+    examples: ["article-bodies", "novel-chapters", "event-descriptions", "listing-details", "weather-observations", "campfire-messages", "circles-messages", "ai-conversations", "creator-content"],
     conflictResolution: "Permissive handler — merges changes automatically using last-write-wins or CRDT merge strategies. A few seconds of propagation delay is acceptable.",
     ownership: "community-shared",
-    description: "Community-contributed content that tolerates eventual consistency. CouchDB multi-master replication handles sync elegantly. Conflict resolution preserves both versions and gives the application information to resolve intelligently.",
+    description: "Community-contributed content that tolerates eventual consistency. ScyllaDB stores all content and streams as the non-relational source of truth. CouchDB replicates data out to device, edge, and pod.",
+  },
+  {
+    category: "personal-sovereign",
+    consistencyModel: "eventual",
+    database: "Web3 Pod (TBD)",
+    examples: ["preferences", "engagement-history", "digital-twin-memory", "ai-context", "learned-interests"],
+    conflictResolution: "User-controlled — the pod owner has final authority over their data. Conflicts resolved by the user's own keys and preferences.",
+    ownership: "user-private",
+    description: "The personal source of truth. Your sovereign data store in the decentralised web. Cryptographically bound to your MIT token. Accessible only with your keys. No platform can read, sell, or revoke access to this data.",
   },
   {
     category: "platform-open",
@@ -355,6 +575,13 @@ export const REMOVED_TECHNOLOGIES: RemovedTechnology[] = [
     reason: "MongoDB switched its license in 2018 from AGPL to SSPL (Server Side Public License). The Open Source Initiative does not recognise SSPL as a genuine open source license. For a platform built on sovereignty and open source principles, this is disqualifying.",
     replacement: "Apache CouchDB",
     migrationPath: "Weather observation data maps directly to CouchDB documents. The data access layer switches from Motor/Mongoose to CouchDB HTTP API or the nano Node.js client. RxDB on the device handles local caching and sync transparently. The migration unlocks the open data story — once observations flow through the Flink anonymisation pipeline into Doris, Mukoko can publish a public API for community-sourced weather data.",
+  },
+  {
+    name: "cloudflare-d1",
+    previousRole: "Edge database for per-user data",
+    reason: "Replaced with Cloudflare KV + two-tier Durable Objects (geographic platform-level + ephemeral per-user). D1 was not the right model for the edge layer.",
+    replacement: "Cloudflare KV + Durable Objects",
+    migrationPath: "Geographic DOs hold platform snapshots by location. User DOs hold personal operational data. KV holds global config and routing maps.",
   },
 ]
 
@@ -385,6 +612,26 @@ export const SOVEREIGNTY_SUMMARY: SovereigntyAssessment[] = [
   ...CLOUD_LAYER.map((s) => s.sovereignty),
   ...OPEN_DATA_PIPELINE.map((p) => p.sovereignty),
   {
+    technology: "ScyllaDB",
+    role: "Non-relational source of truth",
+    license: "AGPL 3.0",
+    governance: "independent",
+    sovereigntyRisk: "none",
+    forkable: true,
+    selfHostable: true,
+    rationale: "AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
+  },
+  {
+    technology: "Cloudflare KV / Durable Objects",
+    role: "Edge cache",
+    license: "Proprietary / managed",
+    governance: "corporate-managed",
+    sovereigntyRisk: "low",
+    forkable: false,
+    selfHostable: false,
+    rationale: "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes.",
+  },
+  {
     technology: "MongoDB",
     role: "Document database (removed)",
     license: "SSPL",
@@ -408,6 +655,8 @@ export const ARCHITECTURE_SYSTEM = {
   homepage: "https://design.nyuchi.com/architecture",
   principles: ARCHITECTURE_PRINCIPLES,
   frameworkDecision: FRAMEWORK_DECISION,
+  sourcesOfTruth: SOURCES_OF_TRUTH,
+  sevenDataLayers: SEVEN_DATA_LAYERS,
   localDataLayer: LOCAL_DATA_LAYER,
   cloudLayer: CLOUD_LAYER,
   openDataPipeline: OPEN_DATA_PIPELINE,

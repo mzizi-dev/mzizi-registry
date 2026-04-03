@@ -16,6 +16,8 @@ import { AiSafetyDemo } from "@/components/patterns/ai-safety-demo"
 
 Input validation, prompt injection detection, and rate limiting — ported from mukoko-weather's production guards. Every Mukoko app integrating Claude or Shamwari AI must use these utilities.
 
+AI safety is especially critical for **shamwari AI**, the sovereign AI companion and Digital Twin at the core of the mukoko ecosystem. Shamwari has direct access to the user's personal Web3 pod data, making every safety layer essential. Shamwari operates across three intelligence layers: **personal** (pod data — your preferences, history, context), **community** (anonymised platform insights), and **platform** (base knowledge). All three layers must pass through these safety guards before reaching the user.
+
 ## Install from registry
 
 ```bash

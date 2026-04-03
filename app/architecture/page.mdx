@@ -44,10 +44,11 @@ export const archLinks = [
       mukoko architecture
     </h1>
     <p className="max-w-2xl text-lg text-muted-foreground">
-      Local-first, mobile-first, open source architecture for Africa's
-      super app. Built on{" "}
-      <strong className="text-foreground">Ubuntu philosophy</strong> — I
-      am because we are.
+      Seven data layers. Three sources of truth. Two platform, one personal.
+      The canonical technical architecture of Africa's super app — 17 mini-apps,
+      4 substrate components, built on{" "}
+      <strong className="text-foreground">Ubuntu philosophy</strong>.{" "}
+      <em>Ndiri nekuti tiri</em> — I am because we are.
     </p>
   </div>
 </div>
@@ -127,47 +128,151 @@ export const archLinks = [
   </CardContent>
 </Card>
 
+## The Seven Data Layers
+
+Each layer serves a distinct stakeholder with a distinct covenant. All seven are necessary. None can be replaced by any of the others.
+
+<div className="overflow-x-auto">
+  <table className="w-full text-sm">
+    <thead>
+      <tr className="border-b border-border text-left">
+        <th className="pb-2 pr-4 font-medium">Layer</th>
+        <th className="pb-2 pr-4 font-medium">Technology</th>
+        <th className="pb-2 pr-4 font-medium">Covenant</th>
+        <th className="pb-2 font-medium">Stakeholder</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-border">
+      <tr>
+        <td className="py-2 pr-4 font-mono text-xs">1. Pod</td>
+        <td className="py-2 pr-4 text-muted-foreground">Web3 (TBD)</td>
+        <td className="py-2 pr-4 italic text-muted-foreground">"Your data is yours."</td>
+        <td className="py-2 text-muted-foreground">The individual</td>
+      </tr>
+      <tr>
+        <td className="py-2 pr-4 font-mono text-xs">2. Relational</td>
+        <td className="py-2 pr-4 text-muted-foreground">Supabase / PostgreSQL</td>
+        <td className="py-2 pr-4 italic text-muted-foreground">"The platform is structured."</td>
+        <td className="py-2 text-muted-foreground">The platform</td>
+      </tr>
+      <tr>
+        <td className="py-2 pr-4 font-mono text-xs">3. Document</td>
+        <td className="py-2 pr-4 text-muted-foreground">ScyllaDB</td>
+        <td className="py-2 pr-4 italic text-muted-foreground">"All content has a home."</td>
+        <td className="py-2 text-muted-foreground">Creator & community</td>
+      </tr>
+      <tr>
+        <td className="py-2 pr-4 font-mono text-xs">4. Sync</td>
+        <td className="py-2 pr-4 text-muted-foreground">Apache CouchDB</td>
+        <td className="py-2 pr-4 italic text-muted-foreground">"Data flows where needed."</td>
+        <td className="py-2 text-muted-foreground">Connected ecosystem</td>
+      </tr>
+      <tr>
+        <td className="py-2 pr-4 font-mono text-xs">5. Edge</td>
+        <td className="py-2 pr-4 text-muted-foreground">Cloudflare KV + Durable Objects</td>
+        <td className="py-2 pr-4 italic text-muted-foreground">"Responses are instant."</td>
+        <td className="py-2 text-muted-foreground">Active web user</td>
+      </tr>
+      <tr>
+        <td className="py-2 pr-4 font-mono text-xs">6. Device</td>
+        <td className="py-2 pr-4 text-muted-foreground">RxDB + SQLite / PouchDB</td>
+        <td className="py-2 pr-4 italic text-muted-foreground">"Works without internet."</td>
+        <td className="py-2 text-muted-foreground">User in the village</td>
+      </tr>
+      <tr>
+        <td className="py-2 pr-4 font-mono text-xs">7. Open Data</td>
+        <td className="py-2 pr-4 text-muted-foreground">Apache Doris</td>
+        <td className="py-2 pr-4 italic text-muted-foreground">"Africa's knowledge belongs to Africa."</td>
+        <td className="py-2 text-muted-foreground">The continent</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## Three Sources of Truth
+
+Two platform-owned. One person-owned. Everything else derives from these three.
+
+<div className="mt-4 grid gap-4 sm:grid-cols-3">
+  <Card>
+    <CardHeader className="pb-2">
+      <CardTitle className="text-base">Supabase / PostgreSQL</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Badge variant="outline" className="mb-2">Platform — relational</Badge>
+      <p className="text-xs text-muted-foreground">Structured data with schemas, foreign keys, and Row Level Security. Identity, places, events, commerce, news metadata, wallet.</p>
+    </CardContent>
+  </Card>
+  <Card>
+    <CardHeader className="pb-2">
+      <CardTitle className="text-base">ScyllaDB</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Badge variant="outline" className="mb-2">Platform — non-relational</Badge>
+      <p className="text-xs text-muted-foreground">All content and all streams. Article bodies, messages, AI conversations, creator content. Wide-column storage on Fly.io (Johannesburg).</p>
+    </CardContent>
+  </Card>
+  <Card>
+    <CardHeader className="pb-2">
+      <CardTitle className="text-base">Web3 Pod</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Badge variant="outline" className="mb-2">Personal — sovereign</Badge>
+      <p className="text-xs text-muted-foreground">Your sovereign data store. Preferences, Digital Twin memory, AI context. Cryptographically bound to your MIT token. We never see it.</p>
+    </CardContent>
+  </Card>
+</div>
+
+<p className="mt-4 text-sm text-muted-foreground">
+  <strong className="text-foreground">Speed is rented. Truth is owned.</strong> Edge caches (Cloudflare KV, Durable Objects)
+  and device caches (RxDB/SQLite) can be rebuilt from the three sources of truth in minutes.
+  CouchDB is the sync protocol — the pipe, not the warehouse.
+</p>
+
 ## Architecture Overview
 
 <Card>
   <CardContent className="pt-6">
     <pre className="overflow-x-auto text-xs leading-relaxed text-muted-foreground sm:text-sm">
-      {`┌─────────────────────────────────────────────────────────┐
-│                    USER'S DEVICE                         │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │         Next.js App (Capacitor Shell)            │   │
-│  │  ┌──────────────────────────────────────────┐   │   │
-│  │  │              RxDB Layer                   │   │   │
-│  │  │  (Reactive queries, schema, replication)  │   │   │
-│  │  └──────────┬──────────────────┬────────────┘   │   │
-│  │    ┌────────▼──────┐  ┌───────▼────────┐       │   │
-│  │    │  SQLite        │  │  IndexedDB     │       │   │
-│  │    │  (Native App)  │  │  (Browser PWA) │       │   │
-│  │    └───────────────┘  └────────────────┘       │   │
-│  └─────────────────────────────────────────────────┘   │
-└───────────────────────┬─────────────────────────────────┘
-                        │ Sync (when online)
-┌───────────────────────▼─────────────────────────────────┐
-│                  OPERATIONAL CLOUD                       │
-│  ┌──────────────────┐      ┌──────────────────────┐    │
-│  │   Apache CouchDB  │      │  Supabase / Postgres  │    │
-│  │  (Community data) │      │  (Auth, wallet, txns) │    │
-│  └────────┬─────────┘      └──────────┬────────────┘    │
-└───────────┼─────────────────────────────┼───────────────┘
-            │ Change events               │
-            └──────────────┬──────────────┘
-┌──────────────────────────▼──────────────────────────────┐
-│                  ANALYTICS PIPELINE                      │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │              Redpanda (Kafka-compatible)          │   │
-│  └──────────────────────┬──────────────────────────┘   │
-│  ┌──────────────────────▼──────────────────────────┐   │
-│  │   Apache Flink — Strip PII · Enrich · Aggregate  │   │
-│  └──────────────────────┬──────────────────────────┘   │
-│  ┌──────────────────────▼──────────────────────────┐   │
-│  │   Apache Doris — Open Data API + Dashboards       │   │
-│  └──────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘`}
+      {`┌──────────────────────────────────────────────────────────────┐
+│  Layer 1 — THE POD (Web3 — personal source of truth)        │
+│  Your Digital Twin, preferences, AI context. Your keys only. │
+└──────────────────────────┬───────────────────────────────────┘
+                           │ Sync via CouchDB protocol
+┌──────────────────────────▼───────────────────────────────────┐
+│  Layers 2 & 3 — PLATFORM SOURCES OF TRUTH                    │
+│  ┌───────────────────────┐  ┌────────────────────────────┐  │
+│  │  Supabase / PostgreSQL │  │  ScyllaDB (Fly.io · JHB)   │  │
+│  │  Relational: identity, │  │  Non-relational: content,  │  │
+│  │  places, events, wallet│  │  messages, AI, streams     │  │
+│  └───────────┬───────────┘  └──────────────┬─────────────┘  │
+└──────────────┼──────────────────────────────┼────────────────┘
+               │                              │
+┌──────────────▼──────────────────────────────▼────────────────┐
+│  Layer 4 — SYNC (Apache CouchDB · Fly.io · JHB)             │
+│  The sync protocol. Replicates to: device, edge, pod.        │
+│  Not a data store. A pipe. Can be rebuilt from layers 2 & 3. │
+└──────────────┬──────────────────────────────┬────────────────┘
+     ┌─────────▼──────────┐       ┌───────────▼───────────────┐
+     │  Layer 5 — EDGE     │       │  Layer 6 — DEVICE          │
+     │  Cloudflare KV +    │       │  RxDB + SQLite (native)    │
+     │  Geographic DOs +   │       │  IndexedDB (browser)       │
+     │  User DOs           │       │  Offline-first. 2G-ready.  │
+     └────────────────────┘       └───────────────────────────┘
+               │ Change events from Layers 2 & 3
+┌──────────────▼──────────────────────────────────────────────┐
+│  Layer 7 — OPEN DATA (Analytics + Search + Public API)       │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Redpanda (Kafka-compatible event streaming)          │   │
+│  └─────────────────────────┬────────────────────────────┘   │
+│  ┌─────────────────────────▼────────────────────────────┐   │
+│  │  Apache Flink — Strip PII · Enrich · Aggregate        │   │
+│  └─────────────────────────┬────────────────────────────┘   │
+│  ┌─────────────────────────▼────────────────────────────┐   │
+│  │  Apache Doris — Search engine + Open data API         │   │
+│  │  Africa's knowledge belongs to Africa.                │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘`}
     </pre>
   </CardContent>
 </Card>

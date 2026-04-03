@@ -7,6 +7,8 @@ description: "Authentication flow patterns for Mukoko ecosystem apps: sign in, s
 
 Authentication patterns for the Mukoko ecosystem. These patterns ensure consistent, secure, and accessible auth flows across all apps.
 
+The mukoko ecosystem uses **Stytch B2C** for authentication. The primary method is **Email OTP** — it works everywhere including Zimbabwe where SMS delivery is unreliable. **SMS OTP** is the secondary method for markets with reliable SMS. Session durations: **1 year** for native apps (mobile/desktop), **1 month** for web.
+
 ## Sign in page
 
 The standard sign-in layout uses a centered card on a muted background:
