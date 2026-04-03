@@ -32,24 +32,31 @@ Every pairing of foreground and background tokens has been validated. When addin
 
 ## Touch targets
 
-All interactive elements must meet a **48px minimum touch target** size. This is critical for mobile users, who make up the majority of Mukoko's audience — especially for outdoor use where gloves, wet hands, or bright sunlight reduce touch precision.
+The bundu ecosystem enforces **56px default** and **48px minimum** touch target sizes. This is non-negotiable — the African mobile market demands larger targets for outdoor use, bright sunlight, varied screen sizes, and accessibility.
+
+| Size | Height | Usage |
+|---|---|---|
+| **Default** | 56px (`h-14`) | Buttons, inputs, interactive controls |
+| **Small** | 48px (`h-12`) | Compact variants, secondary actions |
+| **Minimum** | 48px | The absolute floor — nothing interactive goes below this |
 
 ```tsx
-// Correct — 48px touch target via padding
-<Button size="default" className="h-10 px-4">
-  Submit
-</Button>
+// Default — 56px touch target (h-14)
+<Button size="default">Submit</Button>
 
-// Also correct — icon button with sufficient size
-<Button size="icon" className="size-10">
+// Small — 48px touch target (h-12)
+<Button size="sm">Cancel</Button>
+
+// Icon — 56px touch target (size-14)
+<Button size="icon">
   <Menu className="size-5" />
 </Button>
 ```
 
-For smaller visual elements (like checkbox indicators), ensure the clickable area extends to 48px via padding:
+For smaller visual elements (like checkbox indicators), ensure the clickable area extends to at least 48px via padding:
 
 ```tsx
-<label className="flex min-h-[48px] items-center gap-3 px-3">
+<label className="flex min-h-12 items-center gap-3 px-3">
   <Checkbox />
   <span>Accept terms</span>
 </label>
@@ -129,7 +136,7 @@ The Five African Minerals palette is designed to be distinguishable to people wi
 When building or reviewing components, verify:
 
 - [ ] Contrast meets APCA 3.0 AAA in both light and dark themes
-- [ ] Touch targets are at least 48px
+- [ ] Touch targets are 56px default / 48px minimum
 - [ ] Keyboard navigation works for all interactions
 - [ ] Focus indicators are visible
 - [ ] Screen reader announces the component's purpose and state

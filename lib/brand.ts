@@ -345,16 +345,16 @@ export const BACKGROUNDS: BackgroundToken[] = [
 export const COMPONENT_SPECS: ComponentSpec[] = [
   {
     name: "button",
-    heights: { sm: 32, default: 36, lg: 44, icon: 36 },
-    padding: "px-3 (sm), px-4 (default), px-6 (lg)",
+    heights: { sm: 48, default: 56, lg: 56, icon: 48 },
+    padding: "px-4 (sm), px-5 (default), px-6 (lg)",
     borderRadius: 12,
     minTouchTarget: 48,
     variants: ["default", "destructive", "outline", "secondary", "ghost", "link"],
   },
   {
     name: "input",
-    heights: { default: 40, sm: 32 },
-    padding: "px-3",
+    heights: { default: 56, sm: 48 },
+    padding: "px-4",
     borderRadius: 12,
     minTouchTarget: 48,
     variants: ["default", "error"],
@@ -404,6 +404,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
 export const ACCESSIBILITY = {
   standard: "APCA 3.0 AAA",
   contrastDescription: "Advanced Perceptual Contrast Algorithm for superior readability across all mineral colors",
+  defaultTouchTarget: 56,
   minTouchTarget: 48,
   focusIndicator: "2px ring with ring-offset-2, using --ring token",
   keyboardNavigation: "Full keyboard support via Radix UI primitives",
