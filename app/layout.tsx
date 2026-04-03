@@ -7,6 +7,7 @@ import "nextra-theme-docs/style.css"
 import "./globals.css"
 import { MukokoLogo } from "@/components/brand/mukoko-logo"
 import { MineralStrip } from "@/components/brand/mineral-strip"
+import { Footer as CustomFooter } from "@/components/landing/footer"
 
 const fontSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" })
 const fontSerif = Noto_Serif({ subsets: ["latin"], variable: "--font-serif" })
@@ -37,22 +38,7 @@ const navbar = (
 
 const footer = (
   <Footer>
-    <div className="flex w-full flex-col items-center justify-between gap-2 sm:flex-row">
-      <span className="text-xs text-muted-foreground">
-        Built by{" "}
-        <a
-          href="https://github.com/nyuchitech"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline underline-offset-2 transition-colors hover:text-foreground"
-        >
-          Nyuchi Africa
-        </a>
-      </span>
-      <span className="font-mono text-[10px] text-muted-foreground">
-        v4.0.1
-      </span>
-    </div>
+    <CustomFooter />
   </Footer>
 )
 
