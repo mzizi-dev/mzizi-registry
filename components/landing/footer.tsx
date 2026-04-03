@@ -17,7 +17,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl">
         <Separator className="mb-10" />
 
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-3 lg:grid-cols-6">
           {/* Getting Started */}
           <div className="flex flex-col gap-2">
             <span className="text-xs font-medium text-foreground">Getting Started</span>
@@ -104,7 +104,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-8 sm:gap-12">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-6 sm:flex sm:flex-wrap sm:gap-12">
             <div className="flex flex-col gap-2">
               <span className="text-xs font-medium text-foreground">mukoko — consumer</span>
               <a href="https://www.mukoko.com" target="_blank" rel="noopener noreferrer" className={footerLink}>mukoko.com</a>
