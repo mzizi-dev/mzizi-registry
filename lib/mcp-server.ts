@@ -285,7 +285,7 @@ export function createMukokoMcpServer(): McpServer {
       if (category === "all" || category === "semantic-colors") data.semanticColors = brand.semanticColors
       if (category === "all" || category === "typography") data.typography = brand.typography
       if (category === "all" || category === "spacing") data.spacing = brand.spacing
-      if (category === "all" || category === "radii") data.radii = brand.radii
+      if (category === "all" || category === "radii") data.radii = brand.meta?.radii
 
       return {
         content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
