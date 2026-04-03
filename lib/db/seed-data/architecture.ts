@@ -8,7 +8,6 @@
 
 import type {
   ArchitecturePrinciple,
-  PlatformTarget,
   FrameworkDecision,
   SovereigntyAssessment,
   DataLayerTechnology,
