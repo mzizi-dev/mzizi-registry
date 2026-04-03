@@ -404,14 +404,18 @@ All brand wordmarks are **lowercase**: `mukoko`, `nyuchi`, `shamwari`.
 
 ### 7.5 Radius System
 
+All radii derive from `--radius-unit: 7px`. The ecosystem numbers are 7, 12, 14, 17.
+
 ```
---radius: 0.75rem (base)
---radius-sm: calc(var(--radius) - 4px)
---radius-md: calc(var(--radius) - 2px)
---radius-lg: var(--radius)
---radius-xl: calc(var(--radius) + 4px)
---radius-2xl: calc(var(--radius) + 8px)
+--radius-unit: 7px
+--radius-sm:  7px   (1× unit)   — checkboxes, small elements
+--radius-md:  12px  (unit + 5)  — cards, inputs, containers
+--radius-lg:  14px  (2× unit)   — default, medium containers
+--radius-xl:  17px  (unit + 10) — large cards, dialogs, prominent surfaces
+--radius-full: 9999px           — buttons, badges, pills, avatars
 ```
+
+**Buttons are always pill-shaped (`rounded-full`).** This is an executive brand identity decision — not a radius scale value. All buttons, tabs, and interactive pill-shaped controls use `rounded-full` (9999px). This applies across the entire ecosystem: every app, every API response, every MCP tool, every documentation reference.
 
 ---
 
