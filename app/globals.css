@@ -47,16 +47,22 @@
 --radius-2xl: calc(var(--radius) + 8px);
 --radius-3xl: calc(var(--radius) + 12px);
 --radius-4xl: calc(var(--radius) + 16px);
-/* Five African Minerals */
---color-cobalt: #0047AB;
---color-tanzanite: #B388FF;
---color-malachite: #64FFDA;
---color-gold: #FFD740;
---color-terracotta: #D4A574;
+/* Five African Minerals — theme-adaptive */
+--color-cobalt: var(--mineral-cobalt);
+--color-tanzanite: var(--mineral-tanzanite);
+--color-malachite: var(--mineral-malachite);
+--color-gold: var(--mineral-gold);
+--color-terracotta: var(--mineral-terracotta);
 }
 
 /* Light mode - Warm African palette, neutral primary, minerals as accents */
 :root {
+  /* Five African Minerals — light */
+  --mineral-cobalt: #0047AB;
+  --mineral-tanzanite: #4B0082;
+  --mineral-malachite: #004D40;
+  --mineral-gold: #5D4037;
+  --mineral-terracotta: #8B4513;
   --background: #FAF9F5;
   --foreground: #141413;
   --card: #FFFFFF;
@@ -93,6 +99,12 @@
 
 /* Dark mode - Deep African night, neutral primary, minerals as accents */
 .dark {
+  /* Five African Minerals — dark */
+  --mineral-cobalt: #00B0FF;
+  --mineral-tanzanite: #B388FF;
+  --mineral-malachite: #64FFDA;
+  --mineral-gold: #FFD740;
+  --mineral-terracotta: #D4A574;
   --background: #0A0A0A;
   --foreground: #F5F5F4;
   --card: #141414;

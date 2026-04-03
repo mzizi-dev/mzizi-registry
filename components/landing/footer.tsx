@@ -13,7 +13,7 @@ const footerLink = "text-xs text-muted-foreground transition-colors hover:text-f
 
 export function Footer() {
   return (
-    <footer className="px-4 pb-10 pt-8 sm:px-6 sm:pb-12">
+    <div className="px-4 pb-10 pt-8 sm:px-6 sm:pb-12">
       <div className="mx-auto max-w-6xl">
         <Separator className="mb-10" />
 
@@ -142,6 +142,6 @@ export function Footer() {
           <span className="font-mono text-[10px] text-muted-foreground">v4.0.1</span>
         </div>
       </div>
-    </footer>
+    </div>
   )
 }
