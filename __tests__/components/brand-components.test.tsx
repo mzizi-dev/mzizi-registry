@@ -4,10 +4,10 @@ import { BrandCard } from "@/components/brand/brand-card"
 import { MineralStrip } from "@/components/brand/mineral-strip"
 import { TypeScale } from "@/components/brand/type-scale"
 import { SpacingScale } from "@/components/brand/spacing-scale"
-import { ECOSYSTEM_BRANDS } from "@/lib/brand"
+import { SEED_ECOSYSTEM_BRANDS } from "@/lib/brand"
 
 describe("BrandCard", () => {
-  const testBrand = ECOSYSTEM_BRANDS.find((b) => b.name === "mukoko")!
+  const testBrand = SEED_ECOSYSTEM_BRANDS.find((b) => b.name === "mukoko")!
 
   it("renders brand name", () => {
     render(<BrandCard brand={testBrand} />)

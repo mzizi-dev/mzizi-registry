@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest"
 import { render, screen, fireEvent } from "@testing-library/react"
 import { ColorSwatch } from "@/components/brand/color-swatch"
-import { MINERALS } from "@/lib/brand"
+import { SEED_MINERALS } from "@/lib/brand"
 
 // Mock clipboard API
 Object.assign(navigator, {
@@ -11,7 +11,7 @@ Object.assign(navigator, {
 })
 
 describe("ColorSwatch", () => {
-  const cobalt = MINERALS[0]
+  const cobalt = SEED_MINERALS[0]
 
   it("renders mineral name", () => {
     render(<ColorSwatch mineral={cobalt} />)

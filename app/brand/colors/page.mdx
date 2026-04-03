@@ -3,16 +3,16 @@ title: "Colors — mukoko brand"
 description: "The Five African Minerals color palette: cobalt, tanzanite, malachite, gold, and terracotta."
 ---
 
-import { MINERALS, SEMANTIC_COLORS, BACKGROUNDS } from "@/lib/brand"
+import { SEED_MINERALS, SEED_SEMANTIC_COLORS, SEED_BACKGROUNDS } from "@/lib/brand"
 
-export const semanticTokens = SEMANTIC_COLORS.map((c) => ({
+export const semanticTokens = SEED_SEMANTIC_COLORS.map((c) => ({
   name: c.name,
   value: `${c.light} / ${c.dark}`,
   preview: c.dark,
   description: c.usage,
 }))
 
-export const backgroundTokens = BACKGROUNDS.map((bg) => ({
+export const backgroundTokens = SEED_BACKGROUNDS.map((bg) => ({
   name: bg.name,
   value: `${bg.light} / ${bg.dark}`,
   preview: bg.light,
@@ -45,7 +45,7 @@ The signature brand element — a 4px stripe of all five minerals, used as a vis
 Click any swatch to copy its hex value. Each mineral has light and dark theme variants.
 
 <div className="mt-8 grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-  {MINERALS.map((mineral) => (
+  {SEED_MINERALS.map((mineral) => (
     <ColorSwatch key={mineral.name} mineral={mineral} />
   ))}
 </div>
@@ -53,7 +53,7 @@ Click any swatch to copy its hex value. Each mineral has light and dark theme va
 ## Origins & Symbolism
 
 <div className="mt-6 space-y-4">
-  {MINERALS.map((mineral) => (
+  {SEED_MINERALS.map((mineral) => (
     <div
       key={mineral.name}
       className="flex gap-4 rounded-xl border border-border p-4"

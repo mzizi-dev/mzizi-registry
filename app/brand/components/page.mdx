@@ -3,7 +3,7 @@ title: "Component Specs — mukoko brand"
 description: "Visual specifications for mukoko design system components: dimensions, padding, radii, and touch targets."
 ---
 
-import { COMPONENT_SPECS, ACCESSIBILITY } from "@/lib/brand"
+import { SEED_COMPONENT_SPECS, SEED_ACCESSIBILITY } from "@/lib/brand"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 
 # Component Specs
@@ -15,7 +15,7 @@ spacing, and interactive boundaries that every mukoko component follows.
 
 <div className="mt-6 grid gap-4 sm:grid-cols-3">
   <div className="rounded-xl border border-border p-4">
-    <p className="font-mono text-2xl font-bold text-foreground">{ACCESSIBILITY.minTouchTarget}px</p>
+    <p className="font-mono text-2xl font-bold text-foreground">{SEED_ACCESSIBILITY.minTouchTarget}px</p>
     <p className="mt-1 text-sm text-muted-foreground">Minimum touch target</p>
   </div>
   <div className="rounded-xl border border-border p-4">
@@ -23,7 +23,7 @@ spacing, and interactive boundaries that every mukoko component follows.
     <p className="mt-1 text-sm text-muted-foreground">Base border radius</p>
   </div>
   <div className="rounded-xl border border-border p-4">
-    <p className="font-mono text-2xl font-bold text-foreground">{ACCESSIBILITY.standard}</p>
+    <p className="font-mono text-2xl font-bold text-foreground">{SEED_ACCESSIBILITY.standard}</p>
     <p className="mt-1 text-sm text-muted-foreground">Contrast standard</p>
   </div>
 </div>
@@ -33,7 +33,7 @@ spacing, and interactive boundaries that every mukoko component follows.
 Each component has defined sizes and variants. Install any component via the registry.
 
 <div className="mt-8 grid gap-6 sm:grid-cols-2">
-  {COMPONENT_SPECS.map((spec) => (
+  {SEED_COMPONENT_SPECS.map((spec) => (
     <Card key={spec.name}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
@@ -101,7 +101,7 @@ Each component has defined sizes and variants. Install any component via the reg
 ## Touch Targets
 
 <p className="mt-2 text-sm text-muted-foreground">
-  All interactive elements maintain a minimum {ACCESSIBILITY.minTouchTarget}px touch target
+  All interactive elements maintain a minimum {SEED_ACCESSIBILITY.minTouchTarget}px touch target
   for accessibility, even when visually smaller.
 </p>
 
@@ -109,10 +109,10 @@ Each component has defined sizes and variants. Install any component via the reg
   {[24, 32, 36, 48].map((size) => (
     <div key={size} className="flex flex-col items-center gap-2">
       <div className="relative">
-        {size < ACCESSIBILITY.minTouchTarget && (
+        {size < SEED_ACCESSIBILITY.minTouchTarget && (
           <div
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border border-dashed border-[var(--color-malachite)]"
-            style={{ width: `${ACCESSIBILITY.minTouchTarget}px`, height: `${ACCESSIBILITY.minTouchTarget}px` }}
+            style={{ width: `${SEED_ACCESSIBILITY.minTouchTarget}px`, height: `${SEED_ACCESSIBILITY.minTouchTarget}px` }}
           />
         )}
         <div
@@ -126,5 +126,5 @@ Each component has defined sizes and variants. Install any component via the reg
 </div>
 
 <p className="mt-4 text-xs text-muted-foreground">
-  Dashed outline shows the {ACCESSIBILITY.minTouchTarget}px minimum hit area for elements smaller than the target.
+  Dashed outline shows the {SEED_ACCESSIBILITY.minTouchTarget}px minimum hit area for elements smaller than the target.
 </p>
