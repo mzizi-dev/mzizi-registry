@@ -102,14 +102,14 @@ export function Hero() {
         <CopyCommand />
         <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row sm:gap-3">
           <Button size="lg" className="w-full gap-2 sm:w-auto" asChild>
-            <a href="#components">
+            <a href="/components">
               Browse components
               <ArrowRight className="size-4" />
             </a>
           </Button>
           <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
-            <a href="#catalog">
-              Full catalog
+            <a href="/docs">
+              Documentation
             </a>
           </Button>
         </div>
