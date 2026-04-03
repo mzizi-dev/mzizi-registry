@@ -66,7 +66,7 @@ export function Hero() {
               <span key={m.name} className={`size-1.5 rounded-full ${m.color}`} />
             ))}
           </span>
-          <span className="text-muted-foreground">Five African Minerals</span>
+          <span className="text-muted-foreground">Ndiri nekuti tiri — I am because we are</span>
         </Badge>
 
         <div className="flex flex-wrap items-center justify-center gap-1.5">
@@ -119,9 +119,9 @@ export function Hero() {
       <div className="flex flex-wrap items-center justify-center gap-6 pt-4 sm:gap-8">
         {[
           { label: "Registry Items", value: "294" },
-          { label: "UI Components", value: "177" },
-          { label: "Blocks", value: "105" },
-          { label: "Products", value: "8" },
+          { label: "Mini-Apps", value: "17" },
+          { label: "Enterprise Products", value: "7" },
+          { label: "Data Layers", value: "7" },
           { label: "Palette", value: "5 minerals" },
         ].map((stat) => (
           <div key={stat.label} className="flex flex-col items-center gap-0.5">

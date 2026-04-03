@@ -9,6 +9,8 @@ import {
   REMOVED_TECHNOLOGIES,
   SOVEREIGNTY_SUMMARY,
   ARCHITECTURE_SYSTEM,
+  SOURCES_OF_TRUTH,
+  SEVEN_DATA_LAYERS,
 } from "@/lib/architecture"
 
 describe("Architecture Data Module", () => {
@@ -93,8 +95,8 @@ describe("Architecture Data Module", () => {
   })
 
   describe("CLOUD_LAYER", () => {
-    it("has 2 cloud services", () => {
-      expect(CLOUD_LAYER).toHaveLength(2)
+    it("has 4 cloud services", () => {
+      expect(CLOUD_LAYER).toHaveLength(4)
     })
 
     it("Supabase uses strict consistency", () => {
@@ -137,13 +139,13 @@ describe("Architecture Data Module", () => {
   })
 
   describe("DATA_OWNERSHIP_RULES", () => {
-    it("has 3 ownership categories", () => {
-      expect(DATA_OWNERSHIP_RULES).toHaveLength(3)
+    it("has 4 ownership categories", () => {
+      expect(DATA_OWNERSHIP_RULES).toHaveLength(4)
     })
 
-    it("covers personal, community, and platform-open", () => {
+    it("covers personal, community, personal-sovereign, and platform-open", () => {
       const categories = DATA_OWNERSHIP_RULES.map((r) => r.category)
-      expect(categories).toEqual(["personal", "community", "platform-open"])
+      expect(categories).toEqual(["personal", "community", "personal-sovereign", "platform-open"])
     })
 
     it("personal data is user-private with strict consistency", () => {
@@ -170,9 +172,11 @@ describe("Architecture Data Module", () => {
   })
 
   describe("REMOVED_TECHNOLOGIES", () => {
-    it("contains MongoDB", () => {
-      expect(REMOVED_TECHNOLOGIES).toHaveLength(1)
-      expect(REMOVED_TECHNOLOGIES[0].name).toBe("mongodb")
+    it("contains MongoDB and D1", () => {
+      expect(REMOVED_TECHNOLOGIES).toHaveLength(2)
+      const names = REMOVED_TECHNOLOGIES.map((t) => t.name)
+      expect(names).toContain("mongodb")
+      expect(names).toContain("cloudflare-d1")
     })
 
     it("MongoDB was removed for SSPL license", () => {
@@ -216,6 +220,41 @@ describe("Architecture Data Module", () => {
     })
   })
 
+  describe("SOURCES_OF_TRUTH", () => {
+    it("has 3 sources — two platform, one personal", () => {
+      expect(SOURCES_OF_TRUTH).toHaveLength(3)
+      const platformSources = SOURCES_OF_TRUTH.filter((s) => s.owner === "platform")
+      const personalSources = SOURCES_OF_TRUTH.filter((s) => s.owner === "personal")
+      expect(platformSources).toHaveLength(2)
+      expect(personalSources).toHaveLength(1)
+    })
+
+    it("includes Supabase, ScyllaDB, and Web3 Pod", () => {
+      const names = SOURCES_OF_TRUTH.map((s) => s.name)
+      expect(names).toContain("relational")
+      expect(names).toContain("non-relational")
+      expect(names).toContain("personal")
+    })
+  })
+
+  describe("SEVEN_DATA_LAYERS", () => {
+    it("has exactly 7 layers", () => {
+      expect(SEVEN_DATA_LAYERS).toHaveLength(7)
+    })
+
+    it("layers are numbered 1-7", () => {
+      const layers = SEVEN_DATA_LAYERS.map((l) => l.layer)
+      expect(layers).toEqual([1, 2, 3, 4, 5, 6, 7])
+    })
+
+    it("every layer has a covenant and stakeholder", () => {
+      for (const layer of SEVEN_DATA_LAYERS) {
+        expect(layer.covenant).toBeTruthy()
+        expect(layer.stakeholder).toBeTruthy()
+      }
+    })
+  })
+
   describe("ARCHITECTURE_SYSTEM", () => {
     it("has version 4.0.1", () => {
       expect(ARCHITECTURE_SYSTEM.version).toBe("4.0.1")
@@ -235,6 +274,8 @@ describe("Architecture Data Module", () => {
     it("has all top-level keys", () => {
       expect(ARCHITECTURE_SYSTEM.principles).toBeDefined()
       expect(ARCHITECTURE_SYSTEM.frameworkDecision).toBeDefined()
+      expect(ARCHITECTURE_SYSTEM.sourcesOfTruth).toBeDefined()
+      expect(ARCHITECTURE_SYSTEM.sevenDataLayers).toBeDefined()
       expect(ARCHITECTURE_SYSTEM.localDataLayer).toBeDefined()
       expect(ARCHITECTURE_SYSTEM.cloudLayer).toBeDefined()
       expect(ARCHITECTURE_SYSTEM.openDataPipeline).toBeDefined()

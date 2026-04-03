@@ -230,6 +230,80 @@ export const ECOSYSTEM_BRANDS: EcosystemBrand[] = [
   },
 ]
 
+// ─── Mukoko Mini-Apps (17) ──────────────────────────────────────────────────
+
+export interface MiniApp {
+  name: string
+  emoji: string
+  layer: string
+  description: string
+}
+
+export const MUKOKO_MINI_APPS: MiniApp[] = [
+  { name: "Campfire", emoji: "🔥", layer: "Communication", description: "Platform anchor. All messaging and cross-app communications." },
+  { name: "Pulse", emoji: "⚡", layer: "Discovery", description: "Personalised feed (v1) and agentic dashboard (v2 — Mukoko Home)." },
+  { name: "Mukoko News", emoji: "📰", layer: "Journalism", description: "Pan-African news with entity extraction and 40 interest categories." },
+  { name: "Bytes", emoji: "🎬", layer: "Creator Video", description: "Short-form video for African creators, archived to Arweave." },
+  { name: "Circles", emoji: "🔵", layer: "Community", description: "Community messaging — groups, fan communities, professional networks." },
+  { name: "Novels", emoji: "📚", layer: "Publishing", description: "10 work types, co-authorship with automatic revenue splitting." },
+  { name: "Nhimbe", emoji: "🥁", layer: "Gathering", description: "Events and cultural gatherings. Standalone brand at nhimbe.com." },
+  { name: "BushTrade", emoji: "🛒", layer: "Commerce", description: "Rentals-first marketplace. Standalone brand at bushtrade.co.zw." },
+  { name: "Places", emoji: "📍", layer: "Geography", description: "Africa's geographic knowledge graph and business verification layer." },
+  { name: "Transport", emoji: "🚌", layer: "Movement", description: "Public transit routing, vehicle booking, commute planning." },
+  { name: "Planner", emoji: "📅", layer: "Organisation", description: "Calendar, tasks, bookings, and notes — all cross-app activity." },
+  { name: "Mukoko Lingo", emoji: "🗣", layer: "Language", description: "African language learning. Shona and Ndebele as primaries." },
+  { name: "Weather", emoji: "🌤", layer: "Environment", description: "Hyperlocal forecasts, severe alerts, farming intelligence." },
+  { name: "Wallet", emoji: "💰", layer: "Economics", description: "MUKOKO tokens, mobile money, peer-to-peer, merchant payments." },
+  { name: "Jobs", emoji: "💼", layer: "Employment", description: "Formal and informal employment discovery, credential verification." },
+  { name: "Health", emoji: "🏥", layer: "Wellness", description: "Health info, telemedicine, medication reminders, health records." },
+  { name: "Mukoko ID", emoji: "🆔", layer: "Identity", description: "Unified identity — one login, one Digital Twin, one reputation." },
+]
+
+// ─── Platform Substrate (4) ─────────────────────────────────────────────────
+
+export interface SubstrateComponent {
+  name: string
+  description: string
+}
+
+export const PLATFORM_SUBSTRATE: SubstrateComponent[] = [
+  { name: "Digital Twin", description: "Sovereign AI — your Honey, Shamwari interface, and Digital Twin NFT unified into a single intelligence living in your Web3 pod." },
+  { name: "Mukoko Home", description: "The ambient agentic interface. Pulse v2 toggle. Lives on any screen. Connects to external services via MCP." },
+  { name: "MUKOKO Token", description: "Two-token architecture. MIT (soulbound identity) + MXT (transferable exchange). Floor price anchored to human time." },
+  { name: "Ubuntu Layer", description: "Community conscience. Seven contribution types, Ubuntu scores, badges, missions, DAO governance." },
+]
+
+// ─── Nyuchi Enterprise Products (7) ─────────────────────────────────────────
+
+export interface NyuchiProduct {
+  name: string
+  description: string
+  mukokoCounterpart?: string
+}
+
+export const NYUCHI_PRODUCTS: NyuchiProduct[] = [
+  { name: "Nyuchi API Platform", description: "Gateway exposing platform capabilities to enterprise clients. API key management, rate limiting, billing, developer portal." },
+  { name: "Nyuchi Web Services", description: "Development and infrastructure division. Client work, custom development, platform maintenance." },
+  { name: "Nyuchi Learning", description: "Digital campus and digital literacy. Core expression of the belief that a super app must also build the people who use it." },
+  { name: "Nyuchi Medical", description: "The clinic app. Doctors and GPs manage their practice. Connected to Mukoko Health through the same identity.", mukokoCounterpart: "Health" },
+  { name: "Nyuchi Rentals", description: "Vehicle fleet management. Connected to Mukoko Transport for consumer-facing routing and booking.", mukokoCounterpart: "Transport" },
+  { name: "Nyuchi Tools", description: "Workspace and productivity apps. The enterprise mirror of what Planner does for individuals.", mukokoCounterpart: "Planner" },
+  { name: "Nyuchi SEO Manager", description: "AI-powered WordPress SEO plugin. Standalone SaaS leveraging the Shamwari AI infrastructure." },
+]
+
+// ─── Sister Brands ──────────────────────────────────────────────────────────
+
+export interface SisterBrand {
+  name: string
+  description: string
+  url?: string
+}
+
+export const SISTER_BRANDS: SisterBrand[] = [
+  { name: "Zimbabwe Information Platform", description: "Consolidated travel and business intelligence for Zimbabwe. Powered by Mukoko's Places knowledge graph and verification infrastructure.", url: "https://zimbabwe.info" },
+  { name: "Barstool by Nyuchi", description: "Hospitality reviews and discovery — restaurants, bars, cafes, nightlife. Built on Places verification data." },
+]
+
 export const TYPE_SCALE: TypeScaleEntry[] = [
   { name: "Display", sizePx: 72, sizeRem: "4.5rem", lineHeight: "1.1", weight: 700, font: "serif", usage: "Hero headlines, landing pages" },
   { name: "H1", sizePx: 48, sizeRem: "3rem", lineHeight: "1.15", weight: 700, font: "serif", usage: "Page titles" },
