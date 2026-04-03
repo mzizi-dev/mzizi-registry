@@ -469,15 +469,14 @@ export const PHILOSOPHY = {
 }
 
 export const RADII = {
-  base: "0.75rem (12px)",
-  sm: "calc(var(--radius) - 4px) — 8px",
-  md: "calc(var(--radius) - 2px) — 10px",
-  lg: "var(--radius) — 12px",
-  xl: "calc(var(--radius) + 4px) — 16px",
-  "2xl": "calc(var(--radius) + 8px) — 20px",
-  "3xl": "calc(var(--radius) + 12px) — 24px",
-  "4xl": "calc(var(--radius) + 16px) — 28px",
-  full: "9999px — pills/avatars",
+  base: "14px",
+  sm: "7px — subtle rounding, checkboxes, small elements",
+  md: "12px — cards, inputs, containers",
+  lg: "14px — default radius, medium containers",
+  xl: "17px — large cards, dialogs, prominent surfaces",
+  "2xl": "17px — same as xl (ecosystem ceiling)",
+  full: "9999px — buttons, badges, pills, avatars (brand identity)",
+  system: "Ecosystem numbers: 7, 12, 14, 17. Buttons are always pill (rounded-full).",
 }
 
 export const TYPOGRAPHY_FONTS = {
