@@ -6,6 +6,7 @@ import { getPageMap } from "nextra/page-map"
 import "nextra-theme-docs/style.css"
 import "./globals.css"
 import { MukokoLogo } from "@/components/brand/mukoko-logo"
+import { MineralStrip } from "@/components/brand/mineral-strip"
 
 const fontSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" })
 const fontSerif = Noto_Serif({ subsets: ["latin"], variable: "--font-serif" })
@@ -69,14 +70,17 @@ export default async function RootLayout({
     >
       <Head />
       <body className="font-sans antialiased">
-        <Layout
-          navbar={navbar}
-          pageMap={await getPageMap()}
-          docsRepositoryBase="https://github.com/nyuchitech/design-portal/tree/main"
-          footer={footer}
-        >
-          {children}
-        </Layout>
+        <MineralStrip className="fixed inset-y-0 left-0 z-50 h-screen rounded-none" />
+        <div className="pl-1">
+          <Layout
+            navbar={navbar}
+            pageMap={await getPageMap()}
+            docsRepositoryBase="https://github.com/nyuchitech/design-portal/tree/main"
+            footer={footer}
+          >
+            {children}
+          </Layout>
+        </div>
       </body>
     </html>
   )
