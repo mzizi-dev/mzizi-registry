@@ -1,5 +1,5 @@
 /**
- * Database types for the Mukoko Registry Supabase document store.
+ * Database types for the Nyuchi Design Portal Supabase document store.
  *
  * These types mirror the Supabase tables defined in supabase/schema.sql.
  * Components, docs, and demos are stored as rows in Postgres — queryable,

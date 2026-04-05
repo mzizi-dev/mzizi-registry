@@ -1,6 +1,6 @@
 export default {
   index: {
-    title: "mukoko registry",
+    title: "nyuchi design portal",
     type: "page",
     theme: {
       layout: "full",
@@ -62,36 +62,44 @@ export default {
     type: "separator",
   },
   ecosystem: {
-    title: "Ecosystem",
+    title: "The Bundu Family",
     type: "menu",
     items: {
+      bundu: {
+        title: "bundu — the ecosystem",
+        href: "https://bundu.family",
+      },
       mukoko: {
-        title: "mukoko.com",
+        title: "mukoko — super app",
         href: "https://www.mukoko.com",
+      },
+      weather: {
+        title: "weather",
+        href: "https://weather.mukoko.com",
+      },
+      news: {
+        title: "news",
+        href: "https://news.mukoko.com",
       },
       lingo: {
         title: "lingo",
         href: "https://lingo.mukoko.com",
       },
       nhimbe: {
-        title: "nhimbe",
+        title: "nhimbe — events",
         href: "https://nhimbe.com",
       },
+      shamwari: {
+        title: "shamwari — AI",
+        href: "https://shamwari.ai",
+      },
+      nyuchi: {
+        title: "nyuchi — enterprise",
+        href: "https://nyuchi.com",
+      },
       bushtrade: {
-        title: "bushtrade",
+        title: "bushtrade — marketplace",
         href: "https://bushtrade.co.zw",
-      },
-      bundu: {
-        title: "bundu",
-        href: "https://bundu.family",
-      },
-      news: {
-        title: "news",
-        href: "https://news.mukoko.com",
-      },
-      weather: {
-        title: "weather",
-        href: "https://weather.mukoko.com",
       },
     },
   },

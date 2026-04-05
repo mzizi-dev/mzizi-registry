@@ -1,5 +1,5 @@
 ---
-title: "Discovery — mukoko registry API"
+title: "Discovery — nyuchi design portal API"
 description: "GET /api/v1 — API discovery document listing all available resources."
 ---
 
@@ -13,13 +13,13 @@ Returns a discovery document listing all available API resources. This is the en
 
 ```json
 {
-  "$schema": "https://registry.mukoko.com/schema/api.json",
+  "$schema": "https://design.nyuchi.com/schema/api.json",
   "@context": "https://schema.org",
   "@type": "WebAPI",
   "name": "Mukoko Architecture API",
   "version": "1.0.0",
   "description": "Unified API for the Mukoko ecosystem...",
-  "homepage": "https://registry.mukoko.com",
+  "homepage": "https://design.nyuchi.com",
   "resources": {
     "brand": { "href": "/api/v1/brand", "description": "Brand system: minerals, typography, spacing, semantic colors" },
     "ui": { "href": "/api/v1/ui", "description": "Component registry — 70+ production-ready React components" },
@@ -35,5 +35,5 @@ Returns a discovery document listing all available API resources. This is the en
 ### Example
 
 ```bash
-curl https://registry.mukoko.com/api/v1
+curl https://design.nyuchi.com/api/v1
 ```

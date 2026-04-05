@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { TYPE_SCALE } from "@/lib/brand"
+import { SEED_TYPE_SCALE } from "@/lib/brand"
 
 interface TypeScaleProps {
   className?: string
@@ -14,7 +14,7 @@ const fontClassMap: Record<string, string> = {
 export function TypeScale({ className }: TypeScaleProps) {
   return (
     <div className={cn("space-y-6", className)}>
-      {TYPE_SCALE.map((entry) => (
+      {SEED_TYPE_SCALE.map((entry) => (
         <div key={entry.name} className="group flex flex-col gap-1 border-b border-border pb-6 last:border-0">
           <div className="flex items-baseline justify-between gap-4">
             <p

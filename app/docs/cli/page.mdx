@@ -1,36 +1,36 @@
 ---
-title: "CLI — mukoko registry"
+title: "CLI — nyuchi design portal"
 description: "Using the shadcn CLI to install, update, and manage Mukoko components."
 ---
 
 # CLI
 
-The Mukoko Registry is fully compatible with the **shadcn CLI**. You can install any of the 94 registry items directly into your project with a single command.
+The Nyuchi Design Portal is fully compatible with the **shadcn CLI**. You can install any of the **294 registry items** directly into your project with a single command.
 
 ## Installing components
 
 The base command format:
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/<component-name>
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component-name>
 ```
 
 ### Examples
 
 ```bash
 # Install a single component
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
 
 # Install multiple components
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/card \
-  https://registry.mukoko.com/api/v1/ui/badge \
-  https://registry.mukoko.com/api/v1/ui/input
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/card \
+  https://design.nyuchi.com/api/v1/ui/badge \
+  https://design.nyuchi.com/api/v1/ui/input
 
 # Install a hook
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/use-toast
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/use-toast
 
 # Install a library utility
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/utils
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/utils
 ```
 
 ## What happens when you install
@@ -49,7 +49,7 @@ The component is now a local file in your project. You own it and can modify it 
 To update a component to the latest registry version, run the same install command:
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
 ```
 
 The CLI will overwrite the existing file. If you have made local modifications, they will be lost. Consider using version control to track changes before updating.
@@ -110,7 +110,7 @@ The CLI reads `components.json` in your project root for configuration:
 ```
 
 Key settings:
-- **`style: "new-york"`** — the Mukoko registry uses the New York style variant
+- **`style: "new-york"`** — the Nyuchi design portal uses the New York style variant
 - **`rsc: true`** — components are React Server Components by default
 - **`iconLibrary: "lucide"`** — Lucide React for all icons
 - **`aliases`** — must match your `tsconfig.json` path aliases
@@ -120,7 +120,7 @@ Key settings:
 List all available components via the API:
 
 ```bash
-curl https://registry.mukoko.com/api/v1/ui
+curl https://design.nyuchi.com/api/v1/ui
 ```
 
 Or browse the [Components](/components) page in this documentation.

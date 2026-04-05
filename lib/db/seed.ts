@@ -54,7 +54,7 @@ import {
   ACCESSIBILITY,
   RADII,
   COMPONENT_SPECS,
-} from "@/lib/brand"
+} from "@/lib/db/seed-data/brand"
 import {
   ARCHITECTURE_PRINCIPLES,
   FRAMEWORK_DECISION,
@@ -64,7 +64,7 @@ import {
   DATA_OWNERSHIP_RULES,
   SOVEREIGNTY_SUMMARY,
   REMOVED_TECHNOLOGIES,
-} from "@/lib/architecture"
+} from "@/lib/db/seed-data/architecture"
 
 // ── Category mapping ────────────────────────────────────────────────
 

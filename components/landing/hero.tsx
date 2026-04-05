@@ -14,18 +14,24 @@ const minerals = [
 ]
 
 const products = [
-  { label: "mukoko.com", href: "https://www.mukoko.com" },
+  // Ecosystem
+  { label: "bundu", href: "https://bundu.family" },
+  // Infrastructure & enterprise
+  { label: "nyuchi", href: "https://nyuchi.com" },
+  { label: "bushtrade", href: "https://bushtrade.co.zw" },
+  // Consumer apps
+  { label: "mukoko", href: "https://www.mukoko.com" },
+  { label: "weather", href: "https://weather.mukoko.com" },
+  { label: "news", href: "https://news.mukoko.com" },
   { label: "lingo", href: "https://lingo.mukoko.com" },
   { label: "nhimbe", href: "https://nhimbe.com" },
-  { label: "bushtrade", href: "https://bushtrade.co.zw" },
-  { label: "bundu", href: "https://bundu.family" },
-  { label: "news", href: "https://news.mukoko.com" },
-  { label: "weather", href: "https://weather.mukoko.com" },
+  // AI
+  { label: "shamwari", href: "https://shamwari.ai" },
 ]
 
 function CopyCommand() {
   const [copied, setCopied] = useState(false)
-  const command = "npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button"
+  const command = "npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button"
 
   return (
     <button
@@ -49,7 +55,7 @@ function CopyCommand() {
 
 export function Hero() {
   return (
-    <section className="relative flex flex-col items-center gap-8 px-4 pt-28 pb-16 text-center sm:gap-10 sm:px-6 md:pt-44 md:pb-32">
+    <section className="relative flex flex-col items-center gap-8 px-4 pt-12 pb-16 text-center sm:gap-10 sm:px-6 md:pt-20 md:pb-32">
       {/* Subtle grid */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
@@ -60,7 +66,7 @@ export function Hero() {
               <span key={m.name} className={`size-1.5 rounded-full ${m.color}`} />
             ))}
           </span>
-          <span className="text-muted-foreground">Five African Minerals</span>
+          <span className="text-muted-foreground">Ndiri nekuti tiri — I am because we are</span>
         </Badge>
 
         <div className="flex flex-wrap items-center justify-center gap-1.5">
@@ -80,29 +86,30 @@ export function Hero() {
 
       <div className="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
         <h1 className="font-serif text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
-          The building blocks
+          The design system
           <br />
-          of mukoko
+          for the bundu ecosystem
         </h1>
         <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-          Production-ready UI components rooted in the Five African Minerals
-          palette. Install directly into your project with the shadcn CLI.
-          No packages, no lock-in -- just code you own.
+          294 production-ready components, blocks, and charts rooted in the
+          Five African Minerals palette. One design system powering mukoko,
+          nyuchi, and every app in the bundu family. Install with the shadcn
+          CLI — no packages, no lock-in.
         </p>
       </div>
 
       <div className="flex w-full flex-col items-center gap-4 sm:gap-5">
         <CopyCommand />
         <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row sm:gap-3">
-          <Button size="lg" className="w-full gap-2 rounded-xl sm:w-auto" asChild>
-            <a href="#components">
+          <Button size="lg" className="w-full gap-2 sm:w-auto" asChild>
+            <a href="/components">
               Browse components
               <ArrowRight className="size-4" />
             </a>
           </Button>
-          <Button variant="outline" size="lg" className="w-full rounded-xl sm:w-auto" asChild>
-            <a href="#catalog">
-              Full catalog
+          <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
+            <a href="/docs">
+              Documentation
             </a>
           </Button>
         </div>
@@ -111,8 +118,10 @@ export function Hero() {
       {/* Stats */}
       <div className="flex flex-wrap items-center justify-center gap-6 pt-4 sm:gap-8">
         {[
-          { label: "Components", value: "59" },
-          { label: "Products", value: "7" },
+          { label: "Registry Items", value: "294" },
+          { label: "Mini-Apps", value: "17" },
+          { label: "Enterprise Products", value: "7" },
+          { label: "Data Layers", value: "7" },
           { label: "Palette", value: "5 minerals" },
         ].map((stat) => (
           <div key={stat.label} className="flex flex-col items-center gap-0.5">

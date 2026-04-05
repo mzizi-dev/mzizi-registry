@@ -1,11 +1,11 @@
 ---
-title: "Schema — mukoko registry"
+title: "Schema — nyuchi design portal"
 description: "Registry JSON schema reference for the Mukoko component registry."
 ---
 
 # Schema
 
-The Mukoko Registry uses a JSON schema based on the [shadcn registry schema](https://ui.shadcn.com/schema/registry.json). This document details the schema structure and item types.
+The Nyuchi Design Portal uses a JSON schema based on the [shadcn registry schema](https://ui.shadcn.com/schema/registry.json). This document details the schema structure and item types.
 
 ## Registry manifest
 
@@ -15,7 +15,7 @@ The `registry.json` file at the project root is the single source of truth for a
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "mukoko",
-  "homepage": "https://registry.mukoko.com",
+  "homepage": "https://design.nyuchi.com",
   "items": [
     // ... registry items
   ]
@@ -143,7 +143,7 @@ The index endpoint at `/api/v1/ui` returns all items without source code:
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "mukoko",
-  "homepage": "https://registry.mukoko.com",
+  "homepage": "https://design.nyuchi.com",
   "items": [
     { "name": "accordion", "type": "registry:ui", "description": "..." },
     { "name": "alert", "type": "registry:ui", "description": "..." },

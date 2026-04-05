@@ -54,7 +54,7 @@ export async function GET() {
       {
         $schema: "https://ui.shadcn.com/schema/registry.json",
         name: "mukoko",
-        homepage: "https://registry.mukoko.com",
+        homepage: "https://design.nyuchi.com",
         items,
       },
       { headers: CORS_CACHE }

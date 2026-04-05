@@ -9,13 +9,13 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in Mukoko Registry, please report it responsibly.
+If you discover a security vulnerability in Nyuchi Design Portal, please report it responsibly.
 
 **Do NOT open a public issue.**
 
 Instead, use GitHub's security advisory feature:
 
-1. Go to the [Security tab](https://github.com/nyuchitech/mukoko-registry/security/advisories) on GitHub
+1. Go to the [Security tab](https://github.com/nyuchitech/design-portal/security/advisories) on GitHub
 2. Click "Report a vulnerability"
 3. Provide a description, steps to reproduce, and potential impact
 4. Include the affected version(s) and any relevant configuration details
@@ -30,7 +30,7 @@ Instead, use GitHub's security advisory feature:
 
 This policy covers:
 
-- The Mukoko Registry application (`registry.mukoko.com`)
+- The Nyuchi Design Portal application (`design.nyuchi.com`)
 - The component registry API (`/api/v1/*`)
 - The MCP server (`/mcp`)
 - The brand API (`/api/v1/brand`)

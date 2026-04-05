@@ -38,7 +38,7 @@ interface RegistryCache {
   ttl: number
 }
 
-const CACHE_KEY = "mukoko-registry-cache"
+const CACHE_KEY = "design-portal-cache"
 const CACHE_TTL = 1000 * 60 * 60 // 1 hour
 
 /**

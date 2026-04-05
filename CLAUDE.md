@@ -1,60 +1,61 @@
-# CLAUDE.md — Mukoko Registry
+# CLAUDE.md — Nyuchi Design Portal
 
-> **Canonical design system for the Mukoko ecosystem.**
+> **Canonical design system for the bundu ecosystem.**
 > This file is the definitive reference for AI assistants working on this codebase.
-> It also serves as the template for CLAUDE.md files across all Mukoko and Nyuchi repositories.
+> It also serves as the template for CLAUDE.md files across all bundu ecosystem repositories.
 
 ---
 
 ## 1. Project Identity
 
-**Mukoko Registry** is the Nyuchi Design Portal — the component registry, brand documentation hub, design system, and developer portal for the Mukoko ecosystem. It serves 294 production-ready registry items (169 UI components, 3 hooks, 11 lib utilities, 70 chart blocks, 35 page blocks) built on the **Five African Minerals** design system, installable via the shadcn CLI:
+**Nyuchi Design Portal** is the canonical design system, component registry, brand documentation hub, and developer portal for the bundu ecosystem. It serves 294 production-ready registry items (177 UI components, 3 hooks, 9 lib utilities, 105 blocks) built on the **Five African Minerals** design system, installable via the shadcn CLI:
 
 ```
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/<component>
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>
 ```
 
 **Version:** 4.0.1
 
-**Live at:** registry.mukoko.com
+**Live at:** design.nyuchi.com
 
-**Repository:** `github.com/nyuchitech/mukoko-registry`
+**Repository:** `github.com/nyuchitech/design-portal`
 
 **Organization:** Nyuchi Africa (PVT) Ltd — `github.com/nyuchitech`
 
-**Ecosystem context:** This registry is consumed by all Mukoko apps (weather, news, events, the super app) and any new app built under the Nyuchi/Mukoko brand. It is the single source of truth for both the design system and brand documentation (replacing the legacy assets.nyuchi.com).
+**Ecosystem context:** This design system powers the entire bundu ecosystem — mukoko (17 consumer mini-apps + 4 substrate components), nyuchi (7 enterprise products), and sister brands (Zimbabwe Information Platform, Barstool by Nyuchi). It is the single source of truth for the design system, brand documentation, and developer portal.
 
 ---
 
 ## 2. Ecosystem Overview
 
-Mukoko Registry exists within a broader ecosystem. Understanding the relationships prevents duplicate work and ensures consistency.
+Nyuchi Design Portal exists within a broader ecosystem. Understanding the relationships prevents duplicate work and ensures consistency.
 
 | Repository | Purpose | Stack | Status |
 |---|---|---|---|
-| **mukoko-registry** (this repo) | Component registry + design system hub | Next.js 16, Tailwind 4, Radix UI | Canonical, active |
-| **mukoko-weather** | AI weather intelligence platform | Next.js 16, FastAPI, MongoDB, Claude AI | Production |
+| **design-portal** (this repo) | Component registry + design system hub | Next.js 16, Tailwind 4, Radix UI | Canonical, active |
+| **mukoko-weather** | AI weather intelligence platform | Next.js 16, FastAPI, ScyllaDB, Claude AI | Production |
 | **mukoko-news** | Pan-African news aggregator | Next.js 15, Cloudflare Workers, Hono, D1 | Active |
-| **mukoko** | Super app (6 ecosystem apps) | Flutter shell, Preact mini-apps, Turborepo | Active |
+| **mukoko** | Super app (17 mini-apps, 4 substrate) | Next.js + Capacitor, Preact mini-apps, Turborepo | Active |
 | **nhimbe** | Events platform | Next.js, TypeScript | Active |
-| **shamwari-ai** | Localized African AI model | Python | Research |
+| **shamwari-ai** | Sovereign AI companion | Python, Claude AI | Active |
 | **nyuchi-main** | Core platform + API + marketing | Next.js, Cloudflare Workers | Active |
 | **learning** | Digital learning experiences | Astro | Active |
 
 ### Design System Flow
 
 ```
-mukoko-registry (this repo)
+design-portal (this repo)
     │
     ├── Defines: Five African Minerals palette, typography, component API
-    ├── Serves: 294 registry items (169 UI, 3 hooks, 11 lib, 70 chart blocks, 35 page blocks) via shadcn CLI / API
+    ├── Serves: 294 registry items (177 UI, 3 hooks, 9 lib, 105 blocks) via shadcn CLI / API
     │
     └── Consumed by:
         ├── mukoko-weather  (weather.mukoko.com)
         ├── mukoko-news     (news.mukoko.com)
         ├── mukoko super app (*.mukoko.com)
         ├── nhimbe          (events.mukoko.com)
-        └── Any new Mukoko app
+        ├── Sister brands   (Zimbabwe Information Platform, Barstool by Nyuchi)
+        └── Any new bundu ecosystem app
 ```
 
 **Rule:** When building a new app, install components from this registry. Do not copy-paste component code or create parallel component libraries.
@@ -104,7 +105,7 @@ pnpm registry:build   # Generate static registry JSON files into public/r/
 ## 5. Directory Structure
 
 ```
-mukoko-registry/
+design-portal/
 ├── .claude/
 │   ├── settings.json             # MCP server configuration for Claude Code
 │   └── skills/
@@ -120,7 +121,7 @@ mukoko-registry/
 │   └── components/               # Component rendering tests
 ├── app/                          # Next.js App Router
 │   ├── api/
-│   │   └── v1/                   # Mukoko Architecture API v1
+│   │   └── v1/                   # Nyuchi Design Portal API v1
 │   │       ├── route.ts          # GET /api/v1 — discovery document
 │   │       ├── brand/route.ts    # GET /api/v1/brand — brand system JSON
 │   │       ├── ui/
@@ -245,7 +246,7 @@ Components are served two ways:
 
 ### 6.2 Layered Component Architecture
 
-Every component follows a layered pattern. This is mandatory for all Mukoko apps consuming this registry.
+Every component follows a layered pattern. This is mandatory for all bundu ecosystem apps consuming this registry.
 
 ```
 Layer 1: Shared primitives (Button, Input, Card, Badge, etc.)
@@ -326,7 +327,7 @@ Three layers of error isolation:
 
 ## 7. Five African Minerals Design System
 
-This is the canonical design system. All Mukoko apps MUST use these tokens.
+This is the canonical design system. All bundu ecosystem apps MUST use these tokens.
 
 ### 7.1 Color Palette
 
@@ -403,14 +404,18 @@ All brand wordmarks are **lowercase**: `mukoko`, `nyuchi`, `shamwari`.
 
 ### 7.5 Radius System
 
+All radii derive from `--radius-unit: 7px`. The ecosystem numbers are 7, 12, 14, 17.
+
 ```
---radius: 0.75rem (base)
---radius-sm: calc(var(--radius) - 4px)
---radius-md: calc(var(--radius) - 2px)
---radius-lg: var(--radius)
---radius-xl: calc(var(--radius) + 4px)
---radius-2xl: calc(var(--radius) + 8px)
+--radius-unit: 7px
+--radius-sm:  7px   (1× unit)   — checkboxes, small elements
+--radius-md:  12px  (unit + 5)  — cards, inputs, containers
+--radius-lg:  14px  (2× unit)   — default, medium containers
+--radius-xl:  17px  (unit + 10) — large cards, dialogs, prominent surfaces
+--radius-full: 9999px           — buttons, badges, pills, avatars
 ```
+
+**Buttons are always pill-shaped (`rounded-full`).** This is an executive brand identity decision — not a radius scale value. All buttons, tabs, and interactive pill-shaped controls use `rounded-full` (9999px). This applies across the entire ecosystem: every app, every API response, every MCP tool, every documentation reference.
 
 ---
 
@@ -429,12 +434,13 @@ All brand wordmarks are **lowercase**: `mukoko`, `nyuchi`, `shamwari`.
 
 Every component in `components/ui/` MUST have:
 
-1. **Accessibility** — ARIA attributes where needed, semantic HTML, keyboard navigation via Radix primitives
-2. **Global styles only** — Tailwind classes backed by CSS custom properties from `globals.css`
-3. **`cn()` composition** — all className props composed through `cn()`
-4. **CVA variants** — use class-variance-authority for any component with visual variants
-5. **Radix primitives** — use Radix UI for accessible behavior (focus management, keyboard nav, screen readers)
-6. **`data-slot` attribute** — for component identification in CSS selectors
+1. **Touch targets** — 56px default height, 48px minimum for small variants. This is non-negotiable for the African mobile market (outdoor use, varied screen sizes, accessibility)
+2. **Accessibility** — ARIA attributes where needed, semantic HTML, keyboard navigation via Radix primitives
+3. **Global styles only** — Tailwind classes backed by CSS custom properties from `globals.css`
+4. **`cn()` composition** — all className props composed through `cn()`
+5. **CVA variants** — use class-variance-authority for any component with visual variants
+6. **Radix primitives** — use Radix UI for accessible behavior (focus management, keyboard nav, screen readers)
+7. **`data-slot` attribute** — for component identification in CSS selectors
 
 ### 8.3 Adding a New Component
 
@@ -452,11 +458,11 @@ Every component in `components/ui/` MUST have:
 - Don't break the registry.json schema — it follows `https://ui.shadcn.com/schema/registry.json`
 - Test that the component still serves correctly via the API
 
-### 8.5 When Building a New Mukoko App
+### 8.5 When Building a New Bundu Ecosystem App
 
 This registry is the template. New apps MUST:
 
-1. **Install components from this registry** via `npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/<component>`
+1. **Install components from this registry** via `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>`
 2. **Copy `globals.css` theme tokens** — the `:root`, `.dark`, and `@theme` blocks are the canonical design system
 3. **Use the same typography stack** — Noto Sans, Noto Serif, JetBrains Mono
 4. **Follow the layered architecture** — primitives → composites → orchestrators → error boundaries → server pages
@@ -471,7 +477,7 @@ This registry is the template. New apps MUST:
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "mukoko",
-  "homepage": "https://registry.mukoko.com",
+  "homepage": "https://design.nyuchi.com",
   "items": [
     {
       "name": "component-name",
@@ -492,7 +498,7 @@ This registry is the template. New apps MUST:
 
 ---
 
-## 9. Mukoko Architecture API (v1)
+## 9. Nyuchi Design Portal API (v1)
 
 All endpoints are under `/api/v1/` and documented in `openapi.yaml` (OpenAPI 3.1).
 
@@ -532,9 +538,9 @@ Configured in `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
-    "mukoko-registry": {
+    "design-portal": {
       "type": "url",
-      "url": "https://registry.mukoko.com/mcp"
+      "url": "https://design.nyuchi.com/mcp"
     }
   }
 }
@@ -651,7 +657,7 @@ __tests__/
 
 ### What Tests Cover
 
-- **Brand data integrity:** All 5 minerals match globals.css hex values, ecosystem brands have required fields, type scale ordering, spacing scale, semantic colors, accessibility standards (APCA 3.0 AAA, 48px touch targets)
+- **Brand data integrity:** All 5 minerals match globals.css hex values, ecosystem brands have required fields, type scale ordering, spacing scale, semantic colors, accessibility standards (APCA 3.0 AAA, 56px default / 48px minimum touch targets)
 - **Architecture data integrity:** 5 principles, framework decision, data layer technologies, cloud services, pipeline stages, data ownership rules, removed technologies, sovereignty assessments, aggregate system export
 - **API routes:** Brand API returns correct headers/status/data, registry.json schema validation, all component files exist on disk, all v1 route files exist, old routes removed
 - **Component rendering:** Brand components render correct content, mineral strip vertical-only orientation, copy-to-clipboard behavior
@@ -681,7 +687,7 @@ Three workflows in `.github/workflows/`:
 **`claude-review.yml`** — AI code review on every PR and `@claude` mentions:
 - Triggers on PR open/sync, issue comments, review comments, and reviews
 - Uses `anthropics/claude-code-action@v1` with OAuth token
-- Reviews for: code quality, design system adherence, accessibility (APCA 3.0 AAA, 48px touch targets), security, registry compatibility
+- Reviews for: code quality, design system adherence, accessibility (APCA 3.0 AAA, 56px default / 48px minimum touch targets), security, registry compatibility
 - Secret required: `CLAUDE_CODE_OAUTH_TOKEN`
 
 **`release.yml`** — Runs on version tags (`v*`):
@@ -736,11 +742,11 @@ When working on this codebase as an AI assistant:
 3. **Use the Five African Minerals palette** — never introduce colors outside the token system
 4. **Follow the CVA + Radix + cn() pattern** — every component uses this stack
 5. **Keep components self-contained** — each file should be independently installable via the registry
-6. **Preserve accessibility** — APCA 3.0 AAA contrast, 48px touch targets, Radix primitives for keyboard/screen reader
+6. **Preserve accessibility** — APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets, Radix primitives for keyboard/screen reader
 7. **Test API output** — after modifying a component, verify it serves correctly via `/api/v1/ui/[name]`
 8. **Respect the layered architecture** — primitives don't import page-level code
 9. **All brand wordmarks lowercase** — `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`
-10. **This is the canonical design system** — changes here propagate to all Mukoko apps
+10. **This is the canonical design system** — changes here propagate to all bundu ecosystem apps
 11. **Run tests before committing** — `pnpm test` must pass; add tests for new features
 12. **Brand data lives in `lib/brand.ts`** — update brand data there, not in individual pages
 13. **Keep versions in sync** — `package.json`, `lib/brand.ts` (BRAND_SYSTEM.version), and `footer.tsx` must match

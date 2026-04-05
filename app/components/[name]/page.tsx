@@ -45,7 +45,7 @@ export async function generateMetadata({
   const item = registry.items.find((i) => i.name === name)
   if (!item) return { title: "Not Found" }
   return {
-    title: `${item.name} — mukoko registry`,
+    title: `${item.name} — nyuchi design portal`,
     description: item.description,
   }
 }
@@ -62,7 +62,7 @@ export default async function ComponentPage({
   if (!item) notFound()
 
   const sourceCode = getSourceCode(item.files[0].path)
-  const installUrl = `https://registry.mukoko.com/api/v1/ui/${item.name}`
+  const installUrl = `https://design.nyuchi.com/api/v1/ui/${item.name}`
   const hasDemo = hasDemoFor(item.name)
 
   return (

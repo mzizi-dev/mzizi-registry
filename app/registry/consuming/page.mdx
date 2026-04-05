@@ -1,11 +1,11 @@
 ---
-title: "Consuming — mukoko registry"
-description: "How to install and use Mukoko Registry components in your application."
+title: "Consuming — nyuchi design portal"
+description: "How to install and use Nyuchi Design Portal components in your application."
 ---
 
 # Consuming the Registry
 
-This guide covers how to install components from the Mukoko Registry, customize them after installation, and keep them updated.
+This guide covers how to install components from the Nyuchi Design Portal, customize them after installation, and keep them updated.
 
 ## Prerequisites
 
@@ -22,30 +22,30 @@ See the [Installation guide](/docs/installation) for full setup instructions.
 ### Single component
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
 ```
 
 ### Multiple components
 
 ```bash
 npx shadcn@latest add \
-  https://registry.mukoko.com/api/v1/ui/card \
-  https://registry.mukoko.com/api/v1/ui/badge \
-  https://registry.mukoko.com/api/v1/ui/dialog
+  https://design.nyuchi.com/api/v1/ui/card \
+  https://design.nyuchi.com/api/v1/ui/badge \
+  https://design.nyuchi.com/api/v1/ui/dialog
 ```
 
 ### Hooks
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/use-toast
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/use-mobile
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/use-toast
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/use-mobile
 ```
 
 ### Library utilities
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/utils
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/circuit-breaker
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/utils
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/circuit-breaker
 ```
 
 ## Dependency resolution
@@ -118,7 +118,7 @@ interface ButtonProps extends React.ComponentProps<"button">,
 To update a component to the latest registry version:
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
 ```
 
 This **overwrites** the local file. If you have made customizations:
@@ -133,10 +133,10 @@ You can also fetch component data via the API without the CLI:
 
 ```bash
 # Get component metadata and source
-curl https://registry.mukoko.com/api/v1/ui/button
+curl https://design.nyuchi.com/api/v1/ui/button
 
 # List all components
-curl https://registry.mukoko.com/api/v1/ui
+curl https://design.nyuchi.com/api/v1/ui
 ```
 
 The JSON response includes the full source code in the `files[].content` field, which you can copy manually if needed.

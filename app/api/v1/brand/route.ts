@@ -62,7 +62,7 @@ export async function GET() {
     }
 
     const brandSystem = {
-      $schema: "https://registry.mukoko.com/schema/brand.json",
+      $schema: "https://design.nyuchi.com/schema/brand.json",
       "@context": "https://schema.org",
       "@type": "Brand",
       version: dbBrand.meta.version,

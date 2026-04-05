@@ -1,4 +1,4 @@
--- Mukoko Registry — Supabase Schema
+-- Nyuchi Design Portal — Supabase Schema
 -- Run this in your Supabase SQL Editor to set up the document store.
 --
 -- Tables:
@@ -28,7 +28,7 @@ create table if not exists components (
   updated_at timestamptz not null default now()
 );
 
-comment on table components is 'Mukoko Registry component metadata — source of truth for the shadcn-compatible registry API.';
+comment on table components is 'Nyuchi Design Portal component metadata — source of truth for the shadcn-compatible registry API.';
 
 -- ─── Component Docs ─────────────────────────────────────────────────
 

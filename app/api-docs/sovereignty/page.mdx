@@ -1,5 +1,5 @@
 ---
-title: "Sovereignty — mukoko registry API"
+title: "Sovereignty — nyuchi design portal API"
 description: "GET /api/v1/sovereignty — technology sovereignty assessments and removed dependencies."
 ---
 
@@ -16,7 +16,9 @@ Returns technology sovereignty assessments for current dependencies and a list o
 | `assessments` | `array` | Sovereignty evaluations for current technologies |
 | `removed` | `array` | Technologies removed from the stack with rationale |
 
-### Example Assessment
+The sovereignty principle: **"Speed is rented. Truth is owned."** Edge caches (Cloudflare KV, Durable Objects) provide speed but are ephemeral and managed. Sovereign databases (Supabase, ScyllaDB, Web3 Pod) own the truth and can be self-hosted.
+
+### Example Assessments
 
 ```json
 {
@@ -26,6 +28,28 @@ Returns technology sovereignty assessments for current dependencies and a list o
   "rationale": "Open-source, self-hostable. Postgres underneath. Exit strategy: migrate to raw Postgres.",
   "selfHostable": true,
   "openSource": true
+}
+```
+
+```json
+{
+  "technology": "ScyllaDB",
+  "category": "database",
+  "verdict": "sovereign",
+  "rationale": "AGPL 3.0 licensed. Self-hosted on Fly.io in Johannesburg. Non-relational source of truth.",
+  "selfHostable": true,
+  "openSource": true
+}
+```
+
+```json
+{
+  "technology": "Cloudflare",
+  "category": "edge",
+  "verdict": "acceptable",
+  "rationale": "Managed edge platform. Used for ephemeral caches (KV, Durable Objects), not source of truth. Speed is rented.",
+  "selfHostable": false,
+  "openSource": false
 }
 ```
 
@@ -42,5 +66,5 @@ Returns technology sovereignty assessments for current dependencies and a list o
 ### Example
 
 ```bash
-curl https://registry.mukoko.com/api/v1/sovereignty
+curl https://design.nyuchi.com/api/v1/sovereignty
 ```

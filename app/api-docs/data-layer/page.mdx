@@ -1,5 +1,5 @@
 ---
-title: "Data Layer — mukoko registry API"
+title: "Data Layer — nyuchi design portal API"
 description: "GET /api/v1/data-layer — local-first storage, cloud sync, and data ownership rules."
 ---
 
@@ -8,6 +8,8 @@ description: "GET /api/v1/data-layer — local-first storage, cloud sync, and da
 ## `GET /api/v1/data-layer`
 
 Returns the local data layer specification, cloud layer configuration, and data ownership rules for the Mukoko ecosystem.
+
+The architecture has **three sources of truth**: Supabase (relational), ScyllaDB (non-relational), and the Web3 Pod (personal/sovereign). Data flows across **seven layers**: Pod, Relational (Supabase), Document (ScyllaDB), Sync (CouchDB), Edge (Cloudflare KV + Durable Objects), Device (RxDB/SQLite), and Open Data (Doris). CouchDB is the **sync protocol**, not a data store — it replicates data between layers. ScyllaDB is the non-relational source of truth, running on Fly.io in Johannesburg. Doris serves double duty as both the analytics engine and the live search engine.
 
 ### Response Shape
 
@@ -35,8 +37,9 @@ Returns the local data layer specification, cloud layer configuration, and data 
 ```json
 {
   "sync": [
-    { "name": "Apache CouchDB", "purpose": "Community data replication" },
-    { "name": "Supabase", "purpose": "Auth, wallet, transactions" }
+    { "name": "Supabase", "purpose": "Relational source of truth — auth, wallet, transactions" },
+    { "name": "ScyllaDB", "purpose": "Non-relational source of truth — high-throughput document data" },
+    { "name": "Apache CouchDB", "purpose": "Sync protocol — replicates data between layers" }
   ]
 }
 ```
@@ -53,5 +56,5 @@ Returns the local data layer specification, cloud layer configuration, and data 
 ### Example
 
 ```bash
-curl https://registry.mukoko.com/api/v1/data-layer
+curl https://design.nyuchi.com/api/v1/data-layer
 ```
