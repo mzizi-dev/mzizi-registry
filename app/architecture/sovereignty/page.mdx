@@ -1,9 +1,9 @@
 ---
-title: "Sovereignty — mukoko registry"
+title: "Sovereignty — nyuchi design portal"
 description: "Technology sovereignty assessment: licensing, governance, and self-hosting analysis for the Mukoko stack."
 ---
 
-import { SOVEREIGNTY_SUMMARY, REMOVED_TECHNOLOGIES } from '@/lib/architecture'
+import { SEED_SOVEREIGNTY_SUMMARY, SEED_REMOVED_TECHNOLOGIES } from '@/lib/architecture'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
@@ -35,7 +35,7 @@ Every technology evaluated across licensing, governance, forkability, and self-h
       </tr>
     </thead>
     <tbody>
-      {SOVEREIGNTY_SUMMARY.map((tech) => (
+      {SEED_SOVEREIGNTY_SUMMARY.map((tech) => (
         <tr key={tech.technology} className="border-b border-border last:border-0">
           <td className="px-4 py-3 font-medium text-foreground">{tech.technology}</td>
           <td className="px-4 py-3 text-muted-foreground">{tech.role}</td>
@@ -76,7 +76,7 @@ Every technology evaluated across licensing, governance, forkability, and self-h
 Technologies that were evaluated and removed from the stack due to licensing, governance, or sovereignty concerns.
 
 <div className="mt-8 grid gap-6">
-  {REMOVED_TECHNOLOGIES.map((tech) => (
+  {SEED_REMOVED_TECHNOLOGIES.map((tech) => (
     <Card key={tech.name}>
       <CardHeader>
         <div className="flex items-start justify-between gap-2">

@@ -2,9 +2,9 @@ import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/
 import { createMukokoMcpServer } from "@/lib/mcp-server"
 
 /**
- * MCP Endpoint — registry.mukoko.com/mcp
+ * MCP Endpoint — design.nyuchi.com/mcp
  *
- * Serves the Mukoko Registry MCP server over Streamable HTTP transport.
+ * Serves the Nyuchi Design Portal MCP server over Streamable HTTP transport.
  * Stateless mode — each request creates a fresh transport/server pair.
  *
  * Supports:

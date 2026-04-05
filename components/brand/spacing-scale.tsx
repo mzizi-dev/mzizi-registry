@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { SPACING_SCALE } from "@/lib/brand"
+import { SEED_SPACING_SCALE } from "@/lib/brand"
 
 interface SpacingScaleProps {
   className?: string
@@ -8,7 +8,7 @@ interface SpacingScaleProps {
 export function SpacingScale({ className }: SpacingScaleProps) {
   return (
     <div className={cn("space-y-3", className)}>
-      {SPACING_SCALE.map((token) => (
+      {SEED_SPACING_SCALE.map((token) => (
         <div key={token.name} className="flex items-center gap-4">
           <span className="w-12 shrink-0 font-mono text-xs text-muted-foreground">
             {token.name}

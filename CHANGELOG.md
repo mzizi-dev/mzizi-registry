@@ -1,12 +1,16 @@
 # Changelog
 
-All notable changes to the Mukoko Registry are documented here.
+All notable changes to the Nyuchi Design Portal are documented here.
 
 This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
 ### Added
+- **Architecture v4.0.1 alignment** — three sources of truth (Supabase, ScyllaDB, Web3 Pod), seven data layers, corrected CouchDB to sync protocol, added Cloudflare Edge layer
+- **Brand hierarchy** — bundu ecosystem > nyuchi enterprise > mukoko consumer. 17 mini-apps, 4 substrate, 7 enterprise products, sister brands
+- **Mukoko Manifesto integration** — four pillars, five Ubuntu questions, seven covenants, tri-mode (Musha/Basa/Nhaka)
+- **Site-wide rebrand** — "nyuchi design portal" naming, design.nyuchi.com domain, all 100+ files updated
 - **Nyuchi Design Portal** — full developer documentation portal (71 pages)
   - /docs — Getting started, installation, theming, dark mode, CLI, changelog
   - /components/[name] — Dynamic per-component documentation pages
@@ -84,7 +88,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Header navigation — added "Brand" link
 - Footer — added Brand section links, bumped version to v4.0.1
 - Wordmark sizing — increased from `text-sm` to `text-xl` to match icon height
-- Package name — `my-project` → `mukoko-registry`
+- Package name — `my-project` → `design-portal`
 - Package version — `0.1.0` → `4.0.1`
 - CLAUDE.md — comprehensive update with testing, CI/CD, versioning, brand documentation sections
 

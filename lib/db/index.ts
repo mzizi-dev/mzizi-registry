@@ -1,5 +1,5 @@
 /**
- * Mukoko Registry Document Store — Supabase Backend
+ * Nyuchi Design Portal Document Store — Supabase Backend
  *
  * Replaces hardcoded JSON files (registry.json, component-docs.ts) with
  * Supabase Postgres. All registry data lives in three tables:

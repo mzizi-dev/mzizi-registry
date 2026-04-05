@@ -1,9 +1,9 @@
 ---
-title: "Principles — mukoko registry"
+title: "Principles — nyuchi design portal"
 description: "Architecture principles and philosophy behind the Mukoko ecosystem."
 ---
 
-import { ARCHITECTURE_PRINCIPLES, FRAMEWORK_DECISION } from '@/lib/architecture'
+import { SEED_ARCHITECTURE_PRINCIPLES, SEED_FRAMEWORK_DECISION } from '@/lib/architecture'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
@@ -16,7 +16,7 @@ The architectural principles that guide every technology decision across the Muk
 Each principle carries a name, rationale, and concrete implementation guidance.
 
 <div className="mt-8 grid gap-6 sm:grid-cols-2">
-  {ARCHITECTURE_PRINCIPLES.map((principle) => (
+  {SEED_ARCHITECTURE_PRINCIPLES.map((principle) => (
     <Card key={principle.name}>
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
@@ -55,18 +55,18 @@ Each principle carries a name, rationale, and concrete implementation guidance.
 
 ## Framework Decision
 
-{FRAMEWORK_DECISION.rationale}
+{SEED_FRAMEWORK_DECISION.rationale}
 
 <div className="mt-6 rounded-xl border border-border p-4">
   <div className="flex items-center gap-3">
     <span className="text-sm font-medium text-foreground">Approach:</span>
-    <Badge variant="outline">{FRAMEWORK_DECISION.approach}</Badge>
+    <Badge variant="outline">{SEED_FRAMEWORK_DECISION.approach}</Badge>
     <span className="text-sm font-medium text-foreground">Framework:</span>
-    <Badge variant="outline">{FRAMEWORK_DECISION.framework}</Badge>
+    <Badge variant="outline">{SEED_FRAMEWORK_DECISION.framework}</Badge>
   </div>
   <p className="mt-3 text-sm text-muted-foreground">
     <span className="font-medium text-foreground">Sovereignty advantage:</span>{" "}
-    {FRAMEWORK_DECISION.sovereigntyAdvantage}
+    {SEED_FRAMEWORK_DECISION.sovereigntyAdvantage}
   </p>
 </div>
 
@@ -80,7 +80,7 @@ Each principle carries a name, rationale, and concrete implementation guidance.
       </tr>
     </thead>
     <tbody>
-      {FRAMEWORK_DECISION.platforms.map((target) => (
+      {SEED_FRAMEWORK_DECISION.platforms.map((target) => (
         <tr key={target.name} className="border-b border-border last:border-0">
           <td className="px-4 py-3 font-medium text-foreground">{target.name}</td>
           <td className="px-4 py-3 text-muted-foreground">{target.strategy}</td>
@@ -99,15 +99,15 @@ Each principle carries a name, rationale, and concrete implementation guidance.
   <div className="space-y-3">
     <div className="flex gap-3">
       <span className="text-sm font-medium text-foreground">Approach:</span>
-      <span className="text-sm text-muted-foreground">{FRAMEWORK_DECISION.harmonyOs.approach}</span>
+      <span className="text-sm text-muted-foreground">{SEED_FRAMEWORK_DECISION.harmonyOs.approach}</span>
     </div>
     <div className="flex gap-3">
       <span className="text-sm font-medium text-foreground">Rationale:</span>
-      <span className="text-sm text-muted-foreground">{FRAMEWORK_DECISION.harmonyOs.rationale}</span>
+      <span className="text-sm text-muted-foreground">{SEED_FRAMEWORK_DECISION.harmonyOs.rationale}</span>
     </div>
     <div className="flex gap-3">
       <span className="text-sm font-medium text-foreground">Status:</span>
-      <Badge variant="outline">{FRAMEWORK_DECISION.harmonyOs.status}</Badge>
+      <Badge variant="outline">{SEED_FRAMEWORK_DECISION.harmonyOs.status}</Badge>
     </div>
   </div>
 </div>

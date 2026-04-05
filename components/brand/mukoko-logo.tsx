@@ -5,6 +5,7 @@ interface MukokoLogoProps {
   size?: number
   showWordmark?: boolean
   suffix?: string
+  brand?: "mukoko" | "nyuchi"
 }
 
 /**
@@ -17,7 +18,9 @@ export function MukokoLogo({
   size = 28,
   showWordmark = true,
   suffix,
+  brand = "nyuchi",
 }: MukokoLogoProps) {
+  const wordmark = brand === "nyuchi" ? "nyuchi" : "mukoko"
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <svg
@@ -33,7 +36,7 @@ export function MukokoLogo({
 
       {showWordmark && (
         <span className="text-xl font-black tracking-tight text-foreground">
-          mukoko{suffix ? ` ${suffix}` : ""}
+          {wordmark}{suffix ? ` ${suffix}` : ""}
         </span>
       )}
     </span>

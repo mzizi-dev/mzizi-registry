@@ -35,7 +35,7 @@ const DEFAULT_APPS: AppItem[] = [
   { name: "weather", icon: CloudSunIcon, href: "https://weather.mukoko.com" },
   { name: "news", icon: NewspaperIcon, href: "https://news.mukoko.com" },
   { name: "nhimbe", icon: CalendarIcon, href: "https://events.mukoko.com" },
-  { name: "registry", icon: GlobeIcon, href: "https://registry.mukoko.com" },
+  { name: "registry", icon: GlobeIcon, href: "https://design.nyuchi.com" },
 ]
 
 function AppSwitcher({

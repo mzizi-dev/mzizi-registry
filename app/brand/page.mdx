@@ -1,9 +1,9 @@
 ---
-title: "Brand — mukoko registry"
-description: "The Mukoko brand system: Five African Minerals design language, ecosystem brands, and design philosophy."
+title: "Brand — nyuchi design portal"
+description: "The bundu ecosystem brand system: Five African Minerals design language, three brand pillars, and design philosophy."
 ---
 
-import { ECOSYSTEM_BRANDS, PHILOSOPHY } from "@/lib/brand"
+import { SEED_ECOSYSTEM_BRANDS, SEED_PHILOSOPHY } from "@/lib/brand"
 import { ArrowRight } from "lucide-react"
 
 export const brandLinks = [
@@ -20,10 +20,10 @@ export const brandLinks = [
       <span className="font-mono text-xs">v4.0.1</span>
     </Badge>
     <h1 className="font-serif text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-      mukoko brand system
+      the bundu brand system
     </h1>
     <p className="max-w-2xl text-lg text-muted-foreground">
-      The design system for the Mukoko ecosystem, built on the{" "}
+      The design language for the entire bundu ecosystem — built on the{" "}
       <strong className="text-foreground">Five African Minerals</strong> palette.
       Every color, component, and pattern is rooted in African heritage.
     </p>
@@ -47,31 +47,89 @@ export const brandLinks = [
   ))}
 </div>
 
-## Ecosystem
+## The Three Pillars
 
-Five interconnected brands form the Mukoko ecosystem. Each plays a distinct role,
-named in Shona and inspired by the collective spirit of African communities.
+The **bundu family** is the complete ecosystem built by Nyuchi Africa. It has three pillars:
+
+**mukoko** is the consumer-facing super app — seventeen mini-apps, four substrate
+components, one unified identity. This is where a billion African users live their digital lives.
+
+**nyuchi** is the enterprise layer — seven products, each with its own consumer-facing
+interface AND its business-facing management tools. A doctor on Nyuchi Medical and a
+patient on Mukoko Health are in the same world, connected through the same identity.
+
+**Sister brands** are specialist verticals — bushtrade (marketplace) and others — each
+drawing from the platform's data and verification infrastructure but presenting as its
+own brand with its own audience.
 
 <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-  {ECOSYSTEM_BRANDS.map((brand) => (
+  {SEED_ECOSYSTEM_BRANDS.map((brand) => (
     <BrandCard key={brand.name} brand={brand} />
   ))}
 </div>
 
-## {PHILOSOPHY.name} Philosophy
+## {SEED_PHILOSOPHY.name} — *{SEED_PHILOSOPHY.shona}*
 
 <p className="mt-2 max-w-2xl text-lg italic text-muted-foreground">
-  &ldquo;{PHILOSOPHY.meaning}&rdquo;
+  &ldquo;{SEED_PHILOSOPHY.meaning}&rdquo;
 </p>
 
-<div className="mt-8 grid gap-4 sm:grid-cols-5">
-  {PHILOSOPHY.pillars.map((pillar) => (
+<p className="mt-4 max-w-2xl text-sm text-muted-foreground">
+  {SEED_PHILOSOPHY.description}
+</p>
+
+### The Four Pillars
+
+<div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  {SEED_PHILOSOPHY.pillars.map((pillar) => (
     <div
       key={pillar.name}
-      className="rounded-xl border border-border p-4 text-center"
+      className="rounded-xl border border-border p-4"
     >
       <p className="font-medium text-foreground">{pillar.name}</p>
       <p className="mt-1 text-xs text-muted-foreground">{pillar.description}</p>
+    </div>
+  ))}
+</div>
+
+### The Five Ubuntu Questions
+
+Every product decision runs through five questions. If the answer to any is no, we do not ship.
+
+<div className="mt-6 grid gap-2">
+  {SEED_PHILOSOPHY.ubuntuQuestions.map((q, i) => (
+    <div key={i} className="flex items-start gap-3 rounded-xl border border-border p-3">
+      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-xs text-muted-foreground">
+        {String(i + 1).padStart(2, "0")}
+      </span>
+      <p className="text-sm text-foreground">{q}</p>
+    </div>
+  ))}
+</div>
+
+### Musha · Basa · Nhaka
+
+Every mini-app operates in three modes simultaneously.
+
+<div className="mt-6 grid gap-4 sm:grid-cols-3">
+  {SEED_PHILOSOPHY.triMode.map((mode) => (
+    <div key={mode.name} className="rounded-xl border border-border p-4">
+      <p className="font-serif text-lg font-semibold text-foreground">{mode.name}</p>
+      <p className="font-mono text-xs text-muted-foreground">{mode.meaning}</p>
+      <p className="mt-2 text-xs text-muted-foreground">{mode.description}</p>
+    </div>
+  ))}
+</div>
+
+### The Seven Covenants
+
+<div className="mt-6 grid gap-2">
+  {SEED_PHILOSOPHY.covenants.map((c, i) => (
+    <div key={i} className="flex items-start gap-3 rounded-xl border border-border p-3">
+      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-xs text-muted-foreground">
+        {String(i + 1).padStart(2, "0")}
+      </span>
+      <p className="text-sm font-medium text-foreground">{c}</p>
     </div>
   ))}
 </div>
@@ -84,7 +142,7 @@ named in Shona and inspired by the collective spirit of African communities.
   </p>
   <div className="mt-4 rounded-xl bg-muted p-4">
     <code className="font-mono text-sm text-foreground">
-      GET https://registry.mukoko.com/api/brand
+      GET https://design.nyuchi.com/api/brand
     </code>
   </div>
   <p className="mt-3 text-xs text-muted-foreground">

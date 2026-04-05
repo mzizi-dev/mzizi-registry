@@ -4,10 +4,10 @@ description: "Design guidelines for the mukoko brand system: typography, spacing
 ---
 
 import {
-  ACCESSIBILITY,
-  RADII,
-  VOICE_AND_TONE,
-  TYPOGRAPHY_FONTS,
+  SEED_ACCESSIBILITY,
+  SEED_RADII,
+  SEED_VOICE_AND_TONE,
+  SEED_TYPOGRAPHY_FONTS,
 } from "@/lib/brand"
 import { Check, X } from "lucide-react"
 
@@ -70,7 +70,7 @@ on cards, headers, and feature sections.
 
 {/* Font families */}
 <div className="mt-6 grid gap-4 sm:grid-cols-3">
-  {Object.entries(TYPOGRAPHY_FONTS).map(([key, font]) => (
+  {Object.entries(SEED_TYPOGRAPHY_FONTS).map(([key, font]) => (
     <div key={key} className="rounded-xl border border-border p-4">
       <p
         className={`text-lg font-medium text-foreground ${
@@ -104,7 +104,7 @@ Consistent spacing tokens used across all components and layouts.
 All radii derive from a base value of `0.75rem (12px)`.
 
 <div className="mt-6 grid gap-3 sm:grid-cols-2">
-  {Object.entries(RADII).map(([name, value]) => (
+  {Object.entries(SEED_RADII).map(([name, value]) => (
     <div key={name} className="flex items-center justify-between rounded-lg border border-border p-3">
       <span className="font-mono text-sm text-foreground">--radius-{name}</span>
       <span className="font-mono text-xs text-muted-foreground">{value}</span>
@@ -116,26 +116,26 @@ All radii derive from a base value of `0.75rem (12px)`.
 
 <div className="mt-6 space-y-4">
   <div className="rounded-xl border border-border p-4">
-    <p className="font-medium text-foreground">{ACCESSIBILITY.standard}</p>
-    <p className="mt-1 text-sm text-muted-foreground">{ACCESSIBILITY.contrastDescription}</p>
+    <p className="font-medium text-foreground">{SEED_ACCESSIBILITY.standard}</p>
+    <p className="mt-1 text-sm text-muted-foreground">{SEED_ACCESSIBILITY.contrastDescription}</p>
   </div>
   <div className="rounded-xl border border-border p-4">
-    <p className="font-medium text-foreground">{ACCESSIBILITY.minTouchTarget}px Touch Targets</p>
+    <p className="font-medium text-foreground">{SEED_ACCESSIBILITY.minTouchTarget}px Touch Targets</p>
     <p className="mt-1 text-sm text-muted-foreground">
-      All interactive elements must be at least {ACCESSIBILITY.minTouchTarget}px in both dimensions.
+      All interactive elements must be at least {SEED_ACCESSIBILITY.minTouchTarget}px in both dimensions.
     </p>
   </div>
   <div className="rounded-xl border border-border p-4">
     <p className="font-medium text-foreground">Focus Indicators</p>
-    <p className="mt-1 text-sm text-muted-foreground">{ACCESSIBILITY.focusIndicator}</p>
+    <p className="mt-1 text-sm text-muted-foreground">{SEED_ACCESSIBILITY.focusIndicator}</p>
   </div>
   <div className="rounded-xl border border-border p-4">
     <p className="font-medium text-foreground">Keyboard Navigation</p>
-    <p className="mt-1 text-sm text-muted-foreground">{ACCESSIBILITY.keyboardNavigation}</p>
+    <p className="mt-1 text-sm text-muted-foreground">{SEED_ACCESSIBILITY.keyboardNavigation}</p>
   </div>
   <div className="rounded-xl border border-border p-4">
     <p className="font-medium text-foreground">Screen Readers</p>
-    <p className="mt-1 text-sm text-muted-foreground">{ACCESSIBILITY.screenReaders}</p>
+    <p className="mt-1 text-sm text-muted-foreground">{SEED_ACCESSIBILITY.screenReaders}</p>
   </div>
 </div>
 
@@ -144,7 +144,7 @@ All radii derive from a base value of `0.75rem (12px)`.
 ### Principles
 
 <ul className="mt-3 space-y-2">
-  {VOICE_AND_TONE.principles.map((p) => (
+  {SEED_VOICE_AND_TONE.principles.map((p) => (
     <li key={p} className="flex items-start gap-2 text-sm text-muted-foreground">
       <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[var(--color-tanzanite)]" />
       {p}
@@ -159,7 +159,7 @@ All radii derive from a base value of `0.75rem (12px)`.
       Do
     </h3>
     <ul className="mt-3 space-y-2">
-      {VOICE_AND_TONE.doList.map((item) => (
+      {SEED_VOICE_AND_TONE.doList.map((item) => (
         <li key={item} className="text-sm text-muted-foreground">{item}</li>
       ))}
     </ul>
@@ -170,7 +170,7 @@ All radii derive from a base value of `0.75rem (12px)`.
       Don&apos;t
     </h3>
     <ul className="mt-3 space-y-2">
-      {VOICE_AND_TONE.dontList.map((item) => (
+      {SEED_VOICE_AND_TONE.dontList.map((item) => (
         <li key={item} className="text-sm text-muted-foreground">{item}</li>
       ))}
     </ul>

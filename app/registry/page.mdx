@@ -1,5 +1,5 @@
 ---
-title: "Registry — mukoko registry"
+title: "Registry — nyuchi design portal"
 description: "How the Mukoko component registry works: architecture, API, and static builds."
 ---
 
@@ -7,7 +7,7 @@ import { ArrowRight, Download, Upload, FileJson, Bot } from "lucide-react"
 
 # Registry
 
-The Mukoko Registry is a **shadcn-compatible component registry** that serves 94 items (82 UI components, 3 hooks, 9 library utilities). It allows any Mukoko app to install production-ready components with a single CLI command.
+The Nyuchi Design Portal is a **shadcn-compatible component registry** that serves **294 registry items** (169 UI components, 3 hooks, 11 lib utilities, 70 chart blocks, 35 page blocks). It allows any app in the bundu ecosystem to install production-ready components with a single CLI command — consumed by mukoko's 17 mini-apps, nyuchi's 7 enterprise products, and sister brands including Zimbabwe Information Platform and Barstool by Nyuchi.
 
 ## How it works
 
@@ -62,7 +62,7 @@ registry.json (manifest — source of truth)
 ## Quick install
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/button
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
 ```
 
 This fetches the button component JSON, resolves its dependencies (`radix-ui`, `class-variance-authority`), and writes `components/ui/button.tsx` to your project.

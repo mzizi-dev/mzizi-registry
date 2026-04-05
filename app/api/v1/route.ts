@@ -24,14 +24,14 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        $schema: "https://registry.mukoko.com/schema/api.json",
+        $schema: "https://design.nyuchi.com/schema/api.json",
         "@context": "https://schema.org",
         "@type": "WebAPI",
         name: "Mukoko Architecture API",
         version: "1.0.0",
         description:
           "Unified API for the Mukoko ecosystem — components, brand, architecture, and design system.",
-        homepage: "https://registry.mukoko.com",
+        homepage: "https://design.nyuchi.com",
         database: {
           status: dbStatus,
           components: componentCount,

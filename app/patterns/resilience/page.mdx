@@ -16,13 +16,15 @@ import { CircuitBreakerDemo } from "@/components/patterns/circuit-breaker-demo"
 
 Netflix Hystrix-inspired circuit breakers, retry with exponential backoff, and fallback chains. Prevent cascading failures when external APIs go down.
 
+These resilience patterns are critical for African infrastructure where connectivity is unreliable. The mukoko ecosystem operates across seven data layers — Pod (Web3), Relational (Supabase), Document (ScyllaDB), Sync (CouchDB), Edge (Cloudflare KV + Durable Objects), Device (RxDB/SQLite), and Open Data (Doris) — and resilience must work across all of them. Circuit breakers protect cross-layer calls, retry handles transient failures at the edge, fallback chains cascade from fast edge caches down to sovereign databases. Speed is rented (edge caches). Truth is owned (sovereign databases).
+
 ## Install from registry
 
 ```bash
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/circuit-breaker
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/retry
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/fallback-chain
-npx shadcn@latest add https://registry.mukoko.com/api/v1/ui/timeout
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/circuit-breaker
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/retry
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/fallback-chain
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/timeout
 ```
 
 ## Circuit Breaker

@@ -1,6 +1,6 @@
-# Contributing to mukoko registry
+# Contributing to nyuchi design portal
 
-Thank you for your interest in contributing to the mukoko registry -- the Nyuchi Design Portal.
+Thank you for your interest in contributing to the nyuchi design portal -- the Nyuchi Design Portal.
 
 This guide covers everything you need to get started, from setting up your environment to submitting a pull request.
 
@@ -12,8 +12,8 @@ This guide covers everything you need to get started, from setting up your envir
 
 ```bash
 # Fork via GitHub, then clone your fork
-git clone https://github.com/<your-username>/mukoko-registry.git
-cd mukoko-registry
+git clone https://github.com/<your-username>/design-portal.git
+cd design-portal
 ```
 
 ### 2. Install dependencies
@@ -62,17 +62,17 @@ git checkout -b feature/your-feature
 ### Before You Code
 
 1. **Read [CLAUDE.md](CLAUDE.md)** -- it is the definitive reference for this codebase, covering architecture, conventions, and the full design system specification
-2. **Understand the [Five African Minerals design system](https://registry.mukoko.com/brand/colors)** -- all colors come from five mineral-named tokens
+2. **Understand the [Five African Minerals design system](https://design.nyuchi.com/brand/colors)** -- all colors come from five mineral-named tokens
 3. **Browse existing components** in `components/ui/` to understand the CVA + Radix + cn() pattern
 4. **Check `registry.json`** before modifying components to understand the dependency graph
 5. **Understand the DB-first architecture** -- API routes read from Supabase, not hardcoded objects
 
 ### Key Principles
 
-- The registry is the **single source of truth** for the entire mukoko ecosystem. Changes here propagate to every app that consumes the registry.
+- The registry is the **single source of truth** for the entire bundu ecosystem. Changes here propagate to every app that consumes the registry.
 - Every component must be **independently installable** via the shadcn CLI.
 - The **Five African Minerals palette** is the only approved color system. Never introduce colors outside the token system.
-- **Accessibility is mandatory** -- APCA 3.0 AAA contrast, 48px touch targets, keyboard navigation, screen reader support.
+- **Accessibility is mandatory** -- APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets, keyboard navigation, screen reader support.
 
 ---
 
@@ -388,5 +388,5 @@ Harassment, discrimination, and exclusionary behavior are not tolerated. Maintai
 ## Questions?
 
 - Read [CLAUDE.md](CLAUDE.md) for the full technical reference
-- Browse the [portal](https://registry.mukoko.com) for design system documentation
+- Browse the [portal](https://design.nyuchi.com) for design system documentation
 - Open a discussion on GitHub for architectural questions

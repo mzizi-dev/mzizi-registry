@@ -255,7 +255,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
         </CollapsibleTrigger>
       </div>
       <div className="rounded-md border border-border px-4 py-2 text-sm">
-        mukoko-registry
+        design-portal
       </div>
       <CollapsibleContent className="space-y-2">
         <div className="rounded-md border border-border px-4 py-2 text-sm">
@@ -449,7 +449,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
   separator: (
     <div className="w-full max-w-sm">
       <div className="space-y-1">
-        <h4 className="text-sm font-medium">mukoko registry</h4>
+        <h4 className="text-sm font-medium">nyuchi design portal</h4>
         <p className="text-sm text-muted-foreground">
           Component registry and design system.
         </p>
@@ -597,7 +597,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
         <span className="flex-1 bg-[var(--color-gold)]" />
         <span className="flex-1 bg-[var(--color-terracotta)]" />
       </div>
-      <div className="mb-3 text-sm font-bold">mukoko registry</div>
+      <div className="mb-3 text-sm font-bold">nyuchi design portal</div>
       <div className="space-y-0.5">
         <div className="rounded-md bg-primary/10 px-3 py-1.5 text-xs font-medium text-foreground">Components</div>
         <div className="rounded-md px-3 py-1.5 text-xs text-muted-foreground">Brand</div>
@@ -612,7 +612,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
     <div className="w-full max-w-lg rounded-lg border border-border bg-background/80 px-4 py-2 backdrop-blur-xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <span className="text-sm font-bold">mukoko registry</span>
+          <span className="text-sm font-bold">nyuchi design portal</span>
           <div className="hidden items-center gap-2 sm:flex">
             <span className="text-xs text-muted-foreground">Components</span>
             <span className="text-xs text-muted-foreground">Brand</span>
@@ -852,7 +852,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       </div>
       <div className="flex items-center gap-2">
         <div className="flex-1 truncate rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs">
-          https://registry.mukoko.com/...
+          https://design.nyuchi.com/...
         </div>
         <span className="rounded-lg border border-border px-3 py-2 text-xs">Copy</span>
       </div>
@@ -890,7 +890,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
 
   "copy-button": (
     <div className="flex items-center gap-3">
-      <code className="rounded-lg bg-muted px-3 py-2 text-xs">npx shadcn@latest add https://registry.mukoko.com/api/r/button</code>
+      <code className="rounded-lg bg-muted px-3 py-2 text-xs">npx shadcn@latest add https://design.nyuchi.com/api/r/button</code>
       <span className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
         Copy

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { MINERALS } from "@/lib/brand"
+import { SEED_MINERALS } from "@/lib/brand"
 
 interface MineralStripProps {
   thickness?: number
@@ -20,7 +20,7 @@ export function MineralStrip({
       style={{ width: `${thickness}px` }}
       aria-hidden="true"
     >
-      {MINERALS.map((mineral) => (
+      {SEED_MINERALS.map((mineral) => (
         <div
           key={mineral.name}
           className="flex-1"
