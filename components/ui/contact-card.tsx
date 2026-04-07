@@ -12,30 +12,18 @@ interface ContactCardProps {
   className?: string
 }
 
-function ContactCard({
-  name,
-  email,
-  phone,
-  address,
-  avatar,
-  role,
-  className,
-}: ContactCardProps) {
+function ContactCard({ name, email, phone, address, avatar, role, className }: ContactCardProps) {
   return (
     <div
       data-slot="contact-card"
       className={cn(
-        "ring-foreground/10 bg-card text-card-foreground flex flex-col gap-4 rounded-2xl p-6 text-sm ring-1",
+        "flex flex-col gap-4 rounded-2xl bg-card p-6 text-sm text-card-foreground ring-1 ring-foreground/10",
         className
       )}
     >
       <div className="flex items-center gap-3">
         {avatar ? (
-          <img
-            src={avatar}
-            alt={name}
-            className="size-12 rounded-full object-cover"
-          />
+          <img src={avatar} alt={name} className="size-12 rounded-full object-cover" />
         ) : (
           <div className="flex size-12 items-center justify-center rounded-full bg-muted text-lg font-medium text-muted-foreground">
             {name.charAt(0).toUpperCase()}
@@ -43,9 +31,7 @@ function ContactCard({
         )}
         <div className="flex flex-col">
           <span className="text-base font-medium">{name}</span>
-          {role && (
-            <span className="text-xs text-muted-foreground">{role}</span>
-          )}
+          {role && <span className="text-xs text-muted-foreground">{role}</span>}
         </div>
       </div>
       <div className="flex flex-col gap-2">

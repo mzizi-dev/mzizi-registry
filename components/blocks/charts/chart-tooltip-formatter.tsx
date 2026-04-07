@@ -2,7 +2,12 @@
 
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", revenue: 18600 },
@@ -29,7 +34,11 @@ export function ChartTooltipFormatter() {
           <BarChart data={data}>
             <CartesianGrid vertical={false} />
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-            <ChartTooltip content={<ChartTooltipContent formatter={(value) => `$${Number(value).toLocaleString()}`} />} />
+            <ChartTooltip
+              content={
+                <ChartTooltipContent formatter={(value) => `$${Number(value).toLocaleString()}`} />
+              }
+            />
             <Bar dataKey="revenue" fill="var(--color-revenue)" radius={4} />
           </BarChart>
         </ChartContainer>

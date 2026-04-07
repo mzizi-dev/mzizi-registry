@@ -2,7 +2,14 @@
 
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", farming: 186, mining: 80 },
@@ -32,8 +39,20 @@ export function ChartAreaLegend() {
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />
-            <Area type="natural" dataKey="farming" fill="var(--color-farming)" fillOpacity={0.4} stroke="var(--color-farming)" />
-            <Area type="natural" dataKey="mining" fill="var(--color-mining)" fillOpacity={0.4} stroke="var(--color-mining)" />
+            <Area
+              type="natural"
+              dataKey="farming"
+              fill="var(--color-farming)"
+              fillOpacity={0.4}
+              stroke="var(--color-farming)"
+            />
+            <Area
+              type="natural"
+              dataKey="mining"
+              fill="var(--color-mining)"
+              fillOpacity={0.4}
+              stroke="var(--color-mining)"
+            />
           </AreaChart>
         </ChartContainer>
       </CardContent>

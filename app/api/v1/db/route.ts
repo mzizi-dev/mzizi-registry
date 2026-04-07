@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import {
-  getDatabaseInfo,
-  isSeeded,
-  isSupabaseConfigured,
-} from "@/lib/db"
+import { getDatabaseInfo, isSeeded, isSupabaseConfigured } from "@/lib/db"
 import { seedDatabase } from "@/lib/db/seed"
 
 const logger = createLogger("db")

@@ -17,12 +17,8 @@ export function SpacingScale({ className }: SpacingScaleProps) {
             className="h-6 rounded-md bg-[var(--color-tanzanite)]"
             style={{ width: `${token.px}px`, minWidth: "4px" }}
           />
-          <span className="shrink-0 font-mono text-xs text-muted-foreground">
-            {token.px}px
-          </span>
-          <span className="hidden text-xs text-muted-foreground sm:inline">
-            {token.usage}
-          </span>
+          <span className="shrink-0 font-mono text-xs text-muted-foreground">{token.px}px</span>
+          <span className="hidden text-xs text-muted-foreground sm:inline">{token.usage}</span>
         </div>
       ))}
     </div>

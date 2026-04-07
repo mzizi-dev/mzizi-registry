@@ -36,27 +36,21 @@ function ProfileHeader({
   return (
     <div
       data-slot="profile-header"
-      className={cn("ring-foreground/10 bg-card overflow-hidden rounded-2xl ring-1", className)}
+      className={cn("overflow-hidden rounded-2xl bg-card ring-1 ring-foreground/10", className)}
       {...props}
     >
       {/* Cover image */}
-      <div className="bg-muted relative h-32 sm:h-40">
-        {coverImage && (
-          <img
-            src={coverImage}
-            alt=""
-            className="size-full object-cover"
-          />
-        )}
+      <div className="relative h-32 bg-muted sm:h-40">
+        {coverImage && <img src={coverImage} alt="" className="size-full object-cover" />}
       </div>
       {/* Profile info */}
       <div className="relative px-6 pb-6">
         {/* Avatar */}
-        <div className="ring-card -mt-12 size-24 overflow-hidden rounded-full ring-4">
+        <div className="-mt-12 size-24 overflow-hidden rounded-full ring-4 ring-card">
           {avatar ? (
             <img src={avatar} alt={name} className="size-full object-cover" />
           ) : (
-            <div className="bg-muted text-muted-foreground flex size-full items-center justify-center text-2xl font-medium">
+            <div className="flex size-full items-center justify-center bg-muted text-2xl font-medium text-muted-foreground">
               {initials}
             </div>
           )}
@@ -64,17 +58,17 @@ function ProfileHeader({
         <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <h2 className="text-lg font-semibold">{name}</h2>
-            {bio && <p className="text-muted-foreground mt-1 text-sm">{bio}</p>}
+            {bio && <p className="mt-1 text-sm text-muted-foreground">{bio}</p>}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </div>
         {/* Stats */}
         {stats && stats.length > 0 && (
-          <div className="border-border mt-4 flex gap-6 border-t pt-4">
+          <div className="mt-4 flex gap-6 border-t border-border pt-4">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <p className="text-lg font-semibold">{stat.value}</p>
-                <p className="text-muted-foreground text-xs">{stat.label}</p>
+                <p className="text-xs text-muted-foreground">{stat.label}</p>
               </div>
             ))}
           </div>

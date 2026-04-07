@@ -58,22 +58,15 @@ function Rating({
             className={cn(
               "transition-colors",
               readOnly ? "cursor-default" : "cursor-pointer",
-              isFilled
-                ? "text-[var(--color-gold)]"
-                : "text-muted-foreground/30"
+              isFilled ? "text-[var(--color-gold)]" : "text-muted-foreground/30"
             )}
           >
-            <Star
-              className={cn(SIZE_MAP[size])}
-              fill={isFilled ? "currentColor" : "none"}
-            />
+            <Star className={cn(SIZE_MAP[size])} fill={isFilled ? "currentColor" : "none"} />
           </button>
         )
       })}
       {showValue && (
-        <span className="ml-1 text-sm text-muted-foreground">
-          {controlledValue.toFixed(1)}
-        </span>
+        <span className="ml-1 text-sm text-muted-foreground">{controlledValue.toFixed(1)}</span>
       )}
     </div>
   )

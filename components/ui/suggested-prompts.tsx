@@ -16,10 +16,7 @@ function SuggestedPrompts({
   return (
     <div
       data-slot="suggested-prompts"
-      className={cn(
-        "flex gap-2 overflow-x-auto pb-1 scrollbar-none",
-        className
-      )}
+      className={cn("scrollbar-none flex gap-2 overflow-x-auto pb-1", className)}
       {...props}
     >
       {prompts.map((prompt) => (

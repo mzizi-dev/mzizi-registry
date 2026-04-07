@@ -2,7 +2,12 @@
 
 import { Bar, BarChart, CartesianGrid, LabelList } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { city: "Harare", users: 186 },
@@ -30,8 +35,20 @@ export function ChartBarLabelCustom() {
             <CartesianGrid horizontal={false} />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <Bar dataKey="users" fill="var(--color-users)" radius={4}>
-              <LabelList dataKey="city" position="insideLeft" offset={8} className="fill-[--color-label]" fontSize={12} />
-              <LabelList dataKey="users" position="right" offset={8} className="fill-foreground" fontSize={12} />
+              <LabelList
+                dataKey="city"
+                position="insideLeft"
+                offset={8}
+                className="fill-[--color-label]"
+                fontSize={12}
+              />
+              <LabelList
+                dataKey="users"
+                position="right"
+                offset={8}
+                className="fill-foreground"
+                fontSize={12}
+              />
             </Bar>
           </BarChart>
         </ChartContainer>

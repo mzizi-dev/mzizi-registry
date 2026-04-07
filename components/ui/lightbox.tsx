@@ -67,25 +67,31 @@ function Lightbox({
       <button
         onClick={onClose}
         aria-label="Close"
-        className="absolute right-4 top-4 inline-flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+        className="absolute top-4 right-4 inline-flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
       >
         <X className="size-5" />
       </button>
       {images.length > 1 && (
         <>
           <button
-            onClick={(e) => { e.stopPropagation(); setIndex((i) => (i > 0 ? i - 1 : i)) }}
+            onClick={(e) => {
+              e.stopPropagation()
+              setIndex((i) => (i > 0 ? i - 1 : i))
+            }}
             disabled={index === 0}
             aria-label="Previous"
-            className="absolute left-4 top-1/2 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 disabled:opacity-30"
+            className="absolute top-1/2 left-4 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 disabled:opacity-30"
           >
             <ChevronLeft className="size-5" />
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); setIndex((i) => (i < images.length - 1 ? i + 1 : i)) }}
+            onClick={(e) => {
+              e.stopPropagation()
+              setIndex((i) => (i < images.length - 1 ? i + 1 : i))
+            }}
             disabled={index === images.length - 1}
             aria-label="Next"
-            className="absolute right-4 top-1/2 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 disabled:opacity-30"
+            className="absolute top-1/2 right-4 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 disabled:opacity-30"
           >
             <ChevronRight className="size-5" />
           </button>

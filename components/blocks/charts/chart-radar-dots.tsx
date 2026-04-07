@@ -2,7 +2,12 @@
 
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { metric: "Speed", value: 186 },
@@ -30,7 +35,12 @@ export function ChartRadarDots() {
             <ChartTooltip content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey="metric" />
             <PolarGrid />
-            <Radar dataKey="value" fill="var(--color-value)" fillOpacity={0.6} dot={{ r: 4, fillOpacity: 1 }} />
+            <Radar
+              dataKey="value"
+              fill="var(--color-value)"
+              fillOpacity={0.6}
+              dot={{ r: 4, fillOpacity: 1 }}
+            />
           </RadarChart>
         </ChartContainer>
       </CardContent>

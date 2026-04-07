@@ -25,7 +25,12 @@ function TypeBadge({ type }: { type: string }) {
     array: "bg-[var(--color-malachite)]/15 text-[var(--color-malachite)]",
   }
   return (
-    <span className={cn("rounded-md px-1.5 py-0.5 text-[10px] font-medium", colorMap[type] ?? "bg-muted text-muted-foreground")}>
+    <span
+      className={cn(
+        "rounded-md px-1.5 py-0.5 text-[10px] font-medium",
+        colorMap[type] ?? "bg-muted text-muted-foreground"
+      )}
+    >
       {type}
     </span>
   )
@@ -43,8 +48,14 @@ function SchemaNode({
   depth?: number
 }) {
   const [expanded, setExpanded] = React.useState(depth < 2)
-  const hasChildren = (schema.type === "object" && schema.properties) || (schema.type === "array" && schema.items)
-  const childProperties = schema.type === "object" ? schema.properties : schema.type === "array" && schema.items?.properties ? schema.items.properties : null
+  const hasChildren =
+    (schema.type === "object" && schema.properties) || (schema.type === "array" && schema.items)
+  const childProperties =
+    schema.type === "object"
+      ? schema.properties
+      : schema.type === "array" && schema.items?.properties
+        ? schema.items.properties
+        : null
 
   return (
     <div data-slot="schema-node" className="flex flex-col">
@@ -59,13 +70,19 @@ function SchemaNode({
         aria-expanded={hasChildren ? expanded : undefined}
       >
         {hasChildren ? (
-          <ChevronRight className={cn("size-3.5 shrink-0 transition-transform", expanded && "rotate-90")} />
+          <ChevronRight
+            className={cn("size-3.5 shrink-0 transition-transform", expanded && "rotate-90")}
+          />
         ) : (
           <span className="size-3.5 shrink-0" />
         )}
         {name && <span className="font-mono text-sm font-medium text-foreground">{name}</span>}
-        {required && <span className="text-destructive text-[10px]">*</span>}
-        {schema.type && <TypeBadge type={schema.type === "array" ? `${schema.items?.type ?? "any"}[]` : schema.type} />}
+        {required && <span className="text-[10px] text-destructive">*</span>}
+        {schema.type && (
+          <TypeBadge
+            type={schema.type === "array" ? `${schema.items?.type ?? "any"}[]` : schema.type}
+          />
+        )}
         {schema.description && (
           <span className="truncate text-xs text-muted-foreground">{schema.description}</span>
         )}

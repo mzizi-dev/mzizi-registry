@@ -17,9 +17,27 @@ import {
 } from "lucide-react"
 
 const stats = [
-  { label: "Total Users", value: "12,483", change: "+14%", color: "text-cobalt", bg: "bg-cobalt/10" },
-  { label: "Revenue", value: "$48.2K", change: "+8.2%", color: "text-tanzanite", bg: "bg-tanzanite/10" },
-  { label: "Active Now", value: "1,024", change: "+22%", color: "text-malachite", bg: "bg-malachite/10" },
+  {
+    label: "Total Users",
+    value: "12,483",
+    change: "+14%",
+    color: "text-cobalt",
+    bg: "bg-cobalt/10",
+  },
+  {
+    label: "Revenue",
+    value: "$48.2K",
+    change: "+8.2%",
+    color: "text-tanzanite",
+    bg: "bg-tanzanite/10",
+  },
+  {
+    label: "Active Now",
+    value: "1,024",
+    change: "+22%",
+    color: "text-malachite",
+    bg: "bg-malachite/10",
+  },
   { label: "Conversions", value: "3.6%", change: "+1.2%", color: "text-gold", bg: "bg-gold/10" },
 ]
 

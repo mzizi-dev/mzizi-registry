@@ -88,7 +88,10 @@ export async function withChaos<T>(
     logger.warn("Injecting random error", {
       data: { errorRate: cfg.errorRate },
     })
-    throw new ChaosError("error", `Chaos: random failure (${Math.round(cfg.errorRate * 100)}% rate)`)
+    throw new ChaosError(
+      "error",
+      `Chaos: random failure (${Math.round(cfg.errorRate * 100)}% rate)`
+    )
   }
 
   // Random latency injection

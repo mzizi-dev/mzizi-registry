@@ -53,7 +53,11 @@ function Signup02() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="signup02-password">Password</Label>
-                <Input id="signup02-password" type="password" placeholder="Create a strong password" />
+                <Input
+                  id="signup02-password"
+                  type="password"
+                  placeholder="Create a strong password"
+                />
               </div>
             </>
           )}
@@ -77,7 +81,10 @@ function Signup02() {
           )}
           {step === 2 && (
             <div className="rounded-xl bg-muted p-4 text-sm text-muted-foreground">
-              <p>Review your information and click <span className="font-medium text-foreground">Create account</span> to finish.</p>
+              <p>
+                Review your information and click{" "}
+                <span className="font-medium text-foreground">Create account</span> to finish.
+              </p>
             </div>
           )}
           <div className="flex gap-3">

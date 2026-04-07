@@ -25,9 +25,7 @@ function MiniCard({
         <span className="text-sm font-medium text-foreground">{title}</span>
         <Badge variant="outline">Active</Badge>
       </div>
-      <p className="text-xs text-muted-foreground">
-        This component is working normally.
-      </p>
+      <p className="text-xs text-muted-foreground">This component is working normally.</p>
       {crashTrigger && <CrashOnRender />}
       <Button variant="destructive" size="xs" onClick={onCrash}>
         Trigger error
@@ -47,9 +45,7 @@ export function ErrorBoundaryDemo() {
       <div>
         <div className="mb-3 flex items-center gap-2">
           <div className="size-2.5 rounded-full bg-[var(--color-malachite)]" />
-          <h3 className="text-sm font-semibold text-foreground">
-            Component ErrorBoundary
-          </h3>
+          <h3 className="text-sm font-semibold text-foreground">Component ErrorBoundary</h3>
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
           <ErrorBoundary>
@@ -60,23 +56,15 @@ export function ErrorBoundaryDemo() {
             />
           </ErrorBoundary>
           <ErrorBoundary>
-            <MiniCard
-              title="Card B"
-              crashTrigger={false}
-              onCrash={() => {}}
-            />
+            <MiniCard title="Card B" crashTrigger={false} onCrash={() => {}} />
           </ErrorBoundary>
           <ErrorBoundary>
-            <MiniCard
-              title="Card C"
-              crashTrigger={false}
-              onCrash={() => {}}
-            />
+            <MiniCard title="Card C" crashTrigger={false} onCrash={() => {}} />
           </ErrorBoundary>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">
-          Each card is wrapped in an ErrorBoundary. Crashing one shows a minimal
-          fallback — the others are unaffected.
+          Each card is wrapped in an ErrorBoundary. Crashing one shows a minimal fallback — the
+          others are unaffected.
         </p>
       </div>
 
@@ -86,25 +74,17 @@ export function ErrorBoundaryDemo() {
       <div>
         <div className="mb-3 flex items-center gap-2">
           <div className="size-2.5 rounded-full bg-[var(--color-cobalt)]" />
-          <h3 className="text-sm font-semibold text-foreground">
-            SectionErrorBoundary
-          </h3>
+          <h3 className="text-sm font-semibold text-foreground">SectionErrorBoundary</h3>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           <SectionErrorBoundary section="Weather Data">
             <div className="flex flex-col gap-2 rounded-xl border border-border bg-secondary/30 p-4">
-              <span className="text-sm font-medium text-foreground">
-                Weather Data Section
-              </span>
+              <span className="text-sm font-medium text-foreground">Weather Data Section</span>
               <p className="text-xs text-muted-foreground">
                 Full section with retry capability and named error display.
               </p>
               {sectionACrash && <CrashOnRender />}
-              <Button
-                variant="destructive"
-                size="xs"
-                onClick={() => setSectionACrash(true)}
-              >
+              <Button variant="destructive" size="xs" onClick={() => setSectionACrash(true)}>
                 Crash this section
               </Button>
             </div>
@@ -112,26 +92,20 @@ export function ErrorBoundaryDemo() {
 
           <SectionErrorBoundary section="Community Reports">
             <div className="flex flex-col gap-2 rounded-xl border border-border bg-secondary/30 p-4">
-              <span className="text-sm font-medium text-foreground">
-                Community Reports Section
-              </span>
+              <span className="text-sm font-medium text-foreground">Community Reports Section</span>
               <p className="text-xs text-muted-foreground">
                 Independent section — survives if Weather Data crashes.
               </p>
               {sectionBCrash && <CrashOnRender />}
-              <Button
-                variant="destructive"
-                size="xs"
-                onClick={() => setSectionBCrash(true)}
-              >
+              <Button variant="destructive" size="xs" onClick={() => setSectionBCrash(true)}>
                 Crash this section
               </Button>
             </div>
           </SectionErrorBoundary>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">
-          SectionErrorBoundary shows the section name, a retry button, and logs
-          the error via the observability system. Click &quot;Try again&quot; to recover.
+          SectionErrorBoundary shows the section name, a retry button, and logs the error via the
+          observability system. Click &quot;Try again&quot; to recover.
         </p>
       </div>
     </div>

@@ -30,16 +30,16 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>
 
 Nyuchi Design Portal exists within a broader ecosystem. Understanding the relationships prevents duplicate work and ensures consistency.
 
-| Repository | Purpose | Stack | Status |
-|---|---|---|---|
-| **design-portal** (this repo) | Component registry + design system hub | Next.js 16, Tailwind 4, Radix UI | Canonical, active |
-| **mukoko-weather** | AI weather intelligence platform | Next.js 16, FastAPI, ScyllaDB, Claude AI | Production |
-| **mukoko-news** | Pan-African news aggregator | Next.js 15, Cloudflare Workers, Hono, D1 | Active |
-| **mukoko** | Super app (17 mini-apps, 4 substrate) | Next.js + Capacitor, Preact mini-apps, Turborepo | Active |
-| **nhimbe** | Events platform | Next.js, TypeScript | Active |
-| **shamwari-ai** | Sovereign AI companion | Python, Claude AI | Active |
-| **nyuchi-main** | Core platform + API + marketing | Next.js, Cloudflare Workers | Active |
-| **learning** | Digital learning experiences | Astro | Active |
+| Repository                    | Purpose                                | Stack                                            | Status            |
+| ----------------------------- | -------------------------------------- | ------------------------------------------------ | ----------------- |
+| **design-portal** (this repo) | Component registry + design system hub | Next.js 16, Tailwind 4, Radix UI                 | Canonical, active |
+| **mukoko-weather**            | AI weather intelligence platform       | Next.js 16, FastAPI, ScyllaDB, Claude AI         | Production        |
+| **mukoko-news**               | Pan-African news aggregator            | Next.js 15, Cloudflare Workers, Hono, D1         | Active            |
+| **mukoko**                    | Super app (17 mini-apps, 4 substrate)  | Next.js + Capacitor, Preact mini-apps, Turborepo | Active            |
+| **nhimbe**                    | Events platform                        | Next.js, TypeScript                              | Active            |
+| **shamwari-ai**               | Sovereign AI companion                 | Python, Claude AI                                | Active            |
+| **nyuchi-main**               | Core platform + API + marketing        | Next.js, Cloudflare Workers                      | Active            |
+| **learning**                  | Digital learning experiences           | Astro                                            | Active            |
 
 ### Design System Flow
 
@@ -64,26 +64,26 @@ design-portal (this repo)
 
 ## 3. Tech Stack
 
-| Layer | Technology | Version |
-|---|---|---|
-| Framework | Next.js (App Router) | 16.2.2 |
-| Language | TypeScript (strict mode) | 6.0.2 |
-| Package Manager | pnpm | — |
-| Styling | Tailwind CSS + CSS custom properties | 4.2.2 |
-| Component Primitives | Radix UI + Base UI | radix-ui 1.4.3, @base-ui/react 1.3.0 |
-| Variant Management | class-variance-authority (CVA) | 0.7.1 |
-| Class Composition | clsx + tailwind-merge | via `cn()` in `lib/utils.ts` |
-| Icons | Lucide React | 1.7.0 |
-| Theming | next-themes | 0.4.6 |
-| Forms | react-hook-form + zod | 7.72.0 / 4.3.6 |
-| Charts | Recharts | 3.8.1 |
-| Testing | Vitest + Testing Library | 4.1.2 |
-| Observability | Structured logging (`lib/observability.ts`) | Built-in |
-| Resilience | Circuit breaker, retry, timeout, fallback chain | Built-in (`lib/`) |
-| Database | Supabase (PostgreSQL) | 2.101.1 |
-| MCP Server | @modelcontextprotocol/sdk (Streamable HTTP) | 1.29.0 |
-| CI/CD | GitHub Actions + Vercel | — |
-| Deployment | Vercel | — |
+| Layer                | Technology                                      | Version                              |
+| -------------------- | ----------------------------------------------- | ------------------------------------ |
+| Framework            | Next.js (App Router)                            | 16.2.2                               |
+| Language             | TypeScript (strict mode)                        | 6.0.2                                |
+| Package Manager      | pnpm                                            | —                                    |
+| Styling              | Tailwind CSS + CSS custom properties            | 4.2.2                                |
+| Component Primitives | Radix UI + Base UI                              | radix-ui 1.4.3, @base-ui/react 1.3.0 |
+| Variant Management   | class-variance-authority (CVA)                  | 0.7.1                                |
+| Class Composition    | clsx + tailwind-merge                           | via `cn()` in `lib/utils.ts`         |
+| Icons                | Lucide React                                    | 1.7.0                                |
+| Theming              | next-themes                                     | 0.4.6                                |
+| Forms                | react-hook-form + zod                           | 7.72.0 / 4.3.6                       |
+| Charts               | Recharts                                        | 3.8.1                                |
+| Testing              | Vitest + Testing Library                        | 4.1.2                                |
+| Observability        | Structured logging (`lib/observability.ts`)     | Built-in                             |
+| Resilience           | Circuit breaker, retry, timeout, fallback chain | Built-in (`lib/`)                    |
+| Database             | Supabase (PostgreSQL)                           | 2.101.1                              |
+| MCP Server           | @modelcontextprotocol/sdk (Streamable HTTP)     | 1.29.0                               |
+| CI/CD                | GitHub Actions + Vercel                         | —                                    |
+| Deployment           | Vercel                                          | —                                    |
 
 ---
 
@@ -229,6 +229,7 @@ Components are served two ways:
 2. **Static build** (`scripts/build-registry.js`): Pre-generates JSON files into `public/r/` for CDN serving
 
 **Registry item schema:**
+
 ```json
 {
   "name": "button",
@@ -236,9 +237,7 @@ Components are served two ways:
   "description": "Displays a button or a component that looks like a button.",
   "dependencies": ["radix-ui", "class-variance-authority"],
   "registryDependencies": ["other-component-names"],
-  "files": [
-    { "path": "components/ui/button.tsx", "type": "registry:ui" }
-  ]
+  "files": [{ "path": "components/ui/button.tsx", "type": "registry:ui" }]
 }
 ```
 
@@ -261,6 +260,7 @@ Layer 5: Server page wrappers (page.tsx — SEO, data, layout)
 ```
 
 **Rules:**
+
 - Components import from the layer below, never sideways or upward
 - Each component is a standalone file
 - Page orchestrators NEVER hardcode rendering logic — they compose imported components
@@ -271,6 +271,7 @@ Layer 5: Server page wrappers (page.tsx — SEO, data, layout)
 All UI components in `components/ui/` follow these patterns:
 
 **CVA variant pattern** (example: `button.tsx`):
+
 ```typescript
 const buttonVariants = cva(
   "inline-flex items-center justify-center ...", // base classes
@@ -293,6 +294,7 @@ const buttonVariants = cva(
 ```
 
 **Polymorphic rendering with Slot:**
+
 ```typescript
 function Button({ asChild = false, ...props }) {
   const Comp = asChild ? Slot.Root : "button"
@@ -301,11 +303,13 @@ function Button({ asChild = false, ...props }) {
 ```
 
 **Data attributes for component identification:**
+
 - `data-slot="button"` — component identification
 - `data-variant={variant}` — active variant
 - `data-size={size}` — active size
 
 **Server vs Client components:**
+
 - Components are React Server Components by default
 - Add `"use client"` only when the component uses hooks, event handlers, or browser APIs
 - The `ThemeProvider` and interactive components require `"use client"`
@@ -319,6 +323,7 @@ Three layers of error isolation:
 3. **Global:** `app/global-error.tsx` as last resort
 
 **API error handling:**
+
 - Registry API returns proper HTTP status codes (400, 404, 500)
 - File read errors are logged but don't crash the response — missing files are skipped
 - All errors logged with `[mukoko]` prefix for grep-ability
@@ -372,11 +377,11 @@ This is the canonical design system. All bundu ecosystem apps MUST use these tok
 
 ### 7.2 Typography
 
-| Role | Font | CSS Variable | Usage |
-|---|---|---|---|
-| Body | Noto Sans | `--font-sans` | All body text, UI labels |
-| Display/Headings | Noto Serif | `--font-serif` | Page titles, hero text |
-| Code | JetBrains Mono | `--font-mono` | Code blocks, terminal |
+| Role             | Font           | CSS Variable   | Usage                    |
+| ---------------- | -------------- | -------------- | ------------------------ |
+| Body             | Noto Sans      | `--font-sans`  | All body text, UI labels |
+| Display/Headings | Noto Serif     | `--font-serif` | Page titles, hero text   |
+| Code             | JetBrains Mono | `--font-mono`  | Code blocks, terminal    |
 
 Noto Sans chosen for broad language support (African languages, diacritics).
 
@@ -398,6 +403,7 @@ All brand wordmarks are **lowercase**: `mukoko`, `nyuchi`, `shamwari`.
 5. Border radius uses the `--radius` token system (`radius-sm` through `radius-4xl`)
 
 **Exceptions to the no-inline-styles rule:**
+
 - `next/og` (Satori) routes — canvas renderer, no CSS custom property support
 - Three.js/WebGL — requires raw hex for materials and shaders
 - SVG components where Tailwind classes don't apply
@@ -506,21 +512,22 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 
 **Common headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *`
 
-| Endpoint | Description | Data Source |
-|---|---|---|
-| `GET /api/v1` | Discovery document — lists all resources | — |
-| `GET /api/v1/brand` | Brand system (minerals, typography, spacing) | `lib/brand.ts` |
-| `GET /api/v1/ui` | Component registry index | `registry.json` |
-| `GET /api/v1/ui/{name}` | Individual component with source code | `registry.json` + file system |
-| `GET /api/v1/ecosystem` | Architecture principles & framework decision | `lib/architecture.ts` |
-| `GET /api/v1/data-layer` | Local-first + cloud layer specification | `lib/architecture.ts` |
-| `GET /api/v1/pipeline` | Open data pipeline (Redpanda → Flink → Doris) | `lib/architecture.ts` |
-| `GET /api/v1/sovereignty` | Technology sovereignty assessments | `lib/architecture.ts` |
-| `GET /api/v1/health` | Service health check (`no-cache, no-store`) | Runtime checks |
+| Endpoint                  | Description                                   | Data Source                   |
+| ------------------------- | --------------------------------------------- | ----------------------------- |
+| `GET /api/v1`             | Discovery document — lists all resources      | —                             |
+| `GET /api/v1/brand`       | Brand system (minerals, typography, spacing)  | `lib/brand.ts`                |
+| `GET /api/v1/ui`          | Component registry index                      | `registry.json`               |
+| `GET /api/v1/ui/{name}`   | Individual component with source code         | `registry.json` + file system |
+| `GET /api/v1/ecosystem`   | Architecture principles & framework decision  | `lib/architecture.ts`         |
+| `GET /api/v1/data-layer`  | Local-first + cloud layer specification       | `lib/architecture.ts`         |
+| `GET /api/v1/pipeline`    | Open data pipeline (Redpanda → Flink → Doris) | `lib/architecture.ts`         |
+| `GET /api/v1/sovereignty` | Technology sovereignty assessments            | `lib/architecture.ts`         |
+| `GET /api/v1/health`      | Service health check (`no-cache, no-store`)   | Runtime checks                |
 
 **Error responses:** 400 (invalid input), 404 (not found), 500 (server error)
 
 **Data sources:**
+
 - `lib/brand.ts` — single source of truth for brand system
 - `lib/architecture.ts` — single source of truth for ecosystem architecture
 
@@ -535,6 +542,7 @@ The registry includes a **Model Context Protocol (MCP) server** served at `/mcp`
 The MCP server is a Next.js API route at `app/mcp/route.ts`, powered by `lib/mcp-server.ts`.
 
 Configured in `.claude/settings.json`:
+
 ```json
 {
   "mcpServers": {
@@ -550,25 +558,25 @@ Configured in `.claude/settings.json`:
 
 ### Resources (read-only data)
 
-| URI | Description |
-|---|---|
-| `mukoko://registry` | Full component registry index |
-| `mukoko://brand` | Complete brand system data |
+| URI                      | Description                                     |
+| ------------------------ | ----------------------------------------------- |
+| `mukoko://registry`      | Full component registry index                   |
+| `mukoko://brand`         | Complete brand system data                      |
 | `mukoko://design-tokens` | Five African Minerals palette + semantic tokens |
-| `mukoko://guidelines` | Design system usage guidelines |
-| `mukoko://architecture` | Ecosystem architecture (principles, framework) |
+| `mukoko://guidelines`    | Design system usage guidelines                  |
+| `mukoko://architecture`  | Ecosystem architecture (principles, framework)  |
 
 ### Tools (callable actions)
 
-| Tool | Description |
-|---|---|
-| `list_components` | List all registry components, optionally filter by type |
-| `get_component` | Get a component's source code and metadata |
-| `search_components` | Search components by name or description |
-| `get_design_tokens` | Get color palette, typography, spacing tokens |
-| `scaffold_component` | Generate a new component following CVA + Radix + cn() patterns |
-| `get_install_command` | Get shadcn CLI install command for components |
-| `get_brand_info` | Get information about a specific ecosystem brand |
+| Tool                    | Description                                                                      |
+| ----------------------- | -------------------------------------------------------------------------------- |
+| `list_components`       | List all registry components, optionally filter by type                          |
+| `get_component`         | Get a component's source code and metadata                                       |
+| `search_components`     | Search components by name or description                                         |
+| `get_design_tokens`     | Get color palette, typography, spacing tokens                                    |
+| `scaffold_component`    | Generate a new component following CVA + Radix + cn() patterns                   |
+| `get_install_command`   | Get shadcn CLI install command for components                                    |
+| `get_brand_info`        | Get information about a specific ecosystem brand                                 |
 | `get_architecture_info` | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty) |
 
 ### Architecture
@@ -583,47 +591,47 @@ Configured in `.claude/settings.json`:
 
 The 294 registry items (169 UI components, 3 hooks, 11 library utilities, 70 chart blocks, 35 page blocks) are organized by function:
 
-| Category | Count | Components |
-|---|---|---|
-| **Forms & Input** | 28 | calendar, checkbox, combobox, command, date-picker, date-range-picker, field, file-upload, form, input, input-group, input-otp, label, native-select, radio-group, search-bar, select, slider, switch, textarea, phone-input, tag-input, time-picker, rich-text-editor, code-editor, color-picker, address-input, transfer-list, number-input, autocomplete, mention-input |
-| **Chat & Messaging** | 8 | chat-bubble, chat-list, chat-input, chat-layout, typing-indicator, message-thread, reaction-picker |
-| **AI & Chatbot** | 8 | ai-chat, prompt-input, streaming-text, ai-feedback, ai-response-card, source-citation, suggested-prompts |
-| **Data Display** | 14 | avatar, badge, chart, data-table, kbd, pricing-card, stats-card, status-indicator, table, timeline, typography, tree-view, kanban-board, virtual-list, property-list, json-viewer, schema-viewer, description-list |
-| **User & Profile** | 8 | avatar-group, user-card, profile-header, activity-feed, notification-list |
-| **E-commerce** | 7 | product-card, price-display, cart-item, order-summary, payment-method-card, subscription-card, invoice-row |
-| **Calendar & Scheduling** | 7 | calendar-week-view, calendar-day-view, event-card, time-slot-picker, agenda-view |
-| **Productivity** | 6 | todo-item, checklist, note-card, comment-thread, drag-handle |
-| **Developer Tools** | 7 | api-key-display, webhook-card, env-editor, code-tabs, code-block, endpoint-card, log-viewer |
-| **Security & Auth** | 5 | permission-badge, role-selector, mfa-setup, session-list, audit-log-entry |
-| **Content & Media** | 6 | markdown-renderer, lightbox, video-player, audio-player, file-preview |
-| **Action** | 6 | button, button-group, copy-button, rating, toggle, toggle-group |
-| **Feedback** | 10 | alert, empty, progress, skeleton, sonner, spinner, toast, toaster, announcement-bar, cookie-consent, password-strength, onboarding-tour, changelog-entry, maintenance-page |
-| **Navigation** | 8 | breadcrumb, menubar, navigation-menu, pagination, tabs, stepper, app-switcher, bottom-sheet, mega-menu |
-| **Layout** | 10 | accordion, aspect-ratio, card, carousel, collapsible, drawer, resizable, scroll-area, separator, sheet, sidebar, page-header, section-header, settings-layout, split-view, masonry-grid, sticky-bar, infinite-scroll, pull-to-refresh |
-| **Overlay** | 11 | alert-dialog, context-menu, dialog, dropdown-menu, filter-bar, hover-card, notification-bell, popover, share-dialog, tooltip, user-menu |
-| **Directory & Listings** | 6 | listing-card, category-browser, review-card, contact-card, featured-card, map-placeholder |
-| **Mukoko Ecosystem** | 4 | mukoko-bottom-nav, mukoko-footer, mukoko-header, mukoko-sidebar |
-| **Infrastructure** | 3 | error-boundary, lazy-section, section-error-boundary |
-| **Hooks** | 3 | use-memory-pressure, use-mobile, use-toast |
-| **Resilience (lib)** | 11 | utils, ai-safety, architecture, chaos, circuit-breaker, fallback-chain, observability, retry, timeout |
-| **Chart Blocks** | 70 | area (10), bar (10), line (10), pie (11), radar (14), radial (6), tooltip (9) |
-| **Page Blocks** | 35 | dashboard-01, login-01–05, signup-01–05, sidebar-01–16, profile-page, profile-settings, onboarding-flow, error-page, empty-state, notification-center, search-results, command-center |
+| Category                  | Count | Components                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forms & Input**         | 28    | calendar, checkbox, combobox, command, date-picker, date-range-picker, field, file-upload, form, input, input-group, input-otp, label, native-select, radio-group, search-bar, select, slider, switch, textarea, phone-input, tag-input, time-picker, rich-text-editor, code-editor, color-picker, address-input, transfer-list, number-input, autocomplete, mention-input |
+| **Chat & Messaging**      | 8     | chat-bubble, chat-list, chat-input, chat-layout, typing-indicator, message-thread, reaction-picker                                                                                                                                                                                                                                                                         |
+| **AI & Chatbot**          | 8     | ai-chat, prompt-input, streaming-text, ai-feedback, ai-response-card, source-citation, suggested-prompts                                                                                                                                                                                                                                                                   |
+| **Data Display**          | 14    | avatar, badge, chart, data-table, kbd, pricing-card, stats-card, status-indicator, table, timeline, typography, tree-view, kanban-board, virtual-list, property-list, json-viewer, schema-viewer, description-list                                                                                                                                                         |
+| **User & Profile**        | 8     | avatar-group, user-card, profile-header, activity-feed, notification-list                                                                                                                                                                                                                                                                                                  |
+| **E-commerce**            | 7     | product-card, price-display, cart-item, order-summary, payment-method-card, subscription-card, invoice-row                                                                                                                                                                                                                                                                 |
+| **Calendar & Scheduling** | 7     | calendar-week-view, calendar-day-view, event-card, time-slot-picker, agenda-view                                                                                                                                                                                                                                                                                           |
+| **Productivity**          | 6     | todo-item, checklist, note-card, comment-thread, drag-handle                                                                                                                                                                                                                                                                                                               |
+| **Developer Tools**       | 7     | api-key-display, webhook-card, env-editor, code-tabs, code-block, endpoint-card, log-viewer                                                                                                                                                                                                                                                                                |
+| **Security & Auth**       | 5     | permission-badge, role-selector, mfa-setup, session-list, audit-log-entry                                                                                                                                                                                                                                                                                                  |
+| **Content & Media**       | 6     | markdown-renderer, lightbox, video-player, audio-player, file-preview                                                                                                                                                                                                                                                                                                      |
+| **Action**                | 6     | button, button-group, copy-button, rating, toggle, toggle-group                                                                                                                                                                                                                                                                                                            |
+| **Feedback**              | 10    | alert, empty, progress, skeleton, sonner, spinner, toast, toaster, announcement-bar, cookie-consent, password-strength, onboarding-tour, changelog-entry, maintenance-page                                                                                                                                                                                                 |
+| **Navigation**            | 8     | breadcrumb, menubar, navigation-menu, pagination, tabs, stepper, app-switcher, bottom-sheet, mega-menu                                                                                                                                                                                                                                                                     |
+| **Layout**                | 10    | accordion, aspect-ratio, card, carousel, collapsible, drawer, resizable, scroll-area, separator, sheet, sidebar, page-header, section-header, settings-layout, split-view, masonry-grid, sticky-bar, infinite-scroll, pull-to-refresh                                                                                                                                      |
+| **Overlay**               | 11    | alert-dialog, context-menu, dialog, dropdown-menu, filter-bar, hover-card, notification-bell, popover, share-dialog, tooltip, user-menu                                                                                                                                                                                                                                    |
+| **Directory & Listings**  | 6     | listing-card, category-browser, review-card, contact-card, featured-card, map-placeholder                                                                                                                                                                                                                                                                                  |
+| **Mukoko Ecosystem**      | 4     | mukoko-bottom-nav, mukoko-footer, mukoko-header, mukoko-sidebar                                                                                                                                                                                                                                                                                                            |
+| **Infrastructure**        | 3     | error-boundary, lazy-section, section-error-boundary                                                                                                                                                                                                                                                                                                                       |
+| **Hooks**                 | 3     | use-memory-pressure, use-mobile, use-toast                                                                                                                                                                                                                                                                                                                                 |
+| **Resilience (lib)**      | 11    | utils, ai-safety, architecture, chaos, circuit-breaker, fallback-chain, observability, retry, timeout                                                                                                                                                                                                                                                                      |
+| **Chart Blocks**          | 70    | area (10), bar (10), line (10), pie (11), radar (14), radial (6), tooltip (9)                                                                                                                                                                                                                                                                                              |
+| **Page Blocks**           | 35    | dashboard-01, login-01–05, signup-01–05, sidebar-01–16, profile-page, profile-settings, onboarding-flow, error-page, empty-state, notification-center, search-results, command-center                                                                                                                                                                                      |
 
 ---
 
 ## 12. Notable Configuration
 
-| File | Setting | Note |
-|---|---|---|
-| `next.config.mjs` | `typescript.ignoreBuildErrors: true` | TS errors won't fail builds |
-| `next.config.mjs` | `images.unoptimized: true` | No Next.js image optimization |
-| `next.config.mjs` | `transpilePackages: ["radix-ui"]` | Radix UI needs transpilation |
-| `components.json` | `style: "new-york"`, `rsc: true` | shadcn CLI defaults |
-| `components.json` | `iconLibrary: "lucide"` | Lucide React for all icons |
-| `tsconfig.json` | `strict: true`, `target: "ES6"` | Strict TypeScript |
-| `tsconfig.json` | `paths: { "@/*": ["./*"] }` | Root-relative imports |
-| `postcss.config.mjs` | `@tailwindcss/postcss` | Tailwind CSS 4 PostCSS plugin |
-| `.claude/settings.json` | MCP server config | Connects Claude Code to URL-based MCP server at /mcp |
+| File                    | Setting                              | Note                                                 |
+| ----------------------- | ------------------------------------ | ---------------------------------------------------- |
+| `next.config.mjs`       | `typescript.ignoreBuildErrors: true` | TS errors won't fail builds                          |
+| `next.config.mjs`       | `images.unoptimized: true`           | No Next.js image optimization                        |
+| `next.config.mjs`       | `transpilePackages: ["radix-ui"]`    | Radix UI needs transpilation                         |
+| `components.json`       | `style: "new-york"`, `rsc: true`     | shadcn CLI defaults                                  |
+| `components.json`       | `iconLibrary: "lucide"`              | Lucide React for all icons                           |
+| `tsconfig.json`         | `strict: true`, `target: "ES6"`      | Strict TypeScript                                    |
+| `tsconfig.json`         | `paths: { "@/*": ["./*"] }`          | Root-relative imports                                |
+| `postcss.config.mjs`    | `@tailwindcss/postcss`               | Tailwind CSS 4 PostCSS plugin                        |
+| `.claude/settings.json` | MCP server config                    | Connects Claude Code to URL-based MCP server at /mcp |
 
 ---
 
@@ -679,18 +687,21 @@ pnpm test:watch       # Watch mode for development
 Three workflows in `.github/workflows/`:
 
 **`ci.yml`** — Runs on every push to `main` and all PRs:
+
 1. **Lint** — `pnpm lint` (ESLint with typescript-eslint, flat config in `eslint.config.mjs`)
 2. **Type Check** — `pnpm typecheck`
 3. **Test** — `pnpm test`
 4. **Build** — `pnpm build` (runs after lint, typecheck, test pass)
 
 **`claude-review.yml`** — AI code review on every PR and `@claude` mentions:
+
 - Triggers on PR open/sync, issue comments, review comments, and reviews
 - Uses `anthropics/claude-code-action@v1` with OAuth token
 - Reviews for: code quality, design system adherence, accessibility (APCA 3.0 AAA, 56px default / 48px minimum touch targets), security, registry compatibility
 - Secret required: `CLAUDE_CODE_OAUTH_TOKEN`
 
 **`release.yml`** — Runs on version tags (`v*`):
+
 1. Validates (lint + typecheck + test + build)
 2. Verifies tag version matches `package.json` version
 3. Creates a GitHub release with auto-generated release notes
@@ -723,12 +734,42 @@ Three workflows in `.github/workflows/`:
 **Rule:** Never leave packages outdated "because it's a major version." Upgrade, test, fix. If it breaks and can't be fixed, document why and pin the version with a comment explaining the blocker.
 
 **Current known pins:**
-- `@vitejs/plugin-react@5` — v6 requires vite 8, but vitest 4 bundles vite 7. Upgrade both together when vitest 5 ships.
+
+- `@vitejs/plugin-react@5` — v6 requires vite@8; vitest@4 peer-requires vite@7. `vite` is pinned as a direct devDependency at `^7.3.2` to ensure the patched version is used. Upgrade `@vitejs/plugin-react` to v6 together with vitest@5 when vitest@5 ships.
+
+### Pre-commit Gates
+
+Every commit must pass all gates before pushing. The `.husky/pre-commit` hook enforces this automatically.
+
+| Gate               | Command                                            | Failure means                                               |
+| ------------------ | -------------------------------------------------- | ----------------------------------------------------------- |
+| **Lint**           | `pnpm lint` (zero warnings via `--max-warnings=0`) | ESLint rule violation or warning                            |
+| **Format**         | `pnpm exec prettier --check`                       | Code not formatted — run `pnpm exec prettier --write`       |
+| **Type check**     | `pnpm typecheck`                                   | TypeScript error                                            |
+| **Tests**          | `pnpm test`                                        | Regression or broken test                                   |
+| **Security audit** | `pnpm audit --audit-level=moderate`                | Unresolved vulnerability — update deps or add pnpm override |
+| **Outdated deps**  | `pnpm outdated` (zero results)                     | Package behind latest — upgrade or document pin             |
+
+**Hard rules:**
+
+- Zero ESLint warnings allowed — `--max-warnings=0` is enforced
+- All packages must be at latest, or pinned with a documented reason in this file
+- `pnpm audit --audit-level=moderate` must return clean — use `pnpm.overrides` in `package.json` for transitive vulnerabilities that can't be fixed by upgrading direct deps
+- Prettier formats everything — `.prettierrc` is the canonical style config
+- The CI `audit` job runs the same check — PRs with vulnerabilities will not be merged
+
+**Adding a pnpm override for a transitive vulnerability:**
+
+```json
+// In package.json → "pnpm" → "overrides":
+"vulnerable-package": "^safe-version",
+"parent-package>vulnerable-package": "^safe-version"  // scoped override for version conflicts
+```
 
 ### Deployment
 
 - **Platform:** Vercel (automatic deploys from main branch)
-- **CI gates:** All PRs must pass lint, typecheck, and tests before merge
+- **CI gates:** Security audit, lint (zero warnings), typecheck, tests, and build must all pass before merge
 - **Static registry:** Run `pnpm registry:build` before deploy if static serving is needed
 
 ---

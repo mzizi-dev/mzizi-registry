@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+# Nyuchi Design Portal — Pre-commit hook
+# All checks must pass before a commit is allowed.
+# This is the canonical quality gate for the ecosystem's design system registry.
+
+set -e
+
+echo "Running pre-commit checks..."
+
+# 1. Lint + format staged files (eslint --max-warnings=0 + prettier --write via lint-staged)
+echo "  -> Lint + format staged files"
+pnpm exec lint-staged
+
+# 2. TypeScript — full project check (needs project context, cannot run per-file)
+echo "  -> TypeScript type check"
+pnpm typecheck
+
+# 3. Security audit — fail on moderate+ vulnerabilities
+echo "  -> Security audit"
+pnpm audit --audit-level=moderate
+
+echo "All pre-commit checks passed."

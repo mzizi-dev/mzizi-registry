@@ -45,7 +45,7 @@ function SourceCitation({
     <div
       data-slot="source-citation"
       className={cn(
-        "ring-foreground/10 group flex flex-col gap-1.5 rounded-xl bg-card p-3 text-sm ring-1",
+        "group flex flex-col gap-1.5 rounded-xl bg-card p-3 text-sm ring-1 ring-foreground/10",
         className
       )}
       {...props}
@@ -55,20 +55,16 @@ function SourceCitation({
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 font-medium text-foreground hover:text-primary transition-colors"
+          className="inline-flex items-center gap-1.5 font-medium text-foreground transition-colors hover:text-primary"
         >
           {title}
           <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
         </a>
         {level && (
-          <span className={relevanceVariants({ level })}>
-            {Math.round(relevance! * 100)}%
-          </span>
+          <span className={relevanceVariants({ level })}>{Math.round(relevance! * 100)}%</span>
         )}
       </div>
-      {snippet && (
-        <p className="line-clamp-2 text-xs text-muted-foreground">{snippet}</p>
-      )}
+      {snippet && <p className="line-clamp-2 text-xs text-muted-foreground">{snippet}</p>}
     </div>
   )
 }

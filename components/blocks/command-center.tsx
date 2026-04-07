@@ -84,9 +84,7 @@ function CommandCenter() {
         <CommandInput placeholder="Type a command or search..." />
         <CommandList>
           <CommandEmpty>
-            <div className="py-6 text-center text-sm text-muted-foreground">
-              No results found.
-            </div>
+            <div className="py-6 text-center text-sm text-muted-foreground">No results found.</div>
           </CommandEmpty>
 
           <CommandGroup heading="Recent">

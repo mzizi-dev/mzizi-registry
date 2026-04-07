@@ -35,11 +35,7 @@ export async function generateStaticParams() {
   return registry.items.map((item) => ({ name: item.name }))
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ name: string }>
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
   const registry = getRegistry()
   const item = registry.items.find((i) => i.name === name)
@@ -50,11 +46,7 @@ export async function generateMetadata({
   }
 }
 
-export default async function ComponentPage({
-  params,
-}: {
-  params: Promise<{ name: string }>
-}) {
+export default async function ComponentPage({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
   const registry = getRegistry()
   const item = registry.items.find((i) => i.name === name)
@@ -70,9 +62,7 @@ export default async function ComponentPage({
       {/* Header — always renders (no boundary needed, pure server markup) */}
       <div className="space-y-3">
         <div className="flex items-center gap-3">
-          <h1 className="font-serif text-3xl font-bold tracking-tight">
-            {item.name}
-          </h1>
+          <h1 className="font-serif text-3xl font-bold tracking-tight">{item.name}</h1>
           <Badge variant="outline" className="font-mono text-xs">
             {item.type.replace("registry:", "")}
           </Badge>
@@ -88,9 +78,7 @@ export default async function ComponentPage({
       {/* Preview + Code */}
       <SafeSection section="Preview">
         <section className="space-y-3">
-          <h2 className="text-xl font-semibold">
-            {hasDemo ? "Preview" : "Source Code"}
-          </h2>
+          <h2 className="text-xl font-semibold">{hasDemo ? "Preview" : "Source Code"}</h2>
           <p className="text-sm text-muted-foreground">
             {hasDemo
               ? "Interactive preview with light/dark mode toggle. Switch to Code tab to view the full source."
@@ -107,17 +95,14 @@ export default async function ComponentPage({
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Installation</h2>
           <div className="rounded-xl border border-border bg-muted/50 p-4">
-            <code className="text-sm text-foreground">
-              npx shadcn@latest add {installUrl}
-            </code>
+            <code className="text-sm text-foreground">npx shadcn@latest add {installUrl}</code>
           </div>
         </section>
       </SafeSection>
 
       {/* Dependencies */}
       {((item.dependencies && item.dependencies.length > 0) ||
-        (item.registryDependencies &&
-          item.registryDependencies.length > 0)) && (
+        (item.registryDependencies && item.registryDependencies.length > 0)) && (
         <SafeSection section="Dependencies">
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">Dependencies</h2>
@@ -144,8 +129,7 @@ export default async function ComponentPage({
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">API</h2>
           <p className="text-sm text-muted-foreground">
-            Fetch this component&apos;s metadata and source code from the registry
-            API.
+            Fetch this component&apos;s metadata and source code from the registry API.
           </p>
           <ApiTester name={item.name} />
         </section>
@@ -155,9 +139,7 @@ export default async function ComponentPage({
       <section className="space-y-2">
         <h2 className="text-xl font-semibold">Source</h2>
         <p className="text-sm text-muted-foreground">
-          <code className="rounded-md bg-muted px-2 py-1 text-xs">
-            {item.files[0].path}
-          </code>
+          <code className="rounded-md bg-muted px-2 py-1 text-xs">{item.files[0].path}</code>
         </p>
       </section>
     </div>

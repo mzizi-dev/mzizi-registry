@@ -58,7 +58,7 @@ function RichTextEditor({
     <div
       data-slot="rich-text-editor"
       className={cn(
-        "border-input bg-input/30 rounded-xl border transition-colors focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
+        "rounded-xl border border-input bg-input/30 transition-colors focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50",
         className
       )}
     >

@@ -19,10 +19,24 @@ export function ChartRadialLabel() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={config} className="mx-auto aspect-square max-h-[250px]">
-          <RadialBarChart data={data} startAngle={90} endAngle={90 + 360 * 0.68} innerRadius={80} outerRadius={110}>
+          <RadialBarChart
+            data={data}
+            startAngle={90}
+            endAngle={90 + 360 * 0.68}
+            innerRadius={80}
+            outerRadius={110}
+          >
             <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
             <RadialBar dataKey="value" background cornerRadius={10} />
-            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-foreground text-3xl font-bold">68%</text>
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="fill-foreground text-3xl font-bold"
+            >
+              68%
+            </text>
           </RadialBarChart>
         </ChartContainer>
       </CardContent>

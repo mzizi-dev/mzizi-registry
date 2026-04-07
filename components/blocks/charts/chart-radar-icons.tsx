@@ -3,7 +3,14 @@
 import { Sprout } from "lucide-react"
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart"
 
 const data = [
   { sector: "Farming", output: 275 },
@@ -31,7 +38,12 @@ export function ChartRadarIcons() {
             <ChartLegend content={<ChartLegendContent />} />
             <PolarAngleAxis dataKey="sector" />
             <PolarGrid />
-            <Radar dataKey="output" fill="var(--color-output)" fillOpacity={0.6} dot={{ r: 4, fillOpacity: 1 }} />
+            <Radar
+              dataKey="output"
+              fill="var(--color-output)"
+              fillOpacity={0.6}
+              dot={{ r: 4, fillOpacity: 1 }}
+            />
           </RadarChart>
         </ChartContainer>
       </CardContent>

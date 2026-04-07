@@ -3,11 +3,7 @@
 import * as React from "react"
 import { LogOut, Settings, User, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,21 +68,17 @@ function UserMenu({
         <button
           data-slot="user-menu"
           className={cn(
-            "flex items-center gap-2 rounded-lg p-1.5 text-left text-sm transition-colors hover:bg-muted outline-none",
+            "flex items-center gap-2 rounded-lg p-1.5 text-left text-sm transition-colors outline-none hover:bg-muted",
             className
           )}
         >
           <Avatar className="size-8">
             <AvatarImage src={avatarUrl} alt={name} />
-            <AvatarFallback className="text-xs">
-              {getInitials(name)}
-            </AvatarFallback>
+            <AvatarFallback className="text-xs">{getInitials(name)}</AvatarFallback>
           </Avatar>
           <div className="hidden flex-col sm:flex">
-            <span className="text-sm font-medium leading-none">{name}</span>
-            {email && (
-              <span className="text-xs text-muted-foreground">{email}</span>
-            )}
+            <span className="text-sm leading-none font-medium">{name}</span>
+            {email && <span className="text-xs text-muted-foreground">{email}</span>}
           </div>
           <ChevronsUpDown className="ml-auto hidden size-4 text-muted-foreground sm:block" />
         </button>
@@ -94,12 +86,8 @@ function UserMenu({
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{name}</p>
-            {email && (
-              <p className="text-xs leading-none text-muted-foreground">
-                {email}
-              </p>
-            )}
+            <p className="text-sm leading-none font-medium">{name}</p>
+            {email && <p className="text-xs leading-none text-muted-foreground">{email}</p>}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -107,11 +95,7 @@ function UserMenu({
           {items.map((item) => {
             const Icon = item.icon
             return (
-              <DropdownMenuItem
-                key={item.label}
-                onClick={item.onClick}
-                asChild={!!item.href}
-              >
+              <DropdownMenuItem key={item.label} onClick={item.onClick} asChild={!!item.href}>
                 {item.href ? (
                   <a href={item.href}>
                     {Icon && <Icon className="mr-2 size-4" />}

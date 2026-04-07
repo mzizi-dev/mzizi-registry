@@ -2,7 +2,14 @@
 
 import { Pie, PieChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart"
 
 const data = [
   { sector: "farming", value: 275, fill: "var(--color-farming)" },
@@ -33,7 +40,10 @@ export function ChartPieLegend() {
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent nameKey="sector" hideLabel />} />
             <Pie data={data} dataKey="value" nameKey="sector" />
-            <ChartLegend content={<ChartLegendContent nameKey="sector" />} className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/3 [&>*]:justify-center" />
+            <ChartLegend
+              content={<ChartLegendContent nameKey="sector" />}
+              className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/3 [&>*]:justify-center"
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>

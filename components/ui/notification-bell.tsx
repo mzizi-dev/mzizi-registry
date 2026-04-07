@@ -4,11 +4,7 @@ import * as React from "react"
 import { Bell } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 
@@ -54,7 +50,7 @@ function NotificationBell({
         >
           <Bell className="size-4" />
           {unreadCount > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground">
+            <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
@@ -91,16 +87,11 @@ function NotificationBell({
                     !notification.read && "bg-muted/30"
                   )}
                 >
-                  {notification.icon && (
-                    <div className="mt-0.5 shrink-0">{notification.icon}</div>
-                  )}
+                  {notification.icon && <div className="mt-0.5 shrink-0">{notification.icon}</div>}
                   <div className="flex-1 space-y-1">
                     <div className="flex items-start justify-between gap-2">
                       <p
-                        className={cn(
-                          "text-sm leading-tight",
-                          !notification.read && "font-medium"
-                        )}
+                        className={cn("text-sm leading-tight", !notification.read && "font-medium")}
                       >
                         {notification.title}
                       </p>
@@ -109,13 +100,11 @@ function NotificationBell({
                       )}
                     </div>
                     {notification.description && (
-                      <p className="text-xs text-muted-foreground line-clamp-2">
+                      <p className="line-clamp-2 text-xs text-muted-foreground">
                         {notification.description}
                       </p>
                     )}
-                    <p className="text-xs text-muted-foreground">
-                      {notification.timestamp}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{notification.timestamp}</p>
                   </div>
                 </button>
               ))}
@@ -126,12 +115,7 @@ function NotificationBell({
           <>
             <Separator />
             <div className="p-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-xs"
-                onClick={onViewAll}
-              >
+              <Button variant="ghost" size="sm" className="w-full text-xs" onClick={onViewAll}>
                 View all notifications
               </Button>
             </div>

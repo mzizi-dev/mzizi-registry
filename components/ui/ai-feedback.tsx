@@ -27,11 +27,7 @@ function AiFeedback({
   }
 
   return (
-    <div
-      data-slot="ai-feedback"
-      className={cn("flex flex-col gap-2", className)}
-      {...props}
-    >
+    <div data-slot="ai-feedback" className={cn("flex flex-col gap-2", className)} {...props}>
       <div className="flex items-center gap-1">
         <button
           onClick={() => handleFeedback("positive")}
@@ -67,11 +63,14 @@ function AiFeedback({
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Tell us more..."
-            className="border-input bg-input/30 placeholder:text-muted-foreground min-h-16 w-full resize-none rounded-xl border px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+            className="min-h-16 w-full resize-none rounded-xl border border-input bg-input/30 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
           />
           <button
-            onClick={() => { onTextFeedback?.(text); setText("") }}
-            className="self-end rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/80 transition-colors"
+            onClick={() => {
+              onTextFeedback?.(text)
+              setText("")
+            }}
+            className="self-end rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/80"
           >
             Send
           </button>

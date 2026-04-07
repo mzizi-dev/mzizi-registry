@@ -21,10 +21,12 @@ function Login05() {
       <div className="hidden flex-1 flex-col justify-between bg-card p-10 lg:flex">
         <div>
           <span className="font-serif text-xl font-semibold text-foreground">mukoko</span>
-          <Badge variant="secondary" className="ml-2">ecosystem</Badge>
+          <Badge variant="secondary" className="ml-2">
+            ecosystem
+          </Badge>
         </div>
         <div className="space-y-6">
-          <h2 className="max-w-md font-serif text-3xl font-semibold leading-tight text-foreground">
+          <h2 className="max-w-md font-serif text-3xl leading-tight font-semibold text-foreground">
             Technology built for Africa, by Africa.
           </h2>
           <div className="grid grid-cols-2 gap-4">
@@ -55,7 +57,9 @@ function Login05() {
         <div className="w-full max-w-sm space-y-6">
           <div>
             <h1 className="font-serif text-2xl font-semibold text-foreground">Welcome back</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Sign in to continue to your dashboard</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Sign in to continue to your dashboard
+            </p>
           </div>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -65,7 +69,9 @@ function Login05() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="login05-password">Password</Label>
-                <a href="#" className="text-xs text-cobalt hover:underline">Forgot?</a>
+                <a href="#" className="text-xs text-cobalt hover:underline">
+                  Forgot?
+                </a>
               </div>
               <Input id="login05-password" type="password" placeholder="Enter your password" />
             </div>
@@ -74,7 +80,9 @@ function Login05() {
           <Separator />
           <p className="text-center text-sm text-muted-foreground">
             New to mukoko?{" "}
-            <a href="#" className="font-medium text-foreground hover:underline">Create an account</a>
+            <a href="#" className="font-medium text-foreground hover:underline">
+              Create an account
+            </a>
           </p>
         </div>
       </div>

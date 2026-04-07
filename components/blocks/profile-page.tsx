@@ -16,7 +16,12 @@ const stats = [
 
 const posts = [
   { title: "Exploring Matobo Hills this weekend", date: "2d ago", likes: 48, category: "Travel" },
-  { title: "Best maize varieties for this season", date: "5d ago", likes: 132, category: "Farming" },
+  {
+    title: "Best maize varieties for this season",
+    date: "5d ago",
+    likes: 132,
+    category: "Farming",
+  },
   { title: "Recap: Harare marathon experience", date: "1w ago", likes: 96, category: "Sports" },
 ]
 
@@ -27,7 +32,7 @@ function ProfilePage() {
         {/* Cover image area */}
         <div className="relative h-48 rounded-b-2xl bg-muted sm:h-56">
           {/* Mineral accent stripe on left edge */}
-          <div className="absolute left-0 top-0 flex h-full w-1 flex-col overflow-hidden rounded-bl-2xl">
+          <div className="absolute top-0 left-0 flex h-full w-1 flex-col overflow-hidden rounded-bl-2xl">
             <div className="flex-1 bg-cobalt" />
             <div className="flex-1 bg-tanzanite" />
             <div className="flex-1 bg-malachite" />
@@ -66,7 +71,8 @@ function ProfilePage() {
 
           {/* Bio */}
           <p className="mt-4 text-sm text-foreground">
-            Building the future of African tech, one line at a time. Community advocate and open-source enthusiast based in Harare.
+            Building the future of African tech, one line at a time. Community advocate and
+            open-source enthusiast based in Harare.
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
@@ -119,7 +125,10 @@ function ProfilePage() {
             <TabsContent value="about" className="mt-4">
               <Card size="sm">
                 <CardContent className="space-y-3 text-sm text-muted-foreground">
-                  <p>Software engineer passionate about building technology that serves African communities. Contributor to mukoko and several open-source projects.</p>
+                  <p>
+                    Software engineer passionate about building technology that serves African
+                    communities. Contributor to mukoko and several open-source projects.
+                  </p>
                   <Separator />
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="outline">TypeScript</Badge>

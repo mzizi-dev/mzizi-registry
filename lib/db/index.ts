@@ -110,9 +110,7 @@ export function isSupabaseConfigured(): boolean {
 /**
  * Get a single component by name.
  */
-export async function getComponent(
-  name: string
-): Promise<ComponentRow | null> {
+export async function getComponent(name: string): Promise<ComponentRow | null> {
   const { data, error } = await getPublicClient()
     .from("components")
     .select("*")
@@ -121,7 +119,7 @@ export async function getComponent(
 
   if (error) {
     if (error.code === "PGRST116") return null // not found
-    throw error
+    throw new Error(error.message)
   }
   return data as unknown as ComponentRow
 }
@@ -130,60 +128,51 @@ export async function getComponent(
  * Get all components, sorted by name.
  */
 export async function getAllComponents(): Promise<ComponentRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("*")
-    .order("name")
+  const { data, error } = await getPublicClient().from("components").select("*").order("name")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ComponentRow[]
 }
 
 /**
  * Get components by category.
  */
-export async function getComponentsByCategory(
-  category: string
-): Promise<ComponentRow[]> {
+export async function getComponentsByCategory(category: string): Promise<ComponentRow[]> {
   const { data, error } = await getPublicClient()
     .from("components")
     .select("*")
     .eq("category", category)
     .order("name")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ComponentRow[]
 }
 
 /**
  * Get components by layer.
  */
-export async function getComponentsByLayer(
-  layer: string
-): Promise<ComponentRow[]> {
+export async function getComponentsByLayer(layer: string): Promise<ComponentRow[]> {
   const { data, error } = await getPublicClient()
     .from("components")
     .select("*")
     .eq("layer", layer)
     .order("name")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ComponentRow[]
 }
 
 /**
  * Search components by name or description (case-insensitive).
  */
-export async function searchComponents(
-  query: string
-): Promise<ComponentRow[]> {
+export async function searchComponents(query: string): Promise<ComponentRow[]> {
   const { data, error } = await getPublicClient()
     .from("components")
     .select("*")
     .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
     .order("name")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ComponentRow[]
 }
 
@@ -192,9 +181,7 @@ export async function searchComponents(
 /**
  * Get documentation for a component.
  */
-export async function getComponentDoc(
-  name: string
-): Promise<ComponentDocRow | null> {
+export async function getComponentDoc(name: string): Promise<ComponentDocRow | null> {
   const { data, error } = await getPublicClient()
     .from("component_docs")
     .select("*")
@@ -203,7 +190,7 @@ export async function getComponentDoc(
 
   if (error) {
     if (error.code === "PGRST116") return null
-    throw error
+    throw new Error(error.message)
   }
   return data as unknown as ComponentDocRow
 }
@@ -212,11 +199,9 @@ export async function getComponentDoc(
  * Get all component documentation.
  */
 export async function getAllComponentDocs(): Promise<ComponentDocRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("component_docs")
-    .select("*")
+  const { data, error } = await getPublicClient().from("component_docs").select("*")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ComponentDocRow[]
 }
 
@@ -244,10 +229,8 @@ export async function getDemoNames(): Promise<string[]> {
     .select("component_name")
     .eq("has_demo", true)
 
-  if (error) throw error
-  return ((data ?? []) as unknown as Array<{ component_name: string }>).map(
-    (d) => d.component_name
-  )
+  if (error) throw new Error(error.message)
+  return ((data ?? []) as unknown as Array<{ component_name: string }>).map((d) => d.component_name)
 }
 
 // ── Enriched queries ────────────────────────────────────────────────
@@ -255,9 +238,7 @@ export async function getDemoNames(): Promise<string[]> {
 /**
  * Get a component with its documentation and demo info.
  */
-export async function getComponentWithDocs(
-  name: string
-): Promise<ComponentWithDocs | null> {
+export async function getComponentWithDocs(name: string): Promise<ComponentWithDocs | null> {
   const component = await getComponent(name)
   if (!component) return null
 
@@ -285,10 +266,7 @@ export async function getAllComponentsWithDocs(): Promise<ComponentWithDocs[]> {
       .from("component_demos")
       .select("*")
       .eq("has_demo", true)
-      .then(
-        ({ data }) =>
-          (data ?? []) as unknown as ComponentDemoRow[]
-      ),
+      .then(({ data }) => (data ?? []) as unknown as ComponentDemoRow[]),
   ])
 
   const docMap = new Map(docs.map((d) => [d.component_name, d]))
@@ -306,9 +284,7 @@ export async function getAllComponentsWithDocs(): Promise<ComponentWithDocs[]> {
 /**
  * Upsert a component (insert or update on conflict).
  */
-export async function upsertComponent(
-  component: ComponentInsert
-): Promise<ComponentRow> {
+export async function upsertComponent(component: ComponentInsert): Promise<ComponentRow> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (getAdminClient() as any)
     .from("components")
@@ -316,16 +292,14 @@ export async function upsertComponent(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ComponentRow
 }
 
 /**
  * Upsert component documentation.
  */
-export async function upsertComponentDoc(
-  doc: ComponentDocInsert
-): Promise<ComponentDocRow> {
+export async function upsertComponentDoc(doc: ComponentDocInsert): Promise<ComponentDocRow> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (getAdminClient() as any)
     .from("component_docs")
@@ -333,16 +307,14 @@ export async function upsertComponentDoc(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ComponentDocRow
 }
 
 /**
  * Upsert a component demo.
  */
-export async function upsertComponentDemo(
-  demo: ComponentDemoInsert
-): Promise<ComponentDemoRow> {
+export async function upsertComponentDemo(demo: ComponentDemoInsert): Promise<ComponentDemoRow> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (getAdminClient() as any)
     .from("component_demos")
@@ -350,7 +322,7 @@ export async function upsertComponentDemo(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ComponentDemoRow
 }
 
@@ -358,12 +330,62 @@ export async function upsertComponentDemo(
  * Delete a component and its docs/demos (cascade).
  */
 export async function deleteComponent(name: string): Promise<void> {
-  const { error } = await getAdminClient()
-    .from("components")
-    .delete()
-    .eq("name", name)
+  const { error } = await getAdminClient().from("components").delete().eq("name", name)
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
+}
+
+// ── Registry count queries ──────────────────────────────────────────
+
+export interface RegistryCounts {
+  total: number
+  ui: number
+  blocks: number
+  hooks: number
+  lib: number
+}
+
+/**
+ * Get live component counts from the database, grouped by registry_type.
+ * Used to replace hardcoded numbers in landing page components.
+ * Returns zeros if database is not configured or not seeded.
+ */
+export async function getRegistryCounts(): Promise<RegistryCounts> {
+  if (!isSupabaseConfigured()) {
+    return { total: 0, ui: 0, blocks: 0, hooks: 0, lib: 0 }
+  }
+
+  try {
+    const [total, ui, blocks, hooks, lib] = await Promise.all([
+      getPublicClient().from("components").select("*", { count: "exact", head: true }),
+      getPublicClient()
+        .from("components")
+        .select("*", { count: "exact", head: true })
+        .eq("registry_type", "registry:ui"),
+      getPublicClient()
+        .from("components")
+        .select("*", { count: "exact", head: true })
+        .eq("registry_type", "registry:block"),
+      getPublicClient()
+        .from("components")
+        .select("*", { count: "exact", head: true })
+        .eq("registry_type", "registry:hook"),
+      getPublicClient()
+        .from("components")
+        .select("*", { count: "exact", head: true })
+        .eq("registry_type", "registry:lib"),
+    ])
+
+    return {
+      total: total.count ?? 0,
+      ui: ui.count ?? 0,
+      blocks: blocks.count ?? 0,
+      hooks: hooks.count ?? 0,
+      lib: lib.count ?? 0,
+    }
+  } catch {
+    return { total: 0, ui: 0, blocks: 0, hooks: 0, lib: 0 }
+  }
 }
 
 // ── Database info ───────────────────────────────────────────────────
@@ -374,15 +396,9 @@ export async function deleteComponent(name: string): Promise<void> {
 export async function getDatabaseInfo(): Promise<DatabaseInfo> {
   try {
     const [components, docs, demos] = await Promise.all([
-      getPublicClient()
-        .from("components")
-        .select("*", { count: "exact", head: true }),
-      getPublicClient()
-        .from("component_docs")
-        .select("*", { count: "exact", head: true }),
-      getPublicClient()
-        .from("component_demos")
-        .select("*", { count: "exact", head: true }),
+      getPublicClient().from("components").select("*", { count: "exact", head: true }),
+      getPublicClient().from("component_docs").select("*", { count: "exact", head: true }),
+      getPublicClient().from("component_demos").select("*", { count: "exact", head: true }),
     ])
 
     return {
@@ -425,7 +441,7 @@ export async function getMinerals(): Promise<BrandMineralRow[]> {
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as BrandMineralRow[]
 }
 
@@ -438,23 +454,21 @@ export async function getSemanticColors(): Promise<BrandSemanticColorRow[]> {
     .select("*")
     .order("name")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as BrandSemanticColorRow[]
 }
 
 /**
  * Get semantic colors filtered by type (e.g. 'semantic' or 'background').
  */
-export async function getSemanticColorsByType(
-  colorType: string
-): Promise<BrandSemanticColorRow[]> {
+export async function getSemanticColorsByType(colorType: string): Promise<BrandSemanticColorRow[]> {
   const { data, error } = await getPublicClient()
     .from("brand_semantic_colors")
     .select("*")
     .eq("color_type", colorType)
     .order("name")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as BrandSemanticColorRow[]
 }
 
@@ -467,23 +481,21 @@ export async function getTypography(): Promise<BrandTypographyRow[]> {
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as BrandTypographyRow[]
 }
 
 /**
  * Get typography entries by type ('font' or 'scale').
  */
-export async function getTypographyByType(
-  entryType: string
-): Promise<BrandTypographyRow[]> {
+export async function getTypographyByType(entryType: string): Promise<BrandTypographyRow[]> {
   const { data, error } = await getPublicClient()
     .from("brand_typography")
     .select("*")
     .eq("entry_type", entryType)
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as BrandTypographyRow[]
 }
 
@@ -496,7 +508,7 @@ export async function getSpacing(): Promise<BrandSpacingRow[]> {
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as BrandSpacingRow[]
 }
 
@@ -509,7 +521,7 @@ export async function getEcosystemBrands(): Promise<BrandEcosystemRow[]> {
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as BrandEcosystemRow[]
 }
 
@@ -517,15 +529,11 @@ export async function getEcosystemBrands(): Promise<BrandEcosystemRow[]> {
  * Get brand metadata (single row).
  */
 export async function getBrandMeta(): Promise<BrandMetaRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("brand_meta")
-    .select("*")
-    .limit(1)
-    .single()
+  const { data, error } = await getPublicClient().from("brand_meta").select("*").limit(1).single()
 
   if (error) {
     if (error.code === "PGRST116") return null
-    throw error
+    throw new Error(error.message)
   }
   return data as unknown as BrandMetaRow
 }
@@ -573,7 +581,7 @@ export async function getArchitecturePrinciples(): Promise<ArchitecturePrinciple
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ArchitecturePrincipleRow[]
 }
 
@@ -589,7 +597,7 @@ export async function getFrameworkDecision(): Promise<ArchitectureFrameworkRow |
 
   if (error) {
     if (error.code === "PGRST116") return null
-    throw error
+    throw new Error(error.message)
   }
   return data as unknown as ArchitectureFrameworkRow
 }
@@ -603,7 +611,7 @@ export async function getLocalDataLayer(): Promise<ArchitectureDataLayerRow[]> {
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ArchitectureDataLayerRow[]
 }
 
@@ -616,7 +624,7 @@ export async function getCloudLayer(): Promise<ArchitectureCloudLayerRow[]> {
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ArchitectureCloudLayerRow[]
 }
 
@@ -629,7 +637,7 @@ export async function getPipeline(): Promise<ArchitecturePipelineRow[]> {
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ArchitecturePipelineRow[]
 }
 
@@ -642,7 +650,7 @@ export async function getDataOwnership(): Promise<ArchitectureDataOwnershipRow[]
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ArchitectureDataOwnershipRow[]
 }
 
@@ -655,7 +663,7 @@ export async function getSovereignty(): Promise<ArchitectureSovereigntyRow[]> {
     .select("*")
     .order("sort_order")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ArchitectureSovereigntyRow[]
 }
 
@@ -668,7 +676,7 @@ export async function getRemovedTechnologies(): Promise<ArchitectureRemovedRow[]
     .select("*")
     .order("name")
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ArchitectureRemovedRow[]
 }
 
@@ -677,9 +685,7 @@ export async function getRemovedTechnologies(): Promise<ArchitectureRemovedRow[]
 /**
  * Upsert a brand mineral.
  */
-export async function upsertBrandMineral(
-  mineral: BrandMineralInsert
-): Promise<BrandMineralRow> {
+export async function upsertBrandMineral(mineral: BrandMineralInsert): Promise<BrandMineralRow> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (getAdminClient() as any)
     .from("brand_minerals")
@@ -687,7 +693,7 @@ export async function upsertBrandMineral(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as BrandMineralRow
 }
 
@@ -704,7 +710,7 @@ export async function upsertBrandSemanticColor(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as BrandSemanticColorRow
 }
 
@@ -721,16 +727,14 @@ export async function upsertBrandTypography(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as BrandTypographyRow
 }
 
 /**
  * Upsert a spacing token.
  */
-export async function upsertBrandSpacing(
-  spacing: BrandSpacingInsert
-): Promise<BrandSpacingRow> {
+export async function upsertBrandSpacing(spacing: BrandSpacingInsert): Promise<BrandSpacingRow> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (getAdminClient() as any)
     .from("brand_spacing")
@@ -738,7 +742,7 @@ export async function upsertBrandSpacing(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as BrandSpacingRow
 }
 
@@ -755,29 +759,23 @@ export async function upsertBrandEcosystem(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as BrandEcosystemRow
 }
 
 /**
  * Upsert brand metadata (single row — deletes existing then inserts).
  */
-export async function upsertBrandMeta(
-  meta: BrandMetaInsert
-): Promise<BrandMetaRow> {
+export async function upsertBrandMeta(meta: BrandMetaInsert): Promise<BrandMetaRow> {
   const admin = getAdminClient()
 
   // Delete existing rows (single row table)
   await admin.from("brand_meta").delete().neq("id", 0)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (admin as any)
-    .from("brand_meta")
-    .insert(meta)
-    .select()
-    .single()
+  const { data, error } = await (admin as any).from("brand_meta").insert(meta).select().single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as BrandMetaRow
 }
 
@@ -796,7 +794,7 @@ export async function upsertArchitecturePrinciple(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ArchitecturePrincipleRow
 }
 
@@ -813,7 +811,7 @@ export async function upsertArchitectureFramework(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ArchitectureFrameworkRow
 }
 
@@ -830,7 +828,7 @@ export async function upsertArchitectureDataLayer(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ArchitectureDataLayerRow
 }
 
@@ -847,7 +845,7 @@ export async function upsertArchitectureCloudLayer(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ArchitectureCloudLayerRow
 }
 
@@ -864,7 +862,7 @@ export async function upsertArchitecturePipeline(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ArchitecturePipelineRow
 }
 
@@ -881,7 +879,7 @@ export async function upsertArchitectureDataOwnership(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ArchitectureDataOwnershipRow
 }
 
@@ -898,7 +896,7 @@ export async function upsertArchitectureSovereignty(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ArchitectureSovereigntyRow
 }
 
@@ -915,6 +913,6 @@ export async function upsertArchitectureRemoved(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
   return data as ArchitectureRemovedRow
 }

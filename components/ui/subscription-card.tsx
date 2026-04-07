@@ -25,8 +25,8 @@ function SubscriptionCard({
       data-slot="subscription-card"
       data-highlighted={highlighted || undefined}
       className={cn(
-        "ring-foreground/10 bg-card text-card-foreground flex flex-col gap-6 rounded-2xl p-6 ring-1 transition-shadow",
-        highlighted && "ring-[var(--color-cobalt)] ring-2 shadow-lg",
+        "flex flex-col gap-6 rounded-2xl bg-card p-6 text-card-foreground ring-1 ring-foreground/10 transition-shadow",
+        highlighted && "shadow-lg ring-2 ring-[var(--color-cobalt)]",
         className
       )}
       {...props}
@@ -38,7 +38,7 @@ function SubscriptionCard({
           <span className="text-sm text-muted-foreground">/{period}</span>
         </div>
       </div>
-      <ul className="flex flex-col gap-2.5 flex-1">
+      <ul className="flex flex-1 flex-col gap-2.5">
         {features.map((feature) => (
           <li key={feature} className="flex items-start gap-2 text-sm text-foreground">
             <Check className="mt-0.5 size-4 shrink-0 text-[var(--color-malachite)]" />
@@ -54,7 +54,7 @@ function SubscriptionCard({
             "inline-flex h-10 items-center justify-center rounded-4xl px-6 text-sm font-medium transition-colors",
             highlighted
               ? "bg-[var(--color-cobalt)] text-white hover:bg-[var(--color-cobalt)]/90"
-              : "border border-border bg-input/30 hover:bg-input/50 text-foreground"
+              : "border border-border bg-input/30 text-foreground hover:bg-input/50"
           )}
         >
           Get started

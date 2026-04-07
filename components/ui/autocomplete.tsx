@@ -80,9 +80,11 @@ function Autocomplete({
           aria-expanded={showDropdown}
           aria-autocomplete="list"
           aria-controls="autocomplete-list"
-          aria-activedescendant={activeIndex >= 0 ? `autocomplete-option-${activeIndex}` : undefined}
+          aria-activedescendant={
+            activeIndex >= 0 ? `autocomplete-option-${activeIndex}` : undefined
+          }
           className={cn(
-            "bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 placeholder:text-muted-foreground h-9 w-full min-w-0 rounded-4xl border px-3 py-1 text-base outline-none transition-colors focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 md:text-sm"
+            "h-9 w-full min-w-0 rounded-4xl border border-input bg-input/30 px-3 py-1 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 md:text-sm"
           )}
           placeholder={placeholder}
           value={value}
@@ -93,7 +95,7 @@ function Autocomplete({
           {...props}
         />
         {loading && (
-          <Loader2 className="text-muted-foreground absolute right-3 top-1/2 size-4 -translate-y-1/2 animate-spin" />
+          <Loader2 className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-muted-foreground" />
         )}
       </div>
       {showDropdown && (
@@ -101,7 +103,7 @@ function Autocomplete({
           ref={listRef}
           id="autocomplete-list"
           role="listbox"
-          className="bg-popover ring-foreground/10 absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-xl p-1 text-sm shadow-lg ring-1"
+          className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-popover p-1 text-sm shadow-lg ring-1 ring-foreground/10"
         >
           {suggestions.map((suggestion, index) => (
             <li
@@ -111,7 +113,9 @@ function Autocomplete({
               aria-selected={index === activeIndex}
               className={cn(
                 "cursor-pointer rounded-md px-3 py-2 transition-colors",
-                index === activeIndex ? "bg-muted text-foreground" : "text-foreground hover:bg-muted/50"
+                index === activeIndex
+                  ? "bg-muted text-foreground"
+                  : "text-foreground hover:bg-muted/50"
               )}
               onMouseDown={() => handleSelect(suggestion)}
               onMouseEnter={() => setActiveIndex(index)}
@@ -120,7 +124,7 @@ function Autocomplete({
             </li>
           ))}
           {loading && suggestions.length === 0 && (
-            <li className="text-muted-foreground px-3 py-2">Searching...</li>
+            <li className="px-3 py-2 text-muted-foreground">Searching...</li>
           )}
         </ul>
       )}

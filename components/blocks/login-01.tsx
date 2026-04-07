@@ -1,7 +1,14 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
@@ -29,7 +36,9 @@ function Login01() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="login01-password">Password</Label>
-              <a href="#" className="text-xs text-cobalt hover:underline">Forgot password?</a>
+              <a href="#" className="text-xs text-cobalt hover:underline">
+                Forgot password?
+              </a>
             </div>
             <Input id="login01-password" type="password" placeholder="Enter your password" />
           </div>
@@ -38,7 +47,9 @@ function Login01() {
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground">
             No account?{" "}
-            <a href="#" className="font-medium text-foreground hover:underline">Sign up</a>
+            <a href="#" className="font-medium text-foreground hover:underline">
+              Sign up
+            </a>
           </p>
         </CardFooter>
       </Card>

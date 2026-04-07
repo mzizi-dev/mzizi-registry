@@ -92,12 +92,10 @@ export function useRegistryCache() {
       const res = await fetch("/api/v1/ui")
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
-      const items: CachedComponent[] = (data.items ?? []).map(
-        (item: CachedComponent) => ({
-          ...item,
-          cachedAt: Date.now(),
-        })
-      )
+      const items: CachedComponent[] = (data.items ?? []).map((item: CachedComponent) => ({
+        ...item,
+        cachedAt: Date.now(),
+      }))
       setComponents(items)
       writeCache(items)
     } catch (err) {
@@ -127,10 +125,7 @@ export function useRegistryCache() {
     /** Search components by name or description */
     search: (query: string) => {
       const q = query.toLowerCase()
-      return components.filter(
-        (c) =>
-          c.name.includes(q) || c.description.toLowerCase().includes(q)
-      )
+      return components.filter((c) => c.name.includes(q) || c.description.toLowerCase().includes(q))
     },
   }
 }

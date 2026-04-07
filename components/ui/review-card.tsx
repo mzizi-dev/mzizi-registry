@@ -11,19 +11,12 @@ interface ReviewCardProps {
   className?: string
 }
 
-function ReviewCard({
-  author,
-  rating,
-  content,
-  date,
-  avatar,
-  className,
-}: ReviewCardProps) {
+function ReviewCard({ author, rating, content, date, avatar, className }: ReviewCardProps) {
   return (
     <div
       data-slot="review-card"
       className={cn(
-        "ring-foreground/10 bg-card text-card-foreground flex flex-col gap-4 rounded-2xl p-6 text-sm ring-1",
+        "flex flex-col gap-4 rounded-2xl bg-card p-6 text-sm text-card-foreground ring-1 ring-foreground/10",
         className
       )}
     >
@@ -46,11 +39,7 @@ function ReviewCard({
       <p className="flex-1 text-sm leading-relaxed text-foreground">{content}</p>
       <div className="flex items-center gap-3">
         {avatar ? (
-          <img
-            src={avatar}
-            alt={author}
-            className="size-8 rounded-full object-cover"
-          />
+          <img src={avatar} alt={author} className="size-8 rounded-full object-cover" />
         ) : (
           <div className="flex size-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">
             {author.charAt(0).toUpperCase()}
@@ -58,9 +47,7 @@ function ReviewCard({
         )}
         <div className="flex flex-col">
           <span className="text-sm font-medium">{author}</span>
-          {date && (
-            <span className="text-xs text-muted-foreground">{date}</span>
-          )}
+          {date && <span className="text-xs text-muted-foreground">{date}</span>}
         </div>
       </div>
     </div>

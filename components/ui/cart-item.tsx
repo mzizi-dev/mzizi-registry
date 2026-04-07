@@ -29,14 +29,17 @@ function CartItem({
   return (
     <div
       data-slot="cart-item"
-      className={cn("flex items-center gap-4 py-4 border-b border-border last:border-b-0", className)}
+      className={cn(
+        "flex items-center gap-4 border-b border-border py-4 last:border-b-0",
+        className
+      )}
       {...props}
     >
       <div className="size-16 shrink-0 overflow-hidden rounded-lg bg-muted">
         <img src={image} alt={title} className="size-full object-cover" />
       </div>
-      <div className="flex flex-1 flex-col gap-1 min-w-0">
-        <h4 className="text-sm font-medium text-foreground truncate">{title}</h4>
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <h4 className="truncate text-sm font-medium text-foreground">{title}</h4>
         <span className="text-sm text-muted-foreground">{formatter.format(price)} each</span>
       </div>
       <div className="flex items-center gap-1.5">
@@ -44,7 +47,7 @@ function CartItem({
           type="button"
           onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
           disabled={quantity <= 1}
-          className="flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
+          className="flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50"
           aria-label="Decrease quantity"
         >
           <Minus className="size-3.5" />
@@ -53,17 +56,19 @@ function CartItem({
         <button
           type="button"
           onClick={() => onQuantityChange(quantity + 1)}
-          className="flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors"
+          className="flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted"
           aria-label="Increase quantity"
         >
           <Plus className="size-3.5" />
         </button>
       </div>
-      <span className="w-20 text-right text-sm font-semibold tabular-nums">{formatter.format(price * quantity)}</span>
+      <span className="w-20 text-right text-sm font-semibold tabular-nums">
+        {formatter.format(price * quantity)}
+      </span>
       <button
         type="button"
         onClick={onRemove}
-        className="shrink-0 p-1.5 text-muted-foreground hover:text-destructive rounded-md transition-colors"
+        className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:text-destructive"
         aria-label={`Remove ${title}`}
       >
         <Trash2 className="size-4" />

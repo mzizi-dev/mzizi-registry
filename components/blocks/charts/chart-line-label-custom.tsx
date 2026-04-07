@@ -2,7 +2,12 @@
 
 import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", temperature: 28, city: "Harare" },
@@ -30,8 +35,21 @@ export function ChartLineLabelCustom() {
             <CartesianGrid vertical={false} />
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Line type="natural" dataKey="temperature" stroke="var(--color-temperature)" strokeWidth={2} dot={{ fill: "var(--color-temperature)" }} activeDot={{ r: 6 }}>
-              <LabelList position="top" offset={12} className="fill-foreground" fontSize={11} formatter={(value) => `${value}\u00B0C`} />
+            <Line
+              type="natural"
+              dataKey="temperature"
+              stroke="var(--color-temperature)"
+              strokeWidth={2}
+              dot={{ fill: "var(--color-temperature)" }}
+              activeDot={{ r: 6 }}
+            >
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={11}
+                formatter={(value) => `${value}\u00B0C`}
+              />
             </Line>
           </LineChart>
         </ChartContainer>

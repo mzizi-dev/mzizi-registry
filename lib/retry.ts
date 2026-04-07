@@ -121,13 +121,16 @@ export async function withRetry<T>(
 
       if (!isLastAttempt) {
         const delay = computeDelay(attempt, cfg)
-        logger.warn(`Attempt ${attempt + 1}/${cfg.maxAttempts} failed, retrying in ${Math.round(delay)}ms`, {
-          data: {
-            attempt: attempt + 1,
-            maxAttempts: cfg.maxAttempts,
-            delayMs: Math.round(delay),
-          },
-        })
+        logger.warn(
+          `Attempt ${attempt + 1}/${cfg.maxAttempts} failed, retrying in ${Math.round(delay)}ms`,
+          {
+            data: {
+              attempt: attempt + 1,
+              maxAttempts: cfg.maxAttempts,
+              delayMs: Math.round(delay),
+            },
+          }
+        )
         cfg.onRetry?.(error, attempt + 1, delay)
         await sleep(delay)
       }

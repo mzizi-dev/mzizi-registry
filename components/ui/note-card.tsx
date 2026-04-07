@@ -28,14 +28,14 @@ function NoteCard({
       data-slot="note-card"
       data-color={color}
       className={cn(
-        "ring-foreground/10 bg-card flex flex-col gap-2 rounded-xl p-4 ring-1",
+        "flex flex-col gap-2 rounded-xl bg-card p-4 ring-1 ring-foreground/10",
         color ? `border-t-4 ${mineralBorders[color]}` : "",
         className
       )}
       {...props}
     >
-      <h4 className="text-sm font-medium text-foreground line-clamp-1">{title}</h4>
-      <p className="text-sm text-muted-foreground line-clamp-3">{content}</p>
+      <h4 className="line-clamp-1 text-sm font-medium text-foreground">{title}</h4>
+      <p className="line-clamp-3 text-sm text-muted-foreground">{content}</p>
       <span className="mt-auto text-xs text-muted-foreground">{timestamp}</span>
     </div>
   )

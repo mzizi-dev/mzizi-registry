@@ -43,8 +43,7 @@ const sections = [
 function Sidebar02() {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
 
-  const toggle = (title: string) =>
-    setCollapsed((prev) => ({ ...prev, [title]: !prev[title] }))
+  const toggle = (title: string) => setCollapsed((prev) => ({ ...prev, [title]: !prev[title] }))
 
   return (
     <aside className="flex h-screen w-60 flex-col border-r border-border bg-card">

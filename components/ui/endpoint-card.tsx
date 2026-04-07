@@ -42,32 +42,25 @@ function EndpointCard({
     <div
       data-slot="endpoint-card"
       className={cn(
-        "ring-foreground/10 bg-card flex items-start gap-3 rounded-xl px-4 py-3 text-sm ring-1 transition-colors",
+        "flex items-start gap-3 rounded-xl bg-card px-4 py-3 text-sm ring-1 ring-foreground/10 transition-colors",
         deprecated && "opacity-60",
         className
       )}
       {...props}
     >
-      <span
-        data-slot="endpoint-method"
-        className={cn(methodBadgeVariants({ method }))}
-      >
+      <span data-slot="endpoint-method" className={cn(methodBadgeVariants({ method }))}>
         {method}
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <code className="text-foreground truncate font-mono text-sm font-medium">
-            {path}
-          </code>
+          <code className="truncate font-mono text-sm font-medium text-foreground">{path}</code>
           {deprecated && (
-            <span className="bg-destructive/10 text-destructive shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-medium uppercase">
+            <span className="shrink-0 rounded-md bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium text-destructive uppercase">
               Deprecated
             </span>
           )}
         </div>
-        {description && (
-          <p className="text-muted-foreground mt-1 text-xs">{description}</p>
-        )}
+        {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
       </div>
     </div>
   )

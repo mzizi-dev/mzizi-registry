@@ -47,11 +47,7 @@ function Stepper({
     >
       {steps.map((step, index) => {
         const status =
-          index < activeStep
-            ? "completed"
-            : index === activeStep
-              ? "active"
-              : "upcoming"
+          index < activeStep ? "completed" : index === activeStep ? "active" : "upcoming"
 
         return (
           <div
@@ -61,9 +57,7 @@ function Stepper({
             data-status={status}
             className={cn(
               "group/step flex",
-              orientation === "horizontal"
-                ? "flex-1 flex-col items-center text-center"
-                : "gap-3"
+              orientation === "horizontal" ? "flex-1 flex-col items-center text-center" : "gap-3"
             )}
           >
             {/* Circle + connector column */}
@@ -76,10 +70,7 @@ function Stepper({
               {orientation === "horizontal" && index > 0 && (
                 <div
                   data-slot="stepper-connector"
-                  className={cn(
-                    "h-0.5 flex-1",
-                    index <= activeStep ? "bg-cobalt" : "bg-border"
-                  )}
+                  className={cn("h-0.5 flex-1", index <= activeStep ? "bg-cobalt" : "bg-border")}
                 />
               )}
               <button
@@ -89,7 +80,7 @@ function Stepper({
                 aria-current={status === "active" ? "step" : undefined}
                 className={cn(
                   "inline-flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-medium transition-colors",
-                  "focus-visible:ring-ring/50 focus-visible:outline-none focus-visible:ring-[3px]",
+                  "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
                   "disabled:cursor-default",
                   status === "completed" && "bg-malachite/20 text-malachite",
                   status === "active" && "bg-cobalt text-white",
@@ -107,17 +98,14 @@ function Stepper({
               {orientation === "horizontal" && index < steps.length - 1 && (
                 <div
                   data-slot="stepper-connector"
-                  className={cn(
-                    "h-0.5 flex-1",
-                    index < activeStep ? "bg-cobalt" : "bg-border"
-                  )}
+                  className={cn("h-0.5 flex-1", index < activeStep ? "bg-cobalt" : "bg-border")}
                 />
               )}
               {orientation === "vertical" && index < steps.length - 1 && (
                 <div
                   data-slot="stepper-connector"
                   className={cn(
-                    "my-1 w-0.5 flex-1 min-h-6",
+                    "my-1 min-h-6 w-0.5 flex-1",
                     index < activeStep ? "bg-cobalt" : "bg-border"
                   )}
                 />
@@ -134,9 +122,7 @@ function Stepper({
                 {step.title}
               </span>
               {step.description && (
-                <span className="text-muted-foreground text-xs">
-                  {step.description}
-                </span>
+                <span className="text-xs text-muted-foreground">{step.description}</span>
               )}
             </div>
           </div>

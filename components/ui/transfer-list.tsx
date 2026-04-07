@@ -33,9 +33,7 @@ function TransferPanel({
   search: string
   onSearchChange: (v: string) => void
 }) {
-  const filtered = items.filter((item) =>
-    item.label.toLowerCase().includes(search.toLowerCase())
-  )
+  const filtered = items.filter((item) => item.label.toLowerCase().includes(search.toLowerCase()))
 
   return (
     <div className="flex flex-1 flex-col rounded-xl border border-border bg-card">
@@ -46,7 +44,7 @@ function TransferPanel({
       </div>
       <div className="border-b border-border p-2">
         <div className="relative">
-          <SearchIcon className="absolute left-2.5 top-2 size-3.5 text-muted-foreground" />
+          <SearchIcon className="absolute top-2 left-2.5 size-3.5 text-muted-foreground" />
           <Input
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
@@ -57,9 +55,7 @@ function TransferPanel({
       </div>
       <div className="flex max-h-48 flex-col overflow-y-auto p-1">
         {filtered.length === 0 && (
-          <span className="px-3 py-4 text-center text-xs text-muted-foreground">
-            No items
-          </span>
+          <span className="px-3 py-4 text-center text-xs text-muted-foreground">No items</span>
         )}
         {filtered.map((item) => (
           <label
@@ -86,9 +82,17 @@ function TransferList({ available, selected, onTransfer, className }: TransferLi
   const [leftSearch, setLeftSearch] = React.useState("")
   const [rightSearch, setRightSearch] = React.useState("")
 
-  function toggle(set: Set<string>, setFn: React.Dispatch<React.SetStateAction<Set<string>>>, id: string) {
+  function toggle(
+    set: Set<string>,
+    setFn: React.Dispatch<React.SetStateAction<Set<string>>>,
+    id: string
+  ) {
     const next = new Set(set)
-    if (next.has(id)) { next.delete(id) } else { next.add(id) }
+    if (next.has(id)) {
+      next.delete(id)
+    } else {
+      next.add(id)
+    }
     setFn(next)
   }
 

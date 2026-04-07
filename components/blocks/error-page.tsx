@@ -7,11 +7,7 @@ interface ErrorPageProps {
   description?: string
 }
 
-function ErrorPage({
-  code = 404,
-  title,
-  description,
-}: ErrorPageProps) {
+function ErrorPage({ code = 404, title, description }: ErrorPageProps) {
   const defaults: Record<number, { title: string; description: string }> = {
     404: {
       title: "Page not found",
@@ -39,7 +35,7 @@ function ErrorPage({
         </div>
 
         {/* Error code */}
-        <p className="text-[8rem] font-bold leading-none text-muted-foreground/20 sm:text-[12rem]">
+        <p className="text-[8rem] leading-none font-bold text-muted-foreground/20 sm:text-[12rem]">
           {code}
         </p>
 
@@ -47,9 +43,7 @@ function ErrorPage({
         <h1 className="-mt-4 font-serif text-2xl font-semibold text-foreground sm:text-3xl">
           {resolvedTitle}
         </h1>
-        <p className="mt-2 max-w-md text-sm text-muted-foreground">
-          {resolvedDescription}
-        </p>
+        <p className="mt-2 max-w-md text-sm text-muted-foreground">{resolvedDescription}</p>
 
         {/* Actions */}
         <div className="mt-8 flex items-center justify-center gap-3">

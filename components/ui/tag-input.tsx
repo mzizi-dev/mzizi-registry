@@ -54,7 +54,7 @@ function TagInput({
       data-slot="tag-input"
       onClick={handleContainerClick}
       className={cn(
-        "bg-input/30 border-input focus-within:border-ring focus-within:ring-ring/50",
+        "border-input bg-input/30 focus-within:border-ring focus-within:ring-ring/50",
         "flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-4xl border px-3 py-1.5 transition-colors",
         "focus-within:ring-[3px]",
         className
@@ -62,11 +62,7 @@ function TagInput({
       {...props}
     >
       {tags.map((tag, index) => (
-        <Badge
-          key={`${tag}-${index}`}
-          variant="secondary"
-          className="gap-1 pr-1"
-        >
+        <Badge key={`${tag}-${index}`} variant="secondary" className="gap-1 pr-1">
           {tag}
           <button
             type="button"
@@ -74,7 +70,7 @@ function TagInput({
               e.stopPropagation()
               removeTag(index)
             }}
-            className="hover:bg-foreground/10 inline-flex size-4 items-center justify-center rounded-full transition-colors"
+            className="inline-flex size-4 items-center justify-center rounded-full transition-colors hover:bg-foreground/10"
             aria-label={`Remove ${tag}`}
           >
             <XIcon className="size-3" />
@@ -92,7 +88,7 @@ function TagInput({
         placeholder={tags.length === 0 ? placeholder : ""}
         disabled={maxTags ? tags.length >= maxTags : false}
         className={cn(
-          "placeholder:text-muted-foreground min-w-20 flex-1 bg-transparent text-sm outline-none",
+          "min-w-20 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground",
           "disabled:cursor-not-allowed disabled:opacity-50"
         )}
       />

@@ -44,7 +44,7 @@ function TimeSlotPicker({
                 ? "bg-[var(--color-cobalt)] text-white"
                 : slot.available
                   ? "border border-border bg-input/30 text-foreground hover:bg-input/50"
-                  : "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
+                  : "cursor-not-allowed bg-muted text-muted-foreground opacity-50"
             )}
           >
             {slot.time}

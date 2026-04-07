@@ -34,7 +34,10 @@ export function ChaosDemo() {
 
   function addLog(type: LogEntry["type"], message: string) {
     const ts = new Date().toLocaleTimeString("en-US", {
-      hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     })
     setLog((prev) => [...prev.slice(-29), { type, message, timestamp: ts }])
   }
@@ -102,9 +105,7 @@ export function ChaosDemo() {
         <span className={cn("font-mono text-sm font-bold", stateColors[circuitState])}>
           Circuit: {circuitState.toUpperCase()}
         </span>
-        <Badge variant="outline">
-          Error rate: {Math.round(errorRate * 100)}%
-        </Badge>
+        <Badge variant="outline">Error rate: {Math.round(errorRate * 100)}%</Badge>
         <Badge variant="outline">
           Latency: {latencyMin}-{latencyMax}ms
         </Badge>
@@ -171,24 +172,26 @@ export function ChaosDemo() {
       </div>
 
       {/* Log */}
-      <div className="max-h-[280px] overflow-y-auto rounded-xl border border-border bg-[#141413] dark:bg-[#0A0A0A] p-3">
+      <div className="max-h-[280px] overflow-y-auto rounded-xl border border-border bg-[#141413] p-3 dark:bg-[#0A0A0A]">
         {log.length === 0 ? (
           <p className="text-center text-xs text-[#9A9A95]">
-            Adjust chaos parameters and send requests to see resilience in action.
-            The circuit breaker will open after 3 chaos-injected failures.
+            Adjust chaos parameters and send requests to see resilience in action. The circuit
+            breaker will open after 3 chaos-injected failures.
           </p>
         ) : (
           <div className="flex flex-col gap-1">
             {log.map((entry, i) => (
               <div key={i} className="flex items-start gap-2 font-mono text-[11px]">
                 <span className="shrink-0 text-[#9A9A95]">{entry.timestamp}</span>
-                <span className={cn(
-                  entry.type === "success" && "text-[var(--color-malachite)]",
-                  entry.type === "chaos_error" && "text-destructive",
-                  entry.type === "circuit_open" && "text-[var(--color-gold)]",
-                  entry.type === "latency" && "text-[var(--color-cobalt)]",
-                  entry.type === "info" && "text-[#9A9A95]"
-                )}>
+                <span
+                  className={cn(
+                    entry.type === "success" && "text-[var(--color-malachite)]",
+                    entry.type === "chaos_error" && "text-destructive",
+                    entry.type === "circuit_open" && "text-[var(--color-gold)]",
+                    entry.type === "latency" && "text-[var(--color-cobalt)]",
+                    entry.type === "info" && "text-[#9A9A95]"
+                  )}
+                >
                   {entry.message}
                 </span>
               </div>
@@ -198,8 +201,8 @@ export function ChaosDemo() {
       </div>
 
       <p className="text-xs text-muted-foreground">
-        Chaos injection + circuit breaker working together. Crank up the error rate
-        to see the circuit open, then watch it recover through HALF_OPEN after 5 seconds.
+        Chaos injection + circuit breaker working together. Crank up the error rate to see the
+        circuit open, then watch it recover through HALF_OPEN after 5 seconds.
       </p>
     </div>
   )

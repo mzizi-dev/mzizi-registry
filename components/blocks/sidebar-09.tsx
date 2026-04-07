@@ -2,16 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import {
-  Home,
-  BarChart3,
-  Users,
-  FileText,
-  Settings,
-  CreditCard,
-  Shield,
-  Zap,
-} from "lucide-react"
+import { Home, BarChart3, Users, FileText, Settings, CreditCard, Shield, Zap } from "lucide-react"
 
 const groups = [
   {
@@ -49,7 +40,7 @@ function Sidebar09() {
       <nav className="flex-1 overflow-auto p-3">
         {groups.map((group, gi) => (
           <div key={group.label} className={gi > 0 ? "mt-4" : ""}>
-            <p className="mb-1 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <p className="mb-1 px-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
               {group.label}
             </p>
             <div className="space-y-0.5">

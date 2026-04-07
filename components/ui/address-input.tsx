@@ -19,14 +19,37 @@ interface AddressInputProps {
 }
 
 const AFRICAN_COUNTRIES = [
-  "Zimbabwe", "South Africa", "Kenya", "Nigeria", "Ghana", "Tanzania",
-  "Uganda", "Ethiopia", "Rwanda", "Mozambique", "Zambia", "Botswana",
-  "Namibia", "Malawi", "Senegal", "Cameroon", "Egypt", "Morocco",
+  "Zimbabwe",
+  "South Africa",
+  "Kenya",
+  "Nigeria",
+  "Ghana",
+  "Tanzania",
+  "Uganda",
+  "Ethiopia",
+  "Rwanda",
+  "Mozambique",
+  "Zambia",
+  "Botswana",
+  "Namibia",
+  "Malawi",
+  "Senegal",
+  "Cameroon",
+  "Egypt",
+  "Morocco",
 ] as const
 
 const OTHER_COUNTRIES = [
-  "United Kingdom", "United States", "Canada", "Australia",
-  "Germany", "France", "India", "Brazil", "China", "Japan",
+  "United Kingdom",
+  "United States",
+  "Canada",
+  "Australia",
+  "Germany",
+  "France",
+  "India",
+  "Brazil",
+  "China",
+  "Japan",
 ] as const
 
 const DEFAULT_VALUE: AddressValue = {
@@ -87,17 +110,21 @@ function AddressInput({ value, onChange, className }: AddressInputProps) {
             value={address.country}
             onChange={(e) => update("country", e.target.value)}
             aria-label="Country"
-            className="border-input bg-input/30 focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-4xl border px-3 text-sm outline-none transition-colors focus-visible:ring-[3px]"
+            className="h-9 w-full rounded-4xl border border-input bg-input/30 px-3 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
           >
             <option value="">Select country</option>
             <optgroup label="Africa">
               {AFRICAN_COUNTRIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
+                <option key={c} value={c}>
+                  {c}
+                </option>
               ))}
             </optgroup>
             <optgroup label="Other">
               {OTHER_COUNTRIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
+                <option key={c} value={c}>
+                  {c}
+                </option>
               ))}
             </optgroup>
           </select>

@@ -96,18 +96,15 @@ export async function withFallback<T>(stages: FallbackStage<T>[]): Promise<T> {
       const isTimeout = error instanceof TimeoutError
       errors.push({ stage: stage.name, error })
 
-      logger.warn(
-        `Stage "${stage.name}" failed${isTimeout ? " (timeout)" : ""}`,
-        {
-          data: {
-            stage: stage.name,
-            attemptNumber: errors.length,
-            totalStages: stages.length,
-            isTimeout,
-          },
-          error: error instanceof Error ? error : new Error(String(error)),
-        }
-      )
+      logger.warn(`Stage "${stage.name}" failed${isTimeout ? " (timeout)" : ""}`, {
+        data: {
+          stage: stage.name,
+          attemptNumber: errors.length,
+          totalStages: stages.length,
+          isTimeout,
+        },
+        error: error instanceof Error ? error : new Error(String(error)),
+      })
     }
   }
 

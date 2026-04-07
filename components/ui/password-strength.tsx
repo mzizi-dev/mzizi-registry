@@ -37,11 +37,7 @@ function PasswordStrength({ className, password, ...props }: PasswordStrengthPro
   const { level, label } = getStrength(password)
 
   return (
-    <div
-      data-slot="password-strength"
-      className={cn("space-y-3 text-sm", className)}
-      {...props}
-    >
+    <div data-slot="password-strength" className={cn("space-y-3 text-sm", className)} {...props}>
       {/* Strength bar */}
       <div className="space-y-1.5">
         <div className="flex gap-1">
@@ -78,7 +74,7 @@ function PasswordStrength({ className, password, ...props }: PasswordStrengthPro
               {passed ? (
                 <Check className="text-mineral-malachite size-3.5" />
               ) : (
-                <X className="text-muted-foreground size-3.5" />
+                <X className="size-3.5 text-muted-foreground" />
               )}
               <span className={cn(passed ? "text-foreground" : "text-muted-foreground")}>
                 {check.label}

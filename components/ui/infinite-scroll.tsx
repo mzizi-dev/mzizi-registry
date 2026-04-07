@@ -43,11 +43,7 @@ function InfiniteScroll({
   }, [hasMore, threshold])
 
   return (
-    <div
-      data-slot="infinite-scroll"
-      className={cn(className)}
-      {...props}
-    >
+    <div data-slot="infinite-scroll" className={cn(className)} {...props}>
       {children}
       {hasMore && (
         <div
@@ -55,15 +51,11 @@ function InfiniteScroll({
           data-slot="infinite-scroll-sentinel"
           className="flex items-center justify-center py-4"
         >
-          {loading && (
-            <Loader2 className="text-muted-foreground size-5 animate-spin" />
-          )}
+          {loading && <Loader2 className="size-5 animate-spin text-muted-foreground" />}
         </div>
       )}
       {!hasMore && React.Children.count(children) > 0 && (
-        <p className="text-muted-foreground py-4 text-center text-sm">
-          No more items
-        </p>
+        <p className="py-4 text-center text-sm text-muted-foreground">No more items</p>
       )}
     </div>
   )

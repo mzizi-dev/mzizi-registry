@@ -47,12 +47,7 @@ function TreeView({
   )
 
   return (
-    <div
-      data-slot="tree-view"
-      role="tree"
-      className={cn("text-sm", className)}
-      {...props}
-    >
+    <div data-slot="tree-view" role="tree" className={cn("text-sm", className)} {...props}>
       {data.map((node) => (
         <TreeNodeItem
           key={node.id}
@@ -87,8 +82,8 @@ function TreeNodeItem({
     <div data-slot="tree-node" role="treeitem" aria-expanded={hasChildren ? isExpanded : undefined}>
       <div
         className={cn(
-          "hover:bg-muted flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors",
-          "focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]"
+          "flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors hover:bg-muted",
+          "outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
         )}
         style={{ paddingLeft: `${level * 20 + 8}px` }}
         tabIndex={0}
@@ -107,18 +102,21 @@ function TreeNodeItem({
         {hasChildren ? (
           <ChevronRight
             className={cn(
-              "text-muted-foreground size-4 shrink-0 transition-transform duration-200",
+              "size-4 shrink-0 text-muted-foreground transition-transform duration-200",
               isExpanded && "rotate-90"
             )}
           />
         ) : (
           <span className="size-4 shrink-0" />
         )}
-        {node.icon && <span className="text-muted-foreground shrink-0">{node.icon}</span>}
+        {node.icon && <span className="shrink-0 text-muted-foreground">{node.icon}</span>}
         <span className="truncate">{node.label}</span>
       </div>
       {hasChildren && isExpanded && (
-        <div className="border-muted relative ml-[19px] border-l" style={{ marginLeft: `${level * 20 + 19}px` }}>
+        <div
+          className="relative ml-[19px] border-l border-muted"
+          style={{ marginLeft: `${level * 20 + 19}px` }}
+        >
           {node.children!.map((child) => (
             <TreeNodeItem
               key={child.id}

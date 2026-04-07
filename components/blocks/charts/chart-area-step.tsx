@@ -2,7 +2,12 @@
 
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", signups: 186 },
@@ -30,7 +35,13 @@ export function ChartAreaStep() {
             <CartesianGrid vertical={false} />
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Area type="step" dataKey="signups" fill="var(--color-signups)" fillOpacity={0.4} stroke="var(--color-signups)" />
+            <Area
+              type="step"
+              dataKey="signups"
+              fill="var(--color-signups)"
+              fillOpacity={0.4}
+              stroke="var(--color-signups)"
+            />
           </AreaChart>
         </ChartContainer>
       </CardContent>

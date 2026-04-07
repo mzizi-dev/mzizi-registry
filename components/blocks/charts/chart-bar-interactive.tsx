@@ -3,7 +3,12 @@
 import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { date: "2024-01-01", downloads: 222, installs: 150 },
@@ -33,7 +38,11 @@ export function ChartBarInteractive() {
         <CardDescription>
           <span className="flex gap-2">
             {(["downloads", "installs"] as const).map((key) => (
-              <button key={key} onClick={() => setActiveKey(key)} className={`rounded-md px-2 py-1 text-xs ${activeKey === key ? "bg-muted font-medium" : ""}`}>
+              <button
+                key={key}
+                onClick={() => setActiveKey(key)}
+                className={`rounded-md px-2 py-1 text-xs ${activeKey === key ? "bg-muted font-medium" : ""}`}
+              >
                 {config[key].label}
               </button>
             ))}
@@ -44,7 +53,15 @@ export function ChartBarInteractive() {
         <ChartContainer config={config}>
           <BarChart data={data}>
             <CartesianGrid vertical={false} />
-            <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(v) => new Date(v).toLocaleDateString("en", { month: "short", day: "numeric" })} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(v) =>
+                new Date(v).toLocaleDateString("en", { month: "short", day: "numeric" })
+              }
+            />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Bar dataKey={activeKey} fill={`var(--color-${activeKey})`} radius={4} />
           </BarChart>

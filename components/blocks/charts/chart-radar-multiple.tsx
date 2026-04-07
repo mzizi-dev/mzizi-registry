@@ -2,7 +2,12 @@
 
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { skill: "Design", harare: 186, nairobi: 140, lagos: 170 },
@@ -32,9 +37,24 @@ export function ChartRadarMultiple() {
             <ChartTooltip content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey="skill" />
             <PolarGrid />
-            <Radar dataKey="harare" fill="var(--color-harare)" fillOpacity={0.4} stroke="var(--color-harare)" />
-            <Radar dataKey="nairobi" fill="var(--color-nairobi)" fillOpacity={0.4} stroke="var(--color-nairobi)" />
-            <Radar dataKey="lagos" fill="var(--color-lagos)" fillOpacity={0.4} stroke="var(--color-lagos)" />
+            <Radar
+              dataKey="harare"
+              fill="var(--color-harare)"
+              fillOpacity={0.4}
+              stroke="var(--color-harare)"
+            />
+            <Radar
+              dataKey="nairobi"
+              fill="var(--color-nairobi)"
+              fillOpacity={0.4}
+              stroke="var(--color-nairobi)"
+            />
+            <Radar
+              dataKey="lagos"
+              fill="var(--color-lagos)"
+              fillOpacity={0.4}
+              stroke="var(--color-lagos)"
+            />
           </RadarChart>
         </ChartContainer>
       </CardContent>

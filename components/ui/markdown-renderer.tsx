@@ -22,10 +22,7 @@ function renderInline(text: string): string {
     '<code class="rounded-md bg-muted px-1.5 py-0.5 font-mono text-sm">$1</code>'
   )
   // Bold + italic
-  result = result.replace(
-    /\*\*\*(.+?)\*\*\*/g,
-    "<strong><em>$1</em></strong>"
-  )
+  result = result.replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
   // Bold
   result = result.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
   // Italic
@@ -138,10 +135,7 @@ function parseMarkdown(content: string): string {
             : "border border-border px-3 py-2"
         tableRows.push(
           cells
-            .map(
-              (cell) =>
-                `<${tag} class="${cellClass}">${renderInline(cell)}</${tag}>`
-            )
+            .map((cell) => `<${tag} class="${cellClass}">${renderInline(cell)}</${tag}>`)
             .join("")
         )
       }
@@ -165,9 +159,7 @@ function parseMarkdown(content: string): string {
         5: "text-base font-semibold mt-3 mb-1",
         6: "text-sm font-semibold mt-3 mb-1 text-muted-foreground",
       }
-      html.push(
-        `<h${level} class="${headingClasses[level]}">${text}</h${level}>`
-      )
+      html.push(`<h${level} class="${headingClasses[level]}">${text}</h${level}>`)
       continue
     }
 
@@ -256,10 +248,7 @@ function MarkdownRenderer({ content, className, ...props }: MarkdownRendererProp
   return (
     <div
       data-slot="markdown-renderer"
-      className={cn(
-        "prose-mukoko text-foreground text-sm leading-relaxed",
-        className
-      )}
+      className={cn("prose-mukoko text-sm leading-relaxed text-foreground", className)}
       dangerouslySetInnerHTML={{ __html: html }}
       {...props}
     />

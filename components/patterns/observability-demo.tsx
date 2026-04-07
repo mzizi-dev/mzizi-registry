@@ -54,7 +54,10 @@ export function ObservabilityDemo() {
       data: { location: "Bulawayo" },
     })
     addEntry("info", '[mukoko:weather] INFO Forecast loaded { location: "Harare", temp: 28 }')
-    addEntry("warn", '[mukoko:weather] WARN Cache miss — fetching from API { location: "Bulawayo" }')
+    addEntry(
+      "warn",
+      '[mukoko:weather] WARN Cache miss — fetching from API { location: "Bulawayo" }'
+    )
   }
 
   async function handleMeasure() {
@@ -123,8 +126,7 @@ export function ObservabilityDemo() {
         <div className="max-h-[300px] overflow-y-auto p-4">
           {entries.length === 0 ? (
             <p className="text-center text-xs text-[#9A9A95]">
-              Click a button above to see log output. Also check your browser
-              console (F12).
+              Click a button above to see log output. Also check your browser console (F12).
             </p>
           ) : (
             <div className="flex flex-col gap-1.5">
@@ -146,8 +148,8 @@ export function ObservabilityDemo() {
       </div>
 
       <p className="text-xs text-muted-foreground">
-        These buttons call the actual observability functions — open your browser
-        console (F12) to see the real output alongside the preview above.
+        These buttons call the actual observability functions — open your browser console (F12) to
+        see the real output alongside the preview above.
       </p>
     </div>
   )

@@ -2,7 +2,12 @@
 
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", harare: 186, nairobi: 130 },
@@ -31,8 +36,20 @@ export function ChartLineDotsColors() {
             <CartesianGrid vertical={false} />
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Line type="natural" dataKey="harare" stroke="var(--color-harare)" strokeWidth={2} dot={{ r: 4, fill: "var(--color-harare)" }} />
-            <Line type="natural" dataKey="nairobi" stroke="var(--color-nairobi)" strokeWidth={2} dot={{ r: 4, fill: "var(--color-nairobi)" }} />
+            <Line
+              type="natural"
+              dataKey="harare"
+              stroke="var(--color-harare)"
+              strokeWidth={2}
+              dot={{ r: 4, fill: "var(--color-harare)" }}
+            />
+            <Line
+              type="natural"
+              dataKey="nairobi"
+              stroke="var(--color-nairobi)"
+              strokeWidth={2}
+              dot={{ r: 4, fill: "var(--color-nairobi)" }}
+            />
           </LineChart>
         </ChartContainer>
       </CardContent>

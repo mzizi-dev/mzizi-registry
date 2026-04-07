@@ -68,15 +68,14 @@ function CalendarWeekView({
       className={cn("overflow-auto rounded-xl border border-border bg-card", className)}
       {...props}
     >
-      <div className="grid grid-cols-[60px_repeat(7,1fr)] min-w-[700px]">
+      <div className="grid min-w-[700px] grid-cols-[60px_repeat(7,1fr)]">
         {/* Header */}
         <div className="border-b border-border bg-muted p-2" />
         {days.map((day, i) => (
-          <div
-            key={i}
-            className="border-b border-l border-border bg-muted px-2 py-2 text-center"
-          >
-            <div className="text-xs font-medium text-muted-foreground">{DAY_LABELS[day.getDay()]}</div>
+          <div key={i} className="border-b border-l border-border bg-muted px-2 py-2 text-center">
+            <div className="text-xs font-medium text-muted-foreground">
+              {DAY_LABELS[day.getDay()]}
+            </div>
             <div className="text-sm font-semibold text-foreground">{day.getDate()}</div>
           </div>
         ))}
@@ -100,7 +99,7 @@ function CalendarWeekView({
                   key={eventIndex}
                   type="button"
                   onClick={() => onEventClick?.(event)}
-                  className="absolute inset-x-1 overflow-hidden rounded-md px-1.5 py-0.5 text-left text-[10px] font-medium leading-tight transition-opacity hover:opacity-80"
+                  className="absolute inset-x-1 overflow-hidden rounded-md px-1.5 py-0.5 text-left text-[10px] leading-tight font-medium transition-opacity hover:opacity-80"
                   style={{
                     top: pos.top,
                     height: pos.height,

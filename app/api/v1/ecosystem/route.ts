@@ -20,8 +20,7 @@ export async function GET() {
       return NextResponse.json(
         {
           error: "Database not configured",
-          message:
-            "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
         },
         { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
       )

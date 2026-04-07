@@ -35,7 +35,7 @@ function CommentNode({
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-1 flex-1 min-w-0">
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-foreground">{comment.author}</span>
             <span className="text-xs text-muted-foreground">{comment.timestamp}</span>
@@ -45,7 +45,7 @@ function CommentNode({
             <button
               type="button"
               onClick={() => onReply(comment.id)}
-              className="inline-flex items-center gap-1 self-start text-xs text-muted-foreground hover:text-foreground transition-colors mt-0.5"
+              className="mt-0.5 inline-flex items-center gap-1 self-start text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               <MessageSquare className="size-3" />
               Reply

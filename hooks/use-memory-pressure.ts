@@ -70,10 +70,7 @@ interface PerformanceWithMemory extends Performance {
  * }
  * ```
  */
-export function useMemoryPressure(
-  thresholdPercent = 85,
-  pollIntervalMs = 5000
-): MemoryInfo {
+export function useMemoryPressure(thresholdPercent = 85, pollIntervalMs = 5000): MemoryInfo {
   const [info, setInfo] = useState<MemoryInfo>({
     isUnderPressure: false,
     usedMB: null,

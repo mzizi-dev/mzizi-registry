@@ -23,8 +23,7 @@ const announcementBarVariants = cva(
 )
 
 interface AnnouncementBarProps
-  extends React.ComponentProps<"div">,
-    VariantProps<typeof announcementBarVariants> {
+  extends React.ComponentProps<"div">, VariantProps<typeof announcementBarVariants> {
   message: string
   dismissible?: boolean
   action?: React.ReactNode
@@ -57,7 +56,7 @@ function AnnouncementBar({
       {dismissible && (
         <button
           type="button"
-          className="hover:bg-foreground/10 absolute right-2 rounded-md p-1 transition-colors"
+          className="absolute right-2 rounded-md p-1 transition-colors hover:bg-foreground/10"
           aria-label="Dismiss announcement"
           onClick={() => {
             setDismissed(true)

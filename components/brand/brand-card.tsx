@@ -39,7 +39,8 @@ export function BrandCard({ brand, className }: BrandCardProps) {
             className="flex size-8 items-center justify-center rounded-full text-xs font-medium"
             style={{
               backgroundColor: mineralColor,
-              color: brand.mineral === "gold" || brand.mineral === "malachite" ? "#141413" : "#FAF9F5",
+              color:
+                brand.mineral === "gold" || brand.mineral === "malachite" ? "#141413" : "#FAF9F5",
             }}
           >
             {brand.name[0]}
@@ -53,11 +54,9 @@ export function BrandCard({ brand, className }: BrandCardProps) {
             {brand.role}
           </span>
         </div>
-        <CardDescription className="text-sm leading-relaxed">
-          {brand.description}
-        </CardDescription>
+        <CardDescription className="text-sm leading-relaxed">{brand.description}</CardDescription>
         <div className="flex items-center justify-between">
-          <p className="text-xs italic text-muted-foreground">&ldquo;{brand.voice}&rdquo;</p>
+          <p className="text-xs text-muted-foreground italic">&ldquo;{brand.voice}&rdquo;</p>
           <a
             href={brand.url}
             target="_blank"

@@ -3,7 +3,12 @@
 import * as React from "react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { date: "2024-01-01", harare: 222, lagos: 150 },
@@ -33,7 +38,11 @@ export function ChartLineInteractive() {
         <CardDescription>
           <span className="flex gap-2">
             {(["harare", "lagos"] as const).map((city) => (
-              <button key={city} onClick={() => setActiveCity(city)} className={`rounded-md px-2 py-1 text-xs ${activeCity === city ? "bg-muted font-medium" : ""}`}>
+              <button
+                key={city}
+                onClick={() => setActiveCity(city)}
+                className={`rounded-md px-2 py-1 text-xs ${activeCity === city ? "bg-muted font-medium" : ""}`}
+              >
                 {config[city].label}
               </button>
             ))}
@@ -44,9 +53,23 @@ export function ChartLineInteractive() {
         <ChartContainer config={config}>
           <LineChart data={data} margin={{ left: 12, right: 12 }}>
             <CartesianGrid vertical={false} />
-            <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(v) => new Date(v).toLocaleDateString("en", { month: "short", day: "numeric" })} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(v) =>
+                new Date(v).toLocaleDateString("en", { month: "short", day: "numeric" })
+              }
+            />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Line type="natural" dataKey={activeCity} stroke={`var(--color-${activeCity})`} strokeWidth={2} dot={false} />
+            <Line
+              type="natural"
+              dataKey={activeCity}
+              stroke={`var(--color-${activeCity})`}
+              strokeWidth={2}
+              dot={false}
+            />
           </LineChart>
         </ChartContainer>
       </CardContent>

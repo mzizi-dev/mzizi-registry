@@ -33,8 +33,8 @@ function DemoSection({ name, mineral, delay }: { name: string; mineral: string; 
         </Badge>
       </div>
       <p className="text-xs text-muted-foreground">
-        This section mounted after a {delay}ms delay in the queue.
-        Scroll it far away and it will unmount to reclaim memory.
+        This section mounted after a {delay}ms delay in the queue. Scroll it far away and it will
+        unmount to reclaim memory.
       </p>
       <div className="flex items-end gap-1">
         {Array.from({ length: 12 }, (_, i) => (
@@ -96,10 +96,12 @@ export function LazyLoadingDemo() {
         </Button>
         {memory.usedMB !== null && (
           <div className="flex items-center gap-2">
-            <div className={cn(
-              "size-2 rounded-full",
-              memory.isUnderPressure ? "bg-destructive" : "bg-[var(--color-malachite)]"
-            )} />
+            <div
+              className={cn(
+                "size-2 rounded-full",
+                memory.isUnderPressure ? "bg-destructive" : "bg-[var(--color-malachite)]"
+              )}
+            />
             <span className="text-xs text-muted-foreground">
               Memory: {memory.usedMB}MB / {memory.totalMB}MB ({memory.usagePercent}%)
             </span>

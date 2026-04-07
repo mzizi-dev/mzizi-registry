@@ -1,9 +1,8 @@
-"use client"
-
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Check, Copy, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
+import { CopyCommand } from "@/components/landing/copy-command"
+import { getRegistryCounts } from "@/lib/db"
 
 const minerals = [
   { name: "cobalt", color: "bg-[var(--color-cobalt)]" },
@@ -14,46 +13,28 @@ const minerals = [
 ]
 
 const products = [
-  // Ecosystem
   { label: "bundu", href: "https://bundu.family" },
-  // Infrastructure & enterprise
   { label: "nyuchi", href: "https://nyuchi.com" },
   { label: "bushtrade", href: "https://bushtrade.co.zw" },
-  // Consumer apps
   { label: "mukoko", href: "https://www.mukoko.com" },
   { label: "weather", href: "https://weather.mukoko.com" },
   { label: "news", href: "https://news.mukoko.com" },
   { label: "lingo", href: "https://lingo.mukoko.com" },
   { label: "nhimbe", href: "https://nhimbe.com" },
-  // AI
   { label: "shamwari", href: "https://shamwari.ai" },
 ]
 
-function CopyCommand() {
-  const [copied, setCopied] = useState(false)
-  const command = "npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button"
+export async function Hero() {
+  const counts = await getRegistryCounts().catch(() => ({
+    total: 0,
+    ui: 0,
+    blocks: 0,
+    hooks: 0,
+    lib: 0,
+  }))
 
-  return (
-    <button
-      onClick={() => {
-        navigator.clipboard.writeText(command)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
-      }}
-      className="group flex w-full max-w-2xl items-center gap-2 rounded-2xl border border-border bg-card px-3 py-3 text-left transition-all hover:border-foreground/15 sm:gap-3 sm:px-5 sm:py-3.5"
-    >
-      <span className="hidden font-mono text-sm text-muted-foreground sm:inline">$</span>
-      <code className="flex-1 truncate font-mono text-xs text-muted-foreground sm:text-sm">
-        {command}
-      </code>
-      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors group-hover:text-foreground">
-        {copied ? <Check className="size-4 text-[var(--color-malachite)]" /> : <Copy className="size-4" />}
-      </span>
-    </button>
-  )
-}
+  const totalLabel = counts.total > 0 ? `${counts.total}` : "production-ready"
 
-export function Hero() {
   return (
     <section className="relative flex flex-col items-center gap-8 px-4 pt-12 pb-16 text-center sm:gap-10 sm:px-6 md:pt-20 md:pb-32">
       {/* Subtle grid */}
@@ -76,7 +57,7 @@ export function Hero() {
               href={p.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-border px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground transition-colors hover:text-foreground"
+              className="rounded-full border border-border px-2.5 py-0.5 font-mono text-[11px] text-muted-foreground transition-colors hover:text-foreground"
             >
               {p.label}
             </a>
@@ -85,16 +66,15 @@ export function Hero() {
       </div>
 
       <div className="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
-        <h1 className="font-serif text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
+        <h1 className="font-serif text-3xl font-bold tracking-tight text-balance text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
           The design system
           <br />
           for the bundu ecosystem
         </h1>
-        <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-          294 production-ready components, blocks, and charts rooted in the
-          Five African Minerals palette. One design system powering mukoko,
-          nyuchi, and every app in the bundu family. Install with the shadcn
-          CLI — no packages, no lock-in.
+        <p className="max-w-xl text-base leading-relaxed text-pretty text-muted-foreground md:text-lg">
+          {totalLabel} components, blocks, and charts rooted in the Five African Minerals palette.
+          One design system powering mukoko, nyuchi, and every app in the bundu family. Install with
+          the shadcn CLI — no packages, no lock-in.
         </p>
       </div>
 
@@ -108,17 +88,15 @@ export function Hero() {
             </a>
           </Button>
           <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
-            <a href="/docs">
-              Documentation
-            </a>
+            <a href="/docs">Documentation</a>
           </Button>
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats — live from DB */}
       <div className="flex flex-wrap items-center justify-center gap-6 pt-4 sm:gap-8">
         {[
-          { label: "Registry Items", value: "294" },
+          { label: "Registry Items", value: counts.total > 0 ? `${counts.total}` : "—" },
           { label: "Mini-Apps", value: "17" },
           { label: "Enterprise Products", value: "7" },
           { label: "Data Layers", value: "7" },

@@ -64,17 +64,11 @@ function FilterBar({
   }
 
   return (
-    <div
-      data-slot="filter-bar"
-      className={cn(
-        "flex flex-wrap items-center gap-2",
-        className
-      )}
-    >
+    <div data-slot="filter-bar" className={cn("flex flex-wrap items-center gap-2", className)}>
       {showAll && (
         <Badge
           variant={isAllSelected ? "default" : "outline"}
-          className="cursor-pointer select-none transition-colors"
+          className="cursor-pointer transition-colors select-none"
           onClick={() => setSelected([])}
         >
           All
@@ -86,13 +80,11 @@ function FilterBar({
           <Badge
             key={option.value}
             variant={isActive ? "default" : "outline"}
-            className="cursor-pointer select-none transition-colors"
+            className="cursor-pointer transition-colors select-none"
             onClick={() => handleToggle(option.value)}
           >
             {option.label}
-            {option.count !== undefined && (
-              <span className="ml-1 opacity-60">{option.count}</span>
-            )}
+            {option.count !== undefined && <span className="ml-1 opacity-60">{option.count}</span>}
           </Badge>
         )
       })}

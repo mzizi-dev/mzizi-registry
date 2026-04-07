@@ -15,12 +15,7 @@ function pad(n: number) {
   return n.toString().padStart(2, "0")
 }
 
-function TimePicker({
-  value = "12:00",
-  onChange,
-  use12Hour = false,
-  className,
-}: TimePickerProps) {
+function TimePicker({ value = "12:00", onChange, use12Hour = false, className }: TimePickerProps) {
   const [hour, minute] = value.split(":").map(Number)
   const [period, setPeriod] = React.useState<"AM" | "PM">(hour >= 12 ? "PM" : "AM")
 
@@ -34,8 +29,10 @@ function TimePicker({
     onChange?.(`${pad(h24)}:${pad(m)}`)
   }
 
-  const displayHour = use12Hour ? (hour % 12 || 12) : hour
-  const hours = use12Hour ? Array.from({ length: 12 }, (_, i) => i + 1) : Array.from({ length: 24 }, (_, i) => i)
+  const displayHour = use12Hour ? hour % 12 || 12 : hour
+  const hours = use12Hour
+    ? Array.from({ length: 12 }, (_, i) => i + 1)
+    : Array.from({ length: 24 }, (_, i) => i)
   const minutes = Array.from({ length: 60 }, (_, i) => i)
 
   return (
@@ -52,10 +49,12 @@ function TimePicker({
           value={displayHour}
           onChange={(e) => update(Number(e.target.value), minute)}
           aria-label="Hour"
-          className="h-9 w-14 rounded-lg border border-border bg-background px-1 text-center text-sm outline-none focus:border-ring focus:ring-ring/50 focus:ring-[3px]"
+          className="h-9 w-14 rounded-lg border border-border bg-background px-1 text-center text-sm outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50"
         >
           {hours.map((h) => (
-            <option key={h} value={h}>{pad(h)}</option>
+            <option key={h} value={h}>
+              {pad(h)}
+            </option>
           ))}
         </select>
       </div>
@@ -66,10 +65,12 @@ function TimePicker({
           value={minute}
           onChange={(e) => update(use12Hour ? displayHour : hour, Number(e.target.value))}
           aria-label="Minute"
-          className="h-9 w-14 rounded-lg border border-border bg-background px-1 text-center text-sm outline-none focus:border-ring focus:ring-ring/50 focus:ring-[3px]"
+          className="h-9 w-14 rounded-lg border border-border bg-background px-1 text-center text-sm outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50"
         >
           {minutes.map((m) => (
-            <option key={m} value={m}>{pad(m)}</option>
+            <option key={m} value={m}>
+              {pad(m)}
+            </option>
           ))}
         </select>
       </div>

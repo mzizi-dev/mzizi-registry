@@ -31,12 +31,7 @@ const LEVEL_BADGE_STYLES: Record<LogLevel, string> = {
   debug: "bg-muted text-muted-foreground",
 }
 
-function LogViewer({
-  className,
-  entries,
-  maxHeight = "400px",
-  ...props
-}: LogViewerProps) {
+function LogViewer({ className, entries, maxHeight = "400px", ...props }: LogViewerProps) {
   const [filter, setFilter] = React.useState<LogLevel | "all">("all")
   const scrollRef = React.useRef<HTMLDivElement>(null)
   const [autoScroll, setAutoScroll] = React.useState(true)
@@ -64,11 +59,11 @@ function LogViewer({
   return (
     <div
       data-slot="log-viewer"
-      className={cn("bg-card ring-foreground/10 overflow-hidden rounded-xl ring-1", className)}
+      className={cn("overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10", className)}
       {...props}
     >
       {/* Filter bar */}
-      <div className="border-border flex items-center gap-1 border-b px-3 py-2">
+      <div className="flex items-center gap-1 border-b border-border px-3 py-2">
         {levels.map((level) => (
           <button
             key={level}
@@ -84,9 +79,7 @@ function LogViewer({
             {level}
           </button>
         ))}
-        <span className="text-muted-foreground ml-auto text-xs">
-          {filtered.length} entries
-        </span>
+        <span className="ml-auto text-xs text-muted-foreground">{filtered.length} entries</span>
       </div>
       {/* Log output */}
       <div
@@ -98,9 +91,9 @@ function LogViewer({
         {filtered.map((entry, index) => (
           <div
             key={index}
-            className="hover:bg-muted/30 flex items-start gap-2 px-3 py-1 transition-colors"
+            className="flex items-start gap-2 px-3 py-1 transition-colors hover:bg-muted/30"
           >
-            <span className="text-muted-foreground shrink-0 select-none tabular-nums">
+            <span className="shrink-0 text-muted-foreground tabular-nums select-none">
               {entry.timestamp}
             </span>
             <span
@@ -117,7 +110,7 @@ function LogViewer({
           </div>
         ))}
         {filtered.length === 0 && (
-          <p className="text-muted-foreground px-3 py-8 text-center text-sm font-sans">
+          <p className="px-3 py-8 text-center font-sans text-sm text-muted-foreground">
             No log entries
           </p>
         )}

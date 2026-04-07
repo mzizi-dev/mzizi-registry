@@ -16,9 +16,7 @@ function Signup04() {
             <Lock className="size-6 text-gold" />
           </div>
           <CardTitle className="font-serif text-xl">Invite only</CardTitle>
-          <CardDescription>
-            Enter your invitation code to create an account
-          </CardDescription>
+          <CardDescription>Enter your invitation code to create an account</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -51,7 +49,9 @@ function Signup04() {
           <Button className="w-full">Activate account</Button>
           <p className="text-center text-xs text-muted-foreground">
             Need an invite?{" "}
-            <a href="#" className="text-cobalt hover:underline">Request access</a>
+            <a href="#" className="text-cobalt hover:underline">
+              Request access
+            </a>
           </p>
         </CardContent>
       </Card>

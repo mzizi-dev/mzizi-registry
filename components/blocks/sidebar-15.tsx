@@ -3,15 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import {
-  Home,
-  BarChart3,
-  Users,
-  FileText,
-  Settings,
-  ChevronsUpDown,
-  Check,
-} from "lucide-react"
+import { Home, BarChart3, Users, FileText, Settings, ChevronsUpDown, Check } from "lucide-react"
 
 const workspaces = [
   { id: "mukoko", label: "mukoko", color: "bg-cobalt" },
@@ -69,12 +61,7 @@ function Sidebar15() {
       <Separator />
       <nav className="flex-1 space-y-1 p-3">
         {navItems.map((item) => (
-          <Button
-            key={item.label}
-            variant="ghost"
-            className="w-full justify-start gap-3"
-            size="sm"
-          >
+          <Button key={item.label} variant="ghost" className="w-full justify-start gap-3" size="sm">
             <item.icon className="size-4" />
             {item.label}
           </Button>

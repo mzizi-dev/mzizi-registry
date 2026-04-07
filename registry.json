@@ -7,10 +7,7 @@
       "name": "accordion",
       "type": "registry:ui",
       "description": "A vertically stacked set of interactive headings that reveal content.",
-      "dependencies": [
-        "radix-ui",
-        "lucide-react"
-      ],
+      "dependencies": ["radix-ui", "lucide-react"],
       "files": [
         {
           "path": "components/ui/accordion.tsx",
@@ -34,12 +31,8 @@
       "name": "alert-dialog",
       "type": "registry:ui",
       "description": "A modal dialog that interrupts the user with important content and expects a response.",
-      "dependencies": [
-        "radix-ui"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["radix-ui"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/alert-dialog.tsx",
@@ -51,9 +44,7 @@
       "name": "aspect-ratio",
       "type": "registry:ui",
       "description": "Displays content within a desired ratio.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/aspect-ratio.tsx",
@@ -65,9 +56,7 @@
       "name": "avatar",
       "type": "registry:ui",
       "description": "An image element with a fallback for representing the user.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/avatar.tsx",
@@ -79,9 +68,7 @@
       "name": "badge",
       "type": "registry:ui",
       "description": "Displays a badge or a component that looks like a badge.",
-      "dependencies": [
-        "class-variance-authority"
-      ],
+      "dependencies": ["class-variance-authority"],
       "files": [
         {
           "path": "components/ui/badge.tsx",
@@ -93,10 +80,7 @@
       "name": "breadcrumb",
       "type": "registry:ui",
       "description": "Displays the path to the current resource using a hierarchy of links.",
-      "dependencies": [
-        "radix-ui",
-        "lucide-react"
-      ],
+      "dependencies": ["radix-ui", "lucide-react"],
       "files": [
         {
           "path": "components/ui/breadcrumb.tsx",
@@ -108,10 +92,7 @@
       "name": "button",
       "type": "registry:ui",
       "description": "Displays a button or a component that looks like a button.",
-      "dependencies": [
-        "radix-ui",
-        "class-variance-authority"
-      ],
+      "dependencies": ["radix-ui", "class-variance-authority"],
       "files": [
         {
           "path": "components/ui/button.tsx",
@@ -123,12 +104,8 @@
       "name": "button-group",
       "type": "registry:ui",
       "description": "Groups related buttons together.",
-      "dependencies": [
-        "class-variance-authority"
-      ],
-      "registryDependencies": [
-        "separator"
-      ],
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["separator"],
       "files": [
         {
           "path": "components/ui/button-group.tsx",
@@ -140,13 +117,8 @@
       "name": "calendar",
       "type": "registry:ui",
       "description": "A date field component that allows users to enter and edit dates.",
-      "dependencies": [
-        "react-day-picker",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["react-day-picker", "lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/calendar.tsx",
@@ -170,13 +142,8 @@
       "name": "carousel",
       "type": "registry:ui",
       "description": "A carousel with motion and swipe built using Embla.",
-      "dependencies": [
-        "embla-carousel-react",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["embla-carousel-react", "lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/carousel.tsx",
@@ -188,9 +155,7 @@
       "name": "chart",
       "type": "registry:ui",
       "description": "Beautiful charts built using Recharts. Copy and paste into your apps.",
-      "dependencies": [
-        "recharts"
-      ],
+      "dependencies": ["recharts"],
       "files": [
         {
           "path": "components/ui/chart.tsx",
@@ -202,10 +167,7 @@
       "name": "checkbox",
       "type": "registry:ui",
       "description": "A control that allows the user to toggle between checked and not checked.",
-      "dependencies": [
-        "radix-ui",
-        "lucide-react"
-      ],
+      "dependencies": ["radix-ui", "lucide-react"],
       "files": [
         {
           "path": "components/ui/checkbox.tsx",
@@ -217,9 +179,7 @@
       "name": "collapsible",
       "type": "registry:ui",
       "description": "An interactive component which expands and collapses a panel.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/collapsible.tsx",
@@ -231,14 +191,8 @@
       "name": "combobox",
       "type": "registry:ui",
       "description": "Autocomplete input and command palette with a list of suggestions.",
-      "dependencies": [
-        "@base-ui/react",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button",
-        "input-group"
-      ],
+      "dependencies": ["@base-ui/react", "lucide-react"],
+      "registryDependencies": ["button", "input-group"],
       "files": [
         {
           "path": "components/ui/combobox.tsx",
@@ -250,14 +204,8 @@
       "name": "command",
       "type": "registry:ui",
       "description": "Fast, composable, unstyled command menu for React.",
-      "dependencies": [
-        "cmdk",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "dialog",
-        "input-group"
-      ],
+      "dependencies": ["cmdk", "lucide-react"],
+      "registryDependencies": ["dialog", "input-group"],
       "files": [
         {
           "path": "components/ui/command.tsx",
@@ -269,10 +217,7 @@
       "name": "context-menu",
       "type": "registry:ui",
       "description": "Displays a menu to the user triggered by a right click.",
-      "dependencies": [
-        "radix-ui",
-        "lucide-react"
-      ],
+      "dependencies": ["radix-ui", "lucide-react"],
       "files": [
         {
           "path": "components/ui/context-menu.tsx",
@@ -284,13 +229,8 @@
       "name": "dialog",
       "type": "registry:ui",
       "description": "A window overlaid on the primary window, rendering content underneath inert.",
-      "dependencies": [
-        "radix-ui",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["radix-ui", "lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/dialog.tsx",
@@ -302,9 +242,7 @@
       "name": "direction",
       "type": "registry:ui",
       "description": "A provider to set the text direction for the application.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/direction.tsx",
@@ -316,9 +254,7 @@
       "name": "drawer",
       "type": "registry:ui",
       "description": "A drawer component for React built on top of Vaul.",
-      "dependencies": [
-        "vaul"
-      ],
+      "dependencies": ["vaul"],
       "files": [
         {
           "path": "components/ui/drawer.tsx",
@@ -330,10 +266,7 @@
       "name": "dropdown-menu",
       "type": "registry:ui",
       "description": "Displays a menu to the user triggered by a button.",
-      "dependencies": [
-        "radix-ui",
-        "lucide-react"
-      ],
+      "dependencies": ["radix-ui", "lucide-react"],
       "files": [
         {
           "path": "components/ui/dropdown-menu.tsx",
@@ -345,9 +278,7 @@
       "name": "empty",
       "type": "registry:ui",
       "description": "Displays an empty state with an icon, title, and description.",
-      "dependencies": [
-        "class-variance-authority"
-      ],
+      "dependencies": ["class-variance-authority"],
       "files": [
         {
           "path": "components/ui/empty.tsx",
@@ -359,13 +290,8 @@
       "name": "field",
       "type": "registry:ui",
       "description": "A form field component with label, description, and message.",
-      "dependencies": [
-        "class-variance-authority"
-      ],
-      "registryDependencies": [
-        "label",
-        "separator"
-      ],
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["label", "separator"],
       "files": [
         {
           "path": "components/ui/field.tsx",
@@ -377,14 +303,8 @@
       "name": "form",
       "type": "registry:ui",
       "description": "Building forms with React Hook Form and Zod.",
-      "dependencies": [
-        "@radix-ui/react-label",
-        "@radix-ui/react-slot",
-        "react-hook-form"
-      ],
-      "registryDependencies": [
-        "label"
-      ],
+      "dependencies": ["@radix-ui/react-label", "@radix-ui/react-slot", "react-hook-form"],
+      "registryDependencies": ["label"],
       "files": [
         {
           "path": "components/ui/form.tsx",
@@ -396,9 +316,7 @@
       "name": "hover-card",
       "type": "registry:ui",
       "description": "For sighted users to preview content available behind a link.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/hover-card.tsx",
@@ -422,14 +340,8 @@
       "name": "input-group",
       "type": "registry:ui",
       "description": "Groups input, button, and addon elements together.",
-      "dependencies": [
-        "class-variance-authority"
-      ],
-      "registryDependencies": [
-        "button",
-        "input",
-        "textarea"
-      ],
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["button", "input", "textarea"],
       "files": [
         {
           "path": "components/ui/input-group.tsx",
@@ -441,10 +353,7 @@
       "name": "input-otp",
       "type": "registry:ui",
       "description": "Accessible one-time password component with copy paste functionality.",
-      "dependencies": [
-        "input-otp",
-        "lucide-react"
-      ],
+      "dependencies": ["input-otp", "lucide-react"],
       "files": [
         {
           "path": "components/ui/input-otp.tsx",
@@ -456,13 +365,8 @@
       "name": "item",
       "type": "registry:ui",
       "description": "A flexible item component for lists, menus, and settings.",
-      "dependencies": [
-        "class-variance-authority",
-        "radix-ui"
-      ],
-      "registryDependencies": [
-        "separator"
-      ],
+      "dependencies": ["class-variance-authority", "radix-ui"],
+      "registryDependencies": ["separator"],
       "files": [
         {
           "path": "components/ui/item.tsx",
@@ -486,9 +390,7 @@
       "name": "label",
       "type": "registry:ui",
       "description": "Renders an accessible label associated with controls.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/label.tsx",
@@ -500,10 +402,7 @@
       "name": "menubar",
       "type": "registry:ui",
       "description": "A visually persistent menu common in desktop applications.",
-      "dependencies": [
-        "radix-ui",
-        "lucide-react"
-      ],
+      "dependencies": ["radix-ui", "lucide-react"],
       "files": [
         {
           "path": "components/ui/menubar.tsx",
@@ -515,9 +414,7 @@
       "name": "native-select",
       "type": "registry:ui",
       "description": "A native HTML select element styled to match the design system.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "components/ui/native-select.tsx",
@@ -529,11 +426,7 @@
       "name": "navigation-menu",
       "type": "registry:ui",
       "description": "A collection of links for navigating websites.",
-      "dependencies": [
-        "class-variance-authority",
-        "radix-ui",
-        "lucide-react"
-      ],
+      "dependencies": ["class-variance-authority", "radix-ui", "lucide-react"],
       "files": [
         {
           "path": "components/ui/navigation-menu.tsx",
@@ -545,12 +438,8 @@
       "name": "pagination",
       "type": "registry:ui",
       "description": "Pagination with page navigation, previous and next links.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/pagination.tsx",
@@ -562,9 +451,7 @@
       "name": "popover",
       "type": "registry:ui",
       "description": "Displays rich content in a portal, triggered by a button.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/popover.tsx",
@@ -576,9 +463,7 @@
       "name": "progress",
       "type": "registry:ui",
       "description": "Displays an indicator showing the completion progress of a task.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/progress.tsx",
@@ -590,9 +475,7 @@
       "name": "radio-group",
       "type": "registry:ui",
       "description": "A set of checkable buttons where only one can be checked at a time.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/radio-group.tsx",
@@ -604,9 +487,7 @@
       "name": "resizable",
       "type": "registry:ui",
       "description": "Accessible resizable panel groups and layouts with keyboard support.",
-      "dependencies": [
-        "react-resizable-panels"
-      ],
+      "dependencies": ["react-resizable-panels"],
       "files": [
         {
           "path": "components/ui/resizable.tsx",
@@ -618,9 +499,7 @@
       "name": "scroll-area",
       "type": "registry:ui",
       "description": "Augments native scroll functionality for custom, cross-browser styling.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/scroll-area.tsx",
@@ -632,10 +511,7 @@
       "name": "select",
       "type": "registry:ui",
       "description": "Displays a list of options for the user to pick from, triggered by a button.",
-      "dependencies": [
-        "radix-ui",
-        "lucide-react"
-      ],
+      "dependencies": ["radix-ui", "lucide-react"],
       "files": [
         {
           "path": "components/ui/select.tsx",
@@ -647,9 +523,7 @@
       "name": "separator",
       "type": "registry:ui",
       "description": "Visually or semantically separates content.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/separator.tsx",
@@ -661,13 +535,8 @@
       "name": "sheet",
       "type": "registry:ui",
       "description": "Extends the Dialog component to display content that complements the main content of the screen.",
-      "dependencies": [
-        "radix-ui",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["radix-ui", "lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/sheet.tsx",
@@ -679,11 +548,7 @@
       "name": "sidebar",
       "type": "registry:ui",
       "description": "A composable, themeable and customizable sidebar component.",
-      "dependencies": [
-        "class-variance-authority",
-        "radix-ui",
-        "lucide-react"
-      ],
+      "dependencies": ["class-variance-authority", "radix-ui", "lucide-react"],
       "registryDependencies": [
         "button",
         "input",
@@ -716,9 +581,7 @@
       "name": "slider",
       "type": "registry:ui",
       "description": "An input where the user selects a value from within a given range.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/slider.tsx",
@@ -730,11 +593,7 @@
       "name": "sonner",
       "type": "registry:ui",
       "description": "An opinionated toast component for React.",
-      "dependencies": [
-        "sonner",
-        "next-themes",
-        "lucide-react"
-      ],
+      "dependencies": ["sonner", "next-themes", "lucide-react"],
       "files": [
         {
           "path": "components/ui/sonner.tsx",
@@ -746,9 +605,7 @@
       "name": "spinner",
       "type": "registry:ui",
       "description": "A loading spinner component.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "components/ui/spinner.tsx",
@@ -760,9 +617,7 @@
       "name": "switch",
       "type": "registry:ui",
       "description": "A control that allows the user to toggle between a checked and not checked state.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/switch.tsx",
@@ -786,10 +641,7 @@
       "name": "tabs",
       "type": "registry:ui",
       "description": "A set of layered sections of content that are displayed one at a time.",
-      "dependencies": [
-        "class-variance-authority",
-        "radix-ui"
-      ],
+      "dependencies": ["class-variance-authority", "radix-ui"],
       "files": [
         {
           "path": "components/ui/tabs.tsx",
@@ -813,11 +665,7 @@
       "name": "toast",
       "type": "registry:ui",
       "description": "A succinct message that is displayed temporarily.",
-      "dependencies": [
-        "@radix-ui/react-toast",
-        "class-variance-authority",
-        "lucide-react"
-      ],
+      "dependencies": ["@radix-ui/react-toast", "class-variance-authority", "lucide-react"],
       "files": [
         {
           "path": "components/ui/toast.tsx",
@@ -830,10 +678,7 @@
       "type": "registry:ui",
       "description": "A toaster component to render toast notifications.",
       "dependencies": [],
-      "registryDependencies": [
-        "toast",
-        "use-toast"
-      ],
+      "registryDependencies": ["toast", "use-toast"],
       "files": [
         {
           "path": "components/ui/toaster.tsx",
@@ -845,10 +690,7 @@
       "name": "toggle",
       "type": "registry:ui",
       "description": "A two-state button that can be either on or off.",
-      "dependencies": [
-        "class-variance-authority",
-        "radix-ui"
-      ],
+      "dependencies": ["class-variance-authority", "radix-ui"],
       "files": [
         {
           "path": "components/ui/toggle.tsx",
@@ -860,13 +702,8 @@
       "name": "toggle-group",
       "type": "registry:ui",
       "description": "A set of two-state buttons that can be toggled on or off.",
-      "dependencies": [
-        "class-variance-authority",
-        "radix-ui"
-      ],
-      "registryDependencies": [
-        "toggle"
-      ],
+      "dependencies": ["class-variance-authority", "radix-ui"],
+      "registryDependencies": ["toggle"],
       "files": [
         {
           "path": "components/ui/toggle-group.tsx",
@@ -878,9 +715,7 @@
       "name": "tooltip",
       "type": "registry:ui",
       "description": "A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it.",
-      "dependencies": [
-        "radix-ui"
-      ],
+      "dependencies": ["radix-ui"],
       "files": [
         {
           "path": "components/ui/tooltip.tsx",
@@ -892,16 +727,8 @@
       "name": "data-table",
       "type": "registry:ui",
       "description": "A powerful table with sorting, filtering, pagination, and column visibility powered by TanStack Table.",
-      "dependencies": [
-        "@tanstack/react-table",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button",
-        "dropdown-menu",
-        "input",
-        "table"
-      ],
+      "dependencies": ["@tanstack/react-table", "lucide-react"],
+      "registryDependencies": ["button", "dropdown-menu", "input", "table"],
       "files": [
         {
           "path": "components/ui/data-table.tsx",
@@ -913,15 +740,8 @@
       "name": "date-picker",
       "type": "registry:ui",
       "description": "A date picker component with calendar popover, supporting single date and date range selection.",
-      "dependencies": [
-        "date-fns",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button",
-        "calendar",
-        "popover"
-      ],
+      "dependencies": ["date-fns", "lucide-react"],
+      "registryDependencies": ["button", "calendar", "popover"],
       "files": [
         {
           "path": "components/ui/date-picker.tsx",
@@ -945,14 +765,8 @@
       "name": "search-bar",
       "type": "registry:ui",
       "description": "A search input with keyboard shortcut support, clear button, and command palette integration.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "input",
-        "button",
-        "kbd"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["input", "button", "kbd"],
       "files": [
         {
           "path": "components/ui/search-bar.tsx",
@@ -964,13 +778,8 @@
       "name": "user-menu",
       "type": "registry:ui",
       "description": "A user profile dropdown menu with avatar, name, email, navigation links, and sign-out action.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "avatar",
-        "dropdown-menu"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["avatar", "dropdown-menu"],
       "files": [
         {
           "path": "components/ui/user-menu.tsx",
@@ -982,12 +791,8 @@
       "name": "stats-card",
       "type": "registry:ui",
       "description": "A metric card displaying a value with optional trend indicator, icon, and description.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "card"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["card"],
       "files": [
         {
           "path": "components/ui/stats-card.tsx",
@@ -999,13 +804,8 @@
       "name": "filter-bar",
       "type": "registry:ui",
       "description": "A horizontal bar of toggleable filter chips with optional counts and a clear button.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "badge",
-        "button"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["badge", "button"],
       "files": [
         {
           "path": "components/ui/filter-bar.tsx",
@@ -1017,15 +817,8 @@
       "name": "share-dialog",
       "type": "registry:ui",
       "description": "A share dialog with copy-to-clipboard, social media links (X, LinkedIn, Email), and native share support.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "dialog",
-        "button",
-        "input",
-        "separator"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["dialog", "button", "input", "separator"],
       "files": [
         {
           "path": "components/ui/share-dialog.tsx",
@@ -1037,15 +830,8 @@
       "name": "notification-bell",
       "type": "registry:ui",
       "description": "A notification bell icon with unread count badge and a popover panel listing notifications.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button",
-        "popover",
-        "scroll-area",
-        "separator"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "popover", "scroll-area", "separator"],
       "files": [
         {
           "path": "components/ui/notification-bell.tsx",
@@ -1057,12 +843,8 @@
       "name": "file-upload",
       "type": "registry:ui",
       "description": "A drag-and-drop file upload zone with file list, size validation, and remove actions.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/file-upload.tsx",
@@ -1074,12 +856,8 @@
       "name": "copy-button",
       "type": "registry:ui",
       "description": "A button that copies text to the clipboard with visual feedback on success.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/copy-button.tsx",
@@ -1115,15 +893,8 @@
       "name": "pricing-card",
       "type": "registry:ui",
       "description": "A pricing tier card with plan name, price, feature list, CTA button, and optional highlight badge.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "badge",
-        "button",
-        "card",
-        "separator"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["badge", "button", "card", "separator"],
       "files": [
         {
           "path": "components/ui/pricing-card.tsx",
@@ -1135,9 +906,7 @@
       "name": "rating",
       "type": "registry:ui",
       "description": "An interactive star rating component with hover preview, read-only mode, and mineral gold accent.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "components/ui/rating.tsx",
@@ -1162,9 +931,7 @@
       "type": "registry:hook",
       "description": "A hook for managing toast notifications.",
       "dependencies": [],
-      "registryDependencies": [
-        "toast"
-      ],
+      "registryDependencies": ["toast"],
       "files": [
         {
           "path": "hooks/use-toast.ts",
@@ -1176,10 +943,7 @@
       "name": "utils",
       "type": "registry:lib",
       "description": "Utility functions including the cn classname helper.",
-      "dependencies": [
-        "clsx",
-        "tailwind-merge"
-      ],
+      "dependencies": ["clsx", "tailwind-merge"],
       "files": [
         {
           "path": "lib/utils.ts",
@@ -1204,9 +968,7 @@
       "type": "registry:ui",
       "description": "A React error boundary component that catches render errors and displays a fallback.",
       "dependencies": [],
-      "registryDependencies": [
-        "observability"
-      ],
+      "registryDependencies": ["observability"],
       "files": [
         {
           "path": "components/error-boundary.tsx",
@@ -1219,11 +981,7 @@
       "type": "registry:ui",
       "description": "Section-level error boundary for the 5-layer architecture with retry, named sections, and observability logging.",
       "dependencies": [],
-      "registryDependencies": [
-        "observability",
-        "utils",
-        "button"
-      ],
+      "registryDependencies": ["observability", "utils", "button"],
       "files": [
         {
           "path": "components/section-error-boundary.tsx",
@@ -1248,10 +1006,7 @@
       "type": "registry:lib",
       "description": "Netflix Hystrix-inspired circuit breaker with CLOSED/OPEN/HALF_OPEN state machine, per-provider configs, and observability.",
       "dependencies": [],
-      "registryDependencies": [
-        "timeout",
-        "observability"
-      ],
+      "registryDependencies": ["timeout", "observability"],
       "files": [
         {
           "path": "lib/circuit-breaker.ts",
@@ -1264,9 +1019,7 @@
       "type": "registry:lib",
       "description": "Retry with exponential backoff, jitter, and configurable retry predicates.",
       "dependencies": [],
-      "registryDependencies": [
-        "observability"
-      ],
+      "registryDependencies": ["observability"],
       "files": [
         {
           "path": "lib/retry.ts",
@@ -1279,10 +1032,7 @@
       "type": "registry:lib",
       "description": "Sequential fallback strategy — try stages in order, return first success. Each stage has independent timeout.",
       "dependencies": [],
-      "registryDependencies": [
-        "timeout",
-        "observability"
-      ],
+      "registryDependencies": ["timeout", "observability"],
       "files": [
         {
           "path": "lib/fallback-chain.ts",
@@ -1293,14 +1043,25 @@
     {
       "name": "ai-safety",
       "type": "registry:lib",
-      "description": "AI safety utilities: input validation, prompt injection detection, and sliding-window rate limiting.",
+      "description": "AI safety utilities: input validation, prompt injection detection, adversarial security scanning, AI circuit breaker, output integrity validation, and Ubuntu cultural context layer.",
       "dependencies": [],
-      "registryDependencies": [
-        "observability"
-      ],
+      "registryDependencies": ["observability"],
       "files": [
         {
           "path": "lib/ai-safety.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "accessibility",
+      "type": "registry:lib",
+      "description": "APCA 3.0 AAA accessibility utilities: contrast checking, pre-computed mineral Lc values, touch target constants, component checklist, and Ubuntu-informed design guidelines.",
+      "dependencies": [],
+      "registryDependencies": ["observability"],
+      "files": [
+        {
+          "path": "lib/accessibility.ts",
           "type": "registry:lib"
         }
       ]
@@ -1310,9 +1071,7 @@
       "type": "registry:lib",
       "description": "Chaos testing utilities for injecting random errors and latency to test resilience. Disabled by default.",
       "dependencies": [],
-      "registryDependencies": [
-        "observability"
-      ],
+      "registryDependencies": ["observability"],
       "files": [
         {
           "path": "lib/chaos.ts",
@@ -1325,10 +1084,7 @@
       "type": "registry:ui",
       "description": "TikTok-style sequential mounting component. FIFO queue ensures one section mounts at a time with memory reclaim.",
       "dependencies": [],
-      "registryDependencies": [
-        "use-mobile",
-        "observability"
-      ],
+      "registryDependencies": ["use-mobile", "observability"],
       "files": [
         {
           "path": "components/lazy-section.tsx",
@@ -1364,15 +1120,8 @@
       "name": "mukoko-sidebar",
       "type": "registry:ui",
       "description": "Standardized sidebar for all Mukoko ecosystem apps. Wraps the sidebar primitive with Mukoko branding, mineral accent strip, section-based navigation, and automatic active state detection. Works across docs, dashboards, settings, and any other context.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "sidebar",
-        "separator",
-        "badge",
-        "tooltip"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["sidebar", "separator", "badge", "tooltip"],
       "files": [
         {
           "path": "components/mukoko/mukoko-sidebar.tsx",
@@ -1384,13 +1133,8 @@
       "name": "mukoko-header",
       "type": "registry:ui",
       "description": "Standardized sticky header for all Mukoko ecosystem apps. Includes logo with app name suffix, desktop navigation, theme toggle, and mobile sidebar trigger.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button",
-        "sidebar"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "sidebar"],
       "files": [
         {
           "path": "components/mukoko/mukoko-header.tsx",
@@ -1403,9 +1147,7 @@
       "type": "registry:ui",
       "description": "Standardized footer for all Mukoko ecosystem apps. Includes mineral color dots, product links grid, and Nyuchi branding.",
       "dependencies": [],
-      "registryDependencies": [
-        "separator"
-      ],
+      "registryDependencies": ["separator"],
       "files": [
         {
           "path": "components/mukoko/mukoko-footer.tsx",
@@ -1429,12 +1171,8 @@
       "name": "detail-layout",
       "type": "registry:ui",
       "description": "Shared detail page layout for articles, events, and listings across the Mukoko ecosystem. Includes hero image, back navigation, metadata row, prose content area, and optional aside column.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "separator"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["separator"],
       "files": [
         {
           "path": "components/mukoko/detail-layout.tsx",
@@ -1447,12 +1185,7 @@
       "type": "registry:ui",
       "description": "Full app shell composing MukokoHeader, MukokoSidebar, and MukokoBottomNav into a responsive dashboard layout with collapsible sidebar and mobile navigation.",
       "dependencies": [],
-      "registryDependencies": [
-        "mukoko-sidebar",
-        "mukoko-header",
-        "mukoko-bottom-nav",
-        "sidebar"
-      ],
+      "registryDependencies": ["mukoko-sidebar", "mukoko-header", "mukoko-bottom-nav", "sidebar"],
       "files": [
         {
           "path": "components/mukoko/dashboard-layout.tsx",
@@ -1465,12 +1198,7 @@
       "type": "registry:block",
       "description": "Full dashboard layout with stats, chart section, and activity feed.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/dashboard-01.tsx",
@@ -1483,12 +1211,7 @@
       "type": "registry:block",
       "description": "Centered card login with email/password and mineral accent stripe.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/login-01.tsx",
@@ -1501,12 +1224,7 @@
       "type": "registry:block",
       "description": "Split layout login with brand image left, form right.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/login-02.tsx",
@@ -1519,12 +1237,7 @@
       "type": "registry:block",
       "description": "Social login buttons (Google, GitHub) plus email/password form.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/login-03.tsx",
@@ -1537,12 +1250,7 @@
       "type": "registry:block",
       "description": "OTP/magic link style login with code input.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/login-04.tsx",
@@ -1555,12 +1263,7 @@
       "type": "registry:block",
       "description": "Two-column login with brand showcase and mineral colors.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/login-05.tsx",
@@ -1573,12 +1276,7 @@
       "type": "registry:block",
       "description": "Basic signup with name, email, and password fields.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/signup-01.tsx",
@@ -1591,12 +1289,7 @@
       "type": "registry:block",
       "description": "Multi-step signup wizard with progress indicator.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/signup-02.tsx",
@@ -1609,12 +1302,7 @@
       "type": "registry:block",
       "description": "Split signup with features showcase panel.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/signup-03.tsx",
@@ -1627,12 +1315,7 @@
       "type": "registry:block",
       "description": "Invite-only signup with invite code input.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/signup-04.tsx",
@@ -1645,12 +1328,7 @@
       "type": "registry:block",
       "description": "Social and email signup with terms checkbox.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/signup-05.tsx",
@@ -1663,12 +1341,7 @@
       "type": "registry:block",
       "description": "Basic sidebar with icon and text navigation items.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-01.tsx",
@@ -1681,12 +1354,7 @@
       "type": "registry:block",
       "description": "Collapsible sidebar with grouped sections.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-02.tsx",
@@ -1699,12 +1367,7 @@
       "type": "registry:block",
       "description": "Sidebar with search bar at top.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-03.tsx",
@@ -1717,12 +1380,7 @@
       "type": "registry:block",
       "description": "Sidebar with user profile section.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-04.tsx",
@@ -1735,12 +1393,7 @@
       "type": "registry:block",
       "description": "Sidebar with nested sub-navigation.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-05.tsx",
@@ -1753,12 +1406,7 @@
       "type": "registry:block",
       "description": "Icon-only collapsed sidebar.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-06.tsx",
@@ -1771,12 +1419,7 @@
       "type": "registry:block",
       "description": "Sidebar with badge notification counts.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-07.tsx",
@@ -1789,12 +1432,7 @@
       "type": "registry:block",
       "description": "Sidebar with header and footer sections.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-08.tsx",
@@ -1807,12 +1445,7 @@
       "type": "registry:block",
       "description": "Sidebar with grouped navigation categories.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-09.tsx",
@@ -1825,12 +1458,7 @@
       "type": "registry:block",
       "description": "Floating sidebar detached from edge.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-10.tsx",
@@ -1843,12 +1471,7 @@
       "type": "registry:block",
       "description": "Sidebar with accordion sections.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-11.tsx",
@@ -1861,12 +1484,7 @@
       "type": "registry:block",
       "description": "Sidebar with breadcrumb trail.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-12.tsx",
@@ -1879,12 +1497,7 @@
       "type": "registry:block",
       "description": "Sidebar with quick actions panel.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-13.tsx",
@@ -1897,12 +1510,7 @@
       "type": "registry:block",
       "description": "Sidebar with theme toggle.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-14.tsx",
@@ -1915,12 +1523,7 @@
       "type": "registry:block",
       "description": "Sidebar with workspace switcher.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-15.tsx",
@@ -1933,12 +1536,7 @@
       "type": "registry:block",
       "description": "Full-featured sidebar combining all patterns.",
       "dependencies": [],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "registryDependencies": ["button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/sidebar-16.tsx",
@@ -1950,12 +1548,8 @@
       "name": "chart-area-default",
       "type": "registry:block",
       "description": "Area chart — default variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-default.tsx",
@@ -1967,12 +1561,8 @@
       "name": "chart-area-stacked",
       "type": "registry:block",
       "description": "Area chart — stacked variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-stacked.tsx",
@@ -1984,12 +1574,8 @@
       "name": "chart-area-legend",
       "type": "registry:block",
       "description": "Area chart — legend variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-legend.tsx",
@@ -2001,12 +1587,8 @@
       "name": "chart-area-interactive",
       "type": "registry:block",
       "description": "Area chart — interactive variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-interactive.tsx",
@@ -2018,12 +1600,8 @@
       "name": "chart-area-linear",
       "type": "registry:block",
       "description": "Area chart — linear variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-linear.tsx",
@@ -2035,12 +1613,8 @@
       "name": "chart-area-step",
       "type": "registry:block",
       "description": "Area chart — step variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-step.tsx",
@@ -2052,12 +1626,8 @@
       "name": "chart-area-axes",
       "type": "registry:block",
       "description": "Area chart — axes variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-axes.tsx",
@@ -2069,12 +1639,8 @@
       "name": "chart-area-gradient",
       "type": "registry:block",
       "description": "Area chart — gradient variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-gradient.tsx",
@@ -2086,12 +1652,8 @@
       "name": "chart-area-icons",
       "type": "registry:block",
       "description": "Area chart — icons variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-icons.tsx",
@@ -2103,12 +1665,8 @@
       "name": "chart-area-stacked-expand",
       "type": "registry:block",
       "description": "Area chart — stacked expand variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-area-stacked-expand.tsx",
@@ -2120,12 +1678,8 @@
       "name": "chart-bar-default",
       "type": "registry:block",
       "description": "Bar chart — default variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-default.tsx",
@@ -2137,12 +1691,8 @@
       "name": "chart-bar-stacked",
       "type": "registry:block",
       "description": "Bar chart — stacked variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-stacked.tsx",
@@ -2154,12 +1704,8 @@
       "name": "chart-bar-interactive",
       "type": "registry:block",
       "description": "Bar chart — interactive variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-interactive.tsx",
@@ -2171,12 +1717,8 @@
       "name": "chart-bar-label",
       "type": "registry:block",
       "description": "Bar chart — label variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-label.tsx",
@@ -2188,12 +1730,8 @@
       "name": "chart-bar-label-custom",
       "type": "registry:block",
       "description": "Bar chart — label custom variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-label-custom.tsx",
@@ -2205,12 +1743,8 @@
       "name": "chart-bar-mixed",
       "type": "registry:block",
       "description": "Bar chart — mixed variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-mixed.tsx",
@@ -2222,12 +1756,8 @@
       "name": "chart-bar-active",
       "type": "registry:block",
       "description": "Bar chart — active variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-active.tsx",
@@ -2239,12 +1769,8 @@
       "name": "chart-bar-multiple",
       "type": "registry:block",
       "description": "Bar chart — multiple variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-multiple.tsx",
@@ -2256,12 +1782,8 @@
       "name": "chart-bar-horizontal",
       "type": "registry:block",
       "description": "Bar chart — horizontal variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-horizontal.tsx",
@@ -2273,12 +1795,8 @@
       "name": "chart-bar-negative",
       "type": "registry:block",
       "description": "Bar chart — negative variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-bar-negative.tsx",
@@ -2290,12 +1808,8 @@
       "name": "chart-line-default",
       "type": "registry:block",
       "description": "Line chart — default variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-default.tsx",
@@ -2307,12 +1821,8 @@
       "name": "chart-line-interactive",
       "type": "registry:block",
       "description": "Line chart — interactive variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-interactive.tsx",
@@ -2324,12 +1834,8 @@
       "name": "chart-line-linear",
       "type": "registry:block",
       "description": "Line chart — linear variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-linear.tsx",
@@ -2341,12 +1847,8 @@
       "name": "chart-line-step",
       "type": "registry:block",
       "description": "Line chart — step variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-step.tsx",
@@ -2358,12 +1860,8 @@
       "name": "chart-line-label",
       "type": "registry:block",
       "description": "Line chart — label variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-label.tsx",
@@ -2375,12 +1873,8 @@
       "name": "chart-line-label-custom",
       "type": "registry:block",
       "description": "Line chart — label custom variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-label-custom.tsx",
@@ -2392,12 +1886,8 @@
       "name": "chart-line-dots",
       "type": "registry:block",
       "description": "Line chart — dots variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-dots.tsx",
@@ -2409,12 +1899,8 @@
       "name": "chart-line-dots-colors",
       "type": "registry:block",
       "description": "Line chart — dots colors variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-dots-colors.tsx",
@@ -2426,12 +1912,8 @@
       "name": "chart-line-dots-custom",
       "type": "registry:block",
       "description": "Line chart — dots custom variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-dots-custom.tsx",
@@ -2443,12 +1925,8 @@
       "name": "chart-line-multiple",
       "type": "registry:block",
       "description": "Line chart — multiple variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-line-multiple.tsx",
@@ -2460,12 +1938,8 @@
       "name": "chart-pie-simple",
       "type": "registry:block",
       "description": "Pie chart — simple variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-simple.tsx",
@@ -2477,12 +1951,8 @@
       "name": "chart-pie-stacked",
       "type": "registry:block",
       "description": "Pie chart — stacked variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-stacked.tsx",
@@ -2494,12 +1964,8 @@
       "name": "chart-pie-legend",
       "type": "registry:block",
       "description": "Pie chart — legend variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-legend.tsx",
@@ -2511,12 +1977,8 @@
       "name": "chart-pie-interactive",
       "type": "registry:block",
       "description": "Pie chart — interactive variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-interactive.tsx",
@@ -2528,12 +1990,8 @@
       "name": "chart-pie-label",
       "type": "registry:block",
       "description": "Pie chart — label variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-label.tsx",
@@ -2545,12 +2003,8 @@
       "name": "chart-pie-label-custom",
       "type": "registry:block",
       "description": "Pie chart — label custom variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-label-custom.tsx",
@@ -2562,12 +2016,8 @@
       "name": "chart-pie-label-list",
       "type": "registry:block",
       "description": "Pie chart — label list variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-label-list.tsx",
@@ -2579,12 +2029,8 @@
       "name": "chart-pie-donut",
       "type": "registry:block",
       "description": "Pie chart — donut variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-donut.tsx",
@@ -2596,12 +2042,8 @@
       "name": "chart-pie-donut-active",
       "type": "registry:block",
       "description": "Pie chart — donut active variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-donut-active.tsx",
@@ -2613,12 +2055,8 @@
       "name": "chart-pie-donut-text",
       "type": "registry:block",
       "description": "Pie chart — donut text variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-donut-text.tsx",
@@ -2630,12 +2068,8 @@
       "name": "chart-pie-separator-none",
       "type": "registry:block",
       "description": "Pie chart — separator none variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-pie-separator-none.tsx",
@@ -2647,12 +2081,8 @@
       "name": "chart-radar-default",
       "type": "registry:block",
       "description": "Radar chart — default variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-default.tsx",
@@ -2664,12 +2094,8 @@
       "name": "chart-radar-legend",
       "type": "registry:block",
       "description": "Radar chart — legend variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-legend.tsx",
@@ -2681,12 +2107,8 @@
       "name": "chart-radar-dots",
       "type": "registry:block",
       "description": "Radar chart — dots variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-dots.tsx",
@@ -2698,12 +2120,8 @@
       "name": "chart-radar-icons",
       "type": "registry:block",
       "description": "Radar chart — icons variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-icons.tsx",
@@ -2715,12 +2133,8 @@
       "name": "chart-radar-multiple",
       "type": "registry:block",
       "description": "Radar chart — multiple variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-multiple.tsx",
@@ -2732,12 +2146,8 @@
       "name": "chart-radar-lines-only",
       "type": "registry:block",
       "description": "Radar chart — lines only variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-lines-only.tsx",
@@ -2749,12 +2159,8 @@
       "name": "chart-radar-label-custom",
       "type": "registry:block",
       "description": "Radar chart — label custom variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-label-custom.tsx",
@@ -2766,12 +2172,8 @@
       "name": "chart-radar-radius",
       "type": "registry:block",
       "description": "Radar chart — radius variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-radius.tsx",
@@ -2783,12 +2185,8 @@
       "name": "chart-radar-grid-circle",
       "type": "registry:block",
       "description": "Radar chart — grid circle variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-grid-circle.tsx",
@@ -2800,12 +2198,8 @@
       "name": "chart-radar-grid-circle-fill",
       "type": "registry:block",
       "description": "Radar chart — grid circle fill variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-grid-circle-fill.tsx",
@@ -2817,12 +2211,8 @@
       "name": "chart-radar-grid-circle-no-lines",
       "type": "registry:block",
       "description": "Radar chart — grid circle no lines variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-grid-circle-no-lines.tsx",
@@ -2834,12 +2224,8 @@
       "name": "chart-radar-grid-custom",
       "type": "registry:block",
       "description": "Radar chart — grid custom variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-grid-custom.tsx",
@@ -2851,12 +2237,8 @@
       "name": "chart-radar-grid-fill",
       "type": "registry:block",
       "description": "Radar chart — grid fill variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-grid-fill.tsx",
@@ -2868,12 +2250,8 @@
       "name": "chart-radar-grid-none",
       "type": "registry:block",
       "description": "Radar chart — grid none variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radar-grid-none.tsx",
@@ -2885,12 +2263,8 @@
       "name": "chart-radial-simple",
       "type": "registry:block",
       "description": "Radial chart — simple variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radial-simple.tsx",
@@ -2902,12 +2276,8 @@
       "name": "chart-radial-stacked",
       "type": "registry:block",
       "description": "Radial chart — stacked variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radial-stacked.tsx",
@@ -2919,12 +2289,8 @@
       "name": "chart-radial-label",
       "type": "registry:block",
       "description": "Radial chart — label variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radial-label.tsx",
@@ -2936,12 +2302,8 @@
       "name": "chart-radial-text",
       "type": "registry:block",
       "description": "Radial chart — text variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radial-text.tsx",
@@ -2953,12 +2315,8 @@
       "name": "chart-radial-grid",
       "type": "registry:block",
       "description": "Radial chart — grid variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radial-grid.tsx",
@@ -2970,12 +2328,8 @@
       "name": "chart-radial-shape",
       "type": "registry:block",
       "description": "Radial chart — shape variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-radial-shape.tsx",
@@ -2987,12 +2341,8 @@
       "name": "chart-tooltip-default",
       "type": "registry:block",
       "description": "Tooltip chart — default variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-tooltip-default.tsx",
@@ -3004,12 +2354,8 @@
       "name": "chart-tooltip-icons",
       "type": "registry:block",
       "description": "Tooltip chart — icons variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-tooltip-icons.tsx",
@@ -3021,12 +2367,8 @@
       "name": "chart-tooltip-advanced",
       "type": "registry:block",
       "description": "Tooltip chart — advanced variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-tooltip-advanced.tsx",
@@ -3038,12 +2380,8 @@
       "name": "chart-tooltip-formatter",
       "type": "registry:block",
       "description": "Tooltip chart — formatter variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-tooltip-formatter.tsx",
@@ -3055,12 +2393,8 @@
       "name": "chart-tooltip-indicator-line",
       "type": "registry:block",
       "description": "Tooltip chart — indicator line variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-tooltip-indicator-line.tsx",
@@ -3072,12 +2406,8 @@
       "name": "chart-tooltip-indicator-none",
       "type": "registry:block",
       "description": "Tooltip chart — indicator none variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-tooltip-indicator-none.tsx",
@@ -3089,12 +2419,8 @@
       "name": "chart-tooltip-label-custom",
       "type": "registry:block",
       "description": "Tooltip chart — label custom variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-tooltip-label-custom.tsx",
@@ -3106,12 +2432,8 @@
       "name": "chart-tooltip-label-formatter",
       "type": "registry:block",
       "description": "Tooltip chart — label formatter variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-tooltip-label-formatter.tsx",
@@ -3123,12 +2445,8 @@
       "name": "chart-tooltip-label-none",
       "type": "registry:block",
       "description": "Tooltip chart — label none variant.",
-      "dependencies": [
-        "recharts"
-      ],
-      "registryDependencies": [
-        "chart"
-      ],
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
       "files": [
         {
           "path": "components/blocks/charts/chart-tooltip-label-none.tsx",
@@ -3140,17 +2458,8 @@
       "name": "profile-page",
       "type": "registry:block",
       "description": "Standard profile page with cover image, avatar, stats, tabs, and action buttons.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "avatar",
-        "badge",
-        "button",
-        "card",
-        "separator",
-        "tabs"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["avatar", "badge", "button", "card", "separator", "tabs"],
       "files": [
         {
           "path": "components/blocks/profile-page.tsx",
@@ -3162,9 +2471,7 @@
       "name": "profile-settings",
       "type": "registry:block",
       "description": "Standard settings page with sidebar navigation and content sections.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "registryDependencies": [
         "avatar",
         "button",
@@ -3186,17 +2493,8 @@
       "name": "onboarding-flow",
       "type": "registry:block",
       "description": "Multi-step onboarding flow with progress indicator, profile setup, and interest selection.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "avatar",
-        "badge",
-        "button",
-        "card",
-        "input",
-        "label"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["avatar", "badge", "button", "card", "input", "label"],
       "files": [
         {
           "path": "components/blocks/onboarding-flow.tsx",
@@ -3208,12 +2506,8 @@
       "name": "error-page",
       "type": "registry:block",
       "description": "Standard error page for 404, 500, and 503 states with mineral accent.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/blocks/error-page.tsx",
@@ -3225,12 +2519,8 @@
       "name": "empty-state",
       "type": "registry:block",
       "description": "Standard empty state with icon, title, description, and call-to-action.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/blocks/empty-state.tsx",
@@ -3242,17 +2532,8 @@
       "name": "notification-center",
       "type": "registry:block",
       "description": "Notification center with tabs for all, unread, and mentions with grouped items.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "badge",
-        "button",
-        "card",
-        "scroll-area",
-        "separator",
-        "tabs"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["badge", "button", "card", "scroll-area", "separator", "tabs"],
       "files": [
         {
           "path": "components/blocks/notification-center.tsx",
@@ -3264,16 +2545,8 @@
       "name": "search-results",
       "type": "registry:block",
       "description": "Standard search results page with filters, result items, and pagination.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "badge",
-        "button",
-        "card",
-        "input",
-        "separator"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["badge", "button", "card", "input", "separator"],
       "files": [
         {
           "path": "components/blocks/search-results.tsx",
@@ -3285,12 +2558,8 @@
       "name": "command-center",
       "type": "registry:block",
       "description": "Spotlight-style command palette with search, grouped results, and keyboard hints.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "command"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["command"],
       "files": [
         {
           "path": "components/blocks/command-center.tsx",
@@ -3710,12 +2979,8 @@
       "name": "rich-text-editor",
       "type": "registry:ui",
       "description": "Simple WYSIWYG editor with toolbar for bold, italic, heading, list, and link formatting.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/rich-text-editor.tsx",
@@ -3740,9 +3005,7 @@
       "type": "registry:ui",
       "description": "Color selector with hex input and preset swatches including Five African Minerals.",
       "dependencies": [],
-      "registryDependencies": [
-        "input"
-      ],
+      "registryDependencies": ["input"],
       "files": [
         {
           "path": "components/ui/color-picker.tsx",
@@ -3755,9 +3018,7 @@
       "type": "registry:ui",
       "description": "Hour and minute selector with optional AM/PM toggle.",
       "dependencies": [],
-      "registryDependencies": [
-        "button"
-      ],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/time-picker.tsx",
@@ -3770,9 +3031,7 @@
       "type": "registry:ui",
       "description": "Structured address form with street, city, state, postal code, and country fields with African countries prioritized.",
       "dependencies": [],
-      "registryDependencies": [
-        "input"
-      ],
+      "registryDependencies": ["input"],
       "files": [
         {
           "path": "components/ui/address-input.tsx",
@@ -3784,13 +3043,8 @@
       "name": "transfer-list",
       "type": "registry:ui",
       "description": "Dual-list selector with search filtering and arrow buttons to move items between panels.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button",
-        "input"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "input"],
       "files": [
         {
           "path": "components/ui/transfer-list.tsx",
@@ -3802,12 +3056,8 @@
       "name": "number-input",
       "type": "registry:ui",
       "description": "Numeric input with increment and decrement buttons, min/max/step support.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/number-input.tsx",
@@ -3819,14 +3069,8 @@
       "name": "app-switcher",
       "type": "registry:ui",
       "description": "Ecosystem app selector popover with grid of Mukoko app icons.",
-      "dependencies": [
-        "lucide-react",
-        "radix-ui"
-      ],
-      "registryDependencies": [
-        "popover",
-        "button"
-      ],
+      "dependencies": ["lucide-react", "radix-ui"],
+      "registryDependencies": ["popover", "button"],
       "files": [
         {
           "path": "components/ui/app-switcher.tsx",
@@ -3838,12 +3082,8 @@
       "name": "bottom-sheet",
       "type": "registry:ui",
       "description": "Mobile slide-up panel with drag handle, backdrop, and slide-up animation.",
-      "dependencies": [
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "components/ui/bottom-sheet.tsx",
@@ -3855,14 +3095,8 @@
       "name": "mega-menu",
       "type": "registry:ui",
       "description": "Full-width flyout navigation with columns of links grouped by section.",
-      "dependencies": [
-        "lucide-react",
-        "radix-ui"
-      ],
-      "registryDependencies": [
-        "popover",
-        "button"
-      ],
+      "dependencies": ["lucide-react", "radix-ui"],
+      "registryDependencies": ["popover", "button"],
       "files": [
         {
           "path": "components/ui/mega-menu.tsx",
@@ -3874,9 +3108,7 @@
       "name": "review-card",
       "type": "registry:ui",
       "description": "Review or testimonial display with star rating, author info, and review text.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "components/ui/review-card.tsx",
@@ -3888,9 +3120,7 @@
       "name": "contact-card",
       "type": "registry:ui",
       "description": "Contact information card with avatar, details, and action links for call and email.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "components/ui/contact-card.tsx",
@@ -3902,12 +3132,8 @@
       "name": "featured-card",
       "type": "registry:ui",
       "description": "Promoted content card with mineral accent border, featured badge, and image.",
-      "dependencies": [
-        "class-variance-authority"
-      ],
-      "registryDependencies": [
-        "badge"
-      ],
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["badge"],
       "files": [
         {
           "path": "components/ui/featured-card.tsx",

@@ -2,7 +2,12 @@
 
 import { Pie, PieChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { city: "harare", visitors: 275, fill: "var(--color-harare)" },
@@ -32,11 +37,24 @@ export function ChartPieLabelList() {
         <ChartContainer config={config} className="mx-auto aspect-square max-h-[250px]">
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent nameKey="city" hideLabel />} />
-            <Pie data={data} dataKey="visitors" nameKey="city" label={({ payload, ...props }) => (
-              <text x={props.x} y={props.y} textAnchor={props.textAnchor} dominantBaseline={props.dominantBaseline} fill="hsla(var(--foreground))" className="text-xs">
-                {config[payload.city as keyof typeof config]?.label}
-              </text>
-            )} labelLine />
+            <Pie
+              data={data}
+              dataKey="visitors"
+              nameKey="city"
+              label={({ payload, ...props }) => (
+                <text
+                  x={props.x}
+                  y={props.y}
+                  textAnchor={props.textAnchor}
+                  dominantBaseline={props.dominantBaseline}
+                  fill="hsla(var(--foreground))"
+                  className="text-xs"
+                >
+                  {config[payload.city as keyof typeof config]?.label}
+                </text>
+              )}
+              labelLine
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>

@@ -45,15 +45,10 @@ export function MukokoFooter({
   customLinks = [],
   className,
 }: MukokoFooterProps) {
-  const linkGroups = showProducts
-    ? [PRODUCTS, SERVICES, ...customLinks]
-    : customLinks
+  const linkGroups = showProducts ? [PRODUCTS, SERVICES, ...customLinks] : customLinks
 
   return (
-    <footer
-      data-slot="mukoko-footer"
-      className={cn("px-4 pb-10 pt-8 sm:px-6 sm:pb-12", className)}
-    >
+    <footer data-slot="mukoko-footer" className={cn("px-4 pt-8 pb-10 sm:px-6 sm:pb-12", className)}>
       <div className="mx-auto max-w-5xl">
         <Separator className="mb-8" />
 
@@ -62,8 +57,8 @@ export function MukokoFooter({
           <div className="flex flex-col gap-3">
             <MukokoLogo size={24} showWordmark />
             <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">
-              The design system and component registry for the mukoko product
-              family. Built on the Five African Minerals palette.
+              The design system and component registry for the mukoko product family. Built on the
+              Five African Minerals palette.
             </p>
             <div className="flex items-center gap-1.5 pt-1">
               {MINERALS.map((m) => (
@@ -82,9 +77,7 @@ export function MukokoFooter({
             <div className="flex flex-wrap gap-8 sm:gap-12">
               {linkGroups.map((group) => (
                 <div key={group.title} className="flex flex-col gap-2">
-                  <span className="text-xs font-medium text-foreground">
-                    {group.title}
-                  </span>
+                  <span className="text-xs font-medium text-foreground">{group.title}</span>
                   {group.links.map((link) => (
                     <a
                       key={link.href}
@@ -116,9 +109,7 @@ export function MukokoFooter({
               Nyuchi
             </a>
           </span>
-          <span className="font-mono text-[10px] text-muted-foreground">
-            v4.0.1
-          </span>
+          <span className="font-mono text-[10px] text-muted-foreground">v4.0.1</span>
         </div>
       </div>
     </footer>

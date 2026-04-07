@@ -10,17 +10,12 @@ interface JsonViewerProps extends React.ComponentProps<"div"> {
   initialExpanded?: number
 }
 
-function JsonViewer({
-  className,
-  data,
-  initialExpanded = 2,
-  ...props
-}: JsonViewerProps) {
+function JsonViewer({ className, data, initialExpanded = 2, ...props }: JsonViewerProps) {
   return (
     <div
       data-slot="json-viewer"
       className={cn(
-        "bg-card ring-foreground/10 overflow-auto rounded-xl p-4 font-mono text-xs ring-1",
+        "overflow-auto rounded-xl bg-card p-4 font-mono text-xs ring-1 ring-foreground/10",
         className
       )}
       {...props}
@@ -92,12 +87,12 @@ function JsonNode({
     return (
       <div>
         <span
-          className="hover:bg-muted/50 inline-flex cursor-pointer items-center gap-0.5 rounded-sm"
+          className="inline-flex cursor-pointer items-center gap-0.5 rounded-sm hover:bg-muted/50"
           onClick={() => setExpanded(!expanded)}
         >
           <ChevronRight
             className={cn(
-              "text-muted-foreground size-3 transition-transform",
+              "size-3 text-muted-foreground transition-transform",
               expanded && "rotate-90"
             )}
           />
@@ -135,12 +130,12 @@ function JsonNode({
     return (
       <div>
         <span
-          className="hover:bg-muted/50 inline-flex cursor-pointer items-center gap-0.5 rounded-sm"
+          className="inline-flex cursor-pointer items-center gap-0.5 rounded-sm hover:bg-muted/50"
           onClick={() => setExpanded(!expanded)}
         >
           <ChevronRight
             className={cn(
-              "text-muted-foreground size-3 transition-transform",
+              "size-3 text-muted-foreground transition-transform",
               expanded && "rotate-90"
             )}
           />
@@ -150,7 +145,7 @@ function JsonNode({
           </span>
         </span>
         {expanded && (
-          <div className="border-border ml-4 border-l pl-2">
+          <div className="ml-4 border-l border-border pl-2">
             {entries.map(([key, val], index) => (
               <div key={key} className="py-0.5">
                 <JsonNode value={val} depth={depth + 1} maxExpanded={maxExpanded} keyName={key} />

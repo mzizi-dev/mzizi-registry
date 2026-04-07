@@ -3,7 +3,12 @@
 import { Pie, PieChart, Sector } from "recharts"
 import type { PieSectorDataItem } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { sector: "farming", value: 275, fill: "var(--color-farming)" },
@@ -32,8 +37,19 @@ export function ChartPieInteractive() {
       <CardContent>
         <ChartContainer config={config} className="mx-auto aspect-square max-h-[250px]">
           <PieChart>
-            <ChartTooltip content={<ChartTooltipContent nameKey="sector" hideLabel />} defaultIndex={0} />
-            <Pie data={data} dataKey="value" nameKey="sector" innerRadius={60} activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (<Sector {...props} outerRadius={outerRadius + 10} />)} />
+            <ChartTooltip
+              content={<ChartTooltipContent nameKey="sector" hideLabel />}
+              defaultIndex={0}
+            />
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="sector"
+              innerRadius={60}
+              activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (
+                <Sector {...props} outerRadius={outerRadius + 10} />
+              )}
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>

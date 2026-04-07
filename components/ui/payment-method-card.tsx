@@ -25,8 +25,8 @@ function PaymentMethodCard({
       data-slot="payment-method-card"
       data-default={isDefault || undefined}
       className={cn(
-        "ring-foreground/10 bg-card flex items-center gap-4 rounded-xl p-4 ring-1 transition-shadow",
-        isDefault && "ring-[var(--color-cobalt)]/40 ring-2",
+        "flex items-center gap-4 rounded-xl bg-card p-4 ring-1 ring-foreground/10 transition-shadow",
+        isDefault && "ring-2 ring-[var(--color-cobalt)]/40",
         className
       )}
       {...props}
@@ -34,10 +34,11 @@ function PaymentMethodCard({
       <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
         <CreditCard className="size-5 text-muted-foreground" />
       </div>
-      <div className="flex flex-1 flex-col gap-0.5 min-w-0">
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className="text-sm font-medium text-foreground">{brand}</span>
         <span className="font-mono text-xs text-muted-foreground">
-          {"•••• ".repeat(3)}{lastFour}
+          {"•••• ".repeat(3)}
+          {lastFour}
         </span>
       </div>
       <span className="text-xs text-muted-foreground tabular-nums">{expiry}</span>
@@ -50,7 +51,7 @@ function PaymentMethodCard({
           <button
             type="button"
             onClick={onSetDefault}
-            className="rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             Set default
           </button>

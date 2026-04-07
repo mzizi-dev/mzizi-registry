@@ -11,9 +11,7 @@ describe("Header Navigation", () => {
 
   it("brand link points to /brand", () => {
     render(<Header />)
-    const brandLinks = screen.getAllByRole("link").filter(
-      (link) => link.textContent === "Brand"
-    )
+    const brandLinks = screen.getAllByRole("link").filter((link) => link.textContent === "Brand")
     expect(brandLinks.length).toBeGreaterThan(0)
     expect(brandLinks[0]).toHaveAttribute("href", "/brand")
   })

@@ -4,11 +4,7 @@ import * as React from "react"
 import { Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface Reaction {
   emoji: string

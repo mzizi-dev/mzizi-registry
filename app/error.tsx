@@ -16,17 +16,12 @@ export default function Error({
           <span className="text-lg font-bold text-foreground">m</span>
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="text-xl font-semibold text-foreground">
-            Something went wrong
-          </h1>
+          <h1 className="text-xl font-semibold text-foreground">Something went wrong</h1>
           <p className="text-sm text-muted-foreground">
-            This page encountered an error. You can try again or head back to
-            the homepage.
+            This page encountered an error. You can try again or head back to the homepage.
           </p>
           {error.digest && (
-            <p className="font-mono text-xs text-muted-foreground">
-              Error ID: {error.digest}
-            </p>
+            <p className="font-mono text-xs text-muted-foreground">Error ID: {error.digest}</p>
           )}
         </div>
         <div className="flex gap-3">

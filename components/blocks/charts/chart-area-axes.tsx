@@ -2,7 +2,12 @@
 
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", rainfall: 45 },
@@ -29,9 +34,20 @@ export function ChartAreaAxes() {
           <AreaChart data={data} margin={{ left: 12, right: 12 }}>
             <CartesianGrid vertical={false} />
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-            <YAxis tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(v) => `${v}mm`} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(v) => `${v}mm`}
+            />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Area type="natural" dataKey="rainfall" fill="var(--color-rainfall)" fillOpacity={0.4} stroke="var(--color-rainfall)" />
+            <Area
+              type="natural"
+              dataKey="rainfall"
+              fill="var(--color-rainfall)"
+              fillOpacity={0.4}
+              stroke="var(--color-rainfall)"
+            />
           </AreaChart>
         </ChartContainer>
       </CardContent>

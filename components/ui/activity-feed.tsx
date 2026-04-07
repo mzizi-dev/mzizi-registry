@@ -17,22 +17,16 @@ interface ActivityFeedProps extends React.ComponentProps<"div"> {
 
 function ActivityFeed({ className, items, ...props }: ActivityFeedProps) {
   return (
-    <div
-      data-slot="activity-feed"
-      className={cn("text-sm", className)}
-      {...props}
-    >
+    <div data-slot="activity-feed" className={cn("text-sm", className)} {...props}>
       {items.map((item, index) => (
         <div key={item.id} className="relative flex gap-3 pb-6 last:pb-0">
           {/* Timeline line */}
           {index < items.length - 1 && (
-            <div className="bg-border absolute left-[15px] top-8 bottom-0 w-px" />
+            <div className="absolute top-8 bottom-0 left-[15px] w-px bg-border" />
           )}
           {/* Timeline dot */}
-          <div className="bg-muted text-muted-foreground relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full">
-            {item.icon ?? (
-              <div className="bg-muted-foreground size-2 rounded-full" />
-            )}
+          <div className="relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+            {item.icon ?? <div className="size-2 rounded-full bg-muted-foreground" />}
           </div>
           {/* Content */}
           <div className="flex-1 pt-1">
@@ -41,9 +35,7 @@ function ActivityFeed({ className, items, ...props }: ActivityFeedProps) {
               <span className="text-muted-foreground"> {item.action} </span>
               {item.target && <span className="font-medium">{item.target}</span>}
             </p>
-            <time className="text-muted-foreground mt-0.5 block text-xs">
-              {item.timestamp}
-            </time>
+            <time className="mt-0.5 block text-xs text-muted-foreground">{item.timestamp}</time>
           </div>
         </div>
       ))}

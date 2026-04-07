@@ -44,13 +44,10 @@ function KanbanColumnCard({
   onMove?: (columnId: string, itemId: string) => void
 }) {
   return (
-    <div
-      data-slot="kanban-column"
-      className="bg-muted/50 flex w-72 shrink-0 flex-col rounded-xl"
-    >
+    <div data-slot="kanban-column" className="flex w-72 shrink-0 flex-col rounded-xl bg-muted/50">
       <div className="flex items-center justify-between px-4 py-3">
         <h3 className="text-sm font-medium">{column.title}</h3>
-        <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-medium">
+        <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
           {column.items.length}
         </span>
       </div>
@@ -63,7 +60,7 @@ function KanbanColumnCard({
           />
         ))}
         {column.items.length === 0 && (
-          <div className="text-muted-foreground border-border rounded-lg border border-dashed px-4 py-8 text-center text-sm">
+          <div className="rounded-lg border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">
             No items
           </div>
         )}
@@ -82,11 +79,11 @@ function KanbanItemCard({
   return (
     <div
       data-slot="kanban-item"
-      className="ring-foreground/10 bg-card group flex items-start gap-2 rounded-lg p-3 text-sm ring-1 transition-shadow hover:shadow-sm"
+      className="group flex items-start gap-2 rounded-lg bg-card p-3 text-sm ring-1 ring-foreground/10 transition-shadow hover:shadow-sm"
     >
       <button
         type="button"
-        className="text-muted-foreground hover:text-foreground mt-0.5 shrink-0 cursor-grab opacity-0 transition-opacity group-hover:opacity-100"
+        className="mt-0.5 shrink-0 cursor-grab text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground"
         aria-label="Move item"
         onClick={onDragIndicator}
       >
@@ -95,7 +92,7 @@ function KanbanItemCard({
       <div className="min-w-0 flex-1">
         <p className="font-medium">{item.title}</p>
         {item.description && (
-          <p className="text-muted-foreground mt-1 line-clamp-2 text-xs">{item.description}</p>
+          <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{item.description}</p>
         )}
       </div>
     </div>

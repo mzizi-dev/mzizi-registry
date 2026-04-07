@@ -58,10 +58,7 @@ function PromptInput({
   return (
     <div
       data-slot="prompt-input"
-      className={cn(
-        "border-border bg-card flex items-end gap-2 rounded-2xl border p-2",
-        className
-      )}
+      className={cn("flex items-end gap-2 rounded-2xl border border-border bg-card p-2", className)}
       {...props}
     >
       <textarea
@@ -73,7 +70,7 @@ function PromptInput({
         disabled={isStreaming}
         rows={1}
         className={cn(
-          "placeholder:text-muted-foreground flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          "flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
         )}
       />
 

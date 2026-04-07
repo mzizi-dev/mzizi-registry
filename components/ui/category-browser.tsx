@@ -47,19 +47,11 @@ const MINERAL_STYLES: Record<MineralColor, { bg: string; text: string; border: s
   },
 }
 
-function CategoryBrowser({
-  className,
-  categories,
-  onSelect,
-  ...props
-}: CategoryBrowserProps) {
+function CategoryBrowser({ className, categories, onSelect, ...props }: CategoryBrowserProps) {
   return (
     <div
       data-slot="category-browser"
-      className={cn(
-        "grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4",
-        className
-      )}
+      className={cn("grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4", className)}
       {...props}
     >
       {categories.map((category) => {
@@ -80,14 +72,10 @@ function CategoryBrowser({
               ? { href: category.href }
               : { type: "button" as const, onClick: () => onSelect?.(category.name) })}
           >
-            {category.icon && (
-              <div className={cn("text-2xl", styles.text)}>{category.icon}</div>
-            )}
+            {category.icon && <div className={cn("text-2xl", styles.text)}>{category.icon}</div>}
             <span className="text-sm font-medium">{category.name}</span>
             {category.count !== undefined && (
-              <span className={cn("text-xs font-medium", styles.text)}>
-                {category.count}
-              </span>
+              <span className={cn("text-xs font-medium", styles.text)}>{category.count}</span>
             )}
           </Comp>
         )

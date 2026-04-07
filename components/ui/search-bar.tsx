@@ -68,20 +68,17 @@ function SearchBar({
   }
 
   return (
-    <div
-      data-slot="search-bar"
-      className={cn("relative", className)}
-    >
-      <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+    <div data-slot="search-bar" className={cn("relative", className)}>
+      <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         ref={inputRef}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="pl-9 pr-20"
+        className="pr-20 pl-9"
       />
-      <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1">
+      <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1">
         {showClear && value && (
           <Button
             variant="ghost"
@@ -95,9 +92,7 @@ function SearchBar({
             <X className="size-3" />
           </Button>
         )}
-        {showShortcut && !value && (
-          <Kbd className="text-[10px]">⌘{shortcutKey.toUpperCase()}</Kbd>
-        )}
+        {showShortcut && !value && <Kbd className="text-[10px]">⌘{shortcutKey.toUpperCase()}</Kbd>}
       </div>
     </div>
   )

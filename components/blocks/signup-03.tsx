@@ -59,7 +59,9 @@ function Signup03() {
           </div>
           <p className="text-center text-sm text-muted-foreground">
             Already registered?{" "}
-            <a href="#" className="font-medium text-foreground hover:underline">Sign in</a>
+            <a href="#" className="font-medium text-foreground hover:underline">
+              Sign in
+            </a>
           </p>
         </div>
       </div>

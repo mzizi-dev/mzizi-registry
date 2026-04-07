@@ -52,7 +52,10 @@ describe("GET /api/v1/ui", () => {
     for (const item of registry.items) {
       for (const file of item.files) {
         const filePath = path.join(process.cwd(), file.path)
-        expect(fs.existsSync(filePath), `Missing file: ${file.path} (component: ${item.name})`).toBe(true)
+        expect(
+          fs.existsSync(filePath),
+          `Missing file: ${file.path} (component: ${item.name})`
+        ).toBe(true)
       }
     }
   })

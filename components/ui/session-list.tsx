@@ -15,7 +15,12 @@ interface Session {
 
 function getDeviceIcon(device: string) {
   const lower = device.toLowerCase()
-  if (lower.includes("mobile") || lower.includes("phone") || lower.includes("android") || lower.includes("ios")) {
+  if (
+    lower.includes("mobile") ||
+    lower.includes("phone") ||
+    lower.includes("android") ||
+    lower.includes("ios")
+  ) {
     return Smartphone
   }
   return Monitor
@@ -43,9 +48,11 @@ function SessionList({
             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
               <DeviceIcon className="size-5 text-muted-foreground" />
             </div>
-            <div className="flex flex-1 flex-col gap-0.5 min-w-0">
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-foreground truncate">{session.device}</span>
+                <span className="truncate text-sm font-medium text-foreground">
+                  {session.device}
+                </span>
                 {session.current && (
                   <span className="rounded-4xl bg-[var(--color-malachite)]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--color-malachite)]">
                     Current
@@ -64,7 +71,7 @@ function SessionList({
               type="button"
               onClick={() => onRevoke(session.id)}
               disabled={session.current}
-              className="shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Revoke
             </button>

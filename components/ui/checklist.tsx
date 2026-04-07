@@ -46,7 +46,7 @@ function Checklist({
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="text-xs tabular-nums text-muted-foreground">
+        <span className="text-xs text-muted-foreground tabular-nums">
           {checkedCount}/{items.length}
         </span>
       </div>
@@ -54,23 +54,38 @@ function Checklist({
         {items.map((item) => (
           <label
             key={item.id}
-            className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-muted/50 transition-colors"
+            className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted/50"
           >
             <input
               type="checkbox"
               checked={item.checked}
               onChange={() => toggleItem(item.id)}
-              className="sr-only peer"
+              className="peer sr-only"
             />
-            <div className={cn(
-              "flex size-4.5 shrink-0 items-center justify-center rounded-md border-2 transition-colors",
-              item.checked ? "border-primary bg-primary text-primary-foreground" : "border-border"
-            )}>
+            <div
+              className={cn(
+                "flex size-4.5 shrink-0 items-center justify-center rounded-md border-2 transition-colors",
+                item.checked ? "border-primary bg-primary text-primary-foreground" : "border-border"
+              )}
+            >
               {item.checked && (
-                <svg className="size-3" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                <svg className="size-3" viewBox="0 0 12 12" fill="none">
+                  <path
+                    d="M2 6l3 3 5-5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               )}
             </div>
-            <span className={cn("text-sm", item.checked ? "text-muted-foreground line-through" : "text-foreground")}>
+            <span
+              className={cn(
+                "text-sm",
+                item.checked ? "text-muted-foreground line-through" : "text-foreground"
+              )}
+            >
               {item.text}
             </span>
           </label>
@@ -84,13 +99,13 @@ function Checklist({
             onChange={(e) => setNewText(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="Add item..."
-            className="bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 h-8 flex-1 min-w-0 rounded-lg border px-3 text-sm outline-none transition-colors focus-visible:ring-[3px]"
+            className="h-8 min-w-0 flex-1 rounded-lg border border-input bg-input/30 px-3 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
           />
           <button
             type="button"
             onClick={handleAdd}
             disabled={!newText.trim()}
-            className="flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors disabled:opacity-50"
+            className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
             aria-label="Add item"
           >
             <Plus className="size-4" />

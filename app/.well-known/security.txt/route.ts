@@ -1,0 +1,30 @@
+import { NextResponse } from "next/server"
+
+/**
+ * GET /.well-known/security.txt
+ *
+ * RFC 9116 security contact disclosure.
+ * https://securitytxt.org/
+ */
+export async function GET() {
+  // Expires: 1 year from build time — update on each release
+  const expires = new Date()
+  expires.setFullYear(expires.getFullYear() + 1)
+
+  const body = `Contact: mailto:security@nyuchi.com
+Contact: https://github.com/nyuchitech/design-portal/security/advisories/new
+Expires: ${expires.toISOString()}
+Acknowledgments: https://design.nyuchi.com/security/acknowledgments
+Canonical: https://design.nyuchi.com/.well-known/security.txt
+Policy: https://design.nyuchi.com/security
+Preferred-Languages: en
+`
+
+  return new NextResponse(body, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "public, max-age=86400",
+    },
+  })
+}

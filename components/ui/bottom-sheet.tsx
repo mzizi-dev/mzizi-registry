@@ -42,7 +42,7 @@ function BottomSheet({ open, onClose, title, children, className }: BottomSheetP
   return (
     <div data-slot="bottom-sheet" className="fixed inset-0 z-50">
       <div
-        className="absolute inset-0 bg-black/50 animate-in fade-in-0 duration-200"
+        className="absolute inset-0 animate-in bg-black/50 duration-200 fade-in-0"
         onClick={onClose}
         aria-hidden
       />
@@ -54,7 +54,7 @@ function BottomSheet({ open, onClose, title, children, className }: BottomSheetP
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         className={cn(
-          "absolute inset-x-0 bottom-0 flex max-h-[85vh] flex-col rounded-t-2xl bg-card shadow-2xl ring-1 ring-foreground/5 animate-in slide-in-from-bottom duration-300",
+          "absolute inset-x-0 bottom-0 flex max-h-[85vh] animate-in flex-col rounded-t-2xl bg-card shadow-2xl ring-1 ring-foreground/5 duration-300 slide-in-from-bottom",
           className
         )}
       >
@@ -64,12 +64,7 @@ function BottomSheet({ open, onClose, title, children, className }: BottomSheetP
         {title && (
           <div className="flex items-center justify-between border-b border-border px-4 pb-3">
             <h2 className="font-serif text-base font-medium">{title}</h2>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={onClose}
-              aria-label="Close"
-            >
+            <Button variant="ghost" size="icon-sm" onClick={onClose} aria-label="Close">
               <XIcon />
             </Button>
           </div>

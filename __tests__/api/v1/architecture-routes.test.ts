@@ -25,11 +25,7 @@ describe("Architecture API v1 Routes", () => {
   })
 
   describe("Old API routes removed", () => {
-    const oldRoutes = [
-      "app/api/r/route.ts",
-      "app/api/brand/route.ts",
-      "app/api/health/route.ts",
-    ]
+    const oldRoutes = ["app/api/r/route.ts", "app/api/brand/route.ts", "app/api/health/route.ts"]
 
     for (const file of oldRoutes) {
       it(`${file} no longer exists`, () => {

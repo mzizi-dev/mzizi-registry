@@ -23,12 +23,7 @@ function Sidebar07() {
       <Separator />
       <nav className="flex-1 space-y-1 p-3">
         {navItems.map((item) => (
-          <Button
-            key={item.label}
-            variant="ghost"
-            className="w-full justify-start gap-3"
-            size="sm"
-          >
+          <Button key={item.label} variant="ghost" className="w-full justify-start gap-3" size="sm">
             <item.icon className="size-4" />
             <span className="flex-1">{item.label}</span>
             {item.count && (

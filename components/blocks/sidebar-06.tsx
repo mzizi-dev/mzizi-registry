@@ -2,14 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import {
-  Home,
-  BarChart3,
-  Users,
-  FileText,
-  Settings,
-  Zap,
-} from "lucide-react"
+import { Home, BarChart3, Users, FileText, Settings, Zap } from "lucide-react"
 
 const navItems = [
   { icon: Home, label: "Home", active: true },
@@ -22,7 +15,7 @@ const navItems = [
 function Sidebar06() {
   return (
     <aside className="flex h-screen w-14 flex-col items-center border-r border-border bg-card py-3">
-      <div className="flex size-9 items-center justify-center rounded-lg bg-cobalt/10 mb-1">
+      <div className="mb-1 flex size-9 items-center justify-center rounded-lg bg-cobalt/10">
         <Zap className="size-4 text-cobalt" />
       </div>
       <Separator className="my-2 w-8" />

@@ -18,12 +18,7 @@ interface NotificationListProps extends React.ComponentProps<"div"> {
   onRead?: (id: string) => void
 }
 
-function NotificationList({
-  className,
-  notifications,
-  onRead,
-  ...props
-}: NotificationListProps) {
+function NotificationList({ className, notifications, onRead, ...props }: NotificationListProps) {
   const grouped = React.useMemo(() => {
     const groups: Record<string, NotificationItem[]> = {}
     for (const n of notifications) {
@@ -35,29 +30,21 @@ function NotificationList({
   }, [notifications])
 
   return (
-    <div
-      data-slot="notification-list"
-      className={cn("text-sm", className)}
-      {...props}
-    >
+    <div data-slot="notification-list" className={cn("text-sm", className)} {...props}>
       {Object.entries(grouped).map(([date, items]) => (
         <div key={date} className="mb-4 last:mb-0">
-          <h3 className="text-muted-foreground mb-2 px-1 text-xs font-medium uppercase tracking-wider">
+          <h3 className="mb-2 px-1 text-xs font-medium tracking-wider text-muted-foreground uppercase">
             {date}
           </h3>
           <div className="flex flex-col gap-1">
             {items.map((notification) => (
-              <NotificationRow
-                key={notification.id}
-                notification={notification}
-                onRead={onRead}
-              />
+              <NotificationRow key={notification.id} notification={notification} onRead={onRead} />
             ))}
           </div>
         </div>
       ))}
       {notifications.length === 0 && (
-        <p className="text-muted-foreground py-8 text-center">No notifications</p>
+        <p className="py-8 text-center text-muted-foreground">No notifications</p>
       )}
     </div>
   )
@@ -74,7 +61,7 @@ function NotificationRow({
     <div
       data-slot="notification-item"
       className={cn(
-        "hover:bg-muted/50 flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors",
+        "flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-muted/50",
         !notification.read && "bg-muted/30"
       )}
       onMouseEnter={() => {
@@ -86,26 +73,22 @@ function NotificationRow({
       {/* Unread indicator */}
       <div className="mt-1.5 flex shrink-0 items-center">
         {!notification.read ? (
-          <span className="bg-primary size-2 rounded-full" />
+          <span className="size-2 rounded-full bg-primary" />
         ) : (
           <span className="size-2" />
         )}
       </div>
       {notification.icon && (
-        <div className="text-muted-foreground mt-0.5 shrink-0">{notification.icon}</div>
+        <div className="mt-0.5 shrink-0 text-muted-foreground">{notification.icon}</div>
       )}
       <div className="min-w-0 flex-1">
-        <p className={cn("truncate", !notification.read && "font-medium")}>
-          {notification.title}
-        </p>
+        <p className={cn("truncate", !notification.read && "font-medium")}>{notification.title}</p>
         {notification.description && (
-          <p className="text-muted-foreground mt-0.5 line-clamp-2 text-xs">
+          <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
             {notification.description}
           </p>
         )}
-        <time className="text-muted-foreground mt-1 block text-xs">
-          {notification.timestamp}
-        </time>
+        <time className="mt-1 block text-xs text-muted-foreground">{notification.timestamp}</time>
       </div>
     </div>
   )

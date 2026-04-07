@@ -32,9 +32,9 @@ function SplitView({
       <aside
         data-slot="split-view-sidebar"
         className={cn(
-          "border-border w-full shrink-0 overflow-y-auto",
+          "w-full shrink-0 overflow-y-auto border-border",
           sidebarPosition === "left"
-            ? "border-b md:border-b-0 md:border-r"
+            ? "border-b md:border-r md:border-b-0"
             : "border-b md:border-b-0 md:border-l"
         )}
         style={{ maxWidth: undefined }}
@@ -43,10 +43,7 @@ function SplitView({
           {sidebar}
         </div>
       </aside>
-      <main
-        data-slot="split-view-content"
-        className="min-w-0 flex-1 overflow-y-auto"
-      >
+      <main data-slot="split-view-content" className="min-w-0 flex-1 overflow-y-auto">
         {content}
       </main>
     </div>

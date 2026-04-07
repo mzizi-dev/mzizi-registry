@@ -2,7 +2,12 @@
 
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", growth: 12 },
@@ -33,7 +38,10 @@ export function ChartBarNegative() {
             <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" />
             <Bar dataKey="growth" radius={4}>
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.growth >= 0 ? "hsl(var(--chart-3))" : "hsl(var(--chart-1))"} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.growth >= 0 ? "hsl(var(--chart-3))" : "hsl(var(--chart-1))"}
+                />
               ))}
             </Bar>
           </BarChart>
