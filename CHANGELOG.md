@@ -7,6 +7,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+
 - **Architecture v4.0.1 alignment** — three sources of truth (Supabase, ScyllaDB, Web3 Pod), seven data layers, corrected CouchDB to sync protocol, added Cloudflare Edge layer
 - **Brand hierarchy** — bundu ecosystem > nyuchi enterprise > mukoko consumer. 17 mini-apps, 4 substrate, 7 enterprise products, sister brands
 - **Mukoko Manifesto integration** — four pillars, five Ubuntu questions, seven covenants, tri-mode (Musha/Basa/Nhaka)
@@ -48,6 +49,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - **Updated header navigation** — Docs, Components, Blocks, Charts, Brand, Foundations, Patterns, Architecture
 
 ### Changed
+
 - All API routes now require Supabase — return 503 with setup instructions if not configured
 - global-error.tsx uses design system tokens instead of hardcoded hex colors
 - Registry items: 94 → 294 (169 UI + 3 hooks + 11 lib + 70 chart blocks + 35 page blocks + 6 standard blocks)
@@ -57,6 +59,7 @@ This project follows [Semantic Versioning](https://semver.org/).
   - react-resizable-panels 2 → 4, @vercel/analytics 1 → 2
 
 ### Removed
+
 - mcp/ directory (duplicate stdio server package)
 - Hardcoded fallback patterns in all API routes
 - Filesystem reads (registry.json, fs.readFileSync) from API routes
@@ -64,6 +67,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 ## [4.0.1] - 2026-03-09
 
 ### Added
+
 - **Brand documentation hub** replacing legacy assets.nyuchi.com
   - `/brand` — Ecosystem overview (bundu, nyuchi, mukoko, shamwari, nhimbe)
   - `/brand/colors` — Five African Minerals palette with interactive swatches
@@ -85,6 +89,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - **Repository documentation** — README, CONTRIBUTING, SECURITY, CHANGELOG, issue templates
 
 ### Changed
+
 - Header navigation — added "Brand" link
 - Footer — added Brand section links, bumped version to v4.0.1
 - Wordmark sizing — increased from `text-sm` to `text-xl` to match icon height
@@ -93,6 +98,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - CLAUDE.md — comprehensive update with testing, CI/CD, versioning, brand documentation sections
 
 ### Design Standards
+
 - Touch targets: 48px minimum (up from 44px)
 - Accessibility: APCA 3.0 AAA (replacing WCAG AAA 7:1)
 - Mineral strip replaces the legacy flag strip

@@ -32,10 +32,10 @@ export function InstallSteps() {
     <section className="px-4 py-16 sm:px-6 md:py-28">
       <div className="mx-auto max-w-5xl">
         <div className="mb-10 text-center sm:mb-14">
-          <p className="mb-3 text-sm font-medium uppercase tracking-widest text-muted-foreground">
+          <p className="mb-3 text-sm font-medium tracking-widest text-muted-foreground uppercase">
             How it works
           </p>
-          <h2 className="font-serif text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          <h2 className="font-serif text-3xl font-bold tracking-tight text-balance text-foreground md:text-4xl">
             Three steps. Zero friction.
           </h2>
         </div>
@@ -60,13 +60,11 @@ export function InstallSteps() {
 
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-base font-semibold text-foreground">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {step.description}
-                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
               </div>
 
               <div className="mt-auto rounded-xl bg-secondary px-3 py-2.5">
-                <code className="break-all font-mono text-xs text-muted-foreground">
+                <code className="font-mono text-xs break-all text-muted-foreground">
                   {step.code}
                 </code>
               </div>

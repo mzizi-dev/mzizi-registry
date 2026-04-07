@@ -28,36 +28,24 @@ function ChatLayout({
       >
         {sidebar}
       </div>
-      <div
-        data-slot="chat-layout-content"
-        className="flex min-w-0 flex-1 flex-col"
-      >
+      <div data-slot="chat-layout-content" className="flex min-w-0 flex-1 flex-col">
         {content}
       </div>
     </div>
   )
 }
 
-function ChatLayoutHeader({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function ChatLayoutHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="chat-layout-header"
-      className={cn(
-        "flex items-center gap-3 border-b border-border px-4 py-3",
-        className
-      )}
+      className={cn("flex items-center gap-3 border-b border-border px-4 py-3", className)}
       {...props}
     />
   )
 }
 
-function ChatLayoutMessages({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function ChatLayoutMessages({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="chat-layout-messages"
@@ -67,10 +55,7 @@ function ChatLayoutMessages({
   )
 }
 
-function ChatLayoutInput({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function ChatLayoutInput({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="chat-layout-input"

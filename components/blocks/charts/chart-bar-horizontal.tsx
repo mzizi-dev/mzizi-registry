@@ -2,7 +2,12 @@
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { city: "Harare", visitors: 275 },
@@ -27,7 +32,14 @@ export function ChartBarHorizontal() {
         <ChartContainer config={config}>
           <BarChart data={data} layout="vertical" margin={{ left: 0 }}>
             <CartesianGrid horizontal={false} />
-            <YAxis dataKey="city" type="category" tickLine={false} axisLine={false} tickMargin={8} width={60} />
+            <YAxis
+              dataKey="city"
+              type="category"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              width={60}
+            />
             <XAxis type="number" hide />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Bar dataKey="visitors" fill="var(--color-visitors)" radius={4} />

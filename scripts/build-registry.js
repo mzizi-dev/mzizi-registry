@@ -8,23 +8,23 @@
  * For dynamic serving, the API routes at /api/v1/ui/ handle it at runtime.
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("fs")
+const path = require("path")
 
-const ROOT = process.cwd();
-const REGISTRY_PATH = path.join(ROOT, "registry.json");
-const OUTPUT_DIR = path.join(ROOT, "public", "r");
+const ROOT = process.cwd()
+const REGISTRY_PATH = path.join(ROOT, "registry.json")
+const OUTPUT_DIR = path.join(ROOT, "public", "r")
 
 if (!fs.existsSync(REGISTRY_PATH)) {
-  console.error("registry.json not found at", REGISTRY_PATH);
-  process.exit(1);
+  console.error("registry.json not found at", REGISTRY_PATH)
+  process.exit(1)
 }
 
-const registry = JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf-8"));
-fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+const registry = JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf-8"))
+fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
-let successCount = 0;
-let errorCount = 0;
+let successCount = 0
+let errorCount = 0
 
 for (const item of registry.items) {
   try {
@@ -36,31 +36,31 @@ for (const item of registry.items) {
       dependencies: item.dependencies || [],
       registryDependencies: item.registryDependencies || [],
       files: [],
-    };
+    }
 
     for (const file of item.files) {
-      const filePath = path.join(ROOT, file.path);
+      const filePath = path.join(ROOT, file.path)
 
       if (!fs.existsSync(filePath)) {
-        console.warn(`  Warning: File not found: ${filePath}`);
-        continue;
+        console.warn(`  Warning: File not found: ${filePath}`)
+        continue
       }
 
-      const content = fs.readFileSync(filePath, "utf-8");
+      const content = fs.readFileSync(filePath, "utf-8")
       registryItem.files.push({
         path: file.path,
         type: file.type,
         content: content,
-      });
+      })
     }
 
-    const outputPath = path.join(OUTPUT_DIR, `${item.name}.json`);
-    fs.writeFileSync(outputPath, JSON.stringify(registryItem, null, 2));
-    successCount++;
-    console.log(`  Built: ${item.name}.json`);
+    const outputPath = path.join(OUTPUT_DIR, `${item.name}.json`)
+    fs.writeFileSync(outputPath, JSON.stringify(registryItem, null, 2))
+    successCount++
+    console.log(`  Built: ${item.name}.json`)
   } catch (err) {
-    errorCount++;
-    console.error(`  Error building ${item.name}:`, err.message);
+    errorCount++
+    console.error(`  Error building ${item.name}:`, err.message)
   }
 }
 
@@ -76,13 +76,8 @@ const indexPayload = {
     dependencies: item.dependencies || [],
     registryDependencies: item.registryDependencies || [],
   })),
-};
+}
 
-fs.writeFileSync(
-  path.join(OUTPUT_DIR, "index.json"),
-  JSON.stringify(indexPayload, null, 2)
-);
+fs.writeFileSync(path.join(OUTPUT_DIR, "index.json"), JSON.stringify(indexPayload, null, 2))
 
-console.log(
-  `\nDone! Built ${successCount} items (${errorCount} errors) -> public/r/`
-);
+console.log(`\nDone! Built ${successCount} items (${errorCount} errors) -> public/r/`)

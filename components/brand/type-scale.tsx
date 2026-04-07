@@ -15,13 +15,13 @@ export function TypeScale({ className }: TypeScaleProps) {
   return (
     <div className={cn("space-y-6", className)}>
       {SEED_TYPE_SCALE.map((entry) => (
-        <div key={entry.name} className="group flex flex-col gap-1 border-b border-border pb-6 last:border-0">
+        <div
+          key={entry.name}
+          className="group flex flex-col gap-1 border-b border-border pb-6 last:border-0"
+        >
           <div className="flex items-baseline justify-between gap-4">
             <p
-              className={cn(
-                "truncate text-foreground",
-                fontClassMap[entry.font]
-              )}
+              className={cn("truncate text-foreground", fontClassMap[entry.font])}
               style={{
                 fontSize: entry.sizeRem,
                 lineHeight: entry.lineHeight,
@@ -36,7 +36,11 @@ export function TypeScale({ className }: TypeScaleProps) {
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <span className="rounded-md bg-muted px-1.5 py-0.5 font-mono">
-              {entry.font === "sans" ? "Noto Sans" : entry.font === "serif" ? "Noto Serif" : "JetBrains Mono"}
+              {entry.font === "sans"
+                ? "Noto Sans"
+                : entry.font === "serif"
+                  ? "Noto Serif"
+                  : "JetBrains Mono"}
             </span>
             <span>Weight {entry.weight}</span>
             <span className="hidden sm:inline">·</span>

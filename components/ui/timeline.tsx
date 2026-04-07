@@ -7,11 +7,7 @@ interface TimelineProps extends React.ComponentProps<"div"> {
 
 function Timeline({ className, children, ...props }: TimelineProps) {
   return (
-    <div
-      data-slot="timeline"
-      className={cn("relative space-y-0", className)}
-      {...props}
-    >
+    <div data-slot="timeline" className={cn("relative space-y-0", className)} {...props}>
       {children}
     </div>
   )
@@ -54,12 +50,7 @@ function TimelineDot({ color = "default", className, ...props }: TimelineDotProp
       className={cn("relative flex flex-col items-center", className)}
       {...props}
     >
-      <div
-        className={cn(
-          "z-10 flex size-3 shrink-0 rounded-full",
-          DOT_COLORS[color]
-        )}
-      />
+      <div className={cn("z-10 flex size-3 shrink-0 rounded-full", DOT_COLORS[color])} />
       <div className="w-px flex-1 bg-border" />
     </div>
   )
@@ -73,7 +64,7 @@ function TimelineContent({ className, children, ...props }: TimelineContentProps
   return (
     <div
       data-slot="timeline-content"
-      className={cn("flex-1 space-y-1 pb-2 pt-0", className)}
+      className={cn("flex-1 space-y-1 pt-0 pb-2", className)}
       {...props}
     >
       {children}
@@ -105,7 +96,7 @@ function TimelineHeading({ className, children, ...props }: TimelineHeadingProps
   return (
     <h4
       data-slot="timeline-heading"
-      className={cn("text-sm font-medium leading-tight", className)}
+      className={cn("text-sm leading-tight font-medium", className)}
       {...props}
     >
       {children}

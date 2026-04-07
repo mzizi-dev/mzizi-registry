@@ -2,7 +2,12 @@
 
 import { Pie, PieChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { sector: "farming", value: 275, fill: "var(--color-farming)" },
@@ -32,11 +37,23 @@ export function ChartPieLabelCustom() {
         <ChartContainer config={config} className="mx-auto aspect-square max-h-[250px]">
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent nameKey="sector" hideLabel />} />
-            <Pie data={data} dataKey="value" nameKey="sector" label={({ payload, ...props }) => (
-              <text x={props.x} y={props.y} textAnchor={props.textAnchor} dominantBaseline={props.dominantBaseline} fill="hsla(var(--foreground))" className="text-xs">
-                {`${config[payload.sector as keyof typeof config]?.label ?? payload.sector} (${payload.value})`}
-              </text>
-            )} />
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="sector"
+              label={({ payload, ...props }) => (
+                <text
+                  x={props.x}
+                  y={props.y}
+                  textAnchor={props.textAnchor}
+                  dominantBaseline={props.dominantBaseline}
+                  fill="hsla(var(--foreground))"
+                  className="text-xs"
+                >
+                  {`${config[payload.sector as keyof typeof config]?.label ?? payload.sector} (${payload.value})`}
+                </text>
+              )}
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>

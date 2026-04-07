@@ -14,7 +14,8 @@ const results = [
   {
     title: "Building Resilient Microservices in Africa",
     href: "#",
-    excerpt: "A practical guide to designing fault-tolerant distributed systems tailored for African infrastructure challenges and connectivity patterns...",
+    excerpt:
+      "A practical guide to designing fault-tolerant distributed systems tailored for African infrastructure challenges and connectivity patterns...",
     tags: ["Technology", "Architecture"],
     author: "Kuda R.",
     date: "Mar 28, 2026",
@@ -22,7 +23,8 @@ const results = [
   {
     title: "Matobo Hills: A Complete Travel Guide",
     href: "#",
-    excerpt: "Everything you need to know about visiting the UNESCO World Heritage site. From rock formations to ancient San paintings, discover the hidden gems...",
+    excerpt:
+      "Everything you need to know about visiting the UNESCO World Heritage site. From rock formations to ancient San paintings, discover the hidden gems...",
     tags: ["Travel", "Tourism"],
     author: "Noma S.",
     date: "Mar 25, 2026",
@@ -30,7 +32,8 @@ const results = [
   {
     title: "Best Maize Varieties for Southern Africa",
     href: "#",
-    excerpt: "Comparing drought-resistant maize varieties across different rainfall zones. Field trial results from the 2025-2026 growing season show promising yields...",
+    excerpt:
+      "Comparing drought-resistant maize varieties across different rainfall zones. Field trial results from the 2025-2026 growing season show promising yields...",
     tags: ["Farming"],
     author: "Farai C.",
     date: "Mar 20, 2026",
@@ -38,7 +41,8 @@ const results = [
   {
     title: "Harare Tech Community Meetup Recap",
     href: "#",
-    excerpt: "Over 200 developers gathered at the Harare Innovation Hub for the monthly tech meetup. Highlights include talks on Flutter, AI safety, and the mukoko ecosystem...",
+    excerpt:
+      "Over 200 developers gathered at the Harare Innovation Hub for the monthly tech meetup. Highlights include talks on Flutter, AI safety, and the mukoko ecosystem...",
     tags: ["Technology", "Events"],
     author: "Tendai M.",
     date: "Mar 15, 2026",
@@ -54,16 +58,16 @@ function SearchResults() {
       <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6">
         {/* Search input */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            className="pl-9 pr-10"
+            className="pr-10 pl-9"
             placeholder="Search mukoko..."
             defaultValue="African technology"
           />
           <Button
             variant="ghost"
             size="icon-sm"
-            className="absolute right-1 top-1/2 -translate-y-1/2"
+            className="absolute top-1/2 right-1 -translate-y-1/2"
             onClick={() => setShowFilters(!showFilters)}
           >
             <SlidersHorizontal className="size-4" />
@@ -76,7 +80,7 @@ function SearchResults() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`whitespace-nowrap rounded-full border px-3 py-1 text-sm transition-colors ${
+              className={`rounded-full border px-3 py-1 text-sm whitespace-nowrap transition-colors ${
                 activeCategory === cat
                   ? "border-cobalt/30 bg-cobalt/10 font-medium text-cobalt"
                   : "border-border text-muted-foreground hover:border-foreground/20 hover:text-foreground"
@@ -94,18 +98,30 @@ function SearchResults() {
               <div className="space-y-1">
                 <p className="font-medium text-foreground">Date range</p>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="xs">Past week</Button>
-                  <Button variant="outline" size="xs">Past month</Button>
-                  <Button variant="outline" size="xs">Past year</Button>
+                  <Button variant="outline" size="xs">
+                    Past week
+                  </Button>
+                  <Button variant="outline" size="xs">
+                    Past month
+                  </Button>
+                  <Button variant="outline" size="xs">
+                    Past year
+                  </Button>
                 </div>
               </div>
               <Separator orientation="vertical" className="hidden self-stretch sm:block" />
               <div className="space-y-1">
                 <p className="font-medium text-foreground">Sort by</p>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="xs">Relevance</Button>
-                  <Button variant="outline" size="xs">Newest</Button>
-                  <Button variant="outline" size="xs">Popular</Button>
+                  <Button variant="outline" size="xs">
+                    Relevance
+                  </Button>
+                  <Button variant="outline" size="xs">
+                    Newest
+                  </Button>
+                  <Button variant="outline" size="xs">
+                    Popular
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -130,12 +146,12 @@ function SearchResults() {
                 <h3 className="text-base font-medium text-foreground group-hover:text-cobalt">
                   {result.title}
                 </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {result.excerpt}
-                </p>
+                <p className="line-clamp-2 text-sm text-muted-foreground">{result.excerpt}</p>
                 <div className="flex flex-wrap items-center gap-2">
                   {result.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary">{tag}</Badge>
+                    <Badge key={tag} variant="secondary">
+                      {tag}
+                    </Badge>
                   ))}
                   <span className="text-xs text-muted-foreground">
                     {result.author} &middot; {result.date}
@@ -153,11 +169,7 @@ function SearchResults() {
             <ChevronLeft className="size-4" />
           </Button>
           {[1, 2, 3].map((page) => (
-            <Button
-              key={page}
-              variant={page === 1 ? "secondary" : "ghost"}
-              size="icon-sm"
-            >
+            <Button key={page} variant={page === 1 ? "secondary" : "ghost"} size="icon-sm">
               {page}
             </Button>
           ))}

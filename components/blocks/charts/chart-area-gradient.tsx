@@ -2,7 +2,12 @@
 
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", temperature: 28 },
@@ -36,7 +41,12 @@ export function ChartAreaGradient() {
                 <stop offset="95%" stopColor="var(--color-temperature)" stopOpacity={0.1} />
               </linearGradient>
             </defs>
-            <Area type="natural" dataKey="temperature" fill="url(#fillTemp)" stroke="var(--color-temperature)" />
+            <Area
+              type="natural"
+              dataKey="temperature"
+              fill="url(#fillTemp)"
+              stroke="var(--color-temperature)"
+            />
           </AreaChart>
         </ChartContainer>
       </CardContent>

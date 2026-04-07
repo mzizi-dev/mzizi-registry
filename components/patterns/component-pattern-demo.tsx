@@ -20,7 +20,7 @@ export function ComponentPatternDemo() {
       {/* Controls */}
       <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
         <div className="flex flex-col gap-2">
-          <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          <span className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
             Variant
           </span>
           <div className="flex flex-wrap gap-1.5">
@@ -42,7 +42,7 @@ export function ComponentPatternDemo() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          <span className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
             Size
           </span>
           <div className="flex flex-wrap gap-1.5">
@@ -73,10 +73,10 @@ export function ComponentPatternDemo() {
 
       {/* Rendered output */}
       <div className="flex flex-col gap-3">
-        <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+        <span className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
           What gets rendered
         </span>
-        <div className="overflow-x-auto rounded-xl border border-border bg-[#141413] dark:bg-[#0A0A0A] p-4">
+        <div className="overflow-x-auto rounded-xl border border-border bg-[#141413] p-4 dark:bg-[#0A0A0A]">
           <code className="font-mono text-[13px] leading-relaxed text-[#F5F5F4]">
             {`<button\n`}
             {`  data-slot="button"\n`}
@@ -92,7 +92,7 @@ export function ComponentPatternDemo() {
 
       {/* Data attributes inspection */}
       <div className="flex flex-col gap-2">
-        <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+        <span className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
           Data attributes
         </span>
         <div className="flex flex-wrap gap-2">
@@ -107,8 +107,8 @@ export function ComponentPatternDemo() {
           </Badge>
         </div>
         <p className="text-xs text-muted-foreground">
-          These attributes are always present on the rendered element, enabling
-          stable CSS targeting regardless of class name changes.
+          These attributes are always present on the rendered element, enabling stable CSS targeting
+          regardless of class name changes.
         </p>
       </div>
     </div>

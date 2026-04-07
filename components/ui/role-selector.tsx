@@ -43,17 +43,19 @@ function RoleSelector({
             className={cn(
               "flex items-start gap-3 rounded-xl p-4 text-left ring-1 transition-all",
               isSelected
-                ? "ring-[var(--color-cobalt)] ring-2 bg-[var(--color-cobalt)]/5"
-                : "ring-foreground/10 bg-card hover:bg-muted/50"
+                ? "bg-[var(--color-cobalt)]/5 ring-2 ring-[var(--color-cobalt)]"
+                : "bg-card ring-foreground/10 hover:bg-muted/50"
             )}
           >
-            <div className={cn(
-              "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
-              isSelected ? "border-[var(--color-cobalt)]" : "border-border"
-            )}>
+            <div
+              className={cn(
+                "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+                isSelected ? "border-[var(--color-cobalt)]" : "border-border"
+              )}
+            >
               {isSelected && <div className="size-2 rounded-full bg-[var(--color-cobalt)]" />}
             </div>
-            <div className="flex flex-col gap-1 flex-1 min-w-0">
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-foreground">{role.name}</span>
                 <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">

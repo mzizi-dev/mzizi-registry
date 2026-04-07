@@ -2,7 +2,12 @@
 
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { metric: "Speed", value: 86 },
@@ -28,13 +33,26 @@ export function ChartRadarLabelCustom() {
         <ChartContainer config={config} className="mx-auto aspect-square max-h-[250px]">
           <RadarChart data={data}>
             <ChartTooltip content={<ChartTooltipContent />} />
-            <PolarAngleAxis dataKey="metric" tick={({ x, y, payload, textAnchor }) => (
-              <text x={x} y={y} textAnchor={textAnchor} className="fill-foreground text-[10px] font-medium">
-                {payload.value}
-              </text>
-            )} />
+            <PolarAngleAxis
+              dataKey="metric"
+              tick={({ x, y, payload, textAnchor }) => (
+                <text
+                  x={x}
+                  y={y}
+                  textAnchor={textAnchor}
+                  className="fill-foreground text-[10px] font-medium"
+                >
+                  {payload.value}
+                </text>
+              )}
+            />
             <PolarGrid />
-            <Radar dataKey="value" fill="var(--color-value)" fillOpacity={0.6} stroke="var(--color-value)" />
+            <Radar
+              dataKey="value"
+              fill="var(--color-value)"
+              fillOpacity={0.6}
+              stroke="var(--color-value)"
+            />
           </RadarChart>
         </ChartContainer>
       </CardContent>

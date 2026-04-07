@@ -39,7 +39,10 @@ function TodoItem({
     <div
       data-slot="todo-item"
       data-completed={completed || undefined}
-      className={cn("flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-muted/50", className)}
+      className={cn(
+        "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-muted/50",
+        className
+      )}
       {...props}
     >
       <button
@@ -49,14 +52,29 @@ function TodoItem({
         onClick={onToggle}
         className={cn(
           "flex size-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors",
-          completed ? "border-primary bg-primary text-primary-foreground" : "border-border hover:border-foreground/30"
+          completed
+            ? "border-primary bg-primary text-primary-foreground"
+            : "border-border hover:border-foreground/30"
         )}
       >
         {completed && (
-          <svg className="size-3" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <svg className="size-3" viewBox="0 0 12 12" fill="none">
+            <path
+              d="M2 6l3 3 5-5"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         )}
       </button>
-      <span className={cn("flex-1 text-sm", completed ? "text-muted-foreground line-through" : "text-foreground")}>
+      <span
+        className={cn(
+          "flex-1 text-sm",
+          completed ? "text-muted-foreground line-through" : "text-foreground"
+        )}
+      >
         {title}
       </span>
       <span className={cn(priorityVariants({ priority }))}>{priority}</span>

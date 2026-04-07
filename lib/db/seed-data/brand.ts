@@ -183,67 +183,296 @@ export const ECOSYSTEM_BRANDS: EcosystemBrand[] = [
 // ─── Mukoko Mini-Apps (17) ──────────────────────────────────────────────────
 
 export const MUKOKO_MINI_APPS: MiniApp[] = [
-  { name: "Campfire", emoji: "🔥", layer: "Communication", description: "Platform anchor. All messaging and cross-app communications." },
-  { name: "Pulse", emoji: "⚡", layer: "Discovery", description: "Personalised feed (v1) and agentic dashboard (v2 — Mukoko Home)." },
-  { name: "Mukoko News", emoji: "📰", layer: "Journalism", description: "Pan-African news with entity extraction and 40 interest categories." },
-  { name: "Bytes", emoji: "🎬", layer: "Creator Video", description: "Short-form video for African creators, archived to Arweave." },
-  { name: "Circles", emoji: "🔵", layer: "Community", description: "Community messaging — groups, fan communities, professional networks." },
-  { name: "Novels", emoji: "📚", layer: "Publishing", description: "10 work types, co-authorship with automatic revenue splitting." },
-  { name: "Nhimbe", emoji: "🥁", layer: "Gathering", description: "Events and cultural gatherings. Standalone brand at nhimbe.com." },
-  { name: "BushTrade", emoji: "🛒", layer: "Commerce", description: "Rentals-first marketplace. Standalone brand at bushtrade.co.zw." },
-  { name: "Places", emoji: "📍", layer: "Geography", description: "Africa's geographic knowledge graph and business verification layer." },
-  { name: "Transport", emoji: "🚌", layer: "Movement", description: "Public transit routing, vehicle booking, commute planning." },
-  { name: "Planner", emoji: "📅", layer: "Organisation", description: "Calendar, tasks, bookings, and notes — all cross-app activity." },
-  { name: "Mukoko Lingo", emoji: "🗣", layer: "Language", description: "African language learning. Shona and Ndebele as primaries." },
-  { name: "Weather", emoji: "🌤", layer: "Environment", description: "Hyperlocal forecasts, severe alerts, farming intelligence." },
-  { name: "Wallet", emoji: "💰", layer: "Economics", description: "MUKOKO tokens, mobile money, peer-to-peer, merchant payments." },
-  { name: "Jobs", emoji: "💼", layer: "Employment", description: "Formal and informal employment discovery, credential verification." },
-  { name: "Health", emoji: "🏥", layer: "Wellness", description: "Health info, telemedicine, medication reminders, health records." },
-  { name: "Mukoko ID", emoji: "🆔", layer: "Identity", description: "Unified identity — one login, one Digital Twin, one reputation." },
+  {
+    name: "Campfire",
+    emoji: "🔥",
+    layer: "Communication",
+    description: "Platform anchor. All messaging and cross-app communications.",
+  },
+  {
+    name: "Pulse",
+    emoji: "⚡",
+    layer: "Discovery",
+    description: "Personalised feed (v1) and agentic dashboard (v2 — Mukoko Home).",
+  },
+  {
+    name: "Mukoko News",
+    emoji: "📰",
+    layer: "Journalism",
+    description: "Pan-African news with entity extraction and 40 interest categories.",
+  },
+  {
+    name: "Bytes",
+    emoji: "🎬",
+    layer: "Creator Video",
+    description: "Short-form video for African creators, archived to Arweave.",
+  },
+  {
+    name: "Circles",
+    emoji: "🔵",
+    layer: "Community",
+    description: "Community messaging — groups, fan communities, professional networks.",
+  },
+  {
+    name: "Novels",
+    emoji: "📚",
+    layer: "Publishing",
+    description: "10 work types, co-authorship with automatic revenue splitting.",
+  },
+  {
+    name: "Nhimbe",
+    emoji: "🥁",
+    layer: "Gathering",
+    description: "Events and cultural gatherings. Standalone brand at nhimbe.com.",
+  },
+  {
+    name: "BushTrade",
+    emoji: "🛒",
+    layer: "Commerce",
+    description: "Rentals-first marketplace. Standalone brand at bushtrade.co.zw.",
+  },
+  {
+    name: "Places",
+    emoji: "📍",
+    layer: "Geography",
+    description: "Africa's geographic knowledge graph and business verification layer.",
+  },
+  {
+    name: "Transport",
+    emoji: "🚌",
+    layer: "Movement",
+    description: "Public transit routing, vehicle booking, commute planning.",
+  },
+  {
+    name: "Planner",
+    emoji: "📅",
+    layer: "Organisation",
+    description: "Calendar, tasks, bookings, and notes — all cross-app activity.",
+  },
+  {
+    name: "Mukoko Lingo",
+    emoji: "🗣",
+    layer: "Language",
+    description: "African language learning. Shona and Ndebele as primaries.",
+  },
+  {
+    name: "Weather",
+    emoji: "🌤",
+    layer: "Environment",
+    description: "Hyperlocal forecasts, severe alerts, farming intelligence.",
+  },
+  {
+    name: "Wallet",
+    emoji: "💰",
+    layer: "Economics",
+    description: "MUKOKO tokens, mobile money, peer-to-peer, merchant payments.",
+  },
+  {
+    name: "Jobs",
+    emoji: "💼",
+    layer: "Employment",
+    description: "Formal and informal employment discovery, credential verification.",
+  },
+  {
+    name: "Health",
+    emoji: "🏥",
+    layer: "Wellness",
+    description: "Health info, telemedicine, medication reminders, health records.",
+  },
+  {
+    name: "Mukoko ID",
+    emoji: "🆔",
+    layer: "Identity",
+    description: "Unified identity — one login, one Digital Twin, one reputation.",
+  },
 ]
 
 // ─── Platform Substrate (4) ─────────────────────────────────────────────────
 
 export const PLATFORM_SUBSTRATE: SubstrateComponent[] = [
-  { name: "Digital Twin", description: "Sovereign AI — your Honey, Shamwari interface, and Digital Twin NFT unified into a single intelligence living in your Web3 pod." },
-  { name: "Mukoko Home", description: "The ambient agentic interface. Pulse v2 toggle. Lives on any screen. Connects to external services via MCP." },
-  { name: "MUKOKO Token", description: "Two-token architecture. MIT (soulbound identity) + MXT (transferable exchange). Floor price anchored to human time." },
-  { name: "Ubuntu Layer", description: "Community conscience. Seven contribution types, Ubuntu scores, badges, missions, DAO governance." },
+  {
+    name: "Digital Twin",
+    description:
+      "Sovereign AI — your Honey, Shamwari interface, and Digital Twin NFT unified into a single intelligence living in your Web3 pod.",
+  },
+  {
+    name: "Mukoko Home",
+    description:
+      "The ambient agentic interface. Pulse v2 toggle. Lives on any screen. Connects to external services via MCP.",
+  },
+  {
+    name: "MUKOKO Token",
+    description:
+      "Two-token architecture. MIT (soulbound identity) + MXT (transferable exchange). Floor price anchored to human time.",
+  },
+  {
+    name: "Ubuntu Layer",
+    description:
+      "Community conscience. Seven contribution types, Ubuntu scores, badges, missions, DAO governance.",
+  },
 ]
 
 // ─── Nyuchi Enterprise Products (7) ─────────────────────────────────────────
 
 export const NYUCHI_PRODUCTS: NyuchiProduct[] = [
-  { name: "Nyuchi API Platform", description: "Gateway exposing platform capabilities to enterprise clients. API key management, rate limiting, billing, developer portal." },
-  { name: "Nyuchi Web Services", description: "Development and infrastructure division. Client work, custom development, platform maintenance." },
-  { name: "Nyuchi Learning", description: "Digital campus and digital literacy. Core expression of the belief that a super app must also build the people who use it." },
-  { name: "Nyuchi Medical", description: "The clinic app. Doctors and GPs manage their practice. Connected to Mukoko Health through the same identity.", mukokoCounterpart: "Health" },
-  { name: "Nyuchi Rentals", description: "Vehicle fleet management. Connected to Mukoko Transport for consumer-facing routing and booking.", mukokoCounterpart: "Transport" },
-  { name: "Nyuchi Tools", description: "Workspace and productivity apps. The enterprise mirror of what Planner does for individuals.", mukokoCounterpart: "Planner" },
-  { name: "Nyuchi SEO Manager", description: "AI-powered WordPress SEO plugin. Standalone SaaS leveraging the Shamwari AI infrastructure." },
+  {
+    name: "Nyuchi API Platform",
+    description:
+      "Gateway exposing platform capabilities to enterprise clients. API key management, rate limiting, billing, developer portal.",
+  },
+  {
+    name: "Nyuchi Web Services",
+    description:
+      "Development and infrastructure division. Client work, custom development, platform maintenance.",
+  },
+  {
+    name: "Nyuchi Learning",
+    description:
+      "Digital campus and digital literacy. Core expression of the belief that a super app must also build the people who use it.",
+  },
+  {
+    name: "Nyuchi Medical",
+    description:
+      "The clinic app. Doctors and GPs manage their practice. Connected to Mukoko Health through the same identity.",
+    mukokoCounterpart: "Health",
+  },
+  {
+    name: "Nyuchi Rentals",
+    description:
+      "Vehicle fleet management. Connected to Mukoko Transport for consumer-facing routing and booking.",
+    mukokoCounterpart: "Transport",
+  },
+  {
+    name: "Nyuchi Tools",
+    description:
+      "Workspace and productivity apps. The enterprise mirror of what Planner does for individuals.",
+    mukokoCounterpart: "Planner",
+  },
+  {
+    name: "Nyuchi SEO Manager",
+    description:
+      "AI-powered WordPress SEO plugin. Standalone SaaS leveraging the Shamwari AI infrastructure.",
+  },
 ]
 
 // ─── Sister Brands ──────────────────────────────────────────────────────────
 
 export const SISTER_BRANDS: SisterBrand[] = [
-  { name: "Zimbabwe Information Platform", description: "Consolidated travel and business intelligence for Zimbabwe. Powered by Mukoko's Places knowledge graph and verification infrastructure.", url: "https://zimbabwe.info" },
-  { name: "Barstool by Nyuchi", description: "Hospitality reviews and discovery — restaurants, bars, cafes, nightlife. Built on Places verification data." },
+  {
+    name: "Zimbabwe Information Platform",
+    description:
+      "Consolidated travel and business intelligence for Zimbabwe. Powered by Mukoko's Places knowledge graph and verification infrastructure.",
+    url: "https://zimbabwe.info",
+  },
+  {
+    name: "Barstool by Nyuchi",
+    description:
+      "Hospitality reviews and discovery — restaurants, bars, cafes, nightlife. Built on Places verification data.",
+  },
 ]
 
 // ─── Typography ─────────────────────────────────────────────────────────────
 
 export const TYPE_SCALE: TypeScaleEntry[] = [
-  { name: "Display", sizePx: 72, sizeRem: "4.5rem", lineHeight: "1.1", weight: 700, font: "serif", usage: "Hero headlines, landing pages" },
-  { name: "H1", sizePx: 48, sizeRem: "3rem", lineHeight: "1.15", weight: 700, font: "serif", usage: "Page titles" },
-  { name: "H2", sizePx: 36, sizeRem: "2.25rem", lineHeight: "1.2", weight: 600, font: "serif", usage: "Section headings" },
-  { name: "H3", sizePx: 30, sizeRem: "1.875rem", lineHeight: "1.25", weight: 600, font: "serif", usage: "Sub-section headings" },
-  { name: "H4", sizePx: 24, sizeRem: "1.5rem", lineHeight: "1.3", weight: 600, font: "sans", usage: "Card titles, group headings" },
-  { name: "H5", sizePx: 20, sizeRem: "1.25rem", lineHeight: "1.4", weight: 600, font: "sans", usage: "Small headings" },
-  { name: "Body Large", sizePx: 18, sizeRem: "1.125rem", lineHeight: "1.6", weight: 400, font: "sans", usage: "Lead paragraphs" },
-  { name: "Body", sizePx: 16, sizeRem: "1rem", lineHeight: "1.6", weight: 400, font: "sans", usage: "Default body text" },
-  { name: "Body Small", sizePx: 14, sizeRem: "0.875rem", lineHeight: "1.5", weight: 400, font: "sans", usage: "Secondary text, descriptions" },
-  { name: "Caption", sizePx: 12, sizeRem: "0.75rem", lineHeight: "1.5", weight: 400, font: "sans", usage: "Labels, metadata, timestamps" },
-  { name: "Code", sizePx: 14, sizeRem: "0.875rem", lineHeight: "1.6", weight: 400, font: "mono", usage: "Code blocks, terminal output" },
+  {
+    name: "Display",
+    sizePx: 72,
+    sizeRem: "4.5rem",
+    lineHeight: "1.1",
+    weight: 700,
+    font: "serif",
+    usage: "Hero headlines, landing pages",
+  },
+  {
+    name: "H1",
+    sizePx: 48,
+    sizeRem: "3rem",
+    lineHeight: "1.15",
+    weight: 700,
+    font: "serif",
+    usage: "Page titles",
+  },
+  {
+    name: "H2",
+    sizePx: 36,
+    sizeRem: "2.25rem",
+    lineHeight: "1.2",
+    weight: 600,
+    font: "serif",
+    usage: "Section headings",
+  },
+  {
+    name: "H3",
+    sizePx: 30,
+    sizeRem: "1.875rem",
+    lineHeight: "1.25",
+    weight: 600,
+    font: "serif",
+    usage: "Sub-section headings",
+  },
+  {
+    name: "H4",
+    sizePx: 24,
+    sizeRem: "1.5rem",
+    lineHeight: "1.3",
+    weight: 600,
+    font: "sans",
+    usage: "Card titles, group headings",
+  },
+  {
+    name: "H5",
+    sizePx: 20,
+    sizeRem: "1.25rem",
+    lineHeight: "1.4",
+    weight: 600,
+    font: "sans",
+    usage: "Small headings",
+  },
+  {
+    name: "Body Large",
+    sizePx: 18,
+    sizeRem: "1.125rem",
+    lineHeight: "1.6",
+    weight: 400,
+    font: "sans",
+    usage: "Lead paragraphs",
+  },
+  {
+    name: "Body",
+    sizePx: 16,
+    sizeRem: "1rem",
+    lineHeight: "1.6",
+    weight: 400,
+    font: "sans",
+    usage: "Default body text",
+  },
+  {
+    name: "Body Small",
+    sizePx: 14,
+    sizeRem: "0.875rem",
+    lineHeight: "1.5",
+    weight: 400,
+    font: "sans",
+    usage: "Secondary text, descriptions",
+  },
+  {
+    name: "Caption",
+    sizePx: 12,
+    sizeRem: "0.75rem",
+    lineHeight: "1.5",
+    weight: 400,
+    font: "sans",
+    usage: "Labels, metadata, timestamps",
+  },
+  {
+    name: "Code",
+    sizePx: 14,
+    sizeRem: "0.875rem",
+    lineHeight: "1.6",
+    weight: 400,
+    font: "mono",
+    usage: "Code blocks, terminal output",
+  },
 ]
 
 // ─── Spacing ────────────────────────────────────────────────────────────────
@@ -271,7 +500,12 @@ export const SEMANTIC_COLORS: SemanticColor[] = [
 export const BACKGROUNDS: BackgroundToken[] = [
   { name: "base", light: "#FAF9F5", dark: "#0A0A0A", usage: "Page background" },
   { name: "surface", light: "#FFFFFF", dark: "#141414", usage: "Cards, elevated surfaces" },
-  { name: "muted", light: "#F3F2EE", dark: "#1E1E1E", usage: "Subdued backgrounds, secondary surfaces" },
+  {
+    name: "muted",
+    light: "#F3F2EE",
+    dark: "#1E1E1E",
+    usage: "Subdued backgrounds, secondary surfaces",
+  },
 ]
 
 // ─── Component Specs ────────────────────────────────────────────────────────
@@ -339,7 +573,8 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
 
 export const ACCESSIBILITY = {
   standard: "APCA 3.0 AAA",
-  contrastDescription: "Advanced Perceptual Contrast Algorithm for superior readability across all mineral colors",
+  contrastDescription:
+    "Advanced Perceptual Contrast Algorithm for superior readability across all mineral colors",
   defaultTouchTarget: 56,
   minTouchTarget: 48,
   focusIndicator: "2px ring with ring-offset-2, using --ring token",
@@ -380,10 +615,22 @@ export const PHILOSOPHY = {
   description:
     "Every decision we make, every feature we build, every line of code we write runs through a single filter: does this strengthen the community, or does it extract from it?",
   pillars: [
-    { name: "Local-First", description: "The device is the primary processing surface. Works in a village with 2G." },
-    { name: "Mobile-First", description: "Built for the reality of the African smartphone market, not San Francisco." },
-    { name: "Open Source", description: "Every critical dependency is sovereign. Speed is rented, truth is owned." },
-    { name: "Open Data", description: "Platform data belongs to Africa. Personal data stays sovereign in your pod." },
+    {
+      name: "Local-First",
+      description: "The device is the primary processing surface. Works in a village with 2G.",
+    },
+    {
+      name: "Mobile-First",
+      description: "Built for the reality of the African smartphone market, not San Francisco.",
+    },
+    {
+      name: "Open Source",
+      description: "Every critical dependency is sovereign. Speed is rented, truth is owned.",
+    },
+    {
+      name: "Open Data",
+      description: "Platform data belongs to Africa. Personal data stays sovereign in your pod.",
+    },
   ],
   ubuntuQuestions: [
     "Does this strengthen community?",
@@ -393,9 +640,22 @@ export const PHILOSOPHY = {
     "Does this align with 'I am because we are'?",
   ],
   triMode: [
-    { name: "Musha", meaning: "Home", description: "The foreground experience — the app you open and dwell in." },
-    { name: "Basa", meaning: "Work", description: "The background service — data and capabilities other apps consume." },
-    { name: "Nhaka", meaning: "Heritage", description: "The open data contribution — anonymised data flowing into the continental knowledge commons." },
+    {
+      name: "Musha",
+      meaning: "Home",
+      description: "The foreground experience — the app you open and dwell in.",
+    },
+    {
+      name: "Basa",
+      meaning: "Work",
+      description: "The background service — data and capabilities other apps consume.",
+    },
+    {
+      name: "Nhaka",
+      meaning: "Heritage",
+      description:
+        "The open data contribution — anonymised data flowing into the continental knowledge commons.",
+    },
   ],
   covenants: [
     "We will never sell your personal data.",
@@ -424,9 +684,21 @@ export const RADII = {
 // ─── Typography Fonts ───────────────────────────────────────────────────────
 
 export const TYPOGRAPHY_FONTS = {
-  sans: { family: "Noto Sans", usage: "All body text, UI labels", reason: "Broad language support including African languages and diacritics" },
-  serif: { family: "Noto Serif", usage: "Page titles, hero text, display headings", reason: "Elegant display type with matching language coverage" },
-  mono: { family: "JetBrains Mono", usage: "Code blocks, terminal output, technical content", reason: "Purpose-built for developer readability" },
+  sans: {
+    family: "Noto Sans",
+    usage: "All body text, UI labels",
+    reason: "Broad language support including African languages and diacritics",
+  },
+  serif: {
+    family: "Noto Serif",
+    usage: "Page titles, hero text, display headings",
+    reason: "Elegant display type with matching language coverage",
+  },
+  mono: {
+    family: "JetBrains Mono",
+    usage: "Code blocks, terminal output, technical content",
+    reason: "Purpose-built for developer readability",
+  },
 }
 
 // ─── Full Brand System (for seed meta) ──────────────────────────────────────

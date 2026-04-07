@@ -13,12 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -41,17 +36,8 @@ import { Slider } from "@/components/ui/slider"
 import { Toggle } from "@/components/ui/toggle"
 import { Textarea } from "@/components/ui/textarea"
 import { Skeleton } from "@/components/ui/skeleton"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import {
   Dialog,
   DialogContent,
@@ -80,17 +66,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Table,
@@ -120,21 +98,15 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
     <Accordion type="single" collapsible className="w-full max-w-md">
       <AccordionItem value="item-1">
         <AccordionTrigger>Is it accessible?</AccordionTrigger>
-        <AccordionContent>
-          Yes. It adheres to the WAI-ARIA design pattern.
-        </AccordionContent>
+        <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
         <AccordionTrigger>Is it styled?</AccordionTrigger>
-        <AccordionContent>
-          Yes. It comes with Mukoko design system styles.
-        </AccordionContent>
+        <AccordionContent>Yes. It comes with Mukoko design system styles.</AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-3">
         <AccordionTrigger>Is it animated?</AccordionTrigger>
-        <AccordionContent>
-          Yes. It animates open and closed by default.
-        </AccordionContent>
+        <AccordionContent>Yes. It animates open and closed by default.</AccordionContent>
       </AccordionItem>
     </Accordion>
   ),
@@ -144,16 +116,12 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       <Alert>
         <Terminal className="size-4" />
         <AlertTitle>Heads up!</AlertTitle>
-        <AlertDescription>
-          You can add components using the CLI.
-        </AlertDescription>
+        <AlertDescription>You can add components using the CLI.</AlertDescription>
       </Alert>
       <Alert variant="destructive">
         <AlertCircle className="size-4" />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          Your session has expired. Please log in again.
-        </AlertDescription>
+        <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
       </Alert>
     </div>
   ),
@@ -166,9 +134,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone.
-          </AlertDialogDescription>
+          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -254,16 +220,10 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
           </Button>
         </CollapsibleTrigger>
       </div>
-      <div className="rounded-md border border-border px-4 py-2 text-sm">
-        design-portal
-      </div>
+      <div className="rounded-md border border-border px-4 py-2 text-sm">design-portal</div>
       <CollapsibleContent className="space-y-2">
-        <div className="rounded-md border border-border px-4 py-2 text-sm">
-          mukoko-weather
-        </div>
-        <div className="rounded-md border border-border px-4 py-2 text-sm">
-          mukoko-news
-        </div>
+        <div className="rounded-md border border-border px-4 py-2 text-sm">mukoko-weather</div>
+        <div className="rounded-md border border-border px-4 py-2 text-sm">mukoko-news</div>
       </CollapsibleContent>
     </Collapsible>
   ),
@@ -276,20 +236,14 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here.
-          </DialogDescription>
+          <DialogDescription>Make changes to your profile here.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="dialog-name" className="text-right">
               Name
             </Label>
-            <Input
-              id="dialog-name"
-              defaultValue="Mukoko"
-              className="col-span-3"
-            />
+            <Input id="dialog-name" defaultValue="Mukoko" className="col-span-3" />
           </div>
         </div>
         <DialogFooter>
@@ -372,9 +326,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       <PopoverContent className="w-80">
         <div className="space-y-2">
           <h4 className="font-medium">Schedule</h4>
-          <p className="text-sm text-muted-foreground">
-            Choose a date for your event.
-          </p>
+          <p className="text-sm text-muted-foreground">Choose a date for your event.</p>
           <Input type="date" />
         </div>
       </PopoverContent>
@@ -450,9 +402,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
     <div className="w-full max-w-sm">
       <div className="space-y-1">
         <h4 className="text-sm font-medium">nyuchi design portal</h4>
-        <p className="text-sm text-muted-foreground">
-          Component registry and design system.
-        </p>
+        <p className="text-sm text-muted-foreground">Component registry and design system.</p>
       </div>
       <Separator className="my-4" />
       <div className="flex h-5 items-center space-x-4 text-sm">
@@ -538,15 +488,11 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
         <TabsTrigger value="password">Password</TabsTrigger>
       </TabsList>
       <TabsContent value="account" className="space-y-2">
-        <p className="text-sm text-muted-foreground">
-          Make changes to your account here.
-        </p>
+        <p className="text-sm text-muted-foreground">Make changes to your account here.</p>
         <Input defaultValue="Mukoko" />
       </TabsContent>
       <TabsContent value="password" className="space-y-2">
-        <p className="text-sm text-muted-foreground">
-          Change your password here.
-        </p>
+        <p className="text-sm text-muted-foreground">Change your password here.</p>
         <Input type="password" />
       </TabsContent>
     </Tabs>
@@ -590,7 +536,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
 
   "mukoko-sidebar": (
     <div className="w-full max-w-xs rounded-lg border border-border bg-muted/30 p-4">
-      <div className="mb-3 flex h-1 w-full gap-0.5 rounded-full overflow-hidden">
+      <div className="mb-3 flex h-1 w-full gap-0.5 overflow-hidden rounded-full">
         <span className="flex-1 bg-[var(--color-cobalt)]" />
         <span className="flex-1 bg-[var(--color-tanzanite)]" />
         <span className="flex-1 bg-[var(--color-malachite)]" />
@@ -599,12 +545,16 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       </div>
       <div className="mb-3 text-sm font-bold">nyuchi design portal</div>
       <div className="space-y-0.5">
-        <div className="rounded-md bg-primary/10 px-3 py-1.5 text-xs font-medium text-foreground">Components</div>
+        <div className="rounded-md bg-primary/10 px-3 py-1.5 text-xs font-medium text-foreground">
+          Components
+        </div>
         <div className="rounded-md px-3 py-1.5 text-xs text-muted-foreground">Brand</div>
         <div className="rounded-md px-3 py-1.5 text-xs text-muted-foreground">Architecture</div>
         <div className="rounded-md px-3 py-1.5 text-xs text-muted-foreground">API</div>
       </div>
-      <div className="mt-3 border-t border-border pt-2 text-[10px] text-muted-foreground">v4.0.1</div>
+      <div className="mt-3 border-t border-border pt-2 text-[10px] text-muted-foreground">
+        v4.0.1
+      </div>
     </div>
   ),
 
@@ -620,7 +570,9 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <Badge variant="outline" className="text-[10px]">Theme</Badge>
+          <Badge variant="outline" className="text-[10px]">
+            Theme
+          </Badge>
         </div>
       </div>
     </div>
@@ -629,7 +581,9 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
   "mukoko-footer": (
     <div className="w-full max-w-md rounded-lg border border-border p-4">
       <div className="mb-3 text-sm font-bold">mukoko</div>
-      <p className="mb-2 text-xs text-muted-foreground">Built on the Five African Minerals palette.</p>
+      <p className="mb-2 text-xs text-muted-foreground">
+        Built on the Five African Minerals palette.
+      </p>
       <div className="mb-3 flex items-center gap-1.5">
         <span className="size-2 rounded-full bg-[var(--color-cobalt)]" />
         <span className="size-2 rounded-full bg-[var(--color-tanzanite)]" />
@@ -649,7 +603,9 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
           <p>Weather</p>
         </div>
       </div>
-      <div className="mt-3 border-t border-border pt-2 text-[10px] text-muted-foreground">Built by Nyuchi — v4.0.1</div>
+      <div className="mt-3 border-t border-border pt-2 text-[10px] text-muted-foreground">
+        Built by Nyuchi — v4.0.1
+      </div>
     </div>
   ),
 
@@ -696,7 +652,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
     <div className="flex w-full max-w-lg overflow-hidden rounded-lg border border-border">
       {/* Sidebar mockup */}
       <div className="hidden w-40 shrink-0 border-r border-border bg-muted/30 p-3 sm:block">
-        <div className="mb-3 flex h-0.5 gap-0.5 rounded-full overflow-hidden">
+        <div className="mb-3 flex h-0.5 gap-0.5 overflow-hidden rounded-full">
           <span className="flex-1 bg-[var(--color-cobalt)]" />
           <span className="flex-1 bg-[var(--color-tanzanite)]" />
           <span className="flex-1 bg-[var(--color-malachite)]" />
@@ -712,11 +668,19 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       </div>
       {/* Content area */}
       <div className="flex-1">
-        <div className="border-b border-border bg-background/80 px-3 py-2 text-xs font-medium">Header</div>
+        <div className="border-b border-border bg-background/80 px-3 py-2 text-xs font-medium">
+          Header
+        </div>
         <div className="grid grid-cols-2 gap-2 p-3">
-          <div className="rounded-lg bg-muted p-3 text-center text-xs text-muted-foreground">Card 1</div>
-          <div className="rounded-lg bg-muted p-3 text-center text-xs text-muted-foreground">Card 2</div>
-          <div className="col-span-2 rounded-lg bg-muted p-3 text-center text-xs text-muted-foreground">Chart</div>
+          <div className="rounded-lg bg-muted p-3 text-center text-xs text-muted-foreground">
+            Card 1
+          </div>
+          <div className="rounded-lg bg-muted p-3 text-center text-xs text-muted-foreground">
+            Card 2
+          </div>
+          <div className="col-span-2 rounded-lg bg-muted p-3 text-center text-xs text-muted-foreground">
+            Chart
+          </div>
         </div>
       </div>
     </div>
@@ -725,7 +689,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
   "data-table": (
     <div className="w-full max-w-md space-y-3">
       <div className="flex items-center gap-2">
-        <div className="h-9 flex-1 rounded-lg border border-border bg-background px-3 text-xs text-muted-foreground leading-9">
+        <div className="h-9 flex-1 rounded-lg border border-border bg-background px-3 text-xs leading-9 text-muted-foreground">
           Filter emails...
         </div>
         <div className="rounded-lg border border-border bg-background px-3 py-2 text-xs">
@@ -743,17 +707,27 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
           </thead>
           <tbody>
             <tr className="border-b">
-              <td className="p-2"><span className="rounded-full bg-[var(--color-malachite)]/20 px-2 py-0.5 text-[10px] text-[var(--color-malachite)]">Success</span></td>
+              <td className="p-2">
+                <span className="rounded-full bg-[var(--color-malachite)]/20 px-2 py-0.5 text-[10px] text-[var(--color-malachite)]">
+                  Success
+                </span>
+              </td>
               <td className="p-2">ken@example.com</td>
               <td className="p-2 text-right">$316.00</td>
             </tr>
             <tr className="border-b">
-              <td className="p-2"><span className="rounded-full bg-[var(--color-malachite)]/20 px-2 py-0.5 text-[10px] text-[var(--color-malachite)]">Success</span></td>
+              <td className="p-2">
+                <span className="rounded-full bg-[var(--color-malachite)]/20 px-2 py-0.5 text-[10px] text-[var(--color-malachite)]">
+                  Success
+                </span>
+              </td>
               <td className="p-2">abe@example.com</td>
               <td className="p-2 text-right">$242.00</td>
             </tr>
             <tr>
-              <td className="p-2"><span className="rounded-full bg-muted px-2 py-0.5 text-[10px]">Processing</span></td>
+              <td className="p-2">
+                <span className="rounded-full bg-muted px-2 py-0.5 text-[10px]">Processing</span>
+              </td>
               <td className="p-2">monse@example.com</td>
               <td className="p-2 text-right">$837.00</td>
             </tr>
@@ -773,23 +747,73 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
   "date-picker": (
     <div className="flex flex-col gap-3">
       <button className="inline-flex h-10 w-[280px] items-center rounded-lg border border-border bg-background px-3 text-left text-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 text-muted-foreground"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="mr-2 text-muted-foreground"
+        >
+          <path d="M8 2v4" />
+          <path d="M16 2v4" />
+          <rect width="18" height="18" x="3" y="4" rx="2" />
+          <path d="M3 10h18" />
+        </svg>
         <span className="text-muted-foreground">Pick a date</span>
       </button>
       <button className="inline-flex h-10 w-[280px] items-center rounded-lg border border-border bg-background px-3 text-left text-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 text-muted-foreground"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="mr-2 text-muted-foreground"
+        >
+          <path d="M8 2v4" />
+          <path d="M16 2v4" />
+          <rect width="18" height="18" x="3" y="4" rx="2" />
+          <path d="M3 10h18" />
+        </svg>
         <span>Mar 14, 2026</span>
       </button>
     </div>
   ),
 
-  "typography": (
+  typography: (
     <div className="w-full max-w-sm space-y-4 text-left">
-      <h1 className="scroll-m-20 font-serif text-3xl font-extrabold tracking-tight">The Mukoko Platform</h1>
-      <p className="text-xl text-muted-foreground">A unified design system for the African digital ecosystem.</p>
-      <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">Typography</h2>
-      <p className="leading-7">The typography system uses <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">Noto Sans</code> for body and <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">Noto Serif</code> for display.</p>
-      <blockquote className="border-l-2 pl-6 italic">&ldquo;Built for Africa, by Africa.&rdquo;</blockquote>
+      <h1 className="scroll-m-20 font-serif text-3xl font-extrabold tracking-tight">
+        The Mukoko Platform
+      </h1>
+      <p className="text-xl text-muted-foreground">
+        A unified design system for the African digital ecosystem.
+      </p>
+      <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+        Typography
+      </h2>
+      <p className="leading-7">
+        The typography system uses{" "}
+        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+          Noto Sans
+        </code>{" "}
+        for body and{" "}
+        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+          Noto Serif
+        </code>{" "}
+        for display.
+      </p>
+      <blockquote className="border-l-2 pl-6 italic">
+        &ldquo;Built for Africa, by Africa.&rdquo;
+      </blockquote>
       <p className="text-sm text-muted-foreground">Every mineral tells a story.</p>
     </div>
   ),
@@ -797,12 +821,28 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
   "search-bar": (
     <div className="w-full max-w-sm">
       <div className="relative">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <div className="flex h-10 w-full rounded-lg border border-border bg-background pl-9 pr-16 text-sm text-muted-foreground items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <div className="flex h-10 w-full items-center rounded-lg border border-border bg-background pr-16 pl-9 text-sm text-muted-foreground">
           Search components...
         </div>
-        <div className="absolute right-2 top-1/2 -translate-y-1/2">
-          <kbd className="inline-flex h-5 items-center rounded border bg-muted px-1.5 font-mono text-[10px] text-muted-foreground">⌘K</kbd>
+        <div className="absolute top-1/2 right-2 -translate-y-1/2">
+          <kbd className="inline-flex h-5 items-center rounded border bg-muted px-1.5 font-mono text-[10px] text-muted-foreground">
+            ⌘K
+          </kbd>
         </div>
       </div>
     </div>
@@ -810,12 +850,28 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
 
   "user-menu": (
     <div className="flex items-center gap-2 rounded-lg border border-border p-2">
-      <div className="flex size-8 items-center justify-center rounded-full bg-[var(--color-tanzanite)]/20 text-xs font-medium text-[var(--color-tanzanite)]">TN</div>
+      <div className="flex size-8 items-center justify-center rounded-full bg-[var(--color-tanzanite)]/20 text-xs font-medium text-[var(--color-tanzanite)]">
+        TN
+      </div>
       <div className="flex flex-col">
         <span className="text-sm font-medium">Tinashe Nyuchi</span>
         <span className="text-xs text-muted-foreground">tinashe@nyuchi.com</span>
       </div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2 text-muted-foreground"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="ml-2 text-muted-foreground"
+      >
+        <path d="m7 15 5 5 5-5" />
+        <path d="m7 9 5-5 5 5" />
+      </svg>
     </div>
   ),
 
@@ -824,19 +880,25 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       <div className="rounded-xl border border-border p-4">
         <p className="text-xs text-muted-foreground">Total Revenue</p>
         <p className="mt-1 text-2xl font-bold">$45,231</p>
-        <p className="mt-1 flex items-center gap-1 text-xs text-[var(--color-malachite)]">↑ +20.1% from last month</p>
+        <p className="mt-1 flex items-center gap-1 text-xs text-[var(--color-malachite)]">
+          ↑ +20.1% from last month
+        </p>
       </div>
       <div className="rounded-xl border border-border p-4">
         <p className="text-xs text-muted-foreground">Active Users</p>
         <p className="mt-1 text-2xl font-bold">2,350</p>
-        <p className="mt-1 flex items-center gap-1 text-xs text-[var(--color-malachite)]">↑ +12.5% from last month</p>
+        <p className="mt-1 flex items-center gap-1 text-xs text-[var(--color-malachite)]">
+          ↑ +12.5% from last month
+        </p>
       </div>
     </div>
   ),
 
   "filter-bar": (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">All</span>
+      <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
+        All
+      </span>
       <span className="rounded-full border border-border px-3 py-1 text-xs">Weather</span>
       <span className="rounded-full border border-border px-3 py-1 text-xs">News</span>
       <span className="rounded-full border border-border px-3 py-1 text-xs">Events</span>
@@ -857,9 +919,15 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
         <span className="rounded-lg border border-border px-3 py-2 text-xs">Copy</span>
       </div>
       <div className="flex gap-2">
-        <span className="flex-1 rounded-lg border border-border px-3 py-2 text-center text-xs">X</span>
-        <span className="flex-1 rounded-lg border border-border px-3 py-2 text-center text-xs">LinkedIn</span>
-        <span className="flex-1 rounded-lg border border-border px-3 py-2 text-center text-xs">Email</span>
+        <span className="flex-1 rounded-lg border border-border px-3 py-2 text-center text-xs">
+          X
+        </span>
+        <span className="flex-1 rounded-lg border border-border px-3 py-2 text-center text-xs">
+          LinkedIn
+        </span>
+        <span className="flex-1 rounded-lg border border-border px-3 py-2 text-center text-xs">
+          Email
+        </span>
       </div>
     </div>
   ),
@@ -868,9 +936,24 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
     <div className="flex flex-col items-center gap-3">
       <div className="relative">
         <div className="flex size-9 items-center justify-center rounded-lg border border-border">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+          </svg>
         </div>
-        <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-white">3</span>
+        <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-white">
+          3
+        </span>
       </div>
       <p className="text-xs text-muted-foreground">3 unread notifications</p>
     </div>
@@ -880,7 +963,22 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
     <div className="w-full max-w-sm">
       <div className="flex flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border p-6 text-center">
         <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-muted-foreground"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" x2="12" y1="3" y2="15" />
+          </svg>
         </div>
         <p className="text-sm font-medium">Click to upload or drag and drop</p>
         <p className="text-xs text-muted-foreground">Any file type · Max 10MB</p>
@@ -890,9 +988,24 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
 
   "copy-button": (
     <div className="flex items-center gap-3">
-      <code className="rounded-lg bg-muted px-3 py-2 text-xs">npx shadcn@latest add https://design.nyuchi.com/api/r/button</code>
+      <code className="rounded-lg bg-muted px-3 py-2 text-xs">
+        npx shadcn@latest add https://design.nyuchi.com/api/r/button
+      </code>
       <span className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+        </svg>
         Copy
       </span>
     </div>
@@ -901,7 +1014,10 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
   "status-indicator": (
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-1.5">
-        <span className="relative flex"><span className="size-2.5 rounded-full bg-[var(--color-malachite)]" /><span className="absolute inset-0 animate-ping rounded-full bg-[var(--color-malachite)] opacity-75" /></span>
+        <span className="relative flex">
+          <span className="size-2.5 rounded-full bg-[var(--color-malachite)]" />
+          <span className="absolute inset-0 animate-ping rounded-full bg-[var(--color-malachite)] opacity-75" />
+        </span>
         <span className="text-xs text-muted-foreground">Online</span>
       </div>
       <div className="flex items-center gap-1.5">
@@ -919,7 +1035,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
     </div>
   ),
 
-  "timeline": (
+  timeline: (
     <div className="w-full max-w-sm space-y-0">
       <div className="relative flex gap-4 pb-8">
         <div className="relative flex flex-col items-center">
@@ -928,7 +1044,9 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
         </div>
         <div className="flex-1 space-y-1 pt-0">
           <h4 className="text-sm font-medium">Registry v7.0 released</h4>
-          <p className="text-xs text-muted-foreground">Five African Minerals design system launched.</p>
+          <p className="text-xs text-muted-foreground">
+            Five African Minerals design system launched.
+          </p>
           <time className="text-xs text-muted-foreground">March 2026</time>
         </div>
       </div>
@@ -961,39 +1079,111 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
       <div className="w-48 rounded-xl border border-border p-4">
         <div className="text-center">
           <p className="text-sm font-semibold">Starter</p>
-          <p className="mt-2"><span className="text-3xl font-bold">Free</span></p>
+          <p className="mt-2">
+            <span className="text-3xl font-bold">Free</span>
+          </p>
         </div>
         <div className="my-3 h-px bg-border" />
         <ul className="space-y-2 text-xs">
           <li className="flex items-center gap-1.5">✓ 5 components</li>
           <li className="flex items-center gap-1.5">✓ Community support</li>
         </ul>
-        <button className="mt-4 w-full rounded-lg border border-border py-2 text-xs">Get started</button>
+        <button className="mt-4 w-full rounded-lg border border-border py-2 text-xs">
+          Get started
+        </button>
       </div>
       <div className="relative w-48 rounded-xl border-2 border-primary p-4 shadow-lg">
-        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-medium text-primary-foreground">Popular</div>
+        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-medium text-primary-foreground">
+          Popular
+        </div>
         <div className="text-center">
           <p className="text-sm font-semibold">Pro</p>
-          <p className="mt-2"><span className="text-3xl font-bold">$29</span><span className="text-xs text-muted-foreground">/mo</span></p>
+          <p className="mt-2">
+            <span className="text-3xl font-bold">$29</span>
+            <span className="text-xs text-muted-foreground">/mo</span>
+          </p>
         </div>
         <div className="my-3 h-px bg-border" />
         <ul className="space-y-2 text-xs">
           <li className="flex items-center gap-1.5">✓ All components</li>
           <li className="flex items-center gap-1.5">✓ Priority support</li>
         </ul>
-        <button className="mt-4 w-full rounded-lg bg-primary py-2 text-xs text-primary-foreground">Get started</button>
+        <button className="mt-4 w-full rounded-lg bg-primary py-2 text-xs text-primary-foreground">
+          Get started
+        </button>
       </div>
     </div>
   ),
 
-  "rating": (
+  rating: (
     <div className="flex flex-col items-center gap-3">
       <div className="flex gap-0.5">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="var(--color-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="var(--color-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="var(--color-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="var(--color-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground/30"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="var(--color-gold)"
+          stroke="var(--color-gold)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="var(--color-gold)"
+          stroke="var(--color-gold)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="var(--color-gold)"
+          stroke="var(--color-gold)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="var(--color-gold)"
+          stroke="var(--color-gold)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-muted-foreground/30"
+        >
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
       </div>
       <p className="text-xs text-muted-foreground">4.0 / 5.0</p>
     </div>

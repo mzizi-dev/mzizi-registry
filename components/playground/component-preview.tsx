@@ -11,14 +11,8 @@ interface ComponentPreviewProps {
   hasDemo?: boolean
 }
 
-export function ComponentPreview({
-  code,
-  children,
-  hasDemo = true,
-}: ComponentPreviewProps) {
-  const [tab, setTab] = useState<"preview" | "code">(
-    hasDemo ? "preview" : "code"
-  )
+export function ComponentPreview({ code, children, hasDemo = true }: ComponentPreviewProps) {
+  const [tab, setTab] = useState<"preview" | "code">(hasDemo ? "preview" : "code")
   const [darkPreview, setDarkPreview] = useState(false)
 
   return (
@@ -56,11 +50,7 @@ export function ComponentPreview({
             className="mr-3 rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground"
             title={darkPreview ? "Switch to light preview" : "Switch to dark preview"}
           >
-            {darkPreview ? (
-              <Sun className="size-4" />
-            ) : (
-              <Moon className="size-4" />
-            )}
+            {darkPreview ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </button>
         )}
       </div>
@@ -71,9 +61,7 @@ export function ComponentPreview({
             darkPreview ? "dark bg-[#0A0A0A] text-[#F5F5F4]" : "bg-background"
           )}
         >
-          <ErrorBoundary section="Demo render">
-            {children}
-          </ErrorBoundary>
+          <ErrorBoundary section="Demo render">{children}</ErrorBoundary>
         </div>
       ) : (
         <div className="max-h-[600px] overflow-auto">

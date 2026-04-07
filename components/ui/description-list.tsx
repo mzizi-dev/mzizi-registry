@@ -25,10 +25,14 @@ function CopyableDetail({ detail }: { detail: React.ReactNode }) {
       <button
         type="button"
         onClick={handleCopy}
-        className="shrink-0 p-0.5 text-muted-foreground hover:text-foreground transition-colors"
+        className="shrink-0 p-0.5 text-muted-foreground transition-colors hover:text-foreground"
         aria-label="Copy value"
       >
-        {copied ? <Check className="size-3 text-[var(--color-malachite)]" /> : <Copy className="size-3" />}
+        {copied ? (
+          <Check className="size-3 text-[var(--color-malachite)]" />
+        ) : (
+          <Copy className="size-3" />
+        )}
       </button>
     </span>
   )

@@ -48,18 +48,9 @@ function StatusIndicator({
   const displayLabel = label ?? STATUS_LABELS[status]
 
   return (
-    <div
-      data-slot="status-indicator"
-      className={cn("inline-flex items-center gap-1.5", className)}
-    >
+    <div data-slot="status-indicator" className={cn("inline-flex items-center gap-1.5", className)}>
       <span className="relative flex">
-        <span
-          className={cn(
-            "rounded-full",
-            SIZE_STYLES[size],
-            STATUS_STYLES[status]
-          )}
-        />
+        <span className={cn("rounded-full", SIZE_STYLES[size], STATUS_STYLES[status])} />
         {shouldPulse && (
           <span
             className={cn(
@@ -69,9 +60,7 @@ function StatusIndicator({
           />
         )}
       </span>
-      {displayLabel && (
-        <span className="text-xs text-muted-foreground">{displayLabel}</span>
-      )}
+      {displayLabel && <span className="text-xs text-muted-foreground">{displayLabel}</span>}
     </div>
   )
 }

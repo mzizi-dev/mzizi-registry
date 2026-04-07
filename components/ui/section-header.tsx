@@ -35,18 +35,11 @@ function SectionHeader({
     >
       <div className="flex items-start gap-3">
         {mineral && (
-          <div
-            className={cn(
-              "mt-1 h-6 w-1 shrink-0 rounded-full",
-              MINERAL_LINE_COLORS[mineral]
-            )}
-          />
+          <div className={cn("mt-1 h-6 w-1 shrink-0 rounded-full", MINERAL_LINE_COLORS[mineral])} />
         )}
         <div>
           <h2 className="text-lg font-semibold">{title}</h2>
-          {description && (
-            <p className="text-muted-foreground mt-1 text-sm">{description}</p>
-          )}
+          {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
         </div>
       </div>
       {action && <div className="shrink-0">{action}</div>}

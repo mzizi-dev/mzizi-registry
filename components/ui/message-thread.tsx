@@ -41,7 +41,7 @@ function MessageItem({
           {onReply && (
             <button
               onClick={() => onReply(message.id)}
-              className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Reply
             </button>
@@ -49,7 +49,7 @@ function MessageItem({
           {hasReplies && (
             <button
               onClick={() => setCollapsed(!collapsed)}
-              className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               {collapsed ? `Show ${message.replies!.length} replies` : "Hide replies"}
             </button>
@@ -58,12 +58,7 @@ function MessageItem({
         {hasReplies && !collapsed && (
           <div className="mt-2 flex flex-col gap-3">
             {message.replies!.map((reply) => (
-              <MessageItem
-                key={reply.id}
-                message={reply}
-                onReply={onReply}
-                depth={depth + 1}
-              />
+              <MessageItem key={reply.id} message={reply} onReply={onReply} depth={depth + 1} />
             ))}
           </div>
         )}
@@ -82,11 +77,7 @@ function MessageThread({
   onReply?: (parentId: string) => void
 }) {
   return (
-    <div
-      data-slot="message-thread"
-      className={cn("flex flex-col gap-4", className)}
-      {...props}
-    >
+    <div data-slot="message-thread" className={cn("flex flex-col gap-4", className)} {...props}>
       {messages.map((message) => (
         <MessageItem key={message.id} message={message} onReply={onReply} />
       ))}

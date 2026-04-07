@@ -59,7 +59,7 @@ function FeaturedCard({
         )}
         <h3 className="font-serif text-lg font-medium">{title}</h3>
         {description && (
-          <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">
+          <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
             {description}
           </p>
         )}

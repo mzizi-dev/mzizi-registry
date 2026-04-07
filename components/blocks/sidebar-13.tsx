@@ -38,7 +38,7 @@ function Sidebar13() {
       <Separator />
       {/* Quick actions */}
       <div className="p-3">
-        <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <p className="mb-2 px-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
           Quick Actions
         </p>
         <div className="space-y-1">
@@ -57,16 +57,11 @@ function Sidebar13() {
       </div>
       <Separator />
       <nav className="flex-1 space-y-1 p-3">
-        <p className="mb-1 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <p className="mb-1 px-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
           Navigation
         </p>
         {navItems.map((item) => (
-          <Button
-            key={item.label}
-            variant="ghost"
-            className="w-full justify-start gap-3"
-            size="sm"
-          >
+          <Button key={item.label} variant="ghost" className="w-full justify-start gap-3" size="sm">
             <item.icon className="size-4" />
             {item.label}
           </Button>

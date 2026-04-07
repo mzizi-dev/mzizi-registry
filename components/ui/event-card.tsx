@@ -31,14 +31,16 @@ function EventCard({
       data-slot="event-card"
       data-mineral={mineral}
       className={cn(
-        "ring-foreground/10 bg-card flex flex-col gap-1.5 rounded-lg border-l-4 py-2.5 pl-3 pr-4 ring-1",
+        "flex flex-col gap-1.5 rounded-lg border-l-4 bg-card py-2.5 pr-4 pl-3 ring-1 ring-foreground/10",
         mineralColors[mineral],
         className
       )}
       {...props}
     >
       {category && (
-        <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{category}</span>
+        <span className="text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+          {category}
+        </span>
       )}
       <h4 className="text-sm font-medium text-foreground">{title}</h4>
       <div className="flex items-center gap-3 text-xs text-muted-foreground">

@@ -13,12 +13,9 @@ const TYPE_LABELS: Record<string, string> = {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  "registry:ui":
-    "bg-[var(--color-cobalt)]/10 text-[var(--color-cobalt)]",
-  "registry:hook":
-    "bg-[var(--color-tanzanite)]/10 text-[var(--color-tanzanite)]",
-  "registry:lib":
-    "bg-[var(--color-malachite)]/10 text-[var(--color-malachite)]",
+  "registry:ui": "bg-[var(--color-cobalt)]/10 text-[var(--color-cobalt)]",
+  "registry:hook": "bg-[var(--color-tanzanite)]/10 text-[var(--color-tanzanite)]",
+  "registry:lib": "bg-[var(--color-malachite)]/10 text-[var(--color-malachite)]",
 }
 
 export function ComponentGallery() {
@@ -60,9 +57,7 @@ export function ComponentGallery() {
             </button>
           ))}
         </div>
-        <span className="text-xs text-muted-foreground">
-          {filtered.length} components
-        </span>
+        <span className="text-xs text-muted-foreground">{filtered.length} components</span>
       </div>
 
       {/* Grid */}
@@ -76,12 +71,13 @@ export function ComponentGallery() {
               className="group flex flex-col rounded-xl border border-border p-4 transition-colors hover:border-foreground/20 hover:bg-muted/50"
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono text-sm font-medium text-foreground">
-                  {item.name}
-                </span>
+                <span className="font-mono text-sm font-medium text-foreground">{item.name}</span>
                 <div className="flex items-center gap-1.5">
                   {hasDemo && (
-                    <span className="size-1.5 rounded-full bg-[var(--color-malachite)]" title="Has live preview" />
+                    <span
+                      className="size-1.5 rounded-full bg-[var(--color-malachite)]"
+                      title="Has live preview"
+                    />
                   )}
                   <span
                     className={cn(

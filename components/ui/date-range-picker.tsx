@@ -7,11 +7,7 @@ import type { DateRange } from "react-day-picker"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface DateRangePreset {
   label: string
@@ -39,11 +35,7 @@ function DateRangePicker({
     })
 
   return (
-    <div
-      data-slot="date-range-picker"
-      className={cn("grid gap-2", className)}
-      {...props}
-    >
+    <div data-slot="date-range-picker" className={cn("grid gap-2", className)} {...props}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -71,7 +63,7 @@ function DateRangePicker({
         <PopoverContent className="w-auto p-0" align="start">
           <div className="flex flex-col gap-2 sm:flex-row">
             {presets && presets.length > 0 && (
-              <div className="flex flex-row gap-1 border-b p-3 sm:flex-col sm:border-b-0 sm:border-r">
+              <div className="flex flex-row gap-1 border-b p-3 sm:flex-col sm:border-r sm:border-b-0">
                 {presets.map((preset) => (
                   <Button
                     key={preset.label}

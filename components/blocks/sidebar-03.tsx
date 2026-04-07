@@ -22,19 +22,14 @@ function Sidebar03() {
       </div>
       <div className="px-3 pb-2">
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input placeholder="Search..." className="h-8 pl-8 text-sm" />
         </div>
       </div>
       <Separator />
       <nav className="flex-1 space-y-1 p-3">
         {navItems.map((item) => (
-          <Button
-            key={item.label}
-            variant="ghost"
-            className="w-full justify-start gap-3"
-            size="sm"
-          >
+          <Button key={item.label} variant="ghost" className="w-full justify-start gap-3" size="sm">
             <item.icon className="size-4" />
             {item.label}
           </Button>

@@ -56,7 +56,7 @@ function AudioPlayer({
     <div
       data-slot="audio-player"
       className={cn(
-        "ring-foreground/10 flex items-center gap-3 rounded-xl bg-card px-4 py-3 ring-1",
+        "flex items-center gap-3 rounded-xl bg-card px-4 py-3 ring-1 ring-foreground/10",
         className
       )}
       {...props}
@@ -85,7 +85,9 @@ function AudioPlayer({
           </div>
         )}
         <div className="flex items-center gap-2">
-          <span className="text-xs tabular-nums text-muted-foreground">{formatTime(currentTime)}</span>
+          <span className="text-xs text-muted-foreground tabular-nums">
+            {formatTime(currentTime)}
+          </span>
           <input
             type="range"
             min={0}
@@ -94,7 +96,7 @@ function AudioPlayer({
             onChange={handleSeek}
             className="h-1 flex-1 cursor-pointer appearance-none rounded-full bg-muted accent-primary"
           />
-          <span className="text-xs tabular-nums text-muted-foreground">{formatTime(duration)}</span>
+          <span className="text-xs text-muted-foreground tabular-nums">{formatTime(duration)}</span>
         </div>
       </div>
       <button

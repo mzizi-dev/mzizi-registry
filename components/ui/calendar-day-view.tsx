@@ -64,7 +64,10 @@ function CalendarDayView({
       <div className="grid grid-cols-[60px_1fr]">
         <div>
           {HOURS.map((hour) => (
-            <div key={hour} className="flex h-14 items-start justify-end border-b border-border pr-2 pt-1">
+            <div
+              key={hour}
+              className="flex h-14 items-start justify-end border-b border-border pt-1 pr-2"
+            >
               <span className="text-[10px] text-muted-foreground">{formatHour(hour)}</span>
             </div>
           ))}

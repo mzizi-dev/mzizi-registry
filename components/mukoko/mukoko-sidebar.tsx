@@ -74,10 +74,7 @@ export function MukokoSidebar({
     >
       {/* Mineral accent strip */}
       <div className="flex h-1 w-full">
-        <MineralStrip
-          thickness={4}
-          className="h-1 w-full flex-row rounded-none"
-        />
+        <MineralStrip thickness={4} className="h-1 w-full flex-row rounded-none" />
       </div>
 
       <SidebarHeader>
@@ -93,9 +90,7 @@ export function MukokoSidebar({
       <SidebarContent>
         {sections.map((section, sectionIdx) => (
           <SidebarGroup key={section.label ?? sectionIdx}>
-            {section.label && (
-              <SidebarGroupLabel>{section.label}</SidebarGroupLabel>
-            )}
+            {section.label && <SidebarGroupLabel>{section.label}</SidebarGroupLabel>}
             <SidebarGroupContent>
               <SidebarMenu>
                 {section.items.map((item) => {
@@ -104,30 +99,20 @@ export function MukokoSidebar({
 
                   return (
                     <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={active}
-                        tooltip={item.label}
-                      >
+                      <SidebarMenuButton asChild isActive={active} tooltip={item.label}>
                         <a href={item.href}>
                           {Icon && <Icon className="size-4" />}
                           <span>{item.label}</span>
                         </a>
                       </SidebarMenuButton>
-                      {item.badge != null && (
-                        <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
-                      )}
+                      {item.badge != null && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
                       {item.children && item.children.length > 0 && (
                         <SidebarMenuSub>
                           {item.children.map((child) => {
-                            const childActive =
-                              child.active ?? isActive(child.href)
+                            const childActive = child.active ?? isActive(child.href)
                             return (
                               <SidebarMenuSubItem key={child.href}>
-                                <SidebarMenuSubButton
-                                  asChild
-                                  isActive={childActive}
-                                >
+                                <SidebarMenuSubButton asChild isActive={childActive}>
                                   <a href={child.href}>
                                     <span>{child.label}</span>
                                   </a>
@@ -150,9 +135,7 @@ export function MukokoSidebar({
         {footer ?? (
           <div className="flex items-center justify-between px-2 py-1">
             <ThemeToggle />
-            <span className="font-mono text-[10px] text-muted-foreground">
-              v4.0.1
-            </span>
+            <span className="font-mono text-[10px] text-muted-foreground">v4.0.1</span>
           </div>
         )}
       </SidebarFooter>

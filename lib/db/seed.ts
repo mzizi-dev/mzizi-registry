@@ -69,82 +69,170 @@ import {
 // ── Category mapping ────────────────────────────────────────────────
 
 const CATEGORY_MAP: Record<string, ComponentCategory> = {
-  calendar: "input", checkbox: "input", combobox: "input", command: "input",
-  "date-picker": "input", field: "input", form: "input", input: "input",
-  "input-group": "input", "input-otp": "input", label: "input",
-  "native-select": "input", "radio-group": "input", "search-bar": "input",
-  select: "input", slider: "input", switch: "input", textarea: "input",
+  calendar: "input",
+  checkbox: "input",
+  combobox: "input",
+  command: "input",
+  "date-picker": "input",
+  field: "input",
+  form: "input",
+  input: "input",
+  "input-group": "input",
+  "input-otp": "input",
+  label: "input",
+  "native-select": "input",
+  "radio-group": "input",
+  "search-bar": "input",
+  select: "input",
+  slider: "input",
+  switch: "input",
+  textarea: "input",
   "file-upload": "input",
 
-  button: "action", "button-group": "action", "copy-button": "action",
-  toggle: "action", "toggle-group": "action", rating: "action",
+  button: "action",
+  "button-group": "action",
+  "copy-button": "action",
+  toggle: "action",
+  "toggle-group": "action",
+  rating: "action",
 
-  avatar: "data-display", badge: "data-display", chart: "data-display",
-  "data-table": "data-display", kbd: "data-display", table: "data-display",
-  "stats-card": "data-display", "status-indicator": "data-display",
-  timeline: "data-display", typography: "data-display",
+  avatar: "data-display",
+  badge: "data-display",
+  chart: "data-display",
+  "data-table": "data-display",
+  kbd: "data-display",
+  table: "data-display",
+  "stats-card": "data-display",
+  "status-indicator": "data-display",
+  timeline: "data-display",
+  typography: "data-display",
   "pricing-card": "data-display",
 
-  alert: "feedback", empty: "feedback", progress: "feedback",
-  skeleton: "feedback", sonner: "feedback", spinner: "feedback",
-  toast: "feedback", toaster: "feedback",
+  alert: "feedback",
+  empty: "feedback",
+  progress: "feedback",
+  skeleton: "feedback",
+  sonner: "feedback",
+  spinner: "feedback",
+  toast: "feedback",
+  toaster: "feedback",
 
-  accordion: "layout", "aspect-ratio": "layout", card: "layout",
-  carousel: "layout", collapsible: "layout", drawer: "layout",
-  item: "layout", resizable: "layout", "scroll-area": "layout",
-  separator: "layout", sheet: "layout", sidebar: "layout",
+  accordion: "layout",
+  "aspect-ratio": "layout",
+  card: "layout",
+  carousel: "layout",
+  collapsible: "layout",
+  drawer: "layout",
+  item: "layout",
+  resizable: "layout",
+  "scroll-area": "layout",
+  separator: "layout",
+  sheet: "layout",
+  sidebar: "layout",
 
-  breadcrumb: "navigation", menubar: "navigation",
-  "navigation-menu": "navigation", pagination: "navigation", tabs: "navigation",
+  breadcrumb: "navigation",
+  menubar: "navigation",
+  "navigation-menu": "navigation",
+  pagination: "navigation",
+  tabs: "navigation",
 
-  "alert-dialog": "overlay", "context-menu": "overlay", dialog: "overlay",
-  "dropdown-menu": "overlay", "filter-bar": "overlay",
-  "hover-card": "overlay", "notification-bell": "overlay",
-  popover: "overlay", "share-dialog": "overlay", tooltip: "overlay",
+  "alert-dialog": "overlay",
+  "context-menu": "overlay",
+  dialog: "overlay",
+  "dropdown-menu": "overlay",
+  "filter-bar": "overlay",
+  "hover-card": "overlay",
+  "notification-bell": "overlay",
+  popover: "overlay",
+  "share-dialog": "overlay",
+  tooltip: "overlay",
   "user-menu": "overlay",
 
-  direction: "utility", "use-mobile": "utility", "use-toast": "utility",
+  direction: "utility",
+  "use-mobile": "utility",
+  "use-toast": "utility",
   utils: "utility",
 
-  "mukoko-sidebar": "mukoko", "mukoko-header": "mukoko",
-  "mukoko-footer": "mukoko", "mukoko-bottom-nav": "mukoko",
-  "detail-layout": "mukoko", "dashboard-layout": "mukoko",
+  "mukoko-sidebar": "mukoko",
+  "mukoko-header": "mukoko",
+  "mukoko-footer": "mukoko",
+  "mukoko-bottom-nav": "mukoko",
+  "detail-layout": "mukoko",
+  "dashboard-layout": "mukoko",
 
-  observability: "infrastructure", "error-boundary": "infrastructure",
-  "section-error-boundary": "infrastructure", timeout: "infrastructure",
-  "circuit-breaker": "infrastructure", retry: "infrastructure",
-  "fallback-chain": "infrastructure", "ai-safety": "infrastructure",
-  chaos: "infrastructure", "lazy-section": "infrastructure",
-  "use-memory-pressure": "infrastructure", architecture: "infrastructure",
+  observability: "infrastructure",
+  "error-boundary": "infrastructure",
+  "section-error-boundary": "infrastructure",
+  timeout: "infrastructure",
+  "circuit-breaker": "infrastructure",
+  retry: "infrastructure",
+  "fallback-chain": "infrastructure",
+  "ai-safety": "infrastructure",
+  chaos: "infrastructure",
+  "lazy-section": "infrastructure",
+  "use-memory-pressure": "infrastructure",
+  architecture: "infrastructure",
 }
 
 const LAYER_MAP: Record<string, string> = {
-  "mukoko-sidebar": "layout", "mukoko-header": "layout",
-  "mukoko-footer": "layout", "mukoko-bottom-nav": "layout",
-  "detail-layout": "layout", "dashboard-layout": "layout",
+  "mukoko-sidebar": "layout",
+  "mukoko-header": "layout",
+  "mukoko-footer": "layout",
+  "mukoko-bottom-nav": "layout",
+  "detail-layout": "layout",
+  "dashboard-layout": "layout",
 
-  observability: "infrastructure", "error-boundary": "infrastructure",
-  "section-error-boundary": "infrastructure", timeout: "infrastructure",
-  "circuit-breaker": "infrastructure", retry: "infrastructure",
-  "fallback-chain": "infrastructure", "ai-safety": "infrastructure",
-  chaos: "infrastructure", "lazy-section": "infrastructure",
-  "use-memory-pressure": "infrastructure", architecture: "infrastructure",
+  observability: "infrastructure",
+  "error-boundary": "infrastructure",
+  "section-error-boundary": "infrastructure",
+  timeout: "infrastructure",
+  "circuit-breaker": "infrastructure",
+  retry: "infrastructure",
+  "fallback-chain": "infrastructure",
+  "ai-safety": "infrastructure",
+  chaos: "infrastructure",
+  "lazy-section": "infrastructure",
+  "use-memory-pressure": "infrastructure",
+  architecture: "infrastructure",
 
-  "search-bar": "composite", "user-menu": "composite",
-  "stats-card": "composite", "filter-bar": "composite",
-  "share-dialog": "composite", "notification-bell": "composite",
-  "file-upload": "composite", "copy-button": "composite",
-  "status-indicator": "composite", timeline: "composite",
-  "pricing-card": "composite", rating: "composite",
-  "data-table": "composite", "date-picker": "composite",
+  "search-bar": "composite",
+  "user-menu": "composite",
+  "stats-card": "composite",
+  "filter-bar": "composite",
+  "share-dialog": "composite",
+  "notification-bell": "composite",
+  "file-upload": "composite",
+  "copy-button": "composite",
+  "status-indicator": "composite",
+  timeline: "composite",
+  "pricing-card": "composite",
+  rating: "composite",
+  "data-table": "composite",
+  "date-picker": "composite",
 }
 
 const MUKOKO_COMPONENTS = new Set([
-  "mukoko-sidebar", "mukoko-header", "mukoko-footer", "mukoko-bottom-nav",
-  "detail-layout", "dashboard-layout", "search-bar", "user-menu",
-  "stats-card", "filter-bar", "share-dialog", "notification-bell",
-  "file-upload", "copy-button", "status-indicator", "timeline",
-  "pricing-card", "rating", "data-table", "date-picker", "typography",
+  "mukoko-sidebar",
+  "mukoko-header",
+  "mukoko-footer",
+  "mukoko-bottom-nav",
+  "detail-layout",
+  "dashboard-layout",
+  "search-bar",
+  "user-menu",
+  "stats-card",
+  "filter-bar",
+  "share-dialog",
+  "notification-bell",
+  "file-upload",
+  "copy-button",
+  "status-indicator",
+  "timeline",
+  "pricing-card",
+  "rating",
+  "data-table",
+  "date-picker",
+  "typography",
 ])
 
 // ── Seed functions ──────────────────────────────────────────────────
@@ -655,9 +743,23 @@ export async function seedDatabase(): Promise<SeedResult> {
   console.log(`[mukoko]   ${archRemoved} removed technologies`)
 
   const total =
-    components + docs + demos +
-    brandMinerals + brandSemanticColors + brandTypography + brandSpacing + brandEcosystem + brandMeta +
-    archPrinciples + archFramework + archDataLayer + archCloudLayer + archPipeline + archDataOwnership + archSovereignty + archRemoved
+    components +
+    docs +
+    demos +
+    brandMinerals +
+    brandSemanticColors +
+    brandTypography +
+    brandSpacing +
+    brandEcosystem +
+    brandMeta +
+    archPrinciples +
+    archFramework +
+    archDataLayer +
+    archCloudLayer +
+    archPipeline +
+    archDataOwnership +
+    archSovereignty +
+    archRemoved
 
   const duration = Date.now() - start
   console.log(`[mukoko] Seeded ${total} rows in ${duration}ms`)
@@ -691,8 +793,7 @@ export async function seedDatabase(): Promise<SeedResult> {
 
 // ── CLI entry point ─────────────────────────────────────────────────
 
-const isMainModule =
-  typeof require !== "undefined" && require.main === module
+const isMainModule = typeof require !== "undefined" && require.main === module
 
 if (isMainModule) {
   seedDatabase()

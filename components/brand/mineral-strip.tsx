@@ -6,17 +6,11 @@ interface MineralStripProps {
   className?: string
 }
 
-export function MineralStrip({
-  thickness = 4,
-  className,
-}: MineralStripProps) {
+export function MineralStrip({ thickness = 4, className }: MineralStripProps) {
   return (
     <div
       data-slot="mineral-strip"
-      className={cn(
-        "flex flex-col overflow-hidden rounded-full",
-        className
-      )}
+      className={cn("flex flex-col overflow-hidden rounded-full", className)}
       style={{ width: `${thickness}px` }}
       aria-hidden="true"
     >

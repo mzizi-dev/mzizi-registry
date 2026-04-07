@@ -48,10 +48,26 @@ function OnboardingTour({
   const tooltipStyle: React.CSSProperties = rect
     ? {
         position: "fixed",
-        ...(position === "bottom" && { top: rect.bottom + padding, left: rect.left + rect.width / 2, transform: "translateX(-50%)" }),
-        ...(position === "top" && { bottom: window.innerHeight - rect.top + padding, left: rect.left + rect.width / 2, transform: "translateX(-50%)" }),
-        ...(position === "left" && { top: rect.top + rect.height / 2, right: window.innerWidth - rect.left + padding, transform: "translateY(-50%)" }),
-        ...(position === "right" && { top: rect.top + rect.height / 2, left: rect.right + padding, transform: "translateY(-50%)" }),
+        ...(position === "bottom" && {
+          top: rect.bottom + padding,
+          left: rect.left + rect.width / 2,
+          transform: "translateX(-50%)",
+        }),
+        ...(position === "top" && {
+          bottom: window.innerHeight - rect.top + padding,
+          left: rect.left + rect.width / 2,
+          transform: "translateX(-50%)",
+        }),
+        ...(position === "left" && {
+          top: rect.top + rect.height / 2,
+          right: window.innerWidth - rect.left + padding,
+          transform: "translateY(-50%)",
+        }),
+        ...(position === "right" && {
+          top: rect.top + rect.height / 2,
+          left: rect.right + padding,
+          transform: "translateY(-50%)",
+        }),
       }
     : { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }
 
@@ -83,7 +99,7 @@ function OnboardingTour({
           <button
             type="button"
             onClick={onSkip}
-            className="shrink-0 p-0.5 text-muted-foreground hover:text-foreground transition-colors"
+            className="shrink-0 p-0.5 text-muted-foreground transition-colors hover:text-foreground"
             aria-label="Skip tour"
           >
             <X className="size-4" />
@@ -91,21 +107,21 @@ function OnboardingTour({
         </div>
         <p className="mt-1 text-xs text-muted-foreground">{step.description}</p>
         <div className="mt-3 flex items-center justify-between">
-          <span className="text-xs tabular-nums text-muted-foreground">
+          <span className="text-xs text-muted-foreground tabular-nums">
             {active + 1} of {steps.length}
           </span>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={onSkip}
-              className="rounded-lg px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="rounded-lg px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Skip
             </button>
             <button
               type="button"
               onClick={onNext}
-              className="rounded-4xl bg-[var(--color-cobalt)] px-3 py-1 text-xs font-medium text-white hover:bg-[var(--color-cobalt)]/90 transition-colors"
+              className="rounded-4xl bg-[var(--color-cobalt)] px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-[var(--color-cobalt)]/90"
             >
               {active === steps.length - 1 ? "Done" : "Next"}
             </button>

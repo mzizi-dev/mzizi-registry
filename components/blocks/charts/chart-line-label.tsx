@@ -2,7 +2,12 @@
 
 import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", users: 186 },
@@ -30,7 +35,14 @@ export function ChartLineLabel() {
             <CartesianGrid vertical={false} />
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Line type="natural" dataKey="users" stroke="var(--color-users)" strokeWidth={2} dot={{ fill: "var(--color-users)" }} activeDot={{ r: 6 }}>
+            <Line
+              type="natural"
+              dataKey="users"
+              stroke="var(--color-users)"
+              strokeWidth={2}
+              dot={{ fill: "var(--color-users)" }}
+              activeDot={{ r: 6 }}
+            >
               <LabelList position="top" offset={12} className="fill-foreground" fontSize={12} />
             </Line>
           </LineChart>

@@ -4,13 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { SectionErrorBoundary } from "@/components/section-error-boundary"
 
 // Layer 1: Shared primitives (Button, Card, Badge, Progress) — imported above
@@ -66,11 +60,7 @@ function CrashingComponent(): React.ReactNode {
 
 // Layer 3: Page orchestrator — composes domain components
 
-function DemoOrchestrator({
-  showError,
-}: {
-  showError: boolean
-}) {
+function DemoOrchestrator({ showError }: { showError: boolean }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {/* Layer 4: Each section wrapped in SectionErrorBoundary */}
@@ -100,9 +90,7 @@ function DemoOrchestrator({
                 />
               ))}
             </div>
-            <span className="text-xs text-muted-foreground">
-              Weekly temperature trend
-            </span>
+            <span className="text-xs text-muted-foreground">Weekly temperature trend</span>
           </div>
         )}
       </SectionErrorBoundary>

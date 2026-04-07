@@ -30,11 +30,7 @@ function AvatarGroupStack({
   }
 
   return (
-    <div
-      data-slot="avatar-group-stack"
-      className={cn("flex -space-x-2", className)}
-      {...props}
-    >
+    <div data-slot="avatar-group-stack" className={cn("flex -space-x-2", className)} {...props}>
       {displayed.map((user) => {
         const initials = user.name
           .split(" ")
@@ -47,7 +43,7 @@ function AvatarGroupStack({
           <div
             key={user.name}
             className={cn(
-              "ring-background relative flex shrink-0 items-center justify-center rounded-full ring-2",
+              "relative flex shrink-0 items-center justify-center rounded-full ring-2 ring-background",
               sizeClasses[size]
             )}
             title={user.name}
@@ -59,7 +55,7 @@ function AvatarGroupStack({
                 className="size-full rounded-full object-cover"
               />
             ) : (
-              <div className="bg-muted text-muted-foreground flex size-full items-center justify-center rounded-full font-medium">
+              <div className="flex size-full items-center justify-center rounded-full bg-muted font-medium text-muted-foreground">
                 {initials}
               </div>
             )}
@@ -70,7 +66,7 @@ function AvatarGroupStack({
         <div
           data-slot="avatar-group-overflow"
           className={cn(
-            "ring-background bg-muted text-muted-foreground flex shrink-0 items-center justify-center rounded-full font-medium ring-2",
+            "flex shrink-0 items-center justify-center rounded-full bg-muted font-medium text-muted-foreground ring-2 ring-background",
             sizeClasses[size]
           )}
         >

@@ -52,9 +52,7 @@ describe("Architecture Data Module", () => {
     })
 
     it("includes HarmonyOS as a platform", () => {
-      const harmonyos = SEED_FRAMEWORK_DECISION.platforms.find(
-        (p) => p.name === "harmonyos"
-      )
+      const harmonyos = SEED_FRAMEWORK_DECISION.platforms.find((p) => p.name === "harmonyos")
       expect(harmonyos).toBeDefined()
       expect(harmonyos?.status).toBe("planned")
     })
@@ -100,9 +98,7 @@ describe("Architecture Data Module", () => {
     })
 
     it("Supabase uses strict consistency", () => {
-      const supabase = SEED_CLOUD_LAYER.find(
-        (s) => s.name === "supabase-postgresql"
-      )
+      const supabase = SEED_CLOUD_LAYER.find((s) => s.name === "supabase-postgresql")
       expect(supabase?.consistencyModel).toBe("strict")
       expect(supabase?.database).toBe("PostgreSQL")
     })
@@ -149,17 +145,13 @@ describe("Architecture Data Module", () => {
     })
 
     it("personal data is user-private with strict consistency", () => {
-      const personal = SEED_DATA_OWNERSHIP_RULES.find(
-        (r) => r.category === "personal"
-      )
+      const personal = SEED_DATA_OWNERSHIP_RULES.find((r) => r.category === "personal")
       expect(personal?.ownership).toBe("user-private")
       expect(personal?.consistencyModel).toBe("strict")
     })
 
     it("platform-open data is public with aggregate consistency", () => {
-      const open = SEED_DATA_OWNERSHIP_RULES.find(
-        (r) => r.category === "platform-open"
-      )
+      const open = SEED_DATA_OWNERSHIP_RULES.find((r) => r.category === "platform-open")
       expect(open?.ownership).toBe("public-open")
       expect(open?.consistencyModel).toBe("aggregate")
     })
@@ -196,23 +188,17 @@ describe("Architecture Data Module", () => {
         expect(assessment.technology).toBeTruthy()
         expect(assessment.role).toBeTruthy()
         expect(assessment.license).toBeTruthy()
-        expect(["none", "low", "removed"]).toContain(
-          assessment.sovereigntyRisk
-        )
+        expect(["none", "low", "removed"]).toContain(assessment.sovereigntyRisk)
       }
     })
 
     it("MongoDB is marked as removed", () => {
-      const mongo = SEED_SOVEREIGNTY_SUMMARY.find(
-        (a) => a.technology === "MongoDB"
-      )
+      const mongo = SEED_SOVEREIGNTY_SUMMARY.find((a) => a.technology === "MongoDB")
       expect(mongo?.sovereigntyRisk).toBe("removed")
     })
 
     it("sovereign-rated technologies are forkable and self-hostable", () => {
-      const sovereign = SEED_SOVEREIGNTY_SUMMARY.filter(
-        (a) => a.sovereigntyRisk === "none"
-      )
+      const sovereign = SEED_SOVEREIGNTY_SUMMARY.filter((a) => a.sovereigntyRisk === "none")
       for (const tech of sovereign) {
         expect(tech.forkable).toBe(true)
         expect(tech.selfHostable).toBe(true)

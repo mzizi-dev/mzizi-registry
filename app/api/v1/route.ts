@@ -48,23 +48,19 @@ export async function GET() {
           },
           ecosystem: {
             href: "/api/v1/ecosystem",
-            description:
-              "Architecture principles, framework decision, and Ubuntu philosophy.",
+            description: "Architecture principles, framework decision, and Ubuntu philosophy.",
           },
           dataLayer: {
             href: "/api/v1/data-layer",
-            description:
-              "Local-first data layer and cloud services.",
+            description: "Local-first data layer and cloud services.",
           },
           pipeline: {
             href: "/api/v1/pipeline",
-            description:
-              "Open data pipeline — Redpanda, Flink, Doris.",
+            description: "Open data pipeline — Redpanda, Flink, Doris.",
           },
           sovereignty: {
             href: "/api/v1/sovereignty",
-            description:
-              "Technology sovereignty assessments.",
+            description: "Technology sovereignty assessments.",
           },
           health: {
             href: "/api/v1/health",
@@ -72,13 +68,11 @@ export async function GET() {
           },
           db: {
             href: "/api/v1/db",
-            description:
-              "Document store status and seeding — Supabase (Postgres) backend.",
+            description: "Document store status and seeding — Supabase (Postgres) backend.",
           },
           mcp: {
             href: "/mcp",
-            description:
-              "Model Context Protocol server — Streamable HTTP transport.",
+            description: "Model Context Protocol server — Streamable HTTP transport.",
           },
         },
       },

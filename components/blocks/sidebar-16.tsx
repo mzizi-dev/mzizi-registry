@@ -49,9 +49,7 @@ const navGroups = [
   },
 ]
 
-const quickActions = [
-  { icon: Plus, label: "New project", color: "text-cobalt" },
-]
+const quickActions = [{ icon: Plus, label: "New project", color: "text-cobalt" }]
 
 function Sidebar16() {
   const [activeWs, setActiveWs] = useState("mukoko")
@@ -70,7 +68,9 @@ function Sidebar16() {
           onClick={() => setWsOpen(!wsOpen)}
           className="flex w-full items-center gap-3 rounded-lg border border-border px-3 py-2 text-left hover:bg-muted"
         >
-          <span className={`size-5 shrink-0 rounded ${workspaces.find((w) => w.id === activeWs)?.color}`} />
+          <span
+            className={`size-5 shrink-0 rounded ${workspaces.find((w) => w.id === activeWs)?.color}`}
+          />
           <span className="flex-1 text-sm font-medium text-foreground">
             {workspaces.find((w) => w.id === activeWs)?.label}
           </span>
@@ -81,7 +81,10 @@ function Sidebar16() {
             {workspaces.map((ws) => (
               <button
                 key={ws.id}
-                onClick={() => { setActiveWs(ws.id); setWsOpen(false) }}
+                onClick={() => {
+                  setActiveWs(ws.id)
+                  setWsOpen(false)
+                }}
                 className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-muted"
               >
                 <span className={`size-4 shrink-0 rounded ${ws.color}`} />
@@ -96,7 +99,7 @@ function Sidebar16() {
       {/* Search */}
       <div className="px-3 pb-2">
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input placeholder="Search..." className="h-8 pl-8 text-sm" />
         </div>
       </div>
@@ -122,7 +125,9 @@ function Sidebar16() {
               className="flex w-full items-center justify-between px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
             >
               {group.label}
-              <ChevronDown className={`size-3 transition-transform ${collapsed[group.label] ? "-rotate-90" : ""}`} />
+              <ChevronDown
+                className={`size-3 transition-transform ${collapsed[group.label] ? "-rotate-90" : ""}`}
+              />
             </button>
             {!collapsed[group.label] && (
               <div className="mt-0.5 space-y-0.5">
@@ -158,11 +163,19 @@ function Sidebar16() {
             {dark ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
           </button>
         </div>
-        <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground" size="sm">
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-3 text-muted-foreground"
+          size="sm"
+        >
           <HelpCircle className="size-4" />
           Help & Support
         </Button>
-        <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground" size="sm">
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-3 text-muted-foreground"
+          size="sm"
+        >
           <Settings className="size-4" />
           Settings
         </Button>

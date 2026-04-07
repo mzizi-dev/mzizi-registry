@@ -83,7 +83,8 @@ function OnboardingFlow() {
               </div>
               <CardTitle className="font-serif text-2xl">Welcome to mukoko</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Your gateway to the African digital ecosystem. Let us set up your experience in a few quick steps.
+                Your gateway to the African digital ecosystem. Let us set up your experience in a
+                few quick steps.
               </p>
             </div>
           )}
@@ -98,7 +99,9 @@ function OnboardingFlow() {
                     <Upload className="size-5 text-muted-foreground" />
                   </AvatarFallback>
                 </Avatar>
-                <Button variant="outline" size="sm">Upload photo</Button>
+                <Button variant="outline" size="sm">
+                  Upload photo
+                </Button>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="onboard-name">Display name</Label>
@@ -137,7 +140,9 @@ function OnboardingFlow() {
               {selected.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {selected.map((s) => (
-                    <Badge key={s} variant="secondary">{s}</Badge>
+                    <Badge key={s} variant="secondary">
+                      {s}
+                    </Badge>
                   ))}
                 </div>
               )}

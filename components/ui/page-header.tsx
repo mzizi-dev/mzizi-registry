@@ -24,30 +24,21 @@ function PageHeader({
   backHref?: string
 }) {
   return (
-    <div
-      data-slot="page-header"
-      className={cn("flex flex-col gap-4 pb-6", className)}
-      {...props}
-    >
+    <div data-slot="page-header" className={cn("flex flex-col gap-4 pb-6", className)} {...props}>
       {breadcrumbs && breadcrumbs.length > 0 && (
         <nav aria-label="breadcrumb" data-slot="page-header-breadcrumbs">
-          <ol className="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm">
+          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
             {breadcrumbs.map((crumb, index) => (
               <li key={index} className="inline-flex items-center gap-1.5">
-                {index > 0 && (
-                  <ChevronRightIcon className="size-3.5" aria-hidden="true" />
-                )}
+                {index > 0 && <ChevronRightIcon className="size-3.5" aria-hidden="true" />}
                 {crumb.href && index < breadcrumbs.length - 1 ? (
-                  <a
-                    href={crumb.href}
-                    className="hover:text-foreground transition-colors"
-                  >
+                  <a href={crumb.href} className="transition-colors hover:text-foreground">
                     {crumb.label}
                   </a>
                 ) : (
                   <span
                     className={cn(
-                      index === breadcrumbs.length - 1 && "text-foreground font-medium"
+                      index === breadcrumbs.length - 1 && "font-medium text-foreground"
                     )}
                     aria-current={index === breadcrumbs.length - 1 ? "page" : undefined}
                   >
@@ -64,7 +55,7 @@ function PageHeader({
           {backHref && (
             <a
               href={backHref}
-              className="text-muted-foreground hover:text-foreground inline-flex size-9 items-center justify-center rounded-lg transition-colors"
+              className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
               aria-label="Go back"
             >
               <ArrowLeftIcon className="size-4" />
@@ -80,7 +71,7 @@ function PageHeader({
             {description && (
               <p
                 data-slot="page-header-description"
-                className="text-muted-foreground text-sm sm:text-base"
+                className="text-sm text-muted-foreground sm:text-base"
               >
                 {description}
               </p>
@@ -88,10 +79,7 @@ function PageHeader({
           </div>
         </div>
         {actions && (
-          <div
-            data-slot="page-header-actions"
-            className="flex shrink-0 items-center gap-2"
-          >
+          <div data-slot="page-header-actions" className="flex shrink-0 items-center gap-2">
             {actions}
           </div>
         )}

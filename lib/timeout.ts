@@ -65,11 +65,7 @@ export class TimeoutError extends Error {
  * }
  * ```
  */
-export async function withTimeout<T>(
-  fn: () => Promise<T>,
-  ms: number,
-  label?: string
-): Promise<T> {
+export async function withTimeout<T>(fn: () => Promise<T>, ms: number, label?: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     let settled = false
 

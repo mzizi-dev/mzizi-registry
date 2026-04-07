@@ -3,12 +3,7 @@ import { Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
 interface PricingCardProps {
@@ -54,32 +49,21 @@ function PricingCard({
   return (
     <Card
       data-slot="pricing-card"
-      className={cn(
-        "relative flex flex-col",
-        highlighted && "border-primary shadow-lg",
-        className
-      )}
+      className={cn("relative flex flex-col", highlighted && "border-primary shadow-lg", className)}
     >
       {badge && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <Badge
-            variant={highlighted ? "default" : "secondary"}
-            className="whitespace-nowrap"
-          >
+          <Badge variant={highlighted ? "default" : "secondary"} className="whitespace-nowrap">
             {badge}
           </Badge>
         </div>
       )}
       <CardHeader className="text-center">
         <CardTitle className="text-lg">{name}</CardTitle>
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
+        {description && <p className="text-sm text-muted-foreground">{description}</p>}
         <div className="mt-4">
           <span className="text-4xl font-bold">{price}</span>
-          {period && (
-            <span className="text-sm text-muted-foreground">{period}</span>
-          )}
+          {period && <span className="text-sm text-muted-foreground">{period}</span>}
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col">

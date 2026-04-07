@@ -5,97 +5,97 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
---font-sans: 'Noto Sans', 'Noto Sans Fallback', system-ui, sans-serif;
---font-serif: 'Noto Serif', 'Noto Serif Fallback', Georgia, serif;
---font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
---color-background: var(--background);
---color-foreground: var(--foreground);
---color-card: var(--card);
---color-card-foreground: var(--card-foreground);
---color-popover: var(--popover);
---color-popover-foreground: var(--popover-foreground);
---color-primary: var(--primary);
---color-primary-foreground: var(--primary-foreground);
---color-secondary: var(--secondary);
---color-secondary-foreground: var(--secondary-foreground);
---color-muted: var(--muted);
---color-muted-foreground: var(--muted-foreground);
---color-accent: var(--accent);
---color-accent-foreground: var(--accent-foreground);
---color-destructive: var(--destructive);
---color-destructive-foreground: var(--destructive-foreground);
---color-border: var(--border);
---color-input: var(--input);
---color-ring: var(--ring);
---color-chart-1: var(--chart-1);
---color-chart-2: var(--chart-2);
---color-chart-3: var(--chart-3);
---color-chart-4: var(--chart-4);
---color-chart-5: var(--chart-5);
---color-sidebar: var(--sidebar);
---color-sidebar-foreground: var(--sidebar-foreground);
---color-sidebar-primary: var(--sidebar-primary);
---color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
---color-sidebar-accent: var(--sidebar-accent);
---color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
---color-sidebar-border: var(--sidebar-border);
---color-sidebar-ring: var(--sidebar-ring);
-/* Radius system — derived from --radius-unit (7px)
+  --font-sans: "Noto Sans", "Noto Sans Fallback", system-ui, sans-serif;
+  --font-serif: "Noto Serif", "Noto Serif Fallback", Georgia, serif;
+  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback", monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* Radius system — derived from --radius-unit (7px)
    sm: 1×unit (7),  md: 1×unit + 5 (12),  lg: 2×unit (14),  xl: 1×unit + 10 (17)
    Buttons are always pill (9999px) — brand identity decision */
---radius-unit: 7px;
---radius-sm: var(--radius-unit);
---radius-md: calc(var(--radius-unit) + 5px);
---radius-lg: calc(var(--radius-unit) * 2);
---radius-xl: calc(var(--radius-unit) + 10px);
---radius-2xl: calc(var(--radius-unit) + 10px);
---radius-3xl: 9999px;
---radius-4xl: 9999px;
-/* Five African Minerals — theme-adaptive */
---color-cobalt: var(--mineral-cobalt);
---color-tanzanite: var(--mineral-tanzanite);
---color-malachite: var(--mineral-malachite);
---color-gold: var(--mineral-gold);
---color-terracotta: var(--mineral-terracotta);
+  --radius-unit: 7px;
+  --radius-sm: var(--radius-unit);
+  --radius-md: calc(var(--radius-unit) + 5px);
+  --radius-lg: calc(var(--radius-unit) * 2);
+  --radius-xl: calc(var(--radius-unit) + 10px);
+  --radius-2xl: calc(var(--radius-unit) + 10px);
+  --radius-3xl: 9999px;
+  --radius-4xl: 9999px;
+  /* Five African Minerals — theme-adaptive */
+  --color-cobalt: var(--mineral-cobalt);
+  --color-tanzanite: var(--mineral-tanzanite);
+  --color-malachite: var(--mineral-malachite);
+  --color-gold: var(--mineral-gold);
+  --color-terracotta: var(--mineral-terracotta);
 }
 
 /* Light mode - Warm African palette, neutral primary, minerals as accents */
 :root {
   /* Five African Minerals — light */
-  --mineral-cobalt: #0047AB;
-  --mineral-tanzanite: #4B0082;
-  --mineral-malachite: #004D40;
-  --mineral-gold: #5D4037;
-  --mineral-terracotta: #8B4513;
-  --background: #FAF9F5;
+  --mineral-cobalt: #0047ab;
+  --mineral-tanzanite: #4b0082;
+  --mineral-malachite: #004d40;
+  --mineral-gold: #5d4037;
+  --mineral-terracotta: #8b4513;
+  --background: #faf9f5;
   --foreground: #141413;
-  --card: #FFFFFF;
+  --card: #ffffff;
   --card-foreground: #141413;
-  --popover: #FFFFFF;
+  --popover: #ffffff;
   --popover-foreground: #141413;
   --primary: #141413;
-  --primary-foreground: #FAF9F5;
-  --secondary: #F3F2EE;
+  --primary-foreground: #faf9f5;
+  --secondary: #f3f2ee;
   --secondary-foreground: #141413;
-  --muted: #F3F2EE;
-  --muted-foreground: #5C5B58;
-  --accent: #F3F2EE;
+  --muted: #f3f2ee;
+  --muted-foreground: #5c5b58;
+  --accent: #f3f2ee;
   --accent-foreground: #141413;
-  --destructive: #B3261E;
+  --destructive: #b3261e;
   --border: rgba(10, 10, 10, 0.08);
-  --input: rgba(10, 10, 10, 0.10);
+  --input: rgba(10, 10, 10, 0.1);
   --ring: #141413;
-  --chart-1: #4B0082;
-  --chart-2: #0047AB;
-  --chart-3: #004D40;
-  --chart-4: #5D4037;
-  --chart-5: #8B4513;
+  --chart-1: #4b0082;
+  --chart-2: #0047ab;
+  --chart-3: #004d40;
+  --chart-4: #5d4037;
+  --chart-5: #8b4513;
   --radius: calc(var(--radius-unit) * 2);
-  --sidebar: #FAF9F5;
+  --sidebar: #faf9f5;
   --sidebar-foreground: #141413;
   --sidebar-primary: #141413;
-  --sidebar-primary-foreground: #FAF9F5;
-  --sidebar-accent: #F3F2EE;
+  --sidebar-primary-foreground: #faf9f5;
+  --sidebar-accent: #f3f2ee;
   --sidebar-accent-foreground: #141413;
   --sidebar-border: rgba(10, 10, 10, 0.08);
   --sidebar-ring: #141413;
@@ -104,51 +104,51 @@
 /* Dark mode - Deep African night, neutral primary, minerals as accents */
 .dark {
   /* Five African Minerals — dark */
-  --mineral-cobalt: #00B0FF;
-  --mineral-tanzanite: #B388FF;
-  --mineral-malachite: #64FFDA;
-  --mineral-gold: #FFD740;
-  --mineral-terracotta: #D4A574;
-  --background: #0A0A0A;
-  --foreground: #F5F5F4;
+  --mineral-cobalt: #00b0ff;
+  --mineral-tanzanite: #b388ff;
+  --mineral-malachite: #64ffda;
+  --mineral-gold: #ffd740;
+  --mineral-terracotta: #d4a574;
+  --background: #0a0a0a;
+  --foreground: #f5f5f4;
   --card: #141414;
-  --card-foreground: #F5F5F4;
+  --card-foreground: #f5f5f4;
   --popover: #141414;
-  --popover-foreground: #F5F5F4;
-  --primary: #F5F5F4;
-  --primary-foreground: #0A0A0A;
-  --secondary: #1E1E1E;
-  --secondary-foreground: #F5F5F4;
-  --muted: #1E1E1E;
-  --muted-foreground: #9A9A95;
-  --accent: #1E1E1E;
-  --accent-foreground: #F5F5F4;
-  --destructive: #F2B8B5;
+  --popover-foreground: #f5f5f4;
+  --primary: #f5f5f4;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1e1e1e;
+  --secondary-foreground: #f5f5f4;
+  --muted: #1e1e1e;
+  --muted-foreground: #9a9a95;
+  --accent: #1e1e1e;
+  --accent-foreground: #f5f5f4;
+  --destructive: #f2b8b5;
   --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.10);
-  --ring: #F5F5F4;
-  --chart-1: #B388FF;
-  --chart-2: #00B0FF;
-  --chart-3: #64FFDA;
-  --chart-4: #FFD740;
-  --chart-5: #D4A574;
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #f5f5f4;
+  --chart-1: #b388ff;
+  --chart-2: #00b0ff;
+  --chart-3: #64ffda;
+  --chart-4: #ffd740;
+  --chart-5: #d4a574;
   --sidebar: #141414;
-  --sidebar-foreground: #F5F5F4;
-  --sidebar-primary: #F5F5F4;
-  --sidebar-primary-foreground: #0A0A0A;
-  --sidebar-accent: #1E1E1E;
-  --sidebar-accent-foreground: #F5F5F4;
+  --sidebar-foreground: #f5f5f4;
+  --sidebar-primary: #f5f5f4;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #1e1e1e;
+  --sidebar-accent-foreground: #f5f5f4;
   --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #F5F5F4;
+  --sidebar-ring: #f5f5f4;
 }
 
 @layer base {
-* {
-  @apply border-border outline-ring/50;
-}
-body {
-  @apply bg-background text-foreground;
-}
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 /* Landing page: break out of Nextra's content container to go full-width */

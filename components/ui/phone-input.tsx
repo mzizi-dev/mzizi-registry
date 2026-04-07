@@ -5,11 +5,7 @@ import { ChevronDownIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface Country {
   code: string
@@ -77,11 +73,7 @@ function PhoneInput({
   }
 
   return (
-    <div
-      data-slot="phone-input"
-      className={cn("flex gap-2", className)}
-      {...props}
-    >
+    <div data-slot="phone-input" className={cn("flex gap-2", className)} {...props}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
@@ -90,9 +82,9 @@ function PhoneInput({
             aria-expanded={open}
             aria-label="Select country code"
             className={cn(
-              "bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50",
+              "border-input bg-input/30 focus-visible:border-ring focus-visible:ring-ring/50",
               "inline-flex h-9 shrink-0 items-center gap-1 rounded-4xl border px-2.5 text-sm transition-colors",
-              "hover:bg-input/50 focus-visible:outline-none focus-visible:ring-[3px]"
+              "hover:bg-input/50 focus-visible:ring-[3px] focus-visible:outline-none"
             )}
           >
             <span>{selectedCountry.flag}</span>
@@ -102,9 +94,7 @@ function PhoneInput({
         </PopoverTrigger>
         <PopoverContent className="w-64 p-0" align="start">
           <div className="max-h-64 overflow-y-auto p-1">
-            <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
-              Africa
-            </div>
+            <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">Africa</div>
             {AFRICAN_COUNTRIES.map((country) => (
               <button
                 key={country.code}
@@ -121,9 +111,7 @@ function PhoneInput({
                 <span className="text-muted-foreground">{country.dial}</span>
               </button>
             ))}
-            <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
-              Other
-            </div>
+            <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">Other</div>
             {OTHER_COUNTRIES.map((country) => (
               <button
                 key={country.code}

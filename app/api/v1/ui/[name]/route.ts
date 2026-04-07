@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getComponent, isSupabaseConfigured, isSeeded } from "@/lib/db"
+import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("registry")
 
@@ -14,14 +15,17 @@ const CORS_CACHE = {
  *
  * Reads metadata and source code from Supabase.
  */
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ name: string }> }
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ name: string }> }) {
+  const start = Date.now()
   try {
     const { name } = await params
 
     if (!name || typeof name !== "string") {
+      trackApiCall({
+        endpoint: "/api/v1/ui/[name]",
+        durationMs: Date.now() - start,
+        statusCode: 400,
+      })
       return NextResponse.json(
         { error: "Invalid component name" },
         { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }
@@ -29,17 +33,28 @@ export async function GET(
     }
 
     if (!isSupabaseConfigured()) {
+      trackApiCall({
+        endpoint: `/api/v1/ui/${name}`,
+        durationMs: Date.now() - start,
+        statusCode: 503,
+        componentName: name,
+      })
       return NextResponse.json(
         {
           error: "Database not configured",
-          message:
-            "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
         },
         { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
       )
     }
 
     if (!(await isSeeded().catch(() => false))) {
+      trackApiCall({
+        endpoint: `/api/v1/ui/${name}`,
+        durationMs: Date.now() - start,
+        statusCode: 503,
+        componentName: name,
+      })
       return NextResponse.json(
         {
           error: "Database not seeded",
@@ -53,6 +68,12 @@ export async function GET(
 
     if (!component) {
       logger.warn("Component not found", { data: { name } })
+      trackApiCall({
+        endpoint: `/api/v1/ui/${name}`,
+        durationMs: Date.now() - start,
+        statusCode: 404,
+        componentName: name,
+      })
       return NextResponse.json(
         { error: `Component "${name}" not found in registry` },
         { status: 404, headers: { "Access-Control-Allow-Origin": "*" } }
@@ -60,6 +81,12 @@ export async function GET(
     }
 
     if (!component.source_code) {
+      trackApiCall({
+        endpoint: `/api/v1/ui/${name}`,
+        durationMs: Date.now() - start,
+        statusCode: 404,
+        componentName: name,
+      })
       return NextResponse.json(
         { error: `No source code available for "${name}"` },
         { status: 404, headers: { "Access-Control-Allow-Origin": "*" } }
@@ -74,6 +101,13 @@ export async function GET(
 
     logger.info("Component served", {
       data: { name, fileCount: files.length },
+    })
+
+    trackApiCall({
+      endpoint: `/api/v1/ui/${name}`,
+      durationMs: Date.now() - start,
+      statusCode: 200,
+      componentName: name,
     })
 
     return NextResponse.json(
@@ -92,6 +126,7 @@ export async function GET(
     logger.error("Registry item error", {
       error: error instanceof Error ? error : new Error(String(error)),
     })
+    trackApiCall({ endpoint: "/api/v1/ui/[name]", durationMs: Date.now() - start, statusCode: 500 })
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }

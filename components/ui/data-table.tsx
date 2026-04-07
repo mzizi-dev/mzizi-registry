@@ -65,10 +65,8 @@ function DataTable<TData, TValue>({
   className,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] =
-    React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
@@ -101,15 +99,9 @@ function DataTable<TData, TValue>({
           {filterColumn && (
             <Input
               placeholder={filterPlaceholder}
-              value={
-                (table
-                  .getColumn(filterColumn)
-                  ?.getFilterValue() as string) ?? ""
-              }
+              value={(table.getColumn(filterColumn)?.getFilterValue() as string) ?? ""}
               onChange={(event) =>
-                table
-                  .getColumn(filterColumn)
-                  ?.setFilterValue(event.target.value)
+                table.getColumn(filterColumn)?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />
@@ -130,9 +122,7 @@ function DataTable<TData, TValue>({
                       key={column.id}
                       className="capitalize"
                       checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
@@ -153,10 +143,7 @@ function DataTable<TData, TValue>({
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -165,26 +152,17 @@ function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -226,15 +204,11 @@ function DataTable<TData, TValue>({
 
 // ── DataTableColumnHeader ───────────────────────────────────────────
 
-interface DataTableColumnHeaderProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface DataTableColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string
 }
 
-function DataTableColumnHeader({
-  title,
-  className,
-}: DataTableColumnHeaderProps) {
+function DataTableColumnHeader({ title, className }: DataTableColumnHeaderProps) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
       {title}

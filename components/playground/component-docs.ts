@@ -32,7 +32,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Icon support with automatic grid layout",
       "AlertTitle and AlertDescription subcomponents",
       "AlertAction for inline actions",
-      "role=\"alert\" for screen readers",
+      'role="alert" for screen readers',
     ],
   },
   "alert-dialog": {
@@ -56,10 +56,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Thumbnail grids",
       "Map or chart containers",
     ],
-    features: [
-      "Any numeric ratio (16/9, 4/3, 1/1)",
-      "Content scales within the ratio",
-    ],
+    features: ["Any numeric ratio (16/9, 4/3, 1/1)", "Content scales within the ratio"],
   },
   avatar: {
     useCases: [
@@ -83,22 +80,11 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Technology stack labels",
     ],
     variants: ["default", "secondary", "destructive", "outline", "ghost", "link"],
-    features: [
-      "Compact size for inline use",
-      "Supports asChild for polymorphic rendering",
-    ],
+    features: ["Compact size for inline use", "Supports asChild for polymorphic rendering"],
   },
   breadcrumb: {
-    useCases: [
-      "Navigation hierarchy display",
-      "File path indicators",
-      "Multi-step form progress",
-    ],
-    features: [
-      "Separator customization",
-      "Ellipsis for deep paths",
-      "Accessible nav landmark",
-    ],
+    useCases: ["Navigation hierarchy display", "File path indicators", "Multi-step form progress"],
+    features: ["Separator customization", "Ellipsis for deep paths", "Accessible nav landmark"],
   },
   button: {
     useCases: [
@@ -118,25 +104,13 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   "button-group": {
-    useCases: [
-      "Toolbar button groupings",
-      "Segmented controls",
-      "Action button sets",
-    ],
+    useCases: ["Toolbar button groupings", "Segmented controls", "Action button sets"],
     variants: ["horizontal", "vertical"],
     sizes: ["default", "sm", "lg"],
-    features: [
-      "Automatic separator between buttons",
-      "Horizontal and vertical orientation",
-    ],
+    features: ["Automatic separator between buttons", "Horizontal and vertical orientation"],
   },
   calendar: {
-    useCases: [
-      "Date pickers",
-      "Booking systems",
-      "Event scheduling",
-      "Date range selection",
-    ],
+    useCases: ["Date pickers", "Booking systems", "Event scheduling", "Date range selection"],
     features: [
       "Single date and date range selection",
       "Keyboard navigation",
@@ -160,12 +134,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   carousel: {
-    useCases: [
-      "Image galleries",
-      "Product showcases",
-      "Testimonial sliders",
-      "Onboarding flows",
-    ],
+    useCases: ["Image galleries", "Product showcases", "Testimonial sliders", "Onboarding flows"],
     features: [
       "Touch/swipe support",
       "Previous/Next buttons",
@@ -235,19 +204,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Action menus",
       "Keyboard-driven navigation",
     ],
-    features: [
-      "Fuzzy search built-in",
-      "Grouped items",
-      "Keyboard navigation",
-      "Built on cmdk",
-    ],
+    features: ["Fuzzy search built-in", "Grouped items", "Keyboard navigation", "Built on cmdk"],
   },
   "context-menu": {
-    useCases: [
-      "Right-click menus",
-      "File manager actions",
-      "Canvas/editor context actions",
-    ],
+    useCases: ["Right-click menus", "File manager actions", "Canvas/editor context actions"],
     features: [
       "Triggered by right-click",
       "Submenus support",
@@ -304,17 +264,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "First-time user prompts",
       "Error recovery screens",
     ],
-    features: [
-      "Icon, title, and description slots",
-      "CVA variants for different contexts",
-    ],
+    features: ["Icon, title, and description slots", "CVA variants for different contexts"],
   },
   field: {
-    useCases: [
-      "Form field wrappers",
-      "Input with label and description",
-      "Error message display",
-    ],
+    useCases: ["Form field wrappers", "Input with label and description", "Error message display"],
     features: [
       "Label, description, and message subcomponents",
       "Error state styling",
@@ -349,12 +302,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   input: {
-    useCases: [
-      "Text input fields",
-      "Search bars",
-      "Email/password fields",
-      "Number inputs",
-    ],
+    useCases: ["Text input fields", "Search bars", "Email/password fields", "Number inputs"],
     features: [
       "All HTML input types supported",
       "Focus ring styling",
@@ -368,17 +316,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Input with prefix/suffix icons",
       "URL input with protocol selector",
     ],
-    features: [
-      "Groups input, button, and addon elements",
-      "Automatic border radius handling",
-    ],
+    features: ["Groups input, button, and addon elements", "Automatic border radius handling"],
   },
   "input-otp": {
-    useCases: [
-      "Two-factor authentication",
-      "Verification codes",
-      "PIN entry",
-    ],
+    useCases: ["Two-factor authentication", "Verification codes", "PIN entry"],
     features: [
       "Copy-paste support",
       "Automatic focus advancement",
@@ -392,17 +333,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Hotkey indicators",
       "Documentation for keyboard interactions",
     ],
-    features: [
-      "Styled keyboard key appearance",
-      "Composable for key combinations",
-    ],
+    features: ["Styled keyboard key appearance", "Composable for key combinations"],
   },
   label: {
-    useCases: [
-      "Form field labels",
-      "Checkbox/radio labels",
-      "Accessible input labeling",
-    ],
+    useCases: ["Form field labels", "Checkbox/radio labels", "Accessible input labeling"],
     features: [
       "Automatically associates with form controls",
       "Peer-disabled styling",
@@ -415,11 +349,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Text editor toolbars",
       "Navigation bars with dropdowns",
     ],
-    features: [
-      "Keyboard navigation between menus",
-      "Submenus",
-      "Checkbox and radio items",
-    ],
+    features: ["Keyboard navigation between menus", "Submenus", "Checkbox and radio items"],
   },
   "native-select": {
     useCases: [
@@ -434,36 +364,15 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   "navigation-menu": {
-    useCases: [
-      "Main site navigation",
-      "Documentation sidebar",
-      "Multi-level navigation",
-    ],
-    features: [
-      "Viewport-based content display",
-      "Keyboard navigation",
-      "CVA indicator variants",
-    ],
+    useCases: ["Main site navigation", "Documentation sidebar", "Multi-level navigation"],
+    features: ["Viewport-based content display", "Keyboard navigation", "CVA indicator variants"],
   },
   pagination: {
-    useCases: [
-      "List pagination",
-      "Search results pages",
-      "Table data navigation",
-    ],
-    features: [
-      "Previous/Next links",
-      "Page number links",
-      "Ellipsis for large page counts",
-    ],
+    useCases: ["List pagination", "Search results pages", "Table data navigation"],
+    features: ["Previous/Next links", "Page number links", "Ellipsis for large page counts"],
   },
   popover: {
-    useCases: [
-      "Rich tooltips",
-      "Date picker triggers",
-      "Color pickers",
-      "Inline editing panels",
-    ],
+    useCases: ["Rich tooltips", "Date picker triggers", "Color pickers", "Inline editing panels"],
     features: [
       "Portal rendering",
       "Configurable alignment",
@@ -498,11 +407,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   resizable: {
-    useCases: [
-      "Split-pane layouts",
-      "IDE-style panels",
-      "Dashboard customization",
-    ],
+    useCases: ["Split-pane layouts", "IDE-style panels", "Dashboard customization"],
     features: [
       "Keyboard-accessible resize handles",
       "Horizontal and vertical groups",
@@ -537,15 +442,8 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   separator: {
-    useCases: [
-      "Content section dividers",
-      "Menu item separators",
-      "Toolbar dividers",
-    ],
-    features: [
-      "Horizontal and vertical orientation",
-      "Decorative or semantic",
-    ],
+    useCases: ["Content section dividers", "Menu item separators", "Toolbar dividers"],
+    features: ["Horizontal and vertical orientation", "Decorative or semantic"],
   },
   sheet: {
     useCases: [
@@ -582,10 +480,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Perceived performance improvement",
       "Layout preservation during load",
     ],
-    features: [
-      "Pulse animation",
-      "Composable shapes (circles, rectangles, text lines)",
-    ],
+    features: ["Pulse animation", "Composable shapes (circles, rectangles, text lines)"],
   },
   slider: {
     useCases: [
@@ -615,23 +510,11 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   spinner: {
-    useCases: [
-      "Loading indicators",
-      "Button loading states",
-      "Inline loading feedback",
-    ],
-    features: [
-      "Animated rotation",
-      "Uses Lucide LoaderCircle icon",
-    ],
+    useCases: ["Loading indicators", "Button loading states", "Inline loading feedback"],
+    features: ["Animated rotation", "Uses Lucide LoaderCircle icon"],
   },
   switch: {
-    useCases: [
-      "On/off toggles",
-      "Feature flags",
-      "Settings preferences",
-      "Dark mode toggle",
-    ],
+    useCases: ["On/off toggles", "Feature flags", "Settings preferences", "Dark mode toggle"],
     sizes: ["default", "sm"],
     features: [
       "Animated thumb transition",
@@ -640,12 +523,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   table: {
-    useCases: [
-      "Data tables",
-      "Comparison charts",
-      "Pricing tables",
-      "Admin data views",
-    ],
+    useCases: ["Data tables", "Comparison charts", "Pricing tables", "Admin data views"],
     features: [
       "Header, Body, Footer, Caption subcomponents",
       "Responsive horizontal scroll",
@@ -673,18 +551,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Message composition",
       "Code input fields",
     ],
-    features: [
-      "Auto-resize support via CSS",
-      "Focus ring styling",
-      "aria-invalid error state",
-    ],
+    features: ["Auto-resize support via CSS", "Focus ring styling", "aria-invalid error state"],
   },
   toast: {
-    useCases: [
-      "Temporary notifications",
-      "Action feedback",
-      "Error messages",
-    ],
+    useCases: ["Temporary notifications", "Action feedback", "Error messages"],
     variants: ["default", "destructive"],
     features: [
       "Auto-dismiss timer",
@@ -708,11 +578,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   "toggle-group": {
-    useCases: [
-      "Segmented controls",
-      "View mode selection (grid/list)",
-      "Text alignment selection",
-    ],
+    useCases: ["Segmented controls", "View mode selection (grid/list)", "Text alignment selection"],
     variants: ["default", "outline"],
     sizes: ["default", "sm", "lg"],
     features: [
@@ -877,7 +743,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Composes Calendar, Popover, and Button primitives",
     ],
   },
-  "typography": {
+  typography: {
     useCases: [
       "Consistent heading styles across pages",
       "Blog and article content formatting",
@@ -1001,12 +867,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   "copy-button": {
-    useCases: [
-      "Code snippet copying",
-      "Install command copying",
-      "URL sharing",
-      "API key copying",
-    ],
+    useCases: ["Code snippet copying", "Install command copying", "URL sharing", "API key copying"],
     features: [
       "Clipboard API with legacy fallback",
       "Visual feedback (checkmark) on copy",
@@ -1030,7 +891,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Optional label text",
     ],
   },
-  "timeline": {
+  timeline: {
     useCases: [
       "Event history display",
       "Activity feeds",
@@ -1060,7 +921,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Composes Card, Badge, Button, Separator primitives",
     ],
   },
-  "rating": {
+  rating: {
     useCases: [
       "Event/venue ratings",
       "Product reviews",

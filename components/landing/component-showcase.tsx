@@ -8,19 +8,8 @@ import { Switch } from "@/components/ui/switch"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card"
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-  AvatarGroup,
-} from "@/components/ui/avatar"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Label } from "@/components/ui/label"
 
@@ -43,11 +32,7 @@ function PreviewCard({
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-foreground/12">
       <div className="flex min-h-[180px] items-center justify-center p-4 sm:min-h-[200px] sm:p-8">
         <ErrorBoundary
-          fallback={
-            <p className="text-xs text-muted-foreground">
-              Preview unavailable
-            </p>
-          }
+          fallback={<p className="text-xs text-muted-foreground">Preview unavailable</p>}
         >
           {children}
         </ErrorBoundary>
@@ -110,7 +95,10 @@ function CardShowcase() {
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Status</span>
-            <Badge variant="outline" className="border-[var(--color-malachite)]/30 text-[var(--color-malachite)]">
+            <Badge
+              variant="outline"
+              className="border-[var(--color-malachite)]/30 text-[var(--color-malachite)]"
+            >
               Active
             </Badge>
           </div>
@@ -230,20 +218,20 @@ function AvatarShowcase() {
   )
 }
 
-
 export function ComponentShowcase() {
   return (
     <section id="components" className="px-4 py-16 sm:px-6 md:py-28">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
-          <p className="mb-3 text-sm font-medium uppercase tracking-widest text-muted-foreground">
+          <p className="mb-3 text-sm font-medium tracking-widest text-muted-foreground uppercase">
             Live Preview
           </p>
-          <h2 className="font-serif text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+          <h2 className="font-serif text-2xl font-bold tracking-tight text-balance text-foreground sm:text-3xl md:text-4xl">
             See them in action
           </h2>
           <p className="mt-3 text-sm text-muted-foreground sm:mt-4 sm:text-base">
-            Interactive previews of components from the registry. Click the copy icon to grab the install command.
+            Interactive previews of components from the registry. Click the copy icon to grab the
+            install command.
           </p>
         </div>
 
@@ -254,10 +242,7 @@ export function ComponentShowcase() {
           >
             <ButtonShowcase />
           </PreviewCard>
-          <PreviewCard
-            name="badge"
-            description="Small status indicators and labels."
-          >
+          <PreviewCard name="badge" description="Small status indicators and labels.">
             <BadgeShowcase />
           </PreviewCard>
           <PreviewCard
@@ -266,22 +251,13 @@ export function ComponentShowcase() {
           >
             <CardShowcase />
           </PreviewCard>
-          <PreviewCard
-            name="input"
-            description="Form input fields with label support."
-          >
+          <PreviewCard name="input" description="Form input fields with label support.">
             <InputShowcase />
           </PreviewCard>
-          <PreviewCard
-            name="switch"
-            description="Toggle controls for binary states."
-          >
+          <PreviewCard name="switch" description="Toggle controls for binary states.">
             <SwitchShowcase />
           </PreviewCard>
-          <PreviewCard
-            name="tabs"
-            description="Layered content sections with tab navigation."
-          >
+          <PreviewCard name="tabs" description="Layered content sections with tab navigation.">
             <TabsShowcase />
           </PreviewCard>
           <PreviewCard
@@ -290,7 +266,6 @@ export function ComponentShowcase() {
           >
             <AvatarShowcase />
           </PreviewCard>
-
         </div>
       </div>
     </section>

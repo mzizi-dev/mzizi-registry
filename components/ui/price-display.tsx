@@ -20,12 +20,14 @@ function PriceDisplay({
   return (
     <div
       data-slot="price-display"
-      className={cn("flex items-baseline gap-2 flex-wrap", className)}
+      className={cn("flex flex-wrap items-baseline gap-2", className)}
       {...props}
     >
       <span className="text-2xl font-bold text-foreground">{formatter.format(amount)}</span>
       {originalAmount != null && originalAmount > amount && (
-        <span className="text-sm text-muted-foreground line-through">{formatter.format(originalAmount)}</span>
+        <span className="text-sm text-muted-foreground line-through">
+          {formatter.format(originalAmount)}
+        </span>
       )}
       {discount && (
         <span className="rounded-4xl bg-[var(--color-malachite)]/15 px-2 py-0.5 text-xs font-medium text-[var(--color-malachite)]">

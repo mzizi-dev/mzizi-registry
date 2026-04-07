@@ -26,36 +26,49 @@ export const ARCHITECTURE_PRINCIPLES: ArchitecturePrinciple[] = [
     name: "ubuntu",
     title: "Ubuntu Philosophy",
     description: "I am because we are — every architectural decision flows from communal benefit.",
-    rationale: "Mukoko is Africa's super app built not as a copy of Western or Eastern platforms, but as a genuinely African product rooted in the Ubuntu philosophy. The platform exists to serve communities, not extract from them.",
-    implementation: "Open data layer shares anonymised platform intelligence with the continent. Community-contributed data syncs across all devices. Platform data belongs to Africa.",
+    rationale:
+      "Mukoko is Africa's super app built not as a copy of Western or Eastern platforms, but as a genuinely African product rooted in the Ubuntu philosophy. The platform exists to serve communities, not extract from them.",
+    implementation:
+      "Open data layer shares anonymised platform intelligence with the continent. Community-contributed data syncs across all devices. Platform data belongs to Africa.",
   },
   {
     name: "local-first",
     title: "Local-First",
-    description: "The device is the primary source of truth. The cloud is a synchronisation and backup layer, not a dependency.",
-    rationale: "Mukoko must work fully — browsing, payments, community content, weather data — in a village with no connectivity, on a phone with 2G, or in a city with intermittent wifi. The infrastructure must match the reality of African users' lives.",
-    implementation: "RxDB with SQLite (native) or IndexedDB (browser) as the local database. Reads and writes happen locally without network round-trips. CouchDB and Supabase sync when connectivity exists.",
+    description:
+      "The device is the primary source of truth. The cloud is a synchronisation and backup layer, not a dependency.",
+    rationale:
+      "Mukoko must work fully — browsing, payments, community content, weather data — in a village with no connectivity, on a phone with 2G, or in a city with intermittent wifi. The infrastructure must match the reality of African users' lives.",
+    implementation:
+      "RxDB with SQLite (native) or IndexedDB (browser) as the local database. Reads and writes happen locally without network round-trips. CouchDB and Supabase sync when connectivity exists.",
   },
   {
     name: "mobile-first",
     title: "Mobile-First",
     description: "The primary interface is a mobile device with constrained resources.",
-    rationale: "Architecture is designed for small screens, limited battery, constrained data plans, and the hardware reality of the African smartphone market — including Android, iOS, and critically, Huawei HarmonyOS devices.",
-    implementation: "Next.js + Capacitor as a thin native shell. 48px minimum touch targets. Progressive loading. Lazy sections with memory pressure monitoring.",
+    rationale:
+      "Architecture is designed for small screens, limited battery, constrained data plans, and the hardware reality of the African smartphone market — including Android, iOS, and critically, Huawei HarmonyOS devices.",
+    implementation:
+      "Next.js + Capacitor as a thin native shell. 48px minimum touch targets. Progressive loading. Lazy sections with memory pressure monitoring.",
   },
   {
     name: "open-source-sovereign",
     title: "Open Source & Sovereign",
-    description: "Choose genuinely open source alternatives over proprietary corporate technologies.",
-    rationale: "Strategic risk management. External corporate dependencies can be weaponised. Huawei exists as a company building its own OS precisely because external dependencies were used against it. Mukoko thinks about this before it becomes a crisis.",
-    implementation: "Every technology assessed for sovereignty risk. Apache-licensed and public domain technologies preferred. All core infrastructure is self-hostable and forkable. MongoDB removed for SSPL license concerns.",
+    description:
+      "Choose genuinely open source alternatives over proprietary corporate technologies.",
+    rationale:
+      "Strategic risk management. External corporate dependencies can be weaponised. Huawei exists as a company building its own OS precisely because external dependencies were used against it. Mukoko thinks about this before it becomes a crisis.",
+    implementation:
+      "Every technology assessed for sovereignty risk. Apache-licensed and public domain technologies preferred. All core infrastructure is self-hostable and forkable. MongoDB removed for SSPL license concerns.",
   },
   {
     name: "open-data",
     title: "Open Data",
-    description: "Platform-level, anonymised, aggregate data is Mukoko's gift to the continent, not its moat.",
-    rationale: "Researchers, journalists, governments, developers, and NGOs across Africa should be able to query what the Mukoko community collectively knows about weather, foot traffic, economic activity, and community life. Personal data remains private and protected. Platform data belongs to Africa.",
-    implementation: "Apache Doris as the open data engine. Apache Flink strips all PII before data reaches the analytical layer. Public REST API for open data queries. MySQL-compatible SQL interface for researchers.",
+    description:
+      "Platform-level, anonymised, aggregate data is Mukoko's gift to the continent, not its moat.",
+    rationale:
+      "Researchers, journalists, governments, developers, and NGOs across Africa should be able to query what the Mukoko community collectively knows about weather, foot traffic, economic activity, and community life. Personal data remains private and protected. Platform data belongs to Africa.",
+    implementation:
+      "Apache Doris as the open data engine. Apache Flink strips all PII before data reaches the analytical layer. Public REST API for open data queries. MySQL-compatible SQL interface for researchers.",
   },
 ]
 
@@ -65,8 +78,10 @@ export const FRAMEWORK_DECISION: FrameworkDecision = {
   name: "next-js-capacitor",
   approach: "web-first",
   framework: "Next.js + Capacitor",
-  rationale: "The two dominant cross-platform frameworks (Flutter/React Native) are controlled by large American corporations. Capacitor runs web standards — HTML, CSS, JavaScript — inside a native WebView. Web standards are governed by the W3C and WHATWG (international standards bodies), and JavaScript by ECMA International (Swiss). This is also precisely the architecture that WeChat and Alipay converged on — a runtime environment hosting mini-applications built on web standards.",
-  sovereigntyAdvantage: "No framework vendor holds the platform hostage. Sub-apps are web applications that can run in any browser, on HarmonyOS's WebView, or on a future Nyuchi-built runtime.",
+  rationale:
+    "The two dominant cross-platform frameworks (Flutter/React Native) are controlled by large American corporations. Capacitor runs web standards — HTML, CSS, JavaScript — inside a native WebView. Web standards are governed by the W3C and WHATWG (international standards bodies), and JavaScript by ECMA International (Swiss). This is also precisely the architecture that WeChat and Alipay converged on — a runtime environment hosting mini-applications built on web standards.",
+  sovereigntyAdvantage:
+    "No framework vendor holds the platform hostage. Sub-apps are web applications that can run in any browser, on HarmonyOS's WebView, or on a future Nyuchi-built runtime.",
   platforms: [
     { name: "android", strategy: "capacitor-native", status: "production" },
     { name: "ios", strategy: "capacitor-native", status: "production" },
@@ -74,8 +89,10 @@ export const FRAMEWORK_DECISION: FrameworkDecision = {
     { name: "harmonyos", strategy: "webview", status: "planned" },
   ],
   harmonyOs: {
-    approach: "Huawei ships their own WebView engine (Chromium-based, maintained independently of Google). A web-standards Capacitor application runs on HarmonyOS without requiring Google Mobile Services, Google Play, or any American-controlled infrastructure.",
-    rationale: "Mukoko's own authentication and wallet replace the platform services that would otherwise require GMS. HarmonyOS compatibility is structurally solved rather than patched.",
+    approach:
+      "Huawei ships their own WebView engine (Chromium-based, maintained independently of Google). A web-standards Capacitor application runs on HarmonyOS without requiring Google Mobile Services, Google Play, or any American-controlled infrastructure.",
+    rationale:
+      "Mukoko's own authentication and wallet replace the platform services that would otherwise require GMS. HarmonyOS compatibility is structurally solved rather than patched.",
     status: "planned",
   },
 }
@@ -87,7 +104,8 @@ export const LOCAL_DATA_LAYER: DataLayerTechnology[] = [
     name: "rxdb",
     role: "Local-first reactive database layer",
     platform: "both",
-    description: "Application-facing database providing schema validation, reactive queries (UI components automatically update when data changes), conflict resolution, and a replication protocol for syncing with the cloud. The storage layer is swappable via the RxStorage adapter pattern — application code is identical whether the engine is IndexedDB or SQLite.",
+    description:
+      "Application-facing database providing schema validation, reactive queries (UI components automatically update when data changes), conflict resolution, and a replication protocol for syncing with the cloud. The storage layer is swappable via the RxStorage adapter pattern — application code is identical whether the engine is IndexedDB or SQLite.",
     sovereignty: {
       technology: "RxDB",
       role: "Local database layer",
@@ -103,7 +121,8 @@ export const LOCAL_DATA_LAYER: DataLayerTechnology[] = [
     name: "sqlite",
     role: "Mobile storage engine",
     platform: "native",
-    description: "Uses the SQLite engine that Apple, Google, and Huawei all ship natively in their operating systems. Zero extra app size and a battle-hardened implementation maintained by the OS vendor. SQLite is public domain — not MIT, not Apache — completely, unconditionally public domain. No corporation owns it. No government can threaten access to it.",
+    description:
+      "Uses the SQLite engine that Apple, Google, and Huawei all ship natively in their operating systems. Zero extra app size and a battle-hardened implementation maintained by the OS vendor. SQLite is public domain — not MIT, not Apache — completely, unconditionally public domain. No corporation owns it. No government can threaten access to it.",
     sovereignty: {
       technology: "SQLite",
       role: "Mobile storage engine",
@@ -119,7 +138,8 @@ export const LOCAL_DATA_LAYER: DataLayerTechnology[] = [
     name: "indexeddb-dexie",
     role: "Browser storage",
     platform: "browser",
-    description: "IndexedDB is the browser's built-in structured storage API — a web standard governed by the W3C, available in every modern browser. Dexie is a lightweight IndexedDB wrapper that RxDB uses as its browser storage adapter, making IndexedDB's API significantly more ergonomic.",
+    description:
+      "IndexedDB is the browser's built-in structured storage API — a web standard governed by the W3C, available in every modern browser. Dexie is a lightweight IndexedDB wrapper that RxDB uses as its browser storage adapter, making IndexedDB's API significantly more ergonomic.",
     sovereignty: {
       technology: "IndexedDB / Dexie",
       role: "Browser storage",
@@ -135,7 +155,8 @@ export const LOCAL_DATA_LAYER: DataLayerTechnology[] = [
     name: "pouchdb",
     role: "Sync bridge",
     platform: "both",
-    description: "CouchDB's philosophy and protocol implemented entirely in JavaScript. Runs inside the browser or Capacitor app, stores data in IndexedDB or SQLite, and speaks CouchDB's exact sync protocol. PouchDB and CouchDB do not think of each other as server and client — they are peers exchanging sequence numbers and change sets.",
+    description:
+      "CouchDB's philosophy and protocol implemented entirely in JavaScript. Runs inside the browser or Capacitor app, stores data in IndexedDB or SQLite, and speaks CouchDB's exact sync protocol. PouchDB and CouchDB do not think of each other as server and client — they are peers exchanging sequence numbers and change sets.",
     sovereignty: {
       technology: "PouchDB",
       role: "Client-side sync",
@@ -156,22 +177,48 @@ export const SOURCES_OF_TRUTH: SourceOfTruth[] = [
     name: "relational",
     database: "Supabase / PostgreSQL",
     owner: "platform",
-    description: "The platform's relational source of truth. Structured data with schemas, foreign keys, and Row Level Security. Identity, places, events, commerce, news metadata, wallet metadata, service bus, system. Schema.org compliant at the column level. Primary project: mukoko_platform_cloud.",
-    dataTypes: ["identity", "places", "events", "commerce", "news-metadata", "wallet-metadata", "service-bus", "system"],
+    description:
+      "The platform's relational source of truth. Structured data with schemas, foreign keys, and Row Level Security. Identity, places, events, commerce, news metadata, wallet metadata, service bus, system. Schema.org compliant at the column level. Primary project: mukoko_platform_cloud.",
+    dataTypes: [
+      "identity",
+      "places",
+      "events",
+      "commerce",
+      "news-metadata",
+      "wallet-metadata",
+      "service-bus",
+      "system",
+    ],
   },
   {
     name: "non-relational",
     database: "ScyllaDB",
     owner: "platform",
-    description: "The platform's non-relational source of truth. All content and all streams in one database. Article bodies, novel chapters, event descriptions, BushTrade listing details, weather observations, place descriptions, Campfire messages, Circles messages, Shamwari AI conversations, wallet transaction ledgers, creator content. Wide-column storage with massive write throughput.",
-    dataTypes: ["article-bodies", "novel-chapters", "messages", "ai-conversations", "weather-observations", "creator-content", "transaction-ledgers"],
+    description:
+      "The platform's non-relational source of truth. All content and all streams in one database. Article bodies, novel chapters, event descriptions, BushTrade listing details, weather observations, place descriptions, Campfire messages, Circles messages, Shamwari AI conversations, wallet transaction ledgers, creator content. Wide-column storage with massive write throughput.",
+    dataTypes: [
+      "article-bodies",
+      "novel-chapters",
+      "messages",
+      "ai-conversations",
+      "weather-observations",
+      "creator-content",
+      "transaction-ledgers",
+    ],
   },
   {
     name: "personal",
     database: "Web3 Pod (TBD)",
     owner: "personal",
-    description: "The personal source of truth. Your sovereign data store in the decentralised web. Personal preferences, engagement history, Digital Twin memory, AI conversation context, learned interests. Cryptographically bound to your MIT token. Accessible only with your keys.",
-    dataTypes: ["preferences", "engagement-history", "digital-twin-memory", "ai-context", "learned-interests"],
+    description:
+      "The personal source of truth. Your sovereign data store in the decentralised web. Personal preferences, engagement history, Digital Twin memory, AI conversation context, learned interests. Cryptographically bound to your MIT token. Accessible only with your keys.",
+    dataTypes: [
+      "preferences",
+      "engagement-history",
+      "digital-twin-memory",
+      "ai-context",
+      "learned-interests",
+    ],
   },
 ]
 
@@ -184,7 +231,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
     technology: "Web3 — Database TBD",
     covenant: "Your data is yours.",
     stakeholder: "The individual",
-    description: "The personal source of truth. Your sovereign data store in the decentralised web. Personal preferences, engagement history, Digital Twin memory, AI conversation context, learned interests. Cryptographically bound to your MIT token. Accessible only with your keys.",
+    description:
+      "The personal source of truth. Your sovereign data store in the decentralised web. Personal preferences, engagement history, Digital Twin memory, AI conversation context, learned interests. Cryptographically bound to your MIT token. Accessible only with your keys.",
     sovereignty: {
       technology: "Web3 Pod",
       role: "Personal sovereign data store",
@@ -202,7 +250,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
     technology: "Supabase / PostgreSQL",
     covenant: "The platform is structured and trustworthy.",
     stakeholder: "The platform",
-    description: "The platform's relational source of truth. Structured data with schemas, foreign keys, and Row Level Security. Identity, places, events, commerce, news metadata, wallet metadata, service bus, system.",
+    description:
+      "The platform's relational source of truth. Structured data with schemas, foreign keys, and Row Level Security. Identity, places, events, commerce, news metadata, wallet metadata, service bus, system.",
     sovereignty: {
       technology: "Supabase / PostgreSQL",
       role: "Relational cloud database",
@@ -211,7 +260,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
       sovereigntyRisk: "low",
       forkable: true,
       selfHostable: true,
-      rationale: "Apache 2.0 licensed, fully self-hostable. If Nyuchi Africa ever needs its own instance on African cloud infrastructure, that option exists.",
+      rationale:
+        "Apache 2.0 licensed, fully self-hostable. If Nyuchi Africa ever needs its own instance on African cloud infrastructure, that option exists.",
     },
   },
   {
@@ -220,7 +270,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
     technology: "ScyllaDB",
     covenant: "All content has a home.",
     stakeholder: "The creator and the community",
-    description: "The platform's non-relational source of truth. All content and all streams in one database. Article bodies, novel chapters, event descriptions, BushTrade listing details, weather observations, place descriptions, Campfire messages, Circles messages, Shamwari AI conversations, wallet transaction ledgers, creator content.",
+    description:
+      "The platform's non-relational source of truth. All content and all streams in one database. Article bodies, novel chapters, event descriptions, BushTrade listing details, weather observations, place descriptions, Campfire messages, Circles messages, Shamwari AI conversations, wallet transaction ledgers, creator content.",
     sovereignty: {
       technology: "ScyllaDB",
       role: "Non-relational source of truth",
@@ -229,7 +280,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
       sovereigntyRisk: "none",
       forkable: true,
       selfHostable: true,
-      rationale: "AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
+      rationale:
+        "AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
     },
   },
   {
@@ -238,7 +290,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
     technology: "Apache CouchDB",
     covenant: "Data flows where it is needed.",
     stakeholder: "The connected ecosystem",
-    description: "CouchDB is not a data store. It is the sync protocol. Its value is the replication protocol that PouchDB, RxDB, and offline-first libraries implement for bidirectional sync. CouchDB replicates data from the two platform sources of truth (Supabase and ScyllaDB) out to three targets: to Device (PouchDB/RxDB), to Edge (Durable Objects), and to Pod (Web3).",
+    description:
+      "CouchDB is not a data store. It is the sync protocol. Its value is the replication protocol that PouchDB, RxDB, and offline-first libraries implement for bidirectional sync. CouchDB replicates data from the two platform sources of truth (Supabase and ScyllaDB) out to three targets: to Device (PouchDB/RxDB), to Edge (Durable Objects), and to Pod (Web3).",
     sovereignty: {
       technology: "Apache CouchDB",
       role: "Sync protocol",
@@ -247,7 +300,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
       sovereigntyRisk: "none",
       forkable: true,
       selfHostable: true,
-      rationale: "Apache Foundation (non-profit). No corporate owner. Multi-master replication with no hierarchy.",
+      rationale:
+        "Apache Foundation (non-profit). No corporate owner. Multi-master replication with no hierarchy.",
     },
   },
   {
@@ -256,7 +310,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
     technology: "Cloudflare KV + Two-Tier Durable Objects",
     covenant: "Responses are instant.",
     stakeholder: "The active web user",
-    description: "Three primitives: KV for global config and routing maps, Geographic Durable Objects for platform data snapshots by location, and User Durable Objects for personal operational data. All ephemeral caches — can be rebuilt from sovereign data stores in minutes.",
+    description:
+      "Three primitives: KV for global config and routing maps, Geographic Durable Objects for platform data snapshots by location, and User Durable Objects for personal operational data. All ephemeral caches — can be rebuilt from sovereign data stores in minutes.",
     sovereignty: {
       technology: "Cloudflare KV / Durable Objects",
       role: "Edge cache",
@@ -265,7 +320,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
       sovereigntyRisk: "low",
       forkable: false,
       selfHostable: false,
-      rationale: "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes.",
+      rationale:
+        "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes.",
     },
   },
   {
@@ -274,7 +330,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
     technology: "RxDB + SQLite / PouchDB",
     covenant: "The app works without internet.",
     stakeholder: "The user in the village",
-    description: "The local-first layer. RxDB with SQLite (native) or IndexedDB (browser) as the local database. Reads and writes happen locally without network round-trips. PouchDB speaks CouchDB's sync protocol for bidirectional replication.",
+    description:
+      "The local-first layer. RxDB with SQLite (native) or IndexedDB (browser) as the local database. Reads and writes happen locally without network round-trips. PouchDB speaks CouchDB's sync protocol for bidirectional replication.",
     sovereignty: {
       technology: "RxDB + SQLite",
       role: "Device-local database",
@@ -292,7 +349,8 @@ export const SEVEN_DATA_LAYERS: DataLayer[] = [
     technology: "Apache Doris",
     covenant: "Africa's knowledge belongs to Africa.",
     stakeholder: "The continent",
-    description: "Anonymised, aggregate platform intelligence. Not Mukoko's moat — Mukoko's gift to the continent. Researchers, journalists, governments, NGOs, and developers can query this data. MySQL-compatible SQL interface. Fed by Apache Flink's privacy-stripping stream processing.",
+    description:
+      "Anonymised, aggregate platform intelligence. Not Mukoko's moat — Mukoko's gift to the continent. Researchers, journalists, governments, NGOs, and developers can query this data. MySQL-compatible SQL interface. Fed by Apache Flink's privacy-stripping stream processing.",
     sovereignty: {
       technology: "Apache Doris",
       role: "Analytical / open data",
@@ -314,8 +372,17 @@ export const CLOUD_LAYER: CloudService[] = [
     role: "Structured, relational, consistent data",
     consistencyModel: "strict",
     database: "PostgreSQL",
-    dataCategories: ["user-identity", "authentication", "wallet-balances", "transaction-records", "billing", "subscription-state", "relational-roles"],
-    description: "Open source Firebase alternative built on PostgreSQL. Provides managed Postgres, real-time change subscriptions, row-level security, and REST/GraphQL API. Apache 2.0 licensed and fully self-hostable. Handles data requiring strict consistency — two conflicting versions of a wallet balance are never acceptable. The relational model, foreign keys, and ACID transactions provide the guarantees that money requires.",
+    dataCategories: [
+      "user-identity",
+      "authentication",
+      "wallet-balances",
+      "transaction-records",
+      "billing",
+      "subscription-state",
+      "relational-roles",
+    ],
+    description:
+      "Open source Firebase alternative built on PostgreSQL. Provides managed Postgres, real-time change subscriptions, row-level security, and REST/GraphQL API. Apache 2.0 licensed and fully self-hostable. Handles data requiring strict consistency — two conflicting versions of a wallet balance are never acceptable. The relational model, foreign keys, and ACID transactions provide the guarantees that money requires.",
     sovereignty: {
       technology: "Supabase / PostgreSQL",
       role: "Relational cloud database",
@@ -324,7 +391,8 @@ export const CLOUD_LAYER: CloudService[] = [
       sovereigntyRisk: "low",
       forkable: true,
       selfHostable: true,
-      rationale: "Apache 2.0 licensed, fully self-hostable. If Nyuchi Africa ever needs its own instance on African cloud infrastructure, that option exists.",
+      rationale:
+        "Apache 2.0 licensed, fully self-hostable. If Nyuchi Africa ever needs its own instance on African cloud infrastructure, that option exists.",
     },
   },
   {
@@ -332,8 +400,16 @@ export const CLOUD_LAYER: CloudService[] = [
     role: "Sync protocol — replication to device, edge, and pod",
     consistencyModel: "eventual",
     database: "CouchDB",
-    dataCategories: ["community-posts", "weather-observations", "campsite-listings", "event-details", "ai-conversation-histories", "feed-posts"],
-    description: "CouchDB is not a data store. It is the sync protocol. Its value is the replication protocol that PouchDB, RxDB, and offline-first libraries implement for bidirectional sync. CouchDB replicates data from the two platform sources of truth (Supabase and ScyllaDB) out to three targets: to Device (PouchDB/RxDB), to Edge (Durable Objects), and to Pod (Web3). If CouchDB's data were lost entirely, it could be rebuilt from ScyllaDB and Supabase.",
+    dataCategories: [
+      "community-posts",
+      "weather-observations",
+      "campsite-listings",
+      "event-details",
+      "ai-conversation-histories",
+      "feed-posts",
+    ],
+    description:
+      "CouchDB is not a data store. It is the sync protocol. Its value is the replication protocol that PouchDB, RxDB, and offline-first libraries implement for bidirectional sync. CouchDB replicates data from the two platform sources of truth (Supabase and ScyllaDB) out to three targets: to Device (PouchDB/RxDB), to Edge (Durable Objects), and to Pod (Web3). If CouchDB's data were lost entirely, it could be rebuilt from ScyllaDB and Supabase.",
     sovereignty: {
       technology: "Apache CouchDB",
       role: "Sync protocol",
@@ -342,7 +418,8 @@ export const CLOUD_LAYER: CloudService[] = [
       sovereigntyRisk: "none",
       forkable: true,
       selfHostable: true,
-      rationale: "Apache Foundation (non-profit). No corporate owner. Multi-master replication with no hierarchy.",
+      rationale:
+        "Apache Foundation (non-profit). No corporate owner. Multi-master replication with no hierarchy.",
     },
   },
   {
@@ -350,8 +427,21 @@ export const CLOUD_LAYER: CloudService[] = [
     role: "Non-relational source of truth — all content and streams",
     consistencyModel: "eventual",
     database: "ScyllaDB",
-    dataCategories: ["article-bodies", "novel-chapters", "event-descriptions", "listing-details", "weather-observations", "place-descriptions", "campfire-messages", "circles-messages", "ai-conversations", "transaction-ledgers", "creator-content"],
-    description: "The platform's non-relational source of truth. All content and all streams in one database. Wide-column storage with massive write throughput. AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
+    dataCategories: [
+      "article-bodies",
+      "novel-chapters",
+      "event-descriptions",
+      "listing-details",
+      "weather-observations",
+      "place-descriptions",
+      "campfire-messages",
+      "circles-messages",
+      "ai-conversations",
+      "transaction-ledgers",
+      "creator-content",
+    ],
+    description:
+      "The platform's non-relational source of truth. All content and all streams in one database. Wide-column storage with massive write throughput. AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
     sovereignty: {
       technology: "ScyllaDB",
       role: "Non-relational source of truth",
@@ -360,7 +450,8 @@ export const CLOUD_LAYER: CloudService[] = [
       sovereigntyRisk: "none",
       forkable: true,
       selfHostable: true,
-      rationale: "AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
+      rationale:
+        "AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
     },
   },
   {
@@ -368,8 +459,14 @@ export const CLOUD_LAYER: CloudService[] = [
     role: "Edge cache — KV + two-tier Durable Objects",
     consistencyModel: "eventual",
     database: "SQLite (inside Durable Objects)",
-    dataCategories: ["session-tokens", "feature-flags", "geographic-data-snapshots", "user-profile-cache"],
-    description: "Three primitives: KV for global config and routing maps, Geographic Durable Objects for platform data snapshots by location, and User Durable Objects for personal operational data. All ephemeral caches — can be rebuilt from sovereign data stores in minutes.",
+    dataCategories: [
+      "session-tokens",
+      "feature-flags",
+      "geographic-data-snapshots",
+      "user-profile-cache",
+    ],
+    description:
+      "Three primitives: KV for global config and routing maps, Geographic Durable Objects for platform data snapshots by location, and User Durable Objects for personal operational data. All ephemeral caches — can be rebuilt from sovereign data stores in minutes.",
     sovereignty: {
       technology: "Cloudflare KV / Durable Objects",
       role: "Edge cache",
@@ -378,7 +475,8 @@ export const CLOUD_LAYER: CloudService[] = [
       sovereigntyRisk: "low",
       forkable: false,
       selfHostable: false,
-      rationale: "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes.",
+      rationale:
+        "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes.",
     },
   },
 ]
@@ -389,7 +487,8 @@ export const OPEN_DATA_PIPELINE: PipelineStage[] = [
   {
     name: "redpanda",
     role: "Event streaming backbone",
-    description: "Kafka-compatible event streaming platform written in Rust. Every meaningful event — weather observations, campsite views, payments, posts — flows through as an event stream. Supabase and CouchDB publish change feeds into topics. Downstream systems consume independently. Provides architectural decoupling: operational databases do not need to know about the analytics layer.",
+    description:
+      "Kafka-compatible event streaming platform written in Rust. Every meaningful event — weather observations, campsite views, payments, posts — flows through as an event stream. Supabase and CouchDB publish change feeds into topics. Downstream systems consume independently. Provides architectural decoupling: operational databases do not need to know about the analytics layer.",
     sovereignty: {
       technology: "Redpanda",
       role: "Event streaming",
@@ -398,13 +497,15 @@ export const OPEN_DATA_PIPELINE: PipelineStage[] = [
       sovereigntyRisk: "low",
       forkable: true,
       selfHostable: true,
-      rationale: "Kafka-compatible, lower operational overhead. Speaks the Kafka protocol — all Kafka tooling works without modification.",
+      rationale:
+        "Kafka-compatible, lower operational overhead. Speaks the Kafka protocol — all Kafka tooling works without modification.",
     },
   },
   {
     name: "apache-flink",
     role: "Stream processing and privacy filter",
-    description: "Consumes the raw event stream and applies transformations in real time before data reaches the open data layer. The most important transformation is the privacy filter — strips all personal identifiers (user IDs, IP addresses, device fingerprints), aggregates individual events into anonymised summaries, enriches records with geographic and temporal metadata, and outputs clean, safe, open data. The open data layer is structurally incapable of leaking personal information because personal information never enters it.",
+    description:
+      "Consumes the raw event stream and applies transformations in real time before data reaches the open data layer. The most important transformation is the privacy filter — strips all personal identifiers (user IDs, IP addresses, device fingerprints), aggregates individual events into anonymised summaries, enriches records with geographic and temporal metadata, and outputs clean, safe, open data. The open data layer is structurally incapable of leaking personal information because personal information never enters it.",
     sovereignty: {
       technology: "Apache Flink",
       role: "Stream processing",
@@ -419,7 +520,8 @@ export const OPEN_DATA_PIPELINE: PipelineStage[] = [
   {
     name: "apache-doris",
     role: "Open data analytical database",
-    description: "Real-time analytical database originally built by Baidu, donated to the Apache Software Foundation. Designed for super app data scale — billions of rows, complex analytical queries, real-time ingestion. Columnar storage format means analytical queries only read relevant columns. Ingests the processed, anonymised event stream from Flink in real time. Exposes a MySQL-compatible SQL interface for researchers and a public REST API for developers.",
+    description:
+      "Real-time analytical database originally built by Baidu, donated to the Apache Software Foundation. Designed for super app data scale — billions of rows, complex analytical queries, real-time ingestion. Columnar storage format means analytical queries only read relevant columns. Ingests the processed, anonymised event stream from Flink in real time. Exposes a MySQL-compatible SQL interface for researchers and a public REST API for developers.",
     sovereignty: {
       technology: "Apache Doris",
       role: "Analytical / open data",
@@ -440,37 +542,72 @@ export const DATA_OWNERSHIP_RULES: DataOwnershipRule[] = [
     category: "personal",
     consistencyModel: "strict",
     database: "Supabase / PostgreSQL",
-    examples: ["user-identity", "wallet-balances", "transaction-records", "billing-state", "authentication"],
-    conflictResolution: "Strict handler — flags conflicts and holds for explicit reconciliation. The system shows a 'reconciling your account' message rather than silently picking a winner and potentially misrepresenting a balance.",
+    examples: [
+      "user-identity",
+      "wallet-balances",
+      "transaction-records",
+      "billing-state",
+      "authentication",
+    ],
+    conflictResolution:
+      "Strict handler — flags conflicts and holds for explicit reconciliation. The system shows a 'reconciling your account' message rather than silently picking a winner and potentially misrepresenting a balance.",
     ownership: "user-private",
-    description: "Who a user is, what they bought, who they messaged — private, protected, and belongs to the user. Two conflicting versions are never acceptable. Postgres ACID guarantees and RxDB strict conflict handlers ensure this.",
+    description:
+      "Who a user is, what they bought, who they messaged — private, protected, and belongs to the user. Two conflicting versions are never acceptable. Postgres ACID guarantees and RxDB strict conflict handlers ensure this.",
   },
   {
     category: "community",
     consistencyModel: "eventual",
     database: "ScyllaDB",
-    examples: ["article-bodies", "novel-chapters", "event-descriptions", "listing-details", "weather-observations", "campfire-messages", "circles-messages", "ai-conversations", "creator-content"],
-    conflictResolution: "Permissive handler — merges changes automatically using last-write-wins or CRDT merge strategies. A few seconds of propagation delay is acceptable.",
+    examples: [
+      "article-bodies",
+      "novel-chapters",
+      "event-descriptions",
+      "listing-details",
+      "weather-observations",
+      "campfire-messages",
+      "circles-messages",
+      "ai-conversations",
+      "creator-content",
+    ],
+    conflictResolution:
+      "Permissive handler — merges changes automatically using last-write-wins or CRDT merge strategies. A few seconds of propagation delay is acceptable.",
     ownership: "community-shared",
-    description: "Community-contributed content that tolerates eventual consistency. ScyllaDB stores all content and streams as the non-relational source of truth. CouchDB replicates data out to device, edge, and pod.",
+    description:
+      "Community-contributed content that tolerates eventual consistency. ScyllaDB stores all content and streams as the non-relational source of truth. CouchDB replicates data out to device, edge, and pod.",
   },
   {
     category: "personal-sovereign",
     consistencyModel: "eventual",
     database: "Web3 Pod (TBD)",
-    examples: ["preferences", "engagement-history", "digital-twin-memory", "ai-context", "learned-interests"],
-    conflictResolution: "User-controlled — the pod owner has final authority over their data. Conflicts resolved by the user's own keys and preferences.",
+    examples: [
+      "preferences",
+      "engagement-history",
+      "digital-twin-memory",
+      "ai-context",
+      "learned-interests",
+    ],
+    conflictResolution:
+      "User-controlled — the pod owner has final authority over their data. Conflicts resolved by the user's own keys and preferences.",
     ownership: "user-private",
-    description: "The personal source of truth. Your sovereign data store in the decentralised web. Cryptographically bound to your MIT token. Accessible only with your keys. No platform can read, sell, or revoke access to this data.",
+    description:
+      "The personal source of truth. Your sovereign data store in the decentralised web. Cryptographically bound to your MIT token. Accessible only with your keys. No platform can read, sell, or revoke access to this data.",
   },
   {
     category: "platform-open",
     consistencyModel: "aggregate",
     database: "Apache Doris",
-    examples: ["regional-weather-patterns", "foot-traffic-trends", "anonymised-economic-activity", "usage-patterns"],
-    conflictResolution: "Not applicable — aggregate data is append-only and computed from anonymised event streams.",
+    examples: [
+      "regional-weather-patterns",
+      "foot-traffic-trends",
+      "anonymised-economic-activity",
+      "usage-patterns",
+    ],
+    conflictResolution:
+      "Not applicable — aggregate data is append-only and computed from anonymised event streams.",
     ownership: "public-open",
-    description: "Anonymised, aggregate platform intelligence. Not Mukoko's moat — Mukoko's gift to the continent. Researchers, journalists, governments, NGOs, and developers can query this data without asking Nyuchi Africa for permission.",
+    description:
+      "Anonymised, aggregate platform intelligence. Not Mukoko's moat — Mukoko's gift to the continent. Researchers, journalists, governments, NGOs, and developers can query this data without asking Nyuchi Africa for permission.",
   },
 ]
 
@@ -480,16 +617,20 @@ export const REMOVED_TECHNOLOGIES: RemovedTechnology[] = [
   {
     name: "mongodb",
     previousRole: "Document database for the weather app",
-    reason: "MongoDB switched its license in 2018 from AGPL to SSPL (Server Side Public License). The Open Source Initiative does not recognise SSPL as a genuine open source license. For a platform built on sovereignty and open source principles, this is disqualifying.",
+    reason:
+      "MongoDB switched its license in 2018 from AGPL to SSPL (Server Side Public License). The Open Source Initiative does not recognise SSPL as a genuine open source license. For a platform built on sovereignty and open source principles, this is disqualifying.",
     replacement: "Apache CouchDB",
-    migrationPath: "Weather observation data maps directly to CouchDB documents. The data access layer switches from Motor/Mongoose to CouchDB HTTP API or the nano Node.js client. RxDB on the device handles local caching and sync transparently. The migration unlocks the open data story — once observations flow through the Flink anonymisation pipeline into Doris, Mukoko can publish a public API for community-sourced weather data.",
+    migrationPath:
+      "Weather observation data maps directly to CouchDB documents. The data access layer switches from Motor/Mongoose to CouchDB HTTP API or the nano Node.js client. RxDB on the device handles local caching and sync transparently. The migration unlocks the open data story — once observations flow through the Flink anonymisation pipeline into Doris, Mukoko can publish a public API for community-sourced weather data.",
   },
   {
     name: "cloudflare-d1",
     previousRole: "Edge database for per-user data",
-    reason: "Replaced with Cloudflare KV + two-tier Durable Objects (geographic platform-level + ephemeral per-user). D1 was not the right model for the edge layer.",
+    reason:
+      "Replaced with Cloudflare KV + two-tier Durable Objects (geographic platform-level + ephemeral per-user). D1 was not the right model for the edge layer.",
     replacement: "Cloudflare KV + Durable Objects",
-    migrationPath: "Geographic DOs hold platform snapshots by location. User DOs hold personal operational data. KV holds global config and routing maps.",
+    migrationPath:
+      "Geographic DOs hold platform snapshots by location. User DOs hold personal operational data. KV holds global config and routing maps.",
   },
 ]
 
@@ -527,7 +668,8 @@ export const SOVEREIGNTY_SUMMARY: SovereigntyAssessment[] = [
     sovereigntyRisk: "none",
     forkable: true,
     selfHostable: true,
-    rationale: "AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
+    rationale:
+      "AGPL 3.0 licensed, open source, no corporate dependency on the database engine. Runs on Fly.io with Johannesburg primary region.",
   },
   {
     technology: "Cloudflare KV / Durable Objects",
@@ -537,7 +679,8 @@ export const SOVEREIGNTY_SUMMARY: SovereigntyAssessment[] = [
     sovereigntyRisk: "low",
     forkable: false,
     selfHostable: false,
-    rationale: "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes.",
+    rationale:
+      "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes.",
   },
   {
     technology: "MongoDB",

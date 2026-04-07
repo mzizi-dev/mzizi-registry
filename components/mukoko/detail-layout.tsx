@@ -46,11 +46,7 @@ export function DetailLayout({
       {/* Hero image */}
       {heroImage && (
         <div className="relative mb-6 aspect-video w-full overflow-hidden rounded-xl">
-          <img
-            src={heroImage}
-            alt=""
-            className="size-full object-cover"
-          />
+          <img src={heroImage} alt="" className="size-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
         </div>
       )}
@@ -60,25 +56,15 @@ export function DetailLayout({
         <div className="min-w-0 flex-1">
           {/* Header */}
           <header className="space-y-3">
-            <h1 className="font-serif text-3xl font-bold tracking-tight sm:text-4xl">
-              {title}
-            </h1>
-            {subtitle && (
-              <p className="text-lg text-muted-foreground">{subtitle}</p>
-            )}
-            {metadata && (
-              <div className="flex flex-wrap items-center gap-3">
-                {metadata}
-              </div>
-            )}
+            <h1 className="font-serif text-3xl font-bold tracking-tight sm:text-4xl">{title}</h1>
+            {subtitle && <p className="text-lg text-muted-foreground">{subtitle}</p>}
+            {metadata && <div className="flex flex-wrap items-center gap-3">{metadata}</div>}
           </header>
 
           {/* Actions */}
           {actions && (
             <>
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                {actions}
-              </div>
+              <div className="mt-4 flex flex-wrap items-center gap-2">{actions}</div>
               <Separator className="my-6" />
             </>
           )}
@@ -86,9 +72,7 @@ export function DetailLayout({
           {!actions && <Separator className="my-6" />}
 
           {/* Body */}
-          <div className="prose prose-neutral dark:prose-invert max-w-3xl">
-            {children}
-          </div>
+          <div className="prose prose-neutral dark:prose-invert max-w-3xl">{children}</div>
         </div>
 
         {/* Aside */}

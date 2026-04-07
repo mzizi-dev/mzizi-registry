@@ -1,0 +1,83 @@
+# Nyuchi Design Portal
+
+> The canonical design system and component registry for the bundu ecosystem — 294 production-ready UI components, blocks, and charts built on the Five African Minerals design system. Install directly into any project using the shadcn CLI.
+
+**Version:** 4.0.1
+**Live:** https://design.nyuchi.com
+**API:** https://design.nyuchi.com/api/v1
+**MCP Server:** https://design.nyuchi.com/mcp (Streamable HTTP)
+
+## What this site is
+
+The Nyuchi Design Portal is:
+1. A **component registry** — 294 items (177 UI, 3 hooks, 9 lib, 105 blocks) installable via `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<name>`
+2. A **design system reference** — Five African Minerals palette, typography, spacing, and radius tokens
+3. A **brand documentation hub** — canonical brand specs for bundu, nyuchi, mukoko, shamwari, nhimbe
+4. An **architecture documentation hub** — local-first data strategy, sovereignty assessments, open data pipeline
+5. An **MCP server** — AI assistants can connect at `https://design.nyuchi.com/mcp` to access all registry data, design tokens, and architecture docs
+
+## Key pages
+
+- [API Documentation](/api-docs): Full OpenAPI 3.1 spec for all endpoints
+- [Component Registry](/registry): How to consume and contribute to the registry
+- [Brand System](/brand): Five African Minerals palette and brand guidelines
+- [Colors](/brand/colors): Complete color token reference
+- [Architecture](/architecture): Ecosystem architecture overview
+- [Data Layer](/architecture/data-layer): Local-first data strategy (RxDB, SQLite, PouchDB, CouchDB)
+- [Pipeline](/architecture/pipeline): Open data pipeline (Redpanda → Flink → Doris)
+- [Sovereignty](/architecture/sovereignty): Technology sovereignty assessments
+
+## API endpoints (machine-readable)
+
+All endpoints return JSON with schema.org JSON-LD metadata and CORS headers.
+
+- `GET /api/v1` — Discovery document
+- `GET /api/v1/brand` — Brand system (minerals, typography, spacing, ecosystem)
+- `GET /api/v1/ui` — Component registry index (294 items)
+- `GET /api/v1/ui/{name}` — Individual component with inline source code
+- `GET /api/v1/ecosystem` — Architecture principles
+- `GET /api/v1/data-layer` — Data layer specification
+- `GET /api/v1/pipeline` — Open data pipeline
+- `GET /api/v1/sovereignty` — Sovereignty assessments
+- `GET /api/v1/health` — Health check
+- `GET /api/openapi` — OpenAPI 3.1 specification (YAML)
+
+## MCP server for AI assistants
+
+Connect at `https://design.nyuchi.com/mcp` (POST, Streamable HTTP transport).
+
+**Tools:** list_components, get_component, get_component_docs, search_components, get_design_tokens, scaffold_component, get_install_command, get_brand_info, get_architecture_info, get_database_status
+
+**Resources:** mukoko://registry, mukoko://brand, mukoko://design-tokens, mukoko://architecture
+
+## Design system quick reference
+
+**Five African Minerals:**
+- Cobalt `#0047AB` — primary blue, links, CTAs
+- Tanzanite `#B388FF` — purple accent, mukoko brand
+- Malachite `#64FFDA` — success states, nhimbe brand
+- Gold `#FFD740` — rewards, highlights, nyuchi brand
+- Terracotta `#D4A574` — community, warmth, bundu brand
+
+**Typography:** Noto Sans (body), Noto Serif (display), JetBrains Mono (code)
+
+**Install any component:**
+```
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
+```
+
+## Ecosystem brands
+
+| Brand | Meaning | Role |
+|-------|---------|------|
+| bundu | Wilderness (Shona) | The complete bundu ecosystem |
+| nyuchi | Bee (Shona) | Infrastructure & enterprise products |
+| mukoko | Beehive (Shona) | Africa's consumer super app |
+| shamwari | Friend (Shona) | Sovereign AI companion |
+| nhimbe | Gathering (Shona) | Events & community gatherings |
+
+## Optional: full content
+
+- [OpenAPI spec](/api/openapi) — machine-readable API definition
+- [robots.txt](/robots.txt)
+- [sitemap.xml](/sitemap.xml)

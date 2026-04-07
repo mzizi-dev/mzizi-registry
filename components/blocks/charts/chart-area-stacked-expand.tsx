@@ -2,7 +2,12 @@
 
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", harare: 186, nairobi: 80, lagos: 120 },
@@ -32,9 +37,30 @@ export function ChartAreaStackedExpand() {
             <CartesianGrid vertical={false} />
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Area type="natural" dataKey="harare" stackId="a" fill="var(--color-harare)" fillOpacity={0.4} stroke="var(--color-harare)" />
-            <Area type="natural" dataKey="nairobi" stackId="a" fill="var(--color-nairobi)" fillOpacity={0.4} stroke="var(--color-nairobi)" />
-            <Area type="natural" dataKey="lagos" stackId="a" fill="var(--color-lagos)" fillOpacity={0.4} stroke="var(--color-lagos)" />
+            <Area
+              type="natural"
+              dataKey="harare"
+              stackId="a"
+              fill="var(--color-harare)"
+              fillOpacity={0.4}
+              stroke="var(--color-harare)"
+            />
+            <Area
+              type="natural"
+              dataKey="nairobi"
+              stackId="a"
+              fill="var(--color-nairobi)"
+              fillOpacity={0.4}
+              stroke="var(--color-nairobi)"
+            />
+            <Area
+              type="natural"
+              dataKey="lagos"
+              stackId="a"
+              fill="var(--color-lagos)"
+              fillOpacity={0.4}
+              stroke="var(--color-lagos)"
+            />
           </AreaChart>
         </ChartContainer>
       </CardContent>

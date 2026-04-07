@@ -15,7 +15,8 @@ function Login02() {
           </div>
           <h2 className="font-serif text-2xl font-semibold text-foreground">mukoko</h2>
           <p className="max-w-xs text-sm text-muted-foreground">
-            The pan-African platform connecting communities through technology, culture, and shared purpose.
+            The pan-African platform connecting communities through technology, culture, and shared
+            purpose.
           </p>
           <div className="flex justify-center gap-1.5 pt-2">
             <span className="size-2 rounded-full bg-cobalt" />
@@ -47,7 +48,9 @@ function Login02() {
           </div>
           <p className="text-center text-sm text-muted-foreground">
             New here?{" "}
-            <a href="#" className="font-medium text-foreground hover:underline">Create an account</a>
+            <a href="#" className="font-medium text-foreground hover:underline">
+              Create an account
+            </a>
           </p>
         </div>
       </div>

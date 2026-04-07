@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import {
-  isSupabaseConfigured,
-  getDatabaseInfo,
-  isSeeded,
-} from "@/lib/db"
+import { isSupabaseConfigured, getDatabaseInfo, isSeeded } from "@/lib/db"
 
 const logger = createLogger("health")
 
@@ -26,10 +22,7 @@ async function checkDatabase(): Promise<HealthCheck & { seeded?: boolean }> {
       }
     }
 
-    const [info, seeded] = await Promise.all([
-      getDatabaseInfo(),
-      isSeeded(),
-    ])
+    const [info, seeded] = await Promise.all([getDatabaseInfo(), isSeeded()])
 
     return {
       status: info.status === "connected" ? "pass" : "fail",

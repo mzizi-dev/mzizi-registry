@@ -15,10 +15,7 @@ function SettingsLayout({
   return (
     <div
       data-slot="settings-layout"
-      className={cn(
-        "flex flex-col gap-6 md:flex-row md:gap-10",
-        className
-      )}
+      className={cn("flex flex-col gap-6 md:flex-row md:gap-10", className)}
       {...props}
     >
       <aside
@@ -27,27 +24,18 @@ function SettingsLayout({
       >
         {sidebar}
       </aside>
-      <main
-        data-slot="settings-layout-content"
-        className="flex-1 min-w-0"
-      >
+      <main data-slot="settings-layout-content" className="min-w-0 flex-1">
         {children}
       </main>
     </div>
   )
 }
 
-function SettingsNav({
-  className,
-  ...props
-}: React.ComponentProps<"nav">) {
+function SettingsNav({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       data-slot="settings-nav"
-      className={cn(
-        "flex gap-1 overflow-x-auto md:flex-col md:overflow-visible",
-        className
-      )}
+      className={cn("flex gap-1 overflow-x-auto md:flex-col md:overflow-visible", className)}
       {...props}
     />
   )
@@ -65,7 +53,7 @@ function SettingsNavItem({
       data-slot="settings-nav-item"
       data-active={active}
       className={cn(
-        "whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+        "rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors",
         "text-muted-foreground hover:bg-muted hover:text-foreground",
         active && "bg-muted text-foreground",
         className
@@ -93,13 +81,9 @@ function SettingsSection({
     >
       <div className="flex flex-col gap-1">
         <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-        {description && (
-          <p className="text-muted-foreground text-sm">{description}</p>
-        )}
+        {description && <p className="text-sm text-muted-foreground">{description}</p>}
       </div>
-      <div className="ring-foreground/10 rounded-2xl bg-card p-6 ring-1">
-        {children}
-      </div>
+      <div className="rounded-2xl bg-card p-6 ring-1 ring-foreground/10">{children}</div>
     </section>
   )
 }

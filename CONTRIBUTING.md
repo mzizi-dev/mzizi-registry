@@ -119,23 +119,20 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
-const myComponentVariants = cva(
-  "base-classes-here",
-  {
-    variants: {
-      variant: {
-        default: "default-variant-classes",
-      },
-      size: {
-        default: "default-size-classes",
-      },
+const myComponentVariants = cva("base-classes-here", {
+  variants: {
+    variant: {
+      default: "default-variant-classes",
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
+    size: {
+      default: "default-size-classes",
     },
-  }
-)
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+  },
+})
 
 function MyComponent({
   className,

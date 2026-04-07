@@ -21,7 +21,7 @@ function WebhookCard({
       data-slot="webhook-card"
       data-status={status}
       className={cn(
-        "ring-foreground/10 bg-card text-card-foreground flex flex-col gap-3 rounded-2xl p-4 ring-1",
+        "flex flex-col gap-3 rounded-2xl bg-card p-4 text-card-foreground ring-1 ring-foreground/10",
         className
       )}
       {...props}
@@ -39,13 +39,21 @@ function WebhookCard({
               : "bg-muted text-muted-foreground"
           )}
         >
-          <span className={cn("size-1.5 rounded-full", status === "active" ? "bg-[var(--color-malachite)]" : "bg-muted-foreground")} />
+          <span
+            className={cn(
+              "size-1.5 rounded-full",
+              status === "active" ? "bg-[var(--color-malachite)]" : "bg-muted-foreground"
+            )}
+          />
           {status}
         </span>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {events.map((event) => (
-          <span key={event} className="bg-muted rounded-4xl px-2 py-0.5 text-xs font-medium text-muted-foreground">
+          <span
+            key={event}
+            className="rounded-4xl bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+          >
             {event}
           </span>
         ))}

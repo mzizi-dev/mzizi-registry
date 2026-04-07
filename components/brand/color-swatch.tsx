@@ -36,7 +36,7 @@ export function ColorSwatch({ mineral, className }: ColorSwatchProps) {
       </button>
 
       <div className="space-y-1">
-        <p className="font-medium capitalize text-foreground">{mineral.name}</p>
+        <p className="font-medium text-foreground capitalize">{mineral.name}</p>
         <div className="flex items-center gap-2">
           <button
             onClick={() => copyValue(mineral.hex)}

@@ -19,8 +19,16 @@ const MINERAL_PRESETS = [
 ] as const
 
 const COMMON_PRESETS = [
-  "#000000", "#FFFFFF", "#EF4444", "#F97316", "#22C55E",
-  "#3B82F6", "#8B5CF6", "#EC4899", "#6B7280", "#0EA5E9",
+  "#000000",
+  "#FFFFFF",
+  "#EF4444",
+  "#F97316",
+  "#22C55E",
+  "#3B82F6",
+  "#8B5CF6",
+  "#EC4899",
+  "#6B7280",
+  "#0EA5E9",
 ] as const
 
 function ColorPicker({ value = "#0047AB", onChange, className }: ColorPickerProps) {
@@ -70,7 +78,7 @@ function ColorPicker({ value = "#0047AB", onChange, className }: ColorPickerProp
               onClick={() => selectColor(presetHex)}
               className={cn(
                 "size-7 rounded-md border-2 transition-all hover:scale-110",
-                hex === presetHex ? "border-ring ring-ring/50 ring-[2px]" : "border-transparent"
+                hex === presetHex ? "border-ring ring-[2px] ring-ring/50" : "border-transparent"
               )}
               style={{ backgroundColor: presetHex }}
             />
@@ -86,7 +94,7 @@ function ColorPicker({ value = "#0047AB", onChange, className }: ColorPickerProp
               onClick={() => selectColor(presetHex)}
               className={cn(
                 "size-7 rounded-md border-2 transition-all hover:scale-110",
-                hex === presetHex ? "border-ring ring-ring/50 ring-[2px]" : "border-border/50"
+                hex === presetHex ? "border-ring ring-[2px] ring-ring/50" : "border-border/50"
               )}
               style={{ backgroundColor: presetHex }}
             />

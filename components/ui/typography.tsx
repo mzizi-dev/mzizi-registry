@@ -1,10 +1,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-function TypographyH1({
-  className,
-  ...props
-}: React.ComponentProps<"h1">) {
+function TypographyH1({ className, ...props }: React.ComponentProps<"h1">) {
   return (
     <h1
       data-slot="typography-h1"
@@ -17,10 +14,7 @@ function TypographyH1({
   )
 }
 
-function TypographyH2({
-  className,
-  ...props
-}: React.ComponentProps<"h2">) {
+function TypographyH2({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <h2
       data-slot="typography-h2"
@@ -33,42 +27,27 @@ function TypographyH2({
   )
 }
 
-function TypographyH3({
-  className,
-  ...props
-}: React.ComponentProps<"h3">) {
+function TypographyH3({ className, ...props }: React.ComponentProps<"h3">) {
   return (
     <h3
       data-slot="typography-h3"
-      className={cn(
-        "scroll-m-20 text-2xl font-semibold tracking-tight",
-        className
-      )}
+      className={cn("scroll-m-20 text-2xl font-semibold tracking-tight", className)}
       {...props}
     />
   )
 }
 
-function TypographyH4({
-  className,
-  ...props
-}: React.ComponentProps<"h4">) {
+function TypographyH4({ className, ...props }: React.ComponentProps<"h4">) {
   return (
     <h4
       data-slot="typography-h4"
-      className={cn(
-        "scroll-m-20 text-xl font-semibold tracking-tight",
-        className
-      )}
+      className={cn("scroll-m-20 text-xl font-semibold tracking-tight", className)}
       {...props}
     />
   )
 }
 
-function TypographyP({
-  className,
-  ...props
-}: React.ComponentProps<"p">) {
+function TypographyP({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="typography-p"
@@ -78,10 +57,7 @@ function TypographyP({
   )
 }
 
-function TypographyBlockquote({
-  className,
-  ...props
-}: React.ComponentProps<"blockquote">) {
+function TypographyBlockquote({ className, ...props }: React.ComponentProps<"blockquote">) {
   return (
     <blockquote
       data-slot="typography-blockquote"
@@ -91,15 +67,12 @@ function TypographyBlockquote({
   )
 }
 
-function TypographyInlineCode({
-  className,
-  ...props
-}: React.ComponentProps<"code">) {
+function TypographyInlineCode({ className, ...props }: React.ComponentProps<"code">) {
   return (
     <code
       data-slot="typography-inline-code"
       className={cn(
-        "bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
+        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
         className
       )}
       {...props}
@@ -107,10 +80,7 @@ function TypographyInlineCode({
   )
 }
 
-function TypographyLead({
-  className,
-  ...props
-}: React.ComponentProps<"p">) {
+function TypographyLead({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="typography-lead"
@@ -120,10 +90,7 @@ function TypographyLead({
   )
 }
 
-function TypographyLarge({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function TypographyLarge({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="typography-large"
@@ -133,23 +100,17 @@ function TypographyLarge({
   )
 }
 
-function TypographySmall({
-  className,
-  ...props
-}: React.ComponentProps<"small">) {
+function TypographySmall({ className, ...props }: React.ComponentProps<"small">) {
   return (
     <small
       data-slot="typography-small"
-      className={cn("text-sm font-medium leading-none", className)}
+      className={cn("text-sm leading-none font-medium", className)}
       {...props}
     />
   )
 }
 
-function TypographyMuted({
-  className,
-  ...props
-}: React.ComponentProps<"p">) {
+function TypographyMuted({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="typography-muted"
@@ -159,10 +120,7 @@ function TypographyMuted({
   )
 }
 
-function TypographyList({
-  className,
-  ...props
-}: React.ComponentProps<"ul">) {
+function TypographyList({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
       data-slot="typography-list"

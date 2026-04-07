@@ -1,12 +1,6 @@
 "use client"
 
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  type ReactNode,
-} from "react"
+import { useState, useEffect, useRef, useCallback, type ReactNode } from "react"
 import { createLogger } from "@/lib/observability"
 
 const logger = createLogger("lazy-section")
@@ -206,8 +200,16 @@ export function LazySection({
   }
 
   return (
-    <div ref={containerRef} className={className} data-slot="lazy-section" data-section={section} data-mounted={mounted}>
-      {mounted ? children : (fallback ?? <div className="h-48 animate-pulse rounded-2xl bg-secondary/30" />)}
+    <div
+      ref={containerRef}
+      className={className}
+      data-slot="lazy-section"
+      data-section={section}
+      data-mounted={mounted}
+    >
+      {mounted
+        ? children
+        : (fallback ?? <div className="h-48 animate-pulse rounded-2xl bg-secondary/30" />)}
     </div>
   )
 }

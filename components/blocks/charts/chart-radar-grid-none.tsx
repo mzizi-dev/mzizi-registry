@@ -2,7 +2,12 @@
 
 import { PolarAngleAxis, Radar, RadarChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { skill: "Design", score: 186 },
@@ -29,7 +34,13 @@ export function ChartRadarGridNone() {
           <RadarChart data={data}>
             <ChartTooltip content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey="skill" />
-            <Radar dataKey="score" fill="var(--color-score)" fillOpacity={0.6} stroke="var(--color-score)" strokeWidth={2} />
+            <Radar
+              dataKey="score"
+              fill="var(--color-score)"
+              fillOpacity={0.6}
+              stroke="var(--color-score)"
+              strokeWidth={2}
+            />
           </RadarChart>
         </ChartContainer>
       </CardContent>

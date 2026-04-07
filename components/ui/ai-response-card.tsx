@@ -25,18 +25,18 @@ function AiResponseCard({
     <div
       data-slot="ai-response-card"
       className={cn(
-        "ring-foreground/10 flex flex-col gap-4 rounded-2xl bg-card p-6 text-sm ring-1",
+        "flex flex-col gap-4 rounded-2xl bg-card p-6 text-sm ring-1 ring-foreground/10",
         className
       )}
       {...props}
     >
       <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        <Sparkles className="size-3.5 text-mineral-tanzanite" />
+        <Sparkles className="text-mineral-tanzanite size-3.5" />
         <span>AI Response</span>
       </div>
       <div
         data-slot="ai-response-content"
-        className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed whitespace-pre-wrap"
+        className="prose prose-sm dark:prose-invert max-w-none leading-relaxed whitespace-pre-wrap text-foreground"
       >
         {content}
       </div>
@@ -52,7 +52,7 @@ function AiResponseCard({
                 rel="noopener noreferrer"
                 className="flex items-baseline gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors hover:bg-muted"
               >
-                <span className="shrink-0 font-medium text-mineral-cobalt">[{i + 1}]</span>
+                <span className="text-mineral-cobalt shrink-0 font-medium">[{i + 1}]</span>
                 <span className="text-foreground">{source.title}</span>
               </a>
             ))}

@@ -1,0 +1,66 @@
+version: 2
+updates:
+  # npm / pnpm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Africa/Harare"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "bryanfawcett"
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    groups:
+      # Upgrade all Radix UI packages together
+      radix-ui:
+        patterns:
+          - "@radix-ui/*"
+          - "radix-ui"
+      # Upgrade testing libraries together
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "@testing-library/*"
+          - "jsdom"
+      # Upgrade Tailwind ecosystem together
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "tailwind-merge"
+          - "tw-animate-css"
+      # Upgrade type definitions together
+      types:
+        patterns:
+          - "@types/*"
+    ignore:
+      # @vitejs/plugin-react v6 requires vite@8; vitest@4 requires vite@7.
+      # Upgrade both together when vitest@5 ships.
+      - dependency-name: "@vitejs/plugin-react"
+        versions: [">=6.0.0"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Africa/Harare"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "bryanfawcett"
+    labels:
+      - "dependencies"
+      - "ci"
+      - "automated"
+    commit-message:
+      prefix: "chore(ci)"

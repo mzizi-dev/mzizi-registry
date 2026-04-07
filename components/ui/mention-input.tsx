@@ -91,10 +91,10 @@ function MentionInput({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         rows={3}
-        className="bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-xl border px-3 py-2 text-sm outline-none transition-colors focus-visible:ring-[3px] resize-none"
+        className="w-full min-w-0 resize-none rounded-xl border border-input bg-input/30 px-3 py-2 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
       />
       {showDropdown && filtered.length > 0 && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-48 overflow-auto rounded-xl border border-border bg-card p-1 shadow-lg">
+        <div className="absolute top-full right-0 left-0 z-50 mt-1 max-h-48 overflow-auto rounded-xl border border-border bg-card p-1 shadow-lg">
           {filtered.map((user, index) => (
             <button
               key={user.id}

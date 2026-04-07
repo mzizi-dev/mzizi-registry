@@ -15,8 +15,7 @@ export async function GET() {
       return NextResponse.json(
         {
           error: "Database not configured",
-          message:
-            "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
         },
         { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
       )
@@ -41,17 +40,10 @@ export async function GET() {
       )
     }
 
-    const fontEntries = dbBrand.typography.filter(
-      (t) => t.entry_type === "font"
-    )
-    const scaleEntries = dbBrand.typography.filter(
-      (t) => t.entry_type === "scale"
-    )
+    const fontEntries = dbBrand.typography.filter((t) => t.entry_type === "font")
+    const scaleEntries = dbBrand.typography.filter((t) => t.entry_type === "scale")
 
-    const fonts: Record<
-      string,
-      { family: string; usage: string; reason: string }
-    > = {}
+    const fonts: Record<string, { family: string; usage: string; reason: string }> = {}
     for (const f of fontEntries) {
       const key = f.name.replace("font-", "")
       fonts[key] = {

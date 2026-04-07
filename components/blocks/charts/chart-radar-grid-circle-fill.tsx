@@ -2,7 +2,12 @@
 
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { skill: "Design", harare: 186, nairobi: 140 },
@@ -31,8 +36,18 @@ export function ChartRadarGridCircleFill() {
             <ChartTooltip content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey="skill" />
             <PolarGrid gridType="circle" className="fill-muted opacity-20" />
-            <Radar dataKey="harare" fill="var(--color-harare)" fillOpacity={0.6} stroke="var(--color-harare)" />
-            <Radar dataKey="nairobi" fill="var(--color-nairobi)" fillOpacity={0.6} stroke="var(--color-nairobi)" />
+            <Radar
+              dataKey="harare"
+              fill="var(--color-harare)"
+              fillOpacity={0.6}
+              stroke="var(--color-harare)"
+            />
+            <Radar
+              dataKey="nairobi"
+              fill="var(--color-nairobi)"
+              fillOpacity={0.6}
+              stroke="var(--color-nairobi)"
+            />
           </RadarChart>
         </ChartContainer>
       </CardContent>

@@ -2,7 +2,12 @@
 
 import { RadialBar, RadialBarChart, PolarGrid } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { name: "Harare", visitors: 1260, fill: "var(--color-harare)" },
@@ -30,7 +35,11 @@ export function ChartRadialGrid() {
         <ChartContainer config={config} className="mx-auto aspect-square max-h-[250px]">
           <RadialBarChart data={data} innerRadius={30} outerRadius={100}>
             <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
-            <PolarGrid gridType="circle" radialLines={false} className="stroke-muted-foreground/20" />
+            <PolarGrid
+              gridType="circle"
+              radialLines={false}
+              className="stroke-muted-foreground/20"
+            />
             <RadialBar dataKey="visitors" background />
           </RadialBarChart>
         </ChartContainer>

@@ -1125,7 +1125,8 @@ components:
 
     SovereigntyAssessment:
       type: object
-      required: [technology, role, license, governance, sovereigntyRisk, forkable, selfHostable, rationale]
+      required:
+        [technology, role, license, governance, sovereigntyRisk, forkable, selfHostable, rationale]
       properties:
         technology:
           type: string

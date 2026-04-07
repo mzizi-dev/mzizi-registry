@@ -10,11 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 
 interface AppItem {
@@ -38,11 +34,7 @@ const DEFAULT_APPS: AppItem[] = [
   { name: "registry", icon: GlobeIcon, href: "https://design.nyuchi.com" },
 ]
 
-function AppSwitcher({
-  apps = DEFAULT_APPS,
-  currentApp,
-  className,
-}: AppSwitcherProps) {
+function AppSwitcher({ apps = DEFAULT_APPS, currentApp, className }: AppSwitcherProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -57,9 +49,7 @@ function AppSwitcher({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-56 p-2" align="end">
-        <div className="mb-2 px-2 text-xs font-medium text-muted-foreground">
-          Mukoko Ecosystem
-        </div>
+        <div className="mb-2 px-2 text-xs font-medium text-muted-foreground">Mukoko Ecosystem</div>
         <div className="grid grid-cols-3 gap-1">
           {apps.map((app) => {
             const Icon = app.icon ?? GlobeIcon

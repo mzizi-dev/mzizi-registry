@@ -28,10 +28,7 @@ function CodeBlock({
   return (
     <div
       data-slot="code-block"
-      className={cn(
-        "overflow-hidden rounded-xl border border-border bg-muted/50",
-        className
-      )}
+      className={cn("overflow-hidden rounded-xl border border-border bg-muted/50", className)}
       {...props}
     >
       {/* Header */}
@@ -54,13 +51,7 @@ function CodeBlock({
             </Badge>
           )}
         </div>
-        <CopyButton
-          value={code}
-          variant="ghost"
-          size="icon"
-          iconOnly
-          className="size-6"
-        />
+        <CopyButton value={code} variant="ghost" size="icon" iconOnly className="size-6" />
       </div>
 
       {/* Code content */}
@@ -71,15 +62,13 @@ function CodeBlock({
               <div key={index} className="flex">
                 {showLineNumbers && (
                   <span
-                    className="mr-4 inline-block shrink-0 select-none text-right text-muted-foreground/50"
+                    className="mr-4 inline-block shrink-0 text-right text-muted-foreground/50 select-none"
                     style={{ width: `${lineNumberWidth}ch` }}
                   >
                     {index + 1}
                   </span>
                 )}
-                <span className="flex-1 whitespace-pre-wrap break-all">
-                  {line || "\n"}
-                </span>
+                <span className="flex-1 break-all whitespace-pre-wrap">{line || "\n"}</span>
               </div>
             ))}
           </code>

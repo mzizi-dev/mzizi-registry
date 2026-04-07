@@ -40,7 +40,7 @@ function CodeEditor({
       data-slot="code-editor"
       data-language={language}
       className={cn(
-        "border-input bg-input/30 rounded-xl border overflow-hidden font-mono text-sm transition-colors focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
+        "overflow-hidden rounded-xl border border-input bg-input/30 font-mono text-sm transition-colors focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50",
         className
       )}
     >
@@ -52,7 +52,7 @@ function CodeEditor({
       <div className="flex">
         <div
           aria-hidden
-          className="select-none border-r border-border bg-muted/50 px-3 py-3 text-right text-xs leading-6 text-muted-foreground"
+          className="border-r border-border bg-muted/50 px-3 py-3 text-right text-xs leading-6 text-muted-foreground select-none"
         >
           {lines.map((_, i) => (
             <div key={i}>{i + 1}</div>

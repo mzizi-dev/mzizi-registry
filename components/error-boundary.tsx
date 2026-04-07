@@ -39,10 +39,7 @@ interface ErrorBoundaryState {
  *   </ComponentPreview>
  * </ErrorBoundary>
  */
-export class ErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props)
     this.state = { hasError: false, error: null }
@@ -75,10 +72,7 @@ export class ErrorBoundary extends Component<
 
       return (
         <div
-          className={cn(
-            "rounded-xl border border-border bg-muted/30 p-6",
-            this.props.className
-          )}
+          className={cn("rounded-xl border border-border bg-muted/30 p-6", this.props.className)}
         >
           <div className="flex flex-col items-center gap-3 text-center">
             <div className="flex size-10 items-center justify-center rounded-lg bg-destructive/10">

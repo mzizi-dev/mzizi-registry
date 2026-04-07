@@ -33,22 +33,26 @@ function MfaSetup({
   }
 
   return (
-    <div
-      data-slot="mfa-setup"
-      className={cn("flex flex-col gap-6", className)}
-      {...props}
-    >
+    <div data-slot="mfa-setup" className={cn("flex flex-col gap-6", className)} {...props}>
       {/* Step indicator */}
       <div className="flex items-center gap-3">
-        <div className={cn(
-          "flex size-7 items-center justify-center rounded-full text-xs font-medium",
-          step >= 1 ? "bg-[var(--color-cobalt)] text-white" : "bg-muted text-muted-foreground"
-        )}>1</div>
+        <div
+          className={cn(
+            "flex size-7 items-center justify-center rounded-full text-xs font-medium",
+            step >= 1 ? "bg-[var(--color-cobalt)] text-white" : "bg-muted text-muted-foreground"
+          )}
+        >
+          1
+        </div>
         <div className="h-px flex-1 bg-border" />
-        <div className={cn(
-          "flex size-7 items-center justify-center rounded-full text-xs font-medium",
-          step >= 2 ? "bg-[var(--color-cobalt)] text-white" : "bg-muted text-muted-foreground"
-        )}>2</div>
+        <div
+          className={cn(
+            "flex size-7 items-center justify-center rounded-full text-xs font-medium",
+            step >= 2 ? "bg-[var(--color-cobalt)] text-white" : "bg-muted text-muted-foreground"
+          )}
+        >
+          2
+        </div>
       </div>
 
       {step === 1 && (
@@ -64,17 +68,21 @@ function MfaSetup({
               <button
                 type="button"
                 onClick={handleCopySecret}
-                className="shrink-0 p-1 text-muted-foreground hover:text-foreground transition-colors"
+                className="shrink-0 p-1 text-muted-foreground transition-colors hover:text-foreground"
                 aria-label="Copy secret"
               >
-                {copied ? <Check className="size-3.5 text-[var(--color-malachite)]" /> : <Copy className="size-3.5" />}
+                {copied ? (
+                  <Check className="size-3.5 text-[var(--color-malachite)]" />
+                ) : (
+                  <Copy className="size-3.5" />
+                )}
               </button>
             </div>
           </div>
           <button
             type="button"
             onClick={() => setStep(2)}
-            className="inline-flex h-9 items-center justify-center rounded-4xl bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/80 transition-colors"
+            className="inline-flex h-9 items-center justify-center rounded-4xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
           >
             Continue
           </button>
@@ -95,13 +103,13 @@ function MfaSetup({
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
             placeholder="000000"
-            className="bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 h-12 w-40 rounded-xl border text-center font-mono text-xl tracking-[0.5em] outline-none transition-colors focus-visible:ring-[3px]"
+            className="h-12 w-40 rounded-xl border border-input bg-input/30 text-center font-mono text-xl tracking-[0.5em] transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
           />
           <button
             type="button"
             onClick={handleVerify}
             disabled={code.length < 6}
-            className="inline-flex h-9 items-center justify-center rounded-4xl bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/80 transition-colors disabled:opacity-50"
+            className="inline-flex h-9 items-center justify-center rounded-4xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80 disabled:opacity-50"
           >
             Verify
           </button>

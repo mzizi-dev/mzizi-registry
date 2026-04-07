@@ -31,10 +31,7 @@ function VideoPlayer({
   return (
     <div
       data-slot="video-player"
-      className={cn(
-        "ring-foreground/10 overflow-hidden rounded-2xl bg-card ring-1",
-        className
-      )}
+      className={cn("overflow-hidden rounded-2xl bg-card ring-1 ring-foreground/10", className)}
       {...props}
     >
       <div className="relative">

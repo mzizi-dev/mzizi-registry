@@ -78,10 +78,7 @@ function VirtualList<T>({
       className={cn("relative overflow-auto", className)}
       {...props}
     >
-      <div
-        data-slot="virtual-list-inner"
-        style={{ height: totalHeight, position: "relative" }}
-      >
+      <div data-slot="virtual-list-inner" style={{ height: totalHeight, position: "relative" }}>
         {visibleItems}
       </div>
     </div>

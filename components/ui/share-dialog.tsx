@@ -27,13 +27,7 @@ interface ShareDialogProps {
   className?: string
 }
 
-function ShareDialog({
-  url,
-  title,
-  description,
-  children,
-  className,
-}: ShareDialogProps) {
+function ShareDialog({ url, title, description, children, className }: ShareDialogProps) {
   const [copied, setCopied] = React.useState(false)
 
   const handleCopy = async () => {
@@ -90,10 +84,7 @@ function ShareDialog({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent
-        data-slot="share-dialog"
-        className={cn("sm:max-w-md", className)}
-      >
+      <DialogContent data-slot="share-dialog" className={cn("sm:max-w-md", className)}>
         <DialogHeader>
           <DialogTitle>Share</DialogTitle>
           <DialogDescription>{title}</DialogDescription>
@@ -102,17 +93,8 @@ function ShareDialog({
           {/* Copy link */}
           <div className="flex items-center gap-2">
             <Input value={url} readOnly className="flex-1" />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopy}
-              className="shrink-0"
-            >
-              {copied ? (
-                <Check className="mr-1 size-4" />
-              ) : (
-                <Copy className="mr-1 size-4" />
-              )}
+            <Button variant="outline" size="sm" onClick={handleCopy} className="shrink-0">
+              {copied ? <Check className="mr-1 size-4" /> : <Copy className="mr-1 size-4" />}
               {copied ? "Copied" : "Copy"}
             </Button>
           </div>
@@ -124,22 +106,10 @@ function ShareDialog({
             {shareLinks.map((link) => {
               const Icon = link.icon
               return (
-                <Button
-                  key={link.name}
-                  variant="outline"
-                  size="sm"
-                  asChild
-                  className="flex-1"
-                >
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                <Button key={link.name} variant="outline" size="sm" asChild className="flex-1">
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
                     <Icon />
-                    <span className="ml-1.5 hidden sm:inline">
-                      {link.name}
-                    </span>
+                    <span className="ml-1.5 hidden sm:inline">{link.name}</span>
                   </a>
                 </Button>
               )

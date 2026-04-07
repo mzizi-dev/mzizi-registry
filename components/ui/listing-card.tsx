@@ -27,7 +27,7 @@ function ListingCardContent({
   return (
     <>
       {image && (
-        <div className="bg-muted aspect-video overflow-hidden">
+        <div className="aspect-video overflow-hidden bg-muted">
           <img
             src={image}
             alt={title}
@@ -39,9 +39,7 @@ function ListingCardContent({
         <div>
           <h3 className="font-medium">{title}</h3>
           {description && (
-            <p className="text-muted-foreground mt-1 line-clamp-2 text-xs">
-              {description}
-            </p>
+            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{description}</p>
           )}
         </div>
         {metadata && metadata.length > 0 && (
@@ -59,7 +57,7 @@ function ListingCardContent({
             {badges.map((badge) => (
               <span
                 key={badge}
-                className="bg-muted text-muted-foreground rounded-4xl px-2 py-0.5 text-xs font-medium"
+                className="rounded-4xl bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
               >
                 {badge}
               </span>

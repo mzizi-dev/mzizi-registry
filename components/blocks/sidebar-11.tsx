@@ -2,13 +2,7 @@
 
 import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
-import {
-  ChevronDown,
-  Home,
-  Users,
-  Settings,
-  Zap,
-} from "lucide-react"
+import { ChevronDown, Home, Users, Settings, Zap } from "lucide-react"
 
 const accordionSections = [
   {

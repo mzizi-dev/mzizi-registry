@@ -5,14 +5,11 @@ import { format } from "date-fns"
 import { type DateRange } from "react-day-picker"
 import { Area, AreaChart } from "recharts"
 
-import {
-  Example,
-  ExampleWrapper,
-} from '@/components/example'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
+import { Example, ExampleWrapper } from "@/components/example"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Card,
   CardAction,
@@ -21,13 +18,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from "@/components/ui/card"
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from '@/components/ui/chart'
+} from "@/components/ui/chart"
 import {
   Dialog,
   DialogClose,
@@ -37,27 +34,23 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu"
 import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
-} from '@/components/ui/empty'
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from '@/components/ui/input-group'
+} from "@/components/ui/empty"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import {
   Item,
   ItemActions,
@@ -68,18 +61,20 @@ import {
   ItemMedia,
   ItemSeparator,
   ItemTitle,
-} from '@/components/ui/item'
+} from "@/components/ui/item"
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Textarea } from "@/components/ui/textarea"
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from '@/components/ui/native-select'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { Textarea } from '@/components/ui/textarea'
-import { CalendarIcon, Search, ChevronDownIcon, CheckIcon, MoreHorizontalIcon, CheckCircle2Icon, CircleDollarSignIcon, PlusIcon } from "lucide-react"
+  CalendarIcon,
+  Search,
+  ChevronDownIcon,
+  CheckIcon,
+  MoreHorizontalIcon,
+  CheckCircle2Icon,
+  CircleDollarSignIcon,
+  PlusIcon,
+} from "lucide-react"
 
 export function VercelBlock() {
   return (
@@ -154,9 +149,7 @@ function UsageCard() {
     <Example title="Usage" className="items-center">
       <Card className="w-full max-w-sm gap-4">
         <CardHeader>
-          <CardTitle className="px-1 text-sm">
-            5 days remaining in cycle
-          </CardTitle>
+          <CardTitle className="px-1 text-sm">5 days remaining in cycle</CardTitle>
         </CardHeader>
         <CardContent>
           <ItemGroup className="gap-0">
@@ -175,7 +168,7 @@ function UsageCard() {
                     <ItemTitle className="inline">{item.name}</ItemTitle>
                   </ItemContent>
                   <ItemActions>
-                    <span className="text-muted-foreground font-mono text-xs font-medium tabular-nums">
+                    <span className="font-mono text-xs font-medium text-muted-foreground tabular-nums">
                       {item.value}
                     </span>
                   </ItemActions>
@@ -198,8 +191,7 @@ function AnomalyAlert() {
             <EmptyHeader>
               <EmptyTitle>Get alerted for anomalies</EmptyTitle>
               <EmptyDescription>
-                Automatically monitor your projects for anomalies and get
-                notified.
+                Automatically monitor your projects for anomalies and get notified.
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
@@ -232,9 +224,7 @@ const statuses = [
 ]
 
 function DeploymentFilter() {
-  const [selectedEnvironment, setSelectedEnvironment] = React.useState(
-    environments[0]
-  )
+  const [selectedEnvironment, setSelectedEnvironment] = React.useState(environments[0])
   const [selectedStatuses, setSelectedStatuses] = React.useState<Set<string>>(
     new Set(statuses.slice(0, 5).map((s) => s.name))
   )
@@ -262,8 +252,7 @@ function DeploymentFilter() {
               {dateRange?.from ? (
                 dateRange.to ? (
                   <>
-                    {format(dateRange.from, "LLL dd, y")} -{" "}
-                    {format(dateRange.to, "LLL dd, y")}
+                    {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
                   </>
                 ) : (
                   format(dateRange.from, "LLL dd, y")
@@ -285,8 +274,7 @@ function DeploymentFilter() {
         </Popover>
         <InputGroup className="lg:ml-auto lg:max-w-72">
           <InputGroupAddon>
-            <Search
-            />
+            <Search />
           </InputGroupAddon>
           <InputGroupInput placeholder="All Authors..." />
           <InputGroupAddon align="inline-end">
@@ -331,7 +319,7 @@ function DeploymentFilter() {
                 ))}
               </div>
               Status {selectedStatuses.size}/{statuses.length}
-              <ChevronDownIcon data-icon="inline-end" className="text-muted-foreground ml-auto" />
+              <ChevronDownIcon data-icon="inline-end" className="ml-auto text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end">
@@ -386,11 +374,7 @@ const billingItems = [
 
 function BillingList() {
   return (
-    <Example
-      title="Billing"
-      className="items-center lg:p-16"
-      containerClassName="col-span-full"
-    >
+    <Example title="Billing" className="items-center lg:p-16" containerClassName="col-span-full">
       <ItemGroup className="max-w-7xl gap-0 rounded-lg border">
         {billingItems.map((item, index) => (
           <React.Fragment key={item.month}>
@@ -405,25 +389,20 @@ function BillingList() {
                     {item.status}
                   </Badge>
                 </ItemTitle>
-                <ItemDescription>
-                  Infrastructure usage & Vercel platform
-                </ItemDescription>
+                <ItemDescription>Infrastructure usage & Vercel platform</ItemDescription>
               </ItemContent>
               <ItemContent className="hidden lg:flex">
                 <ItemTitle>Total Due</ItemTitle>
                 <ItemDescription>{item.amount}</ItemDescription>
               </ItemContent>
               <ItemContent className="hidden lg:flex">
-                <ItemDescription>
-                  Invoiced {format(item.invoiceDate, "d MMM yyyy")}
-                </ItemDescription>
+                <ItemDescription>Invoiced {format(item.invoiceDate, "d MMM yyyy")}</ItemDescription>
               </ItemContent>
               <ItemActions>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon">
-                      <MoreHorizontalIcon
-                      />
+                      <MoreHorizontalIcon />
                       <span className="sr-only">More options</span>
                     </Button>
                   </DropdownMenuTrigger>
@@ -447,9 +426,7 @@ function BillingList() {
                 </ItemContent>
               </ItemFooter>
             </Item>
-            {index !== billingItems.length - 1 && (
-              <ItemSeparator className="my-0" />
-            )}
+            {index !== billingItems.length - 1 && <ItemSeparator className="my-0" />}
           </React.Fragment>
         ))}
       </ItemGroup>
@@ -518,8 +495,7 @@ const agentFeatures = [
     id: "code-suggestions",
     content: (
       <>
-        <strong>Code suggestions</strong> validated in sandboxes before you
-        merge.
+        <strong>Code suggestions</strong> validated in sandboxes before you merge.
       </>
     ),
   },
@@ -527,12 +503,8 @@ const agentFeatures = [
     id: "root-cause",
     content: (
       <>
-        <strong>Root-cause analysis</strong> for production issues with
-        deployment context.{" "}
-        <Badge
-          variant="secondary"
-          className="bg-blue-100 text-blue-700 hover:bg-blue-100"
-        >
+        <strong>Root-cause analysis</strong> for production issues with deployment context.{" "}
+        <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100">
           Requires Observability Plus
         </Badge>
       </>
@@ -551,8 +523,7 @@ function ActivateAgentDialog() {
           <DialogHeader>
             <DialogTitle>Ship faster & safer with Vercel Agent</DialogTitle>
             <DialogDescription>
-              Your use is subject to Vercel&apos;s{" "}
-              <a href="#">Public Beta Agreement</a> and{" "}
+              Your use is subject to Vercel&apos;s <a href="#">Public Beta Agreement</a> and{" "}
               <a href="#">AI Product Terms</a>.
             </DialogDescription>
           </DialogHeader>
@@ -561,10 +532,10 @@ function ActivateAgentDialog() {
               {agentFeatures.map((feature) => (
                 <Item key={feature.id} size="xs" className="px-0">
                   <ItemMedia variant="icon" className="self-start">
-                    <CheckCircle2Icon className="fill-primary text-primary-foreground size-5" />
+                    <CheckCircle2Icon className="size-5 fill-primary text-primary-foreground" />
                   </ItemMedia>
                   <ItemContent>
-                    <ItemTitle className="text-muted-foreground *:[strong]:text-foreground inline leading-relaxed font-normal *:[strong]:font-medium">
+                    <ItemTitle className="inline leading-relaxed font-normal text-muted-foreground *:[strong]:font-medium *:[strong]:text-foreground">
                       {feature.content}
                     </ItemTitle>
                   </ItemContent>
@@ -572,8 +543,7 @@ function ActivateAgentDialog() {
               ))}
             </ItemGroup>
             <Alert className="hidden sm:grid">
-              <CircleDollarSignIcon
-              />
+              <CircleDollarSignIcon />
               <AlertDescription>
                 Pro teams get $100 in Vercel Agent trial credit for 2 weeks.
               </AlertDescription>
@@ -595,7 +565,7 @@ function ObservabilityCard() {
   return (
     <Example title="Observability" className="items-center justify-center">
       <Card className="relative w-full max-w-md overflow-hidden pt-0">
-        <div className="bg-primary absolute inset-0 z-30 aspect-video opacity-50 mix-blend-color" />
+        <div className="absolute inset-0 z-30 aspect-video bg-primary opacity-50 mix-blend-color" />
         <img
           src="https://images.unsplash.com/photo-1604076850742-4c7221f3101b?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Photo by mymind on Unsplash"
@@ -605,15 +575,13 @@ function ObservabilityCard() {
         <CardHeader>
           <CardTitle>Observability Plus is replacing Monitoring</CardTitle>
           <CardDescription>
-            Switch to the improved way to explore your data, with natural
-            language. Monitoring will no longer be available on the Pro plan in
-            November, 2025
+            Switch to the improved way to explore your data, with natural language. Monitoring will
+            no longer be available on the Pro plan in November, 2025
           </CardDescription>
         </CardHeader>
         <CardFooter>
           <Button>
-            Create Query{" "}
-            <PlusIcon data-icon="inline-end" />
+            Create Query <PlusIcon data-icon="inline-end" />
           </Button>
           <Badge variant="secondary" className="ml-auto">
             Warning
@@ -634,48 +602,33 @@ function FeedbackForm() {
               <Field>
                 <FieldLabel htmlFor="topic">Topic</FieldLabel>
                 <NativeSelect id="topic">
-                  <NativeSelectOption value="">
-                    Select a topic
-                  </NativeSelectOption>
+                  <NativeSelectOption value="">Select a topic</NativeSelectOption>
                   <NativeSelectOption value="ai">AI</NativeSelectOption>
                   <NativeSelectOption value="accounts-and-access-controls">
                     Accounts and Access Controls
                   </NativeSelectOption>
-                  <NativeSelectOption value="billing">
-                    Billing
-                  </NativeSelectOption>
-                  <NativeSelectOption value="cdn">
-                    CDN (Firewall, Caching)
-                  </NativeSelectOption>
+                  <NativeSelectOption value="billing">Billing</NativeSelectOption>
+                  <NativeSelectOption value="cdn">CDN (Firewall, Caching)</NativeSelectOption>
                   <NativeSelectOption value="ci-cd">
                     CI/CD (Builds, Deployments, Environment Variables)
                   </NativeSelectOption>
                   <NativeSelectOption value="dashboard-interface">
                     Dashboard Interface (Navigation, UI Issues)
                   </NativeSelectOption>
-                  <NativeSelectOption value="domains">
-                    Domains
-                  </NativeSelectOption>
-                  <NativeSelectOption value="frameworks">
-                    Frameworks
-                  </NativeSelectOption>
+                  <NativeSelectOption value="domains">Domains</NativeSelectOption>
+                  <NativeSelectOption value="frameworks">Frameworks</NativeSelectOption>
                   <NativeSelectOption value="marketplace-and-integrations">
                     Marketplace and Integrations
                   </NativeSelectOption>
                   <NativeSelectOption value="observability">
                     Observability (Observability, Logs, Monitoring)
                   </NativeSelectOption>
-                  <NativeSelectOption value="storage">
-                    Storage
-                  </NativeSelectOption>
+                  <NativeSelectOption value="storage">Storage</NativeSelectOption>
                 </NativeSelect>
               </Field>
               <Field>
                 <FieldLabel htmlFor="feedback">Feedback</FieldLabel>
-                <Textarea
-                  id="feedback"
-                  placeholder="Your feedback helps us improve..."
-                />
+                <Textarea id="feedback" placeholder="Your feedback helps us improve..." />
               </Field>
             </FieldGroup>
           </form>

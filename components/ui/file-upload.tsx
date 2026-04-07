@@ -106,9 +106,7 @@ function FileUpload({
             {isDragging ? "Drop files here" : "Click to upload or drag and drop"}
           </p>
           <p className="text-xs text-muted-foreground">
-            {accept
-              ? `Accepted: ${accept}`
-              : "Any file type"}
+            {accept ? `Accepted: ${accept}` : "Any file type"}
             {maxSize && ` · Max ${formatFileSize(maxSize)}`}
           </p>
         </div>
@@ -128,9 +126,7 @@ function FileUpload({
       </div>
 
       {/* Error */}
-      {error && (
-        <p className="text-xs text-destructive">{error}</p>
-      )}
+      {error && <p className="text-xs text-destructive">{error}</p>}
 
       {/* File list */}
       {files.length > 0 && (
@@ -143,9 +139,7 @@ function FileUpload({
               <FileIcon className="size-4 shrink-0 text-muted-foreground" />
               <div className="flex-1 truncate">
                 <p className="truncate text-sm font-medium">{file.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {formatFileSize(file.size)}
-                </p>
+                <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
               </div>
               <Button
                 variant="ghost"

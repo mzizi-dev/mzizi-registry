@@ -18,7 +18,7 @@ function PropertyList({ className, items, ...props }: PropertyListProps) {
   return (
     <dl
       data-slot="property-list"
-      className={cn("divide-border divide-y text-sm", className)}
+      className={cn("divide-y divide-border text-sm", className)}
       {...props}
     >
       {items.map((item) => (
@@ -34,14 +34,14 @@ function PropertyListItem({ item }: { item: PropertyItem }) {
       data-slot="property-list-item"
       className="flex items-start justify-between gap-4 py-3 first:pt-0 last:pb-0"
     >
-      <dt className="text-muted-foreground shrink-0">{item.label}</dt>
+      <dt className="shrink-0 text-muted-foreground">{item.label}</dt>
       <dd className="flex items-center gap-1.5 text-right font-medium">
         {item.href ? (
           <a
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary inline-flex items-center gap-1 hover:underline"
+            className="inline-flex items-center gap-1 text-primary hover:underline"
           >
             {item.value}
             <ExternalLink className="size-3" />
@@ -59,7 +59,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       type="button"
-      className="text-muted-foreground hover:text-foreground inline-flex shrink-0 transition-colors"
+      className="inline-flex shrink-0 text-muted-foreground transition-colors hover:text-foreground"
       aria-label={`Copy ${text}`}
       onClick={() => navigator.clipboard?.writeText(text)}
     >

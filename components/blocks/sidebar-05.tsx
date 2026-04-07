@@ -48,9 +48,7 @@ function Sidebar05() {
               className="w-full justify-start gap-3"
               size="sm"
               onClick={() =>
-                item.children
-                  ? setExpanded(expanded === item.label ? null : item.label)
-                  : undefined
+                item.children ? setExpanded(expanded === item.label ? null : item.label) : undefined
               }
             >
               <item.icon className="size-4" />
@@ -62,7 +60,7 @@ function Sidebar05() {
               )}
             </Button>
             {item.children && expanded === item.label && (
-              <div className="ml-4 mt-1 space-y-0.5 border-l border-border pl-3">
+              <div className="mt-1 ml-4 space-y-0.5 border-l border-border pl-3">
                 {item.children.map((child) => (
                   <Button
                     key={child.label}

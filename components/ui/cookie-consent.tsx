@@ -29,18 +29,18 @@ function CookieConsent({
       role="dialog"
       aria-label="Cookie consent"
       className={cn(
-        "bg-card ring-foreground/10 fixed inset-x-0 bottom-0 z-50 p-4 shadow-lg ring-1 md:p-6",
+        "fixed inset-x-0 bottom-0 z-50 bg-card p-4 shadow-lg ring-1 ring-foreground/10 md:p-6",
         className
       )}
       {...props}
     >
       <div className="mx-auto flex max-w-5xl flex-col items-start gap-4 sm:flex-row sm:items-center">
-        <p className="text-muted-foreground flex-1 text-sm">{message}</p>
+        <p className="flex-1 text-sm text-muted-foreground">{message}</p>
         <div className="flex shrink-0 items-center gap-2">
           {onManage && (
             <button
               type="button"
-              className="text-muted-foreground hover:text-foreground rounded-4xl px-3 py-1.5 text-sm font-medium transition-colors"
+              className="rounded-4xl px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               onClick={onManage}
             >
               Manage
@@ -48,7 +48,7 @@ function CookieConsent({
           )}
           <button
             type="button"
-            className="border-border bg-input/30 hover:bg-input/50 rounded-4xl border px-4 py-1.5 text-sm font-medium transition-colors"
+            className="rounded-4xl border border-border bg-input/30 px-4 py-1.5 text-sm font-medium transition-colors hover:bg-input/50"
             onClick={() => {
               setVisible(false)
               onDecline()
@@ -58,7 +58,7 @@ function CookieConsent({
           </button>
           <button
             type="button"
-            className="bg-primary text-primary-foreground hover:bg-primary/80 rounded-4xl px-4 py-1.5 text-sm font-medium transition-colors"
+            className="rounded-4xl bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
             onClick={() => {
               setVisible(false)
               onAccept()

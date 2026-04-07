@@ -2,7 +2,12 @@
 
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", revenue: 186 },
@@ -30,7 +35,13 @@ export function ChartLineLinear() {
             <CartesianGrid vertical={false} />
             <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Line type="linear" dataKey="revenue" stroke="var(--color-revenue)" strokeWidth={2} dot={false} />
+            <Line
+              type="linear"
+              dataKey="revenue"
+              stroke="var(--color-revenue)"
+              strokeWidth={2}
+              dot={false}
+            />
           </LineChart>
         </ChartContainer>
       </CardContent>

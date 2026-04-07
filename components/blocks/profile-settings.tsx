@@ -9,14 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  User,
-  Bell,
-  Shield,
-  Palette,
-  Lock,
-  Upload,
-} from "lucide-react"
+import { User, Bell, Shield, Palette, Lock, Upload } from "lucide-react"
 
 const sections = [
   { id: "account", label: "Account", icon: User },
@@ -40,7 +33,7 @@ function ProfileSettings() {
               <button
                 key={section.id}
                 onClick={() => setActive(section.id)}
-                className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-sm transition-colors ${
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors ${
                   active === section.id
                     ? "bg-cobalt/10 font-medium text-cobalt"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -122,10 +115,26 @@ function ProfileSettings() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { id: "notif-email", label: "Email notifications", desc: "Receive updates via email" },
-                  { id: "notif-push", label: "Push notifications", desc: "Receive push notifications on your device" },
-                  { id: "notif-mentions", label: "Mentions", desc: "Get notified when someone mentions you" },
-                  { id: "notif-updates", label: "Product updates", desc: "News about mukoko features and releases" },
+                  {
+                    id: "notif-email",
+                    label: "Email notifications",
+                    desc: "Receive updates via email",
+                  },
+                  {
+                    id: "notif-push",
+                    label: "Push notifications",
+                    desc: "Receive push notifications on your device",
+                  },
+                  {
+                    id: "notif-mentions",
+                    label: "Mentions",
+                    desc: "Get notified when someone mentions you",
+                  },
+                  {
+                    id: "notif-updates",
+                    label: "Product updates",
+                    desc: "News about mukoko features and releases",
+                  },
                 ].map((item) => (
                   <div key={item.id} className="flex items-center justify-between">
                     <div>
@@ -148,7 +157,11 @@ function ProfileSettings() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="settings-current-pw">Current password</Label>
-                  <Input id="settings-current-pw" type="password" placeholder="Enter current password" />
+                  <Input
+                    id="settings-current-pw"
+                    type="password"
+                    placeholder="Enter current password"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="settings-new-pw">New password</Label>
@@ -158,14 +171,18 @@ function ProfileSettings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-foreground">Two-factor authentication</p>
-                    <p className="text-xs text-muted-foreground">Add an extra layer of security to your account</p>
+                    <p className="text-xs text-muted-foreground">
+                      Add an extra layer of security to your account
+                    </p>
                   </div>
                   <Switch id="settings-mfa" />
                 </div>
                 <Separator />
                 <div>
                   <p className="text-sm font-medium text-foreground">Active sessions</p>
-                  <p className="mt-1 text-xs text-muted-foreground">Harare, Zimbabwe — Chrome on macOS — Current session</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Harare, Zimbabwe — Chrome on macOS — Current session
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -184,7 +201,9 @@ function ProfileSettings() {
                       key={theme}
                       className="flex flex-col items-center gap-2 rounded-xl border border-border p-4 text-sm text-muted-foreground transition-colors hover:border-cobalt hover:text-foreground"
                     >
-                      <div className={`size-8 rounded-lg ${theme === "Light" ? "bg-background ring-1 ring-border" : theme === "Dark" ? "bg-foreground" : "bg-gradient-to-br from-background to-foreground"}`} />
+                      <div
+                        className={`size-8 rounded-lg ${theme === "Light" ? "bg-background ring-1 ring-border" : theme === "Dark" ? "bg-foreground" : "bg-gradient-to-br from-background to-foreground"}`}
+                      />
                       {theme}
                     </button>
                   ))}
@@ -201,8 +220,16 @@ function ProfileSettings() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { id: "priv-profile", label: "Public profile", desc: "Allow anyone to view your profile" },
-                  { id: "priv-activity", label: "Show activity status", desc: "Let others see when you are online" },
+                  {
+                    id: "priv-profile",
+                    label: "Public profile",
+                    desc: "Allow anyone to view your profile",
+                  },
+                  {
+                    id: "priv-activity",
+                    label: "Show activity status",
+                    desc: "Let others see when you are online",
+                  },
                   { id: "priv-search", label: "Searchable", desc: "Appear in search results" },
                 ].map((item) => (
                   <div key={item.id} className="flex items-center justify-between">

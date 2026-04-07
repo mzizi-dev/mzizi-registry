@@ -39,14 +39,12 @@ function ChatListItem({
       onClick={() => onSelect?.(conversation.id)}
       className={cn(
         "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors outline-none",
-        "hover:bg-muted/50 focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "hover:bg-muted/50 focus-visible:ring-[3px] focus-visible:ring-ring/50",
         isActive && "bg-muted"
       )}
     >
       <Avatar className="shrink-0">
-        {conversation.avatar && (
-          <AvatarImage src={conversation.avatar} alt={conversation.name} />
-        )}
+        {conversation.avatar && <AvatarImage src={conversation.avatar} alt={conversation.name} />}
         <AvatarFallback>
           {conversation.name
             .split(" ")
@@ -69,14 +67,10 @@ function ChatListItem({
           >
             {conversation.name}
           </span>
-          <span className="shrink-0 text-xs text-muted-foreground">
-            {conversation.timestamp}
-          </span>
+          <span className="shrink-0 text-xs text-muted-foreground">{conversation.timestamp}</span>
         </div>
         <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-xs text-muted-foreground">
-            {conversation.lastMessage}
-          </span>
+          <span className="truncate text-xs text-muted-foreground">{conversation.lastMessage}</span>
           {conversation.unreadCount != null && conversation.unreadCount > 0 && (
             <Badge
               variant="default"
@@ -91,19 +85,9 @@ function ChatListItem({
   )
 }
 
-function ChatList({
-  className,
-  conversations,
-  activeId,
-  onSelect,
-  ...props
-}: ChatListProps) {
+function ChatList({ className, conversations, activeId, onSelect, ...props }: ChatListProps) {
   return (
-    <div
-      data-slot="chat-list"
-      className={cn("flex flex-col", className)}
-      {...props}
-    >
+    <div data-slot="chat-list" className={cn("flex flex-col", className)} {...props}>
       <ScrollArea className="flex-1">
         <div className="flex flex-col gap-0.5 p-2">
           {conversations.map((conversation) => (

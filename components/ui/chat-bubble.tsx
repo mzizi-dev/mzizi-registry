@@ -7,20 +7,17 @@ import { Check, CheckCheck, Clock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
-const chatBubbleVariants = cva(
-  "relative max-w-[80%] rounded-2xl px-4 py-2.5 text-sm",
-  {
-    variants: {
-      variant: {
-        sent: "bg-primary text-primary-foreground ml-auto rounded-br-sm",
-        received: "bg-muted text-foreground mr-auto rounded-bl-sm",
-      },
+const chatBubbleVariants = cva("relative max-w-[80%] rounded-2xl px-4 py-2.5 text-sm", {
+  variants: {
+    variant: {
+      sent: "bg-primary text-primary-foreground ml-auto rounded-br-sm",
+      received: "bg-muted text-foreground mr-auto rounded-bl-sm",
     },
-    defaultVariants: {
-      variant: "received",
-    },
-  }
-)
+  },
+  defaultVariants: {
+    variant: "received",
+  },
+})
 
 type MessageStatus = "sending" | "sent" | "delivered" | "read"
 
@@ -30,8 +27,7 @@ interface ChatBubbleSender {
 }
 
 interface ChatBubbleProps
-  extends React.ComponentProps<"div">,
-    VariantProps<typeof chatBubbleVariants> {
+  extends React.ComponentProps<"div">, VariantProps<typeof chatBubbleVariants> {
   content: string
   sender: ChatBubbleSender
   timestamp: string
@@ -68,11 +64,7 @@ function ChatBubble({
     <div
       data-slot="chat-bubble"
       data-variant={variant}
-      className={cn(
-        "flex items-end gap-2",
-        isSent ? "flex-row-reverse" : "flex-row",
-        className
-      )}
+      className={cn("flex items-end gap-2", isSent ? "flex-row-reverse" : "flex-row", className)}
       {...props}
     >
       <Avatar size="sm" className="shrink-0">
@@ -87,20 +79,11 @@ function ChatBubble({
         </AvatarFallback>
       </Avatar>
 
-      <div
-        className={cn(
-          "flex flex-col gap-1",
-          isSent ? "items-end" : "items-start"
-        )}
-      >
+      <div className={cn("flex flex-col gap-1", isSent ? "items-end" : "items-start")}>
         <div className={chatBubbleVariants({ variant })}>
-          <p className="whitespace-pre-wrap break-words">{content}</p>
+          <p className="break-words whitespace-pre-wrap">{content}</p>
         </div>
-        <div
-          className={cn(
-            "flex items-center gap-1 px-1 text-xs text-muted-foreground"
-          )}
-        >
+        <div className={cn("flex items-center gap-1 px-1 text-xs text-muted-foreground")}>
           <span>{timestamp}</span>
           {isSent && status && <StatusIcon status={status} />}
         </div>

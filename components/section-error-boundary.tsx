@@ -99,7 +99,9 @@ export class SectionErrorBoundary extends Component<SectionErrorBoundaryProps, S
           aria-label={`Error in ${this.props.section}`}
         >
           <div className="flex size-10 items-center justify-center rounded-xl bg-destructive/10">
-            <span className="text-sm text-destructive" aria-hidden="true">!</span>
+            <span className="text-sm text-destructive" aria-hidden="true">
+              !
+            </span>
           </div>
           <div className="flex flex-col items-center gap-1.5 text-center">
             <p className="text-sm font-medium text-foreground">

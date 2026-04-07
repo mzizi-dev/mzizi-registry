@@ -2,7 +2,12 @@
 
 import { Pie, PieChart } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const outerData = [
   { sector: "farming", value: 275, fill: "var(--color-farming)" },
@@ -37,8 +42,20 @@ export function ChartPieStacked() {
         <ChartContainer config={config} className="mx-auto aspect-square max-h-[250px]">
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-            <Pie data={innerData} dataKey="value" nameKey="region" innerRadius={0} outerRadius={60} />
-            <Pie data={outerData} dataKey="value" nameKey="sector" innerRadius={70} outerRadius={90} />
+            <Pie
+              data={innerData}
+              dataKey="value"
+              nameKey="region"
+              innerRadius={0}
+              outerRadius={60}
+            />
+            <Pie
+              data={outerData}
+              dataKey="value"
+              nameKey="sector"
+              innerRadius={70}
+              outerRadius={90}
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>

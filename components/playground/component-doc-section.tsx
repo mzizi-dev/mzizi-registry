@@ -19,10 +19,7 @@ export function ComponentDocSection({ name }: ComponentDocSectionProps) {
           <h2 className="text-xl font-semibold">Use cases</h2>
           <ul className="grid gap-2 sm:grid-cols-2">
             {doc.useCases.map((useCase) => (
-              <li
-                key={useCase}
-                className="flex items-start gap-2 text-sm text-muted-foreground"
-              >
+              <li key={useCase} className="flex items-start gap-2 text-sm text-muted-foreground">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[var(--color-cobalt)]" />
                 {useCase}
               </li>
@@ -38,9 +35,7 @@ export function ComponentDocSection({ name }: ComponentDocSectionProps) {
           <div className="flex flex-wrap gap-6">
             {doc.variants && (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-muted-foreground">
-                  Variants
-                </p>
+                <p className="text-xs font-medium text-muted-foreground">Variants</p>
                 <div className="flex flex-wrap gap-1.5">
                   {doc.variants.map((v) => (
                     <Badge key={v} variant="outline" className="font-mono">
@@ -52,9 +47,7 @@ export function ComponentDocSection({ name }: ComponentDocSectionProps) {
             )}
             {doc.sizes && (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-muted-foreground">
-                  Sizes
-                </p>
+                <p className="text-xs font-medium text-muted-foreground">Sizes</p>
                 <div className="flex flex-wrap gap-1.5">
                   {doc.sizes.map((s) => (
                     <Badge key={s} variant="outline" className="font-mono">
@@ -74,10 +67,7 @@ export function ComponentDocSection({ name }: ComponentDocSectionProps) {
           <h2 className="text-xl font-semibold">Features</h2>
           <ul className="grid gap-2 sm:grid-cols-2">
             {doc.features.map((feature) => (
-              <li
-                key={feature}
-                className="flex items-start gap-2 text-sm text-muted-foreground"
-              >
+              <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[var(--color-malachite)]" />
                 {feature}
               </li>

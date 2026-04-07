@@ -1,0 +1,32 @@
+# CODEOWNERS — nyuchi design portal
+#
+# These owners are automatically requested for review on every pull request
+# that touches the corresponding paths.
+#
+# Syntax: <pattern> <owner> [<owner> ...]
+# Last matching rule takes precedence.
+
+# Default: all changes request review from the core team
+*                               @nyuchitech/core
+
+# Design system — Five African Minerals tokens, globals.css
+app/globals.css                 @nyuchitech/core
+lib/brand.ts                    @nyuchitech/core
+lib/architecture.ts             @nyuchitech/core
+
+# Registry manifest — changes affect all 294+ consumers
+registry.json                   @nyuchitech/core
+scripts/build-registry.js       @nyuchitech/core
+
+# Security-sensitive files
+lib/ai-safety.ts                @nyuchitech/core
+lib/metrics.ts                  @nyuchitech/core
+SECURITY.md                     @nyuchitech/core
+
+# CI/CD and release infrastructure
+.github/workflows/              @nyuchitech/core
+.husky/                         @nyuchitech/core
+
+# Community health files
+CODE_OF_CONDUCT.md              @nyuchitech/core
+CONTRIBUTING.md                 @nyuchitech/core

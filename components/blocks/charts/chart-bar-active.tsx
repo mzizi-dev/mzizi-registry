@@ -2,7 +2,12 @@
 
 import { Bar, BarChart, CartesianGrid, XAxis, Cell } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 const data = [
   { month: "Jan", revenue: 186 },
@@ -32,7 +37,15 @@ export function ChartBarActive() {
             <ChartTooltip content={<ChartTooltipContent />} />
             <Bar dataKey="revenue" radius={4}>
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.revenue === Math.max(...data.map(d => d.revenue)) ? "var(--color-revenue)" : "var(--color-revenue)"} fillOpacity={entry.revenue === Math.max(...data.map(d => d.revenue)) ? 1 : 0.4} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={
+                    entry.revenue === Math.max(...data.map((d) => d.revenue))
+                      ? "var(--color-revenue)"
+                      : "var(--color-revenue)"
+                  }
+                  fillOpacity={entry.revenue === Math.max(...data.map((d) => d.revenue)) ? 1 : 0.4}
+                />
               ))}
             </Bar>
           </BarChart>
