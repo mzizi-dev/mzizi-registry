@@ -39,7 +39,7 @@ jobs:
             echo "Tag v${{ steps.version.outputs.version }} is new — creating release."
           fi
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
         if: steps.tag_check.outputs.exists == 'false'
         with:
           version: 10
