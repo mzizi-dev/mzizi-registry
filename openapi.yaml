@@ -13,7 +13,7 @@ info:
 
     **Base URL:** `https://design.nyuchi.com/api/v1`
 
-    **Registry:** 294 items (169 UI components, 3 hooks, 11 lib utilities, 70 chart blocks, 35 page blocks, 6 standard blocks)
+    **Registry:** 545 stable items across 10 architecture layers (served from Supabase `components` table)
 
     **MCP Server:** `https://design.nyuchi.com/mcp` (Streamable HTTP transport)
   contact:
@@ -98,8 +98,7 @@ paths:
     get:
       summary: Component Registry Index
       description: |
-        Returns metadata for all 294 registry items (169 UI components, 3 hooks, 11 lib utilities,
-        70 chart blocks, 35 page blocks, 6 standard blocks).
+        Returns metadata for all 545 stable registry items across 10 architecture layers.
         Reads from Supabase. Returns 503 if database is not configured.
       operationId: getRegistryIndex
       tags: [Registry]
@@ -550,7 +549,7 @@ components:
           const: "Brand"
         version:
           type: string
-          example: "4.0.1"
+          example: "4.0.26"
         name:
           type: string
           example: "Mukoko Brand System"
@@ -837,7 +836,7 @@ components:
           example: "https://design.nyuchi.com"
         items:
           type: array
-          minItems: 294
+          minItems: 545
           items:
             $ref: "#/components/schemas/RegistryItemSummary"
 

@@ -1,5 +1,3 @@
-import fs from "fs"
-import path from "path"
 import { notFound } from "next/navigation"
 import { ComponentPreview } from "@/components/playground/component-preview"
 import { ApiTester } from "@/components/playground/api-tester"
@@ -8,37 +6,26 @@ import { hasDemoFor } from "@/components/playground/demo-names"
 import { ComponentDocSection } from "@/components/playground/component-doc-section"
 import { SafeSection } from "@/components/error-boundary"
 import { Badge } from "@/components/ui/badge"
+import { getAllComponents, getComponent, isSupabaseConfigured } from "@/lib/db"
 
-interface RegistryItem {
-  name: string
-  type: string
-  description: string
-  dependencies?: string[]
-  registryDependencies?: string[]
-  files: Array<{ path: string; type: string }>
-}
-
-function getRegistry(): { items: RegistryItem[] } {
-  const registryPath = path.join(process.cwd(), "registry.json")
-  const raw = fs.readFileSync(registryPath, "utf-8")
-  return JSON.parse(raw)
-}
-
-function getSourceCode(filePath: string): string {
-  const fullPath = path.join(process.cwd(), filePath)
-  if (!fs.existsSync(fullPath)) return "// Source file not found"
-  return fs.readFileSync(fullPath, "utf-8")
-}
-
+/**
+ * Static params: generate a page per component by listing the DB registry.
+ * If Supabase is unreachable at build time we emit an empty set and let the
+ * page render on demand — avoiding a build failure in preview environments.
+ */
 export async function generateStaticParams() {
-  const registry = getRegistry()
-  return registry.items.map((item) => ({ name: item.name }))
+  if (!isSupabaseConfigured()) return []
+  try {
+    const components = await getAllComponents()
+    return components.map((c) => ({ name: c.name }))
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
-  const registry = getRegistry()
-  const item = registry.items.find((i) => i.name === name)
+  const item = await getComponent(name).catch(() => null)
   if (!item) return { title: "Not Found" }
   return {
     title: `${item.name} — nyuchi design portal`,
@@ -48,12 +35,12 @@ export async function generateMetadata({ params }: { params: Promise<{ name: str
 
 export default async function ComponentPage({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
-  const registry = getRegistry()
-  const item = registry.items.find((i) => i.name === name)
+  const item = await getComponent(name).catch(() => null)
 
   if (!item) notFound()
 
-  const sourceCode = getSourceCode(item.files[0].path)
+  const sourceCode = item.source_code ?? "// Source not available"
+  const firstFilePath = item.files[0]?.path ?? ""
   const installUrl = `https://design.nyuchi.com/api/v1/ui/${item.name}`
   const hasDemo = hasDemoFor(item.name)
 
@@ -64,8 +51,13 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
         <div className="flex items-center gap-3">
           <h1 className="font-serif text-3xl font-bold tracking-tight">{item.name}</h1>
           <Badge variant="outline" className="font-mono text-xs">
-            {item.type.replace("registry:", "")}
+            {item.registry_type.replace("registry:", "")}
           </Badge>
+          {item.layer && (
+            <Badge variant="secondary" className="font-mono text-xs">
+              L{item.layer}
+            </Badge>
+          )}
         </div>
         <p className="text-lg text-muted-foreground">{item.description}</p>
       </div>
@@ -102,7 +94,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
 
       {/* Dependencies */}
       {((item.dependencies && item.dependencies.length > 0) ||
-        (item.registryDependencies && item.registryDependencies.length > 0)) && (
+        (item.registry_dependencies && item.registry_dependencies.length > 0)) && (
         <SafeSection section="Dependencies">
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">Dependencies</h2>
@@ -112,7 +104,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
                   {dep}
                 </Badge>
               ))}
-              {item.registryDependencies?.map((dep) => (
+              {item.registry_dependencies?.map((dep) => (
                 <Badge key={dep} variant="outline">
                   <a href={`/components/${dep}`} className="hover:underline">
                     {dep}
@@ -136,12 +128,14 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
       </SafeSection>
 
       {/* Source file path */}
-      <section className="space-y-2">
-        <h2 className="text-xl font-semibold">Source</h2>
-        <p className="text-sm text-muted-foreground">
-          <code className="rounded-md bg-muted px-2 py-1 text-xs">{item.files[0].path}</code>
-        </p>
-      </section>
+      {firstFilePath && (
+        <section className="space-y-2">
+          <h2 className="text-xl font-semibold">Source</h2>
+          <p className="text-sm text-muted-foreground">
+            <code className="rounded-md bg-muted px-2 py-1 text-xs">{firstFilePath}</code>
+          </p>
+        </section>
+      )}
     </div>
   )
 }

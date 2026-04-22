@@ -62,6 +62,17 @@ import type {
   ArchitectureSovereigntyInsert,
   ArchitectureRemovedRow,
   ArchitectureRemovedInsert,
+  AiInstructionRow,
+  AiInstructionInsert,
+  DocumentationPageRow,
+  DocumentationPageInsert,
+  ChangelogRow,
+  ChangelogInsert,
+  ComponentVersionRow,
+  FundiIssueRow,
+  FundiIssueInsert,
+  FundiIssueFilters,
+  DesignTokens,
 } from "./types"
 
 // ── Supabase clients ────────────────────────────────────────────────
@@ -417,17 +428,6 @@ export async function getDatabaseInfo(): Promise<DatabaseInfo> {
       status: "error",
     }
   }
-}
-
-/**
- * Check if the database has been seeded (has at least one component).
- */
-export async function isSeeded(): Promise<boolean> {
-  const { count } = await getPublicClient()
-    .from("components")
-    .select("*", { count: "exact", head: true })
-
-  return (count ?? 0) > 0
 }
 
 // ── Brand queries ──────────────────────────────────────────────────
@@ -915,4 +915,417 @@ export async function upsertArchitectureRemoved(
 
   if (error) throw new Error(error.message)
   return data as ArchitectureRemovedRow
+}
+
+// ── AI instruction queries ─────────────────────────────────────────
+
+/**
+ * Get an AI instruction by name (e.g., "nyuchi-mcp-system-prompt").
+ */
+export async function getAiInstruction(name: string): Promise<AiInstructionRow | null> {
+  const { data, error } = await getPublicClient()
+    .from("ai_instructions")
+    .select("*")
+    .eq("name", name)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw new Error(error.message)
+  }
+  return data as unknown as AiInstructionRow
+}
+
+/**
+ * Get an AI instruction by target audience (mcp-server, claude, github-copilot, cursor).
+ */
+export async function getAiInstructionByTarget(target: string): Promise<AiInstructionRow | null> {
+  const { data, error } = await getPublicClient()
+    .from("ai_instructions")
+    .select("*")
+    .eq("target", target)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw new Error(error.message)
+  }
+  return data as unknown as AiInstructionRow
+}
+
+/**
+ * Get all AI instructions.
+ */
+export async function getAllAiInstructions(): Promise<AiInstructionRow[]> {
+  const { data, error } = await getPublicClient().from("ai_instructions").select("*").order("name")
+
+  if (error) throw new Error(error.message)
+  return (data ?? []) as unknown as AiInstructionRow[]
+}
+
+/**
+ * Upsert an AI instruction (admin only).
+ */
+export async function upsertAiInstruction(
+  instruction: AiInstructionInsert
+): Promise<AiInstructionRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("ai_instructions")
+    .upsert(instruction, { onConflict: "name" })
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+  return data as AiInstructionRow
+}
+
+// ── Documentation page queries ──────────────────────────────────────
+
+/**
+ * Get a documentation page by slug.
+ */
+export async function getDocumentationPage(slug: string): Promise<DocumentationPageRow | null> {
+  const { data, error } = await getPublicClient()
+    .from("documentation_pages")
+    .select("*")
+    .eq("slug", slug)
+    .eq("status", "published")
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw new Error(error.message)
+  }
+  return data as unknown as DocumentationPageRow
+}
+
+/**
+ * Get all published documentation pages, grouped by category and sort_order.
+ */
+export async function getAllDocumentationPages(): Promise<DocumentationPageRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("documentation_pages")
+    .select("*")
+    .eq("status", "published")
+    .order("category")
+    .order("sort_order")
+
+  if (error) throw new Error(error.message)
+  return (data ?? []) as unknown as DocumentationPageRow[]
+}
+
+/**
+ * Get documentation pages by category.
+ */
+export async function getDocumentationPagesByCategory(
+  category: string
+): Promise<DocumentationPageRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("documentation_pages")
+    .select("*")
+    .eq("category", category)
+    .eq("status", "published")
+    .order("sort_order")
+
+  if (error) throw new Error(error.message)
+  return (data ?? []) as unknown as DocumentationPageRow[]
+}
+
+/**
+ * Upsert a documentation page (admin only).
+ */
+export async function upsertDocumentationPage(
+  page: DocumentationPageInsert
+): Promise<DocumentationPageRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("documentation_pages")
+    .upsert(page, { onConflict: "slug" })
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+  return data as DocumentationPageRow
+}
+
+// ── Changelog queries ───────────────────────────────────────────────
+
+/**
+ * Get all changelog entries, most recent first.
+ */
+export async function getChangelogEntries(): Promise<ChangelogRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("changelog")
+    .select("*")
+    .order("released_at", { ascending: false })
+
+  if (error) throw new Error(error.message)
+  return (data ?? []) as unknown as ChangelogRow[]
+}
+
+/**
+ * Get a single changelog entry by version.
+ */
+export async function getChangelogByVersion(version: string): Promise<ChangelogRow | null> {
+  const { data, error } = await getPublicClient()
+    .from("changelog")
+    .select("*")
+    .eq("version", version)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw new Error(error.message)
+  }
+  return data as unknown as ChangelogRow
+}
+
+/**
+ * Get the latest released version string.
+ */
+export async function getLatestVersion(): Promise<string | null> {
+  const { data, error } = await getPublicClient()
+    .from("changelog")
+    .select("version")
+    .order("released_at", { ascending: false })
+    .limit(1)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw new Error(error.message)
+  }
+  return (data as unknown as { version: string } | null)?.version ?? null
+}
+
+/**
+ * Upsert a changelog entry (admin only).
+ */
+export async function upsertChangelog(entry: ChangelogInsert): Promise<ChangelogRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("changelog")
+    .upsert(entry, { onConflict: "version" })
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+  return data as ChangelogRow
+}
+
+// ── Component version queries ───────────────────────────────────────
+
+/**
+ * Get version history for a component, most recent first.
+ */
+export async function getComponentVersions(componentName: string): Promise<ComponentVersionRow[]> {
+  const { data, error } = await getPublicClient()
+    .from("component_versions")
+    .select("*")
+    .eq("component_name", componentName)
+    .order("released_at", { ascending: false })
+
+  if (error) throw new Error(error.message)
+  return (data ?? []) as unknown as ComponentVersionRow[]
+}
+
+/**
+ * Get a specific component version.
+ */
+export async function getComponentVersion(
+  componentName: string,
+  version: string
+): Promise<ComponentVersionRow | null> {
+  const { data, error } = await getPublicClient()
+    .from("component_versions")
+    .select("*")
+    .eq("component_name", componentName)
+    .eq("version", version)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw new Error(error.message)
+  }
+  return data as unknown as ComponentVersionRow
+}
+
+// ── Fundi issue queries ─────────────────────────────────────────────
+
+/**
+ * Get Fundi issues, optionally filtered.
+ */
+export async function getFundiIssues(filters?: FundiIssueFilters): Promise<FundiIssueRow[]> {
+  let query = getPublicClient().from("fundi_issues").select("*")
+
+  if (filters?.status) query = query.eq("status", filters.status)
+  if (filters?.severity) query = query.eq("severity", filters.severity)
+  if (filters?.component_name) query = query.eq("component_name", filters.component_name)
+  if (filters?.layer) query = query.eq("layer", filters.layer)
+
+  query = query.order("created_at", { ascending: false })
+  if (filters?.limit) query = query.limit(filters.limit)
+
+  const { data, error } = await query
+
+  if (error) throw new Error(error.message)
+  return (data ?? []) as unknown as FundiIssueRow[]
+}
+
+/**
+ * Get a Fundi issue by id.
+ */
+export async function getFundiIssue(id: number): Promise<FundiIssueRow | null> {
+  const { data, error } = await getPublicClient()
+    .from("fundi_issues")
+    .select("*")
+    .eq("id", id)
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw new Error(error.message)
+  }
+  return data as unknown as FundiIssueRow
+}
+
+/**
+ * Create a Fundi issue (admin/server use only).
+ */
+export async function createFundiIssue(input: FundiIssueInsert): Promise<FundiIssueRow> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getAdminClient() as any)
+    .from("fundi_issues")
+    .insert(input)
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+  return data as FundiIssueRow
+}
+
+/**
+ * Get aggregate stats about Fundi issues (for /api/v1/fundi/stats).
+ */
+export async function getFundiStats(): Promise<{
+  total: number
+  open: number
+  resolved: number
+  byLayer: Record<string, number>
+}> {
+  const { data, error } = await getPublicClient().from("fundi_issues").select("status, layer")
+
+  if (error) throw new Error(error.message)
+  const rows = (data ?? []) as unknown as Array<{ status: string; layer: string | null }>
+
+  const byLayer: Record<string, number> = {}
+  let open = 0
+  let resolved = 0
+  for (const row of rows) {
+    if (row.status === "open") open++
+    if (row.status === "resolved") resolved++
+    const key = row.layer ?? "unknown"
+    byLayer[key] = (byLayer[key] ?? 0) + 1
+  }
+
+  return { total: rows.length, open, resolved, byLayer }
+}
+
+// ── Design token queries (from nyuchi-tokens component) ─────────────
+
+/**
+ * Get the design tokens payload from the nyuchi-tokens component's source_code.
+ *
+ * In the migrated schema, design tokens (minerals, semantic colors, typography,
+ * spacing, radii) live as a JSON payload in `components.source_code` where
+ * `name = 'nyuchi-tokens'` — not in the legacy brand_* tables.
+ *
+ * Returns null if the component row is missing or source_code doesn't parse.
+ */
+export async function getDesignTokens(): Promise<DesignTokens | null> {
+  const { data, error } = await getPublicClient()
+    .from("components")
+    .select("source_code")
+    .eq("name", "nyuchi-tokens")
+    .single()
+
+  if (error) {
+    if (error.code === "PGRST116") return null
+    throw new Error(error.message)
+  }
+
+  const source = (data as unknown as { source_code: string | null } | null)?.source_code
+  if (!source) return null
+
+  try {
+    return JSON.parse(source) as DesignTokens
+  } catch {
+    return null
+  }
+}
+
+// ── Layer summary query ─────────────────────────────────────────────
+
+export interface LayerSummary {
+  layer: string
+  total: number
+  byCategory: Record<string, number>
+  components: Array<{ name: string; category: string | null; description: string }>
+}
+
+/**
+ * Get a summary of components in a given architecture layer.
+ * Used by the MCP server's get_layer_summary tool.
+ */
+export async function getLayerSummary(layer: string): Promise<LayerSummary> {
+  const components = await getComponentsByLayer(layer)
+
+  const byCategory: Record<string, number> = {}
+  for (const c of components) {
+    const key = c.category ?? "uncategorized"
+    byCategory[key] = (byCategory[key] ?? 0) + 1
+  }
+
+  return {
+    layer,
+    total: components.length,
+    byCategory,
+    components: components.map((c) => ({
+      name: c.name,
+      category: c.category,
+      description: c.description,
+    })),
+  }
+}
+
+// ── Component links (RPC wrapper) ───────────────────────────────────
+
+export interface ComponentLink {
+  url: string
+  kind: string
+  title?: string
+}
+
+/**
+ * Get portal URLs for a component via the Supabase RPC `get_component_links`.
+ * Falls back to canonical portal URLs if the RPC is not available.
+ */
+export async function getComponentLinks(name: string): Promise<ComponentLink[]> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getPublicClient() as any).rpc("get_component_links", {
+    component_name: name,
+  })
+
+  if (!error && Array.isArray(data)) {
+    return data as ComponentLink[]
+  }
+
+  // Fallback: canonical URL pattern for the portal
+  return [
+    { url: `https://design.nyuchi.com/components/${name}`, kind: "portal" },
+    { url: `https://design.nyuchi.com/api/v1/ui/${name}`, kind: "api" },
+  ]
 }

@@ -6,6 +6,33 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [4.0.26] - 2026-04-14
+
+### Added
+
+- **5 new Supabase tables** — `ai_instructions`, `documentation_pages`, `changelog`, `component_versions`, `fundi_issues`. Types, query functions, and upserts in `lib/db/{types,index}.ts`.
+- **Design tokens via `nyuchi-tokens` component** — new `getDesignTokens()` reads tokens from `components.source_code` where `name='nyuchi-tokens'`. Replaces the legacy `brand_*` path.
+- **11 new REST API v1 endpoints** — `/ui/[name]/docs`, `/ui/[name]/versions`, `/search`, `/docs`, `/docs/[slug]`, `/changelog`, `/changelog/[version]`, `/fundi`, `/fundi/[id]`, `/fundi/stats`, `/ai/instructions`, `/ai/instructions/[name]`.
+- **Layer breakdown** in `/api/v1/stats` — counts of stable components grouped by `architecture_layer`.
+- **6 new MCP tools** — `get_layer_summary`, `get_ai_instructions`, `get_component_links`, `get_changelog`, `get_component_versions`, `get_documentation_page`.
+- **MCP system prompt loader** — `loadSystemPrompt()` reads the `nyuchi-mcp-system-prompt` row from `ai_instructions` with a 60s TTL cache and passes it via the server's `instructions` option.
+
+### Fixed
+
+- **#28 — `get_design_tokens`/`get_brand_info` broken tools** — now read from the migrated `nyuchi-tokens` payload (with `getBrandSystem()` fallback) instead of the empty legacy `brand_*` tables.
+- **#28 — `scaffold_component` dep detection** — `inferDependencies()` treats `@/*`, `./`, `../` imports as local, so `lucide-react` is never surfaced when source uses `@/lib/icons`.
+- **GHSA-q4gf-8mx6-v5v3** — bumped Next.js 16.2.2 → 16.2.3.
+
+### Changed
+
+- **Playground `ComponentGallery`** — split into server + client halves; reads from `getAllComponents()` instead of `registry.json`.
+- **`/components/[name]` page** — reads metadata + source from Supabase instead of the filesystem.
+- **MCP server version** — `4.0.1` → `4.0.26`; `createMukokoMcpServer()` is now async.
+- **`__tests__/api/registry-route.test.ts`** — rewritten to mock the DB client and call the route handler directly (no more `registry.json` file-existence assertions).
+- **CLAUDE.md, README.md, public/llms.txt, openapi.yaml, `.claude/skills/*`** — updated counts (294 → 545), version (4.0.1 → 4.0.26), architecture narrative (10-layer 3D model).
+
+## [Unreleased-prior]
+
 ### Added
 
 - **Architecture v4.0.1 alignment** — three sources of truth (Supabase, ScyllaDB, Web3 Pod), seven data layers, corrected CouchDB to sync protocol, added Cloudflare Edge layer

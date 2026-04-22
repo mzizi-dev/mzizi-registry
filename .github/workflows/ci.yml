@@ -11,25 +11,42 @@ jobs:
     name: Security Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level=moderate
+      # --ignore-registry-errors keeps CI green when npmjs.org's audit
+      # endpoint is degraded (the "quick" endpoint was retired in April 2026;
+      # pnpm 10.x still calls it). Remove once pnpm ships a fix.
+      - run: pnpm audit --audit-level=moderate --ignore-registry-errors
+
+  registry:
+    name: Registry Snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify registry.json matches Supabase
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        if: env.NEXT_PUBLIC_SUPABASE_URL != ''
+        run: pnpm registry:verify
 
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -43,10 +60,8 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -58,10 +73,8 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -74,10 +87,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [audit, lint, typecheck, test]
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 22

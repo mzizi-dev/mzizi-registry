@@ -1,6 +1,4 @@
-import { describe, it, expect, vi } from "vitest"
-import fs from "fs"
-import path from "path"
+import { describe, it, expect, vi, beforeEach } from "vitest"
 
 // Mock next/server
 vi.mock("next/server", () => ({
@@ -13,66 +11,127 @@ vi.mock("next/server", () => ({
   },
 }))
 
+// Mock the DB layer — registry lives in Supabase.
+const mockIsSupabaseConfigured = vi.fn()
+const mockGetAllComponents = vi.fn()
+
+vi.mock("@/lib/db", () => ({
+  isSupabaseConfigured: () => mockIsSupabaseConfigured(),
+  getAllComponents: () => mockGetAllComponents(),
+}))
+
+vi.mock("@/lib/observability", () => ({
+  createLogger: () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn() }),
+}))
+
+import { GET } from "@/app/api/v1/ui/route"
+
 describe("GET /api/v1/ui", () => {
-  it("registry.json exists and is valid JSON", () => {
-    const registryPath = path.join(process.cwd(), "registry.json")
-    expect(fs.existsSync(registryPath)).toBe(true)
-
-    const raw = fs.readFileSync(registryPath, "utf-8")
-    const registry = JSON.parse(raw)
-    expect(registry.name).toBe("nyuchi")
-    expect(registry.items).toBeDefined()
-    expect(Array.isArray(registry.items)).toBe(true)
+  beforeEach(() => {
+    mockIsSupabaseConfigured.mockReset()
+    mockGetAllComponents.mockReset()
   })
 
-  it("registry.json has the correct schema", () => {
-    const registryPath = path.join(process.cwd(), "registry.json")
-    const registry = JSON.parse(fs.readFileSync(registryPath, "utf-8"))
+  it("returns 503 when Supabase is not configured", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(false)
 
-    expect(registry.$schema).toBe("https://ui.shadcn.com/schema/registry.json")
-    expect(registry.homepage).toBe("https://design.nyuchi.com")
+    const res = (await GET()) as unknown as { status: number; data: { error: string } }
+    expect(res.status).toBe(503)
+    expect(res.data.error).toBe("Database not configured")
   })
 
-  it("all registry items have required fields", () => {
-    const registryPath = path.join(process.cwd(), "registry.json")
-    const registry = JSON.parse(fs.readFileSync(registryPath, "utf-8"))
+  it("returns registry payload with the correct schema and items", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(true)
+    mockGetAllComponents.mockResolvedValue([
+      {
+        name: "button",
+        registry_type: "registry:ui",
+        description: "Displays a button or a component that looks like a button.",
+        dependencies: ["class-variance-authority"],
+        registry_dependencies: [],
+      },
+      {
+        name: "card",
+        registry_type: "registry:ui",
+        description: "Surface container.",
+        dependencies: [],
+        registry_dependencies: [],
+      },
+    ])
 
-    for (const item of registry.items) {
-      expect(item.name).toBeTruthy()
-      expect(item.type).toMatch(/^registry:(ui|hook|lib|block)$/)
-      expect(item.files).toBeDefined()
-      expect(item.files.length).toBeGreaterThan(0)
-    }
-  })
-
-  it("all registry item files exist on disk", () => {
-    const registryPath = path.join(process.cwd(), "registry.json")
-    const registry = JSON.parse(fs.readFileSync(registryPath, "utf-8"))
-
-    for (const item of registry.items) {
-      for (const file of item.files) {
-        const filePath = path.join(process.cwd(), file.path)
-        expect(
-          fs.existsSync(filePath),
-          `Missing file: ${file.path} (component: ${item.name})`
-        ).toBe(true)
+    const res = (await GET()) as unknown as {
+      status: number
+      headers: Record<string, string>
+      data: {
+        $schema: string
+        name: string
+        homepage: string
+        items: Array<{ name: string; type: string; description: string }>
       }
     }
+
+    expect(res.status).toBe(200)
+    expect(res.data.$schema).toBe("https://ui.shadcn.com/schema/registry.json")
+    expect(res.data.name).toBe("mukoko")
+    expect(res.data.homepage).toBe("https://design.nyuchi.com")
+    expect(res.data.items).toHaveLength(2)
+    expect(res.data.items[0]).toMatchObject({
+      name: "button",
+      type: "registry:ui",
+    })
+    expect(res.headers["Access-Control-Allow-Origin"]).toBe("*")
   })
 
-  it("button component exists in registry", () => {
-    const registryPath = path.join(process.cwd(), "registry.json")
-    const registry = JSON.parse(fs.readFileSync(registryPath, "utf-8"))
+  it("each item has required fields and a recognisable type", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(true)
+    mockGetAllComponents.mockResolvedValue([
+      {
+        name: "button",
+        registry_type: "registry:ui",
+        description: "A button.",
+        dependencies: [],
+        registry_dependencies: [],
+      },
+      {
+        name: "use-toast",
+        registry_type: "registry:hook",
+        description: "Toast state hook.",
+        dependencies: [],
+        registry_dependencies: [],
+      },
+      {
+        name: "retry",
+        registry_type: "registry:lib",
+        description: "Retry utility.",
+        dependencies: [],
+        registry_dependencies: [],
+      },
+      {
+        name: "dashboard-01",
+        registry_type: "registry:block",
+        description: "Dashboard block.",
+        dependencies: [],
+        registry_dependencies: [],
+      },
+    ])
 
-    const button = registry.items.find((item: { name: string }) => item.name === "button")
-    expect(button).toBeDefined()
-    expect(button.type).toBe("registry:ui")
+    const res = (await GET()) as unknown as {
+      data: { items: Array<{ name: string; type: string; description: string }> }
+    }
+
+    for (const item of res.data.items) {
+      expect(item.name).toBeTruthy()
+      expect(item.type).toMatch(/^registry:(ui|hook|lib|block)$/)
+      expect(item.description).toBeTruthy()
+    }
   })
 
-  it("has at least 191 registry items", () => {
-    const registryPath = path.join(process.cwd(), "registry.json")
-    const registry = JSON.parse(fs.readFileSync(registryPath, "utf-8"))
+  it("returns 500 when the DB query throws", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(true)
+    mockGetAllComponents.mockRejectedValue(new Error("connection failed"))
 
-    expect(registry.items.length).toBeGreaterThanOrEqual(191)
+    const res = (await GET()) as unknown as { status: number; data: { error: string } }
+    expect(res.status).toBe(500)
+    expect(res.data.error).toBe("Internal server error")
   })
 })

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { isSupabaseConfigured, isSeeded, getDatabaseInfo } from "@/lib/db"
+import { isSupabaseConfigured, getDatabaseInfo } from "@/lib/db"
 
 const logger = createLogger("api")
 
@@ -10,13 +10,12 @@ export async function GET() {
     let componentCount = 0
 
     if (isSupabaseConfigured()) {
-      const seeded = await isSeeded().catch(() => false)
-      if (seeded) {
+      const info = await getDatabaseInfo().catch(() => null)
+      if (info?.status === "connected") {
         dbStatus = "connected"
-        const info = await getDatabaseInfo().catch(() => null)
-        componentCount = info?.components ?? 0
+        componentCount = info.components
       } else {
-        dbStatus = "not_seeded"
+        dbStatus = "error"
       }
     }
 
@@ -73,6 +72,38 @@ export async function GET() {
           mcp: {
             href: "/mcp",
             description: "Model Context Protocol server — Streamable HTTP transport.",
+          },
+          search: {
+            href: "/api/v1/search",
+            description: "Search components by name/description; filter by layer and category.",
+          },
+          componentDocs: {
+            href: "/api/v1/ui/{name}/docs",
+            description: "Component documentation — use cases, variants, accessibility.",
+          },
+          componentVersions: {
+            href: "/api/v1/ui/{name}/versions",
+            description: "Component version history.",
+          },
+          docs: {
+            href: "/api/v1/docs",
+            description: "Documentation pages from the knowledge base.",
+          },
+          changelog: {
+            href: "/api/v1/changelog",
+            description: "Release changelog.",
+          },
+          fundi: {
+            href: "/api/v1/fundi",
+            description: "Fundi self-healing issue tracking.",
+          },
+          aiInstructions: {
+            href: "/api/v1/ai/instructions",
+            description: "AI assistant instructions (Claude, Copilot, Cursor, MCP).",
+          },
+          stats: {
+            href: "/api/v1/stats",
+            description: "Public usage statistics (CC BY 4.0).",
           },
         },
       },

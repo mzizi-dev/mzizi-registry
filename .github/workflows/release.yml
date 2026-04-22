@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -39,10 +39,8 @@ jobs:
             echo "Tag v${{ steps.version.outputs.version }} is new — creating release."
           fi
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
         if: steps.tag_check.outputs.exists == 'false'
-        with:
-          version: 10
 
       - uses: actions/setup-node@v6
         if: steps.tag_check.outputs.exists == 'false'

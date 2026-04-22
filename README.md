@@ -6,7 +6,7 @@
 [![Release](https://github.com/nyuchitech/design-portal/actions/workflows/release.yml/badge.svg)](https://github.com/nyuchitech/design-portal/actions/workflows/release.yml)
 [![CodeQL](https://github.com/nyuchitech/design-portal/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nyuchitech/design-portal/security/code-scanning)
 
-**Version:** 4.0.1 | **Live:** [design.nyuchi.com](https://design.nyuchi.com) | **Docs:** [design.nyuchi.com/docs](https://design.nyuchi.com/docs) | **Observability:** [design.nyuchi.com/observability](https://design.nyuchi.com/observability)
+**Version:** 4.0.26 | **Live:** [design.nyuchi.com](https://design.nyuchi.com) | **Docs:** [design.nyuchi.com/docs](https://design.nyuchi.com/docs) | **Observability:** [design.nyuchi.com/observability](https://design.nyuchi.com/observability)
 
 ---
 
@@ -235,17 +235,16 @@ Layer 5: Server page wrappers (page.tsx)
 
 ## Commands
 
-| Command               | Description                                     |
-| --------------------- | ----------------------------------------------- |
-| `pnpm dev`            | Start development server                        |
-| `pnpm build`          | Production build                                |
-| `pnpm lint`           | Run ESLint (zero warnings enforced)             |
-| `pnpm test`           | Run Vitest test suite                           |
-| `pnpm test:watch`     | Watch mode                                      |
-| `pnpm typecheck`      | TypeScript type check                           |
-| `pnpm registry:build` | Generate static registry JSON into `public/r/`  |
-| `pnpm db:seed`        | Seed Supabase from registry.json and brand data |
-| `pnpm db:reseed`      | Force re-seed (idempotent)                      |
+| Command                | Description                                                  |
+| ---------------------- | ------------------------------------------------------------ |
+| `pnpm dev`             | Start development server                                     |
+| `pnpm build`           | Production build                                             |
+| `pnpm lint`            | Run ESLint (zero warnings enforced)                          |
+| `pnpm test`            | Run Vitest test suite                                        |
+| `pnpm test:watch`      | Watch mode                                                   |
+| `pnpm typecheck`       | TypeScript type check                                        |
+| `pnpm registry:sync`   | Regenerate `registry.json` + portal primitives from Supabase |
+| `pnpm registry:verify` | Non-mutating; CI-safe drift check                            |
 
 ---
 
@@ -256,12 +255,10 @@ git clone https://github.com/nyuchitech/design-portal.git
 cd design-portal
 pnpm install
 
-# Optional — full DB-first API
+# DB-first API + MCP server
 cp .env.example .env.local
 # NEXT_PUBLIC_SUPABASE_URL=...
 # NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-# SUPABASE_SERVICE_ROLE_KEY=...  (seeding only)
-pnpm db:seed
 
 pnpm dev
 ```

@@ -1,8 +1,8 @@
 # Nyuchi Design Portal
 
-> The canonical design system and component registry for the bundu ecosystem — 294 production-ready UI components, blocks, and charts built on the Five African Minerals design system. Install directly into any project using the shadcn CLI.
+> The canonical design system and component registry for the bundu ecosystem — 545 stable UI components, hooks, library utilities, and blocks across 10 architecture layers, built on the Five African Minerals design system. Install directly into any project using the shadcn CLI.
 
-**Version:** 4.0.1
+**Version:** 4.0.26
 **Live:** https://design.nyuchi.com
 **API:** https://design.nyuchi.com/api/v1
 **MCP Server:** https://design.nyuchi.com/mcp (Streamable HTTP)
@@ -10,22 +10,22 @@
 ## What this site is
 
 The Nyuchi Design Portal is:
-1. A **component registry** — 294 items (177 UI, 3 hooks, 9 lib, 105 blocks) installable via `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<name>`
-2. A **design system reference** — Five African Minerals palette, typography, spacing, and radius tokens
+1. A **component registry** — 545 stable items across 10 architecture layers, installable via `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<name>`
+2. A **design system reference** — Five African Minerals palette, typography, spacing, and radius tokens served from the `nyuchi-tokens` component
 3. A **brand documentation hub** — canonical brand specs for bundu, nyuchi, mukoko, shamwari, nhimbe
-4. An **architecture documentation hub** — local-first data strategy, sovereignty assessments, open data pipeline
-5. An **MCP server** — AI assistants can connect at `https://design.nyuchi.com/mcp` to access all registry data, design tokens, and architecture docs
+4. An **architecture documentation hub** — 3D model (X-axis L2→L3→L6→L7, Y-axis L1/L4/L5, Z-axis L8, Outside L9, Docs L10), local-first data strategy, sovereignty assessments, open data pipeline
+5. A **self-healing system** — Fundi component reports L8 runtime issues as Supabase records and, optionally, as GitHub issues
+6. An **MCP server** — AI assistants can connect at `https://design.nyuchi.com/mcp` for registry data, design tokens, docs, changelog, and architecture
 
 ## Key pages
 
 - [API Documentation](/api-docs): Full OpenAPI 3.1 spec for all endpoints
 - [Component Registry](/registry): How to consume and contribute to the registry
 - [Brand System](/brand): Five African Minerals palette and brand guidelines
-- [Colors](/brand/colors): Complete color token reference
-- [Architecture](/architecture): Ecosystem architecture overview
-- [Data Layer](/architecture/data-layer): Local-first data strategy (RxDB, SQLite, PouchDB, CouchDB)
-- [Pipeline](/architecture/pipeline): Open data pipeline (Redpanda → Flink → Doris)
-- [Sovereignty](/architecture/sovereignty): Technology sovereignty assessments
+- [Architecture](/architecture): 3D architecture model and layer decision guide
+- [Docs: 3D Architecture](/docs/3d-architecture): X/Y/Z/Outside/Docs layer model
+- [Docs: Semantic Tokens](/docs/semantic-tokens): Status token system
+- [Docs: Fundi Guide](/docs/fundi-guide): Self-healing via GitHub issues
 
 ## API endpoints (machine-readable)
 
@@ -33,12 +33,24 @@ All endpoints return JSON with schema.org JSON-LD metadata and CORS headers.
 
 - `GET /api/v1` — Discovery document
 - `GET /api/v1/brand` — Brand system (minerals, typography, spacing, ecosystem)
-- `GET /api/v1/ui` — Component registry index (294 items)
+- `GET /api/v1/ui` — Component registry index (545 items)
 - `GET /api/v1/ui/{name}` — Individual component with inline source code
+- `GET /api/v1/ui/{name}/docs` — Component documentation (use cases, variants, a11y)
+- `GET /api/v1/ui/{name}/versions` — Component version history
+- `GET /api/v1/search?q=&layer=&category=` — Component search and filter
+- `GET /api/v1/docs` — All documentation pages
+- `GET /api/v1/docs/{slug}` — Single documentation page
+- `GET /api/v1/changelog` — Release history
+- `GET /api/v1/changelog/{version}` — Single release entry
+- `GET /api/v1/ai/instructions` — AI assistant instructions
+- `GET /api/v1/ai/instructions/{target}` — Instructions by target (claude, copilot, cursor, mcp-server)
+- `GET /api/v1/fundi` — Fundi self-healing issues
+- `GET /api/v1/fundi/stats` — Aggregate Fundi stats
 - `GET /api/v1/ecosystem` — Architecture principles
 - `GET /api/v1/data-layer` — Data layer specification
 - `GET /api/v1/pipeline` — Open data pipeline
 - `GET /api/v1/sovereignty` — Sovereignty assessments
+- `GET /api/v1/stats` — Public usage statistics (CC BY 4.0)
 - `GET /api/v1/health` — Health check
 - `GET /api/openapi` — OpenAPI 3.1 specification (YAML)
 
@@ -46,9 +58,11 @@ All endpoints return JSON with schema.org JSON-LD metadata and CORS headers.
 
 Connect at `https://design.nyuchi.com/mcp` (POST, Streamable HTTP transport).
 
-**Tools:** list_components, get_component, get_component_docs, search_components, get_design_tokens, scaffold_component, get_install_command, get_brand_info, get_architecture_info, get_database_status
+**Tools:** list_components, get_component, get_component_docs, search_components, get_design_tokens, scaffold_component, get_install_command, get_brand_info, get_architecture_info, get_ubuntu_principles, get_database_status, get_usage_stats, get_layer_summary, get_ai_instructions, get_component_links, get_changelog, get_component_versions, get_documentation_page
 
-**Resources:** mukoko://registry, mukoko://brand, mukoko://design-tokens, mukoko://architecture
+**Resources:** mukoko://registry, mukoko://brand, mukoko://design-tokens, mukoko://architecture, mukoko://ubuntu
+
+**System prompt:** loaded at startup from `ai_instructions` where `name='nyuchi-mcp-system-prompt'` with a 60s TTL cache.
 
 ## Design system quick reference
 

@@ -33,12 +33,8 @@ For full functionality:
 cp .env.example .env.local
 
 # Add your Supabase credentials
-# SUPABASE_URL=https://your-project.supabase.co
-# SUPABASE_ANON_KEY=your-anon-key
-# SUPABASE_SERVICE_ROLE_KEY=your-service-role-key (only needed for seeding)
-
-# Seed the database from registry.json and brand data
-pnpm db:seed
+# NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ### 4. Start the development server
@@ -170,11 +166,7 @@ export { MyComponent, myComponentVariants }
 }
 ```
 
-3. **Seed the database** to make the component available via the API:
-
-```bash
-pnpm db:seed
-```
+3. **Upsert the component** into Supabase (`components` table). The portal serves it from the DB on the next request — no rebuild required.
 
 4. **Run the static registry build**:
 
@@ -313,8 +305,8 @@ All four must pass. The CI pipeline runs lint, typecheck, and test in parallel, 
 - [ ] Code follows TypeScript strict mode -- no untyped `any`
 - [ ] Styling uses Tailwind utility classes only -- no inline styles or hardcoded colors
 - [ ] Components use CVA + cn() + data-slot pattern
-- [ ] New components are added to `registry.json`
-- [ ] Database seeded with new data (`pnpm db:seed`)
+- [ ] New components are upserted into the Supabase `components` table
+- [ ] `pnpm registry:sync` run locally (regenerates `registry.json` snapshot from DB)
 - [ ] Tests added for new functionality
 - [ ] All existing tests pass (`pnpm test`)
 - [ ] Lint passes (`pnpm lint`)

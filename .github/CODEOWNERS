@@ -14,7 +14,7 @@ app/globals.css                 @nyuchitech/core
 lib/brand.ts                    @nyuchitech/core
 lib/architecture.ts             @nyuchitech/core
 
-# Registry manifest — changes affect all 294+ consumers
+# Registry manifest — changes affect all 545+ registry items
 registry.json                   @nyuchitech/core
 scripts/build-registry.js       @nyuchitech/core
 

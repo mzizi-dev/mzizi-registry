@@ -36,9 +36,11 @@ describe("Architecture API v1 Routes", () => {
   })
 
   describe("Architecture data module", () => {
-    it("lib/architecture.ts exists", () => {
+    it("architecture data is served from Supabase (lib/architecture.ts retired)", () => {
       const filePath = path.join(process.cwd(), "lib/architecture.ts")
-      expect(fs.existsSync(filePath)).toBe(true)
+      // Post-v4.0.26: the legacy lib/architecture.ts is gone; architecture data
+      // is now served from the Supabase `architecture_*` tables via lib/db.
+      expect(fs.existsSync(filePath)).toBe(false)
     })
   })
 
