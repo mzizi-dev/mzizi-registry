@@ -461,6 +461,155 @@ export interface ArchitectureRemovedInsert {
   migration_path: string
 }
 
+// ── AI instruction table types ──────────────────────────────────────
+
+export interface AiInstructionRow {
+  id: number
+  name: string
+  target: string
+  title: string | null
+  description: string | null
+  content: string
+  version: string | null
+  metadata: Record<string, unknown> | null
+  created_at: string
+  updated_at: string
+}
+
+export interface AiInstructionInsert {
+  name: string
+  target: string
+  title?: string | null
+  description?: string | null
+  content: string
+  version?: string | null
+  metadata?: Record<string, unknown> | null
+}
+
+// ── Documentation page table types ──────────────────────────────────
+
+export interface DocumentationPageRow {
+  id: number
+  slug: string
+  title: string
+  category: string
+  description: string | null
+  body: string
+  sort_order: number
+  status: string
+  metadata: Record<string, unknown> | null
+  created_at: string
+  updated_at: string
+}
+
+export interface DocumentationPageInsert {
+  slug: string
+  title: string
+  category: string
+  description?: string | null
+  body: string
+  sort_order?: number
+  status?: string
+  metadata?: Record<string, unknown> | null
+}
+
+// ── Changelog table types ───────────────────────────────────────────
+
+export interface ChangelogRow {
+  id: number
+  version: string
+  title: string
+  description: string | null
+  body: string | null
+  released_at: string
+  is_latest: boolean
+  categories: Record<string, unknown> | null
+  created_at: string
+  updated_at: string
+}
+
+export interface ChangelogInsert {
+  version: string
+  title: string
+  description?: string | null
+  body?: string | null
+  released_at: string
+  is_latest?: boolean
+  categories?: Record<string, unknown> | null
+}
+
+// ── Component version table types ───────────────────────────────────
+
+export interface ComponentVersionRow {
+  id: number
+  component_name: string
+  version: string
+  changes: string | null
+  source_code: string | null
+  released_at: string
+  metadata: Record<string, unknown> | null
+  created_at: string
+}
+
+export interface ComponentVersionInsert {
+  component_name: string
+  version: string
+  changes?: string | null
+  source_code?: string | null
+  released_at: string
+  metadata?: Record<string, unknown> | null
+}
+
+// ── Fundi issue table types ─────────────────────────────────────────
+
+export interface FundiIssueRow {
+  id: number
+  title: string
+  body: string | null
+  status: string
+  severity: string | null
+  component_name: string | null
+  layer: string | null
+  source: string | null
+  github_issue_number: number | null
+  metadata: Record<string, unknown> | null
+  created_at: string
+  updated_at: string
+  resolved_at: string | null
+}
+
+export interface FundiIssueInsert {
+  title: string
+  body?: string | null
+  status?: string
+  severity?: string | null
+  component_name?: string | null
+  layer?: string | null
+  source?: string | null
+  github_issue_number?: number | null
+  metadata?: Record<string, unknown> | null
+  resolved_at?: string | null
+}
+
+export interface FundiIssueFilters {
+  status?: string
+  severity?: string
+  component_name?: string
+  layer?: string
+  limit?: number
+}
+
+// ── Design token types (from nyuchi-tokens component source_code) ──
+
+export interface DesignTokens {
+  minerals?: Record<string, unknown>
+  semanticColors?: Record<string, unknown>
+  typography?: Record<string, unknown>
+  spacing?: Record<string, unknown>
+  radii?: Record<string, unknown>
+  [key: string]: unknown
+}
+
 // ── Supabase database type helper ───────────────────────────────────
 
 export interface Database {
@@ -550,6 +699,31 @@ export interface Database {
         Row: ArchitectureRemovedRow
         Insert: ArchitectureRemovedInsert
         Update: Partial<ArchitectureRemovedInsert>
+      }
+      ai_instructions: {
+        Row: AiInstructionRow
+        Insert: AiInstructionInsert
+        Update: Partial<AiInstructionInsert>
+      }
+      documentation_pages: {
+        Row: DocumentationPageRow
+        Insert: DocumentationPageInsert
+        Update: Partial<DocumentationPageInsert>
+      }
+      changelog: {
+        Row: ChangelogRow
+        Insert: ChangelogInsert
+        Update: Partial<ChangelogInsert>
+      }
+      component_versions: {
+        Row: ComponentVersionRow
+        Insert: ComponentVersionInsert
+        Update: Partial<ComponentVersionInsert>
+      }
+      fundi_issues: {
+        Row: FundiIssueRow
+        Insert: FundiIssueInsert
+        Update: Partial<FundiIssueInsert>
       }
     }
   }

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ExternalLink } from "lucide-react"
-import { MukokoLogo } from "@/components/brand/mukoko-logo"
+import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 function GithubIcon({ className }: { className?: string }) {
@@ -36,7 +36,7 @@ export function Header() {
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Left: Icon + wordmark */}
         <a href="/" className="flex items-center">
-          <MukokoLogo size={26} suffix="design" />
+          <NyuchiLogo size={26} showWordmark suffix="design" />
         </a>
 
         {/* Center: Desktop-only nav links */}

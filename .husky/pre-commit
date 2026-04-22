@@ -15,8 +15,11 @@ pnpm exec lint-staged
 echo "  -> TypeScript type check"
 pnpm typecheck
 
-# 3. Security audit — fail on moderate+ vulnerabilities
+# 3. Security audit — fail on moderate+ vulnerabilities.
+#    --ignore-registry-errors prevents hook failures when npmjs.org's audit
+#    endpoint is degraded (the "quick" endpoint was retired in April 2026;
+#    pnpm 10.x still calls it). Remove once pnpm ships a fix.
 echo "  -> Security audit"
-pnpm audit --audit-level=moderate
+pnpm audit --audit-level=moderate --ignore-registry-errors
 
 echo "All pre-commit checks passed."

@@ -1,8 +1,35 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getUsageStats } from "@/lib/metrics"
+import { getPublicClient, isSupabaseConfigured } from "@/lib/db"
 
 const logger = createLogger("api")
+
+/**
+ * Count stable components grouped by architecture_layer. Returns an empty
+ * object if Supabase is unreachable or the layer column is missing — callers
+ * should treat the absence of data as "don't render layer breakdown".
+ */
+async function getLayerBreakdown(): Promise<Record<string, number>> {
+  if (!isSupabaseConfigured()) return {}
+  try {
+    const { data, error } = await getPublicClient()
+      .from("components")
+      .select("layer")
+      .not("source_code", "is", null)
+
+    if (error || !data) return {}
+
+    const breakdown: Record<string, number> = {}
+    for (const row of data as unknown as Array<{ layer: string | null }>) {
+      const key = row.layer ?? "unknown"
+      breakdown[key] = (breakdown[key] ?? 0) + 1
+    }
+    return breakdown
+  } catch {
+    return {}
+  }
+}
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -24,7 +51,7 @@ export async function GET(request: Request) {
     const daysParam = url.searchParams.get("days")
     const days = daysParam ? Math.min(Math.max(parseInt(daysParam, 10) || 30, 1), 90) : 30
 
-    const stats = await getUsageStats(days)
+    const [stats, layers] = await Promise.all([getUsageStats(days), getLayerBreakdown()])
 
     logger.info("Stats served", {
       data: { days, totalCalls: stats.total_api_calls + stats.total_mcp_calls },
@@ -39,6 +66,7 @@ export async function GET(request: Request) {
           "Public API and MCP usage metrics for the Nyuchi Design Portal. Open data aligned with the bundu ecosystem philosophy.",
         license: "https://creativecommons.org/licenses/by/4.0/",
         ...stats,
+        layers,
       },
       { headers: CORS }
     )

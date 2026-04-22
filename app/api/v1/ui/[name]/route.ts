@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { getComponent, isSupabaseConfigured, isSeeded } from "@/lib/db"
+import { getComponent, isSupabaseConfigured } from "@/lib/db"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("registry")
@@ -43,22 +43,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
         {
           error: "Database not configured",
           message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-        },
-        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
-      )
-    }
-
-    if (!(await isSeeded().catch(() => false))) {
-      trackApiCall({
-        endpoint: `/api/v1/ui/${name}`,
-        durationMs: Date.now() - start,
-        statusCode: 503,
-        componentName: name,
-      })
-      return NextResponse.json(
-        {
-          error: "Database not seeded",
-          message: "Run pnpm db:seed or POST /api/v1/db with action: seed.",
         },
         { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
       )

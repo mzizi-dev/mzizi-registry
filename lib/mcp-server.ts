@@ -7,9 +7,6 @@
  * All data is read from Supabase — zero hardcoded content.
  */
 
-import { readFile } from "fs/promises"
-import { join } from "path"
-
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod"
 import {
@@ -29,19 +26,100 @@ import {
   getDataOwnership,
   getSovereignty,
   getRemovedTechnologies,
+  getDesignTokens,
+  getLayerSummary,
+  getAiInstruction,
+  getAiInstructionByTarget,
+  getComponentLinks,
+  getChangelogEntries,
+  getChangelogByVersion,
+  getComponentVersions,
+  getDocumentationPage,
+  getAllDocumentationPages,
 } from "@/lib/db"
 import { getUsageStats, trackMcpTool } from "@/lib/metrics"
+
+// ─── System prompt cache (60s TTL) ─────────────────────────────────────────
+
+const SYSTEM_PROMPT_NAME = "nyuchi-mcp-system-prompt"
+const SYSTEM_PROMPT_TTL_MS = 60_000
+
+let cachedSystemPrompt: { value: string | undefined; expiresAt: number } | null = null
+
+/**
+ * Load the MCP system prompt from the ai_instructions table with a 60s TTL.
+ *
+ * Each POST /mcp request creates a fresh transport/server pair (stateless) —
+ * without caching, every request would hit Supabase. The cache keeps cold-call
+ * latency bounded while still picking up prompt edits within a minute.
+ */
+async function loadSystemPrompt(): Promise<string | undefined> {
+  const now = Date.now()
+  if (cachedSystemPrompt && cachedSystemPrompt.expiresAt > now) {
+    return cachedSystemPrompt.value
+  }
+
+  try {
+    const instruction = await getAiInstruction(SYSTEM_PROMPT_NAME)
+    const value = instruction?.content
+    cachedSystemPrompt = { value, expiresAt: now + SYSTEM_PROMPT_TTL_MS }
+    return value
+  } catch {
+    // On failure, short-lived negative cache so we don't hammer Supabase.
+    cachedSystemPrompt = { value: undefined, expiresAt: now + 5_000 }
+    return undefined
+  }
+}
+
+// ─── Dependency inference (for scaffold output) ────────────────────────────
+
+/**
+ * Infer npm dependencies from component source code. Treats path-aliased
+ * imports (anything starting with `@/` or `./` or `../`) as local — so icons
+ * imported from `@/lib/icons` do NOT surface as `lucide-react` in the scaffold
+ * output.
+ */
+export function inferDependencies(sourceCode: string): string[] {
+  const deps = new Set<string>()
+  const importRegex = /import\s+(?:[^'"]*?from\s+)?['"]([^'"]+)['"]/g
+  let match: RegExpExecArray | null
+  while ((match = importRegex.exec(sourceCode)) !== null) {
+    const specifier = match[1]
+    // Skip local imports — path aliases and relative paths
+    if (
+      specifier.startsWith("@/") ||
+      specifier.startsWith("./") ||
+      specifier.startsWith("../") ||
+      specifier.startsWith("/")
+    ) {
+      continue
+    }
+    // Scoped packages keep both segments; unscoped take the first path segment
+    const pkg = specifier.startsWith("@")
+      ? specifier.split("/").slice(0, 2).join("/")
+      : specifier.split("/")[0]
+    deps.add(pkg)
+  }
+  return Array.from(deps).sort()
+}
 
 // ─── Server Factory ────────────────────────────────────────────────────────
 
 /**
  * Creates and configures a Nyuchi Design Portal MCP server with all tools and resources.
+ *
+ * Async because the server's system prompt is loaded from the `ai_instructions`
+ * Supabase table (with a 60s TTL cache). See `loadSystemPrompt()`.
  */
-export function createMukokoMcpServer(): McpServer {
-  const server = new McpServer({
-    name: "design-portal",
-    version: "4.0.1",
-  })
+export async function createMukokoMcpServer(): Promise<McpServer> {
+  const instructions = await loadSystemPrompt()
+  const server = new McpServer(
+    {
+      name: "design-portal",
+      version: "4.0.26",
+    },
+    instructions ? { instructions } : undefined
+  )
 
   // ─── Resources ───────────────────────────────────────────────────────
 
@@ -251,15 +329,6 @@ export function createMukokoMcpServer(): McpServer {
     }
   }
 
-  /** Read a component's source code from disk, given its file path relative to project root. */
-  async function readSourceFromDisk(filePath: string): Promise<string | null> {
-    try {
-      return await readFile(join(process.cwd(), filePath), "utf-8")
-    } catch {
-      return null
-    }
-  }
-
   server.tool(
     "list_components",
     "List Nyuchi design portal components. Filter by registry type (ui/hook/lib) and/or category.",
@@ -343,11 +412,8 @@ export function createMukokoMcpServer(): McpServer {
           }
         }
 
-        // Read source code from DB or fall back to disk
-        let sourceCode = component.source_code ?? null
-        if (!sourceCode && component.files.length > 0) {
-          sourceCode = await readSourceFromDisk(component.files[0].path)
-        }
+        // Source code is stored in Supabase; no disk fallback post-v4.0.26.
+        const sourceCode = component.source_code ?? null
 
         const result: Record<string, unknown> = {
           name: component.name,
@@ -498,25 +564,35 @@ export function createMukokoMcpServer(): McpServer {
         .describe("Token category to retrieve"),
     },
     async ({ category }) => {
-      const brand = await getBrandSystem()
-      if (!brand) {
+      // Prefer tokens from the `nyuchi-tokens` component.source_code JSON.
+      // Fall back to the legacy brand_* tables if the migrated row is missing.
+      const tokens = await getDesignTokens()
+      const brand = tokens ? null : await getBrandSystem()
+
+      if (!tokens && !brand) {
         return {
           content: [
             {
               type: "text" as const,
-              text: "Brand system not available. Database may not be seeded.",
+              text: "Design tokens not available. Ensure the `nyuchi-tokens` component is seeded.",
             },
           ],
           isError: true,
         }
       }
+
+      const source = (tokens ?? brand) as Record<string, unknown>
       const data: Record<string, unknown> = {}
-      if (category === "all" || category === "minerals") data.minerals = brand.minerals
+      if (category === "all" || category === "minerals") data.minerals = source.minerals
       if (category === "all" || category === "semantic-colors")
-        data.semanticColors = brand.semanticColors
-      if (category === "all" || category === "typography") data.typography = brand.typography
-      if (category === "all" || category === "spacing") data.spacing = brand.spacing
-      if (category === "all" || category === "radii") data.radii = brand.meta?.radii
+        data.semanticColors =
+          source.semanticColors ?? (source as { semantic_colors?: unknown }).semantic_colors
+      if (category === "all" || category === "typography") data.typography = source.typography
+      if (category === "all" || category === "spacing") data.spacing = source.spacing
+      if (category === "all" || category === "radii")
+        data.radii =
+          (source as { radii?: unknown }).radii ??
+          (source as { meta?: { radii?: unknown } }).meta?.radii
 
       return {
         content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
@@ -595,11 +671,13 @@ function ${pascalName}({
 export { ${pascalName}, ${camelVariants}Variants }
 `
 
+      const dependencies = inferDependencies(source)
+
       return {
         content: [
           {
             type: "text" as const,
-            text: `## ${pascalName}\n\n\`\`\`tsx\n${source}\`\`\`\n\n### Registry Entry\n\n\`\`\`json\n${JSON.stringify({ name, type: "registry:ui", description, dependencies: [...(hasRadix ? ["radix-ui"] : []), "class-variance-authority"], files: [{ path: `components/ui/${name}.tsx`, type: "registry:ui" }] }, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Create \`components/ui/${name}.tsx\` with the code above\n2. Add the registry entry to \`registry.json\`\n3. Run \`pnpm registry:build\` to regenerate static files\n4. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\`\n\n### Ubuntu Design Checklist\n- [ ] Touch target ≥ 56px (h-14) default, ≥ 48px (h-12) minimum — outdoor use, all ages\n- [ ] APCA contrast Lc 90+ for body text against both light (#FAF9F5) and dark (#0A0A0A) backgrounds\n- [ ] Designed for shared devices — avoid personal-only state assumptions\n- [ ] Works at 3G speeds — no heavy dependencies unless necessary\n- [ ] All strings externalisable for Shona/Ndebele/English localisation\n- [ ] Community-first framing — benefits the group, not just the individual`,
+            text: `## ${pascalName}\n\n\`\`\`tsx\n${source}\`\`\`\n\n### Registry Entry\n\n\`\`\`json\n${JSON.stringify({ name, type: "registry:ui", description, dependencies, files: [{ path: `components/ui/${name}.tsx`, type: "registry:ui" }] }, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Create \`components/ui/${name}.tsx\` with the code above\n2. Upsert into the \`components\` Supabase table (name, registry_type, description, source_code, dependencies)\n3. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\`\n\n### Ubuntu Design Checklist\n- [ ] Touch target ≥ 56px (h-14) default, ≥ 48px (h-12) minimum — outdoor use, all ages\n- [ ] APCA contrast Lc 90+ for body text against both light (#FAF9F5) and dark (#0A0A0A) backgrounds\n- [ ] Designed for shared devices — avoid personal-only state assumptions\n- [ ] Works at 3G speeds — no heavy dependencies unless necessary\n- [ ] All strings externalisable for Shona/Ndebele/English localisation\n- [ ] Community-first framing — benefits the group, not just the individual`,
           },
         ],
       }
@@ -643,24 +721,35 @@ export { ${pascalName}, ${camelVariants}Variants }
       brand: z.string().describe("Brand name"),
     },
     async ({ brand: brandName }) => {
-      const brandData = await getBrandSystem()
-      if (!brandData) {
+      // Prefer the migrated `nyuchi-tokens` row; fall back to legacy brand_* tables.
+      const tokens = await getDesignTokens()
+      const brandData =
+        (tokens as {
+          ecosystem?: Array<{ name: string; mineral?: string; [k: string]: unknown }>
+          minerals?: Array<{ name: string; [k: string]: unknown }>
+        } | null) ?? (await getBrandSystem())
+
+      const ecosystem = (
+        brandData as { ecosystem?: Array<{ name: string; mineral?: string }> } | null
+      )?.ecosystem
+      const minerals = (brandData as { minerals?: Array<{ name: string }> } | null)?.minerals
+
+      if (!ecosystem || !Array.isArray(ecosystem)) {
         return {
           content: [
             {
               type: "text" as const,
-              text: "Brand system not available. Database may not be seeded.",
+              text: "Brand ecosystem not available. Ensure nyuchi-tokens or the brand_* tables are seeded.",
             },
           ],
           isError: true,
         }
       }
-      const found = brandData.ecosystem.find(
-        (b: { name: string }) => b.name === brandName.toLowerCase()
-      )
+
+      const found = ecosystem.find((b) => b.name === brandName.toLowerCase())
 
       if (!found) {
-        const available = brandData.ecosystem.map((b: { name: string }) => b.name).join(", ")
+        const available = ecosystem.map((b) => b.name).join(", ")
         return {
           content: [
             {
@@ -672,7 +761,7 @@ export { ${pascalName}, ${camelVariants}Variants }
         }
       }
 
-      const mineral = brandData.minerals.find((m: { name: string }) => m.name === found.mineral)
+      const mineral = minerals?.find((m) => m.name === found.mineral)
       return {
         content: [
           {
@@ -846,6 +935,231 @@ export { ${pascalName}, ${camelVariants}Variants }
       } catch (err) {
         trackMcpTool({ toolName: "get_usage_stats", durationMs: Date.now() - start, isError: true })
         return toolError("Failed to get usage stats", err)
+      }
+    }
+  )
+
+  // ─── New tools (v4.0.26) ─────────────────────────────────────────────
+
+  server.tool(
+    "get_layer_summary",
+    "Get a summary of components in a given architecture layer (1-10). Returns total count, per-category breakdown, and the full component list.",
+    {
+      layer: z
+        .string()
+        .describe(
+          "Architecture layer identifier (e.g. '1', '2', '10'). See /docs/3d-architecture for the full layer model."
+        ),
+    },
+    async ({ layer }) => {
+      const start = Date.now()
+      try {
+        const summary = await getLayerSummary(layer)
+        trackMcpTool({ toolName: "get_layer_summary", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(summary, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_layer_summary",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError(`Failed to get summary for layer "${layer}"`, err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_ai_instructions",
+    "Get the AI assistant instruction set for a given target (mcp-server, claude, github-copilot, cursor, etc.). Reads from the `ai_instructions` Supabase table.",
+    {
+      target: z
+        .string()
+        .describe("Target audience name or instruction name (e.g. 'claude', 'github-copilot')"),
+    },
+    async ({ target }) => {
+      const start = Date.now()
+      try {
+        const instruction =
+          (await getAiInstruction(target)) ?? (await getAiInstructionByTarget(target))
+
+        if (!instruction) {
+          trackMcpTool({
+            toolName: "get_ai_instructions",
+            durationMs: Date.now() - start,
+            isError: true,
+          })
+          return {
+            content: [{ type: "text" as const, text: `No AI instruction found for "${target}"` }],
+            isError: true,
+          }
+        }
+
+        trackMcpTool({ toolName: "get_ai_instructions", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(instruction, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_ai_instructions",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError(`Failed to fetch AI instruction for "${target}"`, err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_component_links",
+    "Get all portal URLs (docs, API, source) for a component, via the `get_component_links` Supabase RPC.",
+    {
+      name: z.string().describe("Component name"),
+    },
+    async ({ name }) => {
+      const start = Date.now()
+      try {
+        const links = await getComponentLinks(name)
+        trackMcpTool({
+          toolName: "get_component_links",
+          durationMs: Date.now() - start,
+          componentName: name,
+        })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(links, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_component_links",
+          durationMs: Date.now() - start,
+          componentName: name,
+          isError: true,
+        })
+        return toolError(`Failed to get links for "${name}"`, err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_changelog",
+    "Get the release changelog. Returns a single entry if `version` is provided, otherwise the full history (most recent first).",
+    {
+      version: z
+        .string()
+        .optional()
+        .describe("Specific release version (e.g. '4.0.26'). Omit to get the full history."),
+    },
+    async ({ version }) => {
+      const start = Date.now()
+      try {
+        const payload = version ? await getChangelogByVersion(version) : await getChangelogEntries()
+
+        if (version && !payload) {
+          trackMcpTool({
+            toolName: "get_changelog",
+            durationMs: Date.now() - start,
+            isError: true,
+          })
+          return {
+            content: [{ type: "text" as const, text: `Version "${version}" not found` }],
+            isError: true,
+          }
+        }
+
+        trackMcpTool({ toolName: "get_changelog", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(payload, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({ toolName: "get_changelog", durationMs: Date.now() - start, isError: true })
+        return toolError("Failed to fetch changelog", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_component_versions",
+    "Get the version history for a component from the `component_versions` Supabase table.",
+    {
+      name: z.string().describe("Component name"),
+    },
+    async ({ name }) => {
+      const start = Date.now()
+      try {
+        const versions = await getComponentVersions(name)
+        trackMcpTool({
+          toolName: "get_component_versions",
+          durationMs: Date.now() - start,
+          componentName: name,
+        })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(versions, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_component_versions",
+          durationMs: Date.now() - start,
+          componentName: name,
+          isError: true,
+        })
+        return toolError(`Failed to get versions for "${name}"`, err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_documentation_page",
+    "Get a single documentation page by slug (or list all pages if no slug is given). Reads from the `documentation_pages` table.",
+    {
+      slug: z
+        .string()
+        .optional()
+        .describe(
+          "Page slug (e.g. '3d-architecture', 'semantic-tokens'). Omit to list all published pages."
+        ),
+    },
+    async ({ slug }) => {
+      const start = Date.now()
+      try {
+        if (!slug) {
+          const pages = await getAllDocumentationPages()
+          const summary = pages.map((p) => ({
+            slug: p.slug,
+            title: p.title,
+            category: p.category,
+            description: p.description,
+          }))
+          trackMcpTool({ toolName: "get_documentation_page", durationMs: Date.now() - start })
+          return {
+            content: [{ type: "text" as const, text: JSON.stringify(summary, null, 2) }],
+          }
+        }
+
+        const page = await getDocumentationPage(slug)
+        if (!page) {
+          trackMcpTool({
+            toolName: "get_documentation_page",
+            durationMs: Date.now() - start,
+            isError: true,
+          })
+          return {
+            content: [{ type: "text" as const, text: `Documentation page "${slug}" not found` }],
+            isError: true,
+          }
+        }
+
+        trackMcpTool({ toolName: "get_documentation_page", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(page, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_documentation_page",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError("Failed to fetch documentation page", err)
       }
     }
   )

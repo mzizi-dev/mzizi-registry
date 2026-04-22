@@ -3,58 +3,10 @@ title: "Changelog — nyuchi design portal"
 description: "Version history and release notes for the Nyuchi Design Portal."
 ---
 
+import { DbChangelog } from "@/components/docs/db-changelog"
+
 # Changelog
 
 All notable changes to the Nyuchi Design Portal are documented here. The registry follows [semantic versioning](https://semver.org/).
 
-## v4.0.1
-
-**Released:** Current
-
-The Nyuchi Design Portal v7 is a ground-up rebuild, transitioning from a standalone component library to the canonical design system hub for the entire Mukoko ecosystem.
-
-### Architecture
-
-- **Nextra-powered documentation** — full developer portal with searchable docs, brand guidelines, architecture documentation, and component catalog
-- **Mukoko Architecture API v1** — RESTful API serving brand data, component registry, architecture principles, and ecosystem documentation at `/api/v1/`
-- **MCP server** — Model Context Protocol server at `/mcp` exposing the registry, brand system, and design tokens to AI assistants
-- **Static registry build** — `pnpm registry:build` generates static JSON files into `public/r/` for CDN serving
-- **OpenAPI 3.1 specification** — complete API contract in `openapi.yaml`
-
-### Design System
-
-- **Five African Minerals palette** — cobalt, tanzanite, malachite, gold, terracotta as the core brand colors
-- **Tailwind CSS 4** — migrated from Tailwind 3 to Tailwind 4 with `@theme inline` blocks and `@custom-variant`
-- **CSS custom properties** — all tokens defined as CSS variables with light/dark theme support
-- **82 UI components** — comprehensive component library covering input, action, data display, feedback, layout, navigation, overlay, and ecosystem categories
-- **3 hooks** — `use-toast`, `use-mobile`, `use-memory-pressure`
-- **9 library utilities** — `utils`, `observability`, `circuit-breaker`, `retry`, `timeout`, `fallback-chain`, `chaos`, `ai-safety`, `architecture`
-
-### Resilience
-
-- **Circuit breaker** — Netflix Hystrix-style circuit breaker for external API calls
-- **Retry with exponential backoff** — configurable retry logic for transient failures
-- **Fallback chain** — ordered fallback strategies for graceful degradation
-- **Chaos engineering** — inject random errors and latency in development
-- **AI safety** — input validation, prompt injection detection, and rate limiting
-
-### Components
-
-- **Mukoko ecosystem components** — `mukoko-header`, `mukoko-footer`, `mukoko-sidebar`, `mukoko-bottom-nav`
-- **Dashboard layout** — responsive dashboard composition with sidebar
-- **Detail layout** — resource detail page layout
-- **Error boundary** — component and section-level error isolation
-- **Lazy section** — TikTok-style sequential mount with memory pressure monitoring
-
-### Testing
-
-- **Vitest test suite** — brand data integrity, API route validation, component rendering, navigation tests
-- **CI/CD pipeline** — GitHub Actions for lint, typecheck, test, build on every PR
-- **Claude code review** — AI-powered code review on pull requests
-
-### Documentation
-
-- **Brand section** — ecosystem overview, colors, component specs, usage guidelines
-- **Architecture section** — principles, data layer, pipeline, sovereignty
-- **Patterns section** — mandatory patterns enforced across all Mukoko apps
-- **API documentation** — interactive API reference for all v1 endpoints
+<DbChangelog />

@@ -40,7 +40,7 @@ function withCors(response: Response): Response {
 
 export async function POST(request: Request) {
   const transport = createTransport()
-  const server = createMukokoMcpServer()
+  const server = await createMukokoMcpServer()
 
   await server.connect(transport)
 
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   const transport = createTransport()
-  const server = createMukokoMcpServer()
+  const server = await createMukokoMcpServer()
 
   await server.connect(transport)
 
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
 
 export async function DELETE(request: Request) {
   const transport = createTransport()
-  const server = createMukokoMcpServer()
+  const server = await createMukokoMcpServer()
 
   await server.connect(transport)
 

@@ -8,13 +8,13 @@
 
 ## 1. Project Identity
 
-**Nyuchi Design Portal** is the canonical design system, component registry, brand documentation hub, and developer portal for the bundu ecosystem. It serves 294 production-ready registry items (177 UI components, 3 hooks, 9 lib utilities, 105 blocks) built on the **Five African Minerals** design system, installable via the shadcn CLI:
+**Nyuchi Design Portal** is the canonical design system, component registry, brand documentation hub, and developer portal for the bundu ecosystem. It serves 545 stable registry items across 10 architecture layers (3D model: X-axis L2→L3→L6→L7 composition, Y-axis L1/L4/L5 foundations, Z-axis L8 runtime, Outside L9 docs, Meta L10 templates) built on the **Five African Minerals** design system, installable via the shadcn CLI:
 
 ```
 npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>
 ```
 
-**Version:** 4.0.1
+**Version:** 4.0.26
 
 **Live at:** design.nyuchi.com
 
@@ -47,7 +47,7 @@ Nyuchi Design Portal exists within a broader ecosystem. Understanding the relati
 design-portal (this repo)
     │
     ├── Defines: Five African Minerals palette, typography, component API
-    ├── Serves: 294 registry items (177 UI, 3 hooks, 9 lib, 105 blocks) via shadcn CLI / API
+    ├── Serves: 545 stable registry items across 10 architecture layers via shadcn CLI / API
     │
     └── Consumed by:
         ├── mukoko-weather  (weather.mukoko.com)
@@ -212,7 +212,7 @@ design-portal/
 ├── next.config.mjs               # Next.js config
 ├── tsconfig.json                 # TypeScript config (strict, path aliases)
 ├── postcss.config.mjs            # PostCSS with @tailwindcss/postcss
-└── package.json                  # Dependencies and scripts (v4.0.1)
+└── package.json                  # Dependencies and scripts (v4.0.26)
 ```
 
 ---
@@ -221,7 +221,7 @@ design-portal/
 
 ### 6.1 Registry System
 
-`registry.json` is the manifest defining all 294 registry items with metadata, dependencies, and file paths. It follows the schema at `https://ui.shadcn.com/schema/registry.json`.
+The component registry is stored in the `components` Supabase table — 545 stable items with metadata, dependencies, and source code. API responses follow the schema at `https://ui.shadcn.com/schema/registry.json`.
 
 Components are served two ways:
 
@@ -589,7 +589,7 @@ Configured in `.claude/settings.json`:
 
 ## 11. Component Categories
 
-The 294 registry items (169 UI components, 3 hooks, 11 library utilities, 70 chart blocks, 35 page blocks) are organized by function:
+The 545 stable registry items are organised across 10 architecture layers and by function:
 
 | Category                  | Count | Components                                                                                                                                                                                                                                                                                                                                                                 |
 | ------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -708,7 +708,7 @@ Three workflows in `.github/workflows/`:
 
 ### Versioning
 
-- **Current version:** 4.0.1 (in `package.json`, `lib/brand.ts`, and footer)
+- **Current version:** 4.0.26 (in `package.json`, `lib/mcp-server.ts`, and footer)
 - **Scheme:** Semantic versioning (major.minor.patch)
 - **Release process:**
   1. Update version in `package.json`

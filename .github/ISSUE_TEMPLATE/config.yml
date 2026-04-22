@@ -5,7 +5,7 @@ contact_links:
     about: Ask questions, share ideas, show what you've built with the design system.
   - name: Component Registry
     url: https://design.nyuchi.com/components
-    about: Browse all 294+ components, blocks, and charts in the live portal.
+    about: Browse all 545+ components, blocks, and charts in the live portal.
   - name: MCP Server
     url: https://design.nyuchi.com/mcp
     about: Connect Claude Code and AI assistants directly to the component registry.

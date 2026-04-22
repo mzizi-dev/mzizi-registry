@@ -1,7 +1,6 @@
 export default {
-  index: "Overview",
-  principles: "Principles",
-  "data-layer": "Data Layer",
-  pipeline: "Pipeline",
-  sovereignty: "Sovereignty",
+  index: "3D Architecture",
+  layers: "Layer Decision Guide",
+  "component-backlinks": "Component Backlinks",
+  fundi: "Fundi (L9)",
 }
