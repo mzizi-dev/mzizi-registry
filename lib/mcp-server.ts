@@ -36,6 +36,10 @@ import {
   getComponentVersions,
   getDocumentationPage,
   getAllDocumentationPages,
+  getArchitectureFrontendAxes,
+  getArchitectureFrontendLayers,
+  getUbuntuPillars,
+  getUbuntuPrinciples,
 } from "@/lib/db"
 import { getUsageStats, trackMcpTool } from "@/lib/metrics"
 
@@ -825,8 +829,8 @@ export { ${pascalName}, ${camelVariants}Variants }
   )
 
   server.tool(
-    "get_ubuntu_principles",
-    "Get Ubuntu philosophy principles and community-first design doctrine for the bundu ecosystem. Use when designing new features, writing AI prompts, or onboarding new team members.",
+    "get_ubuntu_doctrine",
+    "Get the static Ubuntu philosophy doctrine for the bundu ecosystem — philosophy statement, design rules, community framing, AI framing, language stance. For the table-backed Five Pillars / Five Principles (structured rows) use get_ubuntu_pillars and get_ubuntu_principles instead.",
     {
       aspect: z
         .enum(["all", "philosophy", "design", "community", "ai-framing", "languages"])
@@ -880,6 +884,77 @@ export { ${pascalName}, ${camelVariants}Variants }
 
       return {
         content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+      }
+    }
+  )
+
+  server.tool(
+    "get_ubuntu_pillars",
+    "Get the Five Ubuntu Pillars from the ubuntu_pillars table — spheres in which Ubuntu is lived (e.g. family, community, language, spirituality, economy). Each pillar maps to a platform surface so the doctrine translates to software.",
+    {},
+    async () => {
+      const start = Date.now()
+      try {
+        const rows = await getUbuntuPillars()
+        trackMcpTool({ toolName: "get_ubuntu_pillars", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(rows, null, 2) }],
+        }
+      } catch (err) {
+        return toolError("Failed to fetch Ubuntu pillars", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_ubuntu_principles",
+    "Get the Five Ubuntu Principles from the ubuntu_principles table — operating rules that translate Ubuntu to software engineering decisions. For the broader philosophy doctrine (design rules, community framing, languages) use get_ubuntu_doctrine.",
+    {},
+    async () => {
+      const start = Date.now()
+      try {
+        const rows = await getUbuntuPrinciples()
+        trackMcpTool({ toolName: "get_ubuntu_principles", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(rows, null, 2) }],
+        }
+      } catch (err) {
+        return toolError("Failed to fetch Ubuntu principles", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_architecture_frontend",
+    "Get the 3D frontend architecture from the architecture_frontend_axes (5 rows) and architecture_frontend_layers (10 rows) tables. Returns axes (X, Y, Z, Outside, Documentation) and layers (L1 tokens .. L10 documentation) with the layer ↔ axis mapping.",
+    {
+      part: z
+        .enum(["all", "axes", "layers"])
+        .default("all")
+        .describe("Which part of the 3D model to retrieve"),
+    },
+    async ({ part }) => {
+      const start = Date.now()
+      try {
+        const [axes, layers] =
+          part === "axes"
+            ? [await getArchitectureFrontendAxes(), []]
+            : part === "layers"
+              ? [[], await getArchitectureFrontendLayers()]
+              : await Promise.all([getArchitectureFrontendAxes(), getArchitectureFrontendLayers()])
+
+        trackMcpTool({
+          toolName: "get_architecture_frontend",
+          durationMs: Date.now() - start,
+        })
+
+        const data = part === "axes" ? { axes } : part === "layers" ? { layers } : { axes, layers }
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
+        }
+      } catch (err) {
+        return toolError("Failed to fetch frontend architecture", err)
       }
     }
   )

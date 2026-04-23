@@ -75,6 +75,8 @@ import type {
   DesignTokens,
   ArchitectureFrontendAxisRow,
   ArchitectureFrontendLayerRow,
+  UbuntuPillarRow,
+  UbuntuPrincipleRow,
 } from "./types"
 
 // ── Supabase clients ────────────────────────────────────────────────
@@ -1371,4 +1373,41 @@ export async function getArchitectureFrontendLayers(): Promise<ArchitectureFront
 
   if (error || !Array.isArray(data)) return []
   return data as ArchitectureFrontendLayerRow[]
+}
+
+// ── Ubuntu doctrine — issue #45 (`ubuntu_pillars`, `ubuntu_principles`) ──
+//
+// Two tables, five rows each. Tables are canonical; seeding is out-of-band.
+// Callers must tolerate an empty array and render an empty state.
+
+/**
+ * Live fetch from `ubuntu_pillars`. Returns an empty array if Supabase
+ * isn't configured or the table is empty.
+ */
+export async function getUbuntuPillars(): Promise<UbuntuPillarRow[]> {
+  if (!isSupabaseConfigured()) return []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getPublicClient() as any)
+    .from("ubuntu_pillars")
+    .select("*")
+    .order("sort_order", { ascending: true })
+
+  if (error || !Array.isArray(data)) return []
+  return data as UbuntuPillarRow[]
+}
+
+/**
+ * Live fetch from `ubuntu_principles`. Returns an empty array if Supabase
+ * isn't configured or the table is empty.
+ */
+export async function getUbuntuPrinciples(): Promise<UbuntuPrincipleRow[]> {
+  if (!isSupabaseConfigured()) return []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getPublicClient() as any)
+    .from("ubuntu_principles")
+    .select("*")
+    .order("sort_order", { ascending: true })
+
+  if (error || !Array.isArray(data)) return []
+  return data as UbuntuPrincipleRow[]
 }

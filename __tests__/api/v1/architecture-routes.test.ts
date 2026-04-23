@@ -16,6 +16,10 @@ describe("Architecture API v1 Routes", () => {
       "app/api/v1/pipeline/route.ts",
       "app/api/v1/sovereignty/route.ts",
       "app/api/v1/health/route.ts",
+      "app/api/v1/architecture/frontend/axes/route.ts",
+      "app/api/v1/architecture/frontend/layers/route.ts",
+      "app/api/v1/ubuntu/pillars/route.ts",
+      "app/api/v1/ubuntu/principles/route.ts",
     ]
 
     for (const file of routeFiles) {
@@ -56,7 +60,7 @@ describe("Architecture API v1 Routes", () => {
       const filePath = path.join(process.cwd(), "openapi.yaml")
       const content = fs.readFileSync(filePath, "utf-8")
       expect(content).toContain('openapi: "3.1.0"')
-      expect(content).toContain("Mukoko Architecture API")
+      expect(content).toContain("Nyuchi Architecture API")
     })
   })
 })

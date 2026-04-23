@@ -1,0 +1,31 @@
+-- Nyuchi Design Portal — canonical Supabase `public` schema
+--
+-- This file is the single source of truth for the database structure:
+-- 41 tables, 2 views, 14 functions, ~31 triggers, ~50 RLS policies.
+-- It contains DDL only. No row data.
+--
+-- ⚠ STATUS: not yet populated. The actual `pg_dump --schema public`
+-- output will be committed in a follow-up PR (the maintainer is
+-- generating it locally in dev mode and seeding the 4 empty doctrine
+-- tables — architecture_frontend_axes, architecture_frontend_layers,
+-- ubuntu_pillars, ubuntu_principles — at the same time). Do not
+-- treat this placeholder as authoritative; query the live database
+-- directly until the dump lands.
+--
+-- Regenerate this file from the live production database after any
+-- schema change. See `supabase/README.md` for the full workflow.
+--
+--   supabase db dump --schema public --file supabase/schema.sql
+--
+-- Consumers:
+--   - Developers bootstrap a local Supabase replica by running this file
+--     against a fresh project (Dashboard SQL editor or `psql < schema.sql`).
+--   - Preview environments replay this file to get the current structure
+--     in a single pass — no migration history to replay.
+--   - CI / tooling reads this file to know the shape of every table,
+--     function, and policy.
+--
+-- DO NOT hand-edit. Any divergence between this file and the live `public`
+-- schema is a drift bug — always regenerate rather than patch by hand.
+
+-- <paste `supabase db dump --schema public` output below this line>

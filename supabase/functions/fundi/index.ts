@@ -62,13 +62,12 @@
 //
 // Required secrets:
 //   GITHUB_TOKEN         — PAT with repo:issues on nyuchi/design-portal
-//   FUNDI_GITHUB_REPO    — default: "nyuchi/design-portal"
 //   FUNDI_HEAL_TOKEN     — optional; if unset /heal accepts service-role key
 
 import { adminClient } from "../_shared/supabase.ts"
 import { json, preflight } from "../_shared/cors.ts"
 
-const GITHUB_REPO = Deno.env.get("FUNDI_GITHUB_REPO") ?? "nyuchi/design-portal"
+const GITHUB_REPO = "nyuchi/design-portal"
 const GITHUB_TOKEN = Deno.env.get("GITHUB_TOKEN")
 
 const MAX_HEAL_BATCH = 10

@@ -79,8 +79,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@nyuchitech",
-    creator: "@nyuchitech",
+    site: "@nyuchiafrica",
+    creator: "@nyuchiafrica",
     title: "nyuchi — Design Portal",
     description: SITE_DESCRIPTION,
     images: ["/og-image.png"],

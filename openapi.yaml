@@ -1,11 +1,12 @@
 openapi: "3.1.0"
 info:
-  title: Mukoko Architecture API
+  title: Nyuchi Architecture API
   version: "1.0.0"
   description: |
-    Unified API for the Mukoko ecosystem — components, brand, architecture, and design system.
+    Unified API for the Nyuchi Design Portal — components, brand, architecture, Ubuntu doctrine,
+    3D frontend model, and design system. Canonical registry for the bundu ecosystem.
 
-    The Mukoko Architecture API follows resource-oriented design principles. All resources
+    The Nyuchi Architecture API follows resource-oriented design principles. All resources
     are served as JSON with schema.org JSON-LD metadata, CORS headers, and CDN-friendly caching.
 
     All data routes read from Supabase. If the database is not configured, endpoints return
@@ -31,15 +32,19 @@ servers:
 
 tags:
   - name: Discovery
-    description: API metadata and health
+    description: API metadata, health, search, stats
   - name: Brand
     description: Five African Minerals design system
   - name: Registry
     description: Component registry (shadcn-compatible)
   - name: Architecture
-    description: Ecosystem architecture, data layer, pipeline, sovereignty
-  - name: Database
-    description: Document store management (Supabase backend)
+    description: Ecosystem architecture, data layer, pipeline, sovereignty, 3D frontend axes/layers
+  - name: Ubuntu
+    description: Ubuntu doctrine — Five Pillars and Five Principles
+  - name: Content
+    description: Documentation pages, changelog, AI instructions
+  - name: Fundi
+    description: Self-healing issue reporting (L9 actors)
   - name: MCP
     description: Model Context Protocol server for AI assistants
 
@@ -69,7 +74,7 @@ paths:
     get:
       summary: Brand System
       description: |
-        Returns the complete Mukoko brand system — Five African Minerals palette,
+        Returns the complete Nyuchi brand system — Five African Minerals palette,
         typography, spacing, ecosystem brands, accessibility standards, and voice & tone.
 
         Reads from Supabase. Returns 503 if database is not configured.
@@ -266,7 +271,7 @@ paths:
     get:
       summary: Technology Sovereignty
       description: |
-        Returns sovereignty assessments for every technology in the Mukoko stack,
+        Returns sovereignty assessments for every technology in the Nyuchi stack,
         including removed technologies and migration notes.
 
         Reads from Supabase. Returns 503 if database is not configured.
@@ -321,65 +326,452 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
 
-  /db:
+  /architecture/frontend/axes:
     get:
-      summary: Database Status
+      summary: Frontend Axes (3D)
       description: |
-        Returns the status of the Supabase document store — connection status,
-        row counts, and whether the database has been seeded.
-      operationId: getDatabaseStatus
-      tags: [Database]
+        The five axes of the 3D frontend architecture: X (horizontal composition),
+        Y (vertical infrastructure), Z (depth observation), Outside (actors beyond
+        the build), Documentation (self-describing system). Sourced from the
+        `architecture_frontend_axes` table.
+      operationId: getFrontendAxes
+      tags: [Architecture]
       responses:
         "200":
-          description: Database status
+          description: 3D frontend axes
           headers:
             Cache-Control:
-              schema:
-                type: string
-                example: "no-cache"
+              $ref: "#/components/headers/CachePublic"
             Access-Control-Allow-Origin:
               $ref: "#/components/headers/CorsWildcard"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DatabaseStatus"
+                $ref: "#/components/schemas/FrontendAxesResponse"
         "500":
           $ref: "#/components/responses/InternalError"
-    post:
-      summary: Seed Database
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /architecture/frontend/layers:
+    get:
+      summary: Frontend Layers (3D)
       description: |
-        Seeds the Supabase database from registry.json and other hardcoded sources.
-        Requires SUPABASE_SERVICE_ROLE_KEY for write access. Idempotent (uses upsert).
-      operationId: seedDatabase
-      tags: [Database]
+        The ten layers of the 3D frontend architecture (L1 tokens .. L10 documentation).
+        Each layer belongs to exactly one axis. Sourced from the
+        `architecture_frontend_layers` table.
+      operationId: getFrontendLayers
+      tags: [Architecture]
+      responses:
+        "200":
+          description: 3D frontend layers
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FrontendLayersResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /ubuntu/pillars:
+    get:
+      summary: Ubuntu Pillars
+      description: |
+        The five Ubuntu Pillars — spheres in which Ubuntu is lived. Each pillar
+        maps a region of life to a platform surface so the doctrine translates
+        to software. Sourced from the `ubuntu_pillars` table.
+      operationId: getUbuntuPillars
+      tags: [Ubuntu]
+      responses:
+        "200":
+          description: Ubuntu pillars
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UbuntuPillarsResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /ubuntu/principles:
+    get:
+      summary: Ubuntu Principles
+      description: |
+        The five Ubuntu Principles — operating rules that translate Ubuntu to
+        software engineering decisions. Sourced from the `ubuntu_principles` table.
+      operationId: getUbuntuPrinciples
+      tags: [Ubuntu]
+      responses:
+        "200":
+          description: Ubuntu principles
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UbuntuPrinciplesResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /docs:
+    get:
+      summary: List documentation pages
+      description: Returns all rows from `documentation_pages`.
+      operationId: listDocs
+      tags: [Content]
+      responses:
+        "200":
+          description: Documentation page index
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pages:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/DocPageSummary"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /docs/{slug}:
+    get:
+      summary: Get a documentation page by slug
+      operationId: getDoc
+      tags: [Content]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Documentation page
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocPage"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /changelog:
+    get:
+      summary: List releases
+      description: Returns all rows from `changelog`, newest first.
+      operationId: listChangelog
+      tags: [Content]
+      responses:
+        "200":
+          description: Release list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  releases:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ChangelogEntry"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /changelog/{version}:
+    get:
+      summary: Get a release by version
+      operationId: getRelease
+      tags: [Content]
+      parameters:
+        - name: version
+          in: path
+          required: true
+          schema: { type: string, example: "4.0.26" }
+      responses:
+        "200":
+          description: Release
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChangelogEntry"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /ai/instructions:
+    get:
+      summary: List AI instruction sets
+      description: Returns the list of AI instruction targets (e.g. claude, copilot, mcp-server).
+      operationId: listAiInstructions
+      tags: [Content]
+      responses:
+        "200":
+          description: Instruction set index
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  instructions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        target: { type: string }
+                        name: { type: string }
+                        description: { type: string }
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /ai/instructions/{name}:
+    get:
+      summary: Get AI instruction set by target
+      operationId: getAiInstruction
+      tags: [Content]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string, example: "claude" }
+      responses:
+        "200":
+          description: Instruction set
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  target: { type: string }
+                  name: { type: string }
+                  content: { type: string, description: "Full instruction text" }
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /fundi:
+    get:
+      summary: List open fundi issues
+      description: Returns rows from `fundi_issues` with status `open` or `in_progress`.
+      operationId: listFundiIssues
+      tags: [Fundi]
+      responses:
+        "200":
+          description: Open issues
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issues:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FundiIssue"
+    post:
+      summary: Report a fundi issue
+      description: Create an issue from an L8 assurance callsite. Deduplicates by `(component_name, error_type, severity)` while an existing row is `open`/`in_progress`.
+      operationId: reportFundiIssue
+      tags: [Fundi]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                action:
-                  type: string
-                  enum: ["seed"]
-                  default: "seed"
+              $ref: "#/components/schemas/FundiIssueInput"
       responses:
-        "200":
-          description: Database seeded successfully
+        "201":
+          description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SeedResult"
+                $ref: "#/components/schemas/FundiIssue"
+        "200":
+          description: Duplicate — existing row returned instead of inserting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FundiIssue"
         "400":
-          description: Unknown action
+          description: Validation error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
+
+  /fundi/{id}:
+    get:
+      summary: Get a fundi issue
+      operationId: getFundiIssue
+      tags: [Fundi]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Issue
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FundiIssue"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /fundi/stats:
+    get:
+      summary: Aggregate fundi stats
+      description: Returns summary statistics across all fundi issues.
+      operationId: fundiStats
+      tags: [Fundi]
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total: { type: integer }
+                  byStatus:
+                    type: object
+                    additionalProperties: { type: integer }
+                  bySeverity:
+                    type: object
+                    additionalProperties: { type: integer }
+
+  /search:
+    get:
+      summary: Cross-resource search
+      description: Full-text search across components, documentation pages, and changelog entries.
+      operationId: search
+      tags: [Discovery]
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  query: { type: string }
+                  components: { type: array, items: { type: object } }
+                  docs: { type: array, items: { type: object } }
+                  changelog: { type: array, items: { type: object } }
+
+  /stats:
+    get:
+      summary: Live registry stats
+      description: Live counts across the registry — total stable components, per-layer and per-category breakdown, token counts. Never hardcoded.
+      operationId: getStats
+      tags: [Discovery]
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  components:
+                    type: object
+                    properties:
+                      total: { type: integer }
+                      stable: { type: integer }
+                      alpha: { type: integer }
+                      deprecated: { type: integer }
+                  layers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        layer: { type: integer }
+                        axis: { type: string }
+                        count: { type: integer }
+                  tokens:
+                    type: object
+                    additionalProperties: { type: integer }
+
+  /ui/{name}/docs:
+    get:
+      summary: Get component documentation
+      operationId: getComponentDocs
+      tags: [Registry]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Component documentation (use cases, variants, accessibility)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  useCases: { type: array, items: { type: string } }
+                  variants: { type: array, items: { type: object } }
+                  accessibility: { type: array, items: { type: string } }
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /ui/{name}/versions:
+    get:
+      summary: Get component version history
+      operationId: getComponentVersions
+      tags: [Registry]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Version history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  versions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        version: { type: string }
+                        change_type: { type: string }
+                        comment: { type: string }
+                        changed_by: { type: string }
+                        created_at: { type: string, format: date-time }
 
   /mcp:
     post:
@@ -512,7 +904,7 @@ components:
           const: "WebAPI"
         name:
           type: string
-          example: "Mukoko Architecture API"
+          example: "Nyuchi Architecture API"
         version:
           type: string
           example: "1.0.0"
@@ -553,7 +945,7 @@ components:
           example: "4.0.26"
         name:
           type: string
-          example: "Mukoko Brand System"
+          example: "Nyuchi Brand System"
         lastUpdated:
           type: string
           format: date
@@ -918,7 +1310,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Mukoko Ecosystem Architecture"
+          example: "Nyuchi Ecosystem Architecture"
         principles:
           type: array
           minItems: 5
@@ -995,7 +1387,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Mukoko Data Layer Architecture"
+          example: "Nyuchi Data Layer Architecture"
         localDataLayer:
           type: array
           items:
@@ -1082,7 +1474,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Mukoko Open Data Pipeline"
+          example: "Nyuchi Open Data Pipeline"
         stages:
           type: array
           items:
@@ -1113,7 +1505,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Mukoko Technology Sovereignty"
+          example: "Nyuchi Technology Sovereignty"
         assessments:
           type: array
           items:
@@ -1198,58 +1590,207 @@ components:
         itemCount:
           type: integer
 
-    # ── Database ───────────────────────────────────────────────────
+    # ── 3D Frontend Architecture ──────────────────────────────────
 
-    DatabaseStatus:
+    FrontendAxis:
       type: object
-      required: [status, provider]
+      required: [name, title, description, geometry, metaphor, sortOrder]
       properties:
-        status:
+        name: { type: string, example: "x-axis" }
+        title: { type: string, example: "Horizontal Composition" }
+        description: { type: string }
+        geometry:
           type: string
-          enum: ["seeded", "empty", "not_configured"]
-        provider:
-          type: string
-          example: "supabase"
-        dbStatus:
-          type: string
-          enum: ["connected", "error"]
-        components:
-          type: integer
-        docs:
-          type: integer
-        demos:
-          type: integer
-        message:
-          type: string
+          enum: [horizontal, vertical, depth, external]
+        metaphor: { type: string }
+        sortOrder: { type: integer }
 
-    SeedResult:
+    FrontendAxesResponse:
       type: object
-      required: [action, result, message]
+      required: ["@context", "@type", name, itemListElement]
       properties:
-        action:
-          type: string
-          example: "seed"
-        result:
-          type: object
-          required: [components, docs, demos, total, duration]
+        "@context": { type: string, example: "https://schema.org" }
+        "@type": { type: string, example: "ItemList" }
+        name: { type: string }
+        description: { type: string }
+        itemListElement:
+          type: array
+          items:
+            $ref: "#/components/schemas/FrontendAxis"
+
+    FrontendLayer:
+      type: object
+      required: [layerNumber, subLabel, title, axisName, role, description, covenant, stakeholder]
+      properties:
+        layerNumber: { type: integer, minimum: 1, maximum: 10 }
+        subLabel: { type: string, example: "primitive" }
+        title: { type: string }
+        axisName: { type: string, example: "x-axis" }
+        role: { type: string }
+        description: { type: string }
+        covenant: { type: string }
+        stakeholder: { type: string }
+        implementationRules:
+          type: array
+          items: { type: string }
+        sortOrder: { type: integer }
+
+    FrontendLayersResponse:
+      type: object
+      required: ["@context", "@type", name, itemListElement]
+      properties:
+        "@context": { type: string }
+        "@type": { type: string, example: "ItemList" }
+        name: { type: string }
+        description: { type: string }
+        itemListElement:
+          type: array
+          items:
+            $ref: "#/components/schemas/FrontendLayer"
+
+    # ── Ubuntu doctrine ───────────────────────────────────────────
+
+    UbuntuPillar:
+      type: object
+      required: [name, shona, title, description, sphere, platformSurface, source]
+      properties:
+        name: { type: string }
+        shona: { type: string, description: "Shona-language name" }
+        title: { type: string }
+        description: { type: string }
+        sphere: { type: string, description: "Region of life the pillar covers" }
+        platformSurface: { type: string, description: "Software surface the pillar maps to" }
+        source: { type: string, description: "Origin citation for the pillar" }
+        sortOrder: { type: integer }
+
+    UbuntuPillarsResponse:
+      type: object
+      required: ["@context", "@type", name, itemListElement]
+      properties:
+        "@context": { type: string }
+        "@type": { type: string, example: "ItemList" }
+        name: { type: string }
+        description: { type: string }
+        itemListElement:
+          type: array
+          items:
+            $ref: "#/components/schemas/UbuntuPillar"
+
+    UbuntuPrinciple:
+      type: object
+      required: [name, shona, title, description, expression, source]
+      properties:
+        name: { type: string }
+        shona: { type: string }
+        title: { type: string }
+        description: { type: string }
+        expression: { type: string, description: "How the principle shows up in software" }
+        source: { type: string }
+        sortOrder: { type: integer }
+
+    UbuntuPrinciplesResponse:
+      type: object
+      required: ["@context", "@type", name, itemListElement]
+      properties:
+        "@context": { type: string }
+        "@type": { type: string, example: "ItemList" }
+        name: { type: string }
+        description: { type: string }
+        itemListElement:
+          type: array
+          items:
+            $ref: "#/components/schemas/UbuntuPrinciple"
+
+    # ── Content (docs + changelog) ────────────────────────────────
+
+    DocPageSummary:
+      type: object
+      required: [slug, title]
+      properties:
+        slug: { type: string }
+        title: { type: string }
+        summary: { type: string }
+        layer: { type: integer, nullable: true }
+        updatedAt: { type: string, format: date-time }
+
+    DocPage:
+      allOf:
+        - $ref: "#/components/schemas/DocPageSummary"
+        - type: object
           properties:
-            components:
-              type: integer
-            docs:
-              type: integer
-            demos:
-              type: integer
-            total:
-              type: integer
-            duration:
-              type: integer
-              description: Seed duration in milliseconds
-        message:
+            body: { type: string, description: "Long-form markdown/MDX content" }
+
+    ChangelogEntry:
+      type: object
+      required: [version, title, createdAt]
+      properties:
+        version: { type: string, example: "4.0.26" }
+        title: { type: string }
+        description: { type: string }
+        layersAffected:
+          type: array
+          items: { type: integer }
+        axesAffected:
+          type: array
+          items: { type: string }
+        componentsAdded:
+          type: array
+          items: { type: string }
+        componentsModified:
+          type: array
+          items: { type: string }
+        componentsDeprecated:
+          type: array
+          items: { type: string }
+        changedBy: { type: string }
+        createdAt: { type: string, format: date-time }
+
+    # ── Fundi ─────────────────────────────────────────────────────
+
+    FundiIssueInput:
+      type: object
+      required: [component_name, severity, error_type, diagnostic_source]
+      properties:
+        component_name: { type: string, maxLength: 40 }
+        severity:
           type: string
+          enum: [critical, high, medium, low]
+        error_type: { type: string }
+        diagnostic_source:
+          type: string
+          enum: ["l8-assurance", "manual", "build-time", "monitor"]
+        architecture_layer: { type: integer, minimum: 1, maximum: 10 }
+        blast_radius:
+          type: string
+          enum: ["single-component", "single-page", "site-wide"]
+        diagnostic_payload: { type: object, additionalProperties: true }
+        portal_url: { type: string, format: uri }
+        auto_fixable: { type: boolean }
+
+    FundiIssue:
+      allOf:
+        - $ref: "#/components/schemas/FundiIssueInput"
+        - type: object
+          required: [id, status, createdAt]
+          properties:
+            id: { type: integer }
+            status:
+              type: string
+              enum: [open, in_progress, resolved, wont_fix, duplicate]
+            githubIssueNumber: { type: integer, nullable: true }
+            githubIssueUrl: { type: string, format: uri, nullable: true }
+            createdAt: { type: string, format: date-time }
+            updatedAt: { type: string, format: date-time }
 
   responses:
     InternalError:
       description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Resource not found
       content:
         application/json:
           schema:
