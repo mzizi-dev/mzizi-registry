@@ -1,8 +1,11 @@
 ---
 title: "Introduction — nyuchi design portal"
-description: "Welcome to the Nyuchi Design Portal — the canonical design system for the bundu ecosystem. 545 stable registry items across 10 architecture layers."
+description: "Welcome to the Nyuchi Design Portal — the canonical design system for the bundu ecosystem. Hundreds of stable registry items across 10 architecture layers (live count via GET /api/v1/stats)."
 ---
 
 import { DbDocPage } from "@/components/docs/db-doc-page"
+import { DbDocIndex } from "@/components/docs/db-doc-index"
 
 <DbDocPage slug="introduction" />
+
+<DbDocIndex excludeSlugs={["introduction"]} />

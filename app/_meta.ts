@@ -16,9 +16,14 @@
 const hidden = { display: "hidden" as const, type: "page" as const }
 
 export default {
+  // Home doesn't need its own navbar link — Nextra already turns the logo
+  // into a link to `/`. Hiding it here prevents "nyuchi design portal"
+  // from rendering twice (once inside the logo on the left, once as a
+  // nav entry on the right next to Components / Brand / etc.).
   index: {
     title: "nyuchi design portal",
     type: "page",
+    display: "hidden",
     theme: {
       layout: "full",
       sidebar: false,
@@ -35,8 +40,8 @@ export default {
   docs: { title: "Docs", type: "page" },
 
   // ── Hidden from navbar; full nav lives in the footer ─────────────────
+  // `/design/*` consolidated under `/foundations/*` per issue #48.
   foundations: { ...hidden, title: "Foundations" },
-  design: { ...hidden, title: "Design" },
   content: { ...hidden, title: "Content" },
   patterns: { ...hidden, title: "Patterns" },
   charts: { ...hidden, title: "Charts" },

@@ -3,19 +3,21 @@ title: "Foundations — nyuchi design portal"
 description: "The foundational principles of the Mukoko design system: accessibility, typography, layout, internationalization, and motion."
 ---
 
-import { ArrowRight, Eye, Globe, Layout, Type, Sparkles } from "lucide-react"
+import { ArrowRight, Eye, Globe, Hexagon, Layout, Paintbrush, Sparkles, Type } from "lucide-react"
 
 # Foundations
 
-Foundations are the bedrock decisions that shape every component and pattern in the Mukoko design system. They define how we handle accessibility, typography, layout, internationalization, and motion across all ecosystem apps.
+Foundations are the bedrock decisions that shape every component and pattern in the Mukoko design system. They define how we handle design tokens, typography, layout, motion, icons, accessibility, and internationalization across all ecosystem apps.
 
 <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
   {[
+    { title: "Design Tokens", href: "/foundations/tokens", description: "CSS custom properties — Five African Minerals, semantic colors, spacing, radius, typography", icon: Paintbrush },
+    { title: "Typography", href: "/foundations/typography", description: "Font stack, type scale, heading hierarchy", icon: Type },
+    { title: "Layout", href: "/foundations/layout", description: "Responsive breakpoints, spacing scale, container patterns", icon: Layout },
+    { title: "Motion", href: "/foundations/motion", description: "Animation principles, transitions, reduced motion", icon: Sparkles },
+    { title: "Icons", href: "/foundations/icons", description: "Lucide React icon conventions, sizing, and accessibility patterns", icon: Hexagon },
     { title: "Accessibility", href: "/foundations/accessibility", description: "APCA 3.0 AAA contrast, 48px touch targets, keyboard navigation", icon: Eye },
     { title: "Internationalization", href: "/foundations/internationalization", description: "Noto Sans for African languages, RTL support, locale formatting", icon: Globe },
-    { title: "Layout", href: "/foundations/layout", description: "Responsive breakpoints, spacing scale, container patterns", icon: Layout },
-    { title: "Typography", href: "/foundations/typography", description: "Font stack, type scale, heading hierarchy", icon: Type },
-    { title: "Motion", href: "/foundations/motion", description: "Animation principles, transitions, reduced motion", icon: Sparkles },
   ].map((item) => (
     <a
       key={item.href}

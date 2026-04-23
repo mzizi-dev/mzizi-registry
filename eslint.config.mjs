@@ -10,6 +10,7 @@ export default tseslint.config(
       "node_modules/**",
       "public/**",
       "scripts/**",
+      "supabase/**",
       "*.config.*",
       "vitest.setup.ts",
     ],

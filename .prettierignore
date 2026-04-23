@@ -7,6 +7,7 @@ build/
 # Generated files
 public/r/
 public/_pagefind/
+next-env.d.ts
 
 # Dependencies
 node_modules/
@@ -16,6 +17,10 @@ pnpm-lock.yaml
 
 # Environment files
 .env*
+
+# Local Claude Code permission allowlists — per-developer, not part of
+# the shared config. Committed template is `.claude/settings.json`.
+.claude/settings.local.json
 
 # Supabase
 supabase/

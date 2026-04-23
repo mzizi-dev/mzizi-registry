@@ -44,7 +44,7 @@ Add to your `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
-    "design-portal": {
+    "nyuchi-design-portal": {
       "type": "url",
       "url": "https://design.nyuchi.com/mcp"
     }
@@ -52,21 +52,28 @@ Add to your `.claude/settings.json`:
 }
 ```
 
-Your AI assistant can now:
+Your AI assistant can now call 18 tools:
 
-| Tool                    | What it does                                                   |
-| ----------------------- | -------------------------------------------------------------- |
-| `list_components`       | Browse all registry items, filter by type or category          |
-| `get_component`         | Fetch full source code + metadata for any component            |
-| `search_components`     | Search by name or description                                  |
-| `scaffold_component`    | Generate a new component following CVA + Radix + cn() patterns |
-| `get_design_tokens`     | Fetch the Five African Minerals palette + semantic tokens      |
-| `get_install_command`   | Get the shadcn CLI install command for any component           |
-| `get_brand_info`        | Brand system — ecosystem brands, typography, spacing           |
-| `get_architecture_info` | Architecture principles, data layer, pipeline, sovereignty     |
-| `get_ubuntu_principles` | Ubuntu philosophy and community-first design doctrine          |
-| `get_usage_stats`       | Public API and MCP usage metrics (open data, CC BY 4.0)        |
-| `get_database_status`   | Registry database status and row counts                        |
+| Tool                     | What it does                                                                |
+| ------------------------ | --------------------------------------------------------------------------- |
+| `list_components`        | Browse all registry items, filter by type/layer/category                    |
+| `get_component`          | Fetch full source code + metadata for any component                         |
+| `get_component_docs`     | Structured docs (use cases, variants, a11y notes)                           |
+| `get_component_versions` | Version history for a component                                             |
+| `get_component_links`    | All portal URLs for a component                                             |
+| `search_components`      | Search by name, description, or category                                    |
+| `scaffold_component`     | Generate a new component following CVA + Radix + cn() patterns              |
+| `get_design_tokens`      | Fetch the Five African Minerals palette + semantic tokens                   |
+| `get_install_command`    | Get the shadcn CLI install command for one or more components               |
+| `get_brand_info`         | Brand system — ecosystem brands, typography, spacing                        |
+| `get_architecture_info`  | Data architecture (principles, data layer, pipeline, sovereignty)           |
+| `get_ubuntu_principles`  | Ubuntu philosophy and community-first design doctrine                       |
+| `get_layer_summary`      | Component count / categories / names for a given frontend layer (1–10)      |
+| `get_ai_instructions`    | System prompts from `ai_instructions` by target (mcp-server/claude/copilot) |
+| `get_changelog`          | Recent releases from the `changelog` table                                  |
+| `get_documentation_page` | Read a documentation page by slug                                           |
+| `get_usage_stats`        | Public API and MCP usage metrics (open data, CC BY 4.0)                     |
+| `get_database_status`    | Registry database status and row counts                                     |
 
 **Endpoint:** `POST /mcp` (JSON-RPC) | `GET /mcp` (SSE) | `DELETE /mcp` (cleanup) | `OPTIONS /mcp` (CORS preflight)
 
@@ -104,25 +111,25 @@ The design system is built on five colors named after African minerals — const
 
 The registry is live at [design.nyuchi.com/components](https://design.nyuchi.com/components). Component counts are always live from the database — see [/observability](https://design.nyuchi.com/observability) for real-time totals.
 
-| Category             | Examples                                                                         |
-| -------------------- | -------------------------------------------------------------------------------- |
-| **Forms & Input**    | input, phone-input, date-range-picker, tag-input, rich-text-editor, combobox     |
-| **Chat & Messaging** | chat-bubble, chat-list, chat-input, chat-layout, typing-indicator                |
-| **AI & Chatbot**     | ai-chat, prompt-input, streaming-text, ai-feedback, suggested-prompts            |
-| **Data Display**     | data-table, kanban-board, tree-view, virtual-list, json-viewer, timeline         |
-| **User & Profile**   | avatar-group, user-card, profile-header, activity-feed                           |
-| **E-commerce**       | product-card, cart-item, order-summary, subscription-card                        |
-| **Calendar**         | calendar, calendar-week-view, event-card, time-slot-picker                       |
-| **Developer Tools**  | api-key-display, code-tabs, log-viewer, endpoint-card                            |
-| **Navigation**       | tabs, stepper, app-switcher, bottom-sheet, mega-menu                             |
-| **Layout**           | split-view, masonry-grid, infinite-scroll, page-header                           |
-| **Feedback**         | announcement-bar, cookie-consent, onboarding-tour, toast                         |
-| **Chart Blocks**     | area (10), bar (10), line (10), pie (11), radar (14), radial (6), tooltip (9)    |
-| **Page Blocks**      | dashboard, login (5), signup (5), sidebar (16), profile, settings                |
-| **Mukoko Ecosystem** | mukoko-header, mukoko-footer, mukoko-sidebar, mukoko-bottom-nav                  |
-| **Infrastructure**   | error-boundary, lazy-section, section-error-boundary                             |
-| **Hooks**            | use-toast, use-mobile, use-memory-pressure                                       |
-| **Lib Utilities**    | utils, observability, circuit-breaker, retry, timeout, fallback-chain, ai-safety |
+| Category             | Examples                                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Forms & Input**    | input, phone-input, date-range-picker, tag-input, rich-text-editor, combobox                                                               |
+| **Chat & Messaging** | chat-bubble, chat-list, chat-input, chat-layout, typing-indicator                                                                          |
+| **AI & Chatbot**     | ai-chat, prompt-input, streaming-text, ai-feedback, suggested-prompts                                                                      |
+| **Data Display**     | data-table, kanban-board, tree-view, virtual-list, json-viewer, timeline                                                                   |
+| **User & Profile**   | avatar-group, user-card, profile-header, activity-feed                                                                                     |
+| **E-commerce**       | product-card, cart-item, order-summary, subscription-card                                                                                  |
+| **Calendar**         | calendar, calendar-week-view, event-card, time-slot-picker                                                                                 |
+| **Developer Tools**  | api-key-display, code-tabs, log-viewer, endpoint-card                                                                                      |
+| **Navigation**       | tabs, stepper, app-switcher, bottom-sheet, mega-menu                                                                                       |
+| **Layout**           | split-view, masonry-grid, infinite-scroll, page-header                                                                                     |
+| **Feedback**         | announcement-bar, cookie-consent, onboarding-tour, toast                                                                                   |
+| **Chart Blocks**     | area (10), bar (10), line (10), pie (11), radar (14), radial (6), tooltip (9)                                                              |
+| **Page Blocks**      | dashboard, login (5), signup (5), sidebar (16), profile, settings                                                                          |
+| **Mukoko Ecosystem** | mukoko-header, mukoko-footer, mukoko-sidebar, mukoko-bottom-nav                                                                            |
+| **Infrastructure**   | error-boundary, lazy-section, section-error-boundary                                                                                       |
+| **Hooks**            | use-toast, use-mobile, use-memory-pressure                                                                                                 |
+| **Lib Utilities**    | utils, observability, circuit-breaker, retry, timeout, fallback-chain, ai-safety, chaos (installed via shadcn; not committed in this repo) |
 
 ---
 
@@ -130,20 +137,32 @@ The registry is live at [design.nyuchi.com/components](https://design.nyuchi.com
 
 All endpoints under `/api/v1/`. Full spec in [`openapi.yaml`](openapi.yaml).
 
-| Endpoint              | Method   | Description                                         |
-| --------------------- | -------- | --------------------------------------------------- |
-| `/api/v1`             | GET      | Discovery document                                  |
-| `/api/v1/ui`          | GET      | Component registry index                            |
-| `/api/v1/ui/{name}`   | GET      | Component source + metadata                         |
-| `/api/v1/brand`       | GET      | Brand system (minerals, typography, spacing)        |
-| `/api/v1/ecosystem`   | GET      | Architecture principles + framework decision        |
-| `/api/v1/data-layer`  | GET      | Local-first + cloud layer specification             |
-| `/api/v1/pipeline`    | GET      | Open data pipeline (Redpanda, Flink, Doris)         |
-| `/api/v1/sovereignty` | GET      | Technology sovereignty assessments                  |
-| `/api/v1/stats`       | GET      | Public usage metrics (CC BY 4.0, `?days=7\|30\|90`) |
-| `/api/v1/health`      | GET      | Service health check                                |
-| `/api/v1/db`          | GET/POST | Database status and seeding                         |
-| `/mcp`                | POST/GET | MCP server (Streamable HTTP)                        |
+| Endpoint                         | Method   | Description                                           |
+| -------------------------------- | -------- | ----------------------------------------------------- |
+| `/api/v1`                        | GET      | Discovery document                                    |
+| `/api/v1/ui`                     | GET      | Component registry index                              |
+| `/api/v1/ui/{name}`              | GET      | Component source + metadata (shadcn format)           |
+| `/api/v1/ui/{name}/docs`         | GET      | Structured docs (use cases, variants, a11y)           |
+| `/api/v1/ui/{name}/versions`     | GET      | Component version history                             |
+| `/api/v1/brand`                  | GET      | Brand system (minerals, typography, spacing)          |
+| `/api/v1/docs`                   | GET      | List documentation pages                              |
+| `/api/v1/docs/{slug}`            | GET      | Single documentation page                             |
+| `/api/v1/changelog`              | GET      | Release history                                       |
+| `/api/v1/changelog/{version}`    | GET      | Single release                                        |
+| `/api/v1/ai/instructions`        | GET      | List AI instruction sets                              |
+| `/api/v1/ai/instructions/{name}` | GET      | Instructions by target (mcp-server/claude/copilot)    |
+| `/api/v1/fundi`                  | GET      | Open self-healing issues                              |
+| `/api/v1/fundi/{id}`             | GET      | Single fundi issue                                    |
+| `/api/v1/fundi/stats`            | GET      | Aggregate learning stats                              |
+| `/api/v1/search?q=`              | GET      | Cross-resource search (components + docs + changelog) |
+| `/api/v1/ecosystem`              | GET      | Architecture principles + framework decision          |
+| `/api/v1/data-layer`             | GET      | Local-first + cloud layer specification               |
+| `/api/v1/pipeline`               | GET      | Open data pipeline (Redpanda, Flink, Doris)           |
+| `/api/v1/sovereignty`            | GET      | Technology sovereignty assessments                    |
+| `/api/v1/stats`                  | GET      | Public usage metrics (CC BY 4.0, `?days=7\|30\|90`)   |
+| `/api/v1/health`                 | GET      | Service health check                                  |
+| `/api/openapi`                   | GET      | OpenAPI 3.1 specification (YAML)                      |
+| `/mcp`                           | POST/GET | MCP server (Streamable HTTP)                          |
 
 ---
 
@@ -235,16 +254,67 @@ Layer 5: Server page wrappers (page.tsx)
 
 ## Commands
 
-| Command                | Description                                                  |
-| ---------------------- | ------------------------------------------------------------ |
-| `pnpm dev`             | Start development server                                     |
-| `pnpm build`           | Production build                                             |
-| `pnpm lint`            | Run ESLint (zero warnings enforced)                          |
-| `pnpm test`            | Run Vitest test suite                                        |
-| `pnpm test:watch`      | Watch mode                                                   |
-| `pnpm typecheck`       | TypeScript type check                                        |
-| `pnpm registry:sync`   | Regenerate `registry.json` + portal primitives from Supabase |
-| `pnpm registry:verify` | Non-mutating; CI-safe drift check                            |
+| Command                | Description                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| `pnpm dev`             | Start development server (port 11736)                                                |
+| `pnpm build`           | Production build (postbuild runs Pagefind to index `.next/server/app`)               |
+| `pnpm check`           | **Run every CI gate locally** — same set CI runs on a PR. Use this before pushing.   |
+| `pnpm format`          | Auto-fix formatting (prettier) across the whole tree                                 |
+| `pnpm format:check`    | Check formatting without writing — fails if anything would change                    |
+| `pnpm lint`            | ESLint (zero warnings enforced)                                                      |
+| `pnpm lint:fix`        | ESLint with `--fix`                                                                  |
+| `pnpm lint:md`         | markdownlint-cli2 across all `*.md` (config: `.markdownlint-cli2.jsonc`)             |
+| `pnpm lint:json`       | Parse every tracked `*.json` to ensure validity                                      |
+| `pnpm lint:yaml`       | yamllint (requires `pip install yamllint`)                                           |
+| `pnpm typecheck`       | TypeScript type check (`tsc --noEmit`)                                               |
+| `pnpm test`            | Vitest, single run                                                                   |
+| `pnpm test:watch`      | Vitest watch mode                                                                    |
+| `pnpm audit:check`     | `pnpm audit --audit-level=moderate` — same gate CI runs                              |
+| `pnpm registry:sync`   | Regenerate `registry.json` + committed primitives from Supabase                      |
+| `pnpm registry:verify` | Non-mutating; CI-safe drift check (run this before pushing if you've touched the DB) |
+
+### Run every CI gate before pushing
+
+`pnpm check` chains all of the above (except dev/build watch modes) into one command. **It is the local mirror of CI** — if `pnpm check` is green, CI will be too:
+
+```bash
+pnpm check
+# = format:check && lint && lint:md && lint:json
+#   && typecheck && test && audit:check && registry:verify && build
+```
+
+Run it before every push. It's also the recommended pre-PR check; the husky pre-commit hook is the safety net (`lint-staged → typecheck → audit`), not a substitute.
+
+---
+
+## CI workflows
+
+Three workflows enforce the gates that block a merge to `main`. All are in `.github/workflows/`. The full required-check matrix lives in [`CLAUDE.md`](CLAUDE.md) §14.
+
+| Workflow                                                   | Trigger                             | Jobs / required checks                                                                                   |
+| ---------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [`ci.yml`](.github/workflows/ci.yml)                       | push to `main`, PR to `main`        | `Lint`, `Type Check`, `Test`, `Build`, `Security Audit`, `Registry Snapshot`                             |
+| [`lint.yml`](.github/workflows/lint.yml)                   | push to `main`, PR to `main`        | `lint / actionlint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`, `lint / yamllint` |
+| [`claude-review.yml`](.github/workflows/claude-review.yml) | PR open/sync, PR comment, PR review | AI code review on every human comment (advisory, not a merge gate)                                       |
+| [`release.yml`](.github/workflows/release.yml)             | push to `main`                      | Auto-creates a GitHub release when `package.json` version bumps                                          |
+
+Dependency tree inside `ci.yml`:
+
+```text
+Tier 1 (parallel, fast)
+├── Security Audit
+├── Lint
+├── Type Check
+└── Registry Snapshot
+
+Tier 2
+└── Test                   (waits on Lint, Type Check)
+
+Tier 3 — terminal gate
+└── Build                  (waits on Audit, Lint, Type Check, Test, Registry)
+```
+
+`Build` is the slowest — it never starts unless every cheaper signal is green.
 
 ---
 

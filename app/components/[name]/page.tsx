@@ -46,6 +46,26 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-8 py-8">
+      {/* Breadcrumb — wayfinding back to the gallery */}
+      <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
+        <ol className="flex items-center gap-1.5">
+          <li>
+            <a
+              href="/components"
+              className="rounded-md transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            >
+              Components
+            </a>
+          </li>
+          <li aria-hidden="true" className="text-border">
+            /
+          </li>
+          <li aria-current="page" className="font-mono text-foreground">
+            {item.name}
+          </li>
+        </ol>
+      </nav>
+
       {/* Header — always renders (no boundary needed, pure server markup) */}
       <div className="space-y-3">
         <div className="flex items-center gap-3">

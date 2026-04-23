@@ -6,10 +6,27 @@ on:
   pull_request:
     branches: [main]
 
+# Top-level default keeps the entire workflow read-only. Each job
+# re-declares its own permissions so CodeQL
+# (`actions/missing-workflow-permissions`) is satisfied per-job.
+permissions:
+  contents: read
+
+# Job names below are the BARE names ("Build", "Lint", "Test",
+# "Type Check", "Security Audit", "Registry Snapshot") because the
+# org-wide branch-protection rule on `main` requires CI checks under
+# their bare names. NB: this is the OPPOSITE convention from
+# `.github/workflows/lint.yml`, which requires "lint / *" prefixed
+# names. The asymmetry is intentional at the org level — see CLAUDE.md
+# §14 "Org-wide required checks" for the authoritative table of
+# required check names per workflow.
+
 jobs:
   audit:
     name: Security Audit
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
@@ -26,6 +43,8 @@ jobs:
   registry:
     name: Registry Snapshot
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
@@ -44,6 +63,8 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
@@ -59,6 +80,8 @@ jobs:
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
@@ -72,6 +95,11 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    # Tests depend on the code being structurally sound — no point burning
+    # runner minutes on `pnpm test` if eslint or tsc already failed.
+    needs: [lint, typecheck]
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
@@ -85,7 +113,14 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [audit, lint, typecheck, test]
+    # Build is the terminal gate — runs only when every other CI job
+    # has finished successfully. Order in `needs:` is: structural
+    # (lint, typecheck) → behavioural (test) → integrity (audit,
+    # registry). Adding a job above? Add it here too so build still
+    # gates everything.
+    needs: [audit, lint, typecheck, test, registry]
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6

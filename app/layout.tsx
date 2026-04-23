@@ -96,7 +96,9 @@ export const viewport: Viewport = {
 
 const navbar = (
   <Navbar
-    logo={<NyuchiLogo size={24} suffix="design" />}
+    // Full left-side brand lockup — icon + "nyuchi design" wordmark, both
+    // clickable (Nextra auto-links the whole `logo` slot to `/`).
+    logo={<NyuchiLogo size={24} showWordmark suffix="design" />}
     projectLink="https://github.com/nyuchitech/design-portal"
   />
 )

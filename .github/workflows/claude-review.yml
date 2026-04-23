@@ -12,11 +12,14 @@ on:
 
 jobs:
   claude-review:
+    # Review runs on every PR event and every human comment/review on a PR,
+    # regardless of branch name or trigger phrase. Bot comments are skipped
+    # so Claude doesn't react to Vercel/Supabase/dependabot/itself.
     if: |
       (github.event_name == 'pull_request') ||
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude'))
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request != null && github.event.comment.user.type != 'Bot') ||
+      (github.event_name == 'pull_request_review_comment' && github.event.comment.user.type != 'Bot') ||
+      (github.event_name == 'pull_request_review' && github.event.review.user.type != 'Bot')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,13 +30,18 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          trigger_phrase: "@claude"
           prompt: |
-            Review this PR for the design-portal project. Focus on:
+            Review this PR (or respond to this comment/review) for the design-portal project.
+
+            On PR open / synchronize: review the full diff.
+            On a comment or review: read the comment and either answer the question directly or take the action the commenter is asking for (review the surrounding code, propose a patch, etc.). Tie the response back to the conversation thread — don't repeat a full PR review unless asked.
+
+            Focus areas:
             - Code quality and adherence to existing patterns (CVA + Radix + cn())
             - No hardcoded colors — must use CSS custom properties from globals.css
-            - Accessibility: APCA 3.0 AAA contrast, 48px touch targets
+            - Accessibility: APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets
             - Brand wordmarks must be lowercase (mukoko, nyuchi, shamwari, bundu, nhimbe)
             - TypeScript strict mode compliance
             - Security vulnerabilities (OWASP top 10)
             - Registry schema compatibility (shadcn format)
+            - Supabase-first architecture — source code and docs live in the DB, not the filesystem

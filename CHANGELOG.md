@@ -6,6 +6,35 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **`LICENSE`:** the repo was previously unlicensed. Added the MIT License with a note that `/api/v1/stats` usage metrics remain under CC BY 4.0.
+- **`.github/workflows/lint.yml`:** new required-check workflow with four jobs — `actionlint`, `JSON validity`, `prettier`, `markdownlint` — wired to report under the `lint / <tool>` status names the branch protection rules expect.
+- **`.markdownlint-cli2.jsonc`:** explicit markdownlint config so the new job runs with the exact same rules locally and in CI. Existing docs were updated to pass them (blank lines around tables, consistent ordered-list numbering) instead of relaxing the rules.
+- **`.claude/skills/README.md`:** install instructions for the three skills (symlink from a local portal clone, copy via `curl`, or pair with the MCP server). The skills themselves are now in proper `---`-frontmatter format, addressing the "make them installable" request.
+
+### Docs
+
+- **Rewrote `CLAUDE.md`** to match the post-v4.0.26 Supabase-first state (issue #30). Supabase is now documented as the single source of truth for components, docs, brand, architecture, AI instructions, changelog, and fundi; `registry.json` is described as a generated snapshot produced by `pnpm registry:sync` and verified in CI by `pnpm registry:verify`. Directory tree, API table, MCP tools list (18), and pre-commit gates all refreshed. Covered the new `/api/v1/{docs,changelog,fundi,search,ai/instructions,ui/[name]/docs,ui/[name]/versions}` endpoints and the `mukoko://ubuntu` resource.
+- **Corrected the 3D frontend architecture description** in `CLAUDE.md` and `public/llms.txt` to match `get_layer_counts()` (issue #46): ten layers across **five** axes — X (L2/L3/L6/L7 composition), Y (L1 tokens / L4 safety / L5 resilience), Z (L8 assurance), Outside (L9 fundi), Documentation (L10). The previous "Outside = docs" / "Meta = templates" wording was wrong.
+- **`README.md`:** fixed the MCP config example (`nyuchi-design-portal`, matching `.claude/settings.json`), expanded the tool table to all 18 MCP tools, and refreshed the `/api/v1/` endpoint table.
+- **`CONTRIBUTING.md`, `.claude/skills/*`, `.github/pull_request_template.md`:** replaced `registry:build` references with the correct `registry:sync` / `registry:verify` flow and the Supabase-first component authoring steps.
+
+### Security
+
+- **`/security-review` follow-through (fundi edge function):** added Bearer-token auth on `POST /functions/v1/fundi/heal` matching either `SUPABASE_SERVICE_ROLE_KEY` or an optional `FUNDI_HEAL_TOKEN`; `/heal` now returns 401 without one. Also added a strict allowlist regex (`/^[a-z0-9._-]{1,40}$/i`) on the `scope` field at ingest plus a 200-char cap on `symptom`, so attacker-controlled values can't reach the GitHub label / issue-body sinks malformed.
+- **CLAUDE.md §15 rule 22 (new policy):** security findings discovered in any review/audit (`/security-review`, manual, CodeQL, Dependabot, `pnpm audit`) must be fixed in the current PR — never deferred. Codified to prevent the "scope creep / file follow-up issue" pattern that leaves vulnerable code in `main`.
+- **4 high + 1 moderate transitive CVEs cleared via `pnpm.overrides`** (caught by audit while applying the policy above): bumped `@xmldom/xmldom` floor to `^0.9.10` (xmldom GHSA-2v35-w6hq-6mfw, GHSA-f6ww-3ggp-fr8h, GHSA-x6wf-f3px-wcqx, GHSA-j759-j44w-7fr8 — XML injection / uncontrolled recursion via `nextra → mathjax → speech-rule-engine → @xmldom/xmldom`); added `uuid: "^14.0.0"` (GHSA-w5hq-g745-h8pq — missing buffer bounds check via `nextra → @theguild/remark-mermaid → mermaid → uuid`).
+- Added `pnpm.overrides` for `hono` (→^4.12.14), `dompurify` (→^3.4.0), and `sanitize-html` (→^2.17.3) to clear three moderate CVEs that were blocking the Security Audit CI job and the local pre-commit `pnpm audit` gate. `pnpm audit --audit-level=moderate` now returns clean.
+- **Workflow permissions hardening:** every job in `.github/workflows/ci.yml` now declares `permissions: contents: read` explicitly, and a top-level default does the same. Resolves six medium CodeQL `actions/missing-workflow-permissions` findings against `main`.
+- **`robots.txt`:** removed the stale `/api/v1/db` `Disallow` (the route no longer exists) and expanded the explicit AI-crawler allow-list — `ClaudeBot`, `Claude-Web`, `anthropic-ai`, `GPTBot`, `ChatGPT-User`, `OAI-SearchBot`, `Googlebot`, `Google-Extended`, `GoogleOther`, `PerplexityBot`, `Perplexity-User`, `FacebookBot`, `Meta-ExternalAgent`, `Meta-ExternalFetcher`, `Applebot`, `Applebot-Extended`, `CCBot`, `cohere-ai`, `Diffbot`, `DuckAssistBot`, `Bytespider`, `YouBot`, `Amazonbot`. The design system is built for AI consumption and the robots file now says so clearly.
+- **`SECURITY.md` rewritten** with concrete response timelines, scoped surface, safe-harbour clause for good-faith security research, explicit out-of-scope items, and a reference to the live `/api/v1/changelog` endpoint instead of a hardcoded version.
+- **`public/llms.txt` refactored** so every count and version points to a live API endpoint. No hardcoded registry totals remain — crawlers / agents are instructed to fetch `/api/v1/stats` for the authoritative numbers.
+
+### Changed
+
+- Applied latest patch/minor dependency upgrades per the upgrade-first policy: `next` 16.2.3 → 16.2.4, `typescript` 6.0.2 → 6.0.3, `vitest` 4.1.4 → 4.1.5, `tailwindcss` 4.2.2 → 4.2.4, `@supabase/supabase-js` 2.103.0 → 2.104.0, `@base-ui/react` 1.3.0 → 1.4.1, `typescript-eslint` 8.58.2 → 8.59.0, `pagefind` 1.5.0 → 1.5.2, plus prettier, eslint, postcss, autoprefixer, react-hook-form, shadcn CLI. `vite` / `@vitejs/plugin-react` remain pinned pending vitest@5.
+
 ## [4.0.26] - 2026-04-14
 
 ### Added
