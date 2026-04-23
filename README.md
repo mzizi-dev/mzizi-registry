@@ -1,4 +1,4 @@
-# nyuchi design portal
+# Nyuchi Design Portal
 
 > The canonical design system for the bundu ecosystem — powering mukoko (17 consumer mini-apps), nyuchi (7 enterprise products), and sister brands. Component registry, brand documentation, architecture reference, AI-native tooling, and developer portal.
 
