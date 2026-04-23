@@ -13,7 +13,7 @@ info:
 
     **Base URL:** `https://design.nyuchi.com/api/v1`
 
-    **Registry:** 545 stable items across 10 architecture layers (served from Supabase `components` table)
+    **Registry:** the stable registry across 10 architecture layers — served from the Supabase `components` table (live count via `GET /api/v1/stats` → `stable`; counts are never hardcoded in this spec so it cannot drift from the database)
 
     **MCP Server:** `https://design.nyuchi.com/mcp` (Streamable HTTP transport)
   contact:
@@ -98,8 +98,9 @@ paths:
     get:
       summary: Component Registry Index
       description: |
-        Returns metadata for all 545 stable registry items across 10 architecture layers.
-        Reads from Supabase. Returns 503 if database is not configured.
+        Returns metadata for every stable registry item across 10 architecture layers
+        (live count from Supabase — query `GET /api/v1/stats` for the current total).
+        Returns 503 if the database is not configured.
       operationId: getRegistryIndex
       tags: [Registry]
       responses:
@@ -836,7 +837,7 @@ components:
           example: "https://design.nyuchi.com"
         items:
           type: array
-          minItems: 545
+          minItems: 1
           items:
             $ref: "#/components/schemas/RegistryItemSummary"
 

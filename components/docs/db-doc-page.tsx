@@ -134,8 +134,10 @@ export async function DbDocPage({ slug }: { slug: string }) {
 
       <div
         className="prose prose-neutral dark:prose-invert max-w-none"
-        // Body is sanitised by renderMarkdown via sanitize-html.
-        dangerouslySetInnerHTML={{ __html: renderMarkdown(page.body) }}
+        // Content is sanitised by renderMarkdown via sanitize-html.
+        // Column is `content` in Supabase (was renamed from `body`; see
+        // commit fixing the type drift that caused DB pages to render empty).
+        dangerouslySetInnerHTML={{ __html: renderMarkdown(page.content) }}
       />
     </article>
   )

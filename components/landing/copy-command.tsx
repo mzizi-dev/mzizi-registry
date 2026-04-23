@@ -3,9 +3,12 @@
 import { useState } from "react"
 import { Check, Copy } from "lucide-react"
 
-export function CopyCommand() {
+export function CopyCommand({
+  command = "npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button",
+}: {
+  command?: string
+} = {}) {
   const [copied, setCopied] = useState(false)
-  const command = "npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button"
 
   return (
     <button

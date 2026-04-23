@@ -87,6 +87,18 @@ const nextConfig = {
       },
     ]
   },
+
+  // ── Permanent redirects — /design/* consolidated under /foundations ──
+  // Issue #48. The old /design route group hosted only Tokens and Icons,
+  // which are both foundational concerns. Merging them into /foundations
+  // gives one IA location and clears a duplicated top-level nav item.
+  async redirects() {
+    return [
+      { source: "/design", destination: "/foundations", permanent: true },
+      { source: "/design/tokens", destination: "/foundations/tokens", permanent: true },
+      { source: "/design/icons", destination: "/foundations/icons", permanent: true },
+    ]
+  },
 }
 
 export default withNextra(nextConfig)

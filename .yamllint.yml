@@ -1,0 +1,46 @@
+# yamllint config for the Nyuchi Design Portal.
+#
+# Goals: catch real YAML mistakes (indentation drift, duplicate keys,
+# invalid syntax) while not fighting the conventions GitHub Actions
+# workflows already use (truthy values like `on:` / `true`, long lines
+# in run-block scripts, trailing spaces in here-docs, etc.).
+
+extends: default
+
+ignore: |
+  .next/
+  node_modules/
+  public/_pagefind/
+  pnpm-lock.yaml
+
+rules:
+  # Workflows need `on:` as a top-level key, which yamllint's default
+  # truthy rule mistakes for a YAML 1.1 boolean. Exempt `on` and `off`.
+  truthy:
+    allowed-values: ["true", "false"]
+    check-keys: false
+
+  # GitHub Actions step scripts and long URLs in run blocks routinely
+  # exceed 80 cols; fighting this is pointless.
+  line-length: disable
+
+  # Workflows and configs frequently start documents without `---`.
+  document-start: disable
+
+  # Be permissive about indentation — both 2-space and
+  # sequence-inside-mapping-indented styles are widely used in Actions.
+  indentation:
+    indent-sequences: consistent
+    spaces: 2
+
+  # Bracket / brace spacing is a style preference; skip.
+  braces: disable
+  brackets: disable
+
+  # Comments don't need to begin with a space after `#` in every case
+  # (shebang-style `#!/usr/bin/env ...` etc.).
+  comments:
+    min-spaces-from-content: 1
+    require-starting-space: false
+
+  comments-indentation: disable

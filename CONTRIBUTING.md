@@ -58,10 +58,10 @@ git checkout -b feature/your-feature
 ### Before You Code
 
 1. **Read [CLAUDE.md](CLAUDE.md)** -- it is the definitive reference for this codebase, covering architecture, conventions, and the full design system specification
-2. **Understand the [Five African Minerals design system](https://design.nyuchi.com/brand/colors)** -- all colors come from five mineral-named tokens
-3. **Browse existing components** in `components/ui/` to understand the CVA + Radix + cn() pattern
-4. **Check `registry.json`** before modifying components to understand the dependency graph
-5. **Understand the DB-first architecture** -- API routes read from Supabase, not hardcoded objects
+1. **Understand the [Five African Minerals design system](https://design.nyuchi.com/brand/colors)** -- all colors come from five mineral-named tokens
+1. **Browse existing components** in `components/ui/` to understand the CVA + Radix + cn() pattern
+1. **Check `registry.json`** before modifying components to understand the dependency graph
+1. **Understand the DB-first architecture** -- API routes read from Supabase, not hardcoded objects
 
 ### Key Principles
 
@@ -148,7 +148,7 @@ function MyComponent({
 export { MyComponent, myComponentVariants }
 ```
 
-2. **Add an entry to `registry.json`**:
+1. **Add an entry to `registry.json`**:
 
 ```json
 {
@@ -166,15 +166,15 @@ export { MyComponent, myComponentVariants }
 }
 ```
 
-3. **Upsert the component** into Supabase (`components` table). The portal serves it from the DB on the next request — no rebuild required.
+1. **Upsert the component** into Supabase (`components` table). The portal serves it from the DB on the next request — no rebuild required.
 
-4. **Run the static registry build**:
+1. **Sync the registry snapshot** (regenerates `registry.json` + any committed portal primitives from Supabase; CI fails on drift via `pnpm registry:verify`):
 
 ```bash
-pnpm registry:build
+pnpm registry:sync
 ```
 
-5. **Add tests** in `__tests__/components/`:
+1. **Add tests** in `__tests__/components/`:
 
 ```tsx
 import { render, screen } from "@testing-library/react"
@@ -188,7 +188,7 @@ describe("MyComponent", () => {
 })
 ```
 
-6. **Verify** the component serves correctly:
+1. **Verify** the component serves correctly:
 
 ```bash
 curl http://localhost:11736/api/v1/ui/my-component
@@ -204,7 +204,7 @@ Blocks are complete page compositions (dashboards, login pages, settings panels,
    - Chart blocks go in the appropriate chart type directory
    - Page blocks go in the appropriate page type directory
 
-2. **Add to `registry.json`** with type `registry:block`:
+1. **Add to `registry.json`** with type `registry:block`:
 
 ```json
 {
@@ -222,7 +222,7 @@ Blocks are complete page compositions (dashboards, login pages, settings panels,
 }
 ```
 
-3. **Seed the database and rebuild the registry** as with UI components.
+1. **Seed the database and rebuild the registry** as with UI components.
 
 ---
 
@@ -243,7 +243,7 @@ The portal uses Nextra (MDX) for documentation pages. There are 71 pages across 
    - `/architecture` -- ecosystem architecture
    - `/registry` -- registry internals (schema, MCP, contributing, consuming)
 
-2. **Create the MDX file** in the appropriate `app/<section>/` directory:
+1. **Create the MDX file** in the appropriate `app/<section>/` directory:
 
 ```mdx
 # Page Title
@@ -255,7 +255,7 @@ Description of the page content.
 Content here.
 ```
 
-3. **Update the section's `_meta.ts`** to include navigation for your new page.
+1. **Update the section's `_meta.ts`** to include navigation for your new page.
 
 ---
 
@@ -290,39 +290,89 @@ __tests__/
 
 ## Pull Request Process
 
-### Before Submitting
+### Before submitting — run the same gates CI runs
 
-Run the full CI pipeline locally:
+Use the single `pnpm check` script. It chains every CI gate locally so you catch problems before they reach the runner. **Run it before every push** — the husky pre-commit hook is a safety net, not a substitute.
 
 ```bash
-pnpm lint && pnpm typecheck && pnpm test && pnpm build
+pnpm check
 ```
 
-All four must pass. The CI pipeline runs lint, typecheck, and test in parallel, then build.
+That's equivalent to:
+
+```bash
+pnpm format:check    # prettier check (no writes)
+pnpm lint            # ESLint, zero warnings
+pnpm lint:md         # markdownlint-cli2
+pnpm lint:json       # every tracked JSON parses
+pnpm typecheck       # tsc --noEmit
+pnpm test            # vitest single run
+pnpm audit:check     # pnpm audit --audit-level=moderate
+pnpm registry:verify # CI fails if registry.json drifts from Supabase
+pnpm build           # next build (terminal gate)
+```
+
+If any step fails, `pnpm check` exits non-zero on the first failure. Fix forwards and re-run.
+
+#### One-time tooling setup
+
+| Tool                 | Install                                                                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Node 22 + pnpm 10.33 | `nvm use 22` then `corepack enable`                                                                                                        |
+| `markdownlint-cli2`  | `pnpm install` (committed devDep)                                                                                                          |
+| `prettier`, `eslint` | `pnpm install` (committed devDeps)                                                                                                         |
+| `actionlint`         | `brew install actionlint` or `bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)` |
+| `yamllint`           | `pip install yamllint==1.35.1` (one-time)                                                                                                  |
+
+The two non-`pnpm` tools (`actionlint`, `yamllint`) are run on CI by the `lint` workflow but aren't strictly required locally — they're pure static checks on YAML files you'd typically run as a sanity check after editing `.github/workflows/*.yml` or `.yamllint.yml`. Install them if you regularly touch CI configs; otherwise CI will catch issues.
+
+#### Quick fix-everything
+
+If `pnpm check` complains about formatting or auto-fixable lint, run:
+
+```bash
+pnpm format    # auto-fix prettier
+pnpm lint:fix  # auto-fix ESLint
+pnpm check     # re-run full gate
+```
+
+### CI workflows that run on your PR
+
+Detailed in [`README.md`](README.md#ci-workflows). Required for merge:
+
+- **`ci.yml`** — `Lint`, `Type Check`, `Test`, `Build`, `Security Audit`, `Registry Snapshot`
+- **`lint.yml`** — `lint / actionlint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`, `lint / yamllint`
+- **`CodeQL`** — `Analyze (actions)`, `Analyze (javascript-typescript)`
+
+`Claude Code Review` runs on every PR comment but is advisory, not a merge gate. The dependency tree inside `ci.yml` is:
+
+```text
+Tier 1 parallel:  Audit, Lint, Type Check, Registry Snapshot
+Tier 2:           Test                              (waits on Lint, Type Check)
+Tier 3 terminal:  Build                             (waits on all of the above)
+```
 
 ### PR Checklist
 
-- [ ] Code follows TypeScript strict mode -- no untyped `any`
-- [ ] Styling uses Tailwind utility classes only -- no inline styles or hardcoded colors
+- [ ] `pnpm check` passes locally (single command — see above)
+- [ ] Code follows TypeScript strict mode — no untyped `any`
+- [ ] Styling uses Tailwind utility classes only — no inline styles or hardcoded hex colors
 - [ ] Components use CVA + cn() + data-slot pattern
-- [ ] New components are upserted into the Supabase `components` table
-- [ ] `pnpm registry:sync` run locally (regenerates `registry.json` snapshot from DB)
+- [ ] New components are upserted into the Supabase `components` table; `pnpm registry:sync` regenerates `registry.json`
 - [ ] Tests added for new functionality
-- [ ] All existing tests pass (`pnpm test`)
-- [ ] Lint passes (`pnpm lint`)
-- [ ] Type check passes (`pnpm typecheck`)
-- [ ] Build succeeds (`pnpm build`)
-- [ ] Accessibility reviewed (APCA contrast, touch targets, keyboard nav)
-- [ ] Brand wordmarks are lowercase (mukoko, nyuchi, shamwari, bundu, nhimbe)
+- [ ] Accessibility reviewed (APCA contrast, 56px default / 48px minimum touch targets, keyboard nav)
+- [ ] Brand wordmarks are lowercase (`mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`)
+- [ ] Buttons are pill-shaped (`rounded-full`)
+- [ ] Any security finding from `/security-review` is fixed in this PR (per CLAUDE.md §15 rule 22 — never deferred)
 
 ### Review Process
 
 1. Submit your PR with a clear description explaining the "why"
-2. Reference any related issues
-3. CI will run automatically (lint, typecheck, test, build)
-4. An AI code review via Claude will check design system adherence, accessibility, and code quality
-5. A maintainer will review and provide feedback
-6. Once approved and CI passes, a maintainer will merge
+1. Reference any related issues
+1. CI will run automatically (lint, typecheck, test, build)
+1. An AI code review via Claude will check design system adherence, accessibility, and code quality
+1. A maintainer will review and provide feedback
+1. Once approved and CI passes, a maintainer will merge
 
 ---
 
@@ -331,17 +381,17 @@ All four must pass. The CI pipeline runs lint, typecheck, and test in parallel, 
 This project uses semantic versioning. The version number appears in **four places** that must stay in sync:
 
 1. `package.json` -- `version` field
-2. `lib/brand.ts` -- `BRAND_SYSTEM.version`
-3. `lib/architecture.ts` -- version reference
-4. `components/landing/footer.tsx` -- footer display
+1. `lib/brand.ts` -- `BRAND_SYSTEM.version`
+1. `lib/architecture.ts` -- version reference
+1. `components/landing/footer.tsx` -- footer display
 
 Only maintainers create version tags and releases. The release process:
 
 1. Update version in all four locations
-2. Commit: `git commit -m "Release vX.Y.Z"`
-3. Tag: `git tag vX.Y.Z`
-4. Push: `git push && git push --tags`
-5. GitHub Actions validates and creates the release automatically
+1. Commit: `git commit -m "Release vX.Y.Z"`
+1. Tag: `git tag vX.Y.Z`
+1. Push: `git push && git push --tags`
+1. GitHub Actions validates and creates the release automatically
 
 ---
 

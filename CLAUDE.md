@@ -8,7 +8,7 @@
 
 ## 1. Project Identity
 
-**Nyuchi Design Portal** is the canonical design system, component registry, brand documentation hub, and developer portal for the bundu ecosystem. It serves 545 stable registry items across 10 architecture layers (3D model: X-axis L2→L3→L6→L7 composition, Y-axis L1/L4/L5 foundations, Z-axis L8 runtime, Outside L9 docs, Meta L10 templates) built on the **Five African Minerals** design system, installable via the shadcn CLI:
+**Nyuchi Design Portal** is the canonical design system, component registry, brand documentation hub, and developer portal for the bundu ecosystem. It serves the full stable registry across a 3D frontend architecture — **ten layers across five axes**: X-axis (horizontal composition — L2 primitives → L3 brand → L6 pages → L7 shell), Y-axis (vertical infrastructure — L1 tokens, L4 safety, L5 resilience), Z-axis (depth observation — L8 assurance), Outside (L9 fundi — self-healing actors), and Documentation (L10). Built on the **Five African Minerals** design system, installable via the shadcn CLI:
 
 ```
 npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>
@@ -47,7 +47,7 @@ Nyuchi Design Portal exists within a broader ecosystem. Understanding the relati
 design-portal (this repo)
     │
     ├── Defines: Five African Minerals palette, typography, component API
-    ├── Serves: 545 stable registry items across 10 architecture layers via shadcn CLI / API
+    ├── Serves: the full stable registry across 10 architecture layers via shadcn CLI / API (live count: `GET /api/v1/stats`)
     │
     └── Consumed by:
         ├── mukoko-weather  (weather.mukoko.com)
@@ -64,41 +64,51 @@ design-portal (this repo)
 
 ## 3. Tech Stack
 
-| Layer                | Technology                                      | Version                              |
-| -------------------- | ----------------------------------------------- | ------------------------------------ |
-| Framework            | Next.js (App Router)                            | 16.2.2                               |
-| Language             | TypeScript (strict mode)                        | 6.0.2                                |
-| Package Manager      | pnpm                                            | —                                    |
-| Styling              | Tailwind CSS + CSS custom properties            | 4.2.2                                |
-| Component Primitives | Radix UI + Base UI                              | radix-ui 1.4.3, @base-ui/react 1.3.0 |
-| Variant Management   | class-variance-authority (CVA)                  | 0.7.1                                |
-| Class Composition    | clsx + tailwind-merge                           | via `cn()` in `lib/utils.ts`         |
-| Icons                | Lucide React                                    | 1.7.0                                |
-| Theming              | next-themes                                     | 0.4.6                                |
-| Forms                | react-hook-form + zod                           | 7.72.0 / 4.3.6                       |
-| Charts               | Recharts                                        | 3.8.1                                |
-| Testing              | Vitest + Testing Library                        | 4.1.2                                |
-| Observability        | Structured logging (`lib/observability.ts`)     | Built-in                             |
-| Resilience           | Circuit breaker, retry, timeout, fallback chain | Built-in (`lib/`)                    |
-| Database             | Supabase (PostgreSQL)                           | 2.101.1                              |
-| MCP Server           | @modelcontextprotocol/sdk (Streamable HTTP)     | 1.29.0                               |
-| CI/CD                | GitHub Actions + Vercel                         | —                                    |
-| Deployment           | Vercel                                          | —                                    |
+| Layer                | Technology                                     | Version                                    |
+| -------------------- | ---------------------------------------------- | ------------------------------------------ |
+| Framework            | Next.js (App Router) + Nextra MDX docs         | 16.2.4                                     |
+| Language             | TypeScript (strict mode)                       | 6.0.3                                      |
+| Package Manager      | pnpm                                           | 10.33.0                                    |
+| Styling              | Tailwind CSS + CSS custom properties           | 4.2.4                                      |
+| Component Primitives | Radix UI + Base UI                             | radix-ui 1.4.3, @base-ui/react 1.4.1       |
+| Variant Management   | class-variance-authority (CVA)                 | 0.7.1                                      |
+| Class Composition    | clsx + tailwind-merge                          | via `cn()` in `lib/utils.ts`               |
+| Icons                | Lucide React                                   | 1.8.0                                      |
+| Theming              | next-themes                                    | 0.4.6                                      |
+| Forms                | react-hook-form + zod                          | 7.73.1 / 4.3.6                             |
+| Charts               | Recharts                                       | 3.8.1                                      |
+| Testing              | Vitest + Testing Library                       | 4.1.5                                      |
+| Observability        | Structured logging (`lib/observability.ts`)    | Built-in                                   |
+| Metrics              | MCP usage tracking (`lib/metrics.ts`)          | Built-in                                   |
+| Site search          | Pagefind (built in `postbuild` step)           | 1.5.2, static index in `public/_pagefind/` |
+| Database             | Supabase (PostgreSQL) — single source of truth | @supabase/supabase-js 2.104.0              |
+| MCP Server           | @modelcontextprotocol/sdk (Streamable HTTP)    | 1.29.0                                     |
+| CI/CD                | GitHub Actions + Vercel                        | —                                          |
+| Deployment           | Vercel                                         | —                                          |
 
 ---
 
 ## 4. Commands
 
 ```bash
-pnpm dev              # Start dev server (Next.js)
-pnpm build            # Production build
+pnpm dev              # Start dev server on PORT (default 11736)
+pnpm build            # Production build (postbuild runs Pagefind to index .next/server/app)
+pnpm start            # Start production server on PORT (default 11736)
 pnpm lint             # ESLint
-pnpm test             # Run Vitest test suite
-pnpm test:watch       # Run tests in watch mode
-pnpm typecheck        # TypeScript type checking
-pnpm start            # Start production server
-pnpm registry:build   # Generate static registry JSON files into public/r/
+pnpm lint:fix         # ESLint with --fix
+pnpm typecheck        # TypeScript type checking (tsc --noEmit)
+pnpm test             # Run Vitest test suite once
+pnpm test:watch       # Vitest in watch mode
+pnpm registry:sync    # Regenerate registry.json (and committed primitives in components/ui/) from Supabase
+pnpm registry:verify  # Non-mutating check — fails CI if registry.json drifts from Supabase
+pnpm audit:check      # pnpm audit --audit-level=moderate --ignore-registry-errors
 ```
+
+Sync flags (passed to `tsx scripts/sync-registry.ts`):
+
+- `--ui-only` — only refresh `components/ui/*` files
+- `--json-only` — only refresh `registry.json` snapshot
+- `--check` — same as `pnpm registry:verify`
 
 ---
 
@@ -107,113 +117,99 @@ pnpm registry:build   # Generate static registry JSON files into public/r/
 ```
 design-portal/
 ├── .claude/
-│   ├── settings.json             # MCP server configuration for Claude Code
+│   ├── settings.json                 # MCP server configuration for Claude Code
 │   └── skills/
-│       └── mukoko-design-system.md  # Claude Code skill for design system guidance
+│       ├── mukoko-design-system.md   # Design system guidance skill
+│       ├── ecosystem-app-setup.md    # Bootstrapping a new bundu ecosystem app
+│       └── scaffold-component.md     # Pattern for adding a new registry component
 ├── .github/
 │   └── workflows/
-│       ├── ci.yml                # CI: lint, typecheck, test, build on PRs
-│       ├── claude-review.yml     # AI code review on PRs via Claude
-│       └── release.yml           # Release: validate + create GitHub release on tags
-├── __tests__/                    # Vitest test suite
-│   ├── api/                      # API route tests
-│   ├── brand/                    # Brand data integrity tests
-│   └── components/               # Component rendering tests
-├── app/                          # Next.js App Router
+│       ├── ci.yml                    # Lint, typecheck, test, build, audit
+│       ├── claude-review.yml         # AI code review on PRs via Claude
+│       └── release.yml               # Validate + create GitHub release on tags
+├── .husky/
+│   └── pre-commit                    # lint-staged → typecheck → audit
+├── __tests__/                        # Vitest test suite (currently 3 files)
+│   └── api/
+│       ├── brand-route.test.ts       # /api/v1/brand response & headers
+│       ├── registry-route.test.ts    # /api/v1/ui registry integrity
+│       └── v1/
+│           └── architecture-routes.test.ts  # v1 route file existence
+├── app/                              # Next.js App Router (Nextra MDX-enabled)
+│   ├── _meta.ts                      # Nextra navigation metadata
+│   ├── globals.css                   # Theme tokens + Tailwind imports (token SOURCE OF TRUTH)
+│   ├── layout.tsx                    # Root layout (fonts, ThemeProvider)
+│   ├── page.mdx                      # Landing page
+│   ├── error.tsx, global-error.tsx, not-found.tsx
+│   ├── icon.svg, apple-icon.svg
+│   ├── robots.ts                     # robots.txt generator
+│   ├── sitemap.ts                    # sitemap.xml generator
 │   ├── api/
-│   │   └── v1/                   # Nyuchi Design Portal API v1
-│   │       ├── route.ts          # GET /api/v1 — discovery document
-│   │       ├── brand/route.ts    # GET /api/v1/brand — brand system JSON
-│   │       ├── ui/
-│   │       │   ├── route.ts      # GET /api/v1/ui — registry index
-│   │       │   └── [name]/route.ts # GET /api/v1/ui/{name} — component
-│   │       ├── ecosystem/route.ts  # GET /api/v1/ecosystem — principles
-│   │       ├── data-layer/route.ts # GET /api/v1/data-layer — data layer spec
-│   │       ├── pipeline/route.ts   # GET /api/v1/pipeline — open data pipeline
-│   │       ├── sovereignty/route.ts # GET /api/v1/sovereignty — tech sovereignty
-│   │       └── health/route.ts     # GET /api/v1/health — health check
-│   ├── architecture/             # Architecture documentation pages
-│   │   ├── layout.tsx            # Shared layout (Header + Footer)
-│   │   ├── page.tsx              # /architecture — overview
-│   │   ├── principles/page.tsx   # /architecture/principles
-│   │   ├── data-layer/page.tsx   # /architecture/data-layer
-│   │   ├── pipeline/page.tsx     # /architecture/pipeline
-│   │   └── sovereignty/page.tsx  # /architecture/sovereignty
-│   ├── brand/                    # Brand documentation pages
-│   │   ├── layout.tsx            # Shared brand layout (Header + Footer)
-│   │   ├── loading.tsx           # Skeleton loading state
-│   │   ├── page.tsx              # /brand — ecosystem overview
-│   │   ├── colors/page.tsx       # /brand/colors — Five African Minerals palette
-│   │   ├── components/page.tsx   # /brand/components — component visual specs
-│   │   └── guidelines/page.tsx   # /brand/guidelines — usage rules, accessibility
-│   ├── layout.tsx                # Root layout (fonts, ThemeProvider)
-│   ├── page.tsx                  # Landing page
-│   ├── globals.css               # Theme tokens + Tailwind imports (SOURCE OF TRUTH)
-│   ├── error.tsx                 # Route-level error boundary
-│   ├── global-error.tsx          # Global error handler
-│   └── not-found.tsx             # 404 page
+│   │   ├── openapi/route.ts          # OpenAPI document
+│   │   └── v1/                       # Nyuchi Design Portal API v1 (see §9)
+│   │       ├── route.ts              # Discovery document
+│   │       ├── ai/instructions/      # AI instruction sets (mcp-server / claude / copilot)
+│   │       ├── brand/                # Brand system
+│   │       ├── changelog/            # Releases (root + [version])
+│   │       ├── data-layer/, ecosystem/, pipeline/, sovereignty/  # Architecture topics
+│   │       ├── docs/                 # Documentation pages (root + [slug])
+│   │       ├── fundi/                # Self-healing issue tracking (root + [id] + stats)
+│   │       ├── health/               # Health check
+│   │       ├── search/               # Cross-resource search
+│   │       ├── stats/                # Live counts + layer breakdown
+│   │       └── ui/                   # Registry: list, [name], [name]/docs, [name]/versions
+│   ├── mcp/route.ts                  # MCP server HTTP endpoint
+│   ├── architecture/                 # MDX docs (page, layers, fundi, component-backlinks)
+│   ├── brand/                        # MDX docs
+│   ├── api-docs/, blocks/, charts/, components/, content/,
+│   ├── design/, docs/, foundations/, observability/, patterns/, registry/   # MDX doc routes
 ├── components/
-│   ├── brand/                    # Brand components
-│   │   ├── mukoko-logo.tsx       # Official beehive logo with wordmark
-│   │   ├── brand-card.tsx        # Ecosystem brand card
-│   │   ├── color-swatch.tsx      # Interactive color swatch (copy-to-clipboard)
-│   │   ├── mineral-strip.tsx     # 4px mineral stripe (5 colors)
-│   │   ├── spacing-scale.tsx     # Spacing scale visualization
-│   │   ├── token-table.tsx       # Design token table (copy-on-click)
-│   │   └── type-scale.tsx        # Typography scale display
-│   ├── landing/                  # Landing page sections
-│   │   ├── header.tsx            # Navigation with theme toggle
-│   │   ├── hero.tsx              # Hero with mineral color showcase
-│   │   ├── install-steps.tsx     # 3-step installation guide
-│   │   ├── component-showcase.tsx
-│   │   ├── component-catalog.tsx # Searchable catalog with categories
-│   │   └── footer.tsx
-│   ├── patterns/                 # Pattern demo components
-│   │   ├── ai-safety-demo.tsx    # AI safety pattern demo
-│   │   ├── architecture-demo.tsx # Architecture pattern demo
-│   │   ├── chaos-demo.tsx        # Chaos engineering demo
-│   │   ├── circuit-breaker-demo.tsx # Circuit breaker pattern demo
-│   │   ├── code-block.tsx        # Code block display
-│   │   ├── component-pattern-demo.tsx # Component pattern demo
-│   │   ├── error-boundary-demo.tsx # Error boundary demo
-│   │   ├── lazy-loading-demo.tsx # Lazy loading demo
-│   │   └── observability-demo.tsx # Observability demo
-│   ├── ui/                       # 169 UI components
-│   │   ├── button.tsx            # CVA variants, Slot polymorphism
-│   │   ├── card.tsx, dialog.tsx, input.tsx, ...
-│   │   └── [60+ component files]
-│   ├── theme-provider.tsx        # next-themes wrapper
-│   └── theme-toggle.tsx          # Light/dark mode toggle
+│   ├── docs/                         # DB-driven docs renderers (db-doc-page, db-changelog)
+│   ├── landing/                      # Landing sections (header, hero, footer, install-steps,
+│   │                                 #   ai-native-section, copy-command, explore-section,
+│   │                                 #   component-catalog, component-showcase)
+│   ├── layout/                       # mineral-strip.tsx, nyuchi-logo.tsx
+│   ├── patterns/                     # Pattern demos (architecture, observability,
+│   │                                 #   error-boundary, lazy-loading, component-pattern, code-block)
+│   ├── playground/                   # Interactive component gallery + API tester
+│   ├── ui/                           # ~35 portal primitives (the only registry items committed
+│   │                                 #   to disk; the other ~510 live only in Supabase
+│   │                                 #   and are served via /api/v1/ui)
+│   ├── error-boundary.tsx, lazy-section.tsx, section-error-boundary.tsx
+│   ├── theme-provider.tsx, theme-toggle.tsx
+│   └── example.tsx
 ├── hooks/
-│   ├── use-toast.ts              # Toast notification state (reducer pattern)
-│   └── use-mobile.ts             # Mobile breakpoint detection (768px)
+│   ├── use-mobile.ts                 # Mobile breakpoint (768px)
+│   └── use-memory-pressure.ts        # Memory pressure observer
 ├── lib/
-│   ├── utils.ts                  # cn() utility (clsx + tailwind-merge)
-│   ├── brand.ts                  # Brand data module (SOURCE OF TRUTH for brand system)
-│   ├── architecture.ts           # Architecture data module (SOURCE OF TRUTH for ecosystem architecture)
-│   ├── observability.ts          # Structured logging with [mukoko] prefix
-│   ├── circuit-breaker.ts        # Circuit breaker pattern for external calls
-│   ├── retry.ts                  # Retry with exponential backoff
-│   ├── timeout.ts                # Request timeout utilities
-│   ├── fallback-chain.ts         # Fallback chain pattern
-│   ├── chaos.ts                  # Chaos engineering utilities
-│   ├── ai-safety.ts              # AI safety guardrails
-│   └── mcp-server.ts             # MCP server factory (served at /mcp)
+│   ├── utils.ts                      # cn() utility (clsx + tailwind-merge)
+│   ├── observability.ts              # Structured logging with [mukoko] prefix
+│   ├── metrics.ts                    # MCP/API usage tracking
+│   ├── mcp-server.ts                 # MCP server factory (served at /mcp)
+│   └── db/                           # Supabase data access — SOURCE OF TRUTH
+│       ├── client.ts                 # Browser-side cache (localStorage)
+│       ├── index.ts                  # Server-side query functions
+│       └── types.ts                  # ComponentRow, ComponentDocRow, etc.
 ├── scripts/
-│   └── build-registry.js         # Static registry builder → public/r/
+│   ├── sync-registry.ts              # Generate registry.json + components/ui/* from Supabase
+│   └── setup-github-labels.sh        # One-shot label provisioning
 ├── public/
-│   ├── r/                        # Generated static registry JSON (gitignored)
-│   └── icons/                    # Favicon assets
-├── registry.json                 # Component registry manifest (SOURCE OF TRUTH)
-├── openapi.yaml                  # OpenAPI 3.1 specification for /api/v1/
-├── vitest.config.ts              # Vitest configuration
-├── vitest.setup.ts               # Test setup (jest-dom matchers)
-├── components.json               # shadcn CLI configuration
-├── next.config.mjs               # Next.js config
-├── tsconfig.json                 # TypeScript config (strict, path aliases)
-├── postcss.config.mjs            # PostCSS with @tailwindcss/postcss
-└── package.json                  # Dependencies and scripts (v4.0.26)
+│   ├── _pagefind/                    # Static search index (built by postbuild)
+│   ├── icons/                        # Favicon assets
+│   └── llms.txt                      # LLM-readable registry summary
+├── registry.json                     # Generated snapshot of Supabase `components` (CI verifies drift)
+├── openapi.yaml                      # OpenAPI 3.1 specification for /api/v1/
+├── vitest.config.ts, vitest.setup.ts
+├── components.json                   # shadcn CLI configuration
+├── next.config.mjs, tsconfig.json, postcss.config.mjs, eslint.config.mjs, .prettierrc
+└── package.json                      # v4.0.26
 ```
+
+> **Note on `registry.json`:** post-v4.0.26 the authoritative registry lives in the
+> Supabase `components` table. `registry.json` is a committed snapshot so PRs show
+> registry deltas clearly; `pnpm registry:verify` runs in CI to enforce the snapshot
+> stays in sync. Only the ~35 primitives the portal itself imports are written into
+> `components/ui/`; the rest of the stable registry is served only via `/api/v1/ui` (live count from `GET /api/v1/stats`).
 
 ---
 
@@ -221,12 +217,39 @@ design-portal/
 
 ### 6.1 Registry System
 
-The component registry is stored in the `components` Supabase table — 545 stable items with metadata, dependencies, and source code. API responses follow the schema at `https://ui.shadcn.com/schema/registry.json`.
+**Single source of truth: the Supabase `components` table** — the stable registry across 10 architecture layers (live count: `GET /api/v1/stats` → `stable`), with metadata, dependencies, source code, docs, and version history split across:
 
-Components are served two ways:
+| Table                 | Purpose                                                                                 |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| `components`          | Name, type, description, deps, files, source_code, architecture_layer, category, status |
+| `component_docs`      | Use cases, variants, a11y notes (per component)                                         |
+| `component_versions`  | Per-component version history                                                           |
+| `documentation_pages` | Long-form MDX-equivalent docs (10 pages)                                                |
+| `changelog`           | Releases (currently 4.0.0 → 4.0.26)                                                     |
+| `ai_instructions`     | System prompts per target (mcp-server, claude, copilot)                                 |
+| `fundi_issues`        | Self-healing issue tracking                                                             |
+| `brand_*`             | Minerals, semantic colors, typography, spacing, ecosystem brands                        |
+| `architecture_*`      | Principles, data layer, pipeline, sovereignty assessments                               |
 
-1. **Dynamic API** (`app/api/v1/ui/`): Reads `registry.json` at runtime, inlines component source code, serves with CORS headers and 1-hour cache
-2. **Static build** (`scripts/build-registry.js`): Pre-generates JSON files into `public/r/` for CDN serving
+API responses follow the shadcn registry schema at `https://ui.shadcn.com/schema/registry.json`.
+
+**Data flow:**
+
+```
+Supabase (source of truth)
+     │
+     ├── lib/db/index.ts (server-side queries)
+     │     ├──► /api/v1/* (Next.js API routes — CORS + 1h cache)
+     │     ├──► /mcp      (MCP server — tools & resources)
+     │     └──► Server components (architecture / brand / docs MDX pages)
+     │
+     ├── pnpm registry:sync ──► registry.json + components/ui/*  (committed snapshot)
+     │                          (CI runs `pnpm registry:verify` to fail on drift)
+     │
+     └── lib/db/client.ts (browser localStorage cache, fetched from /api/v1/ui)
+```
+
+**`registry.json`** must exist in the repo root, but it is **never hand-edited**. It is regenerated dynamically from Supabase by `pnpm registry:sync` whenever a component is added, modified, or removed in the database. The file is committed so that diffs are visible in PRs and CI can detect drift via `pnpm registry:verify`.
 
 **Registry item schema:**
 
@@ -241,30 +264,46 @@ Components are served two ways:
 }
 ```
 
-**Item types:** `registry:ui` (components), `registry:hook` (hooks), `registry:lib` (utilities)
+**Item types:** `registry:ui` (components), `registry:hook` (hooks), `registry:lib` (utilities), `registry:block` (page blocks)
+
+**Required env vars:**
+
+```
+NEXT_PUBLIC_SUPABASE_URL       — Supabase project URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY  — public anon key (read-only via RLS)
+SUPABASE_SERVICE_ROLE_KEY      — write access; server-only, never expose
+```
 
 ### 6.2 Layered Component Architecture
 
 Every component follows a layered pattern. This is mandatory for all bundu ecosystem apps consuming this registry.
 
-```
-Layer 1: Shared primitives (Button, Input, Card, Badge, etc.)
-    ↓ imported by
-Layer 2: Domain-specific composites (landing sections, feature components)
-    ↓ imported by
-Layer 3: Page orchestrators (compose sections into full pages)
-    ↓ wrapped with
-Layer 4: Error boundaries + loading states (per-section isolation)
-    ↓ rendered by
-Layer 5: Server page wrappers (page.tsx — SEO, data, layout)
-```
+The frontend architecture is a **3D model with ten layers across five axes**. Each component in `components.architecture_layer` (1-10) and `components.layer` (sub-label) sits at exactly one position. Issue #46 tracks moving this mapping into first-class Supabase tables (`architecture_frontend_layers`, `architecture_frontend_axes`); until then the mapping is also enumerated in `get_layer_counts()`.
+
+| #   | sub_label       | Axis          | Covenant                                                 |
+| --- | --------------- | ------------- | -------------------------------------------------------- |
+| 1   | `tokens`        | Y-axis        | Design decisions are data, not code.                     |
+| 2   | `primitive`     | X-axis        | A primitive does one thing well.                         |
+| 3   | `brand`         | X-axis        | A brand component is a primitive with Ubuntu in it.      |
+| 4   | `safety`        | Y-axis        | Nothing harmful reaches the user.                        |
+| 5   | `resilience`    | Y-axis        | Failure in one part never breaks the whole.              |
+| 6   | `pages`         | X-axis        | A page is a composition, not an implementation.          |
+| 7   | `shell`         | X-axis        | The shell holds the product.                             |
+| 8   | `assurance`     | Z-axis        | What breaks is seen before users feel it.                |
+| 9   | `fundi`         | Outside       | Failure is a learning event, not a user-facing incident. |
+| 10  | `documentation` | Documentation | The system documents itself.                             |
+
+**Axis meanings:** X = horizontal composition flow (primitives → brand → pages → shell, what the user sees); Y = vertical infrastructure (tokens, safety, resilience threading through every X-layer); Z = depth observation (assurance watching X and Y without being inside anything); Outside = actors beyond the build (fundi heals autonomously); Documentation = the system describing itself.
 
 **Rules:**
 
-- Components import from the layer below, never sideways or upward
+- Components import from the layer below on the same axis — never sideways or upward
 - Each component is a standalone file
-- Page orchestrators NEVER hardcode rendering logic — they compose imported components
+- L6 pages NEVER hardcode buttons/cards/SVGs — pure composition of L2/L3
+- L1 is the only layer allowed to define CSS values — every other layer consumes via `var()`
+- L3 always destructures `{ log, motion, LiveRegion }` from `useNyuchiHarness`; L2 never imports it
 - All colors and styles come from CSS custom properties in `globals.css`
+- This 3D frontend model is **distinct** from the 7-layer data architecture at `/architecture` (Pod → Relational → Document → Orchestration → Edge → Device → Open Data). Never conflate the two numberings — a component can sit at frontend L3 and read from data L2 without contradiction.
 
 ### 6.3 Component Patterns
 
@@ -319,14 +358,14 @@ function Button({ asChild = false, ...props }) {
 Three layers of error isolation:
 
 1. **Component-level:** Try/catch in data processing, graceful fallbacks
-2. **Route-level:** `app/error.tsx` catches route errors
+2. **Route-level:** `app/error.tsx` catches route errors; `components/section-error-boundary.tsx` isolates failures per landing-page section
 3. **Global:** `app/global-error.tsx` as last resort
 
 **API error handling:**
 
-- Registry API returns proper HTTP status codes (400, 404, 500)
-- File read errors are logged but don't crash the response — missing files are skipped
-- All errors logged with `[mukoko]` prefix for grep-ability
+- API routes return proper HTTP status codes (400, 404, 500, 503 when Supabase env vars are missing)
+- All errors logged via `createLogger("<scope>")` from `lib/observability.ts`, with `[mukoko]` prefix for grep-ability
+- Components and resilience patterns (circuit-breaker, retry, timeout, fallback-chain, ai-safety, chaos) are no longer kept as `lib/*` files in this repo — their canonical source lives in the Supabase `components` table as `registry:lib` items and is installed by consumer apps via the shadcn CLI
 
 ---
 
@@ -337,43 +376,47 @@ This is the canonical design system. All bundu ecosystem apps MUST use these tok
 ### 7.1 Color Palette
 
 **Mineral accent colors** (constant across light/dark):
-| Mineral | Hex | CSS Variable | Usage |
-|---|---|---|---|
-| Cobalt | `#0047AB` | `--color-cobalt` | Primary blue, links, CTAs |
-| Tanzanite | `#B388FF` | `--color-tanzanite` | Purple accent, brand/logo |
-| Malachite | `#64FFDA` | `--color-malachite` | Cyan accent, success states |
-| Gold | `#FFD740` | `--color-gold` | Yellow accent, rewards/highlights |
-| Terracotta | `#D4A574` | `--color-terracotta` | Warm accent, community |
+
+| Mineral    | Hex       | CSS Variable         | Usage                             |
+| ---------- | --------- | -------------------- | --------------------------------- |
+| Cobalt     | `#0047AB` | `--color-cobalt`     | Primary blue, links, CTAs         |
+| Tanzanite  | `#B388FF` | `--color-tanzanite`  | Purple accent, brand/logo         |
+| Malachite  | `#64FFDA` | `--color-malachite`  | Cyan accent, success states       |
+| Gold       | `#FFD740` | `--color-gold`       | Yellow accent, rewards/highlights |
+| Terracotta | `#D4A574` | `--color-terracotta` | Warm accent, community            |
 
 **Semantic color tokens** (theme-adaptive via CSS custom properties):
-| Token | Light | Dark | Usage |
-|---|---|---|---|
-| `--background` | `#FAF9F5` (warm cream) | `#0A0A0A` (deep night) | Page background |
-| `--foreground` | `#141413` | `#F5F5F4` | Primary text |
-| `--card` | `#FFFFFF` | `#141414` | Card surfaces |
-| `--muted` | `#F3F2EE` | `#1E1E1E` | Subdued backgrounds |
-| `--muted-foreground` | `#5C5B58` | `#9A9A95` | Secondary text |
-| `--border` | `rgba(10,10,10,0.08)` | `rgba(255,255,255,0.08)` | Borders |
-| `--primary` | `#141413` | `#F5F5F4` | Primary interactive |
-| `--destructive` | `#B3261E` | `#F2B8B5` | Error/danger |
+
+| Token                | Light                  | Dark                     | Usage               |
+| -------------------- | ---------------------- | ------------------------ | ------------------- |
+| `--background`       | `#FAF9F5` (warm cream) | `#0A0A0A` (deep night)   | Page background     |
+| `--foreground`       | `#141413`              | `#F5F5F4`                | Primary text        |
+| `--card`             | `#FFFFFF`              | `#141414`                | Card surfaces       |
+| `--muted`            | `#F3F2EE`              | `#1E1E1E`                | Subdued backgrounds |
+| `--muted-foreground` | `#5C5B58`              | `#9A9A95`                | Secondary text      |
+| `--border`           | `rgba(10,10,10,0.08)`  | `rgba(255,255,255,0.08)` | Borders             |
+| `--primary`          | `#141413`              | `#F5F5F4`                | Primary interactive |
+| `--destructive`      | `#B3261E`              | `#F2B8B5`                | Error/danger        |
 
 **Chart colors** (theme-adaptive):
-| Token | Light | Dark |
-|---|---|---|
-| `--chart-1` | `#4B0082` | `#B388FF` (Tanzanite) |
-| `--chart-2` | `#0047AB` | `#00B0FF` (Cobalt) |
-| `--chart-3` | `#004D40` | `#64FFDA` (Malachite) |
-| `--chart-4` | `#5D4037` | `#FFD740` (Gold) |
+
+| Token       | Light     | Dark                   |
+| ----------- | --------- | ---------------------- |
+| `--chart-1` | `#4B0082` | `#B388FF` (Tanzanite)  |
+| `--chart-2` | `#0047AB` | `#00B0FF` (Cobalt)     |
+| `--chart-3` | `#004D40` | `#64FFDA` (Malachite)  |
+| `--chart-4` | `#5D4037` | `#FFD740` (Gold)       |
 | `--chart-5` | `#8B4513` | `#D4A574` (Terracotta) |
 
 **Category-to-mineral mapping** (for apps with activity categories):
-| Category | Mineral | Tailwind classes |
-|---|---|---|
-| Farming | Malachite | `bg-mineral-malachite`, `text-mineral-malachite` |
-| Mining | Terracotta | `bg-mineral-terracotta`, `text-mineral-terracotta` |
-| Travel | Cobalt | `bg-mineral-cobalt`, `text-mineral-cobalt` |
-| Tourism | Tanzanite | `bg-mineral-tanzanite`, `text-mineral-tanzanite` |
-| Sports | Gold | `bg-mineral-gold`, `text-mineral-gold` |
+
+| Category | Mineral    | Tailwind classes                                   |
+| -------- | ---------- | -------------------------------------------------- |
+| Farming  | Malachite  | `bg-mineral-malachite`, `text-mineral-malachite`   |
+| Mining   | Terracotta | `bg-mineral-terracotta`, `text-mineral-terracotta` |
+| Travel   | Cobalt     | `bg-mineral-cobalt`, `text-mineral-cobalt`         |
+| Tourism  | Tanzanite  | `bg-mineral-tanzanite`, `text-mineral-tanzanite`   |
+| Sports   | Gold       | `bg-mineral-gold`, `text-mineral-gold`             |
 
 ### 7.2 Typography
 
@@ -450,19 +493,22 @@ Every component in `components/ui/` MUST have:
 
 ### 8.3 Adding a New Component
 
-1. Create the component file in `components/ui/`
-2. Follow the CVA + Radix + cn() pattern (see `button.tsx` as reference)
-3. Add an entry to `registry.json` with: `name`, `type`, `description`, `dependencies`, `registryDependencies`, `files`
-4. Run `pnpm registry:build` to regenerate static files
-5. The dynamic API picks up changes from `registry.json` automatically
-6. Verify with: `curl http://localhost:3000/api/v1/ui/<component-name>`
+Components are authored **in the Supabase `components` table**, not as files in this repo. The committed `components/ui/*` files are a derived snapshot of the ~35 primitives the portal itself imports.
+
+1. Insert the row into `components` (and `component_docs`) in Supabase, including `source_code`, `architecture_layer`, `category`, `dependencies`, `registry_dependencies`, and `status = 'stable'`
+2. Author the source following the CVA + Radix + cn() pattern (see `button.tsx` as reference)
+3. Run `pnpm registry:sync` locally to regenerate `registry.json` and (if the new component is portal-imported) `components/ui/<name>.tsx`
+4. Verify the API serves it: `curl http://localhost:11736/api/v1/ui/<component-name>`
+5. Commit the resulting `registry.json` (and `components/ui/*` if changed) — CI runs `pnpm registry:verify` to fail if the snapshot drifts
 
 ### 8.4 Modifying Existing Components
 
+- Edit `source_code` in the `components` table; do not edit `components/ui/*.tsx` directly — they get overwritten by `pnpm registry:sync`
 - Preserve the existing CVA variant pattern — add variants, don't restructure
 - Keep Radix UI accessibility primitives intact
-- Don't break the registry.json schema — it follows `https://ui.shadcn.com/schema/registry.json`
-- Test that the component still serves correctly via the API
+- Don't break the shadcn registry schema — `https://ui.shadcn.com/schema/registry.json`
+- Bump the row's `version` and append to `component_versions` so the changelog API reflects the change
+- Re-run `pnpm registry:sync` and commit the updated snapshot
 
 ### 8.5 When Building a New Bundu Ecosystem App
 
@@ -512,24 +558,36 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 
 **Common headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *`
 
-| Endpoint                  | Description                                   | Data Source                   |
-| ------------------------- | --------------------------------------------- | ----------------------------- |
-| `GET /api/v1`             | Discovery document — lists all resources      | —                             |
-| `GET /api/v1/brand`       | Brand system (minerals, typography, spacing)  | `lib/brand.ts`                |
-| `GET /api/v1/ui`          | Component registry index                      | `registry.json`               |
-| `GET /api/v1/ui/{name}`   | Individual component with source code         | `registry.json` + file system |
-| `GET /api/v1/ecosystem`   | Architecture principles & framework decision  | `lib/architecture.ts`         |
-| `GET /api/v1/data-layer`  | Local-first + cloud layer specification       | `lib/architecture.ts`         |
-| `GET /api/v1/pipeline`    | Open data pipeline (Redpanda → Flink → Doris) | `lib/architecture.ts`         |
-| `GET /api/v1/sovereignty` | Technology sovereignty assessments            | `lib/architecture.ts`         |
-| `GET /api/v1/health`      | Service health check (`no-cache, no-store`)   | Runtime checks                |
+| Endpoint                             | Description                                             | Supabase source            |
+| ------------------------------------ | ------------------------------------------------------- | -------------------------- |
+| `GET /api/v1`                        | Discovery document — lists all resources                | —                          |
+| `GET /api/v1/brand`                  | Brand system (minerals, typography, spacing, ecosystem) | `brand_*` tables           |
+| `GET /api/v1/ui`                     | Component registry index                                | `components`               |
+| `GET /api/v1/ui/{name}`              | Individual component (shadcn format, with source code)  | `components`               |
+| `GET /api/v1/ui/{name}/docs`         | Component docs (use cases, variants, a11y)              | `component_docs`           |
+| `GET /api/v1/ui/{name}/versions`     | Component version history                               | `component_versions`       |
+| `GET /api/v1/ecosystem`              | Architecture principles & framework decision            | `architecture_principles`  |
+| `GET /api/v1/data-layer`             | Local-first + cloud layer specification                 | `architecture_data_layer`  |
+| `GET /api/v1/pipeline`               | Open data pipeline (Redpanda → Flink → Doris)           | `architecture_pipeline`    |
+| `GET /api/v1/sovereignty`            | Technology sovereignty assessments                      | `architecture_sovereignty` |
+| `GET /api/v1/docs`                   | List documentation pages                                | `documentation_pages`      |
+| `GET /api/v1/docs/{slug}`            | Single documentation page                               | `documentation_pages`      |
+| `GET /api/v1/changelog`              | All releases                                            | `changelog`                |
+| `GET /api/v1/changelog/{version}`    | Single release                                          | `changelog`                |
+| `GET /api/v1/ai/instructions`        | List AI instruction sets                                | `ai_instructions`          |
+| `GET /api/v1/ai/instructions/{name}` | Instruction set by target (mcp-server, claude, copilot) | `ai_instructions`          |
+| `GET /api/v1/fundi`                  | Open self-healing issues                                | `fundi_issues`             |
+| `GET /api/v1/fundi/{id}`             | Single fundi issue                                      | `fundi_issues`             |
+| `GET /api/v1/fundi/stats`            | Aggregate learning stats                                | `fundi_issues`             |
+| `GET /api/v1/search?q=`              | Cross-resource search (components + docs + changelog)   | multiple                   |
+| `GET /api/v1/stats`                  | Live counts (total stable, per layer, per category)     | `components`               |
+| `GET /api/v1/health`                 | Service health check (`no-cache, no-store`)             | runtime checks             |
 
-**Error responses:** 400 (invalid input), 404 (not found), 500 (server error)
+**Common response headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *` (except `/health` which is `no-cache, no-store`).
 
-**Data sources:**
+**Error responses:** 400 (invalid input), 404 (not found), 500 (server error), **503** (Supabase env vars missing — the API replies with a clear "Database not configured" message).
 
-- `lib/brand.ts` — single source of truth for brand system
-- `lib/architecture.ts` — single source of truth for ecosystem architecture
+The OpenAPI document is also served at `GET /api/openapi`.
 
 ---
 
@@ -558,26 +616,36 @@ Configured in `.claude/settings.json`:
 
 ### Resources (read-only data)
 
-| URI                      | Description                                     |
-| ------------------------ | ----------------------------------------------- |
-| `mukoko://registry`      | Full component registry index                   |
-| `mukoko://brand`         | Complete brand system data                      |
-| `mukoko://design-tokens` | Five African Minerals palette + semantic tokens |
-| `mukoko://guidelines`    | Design system usage guidelines                  |
-| `mukoko://architecture`  | Ecosystem architecture (principles, framework)  |
+| URI                      | Description                                                 |
+| ------------------------ | ----------------------------------------------------------- |
+| `mukoko://registry`      | Full component registry index                               |
+| `mukoko://brand`         | Complete brand system data                                  |
+| `mukoko://design-tokens` | Five African Minerals palette + semantic tokens             |
+| `mukoko://architecture`  | Ecosystem architecture (principles, framework, sovereignty) |
+| `mukoko://ubuntu`        | Ubuntu philosophy — community-first design doctrine         |
 
 ### Tools (callable actions)
 
-| Tool                    | Description                                                                      |
-| ----------------------- | -------------------------------------------------------------------------------- |
-| `list_components`       | List all registry components, optionally filter by type                          |
-| `get_component`         | Get a component's source code and metadata                                       |
-| `search_components`     | Search components by name or description                                         |
-| `get_design_tokens`     | Get color palette, typography, spacing tokens                                    |
-| `scaffold_component`    | Generate a new component following CVA + Radix + cn() patterns                   |
-| `get_install_command`   | Get shadcn CLI install command for components                                    |
-| `get_brand_info`        | Get information about a specific ecosystem brand                                 |
-| `get_architecture_info` | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty) |
+| Tool                     | Description                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| `list_components`        | List all registry components, optionally filtered by type/layer                  |
+| `get_component`          | Get a component's source code + metadata                                         |
+| `get_component_docs`     | Get a component's structured documentation (use cases, variants, a11y notes)     |
+| `get_component_links`    | Get all portal URLs for a component                                              |
+| `get_component_versions` | Get version history for a component                                              |
+| `search_components`      | Search components by name / description / category                               |
+| `get_design_tokens`      | Get color palette, typography, spacing tokens                                    |
+| `scaffold_component`     | Generate a new component following the CVA + Radix + cn() pattern                |
+| `get_install_command`    | Get the shadcn CLI install command for one or more components                    |
+| `get_brand_info`         | Get information about a specific ecosystem brand                                 |
+| `get_architecture_info`  | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty) |
+| `get_ubuntu_principles`  | Read the Ubuntu philosophy doctrine                                              |
+| `get_database_status`    | Health/diagnostic info about the Supabase connection                             |
+| `get_usage_stats`        | MCP/API usage metrics                                                            |
+| `get_layer_summary`      | Component count, categories, and names for a given architecture layer (1–10)     |
+| `get_ai_instructions`    | Read system prompts from `ai_instructions` by target                             |
+| `get_changelog`          | Recent releases from the `changelog` table                                       |
+| `get_documentation_page` | Read a documentation page by slug from `documentation_pages`                     |
 
 ### Architecture
 
@@ -589,7 +657,7 @@ Configured in `.claude/settings.json`:
 
 ## 11. Component Categories
 
-The 545 stable registry items are organised across 10 architecture layers and by function:
+The stable registry items live in the Supabase `components` table and are organised across 10 architecture layers and by function. Counts/items below are a snapshot — **query `GET /api/v1/stats` or the `get_layer_summary` MCP tool for live numbers, and never hardcode a component count anywhere in the repo** (user-facing docs render the live value via `<LiveComponentCount />` from `components/live-component-count.tsx`). Only the ~35 portal primitives are committed to `components/ui/`; the rest are served only via `/api/v1/ui` and installed by consumer apps via the shadcn CLI.
 
 | Category                  | Count | Components                                                                                                                                                                                                                                                                                                                                                                 |
 | ------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -613,7 +681,7 @@ The 545 stable registry items are organised across 10 architecture layers and by
 | **Mukoko Ecosystem**      | 4     | mukoko-bottom-nav, mukoko-footer, mukoko-header, mukoko-sidebar                                                                                                                                                                                                                                                                                                            |
 | **Infrastructure**        | 3     | error-boundary, lazy-section, section-error-boundary                                                                                                                                                                                                                                                                                                                       |
 | **Hooks**                 | 3     | use-memory-pressure, use-mobile, use-toast                                                                                                                                                                                                                                                                                                                                 |
-| **Resilience (lib)**      | 11    | utils, ai-safety, architecture, chaos, circuit-breaker, fallback-chain, observability, retry, timeout                                                                                                                                                                                                                                                                      |
+| **Resilience (lib)**      | 9     | ai-safety, chaos, circuit-breaker, fallback-chain, observability, retry, timeout, utils, architecture (served only via the registry — no longer files in this repo)                                                                                                                                                                                                        |
 | **Chart Blocks**          | 70    | area (10), bar (10), line (10), pie (11), radar (14), radial (6), tooltip (9)                                                                                                                                                                                                                                                                                              |
 | **Page Blocks**           | 35    | dashboard-01, login-01–05, signup-01–05, sidebar-01–16, profile-page, profile-settings, onboarding-flow, error-page, empty-state, notification-center, search-results, command-center                                                                                                                                                                                      |
 
@@ -648,28 +716,20 @@ The 545 stable registry items are organised across 10 architecture layers and by
 
 ```
 __tests__/
-├── api/
-│   ├── brand-route.test.ts       # Brand API (/api/v1/brand) response, headers, data
-│   ├── registry-route.test.ts    # Registry JSON (/api/v1/ui) integrity, file existence
-│   └── v1/
-│       └── architecture-routes.test.ts  # v1 route file existence, old routes removed
-├── architecture/
-│   └── architecture-data.test.ts # Architecture data integrity tests
-├── brand/
-│   └── brand-data.test.ts        # Brand data integrity (35 tests)
-└── components/
-    ├── brand-components.test.tsx  # BrandCard, MineralStrip, TypeScale, SpacingScale
-    ├── color-swatch.test.tsx      # ColorSwatch copy-to-clipboard
-    └── navigation.test.tsx        # Header nav links
+└── api/
+    ├── brand-route.test.ts                  # /api/v1/brand response, headers, data
+    ├── registry-route.test.ts               # /api/v1/ui registry integrity
+    └── v1/
+        └── architecture-routes.test.ts      # v1 route file existence; legacy routes removed
 ```
 
 ### What Tests Cover
 
-- **Brand data integrity:** All 5 minerals match globals.css hex values, ecosystem brands have required fields, type scale ordering, spacing scale, semantic colors, accessibility standards (APCA 3.0 AAA, 56px default / 48px minimum touch targets)
-- **Architecture data integrity:** 5 principles, framework decision, data layer technologies, cloud services, pipeline stages, data ownership rules, removed technologies, sovereignty assessments, aggregate system export
-- **API routes:** Brand API returns correct headers/status/data, registry.json schema validation, all component files exist on disk, all v1 route files exist, old routes removed
-- **Component rendering:** Brand components render correct content, mineral strip vertical-only orientation, copy-to-clipboard behavior
-- **Navigation:** Header contains all nav links including Brand, Architecture, footer links
+- **API routes:** Brand API returns the correct headers/status/payload shape; the registry response matches the shadcn schema; all expected v1 route files exist on disk; removed legacy routes are confirmed gone.
+
+### Tests removed in the Supabase migration
+
+The earlier file-based brand / architecture / component-rendering tests (against `lib/brand.ts`, `lib/architecture.ts`, `components/brand/*`) have been deleted along with the modules they covered. New tests should target the Supabase-backed data flow, the API-route contracts, and the playground / docs renderers that read from the API.
 
 ### Running Tests
 
@@ -706,18 +766,55 @@ Three workflows in `.github/workflows/`:
 2. Verifies tag version matches `package.json` version
 3. Creates a GitHub release with auto-generated release notes
 
+### Org-wide required checks — naming conventions per workflow
+
+Every bundu ecosystem repo's branch-protection rule on `main` requires the following check names, exactly. **The convention is asymmetric across workflows** — the CI workflow uses bare job names, the lint workflow uses prefixed names. Not stylistic — both must match the org rule literally.
+
+| Reported check name    | Source workflow / job                          | Required by branch protection |
+| ---------------------- | ---------------------------------------------- | ----------------------------- |
+| `Build`                | `.github/workflows/ci.yml` → `build`           | Yes                           |
+| `Lint`                 | `.github/workflows/ci.yml` → `lint`            | Yes                           |
+| `Type Check`           | `.github/workflows/ci.yml` → `typecheck`       | Yes                           |
+| `Security Audit`       | `.github/workflows/ci.yml` → `audit`           | Yes                           |
+| `Test`                 | `.github/workflows/ci.yml` → `test`            | No (informational)            |
+| `Registry Snapshot`    | `.github/workflows/ci.yml` → `registry`        | No (informational)            |
+| `lint / actionlint`    | `.github/workflows/lint.yml` → `actionlint`    | Yes                           |
+| `lint / JSON validity` | `.github/workflows/lint.yml` → `json-validity` | Yes                           |
+| `lint / prettier`      | `.github/workflows/lint.yml` → `prettier`      | Yes                           |
+| `lint / markdownlint`  | `.github/workflows/lint.yml` → `markdownlint`  | Yes                           |
+| `lint / yamllint`      | `.github/workflows/lint.yml` → `yamllint`      | Yes                           |
+
+**Critical implementation detail.** GitHub Actions reports the bare job `name:` field to the Checks API — the `<workflow> /` prefix that the PR UI shows is a visual grouping label, NOT part of the reported check name. So the job's `name:` field must literally match the required check name:
+
+```yaml
+# ci.yml — CI required checks are bare names
+jobs:
+  build:
+    name: Build           # not "CI / Build"
+  lint:
+    name: Lint            # not "CI / Lint"
+
+# lint.yml — lint required checks include the "lint / " prefix
+jobs:
+  actionlint:
+    name: lint / actionlint   # not just "actionlint"
+```
+
+The two conventions are inconsistent at the org level (history, not design), but both need to match what branch protection has configured. If you rename a job, update the org-level branch-protection rule in the same change. Both `ci.yml` and `lint.yml` in this repo are the canonical templates; copy the `name:` pattern when bootstrapping a new ecosystem repo.
+
 ### Versioning
 
-- **Current version:** 4.0.26 (in `package.json`, `lib/mcp-server.ts`, and footer)
-- **Scheme:** Semantic versioning (major.minor.patch)
+- **Current version:** 4.0.26 (must match in `package.json`, `lib/mcp-server.ts`, the `changelog` table in Supabase, and `components/landing/footer.tsx`)
+- **Scheme:** `4.0.x` is the internal pre-1.0-public iteration; `4.1.0` is reserved for the first community-contributed release
 - **Release process:**
   1. Update version in `package.json`
-  2. Update `BRAND_SYSTEM.version` in `lib/brand.ts`
-  3. Update footer version in `components/landing/footer.tsx`
-  4. Commit: `git commit -m "Release v7.x.x"`
-  5. Tag: `git tag v7.x.x`
-  6. Push: `git push && git push --tags`
-  7. GitHub Actions creates the release automatically
+  2. Update the version constant in `lib/mcp-server.ts`
+  3. Update the footer version in `components/landing/footer.tsx`
+  4. Insert a row into the `changelog` Supabase table for the new version
+  5. Commit: `git commit -m "Release v4.0.x"`
+  6. Tag: `git tag v4.0.x`
+  7. Push: `git push && git push --tags`
+  8. GitHub Actions (`release.yml`) verifies the tag matches `package.json` and creates the GitHub release
 
 ### Dependency Management — Upgrade-First Policy
 
@@ -739,16 +836,17 @@ Three workflows in `.github/workflows/`:
 
 ### Pre-commit Gates
 
-Every commit must pass all gates before pushing. The `.husky/pre-commit` hook enforces this automatically.
+Every commit must pass all gates before pushing. `.husky/pre-commit` enforces this automatically and runs three steps:
 
-| Gate               | Command                                            | Failure means                                               |
-| ------------------ | -------------------------------------------------- | ----------------------------------------------------------- |
-| **Lint**           | `pnpm lint` (zero warnings via `--max-warnings=0`) | ESLint rule violation or warning                            |
-| **Format**         | `pnpm exec prettier --check`                       | Code not formatted — run `pnpm exec prettier --write`       |
-| **Type check**     | `pnpm typecheck`                                   | TypeScript error                                            |
-| **Tests**          | `pnpm test`                                        | Regression or broken test                                   |
-| **Security audit** | `pnpm audit --audit-level=moderate`                | Unresolved vulnerability — update deps or add pnpm override |
-| **Outdated deps**  | `pnpm outdated` (zero results)                     | Package behind latest — upgrade or document pin             |
+| Gate                       | Command                                                              | Failure means                                               |
+| -------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Lint + format (staged)** | `pnpm exec lint-staged` (eslint --max-warnings=0 + prettier --write) | ESLint warning/error or unformatted code                    |
+| **Type check (project)**   | `pnpm typecheck`                                                     | TypeScript error                                            |
+| **Security audit**         | `pnpm audit --audit-level=moderate --ignore-registry-errors`         | Unresolved vulnerability — update deps or add pnpm override |
+
+CI additionally runs `pnpm test` and `pnpm build` (and `pnpm registry:verify` to guard against `registry.json` drifting from Supabase).
+
+`--ignore-registry-errors` is required because the npm "quick" audit endpoint that pnpm 10.x calls was retired in April 2026; remove the flag once pnpm ships a fix.
 
 **Hard rules:**
 
@@ -768,9 +866,9 @@ Every commit must pass all gates before pushing. The `.husky/pre-commit` hook en
 
 ### Deployment
 
-- **Platform:** Vercel (automatic deploys from main branch)
-- **CI gates:** Security audit, lint (zero warnings), typecheck, tests, and build must all pass before merge
-- **Static registry:** Run `pnpm registry:build` before deploy if static serving is needed
+- **Platform:** Vercel (Vercel project `mukoko-registry`, domains `design.nyuchi.com`, `registry.mukoko.com`); automatic deploys from `main`
+- **CI gates:** Security audit, lint (zero warnings), typecheck, tests, build, and `registry:verify` must all pass before merge
+- **Search index:** the `postbuild` step runs Pagefind against `.next/server/app` and writes the static index into `public/_pagefind/`
 
 ---
 
@@ -778,22 +876,29 @@ Every commit must pass all gates before pushing. The `.husky/pre-commit` hook en
 
 When working on this codebase as an AI assistant:
 
-1. **Read `registry.json` before modifying components** — understand the dependency graph
-2. **Never break the shadcn registry schema** — downstream apps depend on it
-3. **Use the Five African Minerals palette** — never introduce colors outside the token system
-4. **Follow the CVA + Radix + cn() pattern** — every component uses this stack
-5. **Keep components self-contained** — each file should be independently installable via the registry
-6. **Preserve accessibility** — APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets, Radix primitives for keyboard/screen reader
-7. **Test API output** — after modifying a component, verify it serves correctly via `/api/v1/ui/[name]`
-8. **Respect the layered architecture** — primitives don't import page-level code
-9. **All brand wordmarks lowercase** — `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`
-10. **This is the canonical design system** — changes here propagate to all bundu ecosystem apps
-11. **Run tests before committing** — `pnpm test` must pass; add tests for new features
-12. **Brand data lives in `lib/brand.ts`** — update brand data there, not in individual pages
-13. **Keep versions in sync** — `package.json`, `lib/brand.ts` (BRAND_SYSTEM.version), and `footer.tsx` must match
-14. **The mineral strip uses 5 mineral colors** — not flag colors; it's the brand identity element
-15. **Use the MCP server** — served at `/mcp` via `lib/mcp-server.ts`; reads architecture data directly from `lib/architecture.ts` and brand data from `lib/brand.ts`
-16. **Resilience libraries are registry items** — `lib/observability.ts`, `lib/circuit-breaker.ts`, etc. are served via the registry as `registry:lib` items; follow the same patterns when adding new utilities
-17. **Architecture data lives in `lib/architecture.ts`** — update architecture data there, not in individual pages; follows the same pattern as `lib/brand.ts`
-18. **The mineral strip is always vertical** — used only as a left-edge accent (cards, sidebars, page borders); never horizontal
-19. **API is versioned under `/api/v1/`** — all endpoints documented in `openapi.yaml`; the OpenAPI spec is the contract
+1. **Supabase is the source of truth.** Component source code, docs, brand data, architecture data, AI instructions, changelog, fundi issues — all live in Supabase. Do not reintroduce hardcoded JSON/TS files for any of these.
+2. **`registry.json` is generated, not authored.** It must exist in the repo root, but it is regenerated dynamically from the Supabase `components` table by `pnpm registry:sync`. Never hand-edit it. CI runs `pnpm registry:verify` to catch drift.
+3. **Never break the shadcn registry schema** — downstream apps depend on it.
+4. **Use the Five African Minerals palette** — never introduce colors outside the token system.
+5. **Follow the CVA + Radix + cn() pattern** — every component uses this stack.
+6. **Keep components self-contained** — each file is independently installable via the registry.
+7. **Preserve accessibility** — APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets, Radix primitives for keyboard/screen reader behaviour.
+8. **Test API output** — after modifying a component, verify it serves correctly via `/api/v1/ui/[name]`.
+9. **Respect the layered architecture** — primitives don't import page-level code. The 3D frontend model has five axes: X-axis (L2 primitives / L3 brand / L6 pages / L7 shell — horizontal composition), Y-axis (L1 tokens / L4 safety / L5 resilience — vertical infrastructure), Z-axis (L8 assurance — depth observation), Outside (L9 fundi — self-healing actors), Documentation (L10). This is distinct from the 7-layer data architecture served at `/architecture` — never conflate the two numberings. See issue #46 for the table-backed doctrine (`architecture_frontend_layers`, `architecture_frontend_axes`).
+10. **All brand wordmarks lowercase** — `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`.
+11. **This is the canonical design system** — changes here propagate to all bundu ecosystem apps.
+12. **Run tests before committing** — `pnpm test` must pass; add tests for new behaviour, especially around API routes and DB-driven renderers.
+13. **Keep versions in sync** — `package.json`, `lib/mcp-server.ts`, the `changelog` Supabase row, and `components/landing/footer.tsx` must all match.
+14. **The mineral strip uses 5 mineral colors** — not flag colors; it's the brand identity element.
+15. **The mineral strip is always vertical** — used only as a left-edge accent (cards, sidebars, page borders); never horizontal.
+16. **Use the MCP server** — served at `/mcp` via `lib/mcp-server.ts`; all reads go through `lib/db/`.
+17. **Resilience patterns (circuit-breaker, retry, timeout, fallback-chain, ai-safety, chaos)** are registry items in Supabase, not files in this repo. Consumer apps install them via the shadcn CLI.
+18. **Pages that need long-form docs go in Supabase `documentation_pages`**, then are rendered through the `/docs/[slug]` dynamic route via `components/docs/db-doc-page.tsx`. Do not add new static MDX docs for content that should be editable in the DB.
+19. **The playground (`components/playground/`) reads from the API**, not from local files. If you find a `registry.json` import there, refactor it to fetch `/api/v1/ui` (tracked in issue #26).
+20. **API is versioned under `/api/v1/`** — `openapi.yaml` is the contract; update it whenever a route changes.
+21. **Buttons are always pill-shaped (`rounded-full`)** across the entire ecosystem.
+22. **Security findings are never deferred.** Any vulnerability surfaced during a `/security-review`, a manual audit, a CodeQL alert, a Dependabot advisory, or `pnpm audit` must be fixed inside the current PR — even if the original PR scope is "docs only" or "feature X". Do not file a follow-up issue and merge the unfixed code. The only acceptable exception is when the fix concretely requires infrastructure that isn't available on the PR's branch (e.g. a Supabase migration the developer must run); in that case, document the gap in `SECURITY.md`, open a tracking issue, AND still ship every code-level mitigation that doesn't require the missing infrastructure. This rule applies even when the finding is downgraded to "lack of hardening" during false-positive filtering — if a reviewer flagged it, the patch goes in this PR.
+
+### Open work to be aware of
+
+The repo is mid-migration to a Supabase-first model. Several issues track outstanding cleanup — see #25 (remove redundant files), #26 (Portal UI off `registry.json`), #27 (REST API expansion), #28 (MCP server fixes), #29 (DB-driven docs), #30 (this CLAUDE.md update), and #31 (dependabot deployment errors). When in doubt about whether something is canonical, prefer the Supabase row over any file in the repo.

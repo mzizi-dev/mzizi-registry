@@ -29,3 +29,6 @@ next-env.d.ts
 
 # pagefind search index
 public/_pagefind/
+
+# local Claude Code permission allowlists (per-developer, not shared)
+.claude/settings.local.json

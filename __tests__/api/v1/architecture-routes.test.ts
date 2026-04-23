@@ -1,6 +1,8 @@
+// @vitest-environment node
+// Pure file-existence checks — must run in Node so `fs` / `path` resolve.
 import { describe, it, expect } from "vitest"
-import fs from "fs"
-import path from "path"
+import fs from "node:fs"
+import path from "node:path"
 
 describe("Architecture API v1 Routes", () => {
   describe("API route files exist", () => {

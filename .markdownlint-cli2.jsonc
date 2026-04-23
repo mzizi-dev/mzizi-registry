@@ -1,0 +1,33 @@
+{
+  // Markdownlint configuration for the Nyuchi Design Portal docs.
+  // Goals: catch real formatting mistakes (broken headings, stray blanks)
+  // without fighting long URLs, tables, inline HTML, or in-code examples.
+  "config": {
+    "default": true,
+    // Allow long lines — URLs, tables, and code blocks routinely exceed 80 cols.
+    "line-length": false,
+    // Tables with long cells frequently have duplicated headings when we render
+    // sections per layer/axis. Permit duplicates under different parent trees.
+    "no-duplicate-heading": { "siblings_only": true },
+    // Inline HTML (badges, details, picture) is used deliberately in README.
+    "no-inline-html": false,
+    // First heading doesn't have to be the filename.
+    "first-line-h1": false,
+    // We use "```" without language in snippets that are plain output.
+    "fenced-code-language": false,
+    // Bare URLs are fine in llms.txt / changelog link references.
+    "no-bare-urls": false,
+    // Emphasis as heading shows up in GitHub issue bodies; leave it alone.
+    "no-emphasis-as-heading": false,
+    // Trailing punctuation in headings (e.g. "Getting started!") is acceptable.
+    "no-trailing-punctuation": false
+  },
+  "globs": ["**/*.md"],
+  "ignores": [
+    "node_modules/**",
+    ".next/**",
+    "public/_pagefind/**",
+    "CHANGELOG.md",
+    ".github/ISSUE_TEMPLATE/**"
+  ]
+}

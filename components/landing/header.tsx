@@ -42,10 +42,34 @@ export function Header() {
         {/* Center: Desktop-only nav links */}
         <nav className="hidden items-center gap-1 md:flex">
           <a
+            href="/components"
+            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Components
+          </a>
+          <a
             href="/brand"
             className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >
             Brand
+          </a>
+          <a
+            href="/architecture"
+            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Architecture
+          </a>
+          <a
+            href="/observability"
+            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Observability
+          </a>
+          <a
+            href="/docs"
+            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Docs
           </a>
           <a
             href="https://www.mukoko.com"
@@ -58,14 +82,14 @@ export function Header() {
           </a>
         </nav>
 
-        {/* Right: 3 icon buttons */}
+        {/* Right: 3 icon buttons — 48px min touch target per CLAUDE.md §8.2 */}
         <div className="flex items-center gap-0.5">
-          <Button variant="ghost" size="icon" className="size-8" asChild>
+          <Button variant="ghost" size="icon-sm" asChild>
             <a href="/components" aria-label="Search components">
               <SearchIcon className="size-4" />
             </a>
           </Button>
-          <Button variant="ghost" size="icon" className="size-8" asChild>
+          <Button variant="ghost" size="icon-sm" asChild>
             <a
               href="https://github.com/nyuchitech/design-portal"
               target="_blank"

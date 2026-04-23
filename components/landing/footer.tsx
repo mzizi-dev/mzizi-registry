@@ -9,6 +9,77 @@ const minerals = [
   { name: "terracotta", color: "bg-[var(--color-terracotta)]" },
 ]
 
+// ──────────────────────────────────────────────────────────────────────────
+// Footer columns — 4 coherent buckets, not 6 overlapping ones.
+//
+// Rationale (after the UX critique on PR #43):
+//   - "Getting Started" and "Registry & Developer" overlapped on /docs
+//     entries and /registry entries. Both now fall under the single
+//     "Developer" column.
+//   - "Design System" and "Brand" were split between /foundations,
+//     /design, /brand and /content with ambiguous scope — see issue #48.
+//     They're now one "Design System" column.
+//   - "Components & Blocks" stays its own column because component
+//     browsing is the primary reason most developers land here.
+//   - "Architecture" keeps a dedicated column because the 3D frontend
+//     model + fundi + patterns are distinctive doctrine, not generic docs.
+//
+// When #48 lands (IA consolidation) these columns should re-consolidate
+// further.
+// ──────────────────────────────────────────────────────────────────────────
+
+type FooterColumn = {
+  title: string
+  links: Array<{ label: string; href: string }>
+}
+
+const columns: FooterColumn[] = [
+  {
+    title: "Components",
+    links: [
+      { label: "All Components", href: "/components" },
+      { label: "Blocks", href: "/blocks" },
+      { label: "Charts", href: "/charts" },
+      { label: "Patterns", href: "/patterns" },
+    ],
+  },
+  {
+    title: "Design System",
+    links: [
+      { label: "Brand", href: "/brand" },
+      { label: "Foundations", href: "/foundations" },
+      { label: "Design Tokens", href: "/foundations/tokens" },
+      { label: "Icons", href: "/foundations/icons" },
+      { label: "Accessibility", href: "/foundations/accessibility" },
+      { label: "Typography", href: "/foundations/typography" },
+    ],
+  },
+  {
+    title: "Architecture",
+    links: [
+      { label: "3D Architecture", href: "/architecture" },
+      { label: "Layer Decision Guide", href: "/architecture/layers" },
+      { label: "Component Backlinks", href: "/architecture/component-backlinks" },
+      { label: "Fundi (L9)", href: "/architecture/fundi" },
+      { label: "Observability", href: "/observability" },
+    ],
+  },
+  {
+    title: "Developer",
+    links: [
+      { label: "Introduction", href: "/docs" },
+      { label: "Installation", href: "/docs/installation" },
+      { label: "CLI", href: "/docs/cli" },
+      { label: "Theming", href: "/docs/theming" },
+      { label: "API Reference", href: "/docs/api-reference" },
+      { label: "Registry", href: "/registry" },
+      { label: "MCP Server", href: "/registry/mcp" },
+      { label: "Changelog", href: "/docs/changelog" },
+      { label: "Contributing", href: "/docs/contributing" },
+    ],
+  },
+]
+
 const footerLink = "text-xs text-muted-foreground transition-colors hover:text-foreground"
 
 export function Footer() {
@@ -21,144 +92,21 @@ export function Footer() {
       <div className="mx-auto max-w-6xl">
         <Separator className="mb-10" />
 
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-3 lg:grid-cols-6">
-          {/* Getting Started */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium text-foreground">Getting Started</span>
-            <a href="/docs" className={footerLink}>
-              Introduction
-            </a>
-            <a href="/docs/installation" className={footerLink}>
-              Installation
-            </a>
-            <a href="/docs/cli" className={footerLink}>
-              CLI
-            </a>
-            <a href="/docs/theming" className={footerLink}>
-              Theming
-            </a>
-            <a href="/docs/dark-mode" className={footerLink}>
-              Dark Mode
-            </a>
-            <a href="/docs/api-reference" className={footerLink}>
-              API Reference
-            </a>
-            <a href="/docs/contributing" className={footerLink}>
-              Contributing
-            </a>
-            <a href="/docs/changelog" className={footerLink}>
-              Changelog
-            </a>
-          </div>
-
-          {/* Components & Blocks */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium text-foreground">Components</span>
-            <a href="/components" className={footerLink}>
-              All Components
-            </a>
-            <a href="/blocks" className={footerLink}>
-              Blocks
-            </a>
-            <a href="/blocks/dashboard" className={footerLink}>
-              Dashboard
-            </a>
-            <a href="/blocks/authentication" className={footerLink}>
-              Authentication
-            </a>
-            <a href="/blocks/sidebar" className={footerLink}>
-              Sidebar
-            </a>
-            <a href="/charts" className={footerLink}>
-              Charts
-            </a>
-          </div>
-
-          {/* Design System */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium text-foreground">Design System</span>
-            <a href="/foundations" className={footerLink}>
-              Foundations
-            </a>
-            <a href="/foundations/typography" className={footerLink}>
-              Typography
-            </a>
-            <a href="/foundations/accessibility" className={footerLink}>
-              Accessibility
-            </a>
-            <a href="/foundations/layout" className={footerLink}>
-              Layout
-            </a>
-            <a href="/design/tokens" className={footerLink}>
-              Semantic Tokens
-            </a>
-            <a href="/design/icons" className={footerLink}>
-              Icons
-            </a>
-          </div>
-
-          {/* Brand & Content */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium text-foreground">Brand</span>
-            <a href="/brand" className={footerLink}>
-              Brand Guidelines
-            </a>
-            <a href="/content" className={footerLink}>
-              Content
-            </a>
-            <a href="/content/writing" className={footerLink}>
-              Writing
-            </a>
-          </div>
-
-          {/* Architecture */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium text-foreground">Architecture</span>
-            <a href="/architecture" className={footerLink}>
-              3D Architecture
-            </a>
-            <a href="/architecture/layers" className={footerLink}>
-              Layer Decision Guide
-            </a>
-            <a href="/architecture/component-backlinks" className={footerLink}>
-              Component Backlinks
-            </a>
-            <a href="/architecture/fundi" className={footerLink}>
-              Fundi (L9)
-            </a>
-            <a href="/patterns" className={footerLink}>
-              Patterns
-            </a>
-            <a href="/patterns/error-boundaries" className={footerLink}>
-              Error Boundaries
-            </a>
-          </div>
-
-          {/* Registry & Developer */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium text-foreground">Registry</span>
-            <a href="/registry" className={footerLink}>
-              Overview
-            </a>
-            <a href="/registry/schema" className={footerLink}>
-              Schema
-            </a>
-            <a href="/registry/consuming" className={footerLink}>
-              Consuming
-            </a>
-            <a href="/registry/contributing" className={footerLink}>
-              Contributing
-            </a>
-            <a href="/registry/mcp" className={footerLink}>
-              MCP Server
-            </a>
-            <a href="/api-docs" className={footerLink}>
-              API Docs
-            </a>
-          </div>
+        {/* Primary nav: 4 columns on desktop, 2 on tablet, 1 stacked on mobile. */}
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 md:grid-cols-4">
+          {columns.map((col) => (
+            <div key={col.title} className="flex flex-col gap-2">
+              <span className="text-xs font-medium text-foreground">{col.title}</span>
+              {col.links.map((link) => (
+                <a key={link.href} href={link.href} className={footerLink}>
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          ))}
         </div>
 
-        {/* Ecosystem products */}
+        {/* Brand lockup + ecosystem family */}
         <Separator className="my-8" />
 
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
@@ -168,7 +116,7 @@ export function Footer() {
               The design system for the bundu ecosystem — powering mukoko, nyuchi, and every app in
               the family. Built on the Five African Minerals palette.
             </p>
-            <div className="flex items-center gap-1.5 pt-1">
+            <div className="flex items-center gap-1.5 pt-1" aria-label="Five African Minerals">
               {minerals.map((m) => (
                 <span key={m.name} className={`size-2 rounded-full ${m.color}`} title={m.name} />
               ))}

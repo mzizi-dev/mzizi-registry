@@ -1,0 +1,109 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    # Job-name MUST include the "lint / " prefix so the emitted check
+    # name matches the org/repo branch-protection rule
+    # ("lint / actionlint"). GitHub reports the bare job `name:` field
+    # to the Checks API; the "lint /" prefix users see in the PR UI is
+    # a UI grouping label, NOT part of the reported check name.
+    # Re-tested against PR #43 — without this prefix the required
+    # checks stayed forever "Waiting for status to be reported" even
+    # though every job was green.
+    name: lint / actionlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      # Download the prebuilt actionlint binary directly from the upstream
+      # release — no third-party action, no Go PATH dance, no install-script
+      # process-substitution. This is the most environment-independent approach.
+      - name: Install and run actionlint
+        env:
+          ACTIONLINT_VERSION: 1.7.12
+        run: |
+          curl -fsSL -o actionlint.tar.gz "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          tar -xzf actionlint.tar.gz actionlint
+          chmod +x ./actionlint
+          ./actionlint -color
+
+  json-validity:
+    name: lint / JSON validity
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Validate every tracked JSON file parses
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(git ls-files '*.json' ':!pnpm-lock.yaml')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No JSON files tracked."
+            exit 0
+          fi
+          fail=0
+          for f in "${files[@]}"; do
+            if ! node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f" > /dev/null 2>&1; then
+              echo "::error file=$f::Invalid JSON"
+              fail=1
+            fi
+          done
+          exit "$fail"
+
+  prettier:
+    name: lint / prettier
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Prettier format check
+        run: pnpm exec prettier --check "**/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}" --ignore-path .prettierignore
+
+  markdownlint:
+    name: lint / markdownlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Run markdownlint-cli2
+        run: npx --yes markdownlint-cli2@0.15.0
+
+  yamllint:
+    name: lint / yamllint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install yamllint
+        run: pip install --upgrade yamllint==1.35.1
+      - name: Run yamllint
+        run: yamllint -f github .
