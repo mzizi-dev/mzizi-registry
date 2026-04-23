@@ -56,7 +56,6 @@ fingerprint, so no unique-index changes are required.
 
 ```bash
 supabase secrets set GITHUB_TOKEN=ghp_xxx        # PAT with `repo:issues` on nyuchi/design-portal
-supabase secrets set FUNDI_GITHUB_REPO=nyuchi/design-portal
 
 # Optional: dedicated token for the /heal endpoint. If unset, /heal
 # accepts the Supabase service-role key instead. Set this secret if
@@ -64,7 +63,10 @@ supabase secrets set FUNDI_GITHUB_REPO=nyuchi/design-portal
 supabase secrets set FUNDI_HEAL_TOKEN=$(openssl rand -hex 32)
 ```
 
-The PAT must be able to create issues and add labels on that repo.
+The PAT must be able to create issues and add labels on `nyuchi/design-portal`.
+The repo name is hardcoded in `fundi/index.ts` — this is a public monorepo where
+the fundi function lives alongside the code it files issues against, so there's
+no reason to make it configurable.
 
 **Auth model:**
 

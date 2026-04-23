@@ -59,7 +59,7 @@ Only the small set of primitives the portal **itself** imports gets committed un
 
 ### What does the MCP server do that the API doesn't?
 
-The MCP server exposes the same data as `/api/v1/*` but as **callable tools and resources** for AI assistants (Claude Code, Cursor, Copilot, etc.). 18 tools and 5 resources let your AI install components, scaffold new ones, look up tokens, read live docs, and inspect the architecture without you having to copy-paste URLs. Connect at `https://design.nyuchi.com/mcp` (Streamable HTTP).
+The MCP server exposes the same data as `/api/v1/*` but as **callable tools and resources** for AI assistants (Claude Code, Cursor, Copilot, etc.). The live toolkit lets your AI install components, scaffold new ones, look up tokens, read live docs, and inspect the architecture without you having to copy-paste URLs — call `tools/list` for the current set. Connect at `https://design.nyuchi.com/mcp` (Streamable HTTP).
 
 ### How do I add the MCP server to Claude Code?
 
@@ -134,7 +134,7 @@ The portal serves the African mobile market: shared devices, outdoor use, varied
 
 ### What's APCA and why don't you use WCAG 2 ratios?
 
-APCA (Advanced Perceptual Contrast Algorithm) is the WCAG 3 contrast standard. It correctly weighs perceived contrast based on the human visual system, where WCAG 2's pure luminance ratio over- or under-rates many real-world combinations. Body text targets Lc 90+, large text Lc 75+, UI labels Lc 60+. Pre-computed mineral Lc values are in the `mukoko-design-system` skill.
+APCA (Advanced Perceptual Contrast Algorithm) is the WCAG 3 contrast standard. It correctly weighs perceived contrast based on the human visual system, where WCAG 2's pure luminance ratio over- or under-rates many real-world combinations. Body text targets Lc 90+, large text Lc 75+, UI labels Lc 60+. Pre-computed mineral Lc values are in the `nyuchi-design-system` skill.
 
 ### Where do "Five African Minerals" come from?
 

@@ -772,3 +772,36 @@ export interface ArchitectureFrontendLayerRow {
   created_at: string
   updated_at: string
 }
+
+// ── Ubuntu doctrine — issue #45 (`ubuntu_pillars`, `ubuntu_principles`) ──
+//
+// Five Ubuntu Pillars (the spheres in which Ubuntu is lived) and Five
+// Ubuntu Principles (the operating rules that translate Ubuntu to software).
+// Tables are the canonical structure; seeding is out-of-band.
+
+export interface UbuntuPillarRow {
+  id: number
+  name: string
+  shona: string
+  title: string
+  description: string
+  sphere: string
+  platform_surface: string
+  source: string
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface UbuntuPrincipleRow {
+  id: number
+  name: string
+  shona: string
+  title: string
+  description: string
+  expression: string
+  source: string
+  sort_order: number
+  created_at: string
+  updated_at: string
+}

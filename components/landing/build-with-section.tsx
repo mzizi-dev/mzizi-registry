@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { CopyCommand } from "@/components/landing/copy-command"
+import { LiveMcpStats } from "@/components/live-mcp-stats"
 
 /**
  * "Build with the design portal" — five-step orientation for any developer
@@ -72,9 +73,9 @@ export function BuildWithSection() {
             <h3 className="font-serif text-xl font-semibold">Wire the MCP server</h3>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Add <code className="font-mono text-xs">https://design.nyuchi.com/mcp</code> to your
-              Claude Code settings. 18 tools and 5 resources let your AI assistant install
-              components, scaffold new ones, look up tokens, and read live docs without
-              round-tripping to the browser.
+              Claude Code settings. <LiveMcpStats /> let your AI assistant install components,
+              scaffold new ones, look up tokens, and read live docs without round-tripping to the
+              browser.
             </p>
             <Link
               href="/registry/mcp"
@@ -89,7 +90,7 @@ export function BuildWithSection() {
             <h3 className="font-serif text-xl font-semibold">Install the skills</h3>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Three Claude Code skills ship in this repo:{" "}
-              <code className="font-mono text-xs">mukoko-design-system</code>,{" "}
+              <code className="font-mono text-xs">nyuchi-design-system</code>,{" "}
               <code className="font-mono text-xs">scaffold-component</code>,{" "}
               <code className="font-mono text-xs">ecosystem-app-setup</code>. Symlink or copy into
               your project&apos;s <code className="font-mono text-xs">.claude/skills/</code> and the

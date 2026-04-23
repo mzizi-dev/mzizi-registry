@@ -18,9 +18,9 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>
 
 **Live at:** design.nyuchi.com
 
-**Repository:** `github.com/nyuchitech/design-portal`
+**Repository:** `github.com/nyuchi/design-portal`
 
-**Organization:** Nyuchi Africa (PVT) Ltd — `github.com/nyuchitech`
+**Organization:** Nyuchi Africa (PVT) Ltd — `github.com/nyuchi`
 
 **Ecosystem context:** This design system powers the entire bundu ecosystem — mukoko (17 consumer mini-apps + 4 substrate components), nyuchi (7 enterprise products), and sister brands (Zimbabwe Information Platform, Barstool by Nyuchi). It is the single source of truth for the design system, brand documentation, and developer portal.
 
@@ -119,7 +119,7 @@ design-portal/
 ├── .claude/
 │   ├── settings.json                 # MCP server configuration for Claude Code
 │   └── skills/
-│       ├── mukoko-design-system.md   # Design system guidance skill
+│       ├── nyuchi-design-system.md   # Design system guidance skill
 │       ├── ecosystem-app-setup.md    # Bootstrapping a new bundu ecosystem app
 │       └── scaffold-component.md     # Pattern for adding a new registry component
 ├── .github/
@@ -273,6 +273,16 @@ NEXT_PUBLIC_SUPABASE_URL       — Supabase project URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY  — public anon key (read-only via RLS)
 SUPABASE_SERVICE_ROLE_KEY      — write access; server-only, never expose
 ```
+
+**Stytch B2B (gates `/fundi/*` only — every other route is public):**
+
+```
+STYTCH_PROJECT_ID                — Stytch project ID (server-only)
+STYTCH_SECRET                    — Stytch project secret (server-only)
+NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN  — public token for the browser SDK
+```
+
+The fundi dashboard is the only authenticated surface in the portal. All registry, brand, MCP, and docs routes remain anon-readable. See `lib/stytch.ts`, `middleware.ts`, and `app/fundi/`. The unauthenticated `POST /api/v1/fundi` endpoint stays open by design — L8 callsites across the ecosystem report there without a session.
 
 ### 6.2 Layered Component Architecture
 
@@ -558,30 +568,34 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 
 **Common headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *`
 
-| Endpoint                             | Description                                             | Supabase source            |
-| ------------------------------------ | ------------------------------------------------------- | -------------------------- |
-| `GET /api/v1`                        | Discovery document — lists all resources                | —                          |
-| `GET /api/v1/brand`                  | Brand system (minerals, typography, spacing, ecosystem) | `brand_*` tables           |
-| `GET /api/v1/ui`                     | Component registry index                                | `components`               |
-| `GET /api/v1/ui/{name}`              | Individual component (shadcn format, with source code)  | `components`               |
-| `GET /api/v1/ui/{name}/docs`         | Component docs (use cases, variants, a11y)              | `component_docs`           |
-| `GET /api/v1/ui/{name}/versions`     | Component version history                               | `component_versions`       |
-| `GET /api/v1/ecosystem`              | Architecture principles & framework decision            | `architecture_principles`  |
-| `GET /api/v1/data-layer`             | Local-first + cloud layer specification                 | `architecture_data_layer`  |
-| `GET /api/v1/pipeline`               | Open data pipeline (Redpanda → Flink → Doris)           | `architecture_pipeline`    |
-| `GET /api/v1/sovereignty`            | Technology sovereignty assessments                      | `architecture_sovereignty` |
-| `GET /api/v1/docs`                   | List documentation pages                                | `documentation_pages`      |
-| `GET /api/v1/docs/{slug}`            | Single documentation page                               | `documentation_pages`      |
-| `GET /api/v1/changelog`              | All releases                                            | `changelog`                |
-| `GET /api/v1/changelog/{version}`    | Single release                                          | `changelog`                |
-| `GET /api/v1/ai/instructions`        | List AI instruction sets                                | `ai_instructions`          |
-| `GET /api/v1/ai/instructions/{name}` | Instruction set by target (mcp-server, claude, copilot) | `ai_instructions`          |
-| `GET /api/v1/fundi`                  | Open self-healing issues                                | `fundi_issues`             |
-| `GET /api/v1/fundi/{id}`             | Single fundi issue                                      | `fundi_issues`             |
-| `GET /api/v1/fundi/stats`            | Aggregate learning stats                                | `fundi_issues`             |
-| `GET /api/v1/search?q=`              | Cross-resource search (components + docs + changelog)   | multiple                   |
-| `GET /api/v1/stats`                  | Live counts (total stable, per layer, per category)     | `components`               |
-| `GET /api/v1/health`                 | Service health check (`no-cache, no-store`)             | runtime checks             |
+| Endpoint                                   | Description                                             | Supabase source                |
+| ------------------------------------------ | ------------------------------------------------------- | ------------------------------ |
+| `GET /api/v1`                              | Discovery document — lists all resources                | —                              |
+| `GET /api/v1/brand`                        | Brand system (minerals, typography, spacing, ecosystem) | `brand_*` tables               |
+| `GET /api/v1/ui`                           | Component registry index                                | `components`                   |
+| `GET /api/v1/ui/{name}`                    | Individual component (shadcn format, with source code)  | `components`                   |
+| `GET /api/v1/ui/{name}/docs`               | Component docs (use cases, variants, a11y)              | `component_docs`               |
+| `GET /api/v1/ui/{name}/versions`           | Component version history                               | `component_versions`           |
+| `GET /api/v1/ecosystem`                    | Architecture principles & framework decision            | `architecture_principles`      |
+| `GET /api/v1/data-layer`                   | Local-first + cloud layer specification                 | `architecture_data_layer`      |
+| `GET /api/v1/pipeline`                     | Open data pipeline (Redpanda → Flink → Doris)           | `architecture_pipeline`        |
+| `GET /api/v1/sovereignty`                  | Technology sovereignty assessments                      | `architecture_sovereignty`     |
+| `GET /api/v1/architecture/frontend/axes`   | 5 axes of the 3D frontend architecture                  | `architecture_frontend_axes`   |
+| `GET /api/v1/architecture/frontend/layers` | 10 layers of the 3D frontend architecture               | `architecture_frontend_layers` |
+| `GET /api/v1/ubuntu/pillars`               | 5 Ubuntu Pillars                                        | `ubuntu_pillars`               |
+| `GET /api/v1/ubuntu/principles`            | 5 Ubuntu Principles                                     | `ubuntu_principles`            |
+| `GET /api/v1/docs`                         | List documentation pages                                | `documentation_pages`          |
+| `GET /api/v1/docs/{slug}`                  | Single documentation page                               | `documentation_pages`          |
+| `GET /api/v1/changelog`                    | All releases                                            | `changelog`                    |
+| `GET /api/v1/changelog/{version}`          | Single release                                          | `changelog`                    |
+| `GET /api/v1/ai/instructions`              | List AI instruction sets                                | `ai_instructions`              |
+| `GET /api/v1/ai/instructions/{name}`       | Instruction set by target (mcp-server, claude, copilot) | `ai_instructions`              |
+| `GET /api/v1/fundi`                        | Open self-healing issues                                | `fundi_issues`                 |
+| `GET /api/v1/fundi/{id}`                   | Single fundi issue                                      | `fundi_issues`                 |
+| `GET /api/v1/fundi/stats`                  | Aggregate learning stats                                | `fundi_issues`                 |
+| `GET /api/v1/search?q=`                    | Cross-resource search (components + docs + changelog)   | multiple                       |
+| `GET /api/v1/stats`                        | Live counts (total stable, per layer, per category)     | `components`                   |
+| `GET /api/v1/health`                       | Service health check (`no-cache, no-store`)             | runtime checks                 |
 
 **Common response headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *` (except `/health` which is `no-cache, no-store`).
 
@@ -626,26 +640,29 @@ Configured in `.claude/settings.json`:
 
 ### Tools (callable actions)
 
-| Tool                     | Description                                                                      |
-| ------------------------ | -------------------------------------------------------------------------------- |
-| `list_components`        | List all registry components, optionally filtered by type/layer                  |
-| `get_component`          | Get a component's source code + metadata                                         |
-| `get_component_docs`     | Get a component's structured documentation (use cases, variants, a11y notes)     |
-| `get_component_links`    | Get all portal URLs for a component                                              |
-| `get_component_versions` | Get version history for a component                                              |
-| `search_components`      | Search components by name / description / category                               |
-| `get_design_tokens`      | Get color palette, typography, spacing tokens                                    |
-| `scaffold_component`     | Generate a new component following the CVA + Radix + cn() pattern                |
-| `get_install_command`    | Get the shadcn CLI install command for one or more components                    |
-| `get_brand_info`         | Get information about a specific ecosystem brand                                 |
-| `get_architecture_info`  | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty) |
-| `get_ubuntu_principles`  | Read the Ubuntu philosophy doctrine                                              |
-| `get_database_status`    | Health/diagnostic info about the Supabase connection                             |
-| `get_usage_stats`        | MCP/API usage metrics                                                            |
-| `get_layer_summary`      | Component count, categories, and names for a given architecture layer (1–10)     |
-| `get_ai_instructions`    | Read system prompts from `ai_instructions` by target                             |
-| `get_changelog`          | Recent releases from the `changelog` table                                       |
-| `get_documentation_page` | Read a documentation page by slug from `documentation_pages`                     |
+| Tool                        | Description                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------- |
+| `list_components`           | List all registry components, optionally filtered by type/layer                                   |
+| `get_component`             | Get a component's source code + metadata                                                          |
+| `get_component_docs`        | Get a component's structured documentation (use cases, variants, a11y notes)                      |
+| `get_component_links`       | Get all portal URLs for a component                                                               |
+| `get_component_versions`    | Get version history for a component                                                               |
+| `search_components`         | Search components by name / description / category                                                |
+| `get_design_tokens`         | Get color palette, typography, spacing tokens                                                     |
+| `scaffold_component`        | Generate a new component following the CVA + Radix + cn() pattern                                 |
+| `get_install_command`       | Get the shadcn CLI install command for one or more components                                     |
+| `get_brand_info`            | Get information about a specific ecosystem brand                                                  |
+| `get_architecture_info`     | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty)                  |
+| `get_ubuntu_doctrine`       | Read the static Ubuntu philosophy doctrine (philosophy, design, community, AI framing, languages) |
+| `get_ubuntu_pillars`        | Five Ubuntu Pillars — rows from `ubuntu_pillars`                                                  |
+| `get_ubuntu_principles`     | Five Ubuntu Principles — rows from `ubuntu_principles`                                            |
+| `get_architecture_frontend` | 3D frontend axes + layers — rows from `architecture_frontend_axes`/`_layers`                      |
+| `get_database_status`       | Health/diagnostic info about the Supabase connection                                              |
+| `get_usage_stats`           | MCP/API usage metrics                                                                             |
+| `get_layer_summary`         | Component count, categories, and names for a given architecture layer (1–10)                      |
+| `get_ai_instructions`       | Read system prompts from `ai_instructions` by target                                              |
+| `get_changelog`             | Recent releases from the `changelog` table                                                        |
+| `get_documentation_page`    | Read a documentation page by slug from `documentation_pages`                                      |
 
 ### Architecture
 
@@ -756,9 +773,10 @@ Three workflows in `.github/workflows/`:
 **`claude-review.yml`** — AI code review on every PR and `@claude` mentions:
 
 - Triggers on PR open/sync, issue comments, review comments, and reviews
-- Uses `anthropics/claude-code-action@v1` with OAuth token
+- Uses `anthropics/claude-code-action@v1` preceded by an explicit `actions/checkout@v6` step with `fetch-depth: 0` (the action itself does not check out the repo — it expects a populated `.git` directory so it can `git fetch origin main` to build the review diff)
 - Reviews for: code quality, design system adherence, accessibility (APCA 3.0 AAA, 56px default / 48px minimum touch targets), security, registry compatibility
-- Secret required: `CLAUDE_CODE_OAUTH_TOKEN`
+- Permissions: `contents: write`, `pull-requests: write`, `issues: write`, `id-token: write`, `actions: read`
+- Secret required: `ANTHROPIC_API_KEY` (standard Anthropic API key for GitHub Actions. `CLAUDE_CODE_OAUTH_TOKEN` is the desktop-IDE credential and is not used here.)
 
 **`release.yml`** — Runs on version tags (`v*`):
 

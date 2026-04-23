@@ -26,10 +26,10 @@ export async function GET() {
         $schema: "https://design.nyuchi.com/schema/api.json",
         "@context": "https://schema.org",
         "@type": "WebAPI",
-        name: "Mukoko Architecture API",
+        name: "Nyuchi Architecture API",
         version: "1.0.0",
         description:
-          "Unified API for the Mukoko ecosystem — components, brand, architecture, and design system.",
+          "Unified API for the Nyuchi Design Portal — components, brand, architecture, and design system. Canonical registry for the bundu ecosystem.",
         homepage: "https://design.nyuchi.com",
         database: {
           status: dbStatus,
@@ -65,9 +65,23 @@ export async function GET() {
             href: "/api/v1/health",
             description: "Service health check — database and registry status.",
           },
-          db: {
-            href: "/api/v1/db",
-            description: "Document store status and seeding — Supabase (Postgres) backend.",
+          architectureFrontendAxes: {
+            href: "/api/v1/architecture/frontend/axes",
+            description:
+              "Five axes of the 3D frontend architecture (X, Y, Z, Outside, Documentation).",
+          },
+          architectureFrontendLayers: {
+            href: "/api/v1/architecture/frontend/layers",
+            description:
+              "Ten layers of the 3D frontend architecture (L1 tokens .. L10 documentation).",
+          },
+          ubuntuPillars: {
+            href: "/api/v1/ubuntu/pillars",
+            description: "Five Ubuntu pillars — spheres in which Ubuntu is lived.",
+          },
+          ubuntuPrinciples: {
+            href: "/api/v1/ubuntu/principles",
+            description: "Five Ubuntu principles — operating rules translating Ubuntu to software.",
           },
           mcp: {
             href: "/mcp",

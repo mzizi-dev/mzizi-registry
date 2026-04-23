@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Check, Copy, Bot, Zap, BarChart2, Terminal } from "lucide-react"
+import { LiveMcpStats } from "@/components/live-mcp-stats"
 
 function CopySnippet({ code, label }: { code: string; label: string }) {
   const [copied, setCopied] = useState(false)
@@ -39,7 +40,7 @@ const mcpConfig = `{
 }`
 
 const skillUsage = `# In any Claude Code session:
-/mukoko-design-system
+/nyuchi-design-system
 
 # Or ask Claude directly:
 @design-portal get_component button
@@ -73,7 +74,9 @@ export function AiNativeSection() {
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-foreground">MCP Server</h3>
-                <p className="text-xs text-muted-foreground">Streamable HTTP · 12 tools</p>
+                <p className="text-xs text-muted-foreground">
+                  Streamable HTTP · <LiveMcpStats format="tools" />
+                </p>
               </div>
             </div>
             <p className="text-xs leading-relaxed text-muted-foreground">
@@ -114,7 +117,7 @@ export function AiNativeSection() {
             <p className="text-xs leading-relaxed text-muted-foreground">
               The{" "}
               <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">
-                mukoko-design-system
+                nyuchi-design-system
               </code>{" "}
               skill teaches Claude Code the Five African Minerals palette, component patterns,
               Ubuntu design principles, and APCA accessibility standards.

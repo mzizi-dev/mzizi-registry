@@ -24,7 +24,7 @@ Use GitHub's private security advisory flow so we can investigate and ship a fix
 2. Fill in: a clear title, a description, steps to reproduce, affected version / endpoint, impact (confidentiality / integrity / availability), and any suggested mitigation
 3. Submit — the maintainers are notified privately
 
-If GitHub advisories are unavailable to you, email `security@nyuchi.africa` with the same information. PGP is not required.
+If GitHub advisories are unavailable to you, email `security@nyuchi.com` with the same information. PGP is not required.
 
 ### What to include
 
@@ -60,7 +60,7 @@ This policy covers anything the portal itself owns:
 - The brand + architecture APIs (`/api/v1/brand`, `/api/v1/ecosystem`, `/api/v1/data-layer`, `/api/v1/pipeline`, `/api/v1/sovereignty`)
 - The Model Context Protocol server at `/mcp` (Streamable HTTP)
 - Component source code served via the registry — an XSS or RCE-by-scaffold is in scope
-- Supabase row-level security policies shipping in `supabase/migrations/`
+- Supabase row-level security policies captured in `supabase/schema.sql`
 - GitHub Actions workflows in `.github/workflows/` — malicious-input, token-exfiltration, or privilege-escalation issues
 - The shadcn CLI `install` surface: any way the registry can serve a response that runs unexpected code on a developer's machine
 
@@ -126,6 +126,6 @@ Per `CLAUDE.md` §15 rule 22, **security findings from any review/audit (`/secur
 ## Contact
 
 - Primary: GitHub security advisories — <https://github.com/nyuchitech/design-portal/security/advisories/new>
-- Fallback: `security@nyuchi.africa`
+- Fallback: `security@nyuchi.com`
 
 Thank you for helping keep the bundu ecosystem safe.
