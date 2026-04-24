@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator"
 import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 const minerals = [
   { name: "cobalt", color: "bg-[var(--color-cobalt)]" },
@@ -10,45 +11,39 @@ const minerals = [
 ]
 
 // ──────────────────────────────────────────────────────────────────────────
-// Footer columns — 4 coherent buckets, not 6 overlapping ones.
+// Footer columns — the full navigation map.
 //
-// Rationale (after the UX critique on PR #43):
-//   - "Getting Started" and "Registry & Developer" overlapped on /docs
-//     entries and /registry entries. Both now fall under the single
-//     "Developer" column.
-//   - "Design System" and "Brand" were split between /foundations,
-//     /design, /brand and /content with ambiguous scope — see issue #48.
-//     They're now one "Design System" column.
-//   - "Components & Blocks" stays its own column because component
-//     browsing is the primary reason most developers land here.
-//   - "Architecture" keeps a dedicated column because the 3D frontend
-//     model + fundi + patterns are distinctive doctrine, not generic docs.
+// The header only carries four top-level items (Components, Brand,
+// Architecture, Docs) on desktop. Below md the header hides its nav
+// entirely, so the footer is the authoritative navigation surface at
+// every breakpoint.
 //
-// When #48 lands (IA consolidation) these columns should re-consolidate
-// further.
+// Mobile: single stacked column (one section at a time, no cramped
+// 2-column split). Tablet: 2 columns. Desktop: 4 columns.
 // ──────────────────────────────────────────────────────────────────────────
 
 type FooterColumn = {
   title: string
-  links: Array<{ label: string; href: string }>
+  links: Array<{ label: string; href: string; external?: boolean }>
 }
 
 const columns: FooterColumn[] = [
   {
     title: "Components",
     links: [
-      { label: "All Components", href: "/components" },
+      { label: "All components", href: "/components" },
       { label: "Blocks", href: "/blocks" },
       { label: "Charts", href: "/charts" },
       { label: "Patterns", href: "/patterns" },
+      { label: "Playground", href: "/playground" },
     ],
   },
   {
-    title: "Design System",
+    title: "Design system",
     links: [
       { label: "Brand", href: "/brand" },
       { label: "Foundations", href: "/foundations" },
-      { label: "Design Tokens", href: "/foundations/tokens" },
+      { label: "Design tokens", href: "/foundations/tokens" },
       { label: "Icons", href: "/foundations/icons" },
       { label: "Accessibility", href: "/foundations/accessibility" },
       { label: "Typography", href: "/foundations/typography" },
@@ -57,9 +52,9 @@ const columns: FooterColumn[] = [
   {
     title: "Architecture",
     links: [
-      { label: "3D Architecture", href: "/architecture" },
-      { label: "Layer Decision Guide", href: "/architecture/layers" },
-      { label: "Component Backlinks", href: "/architecture/component-backlinks" },
+      { label: "3D architecture", href: "/architecture" },
+      { label: "Layer decision guide", href: "/architecture/layers" },
+      { label: "Component backlinks", href: "/architecture/component-backlinks" },
       { label: "Fundi (L9)", href: "/architecture/fundi" },
       { label: "Observability", href: "/observability" },
     ],
@@ -71,34 +66,96 @@ const columns: FooterColumn[] = [
       { label: "Installation", href: "/docs/installation" },
       { label: "CLI", href: "/docs/cli" },
       { label: "Theming", href: "/docs/theming" },
-      { label: "API Reference", href: "/docs/api-reference" },
+      { label: "API reference", href: "/docs/api-reference" },
       { label: "Registry", href: "/registry" },
-      { label: "MCP Server", href: "/registry/mcp" },
+      { label: "MCP server", href: "/registry/mcp" },
       { label: "Changelog", href: "/docs/changelog" },
       { label: "Contributing", href: "/docs/contributing" },
     ],
   },
 ]
 
-const footerLink = "text-xs text-muted-foreground transition-colors hover:text-foreground"
+const ecosystem: { heading: string; links: Array<{ label: string; href: string }> }[] = [
+  {
+    heading: "mukoko — consumer",
+    links: [
+      { label: "mukoko.com", href: "https://www.mukoko.com" },
+      { label: "weather", href: "https://weather.mukoko.com" },
+      { label: "news", href: "https://news.mukoko.com" },
+      { label: "lingo", href: "https://lingo.mukoko.com" },
+      { label: "nhimbe", href: "https://nhimbe.com" },
+      { label: "shamwari", href: "https://shamwari.ai" },
+    ],
+  },
+  {
+    heading: "nyuchi — enterprise",
+    links: [
+      { label: "nyuchi.com", href: "https://nyuchi.com" },
+      { label: "bushtrade", href: "https://bushtrade.co.zw" },
+    ],
+  },
+]
+
+function GithubIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+    </svg>
+  )
+}
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  )
+}
+
+const socials = [
+  {
+    label: "GitHub — design portal",
+    href: "https://github.com/nyuchitech/design-portal",
+    Icon: GithubIcon,
+  },
+  {
+    label: "GitHub — Nyuchi Africa",
+    href: "https://github.com/nyuchitech",
+    Icon: GithubIcon,
+  },
+  {
+    label: "Twitter / X",
+    href: "https://twitter.com/nyuchiafrica",
+    Icon: XIcon,
+  },
+]
+
+const footerLink =
+  "text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded-sm"
 
 export function Footer() {
   return (
     // Full-bleed: Nextra's <Footer> wrapper applies its own max-width and
     // left-aligns content inside the docs grid. The negative margins +
     // 100vw width here break out of that container so the footer spans
-    // the full viewport on desktop, then re-centres its grid via mx-auto.
+    // the full viewport, then re-centres its grid via mx-auto.
     <div className="relative right-1/2 left-1/2 -mx-[50vw] w-screen px-4 pt-8 pb-10 sm:px-6 sm:pb-12">
       <div className="mx-auto max-w-6xl">
         <Separator className="mb-10" />
 
-        {/* Primary nav: 4 columns on desktop, 2 on tablet, 1 stacked on mobile. */}
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 md:grid-cols-4">
+        {/* Primary nav: 1 column at mobile, 2 at sm, 4 at lg. */}
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
           {columns.map((col) => (
             <div key={col.title} className="flex flex-col gap-2">
               <span className="text-xs font-medium text-foreground">{col.title}</span>
               {col.links.map((link) => (
-                <a key={link.href} href={link.href} className={footerLink}>
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
+                  className={footerLink}
+                >
                   {link.label}
                 </a>
               ))}
@@ -106,10 +163,10 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Brand lockup + ecosystem family */}
         <Separator className="my-8" />
 
-        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+        {/* Brand lockup + ecosystem family */}
+        <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div className="flex flex-col gap-3">
             <NyuchiLogo size={24} showWordmark suffix="design" />
             <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">
@@ -123,112 +180,61 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-6 gap-y-6 sm:flex sm:flex-wrap sm:gap-12">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium text-foreground">mukoko — consumer</span>
-              <a
-                href="https://www.mukoko.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                mukoko.com
-              </a>
-              <a
-                href="https://weather.mukoko.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                weather
-              </a>
-              <a
-                href="https://news.mukoko.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                news
-              </a>
-              <a
-                href="https://lingo.mukoko.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                lingo
-              </a>
-              <a
-                href="https://nhimbe.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                nhimbe
-              </a>
-              <a
-                href="https://shamwari.ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                shamwari
-              </a>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium text-foreground">nyuchi — enterprise</span>
-              <a
-                href="https://nyuchi.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                nyuchi.com
-              </a>
-              <a
-                href="https://bushtrade.co.zw"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                bushtrade
-              </a>
-              <a
-                href="https://github.com/nyuchitech/design-portal"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                GitHub
-              </a>
-              <a
-                href="https://github.com/nyuchitech"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={footerLink}
-              >
-                Nyuchi on GitHub
-              </a>
-            </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-10 md:gap-12">
+            {ecosystem.map((group) => (
+              <div key={group.heading} className="flex flex-col gap-2">
+                <span className="text-xs font-medium text-foreground">{group.heading}</span>
+                {group.links.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={footerLink}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
 
         <Separator className="my-6" />
 
-        <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
-          <span className="text-xs text-muted-foreground">
-            Built by{" "}
-            <a
-              href="https://github.com/nyuchitech"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground underline underline-offset-2 transition-colors hover:text-muted-foreground"
-            >
-              Nyuchi Africa
-            </a>
-          </span>
-          <span className="font-mono text-[10px] text-muted-foreground">v4.0.26</span>
+        {/* Bottom bar — socials, theme, version, credit */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-1">
+            {socials.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                <Icon className="size-4" />
+              </a>
+            ))}
+            <ThemeToggle />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+            <span>
+              Built by{" "}
+              <a
+                href="https://github.com/nyuchitech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground underline underline-offset-2 transition-colors hover:text-muted-foreground"
+              >
+                Nyuchi Africa
+              </a>
+            </span>
+            <span aria-hidden="true">·</span>
+            <span className="font-mono text-[10px]">v4.0.26</span>
+          </div>
         </div>
       </div>
     </div>

@@ -18,22 +18,22 @@ import { LiveMcpStats } from "@/components/live-mcp-stats"
 export function BuildWithSection() {
   return (
     <section className="border-t border-border bg-muted/30">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mb-12 max-w-2xl">
-          <p className="mb-3 font-mono text-xs tracking-widest text-muted-foreground">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 md:py-24">
+        <div className="mb-10 max-w-2xl sm:mb-12">
+          <p className="mb-3 font-mono text-[11px] tracking-widest text-muted-foreground sm:text-xs">
             BUILD WITH THE PORTAL
           </p>
-          <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
             Five steps from new repo to shipped page
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             The portal is a registry, a token system, an MCP server, and a set of installable Claude
             Code skills. You don&apos;t pull a package — you pull exactly the pieces you need and
             own the source. Here&apos;s the full authoring loop.
           </p>
         </div>
 
-        <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ol className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
           <li className="flex flex-col gap-3 rounded-2xl border border-border bg-background p-6">
             <span className="font-mono text-xs text-muted-foreground">01</span>
             <h3 className="font-serif text-xl font-semibold">Install a component</h3>

@@ -48,11 +48,11 @@ const skillUsage = `# In any Claude Code session:
 
 export function AiNativeSection() {
   return (
-    <section className="px-4 py-16 sm:px-6 md:py-24">
+    <section className="px-4 py-12 sm:px-6 sm:py-16 md:py-24">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
-        <div className="mb-10 text-center sm:mb-14">
-          <p className="mb-3 text-sm font-medium tracking-widest text-muted-foreground uppercase">
+        <div className="mb-8 text-center sm:mb-14">
+          <p className="mb-3 text-xs font-medium tracking-widest text-muted-foreground uppercase sm:text-sm">
             AI-Native
           </p>
           <h2 className="font-serif text-2xl font-bold tracking-tight text-balance text-foreground sm:text-3xl md:text-4xl">
@@ -65,7 +65,7 @@ export function AiNativeSection() {
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* MCP Server */}
           <div className="flex flex-col gap-4 rounded-[var(--radius-xl)] border border-border bg-card p-6">
             <div className="flex items-center gap-3">

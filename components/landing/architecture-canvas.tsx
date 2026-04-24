@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState, type CSSProperties } from "react"
+import { useMemo, useState } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls } from "@react-three/drei"
 import type { ArchitectureFrontendAxisRow, ArchitectureFrontendLayerRow } from "@/lib/db/types"
@@ -178,11 +178,8 @@ export function ArchitectureCanvas({ axes, layers }: ArchitectureCanvasProps) {
   ]
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
-      <div
-        style={{ height: 420 } as CSSProperties}
-        className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-background to-muted/30"
-      >
+    <div className="grid gap-4 sm:gap-6 lg:grid-cols-[2fr_1fr]">
+      <div className="relative h-[320px] overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-background to-muted/30 sm:h-[420px]">
         <Canvas camera={{ position: [5, 4, 6], fov: 45 }}>
           <ambientLight intensity={0.55} />
           <directionalLight position={[6, 8, 4]} intensity={0.9} />

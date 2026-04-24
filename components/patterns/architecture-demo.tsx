@@ -126,11 +126,12 @@ export function ArchitectureDemo() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
         <Button
           variant={showError ? "destructive" : "outline"}
           size="sm"
           onClick={() => setShowError(!showError)}
+          className="w-full sm:w-auto"
         >
           {showError ? "Error triggered" : "Trigger error in Analytics Chart"}
         </Button>

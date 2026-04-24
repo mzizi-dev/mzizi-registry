@@ -41,23 +41,27 @@ export function ComponentGalleryClient({ items }: { items: GalleryItem[] }) {
   return (
     <div className="space-y-6">
       {/* Filters — touch targets 48px min per CLAUDE.md §8.2 */}
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <input
           type="text"
           placeholder="Search components..."
           aria-label="Search components by name"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="h-12 rounded-lg border border-border bg-background px-4 text-sm outline-none focus:ring-2 focus:ring-ring/50"
+          className="h-12 w-full rounded-lg border border-border bg-background px-4 text-sm outline-none focus:ring-2 focus:ring-ring/50 sm:w-auto sm:min-w-[240px] sm:flex-1"
         />
-        <div role="group" aria-label="Filter by registry type" className="flex flex-wrap gap-1.5">
+        <div
+          role="group"
+          aria-label="Filter by registry type"
+          className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
+        >
           {types.map((t) => (
             <button
               key={t}
               onClick={() => setFilter(t)}
               aria-pressed={filter === t}
               className={cn(
-                "inline-flex h-12 items-center rounded-full px-4 text-sm font-medium transition-colors",
+                "inline-flex h-12 shrink-0 items-center rounded-full px-4 text-sm font-medium transition-colors",
                 filter === t
                   ? "bg-foreground text-background"
                   : "bg-muted text-muted-foreground hover:text-foreground"
@@ -73,7 +77,7 @@ export function ComponentGalleryClient({ items }: { items: GalleryItem[] }) {
       </div>
 
       {/* Grid */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {filtered.map((item) => {
           const hasDemo = item.name in COMPONENT_DEMOS
           return (

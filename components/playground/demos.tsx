@@ -239,11 +239,11 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
           <DialogDescription>Make changes to your profile here.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="dialog-name" className="text-right">
+          <div className="grid gap-2 sm:grid-cols-4 sm:items-center sm:gap-4">
+            <Label htmlFor="dialog-name" className="sm:text-right">
               Name
             </Label>
-            <Input id="dialog-name" defaultValue="Mukoko" className="col-span-3" />
+            <Input id="dialog-name" defaultValue="Mukoko" className="sm:col-span-3" />
           </div>
         </div>
         <DialogFooter>
@@ -385,7 +385,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
 
   select: (
     <Select>
-      <SelectTrigger className="w-[200px]">
+      <SelectTrigger className="w-full max-w-[200px]">
         <SelectValue placeholder="Select a mineral" />
       </SelectTrigger>
       <SelectContent>
@@ -416,11 +416,11 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
   ),
 
   skeleton: (
-    <div className="flex items-center space-x-4">
-      <Skeleton className="size-12 rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[250px]" />
-        <Skeleton className="h-4 w-[200px]" />
+    <div className="flex w-full max-w-full items-center space-x-4">
+      <Skeleton className="size-12 shrink-0 rounded-full" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <Skeleton className="h-4 w-full max-w-[250px]" />
+        <Skeleton className="h-4 w-full max-w-[200px]" />
       </div>
     </div>
   ),
@@ -746,7 +746,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
 
   "date-picker": (
     <div className="flex flex-col gap-3">
-      <button className="inline-flex h-10 w-[280px] items-center rounded-lg border border-border bg-background px-3 text-left text-sm">
+      <button className="inline-flex h-10 w-full max-w-[280px] items-center rounded-lg border border-border bg-background px-3 text-left text-sm">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -766,7 +766,7 @@ export const COMPONENT_DEMOS: Record<string, React.ReactNode> = {
         </svg>
         <span className="text-muted-foreground">Pick a date</span>
       </button>
-      <button className="inline-flex h-10 w-[280px] items-center rounded-lg border border-border bg-background px-3 text-left text-sm">
+      <button className="inline-flex h-10 w-full max-w-[280px] items-center rounded-lg border border-border bg-background px-3 text-left text-sm">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

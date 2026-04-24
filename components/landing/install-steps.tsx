@@ -35,7 +35,7 @@ export function InstallSteps() {
           <p className="mb-3 text-sm font-medium tracking-widest text-muted-foreground uppercase">
             How it works
           </p>
-          <h2 className="font-serif text-3xl font-bold tracking-tight text-balance text-foreground md:text-4xl">
+          <h2 className="font-serif text-2xl font-bold tracking-tight text-balance text-foreground sm:text-3xl md:text-4xl">
             Three steps. Zero friction.
           </h2>
         </div>
@@ -63,8 +63,8 @@ export function InstallSteps() {
                 <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
               </div>
 
-              <div className="mt-auto rounded-xl bg-secondary px-3 py-2.5">
-                <code className="font-mono text-xs break-all text-muted-foreground">
+              <div className="mt-auto overflow-hidden rounded-xl bg-secondary px-3 py-2.5">
+                <code className="block font-mono text-[11px] leading-relaxed break-all text-muted-foreground sm:text-xs">
                   {step.code}
                 </code>
               </div>
