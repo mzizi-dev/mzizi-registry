@@ -6,6 +6,7 @@ import { getPageMap } from "nextra/page-map"
 import "nextra-theme-docs/style.css"
 import "./globals.css"
 import { MineralStrip } from "@/components/layout/mineral-strip"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { Header } from "@/components/landing/header"
 import { Footer as CustomFooter } from "@/components/landing/footer"
 
@@ -175,16 +176,25 @@ export default async function RootLayout({
             sticky header (z-50) naturally covers it — the strip appears
             only outside the header band. */}
         <MineralStrip className="fixed inset-y-0 left-0 z-40 h-screen rounded-none" />
-        <div className="pl-1">
-          <Layout
-            navbar={navbar}
-            pageMap={await getPageMap()}
-            docsRepositoryBase="https://github.com/nyuchitech/design-portal/tree/main"
-            footer={footer}
-          >
-            {children}
-          </Layout>
-        </div>
+        {/* SidebarProvider wraps the whole app so `NyuchiHeader`'s built-in
+            SidebarTrigger has the context it needs. The actual `<Sidebar>`
+            content lands in the follow-up dashboard-shell PR
+            (`claude/nyuchi-dashboard-shell`); until then the trigger
+            toggles an empty provider — harmless no-op on desktop, opens
+            a stub sheet on mobile. `defaultOpen={false}` keeps the portal
+            chrome-free for consumers still using Nextra's sidebar. */}
+        <SidebarProvider defaultOpen={false}>
+          <div className="w-full pl-1">
+            <Layout
+              navbar={navbar}
+              pageMap={await getPageMap()}
+              docsRepositoryBase="https://github.com/nyuchitech/design-portal/tree/main"
+              footer={footer}
+            >
+              {children}
+            </Layout>
+          </div>
+        </SidebarProvider>
       </body>
     </html>
   )
