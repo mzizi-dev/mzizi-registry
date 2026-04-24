@@ -165,16 +165,24 @@ design-portal/
 │   ├── design/, docs/, foundations/, observability/, patterns/, registry/   # MDX doc routes
 ├── components/
 │   ├── docs/                         # DB-driven docs renderers (DEPRECATED — see §15.18)
-│   ├── landing/                      # Landing sections (header, hero, footer, install-steps,
-│   │                                 #   ai-native-section, copy-command, explore-section,
-│   │                                 #   component-catalog, component-showcase)
+│   ├── landing/                      # Portal-specific compositions over registry components
+│   │                                 #   (header.tsx configures NyuchiHeader, footer.tsx
+│   │                                 #   composes primitives + portal chrome; hero, install-
+│   │                                 #   steps, ai-native, build-with, explore, resilient-
+│   │                                 #   by-design, architecture-canvas / explorer)
 │   ├── layout/                       # mineral-strip.tsx, nyuchi-logo.tsx
+│   ├── mukoko/                       # Vendored registry:ui brand components
+│   │                                 #   (mukoko-header, mukoko-footer, mukoko-theme-provider,
+│   │                                 #   mukoko-skeleton-set, mukoko-error-set,
+│   │                                 #   mukoko-verified-badge) — registry paths kept as-is
+│   │                                 #   for pnpm registry:sync parity, see §8.6 note
 │   ├── patterns/                     # Pattern demos (architecture, observability,
 │   │                                 #   error-boundary, lazy-loading, component-pattern, code-block)
 │   ├── playground/                   # Interactive component gallery + API tester
 │   ├── ui/                           # ~35 portal primitives (the only registry items committed
 │   │                                 #   to disk; the other ~510 live only in Supabase
-│   │                                 #   and are served via /api/v1/ui)
+│   │                                 #   and are served via /api/v1/ui) — plus user-menu.tsx
+│   │                                 #   (vendored from nyuchi-user-menu)
 │   ├── error-boundary.tsx, lazy-section.tsx, section-error-boundary.tsx
 │   ├── theme-provider.tsx, theme-toggle.tsx
 │   └── example.tsx
@@ -183,10 +191,19 @@ design-portal/
 │   └── use-memory-pressure.ts        # Memory pressure observer
 ├── lib/
 │   ├── utils.ts                      # cn() utility (clsx + tailwind-merge)
+│   ├── icons.ts                      # Re-export shim for @/lib/icons (lucide-react passthrough)
 │   ├── observability.ts              # Structured logging with [mukoko] prefix
 │   ├── metrics.ts                    # MCP/API usage tracking
 │   ├── mcp-server.ts                 # MCP server factory (served at /mcp)
-│   └── db/                           # Supabase data access — SOURCE OF TRUTH
+│   ├── harness/                      # Vendored: NyuchiHarness + useNyuchiHarness hook
+│   │                                 #   (observability + motion + a11y + health wiring)
+│   ├── resilience/                   # Vendored: section error boundary + retry fetch + fallback
+│   ├── tokens/                       # Vendored: L1 design tokens + multi-platform generators
+│   ├── motion/                       # Vendored: motion presets + reduced-motion detection
+│   ├── a11y/                         # Vendored: focus-trap, live-region, skip-nav
+│   ├── circuit-breaker.ts, retry.ts, timeout.ts, fallback-chain.ts,
+│   ├── bulkhead.ts, rate-limiter.ts, chaos.ts    # Resilience primitives (vendored)
+│   └── db/                           # Supabase data access — SOURCE OF TRUTH for components
 │       ├── client.ts                 # Browser-side cache (localStorage)
 │       ├── index.ts                  # Server-side query functions
 │       └── types.ts                  # ComponentRow, ComponentDocRow, etc.
@@ -567,7 +584,20 @@ GET https://design.nyuchi.com/api/v1/skills/{name}    # raw MDX
 
 Skills are source-of-truthed in the existing `ai_instructions` Supabase table (or a new `skills` table if the versioning / audit needs differ) and served via a new `/api/v1/skills/*` endpoint that the CLI consumes. Claude Code plugin support requires a top-level `plugin.json` manifest in the skills repo.
 
-### 8.7 registry.json Schema Reference
+### 8.7 Vendored registry stack — path + naming drift
+
+The portal dogfoods its own registry. The 33-item transitive closure of `nyuchi-header` / `nyuchi-footer` / `nyuchi-user-menu` is vendored into this repo — the harness, resilience, tokens, motion, a11y, theme-provider, skeleton/error sets, verified-badge, and the seven resilience primitives (circuit-breaker, retry, timeout, fallback-chain, bulkhead, rate-limiter, chaos).
+
+**Two divergences between the registry's declared paths and the portal's reality**:
+
+1. **`components/mukoko/*` paths, `nyuchi-*` item names.** The registry is mid-rename (CLAUDE.md §11 already reflects the `nyuchi-*` names, but the registry's `files[].path` still points at `components/mukoko/mukoko-header.tsx`, etc.). Vendored files keep the `components/mukoko/*` path so that future `pnpm registry:sync` sees them as unchanged and doesn't try to overwrite with reshaped paths. When the registry itself completes the rename to `components/nyuchi/*`, run `pnpm registry:sync` + rename locally in a single commit.
+2. **Brand component imports use `@/components/brand/*` paths** that don't exist in this repo. The portal keeps `nyuchi-logo.tsx` and `mineral-strip.tsx` under `@/components/layout/` instead. Vendored files are patched on install to target the portal's real paths. Next `pnpm registry:sync` will re-patch automatically via the sync script (issue to be filed against the registry to align paths).
+
+**Upstream-bug tracking.** The vendor pass fixed 11 genuine bugs in the registry source code (template-literal escape artefacts, broken exports, missing prop definitions, type mismatches). They are listed in the commit message of the vendor commit and mirrored in a tracking GitHub issue. Re-running `pnpm registry:sync` before the upstream issues close will reintroduce the bugs — the sync script may need a patch-set overlay until the registry is clean.
+
+**Footer composition note.** `components/landing/footer.tsx` is deliberately NOT a one-line wrapper over `NyuchiFooter`. The portal footer has four portal-specific features NyuchiFooter doesn't currently expose: (1) the ecosystem brand grid (mukoko-consumer + nyuchi-enterprise columns), (2) a socials row (GitHub x2, X/Twitter), (3) an inline `ThemeToggle`, (4) a version line. The portal footer is a composition of primitives (`Separator`, `NyuchiLogo`, `ThemeToggle`) — not a hand-rolled variation of `NyuchiFooter`. Extending `NyuchiFooter` upstream with `ecosystem` / `socials` / `actions` / `version` props so the portal can fully dogfood it is a tracked follow-up.
+
+### 8.8 registry.json Schema Reference
 
 ```json
 {
