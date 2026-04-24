@@ -27,15 +27,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 export async function ResilientBySection() {
   return (
     <section className="border-t border-border">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mb-12 max-w-2xl">
-          <p className="mb-3 font-mono text-xs tracking-widest text-muted-foreground">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 md:py-24">
+        <div className="mb-10 max-w-2xl sm:mb-12">
+          <p className="mb-3 font-mono text-[11px] tracking-widest text-muted-foreground sm:text-xs">
             RESILIENT BY DESIGN
           </p>
-          <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
             Two outlier layers keep the system updated and secure
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             The 3D frontend architecture is ten layers across five axes. Eight of those layers build
             the product. Two sit outside the build path on purpose — they exist so the system never
             goes stale or insecure.
@@ -43,15 +43,17 @@ export async function ResilientBySection() {
         </div>
 
         {/* Interactive 3D explorer — five axes + ten layer nodes, click to inspect */}
-        <div className="mb-10">
+        <div className="mb-10 overflow-hidden">
           <Suspense
-            fallback={<Skeleton className="h-[420px] w-full rounded-xl border border-border" />}
+            fallback={
+              <Skeleton className="h-[320px] w-full rounded-xl border border-border sm:h-[420px]" />
+            }
           >
             <ArchitectureExplorer />
           </Suspense>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
           <article className="flex flex-col gap-4 rounded-2xl border border-border bg-background p-6 sm:p-8">
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs text-muted-foreground">L9 · OUTSIDE AXIS</span>

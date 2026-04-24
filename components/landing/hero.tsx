@@ -40,17 +40,19 @@ export async function Hero() {
       {/* Subtle grid */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
-      <div className="flex flex-col items-center gap-4">
-        <Badge variant="outline" className="gap-2 px-3 py-1">
-          <span className="flex gap-1">
+      <div className="flex w-full max-w-full flex-col items-center gap-4">
+        <Badge variant="outline" className="max-w-full gap-2 px-3 py-1 text-[11px] sm:text-xs">
+          <span className="flex shrink-0 gap-1">
             {minerals.map((m) => (
               <span key={m.name} className={`size-1.5 rounded-full ${m.color}`} />
             ))}
           </span>
-          <span className="text-muted-foreground">Ndiri nekuti tiri — I am because we are</span>
+          <span className="truncate text-muted-foreground sm:whitespace-normal">
+            Ndiri nekuti tiri — I am because we are
+          </span>
         </Badge>
 
-        <div className="flex flex-wrap items-center justify-center gap-1.5">
+        <div className="flex w-full flex-wrap items-center justify-center gap-1.5 px-2">
           {products.map((p) => (
             <a
               key={p.label}
@@ -66,12 +68,12 @@ export async function Hero() {
       </div>
 
       <div className="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
-        <h1 className="font-serif text-3xl font-bold tracking-tight text-balance text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
+        <h1 className="font-serif text-[clamp(1.75rem,6vw,2rem)] leading-[1.1] font-bold tracking-tight text-balance text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
           The design system
           <br />
           for the bundu ecosystem
         </h1>
-        <p className="max-w-xl text-base leading-relaxed text-pretty text-muted-foreground md:text-lg">
+        <p className="max-w-xl text-sm leading-relaxed text-pretty text-muted-foreground sm:text-base md:text-lg">
           {totalLabel} components, blocks, and charts rooted in the Five African Minerals palette.
           One design system powering mukoko, nyuchi, and every app in the bundu family. Install with
           the shadcn CLI — no packages, no lock-in.

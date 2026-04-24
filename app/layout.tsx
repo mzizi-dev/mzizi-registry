@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next"
 import { Noto_Sans, Noto_Serif, JetBrains_Mono } from "next/font/google"
-import { Footer, Layout, Navbar } from "nextra-theme-docs"
+import { Footer, Layout } from "nextra-theme-docs"
 import { Head } from "nextra/components"
 import { getPageMap } from "nextra/page-map"
 import "nextra-theme-docs/style.css"
 import "./globals.css"
-import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
 import { MineralStrip } from "@/components/layout/mineral-strip"
+import { Header } from "@/components/landing/header"
 import { Footer as CustomFooter } from "@/components/landing/footer"
 
 const fontSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" })
@@ -88,20 +88,18 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
+  // Must match the semantic `--background` token in app/globals.css.
+  // Updated April 2026 when L1 tokens swapped (see nyuchi-tokens registry).
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAF9F5" },
-    { media: "(prefers-color-scheme: dark)", color: "#0A0A0A" },
+    { media: "(prefers-color-scheme: light)", color: "#F3F2EE" },
+    { media: "(prefers-color-scheme: dark)", color: "#1B1A17" },
   ],
 }
 
-const navbar = (
-  <Navbar
-    // Full left-side brand lockup — icon + "nyuchi design" wordmark, both
-    // clickable (Nextra auto-links the whole `logo` slot to `/`).
-    logo={<NyuchiLogo size={24} showWordmark suffix="design" />}
-    projectLink="https://github.com/nyuchitech/design-portal"
-  />
-)
+// Custom header replaces Nextra's <Navbar>. Layout is identical at every
+// breakpoint: logo + wordmark, 4 nav items (desktop only), 3-icon pill group
+// (always visible). See `components/landing/header.tsx`.
+const navbar = <Header />
 
 const footer = (
   <Footer>
@@ -171,7 +169,12 @@ export default async function RootLayout({
         />
       </Head>
       <body className="font-sans antialiased">
-        <MineralStrip className="fixed inset-y-0 left-0 z-50 h-screen rounded-none" />
+        {/* Mineral strip is a 4px fixed-position accent on the far left of
+            every viewport. `pl-1` on the layout wrapper reserves 4px so
+            content never overlaps it, and the strip sits at z-40 so the
+            sticky header (z-50) naturally covers it — the strip appears
+            only outside the header band. */}
+        <MineralStrip className="fixed inset-y-0 left-0 z-40 h-screen rounded-none" />
         <div className="pl-1">
           <Layout
             navbar={navbar}

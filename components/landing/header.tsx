@@ -1,105 +1,96 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { ExternalLink } from "lucide-react"
+import Link from "next/link"
+import { Search, Wrench, User } from "lucide-react"
 import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { cn } from "@/lib/utils"
 
-function GithubIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-    </svg>
-  )
+/**
+ * Landing / portal-wide header.
+ *
+ * Layout is identical from 320px through ultra-wide: logo + wordmark on the
+ * left, three-icon pill group on the right. The only breakpoint-gated bit is
+ * the four top-level nav links in the middle, which only appear at `md` and
+ * above (below that, the footer is the full navigation map).
+ *
+ * Icons in the pill follow the registry's `nyuchi-header` "pill action group"
+ * pattern — a rounded-full container in the brand primary colour with three
+ * circular icon buttons. Search, Fundi (Wrench), and Avatar are the three
+ * persistent identity anchors across every breakpoint.
+ *
+ * Theme toggle and all social links live in the footer (see `footer.tsx`).
+ */
+
+type NavItem = { label: string; href: string }
+
+const NAV_ITEMS: NavItem[] = [
+  { label: "Components", href: "/components" },
+  { label: "Brand", href: "/brand" },
+  { label: "Architecture", href: "/architecture" },
+  { label: "Docs", href: "/docs" },
+]
+
+type PillAction = {
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+  href: string
 }
 
-function SearchIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  )
-}
+const PILL_ACTIONS: PillAction[] = [
+  { icon: Search, label: "Search components", href: "/components" },
+  { icon: Wrench, label: "Fundi — self-healing dashboard", href: "/fundi" },
+  { icon: User, label: "Account", href: "/fundi" },
+]
 
 export function Header() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-        {/* Left: Icon + wordmark */}
-        <a href="/" className="flex items-center">
-          <NyuchiLogo size={26} showWordmark suffix="design" />
-        </a>
+    <header
+      data-slot="header"
+      className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl"
+    >
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
+        <Link
+          href="/"
+          className="flex shrink-0 items-center"
+          aria-label="Nyuchi Design Portal home"
+        >
+          <NyuchiLogo size={24} showWordmark suffix="design" />
+        </Link>
 
-        {/* Center: Desktop-only nav links */}
-        <nav className="hidden items-center gap-1 md:flex">
-          <a
-            href="/components"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Components
-          </a>
-          <a
-            href="/brand"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Brand
-          </a>
-          <a
-            href="/architecture"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Architecture
-          </a>
-          <a
-            href="/observability"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Observability
-          </a>
-          <a
-            href="/docs"
-            className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Docs
-          </a>
-          <a
-            href="https://www.mukoko.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            mukoko.com
-            <ExternalLink className="size-3 opacity-50" />
-          </a>
+        <nav className="ml-4 hidden items-center gap-1 md:flex" aria-label="Primary">
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
-        {/* Right: 3 icon buttons — 48px min touch target per CLAUDE.md §8.2 */}
-        <div className="flex items-center gap-0.5">
-          <Button variant="ghost" size="icon-sm" asChild>
-            <a href="/components" aria-label="Search components">
-              <SearchIcon className="size-4" />
-            </a>
-          </Button>
-          <Button variant="ghost" size="icon-sm" asChild>
-            <a
-              href="https://github.com/nyuchitech/design-portal"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
+        <div className="flex-1" />
+
+        {/* Pill action group — 3 icons, always visible */}
+        <div
+          data-slot="pill-actions"
+          className="flex shrink-0 items-center gap-1 rounded-full bg-primary p-1"
+        >
+          {PILL_ACTIONS.map(({ icon: Icon, label, href }) => (
+            <Link
+              key={label}
+              href={href}
+              aria-label={label}
+              className={cn(
+                "flex size-9 items-center justify-center rounded-full",
+                "bg-background/10 text-primary-foreground transition-colors",
+                "hover:bg-background/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background",
+                "sm:size-10"
+              )}
             >
-              <GithubIcon className="size-4" />
-            </a>
-          </Button>
-          <ThemeToggle />
+              <Icon className="size-4 sm:size-[18px]" />
+            </Link>
+          ))}
         </div>
       </div>
     </header>
