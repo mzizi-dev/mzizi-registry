@@ -54,7 +54,7 @@ const DEFAULT_SECTIONS: FooterSection[] = [
       { label: "Components", href: "/components" },
       { label: "API", href: "/api-docs" },
       { label: "Architecture", href: "/architecture" },
-      { label: "GitHub", href: "https://github.com/nyuchitech", external: true },
+      { label: "GitHub", href: "https://github.com/nyuchi", external: true },
     ],
   },
   {

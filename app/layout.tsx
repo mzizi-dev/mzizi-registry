@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next"
 import { Noto_Sans, Noto_Serif, JetBrains_Mono } from "next/font/google"
-import { Footer, Layout } from "nextra-theme-docs"
-import { Head } from "nextra/components"
-import { getPageMap } from "nextra/page-map"
-import "nextra-theme-docs/style.css"
 import "./globals.css"
 import { MineralStrip } from "@/components/layout/mineral-strip"
-import { SidebarProvider } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { DashboardSidebar } from "@/components/landing/dashboard-sidebar"
 import { Header } from "@/components/landing/header"
+import { Breadcrumbs } from "@/components/landing/breadcrumbs"
+import { Toc } from "@/components/landing/toc"
 import { Footer as CustomFooter } from "@/components/landing/footer"
 
 const fontSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" })
@@ -90,23 +90,11 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   // Must match the semantic `--background` token in app/globals.css.
-  // Updated April 2026 when L1 tokens swapped (see nyuchi-tokens registry).
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#F3F2EE" },
     { media: "(prefers-color-scheme: dark)", color: "#1B1A17" },
   ],
 }
-
-// Custom header replaces Nextra's <Navbar>. Layout is identical at every
-// breakpoint: logo + wordmark, 4 nav items (desktop only), 3-icon pill group
-// (always visible). See `components/landing/header.tsx`.
-const navbar = <Header />
-
-const footer = (
-  <Footer>
-    <CustomFooter />
-  </Footer>
-)
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -129,7 +117,7 @@ const jsonLd = {
         "@type": "ImageObject",
         url: `${SITE_URL}/icons/mukoko-icon-dark-cobalt.svg`,
       },
-      sameAs: ["https://github.com/nyuchitech", "https://nyuchi.com", "https://mukoko.com"],
+      sameAs: ["https://github.com/nyuchi", "https://nyuchi.com", "https://mukoko.com"],
     },
     {
       "@type": "SoftwareApplication",
@@ -145,13 +133,34 @@ const jsonLd = {
       },
       description: SITE_DESCRIPTION,
       creator: { "@id": `${SITE_URL}/#organization` },
-      softwareVersion: "4.0.26",
+      softwareVersion: "4.0.38",
       downloadUrl: "https://design.nyuchi.com/api/v1/ui",
     },
   ],
 }
 
-export default async function RootLayout({
+/**
+ * Root layout — Nyuchi dashboard shell.
+ *
+ * Replaces Nextra's `<Layout>` wrapper with the Nyuchi dashboard pattern:
+ *   - `<SidebarProvider>` (from vendored shadcn sidebar primitive) provides
+ *     the toggle context for the header's built-in `SidebarTrigger`.
+ *   - `<DashboardSidebar>` — curated nav from `lib/nav.ts`. Collapses to
+ *     an icon strip on narrow desktops; renders as a Sheet on mobile.
+ *   - `<SidebarInset>` — the main content column, shifts to accommodate
+ *     the sidebar on desktop and becomes full-width on mobile.
+ *   - Inside the inset: sticky header, then a grid that holds the
+ *     breadcrumb + MDX body + TOC rail + portal footer.
+ *
+ * Layout behaviour by route:
+ *   - Landing `/`           — Breadcrumbs + Toc self-hide (both return null
+ *                             on empty path / no headings); sidebar collapses
+ *                             to icon strip so the hero feels full-bleed.
+ *   - Docs / architecture / …  — full shell: sidebar + breadcrumbs + TOC.
+ *   - Any MDX route          — TOC mounts automatically because `rehype-slug`
+ *                             generates h2/h3 IDs at compile time.
+ */
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
@@ -163,38 +172,41 @@ export default async function RootLayout({
       className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable}`}
       suppressHydrationWarning
     >
-      <Head>
+      <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-      </Head>
+      </head>
       <body className="font-sans antialiased">
-        {/* Mineral strip is a 4px fixed-position accent on the far left of
-            every viewport. `pl-1` on the layout wrapper reserves 4px so
-            content never overlaps it, and the strip sits at z-40 so the
-            sticky header (z-50) naturally covers it — the strip appears
-            only outside the header band. */}
+        {/* Mineral strip — 4px fixed left-edge accent, z-40 so the sticky
+            header (z-50) covers it cleanly. `pl-1` on the content column
+            reserves 4px so nothing overlaps. */}
         <MineralStrip className="fixed inset-y-0 left-0 z-40 h-screen rounded-none" />
-        {/* SidebarProvider wraps the whole app so `NyuchiHeader`'s built-in
-            SidebarTrigger has the context it needs. The actual `<Sidebar>`
-            content lands in the follow-up dashboard-shell PR
-            (`claude/nyuchi-dashboard-shell`); until then the trigger
-            toggles an empty provider — harmless no-op on desktop, opens
-            a stub sheet on mobile. `defaultOpen={false}` keeps the portal
-            chrome-free for consumers still using Nextra's sidebar. */}
-        <SidebarProvider defaultOpen={false}>
-          <div className="w-full pl-1">
-            <Layout
-              navbar={navbar}
-              pageMap={await getPageMap()}
-              docsRepositoryBase="https://github.com/nyuchitech/design-portal/tree/main"
-              footer={footer}
-            >
-              {children}
-            </Layout>
-          </div>
-        </SidebarProvider>
+
+        <TooltipProvider delayDuration={200}>
+          <SidebarProvider defaultOpen>
+            <DashboardSidebar />
+
+            <SidebarInset className="pl-1">
+              <Header />
+
+              <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_12rem] lg:py-8">
+                <div className="min-w-0">
+                  <Breadcrumbs className="mb-4" />
+                  <article data-mdx className="prose-mdx">
+                    {children}
+                  </article>
+                </div>
+                <aside className="hidden self-start lg:sticky lg:top-20 lg:block">
+                  <Toc />
+                </aside>
+              </div>
+
+              <CustomFooter />
+            </SidebarInset>
+          </SidebarProvider>
+        </TooltipProvider>
       </body>
     </html>
   )

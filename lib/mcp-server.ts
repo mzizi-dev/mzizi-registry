@@ -34,10 +34,11 @@ import {
   getChangelogEntries,
   getChangelogByVersion,
   getComponentVersions,
-  getDocumentationPage,
-  getAllDocumentationPages,
   getArchitectureFrontendAxes,
   getArchitectureFrontendLayers,
+  getArchitectureSnapshot,
+  getAxesSummary,
+  getLayerDetail,
   getUbuntuPillars,
   getUbuntuPrinciples,
 } from "@/lib/db"
@@ -119,8 +120,8 @@ export async function createMukokoMcpServer(): Promise<McpServer> {
   const instructions = await loadSystemPrompt()
   const server = new McpServer(
     {
-      name: "design-portal",
-      version: "4.0.26",
+      name: "nyuchi-design",
+      version: "4.0.38",
     },
     instructions ? { instructions } : undefined
   )
@@ -960,6 +961,93 @@ export { ${pascalName}, ${camelVariants}Variants }
   )
 
   server.tool(
+    "get_architecture",
+    "Full 3D-architecture snapshot — every axis with its layers, covenants, stakeholders, implementation rules, and live component counts. Single call powers the /architecture explorer page; uses get_architecture() SQL helper.",
+    {},
+    async () => {
+      const start = Date.now()
+      try {
+        const axes = await getArchitectureSnapshot()
+        trackMcpTool({ toolName: "get_architecture", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(axes, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_architecture",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError("Failed to fetch architecture snapshot", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_axes_summary",
+    "Per-axis summary (5 rows: X-axis, Y-axis, Z-axis, Outside, Documentation) with live layer_count and component_count joins. Wraps get_axes_summary() SQL helper.",
+    {},
+    async () => {
+      const start = Date.now()
+      try {
+        const axes = await getAxesSummary()
+        trackMcpTool({ toolName: "get_axes_summary", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(axes, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_axes_summary",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError("Failed to fetch axes summary", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_layer_detail",
+    "Single-layer detail (covenant, stakeholder, implementation rules, category breakdown). Used by the /architecture/layers/{n} page; wraps get_layer_detail(p_layer_number int).",
+    {
+      layer_number: z
+        .number()
+        .int()
+        .min(1)
+        .max(10)
+        .describe("Layer number 1–10 (L1 tokens, L2 primitive, ..., L10 documentation)"),
+    },
+    async ({ layer_number }) => {
+      const start = Date.now()
+      try {
+        const detail = await getLayerDetail(layer_number)
+        if (!detail) {
+          trackMcpTool({
+            toolName: "get_layer_detail",
+            durationMs: Date.now() - start,
+            isError: true,
+          })
+          return {
+            content: [{ type: "text" as const, text: `Layer ${layer_number} not found` }],
+            isError: true,
+          }
+        }
+        trackMcpTool({ toolName: "get_layer_detail", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(detail, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_layer_detail",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError("Failed to fetch layer detail", err)
+      }
+    }
+  )
+
+  server.tool(
     "get_database_status",
     "Get the status and row counts for the design portal database.",
     {},
@@ -1123,7 +1211,7 @@ export { ${pascalName}, ${camelVariants}Variants }
       version: z
         .string()
         .optional()
-        .describe("Specific release version (e.g. '4.0.26'). Omit to get the full history."),
+        .describe("Specific release version (e.g. '4.0.38'). Omit to get the full history."),
     },
     async ({ version }) => {
       const start = Date.now()
@@ -1179,62 +1267,6 @@ export { ${pascalName}, ${camelVariants}Variants }
           isError: true,
         })
         return toolError(`Failed to get versions for "${name}"`, err)
-      }
-    }
-  )
-
-  server.tool(
-    "get_documentation_page",
-    "Get a single documentation page by slug (or list all pages if no slug is given). Reads from the `documentation_pages` table.",
-    {
-      slug: z
-        .string()
-        .optional()
-        .describe(
-          "Page slug (e.g. '3d-architecture', 'semantic-tokens'). Omit to list all published pages."
-        ),
-    },
-    async ({ slug }) => {
-      const start = Date.now()
-      try {
-        if (!slug) {
-          const pages = await getAllDocumentationPages()
-          const summary = pages.map((p) => ({
-            slug: p.slug,
-            title: p.title,
-            category: p.category,
-            description: p.description,
-          }))
-          trackMcpTool({ toolName: "get_documentation_page", durationMs: Date.now() - start })
-          return {
-            content: [{ type: "text" as const, text: JSON.stringify(summary, null, 2) }],
-          }
-        }
-
-        const page = await getDocumentationPage(slug)
-        if (!page) {
-          trackMcpTool({
-            toolName: "get_documentation_page",
-            durationMs: Date.now() - start,
-            isError: true,
-          })
-          return {
-            content: [{ type: "text" as const, text: `Documentation page "${slug}" not found` }],
-            isError: true,
-          }
-        }
-
-        trackMcpTool({ toolName: "get_documentation_page", durationMs: Date.now() - start })
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify(page, null, 2) }],
-        }
-      } catch (err) {
-        trackMcpTool({
-          toolName: "get_documentation_page",
-          durationMs: Date.now() - start,
-          isError: true,
-        })
-        return toolError("Failed to fetch documentation page", err)
       }
     }
   )

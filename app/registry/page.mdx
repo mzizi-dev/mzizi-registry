@@ -6,6 +6,8 @@ description: "How the Mukoko component registry works: architecture, API, and st
 import { ArrowRight, Download, Upload, FileJson, Bot } from "lucide-react"
 import { LiveComponentCount } from "@/components/live-component-count"
 
+export const revalidate = 300
+
 # Registry
 
 The Nyuchi Design Portal is a **shadcn-compatible component registry** that serves **<LiveComponentCount /> stable registry items across 10 architecture layers** (live count from Supabase). It allows any app in the bundu ecosystem to install production-ready components with a single CLI command — consumed by mukoko's 17 mini-apps, nyuchi's 7 enterprise products, and sister brands including Zimbabwe Information Platform and Barstool by Nyuchi.

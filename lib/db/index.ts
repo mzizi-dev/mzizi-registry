@@ -64,8 +64,6 @@ import type {
   ArchitectureRemovedInsert,
   AiInstructionRow,
   AiInstructionInsert,
-  DocumentationPageRow,
-  DocumentationPageInsert,
   ChangelogRow,
   ChangelogInsert,
   ComponentVersionRow,
@@ -75,6 +73,10 @@ import type {
   DesignTokens,
   ArchitectureFrontendAxisRow,
   ArchitectureFrontendLayerRow,
+  AxisSummaryRow,
+  LayerDetailRow,
+  ArchitectureSnapshotAxis,
+  ArchitectureSnapshotLayer,
   UbuntuPillarRow,
   UbuntuPrincipleRow,
 } from "./types"
@@ -986,75 +988,6 @@ export async function upsertAiInstruction(
   return data as AiInstructionRow
 }
 
-// ── Documentation page queries ──────────────────────────────────────
-
-/**
- * Get a documentation page by slug.
- */
-export async function getDocumentationPage(slug: string): Promise<DocumentationPageRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("documentation_pages")
-    .select("*")
-    .eq("slug", slug)
-    .eq("status", "published")
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as DocumentationPageRow
-}
-
-/**
- * Get all published documentation pages, grouped by category and sort_order.
- */
-export async function getAllDocumentationPages(): Promise<DocumentationPageRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("documentation_pages")
-    .select("*")
-    .eq("status", "published")
-    .order("category")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as DocumentationPageRow[]
-}
-
-/**
- * Get documentation pages by category.
- */
-export async function getDocumentationPagesByCategory(
-  category: string
-): Promise<DocumentationPageRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("documentation_pages")
-    .select("*")
-    .eq("category", category)
-    .eq("status", "published")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as DocumentationPageRow[]
-}
-
-/**
- * Upsert a documentation page (admin only).
- */
-export async function upsertDocumentationPage(
-  page: DocumentationPageInsert
-): Promise<DocumentationPageRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("documentation_pages")
-    .upsert(page, { onConflict: "slug" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as DocumentationPageRow
-}
-
 // ── Changelog queries ───────────────────────────────────────────────
 
 /**
@@ -1373,6 +1306,103 @@ export async function getArchitectureFrontendLayers(): Promise<ArchitectureFront
 
   if (error || !Array.isArray(data)) return []
   return data as ArchitectureFrontendLayerRow[]
+}
+
+/**
+ * Per-axis summary with live `layer_count` and `component_count` joins.
+ * Wraps the `get_axes_summary()` SQL helper.
+ */
+export async function getAxesSummary(): Promise<AxisSummaryRow[]> {
+  if (!isSupabaseConfigured()) return []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getPublicClient() as any).rpc("get_axes_summary")
+  if (error || !Array.isArray(data)) return []
+  return data as AxisSummaryRow[]
+}
+
+/**
+ * Single-layer detail (covenant, stakeholder, implementation rules,
+ * category breakdown). Wraps `get_layer_detail(p_layer_number int)`.
+ * Returns null if the layer number is out of range.
+ */
+export async function getLayerDetail(layerNumber: number): Promise<LayerDetailRow | null> {
+  if (!isSupabaseConfigured()) return null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getPublicClient() as any).rpc("get_layer_detail", {
+    p_layer_number: layerNumber,
+  })
+  if (error || !Array.isArray(data) || data.length === 0) return null
+  return data[0] as LayerDetailRow
+}
+
+/**
+ * Full architecture snapshot — every axis with its layers, covenants,
+ * stakeholders, implementation rules, and live component counts.
+ * Wraps `get_architecture()` and reshapes the flat row set into a
+ * nested `axes[].layers[]` structure for client consumption.
+ */
+export async function getArchitectureSnapshot(): Promise<ArchitectureSnapshotAxis[]> {
+  if (!isSupabaseConfigured()) return []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getPublicClient() as any).rpc("get_architecture")
+  if (error || !Array.isArray(data)) return []
+
+  type Row = {
+    axis_name: string
+    axis_title: string
+    axis_description: string
+    axis_geometry: string
+    axis_metaphor: string
+    axis_sort_order: number
+    layer_number: number
+    layer_sub_label: string
+    layer_title: string
+    layer_role: string
+    layer_description: string
+    layer_covenant: string
+    layer_stakeholder: string
+    layer_implementation_rules: string[]
+    layer_sort_order: number
+    component_count: number
+    stable_count: number
+    alpha_count: number
+    deprecated_count: number
+  }
+
+  const byAxis = new Map<string, ArchitectureSnapshotAxis>()
+  for (const row of data as Row[]) {
+    let axis = byAxis.get(row.axis_name)
+    if (!axis) {
+      axis = {
+        name: row.axis_name,
+        title: row.axis_title,
+        description: row.axis_description,
+        geometry: row.axis_geometry,
+        metaphor: row.axis_metaphor,
+        sort_order: row.axis_sort_order,
+        layers: [],
+      }
+      byAxis.set(row.axis_name, axis)
+    }
+    const layer: ArchitectureSnapshotLayer = {
+      layer_number: row.layer_number,
+      sub_label: row.layer_sub_label,
+      title: row.layer_title,
+      role: row.layer_role,
+      description: row.layer_description,
+      covenant: row.layer_covenant,
+      stakeholder: row.layer_stakeholder,
+      implementation_rules: row.layer_implementation_rules ?? [],
+      sort_order: row.layer_sort_order,
+      component_count: row.component_count,
+      stable_count: row.stable_count,
+      alpha_count: row.alpha_count,
+      deprecated_count: row.deprecated_count,
+    }
+    axis.layers.push(layer)
+  }
+
+  return Array.from(byAxis.values()).sort((a, b) => a.sort_order - b.sort_order)
 }
 
 // ── Ubuntu doctrine — issue #45 (`ubuntu_pillars`, `ubuntu_principles`) ──

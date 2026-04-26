@@ -228,10 +228,12 @@ Blocks are complete page compositions (dashboards, login pages, settings panels,
 
 ## Adding a Portal Page
 
-The portal uses Nextra (MDX) for documentation pages. There are 71 pages across 11 sections.
+The portal uses `@next/mdx` for documentation pages — every `.mdx` file under
+`app/` is a route. Long-form docs live in the repo (not in Supabase); see
+CLAUDE.md §15.18.
 
 1. **Identify the correct section** for your page:
-   - `/docs` -- developer documentation (installation, CLI, theming)
+   - `/docs` -- developer documentation (installation, CLI, theming, contributing)
    - `/components` -- per-component documentation
    - `/blocks` -- block gallery and demos
    - `/charts` -- chart block gallery
@@ -240,22 +242,26 @@ The portal uses Nextra (MDX) for documentation pages. There are 71 pages across 
    - `/design` -- design tokens, icons
    - `/content` -- writing guidelines, error messages, inclusive language
    - `/patterns` -- implementation patterns
-   - `/architecture` -- ecosystem architecture
+   - `/architecture` -- ecosystem architecture (3D model, fundi, layers, backlinks)
    - `/registry` -- registry internals (schema, MCP, contributing, consuming)
 
-1. **Create the MDX file** in the appropriate `app/<section>/` directory:
+1. **Create the MDX file** at `app/<section>/<slug>/page.mdx` with frontmatter:
 
 ```mdx
+---
+title: "Page Title — nyuchi design portal"
+description: "One-sentence description for SEO and the TOC."
+---
+
 # Page Title
 
-Description of the page content.
-
-## Section
-
-Content here.
+Content here. Headings (`##`, `###`) are auto-linked by `rehype-slug`
+and surface in the right-rail TOC at `lg:` breakpoints and above.
 ```
 
-1. **Update the section's `_meta.ts`** to include navigation for your new page.
+1. **Add the page to `lib/nav.ts`** so it appears in the dashboard sidebar.
+   Nav is curated (not auto-generated from the filesystem) so the order and
+   grouping are intentional.
 
 ---
 

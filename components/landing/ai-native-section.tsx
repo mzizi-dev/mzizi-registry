@@ -32,7 +32,7 @@ function CopySnippet({ code, label }: { code: string; label: string }) {
 
 const mcpConfig = `{
   "mcpServers": {
-    "design-portal": {
+    "nyuchi-design": {
       "type": "url",
       "url": "https://design.nyuchi.com/mcp"
     }

@@ -1,73 +1,27 @@
 import { NextResponse } from "next/server"
-import { createLogger } from "@/lib/observability"
-import { getDocumentationPage, isSupabaseConfigured } from "@/lib/db"
 import { trackApiCall } from "@/lib/metrics"
 
-const logger = createLogger("api")
-
-const CORS_CACHE = {
-  "Cache-Control": "public, max-age=3600, s-maxage=86400",
+const CORS = {
   "Access-Control-Allow-Origin": "*",
+  "Cache-Control": "public, max-age=3600, s-maxage=86400",
 }
 
-const CORS = { "Access-Control-Allow-Origin": "*" }
-
 /**
- * GET /api/v1/docs/[slug] — Single documentation page by slug.
+ * GET /api/v1/docs/[slug] — Soft-410 Gone.
+ *
+ * Long-form documentation moved into the repo as MDX. See
+ * `app/api/v1/docs/route.ts` for the per-slug → URL migration map.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ slug: string }> }) {
-  const start = Date.now()
-  try {
-    const { slug } = await params
-
-    if (!slug) {
-      trackApiCall({
-        endpoint: "/api/v1/docs/[slug]",
-        durationMs: Date.now() - start,
-        statusCode: 400,
-      })
-      return NextResponse.json({ error: "Invalid slug" }, { status: 400, headers: CORS })
-    }
-
-    if (!isSupabaseConfigured()) {
-      trackApiCall({
-        endpoint: `/api/v1/docs/${slug}`,
-        durationMs: Date.now() - start,
-        statusCode: 503,
-      })
-      return NextResponse.json({ error: "Database not configured" }, { status: 503, headers: CORS })
-    }
-
-    const page = await getDocumentationPage(slug)
-
-    if (!page) {
-      trackApiCall({
-        endpoint: `/api/v1/docs/${slug}`,
-        durationMs: Date.now() - start,
-        statusCode: 404,
-      })
-      return NextResponse.json(
-        { error: `Page "${slug}" not found` },
-        { status: 404, headers: CORS }
-      )
-    }
-
-    trackApiCall({
-      endpoint: `/api/v1/docs/${slug}`,
-      durationMs: Date.now() - start,
-      statusCode: 200,
-    })
-
-    return NextResponse.json(page, { headers: CORS_CACHE })
-  } catch (error) {
-    logger.error("Docs page error", {
-      error: error instanceof Error ? error : new Error(String(error)),
-    })
-    trackApiCall({
-      endpoint: "/api/v1/docs/[slug]",
-      durationMs: Date.now() - start,
-      statusCode: 500,
-    })
-    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: CORS })
-  }
+  const { slug } = await params
+  trackApiCall({ endpoint: `/api/v1/docs/${slug}`, durationMs: 0, statusCode: 410 })
+  return NextResponse.json(
+    {
+      error: "Gone",
+      message:
+        "Long-form documentation now lives in the repo as MDX. See GET /api/v1/docs for the per-slug → URL migration map, or browse https://design.nyuchi.com/docs.",
+      slug,
+    },
+    { status: 410, headers: CORS }
+  )
 }

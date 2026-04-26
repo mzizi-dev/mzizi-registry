@@ -1,62 +1,45 @@
 import { NextResponse } from "next/server"
-import { createLogger } from "@/lib/observability"
-import {
-  getAllDocumentationPages,
-  getDocumentationPagesByCategory,
-  isSupabaseConfigured,
-} from "@/lib/db"
 import { trackApiCall } from "@/lib/metrics"
 
-const logger = createLogger("api")
-
-const CORS_CACHE = {
-  "Cache-Control": "public, max-age=3600, s-maxage=86400",
+const CORS = {
   "Access-Control-Allow-Origin": "*",
+  "Cache-Control": "public, max-age=3600, s-maxage=86400",
 }
 
-const CORS = { "Access-Control-Allow-Origin": "*" }
-
 /**
- * GET /api/v1/docs — List all published documentation pages.
+ * GET /api/v1/docs — Soft-410 Gone.
  *
- * Query params:
- *   ?category=getting-started|architecture|contributor|api-reference|brand
+ * Long-form documentation moved into the repo as MDX (CLAUDE.md §15.18).
+ * The `documentation_pages` Supabase table is HISTORICAL — content was
+ * migrated in PR #57 to:
+ *
+ *   /architecture, /architecture/fundi, /architecture/layers,
+ *   /architecture/component-backlinks, /brand, /foundations/tokens,
+ *   /docs, /docs/installation, /docs/api-reference, /docs/contributing
+ *
+ * Returns HTTP 410 with a migration note so consumers know to fetch
+ * the live MDX instead of relying on the API.
  */
-export async function GET(request: Request) {
-  const start = Date.now()
-  try {
-    if (!isSupabaseConfigured()) {
-      trackApiCall({ endpoint: "/api/v1/docs", durationMs: Date.now() - start, statusCode: 503 })
-      return NextResponse.json({ error: "Database not configured" }, { status: 503, headers: CORS })
-    }
-
-    const url = new URL(request.url)
-    const category = url.searchParams.get("category")
-
-    const pages = category
-      ? await getDocumentationPagesByCategory(category)
-      : await getAllDocumentationPages()
-
-    const items = pages.map((p) => ({
-      slug: p.slug,
-      title: p.title,
-      category: p.category,
-      description: p.description,
-      sort_order: p.sort_order,
-      updated_at: p.updated_at,
-    }))
-
-    trackApiCall({ endpoint: "/api/v1/docs", durationMs: Date.now() - start, statusCode: 200 })
-
-    return NextResponse.json(
-      { data: items, meta: { total: items.length, category } },
-      { headers: CORS_CACHE }
-    )
-  } catch (error) {
-    logger.error("Docs list error", {
-      error: error instanceof Error ? error : new Error(String(error)),
-    })
-    trackApiCall({ endpoint: "/api/v1/docs", durationMs: Date.now() - start, statusCode: 500 })
-    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: CORS })
-  }
+export async function GET() {
+  trackApiCall({ endpoint: "/api/v1/docs", durationMs: 0, statusCode: 410 })
+  return NextResponse.json(
+    {
+      error: "Gone",
+      message:
+        "Long-form documentation now lives in the repo as MDX. The documentation_pages Supabase table is historical. See https://design.nyuchi.com/docs and CLAUDE.md §15.18.",
+      migrated_to: {
+        "3d-architecture": "https://design.nyuchi.com/architecture",
+        "fundi-guide": "https://design.nyuchi.com/architecture/fundi",
+        "layer-decision-guide": "https://design.nyuchi.com/architecture/layers",
+        "component-backlinks": "https://design.nyuchi.com/architecture/component-backlinks",
+        "brand-guidelines": "https://design.nyuchi.com/brand",
+        "semantic-tokens": "https://design.nyuchi.com/foundations/tokens",
+        introduction: "https://design.nyuchi.com/docs",
+        installation: "https://design.nyuchi.com/docs/installation",
+        "api-reference": "https://design.nyuchi.com/docs/api-reference",
+        contributing: "https://design.nyuchi.com/docs/contributing",
+      },
+    },
+    { status: 410, headers: CORS }
+  )
 }

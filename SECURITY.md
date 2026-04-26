@@ -20,7 +20,7 @@ The authoritative current version is served live at `GET /api/v1/changelog` (fir
 
 Use GitHub's private security advisory flow so we can investigate and ship a fix before disclosure:
 
-1. Go to <https://github.com/nyuchitech/design-portal/security/advisories/new>
+1. Go to <https://github.com/nyuchi/design-portal/security/advisories/new>
 2. Fill in: a clear title, a description, steps to reproduce, affected version / endpoint, impact (confidentiality / integrity / availability), and any suggested mitigation
 3. Submit — the maintainers are notified privately
 
@@ -55,7 +55,7 @@ This policy covers anything the portal itself owns:
 
 - The Next.js app deployed to `design.nyuchi.com` (and `registry.mukoko.com`)
 - The registry API (`/api/v1/ui`, `/api/v1/ui/{name}`, `/api/v1/ui/{name}/{docs,versions}`, `/api/v1/stats`, `/api/v1/search`)
-- The documentation API (`/api/v1/docs`, `/api/v1/changelog`, `/api/v1/ai/instructions`)
+- The content API (`/api/v1/changelog`, `/api/v1/ai/instructions`) — `/api/v1/docs/*` is HTTP 410 (long-form docs moved to repo MDX, see CLAUDE.md §15.18)
 - The fundi self-healing surface (`/api/v1/fundi`, `/api/v1/fundi/{id}`, `/api/v1/fundi/stats`)
 - The brand + architecture APIs (`/api/v1/brand`, `/api/v1/ecosystem`, `/api/v1/data-layer`, `/api/v1/pipeline`, `/api/v1/sovereignty`)
 - The Model Context Protocol server at `/mcp` (Streamable HTTP)
@@ -125,7 +125,7 @@ Per `CLAUDE.md` §15 rule 22, **security findings from any review/audit (`/secur
 
 ## Contact
 
-- Primary: GitHub security advisories — <https://github.com/nyuchitech/design-portal/security/advisories/new>
+- Primary: GitHub security advisories — <https://github.com/nyuchi/design-portal/security/advisories/new>
 - Fallback: `security@nyuchi.com`
 
 Thank you for helping keep the bundu ecosystem safe.

@@ -12,7 +12,7 @@ export async function GET() {
   expires.setFullYear(expires.getFullYear() + 1)
 
   const body = `Contact: mailto:security@nyuchi.com
-Contact: https://github.com/nyuchitech/design-portal/security/advisories/new
+Contact: https://github.com/nyuchi/design-portal/security/advisories/new
 Expires: ${expires.toISOString()}
 Acknowledgments: https://design.nyuchi.com/security/acknowledgments
 Canonical: https://design.nyuchi.com/.well-known/security.txt

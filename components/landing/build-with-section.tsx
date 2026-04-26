@@ -97,7 +97,7 @@ export function BuildWithSection() {
               router activates them automatically.
             </p>
             <Link
-              href="https://github.com/nyuchitech/design-portal/blob/main/.claude/skills/README.md"
+              href="https://github.com/nyuchi/design-portal/blob/main/.claude/skills/README.md"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-foreground hover:underline"

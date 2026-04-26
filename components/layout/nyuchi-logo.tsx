@@ -2,12 +2,7 @@ import { cn } from "@/lib/utils"
 
 export interface NyuchiLogoProps {
   size?: number
-  /**
-   * When `true`, render the wordmark text alongside the icon. The Nextra
-   * navbar already prints the site title from metadata, so the navbar logo
-   * passes `false` (default) — this avoids the duplicate-wordmark bug seen
-   * on desktop. Other surfaces (e.g. landing footer/header) can opt in.
-   */
+  /** When `true`, render the wordmark text alongside the icon. */
   showWordmark?: boolean
   /** Optional secondary word displayed in muted colour after "nyuchi". */
   suffix?: string

@@ -176,8 +176,8 @@
   }
 }
 
-/* Landing page: break out of Nextra's content container to go full-width */
-.nextra-full-bleed {
+/* `.full-bleed` — break MDX content out of the layout container to go full-width. */
+.full-bleed {
   width: 100vw;
   position: relative;
   left: 50%;

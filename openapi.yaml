@@ -326,6 +326,107 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
 
+  /architecture:
+    get:
+      summary: 3D Architecture snapshot
+      description: |
+        Full snapshot of the Nyuchi 3D Architecture model — every axis with its layers,
+        covenants, stakeholders, implementation rules, and live component counts. Wraps
+        the `get_architecture()` SQL helper. ISR cache: 1 hour.
+      operationId: getArchitectureSnapshot
+      tags: [Architecture]
+      responses:
+        "200":
+          description: "Snapshot reshaped as `{ data: axes[].layers[], meta }`."
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { type: object }
+                  meta:
+                    type: object
+                    properties:
+                      axes_count: { type: integer }
+                      version: { type: string }
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /architecture/axes:
+    get:
+      summary: Per-axis summary with live counts
+      description: |
+        One row per axis with `layer_count` and `component_count` joined live from
+        `architecture_frontend_layers` and `components`. Wraps `get_axes_summary()`.
+      operationId: getAxesSummary
+      tags: [Architecture]
+      responses:
+        "200":
+          description: 5 axes ordered by sort_order.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { type: object }
+                  meta:
+                    type: object
+                    properties:
+                      count: { type: integer }
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /architecture/layers/{n}:
+    get:
+      summary: Per-layer detail (covenant, rules, category breakdown)
+      description: |
+        Single-layer detail. Wraps `get_layer_detail(p_layer_number int)`.
+        Returns 400 for non-integer or out-of-range `n` (must be 1-10).
+      operationId: getLayerDetail
+      tags: [Architecture]
+      parameters:
+        - name: n
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+      responses:
+        "200":
+          description: Layer detail with covenant, rules, and category breakdown.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: object }
+        "400":
+          description: Invalid layer number.
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /architecture/frontend/axes:
     get:
       summary: Frontend Axes (3D)
@@ -432,13 +533,20 @@ paths:
 
   /docs:
     get:
-      summary: List documentation pages
-      description: Returns all rows from `documentation_pages`.
+      summary: "GONE — long-form documentation moved into the repo as MDX"
+      description: |
+        Always returns HTTP 410 Gone.
+
+        Long-form documentation now lives in the repo as MDX (CLAUDE.md §15.18).
+        The `documentation_pages` Supabase table is HISTORICAL — content was
+        migrated in PR #57. The response body carries a `migrated_to` map that
+        lists the live URL for each former slug.
       operationId: listDocs
+      deprecated: true
       tags: [Content]
       responses:
-        "200":
-          description: Documentation page index
+        "410":
+          description: Gone — see `migrated_to` for live URLs.
           headers:
             Cache-Control:
               $ref: "#/components/headers/CachePublic"
@@ -449,17 +557,20 @@ paths:
               schema:
                 type: object
                 properties:
-                  pages:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/DocPageSummary"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
+                  error: { type: string, example: "Gone" }
+                  message: { type: string }
+                  migrated_to:
+                    type: object
+                    additionalProperties: { type: string, format: uri }
 
   /docs/{slug}:
     get:
-      summary: Get a documentation page by slug
+      summary: "GONE — see /docs for the migration map"
+      description: |
+        Always returns HTTP 410 Gone. See `GET /api/v1/docs` for the
+        per-slug → URL migration map.
       operationId: getDoc
+      deprecated: true
       tags: [Content]
       parameters:
         - name: slug
@@ -467,16 +578,16 @@ paths:
           required: true
           schema: { type: string }
       responses:
-        "200":
-          description: Documentation page
+        "410":
+          description: Gone — see /docs for the migration map.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DocPage"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
+                type: object
+                properties:
+                  error: { type: string, example: "Gone" }
+                  message: { type: string }
+                  slug: { type: string }
 
   /changelog:
     get:
@@ -508,7 +619,7 @@ paths:
         - name: version
           in: path
           required: true
-          schema: { type: string, example: "4.0.26" }
+          schema: { type: string, example: "4.0.38" }
       responses:
         "200":
           description: Release
@@ -942,7 +1053,7 @@ components:
           const: "Brand"
         version:
           type: string
-          example: "4.0.26"
+          example: "4.0.38"
         name:
           type: string
           example: "Nyuchi Brand System"
@@ -1724,7 +1835,7 @@ components:
       type: object
       required: [version, title, createdAt]
       properties:
-        version: { type: string, example: "4.0.26" }
+        version: { type: string, example: "4.0.38" }
         title: { type: string }
         description: { type: string }
         layersAffected:
