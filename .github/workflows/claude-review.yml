@@ -2,7 +2,16 @@ name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review]
+    # Skip reviews entirely for PRs that only touch generated / lockfile / index
+    # artefacts. Review tokens are budget — don't spend them parsing a ~500 KB
+    # pagefind index or a pnpm-lock refresh. If a PR mixes these paths with
+    # reviewable code, the workflow still fires normally; this filter only
+    # catches PRs whose diff is *exclusively* ignored paths.
+    paths-ignore:
+      - "registry.json"
+      - "pnpm-lock.yaml"
+      - "public/_pagefind/**"
   issue_comment:
     types: [created]
   pull_request_review_comment:
@@ -10,13 +19,27 @@ on:
   pull_request_review:
     types: [submitted]
 
+# One in-flight review per PR. A new commit on the same PR cancels the
+# previous review run, so a burst of three fixups in 90 seconds costs one
+# review, not three. Falls back to `issue.number` for comment/review events
+# (same PR number, different event payload shape) and to `github.ref` as a
+# last resort for any non-PR trigger that gets added in the future.
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number || github.event.issue.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   claude-review:
-    # Review runs on every PR event and every human comment/review on a PR,
-    # regardless of branch name or trigger phrase. Bot comments are skipped
-    # so Claude doesn't react to Vercel/Supabase/dependabot/itself.
+    # Review runs on every non-draft PR event (opened / synchronize / reopened /
+    # ready_for_review) plus every human comment/review on a PR, regardless of
+    # branch name or trigger phrase. Drafts are skipped explicitly — push as
+    # many commits as you want while in draft, the action won't fire. Flipping
+    # draft → ready triggers `ready_for_review`, which runs a fresh review; any
+    # further commits then trigger `synchronize`, which also runs because the
+    # PR is no longer a draft. Bot comments are skipped so Claude doesn't react
+    # to Vercel/Supabase/dependabot/itself.
     if: |
-      (github.event_name == 'pull_request') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
       (github.event_name == 'issue_comment' && github.event.issue.pull_request != null && github.event.comment.user.type != 'Bot') ||
       (github.event_name == 'pull_request_review_comment' && github.event.comment.user.type != 'Bot') ||
       (github.event_name == 'pull_request_review' && github.event.review.user.type != 'Bot')
