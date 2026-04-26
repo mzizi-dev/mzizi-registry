@@ -56,6 +56,34 @@ jobs:
           pnpm typecheck
           pnpm test
           pnpm build
+          pnpm --filter @nyuchi/design-cli build
+
+      # Publish workspace packages to npm. Skipped silently when
+      # NPM_TOKEN isn't set (e.g. forks or local act runs); on the
+      # canonical repo NPM_TOKEN is configured at the org level so
+      # both packages publish on every successful tag.
+      #
+      # `pnpm publish --no-git-checks` is required because we publish
+      # AFTER `git tag` is pushed to origin (tag exists, but the
+      # commit on main hasn't moved). The `--access public` flag is
+      # essential for scoped packages — npm defaults scoped to
+      # restricted otherwise.
+      - name: Publish @nyuchi/design-cli + @nyuchi/design-agent-skills
+        if: steps.tag_check.outputs.exists == 'false' && env.NPM_TOKEN != ''
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Configure npm auth (Node 22 npm respects ~/.npmrc with auth token).
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
+          # Skills package — pure markdown, no build step needed.
+          pnpm --filter @nyuchi/design-agent-skills publish \
+            --access public --no-git-checks
+
+          # CLI package — already built in the validate step above.
+          pnpm --filter @nyuchi/design-cli publish \
+            --access public --no-git-checks
 
       - name: Create tag
         if: steps.tag_check.outputs.exists == 'false'

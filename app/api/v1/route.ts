@@ -117,6 +117,11 @@ export async function GET() {
             href: "/api/v1/ai/instructions",
             description: "AI assistant instructions (Claude, Copilot, Cursor, MCP).",
           },
+          skills: {
+            href: "/api/v1/skills",
+            description:
+              "Agent-skill MDX bodies — reusable workflows AI assistants invoke on specific tasks. Use /skills/{name} for a single skill's full body, /skills/summary for the cheap version-drift check.",
+          },
           stats: {
             href: "/api/v1/stats",
             description: "Public usage statistics (CC BY 4.0).",

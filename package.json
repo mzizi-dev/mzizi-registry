@@ -1,6 +1,6 @@
 {
   "name": "design-portal",
-  "version": "4.0.38",
+  "version": "4.0.39",
   "private": true,
   "packageManager": "pnpm@10.33.0",
   "scripts": {
@@ -12,9 +12,14 @@
     "start": "next start --port ${PORT:-11736}",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:packages": "pnpm --filter \"./packages/*\" test",
     "typecheck": "tsc --noEmit",
+    "typecheck:packages": "pnpm --filter \"./packages/*\" typecheck",
+    "build:packages": "pnpm --filter \"./packages/*\" build",
     "registry:sync": "tsx scripts/sync-registry.ts",
     "registry:verify": "tsx scripts/sync-registry.ts --check",
+    "skills:sync": "tsx scripts/sync-skills.ts",
+    "skills:verify": "tsx scripts/sync-skills.ts --check",
     "prepare": "husky",
     "audit:check": "pnpm audit --audit-level=moderate --ignore-registry-errors",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}\" --ignore-path .prettierignore",

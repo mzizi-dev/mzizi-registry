@@ -486,6 +486,41 @@ export interface AiInstructionInsert {
   metadata?: Record<string, unknown> | null
 }
 
+// ── Skills table types ──────────────────────────────────────────────
+
+/**
+ * Agent-skill MDX bodies served three ways: as `.claude/skills/*.md` files
+ * in any consumer repo (via the `@nyuchi/design-agent-skills` npm package),
+ * via the HTTP API at `/api/v1/skills/{name}`, and via the MCP `get_skill`
+ * tool. The Supabase `skills` table is the single source of truth.
+ *
+ * Distinct from `ai_instructions` — those are per-AI-target system prompts
+ * (one row per target like `claude-system-prompt`, `mcp-server`,
+ * `github-copilot`); skills are reusable workflows an agent invokes on
+ * specific tasks (one row per skill like `nyuchi-design-system`,
+ * `scaffold-component`, `ecosystem-app-setup`).
+ */
+export interface SkillRow {
+  id: number
+  name: string
+  description: string
+  body_mdx: string
+  agents: string[]
+  requires_mcp: boolean
+  applies_to: string[]
+  status: string | null
+  version: string
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Lightweight summary shape returned by `list_skills()` and
+ * `get_skills_summary()` SQL helpers — same as `SkillRow` minus the heavy
+ * `body_mdx` field, for consumers that only need the index.
+ */
+export type SkillSummary = Omit<SkillRow, "body_mdx" | "id" | "created_at">
+
 // ── Changelog table types ───────────────────────────────────────────
 
 export interface ChangelogRow {

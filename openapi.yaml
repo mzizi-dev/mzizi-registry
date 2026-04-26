@@ -619,7 +619,7 @@ paths:
         - name: version
           in: path
           required: true
-          schema: { type: string, example: "4.0.38" }
+          schema: { type: string, example: "4.0.39" }
       responses:
         "200":
           description: Release
@@ -627,6 +627,150 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ChangelogEntry"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /skills:
+    get:
+      summary: List published skills
+      description: |
+        Returns every skill (agent-skill MDX bodies) from the Supabase
+        `skills` table in the lightweight summary shape (no `body_mdx`).
+        Use `GET /skills/{name}` to fetch a single skill's full body.
+
+        Skills are reusable workflows AI assistants invoke on specific
+        tasks. Distinct from `/ai/instructions`, which serve per-AI-target
+        system prompts.
+      operationId: listSkills
+      tags: [Content]
+      responses:
+        "200":
+          description: "Skill index in `{ data: SkillSummary[], meta: { count } }`"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name: { type: string }
+                        description: { type: string }
+                        agents:
+                          type: array
+                          items: { type: string }
+                        applies_to:
+                          type: array
+                          items: { type: string }
+                        requires_mcp: { type: boolean }
+                        version: { type: string }
+                        status: { type: string, nullable: true }
+                        updated_at: { type: string, format: date-time }
+                  meta:
+                    type: object
+                    properties:
+                      count: { type: integer }
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /skills/summary:
+    get:
+      summary: Lightweight skill index for the CLI update path
+      description: |
+        Same shape as `GET /skills` but served via the
+        `get_skills_summary()` SQL helper. Reserved for the CLI's
+        `nyuchi-design skills update` subcommand to detect version
+        drift cheaply; gives `/skills` headroom to add filtering or
+        pagination later without breaking the CLI contract.
+      operationId: getSkillsSummary
+      tags: [Content]
+      responses:
+        "200":
+          description: Skill summary index.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { type: object }
+                  meta:
+                    type: object
+                    properties:
+                      count: { type: integer }
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /skills/{name}:
+    get:
+      summary: Get a single skill (with full body_mdx)
+      description: |
+        Returns the full skill row including `body_mdx`. Used by
+        consumers that need to write the skill to disk (the CLI's
+        `nyuchi-design skills install` subcommand) or pipelines doing
+        direct `curl` against the API.
+
+        Validates `name` against `^[a-z][a-z0-9-]*$`. Returns 400 on
+        invalid pattern, 404 when name well-formed but no row, 503
+        when Supabase is unconfigured.
+      operationId: getSkill
+      tags: [Content]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Kebab-case skill name (e.g. `nyuchi-design-system`)
+          schema:
+            type: string
+            pattern: "^[a-z][a-z0-9-]*$"
+      responses:
+        "200":
+          description: Skill with full `body_mdx` MDX content.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id: { type: integer }
+                      name: { type: string }
+                      description: { type: string }
+                      body_mdx: { type: string }
+                      agents:
+                        type: array
+                        items: { type: string }
+                      applies_to:
+                        type: array
+                        items: { type: string }
+                      requires_mcp: { type: boolean }
+                      version: { type: string }
+                      status: { type: string, nullable: true }
+                      created_at: { type: string, format: date-time }
+                      updated_at: { type: string, format: date-time }
+        "400":
+          description: Invalid skill name pattern.
         "404":
           $ref: "#/components/responses/NotFound"
         "503":
@@ -1053,7 +1197,7 @@ components:
           const: "Brand"
         version:
           type: string
-          example: "4.0.38"
+          example: "4.0.39"
         name:
           type: string
           example: "Nyuchi Brand System"
@@ -1835,7 +1979,7 @@ components:
       type: object
       required: [version, title, createdAt]
       properties:
-        version: { type: string, example: "4.0.38" }
+        version: { type: string, example: "4.0.39" }
         title: { type: string }
         description: { type: string }
         layersAffected:

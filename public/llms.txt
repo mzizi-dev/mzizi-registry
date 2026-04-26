@@ -57,6 +57,9 @@ All endpoints return JSON with schema.org JSON-LD metadata where applicable and 
 - `GET /api/v1/changelog/{version}` — Single release
 - `GET /api/v1/ai/instructions` — AI assistant instruction sets
 - `GET /api/v1/ai/instructions/{target}` — Instructions by target (mcp-server, claude, copilot)
+- `GET /api/v1/skills` — List every published agent skill (summary, no body_mdx)
+- `GET /api/v1/skills/summary` — Same shape as `/skills`; reserved for the CLI `update` path
+- `GET /api/v1/skills/{name}` — Single skill with full `body_mdx`
 - `GET /api/v1/fundi` — Open self-healing issues
 - `GET /api/v1/fundi/{id}` — Single fundi issue
 - `GET /api/v1/fundi/stats` — Aggregate learning stats
@@ -70,9 +73,9 @@ All endpoints return JSON with schema.org JSON-LD metadata where applicable and 
 
 ## MCP server for AI assistants
 
-Connect at `https://design.nyuchi.com/mcp` (POST, Streamable HTTP transport). 18 tools, 5 resources. Tool and resource names are stable — schema is discoverable via the MCP `list_tools` / `list_resources` standard requests.
+Connect at `https://design.nyuchi.com/mcp` (POST, Streamable HTTP transport). 25 tools, 5 resources. Tool and resource names are stable — schema is discoverable via the MCP `list_tools` / `list_resources` standard requests.
 
-**Tools:** `list_components`, `get_component`, `get_component_docs`, `get_component_links`, `get_component_versions`, `search_components`, `get_design_tokens`, `scaffold_component`, `get_install_command`, `get_brand_info`, `get_architecture_info`, `get_ubuntu_principles`, `get_database_status`, `get_usage_stats`, `get_layer_summary`, `get_ai_instructions`, `get_changelog`. (Long-form documentation lives in the repo as MDX — fetch directly from `https://design.nyuchi.com/docs/`, `https://design.nyuchi.com/architecture/`, etc., not via the MCP server.)
+**Tools:** `list_components`, `get_component`, `get_component_docs`, `get_component_links`, `get_component_versions`, `search_components`, `get_design_tokens`, `scaffold_component`, `get_install_command`, `get_brand_info`, `get_architecture_info`, `get_ubuntu_doctrine`, `get_ubuntu_pillars`, `get_ubuntu_principles`, `get_architecture_frontend`, `get_architecture`, `get_axes_summary`, `get_layer_detail`, `get_database_status`, `get_usage_stats`, `get_layer_summary`, `get_ai_instructions`, `get_changelog`, `list_skills`, `get_skill`. (Long-form documentation lives in the repo as MDX — fetch directly from `https://design.nyuchi.com/docs/`, `https://design.nyuchi.com/architecture/`, etc., not via the MCP server.)
 
 **Resources:** `mukoko://registry`, `mukoko://brand`, `mukoko://design-tokens`, `mukoko://architecture`, `mukoko://ubuntu`.
 

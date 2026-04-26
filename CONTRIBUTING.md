@@ -22,6 +22,28 @@ cd design-portal
 pnpm install
 ```
 
+The repo is a **pnpm workspace**. One `pnpm install` at the root resolves the Next.js app + every workspace package under `packages/`:
+
+| Package                                                         | Purpose                                                                     |
+| --------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `packages/design-cli/` (`@nyuchi/design-cli`)                   | CLI binary — bootstraps consumer apps, wraps shadcn install, manages skills |
+| `packages/design-agent-skills/` (`@nyuchi/design-agent-skills`) | Published snapshot of the Supabase `skills` table                           |
+
+Useful workspace commands:
+
+```bash
+pnpm dev                                              # Next.js dev server (root)
+pnpm --filter @nyuchi/design-cli build                 # build only the CLI
+pnpm --filter @nyuchi/design-cli test                  # run the CLI's vitest
+pnpm --filter "./packages/*" build                     # build every package
+pnpm typecheck                                         # root (Next.js app only)
+pnpm typecheck:packages                                # every workspace package
+pnpm skills:sync                                       # regen packages/design-agent-skills/skills/* from Supabase
+pnpm skills:verify                                     # CI-style drift check (non-zero exit on drift)
+```
+
+Skill content lives in the Supabase `skills` table — never edit `.md` files in `packages/design-agent-skills/skills/` directly. See [CLAUDE.md §15.24](CLAUDE.md) for the four-paths-one-source doctrine.
+
 ### 3. Set up the database (optional for UI work)
 
 The registry uses a DB-first architecture with Supabase. For component development and documentation work, you can run the portal without a database connection -- but API routes will not function.
