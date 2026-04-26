@@ -101,7 +101,9 @@ export async function GET() {
           },
           docs: {
             href: "/api/v1/docs",
-            description: "Documentation pages from the knowledge base.",
+            description:
+              "GONE (HTTP 410). Long-form documentation moved into the repo as MDX — see https://design.nyuchi.com/docs.",
+            status: "gone",
           },
           changelog: {
             href: "/api/v1/changelog",

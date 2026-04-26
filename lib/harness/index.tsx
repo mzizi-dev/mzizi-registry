@@ -288,24 +288,24 @@ export interface ComponentHarnessResult {
   /** Render timing tracker — call at end of render (useEffect) */
   trackRenderEnd: () => void
   /** data-portal attribute map (empty off-domain for privacy). */
-  portalAttrs: Record<string, string>
+  observabilityAttrs: Record<string, string>
 }
 
-// ─── PORTAL OBSERVABILITY (domain-gated) ─────────────────────
+// ─── OBSERVABILITY (domain-gated) ─────────────────────────────
 // Portal links and observability only render on allowed domains.
 // This protects privacy: no tracking on unauthorized domains.
 // Domains are controlled via the observability_domains table.
 
 const INTERNAL_DOMAINS = ["nyuchi.com", "mukoko.com", "localhost"]
 
-function isPortalDomain(): boolean {
+function isObservabilityAllowedDomain(): boolean {
   if (typeof window === "undefined") return false
   const hostname = window.location.hostname
   return INTERNAL_DOMAINS.some((d) => hostname === d || hostname.endsWith("." + d))
 }
 
-function getPortalAttrs(componentName: string): Record<string, string> {
-  if (!isPortalDomain()) return {}
+function getObservabilityAttrs(componentName: string): Record<string, string> {
+  if (!isObservabilityAllowedDomain()) return {}
   return { "data-portal": `https://design.nyuchi.com/components/${componentName}` }
 }
 
@@ -342,7 +342,10 @@ export function useNyuchiHarness(componentName: string): ComponentHarnessResult 
     }
   }, [log])
 
-  const portalAttrs = React.useMemo(() => getPortalAttrs(componentName), [componentName])
+  const observabilityAttrs = React.useMemo(
+    () => getObservabilityAttrs(componentName),
+    [componentName]
+  )
   return {
     log,
     motion,
@@ -352,7 +355,7 @@ export function useNyuchiHarness(componentName: string): ComponentHarnessResult 
     LiveRegion,
     trackRenderStart,
     trackRenderEnd,
-    portalAttrs,
+    observabilityAttrs,
   }
 }
 

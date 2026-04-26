@@ -10,7 +10,9 @@ import { AiNativeSection } from "@/components/landing/ai-native-section"
 import { ResilientBySection } from "@/components/landing/resilient-by-design-section"
 import { ExploreSection } from "@/components/landing/explore-section"
 
-<div className="nextra-full-bleed">
+export const revalidate = 300
+
+<div className="full-bleed">
   <Hero />
   <InstallSteps />
   <BuildWithSection />

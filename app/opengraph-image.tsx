@@ -85,7 +85,7 @@ export default function OpengraphImage() {
         >
           <span>design.nyuchi.com</span>
           <span>·</span>
-          <span>github.com/nyuchitech/design-portal</span>
+          <span>github.com/nyuchi/design-portal</span>
         </div>
       </div>
     </div>,

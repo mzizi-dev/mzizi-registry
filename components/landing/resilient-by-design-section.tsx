@@ -109,25 +109,25 @@ export async function ResilientBySection() {
               The system documents itself — no stale truth
             </h3>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Every component, doc page, brand spec, and changelog entry lives in Supabase. The
-              Next.js app and the MCP server read live; nothing is copy-pasted into a static file.
-              When a component changes in the database, the portal, the API, the AI tools, and the
-              install path all pick it up on the next request. Drift becomes structurally
-              impossible.
+              Every component, brand spec, and changelog entry lives in Supabase; long-form docs
+              live in the repo as MDX. The Next.js app and the MCP server read both live; nothing is
+              copy-pasted between them. When a component changes in the database or a doc page
+              changes in the repo, the portal, the API, and the AI tools all pick it up on the next
+              request. Drift becomes structurally impossible.
             </p>
             <ul className="space-y-1.5 text-sm leading-relaxed text-muted-foreground">
               <li className="flex gap-2">
                 <span aria-hidden="true">→</span>
                 <span>
-                  <code className="font-mono text-xs">documentation_pages</code> table renders to{" "}
-                  <code className="font-mono text-xs">/docs/[slug]</code>
+                  Long-form docs are <code className="font-mono text-xs">.mdx</code> files in the
+                  repo, compiled by <code className="font-mono text-xs">@next/mdx</code>
                 </span>
               </li>
               <li className="flex gap-2">
                 <span aria-hidden="true">→</span>
                 <span>
-                  <code className="font-mono text-xs">/api/v1/*</code> endpoints serve the same DB
-                  content to any consumer
+                  <code className="font-mono text-xs">/api/v1/*</code> endpoints serve component +
+                  brand + changelog data live from the database
                 </span>
               </li>
               <li className="flex gap-2">
@@ -162,7 +162,7 @@ export async function ResilientBySection() {
             </Link>{" "}
             for the full ten-layer model and{" "}
             <a
-              href="https://github.com/nyuchitech/design-portal/blob/main/SECURITY.md"
+              href="https://github.com/nyuchi/design-portal/blob/main/SECURITY.md"
               target="_blank"
               rel="noopener noreferrer"
               className="underline hover:no-underline"

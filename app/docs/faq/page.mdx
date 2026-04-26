@@ -5,7 +5,7 @@ description: Common questions about installing, customising, and shipping with t
 
 # Frequently asked questions
 
-The fast answers. For the long-form architecture and rules, [`CLAUDE.md`](https://github.com/nyuchitech/design-portal/blob/main/CLAUDE.md) is the single source of truth.
+The fast answers. For the long-form architecture and rules, [`CLAUDE.md`](https://github.com/nyuchi/design-portal/blob/main/CLAUDE.md) is the single source of truth.
 
 ## Getting started
 
@@ -41,7 +41,7 @@ The frontend is modelled in three primary dimensions plus two outliers:
 - **Outside — actors beyond the build**: L9 fundi (self-healing).
 - **Documentation — the system describing itself**: L10.
 
-Components import from the layer below on the same axis — never sideways or upward. Full table with covenants in [`CLAUDE.md` §6.2](https://github.com/nyuchitech/design-portal/blob/main/CLAUDE.md#62-layered-component-architecture) and on the [/architecture](/architecture) page.
+Components import from the layer below on the same axis — never sideways or upward. Full table with covenants in [`CLAUDE.md` §6.2](https://github.com/nyuchi/design-portal/blob/main/CLAUDE.md#62-layered-component-architecture) and on the [/architecture](/architecture) page.
 
 ### Why are fundi (L9) and documentation (L10) separate axes?
 
@@ -68,7 +68,7 @@ Add to your `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
-    "nyuchi-design-portal": {
+    "nyuchi-design": {
       "type": "url",
       "url": "https://design.nyuchi.com/mcp"
     }
@@ -108,7 +108,7 @@ Single source of truth in Supabase, no hardcoded counts anywhere, CI verifies `r
 pnpm check
 ```
 
-That single command chains every CI gate (`format:check && lint && lint:md && lint:json && typecheck && test && audit:check && registry:verify && build`) and exits non-zero on the first failure. See [`CONTRIBUTING.md`](https://github.com/nyuchitech/design-portal/blob/main/CONTRIBUTING.md) for the one-time tooling setup.
+That single command chains every CI gate (`format:check && lint && lint:md && lint:json && typecheck && test && audit:check && registry:verify && build`) and exits non-zero on the first failure. See [`CONTRIBUTING.md`](https://github.com/nyuchi/design-portal/blob/main/CONTRIBUTING.md) for the one-time tooling setup.
 
 ### What's the policy when a security audit turns up a vulnerability?
 
@@ -156,6 +156,6 @@ Yes — Vercel is the canonical host but the app is a stock Next.js 16 build. Yo
 
 ## Still stuck?
 
-- **Code questions** → open a GitHub issue or discussion at [github.com/nyuchitech/design-portal](https://github.com/nyuchitech/design-portal).
-- **Security** → use the GitHub security advisory flow described in [`SECURITY.md`](https://github.com/nyuchitech/design-portal/blob/main/SECURITY.md).
+- **Code questions** → open a GitHub issue or discussion at [github.com/nyuchi/design-portal](https://github.com/nyuchi/design-portal).
+- **Security** → use the GitHub security advisory flow described in [`SECURITY.md`](https://github.com/nyuchi/design-portal/blob/main/SECURITY.md).
 - **Doctrine / "what's the right way"** → CLAUDE.md is the canonical answer. If it disagrees with the live MCP server output, the MCP server wins (it reads from Supabase).

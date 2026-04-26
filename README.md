@@ -6,7 +6,7 @@
 [![Release](https://github.com/nyuchi/design-portal/actions/workflows/release.yml/badge.svg)](https://github.com/nyuchi/design-portal/actions/workflows/release.yml)
 [![CodeQL](https://github.com/nyuchi/design-portal/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nyuchi/design-portal/security/code-scanning)
 
-**Version:** 4.0.26 | **Live:** [design.nyuchi.com](https://design.nyuchi.com) | **Docs:** [design.nyuchi.com/docs](https://design.nyuchi.com/docs) | **Observability:** [design.nyuchi.com/observability](https://design.nyuchi.com/observability)
+**Version:** 4.0.38 | **Live:** [design.nyuchi.com](https://design.nyuchi.com) | **Docs:** [design.nyuchi.com/docs](https://design.nyuchi.com/docs) | **Observability:** [design.nyuchi.com/observability](https://design.nyuchi.com/observability)
 
 ---
 
@@ -44,7 +44,7 @@ Add to your `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
-    "nyuchi-design-portal": {
+    "nyuchi-design": {
       "type": "url",
       "url": "https://design.nyuchi.com/mcp"
     }
@@ -74,7 +74,6 @@ Your AI assistant can now call the full tool surface — live at `https://design
 | `get_layer_summary`         | Component count / categories / names for a given frontend layer (1–10)       |
 | `get_ai_instructions`       | System prompts from `ai_instructions` by target (mcp-server/claude/copilot)  |
 | `get_changelog`             | Recent releases from the `changelog` table                                   |
-| `get_documentation_page`    | Read a documentation page by slug                                            |
 | `get_usage_stats`           | Public API and MCP usage metrics (open data, CC BY 4.0)                      |
 | `get_database_status`       | Registry database status and row counts                                      |
 
@@ -148,8 +147,8 @@ All endpoints under `/api/v1/`. Full spec in [`openapi.yaml`](openapi.yaml).
 | `/api/v1/ui/{name}/docs`         | GET      | Structured docs (use cases, variants, a11y)           |
 | `/api/v1/ui/{name}/versions`     | GET      | Component version history                             |
 | `/api/v1/brand`                  | GET      | Brand system (minerals, typography, spacing)          |
-| `/api/v1/docs`                   | GET      | List documentation pages                              |
-| `/api/v1/docs/{slug}`            | GET      | Single documentation page                             |
+| `/api/v1/docs`                   | GET      | **HTTP 410 Gone** — long-form docs moved to repo MDX  |
+| `/api/v1/docs/{slug}`            | GET      | **HTTP 410 Gone** — see `/api/v1/docs` for slug map   |
 | `/api/v1/changelog`              | GET      | Release history                                       |
 | `/api/v1/changelog/{version}`    | GET      | Single release                                        |
 | `/api/v1/ai/instructions`        | GET      | List AI instruction sets                              |
@@ -245,12 +244,12 @@ Layer 5: Server page wrappers (page.tsx)
 | Variant Management   | class-variance-authority (CVA)         | 0.7.1          |
 | HTML Sanitization    | sanitize-html                          | 2.17.2         |
 | Charts               | Recharts                               | 3.8.1          |
-| Forms                | react-hook-form + zod                  | 7.72.0 / 4.3.6 |
-| Database             | Supabase                               | 2.101.1        |
-| Documentation        | Nextra                                 | 4.6.1          |
-| Icons                | Lucide React                           | 1.7.0          |
+| Forms                | react-hook-form + zod                  | 7.73.1 / 4.3.6 |
+| Database             | Supabase                               | 2.104.0        |
+| Documentation (MDX)  | @next/mdx + rehype-slug + autolink     | 16.2.4         |
+| Icons                | Lucide React                           | 1.8.0          |
 | MCP                  | @modelcontextprotocol/sdk              | 1.29.0         |
-| Testing              | Vitest + Testing Library               | 4.1.2          |
+| Testing              | Vitest + Testing Library               | 4.1.5          |
 | CI/CD                | GitHub Actions + Vercel                | —              |
 
 ---

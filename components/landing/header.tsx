@@ -1,3 +1,7 @@
+// `"use client"` is required here, not redundant: PILL_ACTIONS passes
+// component references (Search, Wrench, User from @/lib/icons) as the
+// `icon` prop. Function references don't cross the RSC serialization
+// boundary, so the boundary has to land at this file, before NyuchiHeader.
 "use client"
 
 import { Search, Wrench, User } from "@/lib/icons"

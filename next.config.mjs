@@ -1,12 +1,35 @@
-import nextra from "nextra"
+import createMDX from "@next/mdx"
 
-const withNextra = nextra({
-  // Search indexing enabled by default
-  // Syntax highlighting via Shiki at build time
+// MDX compilation (replaces Nextra). All `.mdx` files under `app/` are
+// compiled by @next/mdx and routed through Next.js's file-based router.
+// Rehype plugins are referenced by NAME (string tuples) rather than
+// imported functions — Turbopack requires loader options to be
+// serialisable for its persistent cache, and function references are
+// not serialisable. Next.js resolves the strings to real plugins at
+// build time from `node_modules`.
+const withMDX = createMDX({
+  extension: /\.mdx?$/,
+  options: {
+    rehypePlugins: [
+      ["rehype-slug"],
+      [
+        "rehype-autolink-headings",
+        { behavior: "append", properties: { className: ["heading-anchor"] } },
+      ],
+      [
+        "rehype-pretty-code",
+        {
+          theme: { light: "github-light", dark: "github-dark-dimmed" },
+          keepBackground: false,
+        },
+      ],
+    ],
+  },
 })
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  pageExtensions: ["ts", "tsx", "md", "mdx"],
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -101,4 +124,4 @@ const nextConfig = {
   },
 }
 
-export default withNextra(nextConfig)
+export default withMDX(nextConfig)

@@ -1,8 +1,17 @@
-import { useMDXComponents as getNextraComponents } from "nextra-theme-docs"
+// MDX components map for @next/mdx. Every MDX file under `app/` can
+// reference these identifiers directly without importing them.
+// Previously this merged in `nextra-theme-docs`'s theme components
+// (prose layout, Callout, etc.); under @next/mdx we're framework-free
+// and do our own typography via the rehype plugins + globals.css.
+
+import type { MDXComponents } from "mdx/types"
 
 // ── Layout brand marks (self-contained) ─────────────────────────────
 import { MineralStrip } from "@/components/layout/mineral-strip"
 import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
+
+// ── Brand callout (replaces `nextra/components/Callout`) ────────────
+import { Callout } from "@/components/mdx/callout"
 
 // ── UI primitives actually consumed by the portal (35) ──────────────
 import {
@@ -87,15 +96,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { Toggle } from "@/components/ui/toggle"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
-const nextraComponents = getNextraComponents()
-
-export function useMDXComponents(components: Record<string, React.ComponentType>) {
+export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
-    ...nextraComponents,
-
     // Layout marks
     MineralStrip,
     NyuchiLogo,
+
+    // Brand callout for MDX authors (replaces nextra/components Callout)
+    Callout,
 
     // Accordion
     Accordion,

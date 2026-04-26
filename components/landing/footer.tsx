@@ -35,7 +35,6 @@ const columns: FooterColumn[] = [
       { label: "Blocks", href: "/blocks" },
       { label: "Charts", href: "/charts" },
       { label: "Patterns", href: "/patterns" },
-      { label: "Playground", href: "/playground" },
     ],
   },
   {
@@ -115,12 +114,12 @@ function XIcon({ className }: { className?: string }) {
 const socials = [
   {
     label: "GitHub — design portal",
-    href: "https://github.com/nyuchitech/design-portal",
+    href: "https://github.com/nyuchi/design-portal",
     Icon: GithubIcon,
   },
   {
     label: "GitHub — Nyuchi Africa",
-    href: "https://github.com/nyuchitech",
+    href: "https://github.com/nyuchi",
     Icon: GithubIcon,
   },
   {
@@ -135,10 +134,9 @@ const footerLink =
 
 export function Footer() {
   return (
-    // Full-bleed: Nextra's <Footer> wrapper applies its own max-width and
-    // left-aligns content inside the docs grid. The negative margins +
-    // 100vw width here break out of that container so the footer spans
-    // the full viewport, then re-centres its grid via mx-auto.
+    // Full-bleed: the dashboard shell constrains the article column, so the
+    // negative margins + 100vw width here break out of that container so the
+    // footer spans the full viewport, then re-centres its grid via mx-auto.
     <div className="relative right-1/2 left-1/2 -mx-[50vw] w-screen px-4 pt-8 pb-10 sm:px-6 sm:pb-12">
       <div className="mx-auto max-w-6xl">
         <Separator className="mb-10" />
@@ -224,7 +222,7 @@ export function Footer() {
             <span>
               Built by{" "}
               <a
-                href="https://github.com/nyuchitech"
+                href="https://github.com/nyuchi"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-foreground underline underline-offset-2 transition-colors hover:text-muted-foreground"
@@ -233,7 +231,7 @@ export function Footer() {
               </a>
             </span>
             <span aria-hidden="true">·</span>
-            <span className="font-mono text-[10px]">v4.0.26</span>
+            <span className="font-mono text-[10px]">v4.0.38</span>
           </div>
         </div>
       </div>

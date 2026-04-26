@@ -51,8 +51,8 @@ All endpoints return JSON with schema.org JSON-LD metadata where applicable and 
 - `GET /api/v1/ui/{name}/docs` — Component documentation (use cases, variants, a11y)
 - `GET /api/v1/ui/{name}/versions` — Component version history
 - `GET /api/v1/search?q=&layer=&category=` — Cross-resource search
-- `GET /api/v1/docs` — List all documentation pages
-- `GET /api/v1/docs/{slug}` — Single documentation page
+- `GET /api/v1/docs` — HTTP 410 Gone (long-form docs moved to repo MDX; response carries a `migrated_to` map)
+- `GET /api/v1/docs/{slug}` — HTTP 410 Gone (see /api/v1/docs)
 - `GET /api/v1/changelog` — Release history
 - `GET /api/v1/changelog/{version}` — Single release
 - `GET /api/v1/ai/instructions` — AI assistant instruction sets
@@ -72,7 +72,7 @@ All endpoints return JSON with schema.org JSON-LD metadata where applicable and 
 
 Connect at `https://design.nyuchi.com/mcp` (POST, Streamable HTTP transport). 18 tools, 5 resources. Tool and resource names are stable — schema is discoverable via the MCP `list_tools` / `list_resources` standard requests.
 
-**Tools:** `list_components`, `get_component`, `get_component_docs`, `get_component_links`, `get_component_versions`, `search_components`, `get_design_tokens`, `scaffold_component`, `get_install_command`, `get_brand_info`, `get_architecture_info`, `get_ubuntu_principles`, `get_database_status`, `get_usage_stats`, `get_layer_summary`, `get_ai_instructions`, `get_changelog`, `get_documentation_page`.
+**Tools:** `list_components`, `get_component`, `get_component_docs`, `get_component_links`, `get_component_versions`, `search_components`, `get_design_tokens`, `scaffold_component`, `get_install_command`, `get_brand_info`, `get_architecture_info`, `get_ubuntu_principles`, `get_database_status`, `get_usage_stats`, `get_layer_summary`, `get_ai_instructions`, `get_changelog`. (Long-form documentation lives in the repo as MDX — fetch directly from `https://design.nyuchi.com/docs/`, `https://design.nyuchi.com/architecture/`, etc., not via the MCP server.)
 
 **Resources:** `mukoko://registry`, `mukoko://brand`, `mukoko://design-tokens`, `mukoko://architecture`, `mukoko://ubuntu`.
 
