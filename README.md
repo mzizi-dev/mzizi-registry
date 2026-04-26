@@ -6,7 +6,7 @@
 [![Release](https://github.com/nyuchi/design-portal/actions/workflows/release.yml/badge.svg)](https://github.com/nyuchi/design-portal/actions/workflows/release.yml)
 [![CodeQL](https://github.com/nyuchi/design-portal/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nyuchi/design-portal/security/code-scanning)
 
-**Version:** 4.0.38 | **Live:** [design.nyuchi.com](https://design.nyuchi.com) | **Docs:** [design.nyuchi.com/docs](https://design.nyuchi.com/docs) | **Observability:** [design.nyuchi.com/observability](https://design.nyuchi.com/observability)
+**Version:** 4.0.39 | **Live:** [design.nyuchi.com](https://design.nyuchi.com) | **Docs:** [design.nyuchi.com/docs](https://design.nyuchi.com/docs) | **Observability:** [design.nyuchi.com/observability](https://design.nyuchi.com/observability)
 
 ---
 
@@ -20,11 +20,33 @@ The registry is backed by a **DB-first architecture** (Supabase) and served as a
 
 ## Quick install
 
+Bootstrap a fresh project:
+
+```bash
+npx @nyuchi/design-cli init
+```
+
+This writes `app/globals.css` (the Five African Minerals tokens), `lib/utils.ts` (the `cn()` helper), `components/theme-provider.tsx`, and `components.json` — everything a new Nyuchi-branded app needs to start.
+
+Install components (wraps the shadcn CLI under the hood):
+
+```bash
+npx @nyuchi/design-cli add button card data-table
+```
+
+Install agent skills so AI tools in your project know the doctrine:
+
+```bash
+npx @nyuchi/design-cli skills install
+```
+
+Or use the shadcn CLI directly:
+
 ```bash
 npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
 ```
 
-Install multiple:
+Install multiple via shadcn:
 
 ```bash
 npx shadcn@latest add \
@@ -74,6 +96,8 @@ Your AI assistant can now call the full tool surface — live at `https://design
 | `get_layer_summary`         | Component count / categories / names for a given frontend layer (1–10)       |
 | `get_ai_instructions`       | System prompts from `ai_instructions` by target (mcp-server/claude/copilot)  |
 | `get_changelog`             | Recent releases from the `changelog` table                                   |
+| `list_skills`               | List every published agent skill (summary only; no body_mdx)                 |
+| `get_skill`                 | Fetch a single skill (full MDX body) by name                                 |
 | `get_usage_stats`           | Public API and MCP usage metrics (open data, CC BY 4.0)                      |
 | `get_database_status`       | Registry database status and row counts                                      |
 

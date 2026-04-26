@@ -1,0 +1,48 @@
+{
+  "$schema": "https://docs.claude.com/schemas/claude-code/plugin.json",
+  "name": "nyuchi-design",
+  "displayName": "Nyuchi Design",
+  "version": "1.0.0",
+  "description": "Build with the Nyuchi Design System — Five African Minerals palette, 3D frontend architecture, Ubuntu doctrine, shadcn-compatible registry. Live at design.nyuchi.com.",
+  "homepage": "https://design.nyuchi.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nyuchi/design-portal"
+  },
+  "author": {
+    "name": "Nyuchi Africa (PVT) Ltd",
+    "url": "https://nyuchi.com"
+  },
+  "license": "MIT",
+  "icons": {
+    "light": "https://assets.nyuchi.com/nyuchi-icon-light.png",
+    "dark": "https://assets.nyuchi.com/nyuchi-icon-dark.png"
+  },
+  "skills": [
+    "./packages/design-agent-skills/skills/nyuchi-design-system.md",
+    "./packages/design-agent-skills/skills/scaffold-component.md",
+    "./packages/design-agent-skills/skills/ecosystem-app-setup.md"
+  ],
+  "mcpServers": {
+    "nyuchi-design": {
+      "type": "url",
+      "url": "https://design.nyuchi.com/mcp",
+      "description": "Nyuchi Design MCP — components, brand tokens, 3D architecture, skills, changelog. Streamable HTTP transport."
+    }
+  },
+  "permissions": {
+    "network": ["design.nyuchi.com", "assets.nyuchi.com"]
+  },
+  "keywords": [
+    "design-system",
+    "nyuchi",
+    "bundu",
+    "shadcn",
+    "registry",
+    "africa",
+    "five-african-minerals",
+    "ubuntu",
+    "claude-code",
+    "mcp"
+  ]
+}

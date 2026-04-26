@@ -77,6 +77,8 @@ import type {
   LayerDetailRow,
   ArchitectureSnapshotAxis,
   ArchitectureSnapshotLayer,
+  SkillRow,
+  SkillSummary,
   UbuntuPillarRow,
   UbuntuPrincipleRow,
 } from "./types"
@@ -1403,6 +1405,50 @@ export async function getArchitectureSnapshot(): Promise<ArchitectureSnapshotAxi
   }
 
   return Array.from(byAxis.values()).sort((a, b) => a.sort_order - b.sort_order)
+}
+
+// ── Skills — issue #54 / #58 (FRD-15 Part A, `skills` table) ────────
+//
+// Agent-skill MDX bodies. Three RPC helpers in Supabase:
+//   list_skills()           returns the index without body_mdx
+//   get_skill(name)          returns one row including body_mdx
+//   get_skills_summary()     returns the index without body_mdx (alias)
+
+/**
+ * Live fetch of all skills via the `list_skills()` RPC. Returns an empty
+ * array if Supabase isn't configured. Body MDX is omitted — use
+ * {@link getSkill} when the full body is needed.
+ */
+export async function listSkills(): Promise<SkillSummary[]> {
+  if (!isSupabaseConfigured()) return []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getPublicClient() as any).rpc("list_skills")
+  if (error || !Array.isArray(data)) return []
+  return data as SkillSummary[]
+}
+
+/**
+ * Lightweight summary list (same shape as {@link listSkills}). Wraps the
+ * `get_skills_summary()` SQL helper.
+ */
+export async function getSkillsSummary(): Promise<SkillSummary[]> {
+  if (!isSupabaseConfigured()) return []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getPublicClient() as any).rpc("get_skills_summary")
+  if (error || !Array.isArray(data)) return []
+  return data as SkillSummary[]
+}
+
+/**
+ * Fetch a single skill (with full `body_mdx`) via `get_skill(name)`.
+ * Returns null when Supabase isn't configured or the row is missing.
+ */
+export async function getSkill(name: string): Promise<SkillRow | null> {
+  if (!isSupabaseConfigured()) return null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (getPublicClient() as any).rpc("get_skill", { p_name: name })
+  if (error || !Array.isArray(data) || data.length === 0) return null
+  return data[0] as SkillRow
 }
 
 // ── Ubuntu doctrine — issue #45 (`ubuntu_pillars`, `ubuntu_principles`) ──

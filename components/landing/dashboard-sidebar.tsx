@@ -78,7 +78,7 @@ export function DashboardSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="text-xs text-muted-foreground">
-        <span className="px-2 font-mono">v4.0.38</span>
+        <span className="px-2 font-mono">v4.0.39</span>
       </SidebarFooter>
 
       <SidebarRail />

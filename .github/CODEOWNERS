@@ -7,26 +7,35 @@
 # Last matching rule takes precedence.
 
 # Default: all changes request review from the core team
-*                               @nyuchitech/core
+*                               @nyuchi/core
 
 # Design system — Five African Minerals tokens, globals.css
-app/globals.css                 @nyuchitech/core
-lib/brand.ts                    @nyuchitech/core
-lib/architecture.ts             @nyuchitech/core
+app/globals.css                 @nyuchi/core
 
-# Registry manifest — changes affect all 545+ registry items
-registry.json                   @nyuchitech/core
-scripts/build-registry.js       @nyuchitech/core
+# Database access layer — Supabase queries + types (post-#43 the
+# `components` / `brand_*` / `architecture_*` tables replaced lib/brand.ts
+# and lib/architecture.ts)
+lib/db/                         @nyuchi/core
+
+# MCP server — every AI assistant in the ecosystem reads through here
+lib/mcp-server.ts               @nyuchi/core
+
+# Registry sync — regenerates the committed snapshot from Supabase; CI
+# fails if drift slips in
+scripts/sync-registry.ts        @nyuchi/core
 
 # Security-sensitive files
-lib/ai-safety.ts                @nyuchitech/core
-lib/metrics.ts                  @nyuchitech/core
-SECURITY.md                     @nyuchitech/core
+lib/metrics.ts                  @nyuchi/core
+SECURITY.md                     @nyuchi/core
 
 # CI/CD and release infrastructure
-.github/workflows/              @nyuchitech/core
-.husky/                         @nyuchitech/core
+.github/workflows/              @nyuchi/core
+.husky/                         @nyuchi/core
 
 # Community health files
-CODE_OF_CONDUCT.md              @nyuchitech/core
-CONTRIBUTING.md                 @nyuchitech/core
+CODE_OF_CONDUCT.md              @nyuchi/core
+CONTRIBUTING.md                 @nyuchi/core
+
+# Doctrine — every AI assistant reads CLAUDE.md as the single source of
+# truth; changes here propagate to every consumer app in the bundu ecosystem
+CLAUDE.md                       @nyuchi/core

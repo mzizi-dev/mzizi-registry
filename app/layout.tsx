@@ -115,7 +115,7 @@ const jsonLd = {
       url: "https://nyuchi.com",
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/icons/mukoko-icon-dark-cobalt.svg`,
+        url: "https://assets.nyuchi.com/nyuchi-icon-dark.png",
       },
       sameAs: ["https://github.com/nyuchi", "https://nyuchi.com", "https://mukoko.com"],
     },
@@ -133,7 +133,7 @@ const jsonLd = {
       },
       description: SITE_DESCRIPTION,
       creator: { "@id": `${SITE_URL}/#organization` },
-      softwareVersion: "4.0.38",
+      softwareVersion: "4.0.39",
       downloadUrl: "https://design.nyuchi.com/api/v1/ui",
     },
   ],

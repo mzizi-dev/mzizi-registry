@@ -39,6 +39,8 @@ import {
   getArchitectureSnapshot,
   getAxesSummary,
   getLayerDetail,
+  getSkill,
+  listSkills,
   getUbuntuPillars,
   getUbuntuPrinciples,
 } from "@/lib/db"
@@ -121,7 +123,7 @@ export async function createMukokoMcpServer(): Promise<McpServer> {
   const server = new McpServer(
     {
       name: "nyuchi-design",
-      version: "4.0.38",
+      version: "4.0.39",
     },
     instructions ? { instructions } : undefined
   )
@@ -1211,7 +1213,7 @@ export { ${pascalName}, ${camelVariants}Variants }
       version: z
         .string()
         .optional()
-        .describe("Specific release version (e.g. '4.0.38'). Omit to get the full history."),
+        .describe("Specific release version (e.g. '4.0.39'). Omit to get the full history."),
     },
     async ({ version }) => {
       const start = Date.now()
@@ -1267,6 +1269,67 @@ export { ${pascalName}, ${camelVariants}Variants }
           isError: true,
         })
         return toolError(`Failed to get versions for "${name}"`, err)
+      }
+    }
+  )
+
+  server.tool(
+    "list_skills",
+    "List every published skill from the Supabase `skills` table — agent-skill MDX bodies that AI assistants invoke on specific tasks (e.g. nyuchi-design-system, scaffold-component, ecosystem-app-setup). Returns the lightweight summary shape (no body_mdx); use get_skill(name) to fetch the full MDX. Wraps the list_skills() SQL helper.",
+    {},
+    async () => {
+      const start = Date.now()
+      try {
+        const skills = await listSkills()
+        trackMcpTool({ toolName: "list_skills", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(skills, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "list_skills",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError("Failed to list skills", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_skill",
+    "Fetch a single skill (with full body_mdx) from the Supabase `skills` table by name. Used by agents that already know the skill name and want to load its workflow. The body_mdx is large (~5KB per skill); list_skills returns the summary shape if you only need the index.",
+    {
+      name: z
+        .string()
+        .describe("Skill name in kebab-case (e.g. 'nyuchi-design-system', 'scaffold-component')"),
+    },
+    async ({ name }) => {
+      const start = Date.now()
+      try {
+        const skill = await getSkill(name)
+        if (!skill) {
+          trackMcpTool({
+            toolName: "get_skill",
+            durationMs: Date.now() - start,
+            isError: true,
+          })
+          return {
+            content: [{ type: "text" as const, text: `Skill "${name}" not found` }],
+            isError: true,
+          }
+        }
+        trackMcpTool({ toolName: "get_skill", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(skill, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_skill",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError(`Failed to fetch skill "${name}"`, err)
       }
     }
   )

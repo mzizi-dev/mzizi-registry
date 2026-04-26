@@ -1,6 +1,6 @@
 ---
 title: "CLI — nyuchi design portal"
-description: "Using the shadcn CLI to install, update, and manage Mukoko components."
+description: "Use @nyuchi/design-cli to bootstrap a new app, install components, and manage agent skills. Wraps the shadcn CLI under the hood."
 ---
 
 import { LiveComponentCount } from "@/components/live-component-count"
@@ -9,11 +9,23 @@ export const revalidate = 300
 
 # CLI
 
-The Nyuchi Design Portal is fully compatible with the **shadcn CLI**. You can install any of the **<LiveComponentCount /> stable registry items** (live count from Supabase) directly into your project with a single command.
+`@nyuchi/design-cli` is the canonical entry point for adopting the Nyuchi Design system in any consumer app. One command bootstraps a new project, one wraps the shadcn CLI for installing any of the **<LiveComponentCount /> stable registry items**, and one fetches agent skills live from the API.
 
-## Installing components
+```bash
+# Bootstrap (writes globals.css, lib/utils.ts, theme-provider, components.json)
+npx @nyuchi/design-cli init
 
-The base command format:
+# Install one or more components (wraps `shadcn add` pinned to design.nyuchi.com)
+npx @nyuchi/design-cli add button card data-table
+
+# Install agent skills into ./.claude/skills/
+npx @nyuchi/design-cli skills install
+npx @nyuchi/design-cli skills update
+```
+
+## Installing components — direct shadcn CLI
+
+The shadcn CLI works directly against the registry — `nyuchi-design add` is just a thin wrapper that pre-fills the URL.
 
 ```bash
 npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component-name>
