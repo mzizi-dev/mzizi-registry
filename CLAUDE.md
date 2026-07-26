@@ -16,7 +16,7 @@ It serves the full stable registry across the **Mzizi DNA double helix** — two
 npx shadcn@latest add https://mzizi.dev/api/v1/ui/<component>
 ```
 
-**Version:** 4.1.8
+**Version:** 1.0.0
 
 **Live at:** mzizi.dev
 
@@ -257,7 +257,7 @@ design-portal/
 ├── vitest.config.ts, vitest.setup.ts
 ├── components.json                   # shadcn CLI configuration
 ├── next.config.mjs, tsconfig.json, postcss.config.mjs, eslint.config.mjs, .prettierrc
-└── package.json                      # v4.1.8 (the Next.js app at root)
+└── package.json                      # v1.0.0 (the Next.js app at root)
 ```
 
 > **Note on `registry.json`:** post-v4.0.26 the authoritative registry lives in the
@@ -892,8 +892,10 @@ Three workflows in `.github/workflows/`:
 
 ### Versioning
 
-- **Current version:** 4.1.8 (must match in `package.json`, `lib/mcp-server.ts` (`VERSION` const), the `changelog` table in Supabase, `components/landing/footer.tsx`, `components/landing/dashboard-sidebar.tsx`, `app/layout.tsx` (`softwareVersion`), `README.md`, and CLAUDE.md §1)
-- **Scheme:** `4.1.x` is the current internal pre-1.0-public iteration (the `4.1.0` DNA-helix reframe onward, tracked in the Supabase `changelog` table); `5.0.0` is the maintainers' call for the first public release
+- **Current version:** 1.0.0 (must match in `package.json`, `lib/mcp-server.ts` (`VERSION` const), the `changelog` table in Supabase, `components/landing/footer.tsx`, `components/landing/dashboard-sidebar.tsx`, `app/layout.tsx` (`softwareVersion`), `README.md`, and CLAUDE.md §1)
+- **Scheme (two independent tracks — do not conflate):**
+  - **Code SemVer** — the portal codebase versioned in `package.json` et al. **`1.0.0` is the first public release** of the Mzizi code. The prior `4.1.x` line was the internal pre-1.0 iteration; the portal is not published to npm, so resetting to `1.0.0` carries no backwards-version conflict. The next code major (`2.0.0`) is a maintainers' call.
+  - **Doctrine / IP line** — the design-system doctrine and tooling IP, currently at **v5**. This is the intellectual-property version (doctrine + Mzizi tooling maturity), tracked in the Supabase doctrine/`changelog` metadata, and is deliberately **decoupled** from the code SemVer. A code release bumps the SemVer; a doctrine revision bumps the IP line. (Component tokens still carry their own `doctrineVersion`, e.g. `4.2.0`, orthogonal to both.)
 - **Release process:**
   1. Update version in `package.json`
   2. Update the `VERSION` constant in `lib/mcp-server.ts`
