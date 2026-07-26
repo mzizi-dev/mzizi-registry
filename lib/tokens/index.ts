@@ -820,14 +820,7 @@ export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId =
 // ═══════════════════════════════════════════════════════════════
 
 export type PlatformFormat =
-  | "css"
-  | "swift"
-  | "kotlin"
-  | "arkts"
-  | "react-native"
-  | "rust"
-  | "python"
-  | "json"
+  "css" | "swift" | "kotlin" | "arkts" | "react-native" | "rust" | "python" | "json"
 
 export function generateTokens(format: PlatformFormat): string {
   switch (format) {

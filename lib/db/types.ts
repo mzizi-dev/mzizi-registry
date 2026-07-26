@@ -870,12 +870,7 @@ export interface ArchitectureSnapshotAxis {
 // routes are retained (marked legacy) for unmigrated consumers.
 
 export type HelixStrandKey =
-  | "core-guarantee"
-  | "shipped"
-  | "swappable"
-  | "spine"
-  | "genetic-code"
-  | "transcription"
+  "core-guarantee" | "shipped" | "swappable" | "spine" | "genetic-code" | "transcription"
 
 export type HelixBackbone = "engineering" | "meaning"
 
