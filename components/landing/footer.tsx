@@ -232,7 +232,7 @@ export function Footer() {
               Terms
             </a>
             <span aria-hidden="true">·</span>
-            <span className="font-mono text-xs">v4.1.8</span>
+            <span className="font-mono text-xs">v1.0.0</span>
           </div>
         </div>
       </div>

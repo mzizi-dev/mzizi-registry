@@ -1,6 +1,6 @@
 {
   "name": "mzizi",
-  "version": "4.1.8",
+  "version": "1.0.0",
   "private": true,
   "description": "Mzizi — an open-architecture project of the Bundu Foundation. Open 3D frontend architecture, component registry, and MCP server, operated and developed by Nyuchi.",
   "homepage": "https://mzizi.dev",
