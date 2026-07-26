@@ -475,19 +475,25 @@ Minerals + heritage are **DB-generated**: `pnpm tokens:sync` projects the Supaba
 > **Values synced from the `nyuchi-tokens` registry (N1), April 2026 AAA-optimised swap.**
 > Surfaces were re-arranged: `background` is now the ambient page base, `card` is the content surface, `muted` is the deepest fill. Border/input alpha tightened to 0.06. Two new tokens added: `overlay` (modal/sheet surface) and `scrim` (modal backdrop).
 
-| Token                  | Light                 | Dark                     | Usage                         |
-| ---------------------- | --------------------- | ------------------------ | ----------------------------- |
-| `--background`         | `#F3F2EE`             | `#1B1A17`                | Ambient page base (L10% dark) |
-| `--foreground`         | `#141413`             | `#F5F5F4`                | Primary text                  |
-| `--card`               | `#FFFFFF`             | `#100F0E`                | Content surface (L6% dark)    |
-| `--muted`              | `#FAF9F5`             | `#050504`                | Deepest fill (L2% dark)       |
-| `--muted-foreground`   | `#494840`             | `#B2AFA8`                | Secondary text (AAA)          |
-| `--overlay`            | `#FFFFFF`             | `#252421`                | Modal / sheet surface (L14%)  |
-| `--scrim`              | `rgba(0,0,0,0.40)`    | `rgba(0,0,0,0.60)`       | Modal backdrop                |
-| `--border`             | `rgba(10,10,10,0.06)` | `rgba(255,255,255,0.06)` | Borders                       |
-| `--primary`            | `#141413`             | `#F5F5F4`                | Primary interactive           |
-| `--primary-foreground` | `#FFFFFF`             | `#1B1A17`                | Text on `--primary`           |
-| `--destructive`        | `#B3261E`             | `#F2B8B5`                | Error / danger                |
+| Token                  | Light                     | Dark                       | Usage                         |
+| ---------------------- | ------------------------- | -------------------------- | ----------------------------- |
+| `--background`         | `#F3F2EE`                 | `#1B1A17`                  | Ambient page base (L10% dark) |
+| `--foreground`         | `#141413`                 | `#F5F5F4`                  | Primary text                  |
+| `--card`               | `#FFFFFF`                 | `#100F0E`                  | Content surface (L6% dark)    |
+| `--muted`              | `#FAF9F5`                 | `#050504`                  | Deepest fill (L2% dark)       |
+| `--muted-foreground`   | `#494840`                 | `#B2AFA8`                  | Secondary text (AAA)          |
+| `--pitch`              | `#FAFAFA`                 | `#050505`                  | Highest surface (P2)          |
+| `--void`               | `#F8F8F7`                 | `#080807`                  | Near-highest surface (P3)     |
+| `--surface`            | `#EEEEEC`                 | `#131211`                  | Content surface rung (P7)     |
+| `--container`          | `#E5E4E1`                 | `#1E1D1A`                  | Container rung (P11)          |
+| `--overlay`            | `#E0DFDC`                 | `#23221F`                  | Modal / sheet surface (P13)   |
+| `--raised`             | `#D6D5D1`                 | `#2E2C29`                  | Raised rung (P17)             |
+| `--wash`               | `mix(surface, accent 7%)` | `mix(surface, accent 12%)` | Cover-colour page wash        |
+| `--scrim`              | `rgba(0,0,0,0.40)`        | `rgba(0,0,0,0.60)`         | Modal backdrop                |
+| `--border`             | `rgba(10,10,10,0.06)`     | `rgba(255,255,255,0.06)`   | Borders                       |
+| `--primary`            | `#141413`                 | `#F5F5F4`                  | Primary interactive           |
+| `--primary-foreground` | `#FFFFFF`                 | `#1B1A17`                  | Text on `--primary`           |
+| `--destructive`        | `#B3261E`                 | `#F2B8B5`                  | Error / danger                |
 
 **Chart colors** (theme-adaptive):
 
