@@ -146,6 +146,9 @@
   --color-surface: var(--surface);
   --color-container: var(--container);
   --color-raised: var(--raised);
+  --color-pitch: var(--pitch);
+  --color-void: var(--void);
+  --color-wash: var(--wash);
 }
 
 /* Light mode — L1 tokens synced from nyuchi-tokens registry (April 2026).
@@ -204,7 +207,7 @@
   --accent: #faf9f5;
   --accent-foreground: #141413;
   --destructive: #b3261e;
-  --overlay: #ffffff;
+  --overlay: #e0dfdc;
   --overlay-foreground: #141413;
   --scrim: rgba(0, 0, 0, 0.4);
   --border: rgba(10, 10, 10, 0.06);
@@ -268,6 +271,10 @@
   --surface: #eeeeec;
   --container: #e5e4e1;
   --raised: #d6d5d1;
+  --pitch: #fafafa;
+  --void: #f8f8f7;
+  /* Cover wash — surface tinted with the active brand accent (~7% light). */
+  --wash: color-mix(in oklab, var(--surface) 93%, var(--brand-accent));
   /* Engineering dot-grid — subtle blueprint dots on the ambient base. */
   --dot-color: rgba(10, 10, 10, 0.05);
 }
@@ -328,7 +335,7 @@
   --accent: #050504;
   --accent-foreground: #f5f5f4;
   --destructive: #f2b8b5;
-  --overlay: #252421;
+  --overlay: #23221f;
   --overlay-foreground: #f5f5f4;
   --scrim: rgba(0, 0, 0, 0.6);
   --border: rgba(255, 255, 255, 0.06);
@@ -391,6 +398,10 @@
   --surface: #131211;
   --container: #1e1d1a;
   --raised: #2e2c29;
+  --pitch: #050505;
+  --void: #080807;
+  /* Cover wash — surface tinted with the active brand accent (~12% dark). */
+  --wash: color-mix(in oklab, var(--surface) 88%, var(--brand-accent));
   /* Engineering dot-grid — subtle blueprint dots on the ambient base. */
   --dot-color: rgba(255, 255, 255, 0.05);
 }
