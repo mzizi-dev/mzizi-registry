@@ -20,7 +20,7 @@
     // Emphasis as heading shows up in GitHub issue bodies; leave it alone.
     "no-emphasis-as-heading": false,
     // Trailing punctuation in headings (e.g. "Getting started!") is acceptable.
-    "no-trailing-punctuation": false
+    "no-trailing-punctuation": false,
   },
   "globs": ["**/*.md"],
   "ignores": [
@@ -28,6 +28,6 @@
     ".next/**",
     "public/_pagefind/**",
     "CHANGELOG.md",
-    ".github/ISSUE_TEMPLATE/**"
-  ]
+    ".github/ISSUE_TEMPLATE/**",
+  ],
 }
