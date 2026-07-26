@@ -2,8 +2,8 @@
 
 Deno-runtime functions that run close to the database. One is scaffolded here:
 
-| Function    | Route (Supabase-prefixed)      | Purpose                                                                                              |
-| ----------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Function    | Route (Supabase-prefixed)      | Purpose                                                                                                           |
+| ----------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
 | `analytics` | `POST /functions/v1/analytics` | Fire-and-forget ingest for `usage_events`. Replaces the inline `trackApiCall` / `trackMcpTool` path from Next.js. |
 
 Project ref: `grjsboqkaywpwatvrzmy` (`nyuchi_design_db`, region `ap-southeast-1`).

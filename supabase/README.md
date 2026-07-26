@@ -84,16 +84,16 @@ present today).
 managed schemas created automatically on any new project, so they are
 deliberately excluded:
 
-| Schema                | Managed by         |
-| --------------------- | ------------------ |
-| `auth`                | Supabase Auth      |
-| `storage`             | Supabase Storage   |
-| `realtime`            | Supabase Realtime  |
-| `graphql`, `graphql_public` | pg_graphql   |
-| `extensions`          | Postgres extensions |
-| `vault`               | Supabase Vault     |
-| `pgbouncer`           | connection pooler  |
-| `supabase_migrations` | Supabase internal  |
+| Schema                        | Managed by          |
+| ----------------------------- | ------------------- |
+| `auth`                        | Supabase Auth       |
+| `storage`                     | Supabase Storage    |
+| `realtime`                    | Supabase Realtime   |
+| `graphql`, `graphql_public`   | pg_graphql          |
+| `extensions`                  | Postgres extensions |
+| `vault`                       | Supabase Vault      |
+| `pgbouncer`                   | connection pooler   |
+| `supabase_migrations`         | Supabase internal   |
 
 If you ever add custom RLS on `storage.objects` or `auth.users`, those
 policies live outside `public` and must be captured separately.
