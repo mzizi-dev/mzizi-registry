@@ -1,8 +1,8 @@
-# Contributing to nyuchi design portal
+# Contributing to Mzizi
 
-Thank you for your interest in contributing to the nyuchi design portal -- the Nyuchi Design Portal.
+Thank you for your interest in contributing to **Mzizi** — the open component registry, brand system, and DNA-helix architecture portal for the bundu ecosystem (the `design-portal` repository).
 
-This guide covers everything you need to get started, from setting up your environment to submitting a pull request.
+This guide covers everything you need to get started, from setting up your environment to opening a pull request.
 
 ---
 
@@ -22,31 +22,24 @@ cd design-portal
 pnpm install
 ```
 
-The repo is a **pnpm workspace**. One `pnpm install` at the root resolves the Next.js app + every workspace package under `packages/`:
+The repo is a **pnpm workspace** — one `pnpm install` at the root installs everything. Today the workspace contains a single project: the Next.js portal app at the root. The published Mzizi tooling packages (the CLI, the `mzizi-skills` bundle, the standalone MCP worker, and the SDK) live in **[`nyuchi/mzizi-tools`](https://github.com/nyuchi/mzizi-tools)**, not here — see [CLAUDE.md §2](CLAUDE.md) for the split.
 
-| Package                                                         | Purpose                                                                     |
-| --------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `packages/design-cli/` (`@nyuchi/design-cli`)                   | CLI binary — bootstraps consumer apps, wraps shadcn install, manages skills |
-| `packages/design-agent-skills/` (`@nyuchi/design-agent-skills`) | Published snapshot of the Supabase `skills` table                           |
-
-Useful workspace commands:
+Useful root commands:
 
 ```bash
-pnpm dev                                              # Next.js dev server (root)
-pnpm --filter @nyuchi/design-cli build                 # build only the CLI
-pnpm --filter @nyuchi/design-cli test                  # run the CLI's vitest
-pnpm --filter "./packages/*" build                     # build every package
-pnpm typecheck                                         # root (Next.js app only)
-pnpm typecheck:packages                                # every workspace package
-pnpm skills:sync                                       # regen packages/design-agent-skills/skills/* from Supabase
-pnpm skills:verify                                     # CI-style drift check (non-zero exit on drift)
+pnpm dev             # Next.js dev server
+pnpm typecheck       # typecheck the portal app
+pnpm test            # run the Vitest suite
+pnpm registry:sync   # regenerate registry.json from Supabase
+pnpm skills:sync     # refresh the skill snapshots from the Supabase `skills` table
+pnpm skills:verify   # CI-style drift check (non-zero exit on drift)
 ```
 
-Skill content lives in the Supabase `skills` table — never edit `.md` files in `packages/design-agent-skills/skills/` directly. See [CLAUDE.md §15.24](CLAUDE.md) for the four-paths-one-source doctrine.
+Skill content lives in the Supabase `skills` table — never hand-edit the generated `.md` snapshots. See [CLAUDE.md §15](CLAUDE.md) for the single-source-of-truth doctrine.
 
 ### 3. Set up the database (optional for UI work)
 
-The registry uses a DB-first architecture with Supabase. For component development and documentation work, you can run the portal without a database connection -- but API routes will not function.
+The registry uses a DB-first architecture with Supabase. For component development and documentation work, you can run the portal without a database connection — but API routes will not function.
 
 For full functionality:
 
@@ -79,18 +72,18 @@ git checkout -b feature/your-feature
 
 ### Before You Code
 
-1. **Read [CLAUDE.md](CLAUDE.md)** -- it is the definitive reference for this codebase, covering architecture, conventions, and the full design system specification
-1. **Understand the [Seven African Minerals design system](https://mzizi.dev/tokens)** -- all colors come from the mineral-named tokens (seven minerals + seven heritage tones + status + the Experimental Seven)
+1. **Read [CLAUDE.md](CLAUDE.md)** — it is the definitive reference for this codebase, covering architecture, conventions, and the full design system specification
+1. **Understand the [Seven African Minerals design system](https://mzizi.dev/tokens)** — all colors come from the mineral-named tokens (seven minerals + seven heritage tones + status + the Experimental Seven)
 1. **Browse existing components** in `components/ui/` to understand the CVA + Radix + cn() pattern
 1. **Check `registry.json`** before modifying components to understand the dependency graph
-1. **Understand the DB-first architecture** -- API routes read from Supabase, not hardcoded objects
+1. **Understand the DB-first architecture** — API routes read from Supabase, not hardcoded objects
 
 ### Key Principles
 
 - The registry is the **single source of truth** for the entire bundu ecosystem. Changes here propagate to every app that consumes the registry.
 - Every component must be **independently installable** via the shadcn CLI.
 - The **Seven African Minerals palette** (minerals + heritage + status + experimental) is the only approved color system. Never introduce colors outside the token system.
-- **Accessibility is mandatory** -- APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets, keyboard navigation, screen reader support.
+- **Accessibility is mandatory** — APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets, keyboard navigation, screen reader support.
 
 ---
 
@@ -98,28 +91,28 @@ git checkout -b feature/your-feature
 
 ### TypeScript
 
-- **Strict mode** -- no `any` without explicit justification in a comment
-- **Path alias** -- use `@/*` for imports (e.g., `import { cn } from "@/lib/utils"`)
-- **Named exports** -- `export { Button, buttonVariants }`, not `export default Button`
+- **Strict mode** — no `any` without explicit justification in a comment
+- **Path alias** — use `@/*` for imports (e.g., `import { cn } from "@/lib/utils"`)
+- **Named exports** — `export { Button, buttonVariants }`, not `export default Button`
 
 ### Styling
 
-- **Tailwind utility classes only** -- no inline styles, no CSS modules
-- **Never hardcode hex colors** -- use Tailwind classes backed by CSS custom properties from `globals.css`
-- **`cn()` for all className composition** -- never string concatenation
-- **CVA for variants** -- use class-variance-authority for any component with visual states
+- **Tailwind utility classes only** — no inline styles, no CSS modules
+- **Never hardcode hex colors** — use Tailwind classes backed by CSS custom properties from `globals.css`
+- **`cn()` for all className composition** — never string concatenation
+- **CVA for variants** — use class-variance-authority for any component with visual states
 
 ### File Conventions
 
 - **kebab-case** for file names: `button-group.tsx`, `date-range-picker.tsx`
 - **PascalCase** for component names: `ButtonGroup`, `DateRangePicker`
-- **All brand wordmarks lowercase** -- mukoko, nyuchi, shamwari, bundu, nhimbe
+- **All brand wordmarks lowercase** — mzizi, mukoko, nyuchi, shamwari, bundu, nhimbe
 - **`data-slot` attribute** on every component for CSS selection and identification
-- **`"use client"` only when necessary** -- components are React Server Components by default; add the directive only when using hooks, event handlers, or browser APIs
+- **`"use client"` only when necessary** — components are React Server Components by default; add the directive only when using hooks, event handlers, or browser APIs
 
 ### DB-First Architecture
 
-- All API routes read from Supabase -- never return hardcoded fallback data
+- All API routes read from Supabase — never return hardcoded fallback data
 - Database operations go through `lib/db/index.ts`
 - Types are defined in `lib/db/types.ts`
 - Seeding uses upsert (ON CONFLICT) for idempotency
@@ -170,7 +163,15 @@ function MyComponent({
 export { MyComponent, myComponentVariants }
 ```
 
-1. **Add an entry to `registry.json`**:
+1. **Upsert the component into the Supabase `components` table** — Supabase is the source of truth. Include `source_code`, `architecture_layer`, `category`, `dependencies`, `registry_dependencies`, and `status = 'stable'`. The portal serves it from the DB on the next request — no rebuild required.
+
+1. **Regenerate the registry snapshot.** `registry.json` is generated, never hand-edited (CLAUDE.md §15 rule 2); `pnpm registry:sync` rewrites it from Supabase and CI fails on drift via `pnpm registry:verify`:
+
+```bash
+pnpm registry:sync
+```
+
+The generated entry looks like this:
 
 ```json
 {
@@ -186,14 +187,6 @@ export { MyComponent, myComponentVariants }
     }
   ]
 }
-```
-
-1. **Upsert the component** into Supabase (`components` table). The portal serves it from the DB on the next request — no rebuild required.
-
-1. **Sync the registry snapshot** (regenerates `registry.json` + any committed portal primitives from Supabase; CI fails on drift via `pnpm registry:verify`):
-
-```bash
-pnpm registry:sync
 ```
 
 1. **Add tests** in `__tests__/components/`:
@@ -244,21 +237,23 @@ Blocks are complete page compositions (dashboards, login pages, settings panels,
 }
 ```
 
-1. **Seed the database and rebuild the registry** as with UI components.
+1. **Upsert into Supabase and run `pnpm registry:sync`** as with UI components.
 
 ---
 
 ## Adding a Portal Page
 
 The portal hosts the **functional** surfaces only — the component gallery
-(`/components`), the 3D architecture explorer (`/architecture`), and
+(`/components`), the DNA-helix architecture explorer (`/architecture`), and
 observability (`/observability`). Each is a standard Next.js App Router
 `page.tsx`.
 
 Long-form documentation (installation, CLI, theming, contributing, brand,
-foundations, patterns, registry internals) lives in the standalone Mzizi
-Mintlify docs site at <https://docs.bundu.org/mzizi> — not in this repo. To edit
-a guide, contribute to the Mintlify docs project instead.
+foundations, patterns, registry internals) lives in the standalone Astro
+Starlight docs sites — product docs at <https://docs.bundu.org> and engineering
+docs at <https://docs.nyuchi.com> — not in this repo. To edit a guide,
+contribute to those docs repos instead. (The previous Mintlify docs site is
+retired.)
 
 To add a new functional page to the portal:
 
@@ -281,11 +276,11 @@ pnpm test:watch       # Watch mode for development
 
 ### What to Test
 
-- **New components** -- rendering, variant application, accessibility attributes
-- **New API routes** -- response format, status codes, headers
-- **Brand data changes** -- integrity checks (minerals match globals.css hex values)
-- **Architecture data changes** -- data integrity validation
-- **Registry changes** -- all referenced files exist on disk, schema validation
+- **New components** — rendering, variant application, accessibility attributes
+- **New API routes** — response format, status codes, headers
+- **Brand data changes** — integrity checks (minerals match globals.css hex values)
+- **Architecture data changes** — data integrity validation
+- **Registry changes** — all referenced files exist on disk, schema validation
 
 ### Test Location
 
@@ -314,12 +309,14 @@ That's equivalent to:
 ```bash
 pnpm format:check    # prettier check (no writes)
 pnpm lint            # ESLint, zero warnings
+pnpm lint:colors     # guard against off-token hardcoded colors
 pnpm lint:md         # markdownlint-cli2
 pnpm lint:json       # every tracked JSON parses
 pnpm typecheck       # tsc --noEmit
 pnpm test            # vitest single run
 pnpm audit:check     # pnpm audit --audit-level=moderate
 pnpm registry:verify # CI fails if registry.json drifts from Supabase
+pnpm tokens:verify   # CI fails if the design tokens drift from Supabase
 pnpm build           # next build (terminal gate)
 ```
 
@@ -372,7 +369,7 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 - [ ] New components are upserted into the Supabase `components` table; `pnpm registry:sync` regenerates `registry.json`
 - [ ] Tests added for new functionality
 - [ ] Accessibility reviewed (APCA contrast, 56px default / 48px minimum touch targets, keyboard nav)
-- [ ] Brand wordmarks are lowercase (`mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`)
+- [ ] Brand wordmarks are lowercase (`mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`)
 - [ ] Buttons are pill-shaped (`rounded-full`)
 - [ ] Any security finding from `/security-review` is fixed in this PR (per CLAUDE.md §15 rule 22 — never deferred)
 
@@ -389,28 +386,23 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 
 ## Versioning
 
-This project uses semantic versioning. The version number appears in **four places** that must stay in sync:
-
-1. `package.json` -- `version` field
-1. `lib/brand.ts` -- `BRAND_SYSTEM.version`
-1. `lib/architecture.ts` -- version reference
-1. `components/landing/footer.tsx` -- footer display
+This project uses semantic versioning; the current version is **1.0.0**. A version bump must be propagated to every surface listed in [CLAUDE.md §14](CLAUDE.md) — `package.json`, `lib/mcp-server.ts` (`VERSION`), the Supabase `changelog` row, `components/landing/footer.tsx`, `components/landing/dashboard-sidebar.tsx`, `app/layout.tsx` (`softwareVersion`), `README.md`, and CLAUDE.md §1 — which must all stay in sync.
 
 Only maintainers create version tags and releases. The release process:
 
-1. Update version in all four locations
-1. Commit: `git commit -m "Release vX.Y.Z"`
-1. Tag: `git tag vX.Y.Z`
-1. Push: `git push && git push --tags`
-1. GitHub Actions validates and creates the release automatically
+1. Update the version across every surface listed in CLAUDE.md §14.
+1. Insert a row into the Supabase `changelog` table for the new version.
+1. Commit and open a PR; merge with `merge_method=merge` (never squash).
+1. Tag `vX.Y.Z` and push the tag.
+1. GitHub Actions validates the tag against `package.json` and creates the release automatically.
 
 ---
 
 ## Reporting Issues
 
-- **Bugs** -- describe the problem, include steps to reproduce, expected vs actual behavior
-- **Feature requests** -- describe the use case and why it benefits the ecosystem
-- **Security vulnerabilities** -- see [SECURITY.md](SECURITY.md) for responsible disclosure
+- **Bugs** — describe the problem, include steps to reproduce, expected vs actual behavior
+- **Feature requests** — describe the use case and why it benefits the ecosystem
+- **Security vulnerabilities** — see [SECURITY.md](SECURITY.md) for responsible disclosure
 
 When filing issues, include:
 
@@ -426,7 +418,7 @@ When filing issues, include:
 We follow the Ubuntu philosophy: **"I am because we are."**
 
 - Be respectful and inclusive in all interactions
-- Value constructive feedback -- give it kindly, receive it graciously
+- Value constructive feedback — give it kindly, receive it graciously
 - Remember that this project serves a pan-African ecosystem with diverse users and contributors
 - Write code and documentation that is accessible and welcoming to newcomers
 - Assume good intent; ask clarifying questions before making judgments

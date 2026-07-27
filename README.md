@@ -180,14 +180,16 @@ Raw data: `GET https://mzizi.dev/api/v1/stats` — licensed CC BY 4.0.
 | `pnpm test:watch`      | Vitest watch mode                                                                  |
 | `pnpm audit:check`     | `pnpm audit --audit-level=moderate` — same gate CI runs                            |
 | `pnpm registry:sync`   | Regenerate `registry.json` + committed primitives from Supabase                    |
-| `pnpm registry:verify` | Non-mutating drift check (run this if you've touched the DB)                       |
+| `pnpm registry:verify` | Non-mutating registry drift check (run this if you've touched the DB)              |
+| `pnpm tokens:sync`     | Regenerate the generated palette (`globals.css` + `palette.generated.ts`)          |
+| `pnpm tokens:verify`   | Non-mutating token drift check (run this if you've touched the DB palette)         |
 
 ### Run every CI gate before pushing
 
 ```bash
 pnpm check
-# = format:check && lint && lint:md && lint:json
-#   && typecheck && test && audit:check && registry:verify && build
+# = format:check && lint && lint:colors && lint:md && lint:json && typecheck
+#   && test && audit:check && registry:verify && tokens:verify && build
 ```
 
 If `pnpm check` is green, CI will be too.
