@@ -149,11 +149,12 @@ design-portal/
 │   └── pre-commit                    # lint-staged → typecheck → audit
 ├── __tests__/                        # Vitest test suite
 │   ├── playground-routes.test.ts     # /playground + /playground/[name] route surface
-│   └── api/
-│       ├── brand-route.test.ts       # /api/v1/brand response & headers
-│       ├── registry-route.test.ts    # /api/v1/ui registry integrity
-│       └── v1/
-│           └── architecture-routes.test.ts  # v1 route file existence
+│   ├── api/
+│   │   ├── architecture-routes.test.ts   # architecture route surface
+│   │   ├── brand-route.test.ts       # /api/v1/brand response & headers
+│   │   ├── registry-route.test.ts    # /api/v1/ui registry integrity
+│   │   └── v1/                        # architecture-routes + docs-route (410) tests
+│   └── components/                   # breadcrumbs, callout, dashboard-sidebar, toc render tests
 ├── app/                              # Next.js App Router
 │   ├── globals.css                   # Theme tokens + Tailwind imports (token SOURCE OF TRUTH)
 │   ├── layout.tsx                    # Root layout — Mzizi dashboard shell
@@ -828,17 +829,25 @@ If you genuinely need a category-level list for navigation or doc grouping, deri
 ```
 __tests__/
 ├── playground-routes.test.ts                    # /playground + /playground/[name] route surface
-└── api/
-    ├── brand-route.test.ts                      # /api/v1/brand response, headers, data
-    ├── registry-route.test.ts                   # /api/v1/ui registry integrity
-    └── v1/
-        └── architecture-routes.test.ts          # v1 route file existence; legacy routes removed
+├── api/
+│   ├── architecture-routes.test.ts              # architecture route surface
+│   ├── brand-route.test.ts                      # /api/v1/brand response, headers, data
+│   ├── registry-route.test.ts                   # /api/v1/ui registry integrity
+│   └── v1/
+│       ├── architecture-routes.test.ts          # v1 route file existence; legacy routes removed
+│       └── docs-route.test.ts                   # /api/v1/docs* HTTP 410 behaviour
+└── components/                                  # component rendering tests
+    ├── breadcrumbs.test.tsx
+    ├── callout.test.tsx
+    ├── dashboard-sidebar.test.tsx
+    └── toc.test.tsx
 ```
 
 ### What Tests Cover
 
-- **API routes:** Brand API returns the correct headers/status/payload shape; the registry response matches the shadcn schema; all expected v1 route files exist on disk; removed legacy routes are confirmed gone.
+- **API routes:** Brand API returns the correct headers/status/payload shape; the registry response matches the shadcn schema; all expected v1 route files exist on disk; removed legacy routes are confirmed gone; `/api/v1/docs*` returns HTTP 410.
 - **Portal pages:** `/playground` + `/playground/[name]` exist and render through the playground demo registry.
+- **Portal components:** breadcrumbs, callout, dashboard sidebar, and table-of-contents render correctly.
 
 ### Running Tests
 
