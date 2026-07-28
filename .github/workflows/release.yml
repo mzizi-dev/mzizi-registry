@@ -56,34 +56,20 @@ jobs:
           pnpm typecheck
           pnpm test
           pnpm build
-          pnpm --filter @nyuchi/design-cli build
 
-      # Publish workspace packages to npm. Skipped silently when
-      # NPM_TOKEN isn't set (e.g. forks or local act runs); on the
-      # canonical repo NPM_TOKEN is configured at the org level so
-      # both packages publish on every successful tag.
+      # This repo publishes nothing to npm. The portal itself is deployed to
+      # Vercel, and every npm-distributed package moved to nyuchi/mzizi-tools,
+      # which publishes them from its own workflows:
       #
-      # `pnpm publish --no-git-checks` is required because we publish
-      # AFTER `git tag` is pushed to origin (tag exists, but the
-      # commit on main hasn't moved). The `--access public` flag is
-      # essential for scoped packages — npm defaults scoped to
-      # restricted otherwise.
-      - name: Publish @nyuchi/design-cli + @nyuchi/design-agent-skills
-        if: steps.tag_check.outputs.exists == 'false' && env.NPM_TOKEN != ''
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          # Configure npm auth (Node 22 npm respects ~/.npmrc with auth token).
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-
-          # Skills package — pure markdown, no build step needed.
-          pnpm --filter @nyuchi/design-agent-skills publish \
-            --access public --no-git-checks
-
-          # CLI package — already built in the validate step above.
-          pnpm --filter @nyuchi/design-cli publish \
-            --access public --no-git-checks
+      #   @nyuchi/design-agent-skills  →  @nyuchi/mzizi-skills
+      #   @nyuchi/design-cli           →  @nyuchi/mzizi-cli
+      #
+      # The publish step that used to live here filtered on those two legacy
+      # names against a `packages/` directory that left this repo with them, so
+      # it silently matched nothing ("No projects matched the filters") on every
+      # tag. Worse, had it ever matched it would have republished names that
+      # mzizi-tools deliberately deprecates in favour of the @nyuchi/mzizi-*
+      # packages — two publishers for one package. Do not re-add it.
 
       - name: Create tag
         if: steps.tag_check.outputs.exists == 'false'
