@@ -23,8 +23,6 @@
     "tokens:sync": "tsx scripts/sync-tokens.ts",
     "tokens:verify": "tsx scripts/sync-tokens.ts --check",
     "lint:colors": "tsx scripts/lint-colors.ts",
-    "skills:sync": "tsx scripts/sync-skills.ts",
-    "skills:verify": "tsx scripts/sync-skills.ts --check",
     "prepare": "husky",
     "audit:check": "pnpm audit --audit-level=moderate --ignore-registry-errors",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}\" --ignore-path .prettierignore",
