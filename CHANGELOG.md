@@ -6,6 +6,17 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed — skills move to `nyuchi/mzizi-tools`
+
+- **The `skills` Supabase collection is now read-only from this repo.** Skill content is authored in git as `mzizi-skills/skills/<name>/SKILL.md` in `nyuchi/mzizi-tools`, published as the public npm package `@nyuchi/mzizi-skills`, and projected into the collection by that repo's `pnpm skills:sync`. The portal continues to serve it at `/api/v1/skills*` and via MCP `get_skill` / `list_skills` — it just never writes it. Documented in `CLAUDE.md` §15.23 (which previously asserted the opposite), §6.1, §3, and the `SkillRow` doc comment in `lib/db/types.ts`.
+
+### Removed
+
+- **`scripts/sync-skills.ts` and the `skills:sync` / `skills:verify` scripts.** The script was doubly broken: it wrote to `packages/design-agent-skills/skills/<name>.md`, a directory that left this repo when that package moved to `mzizi-tools` (so `skills:sync` could only throw `ENOENT` and `skills:verify` reported permanent drift), and it pulled **DB → disk** while `mzizi-tools`' `sync-skills.mjs` pushes **disk → DB**. Two writers aimed at one collection from opposite ends meant whichever ran last silently reverted the other — the mechanism behind the drift found across the skill bodies.
+- **The three duplicated skill files** — `.claude/skills/{nyuchi-design-system,ecosystem-app-setup,scaffold-component}.md`. All were copies of registry rows and all had drifted: `nyuchi-design-system` is superseded by the bundle's `nyuchi-design` and still taught the retired L1–L10 "3D architecture" axes; `ecosystem-app-setup` pointed at `npx @nyuchi/design-cli init` (a command that never shipped, under a package name that no longer exists) and `nyuchi/design-agent-skills`; `scaffold-component` was a stale fork of a row already updated to the node model. Their content lives on, corrected, in `@nyuchi/mzizi-skills`. `.claude/skills/README.md` now explains where the skills went and how to install them; the directory remains available for skills specific to working on the portal codebase.
+- **The npm publish step in `release.yml`.** It ran `pnpm --filter @nyuchi/design-agent-skills publish` and `--filter @nyuchi/design-cli publish` on every version tag. With no `packages/` tree those filters matched nothing, so the step was a silent no-op — and had it ever matched, it would have republished the very names `mzizi-tools` deprecates in favour of `@nyuchi/mzizi-skills` and `@nyuchi/mzizi-cli`. This repo deploys to Vercel and publishes nothing to npm.
+- **The broken `skills` array in `.claude-plugin/plugin.json`**, whose three paths under `./packages/design-agent-skills/skills/` did not exist. The skills ship with the `mzizi` plugin in `mzizi-tools`, which symlinks the bundle; this repo's plugin contributes the MCP server registration. Its description also claimed "Five African Minerals" (there are seven) and the retired "open 3D frontend architecture" (it is the DNA double helix).
+
 ### Added
 
 - **`LICENSE`:** the repo was previously unlicensed. Added the MIT License with a note that `/api/v1/stats` usage metrics remain under CC BY 4.0.
