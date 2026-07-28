@@ -489,15 +489,18 @@ export interface AiInstructionInsert {
 // ── Skills table types ──────────────────────────────────────────────
 
 /**
- * Agent-skill MDX bodies served three ways: as `.claude/skills/*.md` files
- * in any consumer repo (via the `@nyuchi/design-agent-skills` npm package),
- * via the HTTP API at `/api/v1/skills/{name}`, and via the MCP `get_skill`
- * tool. The Supabase `skills` table is the single source of truth.
+ * Agent-skill MDX bodies. **Read-only from this repo** — the source of truth is
+ * git: `mzizi-skills/skills/<name>/SKILL.md` in `nyuchi/mzizi-tools`, published
+ * as the npm package `@nyuchi/mzizi-skills` and projected into this table by
+ * that repo's `pnpm skills:sync`. The portal serves what it finds here via the
+ * HTTP API at `/api/v1/skills/{name}` and the MCP `get_skill` tool; consumers
+ * install the package (`npx skills add @nyuchi/mzizi-skills`). Never write to
+ * this table from the portal — see CLAUDE.md §15.23.
  *
  * Distinct from `ai_instructions` — those are per-AI-target system prompts
  * (one row per target like `claude-system-prompt`, `mcp-server`,
  * `github-copilot`); skills are reusable workflows an agent invokes on
- * specific tasks (one row per skill like `nyuchi-design-system`,
+ * specific tasks (one row per skill like `nyuchi-design`,
  * `scaffold-component`, `ecosystem-app-setup`).
  */
 export interface SkillRow {
