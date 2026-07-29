@@ -29,6 +29,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
 
+    // ── Skills + CLI — the agent-facing instruction surfaces ──────────
+    {
+      url: `${BASE}/skills`,
+      lastModified: NOW,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE}/cli`,
+      lastModified: NOW,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+
     // ── Architecture ──────────────────────────────────────────────────
     {
       url: `${BASE}/architecture`,
