@@ -7,6 +7,7 @@ import {
   Palette,
   ScrollText,
   Sparkles,
+  Terminal,
   Wrench,
   type LucideIcon,
 } from "lucide-react"
@@ -16,7 +17,7 @@ import {
 // surfaces only; long-form guides live in the standalone Mintlify
 // docs site at docs.bundu.org/mzizi.
 //
-//   Explore       — the component gallery, tools, and the 3D architecture explorer
+//   Explore       — the component gallery, tools, skills, the CLI, and the architecture explorer
 //   Playground    — interactive registry browser (live preview + API tester)
 //   Doctrine      — Ubuntu Five Pillars + Five Principles (issue #45)
 //   Releases      — the node-aware changelog (issue #85)
@@ -49,7 +50,9 @@ export const SIDEBAR_NAV: NavGroup[] = [
       { label: "Components", href: "/components", icon: Layers },
       { label: "Colour tokens", href: "/tokens", icon: Palette },
       { label: "Tools", href: "/tools", icon: Wrench },
-      { label: "3D architecture", href: "/architecture", icon: Box },
+      { label: "Skills", href: "/skills", icon: BookOpen },
+      { label: "CLI", href: "/cli", icon: Terminal },
+      { label: "Architecture", href: "/architecture", icon: Box },
       { label: "Observability", href: "/observability", icon: Activity },
     ],
   },
@@ -93,6 +96,8 @@ export const BREADCRUMB_LABELS: Record<string, string> = {
   playground: "Playground",
   changelog: "Changelog",
   tools: "Tools",
+  skills: "Skills",
+  cli: "CLI",
   source: "Source",
   layers: "Layers",
   ubuntu: "Ubuntu",
