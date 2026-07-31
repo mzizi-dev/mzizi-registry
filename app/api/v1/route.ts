@@ -65,16 +65,6 @@ export async function GET() {
             href: "/api/v1/health",
             description: "Service health check — database and registry status.",
           },
-          architectureFrontendAxes: {
-            href: "/api/v1/architecture/frontend/axes",
-            description:
-              "Legacy axis-era route (per-axis summary). The model is the Mzizi DNA double helix — see /api/v1/architecture.",
-          },
-          architectureFrontendLayers: {
-            href: "/api/v1/architecture/frontend/layers",
-            description:
-              "Legacy axis-era route (per-node detail). The model is the Mzizi DNA double helix — see /api/v1/architecture.",
-          },
           ubuntuPillars: {
             href: "/api/v1/ubuntu/pillars",
             description: "Five Ubuntu pillars — spheres in which Ubuntu is lived.",

@@ -684,41 +684,43 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 
 **Common headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *` (except `/stats` which is `max-age=60, s-maxage=120` and `/health` which is `no-cache, no-store`).
 
-| Endpoint                                   | Description                                                                         | Landed in |
-| ------------------------------------------ | ----------------------------------------------------------------------------------- | --------- |
-| `GET /api/v1`                              | Discovery document — lists all resources                                            | —         |
-| `GET /api/v1/brand`                        | Brand system (minerals, typography, spacing, ecosystem)                             | —         |
-| `GET /api/v1/ui`                           | Component registry index                                                            | —         |
-| `GET /api/v1/ui/{name}`                    | Individual component (shadcn format, with source code)                              | —         |
-| `GET /api/v1/ui/{name}/docs`               | Component docs (use cases, variants, a11y)                                          | —         |
-| `GET /api/v1/ui/{name}/versions`           | Component version history                                                           | —         |
-| `GET /api/v1/ecosystem`                    | Architecture principles & framework decision                                        | —         |
-| `GET /api/v1/data-layer`                   | Local-first + cloud layer specification                                             | —         |
-| `GET /api/v1/pipeline`                     | Open data pipeline (Redpanda → Flink → Doris)                                       | —         |
-| `GET /api/v1/sovereignty`                  | Technology sovereignty assessments                                                  | —         |
-| `GET /api/v1/architecture`                 | Full architecture snapshot                                                          | —         |
-| `GET /api/v1/architecture/axes`            | Per-axis summary with live component counts                                         | —         |
-| `GET /api/v1/architecture/layers/{n}`      | Per-layer detail (covenant, rules, breakdown)                                       | —         |
-| `GET /api/v1/architecture/frontend/axes`   | **Legacy axis-era route** — per-axis summary; the model is now the DNA helix (§6.2) | —         |
-| `GET /api/v1/architecture/frontend/layers` | **Legacy axis-era route** — per-node detail; the model is now the DNA helix (§6.2)  | —         |
-| `GET /api/v1/ubuntu/pillars`               | 5 Ubuntu Pillars                                                                    | —         |
-| `GET /api/v1/ubuntu/principles`            | 5 Ubuntu Principles                                                                 | —         |
-| `GET /api/v1/docs`                         | **HTTP 410 Gone** — content moved to bundu-docs                                     | —         |
-| `GET /api/v1/docs/{slug}`                  | **HTTP 410 Gone** — see `/api/v1/docs` for the slug map                             | —         |
-| `GET /api/v1/changelog`                    | All releases (from `changelog` table)                                               | #107      |
-| `GET /api/v1/changelog/{version}`          | Single release                                                                      | #107      |
-| `GET /api/v1/ai/instructions`              | List AI instruction sets                                                            | —         |
-| `GET /api/v1/ai/instructions/{name}`       | Instruction set by target (mcp-server, claude, copilot)                             | —         |
-| `GET /api/v1/skills`                       | List published agent skills (lightweight, no body_mdx)                              | —         |
-| `GET /api/v1/skills/summary`               | Same shape as `/skills`; reserved for CLI update path                               | —         |
-| `GET /api/v1/skills/{name}`                | Single skill with full `body_mdx`                                                   | —         |
-| `GET /api/v1/search?q=`                    | Cross-resource search (components + docs + changelog)                               | —         |
-| `GET /api/v1/stats?days=`                  | Open-data usage metrics (CC BY 4.0) — backs `/observability`                        | #105      |
-| `GET /api/v1/health`                       | Service health check (`no-cache, no-store`)                                         | —         |
+| Endpoint                                   | Description                                                             | Landed in |
+| ------------------------------------------ | ----------------------------------------------------------------------- | --------- |
+| `GET /api/v1`                              | Discovery document — lists all resources                                | —         |
+| `GET /api/v1/brand`                        | Brand system (minerals, typography, spacing, ecosystem)                 | —         |
+| `GET /api/v1/ui`                           | Component registry index                                                | —         |
+| `GET /api/v1/ui/{name}`                    | Individual component (shadcn format, with source code)                  | —         |
+| `GET /api/v1/ui/{name}/docs`               | Component docs (use cases, variants, a11y)                              | —         |
+| `GET /api/v1/ui/{name}/versions`           | Component version history                                               | —         |
+| `GET /api/v1/ecosystem`                    | Architecture principles & framework decision                            | —         |
+| `GET /api/v1/data-layer`                   | Local-first + cloud layer specification                                 | —         |
+| `GET /api/v1/pipeline`                     | Open data pipeline (Redpanda → Flink → Doris)                           | —         |
+| `GET /api/v1/sovereignty`                  | Technology sovereignty assessments                                      | —         |
+| `GET /api/v1/architecture`                 | Full architecture snapshot                                              | —         |
+| `GET /api/v1/architecture/axes`            | **HTTP 410 Gone** — the axis model is retired; only the helix is served | —         |
+| `GET /api/v1/architecture/layers/{n}`      | Per-layer detail (covenant, rules, breakdown)                           | —         |
+| `GET /api/v1/architecture/frontend/axes`   | **HTTP 410 Gone** — retired with the axis model (§6.2)                  | —         |
+| `GET /api/v1/architecture/frontend/layers` | **HTTP 410 Gone** — retired with the axis/layer model (§6.2)            | —         |
+| `GET /api/v1/ubuntu/pillars`               | 5 Ubuntu Pillars                                                        | —         |
+| `GET /api/v1/ubuntu/principles`            | 5 Ubuntu Principles                                                     | —         |
+| `GET /api/v1/docs`                         | **HTTP 410 Gone** — content moved to bundu-docs                         | —         |
+| `GET /api/v1/docs/{slug}`                  | **HTTP 410 Gone** — see `/api/v1/docs` for the slug map                 | —         |
+| `GET /api/v1/changelog`                    | All releases (from `changelog` table)                                   | #107      |
+| `GET /api/v1/changelog/{version}`          | Single release                                                          | #107      |
+| `GET /api/v1/ai/instructions`              | List AI instruction sets                                                | —         |
+| `GET /api/v1/ai/instructions/{name}`       | Instruction set by target (mcp-server, claude, copilot)                 | —         |
+| `GET /api/v1/skills`                       | List published agent skills (lightweight, no body_mdx)                  | —         |
+| `GET /api/v1/skills/summary`               | Same shape as `/skills`; reserved for CLI update path                   | —         |
+| `GET /api/v1/skills/{name}`                | Single skill with full `body_mdx`                                       | —         |
+| `GET /api/v1/search?q=`                    | Cross-resource search (components + docs + changelog)                   | —         |
+| `GET /api/v1/stats?days=`                  | Open-data usage metrics (CC BY 4.0) — backs `/observability`            | #105      |
+| `GET /api/v1/health`                       | Service health check (`no-cache, no-store`)                             | —         |
 
-Routes outside `/api/v1/` (intentionally not part of the public v1 contract): `GET /api/openapi` (serves `openapi.yaml`), `GET /api/chaos/{name}` (N5/Y-axis chaos-injection), `GET /api/health/{name}` (per-resource health probe).
+Routes outside `/api/v1/` (intentionally not part of the public v1 contract): `GET /api/openapi` (serves `openapi.yaml`), `GET /api/chaos/{name}` (N5 resilience chaos-injection), `GET /api/health/{name}` (per-resource health probe).
 
-**Error responses:** 400 (invalid input), 404 (not found), 410 (gone — `/docs*`), 500 (server error), **503** (Supabase env vars missing — clear "Database not configured" message).
+**Error responses:** 400 (invalid input), 404 (not found), 410 (gone — `/docs*` and the retired axis routes), 500 (server error), **503** (Supabase env vars missing — clear "Database not configured" message).
+
+**Serve only the DNA double helix.** The axis model is retired and is not served anywhere — not at a route, not nested in a payload, not relabelled. `absence is the correct state for anything axis-shaped, not repair`: emitting strand data through a field named `axis_geometry` would look correct and teach the wrong model to every consumer downstream, which is how the drift started. The three axis routes above return 410 with a `migrated_to` map, matching the `/api/v1/docs*` precedent. `lib/db`'s `getAxesSummary` / `getArchitectureFrontendAxes` / `getArchitectureFrontendLayers` helpers and the `FrontendAxis` / `FrontendLayer` OpenAPI schemas are deleted rather than deprecated.
 
 The OpenAPI document is also served at `GET /api/openapi`.
 
