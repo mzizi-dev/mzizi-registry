@@ -53,7 +53,7 @@ design-portal (this repo)
     │
     ├── Defines: Seven African Minerals palette, typography, component API,
     │            DNA-helix frontend architecture, Ubuntu doctrine
-    ├── Serves: the full stable registry across 10 architecture nodes via the
+    ├── Serves: the full stable registry across the DNA-helix nodes via the
     │           shadcn CLI / `/api/v1/*` (live count: GET /api/v1/stats)
     │           and the document-route MCP at /mcp (mzizi://components, mzizi://nodes)
     │
@@ -150,7 +150,7 @@ design-portal/
 ├── __tests__/                        # Vitest test suite
 │   ├── playground-routes.test.ts     # /playground + /playground/[name] route surface
 │   ├── api/
-│   │   ├── architecture-routes.test.ts   # architecture route surface
+│   │   ├── architecture-routes.test.ts   # architecture route surface (live + 410)
 │   │   ├── brand-route.test.ts       # /api/v1/brand response & headers
 │   │   ├── registry-route.test.ts    # /api/v1/ui registry integrity
 │   │   └── v1/                        # architecture-routes + docs-route (410) tests
@@ -171,8 +171,8 @@ design-portal/
 │   │   └── v1/                       # Mzizi API v1 (see §9)
 │   │       ├── route.ts              # Discovery document
 │   │       ├── ai/instructions/      # AI instruction sets (mcp-server / claude / copilot)
-│   │       ├── architecture/         # /architecture, /architecture/axes, /architecture/layers/[n],
-│   │       │                         #   /architecture/frontend/{axes,layers}
+│   │       ├── architecture/         # /architecture (the helix), /architecture/nodes/[n];
+│   │       │                         #   /architecture/{axes,layers/[n]} + /architecture/frontend/{axes,layers} = 410
 │   │       ├── brand/                # Brand system
 │   │       ├── changelog/            # Releases (root + [version])
 │   │       ├── data-layer/, ecosystem/, pipeline/, sovereignty/
@@ -184,7 +184,7 @@ design-portal/
 │   │       ├── ubuntu/               # /ubuntu/pillars, /ubuntu/principles
 │   │       └── ui/                   # Registry: list, [name], [name]/docs, [name]/versions
 │   ├── mcp/route.ts                  # MCP server HTTP endpoint (document-route)
-│   ├── architecture/                 # DNA-helix architecture explorer (page.tsx + layers/[n])
+│   ├── architecture/                 # DNA-helix architecture explorer (page.tsx + nodes/[n])
 │   ├── components/                   # Component gallery (page.tsx + [name])
 │   ├── source/[name]/                # Per-component source viewer
 │   ├── playground/                   # Interactive component gallery (page.tsx + [name]) — wired #106
@@ -273,7 +273,7 @@ design-portal/
 
 ### 6.1 Registry System
 
-**Single source of truth: the Supabase `components` table** — the stable registry across 10 architecture nodes (live count: `GET /api/v1/stats`), with metadata, dependencies, source code, docs, and version history split across:
+**Single source of truth: the Supabase `components` table** — the stable registry across the nodes and rungs of the DNA double helix (live count: `GET /api/v1/stats`; never a fixed number — the node set is uncapped), with metadata, dependencies, source code, docs, and version history split across:
 
 | Table                                                  | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -282,7 +282,7 @@ design-portal/
 | `component_docs`                                       | Use cases, variants, a11y notes (per component) — served by `/api/v1/ui/{name}/docs`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `component_versions`                                   | Per-component version history — served by `/api/v1/ui/{name}/versions`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `documentation_pages`                                  | **HISTORICAL — content moved to bundu-docs and nyuchi-docs.** All published rows shipped as Astro Starlight pages on `docs.bundu.org` (product docs) and `docs.nyuchi.com` (engineering docs). The DB-driven renderers, the dynamic `[slug]` route, and the `get_documentation_page` MCP tool are all removed; `/api/v1/docs/*` returns HTTP 410 with a `migrated_to` map. The table remains in Supabase as the historical source-of-record. Do not add new rows; author new docs in the Starlight repos. See §15.18.                                                     |
-| `changelog`                                            | Releases — `nodes_affected` (1–10), `tools_added/modified/deprecated/removed`, `components_added/modified/deprecated/removed`, `linked_issues`, `released_at`. Served at `/api/v1/changelog` and `/api/v1/changelog/{version}`; rendered into `/changelog` (#107).                                                                                                                                                                                                                                                                                                        |
+| `changelog`                                            | Releases — `nodes_affected` (uncapped), `tools_added/modified/deprecated/removed`, `components_added/modified/deprecated/removed`, `linked_issues`, `released_at`. Served at `/api/v1/changelog` and `/api/v1/changelog/{version}`; rendered into `/changelog` (#107).                                                                                                                                                                                                                                                                                                    |
 | `ai_instructions`                                      | System prompts per target (mcp-server, claude, copilot)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `skills`                                               | Agent-skill MDX bodies — **read-only from this repo.** Authored in git as `mzizi-skills/skills/<name>/SKILL.md` in `nyuchi/mzizi-tools` (npm `@nyuchi/mzizi-skills`) and projected into this collection by that repo's `pnpm skills:sync`. The portal serves it at `/api/v1/skills*` and via MCP `get_skill`. See §15.23.                                                                                                                                                                                                                                                 |
 | `brand_*`                                              | Minerals, semantic colors, typography, spacing, ecosystem brands                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
@@ -696,9 +696,10 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 | `GET /api/v1/data-layer`                   | Local-first + cloud layer specification                                 | —         |
 | `GET /api/v1/pipeline`                     | Open data pipeline (Redpanda → Flink → Doris)                           | —         |
 | `GET /api/v1/sovereignty`                  | Technology sovereignty assessments                                      | —         |
-| `GET /api/v1/architecture`                 | Full architecture snapshot                                              | —         |
+| `GET /api/v1/architecture`                 | The DNA double helix — nodes, rungs, strands + live counts              | —         |
+| `GET /api/v1/architecture/nodes/{n}`       | Per-node detail (covenant, stakeholder, rules) — **`n` is uncapped**    | —         |
 | `GET /api/v1/architecture/axes`            | **HTTP 410 Gone** — the axis model is retired; only the helix is served | —         |
-| `GET /api/v1/architecture/layers/{n}`      | Per-layer detail (covenant, rules, breakdown)                           | —         |
+| `GET /api/v1/architecture/layers/{n}`      | **HTTP 410 Gone** — retired with the layer era; see `nodes/{n}`         | —         |
 | `GET /api/v1/architecture/frontend/axes`   | **HTTP 410 Gone** — retired with the axis model (§6.2)                  | —         |
 | `GET /api/v1/architecture/frontend/layers` | **HTTP 410 Gone** — retired with the axis/layer model (§6.2)            | —         |
 | `GET /api/v1/ubuntu/pillars`               | 5 Ubuntu Pillars                                                        | —         |
@@ -720,7 +721,13 @@ Routes outside `/api/v1/` (intentionally not part of the public v1 contract): `G
 
 **Error responses:** 400 (invalid input), 404 (not found), 410 (gone — `/docs*` and the retired axis routes), 500 (server error), **503** (Supabase env vars missing — clear "Database not configured" message).
 
-**Serve only the DNA double helix.** The axis model is retired and is not served anywhere — not at a route, not nested in a payload, not relabelled. `absence is the correct state for anything axis-shaped, not repair`: emitting strand data through a field named `axis_geometry` would look correct and teach the wrong model to every consumer downstream, which is how the drift started. The three axis routes above return 410 with a `migrated_to` map, matching the `/api/v1/docs*` precedent. `lib/db`'s `getAxesSummary` / `getArchitectureFrontendAxes` / `getArchitectureFrontendLayers` helpers and the `FrontendAxis` / `FrontendLayer` OpenAPI schemas are deleted rather than deprecated.
+**Serve only the DNA double helix.** The axis model is retired and is not served anywhere — not at a route, not nested in a payload, not relabelled. `absence is the correct state for anything axis-shaped, not repair`: emitting strand data through a field named `axis_geometry` would look correct and teach the wrong model to every consumer downstream, which is how the drift started. The retired routes above return 410 with a `migrated_to` map, matching the `/api/v1/docs*` precedent. `lib/db`'s `getAxesSummary` / `getArchitectureFrontendAxes` / `getArchitectureFrontendLayers` / `getArchitectureSnapshot` / `getLayerDetail` / `getNodeDistribution` helpers, the `ArchitectureSnapshotAxis` / `ArchitectureSnapshotLayer` / `AxisSummaryRow` / `LayerDetailRow` / `ArchitectureAxisGeometry` types, `ChangelogRow.axes_affected`, and the `FrontendAxis` / `FrontendLayer` OpenAPI schemas are deleted rather than deprecated.
+
+**`layers` was retired too, and "URL stability" is not a reason to keep it.** `/api/v1/architecture/layers/{n}` served an `axis_name` per row behind a `1-10` bound; it is now 410, replaced by `/api/v1/architecture/nodes/{n}`. It was briefly kept as a stable alias that "serves nodes", and that is precisely how the vocabulary survived a migration — do not reinstate it. The **site** path `/architecture/layers/:n` is a permanent redirect to `/architecture/nodes/:n` (`next.config.mjs`), because the unit did not change, only its name.
+
+**Never cap the node set.** Node numbers are labels, not a sequence, and more nodes will come. Do not write a fixed count ("ten nodes"), a fixed range (`N1-N10`), a `VALID_NODES` array, or a `maximum` on a node argument anywhere — in a route, an OpenAPI schema, `generateStaticParams`, a chart legend, or prose. **Any upper bound is itself the defect, not its current value:** a cap of 10 hid N11, and a cap of 11 would hide N12. Derive the set from `documentation-architecture-nodes` and let a missing number be a 404 the collection answers, never a 400 a constant answers. `__tests__/api/v1/architecture-routes.test.ts` asserts this against the OpenAPI schema.
+
+**`public/llms.txt` is a doctrine surface.** It is the machine-readable summary AI crawlers read, so a stale claim there propagates further than one on a page. It may _name_ the retired model in order to disown it — the test that guards it asserts per-paragraph that any paragraph mentioning axes also marks them retired, rather than banning the words, so the disavowal does not trip its own check.
 
 The OpenAPI document is also served at `GET /api/openapi`.
 
@@ -786,7 +793,7 @@ The previous relational MCP (the wider tool surface that read from `components`,
 
 ## 11. Component Categories
 
-The stable registry items live in the Supabase `components` table and are organised across 10 architecture nodes and by function.
+The stable registry items live in the Supabase `components` table and are organised across the nodes and rungs of the DNA double helix and by function.
 
 **Do not hardcode component counts anywhere in the repo.** Counts change with every registry sync; baking a number into MDX, into doctrine, or into a card guarantees doctrine drift.
 
@@ -836,7 +843,7 @@ __tests__/
 │   ├── brand-route.test.ts                      # /api/v1/brand response, headers, data
 │   ├── registry-route.test.ts                   # /api/v1/ui registry integrity
 │   └── v1/
-│       ├── architecture-routes.test.ts          # v1 route file existence; legacy routes removed
+│       ├── architecture-routes.test.ts          # route files, no node caps, llms.txt doctrine
 │       └── docs-route.test.ts                   # /api/v1/docs* HTTP 410 behaviour
 └── components/                                  # component rendering tests
     ├── breadcrumbs.test.tsx
@@ -847,7 +854,8 @@ __tests__/
 
 ### What Tests Cover
 
-- **API routes:** Brand API returns the correct headers/status/payload shape; the registry response matches the shadcn schema; all expected v1 route files exist on disk; removed legacy routes are confirmed gone; `/api/v1/docs*` returns HTTP 410.
+- **API routes:** Brand API returns the correct headers/status/payload shape; the registry response matches the shadcn schema; all expected v1 route files exist on disk; removed legacy routes are confirmed gone; `/api/v1/docs*` and the retired axis/layer routes return HTTP 410; `/api/v1/architecture/nodes/{n}` never rejects a high node number.
+- **Doctrine:** no node argument in `openapi.yaml` declares a `maximum`; `public/llms.txt` makes no axis-model claim and describes the helix (§9).
 - **Portal pages:** `/playground` + `/playground/[name]` exist and render through the playground demo registry.
 - **Portal components:** breadcrumbs, callout, dashboard sidebar, and table-of-contents render correctly.
 
