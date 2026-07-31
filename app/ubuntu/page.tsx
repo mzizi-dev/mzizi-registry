@@ -145,12 +145,12 @@ export default async function UbuntuPage() {
           carries the same shape: ndiri nekuti tiri.
         </p>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Ubuntu is the philosophical substrate of the Mukoko platform. It does not live at one
-          layer of the architecture — it sits underneath every layer. The doctrine has three
-          five-fold expressions: <strong className="text-foreground">Pillars</strong> (where Ubuntu
-          is situated), <strong className="text-foreground">Principles</strong> (how Ubuntu is
-          embodied), and <strong className="text-foreground">Questions</strong> (the decision filter
-          that evaluates whether a product change ships).
+          Ubuntu is the philosophical substrate of the Mukoko platform. It does not live at one node
+          of the architecture — it is the genetic code the whole helix is read from. The doctrine
+          has three five-fold expressions: <strong className="text-foreground">Pillars</strong>{" "}
+          (where Ubuntu is situated), <strong className="text-foreground">Principles</strong> (how
+          Ubuntu is embodied), and <strong className="text-foreground">Questions</strong> (the
+          decision filter that evaluates whether a product change ships).
         </p>
       </header>
 

@@ -74,9 +74,7 @@ import type {
   ComponentVersionRow,
   McpToolRegistryRow,
   DesignTokens,
-  LayerDetailRow,
-  ArchitectureSnapshotAxis,
-  ArchitectureSnapshotLayer,
+  HelixClass,
   HelixModel,
   HelixNode,
   HelixStrand,
@@ -88,7 +86,6 @@ import type {
   ObservabilityEventRow,
   ChaosEventRow,
   SystemCountsRow,
-  NodeDistributionRow,
 } from "./types"
 
 // ── Supabase clients ────────────────────────────────────────────────
@@ -1276,98 +1273,20 @@ export async function getComponentLinks(name: string): Promise<ComponentLink[]> 
   ]
 }
 
-// ── 3D Frontend Architecture — issue #46 (`architecture_frontend_*`) ──
+// ── Architecture — the Mzizi DNA double helix ────────────────────────
 //
-// The `architecture_frontend_layers` (10 rows) and `architecture_frontend_axes`
-// (5 rows) tables are the source of truth for the 3D architecture explorer.
-// No in-code fallback dataset is kept — per doctrine, the DB is the only
-// source of truth and seeding happens out-of-band. Callers must tolerate
-// an empty array and render an empty state.
-
-/**
- * Single-layer detail (covenant, stakeholder, implementation rules,
- * category breakdown). Wraps `get_layer_detail(p_layer_number int)`.
- * Returns null if the layer number is out of range.
- */
-export async function getLayerDetail(layerNumber: number): Promise<LayerDetailRow | null> {
-  if (!isSupabaseConfigured()) return null
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("get_layer_detail", {
-    p_layer_number: layerNumber,
-  })
-  if (error || !Array.isArray(data) || data.length === 0) return null
-  return data[0] as LayerDetailRow
-}
-
-/**
- * Full architecture snapshot — every axis with its layers, covenants,
- * stakeholders, implementation rules, and live component counts.
- * Wraps `get_architecture()` and reshapes the flat row set into a
- * nested `axes[].layers[]` structure for client consumption.
- */
-export async function getArchitectureSnapshot(): Promise<ArchitectureSnapshotAxis[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("get_architecture")
-  if (error || !Array.isArray(data)) return []
-
-  type Row = {
-    axis_name: string
-    axis_title: string
-    axis_description: string
-    axis_geometry: string
-    axis_metaphor: string
-    axis_sort_order: number
-    layer_number: number
-    layer_sub_label: string
-    layer_title: string
-    layer_role: string
-    layer_description: string
-    layer_covenant: string
-    layer_stakeholder: string
-    layer_implementation_rules: string[]
-    layer_sort_order: number
-    component_count: number
-    stable_count: number
-    alpha_count: number
-    deprecated_count: number
-  }
-
-  const byAxis = new Map<string, ArchitectureSnapshotAxis>()
-  for (const row of data as Row[]) {
-    let axis = byAxis.get(row.axis_name)
-    if (!axis) {
-      axis = {
-        name: row.axis_name,
-        title: row.axis_title,
-        description: row.axis_description,
-        geometry: row.axis_geometry,
-        metaphor: row.axis_metaphor,
-        sort_order: row.axis_sort_order,
-        layers: [],
-      }
-      byAxis.set(row.axis_name, axis)
-    }
-    const layer: ArchitectureSnapshotLayer = {
-      layer_number: row.layer_number,
-      sub_label: row.layer_sub_label,
-      title: row.layer_title,
-      role: row.layer_role,
-      description: row.layer_description,
-      covenant: row.layer_covenant,
-      stakeholder: row.layer_stakeholder,
-      implementation_rules: row.layer_implementation_rules ?? [],
-      sort_order: row.layer_sort_order,
-      component_count: row.component_count,
-      stable_count: row.stable_count,
-      alpha_count: row.alpha_count,
-      deprecated_count: row.deprecated_count,
-    }
-    axis.layers.push(layer)
-  }
-
-  return Array.from(byAxis.values()).sort((a, b) => a.sort_order - b.sort_order)
-}
+// `component_documents` / `documentation-architecture-{nodes,strands}` is
+// the source of truth, and the same one the MCP serves. The axis-era
+// helpers that used to live here — `getLayerDetail()` (which wrapped
+// `get_layer_detail(p_layer_number)` and returned an `axis_name` per row,
+// capped 1-10) and `getArchitectureSnapshot()` (which reshaped
+// `get_architecture()` into `axes[].layers[]`) — are deleted rather than
+// rewired. Emitting a strand through a field named `axis_*` would look
+// correct and teach the retired model to every consumer that read it.
+//
+// No in-code fallback dataset is kept: the DB is the only source of truth
+// and seeding happens out-of-band, so callers must tolerate an empty
+// model and render an honest empty state rather than implying data.
 
 /**
  * Live per-node component counts via the `get_node_counts()` RPC, keyed
@@ -1465,6 +1384,43 @@ export async function getHelixModel(): Promise<HelixModel> {
     nodes: all.filter((n) => n.type === "node"),
     rungs: all.filter((n) => n.type === "rung"),
     strands,
+  }
+}
+
+/**
+ * One element of the helix by its node number — a node or a rung, both of
+ * which carry a covenant, description, stakeholder, and implementation
+ * rules. Backs `/architecture/nodes/[n]` and
+ * `/api/v1/architecture/nodes/[n]`.
+ *
+ * Deliberately takes no upper bound. Node numbers are labels, not a
+ * sequence, and the set is never capped — whether `n` exists is a
+ * question for the collection, not for a constant in this file. Returns
+ * null when Supabase isn't configured or no element carries that number.
+ */
+export async function getHelixNode(nodeNumber: number): Promise<HelixNode | null> {
+  if (!Number.isInteger(nodeNumber) || nodeNumber < 1) return null
+  const model = await getHelixModel()
+  return (
+    [...model.nodes, ...model.rungs].find((element) => element.node_number === nodeNumber) ?? null
+  )
+}
+
+/**
+ * The helix class a node or rung renders as — its strand class if it sits
+ * on a strand, `"rung"` if it bridges both backbones. Keeps the chart,
+ * the node badge, and the explorer colouring off one rule.
+ */
+export function helixClassOf(element: HelixNode): HelixClass {
+  if (element.type === "rung") return "rung"
+  switch (element.strand) {
+    case "core-guarantee":
+    case "shipped":
+    case "swappable":
+    case "spine":
+      return element.strand
+    default:
+      return "core-guarantee"
   }
 }
 
@@ -1622,65 +1578,18 @@ export async function getSystemCounts(): Promise<SystemCountsRow | null> {
   return data[0] as SystemCountsRow
 }
 
-/**
- * Component distribution by `ecosystem_node`, joined to the node's
- * sub_label, title, and axis from `architecture_frontend_layers`.
- *
- * The dashboard's component-distribution panel renders this as a bar
- * chart with axis labels `horizontal`, `vertical`, `depth`, `outlier`.
- *
- * The join is done client-side (two small queries) rather than via a
- * Postgres function so the helper has no dependency on a not-yet-shipped
- * RPC. Both tables are small — round-trip cost is negligible.
- */
-export async function getNodeDistribution(): Promise<NodeDistributionRow[]> {
-  if (!isSupabaseConfigured()) return []
-
-  const client = getPublicClient()
-
-  const [layersRes, componentsRes] = await Promise.all([
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (client as any)
-      .from("architecture_frontend_layers")
-      .select("node_number, sub_label, title, ecosystem_axis")
-      .order("node_number", { ascending: true }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (client as any).from("components").select("ecosystem_node").not("ecosystem_node", "is", null),
-  ])
-
-  if (layersRes.error || !Array.isArray(layersRes.data)) return []
-
-  type LayerRow = {
-    node_number: number
-    sub_label: string
-    title: string
-    ecosystem_axis: string
-  }
-
-  const layers = layersRes.data as LayerRow[]
-
-  const counts = new Map<number, number>()
-  if (!componentsRes.error && Array.isArray(componentsRes.data)) {
-    for (const row of componentsRes.data as Array<{ ecosystem_node: number | null }>) {
-      const node = row.ecosystem_node
-      if (typeof node !== "number") continue
-      counts.set(node, (counts.get(node) ?? 0) + 1)
-    }
-  }
-
-  return layers.map((l) => ({
-    ecosystem_node: l.node_number,
-    sub_label: l.sub_label,
-    title: l.title,
-    ecosystem_axis: l.ecosystem_axis,
-    component_count: counts.get(l.node_number) ?? 0,
-  }))
-}
+// The observability dashboard's component-distribution panel used to read
+// a `getNodeDistribution()` helper that joined component counts to
+// `architecture_frontend_layers.ecosystem_axis` — a retired table and an
+// axis-shaped column. It is deleted, not rewired: `getHelixModel()`
+// already returns every node and rung with its live `component_count`
+// from `get_node_counts()`, off the collection the MCP serves, so the
+// panel reads the helix directly and colours by `helixClassOf()`.
 
 // ── Changelog v2 — issue #85 (`versioning_and_changelog_v2`) ────────
 //
 // The node-aware changelog lives behind the `list_changelog(limit, offset)`
-// SQL helper. Each row carries `nodes_affected integer[]` (N1–N10) and
+// SQL helper. Each row carries `nodes_affected integer[]` and
 // component / tool deltas. `/changelog` reads via this RPC; the older
 // `getChangelogEntries()` helper is kept for backwards compatibility
 // with `components/docs/db-changelog.tsx`.

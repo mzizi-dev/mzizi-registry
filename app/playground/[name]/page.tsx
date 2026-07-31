@@ -96,7 +96,7 @@ export default async function PlaygroundComponentPage({
           </Badge>
           {item.layer && (
             <Badge variant="secondary" className="font-mono text-xs">
-              L{item.layer}
+              N{item.layer}
             </Badge>
           )}
         </div>

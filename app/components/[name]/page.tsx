@@ -76,7 +76,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
           </Badge>
           {item.layer && (
             <Badge variant="secondary" className="font-mono text-xs">
-              L{item.layer}
+              N{item.layer}
             </Badge>
           )}
         </div>

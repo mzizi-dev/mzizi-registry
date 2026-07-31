@@ -46,8 +46,8 @@ export default function TermsPage() {
 
         <Section title="The service">
           <p>
-            mzizi.dev serves an open component registry, brand and design-token system, and 3D
-            frontend architecture. Components are installable via the shadcn CLI against{" "}
+            mzizi.dev serves an open component registry, brand and design-token system, and the
+            DNA-helix frontend architecture. Components are installable via the shadcn CLI against{" "}
             <code className="font-mono text-xs">/api/v1/ui/&lt;component&gt;</code>, and the same
             data is reachable over the MCP server for AI tools. The service is provided for building
             software within and beyond the Bundu ecosystem.
