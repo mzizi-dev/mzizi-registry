@@ -117,6 +117,16 @@ describe("Architecture API v1 Routes", () => {
       const block = content.split("nodes_affected:")[1] ?? ""
       expect(block.split("components_added:")[0]).not.toMatch(/maximum:/)
     })
+
+    // The MCP tool surface is the one agents actually call, and a Zod bound
+    // there is worse than an HTTP one: it rejects the filter before it reaches
+    // the store, so asking for N11 returned a schema error rather than rows.
+    it("the MCP list_components node argument declares no max", () => {
+      const src = fs.readFileSync(path.join(process.cwd(), "lib/mcp-server.ts"), "utf-8")
+      const nodeArg = src.match(/^\s*node: z\..*$/m)?.[0] ?? ""
+      expect(nodeArg).not.toBe("")
+      expect(nodeArg).not.toMatch(/\.max\(/)
+    })
   })
 
   // Retired-model vocabulary must not reach a crawler. `llms.txt` is the

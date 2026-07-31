@@ -725,7 +725,7 @@ Routes outside `/api/v1/` (intentionally not part of the public v1 contract): `G
 
 **`layers` was retired too, and "URL stability" is not a reason to keep it.** `/api/v1/architecture/layers/{n}` served an `axis_name` per row behind a `1-10` bound; it is now 410, replaced by `/api/v1/architecture/nodes/{n}`. It was briefly kept as a stable alias that "serves nodes", and that is precisely how the vocabulary survived a migration — do not reinstate it. The **site** path `/architecture/layers/:n` is a permanent redirect to `/architecture/nodes/:n` (`next.config.mjs`), because the unit did not change, only its name.
 
-**Never cap the node set.** Node numbers are labels, not a sequence, and more nodes will come. Do not write a fixed count ("ten nodes"), a fixed range (`N1-N10`), a `VALID_NODES` array, or a `maximum` on a node argument anywhere — in a route, an OpenAPI schema, `generateStaticParams`, a chart legend, or prose. **Any upper bound is itself the defect, not its current value:** a cap of 10 hid N11, and a cap of 11 would hide N12. Derive the set from `documentation-architecture-nodes` and let a missing number be a 404 the collection answers, never a 400 a constant answers. `__tests__/api/v1/architecture-routes.test.ts` asserts this against the OpenAPI schema.
+**Never cap the node set.** Node numbers are labels, not a sequence, and more nodes will come. Do not write a fixed count ("ten nodes"), a fixed range (`N1-N10`), a `VALID_NODES` array, or a `maximum` on a node argument anywhere — in a route, an OpenAPI schema, `generateStaticParams`, a chart legend, or prose. **Any upper bound is itself the defect, not its current value:** a cap of 10 hid N11, and a cap of 11 would hide N12. Derive the set from `documentation-architecture-nodes` and let a missing number be a 404 the collection answers, never a 400 a constant answers. **This includes the MCP tool surface** — `list_components`'s `node` argument is `z.number().int().positive()` with no `.max()`, because a Zod bound rejects the filter before it reaches the store, so an agent asking for N11 got a schema error instead of an answer. An unknown node legitimately returns zero rows. `__tests__/api/v1/architecture-routes.test.ts` asserts this against both the OpenAPI schema and `lib/mcp-server.ts`.
 
 **`public/llms.txt` is a doctrine surface.** It is the machine-readable summary AI crawlers read, so a stale claim there propagates further than one on a page. It may _name_ the retired model in order to disown it — the test that guards it asserts per-paragraph that any paragraph mentioning axes also marks them retired, rather than banning the words, so the disavowal does not trip its own check.
 
@@ -771,19 +771,19 @@ const server = await createMziziMcpServer(ctx.supabase)
 
 ### Resources (read-only data)
 
-| URI                  | Description                                                                          |
-| -------------------- | ------------------------------------------------------------------------------------ |
-| `mzizi://components` | Mzizi component registry index — name / node / collection / owner per row            |
-| `mzizi://nodes`      | Per-node collection summary — counts + ownership breakdown across all 11 nodes/rungs |
+| URI                  | Description                                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------------------ |
+| `mzizi://components` | Mzizi component registry index — name / node / collection / owner per row                              |
+| `mzizi://nodes`      | Per-node collection summary — counts + ownership breakdown across every node/rung the collection holds |
 
 ### Tools (callable actions)
 
-| Tool                  | Description                                                                                                                                                                    |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `list_components`     | List components, optionally filtered by node (1–11) or owner (`bundu` / `nyuchi` / `mzizi` / `framework`). Returns the lean index — use `get_component` for the full document. |
-| `get_component`       | Fetch one component as its full JSON document — one read, everything (metadata, owner, sources/descriptors, legacy source code, files, docs)                                   |
-| `list_collections`    | List the per-node collections (`n1_tokens … n10_documentation`) with total counts and ownership breakdown                                                                      |
-| `get_database_status` | Supabase connection health + document-store row count                                                                                                                          |
+| Tool                  | Description                                                                                                                                                                                     |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `list_components`     | List components, optionally filtered by node (**uncapped** — see §9) or owner (`bundu` / `nyuchi` / `mzizi` / `framework`). Returns the lean index — use `get_component` for the full document. |
+| `get_component`       | Fetch one component as its full JSON document — one read, everything (metadata, owner, sources/descriptors, legacy source code, files, docs)                                                    |
+| `list_collections`    | List the per-node collections (`n1_tokens`, `n2_primitives`, … — never a fixed range) with total counts and ownership breakdown                                                                 |
+| `get_database_status` | Supabase connection health + document-store row count                                                                                                                                           |
 
 ### Legacy MCP — RETIRED
 

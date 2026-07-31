@@ -3,7 +3,7 @@
  *
  * Reads from the `component_documents` staging table on Supabase. Each row is
  * a self-contained component document (`{ owner, sources, legacy, files, …}`)
- * keyed by node collection (n1_tokens … n10_documentation). One fetch, no
+ * keyed by node collection (n1_tokens, n2_primitives, … — uncapped). One fetch, no
  * joins — the MCP just looks up a document and returns it.
  *
  * Read-only. The HTTP entrypoint at `app/mcp/route.ts` uses
@@ -143,9 +143,14 @@ export async function createMziziMcpServer(supabase: SupabaseClient): Promise<Mc
 
   server.tool(
     "list_components",
-    "List components from the document store. Optionally filter by node (1–10) or owner (bundu | nyuchi | mzizi | framework). Returns the lean index (name / node / collection / owner) — use get_component for the full document.",
+    "List components from the document store. Optionally filter by node or owner (bundu | nyuchi | mzizi | framework). Node numbers are labels, not a sequence, and the set is never capped — a node above the highest you know of is a valid filter, not an error. Returns the lean index (name / node / collection / owner) — use get_component for the full document.",
     {
-      node: z.number().int().min(1).max(10).optional(),
+      // No .max(). A bound here rejects the filter before it ever reaches the
+      // store, so an agent asking for a node above the cap gets a schema
+      // error rather than an answer — .max(10) is what made N11 undiscoverable
+      // over MCP, and .max(11) would go on to hide N12. An unknown node
+      // legitimately returns zero rows; that is the store's answer to give.
+      node: z.number().int().positive().optional(),
       owner: z.enum(["bundu", "nyuchi", "mzizi", "framework"]).optional(),
       limit: z.number().int().min(1).max(5000).default(500),
     },
@@ -204,7 +209,7 @@ export async function createMziziMcpServer(supabase: SupabaseClient): Promise<Mc
 
   server.tool(
     "list_collections",
-    "List the per-node collections (n1_tokens … n10_documentation) with total counts and ownership breakdown.",
+    "List the per-node collections (n1_tokens, n2_primitives, … — the set is never capped) with total counts and ownership breakdown.",
     {},
     async () => {
       try {
