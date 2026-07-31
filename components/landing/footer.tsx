@@ -28,7 +28,7 @@ const columns: FooterColumn[] = [
       { label: "Colour tokens", href: "/tokens" },
       { label: "Playground", href: "/playground" },
       { label: "Tools", href: "/tools" },
-      { label: "3D architecture", href: "/architecture" },
+      { label: "Architecture", href: "/architecture" },
       { label: "Observability", href: "/observability" },
       { label: "Changelog", href: "/changelog" },
       { label: "Ubuntu", href: "/ubuntu" },

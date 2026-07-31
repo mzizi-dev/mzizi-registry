@@ -10,13 +10,16 @@ import { paletteColor } from "@/lib/tokens"
 // ──────────────────────────────────────────────────────────────────────
 // The Mzizi DNA double helix
 //
-//   Two backbones wind around the vertical axis, 180° out of phase:
-//     · engineering backbone — carries the eight build NODES (N1–N8),
-//       rendered as beads coloured by their strand class.
+//   Two backbones wind around a shared centre line, 180° out of phase:
+//     · engineering backbone — carries the build NODES, rendered as beads
+//       coloured by their strand class.
 //     · meaning backbone     — the doctrine backbone (genetic-code,
 //       transcription).
-//   Cross-cutting RUNGS (N9 fundi, N10 documentation, N11 discovery)
-//   are gold base pairs bridging both backbones — bound to no strand.
+//   Cross-cutting RUNGS are gold base pairs bridging both backbones —
+//   bound to no strand.
+//
+//   Every element comes from the live collection, so nothing here counts
+//   nodes or names a highest one: the node set is never capped.
 //
 // Click a bead (node or rung) or a strand chip to read its covenant,
 // description, and rules in the panel. There are no axes and no outliers.
@@ -91,7 +94,7 @@ function Backbone({ phase, color }: { phase: number; color: string }) {
 }
 
 // A rung: a gold bar bridging the two backbones at height t, with a
-// clickable bead at its midpoint (on the central axis).
+// clickable bead at its midpoint (on the centre line).
 function Rung({ t, isActive, onClick }: { t: number; isActive: boolean; onClick: () => void }) {
   const { mid, rotation, length } = useMemo(() => {
     const a = helixPoint(t, 0)
@@ -310,11 +313,10 @@ export function ArchitectureCanvas({ model }: { model: HelixModel }) {
         {!selection && (
           <div className="flex flex-col gap-3 text-sm text-muted-foreground">
             <p>
-              Two backbones wind around the axis: the{" "}
-              <span className="text-foreground">engineering</span> backbone carries the eight build
-              nodes (beads, coloured by strand); the{" "}
-              <span className="text-foreground">meaning</span> backbone carries the doctrine
-              strands. The gold bars are cross-cutting{" "}
+              Two backbones wind around a shared centre line: the{" "}
+              <span className="text-foreground">engineering</span> backbone carries the build nodes
+              (beads, coloured by strand); the <span className="text-foreground">meaning</span>{" "}
+              backbone carries the doctrine strands. The gold bars are cross-cutting{" "}
               <span className="text-foreground">rungs</span> — fundi, documentation, discovery —
               bridging both.
             </p>

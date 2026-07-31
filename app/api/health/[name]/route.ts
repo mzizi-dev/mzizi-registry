@@ -15,7 +15,7 @@ const COMPONENT_NAME_PATTERN = /^[a-z][a-z0-9-]*$/
 /**
  * GET /api/health/{name}
  *
- * Per-component health probe. L8 assurance components and external
+ * Per-component health probe. N8 assurance components and external
  * synthetic-probes target this URL by component name to verify the
  * registry's view of a single component is healthy.
  *

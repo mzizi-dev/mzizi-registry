@@ -18,7 +18,7 @@ export default async function Image({ params }: { params: Promise<{ name: string
   const item = await getComponent(name).catch(() => null)
   return renderMziziOg({
     title: item?.name ?? name,
-    eyebrow: item?.layer ? `component · ${item.layer}` : "mzizi component",
+    eyebrow: item?.layer ? `component · N${item.layer}` : "mzizi component",
     description: item?.description ?? "A component in the Mzizi registry.",
   })
 }

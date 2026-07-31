@@ -23,7 +23,7 @@ import { SIDEBAR_NAV } from "@/lib/nav"
  * `lib/nav.ts` — four groups:
  *
  *   Design system   — Components / Brand / Foundations / Patterns
- *   Architecture    — 3D architecture / Observability
+ *   Architecture    — the DNA double helix / Observability
  *   Playground      — one link
  *
  * Active-route detection: a nav item is active when `pathname === href`
