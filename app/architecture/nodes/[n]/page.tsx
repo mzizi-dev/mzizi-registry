@@ -74,7 +74,9 @@ export default async function NodeDetailPage({ params }: { params: Promise<{ n: 
         <h1 className="font-serif text-3xl font-bold">N{parsed}</h1>
         <p className="mt-4 text-sm text-muted-foreground">
           Supabase is not configured. Every element of the helix is read live from{" "}
-          <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">component_documents</code>{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
+            component_documents
+          </code>{" "}
           (
           <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
             documentation-architecture-nodes
@@ -131,9 +133,7 @@ export default async function NodeDetailPage({ params }: { params: Promise<{ n: 
 
       {element.description ? (
         <section className="mb-10">
-          <h2 className="mb-3 font-serif text-xl font-semibold">
-            What this {element.type} is
-          </h2>
+          <h2 className="mb-3 font-serif text-xl font-semibold">What this {element.type} is</h2>
           <p className="text-sm leading-relaxed text-muted-foreground">{element.description}</p>
         </section>
       ) : null}
@@ -163,9 +163,7 @@ export default async function NodeDetailPage({ params }: { params: Promise<{ n: 
 
       <section className="mb-10">
         <header className="mb-2 flex items-baseline justify-between gap-3">
-          <h2 className="font-serif text-xl font-semibold">
-            Components on this {element.type}
-          </h2>
+          <h2 className="font-serif text-xl font-semibold">Components on this {element.type}</h2>
           <span className="font-mono text-xs text-muted-foreground">
             {element.component_count} {element.component_count === 1 ? "component" : "components"}
           </span>
