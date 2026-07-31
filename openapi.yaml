@@ -3,7 +3,7 @@ info:
   title: Mzizi API
   version: "1.0.0"
   description: |
-    The Mzizi API — components, brand, architecture, Ubuntu doctrine, the open 3D frontend
+    The Mzizi API — components, brand, architecture, Ubuntu doctrine, the open DNA-helix frontend
     model, and design system. Mzizi is an open-architecture project of the Bundu Foundation,
     operated and developed by Nyuchi.
 
@@ -38,7 +38,7 @@ tags:
   - name: Registry
     description: Component registry (shadcn-compatible)
   - name: Architecture
-    description: Ecosystem architecture, data layer, pipeline, sovereignty, 3D frontend axes/layers
+    description: Ecosystem architecture, data layer, pipeline, sovereignty, the DNA-helix frontend model
   - name: Ubuntu
     description: Ubuntu doctrine — Five Pillars and Five Principles
   - name: Content
@@ -326,16 +326,18 @@ paths:
 
   /architecture:
     get:
-      summary: 3D Architecture snapshot
+      summary: Architecture snapshot (DNA double helix)
       description: |
-        Full snapshot of the Nyuchi 3D Architecture model — every axis with its layers,
-        covenants, stakeholders, implementation rules, and live component counts. Wraps
-        the `get_architecture()` SQL helper. ISR cache: 1 hour.
+        Full snapshot of the Mzizi DNA double helix — nodes on an engineering backbone
+        and a meaning backbone, held together by cross-cutting rungs, with their
+        covenants, stakeholders, implementation rules, and live component counts. There
+        are no axes and no outliers. Wraps the `get_architecture()` SQL helper.
+        ISR cache: 1 hour.
       operationId: getArchitectureSnapshot
       tags: [Architecture]
       responses:
         "200":
-          description: "Snapshot reshaped as `{ data: axes[].layers[], meta }`."
+          description: "Snapshot of the helix — strands with their nodes, plus the rungs."
           headers:
             Cache-Control:
               $ref: "#/components/headers/CachePublic"
@@ -359,15 +361,27 @@ paths:
 
   /architecture/axes:
     get:
-      summary: Per-axis summary with live counts
+      summary: Per-axis summary (retired)
       description: |
-        One row per axis with `layer_count` and `component_count` joined live from
-        `architecture_frontend_layers` and `components`. Wraps `get_axes_summary()`.
-      operationId: getAxesSummary
+        **HTTP 410 Gone — retired.** The axis model is retired. Mzizi serves the
+        DNA double helix: nodes on an engineering backbone and a meaning
+        backbone, held together by cross-cutting rungs. There are no axes, no
+        outliers, no 3D and no X/Y/Z.
+
+        Wrapped `get_axes_summary()`, which returned four rows — horizontal / vertical / depth / outlier — with every count zeroed after the helix migration.
+
+        Retired rather than remapped — emitting strand data through an
+        axis-shaped field would look correct and teach the wrong model to every
+        consumer that read it.
+
+        Replaced by:
+        - `GET /architecture` — the helix snapshot
+        - MCP `get_node_counts` — per-node counts
+      operationId: architecture-axes-gone
       tags: [Architecture]
       responses:
-        "200":
-          description: 5 axes ordered by sort_order.
+        "410":
+          description: Gone — the axis model is retired.
           headers:
             Cache-Control:
               $ref: "#/components/headers/CachePublic"
@@ -378,15 +392,18 @@ paths:
               schema:
                 type: object
                 properties:
-                  data:
-                    type: array
-                    items: { type: object }
-                  meta:
+                  error:
+                    type: string
+                    example: Gone
+                  message:
+                    type: string
+                  model:
+                    type: string
+                    example: mzizi-dna-helix
+                  migrated_to:
                     type: object
-                    properties:
-                      count: { type: integer }
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
+                    additionalProperties:
+                      type: string
 
   /architecture/layers/{n}:
     get:
@@ -427,17 +444,27 @@ paths:
 
   /architecture/frontend/axes:
     get:
-      summary: Frontend Axes (3D)
+      summary: Frontend axes (retired)
       description: |
-        The five axes of the 3D frontend architecture: X (horizontal composition),
-        Y (vertical infrastructure), Z (depth observation), Outside (actors beyond
-        the build), Documentation (self-describing system). Sourced from the
-        `architecture_frontend_axes` table.
-      operationId: getFrontendAxes
+        **HTTP 410 Gone — retired.** The axis model is retired. Mzizi serves the
+        DNA double helix: nodes on an engineering backbone and a meaning
+        backbone, held together by cross-cutting rungs. There are no axes, no
+        outliers, no 3D and no X/Y/Z.
+
+        Served one row per axis with a `geometry` field carrying horizontal / vertical / depth / external.
+
+        Retired rather than remapped — emitting strand data through an
+        axis-shaped field would look correct and teach the wrong model to every
+        consumer that read it.
+
+        Replaced by:
+        - `GET /architecture` — the helix snapshot
+        - MCP `get_node_documents`
+      operationId: architecture-frontend-axes-gone
       tags: [Architecture]
       responses:
-        "200":
-          description: 3D frontend axes
+        "410":
+          description: Gone — the axis model is retired.
           headers:
             Cache-Control:
               $ref: "#/components/headers/CachePublic"
@@ -446,24 +473,44 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FrontendAxesResponse"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Gone
+                  message:
+                    type: string
+                  model:
+                    type: string
+                    example: mzizi-dna-helix
+                  migrated_to:
+                    type: object
+                    additionalProperties:
+                      type: string
 
   /architecture/frontend/layers:
     get:
-      summary: Frontend Layers (3D)
+      summary: Frontend layers (retired)
       description: |
-        The ten layers of the 3D frontend architecture (L1 tokens .. L10 documentation).
-        Each layer belongs to exactly one axis. Sourced from the
-        `architecture_frontend_layers` table.
-      operationId: getFrontendLayers
+        **HTTP 410 Gone — retired.** The axis model is retired. Mzizi serves the
+        DNA double helix: nodes on an engineering backbone and a meaning
+        backbone, held together by cross-cutting rungs. There are no axes, no
+        outliers, no 3D and no X/Y/Z.
+
+        Served `layerNumber` / `subLabel` / `axisName` per row — layer-era vocabulary in which every unit belonged to an axis.
+
+        Retired rather than remapped — emitting strand data through an
+        axis-shaped field would look correct and teach the wrong model to every
+        consumer that read it.
+
+        Replaced by:
+        - `GET /architecture/layers/{n}` — per-node detail
+        - MCP `get_node_documents` — live node and strand documents
+      operationId: architecture-frontend-layers-gone
       tags: [Architecture]
       responses:
-        "200":
-          description: 3D frontend layers
+        "410":
+          description: Gone — the axis model is retired.
           headers:
             Cache-Control:
               $ref: "#/components/headers/CachePublic"
@@ -472,11 +519,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FrontendLayersResponse"
-        "500":
-          $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Gone
+                  message:
+                    type: string
+                  model:
+                    type: string
+                    example: mzizi-dna-helix
+                  migrated_to:
+                    type: object
+                    additionalProperties:
+                      type: string
 
   /ubuntu/pillars:
     get:
@@ -1768,66 +1824,6 @@ components:
           type: string
         itemCount:
           type: integer
-
-    # ── 3D Frontend Architecture ──────────────────────────────────
-
-    FrontendAxis:
-      type: object
-      required: [name, title, description, geometry, metaphor, sortOrder]
-      properties:
-        name: { type: string, example: "x-axis" }
-        title: { type: string, example: "Horizontal Composition" }
-        description: { type: string }
-        geometry:
-          type: string
-          enum: [horizontal, vertical, depth, external]
-        metaphor: { type: string }
-        sortOrder: { type: integer }
-
-    FrontendAxesResponse:
-      type: object
-      required: ["@context", "@type", name, itemListElement]
-      properties:
-        "@context": { type: string, example: "https://schema.org" }
-        "@type": { type: string, example: "ItemList" }
-        name: { type: string }
-        description: { type: string }
-        itemListElement:
-          type: array
-          items:
-            $ref: "#/components/schemas/FrontendAxis"
-
-    FrontendLayer:
-      type: object
-      required: [layerNumber, subLabel, title, axisName, role, description, covenant, stakeholder]
-      properties:
-        layerNumber: { type: integer, minimum: 1, maximum: 10 }
-        subLabel: { type: string, example: "primitive" }
-        title: { type: string }
-        axisName: { type: string, example: "x-axis" }
-        role: { type: string }
-        description: { type: string }
-        covenant: { type: string }
-        stakeholder: { type: string }
-        implementationRules:
-          type: array
-          items: { type: string }
-        sortOrder: { type: integer }
-
-    FrontendLayersResponse:
-      type: object
-      required: ["@context", "@type", name, itemListElement]
-      properties:
-        "@context": { type: string }
-        "@type": { type: string, example: "ItemList" }
-        name: { type: string }
-        description: { type: string }
-        itemListElement:
-          type: array
-          items:
-            $ref: "#/components/schemas/FrontendLayer"
-
-    # ── Ubuntu doctrine ───────────────────────────────────────────
 
     UbuntuPillar:
       type: object
