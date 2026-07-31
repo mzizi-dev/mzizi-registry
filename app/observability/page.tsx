@@ -22,10 +22,11 @@ import {
   getFundiIssues,
   getChaosEvents,
   getSystemCounts,
-  getNodeDistribution,
+  getHelixModel,
+  helixClassOf,
   isSupabaseConfigured,
 } from "@/lib/db"
-import { ObservabilityCharts, NodeDistributionChart } from "./charts"
+import { ObservabilityCharts, NodeDistributionChart, HELIX_CLASS_COLOR } from "./charts"
 
 export const metadata: Metadata = {
   title: "Observability",
@@ -100,16 +101,32 @@ export default async function ObservabilityPage() {
     return <UnconfiguredState />
   }
 
-  const [stats30, stats7, counts, fundiIssues, chaosEvents, sysCounts, nodeDistribution] =
-    await Promise.all([
-      getUsageStats(30).catch(() => null),
-      getUsageStats(7).catch(() => null),
-      getRegistryCounts().catch(() => ({ total: 0, ui: 0, blocks: 0, hooks: 0, lib: 0 })),
-      getFundiIssues(8).catch(() => []),
-      getChaosEvents(10).catch(() => []),
-      getSystemCounts().catch(() => null),
-      getNodeDistribution().catch(() => []),
-    ])
+  const [stats30, stats7, counts, fundiIssues, chaosEvents, sysCounts, helix] = await Promise.all([
+    getUsageStats(30).catch(() => null),
+    getUsageStats(7).catch(() => null),
+    getRegistryCounts().catch(() => ({ total: 0, ui: 0, blocks: 0, hooks: 0, lib: 0 })),
+    getFundiIssues(8).catch(() => []),
+    getChaosEvents(10).catch(() => []),
+    getSystemCounts().catch(() => null),
+    getHelixModel().catch(() => ({ nodes: [], rungs: [], strands: [] })),
+  ])
+
+  // One bar per element of the helix — nodes then rungs, each carrying its
+  // own classification so the chart, the node badge, and the architecture
+  // explorer colour the same node the same way. Read straight off
+  // `documentation-architecture-nodes`; nothing is capped and nothing is
+  // keyed on a retired axis label.
+  const nodeDistribution = [...helix.nodes, ...helix.rungs].map((element) => ({
+    node_number: element.node_number,
+    sub_label: element.sub_label,
+    title: element.title,
+    helix_class: helixClassOf(element),
+    component_count: element.component_count,
+  }))
+
+  // Only legend entries actually present in the data — a fixed list would
+  // re-introduce a hardcoded model.
+  const legendClasses = [...new Set(nodeDistribution.map((d) => d.helix_class))]
 
   const s = stats30
   const s7 = stats7
@@ -434,29 +451,21 @@ export default async function ObservabilityPage() {
             </h3>
           </div>
           <p className="mb-4 text-xs text-muted-foreground">
-            From <span className="font-mono">get_system_counts()</span> · axes:{" "}
-            <span className="font-mono">horizontal</span> ·{" "}
-            <span className="font-mono">vertical</span> · <span className="font-mono">depth</span> ·{" "}
-            <span className="font-mono">outlier</span>
+            Every node and rung of the DNA double helix, read live from{" "}
+            <span className="font-mono">documentation-architecture-nodes</span> and counted by{" "}
+            <span className="font-mono">get_node_counts()</span>. Coloured by helix classification.
           </p>
           <NodeDistributionChart data={nodeDistribution} />
           <div className="mt-3 flex flex-wrap gap-3 text-[10px] text-muted-foreground">
-            {(["horizontal", "vertical", "depth", "outlier"] as const).map((axis) => (
-              <span key={axis} className="inline-flex items-center gap-1.5">
+            {legendClasses.map((helixClass) => (
+              <span key={helixClass} className="inline-flex items-center gap-1.5">
                 <span
                   className="size-2 rounded-full"
                   style={{
-                    background:
-                      axis === "horizontal"
-                        ? "var(--color-cobalt)"
-                        : axis === "vertical"
-                          ? "var(--color-malachite)"
-                          : axis === "depth"
-                            ? "var(--color-tanzanite)"
-                            : "var(--color-gold)",
+                    background: HELIX_CLASS_COLOR[helixClass] ?? "var(--color-terracotta)",
                   }}
                 />
-                <span className="font-mono">{axis}</span>
+                <span className="font-mono">{helixClass}</span>
               </span>
             ))}
           </div>
