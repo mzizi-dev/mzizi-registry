@@ -74,9 +74,6 @@ import type {
   ComponentVersionRow,
   McpToolRegistryRow,
   DesignTokens,
-  ArchitectureFrontendAxisRow,
-  ArchitectureFrontendLayerRow,
-  AxisSummaryRow,
   LayerDetailRow,
   ArchitectureSnapshotAxis,
   ArchitectureSnapshotLayer,
@@ -1286,51 +1283,6 @@ export async function getComponentLinks(name: string): Promise<ComponentLink[]> 
 // No in-code fallback dataset is kept — per doctrine, the DB is the only
 // source of truth and seeding happens out-of-band. Callers must tolerate
 // an empty array and render an empty state.
-
-/**
- * Live fetch from `architecture_frontend_axes`. Returns an empty array if
- * Supabase isn't configured or the table is empty — the DB is the single
- * source of truth and callers must tolerate an empty response.
- */
-export async function getArchitectureFrontendAxes(): Promise<ArchitectureFrontendAxisRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("architecture_frontend_axes")
-    .select("*")
-    .order("sort_order", { ascending: true })
-
-  if (error || !Array.isArray(data)) return []
-  return data as ArchitectureFrontendAxisRow[]
-}
-
-/**
- * Live fetch from `architecture_frontend_layers`. Returns an empty array
- * if Supabase isn't configured or the table is empty.
- */
-export async function getArchitectureFrontendLayers(): Promise<ArchitectureFrontendLayerRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("architecture_frontend_layers")
-    .select("*")
-    .order("layer_number", { ascending: true })
-
-  if (error || !Array.isArray(data)) return []
-  return data as ArchitectureFrontendLayerRow[]
-}
-
-/**
- * Per-axis summary with live `layer_count` and `component_count` joins.
- * Wraps the `get_axes_summary()` SQL helper.
- */
-export async function getAxesSummary(): Promise<AxisSummaryRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("get_axes_summary")
-  if (error || !Array.isArray(data)) return []
-  return data as AxisSummaryRow[]
-}
 
 /**
  * Single-layer detail (covenant, stakeholder, implementation rules,
