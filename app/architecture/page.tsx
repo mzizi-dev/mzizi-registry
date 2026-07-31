@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import Link from "next/link"
 import { getHelixModel, isSupabaseConfigured } from "@/lib/db"
 import type { HelixNode, HelixStrand } from "@/lib/db/types"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -28,11 +29,14 @@ function strandBadge(strand: string): string {
 
 function NodeCard({ node }: { node: HelixNode }) {
   return (
-    <article className="flex flex-col gap-3 rounded-xl border border-border bg-background p-5">
+    <article className="flex flex-col gap-3 rounded-xl border border-border bg-background p-5 transition-colors hover:border-foreground/30">
       <div className="flex items-baseline justify-between gap-3">
-        <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+        <Link
+          href={`/architecture/nodes/${node.node_number}`}
+          className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase transition-colors hover:text-foreground"
+        >
           {node.sub_label} · {node.title}
-        </span>
+        </Link>
         <span className="font-mono text-xs text-muted-foreground">
           {node.component_count} {node.component_count === 1 ? "component" : "components"}
         </span>
@@ -90,9 +94,12 @@ function RungCard({ rung }: { rung: HelixNode }) {
   return (
     <article className="flex flex-col gap-3 rounded-xl border border-border bg-background p-5">
       <div className="flex items-center justify-between gap-3">
-        <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+        <Link
+          href={`/architecture/nodes/${rung.node_number}`}
+          className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase transition-colors hover:text-foreground"
+        >
           {rung.sub_label} · {rung.title}
-        </span>
+        </Link>
         <span
           className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-medium ${RUNG_BADGE}`}
         >
@@ -203,7 +210,7 @@ export default async function ArchitecturePage() {
             documentation-architecture-&#123;nodes,strands&#125;
           </code>
           ) — the single source of truth the MCP serves — never hardcoded. Click any bead or strand
-          chip in the model for its covenant and rules.
+          chip in the model for its covenant and rules, or any node name below for its own page.
         </p>
 
         <dl className="mt-6 grid grid-cols-2 gap-4 border-y border-border py-4 text-sm sm:grid-cols-4">
