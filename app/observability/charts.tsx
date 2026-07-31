@@ -25,26 +25,31 @@ interface Props {
 }
 
 interface NodeDatum {
-  ecosystem_node: number
+  node_number: number
   sub_label: string
   title: string
-  ecosystem_axis: string
+  /** Helix classification — a strand class, or `rung` for a cross-cutting rung. */
+  helix_class: string
   component_count: number
 }
 
-// Axis labels per #84 doctrine: horizontal / vertical / depth / outlier
-// — not X-axis / Y-axis / Z-axis / Outside. Colours come from the Five
-// African Minerals palette so the chart reads as part of the brand
-// system even when no Recharts theme is in scope.
-const AXIS_COLOR: Record<string, string> = {
-  horizontal: "var(--color-cobalt)",
-  vertical: "var(--color-malachite)",
-  depth: "var(--color-tanzanite)",
-  outlier: "var(--color-gold)",
+// Bars are coloured by helix classification, matching
+// `components/ui/node-badge.tsx` so a node reads the same colour wherever
+// it appears. The retired labels this chart used to key on — horizontal /
+// vertical / depth / outlier — are gone, not renamed: they described axes,
+// and there are none. Colours come from the Seven African Minerals palette
+// so the chart reads as part of the brand system with no Recharts theme in
+// scope.
+export const HELIX_CLASS_COLOR: Record<string, string> = {
+  "core-guarantee": "var(--color-cobalt)",
+  shipped: "var(--color-tanzanite)",
+  swappable: "var(--color-malachite)",
+  spine: "var(--color-copper)",
+  rung: "var(--color-gold)",
 }
 
-function axisColor(axis: string): string {
-  return AXIS_COLOR[axis] ?? "var(--color-terracotta)"
+function helixColor(helixClass: string): string {
+  return HELIX_CLASS_COLOR[helixClass] ?? "var(--color-terracotta)"
 }
 
 function shortDate(iso: string): string {
@@ -136,9 +141,9 @@ export function ObservabilityCharts({ data }: Props) {
 }
 
 /**
- * Component distribution by ecosystem_node. Bars are coloured by the
- * node's axis using AXIS_COLOR (`horizontal`, `vertical`, `depth`,
- * `outlier`). Pure component — no client state.
+ * Component distribution across the helix — one bar per node or rung,
+ * coloured by helix classification via HELIX_CLASS_COLOR. Pure component
+ * — no client state.
  */
 export function NodeDistributionChart({ data }: { data: NodeDatum[] }) {
   return (
@@ -169,13 +174,13 @@ export function NodeDistributionChart({ data }: { data: NodeDatum[] }) {
             const payload = (item as unknown as { payload?: NodeDatum } | undefined)?.payload
             return [
               `${value} components`,
-              payload ? `${payload.title} (${payload.ecosystem_axis})` : "",
+              payload ? `${payload.title} (${payload.helix_class})` : "",
             ]
           }}
         />
         <Bar dataKey="component_count" name="Components" radius={[6, 6, 0, 0]}>
           {data.map((d) => (
-            <Cell key={d.ecosystem_node} fill={axisColor(d.ecosystem_axis)} />
+            <Cell key={d.node_number} fill={helixColor(d.helix_class)} />
           ))}
         </Bar>
       </BarChart>
