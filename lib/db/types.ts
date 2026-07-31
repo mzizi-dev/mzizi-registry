@@ -527,8 +527,8 @@ export type SkillSummary = Omit<SkillRow, "body_mdx" | "id" | "created_at">
 // ── Changelog table types ───────────────────────────────────────────
 //
 // The `changelog` table was migrated by `versioning_and_changelog_v2`
-// to a node-aware shape. Each row tracks which ecosystem nodes (N1–N10)
-// and which components / tools moved in the release. The legacy
+// to a node-aware shape. Each row tracks which ecosystem nodes and
+// which components / tools moved in the release. The legacy
 // optional fields (`body`, `is_latest`, `categories`, `updated_at`)
 // are retained for backwards compatibility with the older
 // `getChangelogEntries` / `db-changelog.tsx` rendering path; they are
@@ -540,11 +540,12 @@ export interface ChangelogRow {
   title: string
   description: string | null
   /**
-   * Ecosystem nodes (N1–N10) touched by this release. Rendered as
-   * axis-coloured pill badges via the nyuchi-changelog-renderer.
+   * Ecosystem nodes touched by this release. Rendered as pill badges
+   * coloured by helix classification (strand class for a node, gold for
+   * a rung) via the nyuchi-changelog-renderer. The node set is never
+   * capped — a release may name a node newer than any listed in code.
    */
   nodes_affected: number[] | null
-  axes_affected: string[] | null
   components_added: string[] | null
   components_modified: string[] | null
   components_deprecated: string[] | null
@@ -572,7 +573,6 @@ export interface ChangelogInsert {
   title: string
   description?: string | null
   nodes_affected?: number[] | null
-  axes_affected?: string[] | null
   components_added?: string[] | null
   components_modified?: string[] | null
   components_deprecated?: string[] | null
@@ -589,7 +589,6 @@ export interface ChangelogListRow {
   title: string
   description: string | null
   nodes_affected: number[] | null
-  axes_affected: string[] | null
   components_added: string[] | null
   components_modified: string[] | null
   components_deprecated: string[] | null
@@ -770,107 +769,25 @@ export interface Database {
   }
 }
 
-// ── Architecture (3D frontend model — issue #46 table-backed doctrine) ──
-
-export type ArchitectureAxisGeometry = "horizontal" | "vertical" | "depth" | "external"
-
-export interface ArchitectureFrontendAxisRow {
-  id: number
-  name: string
-  title: string
-  description: string
-  geometry: ArchitectureAxisGeometry | string
-  metaphor: string
-  sort_order: number
-  created_at: string
-  updated_at: string
-}
-
-export interface ArchitectureFrontendLayerRow {
-  id: number
-  layer_number: number
-  sub_label: string
-  title: string
-  axis_name: string
-  role: string
-  description: string
-  covenant: string
-  stakeholder: string
-  implementation_rules: string[]
-  sort_order: number
-  created_at: string
-  updated_at: string
-}
-
-// RPC return shapes for the `get_axes_summary()` and `get_layer_detail()`
-// helper functions. These are derived views (axes joined to component
-// counts; layers joined to component counts + category breakdowns), so
-// they don't share a schema with the base tables.
-
-export interface AxisSummaryRow {
-  name: string
-  title: string
-  description: string
-  geometry: ArchitectureAxisGeometry | string
-  metaphor: string
-  sort_order: number
-  layer_count: number
-  component_count: number
-}
-
-export interface LayerCategoryCount {
-  category: string
-  count: number
-}
-
-export interface LayerDetailRow {
-  layer_number: number
-  sub_label: string
-  title: string
-  axis_name: string
-  role: string
-  description: string
-  covenant: string
-  stakeholder: string
-  implementation_rules: string[]
-  component_count: number
-  categories: LayerCategoryCount[]
-}
-
-export interface ArchitectureSnapshotLayer {
-  layer_number: number
-  sub_label: string
-  title: string
-  role: string
-  description: string
-  covenant: string
-  stakeholder: string
-  implementation_rules: string[]
-  sort_order: number
-  component_count: number
-  stable_count: number
-  alpha_count: number
-  deprecated_count: number
-}
-
-export interface ArchitectureSnapshotAxis {
-  name: string
-  title: string
-  description: string
-  geometry: ArchitectureAxisGeometry | string
-  metaphor: string
-  sort_order: number
-  layers: ArchitectureSnapshotLayer[]
-}
-
 // ── Architecture (Mzizi DNA double helix) — nodes on strands + rungs ──
 //
 // The live model lives in `component_documents` under the collections
-// `documentation-architecture-nodes` (11 docs: 8 nodes + 3 rungs) and
-// `documentation-architecture-strands` (6 docs). This is the single
-// source of truth the MCP already serves — no axes, no outliers. The
-// legacy `architecture_frontend_*` tables + their `/api/v1/architecture`
-// routes are retained (marked legacy) for unmigrated consumers.
+// `documentation-architecture-nodes` (nodes + rungs) and
+// `documentation-architecture-strands` (the backbone groupings). This is
+// the single source of truth the MCP already serves, and the only model
+// this repo describes: there are no axes, no outliers, no 3D, no X/Y/Z.
+//
+// The axis-era types that used to live here — axis geometry, the
+// `architecture_frontend_*` row shapes, the `get_axes_summary()` /
+// `get_layer_detail()` return shapes, and the nested `axes[].layers[]`
+// snapshot — are deleted, not relabelled. A field named `axis_geometry`
+// carrying a strand looks correct and teaches the wrong model to every
+// consumer downstream, so absence is the correct state here.
+//
+// Counts are never hardcoded and the node set is never capped: nodes are
+// read from the collection and more will come. Any `maximum` on a node
+// argument is itself the defect — a cap of 10 hid N11, and a cap of 11
+// would hide N12.
 
 export type HelixStrandKey =
   "core-guarantee" | "shipped" | "swappable" | "spine" | "genetic-code" | "transcription"
@@ -1039,13 +956,10 @@ export interface SystemCountsRow {
 }
 
 /**
- * Component count per `ecosystem_node`, enriched with the node's
- * sub_label, title, and axis from `architecture_frontend_layers`.
+ * The helix classification a node or rung is rendered with. Nodes take
+ * their strand class from the strand they sit on; every rung is a rung,
+ * because a rung bridges both backbones and belongs to no strand. This
+ * is the same four-way split `components/ui/node-badge.tsx` colours by,
+ * so the chart, the badge, and the explorer agree.
  */
-export interface NodeDistributionRow {
-  ecosystem_node: number
-  sub_label: string
-  title: string
-  ecosystem_axis: string
-  component_count: number
-}
+export type HelixClass = "core-guarantee" | "shipped" | "swappable" | "spine" | "rung"

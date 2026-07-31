@@ -33,7 +33,7 @@ export default function PrivacyPage() {
       <div className="mt-10 flex flex-col gap-10">
         <Section title="Who we are">
           <p>
-            mzizi (mzizi.dev) is the open component registry, brand system, and 3D frontend
+            mzizi (mzizi.dev) is the open component registry, brand system, and DNA-helix frontend
             architecture of the Mzizi design system — an open-architecture project governed by the
             Bundu Foundation and operated by nyuchi (Nyuchi Africa (Pvt) Ltd). This policy explains
             what data mzizi.dev handles when you browse the site or use its public API and Model

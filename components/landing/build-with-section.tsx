@@ -106,7 +106,7 @@ export function BuildWithSection() {
           <span className="font-mono text-xs text-muted-foreground">05</span>
           <h3 className="font-serif text-xl font-semibold">Ship and observe</h3>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            The L8 assurance layer surfaces runtime failures across the ecosystem. Run{" "}
+            The N8 assurance node surfaces runtime failures across the ecosystem. Run{" "}
             <code className="font-mono text-xs">pnpm check</code> before every push to mirror the
             full CI gate locally.
           </p>
@@ -114,7 +114,7 @@ export function BuildWithSection() {
             href="/architecture"
             className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-foreground hover:underline"
           >
-            The 3D architecture model <ArrowRight className="size-3" />
+            The DNA double helix <ArrowRight className="size-3" />
           </Link>
         </li>
 

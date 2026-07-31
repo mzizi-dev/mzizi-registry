@@ -15,7 +15,7 @@ info:
 
     **Base URL:** `https://mzizi.dev/api/v1`
 
-    **Registry:** the stable registry across 10 architecture layers — served from the Supabase `components` table (live count via `GET /api/v1/stats` → `stable`; counts are never hardcoded in this spec so it cannot drift from the database)
+    **Registry:** the stable registry across the nodes and rungs of the Mzizi DNA double helix — served from the Supabase `components` table (live count via `GET /api/v1/stats` → `stable`; counts are never hardcoded in this spec so it cannot drift from the database)
 
     **MCP Server:** `https://mzizi.dev/mcp` (Streamable HTTP transport)
   contact:
@@ -101,7 +101,7 @@ paths:
     get:
       summary: Component Registry Index
       description: |
-        Returns metadata for every stable registry item across 10 architecture layers
+        Returns metadata for every stable registry item across the Mzizi DNA double helix
         (live count from Supabase — query `GET /api/v1/stats` for the current total).
         Returns 503 if the database is not configured.
       operationId: getRegistryIndex
@@ -328,11 +328,17 @@ paths:
     get:
       summary: Architecture snapshot (DNA double helix)
       description: |
-        Full snapshot of the Mzizi DNA double helix — nodes on an engineering backbone
-        and a meaning backbone, held together by cross-cutting rungs, with their
-        covenants, stakeholders, implementation rules, and live component counts. There
-        are no axes and no outliers. Wraps the `get_architecture()` SQL helper.
-        ISR cache: 1 hour.
+        Full snapshot of the Mzizi DNA double helix — every node and rung with its
+        covenant, stakeholder, implementation rules and live component count, plus the
+        strands that group them by backbone. There are no axes and no outliers.
+
+        Reads `component_documents` / `documentation-architecture-{nodes,strands}` — the
+        same source of truth the MCP serves — with counts from `get_node_counts()`.
+
+        `data` is an object with `nodes`, `rungs`, and `strands` arrays. An empty model
+        returns 200 with empty arrays and `meta.empty: true`, so a consumer can
+        distinguish "the collection is empty" from "the request failed"; nothing is
+        substituted from a fallback. ISR cache: 1 hour.
       operationId: getArchitectureSnapshot
       tags: [Architecture]
       responses:
@@ -349,12 +355,32 @@ paths:
                 type: object
                 properties:
                   data:
-                    type: array
-                    items: { type: object }
+                    type: object
+                    properties:
+                      nodes:
+                        type: array
+                        items: { type: object }
+                      rungs:
+                        type: array
+                        items: { type: object }
+                      strands:
+                        type: array
+                        items: { type: object }
                   meta:
                     type: object
                     properties:
-                      axes_count: { type: integer }
+                      model: { type: string, example: mzizi-dna-helix }
+                      node_count: { type: integer }
+                      rung_count: { type: integer }
+                      strand_count: { type: integer }
+                      empty:
+                        type: boolean
+                        description: >-
+                          True when the collection returned nothing. The
+                          response is still 200 with empty arrays — an empty
+                          model is reported honestly rather than filled with a
+                          fallback.
+                      source: { type: string }
                       version: { type: string }
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
@@ -405,13 +431,22 @@ paths:
                     additionalProperties:
                       type: string
 
-  /architecture/layers/{n}:
+  /architecture/nodes/{n}:
     get:
-      summary: Per-layer detail (covenant, rules, category breakdown)
+      summary: Per-node detail (covenant, stakeholder, rules, component count)
       description: |
-        Single-layer detail. Wraps `get_layer_detail(p_layer_number int)`.
-        Returns 400 for non-integer or out-of-range `n` (must be 1-10).
-      operationId: getLayerDetail
+        One element of the DNA double helix — a node on a strand or a cross-cutting
+        rung — with its covenant, stakeholder, implementation rules, strand, backbone
+        and live component count. Reads
+        `component_documents` / `documentation-architecture-nodes`.
+
+        **`n` has no upper bound.** Node numbers are labels, not a sequence, and the
+        set is never capped, so a `maximum` here would be the defect rather than a
+        validation — the `1-10` bound on the retired `/architecture/layers/{n}` is
+        exactly what made N11 unreachable. Whether `n` exists is answered by the
+        collection: a missing number is 404, not 400. 400 is reserved for input that
+        is not a positive integer at all.
+      operationId: getHelixNode
       tags: [Architecture]
       parameters:
         - name: n
@@ -420,10 +455,9 @@ paths:
           schema:
             type: integer
             minimum: 1
-            maximum: 10
       responses:
         "200":
-          description: Layer detail with covenant, rules, and category breakdown.
+          description: Node or rung detail with covenant, stakeholder, and rules.
           headers:
             Cache-Control:
               $ref: "#/components/headers/CachePublic"
@@ -435,12 +469,73 @@ paths:
                 type: object
                 properties:
                   data: { type: object }
+                  meta:
+                    type: object
+                    properties:
+                      model: { type: string, example: mzizi-dna-helix }
+                      version: { type: string }
         "400":
-          description: Invalid layer number.
+          description: "`n` is not a positive integer."
         "404":
           $ref: "#/components/responses/NotFound"
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
+
+  /architecture/layers/{n}:
+    get:
+      summary: Per-layer detail (retired)
+      description: |
+        **HTTP 410 Gone — retired.** Wrapped `get_layer_detail(p_layer_number int)`
+        and served an `axis_name` on every row behind a `1-10` bound. Both halves
+        were the retired model: nothing belongs to an axis because there are none,
+        and the node set is never capped — that bound is what made N11 unreachable.
+
+        Retired rather than kept as a stable alias. The `layers` segment was
+        previously preserved "for URL stability", and a stable URL serving retired
+        vocabulary is how the drift spread.
+
+        Replaced by:
+        - `GET /architecture/nodes/{n}` — the same unit, uncapped, no axis field
+        - `GET /architecture` — the whole helix
+        - MCP `get_node_documents` — the live node/strand documents
+
+        The SITE path `/architecture/layers/{n}` is a permanent redirect to
+        `/architecture/nodes/{n}`, so a human following an old link still lands on
+        the page.
+      operationId: architecture-layers-gone
+      tags: [Architecture]
+      parameters:
+        - name: n
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "410":
+          description: Gone — the layer model is retired.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Gone
+                  message:
+                    type: string
+                  model:
+                    type: string
+                    example: mzizi-dna-helix
+                  migrated_to:
+                    type: object
+                    additionalProperties:
+                      type: string
 
   /architecture/frontend/axes:
     get:
@@ -504,7 +599,7 @@ paths:
         consumer that read it.
 
         Replaced by:
-        - `GET /architecture/layers/{n}` — per-node detail
+        - `GET /architecture/nodes/{n}` — per-node detail
         - MCP `get_node_documents` — live node and strand documents
       operationId: architecture-frontend-layers-gone
       tags: [Architecture]
@@ -1904,11 +1999,11 @@ components:
         description: { type: string }
         nodes_affected:
           type: array
-          description: "Architecture nodes (1–10) touched by this release."
-          items: { type: integer, minimum: 1, maximum: 10 }
-        axes_affected:
-          type: array
-          items: { type: string }
+          description: >-
+            Nodes and rungs of the DNA double helix touched by this release.
+            No upper bound: node numbers are labels, not a sequence, and the
+            set is never capped.
+          items: { type: integer, minimum: 1 }
         components_added:
           type: array
           items: { type: string }

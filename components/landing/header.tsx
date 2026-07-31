@@ -5,7 +5,7 @@ import { HeaderSearch } from "@/components/landing/header-search"
 import { HEADER_NAV } from "@/lib/nav"
 
 /**
- * Portal-specific composition of the registry's `NyuchiHeader` (L7 shell).
+ * Portal-specific composition of the registry's `NyuchiHeader` (N7 shell).
  *
  * No design or behaviour lives here — this file only adapts the single
  * source-of-truth `HEADER_NAV` (lib/nav.ts) to the header's `navItems`

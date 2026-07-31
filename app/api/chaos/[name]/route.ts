@@ -18,11 +18,11 @@ type Fault = "render-error" | "slow-render" | "missing-data" | "network-timeout"
  * GET /api/chaos/{name}
  *
  * Documents the chaos surface for a single component — what fault classes
- * the L8 chaos lib (`registry:lib chaos`, installed by consumer apps via
+ * the N8 chaos lib (`registry:lib chaos`, installed by consumer apps via
  * the shadcn CLI) can inject against this target. Read-only.
  *
  * The actual chaos engine runs IN-PROCESS in consumer apps (not in this
- * portal) — this endpoint exists so L8 dashboards, fundi, and external
+ * portal) — this endpoint exists so N8 dashboards, fundi, and external
  * audits can enumerate the supported fault classes per component without
  * importing the chaos lib.
  *
@@ -107,7 +107,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     return NextResponse.json(
       {
         name: component.name,
-        description: `Chaos surface for ${component.name}. Faults are injected in-process via the L8 chaos lib — install with \`npx shadcn@latest add https://mzizi.dev/api/v1/ui/chaos\`.`,
+        description: `Chaos surface for ${component.name}. Faults are injected in-process via the N8 chaos lib — install with \`npx shadcn@latest add https://mzizi.dev/api/v1/ui/chaos\`.`,
         layer: component.layer ?? null,
         registry_type: component.registry_type,
         supported_faults: faults,
@@ -140,7 +140,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ na
     {
       error: "Method Not Allowed",
       message:
-        "Chaos injection is in-process by design — this endpoint never accepts remote fault injection. Install the L8 chaos lib in your app: `npx shadcn@latest add https://mzizi.dev/api/v1/ui/chaos`.",
+        "Chaos injection is in-process by design — this endpoint never accepts remote fault injection. Install the N8 chaos lib in your app: `npx shadcn@latest add https://mzizi.dev/api/v1/ui/chaos`.",
     },
     {
       status: 405,

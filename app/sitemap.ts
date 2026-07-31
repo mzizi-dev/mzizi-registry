@@ -1,10 +1,27 @@
 import type { MetadataRoute } from "next"
+import { getHelixModel } from "@/lib/db"
 
 const BASE = "https://mzizi.dev"
 const NOW = new Date()
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// N11 discovery is a rung of the helix, and its covenant is "if the machine
+// can't see it, it doesn't exist" — so the per-node pages belong here. They
+// are enumerated FROM the collection, never from a range: a hardcoded 1..10
+// here would silently drop N11's own page, which is the joke writing itself.
+async function nodeEntries(): Promise<MetadataRoute.Sitemap> {
+  const model = await getHelixModel().catch(() => null)
+  if (!model) return []
+  return [...model.nodes, ...model.rungs].map((element) => ({
+    url: `${BASE}/architecture/nodes/${element.node_number}`,
+    lastModified: NOW,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }))
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
+    ...(await nodeEntries()),
     // ── Root ──────────────────────────────────────────────────────────
     {
       url: BASE,

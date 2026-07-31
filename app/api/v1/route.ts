@@ -49,6 +49,20 @@ export async function GET() {
             href: "/api/v1/ecosystem",
             description: "Architecture principles, framework decision, and Ubuntu philosophy.",
           },
+          // The helix is the only architecture model served. #191 removed the
+          // two axis entries from this document without adding the helix in
+          // their place, which left a live route undiscoverable — retiring the
+          // wrong model is only half the job if the right one is not advertised.
+          architecture: {
+            href: "/api/v1/architecture",
+            description:
+              "The Mzizi DNA double helix — every node and rung with its covenant and live component count, plus the strands grouping them by backbone. No axes, no outliers.",
+          },
+          architectureNode: {
+            href: "/api/v1/architecture/nodes/{n}",
+            description:
+              "One node or rung of the helix. `n` has no upper bound — node numbers are labels, not a sequence, and the set is never capped.",
+          },
           dataLayer: {
             href: "/api/v1/data-layer",
             description: "Local-first data layer and cloud services.",

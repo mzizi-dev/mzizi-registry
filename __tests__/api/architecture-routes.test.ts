@@ -14,9 +14,10 @@ vi.mock("@/lib/metrics", () => ({
   trackApiCall: vi.fn(),
 }))
 
-// Smoke coverage for the 3 new architecture routes added by issue #59.
-// Without Supabase env vars, every route returns 503 with a clear "not
-// configured" message — same pattern as the existing brand-route test.
+// Smoke coverage for the architecture routes. Live routes return 503 with a
+// clear "not configured" message when Supabase env vars are absent — same
+// pattern as the existing brand-route test. Retired routes return 410
+// regardless, because the answer no longer depends on the database.
 // Real DB-backed assertions live in the live deploy smoke checks.
 
 type Resp = {
@@ -90,27 +91,59 @@ describe("GET /api/v1/architecture/frontend/layers (retired)", () => {
   })
 })
 
-describe("GET /api/v1/architecture/layers/[n]", () => {
-  it("rejects non-integer slugs with 400", async () => {
+// `layers/[n]` is retired for the same reason as the axis routes: it served an
+// `axis_name` per row behind a `1-10` bound. Keeping it as a stable alias for
+// nodes was the earlier compromise, and a stable URL serving retired vocabulary
+// is how the drift spread — so it is 410, and `nodes/[n]` is the live route.
+describe("GET /api/v1/architecture/layers/[n] (retired)", () => {
+  it("returns 410 Gone with a helix pointer, whatever n is", async () => {
     const { GET } = await import("@/app/api/v1/architecture/layers/[n]/route")
-    const r = (await GET(new Request("https://x/api/v1/architecture/layers/abc"), {
+    const r = (await GET(new Request("https://x/api/v1/architecture/layers/3"), {
+      params: Promise.resolve({ n: "3" }),
+    })) as unknown as Resp
+    expect(r.status).toBe(410)
+    expect(r.data.error).toBe("Gone")
+    expect(r.data.model).toBe("mzizi-dna-helix")
+    expect(r.data.migrated_to?.["node detail"]).toContain("/api/v1/architecture/nodes/3")
+  })
+
+  it("is 410 even for a node the old 1-10 bound would have rejected", async () => {
+    const { GET } = await import("@/app/api/v1/architecture/layers/[n]/route")
+    const r = (await GET(new Request("https://x/api/v1/architecture/layers/11"), {
+      params: Promise.resolve({ n: "11" }),
+    })) as unknown as Resp
+    expect(r.status).toBe(410)
+  })
+})
+
+describe("GET /api/v1/architecture/nodes/[n]", () => {
+  it("rejects non-integer slugs with 400", async () => {
+    const { GET } = await import("@/app/api/v1/architecture/nodes/[n]/route")
+    const r = (await GET(new Request("https://x/api/v1/architecture/nodes/abc"), {
       params: Promise.resolve({ n: "abc" }),
     })) as unknown as Resp
     expect(r.status).toBe(400)
     expect(r.data.error).toContain("integer")
   })
 
-  it("rejects out-of-range layer numbers with 400", async () => {
-    const { GET } = await import("@/app/api/v1/architecture/layers/[n]/route")
-    const r = (await GET(new Request("https://x/api/v1/architecture/layers/99"), {
-      params: Promise.resolve({ n: "99" }),
-    })) as unknown as Resp
-    expect(r.status).toBe(400)
+  // The point of the route. A high node number is NOT out of range — node
+  // numbers are labels, not a sequence, and the set is never capped. The old
+  // `1-10` bound is what made N11 unreachable, so a bound at any value is the
+  // defect. Whether a node exists is the collection's answer (404), never a
+  // constant's (400).
+  it("does not treat a high node number as out of range", async () => {
+    const { GET } = await import("@/app/api/v1/architecture/nodes/[n]/route")
+    for (const n of ["11", "12", "99"]) {
+      const r = (await GET(new Request(`https://x/api/v1/architecture/nodes/${n}`), {
+        params: Promise.resolve({ n }),
+      })) as unknown as Resp
+      expect(r.status).not.toBe(400)
+    }
   })
 
-  it("returns 503 for valid layer when Supabase is not configured", async () => {
-    const { GET } = await import("@/app/api/v1/architecture/layers/[n]/route")
-    const r = (await GET(new Request("https://x/api/v1/architecture/layers/3"), {
+  it("returns 503 for a valid node when Supabase is not configured", async () => {
+    const { GET } = await import("@/app/api/v1/architecture/nodes/[n]/route")
+    const r = (await GET(new Request("https://x/api/v1/architecture/nodes/3"), {
       params: Promise.resolve({ n: "3" }),
     })) as unknown as Resp
     expect(r.status).toBe(503)
