@@ -111,15 +111,31 @@ const nextConfig = {
     ]
   },
 
-  // ── Permanent redirects — /design/* consolidated under /foundations ──
-  // Issue #48. The old /design route group hosted only Tokens and Icons,
-  // which are both foundational concerns. Merging them into /foundations
-  // gives one IA location and clears a duplicated top-level nav item.
+  // ── Permanent redirects ──────────────────────────────────────────────
+  //
+  // `/design/*` → `/tokens`. Issue #48 consolidated the old /design route
+  // group (Tokens and Icons) into a `/foundations` group, but no
+  // `/foundations` page was ever built — so all three redirects landed on
+  // a 404, which is worse than the original URL. `/tokens` is the
+  // foundations surface that actually exists, so they point there.
+  //
+  // `/architecture/layers/:n` → `/architecture/nodes/:n`. The unit did not
+  // change, its name did: what the axis era called layer N is node N on
+  // the DNA double helix (§6.2). A redirect — not a 410 — because the
+  // destination genuinely holds the same content, and existing inbound
+  // links and crawler history should land on it rather than dead-end.
+  // The node itself may not exist; `/architecture/nodes/[n]` decides that
+  // by asking the collection, never a capped range.
   async redirects() {
     return [
-      { source: "/design", destination: "/foundations", permanent: true },
-      { source: "/design/tokens", destination: "/foundations/tokens", permanent: true },
-      { source: "/design/icons", destination: "/foundations/icons", permanent: true },
+      { source: "/design", destination: "/tokens", permanent: true },
+      { source: "/design/tokens", destination: "/tokens", permanent: true },
+      { source: "/design/icons", destination: "/tokens", permanent: true },
+      {
+        source: "/architecture/layers/:n",
+        destination: "/architecture/nodes/:n",
+        permanent: true,
+      },
     ]
   },
 }
