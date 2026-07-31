@@ -190,8 +190,8 @@ export default async function ArchitecturePage() {
           <span className="text-foreground">engineering</span> backbone that builds the product and
           a <span className="text-foreground">meaning</span> backbone that carries the doctrine —
           held together by cross-cutting <span className="text-foreground">rungs</span>. Nodes sit
-          on strands; rungs bridge both. The node numbers (N1–N11) are labels, not a sequence, and
-          nothing lives &ldquo;outside.&rdquo;
+          on strands; rungs bridge both. The node numbers are labels, not a sequence — there is no
+          highest one and more will come — and nothing lives &ldquo;outside.&rdquo;
         </p>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           Every element and count below is read live from{" "}
@@ -240,7 +240,7 @@ export default async function ArchitecturePage() {
         </dl>
       </header>
 
-      {/* Interactive 3D double-helix explorer */}
+      {/* Interactive double-helix explorer */}
       <div className="mb-12 overflow-hidden">
         <Suspense
           fallback={
