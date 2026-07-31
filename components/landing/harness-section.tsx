@@ -4,8 +4,9 @@ import { Section, SectionHeader } from "@/components/landing/section"
 /**
  * The Harness spotlight — Mzizi's differentiator. Component libraries ship
  * components; Mzizi ships the *spine* that wires every component to
- * infrastructure with zero config. This is part of the helix (the vertical
- * axis that connects layers 3–5 to observability, a11y, motion, resilience).
+ * infrastructure with zero config. The harness IS the `spine` strand on the
+ * engineering backbone: it pre-wires N3 brand, N4 safety and N5 resilience
+ * to observability, a11y, motion and resilience.
  */
 
 const capabilities: Array<{
@@ -77,7 +78,7 @@ export function HarnessSection() {
 const { log, motion, announce } = useNyuchiHarness("listing-card")`}</code>
           </pre>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Tokens (L1) and primitives (L2) stay pure. Brand (L3), safety (L4) and resilience (L5)
+            Tokens (N1) and primitives (N2) stay pure. Brand (N3), safety (N4) and resilience (N5)
             components plug into the same harness — so behaviour is consistent across the whole
             system, not re-implemented per component.
           </p>

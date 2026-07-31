@@ -23,7 +23,8 @@ import { Section, SectionHeader } from "@/components/landing/section"
  * manual maintenance pressure.
  */
 // `ResilientBySection` is async because it embeds the server-rendered
-// `ArchitectureExplorer` (which fetches axes + layers from Supabase).
+// `ArchitectureExplorer` (which fetches the helix — nodes, rungs and
+// strands — from Supabase).
 export async function ResilientBySection() {
   return (
     <Section bordered>

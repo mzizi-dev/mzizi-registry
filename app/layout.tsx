@@ -16,7 +16,7 @@ const fontMono = JetBrains_Mono({
 const SITE_URL = "https://mzizi.dev"
 const SITE_NAME = "Mzizi"
 const SITE_DESCRIPTION =
-  "Mzizi — an open-architecture project of the Bundu Foundation. An open 3D frontend architecture, component registry, MCP server, and AI-native developer tooling built on the Seven African Minerals palette. Operated and developed by Nyuchi. Install directly into your project with the shadcn CLI."
+  "Mzizi — an open-architecture project of the Bundu Foundation. An open DNA-helix frontend architecture, component registry, MCP server, and AI-native developer tooling built on the Seven African Minerals palette. Operated and developed by Nyuchi. Install directly into your project with the shadcn CLI."
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

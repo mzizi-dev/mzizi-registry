@@ -8,16 +8,17 @@ import { NodeBadgeList } from "@/components/ui/node-badge"
 // Server-rendered timeline of releases. Reads from the node-aware
 // `list_changelog()` RPC introduced by the `versioning_and_changelog_v2`
 // migration; renders each release with its version, title, release date,
-// description, and the ecosystem nodes (N1–N10) touched. The node
-// badges are axis-coloured per the live `nyuchi-changelog-renderer`
-// (registry v2.0.0).
+// description, and the ecosystem nodes touched. The node badges are
+// coloured by helix classification per the live `nyuchi-changelog-renderer`
+// (registry v2.0.0) — never by a fixed list of node numbers, so a release
+// naming a node newer than any in code still renders.
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: "Changelog — Mzizi",
   description:
-    "Release notes for the Mzizi component registry — each entry tagged with the ecosystem nodes (N1–N10) it touched.",
+    "Release notes for the Mzizi component registry — each entry tagged with the nodes and rungs of the DNA double helix it touched.",
 }
 
 function formatDate(iso: string | null | undefined): string {
@@ -64,9 +65,9 @@ export default async function ChangelogPage() {
           Changelog
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Every Mzizi release, newest first. Each entry is tagged with the ecosystem nodes (N1–N10)
-          it touched — colour-coded by axis (cobalt = horizontal, tanzanite = vertical, malachite =
-          depth, gold = outlier).
+          Every Mzizi release, newest first. Each entry is tagged with the nodes and rungs of the
+          DNA double helix it touched — colour-coded by helix classification: cobalt for a core
+          guarantee, tanzanite for shipped, malachite for swappable, gold for a cross-cutting rung.
         </p>
       </header>
 
