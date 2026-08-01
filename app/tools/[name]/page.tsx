@@ -96,7 +96,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { name } = await params
   if (!SLUG_PATTERN.test(name) || !KNOWN_TOOLS[name]) {
-    return { title: "Tool not found — Mzizi" }
+    return { title: "Tool not found" }
   }
   const tool = KNOWN_TOOLS[name]
   return {

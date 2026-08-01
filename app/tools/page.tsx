@@ -15,7 +15,7 @@ import { StatusBadge, type StatusBadgeStatus } from "@/components/ui/status-badg
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: "Tools — Mzizi",
+  title: "Tools",
   description:
     "Published Mzizi tools — MCP server, SDK, skills bundle, and CLI. Install via npm or npx.",
 }
