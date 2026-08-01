@@ -24,7 +24,7 @@ npx shadcn@latest add https://mzizi.dev/api/v1/ui/<component>
 
 **Governance:** Bundu Foundation. **Operated by:** Nyuchi — `github.com/nyuchi`
 
-**Ecosystem context:** Mzizi is consumed across the bundu ecosystem — the Mukoko consumer family (mini-apps), Nyuchi enterprise products (delivered through the Console), and sister brands. It is the single source of truth for the design system, the component registry, the brand documentation, and the open DNA-helix frontend architecture. Long-form product documentation lives at **docs.bundu.org** (bundu-docs); engineering / how-things-are-done content lives at **docs.nyuchi.com** (nyuchi-docs).
+**Ecosystem context:** Mzizi is consumed across the bundu ecosystem — the Mukoko consumer family (mini-apps), Nyuchi enterprise products (delivered through the Console), and sister brands. It is the single source of truth for the design system, the component registry, the brand documentation, and the open DNA-helix frontend architecture. Mzizi's own long-form documentation lives **in this repo**, authored as MDX under `app/` (§15.17 — final). The sibling Starlight sites `docs.bundu.org` (bundu-docs) and `docs.nyuchi.com` (nyuchi-docs) continue to serve their own scopes.
 
 ---
 
@@ -66,7 +66,7 @@ design-portal (this repo)
         └── Any new bundu ecosystem app — via the shadcn CLI against /api/v1/ui/<component>
 ```
 
-**Rule:** When building a new app, install components from this registry. Do not copy-paste component code or create parallel component libraries. Mzizi-side agentic tooling (the Fundi self-healing agent, MCP transport, console mini-app shell) lives in `nyuchi/mzizi-tools`; long-form product docs live in `nyuchi/bundu-docs`; engineering docs in `nyuchi/nyuchi-docs`. Do not reintroduce any of those into `design-portal`.
+**Rule:** When building a new app, install components from this registry. Do not copy-paste component code or create parallel component libraries. Mzizi-side agentic tooling (the Fundi self-healing agent, MCP transport, console mini-app shell) lives in `nyuchi/mzizi-tools` — do not reintroduce it here. Mzizi's long-form docs are the opposite case: they belong **in this repo** as MDX (§15.17).
 
 ---
 
@@ -176,7 +176,7 @@ design-portal/
 │   │       ├── brand/                # Brand system
 │   │       ├── changelog/            # Releases (root + [version])
 │   │       ├── data-layer/, ecosystem/, pipeline/, sovereignty/
-│   │       ├── docs/                 # HTTP 410 — docs moved to bundu-docs (root + [slug])
+│   │       ├── docs/                 # HTTP 410 — MDX pages are routes, not an API (root + [slug])
 │   │       ├── health/               # Health check
 │   │       ├── search/               # Cross-resource search
 │   │       ├── skills/               # Skills index + summary + [name]
@@ -281,7 +281,7 @@ design-portal/
 | `component_documents`                                  | **Document-route staging table** (the spine of the new lean MCP). One self-contained JSON document per component (`{ owner, sources, legacy, files, … }`) keyed by node collection (`n1_tokens … n10_documentation`). The MCP at `/mcp` reads exclusively from here; the portal's `/api/v1/*` routes read from `components` and `component_docs`. The two surfaces are intentionally separate but stay in lock-step via a read-across pattern — `component_documents.legacy` mirrors the row in `components` so downstream consumers can pivot without duplicate fetches. |
 | `component_docs`                                       | Use cases, variants, a11y notes (per component) — served by `/api/v1/ui/{name}/docs`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `component_versions`                                   | Per-component version history — served by `/api/v1/ui/{name}/versions`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `documentation_pages`                                  | **HISTORICAL — content moved to bundu-docs and nyuchi-docs.** All published rows shipped as Astro Starlight pages on `docs.bundu.org` (product docs) and `docs.nyuchi.com` (engineering docs). The DB-driven renderers, the dynamic `[slug]` route, and the `get_documentation_page` MCP tool are all removed; `/api/v1/docs/*` returns HTTP 410 with a `migrated_to` map. The table remains in Supabase as the historical source-of-record. Do not add new rows; author new docs in the Starlight repos. See §15.18.                                                     |
+| `documentation_pages`                                  | **HISTORICAL — never write to it.** Long-form docs are now MDX in this repo (§15.17, final), so this table is neither the source nor the destination. The DB-driven renderers, the dynamic `[slug]` route, and the `get_documentation_page` MCP tool are all removed, and `/api/v1/docs/*` returns HTTP 410 — none of which this reversal asks back, because MDX pages are routes rather than an API surface. The table stays in Supabase as the historical source-of-record. Author `.mdx` under `app/`, not rows here.                                                  |
 | `changelog`                                            | Releases — `nodes_affected` (uncapped), `tools_added/modified/deprecated/removed`, `components_added/modified/deprecated/removed`, `linked_issues`, `released_at`. Served at `/api/v1/changelog` and `/api/v1/changelog/{version}`; rendered into `/changelog` (#107).                                                                                                                                                                                                                                                                                                    |
 | `ai_instructions`                                      | System prompts per target (mcp-server, claude, copilot)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `skills`                                               | Agent-skill MDX bodies — **read-only from this repo.** Authored in git as `mzizi-skills/skills/<name>/SKILL.md` in `nyuchi/mzizi-tools` (npm `@nyuchi/mzizi-skills`) and projected into this collection by that repo's `pnpm skills:sync`. The portal serves it at `/api/v1/skills*` and via MCP `get_skill`. See §15.23.                                                                                                                                                                                                                                                 |
@@ -349,7 +349,7 @@ The frontend architecture is the **Mzizi DNA double helix** — two entwined bac
 | #   | sub_label       | Covenant                                                |
 | --- | --------------- | ------------------------------------------------------- |
 | 9   | `fundi`         | Failure is a learning event — owned by `mzizi-tools`.   |
-| 10  | `documentation` | The system documents itself — bundu-docs + nyuchi-docs. |
+| 10  | `documentation` | The system documents itself in code — MDX in this repo. |
 | 11  | `discovery`     | If the machine can't see it, it doesn't exist.          |
 
 **The six strands** (`documentation-architecture-strands/*`): the **engineering** backbone carries `core-guarantee` (accessibility, data, resilience, observability, safety, primitives — the fixed contract), `shipped` (brand, pages, shell), `swappable` (tokens, icons, framework — the fork seams), and `spine` (the harness); the **meaning** backbone carries `genetic-code` (Ubuntu + Bundu conventions) and `transcription` (doctrine as queryable documents).
@@ -619,7 +619,7 @@ npx shadcn@latest add https://mzizi.dev/api/v1/ui/button
 npx shadcn@latest add https://mzizi.dev/api/v1/ui/card
 ```
 
-Every new app inherits the canonical typography (Noto Sans / Noto Serif / JetBrains Mono), the Seven African Minerals palette, the layered architecture, the pill-button identity, and the touch-target floor. Long-form product docs for any bundu app belong in `nyuchi/bundu-docs`; engineering docs belong in `nyuchi/nyuchi-docs`. Mzizi tooling (MCP, SDK, skills, console mini-app) is consumed from `nyuchi/mzizi-tools` as published npm packages.
+Every new app inherits the canonical typography (Noto Sans / Noto Serif / JetBrains Mono), the Seven African Minerals palette, the layered architecture, the pill-button identity, and the touch-target floor. Mzizi's own long-form docs belong in this repo as MDX (§15.17). Mzizi tooling (MCP, SDK, skills, console mini-app) is consumed from `nyuchi/mzizi-tools` as published npm packages.
 
 ### 8.6 Distribution surface
 
@@ -704,7 +704,7 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 | `GET /api/v1/architecture/frontend/layers` | **HTTP 410 Gone** — retired with the axis/layer model (§6.2)            | —         |
 | `GET /api/v1/ubuntu/pillars`               | 5 Ubuntu Pillars                                                        | —         |
 | `GET /api/v1/ubuntu/principles`            | 5 Ubuntu Principles                                                     | —         |
-| `GET /api/v1/docs`                         | **HTTP 410 Gone** — content moved to bundu-docs                         | —         |
+| `GET /api/v1/docs`                         | **HTTP 410 Gone** — docs are MDX routes, not an API surface             | —         |
 | `GET /api/v1/docs/{slug}`                  | **HTTP 410 Gone** — see `/api/v1/docs` for the slug map                 | —         |
 | `GET /api/v1/changelog`                    | All releases (from `changelog` table)                                   | #107      |
 | `GET /api/v1/changelog/{version}`          | Single release                                                          | #107      |
@@ -975,7 +975,16 @@ When working on this codebase as an AI assistant:
 14. **The mineral strip uses 5 mineral colors** and is always vertical (left-edge accent only).
 15. **Use the MCP server** — served at `/mcp` via `lib/mcp-server.ts` (`createMziziMcpServer`); reads `component_documents` only. The legacy relational MCP is retired; `design.nyuchi.com` is a 308 redirect to `mzizi.dev`.
 16. **Resilience patterns** (circuit-breaker, retry, timeout, fallback-chain, ai-safety, chaos) are vendored in `lib/` and also published as `registry:lib` items in Supabase. Consumer apps install them via the shadcn CLI.
-17. **Long-form documentation lives outside this repo** — product docs in `nyuchi/bundu-docs` (Astro Starlight → `docs.bundu.org`), engineering docs in `nyuchi/nyuchi-docs` (Astro Starlight → `docs.nyuchi.com`). The portal is a registry + brand + architecture surface, not a docs site. The `documentation_pages` Supabase table is HISTORICAL — content was migrated to the Starlight repos; `/api/v1/docs/*` returns HTTP 410 with a `migrated_to` map; the `get_documentation_page` MCP tool is gone. The `changelog` Supabase table is unaffected — it remains the source of truth for the release-bump workflow.
+17. **Mzizi's long-form documentation lives IN this repo, as MDX.** Authored as `.mdx` files under `app/`, compiled by `@next/mdx` and routed by Next.js's file-based router. The database stays the source of truth for **structured** data only — components, tokens, changelog, `ai_instructions`. This is the doctrine N10 `documentation` states, and it is **final**.
+
+    This **reverses** the earlier "docs live outside this repo" rule, which sent Mzizi's own long-form content to the sibling Starlight sites. Both directions were written down at once for a while — this file said "outside", the N10 rung document said "in the repo" — and a contradiction in the canonical file is worse than either answer, because agents read whichever they reach first.
+
+    **Why in-repo wins:** an MDX page passes through the build. A page that references a component that no longer exists, or a route that has moved, fails `pnpm build` — so documentation drift becomes a build error rather than a thing someone notices months later. That guarantee is not available to prose held in a separate site or in a database table.
+
+    **Current state, stated plainly: there are ZERO `.mdx` files in this repo today.** The toolchain is wired (`next.config.mjs` compiles `.mdx` under `app/`) but no page has been authored, and there is no `app/docs/` directory. So this rule describes where docs go from here, and the content still has to be written or brought back. Do not read the rule as a description of what is already there.
+
+    **Unaffected by this reversal:** `/api/v1/docs/*` stays HTTP 410 and `get_documentation_page` stays gone — MDX pages are routes, not an API surface, so nothing here asks for those back. The `documentation_pages` Supabase table stays historical; author MDX, not rows. The `changelog` table is untouched and remains the source of truth for the release-bump workflow. `nyuchi/bundu-docs` and `nyuchi/nyuchi-docs` continue to exist for their own scopes — what changed is that **Mzizi's** long-form docs are no longer theirs to hold.
+
 18. **The playground (`components/playground/`) reads from the API**, not from local files.
 19. **API is versioned under `/api/v1/`** — `openapi.yaml` is the contract; update it whenever a route or schema changes.
 20. **Buttons are always pill-shaped (`rounded-full`)** across the entire ecosystem.
