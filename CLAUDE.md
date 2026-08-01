@@ -10,7 +10,7 @@
 
 **Mzizi** is an **independent open-architecture project of the Bundu Foundation** — governed by the Bundu Foundation, operated and developed by Nyuchi. It is **not** a Nyuchi product. Mzizi owns the open DNA-helix frontend architecture, the component registry (`mzizi.dev/r/`), the Mzizi API (`mzizi.dev/api`), the components, the infrastructure harness, and the architecture nodes it serves.
 
-It serves the full stable registry across the **Mzizi DNA double helix** — two entwined backbones (an **engineering** strand and a **meaning** strand) held by cross-cutting **rungs**, with no axes and no outliers. Nodes N1–N8 sit on strands (N2 primitives → N3 brand → N6 pages → N7 shell = the `shipped`/`core-guarantee` build; N1 tokens = `swappable`; N4 safety, N5 resilience, N8 assurance = `core-guarantee`); the rungs are N9 fundi (self-healing, owned by `mzizi-tools`), N10 documentation, and N11 discovery (SEO/AIO). The N-numbers are labels, not a sequence — see §6.2. **Mobile-first and multi-target** — Next.js/React still ships, but the direction is Svelte on the web and Rust across the stack, with Swift, Kotlin, ArkTS and React Native as first-class targets (§8.9). Built on the **Seven African Minerals** design system (seven minerals + seven heritage tones + status + the Experimental Seven — see §7). The React surface installs via the shadcn CLI; other targets differ (§8.9):
+It serves the full stable registry across the **Mzizi DNA double helix** — two entwined backbones (an **engineering** strand and a **meaning** strand) held by cross-cutting **rungs**, with no axes and no outliers. Nodes N1–N8 sit on strands (N2 primitives → N3 brand → N6 pages → N7 shell = the `shipped`/`core-guarantee` build; N1 tokens = `swappable`; N4 safety, N5 resilience, N8 assurance = `core-guarantee`); the rungs are N9 fundi (self-healing, owned by `mzizi-tools`), N10 documentation, and N11 discovery (SEO/AIO). The N-numbers are labels, not a sequence — see §6.2. **Mobile-first and multi-target** — Next.js/React still ships, but the direction is Rust across the stack, with Dioxus carrying web and mobile native from one codebase; Svelte stays supported but is no longer the destination, and Swift, Kotlin, ArkTS and React Native are first-class targets (§8.9). Each node records its own Rust position — implementation, alternative, or none — in `documentation-architecture-nodes` (§6.2). Built on the **Seven African Minerals** design system (seven minerals + seven heritage tones + status + the Experimental Seven — see §7). The React surface installs via the shadcn CLI; other targets differ (§8.9):
 
 ```
 npx shadcn@latest add https://mzizi.dev/api/v1/ui/<component>
@@ -352,6 +352,28 @@ The frontend architecture is the **Mzizi DNA double helix** — two entwined bac
 | 10  | `documentation` | The system documents itself in code — MDX in this repo. |
 | 11  | `discovery`     | If the machine can't see it, it doesn't exist.          |
 
+**Each node's Rust position** — carried on the node document as a `rust` block (`position`, `kind`, `state`, `today`, `target`, `note`, `descriptors`) and reachable via `get_node_documents`. `position` answers a question `readiness` and `tier` cannot: does this node have a Rust **implementation** of its own, only a Rust **alternative** because it is UI, or **none**?
+
+| #   | `rust.position` | `rust.kind`  | What that means                                                                       |
+| --- | --------------- | ------------ | ------------------------------------------------------------------------------------- |
+| 1   | implementation  | toolchain    | Token generator becomes a Rust CLI emitting every target's token file                 |
+| 2   | alternative     | ui-framework | Dioxus is the Rust path; primitives are framework-specific by nature                  |
+| 3   | alternative     | ui-framework | Harness moves to the shared core; the component shell stays per-framework             |
+| 4   | implementation  | shared-core  | Gate logic to WASM + a native server binary — logic, not UI                           |
+| 5   | implementation  | shared-core  | Resilience state machine to WASM — logic, not UI                                      |
+| 6   | alternative     | ui-framework | Nothing to implement: a page is a composition, which is why it ports cheaply          |
+| 7   | alternative     | ui-framework | Also the **mount point** — the shell instantiates the shared core once per app        |
+| 8   | implementation  | shared-core  | Signal collection off the UI thread; same Rust aggregates server-side                 |
+| 9   | implementation  | edge-worker  | `workers-rs` is the target; the deployed fundi worker is TypeScript                   |
+| 10  | **none**        | —            | Docs are MDX and the build is the guarantee — no Rust role, stated deliberately       |
+| 11  | **constraint**  | —            | No implementation; a WASM web target **must** prerender or crawlers get an empty page |
+
+Three rules fall out of this table and are the ones that get broken:
+
+- **Only nodes holding _logic_ get a Rust implementation** (N1, N4, N5, N8, N9). Every UI node gets an _alternative_ — a Dioxus `Button` and a Svelte `Button` share a contract and a token set, not a source file.
+- **A node with no Rust role is a better answer than a fabricated one.** N10 is the worked example: its guarantee comes from documentation passing through the build, not from the build's language. Do not invent a Rust story to fill the column.
+- **N7 is where the two Rusts meet.** Rust-as-UI replaces the shell; Rust-as-shared-core is what the shell _loads_. Initialise the core per component instead of per app and every component gets its own circuit breaker — which is not a circuit breaker.
+
 **The six strands** (`documentation-architecture-strands/*`): the **engineering** backbone carries `core-guarantee` (accessibility, data, resilience, observability, safety, primitives — the fixed contract), `shipped` (brand, pages, shell), `swappable` (tokens, icons, framework — the fork seams), and `spine` (the harness); the **meaning** backbone carries `genetic-code` (Ubuntu + Bundu conventions) and `transcription` (doctrine as queryable documents).
 
 **Rules:**
@@ -677,11 +699,12 @@ The portal dogfoods its own registry. The transitive closure of the brand compon
 }
 ```
 
-### 8.9 Multi-target — mobile-first, Svelte + Rust, and who gets components vs instructions
+### 8.9 Multi-target — mobile-first, Rust-first, and who gets components vs instructions
 
 Mzizi is **mobile-first**. Next.js/React is still here and still shipping, but the direction is
-**Svelte on the web and Rust across the stack**, with first-class native targets: **Swift**
-(iOS/macOS), **Kotlin** (Jetpack Compose), **ArkTS** (HarmonyOS), and **React Native**.
+**Rust across the stack**, with first-class native targets: **Swift** (iOS/macOS), **Kotlin**
+(Jetpack Compose), **ArkTS** (HarmonyOS), and **React Native**. Svelte remains production-ready
+and supported; it is no longer the destination (see the `tier` table below).
 
 **The consequence, stated plainly: most components are framework-specific.** A `Button` for
 SwiftUI and a `Button` for Svelte share a contract and a token set, not a source file. So the
@@ -717,12 +740,21 @@ core-only; once Dioxus carries web _and_ mobile native from one codebase, Svelte
 alternative rather than the target. It stays production-ready and supported — `optional` is not
 deprecated, and `react` at `legacy` still holds the largest inventory by far.
 
+**No Rust ships yet, and the node documents say so.** There is no `Cargo.toml`, no `.rs` and no
+`.wasm` in this repo or in `nyuchi/mzizi-tools`: the harness is `lib/harness/index.tsx`, the
+token generator is `scripts/sync-tokens.ts`, the resilience primitives are `lib/*.ts`, and the
+fundi worker is TypeScript. Every Rust statement below and in
+`documentation-architecture-nodes` is therefore **target state, explicitly labelled** — each
+node's `rust.state` reads `target`, never `shipping`. Write it that way. A node that describes
+a Rust implementation in the present tense reads as shipped to every agent that queries it, and
+that is the drift this section exists to prevent.
+
 **Two different Rusts, and conflating them is the classic error.**
 
-- **Rust as the shared core** — compiled to WASM, it is the harness, the N5 resilience state
-  machine, and the N4 safety gates (see §6.2). It holds _logic_, not UI, and each target keeps
-  its own native shell. This is what lets Swift, Kotlin, ArkTS and React Native stay idiomatic
-  while sharing one implementation of the rules.
+- **Rust as the shared core** — compiled to WASM, it is to be the harness, the N5 resilience
+  state machine, and the N4 safety gates (see §6.2). It holds _logic_, not UI, and each target
+  keeps its own native shell. This is what lets Swift, Kotlin, ArkTS and React Native stay
+  idiomatic while sharing one implementation of the rules.
 - **Rust as a UI framework** — **Dioxus** is the sanctioned choice, and the one that answers
   "one Rust framework for web _and_ mobile native": it targets web (WASM), desktop, iOS and
   Android from a single codebase. It matters here specifically because **Dioxus 0.7 ships
