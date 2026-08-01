@@ -10,7 +10,7 @@
 
 **Mzizi** is an **independent open-architecture project of the Bundu Foundation** — governed by the Bundu Foundation, operated and developed by Nyuchi. It is **not** a Nyuchi product. Mzizi owns the open DNA-helix frontend architecture, the component registry (`mzizi.dev/r/`), the Mzizi API (`mzizi.dev/api`), the components, the infrastructure harness, and the architecture nodes it serves.
 
-It serves the full stable registry across the **Mzizi DNA double helix** — two entwined backbones (an **engineering** strand and a **meaning** strand) held by cross-cutting **rungs**, with no axes and no outliers. Nodes N1–N8 sit on strands (N2 primitives → N3 brand → N6 pages → N7 shell = the `shipped`/`core-guarantee` build; N1 tokens = `swappable`; N4 safety, N5 resilience, N8 assurance = `core-guarantee`); the rungs are N9 fundi (self-healing, owned by `mzizi-tools`), N10 documentation, and N11 discovery (SEO/AIO). The N-numbers are labels, not a sequence — see §6.2. Built on the **Seven African Minerals** design system (seven minerals + seven heritage tones + status + the Experimental Seven — see §7), installable via the shadcn CLI:
+It serves the full stable registry across the **Mzizi DNA double helix** — two entwined backbones (an **engineering** strand and a **meaning** strand) held by cross-cutting **rungs**, with no axes and no outliers. Nodes N1–N8 sit on strands (N2 primitives → N3 brand → N6 pages → N7 shell = the `shipped`/`core-guarantee` build; N1 tokens = `swappable`; N4 safety, N5 resilience, N8 assurance = `core-guarantee`); the rungs are N9 fundi (self-healing, owned by `mzizi-tools`), N10 documentation, and N11 discovery (SEO/AIO). The N-numbers are labels, not a sequence — see §6.2. **Mobile-first and multi-target** — Next.js/React still ships, but the direction is Svelte on the web and Rust across the stack, with Swift, Kotlin, ArkTS and React Native as first-class targets (§8.9). Built on the **Seven African Minerals** design system (seven minerals + seven heritage tones + status + the Experimental Seven — see §7). The React surface installs via the shadcn CLI; other targets differ (§8.9):
 
 ```
 npx shadcn@latest add https://mzizi.dev/api/v1/ui/<component>
@@ -673,6 +673,52 @@ The portal dogfoods its own registry. The transitive closure of the brand compon
   ]
 }
 ```
+
+### 8.9 Multi-target — mobile-first, Svelte + Rust, and who gets components vs instructions
+
+Mzizi is **mobile-first**. Next.js/React is still here and still shipping, but the direction is
+**Svelte on the web and Rust across the stack**, with first-class native targets: **Swift**
+(iOS/macOS), **Kotlin** (Jetpack Compose), **ArkTS** (HarmonyOS), and **React Native**.
+
+**The consequence, stated plainly: most components are framework-specific.** A `Button` for
+SwiftUI and a `Button` for Svelte share a contract and a token set, not a source file. So the
+registry serves two different things depending on the target, and `framework_descriptors.readiness`
+is the field that says which:
+
+| `readiness`        | What a consumer actually gets                                     |
+| ------------------ | ----------------------------------------------------------------- |
+| `production`       | Real, installable component source for that framework             |
+| `primitives_wired` | Some primitives resolve; the surface is partial                   |
+| `metadata_only`    | **Instructions only** — the contract, tokens and rules, no source |
+
+Never present a `metadata_only` target as though components exist for it. Answer with the
+contract and the tokens, and say that the source is the consumer's to write.
+
+**Two different Rusts, and conflating them is the classic error.**
+
+- **Rust as the shared core** — compiled to WASM, it is the harness, the N5 resilience state
+  machine, and the N4 safety gates (see §6.2). It holds _logic_, not UI, and each target keeps
+  its own native shell. This is what lets Swift, Kotlin, ArkTS and React Native stay idiomatic
+  while sharing one implementation of the rules.
+- **Rust as a UI framework** — **Dioxus** is the sanctioned choice, and the one that answers
+  "one Rust framework for web _and_ mobile native": it targets web (WASM), desktop, iOS and
+  Android from a single codebase. It matters here specifically because **Dioxus 0.7 ships
+  Tailwind and Radix support**, which is Mzizi's exact primitive stack (Tailwind + Radix + CVA)
+  — so the primitive surface maps across rather than being re-invented.
+
+`crates-io` in the registry describes the Rust _UI_ ecosystem (Leptos/Dioxus/Yew). It is **not**
+where the WASM core lives, and a consumer asking "what Rust does Mzizi have?" must not be handed
+the UI descriptor as the answer to a core-logic question.
+
+**What does NOT vary by target:** N1 tokens. Design decisions are data, so tokens generate into
+CSS custom properties, Swift, Kotlin and ArkTS token files from one source. Also invariant: the
+56px default / 48px minimum touch target, the pill-button identity, and the APCA contrast floor.
+A target that cannot honour those is not a supported target.
+
+**Distribution is per-target, and `npx shadcn` is React-only.** §8.6's shadcn command serves
+React. Svelte consumers use `shadcn-svelte`; Dioxus consumes via crates; Swift, Kotlin and ArkTS
+have no CLI equivalent at all — which is precisely why they are instruction-first. Do not
+document one install command as though it serves every target.
 
 ---
 
