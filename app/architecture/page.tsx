@@ -8,7 +8,7 @@ import { ArchitectureExplorer } from "@/components/landing/architecture-explorer
 export const revalidate = 3600
 
 export const metadata = {
-  title: "Architecture — Mzizi DNA double helix",
+  title: "Architecture — the DNA double helix",
   description:
     "The Mzizi DNA double helix — two entwined backbones (engineering + meaning) held by cross-cutting rungs. Nodes on strands, no axes, no outliers. Every count read live from Supabase.",
 }

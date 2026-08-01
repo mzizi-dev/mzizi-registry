@@ -35,7 +35,7 @@ function parseNode(raw: string): number | null {
 export async function generateMetadata({ params }: { params: Promise<{ n: string }> }) {
   const { n } = await params
   const parsed = parseNode(n)
-  if (parsed === null) return { title: "Node not found — Mzizi" }
+  if (parsed === null) return { title: "Node not found" }
   if (!isSupabaseConfigured()) return { title: `N${parsed} — Mzizi` }
 
   const element = await getHelixNode(parsed).catch(() => null)

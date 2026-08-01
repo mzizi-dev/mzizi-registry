@@ -19,7 +19,7 @@ import { CopyCommand } from "@/components/landing/copy-command"
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: "Skills — Mzizi",
+  title: "Skills",
   description:
     "Mzizi agent skills for AI assistants: install the @nyuchi/mzizi-skills bundle, the mzizi Claude Code plugin, or read any skill over HTTP and MCP.",
 }

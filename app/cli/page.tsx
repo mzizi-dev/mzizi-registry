@@ -15,7 +15,7 @@ import { CopyCommand } from "@/components/landing/copy-command"
 // (CLAUDE.md §11). Link out for the live surface.
 
 export const metadata: Metadata = {
-  title: "CLI — Mzizi",
+  title: "CLI",
   description:
     "@nyuchi/mzizi-cli — the fundi agent. Explore a project, plan a change against the Mzizi registry, and apply it. Install, configure, and command reference.",
 }
