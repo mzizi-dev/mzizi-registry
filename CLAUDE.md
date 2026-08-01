@@ -359,7 +359,7 @@ The frontend architecture is the **Mzizi DNA double helix** — two entwined bac
 - Nodes consume from the strand below them on the same backbone — never sideways or upward; rungs bridge both backbones and are never imported by nodes
 - Each component is a standalone file
 - N6 pages NEVER hardcode buttons/cards/SVGs — pure composition of N2/N3
-- N1 is the only layer allowed to define CSS values — every other layer consumes via `var()`
+- N1 is the only layer allowed to define a design **value** — every other layer consumes it (via `var()` on the web, via the generated token file on Swift / Kotlin / ArkTS / Rust). "CSS values" was the web-only phrasing of this rule; the rule is target-agnostic, the syntax is not
 - N3 always destructures `{ log, motion, LiveRegion }` from `useNyuchiHarness`; N2 never imports it
 - All colors and styles come from CSS custom properties in `globals.css`
 - This application DNA helix is **distinct** from the data architecture at `/architecture`. Never conflate the two.
@@ -581,7 +581,10 @@ All radii derive from `--radius-unit: 7px`. The ecosystem numbers are 7, 12, 14,
 
 Every component in `components/ui/` MUST have:
 
-1. **Touch targets** — 56px default height, 48px minimum for small variants. Non-negotiable for the African mobile market
+1. **Control density** — the scale is dense by default: `h-8` (32px) small, `h-9` (36px) default, `h-10` (40px) large. **56px (`h-14`) is reserved for specific prominent surfaces — hero CTAs and the like — not the default.** An earlier revision of this file said 56px default / 48px minimum and called it non-negotiable; the shipped primitives never did that, so the doctrine was describing a system that did not exist. Density won.
+
+   Because the default sits below the 44pt (Apple HIG) and 48dp (Material) touch-target guidance, a dense control that is a **touch** target on mobile must earn its hit area some other way — surrounding spacing, or padding the interactive area beyond the visual box. Density is a deliberate choice, not a licence to ship a 32px tap target with nothing around it.
+
 2. **Accessibility** — ARIA attributes where needed, semantic HTML, keyboard navigation via Radix primitives
 3. **Global styles only** — Tailwind classes backed by CSS custom properties from `globals.css`
 4. **`cn()` composition** — all className props composed through `cn()`
@@ -619,7 +622,7 @@ npx shadcn@latest add https://mzizi.dev/api/v1/ui/button
 npx shadcn@latest add https://mzizi.dev/api/v1/ui/card
 ```
 
-Every new app inherits the canonical typography (Noto Sans / Noto Serif / JetBrains Mono), the Seven African Minerals palette, the layered architecture, the pill-button identity, and the touch-target floor. Mzizi's own long-form docs belong in this repo as MDX (§15.17). Mzizi tooling (MCP, SDK, skills, console mini-app) is consumed from `nyuchi/mzizi-tools` as published npm packages.
+Every new app inherits the canonical typography (Noto Sans / Noto Serif / JetBrains Mono), the Seven African Minerals palette, the layered architecture, the pill-button identity, and the dense control scale (§8.2). Mzizi's own long-form docs belong in this repo as MDX (§15.17). Mzizi tooling (MCP, SDK, skills, console mini-app) is consumed from `nyuchi/mzizi-tools` as published npm packages.
 
 ### 8.6 Distribution surface
 
@@ -694,6 +697,26 @@ is the field that says which:
 Never present a `metadata_only` target as though components exist for it. Answer with the
 contract and the tokens, and say that the source is the consumer's to write.
 
+**`readiness` is not the same question as `tier`, and both are needed.** `readiness` says
+whether source EXISTS. `tier` says whether a target is where Mzizi is HEADING:
+
+| `tier`     | Meaning                                                                        |
+| ---------- | ------------------------------------------------------------------------------ |
+| `primary`  | The direction — Rust: `dioxus`, `crates-io`                                    |
+| `native`   | First-class native shells over the shared Rust core — swift, kotlin, arkts, RN |
+| `optional` | Supported, not the destination — `svelte`                                      |
+| `legacy`   | Still ships, being moved away from — `react`, `mzizi-react-legacy`             |
+
+The two are deliberately independent, because today they point opposite ways: **`svelte` is
+`production` + `optional`** (source exists, not the direction) while **`dioxus` is
+`metadata_only` + `primary`** (the direction, source not wired). One field would force a false
+choice between "has components" and "is the plan", and whichever it answered would mislead.
+
+**Committing to Rust is what demotes Svelte.** Svelte was the web destination while Rust was
+core-only; once Dioxus carries web _and_ mobile native from one codebase, Svelte becomes an
+alternative rather than the target. It stays production-ready and supported — `optional` is not
+deprecated, and `react` at `legacy` still holds the largest inventory by far.
+
 **Two different Rusts, and conflating them is the classic error.**
 
 - **Rust as the shared core** — compiled to WASM, it is the harness, the N5 resilience state
@@ -710,10 +733,18 @@ contract and the tokens, and say that the source is the consumer's to write.
 where the WASM core lives, and a consumer asking "what Rust does Mzizi have?" must not be handed
 the UI descriptor as the answer to a core-logic question.
 
-**What does NOT vary by target:** N1 tokens. Design decisions are data, so tokens generate into
-CSS custom properties, Swift, Kotlin and ArkTS token files from one source. Also invariant: the
-56px default / 48px minimum touch target, the pill-button identity, and the APCA contrast floor.
-A target that cannot honour those is not a supported target.
+**What does NOT vary by target: N1.** This is the load-bearing claim of the whole multi-target
+model — design decisions are _data_, so one source generates every target's token artifact:
+CSS custom properties for web, Swift for iOS/macOS, Kotlin for Compose, ArkTS for HarmonyOS, and
+a Rust module for the shared WASM core and Dioxus. Adding a target means adding an **emitter**,
+never re-authoring the values. If a target ever needs its own hand-maintained token file, N1 has
+failed and the fix is the generator, not the copy.
+
+That is also why N1 sits on the `swappable` strand while carrying an invariant: the token
+_pipeline_ is forkable, the token _decisions_ are not.
+
+Also invariant across targets: the dense control scale (§8.2), the pill-button identity, and the
+APCA contrast floor. A target that cannot honour those is not a supported target.
 
 **Distribution is per-target, and `npx shadcn` is React-only.** §8.6's shadcn command serves
 React. Svelte consumers use `shadcn-svelte`; Dioxus consumes via crates; Swift, Kotlin and ArkTS
@@ -1011,7 +1042,7 @@ When working on this codebase as an AI assistant:
 4. **Use the Seven African Minerals palette** (plus heritage / status / experimental sets — §7) — never introduce colors outside the token system.
 5. **Follow the CVA + Radix + cn() pattern** — every component uses this stack.
 6. **Keep components self-contained** — each file is independently installable via the registry.
-7. **Preserve accessibility** — APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets, Radix primitives for keyboard/screen reader behaviour.
+7. **Preserve accessibility** — APCA 3.0 AAA contrast, the dense control scale with adequate hit area on touch surfaces (§8.2), Radix primitives for keyboard/screen reader behaviour.
 8. **Test API output** — after modifying a component, verify it serves correctly via `/api/v1/ui/[name]`.
 9. **Respect the helix** — primitives don't import page-level code. The frontend model is the Mzizi DNA double helix: nodes on two backbones (engineering + meaning) plus cross-cutting rungs (fundi, documentation, discovery) — no axes, no outliers (§6.2). This is distinct from the data architecture served at `/architecture` — never conflate the two.
 10. **All brand wordmarks lowercase** — `mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`.
