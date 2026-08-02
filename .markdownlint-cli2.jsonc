@@ -29,5 +29,10 @@
     "public/_pagefind/**",
     "CHANGELOG.md",
     ".github/ISSUE_TEMPLATE/**",
+    // Registry components are SOURCE, not prose. A few ship as `.md`
+    // (`accessibility-audit` is a documented SQL pipeline full of box-drawing
+    // rules), and linting them for emphasis style would be linting a component's
+    // implementation. Their gate is tsc / eslint / prettier, not markdownlint.
+    "components/registry/**",
   ],
 }

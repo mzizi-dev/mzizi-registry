@@ -1,6 +1,50 @@
 # Component source moves out of the database
 
-Status: **in progress.** N11 is on disk; the read path landed with this document.
+Status: **all 571 components are on disk and served.** What remains is the drop —
+clearing `source_code` (and the nested `versions[].sourceCode` / `snapshot` blobs) from
+the database, and deleting the `resolveComponentSource` ramp with it. Both wait until
+this branch is merged and deployed; see "The order that matters" below.
+
+## The count was wrong for most of this migration
+
+It ran against **322** components for weeks because that is all the `components` VIEW
+exposed. The view listed nine collections. Four more carried real component source and
+were never listed:
+
+| Collection             | Node | Rows |
+| ---------------------- | ---- | ---- |
+| `primitives`           | N2   | 228  |
+| `styling-libs`         | N1   | 16   |
+| `documentation-engine` | N10  | 4    |
+| `documentation`        | N8   | 1    |
+
+The real number is **571**. Every one of the 249 was `status: stable` with real source and
+a real `files[].path`, and every one 404'd on `/api/v1/ui/{name}` — visible over MCP
+`read_documents`, installable by nobody. `styling-libs` sitting at N1 is the whole reason
+that node reported zero components.
+
+Two consequences worth carrying forward:
+
+- **`extract-components.ts` reads `component_documents` directly, never the view.**
+  Extracting through the view is exactly what hid them.
+- **It never overwrites a file already on disk.** A re-run reported 138 N2 files as
+  "update"; those had already been fixed to compile, and the database copy is by
+  definition the version that never compiled.
+
+## `documentation` is a mixed collection
+
+It holds `accessibility-audit` (a genuine N8 component) **and 20 retired documentation
+pages** — `installation`, `introduction`, `api-reference`, `contributing` — whose content
+moved to bundu-docs / nyuchi-docs and whose HTTP surface is a 410.
+
+The view therefore filters on `document->>'kind' IS NULL`. That predicate is exact: it
+selects 571 rows, every one of which has source, across all thirteen collections; every
+non-null `kind` (`doc_page` 16, `overview` 2, `deprecation-registry` 1, `guide` 1) has no
+source and appears only in `documentation`.
+
+**It is deliberately not `source_code IS NOT NULL`.** `kind` describes what the row _is_,
+so the predicate still holds after the drop. Predicating on the column would empty the
+entire registry the moment the drop landed.
 
 ## Why
 
@@ -114,6 +158,27 @@ serving is the one irreversible mistake available here.
 Order, by ascending risk:
 **N9 (3) → N8 (13) → N5 (14) → N4 (14) → N7 (16) → N6 (52) → N3 (67) → N2 (143)**.
 
+## The order that matters
+
+**The drop runs after the files are merged AND deployed — never before.** Production
+serves component source through `resolveComponentSource`, which reads disk first and falls
+back to the `source_code` column. Until this branch is deployed, production has no disk
+files, so the column is the only copy it can reach. Clearing it first would empty
+`/api/v1/ui/{name}` for the entire registry, and a 200 with an empty body is precisely the
+failure mode this migration exists to remove.
+
+So, in order:
+
+1. Merge and deploy the 571 files.
+2. Confirm one component per node serves real source from production.
+3. Then clear `document.source_code` across all 571 rows **and**
+   `document.versions[].sourceCode` plus the two nested `snapshot` blobs across the 556
+   `versions` rows — `source_code` is one of four copies, and clearing only the column
+   would leave the database full of component source.
+4. Then delete the ramp: `resolveComponentSource` (six callers revert to
+   `readComponentSource`) and the `components:verify` / `--check` drift mode, which is
+   meaningless with one copy and invites someone to recreate the second.
+
 ## Known follow-ups
 
 - **N1 `nyuchi-tokens` is not a component.** Its `source_code` holds a JSON token payload
@@ -124,9 +189,10 @@ Order, by ascending risk:
   Extracting N2 to `components/registry/n2-primitives/` would put two copies on disk —
   precisely what this migration forbids. Settle which path is the one file before N2 is
   extracted; it is last in the order for that reason.
-- **`registry.json` does not exist** although `pnpm registry:verify` (in `pnpm check` and
-  in CI) expects it. Resolve before the drops, or the gate goes red for an unrelated
-  reason.
+- ~~**`registry.json` does not exist**~~ — resolved. It is generated and committed, 571
+  items. Its `name` also said `mukoko`, left over from the rebrand, while the `homepage`
+  beside it already said `mzizi.dev`; that is the identifier the shadcn CLI shows
+  consumers, and it is now `mzizi`.
 - **`components:verify` / the `--check` mode is due for deletion.** A drift gate is
   meaningless once there is only one copy, and leaving it invites someone to re-create
   the second.

@@ -26,7 +26,8 @@
         "./components/registry/n2-primitives/*",
         "./components/registry/n3-brand/*",
         "./components/registry/n7-shell/*"
-      ]
+      ],
+      "@/hooks/*": ["./hooks/*", "./components/registry/n2-primitives/*"]
     }
   },
   "include": [
@@ -36,5 +37,9 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "supabase/functions"]
+  "exclude": [
+    "node_modules",
+    "supabase/functions",
+    "components/registry/n10-documentation/nyuchi-docs-api.ts"
+  ]
 }
