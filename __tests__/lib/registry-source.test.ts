@@ -92,3 +92,51 @@ describe("componentsOnDisk", () => {
     expect(new Set(names).size).toBe(names.length)
   })
 })
+
+/**
+ * The reader took an ALLOW-list of extensions — `.tsx`, `.ts`, `.css`, `.json` —
+ * and the registry is multi-language. Five components fell outside it: N8's
+ * `accessibility-audit` (`.md`, a documented SQL pipeline) and N1's Kotlin,
+ * Swift, Python and ArkTS token targets.
+ *
+ * Nothing looked broken, because `resolveComponentSource` fell back to the
+ * database column and served them from there. The defect was invisible until
+ * the column was dropped — at which point all five would have 404'd in
+ * production, past the point of no return. An allow-list fails closed on a
+ * language nobody anticipated, and it fails silently.
+ */
+describe("multi-language components", () => {
+  it("reads the five non-TypeScript components an allow-list dropped", () => {
+    for (const name of [
+      "accessibility-audit", // .md    — N8 assurance
+      "nyuchi-tokens-kotlin", // .kt    — N1
+      "nyuchi-tokens-swift", // .swift — N1
+      "nyuchi-tokens-python", // .py    — N1
+      "nyuchi-tokens-arkts", // .ets   — N1
+    ]) {
+      const source = readComponentSource(name)
+      expect(source, `${name} must resolve on disk, not via a database fallback`).not.toBeNull()
+      expect(source!.length).toBeGreaterThan(0)
+    }
+  })
+
+  it("indexes every non-hidden file in the registry tree", () => {
+    const indexed = new Set(componentsOnDisk())
+    const root = join(process.cwd(), "components/registry")
+
+    const missing: string[] = []
+    for (const dir of readdirSync(root, { withFileTypes: true })) {
+      if (!dir.isDirectory()) continue
+      for (const entry of readdirSync(join(root, dir.name))) {
+        if (entry.startsWith(".")) continue
+        const name = entry.replace(/\.[^.]+$/, "")
+        if (!indexed.has(name)) missing.push(`${dir.name}/${entry}`)
+      }
+    }
+
+    // Anything here is a file the routes cannot serve, which after the database
+    // drop means a 404 for a component the registry still advertises.
+    expect(missing).toEqual([])
+    expect(indexed.size).toBeGreaterThan(500)
+  })
+})
