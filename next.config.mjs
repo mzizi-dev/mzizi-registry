@@ -37,6 +37,23 @@ const nextConfig = {
     unoptimized: true,
   },
   transpilePackages: ["radix-ui"],
+
+  // Component source lives on disk under `components/registry/**` and is read
+  // at request time by `@/lib/registry-source`. Those reads are dynamic
+  // (readdir + readFileSync), so Next's static trace cannot see them and the
+  // files would be absent from the deployed lambdas — the reads succeed in
+  // `next dev` and 404 in production, which is the worst-shaped failure
+  // available here. Tracing them in explicitly is what makes the registry
+  // route serve real source on Vercel.
+  outputFileTracingIncludes: {
+    "/api/v1/ui/[name]": ["./components/registry/**/*"],
+    "/api/v1/stats": ["./components/registry/**/*"],
+    "/mcp": ["./components/registry/**/*"],
+    "/source/[name]": ["./components/registry/**/*"],
+    "/components/[name]": ["./components/registry/**/*"],
+    "/playground/[name]": ["./components/registry/**/*"],
+  },
+
   turbopack: {
     resolveAlias: {
       "next-mdx-import-source-file": "./mdx-components.tsx",
