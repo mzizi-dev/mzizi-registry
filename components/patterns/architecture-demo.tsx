@@ -1,10 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/registry/n2-primitives/button"
+import { Badge } from "@/components/registry/n2-primitives/badge"
+import { Progress } from "@/components/registry/n2-primitives/progress"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/registry/n2-primitives/card"
 import { SectionErrorBoundary } from "@/components/section-error-boundary"
 
 // Layer 1: Shared primitives (Button, Card, Badge, Progress) — imported above

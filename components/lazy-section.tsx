@@ -89,7 +89,7 @@ interface LazySectionProps {
  * ```tsx
  * import { LazySection } from "@/components/lazy-section"
  * import { SectionErrorBoundary } from "@/components/section-error-boundary"
- * import { Skeleton } from "@/components/ui/skeleton"
+ * import { Skeleton } from "@/components/registry/n2-primitives/skeleton"
  *
  * export function DashboardPage() {
  *   return (

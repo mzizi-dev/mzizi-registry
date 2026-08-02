@@ -32,8 +32,8 @@ beforeEach(() => {
 })
 
 import { DashboardSidebar } from "@/components/landing/dashboard-sidebar"
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { SidebarProvider } from "@/components/registry/n2-primitives/sidebar"
+import { TooltipProvider } from "@/components/registry/n2-primitives/tooltip"
 import { SIDEBAR_NAV } from "@/lib/nav"
 
 function renderInProvider(path: string) {

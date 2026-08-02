@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/registry/n2-primitives/button"
+import { Badge } from "@/components/registry/n2-primitives/badge"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { SectionErrorBoundary } from "@/components/section-error-boundary"
 
@@ -27,7 +27,7 @@ function MiniCard({
       </div>
       <p className="text-xs text-muted-foreground">This component is working normally.</p>
       {crashTrigger && <CrashOnRender />}
-      <Button variant="destructive" size="xs" onClick={onCrash}>
+      <Button variant="destructive" size="sm" onClick={onCrash}>
         Trigger error
       </Button>
     </div>
@@ -84,7 +84,7 @@ export function ErrorBoundaryDemo() {
                 Full section with retry capability and named error display.
               </p>
               {sectionACrash && <CrashOnRender />}
-              <Button variant="destructive" size="xs" onClick={() => setSectionACrash(true)}>
+              <Button variant="destructive" size="sm" onClick={() => setSectionACrash(true)}>
                 Crash this section
               </Button>
             </div>
@@ -97,7 +97,7 @@ export function ErrorBoundaryDemo() {
                 Independent section — survives if Weather Data crashes.
               </p>
               {sectionBCrash && <CrashOnRender />}
-              <Button variant="destructive" size="xs" onClick={() => setSectionBCrash(true)}>
+              <Button variant="destructive" size="sm" onClick={() => setSectionBCrash(true)}>
                 Crash this section
               </Button>
             </div>

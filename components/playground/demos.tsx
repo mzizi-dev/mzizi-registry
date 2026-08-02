@@ -1,8 +1,8 @@
 "use client"
 
 import { minerals } from "@/lib/tokens"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/registry/n2-primitives/button"
+import { Badge } from "@/components/registry/n2-primitives/badge"
 import {
   Card,
   CardContent,
@@ -10,35 +10,44 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "@/components/ui/checkbox"
+} from "@/components/registry/n2-primitives/card"
+import { Input } from "@/components/registry/n2-primitives/input"
+import { Label } from "@/components/registry/n2-primitives/label"
+import { Switch } from "@/components/registry/n2-primitives/switch"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/registry/n2-primitives/tabs"
+import { Alert, AlertDescription, AlertTitle } from "@/components/registry/n2-primitives/alert"
+import { Separator } from "@/components/registry/n2-primitives/separator"
+import { Checkbox } from "@/components/registry/n2-primitives/checkbox"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/registry/n2-primitives/select"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Progress } from "@/components/ui/progress"
-import { Slider } from "@/components/ui/slider"
-import { Toggle } from "@/components/ui/toggle"
-import { Textarea } from "@/components/ui/textarea"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+} from "@/components/registry/n2-primitives/accordion"
+import { Avatar, AvatarFallback } from "@/components/registry/n2-primitives/avatar"
+import { Progress } from "@/components/registry/n2-primitives/progress"
+import { Slider } from "@/components/registry/n2-primitives/slider"
+import { Toggle } from "@/components/registry/n2-primitives/toggle"
+import { Textarea } from "@/components/registry/n2-primitives/textarea"
+import { Skeleton } from "@/components/registry/n2-primitives/skeleton"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/registry/n2-primitives/tooltip"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/registry/n2-primitives/popover"
 import {
   Dialog,
   DialogContent,
@@ -47,7 +56,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/registry/n2-primitives/dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -58,7 +67,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/registry/n2-primitives/alert-dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -66,11 +75,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from "@/components/registry/n2-primitives/dropdown-menu"
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/registry/n2-primitives/hover-card"
+import { RadioGroup, RadioGroupItem } from "@/components/registry/n2-primitives/radio-group"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/registry/n2-primitives/collapsible"
+import { ScrollArea } from "@/components/registry/n2-primitives/scroll-area"
 import {
   Table,
   TableBody,
@@ -79,7 +96,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/registry/n2-primitives/table"
 import { Kbd } from "@/components/ui/kbd"
 import { Spinner } from "@/components/ui/spinner"
 import {

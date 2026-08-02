@@ -3,7 +3,7 @@
 import { Component, type ReactNode } from "react"
 import { log } from "@/lib/observability"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/registry/n2-primitives/button"
 
 interface SectionErrorBoundaryProps {
   children: ReactNode
