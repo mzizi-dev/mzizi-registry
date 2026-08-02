@@ -20,7 +20,13 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@/components/brand/*": ["./components/layout/*"]
+      "@/components/brand/*": ["./components/layout/*"],
+      "@/components/ui/*": [
+        "./components/ui/*",
+        "./components/registry/n7-shell/*",
+        "./components/registry/n3-brand/*",
+        "./components/registry/n2-primitives/*"
+      ]
     }
   },
   "include": [
