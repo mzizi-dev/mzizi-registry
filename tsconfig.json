@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/components/brand/*": ["./components/layout/*"]
     }
   },
   "include": [
