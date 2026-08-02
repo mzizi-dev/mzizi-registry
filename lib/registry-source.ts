@@ -27,8 +27,24 @@ import { basename, extname, join } from "node:path"
  */
 const REGISTRY_ROOT = join(process.cwd(), "components", "registry")
 
-/** Extensions a component's single source file may carry. */
-const SOURCE_EXTENSIONS = new Set([".tsx", ".ts", ".css", ".json"])
+/**
+ * Files that are never a component's source, whatever directory they land in.
+ *
+ * This is an EXCLUDE list, deliberately, where an allow-list of `.tsx / .ts /
+ * .css / .json` stood before. The registry is multi-language: N8's
+ * `accessibility-audit` ships as `.md` (a documented SQL pipeline) and N1's
+ * token targets ship as `.kt`, `.swift`, `.py`, `.ets` and `.rs`. An allow-list
+ * silently returned `null` for all five — they resolved through the database
+ * fallback instead, so nothing looked wrong until the fallback was removed, at
+ * which point they would have 404'd in production.
+ *
+ * An allow-list fails closed on a language nobody thought of, and it fails
+ * INVISIBLY: the reader returns null, the ramp covers it, and the defect only
+ * surfaces at the drop. Excluding known non-source instead means a new language
+ * works the day it lands, and a genuine mistake shows up as a duplicate-name
+ * error rather than a silent 404.
+ */
+const NOT_SOURCE = new Set([".ds_store", ".map", ".snap", ".log"])
 
 interface RegistryIndex {
   /** component name → absolute path of its source file */
@@ -48,8 +64,9 @@ function buildIndex(): RegistryIndex {
       if (!dir.isDirectory()) continue
       const nodeDir = join(REGISTRY_ROOT, dir.name)
       for (const entry of readdirSync(nodeDir)) {
+        if (entry.startsWith(".")) continue
         const ext = extname(entry)
-        if (!SOURCE_EXTENSIONS.has(ext)) continue
+        if (NOT_SOURCE.has(ext.toLowerCase())) continue
         const name = basename(entry, ext)
         const path = join(nodeDir, entry)
         seen.set(name, [...(seen.get(name) ?? []), path])
