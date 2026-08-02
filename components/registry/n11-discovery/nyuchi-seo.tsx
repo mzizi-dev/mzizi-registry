@@ -1,8 +1,14 @@
 import type { Metadata } from "next"
 
 /* ═══════════════════════════════════════════════════════════════
-   NYUCHI SEO — Layer 6 Page Composition
+   NYUCHI SEO — N11 discovery (a rung)
+   "If the machine can't see it, it doesn't exist."
    Server-side metadata generation for Next.js App Router.
+
+   Was labelled "Layer 6 Page Composition": wrong twice over. The layer/axis
+   model is retired in favour of the DNA double helix, and this is not a page
+   composition — it implements machine visibility and composes nothing, which
+   is why it moved off N6 to the N11 discovery rung.
    ═══════════════════════════════════════════════════════════════ */
 
 interface NyuchiSEOConfig {
