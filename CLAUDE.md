@@ -586,6 +586,33 @@ All radii derive from `--radius-unit: 7px`. The ecosystem numbers are 7, 12, 14,
 
 **Buttons are always pill-shaped (`rounded-full`).** This is an executive brand identity decision — not a radius scale value. All buttons, tabs, and interactive pill-shaped controls use `rounded-full` (9999px). This applies across the entire ecosystem.
 
+### 7.6 Media Aspect — the main image is square
+
+**The main image on a detail page is SQUARE, everywhere in the ecosystem.** Events, listings, products, places, profiles — one shape, so a detail page is recognisable as a detail page before a single word is read.
+
+The ratio is an N1 token, not a class someone picks per component:
+
+```
+--aspect-media: 1 / 1          → aspect-[var(--aspect-media,1/1)]        (the default)
+--aspect-media-wide: 16 / 9    → aspect-[var(--aspect-media-wide,16/9)]  (INTRINSICALLY 16:9 only)
+--aspect-media-portrait: 4 / 5 → aspect-[var(--aspect-media-portrait,4/5)]
+```
+
+**Components reference the token with an inline fallback, never a bare `aspect-media`.** A bare utility only exists where `--aspect-media` has been defined in that app's `@theme`, and **nothing distributes it**: there is no registry item carrying the CSS custom properties (`token-row` is a data-display primitive, not the token source), and consumer apps take their tokens from `@bundu/ui`, not from this repo's `globals.css`. A consumer installing `nyuchi-listing-card` would have got an unknown utility and therefore **no aspect ratio at all** — the card collapsing to its content height, silently, in someone else's app. The `var()` fallback keeps the decision as data (redefine the property and every surface retunes) while staying independently installable, which §15.6 requires.
+
+**Why this is a token and not a convention.** Before it, every component chose its own and they disagreed — `nyuchi-article-card` and `nyuchi-listing-card` at 16:9, `nyuchi-offer-card` square, `nyuchi-place-card` custom, and `nyuchi-cover-wash-header` — the detail-page hero itself — with **no aspect constraint at all**. "The main image" therefore meant a different shape on every surface, and nothing in the system could catch it, because none of them were wrong against any stated rule. N1's covenant is that design decisions are data; a ratio is a design decision.
+
+**`aspect-media-wide` is not a free choice.** It is for media that is intrinsically 16:9 — a video frame in `media-player-page` — where forcing square would letterbox or crop the content itself. Reaching for it because a layout looks better wide is exactly how the drift started. If you are tempted, the answer is square.
+
+**The detail-page pattern is invariant even where the ratio is not.** Every detail surface composes in this order, and a new one does not get to invent its own:
+
+```
+square hero (cover wash) → title → host/owner row → meta tiles (when · where · …)
+  → action card (CTA + state) → rich body → supporting sections → footer identity
+```
+
+Only the hero's ratio varies, and only for intrinsically-wide media. The order, the meta-tile treatment, and the action-card-above-the-body sequence do not vary at all.
+
 ---
 
 ## 8. Conventions
