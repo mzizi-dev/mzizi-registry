@@ -6,7 +6,7 @@ import { DemoRenderer } from "@/components/playground/demo-renderer"
 import { hasDemoFor } from "@/components/playground/demo-names"
 import { ComponentDocSection } from "@/components/playground/component-doc-section"
 import { SafeSection } from "@/components/error-boundary"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/registry/n2-primitives/badge"
 import { getAllComponents, getComponent, isSupabaseConfigured } from "@/lib/db"
 import { resolveComponentSource } from "@/lib/registry-source"
 

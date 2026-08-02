@@ -1,5 +1,11 @@
 import { getUbuntuPillars, getUbuntuPrinciples, getBrandMeta, isSupabaseConfigured } from "@/lib/db"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/registry/n2-primitives/card"
 import type { UbuntuPillarRow, UbuntuPrincipleRow } from "@/lib/db/types"
 
 // Render at request time, not at build time. The page reads live from

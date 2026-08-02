@@ -1,7 +1,7 @@
 "use client"
 
 import { COMPONENT_DOCS } from "./component-docs"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/registry/n2-primitives/badge"
 
 interface ComponentDocSectionProps {
   name: string
