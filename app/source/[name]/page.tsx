@@ -2,6 +2,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, Copy } from "lucide-react"
 import { getComponent, isSupabaseConfigured } from "@/lib/db"
+import { resolveComponentSource } from "@/lib/registry-source"
 
 export const revalidate = 3600
 
@@ -20,8 +21,9 @@ export async function generateMetadata({ params }: { params: Promise<{ name: str
 
 /**
  * Per-component source-code page. Documented in the component-backlinks
- * doctrine table at /architecture/component-backlinks; data lives in
- * `components.source_code` on Supabase.
+ * doctrine table at /architecture/component-backlinks. Metadata comes from
+ * Supabase; the source itself is read from disk (`components/registry/**`, via
+ * `@/lib/registry-source`).
  *
  * For the JSON shape with metadata, dependencies, and shadcn-format
  * registry response, use `/api/v1/ui/{name}` instead.
@@ -34,9 +36,10 @@ export default async function SourcePage({ params }: { params: Promise<{ name: s
       <article className="mx-auto max-w-4xl py-12">
         <h1 className="font-serif text-3xl font-bold">Source: {name}</h1>
         <p className="mt-4 text-sm text-muted-foreground">
-          Supabase is not configured. Source is read live from{" "}
+          Supabase is not configured, so this component&apos;s metadata cannot be read. The source
+          itself lives on disk under{" "}
           <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
-            components.source_code
+            components/registry/
           </code>
           .
         </p>
@@ -46,7 +49,8 @@ export default async function SourcePage({ params }: { params: Promise<{ name: s
 
   const component = await getComponent(name).catch(() => null)
   if (!component) notFound()
-  if (!component.source_code) {
+  const sourceCode = resolveComponentSource(name, component.source_code)
+  if (sourceCode === null) {
     return (
       <article className="mx-auto max-w-4xl py-12">
         <p className="font-mono text-[11px] tracking-widest text-muted-foreground uppercase">
@@ -122,7 +126,7 @@ export default async function SourcePage({ params }: { params: Promise<{ name: s
       </div>
 
       <pre className="overflow-x-auto rounded-xl border border-border bg-muted/30 p-4 text-xs leading-relaxed">
-        <code className="font-mono">{component.source_code}</code>
+        <code className="font-mono">{sourceCode}</code>
       </pre>
     </article>
   )

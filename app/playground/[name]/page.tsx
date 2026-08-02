@@ -8,6 +8,7 @@ import { ComponentDocSection } from "@/components/playground/component-doc-secti
 import { SafeSection } from "@/components/error-boundary"
 import { Badge } from "@/components/ui/badge"
 import { getAllComponents, getComponent, isSupabaseConfigured } from "@/lib/db"
+import { resolveComponentSource } from "@/lib/registry-source"
 
 /**
  * Per-component playground page.
@@ -59,7 +60,8 @@ export default async function PlaygroundComponentPage({
 
   if (!item) notFound()
 
-  const sourceCode = item.source_code ?? "// Source not available"
+  // Source lives on disk, not in the registry document (@/lib/registry-source).
+  const sourceCode = resolveComponentSource(name, item.source_code) ?? "// Source not available"
   const firstFilePath = item.files?.[0]?.path ?? ""
   const registryType = item.registry_type?.replace("registry:", "") ?? "component"
   const installUrl = `https://mzizi.dev/api/v1/ui/${item.name}`
