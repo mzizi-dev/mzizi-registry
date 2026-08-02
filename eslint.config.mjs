@@ -63,5 +63,22 @@ export default tseslint.config(
     rules: {
       "no-console": "off",
     },
+  },
+  {
+    // N1 substrate — this is the layer that IMPLEMENTS logging, so it cannot
+    // route through it. `nyuchi-harness-prewire`'s `createScopedLogger` is the
+    // `[nyuchi:<component>]` logger every other node consumes, and
+    // `nyuchi-resilience` emits the structured `[nyuchi:resilience]` lifecycle
+    // records (section recovered, fetch timing, fallback taken) that the
+    // observability rung reads.
+    //
+    // `debug` and `info` are added to the allow-list rather than the rule being
+    // switched off: these are deliberate severities, and rewriting a successful
+    // fetch as `console.warn` to satisfy a linter would misreport it. Bare
+    // `console.log` stays a warning here, as everywhere else.
+    files: ["components/registry/n1-tokens/**/*.{ts,tsx}"],
+    rules: {
+      "no-console": ["warn", { allow: ["debug", "info", "warn", "error"] }],
+    },
   }
 )
