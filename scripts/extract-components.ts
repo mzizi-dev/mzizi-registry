@@ -10,9 +10,16 @@
  *   pnpm components:extract --node 11 --dry-run  # print the plan, write nothing
  *
  * Reads through PostgREST with the ANON key, because `component_documents` is
- * RLS public-read for the collections the `components` view exposes. There is
- * deliberately no service-role path — extraction is a read, and a read never
- * needs to outrank a policy.
+ * RLS public-read. There is deliberately no service-role path — extraction is a
+ * read, and a read never needs to outrank a policy.
+ *
+ * It reads `component_documents` DIRECTLY, not the `components` view. The view
+ * lists only nine collections, so four more — `primitives` (228 components),
+ * `styling-libs` (16), `documentation-engine` (4) and `documentation` (1) —
+ * were invisible to it. Extracting through the view would have declared the
+ * migration finished while 249 stable components were still database-only, and
+ * a component the view hides is one `/api/v1/ui/{name}` answers 404 for, so the
+ * omission was already costing consumers the ability to install them.
  *
  * Layout on disk mirrors the helix so a directory listing teaches the model:
  *
@@ -64,18 +71,75 @@ function arg(flag: string): string | undefined {
 
 const hasFlag = (f: string) => process.argv.includes(f)
 
+interface DocumentRow {
+  name: string
+  collection: string
+  document: {
+    source_code?: string | null
+    node?: string | number | null
+    status?: string | null
+    files?: { path: string; type: string }[] | null
+  } | null
+}
+
+/**
+ * Every document at this node that carries source, whatever collection holds
+ * it. `document->>'node'` is TEXT in the store, so the filter is a string
+ * compare — `eq.2` matches, `eq.02` would not, and a numeric cast here would
+ * make PostgREST reject rows whose node is empty rather than skip them.
+ */
 async function fetchNode(node: number): Promise<Row[]> {
-  const url = new URL("/rest/v1/components", SUPABASE_URL)
-  url.searchParams.set("select", "name,source_code,ecosystem_node,status,files")
-  url.searchParams.set("ecosystem_node", `eq.${node}`)
-  url.searchParams.set("order", "name.asc")
-  const res = await fetch(url, {
-    headers: { apikey: SUPABASE_KEY!, Authorization: `Bearer ${SUPABASE_KEY}` },
-  })
-  if (!res.ok) {
-    throw new Error(`registry read failed (${res.status}): ${(await res.text()).slice(0, 300)}`)
+  const rows: DocumentRow[] = []
+  const pageSize = 1000
+  for (let from = 0; ; from += pageSize) {
+    const url = new URL("/rest/v1/component_documents", SUPABASE_URL)
+    url.searchParams.set("select", "name,collection,document")
+    url.searchParams.set("document->>node", `eq.${node}`)
+    url.searchParams.set("order", "name.asc")
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_KEY!,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Range: `${from}-${from + pageSize - 1}`,
+      },
+    })
+    if (!res.ok) {
+      throw new Error(`registry read failed (${res.status}): ${(await res.text()).slice(0, 300)}`)
+    }
+    const batch = (await res.json()) as DocumentRow[]
+    rows.push(...batch)
+    if (batch.length < pageSize) break
   }
-  return (await res.json()) as Row[]
+
+  // Only documents that actually carry source are components to extract; the
+  // node also holds version-history and descriptor rows, which are not files.
+  const components = rows
+    .filter((r) => typeof r.document?.source_code === "string")
+    .map((r) => ({
+      name: r.name,
+      collection: r.collection,
+      source_code: r.document!.source_code!,
+      ecosystem_node: node,
+      status: r.document!.status ?? null,
+      files: r.document!.files ?? null,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+
+  // A node draws from several collections, and the file name is derived from
+  // `name` alone — so two collections holding the same name would write one
+  // file twice and silently keep whichever lost the race. Refuse instead: the
+  // duplicate is a registry defect to reconcile, not something to pick between.
+  const byName = new Map<string, string[]>()
+  for (const c of components) byName.set(c.name, [...(byName.get(c.name) ?? []), c.collection])
+  const clashes = [...byName.entries()].filter(([, cols]) => cols.length > 1)
+  if (clashes.length > 0) {
+    throw new Error(
+      `N${node}: ${clashes.length} name(s) exist in more than one collection — ` +
+        clashes.map(([n, cols]) => `${n} (${cols.join(" + ")})`).join(", ")
+    )
+  }
+
+  return components
 }
 
 /**
@@ -147,6 +211,8 @@ async function main() {
 
   const dir = join(ROOT, `n${node}-${NODE_LABELS[node] ?? node}`)
   const drift: string[] = []
+  const written: string[] = []
+  const skipped: string[] = []
 
   for (const row of rows) {
     const path = fileFor(node, row)
@@ -158,14 +224,24 @@ async function main() {
       else if (current !== next) drift.push(`${row.name}: differs from the registry`)
       continue
     }
+    // Never overwrite a file that is already on disk. Extraction is a one-way
+    // door: once a component is here it has been through tsc, eslint and
+    // prettier, and most needed fixing to survive that — the database copy is
+    // by definition the version that never compiled. Re-running the script
+    // across an extracted node would restore every one of those defects, which
+    // is precisely the drift this migration exists to end.
+    if (current !== null) {
+      skipped.push(row.name)
+      if (dryRun) console.log(`skip (on disk)  ${path}`)
+      continue
+    }
     if (dryRun) {
-      console.log(
-        `${current === null ? "create" : current === next ? "unchanged" : "update"}  ${path}`
-      )
+      console.log(`create  ${path}`)
       continue
     }
     mkdirSync(dir, { recursive: true })
     writeFileSync(path, next)
+    written.push(row.name)
   }
 
   if (check) {
@@ -187,7 +263,10 @@ async function main() {
   }
 
   if (dryRun) return
-  console.log(`✔ N${node}: extracted ${rows.length} component(s) to ${dir}`)
+  console.log(
+    `✔ N${node}: extracted ${written.length} new component(s) to ${dir}` +
+      (skipped.length > 0 ? `; left ${skipped.length} already on disk untouched` : "")
+  )
 }
 
 main().catch((err) => {
