@@ -1,7 +1,17 @@
 import js from "@eslint/js"
 import tseslint from "typescript-eslint"
+import next from "@next/eslint-plugin-next"
 
 export default tseslint.config(
+  {
+    // Registry component source carries `eslint-disable @next/next/no-img-element`
+    // directives that are correct FOR CONSUMERS — a registry component must not
+    // hard-depend on `next/image`. This repo does not adopt Next's rule set, so
+    // the plugin is registered (below) only so those directives resolve instead
+    // of erroring, and unused-directive reporting is off because a directive
+    // aimed at a consumer's linter is not dead code here.
+    linterOptions: { reportUnusedDisableDirectives: "off" },
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -20,6 +30,12 @@ export default tseslint.config(
     ],
   },
   {
+    // The portal IS a Next app, and registry component source carries
+    // `eslint-disable @next/next/no-img-element` directives that are correct for
+    // consumers — a registry component must not hard-depend on `next/image`.
+    // Without the plugin registered, ESLint errors on the directive itself
+    // ("Definition for rule ... was not found") rather than honouring it.
+    plugins: { "@next/next": next },
     rules: {
       "@typescript-eslint/no-unused-vars": [
         "warn",
