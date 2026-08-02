@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/registry/n2-primitives/button"
 import { Sun, Moon, Monitor } from "lucide-react"
 
 export function ThemeToggle() {

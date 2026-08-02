@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/registry/n2-primitives/button"
+import { Badge } from "@/components/registry/n2-primitives/badge"
 import { LazySection } from "@/components/lazy-section"
 import { SectionErrorBoundary } from "@/components/section-error-boundary"
 import { useMemoryPressure } from "@/hooks/use-memory-pressure"

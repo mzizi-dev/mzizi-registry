@@ -3,7 +3,10 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { Box } from "@/lib/icons"
-import { NyuchiCommandPalette, type CommandItem } from "@/components/ui/nyuchi-command-palette"
+import {
+  NyuchiCommandPalette,
+  type CommandItem,
+} from "@/components/registry/n7-shell/nyuchi-command-palette"
 import { SIDEBAR_NAV } from "@/lib/nav"
 
 /**

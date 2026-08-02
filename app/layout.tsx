@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Noto_Sans, Noto_Serif, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import { MineralStrip } from "@/components/layout/mineral-strip"
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { TooltipProvider } from "@/components/registry/n2-primitives/tooltip"
 import { AppShell } from "@/components/layout/app-shell"
 import { ThemeProvider } from "@/components/theme-provider"
 
