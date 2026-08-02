@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Suspense } from "react"
 import { ArrowRight } from "lucide-react"
 import { ArchitectureExplorer } from "@/components/landing/architecture-explorer"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/registry/n2-primitives/skeleton"
 import { Section, SectionHeader } from "@/components/landing/section"
 
 /**

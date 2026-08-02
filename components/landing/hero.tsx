@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/registry/n2-primitives/button"
+import { Badge } from "@/components/registry/n2-primitives/badge"
 import { ArrowRight } from "lucide-react"
 import { CopyCommand } from "@/components/landing/copy-command"
 import { getRegistryCounts } from "@/lib/db"

@@ -1,4 +1,4 @@
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/registry/n2-primitives/separator"
 import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { minerals } from "@/lib/tokens"

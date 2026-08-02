@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/registry/n2-primitives/button"
 import { ArrowRight } from "lucide-react"
 import { CopyCommand } from "@/components/landing/copy-command"
 import { LiveMcpStats } from "@/components/live-mcp-stats"

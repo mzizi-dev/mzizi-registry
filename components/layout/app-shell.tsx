@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react"
 import { usePathname } from "next/navigation"
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/registry/n2-primitives/sidebar"
 import { DashboardSidebar } from "@/components/landing/dashboard-sidebar"
 import { Header } from "@/components/landing/header"
 import { CommandPalette } from "@/components/landing/command-palette"

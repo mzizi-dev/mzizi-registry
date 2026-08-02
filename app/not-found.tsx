@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/registry/n2-primitives/button"
 
 export default function NotFound() {
   return (

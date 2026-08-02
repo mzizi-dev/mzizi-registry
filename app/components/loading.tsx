@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/registry/n2-primitives/skeleton"
 
 /**
  * Loading skeleton for `/components` — matches the gallery layout

@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/registry/n2-primitives/skeleton"
 
 /**
  * Root-level loading state. Renders while any server component on the

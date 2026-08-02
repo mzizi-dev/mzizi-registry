@@ -4,7 +4,7 @@ import { useNyuchiHarness } from "@/lib/harness"
 import * as React from "react"
 import { LogOut, Settings, User, ChevronsUpDown } from "@/lib/icons"
 import { cn } from "@/lib/utils"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/registry/n2-primitives/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/registry/n2-primitives/dropdown-menu"
 
 interface UserMenuProps {
   /** User display name */
