@@ -29,7 +29,10 @@ import { getAllComponents, getComponent, isSupabaseConfigured } from "../lib/db"
 const REGISTRY_PATH = join(process.cwd(), "registry.json")
 const REGISTRY_HEADER = {
   $schema: "https://ui.shadcn.com/schema/registry.json",
-  name: "mukoko",
+  // `mukoko` here was left over from the rebrand — the registry is Mzizi's, the
+  // homepage beside it already said so, and CLAUDE.md §8.8 documents the name as
+  // `mzizi`. It is the identifier the shadcn CLI shows consumers.
+  name: "mzizi",
   homepage: "https://mzizi.dev",
 }
 
