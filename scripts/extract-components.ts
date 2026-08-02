@@ -26,7 +26,7 @@
 
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs"
 import { existsSync } from "node:fs"
-import { join } from "node:path"
+import { extname, join } from "node:path"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL
 const SUPABASE_KEY =
@@ -54,6 +54,7 @@ interface Row {
   source_code: string | null
   ecosystem_node: number | null
   status: string | null
+  files: { path: string; type: string }[] | null
 }
 
 function arg(flag: string): string | undefined {
@@ -65,7 +66,7 @@ const hasFlag = (f: string) => process.argv.includes(f)
 
 async function fetchNode(node: number): Promise<Row[]> {
   const url = new URL("/rest/v1/components", SUPABASE_URL)
-  url.searchParams.set("select", "name,source_code,ecosystem_node,status")
+  url.searchParams.set("select", "name,source_code,ecosystem_node,status,files")
   url.searchParams.set("ecosystem_node", `eq.${node}`)
   url.searchParams.set("order", "name.asc")
   const res = await fetch(url, {
@@ -92,9 +93,26 @@ function assertUsable(rows: Row[]): Row[] {
   return rows
 }
 
-function fileFor(node: number, name: string): string {
+/**
+ * The file's extension comes from the registry's own `files[0].path`, not from a
+ * blanket `.tsx`.
+ *
+ * It is not cosmetic. In a `.ts` file `<T>(x)` is a type assertion; in `.tsx`
+ * the same characters open a JSX element — so writing a `registry:lib` module
+ * into a `.tsx` file can change what its source MEANS, and the typechecker this
+ * migration exists to enable would then be checking a different program from
+ * the one consumers install. Falls back to `.tsx` when the registry says
+ * nothing, since that is the permissive-by-default case for a UI item.
+ */
+function extensionFor(row: Row): string {
+  const path = row.files?.[0]?.path
+  const ext = path ? extname(path) : ""
+  return ext || ".tsx"
+}
+
+function fileFor(node: number, row: Row): string {
   const label = NODE_LABELS[node] ?? String(node)
-  return join(ROOT, `n${node}-${label}`, `${name}.tsx`)
+  return join(ROOT, `n${node}-${label}`, `${row.name}${extensionFor(row)}`)
 }
 
 async function main() {
@@ -131,7 +149,7 @@ async function main() {
   const drift: string[] = []
 
   for (const row of rows) {
-    const path = fileFor(node, row.name)
+    const path = fileFor(node, row)
     const next = row.source_code!.trimEnd() + "\n"
     const current = existsSync(path) ? readFileSync(path, "utf8") : null
 
@@ -153,7 +171,7 @@ async function main() {
   if (check) {
     // A file on disk with no registry row is drift too — otherwise a deleted
     // component lingers as a file nobody serves.
-    const known = new Set(rows.map((r) => `${r.name}.tsx`))
+    const known = new Set(rows.map((r) => `${r.name}${extensionFor(r)}`))
     if (existsSync(dir)) {
       for (const f of readdirSync(dir)) {
         if (!known.has(f)) drift.push(`${f}: on disk but not in the registry`)
