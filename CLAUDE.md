@@ -83,7 +83,8 @@ design-portal (this repo)
 | Icons                | Lucide React                                       | 1.8.0                                      |
 | Theming              | next-themes                                        | 0.4.6                                      |
 | Forms                | react-hook-form + zod                              | 7.73.1 / 4.3.6                             |
-| Charts               | Recharts                                           | 3.8.1                                      |
+| Charts (canvas)      | Chart.js + react-chartjs-2                         | 4.5.1 / 5.3.1                              |
+| Charts (SVG)         | Recharts                                           | 3.8.1                                      |
 | Testing              | Vitest + Testing Library                           | 4.1.5                                      |
 | Observability        | Structured logging (`lib/observability.ts`)        | Built-in                                   |
 | Metrics              | MCP usage tracking (`lib/metrics.ts`)              | Built-in                                   |
@@ -93,6 +94,26 @@ design-portal (this repo)
 | MCP Server           | @modelcontextprotocol/sdk (Streamable HTTP)        | 1.29.0                                     |
 | CI/CD                | GitHub Actions + Vercel                            | —                                          |
 | Deployment           | Vercel                                             | —                                          |
+
+**Two charting stacks, and that is deliberate — do not "consolidate" them.**
+
+- **Chart.js (canvas)** is the ecosystem's workhorse. Consumer apps lean on it far
+  more than this repo's own file count suggests: mukoko-weather runs seven Chart.js
+  sections on mobile. It is what you reach for when the dataset is large or the view
+  is data-heavy, because a canvas draws one DOM node where SVG draws thousands.
+  `canvas-chart` (N2) is the base; `time-series-chart` composes it.
+- **Recharts (SVG)** backs the `chart-*` family — the shadcn chart blocks. SVG is the
+  right default for small, interactive, styleable charts where per-element theming and
+  accessibility matter more than node count.
+
+This table used to list Recharts alone, which is how "the repo standardised on
+recharts" ended up in a commit message. It had not; the two answer different questions.
+`canvas-chart`'s own header states the rule — use it "when Recharts SVG would create
+too many DOM nodes."
+
+Both are real `dependencies`, not devDependencies: §14's upgrade-first policy makes this
+repo the place major versions are exercised before any production app takes them, and a
+dependency parked in `devDependencies` is one this repo never truly proves.
 
 ### Mzizi tooling — out-of-repo
 
