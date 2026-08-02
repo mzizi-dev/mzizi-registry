@@ -8,8 +8,21 @@
  */
 
 import { describe, expect, it, beforeEach } from "vitest"
-import { readFileSync } from "node:fs"
+import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
+
+/**
+ * Resolve a component's file the way a human would — by name, in its node
+ * directory, whatever extension it carries. The extension is owned by the
+ * registry (`files[0].path`), so hardcoding `.tsx` here made the suite fail the
+ * moment `nyuchi-seo` was corrected to the `.ts` its registry row declares.
+ */
+function fileOnDisk(nodeDir: string, name: string): string {
+  const dir = join(process.cwd(), "components/registry", nodeDir)
+  const match = readdirSync(dir).find((f) => f.replace(/\.[^.]+$/, "") === name)
+  if (!match) throw new Error(`no file for "${name}" in ${nodeDir}`)
+  return readFileSync(join(dir, match), "utf8")
+}
 import {
   componentsOnDisk,
   readComponentSource,
@@ -21,11 +34,7 @@ beforeEach(() => resetRegistrySourceCache())
 
 describe("readComponentSource", () => {
   it("returns the file's real bytes, not a rendering of them", () => {
-    const onDisk = readFileSync(
-      join(process.cwd(), "components/registry/n11-discovery/nyuchi-seo.tsx"),
-      "utf8"
-    )
-    expect(readComponentSource("nyuchi-seo")).toBe(onDisk)
+    expect(readComponentSource("nyuchi-seo")).toBe(fileOnDisk("n11-discovery", "nyuchi-seo"))
   })
 
   it("finds a component without being told its node", () => {
