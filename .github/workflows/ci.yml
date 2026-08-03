@@ -53,6 +53,13 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Runs FIRST and unconditionally: it needs no credentials, so a missing
+      # secret can never be the reason a component that breaks installs ships.
+      # This is the gate that was impossible while source lived in a database
+      # column — nothing could open a component, so nothing could check one.
+      - name: Validate every registry item is installable
+        run: pnpm registry:validate
+
       - name: Verify registry.json matches Supabase
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
