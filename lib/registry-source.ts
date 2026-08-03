@@ -131,29 +131,14 @@ export function componentsOnDisk(): string[] {
   return [...index().files.keys()].sort()
 }
 
-/**
- * Disk first, the database column second — **for the duration of the migration
- * only.**
- *
- * The nodes move one PR at a time, so between the first extraction and the last
- * drop most components still live only in `component_documents.document->>
- * 'source_code'`. Without this fallback the read path would 404 every component
- * that has not been extracted yet: an outage across the whole registry, taken
- * on deliberately in exchange for nothing, since the DB copy is still there and
- * still correct.
- *
- * DELETE THIS FUNCTION at step 5, once
- * `select count(*) from components where source_code is not null` is 0. Its
- * callers then go back to `readComponentSource` directly. Keeping it past that
- * point would re-establish the second copy this migration exists to end — the
- * fallback is a ramp, not an architecture.
- */
-export function resolveComponentSource(
-  name: string,
-  databaseSource?: string | null
-): string | null {
-  const fromDisk = readComponentSource(name)
-  if (fromDisk !== null) return fromDisk
-  const fallback = databaseSource?.trim()
-  return fallback ? databaseSource! : null
-}
+// `resolveComponentSource(name, databaseSource)` stood here — disk first, the
+// `source_code` column second — and its own docstring said to delete it once that
+// column was empty. It is. All 571 components resolve on disk, the column has
+// been dropped from every document, and production was verified serving files
+// byte-for-byte before the drop ran.
+//
+// It is gone rather than left as dead code because a fallback is a ramp, not an
+// architecture: the moment a reader can serve from two places, the two can
+// disagree, and the whole point of moving source into git was to make that
+// impossible. `readComponentSource` is now the only reader, and a component with
+// no file is a 404 — never a 200 with an empty body.
