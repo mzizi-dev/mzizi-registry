@@ -18,7 +18,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
-import { resolveComponentSource } from "@/lib/registry-source"
+import { readComponentSource } from "@/lib/registry-source"
 
 const VERSION = "1.0.0"
 
@@ -205,7 +205,7 @@ export async function createMziziMcpServer(supabase: SupabaseClient): Promise<Mc
         // Overlaying it here keeps this tool's contract intact for callers that
         // have always read `document.source_code`, while the column empties out
         // node by node. Absent on disk stays absent — never an empty string.
-        const source = resolveComponentSource(name, data.document?.source_code)
+        const source = readComponentSource(name)
         return jsonContent({
           ...data,
           document: { ...(data.document ?? {}), source_code: source },

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getComponent, isSupabaseConfigured } from "@/lib/db"
-import { resolveComponentSource } from "@/lib/registry-source"
+import { readComponentSource } from "@/lib/registry-source"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("registry")
@@ -69,7 +69,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       )
     }
 
-    const source = resolveComponentSource(name, component.source_code)
+    const source = readComponentSource(name)
 
     if (source === null) {
       logger.warn("Component has no source on disk or in the registry", { data: { name } })

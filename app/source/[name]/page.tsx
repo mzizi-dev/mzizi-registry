@@ -2,7 +2,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, Copy } from "lucide-react"
 import { getComponent, isSupabaseConfigured } from "@/lib/db"
-import { resolveComponentSource } from "@/lib/registry-source"
+import { readComponentSource } from "@/lib/registry-source"
 
 export const revalidate = 3600
 
@@ -49,7 +49,7 @@ export default async function SourcePage({ params }: { params: Promise<{ name: s
 
   const component = await getComponent(name).catch(() => null)
   if (!component) notFound()
-  const sourceCode = resolveComponentSource(name, component.source_code)
+  const sourceCode = readComponentSource(name)
   if (sourceCode === null) {
     return (
       <article className="mx-auto max-w-4xl py-12">

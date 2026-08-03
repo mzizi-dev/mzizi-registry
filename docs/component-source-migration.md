@@ -1,9 +1,13 @@
 # Component source moves out of the database
 
-Status: **all 571 components are on disk and served.** What remains is the drop —
-clearing `source_code` (and the nested `versions[].sourceCode` / `snapshot` blobs) from
-the database, and deleting the `resolveComponentSource` ramp with it. Both wait until
-this branch is merged and deployed; see "The order that matters" below.
+Status: **complete.** All 571 components are files on disk, `source_code` has been cleared
+from every row, and the `resolveComponentSource` ramp, the drift gate and the extraction
+script are all deleted. `readComponentSource` is the only reader, disk is the only copy,
+and a component with no file is a 404 rather than a 200 with an empty body.
+
+This document is kept as the record of what the migration found, because most of what it
+found was invisible while source lived in a JSON column and is the reason
+`scripts/validate-registry.mjs` now exists.
 
 ## The count was wrong for most of this migration
 
@@ -104,21 +108,27 @@ through it:
 
 Two readers of the filesystem would be the same mistake as two copies of the source.
 
-### The fallback is a ramp, not an architecture
+### The fallback was a ramp, not an architecture — and it is gone
 
-`resolveComponentSource(name, databaseSource)` reads disk first and falls back to the
-`source_code` column. That fallback exists **only for the duration of the migration**:
-nodes move one PR at a time, so between the first extraction and the last drop most
-components still live only in the database, and a disk-only read path would 404 the whole
-registry the moment it merged — an outage taken on in exchange for nothing, since the DB
-copy is still there and still correct.
+`resolveComponentSource(name, databaseSource)` read disk first and fell back to the
+`source_code` column. It existed **only for the duration of the migration**: nodes moved
+one PR at a time, so between the first extraction and the last drop most components still
+lived only in the database, and a disk-only read path would have 404'd the whole registry
+the moment it merged.
 
-**Delete `resolveComponentSource` at step 5**, once
-`select count(*) from components where source_code is not null` returns 0. Its callers go
-back to `readComponentSource` directly. Keeping it past that point re-establishes the
-second copy this whole migration exists to end.
+It is **deleted**, along with the `components:verify` drift gate and
+`scripts/extract-components.ts`. All three read the `source_code` column, which is now
+empty for all 571 rows, so all three were inert — the extraction script in particular could
+only ever print "nothing to extract", since its input filter is
+`typeof document.source_code === "string"`.
 
-Three properties are load-bearing:
+Deleted rather than left as dead code, because a fallback is a ramp: the moment a reader
+can serve from two places the two can disagree, and making that impossible was the point of
+moving source into git. The same argument retires the drift gate — a gate that compares one
+copy against nothing is not a check, it is an invitation to recreate the second copy. If
+source ever needs to come out of a database again, the script is one `git log` away.
+
+Three properties of the surviving reader are load-bearing:
 
 - **Absent is `null`, never `""`.** A 200 carrying an empty body is exactly how the
   pre-migration bugs hid. The registry route 404s on `null`.
@@ -130,54 +140,50 @@ Three properties are load-bearing:
   the explicit include the files are absent from the deployed lambdas and every read
   succeeds in `next dev` and 404s in production.
 
-## Extraction
+## How extraction ran
 
-`scripts/extract-components.ts`, one node at a time:
+`scripts/extract-components.ts` (now deleted — see above) pulled one node at a time,
+reading `component_documents` through PostgREST with the **anon** key. Extraction is a
+read, and a read never needs to outrank a policy. Two of its rules are worth remembering
+if anything like it is ever needed again:
 
-```bash
-pnpm components:extract --node 11
-pnpm components:extract --node 11 --dry-run
-```
+- **It refused to write an empty file** for a component with no source. An empty `.tsx`
+  typechecks and silently serves nothing.
+- **It never overwrote a file already on disk.** By the time a file was committed it had
+  been through tsc, eslint and prettier, and most needed fixing to survive that — so the
+  database copy was by definition the version that never compiled, and a re-run would have
+  restored every one of those defects.
 
-It reads through PostgREST with the **anon** key — extraction is a read, and a read never
-needs to outrank a policy — and refuses to write an empty file for a component with no
-source, because an empty `.tsx` would typecheck and silently serve nothing.
+Per node the gate was: extract → `pnpm typecheck` (fix what it exposes properly, rather
+than narrowing types to fit) → `pnpm build && pnpm test` → PR → merge → **then** the
+migration clearing that node's `source_code`.
 
-Per node, and **a node is not done until it is green**:
+Order run, by ascending risk:
+**N9 (3) → N8 (13) → N5 (14) → N4 (14) → N7 (16) → N6 (52) → N3 (67) → N2 (143)**, then
+the 249 the view had hidden.
 
-1. `pnpm components:extract --node <n>`
-2. `pnpm typecheck` — fix what the extraction exposes. Expect real bugs; N11 had one in
-   its single file. Fix them properly rather than narrowing types to fit.
-3. `pnpm build` && `pnpm test`
-4. Commit, PR, merge.
-5. **Then** the migration that clears that node's `source_code`.
+## The order that mattered
 
-Step 5 is never batched across nodes. Dropping before a node's files are merged and
-serving is the one irreversible mistake available here.
+**The drop ran after the files were merged AND deployed — never before.** Until the files
+were live, the column was the only copy production could reach, so clearing it first would
+have emptied `/api/v1/ui/{name}` for the entire registry — a 200 with an empty body, which
+is precisely the failure mode this migration existed to remove.
 
-Order, by ascending risk:
-**N9 (3) → N8 (13) → N5 (14) → N4 (14) → N7 (16) → N6 (52) → N3 (67) → N2 (143)**.
-
-## The order that matters
-
-**The drop runs after the files are merged AND deployed — never before.** Production
-serves component source through `resolveComponentSource`, which reads disk first and falls
-back to the `source_code` column. Until this branch is deployed, production has no disk
-files, so the column is the only copy it can reach. Clearing it first would empty
-`/api/v1/ui/{name}` for the entire registry, and a 200 with an empty body is precisely the
-failure mode this migration exists to remove.
-
-So, in order:
+The sequence, as executed:
 
 1. Merge and deploy the 571 files.
-2. Confirm one component per node serves real source from production.
-3. Then clear `document.source_code` across all 571 rows **and**
+2. Confirm one component per node serves real source from production. `nyuchi-tokens` went
+   48382 → 46499 chars at this step, which is how we knew it had been serving the database
+   copy and was now serving the file.
+3. Clear `document.source_code` across all 571 rows **and**
    `document.versions[].sourceCode` plus the two nested `snapshot` blobs across the 556
-   `versions` rows — `source_code` is one of four copies, and clearing only the column
-   would leave the database full of component source.
-4. Then delete the ramp: `resolveComponentSource` (six callers revert to
-   `readComponentSource`) and the `components:verify` / `--check` drift mode, which is
-   meaningless with one copy and invites someone to recreate the second.
+   `versions` rows — `source_code` was one of four copies, and clearing only the column
+   would have left the database full of component source.
+4. Delete the ramp, the drift gate and the extraction script.
+
+Rollback snapshot: `public.component_source_backup_20260802`, 571 rows, revoked from `anon`
+and `authenticated`. Drop it once you are satisfied — left indefinitely it becomes the
+second copy this migration removed.
 
 ## Known follow-ups
 
@@ -193,6 +199,9 @@ So, in order:
   items. Its `name` also said `mukoko`, left over from the rebrand, while the `homepage`
   beside it already said `mzizi.dev`; that is the identifier the shadcn CLI shows
   consumers, and it is now `mzizi`.
-- **`components:verify` / the `--check` mode is due for deletion.** A drift gate is
-  meaningless once there is only one copy, and leaving it invites someone to re-create
-  the second.
+- ~~**`components:verify` / the `--check` mode is due for deletion**~~ — done, along with
+  `scripts/extract-components.ts` and `resolveComponentSource`.
+- **The 556 `versions[].sourceCode` archive blobs were cleared with the column.** They were
+  the only record of what each component looked like before extraction, since git history
+  begins at the extraction commits; `component_source_backup_20260802` is now that record.
+  Do not drop the backup table until you are content to lose it.

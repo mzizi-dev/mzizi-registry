@@ -7,7 +7,7 @@ import { ComponentDocSection } from "@/components/playground/component-doc-secti
 import { SafeSection } from "@/components/error-boundary"
 import { Badge } from "@/components/registry/n2-primitives/badge"
 import { getAllComponents, getComponent, isSupabaseConfigured } from "@/lib/db"
-import { resolveComponentSource } from "@/lib/registry-source"
+import { readComponentSource } from "@/lib/registry-source"
 
 /**
  * Static params: generate a page per component by listing the DB registry.
@@ -41,7 +41,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
   if (!item) notFound()
 
   // Source lives on disk, not in the registry document (@/lib/registry-source).
-  const sourceCode = resolveComponentSource(name, item.source_code) ?? "// Source not available"
+  const sourceCode = readComponentSource(name) ?? "// Source not available"
   const firstFilePath = item.files?.[0]?.path ?? ""
   const registryType = item.registry_type?.replace("registry:", "") ?? "component"
   const installUrl = `https://mzizi.dev/api/v1/ui/${item.name}`

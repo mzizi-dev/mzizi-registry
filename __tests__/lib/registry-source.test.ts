@@ -27,7 +27,6 @@ import {
   componentsOnDisk,
   readComponentSource,
   resetRegistrySourceCache,
-  resolveComponentSource,
 } from "@/lib/registry-source"
 
 beforeEach(() => resetRegistrySourceCache())
@@ -56,29 +55,11 @@ describe("readComponentSource", () => {
   })
 })
 
-describe("resolveComponentSource — the migration window", () => {
-  it("prefers disk over the database column", () => {
-    // Both copies exist for exactly as long as a node takes to move. Disk wins,
-    // because disk is the copy the toolchain has actually checked.
-    expect(resolveComponentSource("nyuchi-seo", "// stale db copy")).toContain("generateMetadata")
-  })
-
-  it("falls back to the database for a component not yet extracted", () => {
-    // Without this the read path would 404 every un-extracted component — an
-    // outage across the whole registry in exchange for nothing, since the DB
-    // copy is still there and still correct.
-    expect(resolveComponentSource("not-yet-extracted", "export const x = 1")).toBe(
-      "export const x = 1"
-    )
-  })
-
-  it("treats a blank database column as absent, not as empty source", () => {
-    expect(resolveComponentSource("not-yet-extracted", "   \n ")).toBeNull()
-    expect(resolveComponentSource("not-yet-extracted", "")).toBeNull()
-    expect(resolveComponentSource("not-yet-extracted", null)).toBeNull()
-    expect(resolveComponentSource("not-yet-extracted")).toBeNull()
-  })
-})
+// A `resolveComponentSource — the migration window` block stood here, asserting
+// disk-wins-over-database and the fallback behaviour for un-extracted components.
+// Both are gone with the function: the `source_code` column is empty, every one
+// of the 571 components resolves on disk, and `readComponentSource` is the only
+// reader. There is no second copy left to prefer over.
 
 describe("componentsOnDisk", () => {
   it("lists migrated components and is sorted", () => {
