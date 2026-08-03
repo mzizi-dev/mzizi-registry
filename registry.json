@@ -5021,8 +5021,8 @@
       "name": "nyuchi-data",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
-        "@mzizi/nyuchi-skeleton-set",
-        "@mzizi/nyuchi-error-set",
+        "https://mzizi.dev/api/v1/ui/mzizi-skeleton-set",
+        "https://mzizi.dev/api/v1/ui/mzizi-error-set",
         "https://mzizi.dev/api/v1/ui/nyuchi-a11y"
       ],
       "type": "registry:lib"
@@ -5231,7 +5231,7 @@
         "filter-bar",
         "infinite-scroll",
         "pull-to-refresh",
-        "@mzizi/nyuchi-skeleton-set"
+        "https://mzizi.dev/api/v1/ui/mzizi-skeleton-set"
       ],
       "type": "registry:ui"
     },
@@ -6034,8 +6034,8 @@
         "rate-limiter",
         "chaos",
         "section-error-boundary",
-        "@mzizi/nyuchi-skeleton-set",
-        "@mzizi/nyuchi-error-set"
+        "https://mzizi.dev/api/v1/ui/mzizi-skeleton-set",
+        "https://mzizi.dev/api/v1/ui/mzizi-error-set"
       ],
       "type": "registry:lib"
     },
