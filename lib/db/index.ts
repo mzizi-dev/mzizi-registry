@@ -1150,7 +1150,13 @@ export async function getComponentVersions(componentName: string): Promise<Compo
     .from("component_versions")
     .select("*")
     .eq("component_name", componentName)
-    .order("released_at", { ascending: false })
+    // `component_versions` has no `released_at` — it is a VIEW whose timestamp
+    // column is `created_at`. Ordering by a column that does not exist made
+    // PostgREST error, `getComponentVersions` throw, and
+    // `/api/v1/ui/{name}/versions` answer 500 for every component in the
+    // registry. `changelog` does have `released_at`, which is why the two other
+    // call sites in this file are correct and only this one was wrong.
+    .order("created_at", { ascending: false })
 
   if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ComponentVersionRow[]
