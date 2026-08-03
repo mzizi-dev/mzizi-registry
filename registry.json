@@ -286,7 +286,7 @@
       "registryDependencies": [
         "popover",
         "button",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -434,7 +434,7 @@
         "card",
         "avatar",
         "button",
-        "@mzizi/nyuchi-verified-badge"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "type": "registry:ui"
     },
@@ -748,7 +748,7 @@
       ],
       "name": "canvas-chart",
       "registryDependencies": [
-        "@mzizi/nyuchi-tokens"
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "type": "registry:ui"
     },
@@ -2727,7 +2727,7 @@
         "card",
         "avatar",
         "rating",
-        "@mzizi/nyuchi-verified-badge"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "type": "registry:ui"
     },
@@ -3513,7 +3513,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -3532,7 +3532,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -3551,7 +3551,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -3570,7 +3570,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -3589,7 +3589,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -4062,7 +4062,7 @@
       ],
       "name": "mzizi-content-gate",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "utils"
       ],
       "type": "registry:ui"
@@ -4132,8 +4132,8 @@
       "registryDependencies": [
         "button",
         "badge",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4252,7 +4252,7 @@
       ],
       "name": "mzizi-permission-gate",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "utils"
       ],
       "type": "registry:ui"
@@ -4320,7 +4320,7 @@
       ],
       "name": "mzizi-section",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "utils",
         "error-boundary",
         "section-error-boundary"
@@ -4339,7 +4339,7 @@
       "name": "mzizi-skeleton-set",
       "registryDependencies": [
         "skeleton",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4380,7 +4380,7 @@
       ],
       "name": "mzizi-trust-gate",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "utils"
       ],
       "type": "registry:ui"
@@ -4439,7 +4439,7 @@
       "name": "nearby-list",
       "registryDependencies": [
         "map-view",
-        "@mzizi/nyuchi-listing-card"
+        "https://mzizi.dev/api/v1/ui/nyuchi-listing-card"
       ],
       "type": "registry:ui"
     },
@@ -4615,7 +4615,7 @@
       ],
       "name": "nyuchi-a11y",
       "registryDependencies": [
-        "@mzizi/nyuchi-tokens"
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "type": "registry:lib"
     },
@@ -4631,7 +4631,7 @@
       "name": "nyuchi-action-sheet",
       "registryDependencies": [
         "sheet",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4660,7 +4660,7 @@
       "name": "nyuchi-alert-banner",
       "registryDependencies": [
         "alert",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4676,7 +4676,7 @@
       "name": "nyuchi-application-tracker",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4691,10 +4691,10 @@
       ],
       "name": "nyuchi-article-card",
       "registryDependencies": [
-        "@mzizi/nyuchi-listing-card",
+        "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
         "badge",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4709,7 +4709,7 @@
       ],
       "name": "nyuchi-auth-card",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "utils"
       ],
       "type": "registry:ui"
@@ -4755,7 +4755,7 @@
       "registryDependencies": [
         "badge",
         "tooltip",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4772,7 +4772,7 @@
       "registryDependencies": [
         "card",
         "button",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4787,7 +4787,7 @@
       ],
       "name": "nyuchi-bottom-nav",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4808,7 +4808,7 @@
         "calendar",
         "card",
         "badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4850,7 +4850,7 @@
       "name": "nyuchi-commute-card",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4881,7 +4881,7 @@
         "textarea",
         "button",
         "avatar",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4898,7 +4898,7 @@
       "registryDependencies": [
         "avatar",
         "badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4926,7 +4926,7 @@
       ],
       "name": "nyuchi-cover-wash-header",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4951,7 +4951,7 @@
         "textarea",
         "badge",
         "separator",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -4966,8 +4966,8 @@
       ],
       "name": "nyuchi-create-page",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
-        "@mzizi/nyuchi-create-listing",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-create-listing",
         "stepper"
       ],
       "type": "registry:ui"
@@ -4985,8 +4985,8 @@
       "registryDependencies": [
         "card",
         "badge",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5001,11 +5001,11 @@
       ],
       "name": "nyuchi-dashboard-layout",
       "registryDependencies": [
-        "@mzizi/nyuchi-sidebar",
-        "@mzizi/nyuchi-header",
-        "@mzizi/nyuchi-bottom-nav",
+        "https://mzizi.dev/api/v1/ui/nyuchi-sidebar",
+        "https://mzizi.dev/api/v1/ui/nyuchi-header",
+        "https://mzizi.dev/api/v1/ui/nyuchi-bottom-nav",
         "sidebar",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5020,10 +5020,10 @@
       ],
       "name": "nyuchi-data",
       "registryDependencies": [
-        "@mzizi/nyuchi-listing-card",
+        "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
         "@mzizi/nyuchi-skeleton-set",
         "@mzizi/nyuchi-error-set",
-        "@mzizi/nyuchi-a11y"
+        "https://mzizi.dev/api/v1/ui/nyuchi-a11y"
       ],
       "type": "registry:lib"
     },
@@ -5054,8 +5054,8 @@
         "separator",
         "button",
         "badge",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5070,10 +5070,10 @@
       ],
       "name": "nyuchi-detail-page",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
-        "@mzizi/nyuchi-detail-layout",
-        "@mzizi/nyuchi-share-card",
-        "@mzizi/nyuchi-action-sheet"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-detail-layout",
+        "https://mzizi.dev/api/v1/ui/nyuchi-share-card",
+        "https://mzizi.dev/api/v1/ui/nyuchi-action-sheet"
       ],
       "type": "registry:ui"
     },
@@ -5122,7 +5122,7 @@
       ],
       "name": "nyuchi-dx",
       "registryDependencies": [
-        "@mzizi/nyuchi-tokens"
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "type": "registry:lib"
     },
@@ -5151,7 +5151,7 @@
       "name": "nyuchi-empty-state",
       "registryDependencies": [
         "empty",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5179,7 +5179,7 @@
       ],
       "name": "nyuchi-escalation-card",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "utils"
       ],
       "type": "registry:ui"
@@ -5225,9 +5225,9 @@
       ],
       "name": "nyuchi-feed-page",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
-        "@mzizi/nyuchi-listing-card",
-        "@mzizi/nyuchi-empty-state",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
+        "https://mzizi.dev/api/v1/ui/nyuchi-empty-state",
         "filter-bar",
         "infinite-scroll",
         "pull-to-refresh",
@@ -5247,7 +5247,7 @@
       "name": "nyuchi-footer",
       "registryDependencies": [
         "separator",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5263,7 +5263,7 @@
       "name": "nyuchi-forecast-card",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5319,7 +5319,7 @@
       "registryDependencies": [
         "arc-gauge",
         "card",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5349,7 +5349,7 @@
       "registryDependencies": [
         "card",
         "avatar",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5380,11 +5380,11 @@
       "name": "nyuchi-harness-prewire",
       "registryDependencies": [
         "observability",
-        "@mzizi/nyuchi-motion",
-        "@mzizi/nyuchi-a11y",
-        "@mzizi/nyuchi-tokens",
-        "@mzizi/nyuchi-theme-provider",
-        "@mzizi/nyuchi-resilience"
+        "https://mzizi.dev/api/v1/ui/nyuchi-motion",
+        "https://mzizi.dev/api/v1/ui/nyuchi-a11y",
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens",
+        "https://mzizi.dev/api/v1/ui/nyuchi-theme-provider",
+        "https://mzizi.dev/api/v1/ui/nyuchi-resilience"
       ],
       "type": "registry:lib"
     },
@@ -5401,7 +5401,7 @@
       "registryDependencies": [
         "button",
         "sidebar",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5417,7 +5417,7 @@
       "name": "nyuchi-health-dashboard",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "vitals-display",
         "appointment-card",
         "medication-reminder"
@@ -5436,7 +5436,7 @@
       "name": "nyuchi-hero-stat",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5465,8 +5465,8 @@
       "name": "nyuchi-job-card",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness",
-        "@mzizi/nyuchi-verified-badge"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "type": "registry:ui"
     },
@@ -5481,7 +5481,7 @@
       ],
       "name": "nyuchi-layout",
       "registryDependencies": [
-        "@mzizi/nyuchi-tokens"
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "type": "registry:lib"
     },
@@ -5497,8 +5497,8 @@
       "name": "nyuchi-leaderboard-row",
       "registryDependencies": [
         "avatar",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5515,7 +5515,7 @@
       "registryDependencies": [
         "card",
         "progress",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5535,7 +5535,7 @@
         "card",
         "badge",
         "avatar",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5558,7 +5558,7 @@
       ],
       "name": "nyuchi-locale",
       "registryDependencies": [
-        "@mzizi/nyuchi-tokens"
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "type": "registry:lib"
     },
@@ -5576,7 +5576,7 @@
         "dialog",
         "carousel",
         "lightbox",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5592,8 +5592,8 @@
       "name": "nyuchi-message-bubble",
       "registryDependencies": [
         "avatar",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5637,7 +5637,7 @@
         "card",
         "badge",
         "progress",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5656,7 +5656,7 @@
       ],
       "name": "nyuchi-motion",
       "registryDependencies": [
-        "@mzizi/nyuchi-tokens"
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "type": "registry:lib"
     },
@@ -5686,7 +5686,7 @@
       "registryDependencies": [
         "avatar",
         "badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5701,10 +5701,10 @@
       ],
       "name": "nyuchi-offer-card",
       "registryDependencies": [
-        "@mzizi/nyuchi-listing-card",
+        "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
         "badge",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5720,7 +5720,7 @@
       "name": "nyuchi-onboarding-step",
       "registryDependencies": [
         "stepper",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5748,7 +5748,7 @@
       ],
       "name": "nyuchi-payment-mandate-card",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "utils"
       ],
       "type": "registry:ui"
@@ -5765,7 +5765,7 @@
       "name": "nyuchi-payment-summary",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5794,7 +5794,7 @@
       "name": "nyuchi-phrase-card",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5809,10 +5809,10 @@
       ],
       "name": "nyuchi-place-card",
       "registryDependencies": [
-        "@mzizi/nyuchi-listing-card",
-        "@mzizi/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "rating",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5829,7 +5829,7 @@
       "registryDependencies": [
         "button",
         "card",
-        "@mzizi/nyuchi-tokens"
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "type": "registry:lib"
     },
@@ -5857,7 +5857,7 @@
       ],
       "name": "nyuchi-product-results",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "utils"
       ],
       "type": "registry:ui"
@@ -5876,10 +5876,10 @@
         "avatar",
         "button",
         "separator",
-        "@mzizi/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "badge",
         "progress",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5894,7 +5894,7 @@
       ],
       "name": "nyuchi-profile-header",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5915,7 +5915,7 @@
         "card",
         "separator",
         "tabs",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -5930,9 +5930,9 @@
       ],
       "name": "nyuchi-profile-page-layout",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
-        "@mzizi/nyuchi-profile-block",
-        "@mzizi/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-profile-block",
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "tabs",
         "avatar"
       ],
@@ -5957,7 +5957,7 @@
         "separator",
         "switch",
         "textarea",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -5973,7 +5973,7 @@
       "name": "nyuchi-programme-item",
       "registryDependencies": [
         "avatar",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -5990,8 +5990,8 @@
       "registryDependencies": [
         "card",
         "avatar",
-        "@mzizi/nyuchi-harness",
-        "@mzizi/nyuchi-verified-badge"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "type": "registry:ui"
     },
@@ -6006,7 +6006,7 @@
       ],
       "name": "nyuchi-registration-card",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6053,8 +6053,8 @@
         "card",
         "avatar",
         "rating",
-        "@mzizi/nyuchi-harness",
-        "@mzizi/nyuchi-verified-badge"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "type": "registry:ui"
     },
@@ -6096,7 +6096,7 @@
       "name": "nyuchi-route-planner",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "route-card",
         "stop-card",
         "itinerary-timeline"
@@ -6115,7 +6115,7 @@
       "name": "nyuchi-rsvp-button",
       "registryDependencies": [
         "button",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6133,7 +6133,7 @@
         "search-bar",
         "search-results",
         "filter-bar",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6161,8 +6161,8 @@
       ],
       "name": "nyuchi-settings-page",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
-        "@mzizi/nyuchi-profile-settings",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-profile-settings",
         "switch",
         "select"
       ],
@@ -6181,7 +6181,7 @@
       "registryDependencies": [
         "sheet",
         "share-dialog",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6200,7 +6200,7 @@
         "separator",
         "badge",
         "tooltip",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6229,8 +6229,8 @@
       "name": "nyuchi-source-badge",
       "registryDependencies": [
         "badge",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6261,7 +6261,7 @@
       "name": "nyuchi-stats-row",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6290,7 +6290,7 @@
       "name": "nyuchi-suitability-card",
       "registryDependencies": [
         "card",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6305,7 +6305,7 @@
       ],
       "name": "nyuchi-theme-provider",
       "registryDependencies": [
-        "@mzizi/nyuchi-tokens"
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "type": "registry:ui"
     },
@@ -6322,8 +6322,8 @@
       "registryDependencies": [
         "card",
         "badge",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6339,7 +6339,7 @@
       "name": "nyuchi-timeline",
       "registryDependencies": [
         "avatar",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6458,7 +6458,7 @@
       "name": "nyuchi-transaction-row",
       "registryDependencies": [
         "badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6476,8 +6476,8 @@
         "card",
         "progress",
         "badge",
-        "@mzizi/nyuchi-verified-badge",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6505,7 +6505,7 @@
       ],
       "name": "nyuchi-user-card",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6522,7 +6522,7 @@
       "registryDependencies": [
         "avatar",
         "dropdown-menu",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6540,7 +6540,7 @@
       "name": "nyuchi-verified-badge",
       "registryDependencies": [
         "tooltip",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -6568,7 +6568,7 @@
       ],
       "name": "offline-banner",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness",
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "utils"
       ],
       "type": "registry:ui"
@@ -6590,7 +6590,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -6605,7 +6605,7 @@
       ],
       "name": "onboarding-tour",
       "registryDependencies": [
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:ui"
     },
@@ -7763,7 +7763,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -7782,7 +7782,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -7801,7 +7801,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -7820,7 +7820,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -7839,7 +7839,7 @@
         "card",
         "input",
         "label",
-        "@mzizi/nyuchi-harness"
+        "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "type": "registry:block"
     },
@@ -8306,7 +8306,7 @@
       "name": "time-series-chart",
       "registryDependencies": [
         "canvas-chart",
-        "@mzizi/nyuchi-tokens"
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "type": "registry:ui"
     },
@@ -8655,7 +8655,7 @@
         "avatar",
         "badge",
         "dropdown-menu",
-        "@mzizi/nyuchi-verified-badge"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "type": "registry:ui"
     },
@@ -8720,7 +8720,7 @@
         "card",
         "badge",
         "button-group",
-        "@mzizi/nyuchi-verified-badge"
+        "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "type": "registry:ui"
     },
