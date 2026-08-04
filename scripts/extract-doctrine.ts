@@ -161,6 +161,12 @@ function renderMdx(doc: Record<string, unknown>): { slug: string; body: string }
     front[k] = v
   }
 
+  // Record WHICH field became the body, so a reader can put it back. Without this
+  // the move is lossy in a way nothing would catch: `rationale` and `instruction_text`
+  // silently stop existing as fields, and any consumer casting frontmatter back to a
+  // row type gets an object missing its main prose.
+  if (proseField) front._bodyField = proseField
+
   // Deterministic key order so re-running produces no diff.
   const ordered = Object.keys(front)
     .sort()
