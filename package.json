@@ -31,7 +31,9 @@
     "lint:yaml": "yamllint .",
     "lint:json": "node -e \"const{execSync}=require('child_process');const fs=require('fs');const files=execSync(\\\"git ls-files '*.json' ':!pnpm-lock.yaml'\\\").toString().trim().split('\\n').filter(Boolean);let fail=0;for(const f of files){try{JSON.parse(fs.readFileSync(f,'utf8'))}catch(e){console.error('INVALID JSON:',f,e.message);fail=1}}process.exit(fail)\"",
     "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm build",
-    "registry:validate": "node scripts/validate-registry.mjs"
+    "registry:validate": "node scripts/validate-registry.mjs",
+    "doctrine:extract": "tsx scripts/extract-doctrine.ts",
+    "doctrine:verify": "tsx scripts/extract-doctrine.ts --check"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
