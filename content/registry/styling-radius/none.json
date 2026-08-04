@@ -1,0 +1,20 @@
+{
+  "_id": "none",
+  "_schemaVersion": "v1",
+  "collection": "styling-radius",
+  "css_var": "--radius-none",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "none",
+  "node": 1,
+  "owner": "bundu",
+  "px": 0,
+  "rem": "0",
+  "sort_order": 0,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Sharp corners — data tables, utility elements, technical surfaces"
+}

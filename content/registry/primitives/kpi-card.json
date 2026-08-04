@@ -1,0 +1,68 @@
+{
+  "_id": "kpi-card",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Semantic HTML"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "primitives",
+  "createdAt": "2026-04-14T03:11:08.474068+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Key Performance Indicator card. Displays a metric label, large value, optional change percentage with trend direction. Extracted from analytics-dashboard-page, console-dashboard-page, and wallet-page where the same pattern was repeated inline. Brand-agnostic — uses semantic CSS vars only.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/kpi-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["console", "wallet", "bushtrade", "nhimbe", "health", "news"],
+  "model": "mzizi-dna-helix",
+  "name": "kpi-card",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "kpi",
+  "swappable": false,
+  "tags": ["kpi", "metric", "card", "analytics", "dashboard", "data-display"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/kpi-card",
+    "changelog": "https://mzizi.dev/changelog/kpi-card",
+    "health": "https://mzizi.dev/api/health/kpi-card",
+    "playground": "https://mzizi.dev/playground/kpi-card",
+    "portal": "https://mzizi.dev/components/kpi-card",
+    "source": "https://mzizi.dev/source/kpi-card"
+  },
+  "use_cases": ["nhimbe", "news", "console"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "kpi-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2031,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

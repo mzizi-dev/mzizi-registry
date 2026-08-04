@@ -1,0 +1,21 @@
+{
+  "_id": "accent-foreground",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "text",
+  "currentVersion": 1,
+  "dark_value": "#B3E5FC",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "hc_dark_value": "#E0F2FF",
+  "hc_light_value": "#001030",
+  "kind": "token",
+  "light_value": "#002966",
+  "model": "mzizi-dna-helix",
+  "name": "accent-foreground",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Text on accent fill. Matches cobalt on_container values."
+}

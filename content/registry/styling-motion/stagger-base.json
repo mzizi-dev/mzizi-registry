@@ -1,0 +1,22 @@
+{
+  "_id": "stagger-base",
+  "_schemaVersion": "v1",
+  "collection": "styling-motion",
+  "css_var": "--motion-stagger-base",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "motion_type": "stagger",
+  "ms": 50,
+  "name": "stagger-base",
+  "node": 1,
+  "owner": "bundu",
+  "reduced_motion_fallback": "0ms",
+  "sort_order": 100,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "DEFAULT stagger — cards, list items, gallery entries (max 8 items)",
+  "value": "50ms"
+}

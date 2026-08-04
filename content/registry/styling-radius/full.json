@@ -1,0 +1,20 @@
+{
+  "_id": "full",
+  "_schemaVersion": "v1",
+  "collection": "styling-radius",
+  "css_var": "--radius-full",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "full",
+  "node": 1,
+  "owner": "bundu",
+  "px": 9999,
+  "rem": "9999px",
+  "sort_order": 70,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Pills — BRAND IDENTITY: buttons, inputs, avatars, badges, toggles always use this"
+}

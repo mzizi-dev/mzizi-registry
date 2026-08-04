@@ -1,0 +1,19 @@
+{
+  "_id": "xs-plus",
+  "_schemaVersion": "v1",
+  "collection": "styling-spacing",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "xs-plus",
+  "node": 1,
+  "owner": "bundu",
+  "px": 6,
+  "rem": "0.375rem",
+  "sort_order": 20,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Icon-to-text offset, tight inline spacing"
+}

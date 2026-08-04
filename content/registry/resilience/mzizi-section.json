@@ -1,0 +1,106 @@
+{
+  "_id": "mzizi-section",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "aria-busy during loading",
+    "Error state announced to screen reader",
+    "Retry button keyboard accessible"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "resilience",
+  "collection": "resilience",
+  "createdAt": "2026-04-13T22:05:12.87089+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "The workhorse section wrapper for every page. Combines error boundary, loading skeleton, health reporting, and optional lazy mounting into a single component. Every section of every page is wrapped in NyuchiSection. If one section fails, the rest keep working. Reports health status (healthy/degraded/error/loading) to the global health monitor. The architecture doc says: \"Every section of every page is wrapped in resilience.\"",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Error boundary integration",
+    "Loading skeleton",
+    "Health reporting (healthy/degraded/error/loading)",
+    "Optional lazy mounting",
+    "data-slot attribute",
+    "data-portal backlink"
+  ],
+  "files": [
+    {
+      "path": "components/ui/mzizi-section.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-section",
+  "node": 5,
+  "nodeLabel": "resilience",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+    "utils",
+    "error-boundary",
+    "section-error-boundary"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": null,
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "wrapper",
+  "swappable": false,
+  "tags": ["section", "error-boundary", "skeleton", "health", "resilience", "wrapper"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-section",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-section",
+    "health": "https://mzizi.dev/api/health/nyuchi-section",
+    "playground": "https://mzizi.dev/playground/nyuchi-section",
+    "portal": "https://mzizi.dev/components/nyuchi-section",
+    "source": "https://mzizi.dev/source/nyuchi-section"
+  },
+  "use_cases": [
+    "Wrap every page section in resilience",
+    "Isolate failures to individual sections",
+    "Report section health to global monitor",
+    "Lazy mount heavy sections"
+  ],
+  "variants": ["default", "lazy", "critical"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-section",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2323,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_id": "foreground",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "text",
+  "currentVersion": 1,
+  "dark_value": "#F5F5F4",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "hc_dark_value": "#FFFFFF",
+  "hc_light_value": "#000000",
+  "kind": "token",
+  "light_value": "#141413",
+  "model": "mzizi-dna-helix",
+  "name": "foreground",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Primary text — AAA on all surfaces"
+}

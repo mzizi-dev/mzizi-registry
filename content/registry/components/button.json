@@ -1,0 +1,105 @@
+{
+  "_id": "button",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring with --ring token",
+    "aria-invalid styling",
+    "Minimum 48px touch target",
+    "Keyboard accessible (Enter/Space)"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "action",
+  "collection": "components",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["radix-ui", "class-variance-authority"],
+  "description": "Displays a button or a component that looks like a button.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Pill-shaped (rounded-full) per brand standard",
+    "data-slot attribute for CSS targeting",
+    "asChild support via Radix Slot",
+    "Disabled state with pointer-events-none"
+  ],
+  "files": [
+    {
+      "path": "components/ui/button.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "button",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "framework",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [
+    "default (56px)",
+    "sm (48px)",
+    "lg (56px wide)",
+    "icon (56px square)",
+    "icon-sm (48px square)"
+  ],
+  "sources": [
+    {
+      "baseUrl": "https://ui.shadcn.com/r/styles/default/",
+      "descriptor": "react",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "button.json"
+    },
+    {
+      "baseUrl": "https://shadcn-svelte.com/registry/",
+      "descriptor": "svelte",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "button.json"
+    }
+  ],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": true,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/button",
+    "changelog": "https://mzizi.dev/changelog/button",
+    "health": "https://mzizi.dev/api/health/button",
+    "playground": "https://mzizi.dev/playground/button",
+    "portal": "https://mzizi.dev/components/button",
+    "source": "https://mzizi.dev/source/button"
+  },
+  "use_cases": [
+    "Primary CTA (mineral accent)",
+    "Secondary action (outline/ghost)",
+    "Destructive action (delete, remove)",
+    "Icon-only action",
+    "Link-style navigation"
+  ],
+  "variants": ["default", "outline", "secondary", "ghost", "destructive", "link"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "button",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2243,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

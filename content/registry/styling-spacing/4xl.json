@@ -1,0 +1,19 @@
+{
+  "_id": "4xl",
+  "_schemaVersion": "v1",
+  "collection": "styling-spacing",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "4xl",
+  "node": 1,
+  "owner": "bundu",
+  "px": 80,
+  "rem": "5rem",
+  "sort_order": 200,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Page section spacing on desktop — hero breathing room"
+}

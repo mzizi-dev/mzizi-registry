@@ -1,0 +1,20 @@
+{
+  "_id": "command-palette",
+  "_schemaVersion": "v1",
+  "category": "system",
+  "collection": "styling-z-index",
+  "css_var": "--z-command-palette",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "command-palette",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 170,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Command palette (⌘K) — jumps to front when invoked",
+  "value": 9000
+}

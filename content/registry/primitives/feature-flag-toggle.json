@@ -1,0 +1,68 @@
+{
+  "_id": "feature-flag-toggle",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "forms",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:38:59.277437+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Feature flag row with name, description, environment toggles (dev/staging/production), and rollout percentage slider. Used in the Nyuchi Console feature management dashboard.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/feature-flag-toggle.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["console"],
+  "model": "mzizi-dna-helix",
+  "name": "feature-flag-toggle",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["switch", "slider", "badge"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "toggle",
+  "swappable": false,
+  "tags": ["feature-flag", "toggle", "config", "admin", "console", "enterprise", "admin"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/feature-flag-toggle",
+    "changelog": "https://mzizi.dev/changelog/feature-flag-toggle",
+    "health": "https://mzizi.dev/api/health/feature-flag-toggle",
+    "playground": "https://mzizi.dev/playground/feature-flag-toggle",
+    "portal": "https://mzizi.dev/components/feature-flag-toggle",
+    "source": "https://mzizi.dev/source/feature-flag-toggle"
+  },
+  "use_cases": ["console"],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "feature-flag-toggle",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2596,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

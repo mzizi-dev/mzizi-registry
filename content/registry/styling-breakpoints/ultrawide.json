@@ -1,0 +1,23 @@
+{
+  "_id": "ultrawide",
+  "_schemaVersion": "v1",
+  "collection": "styling-breakpoints",
+  "css_var": "--breakpoint-ultrawide",
+  "currentVersion": 1,
+  "device_class": "ultrawide",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "max_content_px": 1600,
+  "media_query": "(min-width: 1920px)",
+  "min_width_px": 1920,
+  "min_width_rem": "120rem",
+  "model": "mzizi-dna-helix",
+  "name": "ultrawide",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 60,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Ultrawide and 4K monitors. Prevents content sprawl on large displays."
+}

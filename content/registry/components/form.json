@@ -1,0 +1,90 @@
+{
+  "_id": "form",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "forms",
+  "collection": "components",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["@radix-ui/react-label", "@radix-ui/react-slot", "react-hook-form"],
+  "description": "Building forms with React Hook Form and Zod.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute", "Radix UI primitive"],
+  "files": [
+    {
+      "path": "components/ui/form.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "form",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "framework",
+  "platforms": ["web"],
+  "registryDependencies": ["label"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "sources": [
+    {
+      "baseUrl": "https://ui.shadcn.com/r/styles/default/",
+      "descriptor": "react",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "form.json"
+    },
+    {
+      "baseUrl": "https://shadcn-svelte.com/registry/",
+      "descriptor": "svelte",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "form.json"
+    }
+  ],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "layout",
+  "swappable": true,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/form",
+    "changelog": "https://mzizi.dev/changelog/form",
+    "health": "https://mzizi.dev/api/health/form",
+    "playground": "https://mzizi.dev/playground/form",
+    "portal": "https://mzizi.dev/components/form",
+    "source": "https://mzizi.dev/source/form"
+  },
+  "use_cases": [
+    "Multi-field registration forms",
+    "Settings pages with validation",
+    "Checkout forms with structured fields",
+    "KYC and identity verification forms",
+    "Complex business data entry forms"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "form",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2278,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

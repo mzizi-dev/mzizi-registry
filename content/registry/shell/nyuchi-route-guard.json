@@ -1,0 +1,92 @@
+{
+  "_id": "nyuchi-route-guard",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Focus-visible ring on interactive elements", "ARIA role", "ARIA attributes"],
+  "addedInVersion": "7.0.0",
+  "category": "shell",
+  "collection": "shell",
+  "createdAt": "2026-04-14T03:55:15.675454+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Route-level protection gate. Checks auth state, role, subscription tier, and verification level before rendering a route. Redirects to appropriate screen (login, upgrade, verification) if requirements not met. Composes L4 safety gates at the route level.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "App shell infrastructure",
+    "Cross-layer wiring (L7→L8→L9)",
+    "data-slot + data-portal DOM attributes",
+    "Harness integration"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-route-guard.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events",
+    "console"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-route-guard",
+  "node": 7,
+  "nodeLabel": "shell",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "guard",
+  "swappable": false,
+  "tags": ["route", "guard", "auth", "protection", "role", "subscription", "shell"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-route-guard",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-route-guard",
+    "health": "https://mzizi.dev/api/health/nyuchi-route-guard",
+    "playground": "https://mzizi.dev/playground/nyuchi-route-guard",
+    "portal": "https://mzizi.dev/components/nyuchi-route-guard",
+    "source": "https://mzizi.dev/source/nyuchi-route-guard"
+  },
+  "use_cases": ["pulse", "shamwari", "campfire", "circles", "bytes"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-route-guard",
+    "latestAt": "2026-04-14T03:57:32.357035+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1789,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

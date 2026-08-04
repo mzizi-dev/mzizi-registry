@@ -1,0 +1,54 @@
+{
+  "_id": "nyuchi-avatar-stack",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Decorative avatars marked aria-hidden",
+    "Group carries an accessible summary label (e.g. 128 going)",
+    "Initials fallback when no image",
+    "Trailing count label mirrors the aria summary"
+  ],
+  "addedInVersion": "7.1.0",
+  "category": "data-display",
+  "collection": "brand",
+  "createdAt": "2026-07-14 17:18:34.383895+00",
+  "currentVersion": 1,
+  "dependencies": [],
+  "description": "Overlapping +N social-proof avatar stack — the going/attendee cue. Ring-separated avatars overlap with negative margin, each an image or an initials fallback, showing up to `max` before a +N overflow bubble, with an optional trailing <total> <label> in 13px muted. Purely presentational and server-safe (no harness, no client directive) so it renders inside React Server Components. The group carries an accessible summary label (e.g. \"128 going\") while the decorative avatars are aria-hidden. sm / md sizes.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.2.0",
+  "features": [
+    "Overlapping ring-separated avatar stack (-space-x-2)",
+    "Image or initials fallback per person",
+    "+N overflow bubble past max",
+    "Optional trailing total + label (13px muted)",
+    "Server-safe presentational atom — no harness, no client directive",
+    "sm / md size scale"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-avatar-stack.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-avatar-stack",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["avatar"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "data-display", "avatars", "social-proof", "attendees", "nyuchi", "4.2.0"],
+  "updatedAt": "2026-07-14 17:18:34.383895+00",
+  "use_cases": [
+    "+N going social proof on event cards (nhimbe)",
+    "Attendee stack on listings",
+    "Member preview on circles / calendars"
+  ],
+  "variants": ["sm", "md"]
+}

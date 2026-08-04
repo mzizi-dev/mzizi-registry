@@ -1,0 +1,87 @@
+{
+  "_id": "nyuchi-article-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "listing",
+  "collection": "brand",
+  "createdAt": "2026-04-11T05:34:10.317262+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "News article card extending nyuchi-listing-card with factcheck badge, source attribution, journalist byline, and read time. Maps to news.news_article (67 columns) and news.feed_source. Used in Mukoko News feeds, Pulse aggregation, and content discovery.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-article-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-article-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
+    "badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "listing", "news", "nyuchi", "pulse", "content"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-article-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-article-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-article-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-article-card",
+    "portal": "https://mzizi.dev/components/nyuchi-article-card",
+    "source": "https://mzizi.dev/source/nyuchi-article-card"
+  },
+  "use_cases": [
+    "News article feeds in Mukoko News",
+    "Pulse aggregation article listings",
+    "Content discovery feeds with journalist attribution",
+    "Feature article grids with source credibility",
+    "Cross-source news aggregation displays"
+  ],
+  "variants": ["default", "compact", "hero"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-article-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1920,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

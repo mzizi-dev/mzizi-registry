@@ -1,0 +1,19 @@
+{
+  "_id": "react:sidebar-03",
+  "_schemaVersion": "v1",
+  "collection": "primitive-sources",
+  "currentVersion": 1,
+  "descriptor_slug": "react",
+  "dnaRole": "machinery",
+  "doctrineVersion": "4.1.0",
+  "kind": "primitive_source",
+  "model": "mzizi-dna-helix",
+  "node": 2,
+  "notes": "Auto-classified: shadcn-sidebar-block. shadcn upstream available.",
+  "overrides_bundu": {},
+  "owner": "framework",
+  "pinned_version": null,
+  "primitive_name": "sidebar-03",
+  "strand": "core-guarantee",
+  "upstream_path": "sidebar-03.json"
+}

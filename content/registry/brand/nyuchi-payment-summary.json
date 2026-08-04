@@ -1,0 +1,79 @@
+{
+  "_id": "nyuchi-payment-summary",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute",
+    "aria-label for screen readers"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "ecommerce",
+  "collection": "brand",
+  "createdAt": "2026-04-12T20:29:26.800512+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Universal branded payment summary and confirmation card. Shows what is being purchased, price breakdown, payment method, and confirm CTA. Used across all domains with financial transactions: BushTrade (product purchase), Nhimbe (ticket purchase), Transport (ride booking), Wallet (token transfer), Health (consultation fee), Novels (chapter unlock). Supports multi-currency (ZWL, USD, ZAR, KES) and MIT token payments.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes",
+    "I18N via Intl formatters"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-payment-summary.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["bushtrade", "nhimbe", "transport", "wallet", "health", "novels"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-payment-summary",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["card", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "payment",
+  "swappable": false,
+  "tags": ["brand", "payment", "checkout", "nyuchi", "universal", "commerce", "wallet"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-payment-summary",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-payment-summary",
+    "health": "https://mzizi.dev/api/health/nyuchi-payment-summary",
+    "playground": "https://mzizi.dev/playground/nyuchi-payment-summary",
+    "portal": "https://mzizi.dev/components/nyuchi-payment-summary",
+    "source": "https://mzizi.dev/source/nyuchi-payment-summary"
+  },
+  "use_cases": ["novels", "nhimbe", "wallet", "transport", "bushtrade"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-payment-summary",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2190,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

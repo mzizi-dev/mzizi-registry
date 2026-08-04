@@ -1,0 +1,78 @@
+{
+  "_id": "nyuchi-settings-page",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "layout",
+  "collection": "pages",
+  "createdAt": "2026-04-12T20:33:48.734069+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Standard settings page orchestrator with sidebar navigation on desktop and accordion sections on mobile. Groups settings into titled sections with consistent row patterns (toggle, select, link, destructive). Every app and the global platform settings use this layout.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-settings-page.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["campfire", "pulse", "nhimbe", "bushtrade", "wallet", "health", "planner"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-settings-page",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+    "https://mzizi.dev/api/v1/ui/nyuchi-profile-settings",
+    "switch",
+    "select"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "page",
+  "swappable": false,
+  "tags": ["brand", "layout", "page", "settings", "orchestrator", "nyuchi", "universal"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-settings-page",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-settings-page",
+    "health": "https://mzizi.dev/api/health/nyuchi-settings-page",
+    "playground": "https://mzizi.dev/playground/nyuchi-settings-page",
+    "portal": "https://mzizi.dev/components/nyuchi-settings-page",
+    "source": "https://mzizi.dev/source/nyuchi-settings-page"
+  },
+  "use_cases": ["pulse", "campfire", "nhimbe", "planner", "wallet"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-settings-page",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2289,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

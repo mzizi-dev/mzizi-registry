@@ -1,0 +1,53 @@
+{
+  "_id": "nyuchi-cover-wash-header",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Decorative cover image + scrim marked aria-hidden",
+    "CTA slot keeps its own focus semantics",
+    "Reduced-motion respected via harness",
+    "Serif title over a legibility scrim for contrast"
+  ],
+  "addedInVersion": "7.1.0",
+  "category": "identity",
+  "collection": "brand",
+  "createdAt": "2026-07-14 17:17:07.10851+00",
+  "currentVersion": 1,
+  "dependencies": [],
+  "description": "Event/detail header composite that derives the whole page tint and CTA colour from its cover — the 4.2.0 cover-wash signature. A full-bleed image or gradient cover with a legibility scrim carries an overlaid title, optional kicker/subtitle, a small inline meta row (date · location · host) and a CTA slot (children). From an accent (or mineral) prop it emits --event-primary and --wash as inline custom properties on the root, seeding the wash context that every descendant — and the rest of the detail page — inherits. Accent defaults to --brand-accent so each app swaps its own mineral; harness-wired for reduced-motion entry and observability.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.2.0",
+  "features": [
+    "4.2.0 cover-wash signature — seeds --event-primary + --wash on the root",
+    "Full-bleed image or gradient cover with legibility scrim",
+    "Accent from prop or mineral, --brand-accent neutral default",
+    "Inline meta row (date / location / host) + CTA slot via children",
+    "Harness-wired reduced-motion entry + observability"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-cover-wash-header.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-cover-wash-header",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "identity", "header", "cover", "wash", "nyuchi", "4.2.0"],
+  "updatedAt": "2026-07-14 19:41:49.38376+00",
+  "use_cases": [
+    "Event detail page header (nhimbe)",
+    "Any detail page that tints itself from a cover mineral",
+    "Campaign / landing hero that seeds a wash context"
+  ],
+  "variants": ["image", "gradient"]
+}

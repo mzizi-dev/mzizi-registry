@@ -1,0 +1,78 @@
+{
+  "_id": "nyuchi-sidebar-nav",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute",
+    "aria-label for screen readers"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "navigation",
+  "collection": "brand",
+  "createdAt": "2026-04-14T03:11:48.416339+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Branded sidebar navigation with nav items, badges, and section headers. Extracted from admin-page, api-explorer-page, and logs-page. Uses mineral accents for active state.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-sidebar-nav.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["console", "bushtrade", "nhimbe"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-sidebar-nav",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "sidebar",
+  "swappable": false,
+  "tags": ["sidebar", "navigation", "nav", "menu", "brand", "admin"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-sidebar-nav",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-sidebar-nav",
+    "health": "https://mzizi.dev/api/health/nyuchi-sidebar-nav",
+    "playground": "https://mzizi.dev/playground/nyuchi-sidebar-nav",
+    "portal": "https://mzizi.dev/components/nyuchi-sidebar-nav",
+    "source": "https://mzizi.dev/source/nyuchi-sidebar-nav"
+  },
+  "use_cases": ["nhimbe", "console", "bushtrade"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-sidebar-nav",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2089,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

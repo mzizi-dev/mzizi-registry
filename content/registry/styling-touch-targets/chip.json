@@ -1,0 +1,22 @@
+{
+  "_id": "chip",
+  "_schemaVersion": "v1",
+  "collection": "styling-touch-targets",
+  "context": "chip",
+  "css_var": "--touch-chip",
+  "currentVersion": 1,
+  "default_px": 31,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "kind": "token",
+  "min_px": 31,
+  "model": "mzizi-dna-helix",
+  "name": "chip",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 60,
+  "standard": "Prime 31",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Chips, tags, and pickers (with spacing)."
+}

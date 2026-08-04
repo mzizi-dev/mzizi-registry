@@ -1,0 +1,40 @@
+{
+  "_id": "fern",
+  "_schemaVersion": "v1",
+  "collection": "styling-washed-themes",
+  "contrast_floor_text": "P7",
+  "currentVersion": 1,
+  "dark": {
+    "accent": "#228D22",
+    "card": "#152113",
+    "container": "#213521",
+    "foreground": "#F5F5F4",
+    "ground": "#101C0F",
+    "muted_foreground": "#B2AFA8",
+    "on_container": "#28DB28"
+  },
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "kind": "token",
+  "light": {
+    "accent": "#259725",
+    "card": "#E0E8DE",
+    "container": "#DBEBDB",
+    "foreground": "#141413",
+    "ground": "#E5EDE3",
+    "muted_foreground": "#494840",
+    "on_container": "#0F570F"
+  },
+  "model": "mzizi-dna-helix",
+  "name": "fern",
+  "node": 1,
+  "owner": "bundu",
+  "recipe": "ground = base + accent at wash pct; card = surface + accent at wash pct (color-mix in srgb); foregrounds = canonical foreground/muted-foreground (AAA verified)",
+  "sort_order": 9,
+  "source_collection": "styling-experimental",
+  "source_palette": "fern",
+  "strand": "swappable",
+  "swappable": true,
+  "wash_pct_dark": 12,
+  "wash_pct_light": 7
+}

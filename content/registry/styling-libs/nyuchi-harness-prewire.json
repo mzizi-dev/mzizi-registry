@@ -1,0 +1,73 @@
+{
+  "_id": "nyuchi-harness",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Defines focus ring tokens", "Touch target minimums", "Contrast-safe pairings"],
+  "addedInVersion": "7.0.0",
+  "category": "infrastructure",
+  "collection": "styling-libs",
+  "createdAt": "2026-04-11T08:12:14.001859+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Pre-wiring node that connects every brand component to the full Nyuchi infrastructure stack. Exports NyuchiHarness (declarative wrapper providing error boundary + skeleton + observability + motion + a11y) and useNyuchiHarness hook (imperative access to observability logger, motion config, locale, theme, and health reporting). When a component is wrapped in a harness, it automatically logs render timing, catches errors with branded fallback, applies entry animations, uses the correct focus ring tokens, respects reduced-motion preferences, and reports health to the global monitor. Zero manual configuration required — install the component and it works. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["Y-axis vertical spine", "CSS custom properties", "Multi-platform generators"],
+  "files": [
+    {
+      "path": "lib/harness/index.tsx",
+      "type": "registry:lib"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-harness-prewire",
+  "node": 1,
+  "nodeLabel": "tokens",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "observability",
+    "https://mzizi.dev/api/v1/ui/nyuchi-motion",
+    "https://mzizi.dev/api/v1/ui/nyuchi-a11y",
+    "https://mzizi.dev/api/v1/ui/nyuchi-tokens",
+    "https://mzizi.dev/api/v1/ui/nyuchi-theme-provider",
+    "https://mzizi.dev/api/v1/ui/nyuchi-resilience"
+  ],
+  "registryType": "registry:lib",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "swappable",
+  "swappable": true,
+  "tags": ["brand", "infrastructure", "harness", "wiring", "pre-wired", "zero-config"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-harness",
+    "health": "https://mzizi.dev/api/health/nyuchi-harness",
+    "playground": "https://mzizi.dev/playground/nyuchi-harness",
+    "portal": "https://mzizi.dev/components/nyuchi-harness",
+    "source": "https://mzizi.dev/source/nyuchi-harness"
+  },
+  "use_cases": ["Design token infrastructure", "All layers consume L1"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-harness",
+    "latestAt": "2026-04-29T13:31:36.120589+00:00",
+    "latestVersion": "1.1.2",
+    "latestVersionId": 2705,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 22
+  }
+}

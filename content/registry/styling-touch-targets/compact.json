@@ -1,0 +1,22 @@
+{
+  "_id": "compact",
+  "_schemaVersion": "v1",
+  "collection": "styling-touch-targets",
+  "context": "compact",
+  "css_var": "--touch-compact",
+  "currentVersion": 1,
+  "default_px": 37,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "kind": "token",
+  "min_px": 37,
+  "model": "mzizi-dna-helix",
+  "name": "compact",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 50,
+  "standard": "Prime 37",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Dense toolbars and small inputs (with spacing)."
+}

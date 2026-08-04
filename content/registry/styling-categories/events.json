@@ -1,0 +1,22 @@
+{
+  "_id": "events",
+  "_schemaVersion": "v1",
+  "brand": "mukoko",
+  "category_key": "events",
+  "category_label": "Events",
+  "collection": "styling-categories",
+  "currentVersion": 1,
+  "description": "From weddings to festivals, business conferences to community gatherings — we help organize, promote, and celebrate the moments that bring us together.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "mineral": "malachite",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "products": ["Nhimbe"],
+  "sort_order": 3,
+  "strand": "swappable",
+  "swappable": true,
+  "tagline": "Cultural celebrations"
+}

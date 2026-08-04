@@ -1,0 +1,84 @@
+{
+  "_id": "rtl-conformity-check",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Output structured as machine-readable report",
+    "Findings include severity and component reference",
+    "Report format supports CI integration",
+    "Results exposed via get_conformity_report()",
+    "Remediation guidance per finding"
+  ],
+  "addedInVersion": "4.0.32",
+  "category": "conformity",
+  "collection": "observability",
+  "createdAt": "2026-04-24T05:57:42.949618+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "N8 assurance probe that validates RTL (right-to-left) layout correctness across deployed components. Checks: logical properties (start/end vs left/right), bidi text rendering, icon mirroring rules, text alignment consistency. Audit flagged as missing accessibility infrastructure. ALPHA — awaiting edge function implementation.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Logical property usage check (start/end vs left/right)",
+    "Bidi text rendering validation",
+    "Icon mirroring rule enforcement",
+    "Text alignment consistency check",
+    "Regression detection from baseline"
+  ],
+  "files": [
+    {
+      "path": "components/ui/rtl-conformity-check.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "rtl-conformity-check",
+  "node": 8,
+  "nodeLabel": "assurance",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/rtl-conformity-check",
+    "changelog": "https://mzizi.dev/changelog/rtl-conformity-check",
+    "health": "https://mzizi.dev/health/rtl-conformity-check",
+    "playground": "https://mzizi.dev/playground/rtl-conformity-check",
+    "portal": "https://mzizi.dev/components/rtl-conformity-check",
+    "source": "https://mzizi.dev/source/rtl-conformity-check"
+  },
+  "use_cases": [
+    "Pre-launch RTL readiness validation",
+    "Continuous RTL monitoring across deployed apps",
+    "Pull request RTL regression detection",
+    "Locale expansion readiness gates",
+    "Bidi text rendering validation"
+  ],
+  "variants": ["full-scan", "diff-scan", "component-specific"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "rtl-conformity-check",
+    "latestAt": "2026-04-29T14:41:14.122332+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2717,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 2
+  }
+}

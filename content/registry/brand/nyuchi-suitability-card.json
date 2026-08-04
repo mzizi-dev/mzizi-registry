@@ -1,0 +1,77 @@
+{
+  "_id": "nyuchi-suitability-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "brand",
+  "createdAt": "2026-04-12T23:39:22.905835+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Branded suitability/recommendation card with score, icon, title, description, and mineral-colored score indicator. Universal pattern from mukoko-weather ActivityInsights. Used for: \"Good for farming\" (Weather), \"Good for families\" (Places), \"Good for outdoor exercise\" (Health), \"Safe to travel\" (Transport), \"Good match for you\" (Jobs). Any scored recommendation.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-suitability-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["weather", "health", "places", "transport", "jobs", "planner"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-suitability-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["card", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "recommendation",
+  "swappable": false,
+  "tags": ["brand", "suitability", "recommendation", "score", "activity", "nyuchi", "universal"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-suitability-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-suitability-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-suitability-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-suitability-card",
+    "portal": "https://mzizi.dev/components/nyuchi-suitability-card",
+    "source": "https://mzizi.dev/source/nyuchi-suitability-card"
+  },
+  "use_cases": ["planner", "jobs", "places", "transport", "weather"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-suitability-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1971,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

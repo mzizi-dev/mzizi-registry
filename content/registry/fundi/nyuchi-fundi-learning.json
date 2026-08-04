@@ -1,0 +1,79 @@
+{
+  "_id": "nyuchi-fundi-learning",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Non-visual infrastructure — no direct a11y requirements"],
+  "addedInVersion": "7.0.0",
+  "category": "fundi",
+  "collection": "fundi",
+  "createdAt": "2026-04-14T04:16:02.070157+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Fundi learning system. Tracks healing outcomes to improve future decisions. When an issue is resolved, records what failed, what Fundi suggested, what actually worked, and whether the same pattern recurs. Runs as part of the Fundi Cloudflare Worker — same Rust binary, different handler. Writes learned patterns to fundi_issues via Supabase REST API. Improves classification accuracy over time.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Outside actor — operates via GitHub Issues",
+    "Human-in-the-loop healing workflow",
+    "DB persistence via fundi_issues table"
+  ],
+  "files": [
+    {
+      "path": "lib/nyuchi-fundi-learning.ts",
+      "type": "registry:lib"
+    }
+  ],
+  "framework": "rust",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": ["console"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-fundi-learning",
+  "node": 9,
+  "nodeLabel": "fundi",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:lib",
+  "runtimeLang": "rust",
+  "sizes": [],
+  "status": "stable",
+  "subcategory": "learning",
+  "swappable": false,
+  "tags": [
+    "fundi",
+    "learning",
+    "outcomes",
+    "accuracy",
+    "recurrence",
+    "improvement",
+    "outside-actor"
+  ],
+  "type": "rung",
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-fundi-learning",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-fundi-learning",
+    "health": "https://mzizi.dev/api/health/nyuchi-fundi-learning",
+    "playground": "https://mzizi.dev/playground/nyuchi-fundi-learning",
+    "portal": "https://mzizi.dev/components/nyuchi-fundi-learning",
+    "source": "https://mzizi.dev/source/nyuchi-fundi-learning"
+  },
+  "use_cases": ["Self-healing", "GitHub issue tracking", "Healing plan generation"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-fundi-learning",
+    "latestAt": "2026-04-29T14:40:27.559671+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2710,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 3
+  }
+}

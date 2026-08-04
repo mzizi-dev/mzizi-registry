@@ -1,0 +1,89 @@
+{
+  "_id": "accessibility-audit",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Output structured as fundi_issues row plus brand_accessibility_checks flag updates",
+    "Findings include pair_name, theme_mode, fg/bg hex, contrast ratio, simulated safety flags",
+    "Machine-readable via get_accessibility_summary() for dashboard consumption",
+    "Remediation guidance: pair with icon/label, or adjust hex to exceed floor",
+    "Results exposed through fundi_issues table and the Fundi healing loop"
+  ],
+  "addedInVersion": "4.0.35",
+  "category": "conformity",
+  "collection": "documentation",
+  "createdAt": "2026-04-24T11:21:47.247328+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "N8 assurance probe that validates WCAG compliance and color-blindness safety across every semantic-color pair. Runs daily via pg_cron, detects regressions, and files a Fundi issue for each. Uses Machado/Oliveira/Fernandes (2009) linear-RGB simulation matrices for protanopia, deuteranopia, tritanopia, and achromatopsia. Includes an audit_exempt flag so decorative borders covered by WCAG 1.4.11 non-text-contrast exemption are correctly skipped.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Machado/Oliveira/Fernandes (2009) linear-RGB simulation matrices",
+    "Covers protanopia, deuteranopia, tritanopia, and achromatopsia",
+    "WCAG 2.1 contrast ratio computation per simulated pair",
+    "Configurable contrast floor (default 3.0 for WCAG AA large text)",
+    "audit_exempt flag skips decorative pairs per WCAG 1.4.11 exemption",
+    "Regression detection — files Fundi issues only for NEW failures, not existing ones",
+    "Severity assignment — high for foreground/error/success pairs, medium for others",
+    "Scheduled via pg_cron (daily 02:00 UTC)",
+    "SQL-only implementation — no edge function required"
+  ],
+  "files": [
+    {
+      "path": "docs/accessibility-audit-pipeline.md",
+      "type": "registry:file"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "accessibility-audit",
+  "node": 10,
+  "nodeLabel": "assurance",
+  "owner": "mzizi",
+  "platforms": ["postgres"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "registry_type": "registry:file",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/accessibility-audit",
+    "changelog": "https://mzizi.dev/changelog/accessibility-audit",
+    "health": "https://mzizi.dev/health/accessibility-audit",
+    "playground": "https://mzizi.dev/playground/accessibility-audit",
+    "portal": "https://mzizi.dev/components/accessibility-audit",
+    "source": "https://mzizi.dev/source/accessibility-audit"
+  },
+  "use_cases": [
+    "Daily WCAG and color-blindness validation across every semantic-color pair",
+    "Continuous regression detection — any token change that breaks a11y is caught within 24h",
+    "Pre-launch accessibility gate — ensures palette is colorblind-safe before each release",
+    "Fundi-integrated healing loop — new failures create GitHub issues automatically",
+    "On-demand validation — call run_accessibility_audit() in migrations or CI"
+  ],
+  "variants": ["scheduled-daily", "on-demand", "ci-gate"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "accessibility-audit",
+    "latestAt": "2026-04-29T14:41:14.122332+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2714,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

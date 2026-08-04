@@ -1,0 +1,68 @@
+{
+  "_id": "map-view",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:36:00.169887+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["mapbox-gl"],
+  "description": "Embeddable map container with design system tokens, mineral-colored controls, and branded attribution. Wraps Mapbox GL JS with Nyuchi theme integration. Supports tile layers, zoom controls, geolocation, and fullscreen toggle. The foundational map primitive for Places, Transport, BushTrade, Nhimbe, and any app that shows a geographic context.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/map-view.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["places", "transport", "bushtrade", "nhimbe"],
+  "model": "mzizi-dna-helix",
+  "name": "map-view",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android", "harmonyos"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "map",
+  "swappable": false,
+  "tags": ["map", "geospatial", "places", "location", "geo", "geospatial"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/map-view",
+    "changelog": "https://mzizi.dev/changelog/map-view",
+    "health": "https://mzizi.dev/api/health/map-view",
+    "playground": "https://mzizi.dev/playground/map-view",
+    "portal": "https://mzizi.dev/components/map-view",
+    "source": "https://mzizi.dev/source/map-view"
+  },
+  "use_cases": ["nhimbe", "places", "transport"],
+  "variants": ["default", "outline", "ghost", "destructive"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "map-view",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2065,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

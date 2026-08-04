@@ -1,0 +1,23 @@
+{
+  "_id": "wide",
+  "_schemaVersion": "v1",
+  "collection": "styling-breakpoints",
+  "css_var": "--breakpoint-wide",
+  "currentVersion": 1,
+  "device_class": "wide-desktop",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "max_content_px": 1440,
+  "media_query": "(min-width: 1536px)",
+  "min_width_px": 1536,
+  "min_width_rem": "96rem",
+  "model": "mzizi-dna-helix",
+  "name": "wide",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 50,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Wide monitors. Dashboards can expand, marketing content stays constrained."
+}

@@ -1,0 +1,99 @@
+{
+  "_id": "mzizi-rum",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Non-visual infrastructure — no direct a11y requirements"],
+  "addedInVersion": "7.0.0",
+  "category": "assurance",
+  "collection": "observability",
+  "createdAt": "2026-04-14T04:08:41.926234+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Real User Monitoring. Collects page load timing, interaction delays, network quality, and navigation patterns from actual users. Aggregates by mini-app, page, device, and connection type. Privacy-respecting — no PII, only performance metrics. Competitors: Datadog RUM, Vercel Analytics.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Z-axis depth observability",
+    "Cross-layer blast radius analysis via data-portal backlinks",
+    "L9 Fundi integration for auto-healing"
+  ],
+  "files": [
+    {
+      "path": "lib/mzizi-rum.ts",
+      "type": "registry:lib"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events",
+    "console"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-rum",
+  "node": 8,
+  "nodeLabel": "assurance",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:lib",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "rum",
+  "swappable": false,
+  "tags": [
+    "rum",
+    "real-user-monitoring",
+    "analytics",
+    "pageload",
+    "network",
+    "privacy",
+    "assurance",
+    "z-axis"
+  ],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-rum",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-rum",
+    "health": "https://mzizi.dev/api/health/nyuchi-rum",
+    "playground": "https://mzizi.dev/playground/nyuchi-rum",
+    "portal": "https://mzizi.dev/components/nyuchi-rum",
+    "source": "https://mzizi.dev/source/nyuchi-rum"
+  },
+  "use_cases": ["Platform monitoring", "L8 assurance observability"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-rum",
+    "latestAt": "2026-04-29T14:41:46.078428+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2728,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 3
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "_id": "nyuchi-leaderboard-row",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "identity",
+  "collection": "brand",
+  "createdAt": "2026-04-11T05:36:23.333945+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Ranked leaderboard row with position indicator, avatar, name, score, and trend. Maps to ubuntu.leaderboards table. Used in community rankings, Ubuntu point leaderboards, and competitive features. Top 3 positions get mineral-colored rank badges (Gold, Tanzanite, Cobalt).",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-leaderboard-row.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-leaderboard-row",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "avatar",
+    "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "identity", "ubuntu", "gamification", "nyuchi", "leaderboard"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-leaderboard-row",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-leaderboard-row",
+    "health": "https://mzizi.dev/api/health/nyuchi-leaderboard-row",
+    "playground": "https://mzizi.dev/playground/nyuchi-leaderboard-row",
+    "portal": "https://mzizi.dev/components/nyuchi-leaderboard-row",
+    "source": "https://mzizi.dev/source/nyuchi-leaderboard-row"
+  },
+  "use_cases": [
+    "Community Ubuntu point leaderboards",
+    "Competition and challenge rankings",
+    "Top contributor displays",
+    "Weekly and monthly leaderboards",
+    "Group and circle ranking views"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-leaderboard-row",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2006,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "_id": "verification-page",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "identity",
+  "collection": "pages",
+  "createdAt": "2026-04-13T23:27:04.643728+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Identity verification page. Multi-step verification flow: phone/OTP, government ID upload, selfie, biometric. Shows current tier and what unlocks at each level.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/verification-page.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["wallet", "nhimbe", "bushtrade", "jobs", "health"],
+  "model": "mzizi-dna-helix",
+  "name": "verification-page",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "verification",
+  "swappable": false,
+  "tags": ["verification", "identity", "kyc", "tier", "biometric", "page"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/verification-page",
+    "changelog": "https://mzizi.dev/changelog/verification-page",
+    "health": "https://mzizi.dev/api/health/verification-page",
+    "playground": "https://mzizi.dev/playground/verification-page",
+    "portal": "https://mzizi.dev/components/verification-page",
+    "source": "https://mzizi.dev/source/verification-page"
+  },
+  "use_cases": ["nhimbe", "jobs", "wallet", "bushtrade", "health"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "verification-page",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1950,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "_id": "changelog-entry",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Semantic HTML"],
+  "addedInVersion": "7.0.0",
+  "category": "developer",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Version update card with categorized changes.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/changelog-entry.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "changelog-entry",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/changelog-entry",
+    "changelog": "https://mzizi.dev/changelog/changelog-entry",
+    "health": "https://mzizi.dev/api/health/changelog-entry",
+    "playground": "https://mzizi.dev/playground/changelog-entry",
+    "portal": "https://mzizi.dev/components/changelog-entry",
+    "source": "https://mzizi.dev/source/changelog-entry"
+  },
+  "use_cases": [
+    "Release notes display on mzizi.dev",
+    "Product update cards in changelog feeds",
+    "Version history in admin dashboards",
+    "API changelog entries for developer docs",
+    "Feature announcement timeline"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "changelog-entry",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2106,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

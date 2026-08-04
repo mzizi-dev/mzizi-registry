@@ -1,0 +1,22 @@
+{
+  "_id": "neutral",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "semantic",
+  "contrast_floor": "P7",
+  "currentVersion": 1,
+  "dark_value": "#A09C93",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "hc_dark_value": null,
+  "hc_light_value": null,
+  "kind": "token",
+  "light_value": "#55514B",
+  "model": "mzizi-dna-helix",
+  "name": "neutral",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Neutral / inactive status, secondary data series"
+}

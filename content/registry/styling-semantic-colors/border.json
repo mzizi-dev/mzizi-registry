@@ -1,0 +1,21 @@
+{
+  "_id": "border",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "semantic",
+  "currentVersion": 1,
+  "dark_value": "#2A2927",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "hc_dark_value": "#FFFFFF",
+  "hc_light_value": "#000000",
+  "kind": "token",
+  "light_value": "#E7E5E0",
+  "model": "mzizi-dna-helix",
+  "name": "border",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Canonical border color — cards, inputs, dividers, tables. Warm stone, not cool gray."
+}

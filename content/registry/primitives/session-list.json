@@ -1,0 +1,73 @@
+{
+  "_id": "session-list",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "security",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Active session display with device, location, and revoke.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/session-list.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "session-list",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/session-list",
+    "changelog": "https://mzizi.dev/changelog/session-list",
+    "health": "https://mzizi.dev/api/health/session-list",
+    "playground": "https://mzizi.dev/playground/session-list",
+    "portal": "https://mzizi.dev/components/session-list",
+    "source": "https://mzizi.dev/source/session-list"
+  },
+  "use_cases": [
+    "Active sessions display in account security",
+    "Device management with revoke capability",
+    "Login history with location and device",
+    "Suspicious session detection interface",
+    "Sign-out-all-devices confirmation"
+  ],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "session-list",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2570,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 8
+  }
+}

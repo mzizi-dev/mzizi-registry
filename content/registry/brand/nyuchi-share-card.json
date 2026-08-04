@@ -1,0 +1,88 @@
+{
+  "_id": "nyuchi-share-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute",
+    "aria-label for screen readers"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "overlay",
+  "collection": "brand",
+  "createdAt": "2026-04-12T20:29:26.800512+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Universal branded share composition wrapping the share-dialog primitive. Shows a preview card of the shared content (title, image, source app), sharing options (copy link, share to Campfire, native share, social platforms), and a branded deep link. Every shareable piece of content across the ecosystem uses this pattern — listings, articles, profiles, places, events, videos, groups.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-share-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [
+    "campfire",
+    "pulse",
+    "circles",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "bytes",
+    "novels",
+    "news"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-share-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["sheet", "share-dialog", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "share",
+  "swappable": false,
+  "tags": ["brand", "share", "nyuchi", "universal", "cross-app"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-share-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-share-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-share-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-share-card",
+    "portal": "https://mzizi.dev/components/nyuchi-share-card",
+    "source": "https://mzizi.dev/source/nyuchi-share-card"
+  },
+  "use_cases": ["pulse", "campfire", "bytes", "circles", "novels"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-share-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2355,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

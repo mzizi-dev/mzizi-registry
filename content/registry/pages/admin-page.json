@@ -1,0 +1,73 @@
+{
+  "_id": "admin-page",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "b2b",
+  "collection": "pages",
+  "createdAt": "2026-04-14T00:38:46.95+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Admin/back-office page. Tabbed admin interface with sidebar navigation, content area, and action bar. For Mukoko Console admin, B2B partner dashboards, org management.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/admin-page.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["console", "bushtrade", "nhimbe"],
+  "model": "mzizi-dna-helix",
+  "name": "admin-page",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "admin",
+  "swappable": false,
+  "tags": ["admin", "back-office", "management", "b2b", "console", "page"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/admin-page",
+    "changelog": "https://mzizi.dev/changelog/admin-page",
+    "health": "https://mzizi.dev/api/health/admin-page",
+    "playground": "https://mzizi.dev/playground/admin-page",
+    "portal": "https://mzizi.dev/components/admin-page",
+    "source": "https://mzizi.dev/source/admin-page"
+  },
+  "use_cases": ["nhimbe", "console", "bushtrade"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "admin-page",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1999,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

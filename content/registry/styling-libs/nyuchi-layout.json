@@ -1,0 +1,66 @@
+{
+  "_id": "nyuchi-layout",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Defines focus ring tokens", "Touch target minimums", "Contrast-safe pairings"],
+  "addedInVersion": "7.0.0",
+  "category": "infrastructure",
+  "collection": "styling-libs",
+  "createdAt": "2026-04-11T06:49:28.804886+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Responsive and adaptive layout system for Nyuchi. Exports breakpoint tokens (mobile/tablet/desktop/wide), useBreakpoint hook, NyuchiGrid responsive grid component, canonical layout definitions for the five core page types (feed, detail, create, profile, dashboard), and adaptive density support (comfortable vs compact). Ensures consistent responsive behavior across all Nyuchi apps — same breakpoints, same grid, same content flow patterns. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["Y-axis vertical spine", "CSS custom properties", "Multi-platform generators"],
+  "files": [
+    {
+      "path": "lib/layout/index.ts",
+      "type": "registry:lib"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-layout",
+  "node": 1,
+  "nodeLabel": "tokens",
+  "owner": "bundu",
+  "platforms": ["web"],
+  "registryDependencies": ["https://mzizi.dev/api/v1/ui/nyuchi-tokens"],
+  "registryType": "registry:lib",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "swappable",
+  "swappable": true,
+  "tags": ["brand", "layout", "responsive", "infrastructure", "grid", "adaptive"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-layout",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-layout",
+    "health": "https://mzizi.dev/api/health/nyuchi-layout",
+    "playground": "https://mzizi.dev/playground/nyuchi-layout",
+    "portal": "https://mzizi.dev/components/nyuchi-layout",
+    "source": "https://mzizi.dev/source/nyuchi-layout"
+  },
+  "use_cases": ["Design token infrastructure", "All layers consume L1"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-layout",
+    "latestAt": "2026-04-29T13:31:36.120589+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2708,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

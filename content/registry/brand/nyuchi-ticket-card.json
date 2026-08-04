@@ -1,0 +1,87 @@
+{
+  "_id": "nyuchi-ticket-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "listing",
+  "collection": "brand",
+  "createdAt": "2026-04-11T05:32:47.779178+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Event ticket display card with QR code area, ticket tier, status indicator (valid/used/cancelled/transferred), and event details. Maps to events.ticket and events.ticket_tier tables. Used in My Events, check-in flows, and digital wallet views.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-ticket-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-ticket-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "card",
+    "badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "listing", "events", "nhimbe", "ticket"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-ticket-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-ticket-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-ticket-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-ticket-card",
+    "portal": "https://mzizi.dev/components/nyuchi-ticket-card",
+    "source": "https://mzizi.dev/source/nyuchi-ticket-card"
+  },
+  "use_cases": [
+    "Event tickets in My Events",
+    "Check-in flow displays",
+    "Digital wallet ticket views",
+    "QR code entry credentials",
+    "Ticket transfer and gift flows"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-ticket-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2240,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "_id": "base",
+  "_schemaVersion": "v1",
+  "collection": "styling-spacing",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "base",
+  "node": 1,
+  "owner": "bundu",
+  "px": 16,
+  "rem": "1rem",
+  "sort_order": 70,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Default component padding — cards, inputs, comfortable density"
+}

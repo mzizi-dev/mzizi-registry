@@ -1,0 +1,22 @@
+{
+  "_id": "productivity",
+  "_schemaVersion": "v1",
+  "brand": "mukoko",
+  "category_key": "productivity",
+  "category_label": "Productivity",
+  "collection": "styling-categories",
+  "currentVersion": 1,
+  "description": "Calendar, tasks, notes, bookings — the single source of truth for what to do, when, and where.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "mineral": "cobalt",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "products": ["Planner", "Weather", "Jobs"],
+  "sort_order": 6,
+  "strand": "swappable",
+  "swappable": true,
+  "tagline": "Organisation and planning"
+}

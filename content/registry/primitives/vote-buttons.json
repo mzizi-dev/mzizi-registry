@@ -1,0 +1,68 @@
+{
+  "_id": "vote-buttons",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "action",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:39:43.305421+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "For/against/abstain voting interface with visual weight display. Shows current vote distribution and the user's selected option. Mineral colors: malachite=for, terracotta=against, gold=abstain. Used in DAO governance proposals.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/vote-buttons.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["circles"],
+  "model": "mzizi-dna-helix",
+  "name": "vote-buttons",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["button-group", "progress"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "voting",
+  "swappable": false,
+  "tags": ["vote", "governance", "dao", "decision", "web3", "blockchain", "token"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/vote-buttons",
+    "changelog": "https://mzizi.dev/changelog/vote-buttons",
+    "health": "https://mzizi.dev/api/health/vote-buttons",
+    "playground": "https://mzizi.dev/playground/vote-buttons",
+    "portal": "https://mzizi.dev/components/vote-buttons",
+    "source": "https://mzizi.dev/source/vote-buttons"
+  },
+  "use_cases": ["circles"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "vote-buttons",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2540,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

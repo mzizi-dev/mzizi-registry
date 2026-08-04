@@ -1,0 +1,74 @@
+{
+  "_id": "time-slot-picker",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "forms",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Selectable grid of available time slots for booking.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/time-slot-picker.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "time-slot-picker",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "date-time",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/time-slot-picker",
+    "changelog": "https://mzizi.dev/changelog/time-slot-picker",
+    "health": "https://mzizi.dev/api/health/time-slot-picker",
+    "playground": "https://mzizi.dev/playground/time-slot-picker",
+    "portal": "https://mzizi.dev/components/time-slot-picker",
+    "source": "https://mzizi.dev/source/time-slot-picker"
+  },
+  "use_cases": [
+    "Booking platforms with available slots",
+    "Medical and telemedicine appointment booking",
+    "Conference room reservation",
+    "Consultation scheduling",
+    "Service provider availability selection"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "time-slot-picker",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2261,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

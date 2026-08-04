@@ -1,0 +1,82 @@
+{
+  "_id": "chart-tooltip-default",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "components",
+  "createdAt": "2026-04-07T07:22:57.249594+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["recharts"],
+  "description": "Tooltip chart — default variant.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/blocks/charts/chart-tooltip-default.tsx",
+      "type": "registry:block"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "chart-tooltip-default",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "framework",
+  "platforms": ["web"],
+  "registryDependencies": ["chart"],
+  "registryType": "registry:block",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "sources": [
+    {
+      "baseUrl": "https://ui.shadcn.com/r/styles/default/",
+      "descriptor": "react",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "chart-tooltip-default.json"
+    }
+  ],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": true,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/chart-tooltip-default",
+    "changelog": "https://mzizi.dev/changelog/chart-tooltip-default",
+    "health": "https://mzizi.dev/api/health/chart-tooltip-default",
+    "playground": "https://mzizi.dev/playground/chart-tooltip-default",
+    "portal": "https://mzizi.dev/components/chart-tooltip-default",
+    "source": "https://mzizi.dev/source/chart-tooltip-default"
+  },
+  "use_cases": [
+    "Default chart tooltip behaviour",
+    "Hover detail for any chart",
+    "Baseline tooltip for dashboards",
+    "Simple value-on-hover displays",
+    "Universal chart hover primitive"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "chart-tooltip-default",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2226,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

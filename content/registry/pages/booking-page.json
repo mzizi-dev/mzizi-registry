@@ -1,0 +1,73 @@
+{
+  "_id": "booking-page",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "transport",
+  "collection": "pages",
+  "createdAt": "2026-04-13T23:28:42.086014+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Booking/reservation page. Service/ride selection, date/time picker, provider selection, confirmation. Used by transport, health, events.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/booking-page.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["transport", "health", "events", "places"],
+  "model": "mzizi-dna-helix",
+  "name": "booking-page",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "booking",
+  "swappable": false,
+  "tags": ["booking", "reservation", "schedule", "transport", "health", "events", "page"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/booking-page",
+    "changelog": "https://mzizi.dev/changelog/booking-page",
+    "health": "https://mzizi.dev/api/health/booking-page",
+    "playground": "https://mzizi.dev/playground/booking-page",
+    "portal": "https://mzizi.dev/components/booking-page",
+    "source": "https://mzizi.dev/source/booking-page"
+  },
+  "use_cases": ["events", "places", "transport", "health"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "booking-page",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1989,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

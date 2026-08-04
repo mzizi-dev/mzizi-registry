@@ -1,0 +1,23 @@
+{
+  "_id": "base",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "background",
+  "currentVersion": 2,
+  "dark_value": "#0E0D0C",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "hc_dark_value": null,
+  "hc_light_value": null,
+  "kind": "token",
+  "light_value": "#F3F3F1",
+  "lightness_prime": 5,
+  "model": "mzizi-dna-helix",
+  "name": "base",
+  "node": 1,
+  "owner": "bundu",
+  "prime_rule": "dark L=p; light L=100-p",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Page background — ambient base surface (prime step P5)"
+}

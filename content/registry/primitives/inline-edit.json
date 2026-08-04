@@ -1,0 +1,86 @@
+{
+  "_id": "inline-edit",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Initial display role=button with edit hint",
+    "Edit mode exposes role=textbox",
+    "Save/cancel announced to screen reader",
+    "Keyboard shortcuts labelled",
+    "Focus returned to display after save/cancel"
+  ],
+  "addedInVersion": "4.0.32",
+  "category": "forms",
+  "collection": "primitives",
+  "createdAt": "2026-04-24T05:57:42.949618+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Click-to-edit text field that transforms from display mode to input mode on interaction. Pattern for low-friction editing in admin tables, settings pages, and profile fields. Supports validation, optimistic save, and revert on escape. Audit flagged as missing UX pattern. ALPHA — awaiting frontend implementation.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Click to activate editing",
+    "Escape to revert",
+    "Enter to save",
+    "Blur to save (configurable)",
+    "Optimistic save with rollback",
+    "Validation per field type"
+  ],
+  "files": [
+    {
+      "path": "components/ui/inline-edit.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "inline-edit",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/inline-edit",
+    "changelog": "https://mzizi.dev/changelog/inline-edit",
+    "health": "https://mzizi.dev/health/inline-edit",
+    "playground": "https://mzizi.dev/playground/inline-edit",
+    "portal": "https://mzizi.dev/components/inline-edit",
+    "source": "https://mzizi.dev/source/inline-edit"
+  },
+  "use_cases": [
+    "Editable table cells (admin tables)",
+    "Profile field editing",
+    "Task title editing in kanban cards",
+    "Settings value editing",
+    "Inline note and comment editing"
+  ],
+  "variants": ["text", "textarea", "select", "number"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "inline-edit",
+    "latestAt": "2026-04-24T06:05:36.803821+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2630,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

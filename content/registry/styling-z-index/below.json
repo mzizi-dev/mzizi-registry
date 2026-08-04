@@ -1,0 +1,20 @@
+{
+  "_id": "below",
+  "_schemaVersion": "v1",
+  "category": "base",
+  "collection": "styling-z-index",
+  "css_var": "--z-below",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "below",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 20,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Pushed below default flow — background decorations, underlay patterns",
+  "value": -1
+}

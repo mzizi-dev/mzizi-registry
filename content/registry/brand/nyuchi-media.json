@@ -1,0 +1,82 @@
+{
+  "_id": "nyuchi-media",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute",
+    "aria-label for screen readers"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "content",
+  "collection": "brand",
+  "createdAt": "2026-04-11T06:52:39.447962+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Brand media components for the Nyuchi ecosystem. Exports MukokoMediaViewer (full-screen image/video viewer with swipe navigation, pinch-to-zoom, share), MukokoImageGallery (multi-image grid with lightbox expansion and count badge), MukokoReaderMode (long-form content reader with adjustable font size, line height, theme, and estimated reading time for articles and novel chapters), MukokoMediaMessage (standardized format for image/video/audio/document/location messages in Campfire chat), and MukokoStoryRing (ephemeral content avatar ring with gradient border and unseen indicator). Maps to bytes.video_object, novels.chapter, news.news_article, campfire.message, and content.creative_work.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-media.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["bytes", "novels", "campfire", "circles", "pulse", "news"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-media",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "dialog",
+    "carousel",
+    "lightbox",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "content", "media", "nyuchi", "bytes", "novels", "campfire", "reader"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-media",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-media",
+    "health": "https://mzizi.dev/api/health/nyuchi-media",
+    "playground": "https://mzizi.dev/playground/nyuchi-media",
+    "portal": "https://mzizi.dev/components/nyuchi-media",
+    "source": "https://mzizi.dev/source/nyuchi-media"
+  },
+  "use_cases": ["pulse", "campfire", "circles", "bytes", "novels"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-media",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2099,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_id": "brand-accent",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "semantic",
+  "currentVersion": 1,
+  "dark_value": "#B388FF",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "hc_dark_value": "#D0A8FF",
+  "hc_light_value": "#2E004D",
+  "kind": "token",
+  "light_value": "#4B0082",
+  "model": "mzizi-dna-helix",
+  "name": "brand-accent",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Per-app/per-context saturated brand mineral for accent fills and CTAs. Defaults to tanzanite — the Mukoko/Nyuchi brand mineral. Swappable per app or per-event/category (nhimbe). Distinct from the semantic --accent (a pale container for hover/selected states)."
+}

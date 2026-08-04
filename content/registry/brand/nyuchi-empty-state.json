@@ -1,0 +1,94 @@
+{
+  "_id": "nyuchi-empty-state",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "feedback",
+  "collection": "brand",
+  "createdAt": "2026-04-12T20:25:50.579133+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Universal branded empty state with dynamic mineral accent, contextual illustration placeholder, title, description, and optional action CTA. Every screen across the ecosystem uses this when there is no content to display — \"No events yet\", \"Your wallet is empty\", \"No messages\", \"Start your first lesson\". The empty state guides users toward the creation action for that domain.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-empty-state.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [
+    "campfire",
+    "pulse",
+    "news",
+    "bytes",
+    "circles",
+    "novels",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "transport",
+    "planner",
+    "lingo",
+    "weather",
+    "wallet",
+    "jobs",
+    "health"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-empty-state",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["empty", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "empty-state",
+  "swappable": false,
+  "tags": ["brand", "empty-state", "nyuchi", "universal", "feedback"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-empty-state",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-empty-state",
+    "health": "https://mzizi.dev/api/health/nyuchi-empty-state",
+    "playground": "https://mzizi.dev/playground/nyuchi-empty-state",
+    "portal": "https://mzizi.dev/components/nyuchi-empty-state",
+    "source": "https://mzizi.dev/source/nyuchi-empty-state"
+  },
+  "use_cases": ["pulse", "campfire", "circles", "bytes", "novels"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-empty-state",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1984,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

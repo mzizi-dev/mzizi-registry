@@ -1,0 +1,20 @@
+{
+  "_id": "xs",
+  "_schemaVersion": "v1",
+  "collection": "styling-icon-sizes",
+  "css_var": "--icon-xs",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "xs",
+  "node": 1,
+  "owner": "bundu",
+  "px": 12,
+  "rem": "0.75rem",
+  "sort_order": 10,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Extremely tight inline icons (dense tables, chip counters)"
+}

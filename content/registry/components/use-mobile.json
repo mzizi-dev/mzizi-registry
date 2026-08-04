@@ -1,0 +1,82 @@
+{
+  "_id": "use-mobile",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Semantic HTML"],
+  "addedInVersion": "7.0.0",
+  "category": "hooks",
+  "collection": "components",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "A hook to detect if the current device is mobile.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "hooks/use-mobile.ts",
+      "type": "registry:hook"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "use-mobile",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "framework",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:hook",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "sources": [
+    {
+      "baseUrl": "https://ui.shadcn.com/r/styles/default/",
+      "descriptor": "react",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "use-mobile.json"
+    }
+  ],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": true,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/use-mobile",
+    "changelog": "https://mzizi.dev/changelog/use-mobile",
+    "health": "https://mzizi.dev/api/health/use-mobile",
+    "playground": "https://mzizi.dev/playground/use-mobile",
+    "portal": "https://mzizi.dev/components/use-mobile",
+    "source": "https://mzizi.dev/source/use-mobile"
+  },
+  "use_cases": [
+    "Responsive layout switching between mobile and desktop",
+    "Touch vs. mouse interaction adaptation",
+    "Mobile-specific feature enablement",
+    "Sidebar collapse based on screen size",
+    "Navigation pattern adaptation"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "use-mobile",
+    "latestAt": "2026-04-13T23:04:02.930878+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 77,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

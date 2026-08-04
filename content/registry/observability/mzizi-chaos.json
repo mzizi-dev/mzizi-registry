@@ -1,0 +1,103 @@
+{
+  "_id": "mzizi-chaos",
+  "_schemaVersion": "v0.1",
+  "a11y": null,
+  "addedInVersion": "7.0.0",
+  "category": "assurance",
+  "collection": "observability",
+  "createdAt": "2026-04-13T22:06:07.776332+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Reactive chaos diagnostics — N8 Assurance (Z-axis/depth). Runs through the entire 3D architecture, able to inject failures at any component on any horizontal layer, through any vertical spine. Two modes: (1) Injection — random error/latency at configurable probability per layer intersection. (2) Reactive — when a real error is caught anywhere in the 3D space, probe adjacent systems for blast radius. The depth dimension that proves X and Y axes work.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Two modes: injection and reactive",
+    "Configurable error probability per layer",
+    "Blast radius analysis via data-portal",
+    "L9 Fundi integration comments"
+  ],
+  "files": [
+    {
+      "path": "lib/mzizi-chaos.tsx",
+      "type": "registry:lib"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-chaos",
+  "node": 8,
+  "nodeLabel": "assurance",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:lib",
+  "runtimeLang": "rust-wasm",
+  "sizes": null,
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "chaos",
+  "swappable": false,
+  "tags": [
+    "chaos",
+    "diagnostics",
+    "injection",
+    "reactive",
+    "blast-radius",
+    "resilience",
+    "production"
+  ],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-chaos",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-chaos",
+    "health": "https://mzizi.dev/api/health/nyuchi-chaos",
+    "playground": "https://mzizi.dev/playground/nyuchi-chaos",
+    "portal": "https://mzizi.dev/components/nyuchi-chaos",
+    "source": "https://mzizi.dev/source/nyuchi-chaos"
+  },
+  "use_cases": [
+    "Test resilience of any component",
+    "Inject random errors at configurable rate",
+    "Probe blast radius of failures",
+    "Verify error boundaries work"
+  ],
+  "variants": ["injection", "reactive"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-chaos",
+    "latestAt": "2026-04-29T14:41:14.122332+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2715,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 3
+  }
+}

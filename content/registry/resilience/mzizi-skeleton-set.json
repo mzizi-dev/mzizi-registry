@@ -1,0 +1,83 @@
+{
+  "_id": "mzizi-skeleton-set",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "aria-busy=true on parent container",
+    "aria-live=polite for updates when loading completes",
+    "Screen reader silent during shimmer (decorative)",
+    "Non-interactive — no focus traps"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "feedback",
+  "collection": "resilience",
+  "createdAt": "2026-04-11T04:36:40.566275+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "DEPRECATED — Loading states are built into each component from Layer 2 up via the loading prop. Every component renders its own shaped skeleton matching its exact proportions. This top-down skeleton set is a legacy pattern. Use <NyuchiListingCard loading /> instead of <ListingSkeleton />. Will be removed in the next major version.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Respects prefers-reduced-motion (no shimmer when reduced)",
+    "Matches final component shape to prevent layout shift",
+    "Configurable item count for list skeletons",
+    "Mineral accent subtle even in loading state",
+    "Harness integration for observability"
+  ],
+  "files": [
+    {
+      "path": "components/ui/mzizi-skeleton-set.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-skeleton-set",
+  "node": 5,
+  "nodeLabel": "resilience",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["skeleton", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "deprecated",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": ["brand", "skeleton", "loading", "nyuchi", "feedback"],
+  "updatedAt": "2026-05-21T09:53:26.61107+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-skeleton-set",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-skeleton-set",
+    "health": "https://mzizi.dev/api/health/nyuchi-skeleton-set",
+    "playground": "https://mzizi.dev/playground/nyuchi-skeleton-set",
+    "portal": "https://mzizi.dev/components/nyuchi-skeleton-set",
+    "source": "https://mzizi.dev/source/nyuchi-skeleton-set"
+  },
+  "use_cases": [
+    "Loading states for feeds",
+    "Initial page-load placeholders",
+    "Data-fetching fallbacks in dashboards",
+    "Infinite-scroll loading indicators",
+    "Search-results loading state"
+  ],
+  "variants": ["card-list", "feed-item", "profile-block", "chart-placeholder", "row-item"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-skeleton-set",
+    "latestAt": "2026-04-13T23:04:02.930878+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 239,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

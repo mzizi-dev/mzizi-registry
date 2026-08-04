@@ -1,0 +1,68 @@
+{
+  "_id": "pod-storage-meter",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:39:43.305421+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Personal sovereign pod storage usage visualization. Shows total allocation, used space by category (messages, media, documents, AI models), and upgrade path via NST. Data from Layer 1 (Pod) of the 7-layer data architecture.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/pod-storage-meter.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["wallet"],
+  "model": "mzizi-dna-helix",
+  "name": "pod-storage-meter",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android", "harmonyos"],
+  "registryDependencies": ["card", "progress"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "meter",
+  "swappable": false,
+  "tags": ["pod", "storage", "sovereign", "honeycomb", "web3", "blockchain", "token"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/pod-storage-meter",
+    "changelog": "https://mzizi.dev/changelog/pod-storage-meter",
+    "health": "https://mzizi.dev/api/health/pod-storage-meter",
+    "playground": "https://mzizi.dev/playground/pod-storage-meter",
+    "portal": "https://mzizi.dev/components/pod-storage-meter",
+    "source": "https://mzizi.dev/source/pod-storage-meter"
+  },
+  "use_cases": ["wallet"],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "pod-storage-meter",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2298,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

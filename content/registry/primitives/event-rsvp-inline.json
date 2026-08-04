@@ -1,0 +1,68 @@
+{
+  "_id": "event-rsvp-inline",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "action",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:37:23.708+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "In-chat event RSVP card shared in Campfire conversations. Compact event preview with date, venue, and quick RSVP buttons (Going/Maybe/Decline). Maps to events.rsvp_action. Bridges Nhimbe events into the Campfire messaging flow.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/event-rsvp-inline.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["campfire", "nhimbe"],
+  "model": "mzizi-dna-helix",
+  "name": "event-rsvp-inline",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android"],
+  "registryDependencies": ["card", "button-group", "badge"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "inline-action",
+  "swappable": false,
+  "tags": ["event", "rsvp", "chat", "inline", "social", "community"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/event-rsvp-inline",
+    "changelog": "https://mzizi.dev/changelog/event-rsvp-inline",
+    "health": "https://mzizi.dev/api/health/event-rsvp-inline",
+    "playground": "https://mzizi.dev/playground/event-rsvp-inline",
+    "portal": "https://mzizi.dev/components/event-rsvp-inline",
+    "source": "https://mzizi.dev/source/event-rsvp-inline"
+  },
+  "use_cases": ["campfire", "nhimbe"],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "event-rsvp-inline",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2525,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

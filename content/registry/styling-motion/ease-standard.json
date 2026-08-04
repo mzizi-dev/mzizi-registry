@@ -1,0 +1,22 @@
+{
+  "_id": "ease-standard",
+  "_schemaVersion": "v1",
+  "collection": "styling-motion",
+  "css_var": "--motion-ease-standard",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "motion_type": "easing",
+  "ms": null,
+  "name": "ease-standard",
+  "node": 1,
+  "owner": "bundu",
+  "reduced_motion_fallback": "linear",
+  "sort_order": 70,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Default for bidirectional transitions — tabs, toggles",
+  "value": "cubic-bezier(0.4, 0, 0.2, 1)"
+}

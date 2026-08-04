@@ -1,0 +1,78 @@
+{
+  "_id": "nyuchi-hero-stat",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute",
+    "aria-label for screen readers"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "brand",
+  "createdAt": "2026-04-12T23:39:22.905835+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Branded large primary value display with condition label, secondary stats, icon, and share button. The universal pattern extracted from mukoko-weather CurrentConditions. Used for: temperature (Weather), portfolio value (Wallet), trust score (ID), daily steps (Health), total revenue (BushTrade). Any screen that needs a single large number as its hero.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-hero-stat.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["weather", "wallet", "health", "bushtrade", "jobs", "transport"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-hero-stat",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["card", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "hero",
+  "swappable": false,
+  "tags": ["brand", "hero", "stat", "primary-value", "display", "nyuchi", "universal"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-hero-stat",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-hero-stat",
+    "health": "https://mzizi.dev/api/health/nyuchi-hero-stat",
+    "playground": "https://mzizi.dev/playground/nyuchi-hero-stat",
+    "portal": "https://mzizi.dev/components/nyuchi-hero-stat",
+    "source": "https://mzizi.dev/source/nyuchi-hero-stat"
+  },
+  "use_cases": ["jobs", "wallet", "transport", "bushtrade", "weather"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-hero-stat",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1986,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "_id": "chat-input",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "chat",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Message composer with auto-growing textarea, send button, and keyboard shortcuts.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/chat-input.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "chat-input",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/chat-input",
+    "changelog": "https://mzizi.dev/changelog/chat-input",
+    "health": "https://mzizi.dev/api/health/chat-input",
+    "playground": "https://mzizi.dev/playground/chat-input",
+    "portal": "https://mzizi.dev/components/chat-input",
+    "source": "https://mzizi.dev/source/chat-input"
+  },
+  "use_cases": [
+    "Chat message composition in Mukoko messaging",
+    "Comment composer below posts and articles",
+    "Support ticket reply composer",
+    "AI prompt entry with attachment support",
+    "Reply composer in threaded discussions"
+  ],
+  "variants": ["default", "outline", "ghost", "destructive"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "chat-input",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2594,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "travel",
+  "_schemaVersion": "v1",
+  "brand": "nyuchi",
+  "category_key": "travel",
+  "category_label": "Travel",
+  "collection": "styling-categories",
+  "currentVersion": 1,
+  "description": "Discover Zimbabwe through the eyes of those who call it home. From Victoria Falls to Great Zimbabwe, we connect travelers with authentic experiences guided by local expertise.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "mineral": "malachite",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "products": ["Zimbabwe Travel Information", "Iconic Expeditions"],
+  "sort_order": 1,
+  "strand": "swappable",
+  "swappable": true,
+  "tagline": "Authentic Zimbabwe exploration"
+}

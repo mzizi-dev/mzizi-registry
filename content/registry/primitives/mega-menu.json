@@ -1,0 +1,73 @@
+{
+  "_id": "mega-menu",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Semantic HTML"],
+  "addedInVersion": "7.0.0",
+  "category": "navigation",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["radix-ui"],
+  "description": "Full-width flyout navigation with columns of links grouped by section.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/mega-menu.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "mega-menu",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["popover", "button"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/mega-menu",
+    "changelog": "https://mzizi.dev/changelog/mega-menu",
+    "health": "https://mzizi.dev/api/health/mega-menu",
+    "playground": "https://mzizi.dev/playground/mega-menu",
+    "portal": "https://mzizi.dev/components/mega-menu",
+    "source": "https://mzizi.dev/source/mega-menu"
+  },
+  "use_cases": [
+    "Complex site navigation with multiple product areas",
+    "E-commerce category exploration menus",
+    "Enterprise application section navigation",
+    "Content-heavy website navigation",
+    "Desktop-class app feature discovery"
+  ],
+  "variants": ["default", "outline", "ghost", "destructive"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mega-menu",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2026,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

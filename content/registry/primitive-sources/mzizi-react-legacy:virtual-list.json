@@ -1,0 +1,19 @@
+{
+  "_id": "mzizi-react-legacy:virtual-list",
+  "_schemaVersion": "v1",
+  "collection": "primitive-sources",
+  "currentVersion": 1,
+  "descriptor_slug": "mzizi-react-legacy",
+  "dnaRole": "machinery",
+  "doctrineVersion": "4.1.0",
+  "kind": "primitive_source",
+  "model": "mzizi-dna-helix",
+  "node": 2,
+  "notes": "Auto-backfilled from existing components.source_code. Mzizi React baseline.",
+  "overrides_bundu": {},
+  "owner": "framework",
+  "pinned_version": null,
+  "primitive_name": "virtual-list",
+  "strand": "core-guarantee",
+  "upstream_path": "virtual-list"
+}

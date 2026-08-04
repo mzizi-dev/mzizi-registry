@@ -1,0 +1,68 @@
+{
+  "_id": "exchange-rate",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:36:32.503181+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Currency pair display with live rate, conversion calculator, and trend indicator. Supports MXT ↔ fiat pairs across 42 African currencies. Used in Wallet swap interface and BushTrade cross-border commerce.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/exchange-rate.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["wallet", "bushtrade"],
+  "model": "mzizi-dna-helix",
+  "name": "exchange-rate",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["card", "currency-input"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "card",
+  "swappable": false,
+  "tags": ["exchange", "rate", "currency", "conversion", "payment", "financial"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/exchange-rate",
+    "changelog": "https://mzizi.dev/changelog/exchange-rate",
+    "health": "https://mzizi.dev/api/health/exchange-rate",
+    "playground": "https://mzizi.dev/playground/exchange-rate",
+    "portal": "https://mzizi.dev/components/exchange-rate",
+    "source": "https://mzizi.dev/source/exchange-rate"
+  },
+  "use_cases": ["wallet", "bushtrade"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "exchange-rate",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2183,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

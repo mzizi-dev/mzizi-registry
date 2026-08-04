@@ -1,0 +1,86 @@
+{
+  "_id": "onboarding-flow",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "auth",
+  "collection": "pages",
+  "createdAt": "2026-04-07T07:22:57.249594+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Multi-step onboarding flow with progress indicator, profile setup, and interest selection.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/blocks/onboarding-flow.tsx",
+      "type": "registry:block"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "onboarding-flow",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "avatar",
+    "badge",
+    "button",
+    "card",
+    "input",
+    "label",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:block",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/onboarding-flow",
+    "changelog": "https://mzizi.dev/changelog/onboarding-flow",
+    "health": "https://mzizi.dev/api/health/onboarding-flow",
+    "playground": "https://mzizi.dev/playground/onboarding-flow",
+    "portal": "https://mzizi.dev/components/onboarding-flow",
+    "source": "https://mzizi.dev/source/onboarding-flow"
+  },
+  "use_cases": [
+    "First-time user onboarding",
+    "Multi-step profile setup",
+    "Interest and preference selection",
+    "Account creation completion",
+    "Guided app introduction flows"
+  ],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "onboarding-flow",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.1.0",
+    "latestVersionId": 2023,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

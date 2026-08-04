@@ -1,0 +1,22 @@
+{
+  "_id": "duration-quick",
+  "_schemaVersion": "v1",
+  "collection": "styling-motion",
+  "css_var": "--motion-duration-quick",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "motion_type": "duration",
+  "ms": 100,
+  "name": "duration-quick",
+  "node": 1,
+  "owner": "bundu",
+  "reduced_motion_fallback": "0ms",
+  "sort_order": 10,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Immediate feedback — hover, focus, toggle state changes",
+  "value": "100ms"
+}

@@ -1,0 +1,68 @@
+{
+  "_id": "content-calendar",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:38:59.277437+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Editorial calendar showing scheduled content across a week or month view. Drag-and-drop scheduling, content type color coding, and publish status indicators. Used in Mukoko News editorial management and Bytes creator scheduling.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/content-calendar.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["console", "news"],
+  "model": "mzizi-dna-helix",
+  "name": "content-calendar",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["calendar-week-view", "card", "badge"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "calendar",
+  "swappable": false,
+  "tags": ["calendar", "editorial", "scheduling", "content", "console", "enterprise", "admin"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/content-calendar",
+    "changelog": "https://mzizi.dev/changelog/content-calendar",
+    "health": "https://mzizi.dev/api/health/content-calendar",
+    "playground": "https://mzizi.dev/playground/content-calendar",
+    "portal": "https://mzizi.dev/components/content-calendar",
+    "source": "https://mzizi.dev/source/content-calendar"
+  },
+  "use_cases": ["news", "console"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "content-calendar",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2536,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

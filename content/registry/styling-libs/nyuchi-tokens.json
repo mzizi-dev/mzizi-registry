@@ -1,0 +1,93 @@
+{
+  "_id": "nyuchi-tokens",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "AAA contrast on all text-surface combinations",
+    "prefers-contrast: more support",
+    "prefers-reduced-motion: respects motion tokens"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "infrastructure",
+  "collection": "styling-libs",
+  "createdAt": "2026-04-11T06:46:04.457293+00:00",
+  "currentVersion": 2,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "W3C Design Tokens (2025.10) compliant token system for the entire Nyuchi ecosystem. Three-tier architecture: primitive tokens (Five African Minerals with light/dark pairs, container/onContainer colours, Five Heritage Colors, spacing, type scale, radii, shadows, motion, touch targets), semantic tokens (four-level AAA surface system), and component tokens. Brand overrides for all mini-apps. Multi-platform output: CSS (web), TypeScript (React/Svelte), Swift (iOS/macOS), Kotlin (Android/Compose), ArkTS (HarmonyOS), React Native (iOS+Android), Rust (services), Python (analytics/ML). The N1 vertical node — the only node allowed to define values. Every other node reads from here via var() or the relevant platform constant.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "examples": [],
+  "features": [
+    "Five African Minerals palette with light/dark pairs",
+    "Four-level AAA surface system",
+    "8 semantic token categories",
+    "Brand override per mini-app",
+    "Multi-platform generators"
+  ],
+  "files": [
+    {
+      "path": "lib/tokens/index.ts",
+      "type": "registry:lib"
+    },
+    {
+      "path": "lib/tokens/primitives.ts",
+      "type": "registry:lib"
+    },
+    {
+      "path": "lib/tokens/semantic.ts",
+      "type": "registry:lib"
+    },
+    {
+      "path": "lib/tokens/components.ts",
+      "type": "registry:lib"
+    }
+  ],
+  "framework": "css",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-tokens",
+  "node": 1,
+  "nodeLabel": "tokens",
+  "owner": "bundu",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:lib",
+  "runtimeLang": "css",
+  "sizes": null,
+  "status": "stable",
+  "strand": "swappable",
+  "swappable": true,
+  "tags": ["brand", "tokens", "infrastructure", "w3c", "foundation", "nyuchi"],
+  "updatedAt": "2026-04-29T12:53:33.029728+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-tokens",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-tokens",
+    "health": "https://mzizi.dev/api/health/nyuchi-tokens",
+    "playground": "https://mzizi.dev/playground/nyuchi-tokens",
+    "portal": "https://mzizi.dev/components/nyuchi-tokens",
+    "source": "https://mzizi.dev/source/nyuchi-tokens"
+  },
+  "use_cases": [
+    "Design token provider for all Nyuchi apps",
+    "CSS custom properties for colors, spacing, radii, motion",
+    "Multi-platform export: Swift, Kotlin, ArkTS, Rust, Python",
+    "Brand overrides per mini-app"
+  ],
+  "variants": ["light", "dark", "high-contrast"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-tokens",
+    "latestAt": "2026-04-29T12:53:33.029728+00:00",
+    "latestVersion": "1.1.2",
+    "latestVersionId": 2697,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 12
+  }
+}

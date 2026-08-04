@@ -1,0 +1,21 @@
+{
+  "_id": "accent",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "semantic",
+  "currentVersion": 1,
+  "dark_value": "#001F3F",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "hc_dark_value": "#001030",
+  "hc_light_value": "#B8D8FF",
+  "kind": "token",
+  "light_value": "#E3F2FD",
+  "model": "mzizi-dna-helix",
+  "name": "accent",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Hover fills, selected rows, soft highlights. Cobalt container."
+}

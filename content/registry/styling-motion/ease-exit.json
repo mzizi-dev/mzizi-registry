@@ -1,0 +1,22 @@
+{
+  "_id": "ease-exit",
+  "_schemaVersion": "v1",
+  "collection": "styling-motion",
+  "css_var": "--motion-ease-exit",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "motion_type": "easing",
+  "ms": null,
+  "name": "ease-exit",
+  "node": 1,
+  "owner": "bundu",
+  "reduced_motion_fallback": "linear",
+  "sort_order": 60,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Elements leaving — accelerate curve, feels decisive",
+  "value": "cubic-bezier(0.4, 0, 1, 1)"
+}

@@ -1,0 +1,20 @@
+{
+  "_id": "base",
+  "_schemaVersion": "v1",
+  "category": "base",
+  "collection": "styling-z-index",
+  "css_var": "--z-base",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "base",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 10,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Default document flow — no stacking context",
+  "value": 0
+}

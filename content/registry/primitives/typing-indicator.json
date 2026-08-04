@@ -1,0 +1,73 @@
+{
+  "_id": "typing-indicator",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Semantic HTML"],
+  "addedInVersion": "7.0.0",
+  "category": "chat",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Animated dots showing someone is typing.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/typing-indicator.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "typing-indicator",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/typing-indicator",
+    "changelog": "https://mzizi.dev/changelog/typing-indicator",
+    "health": "https://mzizi.dev/api/health/typing-indicator",
+    "playground": "https://mzizi.dev/playground/typing-indicator",
+    "portal": "https://mzizi.dev/components/typing-indicator",
+    "source": "https://mzizi.dev/source/typing-indicator"
+  },
+  "use_cases": [
+    "Real-time typing indicator in active chats",
+    "Presence feedback during message composition",
+    "AI processing indicator during response generation",
+    "Collaborative editing presence signals",
+    "Form-filling indicator in pair workflows"
+  ],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "typing-indicator",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2176,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

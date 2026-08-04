@@ -1,0 +1,23 @@
+{
+  "_id": "sm",
+  "_schemaVersion": "v1",
+  "collection": "styling-breakpoints",
+  "css_var": "--breakpoint-sm",
+  "currentVersion": 1,
+  "device_class": "large-phone",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "max_content_px": null,
+  "media_query": "(min-width: 640px)",
+  "min_width_px": 640,
+  "min_width_rem": "40rem",
+  "model": "mzizi-dna-helix",
+  "name": "sm",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 10,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Large phones in landscape, small tablets in portrait"
+}

@@ -1,0 +1,74 @@
+{
+  "_id": "tag-input",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "forms",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Token-based input for multiple values as dismissible badges.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/tag-input.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "tag-input",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "text-input",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/tag-input",
+    "changelog": "https://mzizi.dev/changelog/tag-input",
+    "health": "https://mzizi.dev/api/health/tag-input",
+    "playground": "https://mzizi.dev/playground/tag-input",
+    "portal": "https://mzizi.dev/components/tag-input",
+    "source": "https://mzizi.dev/source/tag-input"
+  },
+  "use_cases": [
+    "Tag selection for articles and posts",
+    "Skill and interest selection in profiles",
+    "Recipient entry in messaging (To: field)",
+    "Filter multi-select as pills",
+    "Category assignment in content management"
+  ],
+  "variants": ["default", "outline", "ghost", "destructive"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "tag-input",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2141,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

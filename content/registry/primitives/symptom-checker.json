@@ -1,0 +1,68 @@
+{
+  "_id": "symptom-checker",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "forms",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:38:59.277437+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Guided symptom input with body region selector, severity scale, and duration fields. Not a diagnostic tool — produces a structured symptom summary for telemedicine consultations. Used in Health mini-app pre-appointment flow.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/symptom-checker.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["health"],
+  "model": "mzizi-dna-helix",
+  "name": "symptom-checker",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android"],
+  "registryDependencies": ["card", "checkbox", "slider", "stepper"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "wizard",
+  "swappable": false,
+  "tags": ["symptom", "health", "checklist", "medical", "health", "medical"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/symptom-checker",
+    "changelog": "https://mzizi.dev/changelog/symptom-checker",
+    "health": "https://mzizi.dev/api/health/symptom-checker",
+    "playground": "https://mzizi.dev/playground/symptom-checker",
+    "portal": "https://mzizi.dev/components/symptom-checker",
+    "source": "https://mzizi.dev/source/symptom-checker"
+  },
+  "use_cases": ["health"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "symptom-checker",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2555,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

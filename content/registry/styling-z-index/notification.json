@@ -1,0 +1,20 @@
+{
+  "_id": "notification",
+  "_schemaVersion": "v1",
+  "category": "system",
+  "collection": "styling-z-index",
+  "css_var": "--z-notification",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "notification",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 180,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Notification center, notification bell dropdown",
+  "value": 9100
+}

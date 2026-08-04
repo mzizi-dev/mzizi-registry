@@ -1,0 +1,17 @@
+{
+  "_id": "laptop",
+  "_schemaVersion": "v1",
+  "breakpoint": "laptop",
+  "collection": "styling-density-breakpoints",
+  "currentVersion": 1,
+  "default_density": "comfortable",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "rationale": "Small laptops, tablets landscape (1024–1279px). Still comfortable by default — most users here are on hybrid touch devices or have imprecise trackpads. Admin/dashboard surfaces opt into compact explicitly.",
+  "strand": "swappable",
+  "swappable": true
+}

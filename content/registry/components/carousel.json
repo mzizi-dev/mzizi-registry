@@ -1,0 +1,89 @@
+{
+  "_id": "carousel",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "components",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["embla-carousel-react"],
+  "description": "A carousel with motion and swipe built using Embla.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/carousel.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "carousel",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "framework",
+  "platforms": ["web"],
+  "registryDependencies": ["button"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "sources": [
+    {
+      "baseUrl": "https://ui.shadcn.com/r/styles/default/",
+      "descriptor": "react",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "carousel.json"
+    },
+    {
+      "baseUrl": "https://shadcn-svelte.com/registry/",
+      "descriptor": "svelte",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "carousel.json"
+    }
+  ],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": true,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/carousel",
+    "changelog": "https://mzizi.dev/changelog/carousel",
+    "health": "https://mzizi.dev/api/health/carousel",
+    "playground": "https://mzizi.dev/playground/carousel",
+    "portal": "https://mzizi.dev/components/carousel",
+    "source": "https://mzizi.dev/source/carousel"
+  },
+  "use_cases": [
+    "Image galleries with swipe on mobile",
+    "Featured product rotation on homepages",
+    "Onboarding step sequence with swipe",
+    "Testimonial and review rotation",
+    "Multi-image product showcases"
+  ],
+  "variants": ["default", "outline", "ghost", "destructive"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "carousel",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2550,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

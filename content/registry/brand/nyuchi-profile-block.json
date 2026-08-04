@@ -1,0 +1,91 @@
+{
+  "_id": "nyuchi-profile-block",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute",
+    "aria-label for screen readers"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "identity",
+  "collection": "brand",
+  "createdAt": "2026-04-11T04:08:45.617212+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Standardized profile display block used across all Mukoko apps. Centers the avatar with verification badge, name with inline verified check, platform status indicator, trust score meter, and stat counters. The three trust indicators (verified badge, status pill, trust score) are always visible on the profile header — not just badges elsewhere in the app, but the full expanded view here.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-profile-block.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-profile-block",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "avatar",
+    "button",
+    "separator",
+    "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+    "badge",
+    "progress",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "identity", "profile", "nyuchi", "trust", "verification"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-profile-block",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-profile-block",
+    "health": "https://mzizi.dev/api/health/nyuchi-profile-block",
+    "playground": "https://mzizi.dev/playground/nyuchi-profile-block",
+    "portal": "https://mzizi.dev/components/nyuchi-profile-block",
+    "source": "https://mzizi.dev/source/nyuchi-profile-block"
+  },
+  "use_cases": [
+    "Standardized profile header across all Mukoko apps",
+    "User profile primary identity block",
+    "Trust-signal display on profiles",
+    "Consistent identity presentation across ecosystem",
+    "Profile-first surfaces throughout Nyuchi"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-profile-block",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1948,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

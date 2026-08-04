@@ -1,0 +1,77 @@
+{
+  "_id": "nyuchi-forecast-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "brand",
+  "createdAt": "2026-04-12T16:38:07.828926+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Branded weather forecast display with cobalt mineral accent. Shows current conditions, temperature, humidity, 5-day outlook, and farming/agriculture advisory for African rural contexts. Mineral-coded severity levels for weather alerts. Used in Weather home and as an embedded widget in Nhimbe event pages and BushTrade logistics.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-forecast-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["weather"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-forecast-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["card", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "weather",
+  "swappable": false,
+  "tags": ["brand", "weather", "cobalt", "nyuchi", "forecast", "farming"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-forecast-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-forecast-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-forecast-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-forecast-card",
+    "portal": "https://mzizi.dev/components/nyuchi-forecast-card",
+    "source": "https://mzizi.dev/source/nyuchi-forecast-card"
+  },
+  "use_cases": ["weather"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-forecast-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2267,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

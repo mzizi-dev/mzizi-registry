@@ -1,0 +1,84 @@
+{
+  "_id": "nyuchi-detail-layout",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "layout",
+  "collection": "pages",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Shared detail page layout for all content types across the Nyuchi ecosystem — events, articles, products, bush trade listings, places. Supports a hero gradient variant with floating back/like/share action buttons, mineral-colored category badges, and verified badge display for the host/author. The detail-layout is the brand-standard way to present any single piece of content at full depth.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-detail-layout.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-detail-layout",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "separator",
+    "button",
+    "badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "listing", "detail", "nyuchi", "nhimbe", "bushtrade", "shamwari"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-detail-layout",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-detail-layout",
+    "health": "https://mzizi.dev/api/health/nyuchi-detail-layout",
+    "playground": "https://mzizi.dev/playground/nyuchi-detail-layout",
+    "portal": "https://mzizi.dev/components/nyuchi-detail-layout",
+    "source": "https://mzizi.dev/source/nyuchi-detail-layout"
+  },
+  "use_cases": [
+    "Event detail pages in Nhimbe",
+    "Article detail pages in Mukoko News",
+    "Product detail pages in Bush Trade",
+    "Place detail pages in Mukoko Places",
+    "Universal detail page composition across verticals"
+  ],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-detail-layout",
+    "latestAt": "2026-04-17T22:37:22.25357+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2626,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 9
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "commerce",
+  "_schemaVersion": "v1",
+  "brand": "mukoko",
+  "category_key": "commerce",
+  "category_label": "Commerce",
+  "collection": "styling-categories",
+  "currentVersion": 1,
+  "description": "BushTrade — rentals-first, sales supported. Escrow-backed payments. Connected to Nyuchi Logistics for delivery.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "mineral": "gold",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "products": ["BushTrade", "Wallet"],
+  "sort_order": 4,
+  "strand": "swappable",
+  "swappable": true,
+  "tagline": "African marketplace"
+}

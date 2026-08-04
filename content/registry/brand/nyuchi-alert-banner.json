@@ -1,0 +1,87 @@
+{
+  "_id": "nyuchi-alert-banner",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute",
+    "aria-label for screen readers"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "feedback",
+  "collection": "brand",
+  "createdAt": "2026-04-12T16:38:07.828926+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Universal branded alert banner with mineral-coded severity levels. Used across all ecosystem apps for weather alerts, system notifications, security warnings, trust advisories, and any time-sensitive information. Severity maps to minerals: watch=cobalt, moderate=terracotta, severe=gold. Renders as a prominent banner with dismiss, detail action, and safety instructions.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-alert-banner.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [
+    "weather",
+    "nhimbe",
+    "transport",
+    "bushtrade",
+    "campfire",
+    "health",
+    "wallet",
+    "circles"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-alert-banner",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["alert", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "alert",
+  "swappable": false,
+  "tags": ["brand", "alert", "nyuchi", "feedback", "severity", "cross-app", "universal"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-alert-banner",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-alert-banner",
+    "health": "https://mzizi.dev/api/health/nyuchi-alert-banner",
+    "playground": "https://mzizi.dev/playground/nyuchi-alert-banner",
+    "portal": "https://mzizi.dev/components/nyuchi-alert-banner",
+    "source": "https://mzizi.dev/source/nyuchi-alert-banner"
+  },
+  "use_cases": ["wallet", "campfire", "circles", "transport", "bushtrade"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-alert-banner",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1977,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

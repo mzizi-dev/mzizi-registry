@@ -1,0 +1,72 @@
+{
+  "_id": "mzizi-chain-gate",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Screen reader announces gate state", "Focus management on state change"],
+  "addedInVersion": "7.0.0",
+  "category": "safety",
+  "collection": "safety",
+  "createdAt": "2026-04-13T22:26:01.246538+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Blockchain network verification gate. Checks which chain the user is connected to before rendering chain-dependent features. Supports Nyuchi Network (Cosmos SDK), Polygon, and Ethereum. Shows branded switch-network CTA with chain logos.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Y-axis safety spine",
+    "Renders children when check passes",
+    "Branded explanation when blocked",
+    "Web3 integration"
+  ],
+  "files": [
+    {
+      "path": "components/ui/mzizi-chain-gate.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": ["wallet", "nhimbe"],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-chain-gate",
+  "node": 4,
+  "nodeLabel": "safety",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "gate",
+  "swappable": false,
+  "tags": ["gate", "chain", "blockchain", "network", "web3", "cosmos", "polygon"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-chain-gate",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-chain-gate",
+    "health": "https://mzizi.dev/api/health/nyuchi-chain-gate",
+    "playground": "https://mzizi.dev/playground/nyuchi-chain-gate",
+    "portal": "https://mzizi.dev/components/nyuchi-chain-gate",
+    "source": "https://mzizi.dev/source/nyuchi-chain-gate"
+  },
+  "use_cases": ["Access control", "Security gate", "Verification check"],
+  "variants": ["allowed", "blocked", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-chain-gate",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2196,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

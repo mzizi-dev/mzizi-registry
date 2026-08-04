@@ -1,0 +1,73 @@
+{
+  "_id": "map-page",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "transport",
+  "collection": "pages",
+  "createdAt": "2026-04-13T23:28:42.086014+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Map/navigation page. Full-screen map with search, pin details, route overlay, bottom sheet for location info. Competitors: Google Maps, Uber, Bolt.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/map-page.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["transport", "places", "planner"],
+  "model": "mzizi-dna-helix",
+  "name": "map-page",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "map",
+  "swappable": false,
+  "tags": ["map", "navigation", "transport", "location", "route", "page"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/map-page",
+    "changelog": "https://mzizi.dev/changelog/map-page",
+    "health": "https://mzizi.dev/api/health/map-page",
+    "playground": "https://mzizi.dev/playground/map-page",
+    "portal": "https://mzizi.dev/components/map-page",
+    "source": "https://mzizi.dev/source/map-page"
+  },
+  "use_cases": ["planner", "places", "transport"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "map-page",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1967,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}
