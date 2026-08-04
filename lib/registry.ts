@@ -17,9 +17,29 @@
  */
 
 import { readdirSync, readFileSync, existsSync, statSync } from "fs"
-import { join } from "path"
+import { join, resolve, sep } from "path"
 
 const REGISTRY_ROOT = join(process.cwd(), "content", "registry")
+
+/**
+ * A single safe path segment. Directory and file names come off the filesystem here
+ * rather than from a request, but validating them keeps the join provably contained --
+ * the same rule as lib/doctrine.ts, and the failure mode if it is wrong is reading
+ * files from outside the content tree.
+ */
+const SAFE_SEGMENT = /^[A-Za-z0-9._-]+$/
+
+function isSafeSegment(s: string): boolean {
+  return SAFE_SEGMENT.test(s) && s !== "." && s !== ".."
+}
+
+function safeRegistryPath(...segments: string[]): string | null {
+  if (!segments.every(isSafeSegment)) return null
+  const candidate = resolve(REGISTRY_ROOT, ...segments)
+  const root = resolve(REGISTRY_ROOT)
+  if (candidate !== root && !candidate.startsWith(root + sep)) return null
+  return candidate
+}
 
 export type RegistryDocument = Record<string, unknown> & {
   name?: string
@@ -40,12 +60,14 @@ export function readAllRegistryDocuments(): RegistryDocument[] {
 
   const out: RegistryDocument[] = []
   for (const collection of readdirSync(REGISTRY_ROOT)) {
-    const dir = join(REGISTRY_ROOT, collection)
-    if (!statSync(dir).isDirectory()) continue
+    const dir = safeRegistryPath(collection)
+    if (!dir || !statSync(dir).isDirectory()) continue
     for (const file of readdirSync(dir)) {
       if (!file.endsWith(".json")) continue
+      const filePath = safeRegistryPath(collection, file)
+      if (!filePath) continue
       try {
-        const doc = JSON.parse(readFileSync(join(dir, file), "utf8")) as RegistryDocument
+        const doc = JSON.parse(readFileSync(filePath, "utf8")) as RegistryDocument
         // `name` is authoritative from the document; fall back to the filename so a
         // document missing it is still addressable rather than silently invisible.
         if (typeof doc.name !== "string" || doc.name.length === 0) {

@@ -107,10 +107,19 @@ function stableStringify(value: unknown): string {
   return JSON.stringify(sort(value), null, 2) + "\n"
 }
 
-function safeName(name: string): string {
-  // Component names are already slug-like, but the collection is a directory and a
-  // name containing a separator would escape it.
-  return name.replace(/[/\\]/g, "-")
+/**
+ * Coerce a database value into one safe path segment.
+ *
+ * `row.collection` and `row.name` are values from the database and must never be
+ * concatenated into a path as-is. Stripping separators is NOT sufficient -- it leaves
+ * `..` intact, so a name of `..` would still climb a directory. Everything outside the
+ * allowed set collapses to `-`, and a segment that reduces to nothing, `.` or `..` is
+ * rejected by the caller.
+ */
+function safeSegment(value: string): string | null {
+  const out = value.replace(/[^A-Za-z0-9._-]/g, "-")
+  if (out.length === 0 || out === "." || out === "..") return null
+  return out
 }
 
 async function main() {
@@ -146,21 +155,45 @@ async function main() {
 
   const components = rows.filter((r) => !EXCLUDED.has(r.collection))
   const drifted: string[] = []
+  const claimed = new Map<string, string>()
   let written = 0
 
   for (const row of components) {
     const doc = scrub(row.document ?? {}) as Record<string, unknown>
     // Collection and node are the file's location and a queryable field; keep both.
     const payload = stableStringify({ ...doc, collection: row.collection, node: row.node })
-    const path = join(REGISTRY_ROOT, row.collection, `${safeName(row.name)}.json`)
+    const dirSeg = safeSegment(row.collection)
+    const fileSeg = safeSegment(row.name)
+    if (!dirSeg || !fileSeg) {
+      console.error(
+        `[mzizi] registry:extract — skipping unsafe path segment: ` +
+          `collection=${JSON.stringify(row.collection)} name=${JSON.stringify(row.name)}`
+      )
+      continue
+    }
+    // Two different document names can reduce to the same segment (any character
+    // outside [A-Za-z0-9._-] collapses to `-`), and the second write would silently
+    // replace the first -- a document lost with no error anywhere. Refuse instead.
+    const rel = `${dirSeg}/${fileSeg}.json`
+    const prior = claimed.get(rel)
+    if (prior && prior !== row.name) {
+      console.error(
+        `[mzizi] registry:extract — path collision: ${JSON.stringify(prior)} and ` +
+          `${JSON.stringify(row.name)} both map to content/registry/${rel}`
+      )
+      process.exit(1)
+    }
+    claimed.set(rel, row.name)
+
+    const path = join(REGISTRY_ROOT, dirSeg, `${fileSeg}.json`)
 
     if (check) {
       if (!existsSync(path)) {
-        drifted.push(`missing: content/registry/${row.collection}/${safeName(row.name)}.json`)
+        drifted.push(`missing: content/registry/${dirSeg}/${fileSeg}.json`)
         continue
       }
       if ((await readFile(path, "utf8")) !== payload) {
-        drifted.push(`changed: content/registry/${row.collection}/${safeName(row.name)}.json`)
+        drifted.push(`changed: content/registry/${dirSeg}/${fileSeg}.json`)
       }
       continue
     }

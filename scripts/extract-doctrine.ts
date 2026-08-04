@@ -226,15 +226,25 @@ async function main() {
   for (const row of rows) {
     const doc = row.document as Record<string, unknown>
     const { slug, body } = renderMdx(doc)
-    const path = join(CONTENT_ROOT, row.collection, `${slug}.mdx`)
+    // `row.collection` is a database value and must not be concatenated into a path
+    // unchecked; `slug` is already reduced to [a-z0-9-] by slugify().
+    const dirSeg = row.collection.replace(/[^A-Za-z0-9._-]/g, "-")
+    if (dirSeg.length === 0 || dirSeg === "." || dirSeg === ".." || slug.length === 0) {
+      console.error(
+        `[mzizi] doctrine:extract — skipping unsafe path segment: ` +
+          `collection=${JSON.stringify(row.collection)} slug=${JSON.stringify(slug)}`
+      )
+      continue
+    }
+    const path = join(CONTENT_ROOT, dirSeg, `${slug}.mdx`)
 
     if (check) {
       if (!existsSync(path)) {
-        drifted.push(`missing: content/doctrine/${row.collection}/${slug}.mdx`)
+        drifted.push(`missing: content/doctrine/${dirSeg}/${slug}.mdx`)
         continue
       }
       const onDisk = await readFile(path, "utf8")
-      if (onDisk !== body) drifted.push(`changed: content/doctrine/${row.collection}/${slug}.mdx`)
+      if (onDisk !== body) drifted.push(`changed: content/doctrine/${dirSeg}/${slug}.mdx`)
       continue
     }
 
