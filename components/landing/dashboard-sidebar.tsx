@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/registry/n2-primitives/sidebar"
 import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
 import { SIDEBAR_NAV } from "@/lib/nav"
 

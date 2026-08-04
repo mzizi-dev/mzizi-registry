@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getUsageStats } from "@/lib/metrics"
 import { getPublicClient, isSupabaseConfigured } from "@/lib/db"
+import { componentsOnDisk } from "@/lib/registry-source"
 
 const logger = createLogger("api")
 
@@ -15,13 +16,22 @@ async function getLayerBreakdown(): Promise<Record<string, number>> {
   try {
     const { data, error } = await getPublicClient()
       .from("components")
-      .select("layer")
-      .not("source_code", "is", null)
+      .select("name, layer, source_code")
 
     if (error || !data) return {}
 
+    // "Has source" used to be `source_code is not null`. Source is moving to
+    // disk node by node, so during the migration it is either place; once the
+    // last node drops, the `source_code` half of this goes with it.
+    const onDisk = new Set(componentsOnDisk())
+
     const breakdown: Record<string, number> = {}
-    for (const row of data as unknown as Array<{ layer: string | null }>) {
+    for (const row of data as unknown as Array<{
+      name: string
+      layer: string | null
+      source_code: string | null
+    }>) {
+      if (!onDisk.has(row.name) && !row.source_code) continue
       const key = row.layer ?? "unknown"
       breakdown[key] = (breakdown[key] ?? 0) + 1
     }

@@ -9,7 +9,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarTrigger } from "@/components/registry/n2-primitives/sidebar"
 import { ExternalLink } from "@/lib/icons"
 
 /* ═══════════════════════════════════════════════════════════════

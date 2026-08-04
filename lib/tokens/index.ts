@@ -56,10 +56,10 @@ export function paletteColor(name: string, mode: "dark" | "light" = "dark"): str
   return mode === "light" ? s.lightHex : s.darkHex
 }
 
-/** Mineral names in sort order — derived from the DB snapshot, never hardcoded. */
-const mineralKeys = minerals.map((m) => m.name)
-/** Heritage names in sort order — derived from the DB snapshot, never hardcoded. */
-const heritageKeys = heritageColors.map((h) => h.name)
+// `mineralKeys` / `heritageKeys` stood here, derived from the DB snapshot, and
+// were read only by the per-platform generators that have moved to
+// `scripts/sync-tokens.ts`. `minerals` and `heritageColors` remain exported for
+// anything that needs the ordered list.
 
 // ═══════════════════════════════════════════════════════════════
 // TIER 1 — PRIMITIVE TOKENS
@@ -816,109 +816,34 @@ export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId =
 
 // ═══════════════════════════════════════════════════════════════
 // MULTI-PLATFORM TOKEN GENERATOR
-// Produces token files for every platform in the ecosystem.
+//
+// `css` and `json` are generated here because they cover the WHOLE token
+// system — semantic tokens, brand overrides, listing themes, component tokens —
+// which lives in this file.
+//
+// The per-platform COLOUR files (Swift, Kotlin, ArkTS, React Native, Python,
+// Rust) are NOT generated here any more. They are written by
+// `scripts/sync-tokens.ts` from the Supabase collections `styling-minerals` and
+// `styling-heritage-colors`, and guarded by `pnpm tokens:verify`.
+//
+// The generators that stood here read a hardcoded in-file colour map: they
+// emitted five minerals and five heritage tones against a seven-and-seven
+// system, under `mukoko`-prefixed names, dark theme only. Keeping them would
+// keep two sources of truth for one set of values inside the node whose
+// covenant is "design decisions are data, not code".
 // ═══════════════════════════════════════════════════════════════
 
-export type PlatformFormat =
-  "css" | "swift" | "kotlin" | "arkts" | "react-native" | "rust" | "python" | "json"
+export type PlatformFormat = "css" | "json"
 
 export function generateTokens(format: PlatformFormat): string {
-  switch (format) {
-    case "json":
-      return JSON.stringify(
-        {
-          primitives,
-          minerals,
-          heritageColors,
-          semanticTokens,
-          brandOverrides,
-          listingThemes,
-          componentTokens,
-        },
-        null,
-        2
-      )
-
-    case "swift":
-      return generateSwiftTokens()
-
-    case "kotlin":
-      return generateKotlinTokens()
-
-    case "rust":
-      return generateRustTokens()
-
-    case "python":
-      return generatePythonTokens()
-
-    default:
-      return generateCSSVariables()
-  }
-}
-
-function generateSwiftTokens(): string {
-  const lines = [
-    "// MUKOKO DESIGN TOKENS — Auto-generated from tokens.ts",
-    "// Do not edit manually. Source: mzizi.dev",
-    "import SwiftUI",
-    "",
-    "extension Color {",
-  ]
-  for (const key of [...mineralKeys, ...heritageKeys]) {
-    // Swift color values are baked at asset-catalog generation time; the
-    // emitted line just references the catalog key, so the dark/light
-    // values aren't used in this loop.
-    lines.push(
-      `    static let mukoko${key.charAt(0).toUpperCase() + key.slice(1)} = Color("nyuchi-${key}")`
+  if (format === "json") {
+    return JSON.stringify(
+      { primitives, semanticTokens, brandOverrides, listingThemes, componentTokens },
+      null,
+      2
     )
   }
-  lines.push("}")
-  return lines.join("\n")
-}
-
-function generateKotlinTokens(): string {
-  const lines = [
-    "// MUKOKO DESIGN TOKENS — Auto-generated from tokens.ts",
-    "// Do not edit manually. Source: mzizi.dev",
-    "package com.mukoko.design.tokens",
-    "",
-    "import androidx.compose.ui.graphics.Color",
-    "",
-    "object MukokoColors {",
-  ]
-  for (const sw of paletteSwatches) {
-    const hex = sw.darkHex.replace("#", "")
-    lines.push(`    val ${sw.name.charAt(0).toUpperCase() + sw.name.slice(1)} = Color(0xFF${hex})`)
-  }
-  lines.push("}")
-  return lines.join("\n")
-}
-
-function generateRustTokens(): string {
-  const lines = [
-    "// MUKOKO DESIGN TOKENS — Auto-generated from tokens.ts",
-    "// Do not edit manually. Source: mzizi.dev",
-    "",
-  ]
-  for (const sw of paletteSwatches) {
-    lines.push(`pub const MUKOKO_${sw.name.toUpperCase()}: &str = "${sw.darkHex}";`)
-  }
-  return lines.join("\n")
-}
-
-function generatePythonTokens(): string {
-  const lines = [
-    "# MUKOKO DESIGN TOKENS — Auto-generated from tokens.ts",
-    "# Do not edit manually. Source: mzizi.dev",
-    "from dataclasses import dataclass",
-    "",
-    "@dataclass(frozen=True)",
-    "class MukokoColors:",
-  ]
-  for (const sw of paletteSwatches) {
-    lines.push(`    ${sw.name.toUpperCase()}: str = "${sw.darkHex}"`)
-  }
-  return lines.join("\n")
+  return generateCSSVariables()
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1425,20 +1350,6 @@ export function generateTokensJSON(): string {
  * Generate ArkTS/ArkUI tokens for HarmonyOS native shell.
  * Maps minerals + semantics to ArkUI Resource files + theme tokens.
  */
-export function generateArkTS(): string {
-  const lines: string[] = [
-    "// Auto-generated — Nyuchi Design Tokens for ArkUI",
-    "// Source: mzizi.dev",
-    "",
-  ]
-  lines.push("export const NyuchiColors = {")
-  for (const sw of paletteSwatches) {
-    lines.push(`  ${sw.name}: "${sw.darkHex}",`)
-  }
-  lines.push("}")
-  lines.push("")
-  lines.push("export const NyuchiRadii = {")
-  lines.push("  sm: 7, md: 12, lg: 14, xl: 17, full: 9999,")
-  lines.push("}")
-  return lines.join("\n")
-}
+// `generateArkTS` was removed with the other platform generators above —
+// same hardcoded five-and-five colour map. ArkTS now comes from
+// `scripts/sync-tokens.ts` as nyuchi-tokens-arkts.ets.

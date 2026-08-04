@@ -1,0 +1,80 @@
+"use client"
+
+import * as React from "react"
+import { Shield } from "@/lib/icons"
+
+import { cn } from "@/lib/utils"
+
+interface Role {
+  id: string
+  name: string
+  description: string
+  permissions: string[]
+}
+
+function RoleSelector({
+  roles,
+  value,
+  onChange,
+  className,
+  ...props
+}: {
+  roles: Role[]
+  value?: string
+  onChange: (roleId: string) => void
+} & Omit<React.ComponentProps<"div">, "onChange">) {
+  return (
+    <div
+      data-slot="role-selector"
+      data-portal="https://mzizi.dev/components/role-selector"
+      className={cn("flex flex-col gap-2", className)}
+      role="radiogroup"
+      aria-label="Select a role"
+      {...props}
+    >
+      {roles.map((role) => {
+        const isSelected = role.id === value
+        return (
+          <button
+            key={role.id}
+            type="button"
+            role="radio"
+            aria-checked={isSelected}
+            onClick={() => onChange(role.id)}
+            className={cn(
+              "flex items-start gap-3 rounded-[var(--radius-xl,17px)] p-4 text-left ring-1 transition-all",
+              isSelected
+                ? "bg-[var(--color-primary, var(--color-cobalt, #00B0FF))]/5 ring-[var(--color-primary, var(--color-cobalt, #00B0FF))] ring-2"
+                : "bg-card ring-foreground/10 hover:bg-muted/50"
+            )}
+          >
+            <div
+              className={cn(
+                "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+                isSelected
+                  ? "border-[var(--color-primary, var(--color-cobalt, #00B0FF))]"
+                  : "border-border"
+              )}
+            >
+              {isSelected && (
+                <div className="bg-[var(--color-primary, var(--color-cobalt, #00B0FF))] size-2 rounded-full" />
+              )}
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-foreground">{role.name}</span>
+                <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <Shield className="size-3" />
+                  {role.permissions.length} permissions
+                </span>
+              </div>
+              <span className="text-sm text-muted-foreground">{role.description}</span>
+            </div>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+export { RoleSelector, type Role }

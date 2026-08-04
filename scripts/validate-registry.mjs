@@ -1,0 +1,315 @@
+#!/usr/bin/env node
+/**
+ * Validate every registry item against the contract a CONSUMER depends on.
+ *
+ *   pnpm registry:validate
+ *
+ * This is the gate that was impossible while component source lived in a
+ * Supabase JSON column: nothing could open a component, so nothing could check
+ * one. Now that all 571 are files on disk, CI can.
+ *
+ * It exists because three separate bugs shipped this week while every existing
+ * gate stayed green — typecheck, lint, tests, build, the registry snapshot, and
+ * the API returning HTTP 200 the entire time:
+ *
+ *   1. 145 `registryDependencies` were written `@mzizi/<name>`. The shadcn CLI
+ *      resolves a dependency as either a bare name (against ui.shadcn.com) or an
+ *      absolute URL. `@mzizi/x` is neither, so `npx shadcn add` 404'd for 105
+ *      components. Nothing noticed, because the payload itself was well-formed.
+ *   2. The source reader took an allow-list of four extensions, so five
+ *      multi-language components (`.md`, `.kt`, `.swift`, `.py`, `.ets`)
+ *      resolved to nothing on disk and were quietly served from the database
+ *      fallback instead — invisible until that fallback was removed.
+ *   3. A view predicate hid 249 stable components from `/api/v1/ui/{name}` for
+ *      weeks while they stayed visible over MCP.
+ *
+ * The common shape: a component can be BROKEN FOR A CONSUMER while every
+ * signal we had said fine. So this validator asks only consumer-facing
+ * questions, and asks them offline.
+ *
+ * OFFLINE AND CREDENTIAL-FREE, deliberately. It reads `registry.json` and the
+ * files on disk — no database, no network. A missing secret must never be the
+ * reason a broken component ships, and a gate that skips when unconfigured is a
+ * gate that trains people to ignore it.
+ */
+
+import { readFileSync, existsSync, readdirSync } from "node:fs"
+import { basename, extname, join } from "node:path"
+
+const ROOT = process.cwd()
+const REGISTRY_JSON = join(ROOT, "registry.json")
+const REGISTRY_DIR = join(ROOT, "components", "registry")
+
+/** Files that are never component source. Mirrors `lib/registry-source.ts`. */
+const NOT_SOURCE = new Set([".ds_store", ".map", ".snap", ".log"])
+
+/** Only N1 may define raw colour values (CLAUDE.md §7.4). */
+const TOKENS_NODE_DIR = "n1-tokens"
+
+/**
+ * Interactive heights below the 48px floor (CLAUDE.md §8.2: 56px default,
+ * 48px minimum, "non-negotiable for the African mobile market").
+ * Tailwind: h-8=32 h-9=36 h-10=40 h-11=44, size-* likewise.
+ */
+const SHORT_TARGET = /\b(?:h|size)-(?:8|9|10|11)\b/g
+
+/**
+ * Components that genuinely exist upstream at ui.shadcn.com.
+ *
+ * A bare `registryDependencies` entry is resolved by the CLI against the default
+ * registry, so a bare name is CORRECT for these and wrong for anything
+ * Mzizi-only. Without this distinction the check fires on `button` and `card`
+ * — 657 warnings, none of them actionable — and a gate nobody can act on is a
+ * gate everybody ignores.
+ */
+const SHADCN_PRIMITIVES = new Set([
+  "accordion",
+  "alert",
+  "alert-dialog",
+  "aspect-ratio",
+  "avatar",
+  "badge",
+  "breadcrumb",
+  "button",
+  "button-group",
+  "calendar",
+  "card",
+  "carousel",
+  "chart",
+  "checkbox",
+  "collapsible",
+  "combobox",
+  "command",
+  "context-menu",
+  "data-table",
+  "date-picker",
+  "dialog",
+  "drawer",
+  "dropdown-menu",
+  "empty",
+  "field",
+  "form",
+  "hover-card",
+  "input",
+  "input-group",
+  "input-otp",
+  "item",
+  "kbd",
+  "label",
+  "menubar",
+  "navigation-menu",
+  "pagination",
+  "popover",
+  "progress",
+  "radio-group",
+  "resizable",
+  "scroll-area",
+  "select",
+  "separator",
+  "sheet",
+  "sidebar",
+  "skeleton",
+  "slider",
+  "sonner",
+  "spinner",
+  "switch",
+  "table",
+  "tabs",
+  "textarea",
+  "toast",
+  "toggle",
+  "toggle-group",
+  "tooltip",
+  "typography",
+  "utils",
+  "use-mobile",
+])
+
+const errors = []
+const warnings = []
+const err = (item, msg) => errors.push(`${item}: ${msg}`)
+const warn = (item, msg) => warnings.push(`${item}: ${msg}`)
+
+// ─── Index what is actually on disk ─────────────────────────────────────────
+
+function indexDisk() {
+  const byName = new Map()
+  if (!existsSync(REGISTRY_DIR)) {
+    console.error(`✗ ${REGISTRY_DIR} does not exist`)
+    process.exit(1)
+  }
+  for (const dir of readdirSync(REGISTRY_DIR, { withFileTypes: true })) {
+    if (!dir.isDirectory()) continue
+    for (const entry of readdirSync(join(REGISTRY_DIR, dir.name))) {
+      if (entry.startsWith(".")) continue
+      const ext = extname(entry)
+      if (NOT_SOURCE.has(ext.toLowerCase())) continue
+      const name = basename(entry, ext)
+      const existing = byName.get(name)
+      if (existing) {
+        err(name, `resolves to two files on disk: ${existing.rel} and ${dir.name}/${entry}`)
+        continue
+      }
+      byName.set(name, { rel: `${dir.name}/${entry}`, dir: dir.name, ext })
+    }
+  }
+  return byName
+}
+
+// ─── Checks ─────────────────────────────────────────────────────────────────
+
+function main() {
+  if (!existsSync(REGISTRY_JSON)) {
+    console.error("✗ registry.json is missing. Run `pnpm registry:sync`.")
+    process.exit(1)
+  }
+
+  const registry = JSON.parse(readFileSync(REGISTRY_JSON, "utf8"))
+  const items = registry.items ?? []
+  if (items.length === 0) {
+    console.error("✗ registry.json has no items")
+    process.exit(1)
+  }
+
+  const disk = indexDisk()
+  const names = new Set(items.map((i) => i.name))
+
+  for (const item of items) {
+    const n = item.name ?? "(unnamed)"
+
+    // — shape the shadcn CLI requires —
+    if (!item.name) err("(item)", "has no name")
+    if (!item.type) err(n, "has no type (registry:ui | registry:lib | …)")
+    if (!Array.isArray(item.files) || item.files.length === 0) err(n, "has no files[]")
+
+    // — every advertised component must exist on disk (bug 2 and 3) —
+    const onDisk = disk.get(n)
+    if (!onDisk) {
+      err(
+        n,
+        "is advertised in registry.json but has NO source file under components/registry/. " +
+          "A consumer installing it gets nothing."
+      )
+    }
+
+    // — dependencies must be resolvable (bug 1) —
+    for (const dep of item.registryDependencies ?? []) {
+      if (typeof dep !== "string" || dep.length === 0) {
+        err(n, `has an empty registryDependencies entry`)
+        continue
+      }
+      if (dep.startsWith("@")) {
+        err(
+          n,
+          `registryDependencies "${dep}" is scope-prefixed. The shadcn CLI resolves a ` +
+            `dependency as a bare name or an absolute URL — never a package scope — so ` +
+            `this makes the component uninstallable. Use ` +
+            `https://mzizi.dev/api/v1/ui/${dep.replace(/^@[^/]+\//, "")}`
+        )
+        continue
+      }
+      if (/^https?:\/\//.test(dep)) {
+        const m = dep.match(/\/api\/v1\/ui\/([^/?#]+)$/)
+        if (m && !names.has(m[1])) {
+          err(n, `registryDependencies "${dep}" points at "${m[1]}", which is not in the registry`)
+        }
+        continue
+      }
+      // A bare name resolves against ui.shadcn.com. That is correct for a real
+      // upstream primitive and broken for anything Mzizi-only, which will 404.
+      if (SHADCN_PRIMITIVES.has(dep)) continue
+      if (names.has(dep)) {
+        warn(
+          n,
+          `registryDependencies "${dep}" is a bare name, but "${dep}" is Mzizi-only — it does ` +
+            `not exist at ui.shadcn.com, which is where the CLI will look. ` +
+            `Use https://mzizi.dev/api/v1/ui/${dep}`
+        )
+      } else {
+        err(
+          n,
+          `registryDependencies "${dep}" resolves nowhere — not a known shadcn primitive and ` +
+            `not in this registry`
+        )
+      }
+    }
+
+    // — declared npm dependencies should be installable here (§14 upgrade-first) —
+    for (const dep of item.dependencies ?? []) {
+      const bare = dep.replace(/^(@[^/]+\/[^@]+|[^@][^@]*)@.*$/, "$1")
+      if (!PKG_DEPS.has(bare)) {
+        warn(
+          n,
+          `declares npm dependency "${dep}" which this repo does not install, so nothing ` +
+            `here ever compiles against it`
+        )
+      }
+    }
+
+    // — doctrine, checkable only now that the file is readable —
+    if (onDisk) {
+      const src = readFileSync(join(REGISTRY_DIR, onDisk.rel), "utf8")
+
+      // §7.4 — only N1 defines raw colour values.
+      if (onDisk.dir !== TOKENS_NODE_DIR) {
+        const hexes = src.match(/#[0-9a-fA-F]{6}\b/g) ?? []
+        // A hex inside a `var(--token, #fallback)` is the documented fallback
+        // form, so only flag hexes that are NOT preceded by a comma in a var().
+        const bare = hexes.filter((h) => !new RegExp(`var\\([^)]*,\\s*${h}`).test(src))
+        if (bare.length > 0) {
+          warn(
+            n,
+            `contains ${bare.length} raw hex colour(s) outside N1 (${[...new Set(bare)].slice(0, 3).join(", ")}). ` +
+              `§7.4: consume CSS custom properties instead`
+          )
+        }
+      }
+
+      // §8.2 — touch-target floor.
+      const short = [...new Set(src.match(SHORT_TARGET) ?? [])]
+      if (short.length > 0 && /<button|role="button"|onClick=/.test(src)) {
+        warn(n, `has interactive elements below the 48px touch floor (${short.join(", ")}). §8.2`)
+      }
+    }
+  }
+
+  // — anything on disk that the registry does not advertise —
+  for (const [name, meta] of disk) {
+    if (!names.has(name)) {
+      warn(
+        name,
+        `exists on disk (${meta.rel}) but is not in registry.json, so no consumer can install it`
+      )
+    }
+  }
+
+  // ─── Report ───────────────────────────────────────────────────────────────
+
+  console.log(`Checked ${items.length} registry items against ${disk.size} files on disk.\n`)
+
+  if (warnings.length > 0) {
+    console.log(`⚠ ${warnings.length} warning(s):`)
+    for (const w of warnings) console.log(`  ${w}`)
+    console.log("")
+  }
+
+  if (errors.length > 0) {
+    console.error(`✗ ${errors.length} error(s) — these break installs:`)
+    for (const e of errors) console.error(`  ${e}`)
+    process.exit(1)
+  }
+
+  console.log(`✓ every registry item resolves on disk and every dependency is addressable`)
+}
+
+const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"))
+const PKG_DEPS = new Set([
+  ...Object.keys(pkg.dependencies ?? {}),
+  ...Object.keys(pkg.devDependencies ?? {}),
+  ...Object.keys(pkg.peerDependencies ?? {}),
+  // Always available to a consumer of a React registry.
+  "react",
+  "react-dom",
+])
+
+main()

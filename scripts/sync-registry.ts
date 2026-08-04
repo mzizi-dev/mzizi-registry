@@ -1,12 +1,16 @@
 #!/usr/bin/env -S tsx
 /**
- * Sync registry.json and (optionally) components/ui/ from the Supabase `components` table.
+ * Sync registry.json from the Supabase `components` table.
+ *
+ * Component SOURCE no longer lives in the database (see
+ * docs/component-source-migration.md) and `components/ui/` no longer holds
+ * registry components, so the old `--ui-only` projection of primitives onto disk
+ * is gone — it would recreate the duplicates the migration removed. What remains
+ * is the metadata snapshot.
  *
  * Modes:
  *   pnpm registry:sync              — regenerate registry.json + committed primitives
  *   pnpm registry:verify            — non-mutating; exit non-zero if registry.json drifts
- *   pnpm tsx scripts/sync-registry.ts --ui-only   — only refresh components/ui/*
- *   pnpm tsx scripts/sync-registry.ts --json-only — only refresh registry.json
  *
  * Requires NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY to be set.
  *
@@ -25,60 +29,17 @@ import { getAllComponents, getComponent, isSupabaseConfigured } from "../lib/db"
 const REGISTRY_PATH = join(process.cwd(), "registry.json")
 const REGISTRY_HEADER = {
   $schema: "https://ui.shadcn.com/schema/registry.json",
-  name: "mukoko",
+  // `mukoko` here was left over from the rebrand — the registry is Mzizi's, the
+  // homepage beside it already said so, and CLAUDE.md §8.8 documents the name as
+  // `mzizi`. It is the identifier the shadcn CLI shows consumers.
+  name: "mzizi",
   homepage: "https://mzizi.dev",
 }
-
-// ── Primitives the portal itself imports from components/ui/ ──────────────
-// When they change, regenerate /tmp/keep.txt via:
-//   grep -rhEo "@/components/ui/[a-z0-9-]+" app components/landing \
-//     components/playground components/patterns components/docs \
-//     components/error-boundary.tsx components/theme-provider.tsx \
-//     components/theme-toggle.tsx | sed 's|@/components/ui/||' | sort -u
-const PORTAL_PRIMITIVES = new Set([
-  "accordion",
-  "alert",
-  "alert-dialog",
-  "avatar",
-  "badge",
-  "button",
-  "card",
-  "chart",
-  "checkbox",
-  "collapsible",
-  "dialog",
-  "direction",
-  "dropdown-menu",
-  "hover-card",
-  "input",
-  "kbd",
-  "label",
-  "popover",
-  "progress",
-  "radio-group",
-  "scroll-area",
-  "select",
-  "separator",
-  "sheet", // transitive via sidebar
-  "sidebar",
-  "skeleton",
-  "slider",
-  "spinner",
-  "switch",
-  "table",
-  "tabs",
-  "textarea",
-  "toggle",
-  "tooltip",
-  "typography",
-])
 
 function parseArgs() {
   const args = process.argv.slice(2)
   return {
     check: args.includes("--check"),
-    uiOnly: args.includes("--ui-only"),
-    jsonOnly: args.includes("--json-only"),
   }
 }
 
@@ -123,31 +84,6 @@ async function readRegistryJson(): Promise<string | null> {
   return readFile(REGISTRY_PATH, "utf-8")
 }
 
-async function syncPrimitiveFiles() {
-  const writes: Array<{ path: string; changed: boolean }> = []
-  for (const name of PORTAL_PRIMITIVES) {
-    const component = await getComponent(name)
-    if (!component || !component.source_code) {
-      console.warn(`  skipped ${name} — not in DB or missing source_code`)
-      continue
-    }
-    const firstFile = component.files?.[0]
-    if (!firstFile) {
-      console.warn(`  skipped ${name} — no files[] entry`)
-      continue
-    }
-    const target = join(process.cwd(), firstFile.path)
-    await mkdir(dirname(target), { recursive: true })
-    let prev: string | null = null
-    if (existsSync(target)) prev = await readFile(target, "utf-8")
-    if (prev !== component.source_code) {
-      await writeFile(target, component.source_code, "utf-8")
-      writes.push({ path: firstFile.path, changed: true })
-    }
-  }
-  return writes
-}
-
 async function main() {
   const args = parseArgs()
 
@@ -159,7 +95,7 @@ async function main() {
   }
 
   // Registry JSON
-  if (!args.uiOnly) {
+  {
     console.log("→ Building registry.json from Supabase…")
     const payload = sortKeys(await buildRegistryJson())
     const serialised = JSON.stringify(payload, null, 2) + "\n"
@@ -177,19 +113,6 @@ async function main() {
       console.log(
         `✓ registry.json written (${(payload as { items: unknown[] }).items.length} items)`
       )
-    }
-  }
-
-  // Primitive files
-  if (!args.jsonOnly && !args.check) {
-    console.log(`→ Syncing ${PORTAL_PRIMITIVES.size} portal primitives into components/ui/…`)
-    const writes = await syncPrimitiveFiles()
-    const changed = writes.filter((w) => w.changed)
-    if (changed.length === 0) {
-      console.log("✓ All primitives up to date.")
-    } else {
-      console.log(`✓ Updated ${changed.length} primitive(s):`)
-      for (const w of changed) console.log(`    ${w.path}`)
     }
   }
 }

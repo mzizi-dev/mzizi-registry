@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest"
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 
 vi.mock("next/server", () => ({
   NextResponse: {
@@ -31,6 +31,22 @@ type Resp = {
   status: number
   headers: Record<string, string>
 }
+
+// These specs assert the "database not configured" branch, which `lib/db` decides
+// from `process.env` read at MODULE scope. They used to rely on those vars simply
+// being absent from the ambient environment: true in CI, false on any developer
+// machine with the usual `.env.local`, where the suite failed with 200-instead-of-503.
+// Stub the vars empty and reset the module registry so the branch under test is the
+// one that actually runs, whatever the environment holds.
+beforeEach(() => {
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "")
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "")
+  vi.resetModules()
+})
+
+afterEach(() => {
+  vi.unstubAllEnvs()
+})
 
 describe("GET /api/v1/architecture (no Supabase)", () => {
   it("returns 503 with a clear 'not configured' message", async () => {
