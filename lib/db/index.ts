@@ -1,34 +1,37 @@
 /**
- * Nyuchi Design Portal Document Store — Supabase Backend
+ * Mzizi data access.
  *
- * Replaces hardcoded JSON files (registry.json, component-docs.ts) with
- * Supabase Postgres. Registry data lives in the document store:
+ * The registry is NOT in the database. This app builds it from files at build time and
+ * serves it over `/api/v1/*`, and `mzizi-mcp` is an HTTP client of that API — so the
+ * database is not in the serving path for components or doctrine.
  *
- *   component_documents  — one self-contained JSON document per item, keyed by
- *                          (collection, name). `components` is a VIEW projecting
- *                          the `collection = 'components'` rows. Docs (use_cases,
- *                          variants, features, a11y, examples) and demo info
- *                          (`demo: { has_demo, demo_type }`) live INSIDE each
- *                          component's document — the old standalone
- *                          `component_docs` / `component_demos` tables are gone.
+ *   Components  →  content/registry/<collection>/<name>.json  (lib/registry.ts)
+ *                  + source on disk under components/registry/ (lib/registry-source.ts)
+ *   Doctrine    →  content/doctrine/<collection>/<slug>.mdx    (lib/doctrine.ts)
  *
- * Architecture:
- *   Browser  →  Next.js API routes  →  Supabase (Postgres + RLS)
- *                                         ↑
- *                                    Public read (anon key)
- *                                    Write via service_role key
+ * What is still Supabase, and why — it is written by a machine, not a person:
  *
- * Env vars:
+ *   component_versions / tool_versions  — version history
+ *   changelog                           — release state
+ *   brand_*                             — tokens (pnpm tokens:sync generates the
+ *                                         repo artifacts; migration pending)
+ *   fundi_issues / fundi_healing_log    — the issue log and the self-healing log
+ *   observability_events / chaos_events / usage_events — telemetry
+ *
+ * See docs/db-contents-rule.md for the rule and the live audit.
+ *
+ * Env vars (still needed for the above):
  *   NEXT_PUBLIC_SUPABASE_URL      — Supabase project URL
  *   NEXT_PUBLIC_SUPABASE_ANON_KEY — Public anon key (read-only via RLS)
  *   SUPABASE_SERVICE_ROLE_KEY     — Service role key (write access, server only)
  *
  * Usage:
  *   import { getComponent, getAllComponents } from "@/lib/db"
- *   const button = await getComponent("button")
+ *   const button = await getComponent("button")   // reads a file, not a row
  */
 
 import { doctrineRows, readDoctrineSorted, DOCTRINE } from "@/lib/doctrine"
+import { readComponent, readComponents, readNodeCounts } from "@/lib/registry"
 import { createClient } from "@supabase/supabase-js"
 import type {
   ComponentRow,
@@ -176,75 +179,46 @@ function documentHasDemo(document: Record<string, unknown> | null): boolean {
  * Get a single component by name.
  */
 export async function getComponent(name: string): Promise<ComponentRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("*")
-    .eq("name", name)
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null // not found
-    throw new Error(error.message)
-  }
-  return data as unknown as ComponentRow
+  return readComponent(name) as unknown as ComponentRow | null
 }
 
 /**
  * Get all components, sorted by name.
  */
 export async function getAllComponents(): Promise<ComponentRow[]> {
-  const { data, error } = await getPublicClient().from("components").select("*").order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ComponentRow[]
+  return readComponents() as unknown as ComponentRow[]
 }
 
 /**
  * Get components by category.
  */
 export async function getComponentsByCategory(category: string): Promise<ComponentRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("*")
-    .eq("category", category)
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ComponentRow[]
+  return readComponents().filter((c) => c.category === category) as unknown as ComponentRow[]
 }
 
 /**
  * Get components by layer.
  */
 export async function getComponentsByLayer(layer: string): Promise<ComponentRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("*")
-    .eq("layer", layer)
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ComponentRow[]
+  return readComponents().filter(
+    (c) => c.layer === layer || String(c.node) === layer
+  ) as unknown as ComponentRow[]
 }
 
 /**
  * Search components by name or description (case-insensitive).
  */
 export async function searchComponents(query: string): Promise<ComponentRow[]> {
-  // The term is interpolated into a PostgREST `.or()` filter string, so strip
-  // characters that are significant to PostgREST/ilike (`,()*:.%_\"\\`) to
-  // prevent filter-structure injection and wildcard abuse (e.g. `q=*`).
-  const safe = query.replace(/[%_(),:*.\\"]/g, " ").trim()
-  if (!safe) return []
-
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("*")
-    .or(`name.ilike.%${safe}%,description.ilike.%${safe}%`)
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ComponentRow[]
+  // Plain substring match over the files. The old implementation had to strip
+  // PostgREST-significant characters to avoid filter-structure injection; reading
+  // files removes that attack surface entirely rather than sanitising for it.
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  return readComponents().filter((c) => {
+    const name = String(c.name ?? "").toLowerCase()
+    const desc = String(c.description ?? "").toLowerCase()
+    return name.includes(q) || desc.includes(q)
+  }) as unknown as ComponentRow[]
 }
 
 // ── Component documentation queries ─────────────────────────────────
@@ -1066,17 +1040,7 @@ export async function getComponentLinks(name: string): Promise<ComponentLink[]> 
  * by node number. Empty object if Supabase isn't configured.
  */
 export async function getNodeCounts(): Promise<Record<number, number>> {
-  if (!isSupabaseConfigured()) return {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("get_node_counts")
-  if (error || !Array.isArray(data)) return {}
-  const counts: Record<number, number> = {}
-  for (const row of data as Array<{ ecosystem_node: number; component_count: number }>) {
-    if (typeof row?.ecosystem_node === "number") {
-      counts[row.ecosystem_node] = row.component_count ?? 0
-    }
-  }
-  return counts
+  return readNodeCounts()
 }
 
 /**
