@@ -1,0 +1,36 @@
+---
+_schemaVersion: "v1"
+covenant: "Failure in one part never breaks the whole."
+currentVersion: 3
+description: "Circuit breakers, retry logic, error boundaries and fallback chains. TypeScript today — circuit-breaker, retry, timeout, fallback-chain, bulkhead, rate-limiter and chaos live in lib/ and ship as registry:lib items consumers install. Target: the resilience STATE MACHINE (circuit state closed/open/half-open, failure counts, timeout budgets) is Rust compiled to WebAssembly via wasm-bindgen, while framework components render the visual fallback — error cards, skeletons, offline banners — by reading state from the module. This is Rust-as-shared-core, not Rust-as-UI: alongside N4 it is one of the two nodes with a genuine Rust implementation, because both hold logic rather than UI. The isolation is the point and it is genuine: a UI failure cannot corrupt resilience state, and a state transition cannot block the UI thread."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "Wrap every async boundary in SectionErrorBoundary."
+- "Use the resilience lib primitives: circuit-breaker, retry, timeout, fallback-chain, bulkhead, rate-limiter."
+- "No global error handler swallows section-level failures silently."
+- "Chaos tests exercise the resilience paths before every release."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+node_number: 5
+owner: "nyuchi"
+role: "N5 — circuit breakers, retries, timeouts, fallback chains"
+rust:
+  kind: "shared-core"
+  note: "N5 is a Rust IMPLEMENTATION alongside N4 — the two strongest Rust cases in the helix, because both hold logic rather than UI. A per-target reimplementation of a circuit breaker gives you several circuit breakers that disagree about whether the system is healthy, which is worse than having none."
+  state: "target"
+  today: "No Rust ships. The primitives are TypeScript in nyuchi/mzizi's lib/ — circuit-breaker, retry, timeout, fallback-chain, bulkhead, rate-limiter, chaos — vendored in-repo and published as registry:lib items."
+  target: "The state machine compiles to WASM via wasm-bindgen. Every target shares one implementation of when a circuit opens and when it is allowed to close; each target renders its own fallback UI from that state."
+  position: "implementation"
+  descriptors: []
+sort_order: 5
+stakeholder: "Reliability engineer"
+strand: "core-guarantee"
+sub_label: "resilience"
+title: "Resilience patterns"
+type: "node"
+---
+
+

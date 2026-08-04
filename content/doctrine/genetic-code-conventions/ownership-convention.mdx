@@ -1,0 +1,48 @@
+---
+_schemaVersion: "v1"
+baseLayer: true
+currentVersion: 1
+dnaRole: "genetic-code"
+doctrineVersion: "4.1.0"
+kind: "convention"
+model: "mzizi-dna-helix"
+node: 0
+owner: "bundu"
+slug: "ownership-convention"
+status: "active"
+strand: "genetic-code"
+title: "Bundu ecosystem ownership convention"
+version: "1.0.0"
+---
+
+## Roles
+
+- **Bundu** owns the IP — standards, frameworks, research, the canonical token palette (five minerals: terracotta, gold, tanzanite, malachite, cobalt), the semantic token schema, the documentation system.
+- **Nyuchi** operates all infrastructure across the ecosystem. The database, the registry, the MCP, the build pipeline, the Fundi worker, billing, observability — anything that runs is Nyuchi-operated.
+- **Mukoko** is the consumer surface. The apps people see and use.
+- **Projects, products, initiatives** sit under the ecosystem as siblings.
+
+## Node ownership in the 3D + 2 model
+
+- Node 1 (tokens) — Bundu canonical
+- Node 2 (primitive) — Upstream (React, Svelte, Angular, Material, crates.io, Swift, Kotlin, ArkTS) resolved via Mzizi hybrid resolver, not stored
+- Node 3 (brand) — Nyuchi, Mukoko, or any ecosystem brand
+- Node 4 (safety) — Mzizi
+- Node 5 (resilience) — Mzizi
+- Node 6 (pages) — Nyuchi, Mukoko, or any ecosystem brand
+- Node 7 (shell) — Nyuchi, Mukoko, or any ecosystem brand
+- Node 8 (assurance) — Mzizi
+- Node 9 (fundi) — Nyuchi-operated, Bundu-governed
+- Node 10 (documentation) — Bundu canonical
+
+## What Mzizi is
+
+Mzizi is the open architecture framework published by Bundu. It defines the 3D + 2 node model, the MCP and registry, the build toolchain, and the resilience layer (nodes 4, 5, 8). Open source. Anyone can build with it.
+
+## What ecosystem brands do
+
+Each brand inside the Bundu ecosystem picks one mineral from the canonical Bundu palette as its primary and inherits the rest of the token schema. brand_ecosystem.adopter_type = 'ecosystem_brand'.
+
+## What external adopters do
+
+Third-party organisations adopting Mzizi substitute their own palette, their own primary, their own documentation. The framework accepts it. They cannot substitute the engineering nodes (4, 5, 8) which are Mzizi-defined. brand_ecosystem.adopter_type = 'external_adopter'.

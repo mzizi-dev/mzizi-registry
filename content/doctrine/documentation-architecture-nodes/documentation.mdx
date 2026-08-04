@@ -1,0 +1,35 @@
+---
+_schemaVersion: "v1"
+covenant: "Every document lives here. Documents, instructions, docs, documentation — one rung, no exceptions."
+currentVersion: 2
+description: "The doctrine rung, and the single home for everything document-shaped: documents, instructions (including ai_instructions), docs and documentation. Conventions, covenants, guides and reference all belong to N10 — held as MDX in the repo so a document referencing something that no longer exists fails the build rather than rotting unnoticed. If an artifact is prose meant to be read, it is N10; nothing else claims it and no other rung should."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "Long-form guides live in the Starlight repos: bundu-docs serves docs.bundu.org (product) and nyuchi-docs serves docs.nyuchi.com (engineering). /api/v1/docs* returns HTTP 410 with a migrated_to map."
+- "Component source lives in git under components/registry/n<N>-<label>/; Supabase holds only the metadata around it, served over /api/v1/*."
+- "registry.json is a CI-verified snapshot of the registry, never hand-edited (pnpm registry:verify)."
+- "MCP tools and /api/v1/stats surface live counts from the DB; never quote a hardcoded count."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+node_number: 10
+owner: "nyuchi"
+role: "N10 — the ecosystem documents itself in code"
+rust:
+  kind: null
+  note: "Stated deliberately. The guarantee this node provides is that a page referencing a component that no longer exists fails the build — and that comes from the page being compiled, not from the compiler's language. If the web target moves to Dioxus the docs toolchain follows the framework, but that is the framework's story, not a Rust implementation of N10. A node with no Rust role is a better answer than a fabricated one, and inventing one here would be doctrine drift of exactly the kind this node exists to prevent."
+  state: "not-applicable"
+  today: "Long-form docs are .mdx files in nyuchi/mzizi compiled by @next/mdx; structured data is served from Supabase over /api/v1/*."
+  target: "None. N10 has no Rust implementation and no Rust alternative."
+  position: "none"
+  descriptors: []
+sort_order: 10
+stakeholder: "Docs maintainer"
+sub_label: "documentation"
+title: "Documentation"
+type: "rung"
+---
+
+

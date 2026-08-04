@@ -1,0 +1,27 @@
+---
+_schemaVersion: "v1"
+currentVersion: 1
+description: "Application-facing database providing schema validation, reactive queries (UI components automatically update when data changes), conflict resolution, and a replication protocol for syncing with the cloud. The storage layer is swappable via the RxStorage adapter pattern — application code is identical whether the engine is IndexedDB or SQLite."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+kind: "architecture"
+model: "mzizi-dna-helix"
+name: "rxdb"
+node: 0
+owner: "nyuchi"
+platform: "both"
+role: "Local-first reactive database layer"
+sort_order: 0
+sovereignty:
+  role: "Local database layer"
+  license: "Apache-2.0"
+  forkable: true
+  rationale: "Independent open source project with Apache license. Fully forkable."
+  governance: "independent"
+  technology: "RxDB"
+  selfHostable: true
+  sovereigntyRisk: "low"
+strand: "transcription"
+---
+
+

@@ -1,0 +1,75 @@
+---
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "architecture"
+createdAt: "2026-04-14T04:32:49.164756+00:00"
+currentVersion: 2
+description: "How component backlinks connect the design system to the portal, L8, and L9."
+dnaRole: "documentation"
+doctrineVersion: "4.1.7"
+keywords:
+- "backlinks"
+- "portal"
+- "urls"
+- "chaos"
+- "fundi"
+- "dom"
+- "data-portal"
+kind: "doc_page"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+owner: "nyuchi"
+relatedNodes:
+- 8
+- 9
+slug: "component-backlinks"
+sortOrder: 12
+status: "published"
+strand: "transcription"
+subcategory: "backlinks"
+title: "Component Backlinks & Design Portal Integration"
+updatedAt: "2026-04-24T10:56:44.877196+00:00"
+version: "4.0.34-reviewed"
+---
+
+# Component Backlinks
+
+Every component in the design system has canonical URLs on mzizi.dev. These serve as the component identity — documentation, playground, health check, and chaos test target.
+
+## URL Structure
+
+| Endpoint | URL Pattern | Purpose |
+|---|---|---|
+| Portal | mzizi.dev/components/{name} | Documentation page |
+| API | mzizi.dev/api/v1/ui/{name} | JSON API |
+| Playground | mzizi.dev/playground/{name} | Live playground |
+| Health | mzizi.dev/api/health/{name} | Health check target |
+| Source | mzizi.dev/source/{name} | Source code view |
+| Changelog | mzizi.dev/changelog/{name} | Version history |
+| Chaos | mzizi.dev/api/chaos/{name} | N8 chaos injection |
+| Fundi | mzizi.dev/api/fundi/{name} | N9 healing trigger |
+
+## DOM Integration
+
+Every rendered component includes a data-portal attribute:
+
+```html
+<div data-slot="nyuchi-section" data-portal="https://mzizi.dev/components/nyuchi-section">
+```
+
+This allows:
+- N8 chaos testing to target specific components by URL
+- N9 Fundi to link healing actions to documentation
+- DevTools inspection to click through to docs
+- Error tracking to enrich errors with portal links
+
+## Database
+
+```sql
+-- Get all links for a component
+SELECT * FROM get_component_links('nyuchi-section');
+
+-- Query all components with backlinks
+SELECT * FROM component_backlinks;
+```

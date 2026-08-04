@@ -1,0 +1,26 @@
+---
+_schemaVersion: "v1"
+currentVersion: 1
+description: "Kafka-compatible event streaming platform written in Rust. Every meaningful event — weather observations, campsite views, payments, posts — flows through as an event stream. Supabase and CouchDB publish change feeds into topics. Downstream systems consume independently. Provides architectural decoupling: operational databases do not need to know about the analytics layer."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+kind: "architecture"
+model: "mzizi-dna-helix"
+name: "redpanda"
+node: 0
+owner: "nyuchi"
+role: "Event streaming backbone"
+sort_order: 0
+sovereignty:
+  role: "Event streaming"
+  license: "BSL / Apache-2.0"
+  forkable: true
+  rationale: "Kafka-compatible, lower operational overhead. Speaks the Kafka protocol — all Kafka tooling works without modification."
+  governance: "independent"
+  technology: "Redpanda"
+  selfHostable: true
+  sovereigntyRisk: "low"
+strand: "transcription"
+---
+
+

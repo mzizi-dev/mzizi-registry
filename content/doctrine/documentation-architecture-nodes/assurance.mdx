@@ -1,0 +1,36 @@
+---
+_schemaVersion: "v1"
+covenant: "What breaks is seen before users feel it."
+currentVersion: 2
+description: "The node that watches, on the engineering backbone's core-guarantee strand. Observability signal collection, SLO tracking, chaos injection, accessibility auditing and conformity checking. TypeScript today (lib/observability.ts and lib/metrics.ts in nyuchi/mzizi). Target: the collection layer compiles to WebAssembly so the browser gathers signals without blocking the UI thread, and the same Rust builds as a native binary aggregating signals across the fleet server-side. Writes to observability_events and fundi_issues. Never stores PII — in any language. Rate-limited at the application layer."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "Every brand component emits render timing + error events via the harness."
+- "Structured logs use the [mzizi] prefix for grep-ability."
+- "MCP / API usage flows into lib/metrics.ts."
+- "Health signals are exposed at /api/v1/health; assurance dashboards read from there."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+node_number: 8
+owner: "nyuchi"
+role: "N8 — observability, health monitoring, SLO tracking"
+rust:
+  kind: "shared-core"
+  note: "A Rust IMPLEMENTATION, with a constraint that survives the port unchanged: N8 never stores PII, and rate limiting stays at the application layer. Moving collection off the UI thread is most of the reason Rust is worth it here — an observer that degrades the thing it observes is not an observer."
+  state: "target"
+  today: "No Rust ships. Signal collection is lib/observability.ts and lib/metrics.ts (TypeScript); writes land in observability_events and fundi_issues, and MCP / API usage flows through the metrics module."
+  target: "Signal collection, SLO tracking, chaos injection and accessibility auditing compile to WASM for the browser and to a native binary for fleet-wide aggregation server-side — one implementation of what counts as a signal, across every target."
+  position: "implementation"
+  descriptors: []
+sort_order: 8
+stakeholder: "Observability engineer"
+strand: "core-guarantee"
+sub_label: "assurance"
+title: "Assurance"
+type: "node"
+---
+
+

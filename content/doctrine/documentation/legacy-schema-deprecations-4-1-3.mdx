@@ -1,0 +1,212 @@
+---
+_schemaVersion: "v1"
+currentVersion: 2
+description: "All 48 legacy tables now live in the `legacy` schema with their original names restored (e.g. legacy.components, legacy.brand_minerals). The schema itself is the deprecation boundary — DROP SCHEMA legacy CASCADE will remove them all after FRD-43 cutover."
+dnaRole: "documentation"
+doctrineVersion: "4.1.3"
+dropCommand: "DROP SCHEMA legacy CASCADE"
+effectiveVersion: "4.1.3"
+entries:
+-
+
+    legacyPath: "legacy.ai_instructions"
+    replacement: "component_documents/ai-instructions"
+-
+
+    legacyPath: "legacy.architecture_cloud_layer"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.architecture_data_layer"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.architecture_data_ownership"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.architecture_framework"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.architecture_frontend_axes"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.architecture_frontend_layers"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.architecture_pipeline"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.architecture_principles"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.architecture_removed"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.architecture_sovereignty"
+    replacement: "component_documents/documentation-architecture-*"
+-
+
+    legacyPath: "legacy.blocks"
+    replacement: "component_documents/* (see migration map)"
+-
+
+    legacyPath: "legacy.brand_accessibility_checks"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_breakpoints"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_categories"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_component_specs"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_density"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_density_breakpoint_map"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_ecosystem"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_heritage_colors"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_icon_sizes"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_meta"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_minerals"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_motion"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_radius"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_semantic_colors"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_shadow"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_spacing"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_touch_targets"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_typography"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.brand_z_index"
+    replacement: "component_documents/styling-*"
+-
+
+    legacyPath: "legacy.bundu_conventions"
+    replacement: "component_documents/genetic-code-conventions"
+-
+
+    legacyPath: "legacy.changelog"
+    replacement: "component_documents/changelog"
+-
+
+    legacyPath: "legacy.component_demos"
+    replacement: "merged into component_documents/primitives (demo field)"
+-
+
+    legacyPath: "legacy.component_docs"
+    replacement: "merged into component_documents/primitives"
+-
+
+    legacyPath: "legacy.component_versions"
+    replacement: "document_versions"
+-
+
+    legacyPath: "legacy.components"
+    replacement: "component_documents/primitives + components"
+-
+
+    legacyPath: "legacy.documentation_pages"
+    replacement: "component_documents/documentation"
+-
+
+    legacyPath: "legacy.framework_descriptors"
+    replacement: "component_documents/framework"
+-
+
+    legacyPath: "legacy.frd16_backup_source"
+    replacement: "component_documents/* (see migration map)"
+-
+
+    legacyPath: "legacy.infrastructure_topology"
+    replacement: "component_documents/infrastructure-topology"
+-
+
+    legacyPath: "legacy.observability_domains"
+    replacement: "component_documents/observability-domains"
+-
+
+    legacyPath: "legacy.portal_pages"
+    replacement: "component_documents/* (see migration map)"
+-
+
+    legacyPath: "legacy.primitive_sources"
+    replacement: "component_documents/primitive-sources"
+-
+
+    legacyPath: "legacy.skills"
+    replacement: "component_documents/skills"
+-
+
+    legacyPath: "legacy.tool_versions"
+    replacement: "document_versions"
+-
+
+    legacyPath: "legacy.ubuntu_pillars"
+    replacement: "component_documents/genetic-code-ubuntu-pillars"
+-
+
+    legacyPath: "legacy.ubuntu_principles"
+    replacement: "component_documents/genetic-code-ubuntu-principles"
+kind: "deprecation-registry"
+lastDoctrineChangeAt: "2026-05-28T20:54:58.677733+00:00"
+model: "mzizi-dna-helix"
+owner: "mzizi"
+removalTargetVersion: "4.2.0"
+schemaName: "legacy"
+strand: "transcription"
+title: "Legacy schema deprecations (4.1.3)"
+---
+
+

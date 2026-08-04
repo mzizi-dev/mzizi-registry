@@ -1,0 +1,98 @@
+---
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "getting-started"
+createdAt: "2026-04-14T04:32:02.311034+00:00"
+currentVersion: 2
+description: "How to install and set up the Nyuchi Design System in your project."
+dnaRole: "documentation"
+doctrineVersion: "4.1.7"
+keywords:
+- "installation"
+- "setup"
+- "cli"
+- "getting-started"
+- "next-js"
+- "tailwind"
+kind: "doc_page"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+owner: "nyuchi"
+relatedNodes:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+slug: "installation"
+sortOrder: 2
+status: "published"
+strand: "transcription"
+subcategory: "setup"
+title: "Installation & Setup"
+updatedAt: "2026-04-24T10:56:44.877196+00:00"
+version: "4.0.34-reviewed"
+---
+
+# Installation
+
+## Prerequisites
+
+- Node.js 18+
+- Next.js 14+ (App Router)
+- Tailwind CSS 3.4+
+
+## Install the CLI
+
+```bash
+npm install -g @nyuchi/design-cli@latest
+```
+
+## Initialize in your project
+
+```bash
+npx @nyuchi/design-cli@latest init
+```
+
+This will:
+1. Create `components.json` configuration
+2. Set up the `@/lib/utils` helper with `cn()` function
+3. Configure Tailwind with Nyuchi design tokens
+4. Install the seven African minerals color palette
+5. Set up the Noto Serif / Noto Sans / JetBrains Mono font stack
+
+## Add components
+
+```bash
+# Add individual components
+npx @nyuchi/design-cli@latest add button card dialog
+
+# Add a full node
+npx @nyuchi/design-cli@latest add --node 3
+
+# Add all components for a mini-app
+npx @nyuchi/design-cli@latest add --mini-app wallet
+```
+
+## Project structure
+
+```
+src/
+├── components/
+│   ├── ui/          # N2 — Primitives
+│   ├── brand/       # N3 — Brand Components
+│   ├── safety/      # N4 — Safety Gates
+│   ├── resilience/  # N5 — Resilience
+│   ├── pages/       # N6 — Page Compositions
+│   └── shell/       # N7 — App Shell
+├── lib/
+│   ├── tokens/      # N1 — Design Tokens
+│   ├── icons/       # N1 — Icon Registry
+│   ├── harness/     # Harness — Cross-cutting
+│   ├── assurance/   # N8 — Assurance
+│   └── fundi/       # N9 — Fundi
+└── docs/            # N10 — Documentation
+```

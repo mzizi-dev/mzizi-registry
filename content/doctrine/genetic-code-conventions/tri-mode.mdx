@@ -1,0 +1,71 @@
+---
+_schemaVersion: "v1"
+baseLayer: true
+currentVersion: 1
+dnaRole: "genetic-code"
+doctrineVersion: "4.1.6"
+kind: "convention"
+lastDoctrineChangeAt: "2026-05-28T22:09:54.199205+00:00"
+model: "mzizi-dna-helix"
+owner: "bundu"
+slug: "tri-mode"
+status: "active"
+strand: "genetic-code"
+title: "Tri-mode — Musha · Basa · Nhaka"
+---
+
+# Tri-mode — Musha · Basa · Nhaka
+
+> Every feature, every component, every infrastructure piece simultaneously serves three audiences. If a piece cannot justify three simultaneous roles, it does not belong in the architecture.
+
+## The three modes
+
+| Mode | Shona meaning | Audience | What it serves |
+| -- | -- | -- | -- |
+| **Musha** | home | the individual user | the foreground experience — what the user sees and does |
+| **Basa** | work | other apps and services | the background capability — data and behaviour other apps consume silently |
+| **Nhaka** | heritage | the continental knowledge commons | the anonymised contribution — data flowing into the open data tier |
+
+The Shona names encode the Ubuntu principle structurally: the individual experience (Musha), the community service (Basa), and the civilisational gift (Nhaka). Tri-mode is how Ubuntu — *I am because we are* — becomes architecture, not a slogan.
+
+## Where tri-mode applies
+
+The rule is recursive — it governs three distinct levels:
+
+1. **Application surfaces.** Every mini-app in a consumer product operates in all three modes simultaneously.
+2. **Infrastructure components.** Every component of the analytical intelligence system (search engine, ML engine, data quality system) has at least three simultaneous functions — powering current use, training future models, and serving the open data commons.
+3. **Data flows.** Every event traverses the three tiers: written to operational store (Musha), consumed by services (Basa), extracted via privacy filter to the open commons (Nhaka).
+
+## The rule (the test)
+
+For any new feature, component, table, endpoint, or piece of infrastructure entering the canonical stack, three questions must be answered before it is accepted:
+
+1. **What does this do for the individual user?** (Musha)
+2. **What does this provide for other apps or services in the ecosystem?** (Basa)
+3. **What does this contribute to the open data commons or the broader community?** (Nhaka)
+
+If any of the three cannot be answered substantively, the piece does not belong in the architecture. Single-purpose tools and siloed components are rejected by this rule.
+
+## Tri-mode and the four-category data ownership model
+
+Tri-mode and the four-category data ownership model interlock:
+
+| Tri-mode | Data ownership category | Where it lives |
+| -- | -- | -- |
+| Musha (individual) | `personal` (pre-verification) → `personal-sovereign` (post-verification, Honeycomb Pod) | per-user pod or operational store |
+| Basa (services) | `community` | MongoDB operational primary |
+| Nhaka (commons) | `platform-open` | Apache Doris, fed via Apache Flink PII strip |
+
+The Nhaka extraction is automated and continuous: events flow Mongo → Redpanda → Flink (privacy filter) → Doris. The `observability_events.metadata` CHECK constraint enforces the no-PII rule at the schema level so Nhaka data is structurally safe to publish.
+
+## Why it matters
+
+Tri-mode is what makes the architecture *sovereign and contributive at the same time*. Sovereign because each user keeps Musha (their personal data) in their own pod. Contributive because every interaction simultaneously feeds Basa (services other people use) and Nhaka (the commons). Other platforms have users and services; this architecture has users, services, and a civilisational contribution — by design, by default, at every layer.
+
+## Related
+
+- `genetic-code-conventions/substrate-decision` — substrate decisions including the four-category data ownership model
+- `documentation-architecture-data-ownership/{personal,personal-sovereign,community,platform-open}` — per-category documents
+- `documentation-architecture-pipeline/{apache-flink,apache-doris,redpanda,nats}` — Nhaka pipeline
+- `documentation-architecture-principles/ubuntu` — the philosophy tri-mode encodes
+- Bundu Foundation architecture and order documents (renaming in progress — Bundu owns architecture, not Mukoko)

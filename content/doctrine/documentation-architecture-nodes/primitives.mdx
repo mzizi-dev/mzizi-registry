@@ -1,0 +1,40 @@
+---
+_schemaVersion: "v1"
+covenant: "A primitive does one thing well."
+currentVersion: 2
+description: "The smallest composable unit of UI, and framework-specific by nature: a primitive is a contract plus a token set, not one source file shared across targets. Shipping today are React (the verified Mzizi baseline) and Svelte via shadcn-svelte, both Radix + CVA — Svelte is a supported way to build a primitive, no longer the primary one. The Rust path is Dioxus, whose 0.7 Tailwind + Radix support matches this exact stack; it is metadata_only today, with zero Dioxus primitives wired. Target: primitives read accessibility state and motion config from the shared Rust WASM core. No harness and no business logic here — the harness stays N3-only."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "One CVA variants block per primitive; no inline conditional classes."
+- "Expose asChild / Slot where composition matters."
+- "Use Radix UI for focus, keyboard, and screen-reader behaviour."
+- "56px default / 48px minimum touch target."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+node_number: 2
+owner: "nyuchi"
+role: "N2 — smallest composable unit of UI"
+rust:
+  kind: "ui-framework"
+  note: "N2 has a Rust ALTERNATIVE, not a Rust implementation. A Dioxus Button and a Svelte Button share a contract and a token set, not a source file — so the honest statement is which Rust framework a consumer would reach for, plus the fact that no source exists for it yet. Readiness and tier point opposite ways here on purpose: svelte is production + optional, dioxus is metadata_only + primary. Never collapse the two."
+  state: "target"
+  today: "No Rust ships and zero Dioxus primitives are wired. The dioxus descriptor is readiness metadata_only and primitive_sources holds no dioxus row, so resolve_primitive(<name>, 'dioxus') correctly returns nothing. The installable inventory is React (mzizi-react-legacy, react) and Svelte (shadcn-svelte), all readiness production; svelte is tier optional."
+  target: "Dioxus is the Rust path for primitives, and the only Rust UI framework that reaches web (WASM), desktop, iOS and Android from one codebase — which is why it is sanctioned over Leptos and Yew, both web-only. Dioxus 0.7 ships Tailwind and Radix support, and Mzizi's primitive stack is Tailwind + Radix + CVA, so the primitive surface maps across rather than being re-invented. Swift, Kotlin, ArkTS and React Native stay instruction-first: they get the contract, the tokens and the rules, never component source."
+  position: "alternative"
+  descriptors:
+  - "dioxus"
+  - "svelte"
+  - "react"
+  - "mzizi-react-legacy"
+sort_order: 2
+stakeholder: "Component library author"
+strand: "core-guarantee"
+sub_label: "primitive"
+title: "Primitives"
+type: "node"
+---
+
+

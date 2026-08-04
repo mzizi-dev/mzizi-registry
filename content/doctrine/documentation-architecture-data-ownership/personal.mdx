@@ -1,0 +1,26 @@
+---
+_schemaVersion: "v1"
+category: "personal"
+conflict_resolution: "Strict handler — flags conflicts and holds for explicit reconciliation. The system shows a 'reconciling your account' message rather than silently picking a winner and potentially misrepresenting a balance."
+consistency_model: "strict"
+currentVersion: 1
+database: "Postgres (FK roots) + Mongo (operational content)"
+description: "Pre-verification lifecycle stage of the personal-data category. Personal data (identity, wallet, transactions, billing, auth) starts platform-readable: FK roots in Postgres, operational content in MongoDB. At identity verification (tier 2+) it migrates to the sovereign Honeycomb Pod — see the personal-sovereign category."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+examples:
+- "user-identity"
+- "wallet-balances"
+- "transaction-records"
+- "billing-state"
+- "authentication"
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+owner: "nyuchi"
+ownership: "platform-readable"
+sort_order: 0
+strand: "transcription"
+---
+
+
