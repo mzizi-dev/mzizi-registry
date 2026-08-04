@@ -1,0 +1,56 @@
+---
+_schemaVersion: "v1"
+baseLayer: true
+currentVersion: 1
+dnaRole: "genetic-code"
+doctrineVersion: "4.1.0"
+kind: "convention"
+model: "mzizi-dna-helix"
+node: 0
+owner: "bundu"
+slug: "resolver-deployment-decision"
+status: "active"
+strand: "genetic-code"
+title: "Resolver deployment: Supabase edge function (deferred)"
+version: "2.0.0"
+---
+
+## Status: LIVE (v0.1.0)
+
+Deployed as Supabase edge function ``resolver`` at:
+  ``https://grjsboqkaywpwatvrzmy.functions.supabase.co/resolver``
+
+All four fetch strategies implemented and tested:
+  - http_json — verified against mzizi-react-legacy, react (shadcn), svelte (shadcn-svelte)
+  - npm — verified against interchain-ui (returns package + export name)
+  - native — returns platform module path with no-fetch note
+  - crate — returns crate name + Cargo.toml guidance
+
+## Routes
+
+  GET /resolver?name=<primitive>&descriptor=<slug>
+    Resolve one primitive against one descriptor. If descriptor omitted, picks
+    the best by readiness (production > primitives_wired > resolver_ready >
+    metadata_only), with mzizi-react-legacy preferred on tiebreaks for stability.
+
+  GET /resolver/sources?name=<primitive>
+    List every descriptor that serves the named primitive.
+
+  GET /resolver/descriptors
+    List every registered framework descriptor.
+
+  GET /resolver/health
+    Liveness check.
+
+## Why edge function vs Cloudflare Worker
+
+Lives next to the data. Same deploy pipeline as fundi, analytics, fundi-webhook,
+sync-mcp-source-code, batch-sync-source-code. One less moving part than a
+separate Worker. Service-role key already in scope.
+
+## Upstream risk policy
+
+Upstream failure is accepted as business risk. No caching, no fallbacks, no
+pinning beyond what is recorded in primitive_sources.pinned_version. If shadcn
+is down, react descriptor installs fail. Document the dependency; do not
+engineer around it.

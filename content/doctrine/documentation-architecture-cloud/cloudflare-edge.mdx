@@ -1,0 +1,33 @@
+---
+_schemaVersion: "v1"
+consistency_model: "eventual"
+currentVersion: 1
+data_categories:
+- "session-tokens"
+- "feature-flags"
+- "geographic-data-snapshots"
+- "user-profile-cache"
+database: "SQLite (inside Durable Objects)"
+description: "Three primitives: KV for global config and routing maps, Geographic Durable Objects for platform data snapshots by location, and User Durable Objects for personal operational data. All ephemeral caches — can be rebuilt from sovereign data stores in minutes."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+kind: "architecture"
+model: "mzizi-dna-helix"
+name: "cloudflare-edge"
+node: 0
+owner: "nyuchi"
+role: "Edge cache — KV + two-tier Durable Objects"
+sort_order: 3
+sovereignty:
+  role: "Edge cache"
+  license: "Proprietary / managed"
+  forkable: false
+  rationale: "Managed edge infrastructure used as ephemeral caches, not sources of truth. Can be rebuilt from sovereign data stores in minutes."
+  governance: "corporate-managed"
+  technology: "Cloudflare KV / Durable Objects"
+  selfHostable: false
+  sovereigntyRisk: "low"
+strand: "transcription"
+---
+
+

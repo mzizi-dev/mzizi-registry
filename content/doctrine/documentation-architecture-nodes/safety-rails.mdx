@@ -1,0 +1,36 @@
+---
+_schemaVersion: "v1"
+covenant: "Nothing harmful reaches the user."
+currentVersion: 2
+description: "Validation, sanitisation and AI guardrails. TypeScript today — Zod schemas at the entry point and the ai-safety lib wrapping completions. Target: the gate logic (permission evaluation, content moderation, wallet state, trust-score validation) compiles to WebAssembly via wasm-bindgen for the browser and to a native binary for server-side API validation, with a thin framework shell rendering the visual gate — verification-required screens, blocked states — by reading state from the module. This is Rust-as-shared-core, not Rust-as-UI: one of the two nodes with a genuine Rust implementation, because a safety gate is logic and logic does not need rewriting per target."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "Validate all external input with Zod schemas at the entry point."
+- "Sanitise every rich-text or MDX payload before render."
+- "Wrap AI completions with the ai-safety lib (see registry:lib)."
+- "Treat every third-party response as untrusted until it clears N4."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+node_number: 4
+owner: "nyuchi"
+role: "N4 — input validation, output sanitisation, AI guardrails"
+rust:
+  kind: "shared-core"
+  note: "N4 is a Rust IMPLEMENTATION, not an alternative. This is what makes Swift, Kotlin, ArkTS and React Native viable as first-class targets: they each keep an idiomatic UI while sharing one implementation of what is allowed through. A safety rule reimplemented per target is a safety rule that will eventually disagree with itself."
+  state: "target"
+  today: "No Rust ships. Validation is Zod at the entry point and the ai-safety lib (a registry:lib item) for AI completions, both TypeScript. There is no wasm-bindgen build in either repo."
+  target: "The gate logic compiles to WASM via wasm-bindgen for the browser and to a native binary for the API layer, so one implementation of the rules serves every target. A thin framework shell renders the visual gate by reading state from the module; the shell varies by target, the verdict never does."
+  position: "implementation"
+  descriptors: []
+sort_order: 4
+stakeholder: "Security + safety engineer"
+strand: "core-guarantee"
+sub_label: "safety"
+title: "Safety rails"
+type: "node"
+---
+
+

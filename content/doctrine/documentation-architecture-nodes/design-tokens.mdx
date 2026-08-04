@@ -1,0 +1,36 @@
+---
+_schemaVersion: "v1"
+covenant: "Design decisions are data, not code."
+currentVersion: 2
+description: "Design decisions expressed as CSS custom properties. The token generation toolchain reads the Supabase styling collections and writes the generated palette plus each target's token file; it is TypeScript today (pnpm tokens:sync, scripts/sync-tokens.ts), and a Rust CLI binary is the target. Every other node reads tokens via var() or its platform equivalent — no node above ever declares its own colour, radius, spacing or motion duration. N1 is target-agnostic: what it emits varies by target, what it guarantees does not."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "Define every value in :root and .dark blocks."
+- "Register tokens in the Tailwind @theme inline block so utility classes resolve."
+- "No hardcoded hex values, rgba(), or inline style={{}} outside N1."
+- "Category-to-mineral mapping lives here, not in components."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+node_number: 1
+owner: "nyuchi"
+role: "N1 — the only node allowed to define CSS values"
+rust:
+  kind: "toolchain"
+  note: "N1 has a genuine Rust IMPLEMENTATION, not a framework alternative, because generating tokens is a build-time job rather than UI. It is also the one node whose Rust position does not depend on which UI framework a consumer picks."
+  state: "target"
+  today: "No Rust ships. The generator is scripts/sync-tokens.ts in nyuchi/mzizi, run as `pnpm tokens:sync` under tsx: it projects the Supabase styling-minerals and styling-heritage-colors collections into lib/tokens/palette.generated.ts and the tokens:generated block of app/globals.css. `pnpm tokens:verify` is the CI drift gate."
+  target: "The generator becomes a Rust CLI binary emitting every target's token file from the one database source — CSS custom properties for the web, plus Swift, Kotlin and ArkTS token files. This is the node where Rust costs least and buys most: tokens are data, so the generator's language is an implementation detail no consumer ever sees, and a single binary drops the Node dependency out of every native target's build. The token contract itself does not change."
+  position: "implementation"
+  descriptors: []
+sort_order: 1
+stakeholder: "Design system maintainer"
+strand: "swappable"
+sub_label: "tokens"
+title: "Design tokens"
+type: "node"
+---
+
+

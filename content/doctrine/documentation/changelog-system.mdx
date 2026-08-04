@@ -1,0 +1,158 @@
+---
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "changelog"
+createdAt: "2026-04-28T16:55:26.349194+00:00"
+currentVersion: 2
+description: "Why the Nyuchi Design System changelog is a database table, not a markdown file. How to read it, what each column captures, versioning policy, and what earns an entry."
+dnaRole: "documentation"
+doctrineVersion: "4.1.7"
+keywords:
+- "changelog"
+- "versioning"
+- "history"
+- "audit"
+- "release-notes"
+kind: "doc_page"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+owner: "nyuchi"
+relatedNodes:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+- 10
+slug: "changelog-system"
+sortOrder: 70
+status: "published"
+strand: "transcription"
+subcategory: "overview"
+title: "The Changelog System — How Change Is Recorded"
+updatedAt: "2026-04-28T16:55:26.349194+00:00"
+version: "4.0.34"
+---
+
+# The Changelog System — How Change Is Recorded
+
+Every meaningful change to the Nyuchi Design System lands as a row in `public.changelog`. The changelog is not a markdown file; it is a database table. This page explains why, what each column captures, and how to read the history of the system.
+
+## Why the changelog is a table
+
+A markdown CHANGELOG.md file is a snapshot. It accumulates by appending; it does not lend itself to query. Three things become hard with a markdown changelog:
+
+1. **"What changed in N8 last quarter?"** — requires reading every entry by hand.
+2. **"Which version added the `nyuchi-trade-status` component?"** — requires text search across versions.
+3. **"What axes have been touched in the last release?"** — impossible to answer without re-tagging every entry manually.
+
+A database changelog answers all three with SQL. The version, nodes affected, axes affected, and components touched are structured fields. Filtering and aggregation are free.
+
+## The columns
+
+Each `changelog` row carries:
+
+| Column | Purpose |
+|---|---|
+| `version` | Semver string at the time of the change |
+| `title` | One-line summary |
+| `description` | The full prose entry |
+| `nodes_affected` | Array of integers 1–10 — which ecosystem nodes this change touched |
+| `axes_affected` | Array of axis names — `horizontal`, `vertical`, `depth`, `outlier`, or doctrinal axes like `philosophy` |
+| `components_added` | Array of component names introduced |
+| `components_modified` | Array of component names changed |
+| `components_deprecated` | Array of component names marked deprecated |
+| `components_removed` | Array of component names removed |
+| `total_stable` / `total_deprecated` / `total_alpha` | Snapshot counts at this version |
+| `changed_by` | Actor — `system`, `bryan`, or another author |
+| `created_at` | When the row was written |
+
+## Versioning policy
+
+- `4.0.x` — internal development patches. Frequent. May land breaking changes during the pre-launch phase.
+- `4.1.0` — first public release milestone. The version contract becomes binding here.
+- `5.0.0` — reserved for major architectural redesign.
+
+The project started at `4.0.2`. Every internal patch increments the patch number; meaningful milestones get minor or major bumps.
+
+## Component-level versioning
+
+In parallel with the system changelog, every component has its own version history in `public.component_versions`. The `change_type` enum tells you what kind of change it was: `created`, `source_updated`, `metadata_updated`, `status_changed`, `node_moved`, `dependencies_changed`, `promoted`, `deprecated`, `breaking_change`, `bugfix`, `enhancement`, `refactor`, `tokens_wired`, `enterprise_upgrade`.
+
+The two changelogs answer different questions:
+
+- `changelog` — what changed in the **system** in this version?
+- `component_versions` — what changed in this **component** across all versions?
+
+## Reading the history
+
+To see the most recent system changes:
+
+```sql
+SELECT version, title, created_at
+FROM changelog
+ORDER BY created_at DESC
+LIMIT 20;
+```
+
+To find every change that touched N8:
+
+```sql
+SELECT version, title, description
+FROM changelog
+WHERE 8 = ANY(nodes_affected)
+ORDER BY created_at DESC;
+```
+
+To see when a component was first added:
+
+```sql
+SELECT version, created_at
+FROM changelog
+WHERE 'nyuchi-button' = ANY(components_added);
+```
+
+To audit doctrinal changes (changes affecting `philosophy` or `doctrine` axes):
+
+```sql
+SELECT version, title, description
+FROM changelog
+WHERE 'philosophy' = ANY(axes_affected)
+   OR 'doctrine' = ANY(axes_affected)
+ORDER BY created_at DESC;
+```
+
+## What earns a changelog entry
+
+Not every change. The bar:
+
+- New tables, columns, or functions in production
+- New components added to the system
+- Component status promotions (alpha → beta → stable)
+- Component deprecations and removals
+- Doctrinal changes — Ubuntu, the nodes, the axes, the covenants, the manifesto
+- API surface changes — REST endpoints, MCP tools
+- Token additions or renames
+- Migration applications that affect schema
+
+What does NOT earn an entry:
+
+- Typo fixes in component descriptions
+- Internal refactors that do not change behaviour
+- Test additions
+- CI configuration changes
+
+## Public visibility
+
+The changelog table is publicly readable (RLS allows `SELECT` to `anon`). The portal renders it at `/changelog` for anyone to read. This transparency is doctrinal — the platform is open source and community-based; its history is public.
+
+## Related
+
+- `/getting-started/installation` — How to consume a specific version
+- `/contributor/contributing` — When to write a changelog entry
+- `/api-reference` — How to query the changelog programmatically

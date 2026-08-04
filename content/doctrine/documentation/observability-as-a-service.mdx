@@ -1,0 +1,95 @@
+---
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "architecture"
+createdAt: "2026-04-28T16:55:26.349194+00:00"
+currentVersion: 2
+description: "Observability-as-a-Service is the tenancy model on L8 (Assurance) + L9 (Fundi), not a separate layer. Documents the four live tables: observability_domains, observability_events, fundi_issues, fundi_healing_log."
+dnaRole: "documentation"
+doctrineVersion: "4.1.5"
+keywords:
+- "oaas"
+- "observability"
+- "fundi"
+- "assurance"
+- "tenancy"
+- "tier"
+- "multi-tenant"
+- "l8"
+- "l9"
+kind: "doc_page"
+lastDoctrineChangeAt: "2026-05-28T22:02:07.706637+00:00"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+owner: "nyuchi"
+relatedNodes:
+- 8
+- 9
+slug: "observability-as-a-service"
+sortOrder: 16
+status: "published"
+strand: "transcription"
+subcategory: "oaas"
+title: "Observability-as-a-Service — L8 + L9 Tenancy Model"
+updatedAt: "2026-04-28T16:55:26.349194+00:00"
+version: "4.0.34"
+---
+
+# Observability-as-a-Service — Observability + Fundi Tenancy Model
+
+**OaaS is not a separate node.** It is the tenancy and commercialisation model layered on top of the **observability** and **fundi** collections (the core guarantee nodes for sensing and self-healing in the Mzizi DNA helix). The four tables that implement it are live in `public` schema and remain canonical post-4.1.x.
+
+## The four tables
+
+| Table | Purpose |
+|---|---|
+| `observability_domains` | Tenant registry. Each row is one domain consuming OaaS — internally, free, pro, or enterprise tier. |
+| `observability_events` | Structural event sink. Renders, errors, chaos injections, healing events, health checks. **Never stores PII** — enforced by a CHECK constraint that rejects metadata containing user, email, name, token, password, session, cookie, auth, ip, phone, address, or dob keys. |
+| `fundi_issues` | Failure reports surfaced from observability. Each issue carries a severity, error type, blast radius, diagnostic source, and healing plan. Status moves through `open → triaging → healing → awaiting_review → resolved` (or `wont_fix`). |
+| `fundi_healing_log` | Append-only audit trail of healing actions. Logged once, never updated, never deleted by authenticated clients. |
+
+## Tenancy tiers
+
+The `tier` column on `observability_domains` is a CHECK-constrained enum:
+
+| Tier | Meaning |
+|---|---|
+| `internal` | Nyuchi-owned domain consuming OaaS internally. No commercial commitment. |
+| `free` | External tenant on the free tier. Limited rate, no chaos injection. |
+| `pro` | External tenant on the pro tier. Higher rate, basic chaos and analytics. |
+| `enterprise` | External tenant on the enterprise tier. Full chaos, full analytics, dedicated support. |
+
+Feature flags per tenant — `portal_links_enabled`, `chaos_enabled`, `fundi_enabled`, `analytics_enabled` — are stored on the same row. Rate is bounded by `max_chaos_injections_per_hour` and `health_check_interval_seconds`.
+
+## Why OaaS sits on observability + fundi, not as its own node
+
+The **observability** node does the watching (assurance + the event streams). The **fundi** node does the healing. OaaS is the *commercial framing* of those two capabilities — the multi-tenancy registry, the tier gating, the rate limiting, the per-tenant configuration. It is not a new behaviour; it is a packaging of two existing behaviours.
+
+If OaaS were its own node it would force a re-explanation of the DNA helix. The helix already classifies both observability and fundi as **mzizi core** (the fixed guarantee). OaaS commercialises that guarantee without changing it.
+
+## The data flow
+
+1. An observability-node component detects a failure or runs a probe.
+2. It writes to `observability_events` (the structural fact) via `emit_observability(...)` and to `fundi_issues` (the actionable report) via `emit_issue(...)`.
+3. Fundi reads `fundi_issues`, opens a GitHub issue, executes its healing plan, and logs each step to `fundi_healing_log` via `emit_healing(...)`.
+4. The tenant's `observability_domains` row gates whether any of this happens at all and at what intensity.
+
+## Privacy guarantees
+
+The `observability_events.metadata` CHECK constraint is the doctrinal teeth. It rejects any JSONB metadata containing keys named `user`, `email`, `name`, `token`, `password`, `session`, `cookie`, `auth`, `ip`, `phone`, `address`, or `dob`. There is no way to write PII to this table without dropping the constraint. The constraint is the doctrine, encoded.
+
+The ±5-minute timestamp gate on every event table (the `created_at` / `executed_at` RLS check) prevents backdating and future-dating. This is enforced in the schema, not in code — the database refuses to accept an out-of-window event regardless of the client. Open infrastructure: integrity guaranteed by the substrate, not by trust.
+
+Fundi issues may contain operational diagnostic data but never user identifiers. Healing actions are logged with `approved_by` (a system or human actor) but never with end-user identity.
+
+## Future commercial work
+
+A later FRD will surface OaaS publicly — pricing pages, tenant onboarding UI, dashboards for each tier. That work is queued; this page documents the substrate that already exists.
+
+## Related
+
+- DNA helix model — `changelog/4.1.0`
+- Fundi self-healing — `documentation/fundi-guide`
+- Event contract — `query_events(stream, since, limit)` + `emit_observability/chaos/healing/issue`
+- Component → portal links — `documentation/component-backlinks`

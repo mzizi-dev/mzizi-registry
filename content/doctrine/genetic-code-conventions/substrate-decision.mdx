@@ -1,0 +1,63 @@
+---
+_schemaVersion: "v1"
+baseLayer: true
+currentVersion: 1
+dnaRole: "genetic-code"
+doctrineVersion: "4.1.0"
+kind: "convention"
+model: "mzizi-dna-helix"
+node: 0
+owner: "bundu"
+slug: "substrate-decision"
+status: "active"
+strand: "genetic-code"
+title: "Doctrine v3.5 substrate decision"
+version: "1.0.0"
+---
+
+# Doctrine v3.5 — substrate decision
+
+Recorded 2026-05-21. Reconciles the in-conversation doctrine with the canonical
+`nyuchi_design_db` architecture tables (FRD-36 track).
+
+## Decisions
+
+1. **MongoDB is the non-relational operational primary.** Restored to the
+   canonical stack (it had been removed over its SSPL licence). Sovereignty is
+   handled as a tiered classification: MongoDB is classified medium risk with a
+   documented justification — SSPL is not OSI-approved, but the source is
+   available and Community Server is self-hostable — rather than treated as a
+   hard disqualifier.
+
+2. **NATS and Redpanda are both kept.** NATS provides the service mesh, event
+   bus, RPC, and ephemeral KV — the edge-native connective fabric. Redpanda
+   provides high-throughput, Kafka-compatible event streaming into Apache Flink.
+
+3. **Sync protocol: SiafuDB Graph Sync Protocol is canonical.** SiafuDB is a
+   first-party Bundu Foundation project (Apache-2.0, relicensing legally
+   prevented; Nyuchi develops, the Foundation governs). Its bidirectional,
+   CRDT-inspired Graph Sync Protocol supersedes Apache CouchDB. SiafuDB Graph
+   Sync is Phase 1 / early-stage; until it ships, Mongo-native RxDB replication
+   is the interim sync implementation. Apache CouchDB is removed from the stack.
+
+4. **ScyllaDB is retained as future, not removed.** With MongoDB taking the
+   non-relational operational-primary role, ScyllaDB is re-roled to a future
+   candidate for the Nhaka cold-storage tier and is not currently active.
+
+## Data ownership (four-category model)
+
+| Category | Database | Lifecycle |
+| -- | -- | -- |
+| personal | Postgres (FK roots) + Mongo (operational content) | pre-verification, platform-readable |
+| personal-sovereign | Honeycomb Pod | post-verification, user-private |
+| community | MongoDB (operational primary) | community-shared |
+| platform-open | Apache Doris (via Flink privacy filter) | public-open |
+
+personal and personal-sovereign are one category at two lifecycle points:
+personal data starts platform-readable and migrates to the sovereign Honeycomb
+Pod at identity verification (tier 2+).
+
+## Source issues
+
+FRD-36 (parent), FRD-37 (sync protocol), FRD-38 (substrate), FRD-40 (open data
+framework).

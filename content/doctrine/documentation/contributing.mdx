@@ -1,0 +1,135 @@
+---
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "contributor"
+createdAt: "2026-04-14T04:33:18.859813+00:00"
+currentVersion: 2
+description: "How to contribute components to the Nyuchi Design System."
+dnaRole: "documentation"
+doctrineVersion: "4.1.7"
+keywords:
+- "contributing"
+- "guide"
+- "checklist"
+- "enterprise-criteria"
+- "pr"
+- "github"
+kind: "doc_page"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+owner: "nyuchi"
+relatedNodes:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+- 10
+slug: "contributing"
+sortOrder: 20
+status: "published"
+strand: "transcription"
+subcategory: "guide"
+title: "Contributing to the Nyuchi Design System"
+updatedAt: "2026-04-24T14:31:16.717282+00:00"
+version: "4.0.34"
+---
+
+# Contributing
+
+The Nyuchi Design System is open source and built by the community. Ubuntu — I am because we are.
+
+## Repository
+
+github.com/nyuchi/design-portal
+
+## Source code lives in the database
+
+Production source for every stable component is stored in `components.source_code` in Supabase (project `grjsboqkaywpwatvrzmy`). The frontend repo pulls from the database at build time — it does not maintain a separate source-of-truth in the file system. To add or modify a component, write the source directly to `components.source_code` via SQL.
+
+## Adding a New Component
+
+1. Decide which node it belongs to (see Node Decision Guide)
+2. Create the component following the node enterprise criteria
+3. Insert into the components table with status=alpha (registered, no source yet)
+4. Write the production TypeScript into components.source_code
+5. Flip status to stable when source is production-ready
+6. Add component_docs entry with use_cases, variants, features, a11y notes
+7. Insert a component_demos manifest row (has_demo=true, demo_type=interactive or code-example)
+8. Ensure data-slot and data-portal attributes are present in the source
+9. Log the version with log_version(name, type, comment, author)
+10. Submit a PR
+
+## Enterprise Criteria Checklist
+
+### N2 (Primitives)
+- [ ] No useNyuchiHarness import
+- [ ] data-slot attribute on root element
+- [ ] data-portal attribute pointing to mzizi.dev/components/{name}
+- [ ] cn() for className composition
+- [ ] Zero raw Tailwind colors
+- [ ] Import icons from @/lib/icons
+- [ ] Touch targets follow styling-touch-targets (48px minimum)
+- [ ] If pill-shaped category (button, input, avatar, badge, toggle), use borderRadius 9999
+
+### N3 (Brand)
+- [ ] nyuchi- prefix on the name
+- [ ] useNyuchiHarness with full destructure { log, motion, LiveRegion }
+- [ ] animStyle with motion.prefersReduced check
+- [ ] ARIA role or aria-label
+- [ ] data-slot and data-portal attributes
+- [ ] focus-visible ring on interactive elements
+- [ ] min-h-[48px] touch targets on buttons (styling-touch-targets.comfortable)
+- [ ] I18N (Intl formatters for dates, numbers, currency)
+- [ ] Semantic tokens for status-bearing colors
+
+### N6 (Pages)
+- [ ] Pure composition — no inline buttons, cards, or SVGs
+- [ ] Accept children/slots for content
+- [ ] Semantic CSS vars only (bg-card, text-foreground, bg-primary)
+- [ ] Loading state prop
+- [ ] role="main" and aria-label
+- [ ] data-slot and data-portal
+
+### N8 (Assurance)
+- [ ] TypeScript module exporting typed functions and React hooks
+- [ ] Banner comment identifying node and purpose
+- [ ] Configurable rules array
+- [ ] Optional onViolation/onComplete callbacks
+- [ ] React hook variant for continuous monitoring
+
+## Accessibility Validation
+
+Before shipping a new component, validate text-on-background color combinations:
+
+```sql
+SELECT calculate_contrast_ratio('#FFFFFF', '#0047AB');
+-- Returns the WCAG 2.1 contrast ratio. AA needs 4.5, AAA needs 7.0.
+```
+
+For systematic pair tracking, look at `styling-accessibility-checks`. Every critical pair already has a row with computed ratio and color-blindness flags.
+
+## RTL Support
+
+Use logical CSS properties (margin-inline-start, padding-inline-end, inset-inline-start) not physical (margin-left, padding-right, left). Use text-align: start/end not left/right. Mark directional icons with data-rtl-mirror="true". The rtl-conformity-check N8 component validates these rules at runtime.
+
+## Versioning
+
+Use the log_version function:
+
+```sql
+SELECT log_version('button', 'fix', 'Fixed focus ring on disabled state', 'your-github-handle');
+```
+
+Change types: created, fix, enhancement, tokens_wired, node_moved, breaking, deprecated, docs.
+
+## Fundi Integration
+
+When N8 detects an issue with your component, Fundi creates a GitHub issue with structured labels. You can find issues related to your component at:
+
+github.com/nyuchi/design-portal/issues?q=label:fundi:node/{your-node}
