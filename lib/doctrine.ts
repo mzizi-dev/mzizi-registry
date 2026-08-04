@@ -20,9 +20,39 @@
  */
 
 import { readdirSync, readFileSync, existsSync } from "fs"
-import { join } from "path"
+import { join, resolve, sep } from "path"
 
 const DOCTRINE_ROOT = join(process.cwd(), "content", "doctrine")
+
+/**
+ * A single safe path segment: letters, digits, dot, underscore, hyphen — and never
+ * `.` or `..` on their own.
+ *
+ * `collection` and `slug` reach these functions from callers that may be handling a
+ * request parameter, so treating them as trusted is a path-traversal read: a `slug` of
+ * `../../../etc/passwd` would resolve outside the content tree. Validating the segment
+ * is the fix; a `replace()` that strips separators is not, because it leaves `..`
+ * intact.
+ */
+const SAFE_SEGMENT = /^[A-Za-z0-9._-]+$/
+
+function isSafeSegment(s: string): boolean {
+  return SAFE_SEGMENT.test(s) && s !== "." && s !== ".."
+}
+
+/**
+ * Join segments under DOCTRINE_ROOT, or return null if any segment is unsafe or the
+ * result escapes the root. The containment check is belt-and-braces behind the segment
+ * validation — defence in depth is cheap here and the failure mode is reading arbitrary
+ * files off the server.
+ */
+function safeDoctrinePath(...segments: string[]): string | null {
+  if (!segments.every(isSafeSegment)) return null
+  const candidate = resolve(DOCTRINE_ROOT, ...segments)
+  const root = resolve(DOCTRINE_ROOT)
+  if (candidate !== root && !candidate.startsWith(root + sep)) return null
+  return candidate
+}
 
 export type DoctrineDocument = {
   /** Frontmatter fields, as written by `doctrine:extract`. */
@@ -161,22 +191,25 @@ function parseFrontmatter(source: string): { data: Record<string, unknown>; body
 
 /** Every document in a doctrine collection. Returns [] when the directory is absent. */
 export function readDoctrineCollection(collection: string): DoctrineDocument[] {
-  const dir = join(DOCTRINE_ROOT, collection)
-  if (!existsSync(dir)) return []
+  const dir = safeDoctrinePath(collection)
+  if (!dir || !existsSync(dir)) return []
 
   return readdirSync(dir)
-    .filter((f) => f.endsWith(".mdx"))
+    .filter((f) => f.endsWith(".mdx") && isSafeSegment(f))
     .sort()
     .map((file) => {
-      const { data, body } = parseFrontmatter(readFileSync(join(dir, file), "utf8"))
+      const path = safeDoctrinePath(collection, file)
+      if (!path) return null
+      const { data, body } = parseFrontmatter(readFileSync(path, "utf8"))
       return { data, body, slug: file.replace(/\.mdx$/, "") }
     })
+    .filter((d): d is DoctrineDocument => d !== null)
 }
 
-/** One document by slug, or null. */
+/** One document by slug, or null. An unsafe collection or slug is simply not found. */
 export function readDoctrineDocument(collection: string, slug: string): DoctrineDocument | null {
-  const path = join(DOCTRINE_ROOT, collection, `${slug}.mdx`)
-  if (!existsSync(path)) return null
+  const path = safeDoctrinePath(collection, `${slug}.mdx`)
+  if (!path || !existsSync(path)) return null
   const { data, body } = parseFrontmatter(readFileSync(path, "utf8"))
   return { data, body, slug }
 }
