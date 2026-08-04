@@ -28,7 +28,7 @@
  *   const button = await getComponent("button")
  */
 
-import { doctrineRows, DOCTRINE } from "@/lib/doctrine"
+import { doctrineRows, readDoctrineSorted, DOCTRINE } from "@/lib/doctrine"
 import { createClient } from "@supabase/supabase-js"
 import type {
   ComponentRow,
@@ -1090,23 +1090,22 @@ export async function getNodeCounts(): Promise<Record<number, number>> {
  */
 export async function getHelixModel(): Promise<HelixModel> {
   const empty: HelixModel = { nodes: [], rungs: [], strands: [] }
-  if (!isSupabaseConfigured()) return empty
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const client = getPublicClient() as any
 
-  const [nodeRes, strandRes, counts] = await Promise.all([
-    client
-      .from("component_documents")
-      .select("document")
-      .eq("collection", "documentation-architecture-nodes"),
-    client
-      .from("component_documents")
-      .select("document")
-      .eq("collection", "documentation-architecture-strands"),
-    getNodeCounts(),
-  ])
+  // The helix comes from content/doctrine, not Supabase. Node counts still do — a
+  // count is derived from whatever components exist, which is database-owned.
+  // Deliberately NOT gated on isSupabaseConfigured(): the helix is files now, so
+  // /api/v1/architecture must keep answering when the database is unreachable.
+  const nodeRes = {
+    error: null,
+    data: readDoctrineSorted(DOCTRINE.nodes).map((d) => ({ document: d.data })),
+  }
+  const strandRes = {
+    error: null,
+    data: readDoctrineSorted(DOCTRINE.strands).map((d) => ({ document: d.data })),
+  }
+  const counts = isSupabaseConfigured() ? await getNodeCounts() : {}
 
-  if (nodeRes.error || !Array.isArray(nodeRes.data)) return empty
+  if (nodeRes.error || !Array.isArray(nodeRes.data) || nodeRes.data.length === 0) return empty
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const read = (row: any) => (row?.document ?? {}) as Record<string, unknown>
