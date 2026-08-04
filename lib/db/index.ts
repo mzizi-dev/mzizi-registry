@@ -28,6 +28,7 @@
  *   const button = await getComponent("button")
  */
 
+import { doctrineRows, DOCTRINE } from "@/lib/doctrine"
 import { createClient } from "@supabase/supabase-js"
 import type {
   ComponentRow,
@@ -51,23 +52,14 @@ import type {
   BrandMetaRow,
   BrandMetaInsert,
   ArchitecturePrincipleRow,
-  ArchitecturePrincipleInsert,
   ArchitectureFrameworkRow,
-  ArchitectureFrameworkInsert,
   ArchitectureDataLayerRow,
-  ArchitectureDataLayerInsert,
   ArchitectureCloudLayerRow,
-  ArchitectureCloudLayerInsert,
   ArchitecturePipelineRow,
-  ArchitecturePipelineInsert,
   ArchitectureDataOwnershipRow,
-  ArchitectureDataOwnershipInsert,
   ArchitectureSovereigntyRow,
-  ArchitectureSovereigntyInsert,
   ArchitectureRemovedRow,
-  ArchitectureRemovedInsert,
   AiInstructionRow,
-  AiInstructionInsert,
   ChangelogRow,
   ChangelogInsert,
   ChangelogListRow,
@@ -669,108 +661,57 @@ export async function getBrandSystem(): Promise<{
  * Get all architecture principles, sorted by sort_order.
  */
 export async function getArchitecturePrinciples(): Promise<ArchitecturePrincipleRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_principles")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitecturePrincipleRow[]
+  return doctrineRows<ArchitecturePrincipleRow>(DOCTRINE.principles)
 }
 
 /**
  * Get the framework decision (single row).
  */
 export async function getFrameworkDecision(): Promise<ArchitectureFrameworkRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_framework")
-    .select("*")
-    .limit(1)
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as ArchitectureFrameworkRow
+  const rows = doctrineRows<ArchitectureFrameworkRow>(DOCTRINE.framework)
+  return rows[0] ?? null
 }
 
 /**
  * Get local data layer technologies, sorted by sort_order.
  */
 export async function getLocalDataLayer(): Promise<ArchitectureDataLayerRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_data_layer")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureDataLayerRow[]
+  return doctrineRows<ArchitectureDataLayerRow>(DOCTRINE.dataLayer)
 }
 
 /**
  * Get cloud layer services, sorted by sort_order.
  */
 export async function getCloudLayer(): Promise<ArchitectureCloudLayerRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_cloud_layer")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureCloudLayerRow[]
+  return doctrineRows<ArchitectureCloudLayerRow>(DOCTRINE.cloudLayer)
 }
 
 /**
  * Get pipeline stages, sorted by sort_order.
  */
 export async function getPipeline(): Promise<ArchitecturePipelineRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_pipeline")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitecturePipelineRow[]
+  return doctrineRows<ArchitecturePipelineRow>(DOCTRINE.pipeline)
 }
 
 /**
  * Get data ownership rules, sorted by sort_order.
  */
 export async function getDataOwnership(): Promise<ArchitectureDataOwnershipRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_data_ownership")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureDataOwnershipRow[]
+  return doctrineRows<ArchitectureDataOwnershipRow>(DOCTRINE.dataOwnership)
 }
 
 /**
  * Get sovereignty assessments, sorted by sort_order.
  */
 export async function getSovereignty(): Promise<ArchitectureSovereigntyRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_sovereignty")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureSovereigntyRow[]
+  return doctrineRows<ArchitectureSovereigntyRow>(DOCTRINE.sovereignty)
 }
 
 /**
  * Get removed technologies.
  */
 export async function getRemovedTechnologies(): Promise<ArchitectureRemovedRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_removed")
-    .select("*")
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureRemovedRow[]
+  return doctrineRows<ArchitectureRemovedRow>(DOCTRINE.removed)
 }
 
 // ── Brand write operations (server-only) ───────────────────────────
@@ -874,205 +815,31 @@ export async function upsertBrandMeta(meta: BrandMetaInsert): Promise<BrandMetaR
 
 // ── Architecture write operations (server-only) ────────────────────
 
-/**
- * Upsert an architecture principle.
- */
-export async function upsertArchitecturePrinciple(
-  principle: ArchitecturePrincipleInsert
-): Promise<ArchitecturePrincipleRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_principles")
-    .upsert(principle, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitecturePrincipleRow
-}
-
-/**
- * Upsert the framework decision.
- */
-export async function upsertArchitectureFramework(
-  framework: ArchitectureFrameworkInsert
-): Promise<ArchitectureFrameworkRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_framework")
-    .upsert(framework, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureFrameworkRow
-}
-
-/**
- * Upsert a data layer technology.
- */
-export async function upsertArchitectureDataLayer(
-  tech: ArchitectureDataLayerInsert
-): Promise<ArchitectureDataLayerRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_data_layer")
-    .upsert(tech, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureDataLayerRow
-}
-
-/**
- * Upsert a cloud layer service.
- */
-export async function upsertArchitectureCloudLayer(
-  service: ArchitectureCloudLayerInsert
-): Promise<ArchitectureCloudLayerRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_cloud_layer")
-    .upsert(service, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureCloudLayerRow
-}
-
-/**
- * Upsert a pipeline stage.
- */
-export async function upsertArchitecturePipeline(
-  stage: ArchitecturePipelineInsert
-): Promise<ArchitecturePipelineRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_pipeline")
-    .upsert(stage, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitecturePipelineRow
-}
-
-/**
- * Upsert a data ownership rule.
- */
-export async function upsertArchitectureDataOwnership(
-  rule: ArchitectureDataOwnershipInsert
-): Promise<ArchitectureDataOwnershipRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_data_ownership")
-    .upsert(rule, { onConflict: "category" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureDataOwnershipRow
-}
-
-/**
- * Upsert a sovereignty assessment.
- */
-export async function upsertArchitectureSovereignty(
-  assessment: ArchitectureSovereigntyInsert
-): Promise<ArchitectureSovereigntyRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_sovereignty")
-    .upsert(assessment, { onConflict: "technology" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureSovereigntyRow
-}
-
-/**
- * Upsert a removed technology.
- */
-export async function upsertArchitectureRemoved(
-  removed: ArchitectureRemovedInsert
-): Promise<ArchitectureRemovedRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_removed")
-    .upsert(removed, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureRemovedRow
-}
-
 // ── AI instruction queries ─────────────────────────────────────────
 
 /**
  * Get an AI instruction by name (e.g., "nyuchi-mcp-system-prompt").
  */
 export async function getAiInstruction(name: string): Promise<AiInstructionRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("ai_instructions")
-    .select("*")
-    .eq("name", name)
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as AiInstructionRow
+  return (
+    doctrineRows<AiInstructionRow>(DOCTRINE.aiInstructions).find((r) => r.name === name) ?? null
+  )
 }
 
 /**
  * Get an AI instruction by target audience (mcp-server, claude, github-copilot, cursor).
  */
 export async function getAiInstructionByTarget(target: string): Promise<AiInstructionRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("ai_instructions")
-    .select("*")
-    .eq("target", target)
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as AiInstructionRow
+  return (
+    doctrineRows<AiInstructionRow>(DOCTRINE.aiInstructions).find((r) => r.target === target) ?? null
+  )
 }
 
 /**
  * Get all AI instructions.
  */
 export async function getAllAiInstructions(): Promise<AiInstructionRow[]> {
-  const { data, error } = await getPublicClient().from("ai_instructions").select("*").order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as AiInstructionRow[]
-}
-
-/**
- * Upsert an AI instruction (admin only).
- */
-export async function upsertAiInstruction(
-  instruction: AiInstructionInsert
-): Promise<AiInstructionRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("ai_instructions")
-    .upsert(instruction, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as AiInstructionRow
+  return doctrineRows<AiInstructionRow>(DOCTRINE.aiInstructions)
 }
 
 // ── Changelog queries ───────────────────────────────────────────────
@@ -1484,15 +1251,7 @@ export async function getSkill(name: string): Promise<SkillRow | null> {
  * isn't configured or the table is empty.
  */
 export async function getUbuntuPillars(): Promise<UbuntuPillarRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("ubuntu_pillars")
-    .select("*")
-    .order("sort_order", { ascending: true })
-
-  if (error || !Array.isArray(data)) return []
-  return data as UbuntuPillarRow[]
+  return doctrineRows<UbuntuPillarRow>(DOCTRINE.ubuntuPillars)
 }
 
 /**
@@ -1500,15 +1259,7 @@ export async function getUbuntuPillars(): Promise<UbuntuPillarRow[]> {
  * isn't configured or the table is empty.
  */
 export async function getUbuntuPrinciples(): Promise<UbuntuPrincipleRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("ubuntu_principles")
-    .select("*")
-    .order("sort_order", { ascending: true })
-
-  if (error || !Array.isArray(data)) return []
-  return data as UbuntuPrincipleRow[]
+  return doctrineRows<UbuntuPrincipleRow>(DOCTRINE.ubuntuPrinciples)
 }
 
 // ── Observability open-data — issue #84 ─────────────────────────────
