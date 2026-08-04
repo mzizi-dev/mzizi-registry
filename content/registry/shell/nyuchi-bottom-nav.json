@@ -1,0 +1,78 @@
+{
+  "_id": "nyuchi-bottom-nav",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Focus-visible ring on interactive elements", "ARIA attributes"],
+  "addedInVersion": "7.0.0",
+  "category": "shell",
+  "collection": "shell",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Mobile-only bottom navigation bar for Nyuchi ecosystem apps. Supports a center FAB (floating action button) — a raised button in the app mineral accent colour with a glow shadow. The center FAB is the primary creation entry point, making the \"create\" action instantly recognizable across all apps.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "App shell infrastructure",
+    "Cross-layer wiring (L7→L8→L9)",
+    "data-slot + data-portal DOM attributes",
+    "Harness integration"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-bottom-nav.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-bottom-nav",
+  "node": 7,
+  "nodeLabel": "shell",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "shell", "nyuchi", "navigation", "center-fab", "mobile"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-bottom-nav",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-bottom-nav",
+    "health": "https://mzizi.dev/api/health/nyuchi-bottom-nav",
+    "playground": "https://mzizi.dev/playground/nyuchi-bottom-nav",
+    "portal": "https://mzizi.dev/components/nyuchi-bottom-nav",
+    "source": "https://mzizi.dev/source/nyuchi-bottom-nav"
+  },
+  "use_cases": [
+    "Mobile primary navigation across all Nyuchi apps",
+    "Bottom-tab navigation with center FAB",
+    "Mobile-first app shells",
+    "Tablet bottom navigation",
+    "Thumb-friendly nav with primary create action"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-bottom-nav",
+    "latestAt": "2026-04-14T04:26:49.262826+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1822,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "duration-emphasis",
+  "_schemaVersion": "v1",
+  "collection": "styling-motion",
+  "css_var": "--motion-duration-emphasis",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "motion_type": "duration",
+  "ms": 350,
+  "name": "duration-emphasis",
+  "node": 1,
+  "owner": "bundu",
+  "reduced_motion_fallback": "0ms",
+  "sort_order": 30,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Meaningful motion — page transitions, modal open/close, drawers",
+  "value": "350ms"
+}

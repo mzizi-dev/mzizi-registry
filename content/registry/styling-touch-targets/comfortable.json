@@ -1,0 +1,22 @@
+{
+  "_id": "comfortable",
+  "_schemaVersion": "v1",
+  "collection": "styling-touch-targets",
+  "context": "primary",
+  "css_var": "--touch-default",
+  "currentVersion": 2,
+  "default_px": 47,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "kind": "token",
+  "min_px": 47,
+  "model": "mzizi-dna-helix",
+  "name": "comfortable",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 30,
+  "standard": "Prime 47 — exceeds Apple HIG 44 and WCAG 2.5.5",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Default primary buttons and major CTAs in apps, tools, and artifacts."
+}

@@ -1,0 +1,19 @@
+{
+  "_id": "mzizi-react-legacy:wallet-card",
+  "_schemaVersion": "v1",
+  "collection": "primitive-sources",
+  "currentVersion": 1,
+  "descriptor_slug": "mzizi-react-legacy",
+  "dnaRole": "machinery",
+  "doctrineVersion": "4.1.0",
+  "kind": "primitive_source",
+  "model": "mzizi-dna-helix",
+  "node": 2,
+  "notes": "Mzizi-originated: encodes MIT/MXT/NST/NHC token types with mineral gradient styling. Specific to the four Mukoko Foundation tokens; no upstream Web3 library knows about these tokens. Stays mzizi-react-legacy only.",
+  "overrides_bundu": {},
+  "owner": "framework",
+  "pinned_version": null,
+  "primitive_name": "wallet-card",
+  "strand": "core-guarantee",
+  "upstream_path": "wallet-card"
+}

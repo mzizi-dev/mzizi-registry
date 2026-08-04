@@ -1,0 +1,40 @@
+{
+  "_id": "protea",
+  "_schemaVersion": "v1",
+  "collection": "styling-washed-themes",
+  "contrast_floor_text": "P7",
+  "currentVersion": 1,
+  "dark": {
+    "accent": "#CA3188",
+    "card": "#29161F",
+    "container": "#35212D",
+    "foreground": "#F5F5F4",
+    "ground": "#25111B",
+    "muted_foreground": "#B2AFA8",
+    "on_container": "#ED98C9"
+  },
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "kind": "token",
+  "light": {
+    "accent": "#D34998",
+    "card": "#ECE2E6",
+    "container": "#EBDBE4",
+    "foreground": "#141413",
+    "ground": "#F1E7EB",
+    "muted_foreground": "#494840",
+    "on_container": "#841656"
+  },
+  "model": "mzizi-dna-helix",
+  "name": "protea",
+  "node": 1,
+  "owner": "bundu",
+  "recipe": "ground = base + accent at wash pct; card = surface + accent at wash pct (color-mix in srgb); foregrounds = canonical foreground/muted-foreground (AAA verified)",
+  "sort_order": 13,
+  "source_collection": "styling-experimental",
+  "source_palette": "protea",
+  "strand": "swappable",
+  "swappable": true,
+  "wash_pct_dark": 12,
+  "wash_pct_light": 7
+}

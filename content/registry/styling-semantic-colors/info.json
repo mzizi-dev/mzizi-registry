@@ -1,0 +1,21 @@
+{
+  "_id": "info",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "semantic",
+  "currentVersion": 1,
+  "dark_value": "#00B0FF",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "hc_dark_value": "#66CCFF",
+  "hc_light_value": "#003380",
+  "kind": "token",
+  "light_value": "#0047AB",
+  "model": "mzizi-dna-helix",
+  "name": "info",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Informational states"
+}

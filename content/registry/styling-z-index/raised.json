@@ -1,0 +1,20 @@
+{
+  "_id": "raised",
+  "_schemaVersion": "v1",
+  "category": "content",
+  "collection": "styling-z-index",
+  "css_var": "--z-raised",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "raised",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 40,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Elevated content cards — featured items, highlighted sections",
+  "value": 20
+}

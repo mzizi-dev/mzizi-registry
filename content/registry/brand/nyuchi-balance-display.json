@@ -1,0 +1,82 @@
+{
+  "_id": "nyuchi-balance-display",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "aria-live for balance updates",
+    "Focus-visible on action buttons",
+    "48px touch targets"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "ecommerce",
+  "collection": "brand",
+  "createdAt": "2026-04-11T05:34:49.069808+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Token balance display card for the Mukoko wallet. Shows primary balance with MIT currency, secondary fiat conversion, and quick action buttons (Send, Receive, Swap). Maps to wallet.balance table. Used at the top of wallet views and in mini wallet widgets.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "MIT currency formatting",
+    "Fiat conversion display",
+    "Quick action buttons (Send, Receive, Swap)",
+    "Harness integration",
+    "Maps to wallet.balance table"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-balance-display.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["wallet", "bushtrade", "nhimbe"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-balance-display",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["card", "button", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": null,
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "ecommerce", "wallet", "balance", "nyuchi", "mit"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-balance-display",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-balance-display",
+    "health": "https://mzizi.dev/api/health/nyuchi-balance-display",
+    "playground": "https://mzizi.dev/playground/nyuchi-balance-display",
+    "portal": "https://mzizi.dev/components/nyuchi-balance-display",
+    "source": "https://mzizi.dev/source/nyuchi-balance-display"
+  },
+  "use_cases": [
+    "Wallet home screen hero",
+    "Mini wallet widget",
+    "Payment confirmation balance check",
+    "Transaction receipt header"
+  ],
+  "variants": ["full", "compact", "mini"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-balance-display",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2021,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

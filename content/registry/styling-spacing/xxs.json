@@ -1,0 +1,19 @@
+{
+  "_id": "xxs",
+  "_schemaVersion": "v1",
+  "collection": "styling-spacing",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "xxs",
+  "node": 1,
+  "owner": "bundu",
+  "px": 2,
+  "rem": "0.125rem",
+  "sort_order": 5,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Hairline gaps — chip-in-chip, icon-to-badge, inline meta separators"
+}

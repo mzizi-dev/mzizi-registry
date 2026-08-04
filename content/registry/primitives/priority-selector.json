@@ -1,0 +1,68 @@
+{
+  "_id": "priority-selector",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "forms",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:43:28.091468+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Task/item priority picker with visual indicators — none, low, medium, high, urgent. Mineral-colored dots: grey=none, cobalt=low, gold=medium, terracotta=high, destructive=urgent. Compact inline selector for use in task forms, issue trackers, and ticket systems.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/priority-selector.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["planner"],
+  "model": "mzizi-dna-helix",
+  "name": "priority-selector",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android"],
+  "registryDependencies": ["toggle-group", "badge"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "selector",
+  "swappable": false,
+  "tags": ["priority", "selector", "task", "importance"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/priority-selector",
+    "changelog": "https://mzizi.dev/changelog/priority-selector",
+    "health": "https://mzizi.dev/api/health/priority-selector",
+    "playground": "https://mzizi.dev/playground/priority-selector",
+    "portal": "https://mzizi.dev/components/priority-selector",
+    "source": "https://mzizi.dev/source/priority-selector"
+  },
+  "use_cases": ["planner"],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "priority-selector",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2513,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

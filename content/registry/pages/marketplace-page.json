@@ -1,0 +1,73 @@
+{
+  "_id": "marketplace-page",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "commerce",
+  "collection": "pages",
+  "createdAt": "2026-04-13T23:28:42.086014+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Marketplace/storefront browsing page. Search, category filters, grid/list toggle, product cards. Competitors: Jumia, Amazon, Alibaba, Facebook Marketplace.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/marketplace-page.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["bushtrade", "nhimbe", "places"],
+  "model": "mzizi-dna-helix",
+  "name": "marketplace-page",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "marketplace",
+  "swappable": false,
+  "tags": ["marketplace", "commerce", "shopping", "products", "search", "page"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/marketplace-page",
+    "changelog": "https://mzizi.dev/changelog/marketplace-page",
+    "health": "https://mzizi.dev/api/health/marketplace-page",
+    "playground": "https://mzizi.dev/playground/marketplace-page",
+    "portal": "https://mzizi.dev/components/marketplace-page",
+    "source": "https://mzizi.dev/source/marketplace-page"
+  },
+  "use_cases": ["nhimbe", "places", "bushtrade"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "marketplace-page",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1966,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

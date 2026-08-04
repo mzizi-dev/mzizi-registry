@@ -1,0 +1,81 @@
+{
+  "_id": "mzizi-did-gate",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Screen reader announces gate state", "Focus management on state change"],
+  "addedInVersion": "7.0.0",
+  "category": "safety",
+  "collection": "safety",
+  "createdAt": "2026-04-13T22:26:01.246538+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Decentralized Identifier (DID) credential gate. Verifies W3C Verifiable Credentials from the Nyuchi Honeycomb pod. Works offline by checking the local credential store first, then validates against the server when connectivity returns. Shows \"locally verified\" vs \"server confirmed\" status.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Y-axis safety spine",
+    "Renders children when check passes",
+    "Branded explanation when blocked",
+    "Web2 safety gate"
+  ],
+  "files": [
+    {
+      "path": "components/ui/mzizi-did-gate.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": ["wallet", "nhimbe", "shamwari", "health", "jobs"],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-did-gate",
+  "node": 4,
+  "nodeLabel": "safety",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "gate",
+  "swappable": false,
+  "tags": [
+    "gate",
+    "did",
+    "decentralized",
+    "identity",
+    "verifiable-credential",
+    "honeycomb",
+    "web3",
+    "offline"
+  ],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-did-gate",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-did-gate",
+    "health": "https://mzizi.dev/api/health/nyuchi-did-gate",
+    "playground": "https://mzizi.dev/playground/nyuchi-did-gate",
+    "portal": "https://mzizi.dev/components/nyuchi-did-gate",
+    "source": "https://mzizi.dev/source/nyuchi-did-gate"
+  },
+  "use_cases": ["Access control", "Security gate", "Verification check"],
+  "variants": ["allowed", "blocked", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-did-gate",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2163,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

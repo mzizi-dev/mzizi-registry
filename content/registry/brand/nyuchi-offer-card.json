@@ -1,0 +1,88 @@
+{
+  "_id": "nyuchi-offer-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "listing",
+  "collection": "brand",
+  "createdAt": "2026-04-11T05:34:10.317262+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Commerce offer/product card for Bush Trade with price display, original/discount pricing, availability, seller verification badge, and inquiry CTA. Maps to commerce.offer and commerce.product tables. Used in Bush Trade marketplace, commerce listings, and deal displays.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes",
+    "I18N via Intl formatters"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-offer-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-offer-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
+    "badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "listing", "commerce", "bushtrade", "nyuchi"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-offer-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-offer-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-offer-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-offer-card",
+    "portal": "https://mzizi.dev/components/nyuchi-offer-card",
+    "source": "https://mzizi.dev/source/nyuchi-offer-card"
+  },
+  "use_cases": [
+    "Bush Trade marketplace product cards",
+    "Commerce listing grids",
+    "Deal and offer displays",
+    "Seller marketplace listings",
+    "Inquiry-driven commerce interfaces"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-offer-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2263,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

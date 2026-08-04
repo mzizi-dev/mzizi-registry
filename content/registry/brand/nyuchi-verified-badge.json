@@ -1,0 +1,88 @@
+{
+  "_id": "nyuchi-verified-badge",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "aria-label describes verification tier",
+    "Tooltip accessible via focus",
+    "Screen reader announces trust level"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "identity",
+  "collection": "brand",
+  "createdAt": "2026-04-11T04:14:51.767409+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["class-variance-authority"],
+  "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. Renders the appropriate mineral-colored badge for each tier — Terracotta (Community 0.10), Cobalt (OTP 0.20), Gold (Government 0.30), Tanzanite (Licensed 0.50). Suspended/ancestral accounts show a dimmed or memorial variant. Used inline next to names, on profile headers, listing cards, and anywhere trust needs to be communicated.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Three-axis trust model: Status × Tier → Score",
+    "Mineral-colored per tier",
+    "Tooltip with tier explanation",
+    "Maps to system.verification_tier"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-verified-badge.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-verified-badge",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["tooltip", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": ["sm", "md", "lg"],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "identity", "verification", "badge", "nyuchi", "trust"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-verified-badge",
+    "health": "https://mzizi.dev/api/health/nyuchi-verified-badge",
+    "playground": "https://mzizi.dev/playground/nyuchi-verified-badge",
+    "portal": "https://mzizi.dev/components/nyuchi-verified-badge",
+    "source": "https://mzizi.dev/source/nyuchi-verified-badge"
+  },
+  "use_cases": [
+    "Profile header verification display",
+    "Inline name verification",
+    "Listing card trust indicator",
+    "Search result trust signal"
+  ],
+  "variants": [
+    "community (terracotta)",
+    "otp (cobalt)",
+    "government (gold)",
+    "licensed (tanzanite)",
+    "suspended (dimmed)",
+    "ancestral (memorial)"
+  ],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-verified-badge",
+    "latestAt": "2026-04-24T14:04:51.518651+00:00",
+    "latestVersion": "1.0.1",
+    "latestVersionId": 2658,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 8
+  }
+}

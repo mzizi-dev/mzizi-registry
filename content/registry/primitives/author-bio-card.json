@@ -1,0 +1,73 @@
+{
+  "_id": "author-bio-card",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:38:13.928415+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Author profile card with avatar, bio, works count, subscriber count, revenue sharing indicator, and follow button. Maps to identity.person + novels.work tables. Used on novel detail pages and author directory.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/author-bio-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["novels"],
+  "model": "mzizi-dna-helix",
+  "name": "author-bio-card",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "card",
+    "avatar",
+    "button",
+    "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "card",
+  "swappable": false,
+  "tags": ["author", "profile", "writer", "bio", "publishing", "reading"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/author-bio-card",
+    "changelog": "https://mzizi.dev/changelog/author-bio-card",
+    "health": "https://mzizi.dev/api/health/author-bio-card",
+    "playground": "https://mzizi.dev/playground/author-bio-card",
+    "portal": "https://mzizi.dev/components/author-bio-card",
+    "source": "https://mzizi.dev/source/author-bio-card"
+  },
+  "use_cases": ["novels"],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "author-bio-card",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2562,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

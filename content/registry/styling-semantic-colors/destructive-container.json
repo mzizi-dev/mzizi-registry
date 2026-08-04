@@ -1,0 +1,21 @@
+{
+  "_id": "destructive-container",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "semantic",
+  "currentVersion": 1,
+  "dark_value": "#3E1818",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "hc_dark_value": null,
+  "hc_light_value": null,
+  "kind": "token",
+  "light_value": "#FDEDED",
+  "model": "mzizi-dna-helix",
+  "name": "destructive-container",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Soft background behind destructive content. Follows mineral container pattern."
+}

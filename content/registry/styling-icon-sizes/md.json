@@ -1,0 +1,20 @@
+{
+  "_id": "md",
+  "_schemaVersion": "v1",
+  "collection": "styling-icon-sizes",
+  "css_var": "--icon-md",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "md",
+  "node": 1,
+  "owner": "bundu",
+  "px": 24,
+  "rem": "1.5rem",
+  "sort_order": 40,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Medium icons (section headers, prominent controls)"
+}

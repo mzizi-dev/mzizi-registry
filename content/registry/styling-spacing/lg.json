@@ -1,0 +1,19 @@
+{
+  "_id": "lg",
+  "_schemaVersion": "v1",
+  "collection": "styling-spacing",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "lg",
+  "node": 1,
+  "owner": "bundu",
+  "px": 24,
+  "rem": "1.5rem",
+  "sort_order": 100,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Section padding, card gaps"
+}

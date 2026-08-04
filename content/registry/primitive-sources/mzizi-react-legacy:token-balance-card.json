@@ -1,0 +1,19 @@
+{
+  "_id": "mzizi-react-legacy:token-balance-card",
+  "_schemaVersion": "v1",
+  "collection": "primitive-sources",
+  "currentVersion": 1,
+  "descriptor_slug": "mzizi-react-legacy",
+  "dnaRole": "machinery",
+  "doctrineVersion": "4.1.0",
+  "kind": "primitive_source",
+  "model": "mzizi-dna-helix",
+  "node": 2,
+  "notes": "Mzizi-originated: multi-token balance view for the four Mukoko tokens (MIT, MXT, NST, NHC). Hardcoded to ecosystem token set. Stays mzizi-react-legacy only.",
+  "overrides_bundu": {},
+  "owner": "framework",
+  "pinned_version": null,
+  "primitive_name": "token-balance-card",
+  "strand": "core-guarantee",
+  "upstream_path": "token-balance-card"
+}

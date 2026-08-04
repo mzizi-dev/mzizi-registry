@@ -1,0 +1,19 @@
+{
+  "_id": "5xl",
+  "_schemaVersion": "v1",
+  "collection": "styling-spacing",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "5xl",
+  "node": 1,
+  "owner": "bundu",
+  "px": 96,
+  "rem": "6rem",
+  "sort_order": 220,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Hero section spacing — prominent landing blocks"
+}

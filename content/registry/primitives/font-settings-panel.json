@@ -1,0 +1,68 @@
+{
+  "_id": "font-settings-panel",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "forms",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:38:13.928415+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Reader customization panel for font size, line height, theme (light/dark/sepia), font family (Noto Sans/Serif/system), and text alignment. Persisted per-user in the Digital Twin preferences. Used in Novels reader and News article reader mode.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/font-settings-panel.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["novels", "news"],
+  "model": "mzizi-dna-helix",
+  "name": "font-settings-panel",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android"],
+  "registryDependencies": ["slider", "radio-group", "card"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "settings",
+  "swappable": false,
+  "tags": ["font", "reader", "settings", "typography", "publishing", "reading"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/font-settings-panel",
+    "changelog": "https://mzizi.dev/changelog/font-settings-panel",
+    "health": "https://mzizi.dev/api/health/font-settings-panel",
+    "playground": "https://mzizi.dev/playground/font-settings-panel",
+    "portal": "https://mzizi.dev/components/font-settings-panel",
+    "source": "https://mzizi.dev/source/font-settings-panel"
+  },
+  "use_cases": ["novels", "news"],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "font-settings-panel",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2518,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

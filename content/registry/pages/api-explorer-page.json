@@ -1,0 +1,73 @@
+{
+  "_id": "api-explorer-page",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "infrastructure",
+  "collection": "pages",
+  "createdAt": "2026-04-14T00:38:46.95+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "API explorer/playground page. Endpoint browser, request builder, response viewer, auth token input. For Nyuchi Web Services API docs. Competitors: Swagger UI, Postman, Stripe API Reference.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/api-explorer-page.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["console"],
+  "model": "mzizi-dna-helix",
+  "name": "api-explorer-page",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "api",
+  "swappable": false,
+  "tags": ["api", "explorer", "playground", "developer", "documentation", "rest", "page"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/api-explorer-page",
+    "changelog": "https://mzizi.dev/changelog/api-explorer-page",
+    "health": "https://mzizi.dev/api/health/api-explorer-page",
+    "playground": "https://mzizi.dev/playground/api-explorer-page",
+    "portal": "https://mzizi.dev/components/api-explorer-page",
+    "source": "https://mzizi.dev/source/api-explorer-page"
+  },
+  "use_cases": ["console"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "api-explorer-page",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1962,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

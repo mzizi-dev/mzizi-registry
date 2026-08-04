@@ -1,0 +1,30 @@
+{
+  "_id": "input",
+  "_schemaVersion": "v1",
+  "border_radius": 9999,
+  "collection": "styling-component-specs",
+  "component_name": "input",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "example": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\n/* ═══════════════════════════════════════════════════════════════\n   INPUT — Layer 2 Primitive\n   \n   Nyuchi Frontend Architecture: Layer 2 (Primitives)\n   \n   Token compliance:\n   ✅ Radius: rounded-full (9999px) — inputs use pill radius per brand\n   ✅ Touch target: h-12 (48px) — meets minimum touch target\n   ✅ Focus ring: uses --ring token from semantic layer\n   ✅ Colors: uses semantic tokens (input, foreground, muted-foreground)\n   ✅ data-slot: present for CSS targeting\n   \n   Height was 36px (h-9) — VIOLATION of 48px minimum.\n   Now 48px (h-12) as the base, with touch-safe proportions.\n   ═══════════════════════════════════════════════════════════════ */\n\nfunction Input({ className, type, ...props }: React.ComponentProps<\"input\">) {\n  return (\n    <input\n      type={type}\n      data-slot=\"input\" data-portal=\"https://mzizi.dev/components/input\"\n      className={cn(\n        \"h-12 w-full min-w-0 rounded-full border border-input bg-input/30 px-4 py-1 text-base transition-colors outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 md:text-sm dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40\",\n        className\n      )}\n      {...props}\n    />\n  )\n}\n\nexport { Input }\n",
+  "heights": {
+    "default": 56,
+    "sm": 48
+  },
+  "kind": "token",
+  "min_touch_target": 48,
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "note": "Inputs are pill-shaped to match buttons.",
+  "owner": "bundu",
+  "padding": "px-4",
+  "sort_order": 10,
+  "strand": "swappable",
+  "swappable": true,
+  "variants": ["default", "error"]
+}

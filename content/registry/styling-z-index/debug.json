@@ -1,0 +1,20 @@
+{
+  "_id": "debug",
+  "_schemaVersion": "v1",
+  "category": "debug",
+  "collection": "styling-z-index",
+  "css_var": "--z-debug",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "debug",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 210,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Developer debug overlays — above all production stacking",
+  "value": 99999
+}

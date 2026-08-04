@@ -1,0 +1,20 @@
+{
+  "_id": "sm",
+  "_schemaVersion": "v1",
+  "collection": "styling-icon-sizes",
+  "css_var": "--icon-sm",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "sm",
+  "node": 1,
+  "owner": "bundu",
+  "px": 16,
+  "rem": "1rem",
+  "sort_order": 20,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Small inline icons in body text and compact UI"
+}

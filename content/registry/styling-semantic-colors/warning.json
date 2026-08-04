@@ -1,0 +1,21 @@
+{
+  "_id": "warning",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "semantic",
+  "currentVersion": 1,
+  "dark_value": "#FFD866",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "hc_dark_value": "#FFE080",
+  "hc_light_value": "#5C4400",
+  "kind": "token",
+  "light_value": "#7A5C00",
+  "model": "mzizi-dna-helix",
+  "name": "warning",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Warning states, caution"
+}

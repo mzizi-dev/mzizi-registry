@@ -1,0 +1,104 @@
+{
+  "_id": "nyuchi-fundi",
+  "_schemaVersion": "v0.1",
+  "a11y": null,
+  "addedInVersion": "7.0.0",
+  "category": "fundi",
+  "collection": "fundi",
+  "createdAt": "2026-04-13T23:00:36.940485+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Fundi — the self-healing intelligence engine. Swahili for fixer/mechanic/technician. N9 acts on what N8 observes. Built in Rust, deployed as a Cloudflare Worker (workers-rs crate, compiled to WebAssembly). NOT a Cloudflare Worker (Rust/WASM) — Fundi is independent of the database vendor. Reads fundi_issues and observability_events from Supabase via REST API. Classifies failure patterns, deduplicates against open GitHub issues, creates structured remediation tickets. Triggered by Cloudflare Cron Triggers and Cloudflare Queues.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Decision engine with 6 rules",
+    "Dual client/server architecture",
+    "GitHub issue integration",
+    "Healing plan creation",
+    "Human-in-the-loop via GitHub"
+  ],
+  "files": [
+    {
+      "path": "lib/nyuchi-fundi.tsx",
+      "type": "registry:lib"
+    }
+  ],
+  "framework": "rust",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-fundi",
+  "node": 9,
+  "nodeLabel": "fundi",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:lib",
+  "runtimeLang": "rust",
+  "sizes": null,
+  "status": "stable",
+  "subcategory": "healing",
+  "swappable": false,
+  "tags": [
+    "fundi",
+    "self-healing",
+    "agent",
+    "intelligence",
+    "remediation",
+    "recovery",
+    "autonomous"
+  ],
+  "type": "rung",
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-fundi",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-fundi",
+    "health": "https://mzizi.dev/api/health/nyuchi-fundi",
+    "playground": "https://mzizi.dev/playground/nyuchi-fundi",
+    "portal": "https://mzizi.dev/components/nyuchi-fundi",
+    "source": "https://mzizi.dev/source/nyuchi-fundi"
+  },
+  "use_cases": [
+    "Client-side healing decisions",
+    "Wrap app in FundiProvider",
+    "Auto-heal or escalate to human",
+    "Server-side healing via edge function"
+  ],
+  "variants": null,
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-fundi",
+    "latestAt": "2026-04-29T14:41:46.078428+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2725,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

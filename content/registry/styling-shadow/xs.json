@@ -1,0 +1,21 @@
+{
+  "_id": "xs",
+  "_schemaVersion": "v1",
+  "collection": "styling-shadow",
+  "css_var": "--shadow-xs",
+  "currentVersion": 1,
+  "dark_value": "0 1px 2px 0 rgba(0, 0, 0, 0.40)",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "elevation": 1,
+  "kind": "token",
+  "light_value": "0 1px 2px 0 rgba(20, 20, 19, 0.04)",
+  "model": "mzizi-dna-helix",
+  "name": "xs",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 10,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Subtle lift — hover states on cards, resting toggles"
+}

@@ -1,0 +1,20 @@
+{
+  "_id": "md",
+  "_schemaVersion": "v1",
+  "collection": "styling-radius",
+  "css_var": "--radius-md",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "md",
+  "node": 1,
+  "owner": "bundu",
+  "px": 12,
+  "rem": "0.75rem",
+  "sort_order": 30,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Ecosystem number — inputs, small cards, secondary surfaces"
+}

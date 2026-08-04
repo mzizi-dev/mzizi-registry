@@ -1,0 +1,68 @@
+{
+  "_id": "translation-indicator",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:39:43.305421+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Shows translation status and language of content. Indicates whether content is original, machine-translated, or community-translated. Links to Lingo for translation contribution. Used on articles, listings, and chat messages.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/translation-indicator.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["news", "lingo", "campfire"],
+  "model": "mzizi-dna-helix",
+  "name": "translation-indicator",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android"],
+  "registryDependencies": ["badge", "tooltip"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "indicator",
+  "swappable": false,
+  "tags": ["translation", "language", "lingo", "i18n", "i18n", "accessibility"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/translation-indicator",
+    "changelog": "https://mzizi.dev/changelog/translation-indicator",
+    "health": "https://mzizi.dev/api/health/translation-indicator",
+    "playground": "https://mzizi.dev/playground/translation-indicator",
+    "portal": "https://mzizi.dev/components/translation-indicator",
+    "source": "https://mzizi.dev/source/translation-indicator"
+  },
+  "use_cases": ["campfire", "news", "lingo"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "translation-indicator",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2074,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

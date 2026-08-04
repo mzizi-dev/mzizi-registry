@@ -1,0 +1,19 @@
+{
+  "_id": "interchain-ui:wallet-connect-button",
+  "_schemaVersion": "v1",
+  "collection": "primitive-sources",
+  "currentVersion": 1,
+  "descriptor_slug": "interchain-ui",
+  "dnaRole": "machinery",
+  "doctrineVersion": "4.1.0",
+  "kind": "primitive_source",
+  "model": "mzizi-dna-helix",
+  "node": 2,
+  "notes": "Generic wallet connect/disconnect with address truncation. Defer to Interchain UI; no Mzizi-specific behaviour. Existing mzizi-react-legacy source pre-dates awareness of Interchain UI and is kept only for back-compat.",
+  "overrides_bundu": {},
+  "owner": "framework",
+  "pinned_version": null,
+  "primitive_name": "wallet-connect-button",
+  "strand": "core-guarantee",
+  "upstream_path": "@interchain-ui/react::ConnectModal"
+}

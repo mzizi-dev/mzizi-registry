@@ -1,0 +1,78 @@
+{
+  "_id": "nyuchi-harness",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Semantic HTML"],
+  "addedInVersion": "7.0.0",
+  "category": "infrastructure",
+  "collection": "brand",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": "1",
+  "dependencies": [],
+  "description": "The Nyuchi component harness — the vertical infrastructure spine (useNyuchiHarness hook + NyuchiHarness wrapper) giving N3 brand, N4 safety, and N5 resilience components scoped logging, motion, and an accessible shared live region. Self-contained; adapt the console logger to your app observability layer.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "lib/harness/index.tsx",
+      "type": "registry:lib"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-harness",
+  "node": 5,
+  "nodeLabel": "resilience",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["utils"],
+  "registryType": "registry:lib",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "sources": [
+    {
+      "baseUrl": "https://ui.shadcn.com/r/styles/default/",
+      "descriptor": "react",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "utils.json"
+    }
+  ],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": true,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/utils",
+    "changelog": "https://mzizi.dev/changelog/utils",
+    "health": "https://mzizi.dev/api/health/utils",
+    "playground": "https://mzizi.dev/playground/utils",
+    "portal": "https://mzizi.dev/components/utils",
+    "source": "https://mzizi.dev/source/utils"
+  },
+  "use_cases": [
+    "cn() classname composition across all layers",
+    "Shared utility functions for formatting",
+    "Tailwind class merging helpers",
+    "Common type predicates and guards",
+    "Universal helpers imported everywhere"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "utils",
+    "latestAt": "2026-04-13T23:04:02.930878+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 436,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

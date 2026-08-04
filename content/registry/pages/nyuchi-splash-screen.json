@@ -1,0 +1,91 @@
+{
+  "_id": "nyuchi-splash-screen",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "feedback",
+  "collection": "pages",
+  "createdAt": "2026-04-13T23:19:15.637348+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Default splash/loading screen shown on app launch or during major transitions. Branded with mukoko wordmark and mineral accent. Supports progress indication for initial data hydration.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-splash-screen.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-splash-screen",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "splash",
+  "swappable": false,
+  "tags": ["splash", "loading", "launch", "progress", "hydration", "page"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-splash-screen",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-splash-screen",
+    "health": "https://mzizi.dev/api/health/nyuchi-splash-screen",
+    "playground": "https://mzizi.dev/playground/nyuchi-splash-screen",
+    "portal": "https://mzizi.dev/components/nyuchi-splash-screen",
+    "source": "https://mzizi.dev/source/nyuchi-splash-screen"
+  },
+  "use_cases": ["pulse", "shamwari", "campfire", "circles", "bytes"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-splash-screen",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1940,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 8
+  }
+}

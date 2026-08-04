@@ -1,0 +1,17 @@
+{
+  "_id": "ultrawide",
+  "_schemaVersion": "v1",
+  "breakpoint": "ultrawide",
+  "collection": "styling-density-breakpoints",
+  "currentVersion": 1,
+  "default_density": "compact",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "rationale": "Ultrawide and 4K (1920px+). Compact. Max-content of 1600px prevents content sprawl. If a hero page wants spacious density here, it requests it explicitly.",
+  "strand": "swappable",
+  "swappable": true
+}

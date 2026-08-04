@@ -1,0 +1,82 @@
+{
+  "_id": "chart-radar-default",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "components",
+  "createdAt": "2026-04-07T07:22:57.249594+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["recharts"],
+  "description": "Radar chart — default variant.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/blocks/charts/chart-radar-default.tsx",
+      "type": "registry:block"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "chart-radar-default",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "framework",
+  "platforms": ["web"],
+  "registryDependencies": ["chart"],
+  "registryType": "registry:block",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "sources": [
+    {
+      "baseUrl": "https://ui.shadcn.com/r/styles/default/",
+      "descriptor": "react",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "chart-radar-default.json"
+    }
+  ],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": true,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/chart-radar-default",
+    "changelog": "https://mzizi.dev/changelog/chart-radar-default",
+    "health": "https://mzizi.dev/api/health/chart-radar-default",
+    "playground": "https://mzizi.dev/playground/chart-radar-default",
+    "portal": "https://mzizi.dev/components/chart-radar-default",
+    "source": "https://mzizi.dev/source/chart-radar-default"
+  },
+  "use_cases": [
+    "Skill assessment visualization (multi-dimension profile)",
+    "Product feature comparison",
+    "Performance review visualisations",
+    "Character and attribute displays",
+    "Multi-axis competitive comparisons"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "chart-radar-default",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2119,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

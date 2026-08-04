@@ -1,0 +1,83 @@
+{
+  "_id": "mzizi-content-gate",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Screen reader announces gate state", "Focus management on state change"],
+  "addedInVersion": "7.0.0",
+  "category": "safety",
+  "collection": "safety",
+  "createdAt": "2026-04-13T21:51:28.13082+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Content access gate with age verification, location restrictions, and content sensitivity filters. Renders children when all checks pass. Shows a branded explanation with the specific restriction reason when blocked. Supports multiple gate types that can be composed.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Y-axis safety spine",
+    "Renders children when check passes",
+    "Branded explanation when blocked",
+    "Web2 safety gate"
+  ],
+  "files": [
+    {
+      "path": "components/ui/mzizi-content-gate.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "bytes",
+    "circles",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-content-gate",
+  "node": 4,
+  "nodeLabel": "safety",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["https://mzizi.dev/api/v1/ui/nyuchi-harness", "utils"],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "gate",
+  "swappable": false,
+  "tags": ["gate", "content", "age", "location", "sensitivity", "safety", "trust"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-content-gate",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-content-gate",
+    "health": "https://mzizi.dev/api/health/nyuchi-content-gate",
+    "playground": "https://mzizi.dev/playground/nyuchi-content-gate",
+    "portal": "https://mzizi.dev/components/nyuchi-content-gate",
+    "source": "https://mzizi.dev/source/nyuchi-content-gate"
+  },
+  "use_cases": ["Access control", "Security gate", "Verification check"],
+  "variants": ["allowed", "blocked", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-content-gate",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1947,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

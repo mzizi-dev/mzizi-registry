@@ -1,0 +1,83 @@
+{
+  "_id": "nyuchi-review-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "brand",
+  "createdAt": "2026-04-12T20:29:26.800512+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Universal branded review card with trust-verified reviewer badge, star rating, review text, and helpful vote. Used across all domains where user reviews exist: Places (business reviews), BushTrade (seller reviews), Novels (book reviews), Health (provider reviews), Nhimbe (event reviews). The reviewer verification tier is always visible — Ubuntu principle: trust is earned and displayed.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-review-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["places", "bushtrade", "novels", "health", "nhimbe"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-review-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "card",
+    "avatar",
+    "rating",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness",
+    "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "review",
+  "swappable": false,
+  "tags": ["brand", "review", "rating", "nyuchi", "universal", "trust", "ubuntu"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-review-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-review-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-review-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-review-card",
+    "portal": "https://mzizi.dev/components/nyuchi-review-card",
+    "source": "https://mzizi.dev/source/nyuchi-review-card"
+  },
+  "use_cases": ["novels", "nhimbe", "places", "bushtrade", "health"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-review-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2321,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

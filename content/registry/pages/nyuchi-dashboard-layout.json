@@ -1,0 +1,84 @@
+{
+  "_id": "nyuchi-dashboard-layout",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "layout",
+  "collection": "pages",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Full app shell composing NyuchiHeader, NyuchiSidebar, and NyuchiBottomNav into a responsive dashboard layout.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-dashboard-layout.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-dashboard-layout",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "https://mzizi.dev/api/v1/ui/nyuchi-sidebar",
+    "https://mzizi.dev/api/v1/ui/nyuchi-header",
+    "https://mzizi.dev/api/v1/ui/nyuchi-bottom-nav",
+    "sidebar",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "shell", "nyuchi", "layout", "dashboard"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-dashboard-layout",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-dashboard-layout",
+    "health": "https://mzizi.dev/api/health/nyuchi-dashboard-layout",
+    "playground": "https://mzizi.dev/playground/nyuchi-dashboard-layout",
+    "portal": "https://mzizi.dev/components/nyuchi-dashboard-layout",
+    "source": "https://mzizi.dev/source/nyuchi-dashboard-layout"
+  },
+  "use_cases": [
+    "Full app shell for Nyuchi ecosystem apps",
+    "Standard dashboard composition with header, sidebar, bottom nav",
+    "Responsive app layout across mobile and desktop",
+    "Primary app page structure",
+    "Base layout for admin, analytics, and dashboard apps"
+  ],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-dashboard-layout",
+    "latestAt": "2026-04-17T22:37:22.25357+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2625,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 7
+  }
+}

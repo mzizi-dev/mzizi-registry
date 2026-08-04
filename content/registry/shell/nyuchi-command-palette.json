@@ -1,0 +1,104 @@
+{
+  "_id": "nyuchi-command-palette",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "role=dialog",
+    "aria-label",
+    "Keyboard trap while open",
+    "Escape to close",
+    "Arrow keys for navigation"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "shell",
+  "collection": "shell",
+  "createdAt": "2026-04-14T03:55:15.675454+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Global command palette (Cmd+K / Ctrl+K). Search across mini-apps, navigate to pages, run actions. Competitors: Vercel, Linear, Raycast. Overlay with fuzzy search, recent items, and categorized results.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Fuzzy search across mini-apps",
+    "Recent items",
+    "Categorized results",
+    "Keyboard navigation",
+    "Action shortcuts"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-command-palette.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events",
+    "console"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-command-palette",
+  "node": 7,
+  "nodeLabel": "shell",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": null,
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "command",
+  "swappable": false,
+  "tags": ["command", "palette", "search", "global", "keyboard", "cmd-k", "shell"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-command-palette",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-command-palette",
+    "health": "https://mzizi.dev/api/health/nyuchi-command-palette",
+    "playground": "https://mzizi.dev/playground/nyuchi-command-palette",
+    "portal": "https://mzizi.dev/components/nyuchi-command-palette",
+    "source": "https://mzizi.dev/source/nyuchi-command-palette"
+  },
+  "use_cases": [
+    "Global search (Cmd+K / Ctrl+K)",
+    "Navigate to any page",
+    "Switch between mini-apps",
+    "Run quick actions"
+  ],
+  "variants": null,
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-command-palette",
+    "latestAt": "2026-04-14T03:57:32.357035+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1790,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

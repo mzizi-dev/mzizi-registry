@@ -1,0 +1,72 @@
+{
+  "_id": "subscription-gate",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Screen reader announces gate state", "Focus management on state change"],
+  "addedInVersion": "7.0.0",
+  "category": "safety",
+  "collection": "safety",
+  "createdAt": "2026-04-11T18:38:13.928415+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Subscribe-to-read paywall with tier preview, price display, and CTA. Shows a blurred preview of gated content with clear upgrade path. Used in Novels for chapter unlocks and premium content across the platform.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Y-axis safety spine",
+    "Renders children when check passes",
+    "Branded explanation when blocked",
+    "Web2 safety gate"
+  ],
+  "files": [
+    {
+      "path": "components/ui/subscription-gate.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": ["novels", "bytes"],
+  "model": "mzizi-dna-helix",
+  "name": "subscription-gate",
+  "node": 4,
+  "nodeLabel": "safety",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android"],
+  "registryDependencies": ["card", "button", "badge"],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "gate",
+  "swappable": false,
+  "tags": ["paywall", "subscription", "gate", "premium", "publishing", "reading"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/subscription-gate",
+    "changelog": "https://mzizi.dev/changelog/subscription-gate",
+    "health": "https://mzizi.dev/api/health/subscription-gate",
+    "playground": "https://mzizi.dev/playground/subscription-gate",
+    "portal": "https://mzizi.dev/components/subscription-gate",
+    "source": "https://mzizi.dev/source/subscription-gate"
+  },
+  "use_cases": ["Access control", "Security gate", "Verification check"],
+  "variants": ["allowed", "blocked", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "subscription-gate",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1978,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

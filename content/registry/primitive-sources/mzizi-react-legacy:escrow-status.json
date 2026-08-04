@@ -1,0 +1,19 @@
+{
+  "_id": "mzizi-react-legacy:escrow-status",
+  "_schemaVersion": "v1",
+  "collection": "primitive-sources",
+  "currentVersion": 1,
+  "descriptor_slug": "mzizi-react-legacy",
+  "dnaRole": "machinery",
+  "doctrineVersion": "4.1.0",
+  "kind": "primitive_source",
+  "model": "mzizi-dna-helix",
+  "node": 2,
+  "notes": "Mzizi-originated: BushTrade escrow lifecycle (initiated → held → released/disputed). Specific to BushTrade marketplace flow; not a standard on-chain pattern. Stays mzizi-react-legacy only.",
+  "overrides_bundu": {},
+  "owner": "framework",
+  "pinned_version": null,
+  "primitive_name": "escrow-status",
+  "strand": "core-guarantee",
+  "upstream_path": "escrow-status"
+}

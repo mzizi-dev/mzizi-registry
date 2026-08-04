@@ -1,0 +1,20 @@
+{
+  "_id": "navigation",
+  "_schemaVersion": "v1",
+  "category": "navigation",
+  "collection": "styling-z-index",
+  "css_var": "--z-navigation",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "navigation",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 60,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Page navigation — sidebars, top nav when not fixed",
+  "value": 100
+}

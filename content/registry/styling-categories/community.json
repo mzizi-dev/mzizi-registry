@@ -1,0 +1,22 @@
+{
+  "_id": "community",
+  "_schemaVersion": "v1",
+  "brand": "nyuchi",
+  "category_key": "community",
+  "category_label": "Community",
+  "collection": "styling-categories",
+  "currentVersion": 1,
+  "description": "Ubuntu teaches that we are because others are. Our community initiatives put this philosophy into action — supporting local nonprofits, nurturing tech talent, and building bridges across generations.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "mineral": "terracotta",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "products": ["Nyuchi Foundation", "Technology Leaders of Africa"],
+  "sort_order": 3,
+  "strand": "swappable",
+  "swappable": true,
+  "tagline": "Ubuntu in action"
+}

@@ -1,0 +1,40 @@
+{
+  "_id": "river",
+  "_schemaVersion": "v1",
+  "collection": "styling-washed-themes",
+  "contrast_floor_text": "P7",
+  "currentVersion": 1,
+  "dark": {
+    "accent": "#4DD0E1",
+    "card": "#1A292A",
+    "container": "#213335",
+    "foreground": "#F5F5F4",
+    "ground": "#162426",
+    "muted_foreground": "#B2AFA8",
+    "on_container": "#4CD3E1"
+  },
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "kind": "token",
+  "light": {
+    "accent": "#006064",
+    "card": "#DDE4E2",
+    "container": "#DBEAEB",
+    "foreground": "#141413",
+    "ground": "#E2E9E7",
+    "muted_foreground": "#494840",
+    "on_container": "#00535C"
+  },
+  "model": "mzizi-dna-helix",
+  "name": "river",
+  "node": 1,
+  "owner": "bundu",
+  "recipe": "ground = base + accent at wash pct; card = surface + accent at wash pct (color-mix in srgb); foregrounds = canonical foreground/muted-foreground (AAA verified)",
+  "sort_order": 4,
+  "source_collection": "styling-heritage-colors",
+  "source_palette": "river",
+  "strand": "swappable",
+  "swappable": true,
+  "wash_pct_dark": 12,
+  "wash_pct_light": 7
+}

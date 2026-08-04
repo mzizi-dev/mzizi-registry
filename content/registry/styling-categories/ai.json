@@ -1,0 +1,22 @@
+{
+  "_id": "ai",
+  "_schemaVersion": "v1",
+  "brand": "shamwari",
+  "category_key": "ai",
+  "category_label": "Artificial Intelligence",
+  "collection": "styling-categories",
+  "currentVersion": 1,
+  "description": "Shamwari means friend in Shona. An intelligent companion that helps you navigate the digital world, understands African context, and serves your needs.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "mineral": "tanzanite",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "products": ["Shamwari AI", "Digital Twin"],
+  "sort_order": 0,
+  "strand": "swappable",
+  "swappable": true,
+  "tagline": "Sovereign AI companion"
+}

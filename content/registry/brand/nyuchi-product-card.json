@@ -1,0 +1,87 @@
+{
+  "_id": "nyuchi-product-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "role=article with aria-label including price",
+    "Focus-visible ring",
+    "48px minimum touch target on add-to-cart",
+    "Screen reader announces title, price, availability, rating",
+    "Currency formatted via Intl.NumberFormat for locale"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "listing",
+  "collection": "brand",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "DEPRECATED: Use nyuchi-offer-card instead. This was an early pre-brand product card without harness, motion, or ARIA integration.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Price display with locale currency formatting",
+    "Rating with star count",
+    "Availability badge (in-stock, low-stock, out-of-stock)",
+    "Add-to-cart action slot",
+    "Mineral accent for category or merchant",
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-product-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-product-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "deprecated",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["deprecated", "use-mukoko-listing-card"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-product-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-product-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-product-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-product-card",
+    "portal": "https://mzizi.dev/components/nyuchi-product-card",
+    "source": "https://mzizi.dev/source/nyuchi-product-card"
+  },
+  "use_cases": [
+    "BushTrade marketplace product listings",
+    "Cart item display in checkout flows",
+    "Wishlist entries",
+    "Recommended products panels",
+    "Search results in commerce contexts"
+  ],
+  "variants": ["default", "compact", "grid", "list-row"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-product-card",
+    "latestAt": "2026-04-13T23:04:02.930878+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 382,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

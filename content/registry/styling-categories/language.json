@@ -1,0 +1,22 @@
+{
+  "_id": "language",
+  "_schemaVersion": "v1",
+  "brand": "mukoko",
+  "category_key": "language",
+  "category_label": "Language",
+  "collection": "styling-categories",
+  "currentVersion": 1,
+  "description": "Shona and Ndebele primaries, plus continental African languages. Phrase-learning with community translation.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "mineral": "cobalt",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "products": ["Lingo"],
+  "sort_order": 8,
+  "strand": "swappable",
+  "swappable": true,
+  "tagline": "African languages"
+}

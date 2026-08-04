@@ -1,0 +1,85 @@
+{
+  "_id": "segmented-control",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "role=radiogroup with aria-label",
+    "Each segment role=radio",
+    "Arrow keys move selection",
+    "48px minimum touch target",
+    "Selected state announced"
+  ],
+  "addedInVersion": "4.0.32",
+  "category": "forms",
+  "collection": "primitives",
+  "createdAt": "2026-04-24T05:57:42.949618+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Connected multi-option selector as a single pill-shaped control. Inline alternative to radio-group for 2-4 mutually exclusive options like view mode switchers, time range selectors, or binary choices. Audit flagged as missing primitive. ALPHA — awaiting frontend implementation.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Pill-shaped connected group per brand identity",
+    "Keyboard navigation (arrow keys)",
+    "Single-select behavior",
+    "Mineral accent on active segment",
+    "Harness integration (log, motion, LiveRegion)"
+  ],
+  "files": [
+    {
+      "path": "components/ui/segmented-control.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "segmented-control",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/segmented-control",
+    "changelog": "https://mzizi.dev/changelog/segmented-control",
+    "health": "https://mzizi.dev/health/segmented-control",
+    "playground": "https://mzizi.dev/playground/segmented-control",
+    "portal": "https://mzizi.dev/components/segmented-control",
+    "source": "https://mzizi.dev/source/segmented-control"
+  },
+  "use_cases": [
+    "View mode switcher (grid/list/calendar)",
+    "Time range picker (day/week/month/year)",
+    "Binary preference toggle with two labels",
+    "Segment selection in settings",
+    "Filter mode selection"
+  ],
+  "variants": ["default", "compact", "icon-only", "icon-with-label"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "segmented-control",
+    "latestAt": "2026-04-24T06:04:29.073649+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2627,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "_id": "nyuchi-listing-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "role=article",
+    "aria-label with title",
+    "Focus-visible ring",
+    "48px minimum touch target",
+    "Screen reader announces category and title"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "listing",
+  "collection": "brand",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["class-variance-authority"],
+  "description": "Universal content card for all Mukoko listing types — events, products, news, bush trade, directories. Supports row, compact, and hero variants with mineral-colored category accents. The foundational brand component: every listing across the super app uses this pattern.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.2.0",
+  "examples": [],
+  "features": [
+    "Mineral-colored category accent",
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced",
+    "Verified badge slot",
+    "Mini-app aware mineral accent"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-listing-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-listing-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["card", "badge", "avatar", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": null,
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "listing", "universal", "nyuchi", "nhimbe", "bushtrade", "shamwari"],
+  "updatedAt": "2026-07-14 16:46:04.701208+00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-listing-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-listing-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-listing-card",
+    "portal": "https://mzizi.dev/components/nyuchi-listing-card",
+    "source": "https://mzizi.dev/source/nyuchi-listing-card"
+  },
+  "use_cases": [
+    "Event listings (Nhimbe)",
+    "Product listings (BushTrade)",
+    "News articles (News)",
+    "Place listings (Places)",
+    "Job listings (Jobs)"
+  ],
+  "variants": ["row", "compact", "hero"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-listing-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2203,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

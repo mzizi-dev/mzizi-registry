@@ -1,0 +1,66 @@
+{
+  "_id": "error-boundary",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Error states announced to screen readers", "Retry actions keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "feedback",
+  "collection": "resilience",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "A React error boundary component that catches render errors and displays a fallback.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["Y-axis resilience spine", "Netflix resilience patterns"],
+  "files": [
+    {
+      "path": "components/error-boundary.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "error-boundary",
+  "node": 5,
+  "nodeLabel": "resilience",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["observability"],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/error-boundary",
+    "changelog": "https://mzizi.dev/changelog/error-boundary",
+    "health": "https://mzizi.dev/api/health/error-boundary",
+    "playground": "https://mzizi.dev/playground/error-boundary",
+    "portal": "https://mzizi.dev/components/error-boundary",
+    "source": "https://mzizi.dev/source/error-boundary"
+  },
+  "use_cases": ["Error handling", "Graceful degradation", "Offline support"],
+  "variants": ["default", "degraded", "error"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "error-boundary",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1913,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

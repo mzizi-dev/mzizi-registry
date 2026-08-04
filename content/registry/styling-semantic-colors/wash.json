@@ -1,0 +1,21 @@
+{
+  "_id": "wash",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "background",
+  "currentVersion": 1,
+  "dark_value": "color-mix(in oklab, var(--surface) 88%, var(--brand-accent))",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "hc_dark_value": null,
+  "hc_light_value": null,
+  "kind": "token",
+  "light_value": "color-mix(in oklab, var(--surface) 93%, var(--brand-accent))",
+  "model": "mzizi-dna-helix",
+  "name": "wash",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Cover-colour page wash — surface tinted with the active brand accent (~7% light / ~12% dark)"
+}

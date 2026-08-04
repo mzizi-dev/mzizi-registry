@@ -1,0 +1,85 @@
+{
+  "_id": "offline-banner",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Error states announced to screen readers", "Retry actions keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "resilience",
+  "collection": "resilience",
+  "createdAt": "2026-04-13T22:05:35.631697+00:00",
+  "currentVersion": "2",
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Connection status indicator for the local-first architecture. Distinguishes between \"offline\" (no connection), \"showing cached data\" (offline but data available), and \"syncing\" (reconnecting). Persists at the top of the viewport. Dismissible but reappears on state change. Uses CouchDB sync status when available.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["Y-axis resilience spine", "Netflix resilience patterns"],
+  "files": [
+    {
+      "path": "components/ui/offline-banner.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "offline-banner",
+  "node": 5,
+  "nodeLabel": "resilience",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["https://mzizi.dev/api/v1/ui/nyuchi-harness", "utils"],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "connectivity",
+  "swappable": false,
+  "tags": ["offline", "banner", "connection", "local-first", "sync", "resilience"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/offline-banner",
+    "changelog": "https://mzizi.dev/changelog/offline-banner",
+    "health": "https://mzizi.dev/api/health/offline-banner",
+    "playground": "https://mzizi.dev/playground/offline-banner",
+    "portal": "https://mzizi.dev/components/offline-banner",
+    "source": "https://mzizi.dev/source/offline-banner"
+  },
+  "use_cases": ["Error handling", "Graceful degradation", "Offline support"],
+  "variants": ["default", "degraded", "error"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "offline-banner",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2353,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "_id": "comment-on-paragraph",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "action",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:38:13.928415+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Inline paragraph-level commenting — the Medium-style annotation pattern. Users highlight text in a chapter and leave comments anchored to that specific passage. Maps to a future comments schema on novels.chapter.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/comment-on-paragraph.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["novels", "news"],
+  "model": "mzizi-dna-helix",
+  "name": "comment-on-paragraph",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["popover", "textarea", "avatar"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "annotation",
+  "swappable": false,
+  "tags": ["comment", "annotation", "paragraph", "highlight", "publishing", "reading"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/comment-on-paragraph",
+    "changelog": "https://mzizi.dev/changelog/comment-on-paragraph",
+    "health": "https://mzizi.dev/api/health/comment-on-paragraph",
+    "playground": "https://mzizi.dev/playground/comment-on-paragraph",
+    "portal": "https://mzizi.dev/components/comment-on-paragraph",
+    "source": "https://mzizi.dev/source/comment-on-paragraph"
+  },
+  "use_cases": ["news", "novels"],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "comment-on-paragraph",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2535,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

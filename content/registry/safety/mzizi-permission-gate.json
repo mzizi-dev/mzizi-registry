@@ -1,0 +1,99 @@
+{
+  "_id": "mzizi-permission-gate",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "aria-live announces gate state",
+    "Focus moves to CTA when blocked",
+    "Screen reader explains what is required"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "safety",
+  "collection": "safety",
+  "createdAt": "2026-04-13T21:51:04.515341+00:00",
+  "currentVersion": "2",
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Verification tier gate. Checks the user's verification tier against the required tier before rendering children. Shows a branded mineral-colored upgrade CTA if insufficient. Maps to system.verification_tier (5 tiers: unverified, community, OTP, government, licensed). Renders children when check passes, branded explanation when it doesn't.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Renders children when check passes",
+    "Branded upgrade CTA when blocked",
+    "5 verification tiers",
+    "Maps to system.verification_tier"
+  ],
+  "files": [
+    {
+      "path": "components/ui/mzizi-permission-gate.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-permission-gate",
+  "node": 4,
+  "nodeLabel": "safety",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["https://mzizi.dev/api/v1/ui/nyuchi-harness", "utils"],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": null,
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "gate",
+  "swappable": false,
+  "tags": ["gate", "permission", "verification", "tier", "safety", "trust"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-permission-gate",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-permission-gate",
+    "health": "https://mzizi.dev/api/health/nyuchi-permission-gate",
+    "playground": "https://mzizi.dev/playground/nyuchi-permission-gate",
+    "portal": "https://mzizi.dev/components/nyuchi-permission-gate",
+    "source": "https://mzizi.dev/source/nyuchi-permission-gate"
+  },
+  "use_cases": [
+    "Gate features behind verification tier",
+    "Block posting for unverified users",
+    "Require government ID for selling",
+    "Restrict moderation to trusted users"
+  ],
+  "variants": null,
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-permission-gate",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2164,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

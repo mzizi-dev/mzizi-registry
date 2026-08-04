@@ -1,0 +1,73 @@
+{
+  "_id": "social-feed-page",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "social",
+  "collection": "pages",
+  "createdAt": "2026-04-13T23:27:46.181739+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Social feed page. Infinite scroll content feed with stories/status bar, create post FAB, pull-to-refresh. Competitors: Instagram, TikTok, Twitter.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/social-feed-page.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["bytes", "circles", "pulse", "campfire"],
+  "model": "mzizi-dna-helix",
+  "name": "social-feed-page",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "feed",
+  "swappable": false,
+  "tags": ["social", "feed", "posts", "stories", "infinite-scroll", "page"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/social-feed-page",
+    "changelog": "https://mzizi.dev/changelog/social-feed-page",
+    "health": "https://mzizi.dev/api/health/social-feed-page",
+    "playground": "https://mzizi.dev/playground/social-feed-page",
+    "portal": "https://mzizi.dev/components/social-feed-page",
+    "source": "https://mzizi.dev/source/social-feed-page"
+  },
+  "use_cases": ["pulse", "campfire", "circles", "bytes"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "social-feed-page",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1993,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

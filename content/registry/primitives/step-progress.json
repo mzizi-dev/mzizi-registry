@@ -1,0 +1,68 @@
+{
+  "_id": "step-progress",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "navigation",
+  "collection": "primitives",
+  "createdAt": "2026-04-14T03:11:08.474068+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Horizontal step progress indicator for multi-step flows. Shows current progress as filled/unfilled segments. Extracted from payment-page, checkout-page, booking-page, and verification-page. Brand-agnostic.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/step-progress.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["wallet", "bushtrade", "nhimbe", "health", "transport", "events"],
+  "model": "mzizi-dna-helix",
+  "name": "step-progress",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "progress",
+  "swappable": false,
+  "tags": ["step", "progress", "multi-step", "flow", "wizard", "navigation"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/step-progress",
+    "changelog": "https://mzizi.dev/changelog/step-progress",
+    "health": "https://mzizi.dev/api/health/step-progress",
+    "playground": "https://mzizi.dev/playground/step-progress",
+    "portal": "https://mzizi.dev/components/step-progress",
+    "source": "https://mzizi.dev/source/step-progress"
+  },
+  "use_cases": ["nhimbe", "events", "wallet"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "step-progress",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2037,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

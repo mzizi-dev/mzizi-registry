@@ -1,0 +1,21 @@
+{
+  "_id": "success",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "semantic",
+  "currentVersion": 1,
+  "dark_value": "#64FFDA",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "hc_dark_value": "#7FFFB0",
+  "hc_light_value": "#003820",
+  "kind": "token",
+  "light_value": "#004D40",
+  "model": "mzizi-dna-helix",
+  "name": "success",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Success states, positive actions"
+}

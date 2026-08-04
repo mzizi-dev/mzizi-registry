@@ -1,0 +1,73 @@
+{
+  "_id": "use-memory-pressure",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Semantic HTML"],
+  "addedInVersion": "7.0.0",
+  "category": "hooks",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Monitor JS heap memory pressure via Performance Memory API.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "hooks/use-memory-pressure.ts",
+      "type": "registry:hook"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "use-memory-pressure",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:hook",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/use-memory-pressure",
+    "changelog": "https://mzizi.dev/changelog/use-memory-pressure",
+    "health": "https://mzizi.dev/api/health/use-memory-pressure",
+    "playground": "https://mzizi.dev/playground/use-memory-pressure",
+    "portal": "https://mzizi.dev/components/use-memory-pressure",
+    "source": "https://mzizi.dev/source/use-memory-pressure"
+  },
+  "use_cases": [
+    "Low-memory detection in long-running sessions",
+    "Deferred loading based on device capability",
+    "Memory-adaptive content quality switching",
+    "Mobile device optimization in chat and feeds",
+    "Background task throttling on constrained devices"
+  ],
+  "variants": ["default", "outline", "ghost", "destructive"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "use-memory-pressure",
+    "latestAt": "2026-04-13T23:04:02.930878+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 93,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

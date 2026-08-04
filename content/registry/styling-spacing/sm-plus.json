@@ -1,0 +1,19 @@
+{
+  "_id": "sm-plus",
+  "_schemaVersion": "v1",
+  "collection": "styling-spacing",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "sm-plus",
+  "node": 1,
+  "owner": "bundu",
+  "px": 10,
+  "rem": "0.625rem",
+  "sort_order": 40,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Dense tag padding, compact button icons"
+}

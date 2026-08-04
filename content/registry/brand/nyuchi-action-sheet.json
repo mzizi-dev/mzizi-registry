@@ -1,0 +1,78 @@
+{
+  "_id": "nyuchi-action-sheet",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute",
+    "aria-label for screen readers"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "overlay",
+  "collection": "brand",
+  "createdAt": "2026-04-12T20:25:50.579133+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Universal branded bottom action sheet for contextual actions on any content across the ecosystem. Share, save, report, copy link, block, follow — the standard set of actions available on listings, posts, profiles, and messages. Renders as a bottom sheet on mobile with mineral accent on destructive/primary actions. Composes sheet and share-dialog primitives.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-action-sheet.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["campfire", "pulse", "circles", "novels", "nhimbe", "bushtrade", "places", "bytes"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-action-sheet",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["sheet", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "action-sheet",
+  "swappable": false,
+  "tags": ["brand", "action-sheet", "nyuchi", "universal", "overlay", "contextual"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-action-sheet",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-action-sheet",
+    "health": "https://mzizi.dev/api/health/nyuchi-action-sheet",
+    "playground": "https://mzizi.dev/playground/nyuchi-action-sheet",
+    "portal": "https://mzizi.dev/components/nyuchi-action-sheet",
+    "source": "https://mzizi.dev/source/nyuchi-action-sheet"
+  },
+  "use_cases": ["pulse", "campfire", "bytes", "circles", "novels"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-action-sheet",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1990,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

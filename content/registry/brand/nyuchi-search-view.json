@@ -1,0 +1,92 @@
+{
+  "_id": "nyuchi-search-view",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "aria-label for screen readers"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "layout",
+  "collection": "brand",
+  "createdAt": "2026-04-12T20:25:50.579133+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Universal branded search results view composing search-bar, filter-bar, and search-results primitives with mineral-accented category filters. Shows unified cross-app results: people, places, events, products, articles, groups. Each result type renders using its corresponding brand card (nyuchi-listing-card, nyuchi-place-card, user-card, nyuchi-group-card). The standard search experience across the entire ecosystem.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-search-view.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [
+    "pulse",
+    "campfire",
+    "circles",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "jobs",
+    "news",
+    "novels"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-search-view",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "search-bar",
+    "search-results",
+    "filter-bar",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "search",
+  "swappable": false,
+  "tags": ["brand", "search", "nyuchi", "universal", "cross-app", "discovery"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-search-view",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-search-view",
+    "health": "https://mzizi.dev/api/health/nyuchi-search-view",
+    "playground": "https://mzizi.dev/playground/nyuchi-search-view",
+    "portal": "https://mzizi.dev/components/nyuchi-search-view",
+    "source": "https://mzizi.dev/source/nyuchi-search-view"
+  },
+  "use_cases": ["pulse", "campfire", "circles", "novels", "nhimbe"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-search-view",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2296,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

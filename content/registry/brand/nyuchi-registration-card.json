@@ -1,0 +1,54 @@
+{
+  "_id": "nyuchi-registration-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Tier rows are radios (role=radio, aria-checked) in a radiogroup",
+    "Quantity steppers are 48px targets with aria-labels",
+    "Live region announces tier + quantity changes",
+    "Sold-out tiers disabled and labelled Sold out",
+    "Visible focus-visible ring on every control"
+  ],
+  "addedInVersion": "7.1.0",
+  "category": "listing",
+  "collection": "brand",
+  "createdAt": "2026-07-14 17:18:07.804536+00",
+  "currentVersion": 1,
+  "dependencies": [],
+  "description": "Ticket registration panel — a labelled header, a selectable ticket-tier list, a clamped quantity stepper, and one saturated accent CTA. Tiers render as radios (role=radio / aria-checked) showing name + USD-formatted price (Free for 0) and disable with a Sold out label; the Minus/Plus stepper uses 48px pill targets and clamps to [min, max]. The accent CTA (pill, --brand-accent) shows the running total and a loading spinner. Harness-wired: tier and quantity changes are announced through the live region. Accent defaults to --brand-accent so each app swaps its own mineral.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.2.0",
+  "features": [
+    "Selectable ticket-tier list with radio semantics",
+    "USD Intl.NumberFormat price formatting, Free for 0",
+    "Clamped quantity stepper (Minus/Plus, 48px pills)",
+    "One saturated accent CTA with running total + loading spinner",
+    "Harness live-region announcements, --brand-accent neutral default"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-registration-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-registration-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "listing", "registration", "ticket", "commerce", "nyuchi", "4.2.0"],
+  "updatedAt": "2026-07-14 17:30:07.905152+00",
+  "use_cases": [
+    "Event registration / ticketing panel (nhimbe)",
+    "Paid RSVP tier selection",
+    "Any quantity + tier purchase sidebar"
+  ],
+  "variants": ["default"]
+}

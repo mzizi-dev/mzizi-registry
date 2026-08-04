@@ -1,0 +1,17 @@
+{
+  "_id": "sm",
+  "_schemaVersion": "v1",
+  "breakpoint": "sm",
+  "collection": "styling-density-breakpoints",
+  "currentVersion": 1,
+  "default_density": "comfortable",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "rationale": "Large phones in landscape, small tablets portrait (640–767px). Still touch-first — the awkward zone where compact would shrink targets below 56px and break fat-finger accessibility.",
+  "strand": "swappable",
+  "swappable": true
+}

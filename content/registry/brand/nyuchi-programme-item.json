@@ -1,0 +1,82 @@
+{
+  "_id": "nyuchi-programme-item",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "listing",
+  "collection": "brand",
+  "createdAt": "2026-04-11T05:32:47.779178+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Timeline-style programme/schedule item for event agendas. Shows time slot, title, speaker/host, and mineral-colored timeline dot. Maps to events.programme_item table. Used on event detail pages for agenda/programme display.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-programme-item.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-programme-item",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["avatar", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": ["brand", "listing", "events", "nhimbe", "programme", "timeline"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-programme-item",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-programme-item",
+    "health": "https://mzizi.dev/api/health/nyuchi-programme-item",
+    "playground": "https://mzizi.dev/playground/nyuchi-programme-item",
+    "portal": "https://mzizi.dev/components/nyuchi-programme-item",
+    "source": "https://mzizi.dev/source/nyuchi-programme-item"
+  },
+  "use_cases": [
+    "Event programme and schedule displays",
+    "Conference agenda timelines",
+    "Workshop session listings",
+    "Multi-day event schedules",
+    "Time-slot-based event programmes"
+  ],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-programme-item",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2098,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

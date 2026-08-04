@@ -1,0 +1,77 @@
+{
+  "_id": "nyuchi-group-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Focus-visible ring on interactive elements",
+    "48px minimum touch targets",
+    "ARIA role attribute"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "identity",
+  "collection": "brand",
+  "createdAt": "2026-04-12T16:35:00.085031+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Universal branded group/community card with dynamic mineral accent based on the parent app. Shows group name, member count, avatar strip, activity indicator, privacy level, topic tags, and join CTA. Used across Circles (communities), Campfire (group chats), BushTrade (seller groups), Nhimbe (event communities), and any app with group-based features.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Harness integration (log, motion, LiveRegion)",
+    "animStyle with prefersReduced motion check",
+    "Mineral-colored accent via brand override",
+    "data-slot + data-portal DOM attributes"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-group-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["circles", "campfire", "bushtrade", "nhimbe", "lingo"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-group-card",
+  "node": 3,
+  "nodeLabel": "brand",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["card", "avatar", "https://mzizi.dev/api/v1/ui/nyuchi-harness"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "community",
+  "swappable": false,
+  "tags": ["brand", "community", "group", "nyuchi", "ubuntu", "universal", "circles"],
+  "updatedAt": "2026-07-14 17:31:09.083394+00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-group-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-group-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-group-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-group-card",
+    "portal": "https://mzizi.dev/components/nyuchi-group-card",
+    "source": "https://mzizi.dev/source/nyuchi-group-card"
+  },
+  "use_cases": ["campfire", "circles", "nhimbe", "lingo", "bushtrade"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-group-card",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2282,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_id": "brand-accent-foreground",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "text",
+  "currentVersion": 1,
+  "dark_value": "#2E004D",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "hc_dark_value": "#1A0033",
+  "hc_light_value": "#FFFFFF",
+  "kind": "token",
+  "light_value": "#FFFFFF",
+  "model": "mzizi-dna-helix",
+  "name": "brand-accent-foreground",
+  "node": 1,
+  "owner": "bundu",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Text/icon on --brand-accent fills (CTAs, selected tiers). AAA on-mineral contrast: white on the light-theme deep tanzanite, deep-violet (#2E004D) on the dark-theme lavender. Apps overriding --brand-accent to a light mineral (malachite/gold/kalahari) also set this to a near-black. Components chain to --primary-foreground when unset."
+}

@@ -1,0 +1,73 @@
+{
+  "_id": "pricing-card",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "ecommerce",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "A pricing tier card with plan name, price, feature list, CTA button, and optional highlight badge.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/pricing-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "pricing-card",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["badge", "button", "card", "separator"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/pricing-card",
+    "changelog": "https://mzizi.dev/changelog/pricing-card",
+    "health": "https://mzizi.dev/api/health/pricing-card",
+    "playground": "https://mzizi.dev/playground/pricing-card",
+    "portal": "https://mzizi.dev/components/pricing-card",
+    "source": "https://mzizi.dev/source/pricing-card"
+  },
+  "use_cases": [
+    "Subscription tier comparison on pricing pages",
+    "Plan upgrade interfaces",
+    "Feature-gated pricing presentation",
+    "Highlighted recommended plan in lineup",
+    "Promotional pricing cards with countdown"
+  ],
+  "variants": ["default", "outline", "ghost", "destructive"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "pricing-card",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2578,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 8
+  }
+}

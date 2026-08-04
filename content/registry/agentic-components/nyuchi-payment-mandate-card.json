@@ -1,0 +1,64 @@
+{
+  "_id": "nyuchi-payment-mandate-card",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "radio fieldset/legend for payment handler choice",
+    "48px minimum touch targets",
+    "focus-visible ring on all controls",
+    "role=alert for errors",
+    "prefers-reduced-motion honoured via the harness"
+  ],
+  "addedInVersion": "7.1.0",
+  "category": "agentic",
+  "collection": "agentic-components",
+  "createdAt": "2026-06-13T15:42:00.872332+00:00",
+  "currentVersion": 1,
+  "dependencies": [],
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "features": [
+    "Inline AP2 payment authorization — no checkout tab",
+    "Payment-handler (rail) selection: card / bank / mobile money",
+    "Shows the AP2 mandate chain (intent/cart) for transparency",
+    "No card details leave the wallet — signs a Payment Mandate",
+    "Dynamic mineral accent via --brand-accent"
+  ],
+  "files": [
+    {
+      "path": "agentic/nyuchi-payment-mandate-card.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-payment-mandate-card",
+  "node": 3,
+  "nodeLabel": "agentic component",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": ["https://mzizi.dev/api/v1/ui/nyuchi-harness", "utils"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "alpha",
+  "strand": "shipped",
+  "subcategory": "payment",
+  "swappable": false,
+  "tags": ["payment", "ap2", "mandate", "commerce", "agentic", "inline"],
+  "updatedAt": "2026-06-13T15:42:00.872332+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-payment-mandate-card",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-payment-mandate-card",
+    "health": "https://mzizi.dev/api/health/nyuchi-payment-mandate-card",
+    "playground": "https://mzizi.dev/playground/nyuchi-payment-mandate-card",
+    "portal": "https://mzizi.dev/components/nyuchi-payment-mandate-card",
+    "source": "https://mzizi.dev/source/nyuchi-payment-mandate-card"
+  },
+  "use_cases": [
+    "Authorize the $1/mo fundi-tester charge inside an AI client",
+    "Final step of an inline UCP checkout",
+    "Confirm a one-time purchase via an AP2 mandate"
+  ],
+  "variants": ["default"]
+}

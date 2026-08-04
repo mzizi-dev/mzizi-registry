@@ -1,0 +1,20 @@
+{
+  "_id": "update-prompt",
+  "_schemaVersion": "v1",
+  "category": "system",
+  "collection": "styling-z-index",
+  "css_var": "--z-update-prompt",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "update-prompt",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 200,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "App update prompts — system-critical, above toasts",
+  "value": 9500
+}

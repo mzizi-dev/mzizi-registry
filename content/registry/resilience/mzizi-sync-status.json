@@ -1,0 +1,85 @@
+{
+  "_id": "mzizi-sync-status",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Error states announced to screen readers", "Retry actions keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "resilience",
+  "collection": "resilience",
+  "createdAt": "2026-04-13T22:28:59.214408+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "CouchDB sync state indicator. Shows sync progress, conflict count, and resolution status. The bridge between local-first data and cloud truth. Displays: synced, syncing (with progress), conflicts pending, sync error, and offline-queued states.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["Y-axis resilience spine", "Netflix resilience patterns"],
+  "files": [
+    {
+      "path": "components/ui/mzizi-sync-status.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-sync-status",
+  "node": 5,
+  "nodeLabel": "resilience",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "sync",
+  "swappable": false,
+  "tags": ["sync", "couchdb", "local-first", "offline", "conflicts", "resilience"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-sync-status",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-sync-status",
+    "health": "https://mzizi.dev/api/health/nyuchi-sync-status",
+    "playground": "https://mzizi.dev/playground/nyuchi-sync-status",
+    "portal": "https://mzizi.dev/components/nyuchi-sync-status",
+    "source": "https://mzizi.dev/source/nyuchi-sync-status"
+  },
+  "use_cases": ["Error handling", "Graceful degradation", "Offline support"],
+  "variants": ["default", "degraded", "error"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-sync-status",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2364,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

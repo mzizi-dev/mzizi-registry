@@ -1,0 +1,70 @@
+{
+  "_id": "nyuchi-changelog-renderer",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Semantic HTML", "Keyboard navigation", "Screen reader compatible"],
+  "addedInVersion": "7.0.0",
+  "category": "documentation",
+  "collection": "documentation-engine",
+  "createdAt": "2026-04-14T04:35:18.906824+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Changelog renderer for N10. Reads from the public.changelog table and renders a visual timeline of releases with affected ecosystem nodes (colour-coded by axis), components added/modified/deprecated, and version labels.",
+  "dnaRole": "documentation",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Layer 10 documentation infrastructure",
+    "Reads from documentation_pages + ai_instructions tables"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-changelog-renderer.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["console"],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-changelog-renderer",
+  "node": 10,
+  "nodeLabel": "documentation",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "transcription",
+  "subcategory": "changelog",
+  "tags": ["changelog", "renderer", "timeline", "releases", "versions", "layer-10"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-changelog-renderer",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-changelog-renderer",
+    "health": "https://mzizi.dev/api/health/nyuchi-changelog-renderer",
+    "playground": "https://mzizi.dev/playground/nyuchi-changelog-renderer",
+    "portal": "https://mzizi.dev/components/nyuchi-changelog-renderer",
+    "source": "https://mzizi.dev/source/nyuchi-changelog-renderer"
+  },
+  "use_cases": ["Documentation", "AI context generation", "Changelog display"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-changelog-renderer",
+    "latestAt": "2026-04-29T11:18:11.839104+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2683,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 3
+  }
+}

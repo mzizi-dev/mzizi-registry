@@ -1,0 +1,22 @@
+{
+  "_id": "education",
+  "_schemaVersion": "v1",
+  "brand": "nyuchi",
+  "category_key": "education",
+  "category_label": "Education",
+  "collection": "styling-categories",
+  "currentVersion": 1,
+  "description": "Education is the honey we create for future generations. Our learning platforms preserve African knowledge while building skills for the modern world — from language to technology.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "mineral": "cobalt",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "products": ["Nyuchi Learning", "Nyuchi Lingo"],
+  "sort_order": 2,
+  "strand": "swappable",
+  "swappable": true,
+  "tagline": "Knowledge, growth, skill building"
+}

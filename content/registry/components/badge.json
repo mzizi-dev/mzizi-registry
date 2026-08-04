@@ -1,0 +1,89 @@
+{
+  "_id": "badge",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "components",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": ["class-variance-authority"],
+  "description": "Displays a badge or a component that looks like a badge.",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute", "Radix UI primitive"],
+  "files": [
+    {
+      "path": "components/ui/badge.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "badge",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "framework",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "sources": [
+    {
+      "baseUrl": "https://ui.shadcn.com/r/styles/default/",
+      "descriptor": "react",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "badge.json"
+    },
+    {
+      "baseUrl": "https://shadcn-svelte.com/registry/",
+      "descriptor": "svelte",
+      "fetchStrategy": "http_json",
+      "overrides": {},
+      "upstreamPath": "badge.json"
+    }
+  ],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": true,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/badge",
+    "changelog": "https://mzizi.dev/changelog/badge",
+    "health": "https://mzizi.dev/api/health/badge",
+    "playground": "https://mzizi.dev/playground/badge",
+    "portal": "https://mzizi.dev/components/badge",
+    "source": "https://mzizi.dev/source/badge"
+  },
+  "use_cases": [
+    "Status indicators (active, pending, archived)",
+    "Category labels on content",
+    "Count indicators (unread, new)",
+    "Priority indicators (high, low, urgent)",
+    "Tag display on posts and articles"
+  ],
+  "variants": ["default", "outline", "ghost", "destructive"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "badge",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2126,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

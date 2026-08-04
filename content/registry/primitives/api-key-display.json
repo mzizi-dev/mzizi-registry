@@ -1,0 +1,73 @@
+{
+  "_id": "api-key-display",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "security",
+  "collection": "primitives",
+  "createdAt": "2026-04-07T07:26:24.302428+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Masked/revealable API key with copy and regenerate actions.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/api-key-display.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "api-key-display",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/api-key-display",
+    "changelog": "https://mzizi.dev/changelog/api-key-display",
+    "health": "https://mzizi.dev/api/health/api-key-display",
+    "playground": "https://mzizi.dev/playground/api-key-display",
+    "portal": "https://mzizi.dev/components/api-key-display",
+    "source": "https://mzizi.dev/source/api-key-display"
+  },
+  "use_cases": [
+    "API key display in developer dashboard",
+    "Secret reveal with copy-to-clipboard",
+    "Webhook signing secret management",
+    "OAuth client secret display",
+    "Third-party integration credential viewing"
+  ],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "api-key-display",
+    "latestAt": "2026-04-14T05:05:12.242552+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2548,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 8
+  }
+}

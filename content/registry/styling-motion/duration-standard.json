@@ -1,0 +1,22 @@
+{
+  "_id": "duration-standard",
+  "_schemaVersion": "v1",
+  "collection": "styling-motion",
+  "css_var": "--motion-duration-standard",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "motion_type": "duration",
+  "ms": 200,
+  "name": "duration-standard",
+  "node": 1,
+  "owner": "bundu",
+  "reduced_motion_fallback": "0ms",
+  "sort_order": 20,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Default UI transitions — dropdowns, tooltips, collapses",
+  "value": "200ms"
+}

@@ -1,0 +1,19 @@
+{
+  "_id": "6xl",
+  "_schemaVersion": "v1",
+  "collection": "styling-spacing",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "6xl",
+  "node": 1,
+  "owner": "bundu",
+  "px": 128,
+  "rem": "8rem",
+  "sort_order": 250,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Page hero spacing — full-viewport feature sections"
+}

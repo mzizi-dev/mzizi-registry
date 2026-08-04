@@ -1,0 +1,23 @@
+{
+  "_id": "void",
+  "_schemaVersion": "v1",
+  "collection": "styling-semantic-colors",
+  "color_type": "background",
+  "currentVersion": 1,
+  "dark_value": "#080807",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "hc_dark_value": null,
+  "hc_light_value": null,
+  "kind": "token",
+  "light_value": "#F8F8F7",
+  "lightness_prime": 3,
+  "model": "mzizi-dna-helix",
+  "name": "void",
+  "node": 1,
+  "owner": "bundu",
+  "prime_rule": "dark L=p; light L=100-p",
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "App shell behind base (prime step P3)"
+}

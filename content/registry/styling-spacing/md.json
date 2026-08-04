@@ -1,0 +1,19 @@
+{
+  "_id": "md",
+  "_schemaVersion": "v1",
+  "collection": "styling-spacing",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "md",
+  "node": 1,
+  "owner": "bundu",
+  "px": 12,
+  "rem": "0.75rem",
+  "sort_order": 50,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Compact component padding — dense layouts, secondary surfaces"
+}

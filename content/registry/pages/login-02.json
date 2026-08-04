@@ -1,0 +1,78 @@
+{
+  "_id": "login-02",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "Form labels",
+    "Keyboard navigation",
+    "Error announcements",
+    "Focus-visible via L1 global CSS"
+  ],
+  "addedInVersion": "7.0.0",
+  "category": "auth",
+  "collection": "pages",
+  "createdAt": "2026-04-07T07:21:49.236879+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Split layout login with brand image left, form right.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [],
+  "files": [
+    {
+      "path": "components/blocks/login-02.tsx",
+      "type": "registry:block"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "login-02",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "button",
+    "card",
+    "input",
+    "label",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:block",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/login-02",
+    "changelog": "https://mzizi.dev/changelog/login-02",
+    "health": "https://mzizi.dev/api/health/login-02",
+    "playground": "https://mzizi.dev/playground/login-02",
+    "portal": "https://mzizi.dev/components/login-02",
+    "source": "https://mzizi.dev/source/login-02"
+  },
+  "use_cases": ["Authentication flow", "Login/signup entry point"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "login-02",
+    "latestAt": "2026-04-14T05:07:19.620578+00:00",
+    "latestVersion": "1.1.0",
+    "latestVersionId": 2618,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 9
+  }
+}

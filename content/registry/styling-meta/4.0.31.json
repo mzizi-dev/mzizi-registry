@@ -1,0 +1,284 @@
+{
+  "_id": "4.0.31",
+  "_schemaVersion": "v1",
+  "accessibility": {
+    "contrastDescription": "Advanced Perceptual Contrast Algorithm for superior readability across all mineral colors",
+    "defaultTouchTarget": 56,
+    "focusIndicator": "2px ring with ring-offset-2, using --ring token",
+    "keyboardNavigation": "Full keyboard support via Radix UI primitives",
+    "minTouchTarget": 48,
+    "screenReaders": "Semantic HTML with ARIA attributes where needed",
+    "standard": "APCA 3.0 AAA"
+  },
+  "collection": "styling-meta",
+  "component_specs": [
+    {
+      "borderRadius": 9999,
+      "heights": {
+        "default": 56,
+        "icon": 48,
+        "lg": 56,
+        "sm": 48
+      },
+      "minTouchTarget": 48,
+      "name": "button",
+      "note": "Buttons are ALWAYS pill-shaped (rounded-full). Brand identity decision.",
+      "padding": "px-4 (sm), px-5 (default), px-6 (lg)",
+      "variants": ["default", "destructive", "outline", "secondary", "ghost", "link"]
+    },
+    {
+      "borderRadius": 9999,
+      "heights": {
+        "default": 56,
+        "sm": 48
+      },
+      "minTouchTarget": 48,
+      "name": "input",
+      "note": "Inputs are pill-shaped to match buttons.",
+      "padding": "px-4",
+      "variants": ["default", "error"]
+    },
+    {
+      "borderRadius": 9999,
+      "heights": {
+        "default": 40,
+        "lg": 48,
+        "sm": 32,
+        "xl": 64,
+        "xs": 24
+      },
+      "minTouchTarget": 48,
+      "name": "avatar",
+      "padding": "none",
+      "variants": ["image", "fallback"]
+    },
+    {
+      "borderRadius": 9999,
+      "heights": {
+        "default": 22
+      },
+      "minTouchTarget": 48,
+      "name": "badge",
+      "padding": "px-2.5 py-0.5",
+      "variants": ["default", "secondary", "destructive", "outline"]
+    },
+    {
+      "borderRadius": 14,
+      "heights": {
+        "auto": 0
+      },
+      "minTouchTarget": 48,
+      "name": "card",
+      "note": "Cards use --radius-lg (14px) with a full 1px border and compact 14px padding (4.2.0 density refresh).",
+      "padding": "p-3.5",
+      "variants": ["default", "accented", "clickable"]
+    },
+    {
+      "borderRadius": 17,
+      "heights": {
+        "auto": 0
+      },
+      "minTouchTarget": 48,
+      "name": "dialog",
+      "note": "Dialogs use --radius-xl (17px).",
+      "padding": "p-5",
+      "variants": ["default"]
+    },
+    {
+      "borderRadius": 9999,
+      "heights": {
+        "default": 24
+      },
+      "minTouchTarget": 48,
+      "name": "toggle",
+      "padding": "none",
+      "variants": ["on", "off"]
+    },
+    {
+      "borderRadius": 7,
+      "heights": {
+        "default": 20
+      },
+      "minTouchTarget": 48,
+      "name": "checkbox",
+      "note": "Checkboxes use --radius-sm (7px).",
+      "padding": "none",
+      "variants": ["checked", "unchecked", "indeterminate"]
+    },
+    {
+      "borderRadius": 17,
+      "heights": {
+        "default": 48
+      },
+      "minTouchTarget": 48,
+      "name": "tabs",
+      "note": "Tab triggers use --radius-xl (17px).",
+      "padding": "px-4",
+      "variants": ["default", "underline"]
+    }
+  ],
+  "currentVersion": 1,
+  "density": {
+    "cardGap": "8-10px",
+    "cardPadding": "14px",
+    "metadataColor": "muted-foreground",
+    "metadataFontSize": "13px",
+    "rule": "tight component internals, generous section rhythm",
+    "unit": "4px grid",
+    "wash": "event/detail ground = surface mixed with active accent ~7% (light) / ~12% (dark)"
+  },
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.2.0",
+  "homepage": "https://mzizi.dev/brand",
+  "kind": "token",
+  "last_updated": "2026-07-13",
+  "model": "mzizi-dna-helix",
+  "name": "The Bundu Brand System",
+  "node": 1,
+  "owner": "bundu",
+  "philosophy": {
+    "architecturalPillars": [
+      {
+        "description": "The device is the primary processing surface. Works in a village with 2G.",
+        "name": "Local-First"
+      },
+      {
+        "description": "Built for the reality of the African smartphone market, not San Francisco.",
+        "name": "Mobile-First"
+      },
+      {
+        "description": "Every critical dependency is sovereign. Speed is rented, truth is owned.",
+        "name": "Open Source"
+      },
+      {
+        "description": "Platform data belongs to Africa. Personal data stays sovereign in your pod.",
+        "name": "Open Data"
+      }
+    ],
+    "covenants": [
+      "We will never sell your personal data.",
+      "We will never design for addiction.",
+      "We will never let advertisers control what you see.",
+      "We will never abandon African creators.",
+      "We will never choose proprietary when open source is adequate.",
+      "We will never treat African languages as an afterthought.",
+      "We will never abandon our values when growth demands it."
+    ],
+    "description": "Every decision we make, every feature we build, every line of code we write runs through a single filter: does this strengthen the community, or does it extract from it?",
+    "meaning": "I am because we are",
+    "name": "Ubuntu",
+    "shona": "Ndiri nekuti tiri",
+    "triMode": [
+      {
+        "description": "The foreground experience — the app you open and dwell in.",
+        "meaning": "Home",
+        "name": "Musha"
+      },
+      {
+        "description": "The background service — data and capabilities other apps consume.",
+        "meaning": "Work",
+        "name": "Basa"
+      },
+      {
+        "description": "The open data contribution — anonymised data flowing into the continental knowledge commons.",
+        "meaning": "Heritage",
+        "name": "Nhaka"
+      }
+    ],
+    "ubuntuPillars": [
+      {
+        "name": "family",
+        "shona": "Mhuri",
+        "title": "Family"
+      },
+      {
+        "name": "community",
+        "shona": "Nharaunda",
+        "title": "Community"
+      },
+      {
+        "name": "society",
+        "shona": "Vanhu",
+        "title": "Society"
+      },
+      {
+        "name": "environment",
+        "shona": "Zvakatipoteredza",
+        "title": "Environment"
+      },
+      {
+        "name": "spirituality",
+        "shona": "Unhu",
+        "title": "Spirituality"
+      }
+    ],
+    "ubuntuPrinciples": [
+      {
+        "name": "survival",
+        "shona": "Kurarama",
+        "title": "Survival"
+      },
+      {
+        "name": "solidarity",
+        "shona": "Kubatana",
+        "title": "Solidarity"
+      },
+      {
+        "name": "compassion",
+        "shona": "Tsitsi",
+        "title": "Compassion"
+      },
+      {
+        "name": "respect",
+        "shona": "Ruremekedzo",
+        "title": "Respect"
+      },
+      {
+        "name": "dignity",
+        "shona": "Chiremerera",
+        "title": "Dignity"
+      }
+    ],
+    "ubuntuQuestions": [
+      "Does this strengthen community?",
+      "Does this respect human dignity?",
+      "Does this serve the collective good?",
+      "Would we explain this proudly to our elders?",
+      "Does this align with 'I am because we are'?"
+    ]
+  },
+  "radii": {
+    "2xl": "17px",
+    "base": "14px",
+    "full": "9999px",
+    "lg": "14px",
+    "md": "12px",
+    "sm": "7px",
+    "system": "Ecosystem numbers: 7, 12, 14, 17. Buttons are always pill (rounded-full).",
+    "xl": "17px"
+  },
+  "strand": "swappable",
+  "swappable": true,
+  "version": "4.0.31",
+  "voice_and_tone": {
+    "doList": [
+      "Use lowercase for all brand wordmarks (mukoko, nyuchi, shamwari, bundu, nhimbe)",
+      "Reference African origins and meanings when contextually appropriate",
+      "Write in a way that welcomes both technical and non-technical readers",
+      "Use inclusive language that reflects Ubuntu philosophy"
+    ],
+    "dontList": [
+      "Don't capitalize brand wordmarks (not Mukoko, not NYUCHI)",
+      "Don't use overly formal or corporate language",
+      "Don't assume Western-centric cultural references",
+      "Don't use jargon without explanation"
+    ],
+    "principles": [
+      "Speak like a knowledgeable friend, not a corporation",
+      "Use simple, clear language — avoid jargon",
+      "Be warm and encouraging, never condescending",
+      "Respect African cultural context and diversity",
+      "Prefer active voice and direct address"
+    ]
+  }
+}

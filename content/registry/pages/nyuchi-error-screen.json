@@ -1,0 +1,91 @@
+{
+  "_id": "nyuchi-error-screen",
+  "_schemaVersion": "v0.1",
+  "a11y": ["role=main", "aria-label", "Loading state with skeleton", "Focus management"],
+  "addedInVersion": "7.0.0",
+  "category": "feedback",
+  "collection": "pages",
+  "createdAt": "2026-04-13T23:19:15.637348+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Default full-page error screen for 404, 500, 503, and custom errors. Used by the App Router error.tsx and not-found.tsx pages. Branded with mineral gradient, retry action, and navigation back to safety.",
+  "dnaRole": "shipped",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "X-axis page composition",
+    "Pure composition — no inline UI",
+    "Semantic CSS vars only",
+    "Children/slots for content"
+  ],
+  "files": [
+    {
+      "path": "components/ui/nyuchi-error-screen.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "nyuchi-error-screen",
+  "node": 6,
+  "nodeLabel": "pages",
+  "owner": "nyuchi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "shipped",
+  "subcategory": "error",
+  "swappable": false,
+  "tags": ["error", "404", "500", "503", "page", "screen", "not-found"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-error-screen",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-error-screen",
+    "health": "https://mzizi.dev/api/health/nyuchi-error-screen",
+    "playground": "https://mzizi.dev/playground/nyuchi-error-screen",
+    "portal": "https://mzizi.dev/components/nyuchi-error-screen",
+    "source": "https://mzizi.dev/source/nyuchi-error-screen"
+  },
+  "use_cases": ["pulse", "shamwari", "campfire", "circles", "bytes"],
+  "variants": ["default", "loading"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "nyuchi-error-screen",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 1970,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 6
+  }
+}

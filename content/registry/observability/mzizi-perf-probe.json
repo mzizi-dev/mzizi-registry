@@ -1,0 +1,100 @@
+{
+  "_id": "mzizi-perf-probe",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Non-visual infrastructure — no direct a11y requirements"],
+  "addedInVersion": "7.0.0",
+  "category": "assurance",
+  "collection": "observability",
+  "createdAt": "2026-04-14T04:07:43.851332+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Web Vitals and performance monitoring. Tracks LCP, FID, CLS, INP, TTFB per page and per component (using data-portal backlinks). Reports to analytics. Competitors: Lighthouse, Web Vitals library, Vercel Analytics.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Z-axis depth observability",
+    "Cross-layer blast radius analysis via data-portal backlinks",
+    "L9 Fundi integration for auto-healing"
+  ],
+  "files": [
+    {
+      "path": "lib/mzizi-perf-probe.ts",
+      "type": "registry:lib"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events",
+    "console"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-perf-probe",
+  "node": 8,
+  "nodeLabel": "assurance",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:lib",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "performance",
+  "swappable": false,
+  "tags": [
+    "performance",
+    "web-vitals",
+    "lcp",
+    "cls",
+    "inp",
+    "ttfb",
+    "monitoring",
+    "assurance",
+    "z-axis"
+  ],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-perf-probe",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-perf-probe",
+    "health": "https://mzizi.dev/api/health/nyuchi-perf-probe",
+    "playground": "https://mzizi.dev/playground/nyuchi-perf-probe",
+    "portal": "https://mzizi.dev/components/nyuchi-perf-probe",
+    "source": "https://mzizi.dev/source/nyuchi-perf-probe"
+  },
+  "use_cases": ["Platform monitoring", "L8 assurance observability"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-perf-probe",
+    "latestAt": "2026-04-29T14:41:46.078428+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2727,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 2
+  }
+}

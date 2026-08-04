@@ -1,0 +1,23 @@
+{
+  "_id": "tablet",
+  "_schemaVersion": "v1",
+  "collection": "styling-breakpoints",
+  "css_var": "--breakpoint-tablet",
+  "currentVersion": 1,
+  "device_class": "tablet",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "max_content_px": 720,
+  "media_query": "(min-width: 768px)",
+  "min_width_px": 768,
+  "min_width_rem": "48rem",
+  "model": "mzizi-dna-helix",
+  "name": "tablet",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 20,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Tablets in portrait. Content begins constraining to max-width."
+}

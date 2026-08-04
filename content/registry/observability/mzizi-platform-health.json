@@ -1,0 +1,89 @@
+{
+  "_id": "mzizi-platform-health",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Non-visual infrastructure — no direct a11y requirements"],
+  "addedInVersion": "7.0.0",
+  "category": "assurance",
+  "collection": "observability",
+  "createdAt": "2026-04-13T22:30:33.03192+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "code-example",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Transparent platform health dashboard — N8 Assurance (Z-axis/depth). Observes the full 3D architecture: every horizontal layer (L2-L7), every vertical spine (L1 tokens, L4 safety, L5 resilience), and reports which intersections are operational, degraded, or in outage. The depth view into the system.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Z-axis depth observability",
+    "Cross-layer blast radius analysis via data-portal backlinks",
+    "L9 Fundi integration for auto-healing"
+  ],
+  "files": [
+    {
+      "path": "components/ui/mzizi-platform-health.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [
+    "weather",
+    "news",
+    "health",
+    "wallet",
+    "nhimbe",
+    "bushtrade",
+    "places",
+    "lingo",
+    "bytes",
+    "circles",
+    "transport",
+    "planner",
+    "pulse",
+    "campfire",
+    "shamwari",
+    "jobs",
+    "events"
+  ],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-platform-health",
+  "node": 8,
+  "nodeLabel": "assurance",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "monitoring",
+  "swappable": false,
+  "tags": ["platform", "health", "status", "transparency", "trust", "resilience", "novel"],
+  "updatedAt": "2026-05-22T08:15:10.674053+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-platform-health",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-platform-health",
+    "health": "https://mzizi.dev/api/health/nyuchi-platform-health",
+    "playground": "https://mzizi.dev/playground/nyuchi-platform-health",
+    "portal": "https://mzizi.dev/components/nyuchi-platform-health",
+    "source": "https://mzizi.dev/source/nyuchi-platform-health"
+  },
+  "use_cases": ["Platform monitoring", "L8 assurance observability"],
+  "variants": ["default"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-platform-health",
+    "latestAt": "2026-04-29T14:41:14.122332+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2716,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

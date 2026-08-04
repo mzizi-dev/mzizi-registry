@@ -1,0 +1,68 @@
+{
+  "_id": "co-author-strip",
+  "_schemaVersion": "v0.1",
+  "a11y": ["ARIA attributes", "Keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "data-display",
+  "collection": "primitives",
+  "createdAt": "2026-04-11T18:38:13.928415+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Multi-author display showing all co-authors with their revenue split percentages. Compact inline strip for novel headers and detail pages. Maps to novels.work_contributor with revenue_share_pct.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["cn() for className composition", "data-slot attribute"],
+  "files": [
+    {
+      "path": "components/ui/co-author-strip.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": ["novels"],
+  "model": "mzizi-dna-helix",
+  "name": "co-author-strip",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": ["avatar-group", "tooltip"],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "subcategory": "strip",
+  "swappable": false,
+  "tags": ["author", "collaboration", "revenue", "split", "publishing", "reading"],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/co-author-strip",
+    "changelog": "https://mzizi.dev/changelog/co-author-strip",
+    "health": "https://mzizi.dev/api/health/co-author-strip",
+    "playground": "https://mzizi.dev/playground/co-author-strip",
+    "portal": "https://mzizi.dev/components/co-author-strip",
+    "source": "https://mzizi.dev/source/co-author-strip"
+  },
+  "use_cases": ["novels"],
+  "variants": ["default", "sm", "lg"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "co-author-strip",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2360,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 4
+  }
+}

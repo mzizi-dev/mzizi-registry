@@ -1,0 +1,17 @@
+{
+  "_id": "wide",
+  "_schemaVersion": "v1",
+  "breakpoint": "wide",
+  "collection": "styling-density-breakpoints",
+  "currentVersion": 1,
+  "default_density": "compact",
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "node": 1,
+  "owner": "bundu",
+  "rationale": "Wide monitors (1536–1919px). Compact stays — content caps at 1440px. Dashboards expand horizontally; marketing content stays constrained.",
+  "strand": "swappable",
+  "swappable": true
+}

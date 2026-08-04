@@ -1,0 +1,71 @@
+{
+  "_id": "mzizi-error-set",
+  "_schemaVersion": "v0.1",
+  "a11y": ["Error states announced to screen readers", "Retry actions keyboard accessible"],
+  "addedInVersion": "7.0.0",
+  "category": "feedback",
+  "collection": "resilience",
+  "createdAt": "2026-04-11T04:37:38.217287+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Brand error and resilience states for the Nyuchi ecosystem. Exports ErrorCard (inline error within feeds), NotFound (brand 404 page), OfflineBanner (local-first connection status indicator), SectionFallback (section-level error with retry). NOTE: PermissionGate is also currently exported here but architecturally belongs at Layer 4 (Safety & Trust) and should be extracted into a separate component in a future refactor. Each state uses mineral accents, brand typography, and matches the Nyuchi identity system.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": ["Y-axis resilience spine", "Netflix resilience patterns"],
+  "files": [
+    {
+      "path": "components/ui/mzizi-error-set.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "rust-wasm",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "mzizi-error-set",
+  "node": 5,
+  "nodeLabel": "resilience",
+  "owner": "mzizi",
+  "platforms": ["web"],
+  "registryDependencies": [
+    "button",
+    "badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
+    "https://mzizi.dev/api/v1/ui/nyuchi-harness"
+  ],
+  "registryType": "registry:ui",
+  "runtimeLang": "rust-wasm",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": ["brand", "error", "feedback", "boundary", "nyuchi", "offline", "trust-gate"],
+  "updatedAt": "2026-05-21T09:53:26.61107+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/v1/ui/nyuchi-error-set",
+    "changelog": "https://mzizi.dev/changelog/nyuchi-error-set",
+    "health": "https://mzizi.dev/api/health/nyuchi-error-set",
+    "playground": "https://mzizi.dev/playground/nyuchi-error-set",
+    "portal": "https://mzizi.dev/components/nyuchi-error-set",
+    "source": "https://mzizi.dev/source/nyuchi-error-set"
+  },
+  "use_cases": ["Error handling", "Graceful degradation", "Offline support"],
+  "variants": ["default", "degraded", "error"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "mzizi-error-set",
+    "latestAt": "2026-04-14T05:04:16.880185+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2352,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 5
+  }
+}

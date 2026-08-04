@@ -1,0 +1,85 @@
+{
+  "_id": "notification-center-full",
+  "_schemaVersion": "v0.1",
+  "a11y": [
+    "role=region with aria-label",
+    "Filter tabs with role=tablist",
+    "Notification items in role=feed",
+    "Keyboard-navigable with j/k shortcuts",
+    "Screen reader announces count changes"
+  ],
+  "addedInVersion": "4.0.32",
+  "category": "feedback",
+  "collection": "primitives",
+  "createdAt": "2026-04-24T05:57:42.949618+00:00",
+  "currentVersion": 1,
+  "demo": {
+    "demo_type": "interactive",
+    "has_demo": true
+  },
+  "dependencies": [],
+  "description": "Full-screen or drawer notification management surface. Extends notification-center (existing Layer 2 component) with filter/search, archive, bulk actions, and grouped conversations view. Audit flagged as missing UX pattern for mature notification UX. ALPHA — awaiting frontend implementation.",
+  "dnaRole": "core",
+  "doctrineVersion": "4.1.0",
+  "examples": [],
+  "features": [
+    "Filter by all/unread/mentions/mine",
+    "Search within notifications",
+    "Date-grouped lists (today/yesterday/this week)",
+    "Bulk selection with actions",
+    "Conversation threading"
+  ],
+  "files": [
+    {
+      "path": "components/ui/notification-center-full.tsx",
+      "type": "registry:ui"
+    }
+  ],
+  "framework": "react",
+  "legacy": {
+    "descriptor": "mzizi-react-legacy"
+  },
+  "migrationTarget": "svelte",
+  "miniApps": [],
+  "model": "mzizi-dna-helix",
+  "name": "notification-center-full",
+  "node": 2,
+  "nodeLabel": "primitive",
+  "owner": "mzizi",
+  "platforms": ["web", "ios", "android"],
+  "registryDependencies": [],
+  "registryType": "registry:ui",
+  "runtimeLang": "typescript",
+  "sizes": [],
+  "status": "stable",
+  "strand": "core-guarantee",
+  "swappable": false,
+  "tags": [],
+  "updatedAt": "2026-04-29T13:31:36.120589+00:00",
+  "urls": {
+    "api": "https://mzizi.dev/api/notification-center-full",
+    "changelog": "https://mzizi.dev/changelog/notification-center-full",
+    "health": "https://mzizi.dev/health/notification-center-full",
+    "playground": "https://mzizi.dev/playground/notification-center-full",
+    "portal": "https://mzizi.dev/components/notification-center-full",
+    "source": "https://mzizi.dev/source/notification-center-full"
+  },
+  "use_cases": [
+    "Full-screen notification management",
+    "Notification drawer with filters",
+    "Grouped conversations view",
+    "Archived notification browsing",
+    "Bulk mark-as-read and delete actions"
+  ],
+  "variants": ["drawer", "full-page", "modal"],
+  "versionHistory": {
+    "joinKey": "component_name",
+    "joinValue": "notification-center-full",
+    "latestAt": "2026-04-24T06:06:13.782288+00:00",
+    "latestVersion": "1.0.0",
+    "latestVersionId": 2631,
+    "mcpTool": "get_component_history",
+    "sourceTable": "component_versions",
+    "versionCount": 1
+  }
+}

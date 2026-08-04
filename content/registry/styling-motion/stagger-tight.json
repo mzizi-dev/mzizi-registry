@@ -1,0 +1,22 @@
+{
+  "_id": "stagger-tight",
+  "_schemaVersion": "v1",
+  "collection": "styling-motion",
+  "css_var": "--motion-stagger-tight",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "motion_type": "stagger",
+  "ms": 30,
+  "name": "stagger-tight",
+  "node": 1,
+  "owner": "bundu",
+  "reduced_motion_fallback": "0ms",
+  "sort_order": 90,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Dense lists — chat messages, notifications, feed items",
+  "value": "30ms"
+}

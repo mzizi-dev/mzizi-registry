@@ -1,0 +1,20 @@
+{
+  "_id": "bottom-nav",
+  "_schemaVersion": "v1",
+  "category": "navigation",
+  "collection": "styling-z-index",
+  "css_var": "--z-bottom-nav",
+  "currentVersion": 1,
+  "dnaRole": "swappable",
+  "doctrineVersion": "4.1.0",
+  "kind": "token",
+  "model": "mzizi-dna-helix",
+  "name": "bottom-nav",
+  "node": 1,
+  "owner": "bundu",
+  "sort_order": 80,
+  "strand": "swappable",
+  "swappable": true,
+  "usage": "Fixed bottom navigation — mobile-primary nav pattern",
+  "value": 300
+}
