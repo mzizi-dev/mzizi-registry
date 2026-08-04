@@ -45,18 +45,28 @@ matters because a stored count is the oldest drift bug in this system — see th
 | `mcp_tool_registry`                      | 66   | Tool definitions belong beside the server that serves them                                |
 | `documentation_pages`                    | —    | Historical; content already left                                                          |
 
-### Delete — superseded, and two violate CLAUDE.md §6.1
+### Deleted — 2026-08-04, done
+
+Six tables dropped, ~25 MB reclaimed; the project is down from 19 tables to 13.
+
+| Table                                  | Rows  | Size  | Why it went                                   |
+| -------------------------------------- | ----- | ----- | --------------------------------------------- |
+| `_rearch_snapshot_component_documents` | 3,190 | 14 MB | 2,499 documents contained `source_code`       |
+| `component_source_backup_20260802`     | 2,111 | 11 MB | 571 rows with non-empty `source_code`         |
+| `_audit_backup_20260727`               | —     | —     | Superseded audit snapshot                     |
+| `_backup_skills_20260701`              | —     | —     | Skills are files in `mzizi-tools`             |
+| `nodes_store`                          | 126   | —     | **Second copy of doctrine that nothing read** |
+| `instructions_store`                   | 11    | —     | Second copy of the AI instruction sets        |
 
 §6.1: _"The DB never holds component code — not source, not a snapshot, not an
-archive blob."_ Two of these hold exactly that. Source was dropped from the live
+archive blob."_ The first two held exactly that. Source was dropped from the live
 tables and kept in backups, so the rule read as satisfied everywhere anyone looked.
 
-| Table                                  | Rows  | Size  | Note                                  |
-| -------------------------------------- | ----- | ----- | ------------------------------------- |
-| `_rearch_snapshot_component_documents` | 3,190 | 14 MB | 2,499 documents contain `source_code` |
-| `component_source_backup_20260802`     | 2,111 | 11 MB | 571 rows with non-empty `source_code` |
-| `_audit_backup_20260727`               | —     | —     | Superseded audit snapshot             |
-| `_backup_skills_20260701`              | —     | —     | Skills are files in `mzizi-tools`     |
+**Doctrine was in the database twice.** Every doctrine view — `ai_instructions`,
+`ubuntu_pillars`, `ubuntu_principles`, `bundu_conventions`, `documentation_pages`,
+`framework_descriptors`, `primitive_sources`, `skills` — reads `component_documents`.
+`nodes_store` and `instructions_store` were an older parallel copy with zero readers
+in either repo. Two copies with one reader is how the copies come to disagree.
 
 ### Needs a decision
 
@@ -73,10 +83,22 @@ The extracted rows still **serve** live surfaces: `/api/v1/architecture`,
 `/api/v1/ubuntu/*`, `/api/v1/ai/instructions`, `/api/v1/skills*`, and the MCP read
 tools. Deleting a row before its reader moves takes the endpoint down.
 
-1. Extract to files. (Doctrine: done. Metadata, tokens, tool registry: not yet.)
-2. Repoint `lib/db` and the `/api/v1` routes to read the files.
-3. Verify the routes green against the files, with the DB rows still present.
-4. **Then** delete the rows.
+1. Extract to files. (Doctrine: **done** — 103 MDX documents.)
+2. Repoint the readers. (**done** — the eight architecture helpers, both ubuntu
+   readers, the three `ai_instructions` readers, and `getHelixModel`. This repo no
+   longer reads doctrine from the database at all.)
+3. Verify green against the files. (**done** — 6/1/4/5/4/4/16/6 architecture rows,
+   5/5 ubuntu, 3 instruction sets, helix at 8 nodes / 6 strands / 4 rungs.)
+4. Delete the rows. **The 113 doctrine rows in `component_documents` are NOT yet
+   deleted, and the blocker is a reader outside this repo:** the doctrine views feed
+   the registry RPCs `mzizi-mcp` serves at mcp.mzizi.dev — `get_architecture`,
+   `get_node_documents`, `get_ubuntu_*`, `get_ai_instructions`,
+   `list_bundu_conventions`. Dropping them now leaves that endpoint answering empty
+   doctrine with no fix in flight. It belongs in the same change that repoints
+   `mzizi-mcp` at the files, which is step 1 of the 10-tool consolidation
+   (`docs/mcp-tool-consolidation.md`) — `get_architecture` and `get_doctrine` are two
+   of the ten. Same for `/api/v1/skills*`: it reads the `skills` view through an RPC
+   and needs `@nyuchi/mzizi-skills` as a dependency instead.
 
 The four `delete` tables above are the exception — nothing reads them, so they can
 go independently of steps 1-3.
