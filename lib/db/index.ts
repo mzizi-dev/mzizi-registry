@@ -193,7 +193,9 @@ export async function getAllComponents(): Promise<ComponentRow[]> {
  * Get components by category.
  */
 export async function getComponentsByCategory(category: string): Promise<ComponentRow[]> {
-  return readComponents().filter((c) => c.category === category) as unknown as ComponentRow[]
+  return readComponents().filter(
+    (c) => (c as unknown as { category?: string }).category === category
+  ) as unknown as ComponentRow[]
 }
 
 /**
@@ -201,7 +203,7 @@ export async function getComponentsByCategory(category: string): Promise<Compone
  */
 export async function getComponentsByLayer(layer: string): Promise<ComponentRow[]> {
   return readComponents().filter(
-    (c) => c.layer === layer || String(c.node) === layer
+    (c) => String(c.node) === layer || (c as unknown as { layer?: string }).layer === layer
   ) as unknown as ComponentRow[]
 }
 

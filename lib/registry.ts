@@ -1,135 +1,168 @@
 /**
- * The component registry, read from disk.
+ * The component registry, read from the repo.
  *
- * Component documents live in `content/registry/<collection>/<name>.json`, extracted
- * by `pnpm registry:extract`. This module is the read path the Next.js app builds the
- * registry from, and `/api/v1/*` serves. The database is not involved.
+ * A component is a REAL FILE — `components/registry/n<N>-<label>/<name>.<ext>` — which
+ * the build compiles and typechecks. That is the whole point: an error in a component
+ * fails `pnpm build`. There is no per-component JSON document and no database row; both
+ * are representations of a component rather than the component, and both can drift from
+ * the code while still looking correct.
  *
- * That is the architecture: the app builds the registry at build time and serves it
- * over `/api/v1/*`, and `mzizi-mcp` is an HTTP client of that API rather than a
- * Supabase client. A component is a file (source under `components/registry/`) plus a
- * file (its document here) — nothing about it is a row.
+ * Two files, and only two:
  *
- * The `components` set mirrors what the retired `components` VIEW selected: documents
- * whose `kind` is null. A non-null `kind` marks something that is not an installable
- * component (`doc_page`, `overview`, `architecture`, `version_history`, …), and serving
- * those as components is the defect the view's filter existed to prevent.
+ *   components/registry/n<N>-<label>/<name>.<ext>   the component itself, 571 of them
+ *   registry.json                                   the shadcn manifest, 571 items
+ *
+ * `registry.json` is the manifest a consumer's `npx shadcn add` resolves against, so it
+ * has to exist as one document in the shadcn schema. It is NOT a second copy of the
+ * components: it carries the install contract (description, dependencies,
+ * registryDependencies, target paths) and never the source.
+ *
+ * The node is derived from the directory the component lives in, so it cannot disagree
+ * with where the file actually is.
  */
 
 import { readdirSync, readFileSync, existsSync, statSync } from "fs"
-import { join, resolve, sep } from "path"
+import { join, resolve, sep, extname, basename } from "path"
 
-const REGISTRY_ROOT = join(process.cwd(), "content", "registry")
+const REGISTRY_SOURCE_ROOT = join(process.cwd(), "components", "registry")
+const MANIFEST_PATH = join(process.cwd(), "registry.json")
 
-/**
- * A single safe path segment. Directory and file names come off the filesystem here
- * rather than from a request, but validating them keeps the join provably contained --
- * the same rule as lib/doctrine.ts, and the failure mode if it is wrong is reading
- * files from outside the content tree.
- */
+/** Only letters, digits, dot, underscore, hyphen — never bare `.` or `..`. */
 const SAFE_SEGMENT = /^[A-Za-z0-9._-]+$/
 
 function isSafeSegment(s: string): boolean {
   return SAFE_SEGMENT.test(s) && s !== "." && s !== ".."
 }
 
-function safeRegistryPath(...segments: string[]): string | null {
+/** Join under the source root, or null if a segment is unsafe or the path escapes. */
+function safeSourcePath(...segments: string[]): string | null {
   if (!segments.every(isSafeSegment)) return null
-  const candidate = resolve(REGISTRY_ROOT, ...segments)
-  const root = resolve(REGISTRY_ROOT)
+  const candidate = resolve(REGISTRY_SOURCE_ROOT, ...segments)
+  const root = resolve(REGISTRY_SOURCE_ROOT)
   if (candidate !== root && !candidate.startsWith(root + sep)) return null
   return candidate
 }
 
-export type RegistryDocument = Record<string, unknown> & {
-  name?: string
-  collection?: string
+export type RegistryFile = { path: string; type?: string }
+
+export type RegistryItem = {
+  name: string
+  type?: string
+  description?: string
+  dependencies?: string[]
+  registryDependencies?: string[]
+  files?: RegistryFile[]
+  /** Derived from the directory on disk, e.g. `n2-primitives` → 2. */
   node?: number
-  kind?: string | null
+  /** The directory label on disk, e.g. `primitives`. */
+  nodeLabel?: string
+  /** Repo-relative path of the actual component file. */
+  sourcePath?: string
 }
 
-let _cache: RegistryDocument[] | null = null
+type Manifest = { items?: RegistryItem[] }
 
-/** Every document under content/registry, parsed once per process. */
-export function readAllRegistryDocuments(): RegistryDocument[] {
+let _cache: RegistryItem[] | null = null
+
+/** Parse `n<N>-<label>` into its node number and label. */
+function parseNodeDir(dir: string): { node: number; label: string } | null {
+  const m = dir.match(/^n(\d+)-(.+)$/)
+  if (!m) return null
+  const node = Number.parseInt(m[1], 10)
+  // No upper bound: the node set is uncapped (CLAUDE.md §9), so a cap here would
+  // silently hide a component the moment a new node is added.
+  if (!Number.isFinite(node) || node < 1) return null
+  return { node, label: m[2] }
+}
+
+/** Every component file on disk, keyed by component name. */
+function readSourceIndex(): Map<string, { node: number; nodeLabel: string; sourcePath: string }> {
+  const index = new Map<string, { node: number; nodeLabel: string; sourcePath: string }>()
+  if (!existsSync(REGISTRY_SOURCE_ROOT)) return index
+
+  for (const dir of readdirSync(REGISTRY_SOURCE_ROOT)) {
+    const parsed = parseNodeDir(dir)
+    const dirPath = safeSourcePath(dir)
+    if (!parsed || !dirPath || !statSync(dirPath).isDirectory()) continue
+
+    for (const file of readdirSync(dirPath)) {
+      const filePath = safeSourcePath(dir, file)
+      if (!filePath || !statSync(filePath).isFile()) continue
+      // The component name is the filename without its extension. A component may
+      // ship per-target variants (.tsx / .swift / .kt), which share one name.
+      const name = basename(file, extname(file))
+      if (index.has(name)) continue
+      index.set(name, {
+        node: parsed.node,
+        nodeLabel: parsed.label,
+        sourcePath: `components/registry/${dir}/${file}`,
+      })
+    }
+  }
+  return index
+}
+
+/**
+ * The registry: every manifest item, joined to the component file that implements it.
+ *
+ * An item with no file on disk is dropped rather than served — the manifest promises
+ * something installable, and serving an entry whose source does not exist hands a
+ * consumer a broken `shadcn add`.
+ */
+export function readComponents(): RegistryItem[] {
   if (_cache) return _cache
-  if (!existsSync(REGISTRY_ROOT)) {
+  if (!existsSync(MANIFEST_PATH)) {
     _cache = []
     return _cache
   }
 
-  const out: RegistryDocument[] = []
-  for (const collection of readdirSync(REGISTRY_ROOT)) {
-    const dir = safeRegistryPath(collection)
-    if (!dir || !statSync(dir).isDirectory()) continue
-    for (const file of readdirSync(dir)) {
-      if (!file.endsWith(".json")) continue
-      const filePath = safeRegistryPath(collection, file)
-      if (!filePath) continue
-      try {
-        const doc = JSON.parse(readFileSync(filePath, "utf8")) as RegistryDocument
-        // `name` is authoritative from the document; fall back to the filename so a
-        // document missing it is still addressable rather than silently invisible.
-        if (typeof doc.name !== "string" || doc.name.length === 0) {
-          doc.name = file.replace(/\.json$/, "")
-        }
-        if (typeof doc.collection !== "string") doc.collection = collection
-        out.push(doc)
-      } catch {
-        // A malformed file is a build-time problem, not a reason to serve nothing —
-        // but it must not be silent, so surface it and continue.
-        console.error(`[mzizi] registry: could not parse content/registry/${collection}/${file}`)
-      }
-    }
+  let manifest: Manifest
+  try {
+    manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf8")) as Manifest
+  } catch {
+    console.error("[mzizi] registry: registry.json is not valid JSON")
+    _cache = []
+    return _cache
   }
-  _cache = out.sort((a, b) => String(a.name).localeCompare(String(b.name)))
+
+  const sources = readSourceIndex()
+  const out: RegistryItem[] = []
+  for (const item of manifest.items ?? []) {
+    if (!item?.name) continue
+    const src = sources.get(item.name)
+    if (!src) {
+      console.error(`[mzizi] registry: ${item.name} is in registry.json with no file on disk`)
+      continue
+    }
+    out.push({ ...item, node: src.node, nodeLabel: src.nodeLabel, sourcePath: src.sourcePath })
+  }
+
+  _cache = out.sort((a, b) => a.name.localeCompare(b.name))
   return _cache
 }
 
-/**
- * Installable components only — documents with a null/absent `kind`, matching what the
- * `components` view selected.
- */
-export function readComponents(): RegistryDocument[] {
-  return readAllRegistryDocuments().filter(
-    (d) => d.kind === null || d.kind === undefined || d.kind === ""
-  )
-}
-
 /** One component by name, or null. */
-export function readComponent(name: string): RegistryDocument | null {
-  return readComponents().find((d) => d.name === name) ?? null
+export function readComponent(name: string): RegistryItem | null {
+  return readComponents().find((c) => c.name === name) ?? null
 }
 
-/** Any document by name, component or not. */
-export function readRegistryDocument(name: string): RegistryDocument | null {
-  return readAllRegistryDocuments().find((d) => d.name === name) ?? null
-}
-
-/** Components in a collection. */
-export function readCollection(collection: string): RegistryDocument[] {
-  return readComponents().filter((d) => d.collection === collection)
-}
-
-/** Collection names present on disk, with document counts. */
-export function readCollectionCounts(): Record<string, number> {
-  return readAllRegistryDocuments().reduce<Record<string, number>>((acc, d) => {
-    const c = String(d.collection ?? "unknown")
-    acc[c] = (acc[c] ?? 0) + 1
+/**
+ * Component count per node, derived from where the files actually are. Never stored — a
+ * stored count is the oldest drift bug here (§11) — and never bounded, because the node
+ * set is uncapped.
+ */
+export function readNodeCounts(): Record<number, number> {
+  return readComponents().reduce<Record<number, number>>((acc, c) => {
+    if (typeof c.node !== "number") return acc
+    acc[c.node] = (acc[c.node] ?? 0) + 1
     return acc
   }, {})
 }
 
-/**
- * Component count per node. Derived, never stored — a stored count is the oldest drift
- * bug in this system (CLAUDE.md §11), and the node set is uncapped, so this returns
- * whatever nodes actually have components rather than a fixed range.
- */
-export function readNodeCounts(): Record<number, number> {
-  return readComponents().reduce<Record<number, number>>((acc, d) => {
-    const n = typeof d.node === "number" ? d.node : Number(d.node)
-    if (!Number.isFinite(n)) return acc
-    acc[n] = (acc[n] ?? 0) + 1
+/** Node labels present on disk, e.g. { 2: "primitives" }. */
+export function readNodeLabels(): Record<number, string> {
+  return readComponents().reduce<Record<number, string>>((acc, c) => {
+    if (typeof c.node === "number" && c.nodeLabel) acc[c.node] = c.nodeLabel
     return acc
   }, {})
 }
