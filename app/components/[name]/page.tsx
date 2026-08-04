@@ -5,8 +5,9 @@ import { DemoRenderer } from "@/components/playground/demo-renderer"
 import { hasDemoFor } from "@/components/playground/demo-names"
 import { ComponentDocSection } from "@/components/playground/component-doc-section"
 import { SafeSection } from "@/components/error-boundary"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/registry/n2-primitives/badge"
 import { getAllComponents, getComponent, isSupabaseConfigured } from "@/lib/db"
+import { readComponentSource } from "@/lib/registry-source"
 
 /**
  * Static params: generate a page per component by listing the DB registry.
@@ -39,7 +40,8 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
 
   if (!item) notFound()
 
-  const sourceCode = item.source_code ?? "// Source not available"
+  // Source lives on disk, not in the registry document (@/lib/registry-source).
+  const sourceCode = readComponentSource(name) ?? "// Source not available"
   const firstFilePath = item.files?.[0]?.path ?? ""
   const registryType = item.registry_type?.replace("registry:", "") ?? "component"
   const installUrl = `https://mzizi.dev/api/v1/ui/${item.name}`

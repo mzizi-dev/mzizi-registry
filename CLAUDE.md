@@ -83,7 +83,8 @@ design-portal (this repo)
 | Icons                | Lucide React                                       | 1.8.0                                      |
 | Theming              | next-themes                                        | 0.4.6                                      |
 | Forms                | react-hook-form + zod                              | 7.73.1 / 4.3.6                             |
-| Charts               | Recharts                                           | 3.8.1                                      |
+| Charts (canvas)      | Chart.js + react-chartjs-2                         | 4.5.1 / 5.3.1                              |
+| Charts (SVG)         | Recharts                                           | 3.8.1                                      |
 | Testing              | Vitest + Testing Library                           | 4.1.5                                      |
 | Observability        | Structured logging (`lib/observability.ts`)        | Built-in                                   |
 | Metrics              | MCP usage tracking (`lib/metrics.ts`)              | Built-in                                   |
@@ -93,6 +94,26 @@ design-portal (this repo)
 | MCP Server           | @modelcontextprotocol/sdk (Streamable HTTP)        | 1.29.0                                     |
 | CI/CD                | GitHub Actions + Vercel                            | —                                          |
 | Deployment           | Vercel                                             | —                                          |
+
+**Two charting stacks, and that is deliberate — do not "consolidate" them.**
+
+- **Chart.js (canvas)** is the ecosystem's workhorse. Consumer apps lean on it far
+  more than this repo's own file count suggests: mukoko-weather runs seven Chart.js
+  sections on mobile. It is what you reach for when the dataset is large or the view
+  is data-heavy, because a canvas draws one DOM node where SVG draws thousands.
+  `canvas-chart` (N2) is the base; `time-series-chart` composes it.
+- **Recharts (SVG)** backs the `chart-*` family — the shadcn chart blocks. SVG is the
+  right default for small, interactive, styleable charts where per-element theming and
+  accessibility matter more than node count.
+
+This table used to list Recharts alone, which is how "the repo standardised on
+recharts" ended up in a commit message. It had not; the two answer different questions.
+`canvas-chart`'s own header states the rule — use it "when Recharts SVG would create
+too many DOM nodes."
+
+Both are real `dependencies`, not devDependencies: §14's upgrade-first policy makes this
+repo the place major versions are exercised before any production app takes them, and a
+dependency parked in `devDependencies` is one this repo never truly proves.
 
 ### Mzizi tooling — out-of-repo
 
@@ -120,16 +141,23 @@ pnpm lint:fix         # ESLint with --fix
 pnpm typecheck        # TypeScript type checking (tsc --noEmit)
 pnpm test             # Run Vitest test suite once
 pnpm test:watch       # Vitest in watch mode
-pnpm registry:sync    # Regenerate registry.json (and committed primitives in components/ui/) from Supabase
+pnpm registry:sync    # Regenerate registry.json from Supabase (571 items)
 pnpm registry:verify  # Non-mutating check — fails CI if registry.json drifts from Supabase
+pnpm tokens:sync      # Regenerate every N1 token artifact from the DB (§8.4.1)
+pnpm tokens:verify    # Non-mutating check — fails CI if any token artifact drifted
+pnpm registry:validate # Offline gate — every registry item resolves on disk and installs
 pnpm audit:check      # pnpm audit --audit-level=moderate --ignore-registry-errors
 ```
 
-Sync flags (passed to `tsx scripts/sync-registry.ts`):
+`pnpm components:extract` is **gone**, with `scripts/extract-components.ts` and the
+`resolveComponentSource` disk-then-DB fallback. The migration those served is finished:
+`source_code` is empty on all 571 rows, so all three could only read a column that no
+longer holds anything. Source moves in one direction now, and that direction is "it is
+already in git". See `docs/component-source-migration.md`.
 
-- `--ui-only` — only refresh `components/ui/*` files
-- `--json-only` — only refresh `registry.json` snapshot
-- `--check` — same as `pnpm registry:verify`
+`sync-registry.ts` takes one flag, `--check` (same as `pnpm registry:verify`). It writes
+`registry.json` and nothing else — the `--ui-only` / `--json-only` pair documented here
+before referred to a `components/ui/*` write path the script no longer has.
 
 ---
 
@@ -273,22 +301,22 @@ design-portal/
 
 ### 6.1 Registry System
 
-**Single source of truth: the Supabase `components` table** — the stable registry across the nodes and rungs of the DNA double helix (live count: `GET /api/v1/stats`; never a fixed number — the node set is uncapped), with metadata, dependencies, source code, docs, and version history split across:
+**Single source of truth: the Supabase `components` table** — the stable registry across the nodes and rungs of the DNA double helix (live count: `GET /api/v1/stats`; never a fixed number — the node set is uncapped), with metadata, dependencies, docs and version history split across the tables below. **Source code is the exception and is not in any of them** — it is on disk, in git (§8.3).
 
-| Table                                                  | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `components`                                           | Name, type, description, deps, files, source_code, `node` / `architecture_layer`, category, status                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `component_documents`                                  | **Document-route staging table** (the spine of the new lean MCP). One self-contained JSON document per component (`{ owner, sources, legacy, files, … }`) keyed by node collection (`n1_tokens … n10_documentation`). The MCP at `/mcp` reads exclusively from here; the portal's `/api/v1/*` routes read from `components` and `component_docs`. The two surfaces are intentionally separate but stay in lock-step via a read-across pattern — `component_documents.legacy` mirrors the row in `components` so downstream consumers can pivot without duplicate fetches. |
-| `component_docs`                                       | Use cases, variants, a11y notes (per component) — served by `/api/v1/ui/{name}/docs`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `component_versions`                                   | Per-component version history — served by `/api/v1/ui/{name}/versions`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `documentation_pages`                                  | **HISTORICAL — never write to it.** Long-form docs are now MDX in this repo (§15.17, final), so this table is neither the source nor the destination. The DB-driven renderers, the dynamic `[slug]` route, and the `get_documentation_page` MCP tool are all removed, and `/api/v1/docs/*` returns HTTP 410 — none of which this reversal asks back, because MDX pages are routes rather than an API surface. The table stays in Supabase as the historical source-of-record. Author `.mdx` under `app/`, not rows here.                                                  |
-| `changelog`                                            | Releases — `nodes_affected` (uncapped), `tools_added/modified/deprecated/removed`, `components_added/modified/deprecated/removed`, `linked_issues`, `released_at`. Served at `/api/v1/changelog` and `/api/v1/changelog/{version}`; rendered into `/changelog` (#107).                                                                                                                                                                                                                                                                                                    |
-| `ai_instructions`                                      | System prompts per target (mcp-server, claude, copilot)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `skills`                                               | Agent-skill MDX bodies — **read-only from this repo.** Authored in git as `mzizi-skills/skills/<name>/SKILL.md` in `nyuchi/mzizi-tools` (npm `@nyuchi/mzizi-skills`) and projected into this collection by that repo's `pnpm skills:sync`. The portal serves it at `/api/v1/skills*` and via MCP `get_skill`. See §15.23.                                                                                                                                                                                                                                                 |
-| `brand_*`                                              | Minerals, semantic colors, typography, spacing, ecosystem brands                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `architecture_*`                                       | Principles, data layer, pipeline, sovereignty assessments, frontend axes/layers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `ubuntu_pillars/principles`                            | Doctrine rows served at `/api/v1/ubuntu/{pillars,principles}` (and consumed by `app/ubuntu` once #108 lands)                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `fundi_issues`, `observability_events`, `chaos_events` | Open-data event streams behind the `/observability` dashboard (#105) — public, schema.org `Dataset` JSON-LD                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Table                                                  | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `components`                                           | **A VIEW over `component_documents`, not a table.** It covers thirteen collections and filters to rows whose `kind` is null — the `documentation` collection also holds retired doc pages (`kind: doc_page` / `overview`), which must never be served as installable components. It listed only nine collections until the extraction, which is why `primitives` (228), `styling-libs` (16, all of N1), `documentation-engine` (4) and `accessibility-audit` were invisible to `/api/v1/ui/{name}` while remaining visible over MCP. **Component source is NOT here** — it is on disk under `components/registry/n<N>-<label>/` (§8.3), read only through `lib/registry-source.ts`. The `source_code` column survives the view definition but is null on every row, and nothing reads it: the disk-then-DB fallback that used to is deleted. |
+| `component_documents`                                  | **Document-route staging table** (the spine of the new lean MCP). One self-contained JSON document per component (`{ owner, sources, legacy, files, … }`) keyed by node collection (`n1_tokens … n10_documentation`). The MCP at `/mcp` reads exclusively from here; the portal's `/api/v1/*` routes read from `components` and `component_docs`. The two surfaces are intentionally separate but stay in lock-step via a read-across pattern — `component_documents.legacy` mirrors the row in `components` so downstream consumers can pivot without duplicate fetches.                                                                                                                                                                                                                                                                    |
+| `component_docs`                                       | Use cases, variants, a11y notes (per component) — served by `/api/v1/ui/{name}/docs`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `component_versions`                                   | Per-component version history — served by `/api/v1/ui/{name}/versions`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `documentation_pages`                                  | **HISTORICAL — never write to it.** Long-form docs are now MDX in this repo (§15.17, final), so this table is neither the source nor the destination. The DB-driven renderers, the dynamic `[slug]` route, and the `get_documentation_page` MCP tool are all removed, and `/api/v1/docs/*` returns HTTP 410 — none of which this reversal asks back, because MDX pages are routes rather than an API surface. The table stays in Supabase as the historical source-of-record. Author `.mdx` under `app/`, not rows here.                                                                                                                                                                                                                                                                                                                     |
+| `changelog`                                            | Releases — `nodes_affected` (uncapped), `tools_added/modified/deprecated/removed`, `components_added/modified/deprecated/removed`, `linked_issues`, `released_at`. Served at `/api/v1/changelog` and `/api/v1/changelog/{version}`; rendered into `/changelog` (#107).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `ai_instructions`                                      | System prompts per target (mcp-server, claude, copilot)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `skills`                                               | Agent-skill MDX bodies — **read-only from this repo.** Authored in git as `mzizi-skills/skills/<name>/SKILL.md` in `nyuchi/mzizi-tools` (npm `@nyuchi/mzizi-skills`) and projected into this collection by that repo's `pnpm skills:sync`. The portal serves it at `/api/v1/skills*` and via MCP `get_skill`. See §15.23.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `brand_*`                                              | Minerals, semantic colors, typography, spacing, ecosystem brands                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `architecture_*`                                       | Principles, data layer, pipeline, sovereignty assessments, frontend axes/layers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `ubuntu_pillars/principles`                            | Doctrine rows served at `/api/v1/ubuntu/{pillars,principles}` (and consumed by `app/ubuntu` once #108 lands)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `fundi_issues`, `observability_events`, `chaos_events` | Open-data event streams behind the `/observability` dashboard (#105) — public, schema.org `Dataset` JSON-LD                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 API responses follow the shadcn registry schema at `https://ui.shadcn.com/schema/registry.json`.
 
@@ -305,10 +333,20 @@ Supabase (source of truth)
      ├── app/mcp/route.ts (document-route MCP)
      │     └──► createMziziMcpServer(supabase) — reads `component_documents` only
      │
-     ├── pnpm registry:sync ──► registry.json + components/ui/*  (committed snapshot)
+     ├── pnpm registry:sync ──► registry.json          (committed snapshot, 571 items)
      │                          (CI runs `pnpm registry:verify` to fail on drift)
      │
+     ├── pnpm tokens:sync ────► lib/tokens/palette.generated.ts, the globals.css
+     │                          palette block, and the six N1 platform token files
+     │                          (CI runs `pnpm tokens:verify` to fail on drift)
+     │
      └── lib/db/client.ts (browser localStorage cache, fetched from /api/v1/ui)
+
+git (source of truth for component SOURCE)
+     │
+     └── components/registry/n<N>-<label>/<name>.<ext>  — 571 files, read by
+         lib/registry-source.ts and served through /api/v1/ui/{name}, the MCP,
+         /source/[name], /components/[name] and /playground/[name]
 ```
 
 **`registry.json`** must exist in the repo root, but it is **never hand-edited**. It is regenerated dynamically from Supabase by `pnpm registry:sync` whenever a component is added, modified, or removed in the database. The file is committed so that diffs are visible in PRs and CI can detect drift via `pnpm registry:verify`.
@@ -643,24 +681,51 @@ Every component in `components/ui/` MUST have:
 
 ### 8.3 Adding a New Component
 
-Components are authored **in the Supabase `components` table**, not as files in this repo. The committed `components/ui/*` files are a derived snapshot of the primitives the portal itself imports.
+**Component source lives on disk, in git.** Every component is a file under
+`components/registry/n<N>-<label>/<name>.<ext>` — 571 of them across N1–N11. Source is
+_not_ authored in Supabase any more; see `docs/component-source-migration.md` for why.
+Everything _around_ a component still lives in `component_documents`: description,
+dependencies, `registryDependencies`, `files[]`, node, collection, owner, status, version
+history, changelog and docs. Only the bytes moved.
 
-1. Insert the row into `components` (and `component_docs`) in Supabase, including `source_code`, `architecture_layer`, `category`, `dependencies`, `registry_dependencies`, and `status = 'stable'`
-2. If the new component should be reachable via the document-route MCP, also insert a row into `component_documents` keyed by the right `n{N}_*` collection
-3. Author the source following the CVA + Radix + cn() pattern (see `button.tsx`)
-4. Run `pnpm registry:sync` locally to regenerate `registry.json` and (if the new component is portal-imported) `components/ui/<name>.tsx`
-5. Verify the API serves it: `curl http://localhost:11736/api/v1/ui/<component-name>`
-6. Commit the resulting `registry.json` (and `components/ui/*` if changed) — CI runs `pnpm registry:verify` to fail if the snapshot drifts
+1. Write the file under `components/registry/n<N>-<label>/`, following the CVA + Radix +
+   `cn()` pattern (see `button.tsx`)
+2. Insert the metadata row into `component_documents` under the right collection — with
+   `files[].path` (where the shadcn CLI places it in a **consumer's** project, which is
+   free to differ from where it lives here), node, category, dependencies, `status`
+3. Leave `kind` null. A non-null `kind` marks a row as something other than a component
+   (`doc_page`, `overview`, …) and the `components` view filters those out — that is what
+   keeps 20 retired documentation pages from being served as installable components
+4. `pnpm typecheck && pnpm lint && pnpm test` — the whole point of the file being on disk
+5. Run `pnpm registry:sync` to regenerate `registry.json`
+6. Verify the API serves it: `curl http://localhost:11736/api/v1/ui/<component-name>`
+7. Commit both — CI runs `pnpm registry:verify` to fail if the snapshot drifts
 
 ### 8.4 Modifying Existing Components
 
-- Edit `source_code` in the `components` table; do not edit `components/ui/*.tsx` directly — they get overwritten by `pnpm registry:sync`
+- **Edit the file on disk.** There is no `source_code` column to edit any more, and no
+  sync in either direction — one copy, in git, where the toolchain can see it
 - Preserve the existing CVA variant pattern — add variants, don't restructure
 - Keep Radix UI accessibility primitives intact
 - Don't break the shadcn registry schema — `https://ui.shadcn.com/schema/registry.json`
-- Bump the row's `version` and append to `component_versions` so the changelog API reflects the change
-- If the component has a `component_documents` row, also update the document so the MCP stays in sync
+- Bump the document's `currentVersion` and append to `component_versions` so the changelog
+  API reflects the change
 - Re-run `pnpm registry:sync` and commit the updated snapshot
+
+### 8.4.1 N1 token artifacts are generated — never hand-written
+
+`components/registry/n1-tokens/nyuchi-tokens-<platform>.<ext>` (swift, kotlin, arkts,
+react-native, python, rust) and `lib/tokens/palette.generated.ts` are all written by
+`pnpm tokens:sync` from the Supabase collections `styling-minerals` and
+`styling-heritage-colors`. `pnpm tokens:verify` fails the build on any drift, and treats a
+**missing** file as drift.
+
+Edit the DB collection and re-sync. Do not hand-edit these files, and do not re-add
+per-platform generators to `nyuchi-tokens.ts` — that file's `generateTokens` covers `css`
+and `json` only, because those span the whole token system (semantic tokens, brand
+overrides, listing themes) rather than just the palette. The platform generators that used
+to live there carried their own hardcoded five-mineral colour map and were the reason the
+token node shipped a five-and-five palette against a seven-and-seven system.
 
 ### 8.5 When Building a New Bundu Ecosystem App
 
@@ -1095,7 +1160,7 @@ CI additionally runs `pnpm test`, `pnpm build`, and `pnpm registry:verify`.
 
 When working on this codebase as an AI assistant:
 
-1. **Supabase is the source of truth.** Component source code, docs, brand data, architecture data, AI instructions, changelog, document-route docs — all live in Supabase. Do not reintroduce hardcoded JSON/TS files for any of these.
+1. **Supabase is the source of truth for everything except component source.** Docs, brand data, architecture data, AI instructions, changelog and document-route metadata all live in Supabase; do not reintroduce hardcoded JSON/TS files for those. **Component source is the exception and now lives on disk** under `components/registry/n<N>-<label>/` — it moved precisely because a JSON column is invisible to tsc, eslint and prettier, and every node that reached disk failed the build on first contact with defects consumers had already installed. One copy, in git. See §8.3 and `docs/component-source-migration.md`.
 2. **`registry.json` is generated, not authored.** Never hand-edit it. CI runs `pnpm registry:verify` to catch drift.
 3. **Never break the shadcn registry schema** — downstream apps depend on it.
 4. **Use the Seven African Minerals palette** (plus heritage / status / experimental sets — §7) — never introduce colors outside the token system.

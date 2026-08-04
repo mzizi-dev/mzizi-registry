@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import Link from "next/link"
 import { getHelixModel, isSupabaseConfigured } from "@/lib/db"
 import type { HelixNode, HelixStrand } from "@/lib/db/types"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/registry/n2-primitives/skeleton"
 import { ArchitectureExplorer } from "@/components/landing/architecture-explorer"
 
 export const revalidate = 3600

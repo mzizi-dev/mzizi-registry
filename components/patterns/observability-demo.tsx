@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/registry/n2-primitives/button"
+import { Badge } from "@/components/registry/n2-primitives/badge"
 import { log, createLogger, measure, trackError } from "@/lib/observability"
 
 interface LogEntry {

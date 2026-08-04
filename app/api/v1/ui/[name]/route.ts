@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getComponent, isSupabaseConfigured } from "@/lib/db"
+import { readComponentSource } from "@/lib/registry-source"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("registry")
@@ -13,7 +14,11 @@ const CORS_CACHE = {
 /**
  * GET /api/v1/ui/[name] — Individual component with inline source
  *
- * Reads metadata and source code from Supabase.
+ * Metadata comes from Supabase; the SOURCE comes from disk
+ * (`components/registry/**`, via `@/lib/registry-source`). See
+ * `docs/component-source-migration.md` — the database no longer holds a copy,
+ * so a component whose file is missing is a 404 and never a 200 with an empty
+ * body.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ name: string }> }) {
   const start = Date.now()
@@ -64,7 +69,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       )
     }
 
-    if (!component.source_code) {
+    const source = readComponentSource(name)
+
+    if (source === null) {
+      logger.warn("Component has no source on disk or in the registry", { data: { name } })
       trackApiCall({
         endpoint: `/api/v1/ui/${name}`,
         durationMs: Date.now() - start,
@@ -80,7 +88,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     const files = component.files.map((file, i) => ({
       path: file.path,
       type: file.type,
-      content: i === 0 ? component.source_code! : "",
+      content: i === 0 ? source : "",
     }))
 
     logger.info("Component served", {
