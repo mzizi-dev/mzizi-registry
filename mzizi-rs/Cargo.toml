@@ -1,0 +1,42 @@
+# The Mzizi Rust workspace.
+#
+# Rust is the direction for the whole stack (CLAUDE.md §8.9), and this is where it
+# starts. Two Rusts live here and they answer different questions:
+#
+#   * `mzizi-tokens` — N1. The token module, GENERATED from the same source that
+#     emits the CSS custom properties, the Swift file and the Kotlin file. It is
+#     not a Rust re-authoring of the palette; it is one more emitter, which is the
+#     whole claim N1 makes.
+#   * `mzizi-ui` — N2. Dioxus primitives. A Dioxus `Button` and the React `Button`
+#     share a contract and a token set, not a source file.
+#
+# WHY THIS CRATE EXISTS BEFORE THE COMPONENTS DO.
+#
+# A `.rs` file in the registry with no crate compiling it is exactly what a
+# `source_code` database column was: bytes that nothing verifies. `cargo check`,
+# `clippy -D warnings` and `fmt --check` are wired into CI in the same change that
+# adds the first component, so there is never a window where Rust ships unchecked.
+#
+# The components themselves are NOT in this directory. They are files under
+# `components/registry/n<N>-<label>/`, beside their `.tsx` siblings, and each crate
+# `#[path]`-includes them. One component, one name, one place — the registry —
+# with the crate as the thing that compiles it.
+
+[workspace]
+resolver = "3"
+members = ["crates/mzizi-tokens", "crates/mzizi-ui"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+repository = "https://github.com/nyuchi/mzizi"
+homepage = "https://mzizi.dev"
+
+[workspace.lints.rust]
+missing_docs = "warn"
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }

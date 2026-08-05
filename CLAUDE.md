@@ -151,6 +151,17 @@ pnpm doctrine:verify  # Non-mutating check — fails if an extracted doctrine fi
 pnpm audit:check      # pnpm audit --audit-level=moderate --ignore-registry-errors
 ```
 
+The Rust half of the registry has its own toolchain (§8.9). It is not wrapped in pnpm scripts,
+because a `pnpm rust:check` that shells out to cargo only adds a layer that can disagree with
+what CI runs:
+
+```bash
+cargo fmt   --manifest-path mzizi-rs/Cargo.toml --all -- --check
+cargo check --manifest-path mzizi-rs/Cargo.toml --workspace --all-targets
+cargo clippy --manifest-path mzizi-rs/Cargo.toml --workspace --all-targets -- -D warnings
+cargo test  --manifest-path mzizi-rs/Cargo.toml --workspace   # contract tests vs the .tsx
+```
+
 `pnpm components:extract` is **gone**, with `scripts/extract-components.ts` and the
 `resolveComponentSource` disk-then-DB fallback. The migration those served is finished:
 `source_code` is empty on all 571 rows, so all three could only read a column that no
@@ -287,6 +298,13 @@ design-portal/
 │   ├── _pagefind/                    # Static search index (built by postbuild)
 │   ├── icons/                        # Favicon assets
 │   └── llms.txt                      # LLM-readable registry summary
+├── mzizi-rs/                         # Cargo workspace — the Rust half of the registry (§8.9)
+│   ├── Cargo.toml                    #   workspace: mzizi-tokens (N1), mzizi-ui (N2/Dioxus)
+│   └── crates/
+│       ├── mzizi-tokens/src/lib.rs   #   #[path]-includes n1-tokens/nyuchi-tokens-rust.rs
+│       └── mzizi-ui/
+│           ├── src/lib.rs            #   #[path]-includes n2-primitives/<name>.rs
+│           └── tests/contract.rs     #   asserts each .rs agrees with its .tsx sibling
 ├── supabase/
 │   ├── schema.sql                    # Single-file schema snapshot
 │   ├── config.toml
@@ -865,14 +883,41 @@ core-only; once Dioxus carries web _and_ mobile native from one codebase, Svelte
 alternative rather than the target. It stays production-ready and supported — `optional` is not
 deprecated, and `react` at `legacy` still holds the largest inventory by far.
 
-**No Rust ships yet, and the node documents say so.** There is no `Cargo.toml`, no `.rs` and no
-`.wasm` in this repo or in `nyuchi/mzizi-tools`: the harness is `lib/harness/index.tsx`, the
-token generator is `scripts/sync-tokens.ts`, the resilience primitives are `lib/*.ts`, and the
-fundi worker is TypeScript. Every Rust statement below and in
-`documentation-architecture-nodes` is therefore **target state, explicitly labelled** — each
-node's `rust.state` reads `target`, never `shipping`. Write it that way. A node that describes
-a Rust implementation in the present tense reads as shipped to every agent that queries it, and
-that is the drift this section exists to prevent.
+**Rust has started, and exactly how far it has got matters.** This section previously said "no
+Rust ships yet"; that is now wrong in one specific place and still right everywhere else, and
+conflating the two is the drift it warned about.
+
+**What ships:** a cargo workspace at `mzizi-rs/` with two crates — `mzizi-tokens` (N1, the
+generated token module) and `mzizi-ui` (N2, Dioxus primitives). The primitives are files under
+`components/registry/n2-primitives/<name>.rs`, beside their `.tsx` siblings, which the crate
+`#[path]`-includes. `cargo fmt --check`, `cargo check`, `clippy -D warnings` and `cargo test`
+run in CI's `Rust` job, and `Build` needs it.
+
+**What does not:** no WASM shared core. The harness is still `lib/harness/index.tsx`, the
+resilience primitives are still `lib/*.ts`, the N4 safety gates are still TypeScript, and the
+fundi worker is still TypeScript. Every Rust statement about N4, N5, N8 and N9 in
+`documentation-architecture-nodes` remains **target state, explicitly labelled** — `rust.state`
+reads `target`, never `shipping`. A node that describes a Rust implementation in the present
+tense reads as shipped to every agent that queries it.
+
+**The gate landed with the first component, not after it.** A `.rs` file in the registry with
+no crate compiling it is exactly what a `source_code` database column was: bytes nothing
+verifies. `__tests__/api/v1/rust-route.test.ts` fails if any `.rs` component is not included by
+a crate, so there is no window in which Rust ships unchecked.
+
+**`cargo check` is necessary and not sufficient.** Two files can each compile and still be
+different buttons — a renamed variant, a missing `data-slot`, a dropped class — and the symptom
+is a Dioxus app rendering markup the shared stylesheet does not style, which looks like a CSS
+bug in a repo where nothing is wrong. `mzizi-rs/crates/mzizi-ui/tests/contract.rs` reads each
+component's `.tsx` on disk and compares. Individual classes are asserted, never the whole
+string: Tailwind class order is not semantic, and a character-diff that fails on a reordering
+trains everyone to ignore it.
+
+**Do not machine-translate the `.tsx` files.** Write each Rust component against the
+component's _contract_ — props, variants, a11y semantics, the `data-slot` names — with the
+`.tsx` as reference, not input. A mechanical TSX→RSX pass carries every defect in the original
+across while `cargo check` waves it through, because a faithful port of a broken component
+still compiles.
 
 **Two different Rusts, and conflating them is the classic error.**
 
@@ -924,6 +969,7 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 | `GET /api/v1/brand`                        | Brand system (minerals, typography, spacing, ecosystem)                 | —         |
 | `GET /api/v1/ui`                           | Component registry index                                                | —         |
 | `GET /api/v1/ui/{name}`                    | Individual component (shadcn format, with source code)                  | —         |
+| `GET /api/v1/rs/{name}`                    | The same component's **Rust (Dioxus)** source; 404 when it has none     | —         |
 | `GET /api/v1/ui/{name}/docs`               | Component docs (use cases, variants, a11y)                              | —         |
 | `GET /api/v1/ui/{name}/versions`           | Component version history                                               | —         |
 | `GET /api/v1/ecosystem`                    | Architecture principles & framework decision                            | —         |
