@@ -59,3 +59,10 @@ components/ui/
 # Misc
 *.min.js
 *.min.css
+
+# Extracted component props — `pnpm props:extract` emits this as
+# `JSON.stringify(…, null, 2)` and `props:verify` compares byte-for-byte. Prettier
+# reformats it differently, so with both active `format:check` and `props:verify`
+# cannot pass at the same time. The generator owns the formatting — same reasoning
+# as `registry.json` and `content/doctrine/` above. See CLAUDE.md §8.10.
+lib/samples/props.generated.ts

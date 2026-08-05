@@ -66,6 +66,13 @@ jobs:
       - name: Verify registry.json is canonical
         run: pnpm registry:verify
 
+      # The extracted prop map is what lets a preview resolve sample data for a component
+      # (§8.10). If it goes stale the previews silently degrade to empty — nothing errors,
+      # they just stop showing anything, which is the failure mode this whole session has
+      # been removing.
+      - name: Verify the extracted component props are current
+        run: pnpm props:verify
+
   rust:
     name: Rust
     runs-on: ubuntu-latest
