@@ -46,10 +46,27 @@ const REGISTRY_ROOT = join(process.cwd(), "components", "registry")
  */
 const NOT_SOURCE = new Set([".ds_store", ".map", ".snap", ".log"])
 
+/**
+ * Extensions that serve the React/shadcn surface, in preference order.
+ *
+ * The winner is what `readComponentSource(name)` returns, so it is what
+ * `GET /api/v1/ui/{name}` and `npx shadcn add` hand a consumer. Without an explicit order
+ * the answer would depend on directory enumeration, and `shadcn add button` could return
+ * `button.rs` on one filesystem and `button.tsx` on another.
+ */
+const PRIMARY_EXTENSIONS = ["tsx", "ts", "jsx", "js"]
+
+function primaryRank(ext: string): number {
+  const i = PRIMARY_EXTENSIONS.indexOf(ext)
+  return i === -1 ? PRIMARY_EXTENSIONS.length : i
+}
+
 interface RegistryIndex {
-  /** component name → absolute path of its source file */
+  /** component name → absolute path of its PRIMARY source file */
   files: Map<string, string>
-  /** names that resolve to more than one file — a defect, not a fallback */
+  /** component name → every source file it has, keyed by extension without the dot */
+  targets: Map<string, Record<string, string>>
+  /** names that resolve to files in more than one node directory — a defect */
   ambiguous: Map<string, string[]>
 }
 
@@ -57,7 +74,9 @@ let cached: RegistryIndex | null = null
 
 function buildIndex(): RegistryIndex {
   const files = new Map<string, string>()
-  const seen = new Map<string, string[]>()
+  const targets = new Map<string, Record<string, string>>()
+  // name → the node directories it appeared in, and the paths under each
+  const dirs = new Map<string, Map<string, string[]>>()
 
   if (existsSync(REGISTRY_ROOT)) {
     for (const dir of readdirSync(REGISTRY_ROOT, { withFileTypes: true })) {
@@ -65,26 +84,45 @@ function buildIndex(): RegistryIndex {
       const nodeDir = join(REGISTRY_ROOT, dir.name)
       for (const entry of readdirSync(nodeDir)) {
         if (entry.startsWith(".")) continue
-        const ext = extname(entry)
-        if (NOT_SOURCE.has(ext.toLowerCase())) continue
-        const name = basename(entry, ext)
+        const dotted = extname(entry)
+        if (NOT_SOURCE.has(dotted.toLowerCase())) continue
+        const ext = dotted.replace(/^\./, "").toLowerCase()
+        const name = basename(entry, dotted)
         const path = join(nodeDir, entry)
-        seen.set(name, [...(seen.get(name) ?? []), path])
-        if (!files.has(name)) files.set(name, path)
+
+        const perDir = dirs.get(name) ?? new Map<string, string[]>()
+        perDir.set(dir.name, [...(perDir.get(dir.name) ?? []), path])
+        dirs.set(name, perDir)
+
+        const byExt = targets.get(name) ?? {}
+        if (!byExt[ext]) byExt[ext] = path
+        targets.set(name, byExt)
+
+        const current = files.get(name)
+        if (!current || primaryRank(ext) < primaryRank(extname(current).replace(/^\./, ""))) {
+          files.set(name, path)
+        }
       }
     }
   }
 
-  // A component name is unique across the registry, so two files claiming one
-  // name means an extraction went to the wrong node. Fail that ONE name rather
-  // than the whole index: a single mislaid file must not take the route down
-  // for the other 300-odd components.
+  // AMBIGUITY IS ABOUT NODES, NOT EXTENSIONS.
+  //
+  // `button.tsx` and `button.rs` in the SAME directory are one component with two target
+  // implementations — the whole design of the bilingual registry (CLAUDE.md §8.9). This
+  // check used to treat any repeated name as a defect, which was right when a component
+  // could only be TypeScript and would now reject every Rust sibling.
+  //
+  // Two files sharing a name across DIFFERENT node directories is still a genuine defect:
+  // the component's node would be ambiguous, and a node is not cosmetic — it decides what
+  // may import what. Fail that ONE name rather than the whole index, so a single mislaid
+  // file cannot take the route down for the other 570.
   const ambiguous = new Map<string, string[]>()
-  for (const [name, paths] of seen) {
-    if (paths.length > 1) ambiguous.set(name, paths)
+  for (const [name, perDir] of dirs) {
+    if (perDir.size > 1) ambiguous.set(name, [...perDir.values()].flat())
   }
 
-  return { files, ambiguous }
+  return { files, targets, ambiguous }
 }
 
 function index(): RegistryIndex {
@@ -108,20 +146,42 @@ export function resetRegistrySourceCache(): void {
  * @throws if the name resolves to more than one file on disk.
  */
 export function readComponentSource(name: string): string | null {
-  const { files, ambiguous } = index()
+  return readAt(name, index().files.get(name))
+}
 
-  const duplicates = ambiguous.get(name)
+/**
+ * Read one target's source for a component — `readComponentSourceFor("button", "rs")`.
+ *
+ * Returns `null` when the component has no implementation for that target, which is the
+ * honest answer for the many components that are TypeScript-only: `/api/v1/rs/{name}` 404s
+ * rather than pretending a Dioxus version exists (CLAUDE.md §8.9 — never present a
+ * `metadata_only` target as though components exist for it).
+ */
+export function readComponentSourceFor(name: string, ext: string): string | null {
+  return readAt(name, index().targets.get(name)?.[ext.toLowerCase()])
+}
+
+/** Every target a component ships, keyed by extension: `{ tsx: "…", rs: "…" }`. */
+export function componentTargets(name: string): Record<string, string> {
+  assertUnambiguous(name)
+  return { ...(index().targets.get(name) ?? {}) }
+}
+
+function assertUnambiguous(name: string): void {
+  const duplicates = index().ambiguous.get(name)
   if (duplicates) {
     throw new Error(
-      `Component "${name}" resolves to ${duplicates.length} files on disk: ` +
-        `${duplicates.join(", ")}. A component name is unique across the registry — ` +
-        `delete the copy that is filed under the wrong node.`
+      `Component "${name}" resolves to files under more than one node directory: ` +
+        `${duplicates.join(", ")}. A component belongs to exactly one node — ` +
+        `delete the copy that is filed under the wrong one. ` +
+        `(Several files with one name in ONE directory are target variants and are fine.)`
     )
   }
+}
 
-  const path = files.get(name)
+function readAt(name: string, path: string | undefined): string | null {
+  assertUnambiguous(name)
   if (!path) return null
-
   const source = readFileSync(path, "utf8")
   return source.trim().length === 0 ? null : source
 }

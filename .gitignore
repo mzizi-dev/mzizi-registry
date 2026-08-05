@@ -36,3 +36,5 @@ public/_pagefind/
 
 # local Claude Code permission allowlists (per-developer, not shared)
 .claude/settings.local.json
+# Rust build artifacts (mzizi-rs cargo workspace)
+mzizi-rs/target/

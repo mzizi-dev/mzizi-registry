@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { getComponent, isSupabaseConfigured } from "@/lib/db"
+import { getComponent } from "@/lib/db"
 import { readComponentSource } from "@/lib/registry-source"
 import { trackApiCall } from "@/lib/metrics"
 
@@ -37,22 +37,11 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       )
     }
 
-    if (!isSupabaseConfigured()) {
-      trackApiCall({
-        endpoint: `/api/v1/ui/${name}`,
-        durationMs: Date.now() - start,
-        statusCode: 503,
-        componentName: name,
-      })
-      return NextResponse.json(
-        {
-          error: "Database not configured",
-          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-        },
-        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
-      )
-    }
-
+    // The `isSupabaseConfigured()` guard that stood here is gone with the store it guarded.
+    // `getComponent` reads `registry.json` and the files on disk, so a missing anon key
+    // made this route answer 503 — "Database not configured" — for data sitting in the
+    // deployed bundle. A precondition that no longer holds does not fail safe; it fails
+    // loudly for no reason, and points whoever hits it at a credential that would not help.
     const component = await getComponent(name)
 
     if (!component) {
