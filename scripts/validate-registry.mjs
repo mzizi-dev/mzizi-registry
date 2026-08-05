@@ -132,6 +132,27 @@ const warn = (item, msg) => warnings.push(`${item}: ${msg}`)
 
 // ─── Index what is actually on disk ─────────────────────────────────────────
 
+/** Extensions that serve the React/shadcn surface, in preference order. */
+const PRIMARY_EXTENSIONS = [".tsx", ".ts", ".jsx", ".js"]
+const primaryRank = (ext) => {
+  const i = PRIMARY_EXTENSIONS.indexOf(ext.toLowerCase())
+  return i === -1 ? PRIMARY_EXTENSIONS.length : i
+}
+
+/**
+ * Index the registry by component name.
+ *
+ * A name may map to SEVERAL files — `button.tsx` and `button.rs` are one component with two
+ * target implementations (CLAUDE.md §8.9), and the entry records every one. Only the primary
+ * (TypeScript) file is doctrine-checked below: the §7.4 hex rule and the §8.2 touch-target
+ * rule are written in Tailwind terms and the Rust sibling carries the identical class
+ * strings, so running them twice would double every finding without catching anything new.
+ * The Rust side is gated by `cargo check`, `clippy -D warnings` and the contract tests in
+ * `mzizi-rs/crates/mzizi-ui/tests/contract.rs`, which compare it back to the TypeScript.
+ *
+ * Two files with one name in DIFFERENT node directories is still an error — the component's
+ * node would be ambiguous, and a node decides what may import what.
+ */
 function indexDisk() {
   const byName = new Map()
   if (!existsSync(REGISTRY_DIR)) {
@@ -145,12 +166,29 @@ function indexDisk() {
       const ext = extname(entry)
       if (NOT_SOURCE.has(ext.toLowerCase())) continue
       const name = basename(entry, ext)
+      const rel = `${dir.name}/${entry}`
       const existing = byName.get(name)
-      if (existing) {
-        err(name, `resolves to two files on disk: ${existing.rel} and ${dir.name}/${entry}`)
+
+      if (!existing) {
+        byName.set(name, { rel, dir: dir.name, ext, targets: [rel] })
         continue
       }
-      byName.set(name, { rel: `${dir.name}/${entry}`, dir: dir.name, ext })
+      if (existing.dir !== dir.name) {
+        err(
+          name,
+          `resolves to files under two different nodes: ${existing.rel} and ${rel}. ` +
+            `A component belongs to exactly one node.`
+        )
+        continue
+      }
+      if (existing.targets.includes(rel)) continue
+      existing.targets.push(rel)
+      // The primary is what `/api/v1/ui/{name}` serves, so it must be deterministic rather
+      // than whichever file the directory listed first.
+      if (primaryRank(ext) < primaryRank(existing.ext)) {
+        existing.rel = rel
+        existing.ext = ext
+      }
     }
   }
   return byName
@@ -160,7 +198,7 @@ function indexDisk() {
 
 function main() {
   if (!existsSync(REGISTRY_JSON)) {
-    console.error("✗ registry.json is missing. Run `pnpm registry:sync`.")
+    console.error("✗ registry.json is missing. It is authored — restore it from git.")
     process.exit(1)
   }
 

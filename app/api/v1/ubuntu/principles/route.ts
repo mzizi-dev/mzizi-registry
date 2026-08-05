@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { isSupabaseConfigured, getUbuntuPrinciples } from "@/lib/db"
+import { getUbuntuPrinciples } from "@/lib/db"
 
 const logger = createLogger("ubuntu-principles")
 
@@ -11,15 +11,11 @@ const CORS_CACHE = {
 
 export async function GET() {
   try {
-    if (!isSupabaseConfigured()) {
-      return NextResponse.json(
-        {
-          error: "Database not configured",
-          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-        },
-        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
-      )
-    }
+    // The `isSupabaseConfigured()` guard that stood here is gone with the store it guarded.
+    // Doctrine is MDX under `content/doctrine/` read through `lib/doctrine.ts` (CLAUDE.md
+    // §15.17), so a missing anon key made this route answer 503 — "Database not configured" —
+    // for content sitting in the deployed bundle, and pointed whoever hit it at a credential
+    // that would not have helped. A precondition that no longer holds does not fail safe.
 
     const rows = await getUbuntuPrinciples()
 

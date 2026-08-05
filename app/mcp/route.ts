@@ -1,16 +1,17 @@
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js"
-import { createSupabaseContext, type WithSupabaseConfig } from "@supabase/server"
 import { createMziziMcpServer } from "@/lib/mcp-server"
 
 /**
- * Mzizi MCP — mzizi.dev/mcp (new tooling, document-route)
+ * Mzizi MCP — mzizi.dev/mcp (document-route)
  *
- * Reads the `component_documents` Supabase table — one document per component
- * — and serves it over Streamable HTTP transport, stateless.
+ * Serves the component registry over Streamable HTTP transport, stateless.
  *
- * Auth via `@supabase/server`'s `createSupabaseContext` with `auth: 'none'` —
- * a per-request anon-scoped `SupabaseClient` for public-read against RLS. No
- * service-role key in scope, no write APIs exposed.
+ * There is no Supabase context here any more. Components are files in this repo
+ * that this app compiles, and `lib/mcp-server.ts` reads them directly — so the
+ * per-request anon `SupabaseClient` this route used to mint had nothing left to
+ * connect to. Removing it also removes a failure mode: an unreachable database
+ * used to make `/mcp` answer 500 before a single tool ran, for a store that only
+ * ever served data now sitting on disk beside the code.
  *
  * The legacy relational MCP is retired (the `legacy` branch was dropped);
  * `design.nyuchi.com` now 308-redirects to `mzizi.dev`.
@@ -25,21 +26,6 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, MCP-Protocol-Version, MCP-Session-Id, apikey",
-}
-
-// Map the portal's existing public env vars onto @supabase/server's expected shape.
-// Falls back to the package's auto-detection (SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY)
-// when only the new-style env vars are set.
-const SUPABASE_CONFIG: WithSupabaseConfig = {
-  auth: "none",
-  cors: false, // we add our own CORS headers below
-  env: {
-    url: process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-    publishableKeys: {
-      default:
-        process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
-    },
-  },
 }
 
 function createTransport() {
@@ -60,17 +46,8 @@ function withCors(response: Response): Response {
 }
 
 async function handle(request: Request): Promise<Response> {
-  const { data: ctx, error } = await createSupabaseContext(request, SUPABASE_CONFIG)
-  if (error || !ctx) {
-    return withCors(
-      Response.json(
-        { error: error?.message ?? "Failed to create Supabase context" },
-        { status: error?.status ?? 500 }
-      )
-    )
-  }
   const transport = createTransport()
-  const server = await createMziziMcpServer(ctx.supabase)
+  const server = await createMziziMcpServer()
   await server.connect(transport)
   const response = await transport.handleRequest(request)
   return withCors(response)

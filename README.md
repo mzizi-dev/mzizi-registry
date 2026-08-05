@@ -163,26 +163,26 @@ Raw data: `GET https://mzizi.dev/api/v1/stats` — licensed CC BY 4.0.
 
 ## Commands
 
-| Command                | Description                                                                        |
-| ---------------------- | ---------------------------------------------------------------------------------- |
-| `pnpm dev`             | Start development server (port 11736)                                              |
-| `pnpm build`           | Production build (postbuild runs Pagefind to index `.next/server/app`)             |
-| `pnpm check`           | **Run every CI gate locally** — same set CI runs on a PR. Use this before pushing. |
-| `pnpm format`          | Auto-fix formatting (prettier) across the whole tree                               |
-| `pnpm format:check`    | Check formatting without writing — fails if anything would change                  |
-| `pnpm lint`            | ESLint (zero warnings enforced)                                                    |
-| `pnpm lint:fix`        | ESLint with `--fix`                                                                |
-| `pnpm lint:md`         | markdownlint-cli2 across all `*.md`                                                |
-| `pnpm lint:json`       | Parse every tracked `*.json` to ensure validity                                    |
-| `pnpm lint:yaml`       | yamllint (requires `pip install yamllint`)                                         |
-| `pnpm typecheck`       | TypeScript type check (`tsc --noEmit`)                                             |
-| `pnpm test`            | Vitest, single run                                                                 |
-| `pnpm test:watch`      | Vitest watch mode                                                                  |
-| `pnpm audit:check`     | `pnpm audit --audit-level=moderate` — same gate CI runs                            |
-| `pnpm registry:sync`   | Regenerate `registry.json` + committed primitives from Supabase                    |
-| `pnpm registry:verify` | Non-mutating registry drift check (run this if you've touched the DB)              |
-| `pnpm tokens:sync`     | Regenerate the generated palette (`globals.css` + `palette.generated.ts`)          |
-| `pnpm tokens:verify`   | Non-mutating token drift check (run this if you've touched the DB palette)         |
+| Command                   | Description                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| `pnpm dev`                | Start development server (port 11736)                                              |
+| `pnpm build`              | Production build (postbuild runs Pagefind to index `.next/server/app`)             |
+| `pnpm check`              | **Run every CI gate locally** — same set CI runs on a PR. Use this before pushing. |
+| `pnpm format`             | Auto-fix formatting (prettier) across the whole tree                               |
+| `pnpm format:check`       | Check formatting without writing — fails if anything would change                  |
+| `pnpm lint`               | ESLint (zero warnings enforced)                                                    |
+| `pnpm lint:fix`           | ESLint with `--fix`                                                                |
+| `pnpm lint:md`            | markdownlint-cli2 across all `*.md`                                                |
+| `pnpm lint:json`          | Parse every tracked `*.json` to ensure validity                                    |
+| `pnpm lint:yaml`          | yamllint (requires `pip install yamllint`)                                         |
+| `pnpm typecheck`          | TypeScript type check (`tsc --noEmit`)                                             |
+| `pnpm test`               | Vitest, single run                                                                 |
+| `pnpm test:watch`         | Vitest watch mode                                                                  |
+| `pnpm audit:check`        | `pnpm audit --audit-level=moderate` — same gate CI runs                            |
+| `pnpm registry:normalize` | Rewrite `registry.json` in canonical form (it is authored, not generated)          |
+| `pnpm registry:verify`    | Non-mutating check — fails if `registry.json` is not canonical                     |
+| `pnpm tokens:sync`        | Regenerate the generated palette (`globals.css` + `palette.generated.ts`)          |
+| `pnpm tokens:verify`      | Non-mutating token drift check (run this if you've touched the DB palette)         |
 
 ### Run every CI gate before pushing
 

@@ -15,13 +15,29 @@ const REGISTRY_UI_ROOTS = [
   "components/registry/n7-shell",
 ]
 
+/**
+ * Extensions this alias map may point at.
+ *
+ * The registry is bilingual — `button.tsx` and `button.rs` are one component implemented for
+ * React and for Dioxus (CLAUDE.md §8.9) — and stripping the extension collapses both onto the
+ * same `find` key. `readdirSync` returns them alphabetically, so `.rs` sorted ahead of `.tsx`
+ * and the first matching alias won: every test importing a primitive got handed Rust, and
+ * vite failed on `pub const fn` as invalid JS. An allow-list is right here (unlike in
+ * `lib/registry-source.ts`, where it is deliberately an exclude list) because this map exists
+ * only to resolve JS module imports — a `.swift` or `.py` token file is not a module vitest
+ * could ever load, so silently skipping it is the correct behaviour rather than a hidden 404.
+ */
+const JS_EXTENSIONS = new Set([".tsx", ".ts", ".jsx", ".js"])
+
 /** One alias per registry component, ahead of the `@` catch-all. */
 const registryUiAliases = REGISTRY_UI_ROOTS.flatMap((root) =>
   existsSync(path.resolve(__dirname, root))
-    ? readdirSync(path.resolve(__dirname, root)).map((file) => ({
-        find: `@/components/ui/${file.replace(/\.[^.]+$/, "")}`,
-        replacement: path.resolve(__dirname, root, file),
-      }))
+    ? readdirSync(path.resolve(__dirname, root))
+        .filter((file) => JS_EXTENSIONS.has(path.extname(file).toLowerCase()))
+        .map((file) => ({
+          find: `@/components/ui/${file.replace(/\.[^.]+$/, "")}`,
+          replacement: path.resolve(__dirname, root, file),
+        }))
     : []
 )
 

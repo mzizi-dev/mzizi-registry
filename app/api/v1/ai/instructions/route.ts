@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { getAllAiInstructions, isSupabaseConfigured } from "@/lib/db"
+import { getAllAiInstructions } from "@/lib/db"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("api")
@@ -18,14 +18,11 @@ const CORS = { "Access-Control-Allow-Origin": "*" }
 export async function GET() {
   const start = Date.now()
   try {
-    if (!isSupabaseConfigured()) {
-      trackApiCall({
-        endpoint: "/api/v1/ai/instructions",
-        durationMs: Date.now() - start,
-        statusCode: 503,
-      })
-      return NextResponse.json({ error: "Database not configured" }, { status: 503, headers: CORS })
-    }
+    // The `isSupabaseConfigured()` guard that stood here is gone with the store it guarded.
+    // Doctrine is MDX under `content/doctrine/` read through `lib/doctrine.ts` (CLAUDE.md
+    // §15.17), so a missing anon key made this route answer 503 — "Database not configured" —
+    // for content sitting in the deployed bundle, and pointed whoever hit it at a credential
+    // that would not have helped. A precondition that no longer holds does not fail safe.
 
     const instructions = await getAllAiInstructions()
 
