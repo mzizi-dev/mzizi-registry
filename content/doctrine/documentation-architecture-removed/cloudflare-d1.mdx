@@ -1,0 +1,18 @@
+---
+_schemaVersion: "v1"
+currentVersion: 1
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+kind: "architecture"
+migration_path: "Geographic DOs hold platform snapshots by location. User DOs hold personal operational data. KV holds global config and routing maps."
+model: "mzizi-dna-helix"
+name: "cloudflare-d1"
+node: 0
+owner: "nyuchi"
+previous_role: "Edge database for per-user data"
+reason: "Replaced with Cloudflare KV + two-tier Durable Objects (geographic platform-level + ephemeral per-user). D1 was not the right model for the edge layer."
+replacement: "Cloudflare KV + Durable Objects"
+strand: "transcription"
+---
+
+

@@ -10,7 +10,7 @@ const COMPONENT_NAME_PATTERN = /^[a-z][a-z0-9-]*$/
 export async function generateMetadata({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
   if (!COMPONENT_NAME_PATTERN.test(name)) {
-    return { title: "Component not found — nyuchi design portal" }
+    return { title: "Component not found" }
   }
   return {
     title: `Changelog: ${name} — nyuchi design portal`,

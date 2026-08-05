@@ -1,0 +1,43 @@
+---
+_bodyField: "rationale"
+_schemaVersion: "v1"
+approach: "web-first"
+currentVersion: 1
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+framework: "Next.js + Capacitor"
+harmony_os:
+  status: "planned"
+  approach: "Huawei ships their own WebView engine (Chromium-based, maintained independently of Google). A web-standards Capacitor application runs on HarmonyOS without requiring Google Mobile Services, Google Play, or any American-controlled infrastructure."
+  rationale: "Mukoko's own authentication and wallet replace the platform services that would otherwise require GMS. HarmonyOS compatibility is structurally solved rather than patched."
+kind: "architecture"
+model: "mzizi-dna-helix"
+name: "next-js-capacitor"
+node: 0
+owner: "nyuchi"
+platforms:
+-
+
+    name: "android"
+    status: "production"
+    strategy: "capacitor-native"
+-
+
+    name: "ios"
+    status: "production"
+    strategy: "capacitor-native"
+-
+
+    name: "web"
+    status: "production"
+    strategy: "pwa"
+-
+
+    name: "harmonyos"
+    status: "planned"
+    strategy: "webview"
+sovereignty_advantage: "No framework vendor holds the platform hostage. Sub-apps are web applications that can run in any browser, on HarmonyOS's WebView, or on a future Nyuchi-built runtime."
+strand: "transcription"
+---
+
+The two dominant cross-platform frameworks (Flutter/React Native) are controlled by large American corporations. Capacitor runs web standards — HTML, CSS, JavaScript — inside a native WebView. Web standards are governed by the W3C and WHATWG (international standards bodies), and JavaScript by ECMA International (Swiss). This is also precisely the architecture that WeChat and Alipay converged on — a runtime environment hosting mini-applications built on web standards.

@@ -1,33 +1,37 @@
 /**
- * Nyuchi Design Portal Document Store — Supabase Backend
+ * Mzizi data access.
  *
- * Replaces hardcoded JSON files (registry.json, component-docs.ts) with
- * Supabase Postgres. Registry data lives in the document store:
+ * The registry is NOT in the database. This app builds it from files at build time and
+ * serves it over `/api/v1/*`, and `mzizi-mcp` is an HTTP client of that API — so the
+ * database is not in the serving path for components or doctrine.
  *
- *   component_documents  — one self-contained JSON document per item, keyed by
- *                          (collection, name). `components` is a VIEW projecting
- *                          the `collection = 'components'` rows. Docs (use_cases,
- *                          variants, features, a11y, examples) and demo info
- *                          (`demo: { has_demo, demo_type }`) live INSIDE each
- *                          component's document — the old standalone
- *                          `component_docs` / `component_demos` tables are gone.
+ *   Components  →  content/registry/<collection>/<name>.json  (lib/registry.ts)
+ *                  + source on disk under components/registry/ (lib/registry-source.ts)
+ *   Doctrine    →  content/doctrine/<collection>/<slug>.mdx    (lib/doctrine.ts)
  *
- * Architecture:
- *   Browser  →  Next.js API routes  →  Supabase (Postgres + RLS)
- *                                         ↑
- *                                    Public read (anon key)
- *                                    Write via service_role key
+ * What is still Supabase, and why — it is written by a machine, not a person:
  *
- * Env vars:
+ *   component_versions / tool_versions  — version history
+ *   changelog                           — release state
+ *   brand_*                             — tokens (pnpm tokens:sync generates the
+ *                                         repo artifacts; migration pending)
+ *   fundi_issues / fundi_healing_log    — the issue log and the self-healing log
+ *   observability_events / chaos_events / usage_events — telemetry
+ *
+ * See docs/db-contents-rule.md for the rule and the live audit.
+ *
+ * Env vars (still needed for the above):
  *   NEXT_PUBLIC_SUPABASE_URL      — Supabase project URL
  *   NEXT_PUBLIC_SUPABASE_ANON_KEY — Public anon key (read-only via RLS)
  *   SUPABASE_SERVICE_ROLE_KEY     — Service role key (write access, server only)
  *
  * Usage:
  *   import { getComponent, getAllComponents } from "@/lib/db"
- *   const button = await getComponent("button")
+ *   const button = await getComponent("button")   // reads a file, not a row
  */
 
+import { doctrineRows, readDoctrineSorted, DOCTRINE } from "@/lib/doctrine"
+import { readComponent, readComponents, readNodeCounts } from "@/lib/registry"
 import { createClient } from "@supabase/supabase-js"
 import type {
   ComponentRow,
@@ -51,23 +55,14 @@ import type {
   BrandMetaRow,
   BrandMetaInsert,
   ArchitecturePrincipleRow,
-  ArchitecturePrincipleInsert,
   ArchitectureFrameworkRow,
-  ArchitectureFrameworkInsert,
   ArchitectureDataLayerRow,
-  ArchitectureDataLayerInsert,
   ArchitectureCloudLayerRow,
-  ArchitectureCloudLayerInsert,
   ArchitecturePipelineRow,
-  ArchitecturePipelineInsert,
   ArchitectureDataOwnershipRow,
-  ArchitectureDataOwnershipInsert,
   ArchitectureSovereigntyRow,
-  ArchitectureSovereigntyInsert,
   ArchitectureRemovedRow,
-  ArchitectureRemovedInsert,
   AiInstructionRow,
-  AiInstructionInsert,
   ChangelogRow,
   ChangelogInsert,
   ChangelogListRow,
@@ -184,75 +179,48 @@ function documentHasDemo(document: Record<string, unknown> | null): boolean {
  * Get a single component by name.
  */
 export async function getComponent(name: string): Promise<ComponentRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("*")
-    .eq("name", name)
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null // not found
-    throw new Error(error.message)
-  }
-  return data as unknown as ComponentRow
+  return readComponent(name) as unknown as ComponentRow | null
 }
 
 /**
  * Get all components, sorted by name.
  */
 export async function getAllComponents(): Promise<ComponentRow[]> {
-  const { data, error } = await getPublicClient().from("components").select("*").order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ComponentRow[]
+  return readComponents() as unknown as ComponentRow[]
 }
 
 /**
  * Get components by category.
  */
 export async function getComponentsByCategory(category: string): Promise<ComponentRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("*")
-    .eq("category", category)
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ComponentRow[]
+  return readComponents().filter(
+    (c) => (c as unknown as { category?: string }).category === category
+  ) as unknown as ComponentRow[]
 }
 
 /**
  * Get components by layer.
  */
 export async function getComponentsByLayer(layer: string): Promise<ComponentRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("*")
-    .eq("layer", layer)
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ComponentRow[]
+  return readComponents().filter(
+    (c) => String(c.node) === layer || (c as unknown as { layer?: string }).layer === layer
+  ) as unknown as ComponentRow[]
 }
 
 /**
  * Search components by name or description (case-insensitive).
  */
 export async function searchComponents(query: string): Promise<ComponentRow[]> {
-  // The term is interpolated into a PostgREST `.or()` filter string, so strip
-  // characters that are significant to PostgREST/ilike (`,()*:.%_\"\\`) to
-  // prevent filter-structure injection and wildcard abuse (e.g. `q=*`).
-  const safe = query.replace(/[%_(),:*.\\"]/g, " ").trim()
-  if (!safe) return []
-
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("*")
-    .or(`name.ilike.%${safe}%,description.ilike.%${safe}%`)
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ComponentRow[]
+  // Plain substring match over the files. The old implementation had to strip
+  // PostgREST-significant characters to avoid filter-structure injection; reading
+  // files removes that attack surface entirely rather than sanitising for it.
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  return readComponents().filter((c) => {
+    const name = String(c.name ?? "").toLowerCase()
+    const desc = String(c.description ?? "").toLowerCase()
+    return name.includes(q) || desc.includes(q)
+  }) as unknown as ComponentRow[]
 }
 
 // ── Component documentation queries ─────────────────────────────────
@@ -669,108 +637,57 @@ export async function getBrandSystem(): Promise<{
  * Get all architecture principles, sorted by sort_order.
  */
 export async function getArchitecturePrinciples(): Promise<ArchitecturePrincipleRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_principles")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitecturePrincipleRow[]
+  return doctrineRows<ArchitecturePrincipleRow>(DOCTRINE.principles)
 }
 
 /**
  * Get the framework decision (single row).
  */
 export async function getFrameworkDecision(): Promise<ArchitectureFrameworkRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_framework")
-    .select("*")
-    .limit(1)
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as ArchitectureFrameworkRow
+  const rows = doctrineRows<ArchitectureFrameworkRow>(DOCTRINE.framework)
+  return rows[0] ?? null
 }
 
 /**
  * Get local data layer technologies, sorted by sort_order.
  */
 export async function getLocalDataLayer(): Promise<ArchitectureDataLayerRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_data_layer")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureDataLayerRow[]
+  return doctrineRows<ArchitectureDataLayerRow>(DOCTRINE.dataLayer)
 }
 
 /**
  * Get cloud layer services, sorted by sort_order.
  */
 export async function getCloudLayer(): Promise<ArchitectureCloudLayerRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_cloud_layer")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureCloudLayerRow[]
+  return doctrineRows<ArchitectureCloudLayerRow>(DOCTRINE.cloudLayer)
 }
 
 /**
  * Get pipeline stages, sorted by sort_order.
  */
 export async function getPipeline(): Promise<ArchitecturePipelineRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_pipeline")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitecturePipelineRow[]
+  return doctrineRows<ArchitecturePipelineRow>(DOCTRINE.pipeline)
 }
 
 /**
  * Get data ownership rules, sorted by sort_order.
  */
 export async function getDataOwnership(): Promise<ArchitectureDataOwnershipRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_data_ownership")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureDataOwnershipRow[]
+  return doctrineRows<ArchitectureDataOwnershipRow>(DOCTRINE.dataOwnership)
 }
 
 /**
  * Get sovereignty assessments, sorted by sort_order.
  */
 export async function getSovereignty(): Promise<ArchitectureSovereigntyRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_sovereignty")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureSovereigntyRow[]
+  return doctrineRows<ArchitectureSovereigntyRow>(DOCTRINE.sovereignty)
 }
 
 /**
  * Get removed technologies.
  */
 export async function getRemovedTechnologies(): Promise<ArchitectureRemovedRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("architecture_removed")
-    .select("*")
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ArchitectureRemovedRow[]
+  return doctrineRows<ArchitectureRemovedRow>(DOCTRINE.removed)
 }
 
 // ── Brand write operations (server-only) ───────────────────────────
@@ -874,205 +791,31 @@ export async function upsertBrandMeta(meta: BrandMetaInsert): Promise<BrandMetaR
 
 // ── Architecture write operations (server-only) ────────────────────
 
-/**
- * Upsert an architecture principle.
- */
-export async function upsertArchitecturePrinciple(
-  principle: ArchitecturePrincipleInsert
-): Promise<ArchitecturePrincipleRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_principles")
-    .upsert(principle, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitecturePrincipleRow
-}
-
-/**
- * Upsert the framework decision.
- */
-export async function upsertArchitectureFramework(
-  framework: ArchitectureFrameworkInsert
-): Promise<ArchitectureFrameworkRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_framework")
-    .upsert(framework, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureFrameworkRow
-}
-
-/**
- * Upsert a data layer technology.
- */
-export async function upsertArchitectureDataLayer(
-  tech: ArchitectureDataLayerInsert
-): Promise<ArchitectureDataLayerRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_data_layer")
-    .upsert(tech, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureDataLayerRow
-}
-
-/**
- * Upsert a cloud layer service.
- */
-export async function upsertArchitectureCloudLayer(
-  service: ArchitectureCloudLayerInsert
-): Promise<ArchitectureCloudLayerRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_cloud_layer")
-    .upsert(service, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureCloudLayerRow
-}
-
-/**
- * Upsert a pipeline stage.
- */
-export async function upsertArchitecturePipeline(
-  stage: ArchitecturePipelineInsert
-): Promise<ArchitecturePipelineRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_pipeline")
-    .upsert(stage, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitecturePipelineRow
-}
-
-/**
- * Upsert a data ownership rule.
- */
-export async function upsertArchitectureDataOwnership(
-  rule: ArchitectureDataOwnershipInsert
-): Promise<ArchitectureDataOwnershipRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_data_ownership")
-    .upsert(rule, { onConflict: "category" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureDataOwnershipRow
-}
-
-/**
- * Upsert a sovereignty assessment.
- */
-export async function upsertArchitectureSovereignty(
-  assessment: ArchitectureSovereigntyInsert
-): Promise<ArchitectureSovereigntyRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_sovereignty")
-    .upsert(assessment, { onConflict: "technology" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureSovereigntyRow
-}
-
-/**
- * Upsert a removed technology.
- */
-export async function upsertArchitectureRemoved(
-  removed: ArchitectureRemovedInsert
-): Promise<ArchitectureRemovedRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("architecture_removed")
-    .upsert(removed, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ArchitectureRemovedRow
-}
-
 // ── AI instruction queries ─────────────────────────────────────────
 
 /**
  * Get an AI instruction by name (e.g., "nyuchi-mcp-system-prompt").
  */
 export async function getAiInstruction(name: string): Promise<AiInstructionRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("ai_instructions")
-    .select("*")
-    .eq("name", name)
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as AiInstructionRow
+  return (
+    doctrineRows<AiInstructionRow>(DOCTRINE.aiInstructions).find((r) => r.name === name) ?? null
+  )
 }
 
 /**
  * Get an AI instruction by target audience (mcp-server, claude, github-copilot, cursor).
  */
 export async function getAiInstructionByTarget(target: string): Promise<AiInstructionRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("ai_instructions")
-    .select("*")
-    .eq("target", target)
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as AiInstructionRow
+  return (
+    doctrineRows<AiInstructionRow>(DOCTRINE.aiInstructions).find((r) => r.target === target) ?? null
+  )
 }
 
 /**
  * Get all AI instructions.
  */
 export async function getAllAiInstructions(): Promise<AiInstructionRow[]> {
-  const { data, error } = await getPublicClient().from("ai_instructions").select("*").order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as AiInstructionRow[]
-}
-
-/**
- * Upsert an AI instruction (admin only).
- */
-export async function upsertAiInstruction(
-  instruction: AiInstructionInsert
-): Promise<AiInstructionRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("ai_instructions")
-    .upsert(instruction, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as AiInstructionRow
+  return doctrineRows<AiInstructionRow>(DOCTRINE.aiInstructions)
 }
 
 // ── Changelog queries ───────────────────────────────────────────────
@@ -1299,17 +1042,7 @@ export async function getComponentLinks(name: string): Promise<ComponentLink[]> 
  * by node number. Empty object if Supabase isn't configured.
  */
 export async function getNodeCounts(): Promise<Record<number, number>> {
-  if (!isSupabaseConfigured()) return {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("get_node_counts")
-  if (error || !Array.isArray(data)) return {}
-  const counts: Record<number, number> = {}
-  for (const row of data as Array<{ ecosystem_node: number; component_count: number }>) {
-    if (typeof row?.ecosystem_node === "number") {
-      counts[row.ecosystem_node] = row.component_count ?? 0
-    }
-  }
-  return counts
+  return readNodeCounts()
 }
 
 /**
@@ -1323,23 +1056,22 @@ export async function getNodeCounts(): Promise<Record<number, number>> {
  */
 export async function getHelixModel(): Promise<HelixModel> {
   const empty: HelixModel = { nodes: [], rungs: [], strands: [] }
-  if (!isSupabaseConfigured()) return empty
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const client = getPublicClient() as any
 
-  const [nodeRes, strandRes, counts] = await Promise.all([
-    client
-      .from("component_documents")
-      .select("document")
-      .eq("collection", "documentation-architecture-nodes"),
-    client
-      .from("component_documents")
-      .select("document")
-      .eq("collection", "documentation-architecture-strands"),
-    getNodeCounts(),
-  ])
+  // The helix comes from content/doctrine, not Supabase. Node counts still do — a
+  // count is derived from whatever components exist, which is database-owned.
+  // Deliberately NOT gated on isSupabaseConfigured(): the helix is files now, so
+  // /api/v1/architecture must keep answering when the database is unreachable.
+  const nodeRes = {
+    error: null,
+    data: readDoctrineSorted(DOCTRINE.nodes).map((d) => ({ document: d.data })),
+  }
+  const strandRes = {
+    error: null,
+    data: readDoctrineSorted(DOCTRINE.strands).map((d) => ({ document: d.data })),
+  }
+  const counts = isSupabaseConfigured() ? await getNodeCounts() : {}
 
-  if (nodeRes.error || !Array.isArray(nodeRes.data)) return empty
+  if (nodeRes.error || !Array.isArray(nodeRes.data) || nodeRes.data.length === 0) return empty
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const read = (row: any) => (row?.document ?? {}) as Record<string, unknown>
@@ -1484,15 +1216,7 @@ export async function getSkill(name: string): Promise<SkillRow | null> {
  * isn't configured or the table is empty.
  */
 export async function getUbuntuPillars(): Promise<UbuntuPillarRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("ubuntu_pillars")
-    .select("*")
-    .order("sort_order", { ascending: true })
-
-  if (error || !Array.isArray(data)) return []
-  return data as UbuntuPillarRow[]
+  return doctrineRows<UbuntuPillarRow>(DOCTRINE.ubuntuPillars)
 }
 
 /**
@@ -1500,15 +1224,7 @@ export async function getUbuntuPillars(): Promise<UbuntuPillarRow[]> {
  * isn't configured or the table is empty.
  */
 export async function getUbuntuPrinciples(): Promise<UbuntuPrincipleRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("ubuntu_principles")
-    .select("*")
-    .order("sort_order", { ascending: true })
-
-  if (error || !Array.isArray(data)) return []
-  return data as UbuntuPrincipleRow[]
+  return doctrineRows<UbuntuPrincipleRow>(DOCTRINE.ubuntuPrinciples)
 }
 
 // ── Observability open-data — issue #84 ─────────────────────────────

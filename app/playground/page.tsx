@@ -14,7 +14,7 @@ import { ComponentGallery } from "@/components/playground/component-gallery"
  */
 
 export const metadata: Metadata = {
-  title: "Playground — Mzizi",
+  title: "Playground",
   description:
     "Interactive playground for the Mzizi component registry — live preview, variants, props inspector, and an API tester for every stable component.",
 }

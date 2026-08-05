@@ -1,0 +1,26 @@
+---
+_schemaVersion: "v1"
+currentVersion: 1
+description: "Consumes the raw event stream and applies transformations in real time before data reaches the open data layer. The most important transformation is the privacy filter — strips all personal identifiers (user IDs, IP addresses, device fingerprints), aggregates individual events into anonymised summaries, enriches records with geographic and temporal metadata, and outputs clean, safe, open data. The open data layer is structurally incapable of leaking personal information because personal information never enters it."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+kind: "architecture"
+model: "mzizi-dna-helix"
+name: "apache-flink"
+node: 0
+owner: "nyuchi"
+role: "Stream processing and privacy filter"
+sort_order: 1
+sovereignty:
+  role: "Stream processing"
+  license: "Apache-2.0"
+  forkable: true
+  rationale: "Apache Foundation (non-profit). No corporate owner."
+  governance: "apache-foundation"
+  technology: "Apache Flink"
+  selfHostable: true
+  sovereigntyRisk: "none"
+strand: "transcription"
+---
+
+

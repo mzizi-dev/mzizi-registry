@@ -1,0 +1,43 @@
+---
+_schemaVersion: "v1"
+covenant: "The shell holds the product."
+currentVersion: 2
+description: "The app chrome — navigation, routing, theme provision and global overlays, mounted once per app. N7 is the one node that is both things at once: as UI it is framework-specific and has a Rust alternative (Dioxus on the Rust path, Svelte optional, SwiftUI / Jetpack Compose / ArkTS / React Native native), and as the mount point it is where the shared Rust WASM core is initialised once per app and its state — N4's gates, N5's resilience — made available to the component tree. TypeScript today (app/layout.tsx plus next-themes), initialising nothing from WASM."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "One <Header /> + one <Footer /> per app — the shell is singular."
+- "Shell components are the only place sticky positioning, backdrop blur, and theme-provider wiring live."
+- "The shell surfaces authentication state but never implements auth logic."
+- "Responsive by default across every breakpoint from 320px to ultra-wide."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+node_number: 7
+owner: "nyuchi"
+role: "N7 — the app chrome: header, footer, navigation, theme"
+rust:
+  kind: "ui-framework"
+  note: "N7 is where the two Rusts meet, and the one place they can be confused with consequences. Rust-as-UI replaces the shell; Rust-as-shared-core is what the shell loads. Initialise the core per component instead of per app and every component gets its own circuit breaker — which is not a circuit breaker. The shell surfaces core state; it never implements the rules the core holds."
+  state: "target"
+  today: "No Rust ships. The shell is app/layout.tsx plus next-themes in nyuchi/mzizi — TypeScript — and nothing is initialised from WASM."
+  target: "As UI: Dioxus on the Rust path, Svelte optional, the native targets idiomatic. As mount point: the shell instantiates the shared Rust core once per app and hands its state down. Whatever the framework, the shell is the only place that initialisation happens."
+  position: "alternative"
+  dual_role: "shared-core mount point"
+  descriptors:
+  - "dioxus"
+  - "svelte"
+  - "swift"
+  - "kotlin"
+  - "arkts"
+  - "react-native"
+sort_order: 7
+stakeholder: "Platform engineer"
+strand: "shipped"
+sub_label: "shell"
+title: "Shell"
+type: "node"
+---
+
+

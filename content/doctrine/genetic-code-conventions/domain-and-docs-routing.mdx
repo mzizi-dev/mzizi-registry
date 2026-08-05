@@ -1,0 +1,60 @@
+---
+_bodyField: "body"
+_schemaVersion: "v1"
+baseLayer: true
+currentVersion: 1
+dnaRole: "genetic-code"
+doctrineVersion: "4.1.0"
+kind: "convention"
+model: "mzizi-dna-helix"
+node: 0
+owner: "bundu"
+slug: "domain-and-docs-routing"
+status: "active"
+strand: "genetic-code"
+title: "Domain and docs routing"
+version: "1.0.0"
+---
+
+# Domain and docs routing
+
+Recorded 2026-05-22. Canonical guideline for where ecosystem surfaces live.
+
+## Three surfaces per project
+
+Every Bundu Foundation project has three surfaces, on three homes:
+
+1. **Tooling** -> the project's own **branded domain**. The functional app —
+   registry, API, MCP. The branded domain serves a slim one-pager landing;
+   everything else under it is the project itself. Example: Mzizi -> `mzizi.dev`.
+2. **Information** -> a **Bundu subdomain**, `<project>.bundu.org` (ASF-style —
+   like `<project>.apache.org`). The project mini-site / explainer. Example:
+   `mzizi.bundu.org`.
+3. **Documentation** -> `docs.bundu.org`, under a **top-level path per project**:
+   `docs.bundu.org/<project>`. Example: `docs.bundu.org/mzizi`.
+
+## Documentation
+
+- **`docs.bundu.org`** — one Starlight site, one repo (`bundu-docs`), holding
+  the docs for every Bundu Foundation project and initiative. Each project is a
+  top-level content folder (`mzizi/`, `siafudb/`, ...). One build, one deploy,
+  unified search and navigation.
+- **`docs.nyuchi.com`** — Nyuchi's own docs, separate repo (`nyuchi-docs`).
+  Nyuchi and Bundu are legally separate entities — Bundu is research and
+  governance, Nyuchi is commercial — so they do not share a docs surface.
+- Project docs live in the `bundu-docs` repo, NOT the project's code repo. A
+  project keeps its own code/tooling repo; its documentation is a
+  Foundation-owned artifact consolidated in `bundu-docs`.
+
+## Research
+
+- All research is published via the Sanity studio onto `bundu.org/research`.
+
+## Deployment
+
+- Sites deploy to **Vercel**.
+- Tools that need a backend deploy to **Cloudflare Workers**.
+
+## Source
+
+FRD-36 track / the 2026-05-22 architecture conversation.

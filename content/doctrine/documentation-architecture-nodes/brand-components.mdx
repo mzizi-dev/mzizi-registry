@@ -1,0 +1,40 @@
+---
+_schemaVersion: "v1"
+covenant: "A brand component is a primitive with Ubuntu in it."
+currentVersion: 2
+description: "Primitives wrapped in Ubuntu philosophy. Brand components consume the harness for observability, motion and accessibility — every one destructures { log, motion, LiveRegion } from it, and N2 primitives never do. The harness is TypeScript today (lib/harness in nyuchi/mzizi); the target is one shared Rust WASM core behind that same interface, so the harness is implemented once instead of once per framework. The component shell stays framework-specific either way: Dioxus on the Rust path, Svelte optional, Swift / Kotlin / ArkTS / React Native idiomatic native."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "Always destructure { log, motion, LiveRegion } from useNyuchiHarness."
+- "N2 primitives never import useNyuchiHarness directly."
+- "Every brand component carries a data-slot attribute for stable targeting."
+- "Use mineral palette tokens, not raw colour values."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+node_number: 3
+owner: "nyuchi"
+role: "N3 — primitives wrapped in Ubuntu"
+rust:
+  kind: "ui-framework"
+  note: "The N2/N3 boundary is unchanged by any of this: N3 takes the harness, N2 never does, whatever language the harness is written in. Rust changes who implements the harness, not who is allowed to hold it."
+  state: "target"
+  today: "No Rust ships. The harness is lib/harness/index.tsx in nyuchi/mzizi — a TypeScript React context, not a WASM module — and the brand inventory is React with a production Svelte surface. Zero Dioxus brand components exist."
+  target: "Two things move, and they move separately. The HARNESS becomes part of the shared Rust core compiled to WASM, so { log, motion, LiveRegion } is one implementation every target consumes. The SHELL stays framework-specific — Dioxus is the Rust path, Svelte remains a supported option, the native targets keep their own idiomatic components. Consumers on native targets get the contract and the tokens, not source."
+  position: "alternative"
+  descriptors:
+  - "dioxus"
+  - "svelte"
+  - "react"
+  - "mzizi-react-legacy"
+sort_order: 3
+stakeholder: "Brand system steward"
+strand: "shipped"
+sub_label: "brand"
+title: "Brand components"
+type: "node"
+---
+
+

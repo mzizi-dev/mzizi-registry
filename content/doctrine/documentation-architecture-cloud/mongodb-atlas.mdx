@@ -1,0 +1,37 @@
+---
+_schemaVersion: "v1"
+consistency_model: "eventual"
+currentVersion: 1
+data_categories:
+- "community-posts"
+- "weather-observations"
+- "listings"
+- "event-details"
+- "messages"
+- "ai-conversations"
+- "creator-content"
+- "operational-personal-content"
+database: "MongoDB Atlas"
+description: "Operational primary for non-relational data: community content, observations, listings, messages, AI conversations, and operational personal content. Restored as canonical under doctrine v3.5, replacing ScyllaDB in the non-relational source-of-truth role."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+kind: "architecture"
+model: "mzizi-dna-helix"
+name: "mongodb-atlas"
+node: 0
+owner: "nyuchi"
+role: "Non-relational operational primary — all content and streams"
+sort_order: 1
+sovereignty:
+  role: "Non-relational operational primary"
+  license: "SSPL"
+  forkable: true
+  rationale: "Tiered sovereignty classification: SSPL is not an OSI-approved open-source licence, but the source is available and MongoDB Community Server is self-hostable. Classified medium risk with a documented justification rather than treated as a hard disqualifier. See the substrate-decision convention."
+  governance: "corporate-managed"
+  technology: "MongoDB Atlas"
+  selfHostable: true
+  sovereigntyRisk: "medium"
+strand: "transcription"
+---
+
+

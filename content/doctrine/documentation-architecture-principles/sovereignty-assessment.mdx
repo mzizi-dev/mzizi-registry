@@ -1,0 +1,64 @@
+---
+_bodyField: "content"
+_schemaVersion: "v1"
+currentVersion: 1
+dnaRole: "documentation"
+doctrineVersion: "4.1.6"
+kind: "principle"
+lastDoctrineChangeAt: "2026-05-28T22:10:26.021609+00:00"
+model: "mzizi-dna-helix"
+owner: "bundu"
+slug: "sovereignty-assessment"
+status: "active"
+strand: "transcription"
+title: "Sovereignty Assessment"
+---
+
+# Sovereignty Assessment
+
+> Every technology entering the canonical stack carries a written per-technology sovereignty assessment. Without one, the technology is not in the stack.
+
+## The rule
+
+Before any database, message bus, runtime, framework, or service joins the canonical stack, an assessment must be written and stored in `documentation-architecture-sovereignty/{technology-name}` covering at minimum:
+
+| Field | Question it answers |
+| -- | -- |
+| `licence` | What licence governs use, redistribution, and modification? |
+| `governance` | Who controls the project? Foundation, single vendor, BDFL, or community? |
+| `forkable` | Can the project be forked and maintained independently if the upstream becomes hostile or abandoned? |
+| `self_hostable` | Can it run on infrastructure we control, without dependency on a vendor service? |
+| `sovereignty_risk` | `low` / `medium` / `high` — overall risk classification |
+| `rationale` | The reasoning for the risk classification, in prose |
+
+A technology may be accepted with `medium` or even `high` risk *if* the rationale is documented and the trade-off is explicit. What is rejected is admitting a technology to the stack without any assessment.
+
+## Why this rule exists
+
+The Bundu Foundation architecture is built for African digital sovereignty. That means the substrate cannot quietly accumulate dependencies on technologies whose governance, licensing, or vendor lock-in undermines that sovereignty. The point of the rule is not to ban any class of technology — it is to make every dependency a deliberate, examined choice with a written justification.
+
+The MongoDB SSPL decision is the canonical example. SSPL is not an OSI-approved licence, and that is a real concern. But MongoDB source is available, Community Server is self-hostable, and the alternative (excluding the leading document database from the operational primary slot) had a worse sovereignty profile in practice (forcing a less mature substitute). The decision: accept MongoDB at `medium` risk, with the trade-off documented. See `genetic-code-conventions/substrate-decision` decision 1.
+
+The point of the principle is that this kind of trade-off must be **written down, queryable, and auditable** — not assumed, not in someone's head.
+
+## Current canonical assessments
+
+15 per-technology assessments are live in `documentation-architecture-sovereignty/*`:
+
+`Apache CouchDB` · `Apache Doris` · `Apache Flink` · `Capacitor` · `Cloudflare KV / Durable Objects` · `IndexedDB / Dexie` · `MongoDB` · `NATS` · `Next.js` · `PouchDB` · `Redpanda` · `RxDB` · `ScyllaDB` · `SiafuDB` · `SQLite` · `Supabase / PostgreSQL`
+
+The legacy `architecture_sovereignty` table (now `legacy.architecture_sovereignty`) is preserved for historical audit and is scheduled for DROP after FRD-43 cutover. The canonical store going forward is the document collection.
+
+## How to add a new technology to the stack
+
+1. Write the assessment document via `put_document('documentation-architecture-sovereignty', '<Technology Name>', 'bundu', { ... assessment fields ... })`.
+2. The doc is automatically versioned in the `versions` collection.
+3. Reference the assessment in any relevant substrate decision (`genetic-code-conventions/substrate-decision`) so the trade-off is visible from the decision record.
+4. If the assessment is part of a broader doctrine change, route through `record_doctrine_change(...)` instead so a changelog entry is generated.
+
+## Related
+
+- `genetic-code-conventions/substrate-decision` — the canonical record of substrate-level technology choices and the trade-offs accepted
+- `documentation-architecture-sovereignty/*` — the 15 per-technology assessments
+- `documentation-architecture-removed/*` — audit trail of technologies excluded after assessment (Apache CouchDB, Cloudflare D1)
+- `documentation-architecture-principles/{local-first,mobile-first,open-data,open-source-sovereign,ubuntu}` — the four other architecture principles this joins

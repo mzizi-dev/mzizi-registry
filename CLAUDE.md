@@ -10,7 +10,7 @@
 
 **Mzizi** is an **independent open-architecture project of the Bundu Foundation** — governed by the Bundu Foundation, operated and developed by Nyuchi. It is **not** a Nyuchi product. Mzizi owns the open DNA-helix frontend architecture, the component registry (`mzizi.dev/r/`), the Mzizi API (`mzizi.dev/api`), the components, the infrastructure harness, and the architecture nodes it serves.
 
-It serves the full stable registry across the **Mzizi DNA double helix** — two entwined backbones (an **engineering** strand and a **meaning** strand) held by cross-cutting **rungs**, with no axes and no outliers. Nodes N1–N8 sit on strands (N2 primitives → N3 brand → N6 pages → N7 shell = the `shipped`/`core-guarantee` build; N1 tokens = `swappable`; N4 safety, N5 resilience, N8 assurance = `core-guarantee`); the rungs are N9 fundi (self-healing, owned by `mzizi-tools`), N10 documentation, and N11 discovery (SEO/AIO). The N-numbers are labels, not a sequence — see §6.2. Built on the **Seven African Minerals** design system (seven minerals + seven heritage tones + status + the Experimental Seven — see §7), installable via the shadcn CLI:
+It serves the full stable registry across the **Mzizi DNA double helix** — two entwined backbones (an **engineering** strand and a **meaning** strand) held by cross-cutting **rungs**, with no axes and no outliers. Nodes N1–N8 sit on strands (N2 primitives → N3 brand → N6 pages → N7 shell = the `shipped`/`core-guarantee` build; N1 tokens = `swappable`; N4 safety, N5 resilience, N8 assurance = `core-guarantee`); the rungs are N9 fundi (self-healing, owned by `mzizi-tools`), N10 documentation, and N11 discovery (SEO/AIO). The N-numbers are labels, not a sequence — see §6.2. **Mobile-first and multi-target** — Next.js/React still ships, but the direction is Rust across the stack, with Dioxus carrying web and mobile native from one codebase; Svelte stays supported but is no longer the destination, and Swift, Kotlin, ArkTS and React Native are first-class targets (§8.9). Each node records its own Rust position — implementation, alternative, or none — in `documentation-architecture-nodes` (§6.2). Built on the **Seven African Minerals** design system (seven minerals + seven heritage tones + status + the Experimental Seven — see §7). The React surface installs via the shadcn CLI; other targets differ (§8.9):
 
 ```
 npx shadcn@latest add https://mzizi.dev/api/v1/ui/<component>
@@ -24,7 +24,7 @@ npx shadcn@latest add https://mzizi.dev/api/v1/ui/<component>
 
 **Governance:** Bundu Foundation. **Operated by:** Nyuchi — `github.com/nyuchi`
 
-**Ecosystem context:** Mzizi is consumed across the bundu ecosystem — the Mukoko consumer family (mini-apps), Nyuchi enterprise products (delivered through the Console), and sister brands. It is the single source of truth for the design system, the component registry, the brand documentation, and the open DNA-helix frontend architecture. Long-form product documentation lives at **docs.bundu.org** (bundu-docs); engineering / how-things-are-done content lives at **docs.nyuchi.com** (nyuchi-docs).
+**Ecosystem context:** Mzizi is consumed across the bundu ecosystem — the Mukoko consumer family (mini-apps), Nyuchi enterprise products (delivered through the Console), and sister brands. It is the single source of truth for the design system, the component registry, the brand documentation, and the open DNA-helix frontend architecture. Mzizi's own long-form documentation lives **in this repo**, authored as MDX under `app/` (§15.17 — final). The sibling Starlight sites `docs.bundu.org` (bundu-docs) and `docs.nyuchi.com` (nyuchi-docs) continue to serve their own scopes.
 
 ---
 
@@ -66,7 +66,7 @@ design-portal (this repo)
         └── Any new bundu ecosystem app — via the shadcn CLI against /api/v1/ui/<component>
 ```
 
-**Rule:** When building a new app, install components from this registry. Do not copy-paste component code or create parallel component libraries. Mzizi-side agentic tooling (the Fundi self-healing agent, MCP transport, console mini-app shell) lives in `nyuchi/mzizi-tools`; long-form product docs live in `nyuchi/bundu-docs`; engineering docs in `nyuchi/nyuchi-docs`. Do not reintroduce any of those into `design-portal`.
+**Rule:** When building a new app, install components from this registry. Do not copy-paste component code or create parallel component libraries. Mzizi-side agentic tooling (the Fundi self-healing agent, MCP transport, console mini-app shell) lives in `nyuchi/mzizi-tools` — do not reintroduce it here. Mzizi's long-form docs are the opposite case: they belong **in this repo** as MDX (§15.17).
 
 ---
 
@@ -146,6 +146,8 @@ pnpm registry:verify  # Non-mutating check — fails CI if registry.json drifts 
 pnpm tokens:sync      # Regenerate every N1 token artifact from the DB (§8.4.1)
 pnpm tokens:verify    # Non-mutating check — fails CI if any token artifact drifted
 pnpm registry:validate # Offline gate — every registry item resolves on disk and installs
+pnpm doctrine:extract # Write content/doctrine/**/*.mdx from Supabase (§15.17)
+pnpm doctrine:verify  # Non-mutating check — fails if an extracted doctrine file drifted
 pnpm audit:check      # pnpm audit --audit-level=moderate --ignore-registry-errors
 ```
 
@@ -204,7 +206,7 @@ design-portal/
 │   │       ├── brand/                # Brand system
 │   │       ├── changelog/            # Releases (root + [version])
 │   │       ├── data-layer/, ecosystem/, pipeline/, sovereignty/
-│   │       ├── docs/                 # HTTP 410 — docs moved to bundu-docs (root + [slug])
+│   │       ├── docs/                 # HTTP 410 — MDX pages are routes, not an API (root + [slug])
 │   │       ├── health/               # Health check
 │   │       ├── search/               # Cross-resource search
 │   │       ├── skills/               # Skills index + summary + [name]
@@ -309,10 +311,10 @@ design-portal/
 | `component_documents`                                  | **Document-route staging table** (the spine of the new lean MCP). One self-contained JSON document per component (`{ owner, sources, legacy, files, … }`) keyed by node collection (`n1_tokens … n10_documentation`). The MCP at `/mcp` reads exclusively from here; the portal's `/api/v1/*` routes read from `components` and `component_docs`. The two surfaces are intentionally separate but stay in lock-step via a read-across pattern — `component_documents.legacy` mirrors the row in `components` so downstream consumers can pivot without duplicate fetches.                                                                                                                                                                                                                                                                    |
 | `component_docs`                                       | Use cases, variants, a11y notes (per component) — served by `/api/v1/ui/{name}/docs`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `component_versions`                                   | Per-component version history — served by `/api/v1/ui/{name}/versions`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `documentation_pages`                                  | **HISTORICAL — content moved to bundu-docs and nyuchi-docs.** All published rows shipped as Astro Starlight pages on `docs.bundu.org` (product docs) and `docs.nyuchi.com` (engineering docs). The DB-driven renderers, the dynamic `[slug]` route, and the `get_documentation_page` MCP tool are all removed; `/api/v1/docs/*` returns HTTP 410 with a `migrated_to` map. The table remains in Supabase as the historical source-of-record. Do not add new rows; author new docs in the Starlight repos. See §15.18.                                                                                                                                                                                                                                                                                                                        |
+| `documentation_pages`                                  | **HISTORICAL — never write to it.** Long-form docs are now MDX in this repo (§15.17, final), so this table is neither the source nor the destination. The DB-driven renderers, the dynamic `[slug]` route, and the `get_documentation_page` MCP tool are all removed, and `/api/v1/docs/*` returns HTTP 410 — none of which this reversal asks back, because MDX pages are routes rather than an API surface. The table stays in Supabase as the historical source-of-record. Author `.mdx` under `app/`, not rows here.                                                                                                                                                                                                                                                                                                                     |
 | `changelog`                                            | Releases — `nodes_affected` (uncapped), `tools_added/modified/deprecated/removed`, `components_added/modified/deprecated/removed`, `linked_issues`, `released_at`. Served at `/api/v1/changelog` and `/api/v1/changelog/{version}`; rendered into `/changelog` (#107).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `ai_instructions`                                      | System prompts per target (mcp-server, claude, copilot)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `skills`                                               | Agent-skill MDX bodies — **read-only from this repo.** Authored in git as `mzizi-skills/skills/<name>/SKILL.md` in `nyuchi/mzizi-tools` (npm `@nyuchi/mzizi-skills`) and projected into this collection by that repo's `pnpm skills:sync`. The portal serves it at `/api/v1/skills*` and via MCP `get_skill`. See §15.23.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `skills`                                               | **RETIRED — no longer used.** Skills are files in `nyuchi/mzizi-tools` (`mzizi-skills/skills/<name>/SKILL.md`, npm `@nyuchi/mzizi-skills`) and are not projected into the database any more. `pnpm skills:sync` in that repo made three copies of every skill — the git file, this collection, and a standalone `skills` table — none of which anyone was allowed to edit, so the projection could only ever go stale. See §15.23.                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `brand_*`                                              | Minerals, semantic colors, typography, spacing, ecosystem brands                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `architecture_*`                                       | Principles, data layer, pipeline, sovereignty assessments, frontend axes/layers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `ubuntu_pillars/principles`                            | Doctrine rows served at `/api/v1/ubuntu/{pillars,principles}` (and consumed by `app/ubuntu` once #108 lands)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
@@ -367,7 +369,7 @@ Every route in the portal is public and anon-readable. There is no authenticated
 
 Every component follows a layered pattern. This is mandatory for all bundu ecosystem apps consuming this registry.
 
-The frontend architecture is the **Mzizi DNA double helix** — two entwined backbones (an **engineering** strand and a **meaning** strand) held together by cross-cutting **rungs**. Every element carries a `type`: a **node** (a functional unit sitting on a strand), a **strand** (a backbone grouping), or a **rung** (a base pair bridging both backbones). **There are no axes and no outliers.** Node identifiers **N1–N11 are labels, not a sequence** — N11 is simply the next id, not "on top of" N10. The live model is in `documentation-architecture-{nodes,strands}/*` and served by the MCP (`get_node_documents`, `get_architecture`); never hardcode counts.
+The frontend architecture is the **Mzizi DNA double helix** — two entwined backbones (an **engineering** strand and a **meaning** strand) held together by cross-cutting **rungs**. Every element carries a `type`: a **node** (a functional unit sitting on a strand), a **strand** (a backbone grouping), or a **rung** (a base pair bridging both backbones). **There are no axes and no outliers.** Node identifiers **N1–N12 are labels, not a sequence** — N12 is simply the next id, not "on top of" N11. The live model is in `documentation-architecture-{nodes,strands}/*` and served by the MCP (`get_node_documents`, `get_architecture`); never hardcode counts.
 
 **Nodes** (functional units, each on one strand):
 
@@ -384,11 +386,42 @@ The frontend architecture is the **Mzizi DNA double helix** — two entwined bac
 
 **Rungs** (cross-cutting base pairs — bridge both backbones, bound to no single strand):
 
-| #   | sub_label       | Covenant                                                |
-| --- | --------------- | ------------------------------------------------------- |
-| 9   | `fundi`         | Failure is a learning event — owned by `mzizi-tools`.   |
-| 10  | `documentation` | The system documents itself — bundu-docs + nyuchi-docs. |
-| 11  | `discovery`     | If the machine can't see it, it doesn't exist.          |
+| #   | sub_label       | Covenant                                                  |
+| --- | --------------- | --------------------------------------------------------- |
+| 9   | `fundi`         | Failure is a learning event — owned by `mzizi-tools`.     |
+| 10  | `documentation` | The system documents itself in code — MDX in this repo.   |
+| 11  | `discovery`     | If the machine can't see it, it doesn't exist.            |
+| 12  | `skills`        | What the system knows how to do is teachable, not tribal. |
+
+**N12 `skills` is a rung, and this file omitted it entirely** while the DB carried it — which is
+how a rung stays invisible to every agent that reads doctrine here first. Its content is authored
+in `nyuchi/mzizi-tools` (`mzizi-skills/skills/<name>/SKILL.md`, published as
+`@nyuchi/mzizi-skills`); this repo neither authors nor stores it. It is a rung rather than a node
+for the same reason N10 is: a skill bridges engineering practice and meaning at once, and no node
+imports it.
+
+**Each node's Rust position** — carried on the node document as a `rust` block (`position`, `kind`, `state`, `today`, `target`, `note`, `descriptors`) and reachable via `get_node_documents`. `position` answers a question `readiness` and `tier` cannot: does this node have a Rust **implementation** of its own, only a Rust **alternative** because it is UI, or **none**?
+
+| #   | `rust.position` | `rust.kind`  | What that means                                                                               |
+| --- | --------------- | ------------ | --------------------------------------------------------------------------------------------- |
+| 1   | implementation  | toolchain    | Token generator becomes a Rust CLI emitting every target's token file                         |
+| 2   | alternative     | ui-framework | Dioxus is the Rust path; primitives are framework-specific by nature                          |
+| 3   | alternative     | ui-framework | Harness moves to the shared core; the component shell stays per-framework                     |
+| 4   | implementation  | shared-core  | Gate logic to WASM + a native server binary — logic, not UI                                   |
+| 5   | implementation  | shared-core  | Resilience state machine to WASM — logic, not UI                                              |
+| 6   | alternative     | ui-framework | Nothing to implement: a page is a composition, which is why it ports cheaply                  |
+| 7   | alternative     | ui-framework | Also the **mount point** — the shell instantiates the shared core once per app                |
+| 8   | implementation  | shared-core  | Signal collection off the UI thread; same Rust aggregates server-side                         |
+| 9   | implementation  | edge-worker  | `workers-rs` is the target; the deployed fundi worker is TypeScript                           |
+| 10  | **none**        | —            | Docs are MDX and the build is the guarantee — no Rust role, stated deliberately               |
+| 11  | **constraint**  | —            | No implementation; a WASM web target **must** prerender or crawlers get an empty page         |
+| 12  | **none**        | —            | A skill is a document read at inference time — no runtime to compile, so nothing to implement |
+
+Three rules fall out of this table and are the ones that get broken:
+
+- **Only nodes holding _logic_ get a Rust implementation** (N1, N4, N5, N8, N9). Every UI node gets an _alternative_ — a Dioxus `Button` and a Svelte `Button` share a contract and a token set, not a source file.
+- **A node with no Rust role is a better answer than a fabricated one.** N10 is the worked example: its guarantee comes from documentation passing through the build, not from the build's language. Do not invent a Rust story to fill the column.
+- **N7 is where the two Rusts meet.** Rust-as-UI replaces the shell; Rust-as-shared-core is what the shell _loads_. Initialise the core per component instead of per app and every component gets its own circuit breaker — which is not a circuit breaker.
 
 **The six strands** (`documentation-architecture-strands/*`): the **engineering** backbone carries `core-guarantee` (accessibility, data, resilience, observability, safety, primitives — the fixed contract), `shipped` (brand, pages, shell), `swappable` (tokens, icons, framework — the fork seams), and `spine` (the harness); the **meaning** backbone carries `genetic-code` (Ubuntu + Bundu conventions) and `transcription` (doctrine as queryable documents).
 
@@ -397,7 +430,7 @@ The frontend architecture is the **Mzizi DNA double helix** — two entwined bac
 - Nodes consume from the strand below them on the same backbone — never sideways or upward; rungs bridge both backbones and are never imported by nodes
 - Each component is a standalone file
 - N6 pages NEVER hardcode buttons/cards/SVGs — pure composition of N2/N3
-- N1 is the only layer allowed to define CSS values — every other layer consumes via `var()`
+- N1 is the only layer allowed to define a design **value** — every other layer consumes it (via `var()` on the web, via the generated token file on Swift / Kotlin / ArkTS / Rust). "CSS values" was the web-only phrasing of this rule; the rule is target-agnostic, the syntax is not
 - N3 always destructures `{ log, motion, LiveRegion }` from `useNyuchiHarness`; N2 never imports it
 - All colors and styles come from CSS custom properties in `globals.css`
 - This application DNA helix is **distinct** from the data architecture at `/architecture`. Never conflate the two.
@@ -602,6 +635,33 @@ All radii derive from `--radius-unit: 7px`. The ecosystem numbers are 7, 12, 14,
 
 **Buttons are always pill-shaped (`rounded-full`).** This is an executive brand identity decision — not a radius scale value. All buttons, tabs, and interactive pill-shaped controls use `rounded-full` (9999px). This applies across the entire ecosystem.
 
+### 7.6 Media Aspect — the main image is square
+
+**The main image on a detail page is SQUARE, everywhere in the ecosystem.** Events, listings, products, places, profiles — one shape, so a detail page is recognisable as a detail page before a single word is read.
+
+The ratio is an N1 token, not a class someone picks per component:
+
+```
+--aspect-media: 1 / 1          → aspect-[var(--aspect-media,1/1)]        (the default)
+--aspect-media-wide: 16 / 9    → aspect-[var(--aspect-media-wide,16/9)]  (INTRINSICALLY 16:9 only)
+--aspect-media-portrait: 4 / 5 → aspect-[var(--aspect-media-portrait,4/5)]
+```
+
+**Components reference the token with an inline fallback, never a bare `aspect-media`.** A bare utility only exists where `--aspect-media` has been defined in that app's `@theme`, and **nothing distributes it**: there is no registry item carrying the CSS custom properties (`token-row` is a data-display primitive, not the token source), and consumer apps take their tokens from `@bundu/ui`, not from this repo's `globals.css`. A consumer installing `nyuchi-listing-card` would have got an unknown utility and therefore **no aspect ratio at all** — the card collapsing to its content height, silently, in someone else's app. The `var()` fallback keeps the decision as data (redefine the property and every surface retunes) while staying independently installable, which §15.6 requires.
+
+**Why this is a token and not a convention.** Before it, every component chose its own and they disagreed — `nyuchi-article-card` and `nyuchi-listing-card` at 16:9, `nyuchi-offer-card` square, `nyuchi-place-card` custom, and `nyuchi-cover-wash-header` — the detail-page hero itself — with **no aspect constraint at all**. "The main image" therefore meant a different shape on every surface, and nothing in the system could catch it, because none of them were wrong against any stated rule. N1's covenant is that design decisions are data; a ratio is a design decision.
+
+**`aspect-media-wide` is not a free choice.** It is for media that is intrinsically 16:9 — a video frame in `media-player-page` — where forcing square would letterbox or crop the content itself. Reaching for it because a layout looks better wide is exactly how the drift started. If you are tempted, the answer is square.
+
+**The detail-page pattern is invariant even where the ratio is not.** Every detail surface composes in this order, and a new one does not get to invent its own:
+
+```
+square hero (cover wash) → title → host/owner row → meta tiles (when · where · …)
+  → action card (CTA + state) → rich body → supporting sections → footer identity
+```
+
+Only the hero's ratio varies, and only for intrinsically-wide media. The order, the meta-tile treatment, and the action-card-above-the-body sequence do not vary at all.
+
 ---
 
 ## 8. Conventions
@@ -619,7 +679,10 @@ All radii derive from `--radius-unit: 7px`. The ecosystem numbers are 7, 12, 14,
 
 Every component in `components/ui/` MUST have:
 
-1. **Touch targets** — 56px default height, 48px minimum for small variants. Non-negotiable for the African mobile market
+1. **Control density** — the scale is dense by default: `h-8` (32px) small, `h-9` (36px) default, `h-10` (40px) large. **56px (`h-14`) is reserved for specific prominent surfaces — hero CTAs and the like — not the default.** An earlier revision of this file said 56px default / 48px minimum and called it non-negotiable; the shipped primitives never did that, so the doctrine was describing a system that did not exist. Density won.
+
+   Because the default sits below the 44pt (Apple HIG) and 48dp (Material) touch-target guidance, a dense control that is a **touch** target on mobile must earn its hit area some other way — surrounding spacing, or padding the interactive area beyond the visual box. Density is a deliberate choice, not a licence to ship a 32px tap target with nothing around it.
+
 2. **Accessibility** — ARIA attributes where needed, semantic HTML, keyboard navigation via Radix primitives
 3. **Global styles only** — Tailwind classes backed by CSS custom properties from `globals.css`
 4. **`cn()` composition** — all className props composed through `cn()`
@@ -684,7 +747,7 @@ npx shadcn@latest add https://mzizi.dev/api/v1/ui/button
 npx shadcn@latest add https://mzizi.dev/api/v1/ui/card
 ```
 
-Every new app inherits the canonical typography (Noto Sans / Noto Serif / JetBrains Mono), the Seven African Minerals palette, the layered architecture, the pill-button identity, and the touch-target floor. Long-form product docs for any bundu app belong in `nyuchi/bundu-docs`; engineering docs belong in `nyuchi/nyuchi-docs`. Mzizi tooling (MCP, SDK, skills, console mini-app) is consumed from `nyuchi/mzizi-tools` as published npm packages.
+Every new app inherits the canonical typography (Noto Sans / Noto Serif / JetBrains Mono), the Seven African Minerals palette, the layered architecture, the pill-button identity, and the dense control scale (§8.2). Mzizi's own long-form docs belong in this repo as MDX (§15.17). Mzizi tooling (MCP, SDK, skills, console mini-app) is consumed from `nyuchi/mzizi-tools` as published npm packages.
 
 ### 8.6 Distribution surface
 
@@ -739,6 +802,90 @@ The portal dogfoods its own registry. The transitive closure of the brand compon
 }
 ```
 
+### 8.9 Multi-target — mobile-first, Rust-first, and who gets components vs instructions
+
+Mzizi is **mobile-first**. Next.js/React is still here and still shipping, but the direction is
+**Rust across the stack**, with first-class native targets: **Swift** (iOS/macOS), **Kotlin**
+(Jetpack Compose), **ArkTS** (HarmonyOS), and **React Native**. Svelte remains production-ready
+and supported; it is no longer the destination (see the `tier` table below).
+
+**The consequence, stated plainly: most components are framework-specific.** A `Button` for
+SwiftUI and a `Button` for Svelte share a contract and a token set, not a source file. So the
+registry serves two different things depending on the target, and `framework_descriptors.readiness`
+is the field that says which:
+
+| `readiness`        | What a consumer actually gets                                     |
+| ------------------ | ----------------------------------------------------------------- |
+| `production`       | Real, installable component source for that framework             |
+| `primitives_wired` | Some primitives resolve; the surface is partial                   |
+| `metadata_only`    | **Instructions only** — the contract, tokens and rules, no source |
+
+Never present a `metadata_only` target as though components exist for it. Answer with the
+contract and the tokens, and say that the source is the consumer's to write.
+
+**`readiness` is not the same question as `tier`, and both are needed.** `readiness` says
+whether source EXISTS. `tier` says whether a target is where Mzizi is HEADING:
+
+| `tier`     | Meaning                                                                        |
+| ---------- | ------------------------------------------------------------------------------ |
+| `primary`  | The direction — Rust: `dioxus`, `crates-io`                                    |
+| `native`   | First-class native shells over the shared Rust core — swift, kotlin, arkts, RN |
+| `optional` | Supported, not the destination — `svelte`                                      |
+| `legacy`   | Still ships, being moved away from — `react`, `mzizi-react-legacy`             |
+
+The two are deliberately independent, because today they point opposite ways: **`svelte` is
+`production` + `optional`** (source exists, not the direction) while **`dioxus` is
+`metadata_only` + `primary`** (the direction, source not wired). One field would force a false
+choice between "has components" and "is the plan", and whichever it answered would mislead.
+
+**Committing to Rust is what demotes Svelte.** Svelte was the web destination while Rust was
+core-only; once Dioxus carries web _and_ mobile native from one codebase, Svelte becomes an
+alternative rather than the target. It stays production-ready and supported — `optional` is not
+deprecated, and `react` at `legacy` still holds the largest inventory by far.
+
+**No Rust ships yet, and the node documents say so.** There is no `Cargo.toml`, no `.rs` and no
+`.wasm` in this repo or in `nyuchi/mzizi-tools`: the harness is `lib/harness/index.tsx`, the
+token generator is `scripts/sync-tokens.ts`, the resilience primitives are `lib/*.ts`, and the
+fundi worker is TypeScript. Every Rust statement below and in
+`documentation-architecture-nodes` is therefore **target state, explicitly labelled** — each
+node's `rust.state` reads `target`, never `shipping`. Write it that way. A node that describes
+a Rust implementation in the present tense reads as shipped to every agent that queries it, and
+that is the drift this section exists to prevent.
+
+**Two different Rusts, and conflating them is the classic error.**
+
+- **Rust as the shared core** — compiled to WASM, it is to be the harness, the N5 resilience
+  state machine, and the N4 safety gates (see §6.2). It holds _logic_, not UI, and each target
+  keeps its own native shell. This is what lets Swift, Kotlin, ArkTS and React Native stay
+  idiomatic while sharing one implementation of the rules.
+- **Rust as a UI framework** — **Dioxus** is the sanctioned choice, and the one that answers
+  "one Rust framework for web _and_ mobile native": it targets web (WASM), desktop, iOS and
+  Android from a single codebase. It matters here specifically because **Dioxus 0.7 ships
+  Tailwind and Radix support**, which is Mzizi's exact primitive stack (Tailwind + Radix + CVA)
+  — so the primitive surface maps across rather than being re-invented.
+
+`crates-io` in the registry describes the Rust _UI_ ecosystem (Leptos/Dioxus/Yew). It is **not**
+where the WASM core lives, and a consumer asking "what Rust does Mzizi have?" must not be handed
+the UI descriptor as the answer to a core-logic question.
+
+**What does NOT vary by target: N1.** This is the load-bearing claim of the whole multi-target
+model — design decisions are _data_, so one source generates every target's token artifact:
+CSS custom properties for web, Swift for iOS/macOS, Kotlin for Compose, ArkTS for HarmonyOS, and
+a Rust module for the shared WASM core and Dioxus. Adding a target means adding an **emitter**,
+never re-authoring the values. If a target ever needs its own hand-maintained token file, N1 has
+failed and the fix is the generator, not the copy.
+
+That is also why N1 sits on the `swappable` strand while carrying an invariant: the token
+_pipeline_ is forkable, the token _decisions_ are not.
+
+Also invariant across targets: the dense control scale (§8.2), the pill-button identity, and the
+APCA contrast floor. A target that cannot honour those is not a supported target.
+
+**Distribution is per-target, and `npx shadcn` is React-only.** §8.6's shadcn command serves
+React. Svelte consumers use `shadcn-svelte`; Dioxus consumes via crates; Swift, Kotlin and ArkTS
+have no CLI equivalent at all — which is precisely why they are instruction-first. Do not
+document one install command as though it serves every target.
+
 ---
 
 ## 9. Mzizi API (v1)
@@ -769,7 +916,7 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 | `GET /api/v1/architecture/frontend/layers` | **HTTP 410 Gone** — retired with the axis/layer model (§6.2)            | —         |
 | `GET /api/v1/ubuntu/pillars`               | 5 Ubuntu Pillars                                                        | —         |
 | `GET /api/v1/ubuntu/principles`            | 5 Ubuntu Principles                                                     | —         |
-| `GET /api/v1/docs`                         | **HTTP 410 Gone** — content moved to bundu-docs                         | —         |
+| `GET /api/v1/docs`                         | **HTTP 410 Gone** — docs are MDX routes, not an API surface             | —         |
 | `GET /api/v1/docs/{slug}`                  | **HTTP 410 Gone** — see `/api/v1/docs` for the slug map                 | —         |
 | `GET /api/v1/changelog`                    | All releases (from `changelog` table)                                   | #107      |
 | `GET /api/v1/changelog/{version}`          | Single release                                                          | #107      |
@@ -1024,13 +1171,20 @@ CI additionally runs `pnpm test`, `pnpm build`, and `pnpm registry:verify`.
 
 When working on this codebase as an AI assistant:
 
-1. **Supabase is the source of truth for everything except component source.** Docs, brand data, architecture data, AI instructions, changelog and document-route metadata all live in Supabase; do not reintroduce hardcoded JSON/TS files for those. **Component source is the exception and now lives on disk** under `components/registry/n<N>-<label>/` — it moved precisely because a JSON column is invisible to tsc, eslint and prettier, and every node that reached disk failed the build on first contact with defects consumers had already installed. One copy, in git. See §8.3 and `docs/component-source-migration.md`.
+1. **Git owns what humans author; Supabase owns what machines generate or accumulate.** That is the rule, and it replaces "Supabase is the source of truth for everything except component source" — which was true when component source was the only exception and is now wrong for three whole classes.
+
+   **Git:** component source under `components/registry/n<N>-<label>/` (§8.3); doctrine + long-form docs under `content/doctrine/` and `app/` as MDX (§15.17); skills in `nyuchi/mzizi-tools` (§15.23).
+
+   **Supabase:** component metadata and the `components` view (§6.1), brand tokens, `changelog`, and the observability / chaos / fundi event streams.
+
+   The test is _who edits it_. A JSON column is invisible to tsc, eslint, prettier and a reviewer, so anything a person writes and another person should check belongs in a file where the toolchain and a diff can see it. Anything generated by a script, bumped by a release, or appended by telemetry belongs in the database. See §8.3 and `docs/component-source-migration.md`.
+
 2. **`registry.json` is generated, not authored.** Never hand-edit it. CI runs `pnpm registry:verify` to catch drift.
 3. **Never break the shadcn registry schema** — downstream apps depend on it.
 4. **Use the Seven African Minerals palette** (plus heritage / status / experimental sets — §7) — never introduce colors outside the token system.
 5. **Follow the CVA + Radix + cn() pattern** — every component uses this stack.
 6. **Keep components self-contained** — each file is independently installable via the registry.
-7. **Preserve accessibility** — APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets, Radix primitives for keyboard/screen reader behaviour.
+7. **Preserve accessibility** — APCA 3.0 AAA contrast, the dense control scale with adequate hit area on touch surfaces (§8.2), Radix primitives for keyboard/screen reader behaviour.
 8. **Test API output** — after modifying a component, verify it serves correctly via `/api/v1/ui/[name]`.
 9. **Respect the helix** — primitives don't import page-level code. The frontend model is the Mzizi DNA double helix: nodes on two backbones (engineering + meaning) plus cross-cutting rungs (fundi, documentation, discovery) — no axes, no outliers (§6.2). This is distinct from the data architecture served at `/architecture` — never conflate the two.
 10. **All brand wordmarks lowercase** — `mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`.
@@ -1040,7 +1194,20 @@ When working on this codebase as an AI assistant:
 14. **The mineral strip uses 5 mineral colors** and is always vertical (left-edge accent only).
 15. **Use the MCP server** — served at `/mcp` via `lib/mcp-server.ts` (`createMziziMcpServer`); reads `component_documents` only. The legacy relational MCP is retired; `design.nyuchi.com` is a 308 redirect to `mzizi.dev`.
 16. **Resilience patterns** (circuit-breaker, retry, timeout, fallback-chain, ai-safety, chaos) are vendored in `lib/` and also published as `registry:lib` items in Supabase. Consumer apps install them via the shadcn CLI.
-17. **Long-form documentation lives outside this repo** — product docs in `nyuchi/bundu-docs` (Astro Starlight → `docs.bundu.org`), engineering docs in `nyuchi/nyuchi-docs` (Astro Starlight → `docs.nyuchi.com`). The portal is a registry + brand + architecture surface, not a docs site. The `documentation_pages` Supabase table is HISTORICAL — content was migrated to the Starlight repos; `/api/v1/docs/*` returns HTTP 410 with a `migrated_to` map; the `get_documentation_page` MCP tool is gone. The `changelog` Supabase table is unaffected — it remains the source of truth for the release-bump workflow.
+17. **Mzizi's long-form documentation AND its doctrine live IN this repo, as MDX.** Authored as `.mdx` files, compiled by `@next/mdx`. Prose pages go under `app/` and are routed by Next.js's file-based router; **doctrine** — the helix nodes and strands, architecture principles, sovereignty assessments, Ubuntu pillars and principles, bundu conventions, AI instructions — lives under `content/doctrine/<collection>/<slug>.mdx` as YAML frontmatter plus body, extracted by `pnpm doctrine:extract` and drift-gated by `pnpm doctrine:verify`. This is the doctrine N10 `documentation` states, and it is **final**.
+
+    **This widens an earlier, narrower version of this rule**, which said the database stayed the source of truth for _structured_ data and moved only prose. That split does not survive contact with the actual rows: a node document is mostly structured fields and its load-bearing content is still prose — a covenant, a role, four implementation rules — and holding it in a JSON column is what let N12 ship with N10's `role`, N10's `stakeholder`, N10's four implementation rules and N10's entire `rust` block, describing itself as the documentation rung. Every one of those was invisible until the rows became files. Frontmatter keeps the structure queryable; being a file is what makes the content reviewable.
+
+    **Still database-owned:** components + their metadata (§6.1), tokens, `changelog`, and the observability/chaos event streams. Those are either generated, high-churn release state, or append-only telemetry — none of which a human edits in a pull request.
+
+    This **reverses** the earlier "docs live outside this repo" rule, which sent Mzizi's own long-form content to the sibling Starlight sites. Both directions were written down at once for a while — this file said "outside", the N10 rung document said "in the repo" — and a contradiction in the canonical file is worse than either answer, because agents read whichever they reach first.
+
+    **Why in-repo wins:** an MDX page passes through the build. A page that references a component that no longer exists, or a route that has moved, fails `pnpm build` — so documentation drift becomes a build error rather than a thing someone notices months later. That guarantee is not available to prose held in a separate site or in a database table.
+
+    **Current state, stated plainly: there are ZERO `.mdx` files in this repo today.** The toolchain is wired (`next.config.mjs` compiles `.mdx` under `app/`) but no page has been authored, and there is no `app/docs/` directory. So this rule describes where docs go from here, and the content still has to be written or brought back. Do not read the rule as a description of what is already there.
+
+    **Unaffected by this reversal:** `/api/v1/docs/*` stays HTTP 410 and `get_documentation_page` stays gone — MDX pages are routes, not an API surface, so nothing here asks for those back. The `documentation_pages` Supabase table stays historical; author MDX, not rows. The `changelog` table is untouched and remains the source of truth for the release-bump workflow. `nyuchi/bundu-docs` and `nyuchi/nyuchi-docs` continue to exist for their own scopes — what changed is that **Mzizi's** long-form docs are no longer theirs to hold.
+
 18. **The playground (`components/playground/`) reads from the API**, not from local files.
 19. **API is versioned under `/api/v1/`** — `openapi.yaml` is the contract; update it whenever a route or schema changes.
 20. **Buttons are always pill-shaped (`rounded-full`)** across the entire ecosystem.
@@ -1054,7 +1221,9 @@ When working on this codebase as an AI assistant:
 
     **The audit gate before merge.** Every PR runs through (1) `/security-review`, (2) a gap analysis against this CLAUDE.md, and (3) a sweep of open GitHub issues. Anything matching the bug definition above lands in the same PR — re-scope rather than defer.
 
-23. **Skills are authored in `nyuchi/mzizi-tools`, not here.** The source of truth is git — `mzizi-skills/skills/<name>/SKILL.md` in that repo, published as the public npm package `@nyuchi/mzizi-skills`. `mzizi-tools` projects the committed bundle **into** the Supabase `skills` collection (`pnpm skills:sync` there, disk → DB); this repo only ever **reads** that collection, serving it at `/api/v1/skills*` and over MCP `get_skill` / `list_skills`.
+23. **Skills are authored in `nyuchi/mzizi-tools`, not here — and they no longer live in the database at all.** The source of truth is git: `mzizi-skills/skills/<name>/SKILL.md` in that repo, published as the public npm package `@nyuchi/mzizi-skills`. Consumers install with `npx skills add @nyuchi/mzizi-skills`.
+
+    **The `skills` DB projection is retired.** `mzizi-tools` used to run `pnpm skills:sync` to copy the committed bundle into the Supabase `skills` collection so this repo could serve it. That made three copies of every skill — the git file, the `skills` collection, and a standalone `skills` table — for no gain, since git was already authoritative. A projection nobody may edit is not a source of truth; it is a cache that can only ever be stale, and `skills:check` reporting drift was the symptom. Skills are files, and §6.1's rule applies: prefer no database at all where the answer is a file.
 
     **This reverses the earlier "authored once in Supabase" model.** To change a skill, open a PR against `nyuchi/mzizi-tools` — never edit the Supabase row directly, never edit a published copy, and never re-add skill `.md` files to this repo. The portal's own `scripts/sync-skills.ts` (which pulled DB → disk, into a `packages/design-agent-skills/` directory that no longer exists) has been removed along with the `skills:sync` / `skills:verify` scripts: it wrote in the opposite direction to the `mzizi-tools` script, so with both present the `skills` collection was won by whichever ran last. `.claude/skills/` in this repo is now reserved for skills specific to working on the portal codebase itself, and holds none today. See `.claude/skills/README.md`.
 
@@ -1081,4 +1250,4 @@ Active issues to keep on the radar (live from the `nyuchi/design-portal` issue t
 - **#58** — Repo sync: v4.0.33–v4.0.44 — nodes, plug design into mukoko-edge gateway
 - **#45** — Build: Ubuntu Five Pillars & Five Principles structural doctrine (parts landed via #108)
 
-When in doubt about whether something is canonical, prefer the Supabase row over any file in the repo.
+When in doubt about whether something is canonical, ask **which kind of thing it is** — the blanket "prefer the Supabase row over any file in the repo" that stood here is now wrong three times over. Component source is git (§8.3), doctrine and long-form docs are git (§15.17), skills are git in `mzizi-tools` (§15.23). Prefer the Supabase row for components' metadata, tokens, `changelog`, and the event streams; prefer the file for everything above.

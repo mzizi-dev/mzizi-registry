@@ -1,0 +1,84 @@
+---
+_bodyField: "content"
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "architecture"
+createdAt: "2026-04-14T04:33:18.859813+00:00"
+currentVersion: 2
+description: "The 8 semantic status token categories and how they flow through all layers."
+dnaRole: "documentation"
+doctrineVersion: "4.1.7"
+keywords:
+- "tokens"
+- "semantic"
+- "status"
+- "severity"
+- "connection"
+- "verification"
+- "crypto"
+- "moderation"
+- "health"
+kind: "doc_page"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+owner: "nyuchi"
+relatedNodes:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+slug: "semantic-tokens"
+sortOrder: 13
+status: "published"
+strand: "transcription"
+subcategory: "tokens"
+title: "Semantic Status Token System"
+updatedAt: "2026-04-24T10:56:44.877196+00:00"
+version: "4.0.34-reviewed"
+---
+
+# Semantic Status Token System
+
+The Nyuchi Design System uses 8 categories of semantic tokens that flow from N1 through all nodes. These replace raw color values with meaningful, theme-adaptive tokens.
+
+## Token Categories
+
+| Category | CSS Prefix | Values |
+|---|---|---|
+| Status | --status-* | success, warning, error, info, neutral |
+| Severity | --severity-* | low, moderate, high, severe, extreme, cold |
+| Notification | --notification-* | success, warning, error, info |
+| Connection | --connection-* | online, syncing, cached, offline |
+| Verification | --tier-* | unverified, community, otp, government, licensed |
+| Crypto | --crypto-* | quantumSafe, classical, weak, none |
+| Moderation | --moderation-* | approved, pending, flagged, rejected |
+| Service Health | --health-* | operational, degraded, outage, maintenance |
+
+## Usage Pattern
+
+```css
+/* In N1 tokens */
+--status-success: var(--color-malachite, #64FFDA);
+--status-error: var(--destructive, #FF5252);
+
+/* In N2-N7 components */
+background-color: var(--status-success, var(--color-malachite, #64FFDA));
+```
+
+The fallback chain ensures: semantic token → mineral token → hex fallback.
+
+## Wiring Through Layers
+
+- N1 defines the tokens
+- N2 status-bearing primitives (status-dot, kpi-card, service-health-card) use them
+- N3 brand components with status indicators use them
+- N4 safety gates use them for gate state visualization
+- N5 resilience components use connection/health tokens
+- N6 pages use only semantic CSS vars (bg-primary, text-foreground)
+- N7 shell uses connection tokens for connectivity-bar
+- N8 assurance uses health tokens for platform-health
