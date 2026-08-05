@@ -116,7 +116,13 @@ export interface ComponentWithDocs extends ComponentRow {
 // ── Database info ───────────────────────────────────────────────────
 
 export interface DatabaseInfo {
-  provider: "supabase"
+  /**
+   * Where the component registry is actually read from. `registry` = the repo
+   * (registry.json + the files on disk); `supabase` remains in the union only
+   * for the surfaces that still read a table, so a consumer can tell which
+   * answered.
+   */
+  provider: "registry" | "supabase"
   components: number
   docs: number
   demos: number

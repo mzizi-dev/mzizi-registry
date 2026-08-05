@@ -133,44 +133,58 @@ export function isAdminConfigured(): boolean {
   return Boolean(supabaseUrl && supabaseServiceKey)
 }
 
-// ── Document-store mapping ──────────────────────────────────────────
-// Component docs/demos used to live in the dropped `component_docs` /
-// `component_demos` tables; they now live inside each component's JSON
-// document in `component_documents` (collection 'components').
+// ── Component docs, from the manifest ───────────────────────────────
+//
+// Use cases, variants, sizes, features, a11y notes and the demo flag were the
+// last authored content living only in Supabase — first in the dropped
+// `component_docs` / `component_demos` tables, then inside each row's JSON
+// document. They are now the `meta` block on the item in `registry.json`, beside
+// the dependencies and files they describe.
+//
+// That move fixed a defect nobody could see from the outside. Every read below
+// filtered `.eq("collection", "components")`, but the registry spans thirteen
+// collections — so `/api/v1/ui/{name}/docs` answered 200 with empty arrays for
+// every component outside that one collection, which is most of them. An empty
+// payload and "this component documents nothing" are indistinguishable over
+// HTTP. The manifest has one entry per component and no collection to filter on,
+// so the whole class is gone rather than fixed.
 
-type ComponentDocument = {
-  name: string
-  document: Record<string, unknown> | null
-  updated_at: string | null
+type RegistryMeta = {
+  useCases?: string[]
+  variants?: string[]
+  sizes?: string[]
+  features?: string[]
+  a11y?: string[]
+  examples?: ComponentDocRow["examples"]
+  hasDemo?: boolean
 }
 
 function asStringArray(v: unknown): string[] {
   return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : []
 }
 
-function docRowFromDocument(row: ComponentDocument): ComponentDocRow {
-  const d = row.document ?? {}
-  return {
-    id: 0,
-    component_name: row.name,
-    use_cases: asStringArray(d["use_cases"]),
-    variants: asStringArray(d["variants"]),
-    sizes: asStringArray(d["sizes"]),
-    features: asStringArray(d["features"]),
-    a11y: asStringArray(d["a11y"]),
-    examples: Array.isArray(d["examples"]) ? (d["examples"] as ComponentDocRow["examples"]) : [],
-    created_at: row.updated_at ?? "",
-    updated_at: row.updated_at ?? "",
-  }
+function metaOf(name: string): RegistryMeta | null {
+  const item = readComponent(name)
+  if (!item) return null
+  return ((item as unknown as { meta?: RegistryMeta }).meta ?? {}) as RegistryMeta
 }
 
-function documentHasDemo(document: Record<string, unknown> | null): boolean {
-  const demo = document?.["demo"]
-  // `demo` is a `{ has_demo, demo_type }` object in the document store.
-  if (demo && typeof demo === "object") {
-    return Boolean((demo as Record<string, unknown>)["has_demo"])
+function docRowFromMeta(name: string, meta: RegistryMeta): ComponentDocRow {
+  return {
+    id: 0,
+    component_name: name,
+    use_cases: asStringArray(meta.useCases),
+    variants: asStringArray(meta.variants),
+    sizes: asStringArray(meta.sizes),
+    features: asStringArray(meta.features),
+    a11y: asStringArray(meta.a11y),
+    examples: Array.isArray(meta.examples) ? meta.examples : [],
+    // The manifest is a file in git, so its timestamps belong to the commit, not
+    // to a row. Empty rather than invented — a fabricated `updated_at` would read
+    // as a real edit time to every consumer of this shape.
+    created_at: "",
+    updated_at: "",
   }
-  return Boolean(demo)
 }
 
 // ── Component queries ───────────────────────────────────────────────
@@ -229,64 +243,40 @@ export async function searchComponents(query: string): Promise<ComponentRow[]> {
  * Get documentation for a component.
  */
 export async function getComponentDoc(name: string): Promise<ComponentDocRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("component_documents")
-    .select("name, document, updated_at")
-    .eq("collection", "components")
-    .eq("name", name)
-    .maybeSingle()
-
-  if (error) throw new Error(error.message)
-  if (!data) return null
-  return docRowFromDocument(data as unknown as ComponentDocument)
+  const meta = metaOf(name)
+  if (!meta) return null
+  return docRowFromMeta(name, meta)
 }
 
 /**
  * Get all component documentation.
  */
 export async function getAllComponentDocs(): Promise<ComponentDocRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("component_documents")
-    .select("name, document, updated_at")
-    .eq("collection", "components")
-
-  if (error) throw new Error(error.message)
-  return ((data ?? []) as unknown as ComponentDocument[]).map(docRowFromDocument)
+  return readComponents().map((c) =>
+    docRowFromMeta(c.name, ((c as unknown as { meta?: RegistryMeta }).meta ?? {}) as RegistryMeta)
+  )
 }
 
 // ── Demo queries ────────────────────────────────────────────────────
 
 /**
- * Check if a component has a demo.
+ * Whether a component ships a hand-written demo.
+ *
+ * This is NOT "can it be previewed". `AutoPreview` renders the real component
+ * from disk for everything, so a component without a demo still has a preview —
+ * gating the Preview tab on this flag is what hid it for 525 of 571 components.
  */
 export async function hasDemoFor(name: string): Promise<boolean> {
-  const { data } = await getPublicClient()
-    .from("component_documents")
-    .select("document")
-    .eq("collection", "components")
-    .eq("name", name)
-    .maybeSingle()
-
-  return documentHasDemo(
-    (data as { document?: Record<string, unknown> | null } | null)?.document ?? null
-  )
+  return Boolean(metaOf(name)?.hasDemo)
 }
 
 /**
- * Get all component names that have demos.
+ * Get all component names that ship a hand-written demo.
  */
 export async function getDemoNames(): Promise<string[]> {
-  const { data, error } = await getPublicClient()
-    .from("component_documents")
-    .select("name, document")
-    .eq("collection", "components")
-
-  if (error) throw new Error(error.message)
-  return (
-    (data ?? []) as unknown as Array<{ name: string; document: Record<string, unknown> | null }>
-  )
-    .filter((d) => documentHasDemo(d.document))
-    .map((d) => d.name)
+  return readComponents()
+    .filter((c) => Boolean((c as unknown as { meta?: RegistryMeta }).meta?.hasDemo))
+    .map((c) => c.name)
 }
 
 // ── Enriched queries ────────────────────────────────────────────────
@@ -413,40 +403,18 @@ export interface RegistryCounts {
  * Returns zeros if database is not configured or not seeded.
  */
 export async function getRegistryCounts(): Promise<RegistryCounts> {
-  if (!isSupabaseConfigured()) {
-    return { total: 0, ui: 0, blocks: 0, hooks: 0, lib: 0 }
-  }
-
-  try {
-    const [total, ui, blocks, hooks, lib] = await Promise.all([
-      getPublicClient().from("components").select("*", { count: "exact", head: true }),
-      getPublicClient()
-        .from("components")
-        .select("*", { count: "exact", head: true })
-        .eq("registry_type", "registry:ui"),
-      getPublicClient()
-        .from("components")
-        .select("*", { count: "exact", head: true })
-        .eq("registry_type", "registry:block"),
-      getPublicClient()
-        .from("components")
-        .select("*", { count: "exact", head: true })
-        .eq("registry_type", "registry:hook"),
-      getPublicClient()
-        .from("components")
-        .select("*", { count: "exact", head: true })
-        .eq("registry_type", "registry:lib"),
-    ])
-
-    return {
-      total: total.count ?? 0,
-      ui: ui.count ?? 0,
-      blocks: blocks.count ?? 0,
-      hooks: hooks.count ?? 0,
-      lib: lib.count ?? 0,
-    }
-  } catch {
-    return { total: 0, ui: 0, blocks: 0, hooks: 0, lib: 0 }
+  // Counted from the manifest joined to the files on disk, so the number cannot
+  // disagree with what a consumer can actually install — five COUNT queries
+  // against a view could, and the view predicate hiding 249 components for weeks
+  // is what that looks like in practice.
+  const items = readComponents()
+  const by = (type: string) => items.filter((c) => c.type === type).length
+  return {
+    total: items.length,
+    ui: by("registry:ui"),
+    blocks: by("registry:block"),
+    hooks: by("registry:hook"),
+    lib: by("registry:lib"),
   }
 }
 
@@ -456,38 +424,20 @@ export async function getRegistryCounts(): Promise<RegistryCounts> {
  * Get database status and counts.
  */
 export async function getDatabaseInfo(): Promise<DatabaseInfo> {
-  try {
-    // Docs + demos now live inside each component's JSON document
-    // (component_documents, collection 'components') — the standalone
-    // component_docs / component_demos tables were dropped.
-    const [components, docDocs] = await Promise.all([
-      getPublicClient().from("components").select("*", { count: "exact", head: true }),
-      getPublicClient()
-        .from("component_documents")
-        .select("document", { count: "exact" })
-        .eq("collection", "components"),
-    ])
-
-    const docRows = (docDocs.data ?? []) as unknown as Array<{
-      document: Record<string, unknown> | null
-    }>
-    const demos = docRows.filter((r) => documentHasDemo(r.document)).length
-
-    return {
-      provider: "supabase",
-      components: components.count ?? 0,
-      docs: docDocs.count ?? docRows.length,
-      demos,
-      status: "connected",
-    }
-  } catch {
-    return {
-      provider: "supabase",
-      components: 0,
-      docs: 0,
-      demos: 0,
-      status: "error",
-    }
+  // Components, their docs and their demo flags are all in the repo now, so this
+  // reports the repo — `provider: "registry"`, not `"supabase"`. Reporting the
+  // old provider would be the same drift this migration removed: a status
+  // endpoint naming a store it no longer reads.
+  const items = readComponents()
+  return {
+    provider: "registry",
+    components: items.length,
+    docs: items.filter(
+      (c) => Object.keys((c as unknown as { meta?: RegistryMeta }).meta ?? {}).length > 0
+    ).length,
+    demos: items.filter((c) => Boolean((c as unknown as { meta?: RegistryMeta }).meta?.hasDemo))
+      .length,
+    status: "connected",
   }
 }
 

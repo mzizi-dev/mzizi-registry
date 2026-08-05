@@ -40,7 +40,7 @@ Brief description of what this PR does and why.
 ## Registry / Design System (if applicable)
 
 - [ ] Supabase `components` row upserted (and `component_docs` / `component_versions` as needed)
-- [ ] `pnpm registry:sync` run; resulting `registry.json` committed (CI verifies via `pnpm registry:verify`)
+- [ ] `registry.json` updated by hand (it is authored) and `pnpm registry:normalize` run; CI verifies via `pnpm registry:verify` + `pnpm registry:validate`
 - [ ] API verified: `curl http://localhost:11736/api/v1/ui/<name>` returns source code
 - [ ] MCP tool verified: `get_component({ name })` returns source code
 

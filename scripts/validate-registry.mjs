@@ -160,7 +160,7 @@ function indexDisk() {
 
 function main() {
   if (!existsSync(REGISTRY_JSON)) {
-    console.error("✗ registry.json is missing. Run `pnpm registry:sync`.")
+    console.error("✗ registry.json is missing. It is authored — restore it from git.")
     process.exit(1)
   }
 

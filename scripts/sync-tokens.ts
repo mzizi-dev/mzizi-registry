@@ -32,7 +32,7 @@
  *                        formatting differences never trip the gate)
  *
  * Requires NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY (same as
- * registry:sync). The store is anon-readable via RLS.
+ * tokens:sync). The store is anon-readable via RLS.
  */
 
 import { readFile, writeFile } from "fs/promises"
