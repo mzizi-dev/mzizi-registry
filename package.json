@@ -33,7 +33,10 @@
     "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm build",
     "registry:validate": "node scripts/validate-registry.mjs",
     "doctrine:extract": "tsx scripts/extract-doctrine.ts",
-    "doctrine:verify": "tsx scripts/extract-doctrine.ts --check"
+    "doctrine:verify": "tsx scripts/extract-doctrine.ts --check",
+    "props:extract": "tsx scripts/extract-props.ts",
+    "props:verify": "tsx scripts/extract-props.ts --check",
+    "samples:push": "tsx scripts/push-samples.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -123,6 +126,7 @@
     "jsdom": "^29.1.1",
     "lint-staged": "^17.2.0",
     "markdownlint-cli2": "0.23.2",
+    "mongodb": "^7.5.0",
     "pagefind": "^1.5.2",
     "postcss": "^8.5.23",
     "prettier": "^3.9.6",
