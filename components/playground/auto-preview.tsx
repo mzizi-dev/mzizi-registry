@@ -2,6 +2,7 @@
 
 import { Suspense, lazy, useEffect, useMemo, useState, type ComponentType } from "react"
 import { ErrorBoundary } from "@/components/error-boundary"
+import { resolvePropsFor } from "@/lib/samples/resolve"
 
 /**
  * Renders a registry component directly from its file on disk.
@@ -12,15 +13,24 @@ import { ErrorBoundary } from "@/components/error-boundary"
  * source lives on disk now (docs/component-source-migration.md) rather than in a
  * database column.
  *
- * What this deliberately does NOT do: invent props. It renders the component with
- * none. Anything that needs required props will throw, and throwing is the correct
- * outcome — a preview built from guessed props shows the consumer something that is
- * not the component, which is worse than showing them the source. The boundary
- * catches it and the page falls back to Code.
+ * It renders with SAMPLE DATA, not with invented props, and the distinction is the
+ * whole design. This component used to pass nothing at all, on the stated principle
+ * that a preview built from guessed props shows the consumer something that is not
+ * the component. That principle is intact:
  *
- * A hand-written demo always wins. This is the floor, not a replacement: a real demo
- * shows a component in a composition with realistic content, which auto-rendering
- * cannot do.
+ *   * A GUESS invents a value to satisfy a type — `title: "Title"`, `count: 1`. What
+ *     it renders tells you nothing about whether the component works.
+ *   * SAMPLE DATA is a record of the shape the component was designed to display,
+ *     from a curated set that mirrors the production MongoDB validators field for
+ *     field (lib/samples/types.ts). A place card rendered against a real place
+ *     document is the component doing its actual job.
+ *
+ * `resolvePropsFor` only supplies a value when it can identify the prop confidently,
+ * by declared type first and name second. What it cannot identify it leaves absent,
+ * so the component shows its own empty state rather than a fabricated one.
+ *
+ * A hand-written demo still wins where one exists. This is the floor, not a
+ * replacement: a demo shows a component in a composition, which no resolver can.
  */
 
 /**
@@ -91,17 +101,31 @@ export function AutoPreview({ sourcePath, name }: { sourcePath: string; name: st
     })
   }, [sourcePath, name])
 
+  // Resolved once per component, not per render — the sample set is static, so recomputing
+  // it would allocate a fresh object every render and remount every child that takes it.
+  const resolution = useMemo(() => resolvePropsFor(name), [name])
+
   if (!Component) return null
   if (!mounted) {
     return <div className="text-sm text-muted-foreground">Loading preview…</div>
   }
 
   return (
-    <ErrorBoundary fallback={<PreviewUnavailable />}>
-      <Suspense fallback={<div className="text-sm text-muted-foreground">Loading preview…</div>}>
-        <Component />
-      </Suspense>
-    </ErrorBoundary>
+    <div className="flex flex-col gap-3">
+      <ErrorBoundary fallback={<PreviewUnavailable />}>
+        <Suspense fallback={<div className="text-sm text-muted-foreground">Loading preview…</div>}>
+          <Component {...(resolution.props as Record<string, never>)} />
+        </Suspense>
+      </ErrorBoundary>
+      {resolution.unmatched.length > 0 && (
+        // Stated, not hidden. A preview that silently omits half a component's inputs looks
+        // like a broken component, and the reader has no way to tell the difference.
+        <p className="text-xs text-muted-foreground">
+          Rendered with sample data. No sample resolved for:{" "}
+          <code className="font-mono">{resolution.unmatched.join(", ")}</code>
+        </p>
+      )}
+    </div>
   )
 }
 
