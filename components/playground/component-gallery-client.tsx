@@ -3,7 +3,6 @@
 import { useState } from "react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { COMPONENT_DEMOS } from "./demos"
 
 export interface GalleryItem {
   name: string
@@ -85,7 +84,6 @@ export function ComponentGalleryClient({
       {/* Grid */}
       <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {filtered.map((item) => {
-          const hasDemo = item.name in COMPONENT_DEMOS
           return (
             <Link
               key={item.name}
@@ -95,12 +93,6 @@ export function ComponentGalleryClient({
               <div className="flex items-center justify-between">
                 <span className="font-mono text-sm font-medium text-foreground">{item.name}</span>
                 <div className="flex items-center gap-1.5">
-                  {hasDemo && (
-                    <span
-                      className="size-1.5 rounded-full bg-[var(--color-malachite)]"
-                      title="Has live preview"
-                    />
-                  )}
                   <span
                     className={cn(
                       "rounded-md px-1.5 py-0.5 text-[10px] font-medium",
