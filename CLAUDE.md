@@ -141,8 +141,8 @@ pnpm lint:fix         # ESLint with --fix
 pnpm typecheck        # TypeScript type checking (tsc --noEmit)
 pnpm test             # Run Vitest test suite once
 pnpm test:watch       # Vitest in watch mode
-pnpm registry:sync    # Regenerate registry.json from Supabase (571 items)
-pnpm registry:verify  # Non-mutating check — fails CI if registry.json drifts from Supabase
+pnpm registry:normalize # Rewrite registry.json in canonical form (571 items)
+pnpm registry:verify  # Non-mutating check — fails CI if registry.json is not canonical
 pnpm tokens:sync      # Regenerate every N1 token artifact from the DB (§8.4.1)
 pnpm tokens:verify    # Non-mutating check — fails CI if any token artifact drifted
 pnpm registry:validate # Offline gate — every registry item resolves on disk and installs
@@ -157,9 +157,22 @@ pnpm audit:check      # pnpm audit --audit-level=moderate --ignore-registry-erro
 longer holds anything. Source moves in one direction now, and that direction is "it is
 already in git". See `docs/component-source-migration.md`.
 
-`sync-registry.ts` takes one flag, `--check` (same as `pnpm registry:verify`). It writes
-`registry.json` and nothing else — the `--ui-only` / `--json-only` pair documented here
-before referred to a `components/ui/*` write path the script no longer has.
+**`pnpm registry:sync` is gone, and its direction is reversed.** `scripts/sync-registry.ts`
+REGENERATED `registry.json` from the Supabase `components` view. Running it today would
+delete the manifest's authored `meta` block — use cases, variants, sizes, features, a11y
+notes, owner, collection — because no database row holds any of that any more. A generator
+whose source has less information than its output does not regenerate, it truncates.
+
+`scripts/normalize-registry.ts` replaces it and only canonicalises FORM: keys sorted, items
+sorted by name, two-space indent, one trailing newline, so a diff shows what changed rather
+than a reordering. `--check` (= `pnpm registry:verify`) fails when the committed file is not
+canonical. It reads no database and needs no credentials.
+
+Whether the manifest is CORRECT is a different question, asked by `pnpm registry:validate`
+(`scripts/validate-registry.mjs`): every item resolves to a file on disk, every
+`registryDependencies` entry is addressable by the shadcn CLI, every declared npm dependency
+is installed here. Two scripts because they answer two questions — one asks "is the file
+tidy", the other asks "does it work".
 
 ---
 
@@ -332,26 +345,32 @@ Supabase (source of truth)
      │     ├──► Server components (architecture / brand / changelog / observability pages)
      │     └──► /observability dashboard (live charts from usage_events + fundi_issues + chaos_events)
      │
-     ├── app/mcp/route.ts (document-route MCP)
-     │     └──► createMziziMcpServer(supabase) — reads `component_documents` only
-     │
-     ├── pnpm registry:sync ──► registry.json          (committed snapshot, 571 items)
-     │                          (CI runs `pnpm registry:verify` to fail on drift)
-     │
      ├── pnpm tokens:sync ────► lib/tokens/palette.generated.ts, the globals.css
      │                          palette block, and the six N1 platform token files
      │                          (CI runs `pnpm tokens:verify` to fail on drift)
      │
      └── lib/db/client.ts (browser localStorage cache, fetched from /api/v1/ui)
 
-git (source of truth for component SOURCE)
+git (source of truth for THE COMPONENT REGISTRY, end to end)
      │
-     └── components/registry/n<N>-<label>/<name>.<ext>  — 571 files, read by
-         lib/registry-source.ts and served through /api/v1/ui/{name}, the MCP,
-         /source/[name], /components/[name] and /playground/[name]
+     ├── registry.json                                  — the authored manifest, 571 items:
+     │                                                     install contract + `meta`
+     │                                                     (use cases, variants, sizes,
+     │                                                      features, a11y, owner,
+     │                                                      collection, hasDemo)
+     │
+     └── components/registry/n<N>-<label>/<name>.<ext>  — 571 files, the components
+         │
+         └──► lib/registry.ts joins the two and is read by
+              /api/v1/ui/{name}, app/mcp/route.ts, /source/[name],
+              /components/[name] and /playground/[name]
 ```
 
-**`registry.json`** must exist in the repo root, but it is **never hand-edited**. It is regenerated dynamically from Supabase by `pnpm registry:sync` whenever a component is added, modified, or removed in the database. The file is committed so that diffs are visible in PRs and CI can detect drift via `pnpm registry:verify`.
+**`registry.json` is AUTHORED, not generated.** It used to be a snapshot regenerated from
+Supabase; it now carries the only copy of each component's documented contract, so editing a
+description or a use case is a pull request against this file. `pnpm registry:normalize`
+canonicalises its formatting and `pnpm registry:verify` fails CI when it is not canonical;
+`pnpm registry:validate` is the gate that checks it actually installs.
 
 **Required env vars:**
 
@@ -701,16 +720,17 @@ history, changelog and docs. Only the bytes moved.
 
 1. Write the file under `components/registry/n<N>-<label>/`, following the CVA + Radix +
    `cn()` pattern (see `button.tsx`)
-2. Insert the metadata row into `component_documents` under the right collection — with
-   `files[].path` (where the shadcn CLI places it in a **consumer's** project, which is
-   free to differ from where it lives here), node, category, dependencies, `status`
-3. Leave `kind` null. A non-null `kind` marks a row as something other than a component
-   (`doc_page`, `overview`, …) and the `components` view filters those out — that is what
-   keeps 20 retired documentation pages from being served as installable components
+2. Add its item to `registry.json` — `name`, `type`, `description`, `dependencies`,
+   `registryDependencies`, and `files[].path` (where the shadcn CLI places it in a
+   **consumer's** project, which is free to differ from where it lives here)
+3. Add its `meta` block in the same item — `useCases`, `variants`, `sizes`, `features`,
+   `a11y`, `owner`, `collection`. This is the component's documented contract and the
+   manifest is its only home; there is no database row to put it in
 4. `pnpm typecheck && pnpm lint && pnpm test` — the whole point of the file being on disk
-5. Run `pnpm registry:sync` to regenerate `registry.json`
+5. `pnpm registry:normalize` to canonicalise the manifest, then `pnpm registry:validate`
+   to prove the item resolves on disk and its dependencies are addressable
 6. Verify the API serves it: `curl http://localhost:11736/api/v1/ui/<component-name>`
-7. Commit both — CI runs `pnpm registry:verify` to fail if the snapshot drifts
+7. Commit both — CI runs `registry:verify` + `registry:validate`
 
 ### 8.4 Modifying Existing Components
 
@@ -719,9 +739,11 @@ history, changelog and docs. Only the bytes moved.
 - Preserve the existing CVA variant pattern — add variants, don't restructure
 - Keep Radix UI accessibility primitives intact
 - Don't break the shadcn registry schema — `https://ui.shadcn.com/schema/registry.json`
-- Bump the document's `currentVersion` and append to `component_versions` so the changelog
-  API reflects the change
-- Re-run `pnpm registry:sync` and commit the updated snapshot
+- Update the item's `meta` in `registry.json` when the change alters the contract — a new
+  variant that no `meta.variants` entry names is a component whose documentation is already
+  wrong
+- Append to `component_versions` so the changelog API reflects the change
+- Re-run `pnpm registry:normalize` and `pnpm registry:validate`, and commit the manifest
 
 ### 8.4.1 N1 token artifacts are generated — never hand-written
 
@@ -772,7 +794,7 @@ The portal dogfoods its own registry. The transitive closure of the brand compon
 
 **Two divergences between the registry's declared paths and the portal's reality**:
 
-1. **`components/mukoko/*` paths, `nyuchi-*` item names.** The registry is mid-rename; vendored files keep the `components/mukoko/*` path so that `pnpm registry:sync` sees them as unchanged. When the registry itself completes the rename to `components/nyuchi/*`, run `pnpm registry:sync` + rename locally in a single commit.
+1. **`components/mukoko/*` paths, `nyuchi-*` item names.** The registry is mid-rename; vendored files keep the `components/mukoko/*` path. When the registry itself completes the rename to `components/nyuchi/*`, update the `files[].path` entries in `registry.json` + rename locally in a single commit.
 2. **Brand component imports use `@/components/brand/*` paths** that don't exist in this repo. The portal keeps `nyuchi-logo.tsx` and `mineral-strip.tsx` under `@/components/layout/` instead. Vendored files are patched on install to target the portal's real paths.
 
 **Footer composition note.** `components/landing/footer.tsx` is deliberately NOT a one-line wrapper over `NyuchiFooter`. The portal footer has four portal-specific features: (1) the ecosystem brand grid, (2) a socials row, (3) an inline `ThemeToggle`, (4) a version line.
@@ -1157,7 +1179,7 @@ Three workflows in `.github/workflows/`:
 | **Type check (project)**   | `pnpm typecheck`                                                     | TypeScript error                                            |
 | **Security audit**         | `pnpm audit --audit-level=moderate --ignore-registry-errors`         | Unresolved vulnerability — update deps or add pnpm override |
 
-CI additionally runs `pnpm test`, `pnpm build`, and `pnpm registry:verify`.
+CI additionally runs `pnpm test`, `pnpm build`, `pnpm registry:verify`, and `pnpm registry:validate`.
 
 ### Deployment
 
@@ -1179,7 +1201,7 @@ When working on this codebase as an AI assistant:
 
    The test is _who edits it_. A JSON column is invisible to tsc, eslint, prettier and a reviewer, so anything a person writes and another person should check belongs in a file where the toolchain and a diff can see it. Anything generated by a script, bumped by a release, or appended by telemetry belongs in the database. See §8.3 and `docs/component-source-migration.md`.
 
-2. **`registry.json` is generated, not authored.** Never hand-edit it. CI runs `pnpm registry:verify` to catch drift.
+2. **`registry.json` is AUTHORED, not generated** — this reverses the old rule. It holds the only copy of each component's documented contract (`meta`: use cases, variants, sizes, features, a11y, owner, collection), so editing it IS the workflow. `pnpm registry:normalize` canonicalises its formatting; `pnpm registry:validate` proves every item still installs.
 3. **Never break the shadcn registry schema** — downstream apps depend on it.
 4. **Use the Seven African Minerals palette** (plus heritage / status / experimental sets — §7) — never introduce colors outside the token system.
 5. **Follow the CVA + Radix + cn() pattern** — every component uses this stack.
