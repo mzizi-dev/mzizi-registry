@@ -1,0 +1,64 @@
+---
+_bodyField: "content"
+_schemaVersion: "v1"
+currentVersion: 1
+dnaRole: "documentation"
+doctrineVersion: "4.2.0"
+kind: "overview"
+lastDoctrineChangeAt: "2026-06-29T20:00:25.534193+00:00"
+model: "mzizi-dna-helix"
+owner: "bundu"
+slug: "dna-helix-overview"
+status: "active"
+strand: "transcription"
+title: "The Mzizi DNA Helix — Application Architecture Model"
+---
+
+# The Mzizi DNA Helix — Application Architecture Model
+
+The Mzizi DNA Helix is the canonical model for the **application architecture** — how UI and app components are built, composed, classified, and shipped. It superseded the earlier "flat stack" and "3D axes" framings: **there are no axes and no outliers.** (For how application and data architecture relate, see `/documentation/architecture-overview`.)
+
+Mzizi is one **double helix** — two complementary backbones, an **engineering** strand and a **meaning** strand, twisted together and held by **rungs** (base pairs). Every component carries two coordinates, both stamped on its row in `component_documents`:
+
+- a **`type`** — `node` (a functional unit sitting on a strand), `strand` (a backbone grouping), or `rung` (a cross-cutting base pair bridging both backbones).
+- a **`strand`** — which functional strand a node belongs to (rungs bridge all, so they carry none).
+
+## The nodes
+
+Eleven ecosystem nodes carry **non-sequential identifiers N1–N11** — labels, not a dependency order (N11 is simply the next id; it does not sit "on top of" N10). N1–N8 are nodes on strands; N9–N11 are rungs. Per-node doctrine is in `documentation-architecture-nodes/*`; the decision tree is `/documentation/node-decision-guide`. Never hardcode counts — use `get_node_counts()`.
+
+## The strands
+
+Six functional strands, grouped onto the two backbones (`documentation-architecture-strands/*`):
+
+| Strand | Backbone | What it is | Owner |
+| -- | -- | -- | -- |
+| `core-guarantee` | engineering | The fixed contract — accessibility, data, resilience, observability, safety, primitives | nyuchi |
+| `shipped` | engineering | Nyuchi-authored, in the box — brand, pages, shell | nyuchi |
+| `swappable` | engineering | The fork seams — styling/tokens, icon library, framework | nyuchi |
+| `spine` | engineering | The harness — the pre-wiring backbone that binds components to their conventions | nyuchi |
+| `genetic-code` | meaning | Ubuntu principles + Bundu conventions — the sequence everything is read from | bundu |
+| `transcription` | meaning | Doctrine stored as queryable documents in `component_documents`, served by the MCP | nyuchi |
+
+## The rungs
+
+Rungs are cross-cutting base pairs — bound to no single strand because they bridge both backbones and run the length of the helix:
+
+- **N9 fundi** — self-healing; reads observability and repairs.
+- **N10 documentation** — the written, transcribed record.
+- **N11 discovery** — SEO/AIO: preview images, structured data, llms.txt, agent-readiness ("if the machine can't see it, it doesn't exist").
+
+## Why a helix, not a stack or a cube
+
+A flat stack re-answers "which layer?" for every capability and implies a consume-downward order the system does not obey. A 3D cube of axes forced an arbitrary "which axis?" and needed an "outlier" bucket — a confession the model did not fit. The helix keeps stable, additive coordinates: a component joins a strand, or it is a rung. Nothing is renumbered, no dimension is redefined, no outlier bucket exists. New collections become queryable the moment rows land in `component_documents`.
+
+## Where the helix is stored
+
+There is no separate "architecture" table. The helix *is* the `component_documents` store: each row's `node`, `collection`, `type`, and `strand` place it on both readings. `public.components` is a read-only projection into the older flat shape; author against `component_documents` directly (see the `scaffold-component` skill).
+
+## Related
+
+- `/documentation/architecture-overview` — application vs data architecture, and the seam
+- `/documentation/node-decision-guide` — choosing a node/strand/rung for a new component
+- `documentation-architecture-strands/*` — the six strand covenants
+- `documentation-architecture-nodes/*` — per-node covenants and rules

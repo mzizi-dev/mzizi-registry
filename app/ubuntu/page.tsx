@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic"
 export const revalidate = 3600
 
 export const metadata = {
-  title: "Ubuntu — mzizi design portal",
+  title: "Ubuntu",
   description:
     "The Ubuntu doctrine of the Mukoko platform: Five Pillars (where Ubuntu is situated), Five Principles (how Ubuntu is embodied), and the Five Questions (the product decision filter). African scholarship, sovereign derivation.",
 }

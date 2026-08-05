@@ -1,0 +1,81 @@
+---
+_bodyField: "content"
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "architecture"
+createdAt: "2026-04-14T04:32:49.164756+00:00"
+currentVersion: 2
+description: "Decision guide for which node a new component belongs in."
+dnaRole: "documentation"
+doctrineVersion: "4.1.5"
+keywords:
+- "decision-guide"
+- "nodes"
+- "rules"
+- "css"
+- "icons"
+- "versioning"
+kind: "doc_page"
+lastDoctrineChangeAt: "2026-05-28T22:01:31.269265+00:00"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+note: "Describes the pre-4.1.0 model. Rewrite to DNA helix pending."
+owner: "nyuchi"
+relatedNodes:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+- 10
+slug: "layer-decision-guide"
+sortOrder: 11
+status: "published"
+strand: "transcription"
+subcategory: "guide"
+superseded: true
+supersededBy: "mzizi-dna-helix"
+supersededInVersion: "4.1.0"
+title: "What Belongs Where — Node Decision Guide"
+updatedAt: "2026-04-24T10:58:41.615738+00:00"
+version: "4.0.34"
+---
+
+# Superseded — Layer Decision Guide
+
+> **Status:** superseded in version 4.1.0 by the **Mzizi DNA Helix** model. Reference to `brand_*` tables (now in the `legacy` schema) is stale.
+
+This guide answered "which node does this component belong in" by walking a decision tree against `N1`–`N10` numbered nodes and the `brand_*` token tables. The DNA helix replaces the decision space with named collections; the `brand_*` tables are deprecated and live in the `legacy` schema (4.1.3) pending removal.
+
+## The new decision space
+
+Pick a collection by what the artifact *is*, not what number node it sits in:
+
+| If the artifact is… | Collection |
+| -- | -- |
+| A CSS value, color, token, spacing, layout breakpoint | `styling-*` (one of the styling-prefixed collections) |
+| A generic UI element with no brand assumptions | `primitives` |
+| A brand-styled UI element | `brand` |
+| A safety guarantee (input bounds, type guards) | `safety` |
+| A resilience pattern (retry, circuit-break, fallback) | `resilience` |
+| An accessibility helper (a11y or locale) | `accessibility` |
+| A data-fetch helper | `data` |
+| An observability domain or event-stream definition | `observability` / `observability-domains` |
+| A self-healing recipe | `fundi` |
+| A page composition | `pages` |
+| An app shell | `shell` |
+| Doctrine, principles, architecture docs | `documentation*` |
+| Ubuntu pillar/principle, bundu convention | `genetic-code-*` |
+
+## DNA-role classification (per-doc)
+
+Every document carries a `dnaRole` field — `core`, `shipped`, `swappable`, `genetic-code`, `machinery`, or `documentation`. See `changelog/4.1.0` for the model definition.
+
+## Historical reference
+
+Use `read_versions('documentation', 'layer-decision-guide')` to retrieve the previous decision tree.

@@ -82,6 +82,22 @@
   --radius-2xl: calc(var(--radius-unit) + 10px);
   --radius-3xl: 9999px;
   --radius-4xl: 9999px;
+  /* Media aspect — the detail-page hero and every media surface read this
+     instead of hardcoding a ratio. N1's covenant is that design decisions are
+     data, and a ratio is a design decision: before this token every card chose
+     its own (article/listing 16:9, offer square, place custom, cover-wash
+     nothing at all), so "the main image" meant a different shape on every
+     surface. Tailwind 4 generates `aspect-media` / `aspect-media-wide` /
+     `aspect-media-portrait` from the `--aspect-*` namespace.
+
+     SQUARE IS THE DEFAULT, and `aspect-media` is what a detail page uses.
+     `--aspect-media-wide` is not a free choice — it is for media that is
+     INTRINSICALLY 16:9 (a video frame), where forcing square would letterbox
+     or crop the content itself. Reaching for it to make a layout look better
+     is how the drift started. */
+  --aspect-media: 1 / 1;
+  --aspect-media-wide: 16 / 9;
+  --aspect-media-portrait: 4 / 5;
   /* Seven Minerals + Seven Heritage — theme-adaptive, sourced from the DB
      (collections styling-minerals / styling-heritage-colors). Each mineral
      also exposes -container / -on-container surface utilities.

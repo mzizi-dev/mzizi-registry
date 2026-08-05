@@ -16,7 +16,7 @@ import { NodeBadgeList } from "@/components/ui/node-badge"
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: "Changelog — Mzizi",
+  title: "Changelog",
   description:
     "Release notes for the Mzizi component registry — each entry tagged with the nodes and rungs of the DNA double helix it touched.",
 }

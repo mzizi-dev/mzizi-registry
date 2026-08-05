@@ -1,0 +1,106 @@
+---
+_bodyField: "content"
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "getting-started"
+createdAt: "2026-04-14T04:32:02.311034+00:00"
+currentVersion: 2
+description: "Introduction to the Nyuchi Design System — the foundation of Mukoko and Nyuchi Africa products."
+dnaRole: "documentation"
+doctrineVersion: "4.1.7"
+keywords:
+- "nyuchi"
+- "design-system"
+- "introduction"
+- "mukoko"
+- "africa"
+- "ubuntu"
+kind: "doc_page"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+owner: "nyuchi"
+relatedNodes:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+- 10
+slug: "introduction"
+sortOrder: 1
+status: "published"
+strand: "transcription"
+subcategory: "overview"
+title: "Introduction to the Nyuchi Design System"
+updatedAt: "2026-04-24T10:59:05.115107+00:00"
+version: "4.0.34"
+---
+
+# Nyuchi Design System
+
+The Nyuchi Design System is the foundation of everything built by Nyuchi Africa. It powers Mukoko (Africa's super app), the Nyuchi Web Services developer platform, and every product in the ecosystem.
+
+## Philosophy
+
+Built on Ubuntu — "I am because we are." Every component, every token, every decision is made with the community in mind. The system is open source and designed for anyone to use, extend, and contribute to.
+
+## The Seven African Minerals
+
+Our color palette is seven minerals dug from African earth. Each carries a one-word ROLE — the role is a contract, not a mood — and the seven split into two families (deep-earth and hand). Full doctrine: `genetic-code-conventions/seven-minerals`.
+
+Deep-earth family (cool, luminous):
+- **Cobalt** — Knowledge. Katanga Copperbelt, DRC & Zambia.
+- **Sodalite** — Intelligence. Kunene River, Namibia & South Africa.
+- **Tanzanite** — Identity. Merelani Hills, Tanzania.
+- **Malachite** — Growth. Congo Copper Belt.
+
+Hand family (warm, grounded):
+- **Gold** — Value. Ghana, South Africa, Mali, Zimbabwe.
+- **Copper** — Stewardship. Central African Copperbelt, Zambia & DRC.
+- **Terracotta** — Community. Pan-African Sahel.
+
+For canonical hex values, container colours, role, and family, query the `styling-minerals` collection — the database is the source of truth and stays current as we refine the palette.
+
+## Architecture
+
+The system uses a 3D architecture model:
+
+- **Horizontal axis:** What users see — Primitives → Brand → Pages → Shell
+- **Vertical axis:** What flows through — Tokens, Safety, Resilience
+- **Depth axis:** What observes — Assurance (N8: a11y audit, RTL conformity, probes, alerts)
+- **Outlier actors:** Fundi (N9) — the self-healing engine
+- **N10:** This documentation node
+
+See the 3D Architecture page for the full conceptual model.
+
+## What's in the database
+
+Everything that defines the design system lives in Supabase, not in scattered config files:
+
+- **Components** — every UI component, with its production TypeScript source code in `components.source_code`. The frontend repo pulls from the DB at build.
+- **Design tokens** — 18 brand_* tables covering minerals, semantic colours, spacing, typography, radius, shadow, motion, breakpoints, z-index, icon sizes, touch targets, density, component specs, and accessibility validation.
+- **Documentation** — this page and others in `documentation_pages`.
+- **AI instructions** — prompts for Claude, Cursor, Copilot, and the MCP server in `ai_instructions`.
+- **Changelog** — every release in `changelog`.
+
+To see the live system shape, run:
+
+```sql
+SELECT * FROM get_system_counts();
+SELECT * FROM get_token_counts();
+SELECT * FROM get_node_counts();
+```
+
+## Quick Start
+
+```bash
+npx @nyuchi/design-cli@latest init
+npx @nyuchi/design-cli@latest add button card dialog
+```
+
+Visit [mzizi.dev](https://mzizi.dev) for the full component library.

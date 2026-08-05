@@ -31,7 +31,9 @@
     "lint:yaml": "yamllint .",
     "lint:json": "node -e \"const{execSync}=require('child_process');const fs=require('fs');const files=execSync(\\\"git ls-files '*.json' ':!pnpm-lock.yaml'\\\").toString().trim().split('\\n').filter(Boolean);let fail=0;for(const f of files){try{JSON.parse(fs.readFileSync(f,'utf8'))}catch(e){console.error('INVALID JSON:',f,e.message);fail=1}}process.exit(fail)\"",
     "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm build",
-    "registry:validate": "node scripts/validate-registry.mjs"
+    "registry:validate": "node scripts/validate-registry.mjs",
+    "doctrine:extract": "tsx scripts/extract-doctrine.ts",
+    "doctrine:verify": "tsx scripts/extract-doctrine.ts --check"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -145,7 +147,7 @@
   "pnpm": {
     "overrides": {
       "qs": "^6.15.2",
-      "hono": "^4.12.25",
+      "hono": "^4.12.34",
       "@hono/node-server": "^2.0.5",
       "express-rate-limit": "^8.3.2",
       "flatted": "^3.4.2",
@@ -161,16 +163,16 @@
       "lodash-es": "^4.18.1",
       "micromatch>picomatch": "^2.3.2",
       "tinyglobby>picomatch": "^4.0.4",
-      "minimatch>brace-expansion": "^5.0.7",
+      "minimatch>brace-expansion": "^5.0.9",
       "postcss": "^8.5.18",
       "dompurify": "^3.4.0",
       "sanitize-html": "^2.17.4",
       "js-yaml": "^4.2.0",
       "markdown-it": "^14.2.0",
-      "fast-uri": "^3.1.4",
+      "fast-uri": "^3.1.5",
       "ip-address": "^10.1.1",
       "ws": "^8.20.1",
-      "brace-expansion": "^5.0.7",
+      "brace-expansion": "^5.0.9",
       "sharp": "^0.35.0"
     }
   }

@@ -1,0 +1,124 @@
+---
+_bodyField: "content"
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "ai-instructions"
+createdAt: "2026-04-28T16:55:26.349194+00:00"
+currentVersion: 2
+description: "How AI agents (Claude, Cursor, Copilot, Windsurf) are wired into the design system: the ai_instructions table, the skills table, the MCP server, and the doctrine every agent must hold."
+dnaRole: "documentation"
+doctrineVersion: "4.1.7"
+keywords:
+- "ai"
+- "agents"
+- "claude"
+- "cursor"
+- "copilot"
+- "windsurf"
+- "mcp"
+- "skills"
+- "instructions"
+- "doctrine"
+kind: "doc_page"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+owner: "nyuchi"
+relatedNodes:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+- 10
+slug: "ai-agent-instructions"
+sortOrder: 60
+status: "published"
+strand: "transcription"
+subcategory: "overview"
+title: "AI Agent Instructions — How AI Builds With This System"
+updatedAt: "2026-04-28T16:55:26.349194+00:00"
+version: "4.0.34"
+---
+
+# AI Agent Instructions — How AI Builds With This System
+
+The Nyuchi Design System is designed to be built *with* AI agents — Claude, Cursor, GitHub Copilot, Windsurf, and others — not just by humans alone. This page explains how AI agents are wired into the system, where their instructions live, and what guardrails are in place.
+
+## Where AI instructions live
+
+Three places, in order of authority:
+
+1. **`public.ai_instructions` table** — the canonical doctrine. Each row targets a specific AI surface (`mcp-server`, `claude-system-prompt`, `github-copilot`, `cursor`, `windsurf`, `generic`). The `instruction_text` field is what the agent reads.
+2. **`public.skills` table** — distributable MDX skill packs. Each skill is a self-contained instruction module that ships via the skills CLI (`npx skills add nyuchi/design-agent-skills`), the Claude Code plugin marketplace, or `/api/v1/skills`. The `body_mdx` field is served raw to the agent's skill loader.
+3. **The MCP server** — `mcp.mzizi.dev/mcp` exposes the live database (components, nodes, tokens, brand, Ubuntu) as MCP tools. Agents that connect to the MCP get authoritative answers without copying any of the doctrine into their own context.
+
+The ordering matters. Database content beats MDX content beats anything an agent thinks it remembers.
+
+## The doctrine an AI must hold
+
+Whatever agent is writing code against this system must know:
+
+- **Ubuntu** is the substrate. Every decision passes the Five Questions. See `/brand/ubuntu-pillars-and-principles`.
+- **Nodes are not suggestions.** A component belongs to exactly one of the ten nodes, and the node determines what it can do. See `/architecture/architecture-overview`.
+- **No hardcoded numbers.** Counts come from `get_*_counts()` functions or live queries. The number of nodes, components, mini-apps, principles is data, not a constant.
+- **No hardcoded labels.** Axis names, node titles, principle names live in tables. The agent reads them, never invents them.
+- **CSS values live only in N1.** All other nodes consume via `var(--token-name)`. An agent that writes hex codes outside N1 has broken the doctrine.
+
+## What the MCP tools do
+
+Agents connected to `mcp.mzizi.dev/mcp` have direct access to live tools. The most important ones:
+
+- `get_component` — metadata for a named component (source is served via the registry/API)
+- `get_node_documents` — fetch documents for any node/collection (components, primitives, brand, pages, shell, styling-*, docs); the generic resolver
+- `list_components` — filter by node, status, platform, mini-app
+- `get_brand_tokens` / `list_brand_token_categories` — design tokens by category
+- `list_ecosystem_brands` — ecosystem brands with their primary mineral resolved against the palette
+- `get_architecture` / `get_axes_summary` — the 3D node model (four axes, ten nodes, covenants, rules)
+- `get_node_counts` / `get_system_counts` / `get_token_counts` — live counts; never hardcode
+- `get_ubuntu_pillars` / `get_ubuntu_principles` / `get_ubuntu_doctrine` — Ubuntu doctrine (separate tools; no aspect parameter)
+- `calculate_contrast_ratio` / `get_accessibility_summary` — accessibility validation
+- `get_skill` / `list_skills` — published agent skills (component scaffolding guidance lives in a skill, not a tool)
+- `mcp_describe` — self-describing list of every live tool with stability and TTL
+
+When an agent calls these tools, it gets the truth as of right now. When it relies on its training data, it gets snapshots that may be wrong.
+
+## Skill distribution
+
+The `public.skills` table is the source of truth for `.claude/skills/` content across every Mukoko ecosystem app. Each skill is hand-written, not generated. The `requires_mcp` flag tells Claude Code whether to recommend connecting to the MCP server when the skill is loaded.
+
+Developers install skills with the skills CLI, which writes the MDX body to `./.claude/skills/{name}.md` in the target project. From there, Claude Code surfaces the skill as part of its working context.
+
+## What AI agents must NOT do
+
+These are doctrinal violations that should be caught in PR review:
+
+- Inventing a sixth pillar or sixth principle. Five is the locked count.
+- Adding "restorative justice" to the principles. Explicitly excluded as non-African.
+- Hardcoding the number of nodes, axes, components, or mini-apps in code or copy.
+- Translating Shona terms out of the database. The Shona carries meaning the English cannot.
+- Reading Ubuntu pillars/principles from `styling-meta`/`styling-meta` — the canonical source is the `genetic-code-ubuntu-pillars` and `genetic-code-ubuntu-principles` collections (or the `get_ubuntu_pillars` / `get_ubuntu_principles` tools).
+- Auto-merging Fundi healing actions without human review. N9 is autonomous in detection but not in resolution.
+- Writing PII to `observability_events.metadata`. The CHECK constraint will reject it; the agent should never try.
+
+## How to ask the system for help
+
+An AI agent unsure about doctrine should:
+
+1. Query the relevant table (`SELECT … FROM ubuntu_pillars`)
+2. Call the relevant MCP tool (`get_ubuntu_principles`)
+3. Read the relevant documentation page (`SELECT content FROM documentation_pages WHERE slug = 'ubuntu-pillars-and-principles'`)
+4. Only then reason from training-data priors
+
+The order is enforced by humility, not code. An agent that follows this order gets the right answer; an agent that skips it produces drift.
+
+## Related
+
+- `/api-reference` — REST and MCP endpoint reference
+- `/architecture/architecture-overview` — Node rules every agent must respect
+- `/brand/ubuntu-pillars-and-principles` — The doctrinal substrate
+- `/contributor/contributing` — Human + AI workflow for adding components

@@ -4,7 +4,7 @@ import { minerals, heritageColors, type MineralToken, type HeritageToken } from 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: "Colour tokens — mzizi.dev",
+  title: "Colour tokens",
   description:
     "The seven minerals and seven heritage tones — the Mzizi colour system, grouped by family, every value sourced live from the design database.",
 }

@@ -1,0 +1,78 @@
+---
+_bodyField: "content"
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "architecture"
+createdAt: "2026-04-28T16:55:26.349194+00:00"
+currentVersion: 2
+description: "The 3D frontend architecture: four axes (horizontal composition, vertical infrastructure, depth observation, outlier actors), ten nodes, table-backed doctrine. Companion to /architecture/3d-architecture."
+dnaRole: "documentation"
+doctrineVersion: "4.1.5"
+keywords:
+- "architecture"
+- "frontend"
+- "3d"
+- "axes"
+- "nodes"
+- "horizontal"
+- "vertical"
+- "depth"
+- "outlier"
+- "documentation"
+- "doctrine"
+kind: "doc_page"
+lastDoctrineChangeAt: "2026-05-28T22:01:31.269265+00:00"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+note: "Describes the pre-4.1.0 model. Rewrite to DNA helix pending."
+owner: "nyuchi"
+relatedNodes:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+- 10
+slug: "frontend-architecture"
+sortOrder: 15
+status: "published"
+strand: "transcription"
+subcategory: "frontend"
+superseded: true
+supersededBy: "mzizi-dna-helix"
+supersededInVersion: "4.1.0"
+title: "Frontend Architecture — Four Axes, Ten Nodes"
+updatedAt: "2026-04-28T16:55:26.349194+00:00"
+version: "4.0.34"
+---
+
+# Superseded — Frontend Architecture (Four Axes, Ten Nodes)
+
+> **Status:** superseded in version 4.1.0 by the **Mzizi DNA Helix** model.
+
+This page described the system as four axes containing ten nodes, with doctrine stored in `public.architecture_frontend_axes` and `public.architecture_frontend_layers`. Both have moved to the `legacy` schema (4.1.3) and are scheduled for removal after the full cutover.
+
+## What replaced this
+
+| Old | New |
+| -- | -- |
+| `public.architecture_frontend_axes` | doctrine documents in `documentation-architecture-axes` (4 axis docs flagged superseded; the strand model is the active doctrine) |
+| `public.architecture_frontend_layers` | doctrine documents in `documentation-architecture-nodes` (node catalogue) |
+| `get_layer_counts()` | `get_system_counts()` (live counts from `component_documents`, no hardcoded numbers) |
+| Numbered nodes (N1–N10) | Named collections (`styling`, `primitives`, `accessibility`, `resilience`, `observability`, `fundi`, `brand`, `pages`, `shell`, `documentation`) |
+| Layer 3D framing | Mzizi DNA Helix model (core / shipped / swappable / genetic-code / machinery / documentation) |
+
+## Where to look now
+
+- The locked DNA helix model: `changelog/4.1.0`
+- Per-node descriptive doctrine: `documentation-architecture-nodes/*`
+- Node naming and ownership chain: see `genetic-code-conventions/ownership-convention`
+
+## Historical reference
+
+Use `read_versions('documentation', 'frontend-architecture')` to retrieve the previous prose.

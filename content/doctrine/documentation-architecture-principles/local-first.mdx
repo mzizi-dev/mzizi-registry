@@ -1,0 +1,19 @@
+---
+_bodyField: "rationale"
+_schemaVersion: "v1"
+currentVersion: 1
+description: "The device is the primary source of truth. The cloud is a synchronisation and backup layer, not a dependency."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+implementation: "RxDB with SQLite (native) or IndexedDB (browser) as the local database. Reads and writes happen locally without network round-trips. CouchDB and Supabase sync when connectivity exists."
+kind: "architecture"
+model: "mzizi-dna-helix"
+name: "local-first"
+node: 0
+owner: "nyuchi"
+sort_order: 1
+strand: "transcription"
+title: "Local-First"
+---
+
+Mukoko must work fully — browsing, payments, community content, weather data — in a village with no connectivity, on a phone with 2G, or in a city with intermittent wifi. The infrastructure must match the reality of African users' lives.

@@ -1,0 +1,35 @@
+---
+_schemaVersion: "v1"
+covenant: "Failure is a learning event, not a user-facing incident."
+currentVersion: 2
+description: "The self-healing rung — a cross-cutting base pair that bridges both backbones. A Cloudflare Worker at fundi.nyuchi.dev, TypeScript today (fundi-tester in nyuchi/mzizi-tools: a FundiAgent durable object, a */5 cron and the fundi-signals queue); a workers-rs Rust/WASM Worker is the target. NOT a Supabase Edge Function — fundi runs independently of the database vendor on Cloudflare's global edge. Triggered by Cron Triggers and Cloudflare Queues pushed by N8 signals. Reads observability_events and fundi_issues from Supabase via REST API, classifies failure severity, deduplicates against open GitHub issues, and creates structured issues with fundi:node/{n} labels for human review. Never auto-merges fixes. Logs every healing action append-only."
+dnaRole: "documentation"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "The fundi worker route POST /webhook ingests and deduplicates incoming failures, authenticated by an X-Hub-Signature-256 HMAC over the raw body. It replaced the fundi-webhook Supabase edge function, which had no signature check."
+- "Cron-driven heal pass promotes fingerprinted failures into labelled GitHub issues."
+- "Append-only audit trail in fundi_healing_log, surfaced by get_healing_log; fundi_issues holds the issues themselves."
+- "On by default for nyuchi / mukoko; opt-in for external consumers."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 0
+node_number: 9
+owner: "nyuchi"
+role: "N9 — the self-healing rung: consumes N8 assurance signals and remediates the root cause"
+rust:
+  kind: "edge-worker"
+  note: "A Rust IMPLEMENTATION, and the one where the language genuinely does not change the contract. Whatever it is written in, fundi reads signals over REST, classifies, deduplicates, files a labelled issue for human review, and NEVER auto-merges. If a port ever makes auto-merge look convenient, the port is wrong, not the covenant."
+  state: "target"
+  today: "No Rust ships. The deployed worker is fundi-tester in nyuchi/mzizi-tools — TypeScript on Cloudflare (hono, agents, jose, mongodb; a FundiAgent durable object, a */5 cron, the fundi-signals queue). There is no Cargo.toml in that repo and workers-rs is not in use."
+  target: "A workers-rs Worker following the cloudflare-worker-rust house pattern that mzizi-tools already documents as a skill but this worker has not yet adopted. Rust buys cold-start and memory at the edge; it buys no new powers."
+  position: "implementation"
+  descriptors: []
+sort_order: 9
+stakeholder: "Fundi operator"
+sub_label: "fundi"
+title: "Fundi"
+type: "rung"
+---
+
+

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { ComponentGallery } from "@/components/playground/component-gallery"
 
 export const metadata: Metadata = {
-  title: "Components — Mzizi",
+  title: "Components",
   description:
     "Browse the full Mzizi component library. Each component has a live preview, source code, and an API tester.",
 }

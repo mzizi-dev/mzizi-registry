@@ -1,0 +1,35 @@
+---
+_schemaVersion: "v1"
+covenant: "What the system knows how to do is teachable, not tribal."
+currentVersion: 2
+description: "The skills rung. Agent skills are authored in git (mzizi-tools/mzizi-skills, published as @nyuchi/mzizi-skills) and projected into the `skills` collection, which the registry serves at /api/v1/skills* and the MCP serves as get_skill / list_skills. A rung rather than a node: skills bridge both backbones — engineering practice and meaning at once — and no node imports them."
+dnaRole: "skills"
+doctrineVersion: "4.1.0"
+helix_model: "double-helix"
+implementation_rules:
+- "Skills are authored in git as mzizi-skills/skills/<name>/SKILL.md in nyuchi/mzizi-tools and published as the public npm package @nyuchi/mzizi-skills."
+- "pnpm skills:validate is the offline pre-publish gate: index.json and package.json version lockstep, frontmatter name matching the index, no unlisted skill directory."
+- "pnpm skills:sync projects the committed bundle into this collection through RLS (disk to DB). The DB rows are a read-only projection; git is the source of truth."
+- "mzizi.dev serves skills at /api/v1/skills* and over MCP; consumers install with npx skills add @nyuchi/mzizi-skills."
+kind: "architecture"
+model: "mzizi-dna-helix"
+node: 12
+node_number: 12
+owner: "nyuchi"
+role: "N12 — the skills rung: what the system knows how to do, authored in git and projected to the registry"
+rust:
+  kind: null
+  note: "Stated deliberately, and for a different reason than N10. A skill is a document an agent reads at inference time; there is no runtime to compile and therefore nothing for Rust to implement. Inventing a Rust story here would be exactly the doctrine drift this rung teaches agents to avoid."
+  state: "not-applicable"
+  today: "Skills are SKILL.md files in nyuchi/mzizi-tools, published as @nyuchi/mzizi-skills and read by agents as markdown."
+  target: "None. N12 has no Rust implementation and no Rust alternative."
+  position: "none"
+  descriptors: []
+sort_order: 12
+stakeholder: "Agent-skills author"
+sub_label: "skills"
+title: "Skills"
+type: "rung"
+---
+
+

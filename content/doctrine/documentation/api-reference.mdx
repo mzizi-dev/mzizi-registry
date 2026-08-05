@@ -1,0 +1,137 @@
+---
+_bodyField: "content"
+_schemaVersion: "v1"
+author: "nyuchi-team"
+category: "api-reference"
+createdAt: "2026-04-14T04:34:29.591833+00:00"
+currentVersion: 2
+description: "REST API and MCP server reference for the Nyuchi Design Portal."
+dnaRole: "documentation"
+doctrineVersion: "4.1.7"
+keywords:
+- "api"
+- "rest"
+- "mcp"
+- "endpoints"
+- "reference"
+kind: "doc_page"
+model: "mzizi-dna-helix"
+node: 10
+nodeLabel: "documentation"
+owner: "nyuchi"
+relatedNodes:
+- 8
+- 9
+- 10
+slug: "api-reference"
+sortOrder: 30
+status: "published"
+strand: "transcription"
+subcategory: "rest"
+title: "Design Portal API Reference"
+updatedAt: "2026-04-24T10:57:17.273063+00:00"
+version: "4.0.34"
+---
+
+# API Reference
+
+The Nyuchi Design Portal exposes a REST API and MCP server for accessing the component registry.
+
+## Base URL
+
+```
+https://api.nyuchi.dev/v1
+```
+
+## Endpoints
+
+### Components
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | /api/components | List all components |
+| GET | /api/v1/ui/{name} | Get component by name |
+| GET | /api/v1/ui/{name} | Get source code (lives in components.source_code in DB) |
+| GET | /api/v1/ui/{name}/docs | Get documentation |
+| GET | /api/health/{name} | Health check |
+| GET | /api/changelog/{name} | Version history |
+
+### Search
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | /api/search?q={query} | Search components |
+| GET | /api/search?category={cat} | Filter by category |
+| GET | /api/search?node={n} | Filter by node |
+| GET | /api/search?status={status} | Filter by status (stable, alpha, deprecated) |
+
+### Documentation
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | /api/docs | List documentation pages |
+| GET | /api/docs/{slug} | Get page by slug |
+
+### Fundi
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /api/chaos/{name} | Inject chaos (N8) |
+| POST | /api/fundi/{name} | Trigger healing (N9) |
+| GET | /api/fundi/issues | List open healing issues |
+
+## MCP Server
+
+```
+https://mcp.mzizi.dev/mcp
+```
+
+Tools (live registry): list_components, get_component, get_node_documents, get_brand_tokens, list_brand_token_categories, list_ecosystem_brands, get_architecture, get_axes_summary, get_node_counts, get_node_categories, get_system_counts, get_accessibility_summary, calculate_contrast_ratio, get_skill, get_ubuntu_pillars, get_ubuntu_principles, get_latest_release. Call mcp_describe for the full self-describing list with stability and TTL.
+
+## SQL Functions (Canonical Counts)
+
+The database exposes count functions that should be used instead of hardcoded numbers anywhere they appear:
+
+| Function | Returns |
+|---|---|
+| `get_node_counts()` | per-node component counts with axis and label |
+| `get_system_counts()` | system-wide totals in one row |
+| `get_token_counts()` | row counts for every token category (styling-* collections) |
+| `get_node_categories(N)` | category breakdown within node N |
+| `get_latest_release()` | most recent changelog entry |
+| `get_accessibility_summary()` | WCAG compliance and color-blindness validation summary |
+
+## SQL Functions (Accessibility Validation)
+
+Three functions support contrast-ratio validation directly in the database:
+
+| Function | Returns |
+|---|---|
+| `hex_to_rgb(hex)` | (r, g, b) integer tuple |
+| `relative_luminance(hex)` | WCAG relative luminance numeric value |
+| `calculate_contrast_ratio(fg_hex, bg_hex)` | WCAG 2.1 contrast ratio (1.00 to 21.00) |
+
+## SQL Functions (Component Lifecycle)
+
+| Function | Purpose |
+|---|---|
+| `log_version(name, type, comment, author)` | Track component changes |
+| `log_release_v2(version, title, desc, nodes, axes, added, modified, deprecated, removed, author)` | Log a release to the changelog (successor to log_release; accepts nodes_affected and components_removed) |
+| `get_component_links(name)` | Get all canonical URLs for a component |
+| `get_component_history(name, limit)` | Component version history |
+| `create_fundi_issue(component, severity, error_type, source, payload)` | Create healing issue |
+| `is_domain_allowed(domain, mode)` | Check observability allowlist |
+
+## Direct Database Tables
+
+When you need raw token values, query the `styling-*` collections directly. The full list is available via `get_token_counts()` and includes:
+
+Visual tokens: styling-minerals, styling-semantic-colors, styling-spacing, styling-typography, styling-radius, styling-shadow, styling-motion, styling-breakpoints, styling-z-index.
+
+Sizing & accessibility: styling-icon-sizes, styling-touch-targets, styling-component-specs.
+
+Density: styling-density, styling-density-breakpoints.
+
+Validation: styling-accessibility-checks (per-pair WCAG and color-blindness flags).
+
+Reference: styling-categories, styling-ecosystem, styling-meta.
