@@ -148,6 +148,9 @@ pnpm tokens:verify    # Non-mutating check — fails CI if any token artifact dr
 pnpm registry:validate # Offline gate — every registry item resolves on disk and installs
 pnpm doctrine:extract # Write content/doctrine/**/*.mdx from Supabase (§15.17)
 pnpm doctrine:verify  # Non-mutating check — fails if an extracted doctrine file drifted
+pnpm props:extract    # Read component prop types into lib/samples/props.generated.ts (§8.10)
+pnpm props:verify     # Non-mutating check — fails if the extracted props are stale
+pnpm samples:push     # Project lib/samples/data.ts into MongoDB `mzizi_samples` (§8.10)
 pnpm audit:check      # pnpm audit --audit-level=moderate --ignore-registry-errors
 ```
 
@@ -955,6 +958,76 @@ document one install command as though it serves every target.
 
 ---
 
+## 8.10 Sample data — what previews render against, and where it lives
+
+**Every component preview renders against a curated sample dataset.** `lib/samples/data.ts`
+is the source; `lib/samples/types.ts` explains the shapes.
+
+**The shapes mirror the production MongoDB validators field for field** — `SamplePlace` against
+`places.places`, `SampleEntity` against `entity.entities`, and so on through persons, events,
+products and articles. That correspondence is the whole point and what makes this more than
+fixture JSON: a consumer wiring `nyuchi-place-card` to their own `places.places` has the
+mapping already done, because the component was built against a document of exactly that
+shape. Getting a preview working and getting an integration working stop being two jobs.
+
+**Why curated rather than reading production — measured, not assumed.** `places.places` holds
+15,359 documents; **38** have a description and **zero** have `media`. They are bare OSM
+name-and-geometry imports. `events.events` holds one document; `commerce.products` holds two.
+A place card rendered against production is a grey box with a name, so the choice was never
+"curated vs. real", it was "curated vs. nothing". Three reasons it stays curated once
+production fills up: mzizi.dev is public and production records are real people and unverified
+community reports (`places_public` exists as a view precisely because some fields must not
+leave the cluster); a preview that changes when someone edits a row is not a preview; and real
+data clusters around the easy case, while a fixture set is chosen to break things.
+
+**One source, two distribution surfaces.**
+
+```
+lib/samples/data.ts ──┬─► the app (/playground, /components, /api/v1/samples/*)
+                      └─► `pnpm samples:push` ─► MongoDB `mzizi_samples`
+```
+
+MongoDB **gets filled**, and it is not the authoring surface. A consumer or an agent points a
+real driver at `mzizi_samples` and queries documents in the production shape — that is the
+"wiring is already done" property, and an HTTP fixture endpoint would not give it to them. But
+the site does NOT query Mongo to render: 1,179 pages prerender from the file, so a Mongo
+outage can never empty the playground. Pushing derives Mongo from git and never the reverse;
+edit a document in `mzizi_samples` directly and the next push overwrites it.
+
+**This is not a reversal of §15.1.** The test is who edits it. Sample records are authored —
+someone writes them and someone reviews them, and the reason a place has no cover image is a
+decision recorded in a comment. Domain data — the 15,359 real places, the 23,231 articles — is
+the opposite kind and belongs in MongoDB, where it already is. **For actual data the platform
+uses MongoDB, not Supabase.**
+
+**Prop resolution.** `pnpm props:extract` reads each component's props type from source into
+`lib/samples/props.generated.ts` (drift-gated by `props:verify`), and `lib/samples/resolve.ts`
+binds prop names and types to sample values in the browser. This does not violate the
+"never invent props" rule that `AutoPreview` was built on — a GUESS invents a value to satisfy
+a type and tells you nothing; SAMPLE DATA is a record of the shape the component was designed
+to display. The resolver only supplies a value it can identify confidently, by declared type
+first and name second, and **reports what it could not resolve on the page** rather than
+leaving a half-filled component looking broken.
+
+Three rules the implementation learned the hard way, all now covered by
+`__tests__/samples.test.ts`:
+
+- **A literal union is checked before anything else.** `size` means a pixel count on an avatar
+  and a variant name on a CVA control; and `appointment-card`'s `type: "in-person" |
+"telemedicine"` matched a `/\bperson\b/` domain pattern _inside its own literal_ and
+  received an entire person document.
+- **`boolean` defaults to FALSE.** Nearly every boolean here is `loading`, `disabled` or
+  `error`; defaulting to true made every component with a `loading` prop render grey bars.
+- **There is no generic `string` fallback.** It produced `readTime: "Mana Pools National
+Park"`. A prop whose name says nothing and whose type says only "a string" is one this
+  cannot resolve, and saying so is the honest answer.
+
+**Never put a clock read or randomness in the sample set.** A fixture that changes between two
+renders breaks static prerendering, makes visual diffs noise, and makes a failing test
+unreproducible. Dates are fixed ISO strings against `SAMPLE_NOW`.
+
+---
+
 ## 9. Mzizi API (v1)
 
 All endpoints are under `/api/v1/` and documented in `openapi.yaml` (OpenAPI 3.1).
@@ -970,6 +1043,8 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 | `GET /api/v1/ui`                           | Component registry index                                                | —         |
 | `GET /api/v1/ui/{name}`                    | Individual component (shadcn format, with source code)                  | —         |
 | `GET /api/v1/rs/{name}`                    | The same component's **Rust (Dioxus)** source; 404 when it has none     | —         |
+| `GET /api/v1/samples`                      | Sample-data catalog — the records every preview renders against (§8.10) | —         |
+| `GET /api/v1/samples/{type}`               | Sample records: places, entities, persons, events, products, articles   | —         |
 | `GET /api/v1/ui/{name}/docs`               | Component docs (use cases, variants, a11y)                              | —         |
 | `GET /api/v1/ui/{name}/versions`           | Component version history                                               | —         |
 | `GET /api/v1/ecosystem`                    | Architecture principles & framework decision                            | —         |

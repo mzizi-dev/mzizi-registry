@@ -130,8 +130,9 @@ export default async function PlaygroundComponentPage({
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Variants & props</h2>
           <p className="text-sm text-muted-foreground">
-            The variants, sizes, and props surfaced by the registry. Each is sourced from the
-            Supabase <code className="font-mono text-xs">component_docs</code> table.
+            The variants, sizes, and props surfaced by the registry, from the{" "}
+            <code className="font-mono text-xs">meta</code> block on this component&rsquo;s item in{" "}
+            <code className="font-mono text-xs">registry.json</code>.
           </p>
           <ComponentDocSection name={item.name} />
         </section>
