@@ -32,7 +32,7 @@
  *                        formatting differences never trip the gate)
  *
  * Requires NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY (same as
- * registry:sync). The store is anon-readable via RLS.
+ * tokens:sync). The store is anon-readable via RLS.
  */
 
 import { readFile, writeFile } from "fs/promises"
@@ -478,17 +478,25 @@ ${heritage.map((h) => `    heritage.${upper(h.name)}_DARK,`).join("\n")}
 }
 
 function renderRust(minerals: Mineral[], heritage: Heritage[]): string {
+  // Every public item carries a doc comment. `mzizi-rs` sets `missing_docs = "warn"` at the
+  // workspace level and CI runs clippy with `-D warnings`, so an undocumented `pub const`
+  // here fails the Rust build — in a file nobody may hand-edit. Emitting the docs is
+  // therefore the only place the fix can live (CLAUDE.md §8.4.1: fix the generator, never
+  // the artifact).
   const consts = (rows: { name: string; darkHex: string; lightHex: string }[]) =>
     rows
       .map(
         (r) =>
+          `/// ${cap(r.name)} — dark theme.\n` +
           `pub const ${upper(r.name)}_DARK: &str = ${JSON.stringify(r.darkHex)};\n` +
+          `/// ${cap(r.name)} — light theme.\n` +
           `pub const ${upper(r.name)}_LIGHT: &str = ${JSON.stringify(r.lightHex)};`
       )
       .join("\n")
-  const field = (r: { name: string }) => `    pub ${r.name}: &'static str,`
-  const darkInit = (r: { name: string }) => `        ${r.name}: ${upper(r.name)}_DARK,`
-  const lightInit = (r: { name: string }) => `        ${r.name}: ${upper(r.name)}_LIGHT,`
+  const field = (r: { name: string }) =>
+    `    /// ${cap(r.name)}, resolved for this theme.\n    pub ${r.name}: &'static str,`
+  const darkInit = (r: { name: string }) => `            ${r.name}: ${upper(r.name)}_DARK,`
+  const lightInit = (r: { name: string }) => `            ${r.name}: ${upper(r.name)}_LIGHT,`
   const all = [...minerals, ...heritage]
 
   return `${banner("//", "Rust")}
@@ -513,12 +521,14 @@ ${all.map(field).join("\n")}
 }
 
 impl Palette {
+    /// The palette resolved for the dark theme.
     pub const fn dark() -> Self {
         Self {
 ${all.map(darkInit).join("\n")}
         }
     }
 
+    /// The palette resolved for the light theme.
     pub const fn light() -> Self {
         Self {
 ${all.map(lightInit).join("\n")}
@@ -531,7 +541,7 @@ pub struct Spacing;
 
 impl Spacing {
 ${Object.entries(SCALE.spacing)
-  .map(([k, v]) => `    pub const ${upper(k)}: u32 = ${v};`)
+  .map(([k, v]) => `    /// ${v}px.\n    pub const ${upper(k)}: u32 = ${v};`)
   .join("\n")}
 }
 
@@ -540,7 +550,7 @@ pub struct Radius;
 
 impl Radius {
 ${Object.entries(SCALE.radius)
-  .map(([k, v]) => `    pub const ${upper(k)}: u32 = ${v};`)
+  .map(([k, v]) => `    /// ${v}px.\n    pub const ${upper(k)}: u32 = ${v};`)
   .join("\n")}
 }
 
@@ -549,7 +559,7 @@ pub struct Fonts;
 
 impl Fonts {
 ${Object.entries(SCALE.fonts)
-  .map(([k, v]) => `    pub const ${upper(k)}: &'static str = ${JSON.stringify(v)};`)
+  .map(([k, v]) => `    /// ${v}.\n    pub const ${upper(k)}: &'static str = ${JSON.stringify(v)};`)
   .join("\n")}
 }
 `

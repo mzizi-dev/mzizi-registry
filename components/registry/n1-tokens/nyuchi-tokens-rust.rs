@@ -12,93 +12,137 @@
 #![allow(dead_code)]
 
 // ─── Seven African Minerals ─────────────────────────────────────────────────
+/// Cobalt — dark theme.
 pub const COBALT_DARK: &str = "#00B0FF";
+/// Cobalt — light theme.
 pub const COBALT_LIGHT: &str = "#0047AB";
+/// Tanzanite — dark theme.
 pub const TANZANITE_DARK: &str = "#B388FF";
+/// Tanzanite — light theme.
 pub const TANZANITE_LIGHT: &str = "#4B0082";
+/// Malachite — dark theme.
 pub const MALACHITE_DARK: &str = "#64FFDA";
+/// Malachite — light theme.
 pub const MALACHITE_LIGHT: &str = "#004D40";
+/// Gold — dark theme.
 pub const GOLD_DARK: &str = "#FFD740";
+/// Gold — light theme.
 pub const GOLD_LIGHT: &str = "#5D4037";
+/// Terracotta — dark theme.
 pub const TERRACOTTA_DARK: &str = "#E1B07E";
+/// Terracotta — light theme.
 pub const TERRACOTTA_LIGHT: &str = "#A0522D";
+/// Sodalite — dark theme.
 pub const SODALITE_DARK: &str = "#3D5AFE";
+/// Sodalite — light theme.
 pub const SODALITE_LIGHT: &str = "#283593";
+/// Copper — dark theme.
 pub const COPPER_DARK: &str = "#FF8A65";
+/// Copper — light theme.
 pub const COPPER_LIGHT: &str = "#BF5A36";
 
 // ─── Seven Heritage tones ───────────────────────────────────────────────────
+/// Indigo — dark theme.
 pub const INDIGO_DARK: &str = "#7986CB";
+/// Indigo — light theme.
 pub const INDIGO_LIGHT: &str = "#4527A0";
+/// Savanna — dark theme.
 pub const SAVANNA_DARK: &str = "#E5C158";
+/// Savanna — light theme.
 pub const SAVANNA_LIGHT: &str = "#8D6E1A";
+/// Baobab — dark theme.
 pub const BAOBAB_DARK: &str = "#A1887F";
+/// Baobab — light theme.
 pub const BAOBAB_LIGHT: &str = "#4E342E";
+/// Sunset — dark theme.
 pub const SUNSET_DARK: &str = "#FF7043";
+/// Sunset — light theme.
 pub const SUNSET_LIGHT: &str = "#D84315";
+/// River — dark theme.
 pub const RIVER_DARK: &str = "#4DD0E1";
+/// River — light theme.
 pub const RIVER_LIGHT: &str = "#006064";
+/// Hematite — dark theme.
 pub const HEMATITE_DARK: &str = "#90A4AE";
+/// Hematite — light theme.
 pub const HEMATITE_LIGHT: &str = "#546E7A";
+/// Kalahari — dark theme.
 pub const KALAHARI_DARK: &str = "#E8D9B5";
+/// Kalahari — light theme.
 pub const KALAHARI_LIGHT: &str = "#C9B589";
 
 /// Every palette colour for one theme. Construct with [`Palette::dark`] or
 /// [`Palette::light`] rather than by hand, so a new colour cannot be missed.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Palette {
+    /// Cobalt, resolved for this theme.
     pub cobalt: &'static str,
+    /// Tanzanite, resolved for this theme.
     pub tanzanite: &'static str,
+    /// Malachite, resolved for this theme.
     pub malachite: &'static str,
+    /// Gold, resolved for this theme.
     pub gold: &'static str,
+    /// Terracotta, resolved for this theme.
     pub terracotta: &'static str,
+    /// Sodalite, resolved for this theme.
     pub sodalite: &'static str,
+    /// Copper, resolved for this theme.
     pub copper: &'static str,
+    /// Indigo, resolved for this theme.
     pub indigo: &'static str,
+    /// Savanna, resolved for this theme.
     pub savanna: &'static str,
+    /// Baobab, resolved for this theme.
     pub baobab: &'static str,
+    /// Sunset, resolved for this theme.
     pub sunset: &'static str,
+    /// River, resolved for this theme.
     pub river: &'static str,
+    /// Hematite, resolved for this theme.
     pub hematite: &'static str,
+    /// Kalahari, resolved for this theme.
     pub kalahari: &'static str,
 }
 
 impl Palette {
+    /// The palette resolved for the dark theme.
     pub const fn dark() -> Self {
         Self {
-        cobalt: COBALT_DARK,
-        tanzanite: TANZANITE_DARK,
-        malachite: MALACHITE_DARK,
-        gold: GOLD_DARK,
-        terracotta: TERRACOTTA_DARK,
-        sodalite: SODALITE_DARK,
-        copper: COPPER_DARK,
-        indigo: INDIGO_DARK,
-        savanna: SAVANNA_DARK,
-        baobab: BAOBAB_DARK,
-        sunset: SUNSET_DARK,
-        river: RIVER_DARK,
-        hematite: HEMATITE_DARK,
-        kalahari: KALAHARI_DARK,
+            cobalt: COBALT_DARK,
+            tanzanite: TANZANITE_DARK,
+            malachite: MALACHITE_DARK,
+            gold: GOLD_DARK,
+            terracotta: TERRACOTTA_DARK,
+            sodalite: SODALITE_DARK,
+            copper: COPPER_DARK,
+            indigo: INDIGO_DARK,
+            savanna: SAVANNA_DARK,
+            baobab: BAOBAB_DARK,
+            sunset: SUNSET_DARK,
+            river: RIVER_DARK,
+            hematite: HEMATITE_DARK,
+            kalahari: KALAHARI_DARK,
         }
     }
 
+    /// The palette resolved for the light theme.
     pub const fn light() -> Self {
         Self {
-        cobalt: COBALT_LIGHT,
-        tanzanite: TANZANITE_LIGHT,
-        malachite: MALACHITE_LIGHT,
-        gold: GOLD_LIGHT,
-        terracotta: TERRACOTTA_LIGHT,
-        sodalite: SODALITE_LIGHT,
-        copper: COPPER_LIGHT,
-        indigo: INDIGO_LIGHT,
-        savanna: SAVANNA_LIGHT,
-        baobab: BAOBAB_LIGHT,
-        sunset: SUNSET_LIGHT,
-        river: RIVER_LIGHT,
-        hematite: HEMATITE_LIGHT,
-        kalahari: KALAHARI_LIGHT,
+            cobalt: COBALT_LIGHT,
+            tanzanite: TANZANITE_LIGHT,
+            malachite: MALACHITE_LIGHT,
+            gold: GOLD_LIGHT,
+            terracotta: TERRACOTTA_LIGHT,
+            sodalite: SODALITE_LIGHT,
+            copper: COPPER_LIGHT,
+            indigo: INDIGO_LIGHT,
+            savanna: SAVANNA_LIGHT,
+            baobab: BAOBAB_LIGHT,
+            sunset: SUNSET_LIGHT,
+            river: RIVER_LIGHT,
+            hematite: HEMATITE_LIGHT,
+            kalahari: KALAHARI_LIGHT,
         }
     }
 }
@@ -107,11 +151,17 @@ impl Palette {
 pub struct Spacing;
 
 impl Spacing {
+    /// 4px.
     pub const XS: u32 = 4;
+    /// 8px.
     pub const SM: u32 = 8;
+    /// 12px.
     pub const MD: u32 = 12;
+    /// 16px.
     pub const BASE: u32 = 16;
+    /// 24px.
     pub const LG: u32 = 24;
+    /// 32px.
     pub const XL: u32 = 32;
 }
 
@@ -119,10 +169,15 @@ impl Spacing {
 pub struct Radius;
 
 impl Radius {
+    /// 7px.
     pub const SM: u32 = 7;
+    /// 12px.
     pub const MD: u32 = 12;
+    /// 14px.
     pub const LG: u32 = 14;
+    /// 17px.
     pub const XL: u32 = 17;
+    /// 9999px.
     pub const FULL: u32 = 9999;
 }
 
@@ -130,7 +185,10 @@ impl Radius {
 pub struct Fonts;
 
 impl Fonts {
+    /// Noto Sans.
     pub const SANS: &'static str = "Noto Sans";
+    /// Noto Serif.
     pub const SERIF: &'static str = "Noto Serif";
+    /// JetBrains Mono.
     pub const MONO: &'static str = "JetBrains Mono";
 }

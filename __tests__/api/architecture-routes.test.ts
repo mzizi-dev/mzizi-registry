@@ -49,11 +49,17 @@ afterEach(() => {
 })
 
 describe("GET /api/v1/architecture (no Supabase)", () => {
-  it("returns 503 with a clear 'not configured' message", async () => {
+  it("serves the helix with no database configured", async () => {
+    // This spec asserted 503 "Database not configured", and asserting it is what kept the
+    // defect alive after the doctrine moved. The helix is MDX under `content/doctrine/`, read
+    // through `lib/doctrine.ts` (CLAUDE.md §15.17), so the route answered 503 for content in
+    // the deployed bundle — and pointed whoever hit it at a credential that would not help.
+    //
+    // The env vars are still stubbed empty by the `beforeEach` above, which is the point:
+    // the route must serve WITHOUT them.
     const { GET } = await import("@/app/api/v1/architecture/route")
     const r = (await GET()) as unknown as Resp
-    expect(r.status).toBe(503)
-    expect(r.data.error).toBe("Database not configured")
+    expect(r.status).toBe(200)
     expect(r.headers["Access-Control-Allow-Origin"]).toBe("*")
   })
 })

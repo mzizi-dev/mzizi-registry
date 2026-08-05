@@ -60,12 +60,44 @@ jobs:
       - name: Validate every registry item is installable
         run: pnpm registry:validate
 
-      - name: Verify registry.json matches Supabase
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-        if: env.NEXT_PUBLIC_SUPABASE_URL != ''
+      # `registry.json` is authored, not generated, so this no longer compares against
+      # Supabase and no longer needs a credential — it asserts the committed file is in
+      # canonical form so a diff shows what changed rather than a reordering.
+      - name: Verify registry.json is canonical
         run: pnpm registry:verify
+
+  rust:
+    name: Rust
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    # The gate that makes the Rust half of the registry real.
+    #
+    # A `.rs` file under `components/registry/` with nothing compiling it is exactly what a
+    # `source_code` database column was: bytes that no toolchain verifies. `mzizi-rs`
+    # `#[path]`-includes those files, so `cargo check` here is a REGISTRY check, not just a
+    # crate's own business — and it lands with the first Rust component rather than after
+    # it, so there is never a window where Rust ships unchecked.
+    #
+    # `cargo test` runs the contract suite, which reads each component's `.tsx` sibling and
+    # asserts the two agree on variants, `data-slot` names and classes. `cargo check` alone
+    # cannot catch a Dioxus button that compiles perfectly and renders markup the shared
+    # stylesheet does not style.
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install the Rust toolchain
+        run: rustup toolchain install stable --profile minimal --component clippy,rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: mzizi-rs
+      - name: Format
+        run: cargo fmt --manifest-path mzizi-rs/Cargo.toml --all -- --check
+      - name: Check
+        run: cargo check --manifest-path mzizi-rs/Cargo.toml --workspace --all-targets
+      - name: Clippy
+        run: cargo clippy --manifest-path mzizi-rs/Cargo.toml --workspace --all-targets -- -D warnings
+      - name: Contract tests against the TypeScript siblings
+        run: cargo test --manifest-path mzizi-rs/Cargo.toml --workspace
 
   lint:
     name: Lint
@@ -125,7 +157,7 @@ jobs:
     # (lint, typecheck) → behavioural (test) → integrity (audit,
     # registry). Adding a job above? Add it here too so build still
     # gates everything.
-    needs: [audit, lint, typecheck, test, registry]
+    needs: [audit, lint, typecheck, test, registry, rust]
     permissions:
       contents: read
     steps:

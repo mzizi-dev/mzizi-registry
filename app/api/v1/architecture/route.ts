@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { isSupabaseConfigured, getHelixModel } from "@/lib/db"
+import { getHelixModel } from "@/lib/db"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("architecture-snapshot")
@@ -41,20 +41,11 @@ export const revalidate = 3600
 export async function GET() {
   const start = Date.now()
   try {
-    if (!isSupabaseConfigured()) {
-      trackApiCall({
-        endpoint: "/api/v1/architecture",
-        durationMs: Date.now() - start,
-        statusCode: 503,
-      })
-      return NextResponse.json(
-        {
-          error: "Database not configured",
-          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-        },
-        { status: 503, headers: CORS }
-      )
-    }
+    // The `isSupabaseConfigured()` guard that stood here is gone with the store it guarded.
+    // Doctrine is MDX under `content/doctrine/` read through `lib/doctrine.ts` (CLAUDE.md
+    // §15.17), so a missing anon key made this route answer 503 — "Database not configured" —
+    // for content sitting in the deployed bundle, and pointed whoever hit it at a credential
+    // that would not have helped. A precondition that no longer holds does not fail safe.
 
     const model = await getHelixModel()
     trackApiCall({

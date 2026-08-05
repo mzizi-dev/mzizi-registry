@@ -2,8 +2,7 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { ComponentPreview } from "@/components/playground/component-preview"
 import { ApiTester } from "@/components/playground/api-tester"
-import { DemoRenderer } from "@/components/playground/demo-renderer"
-import { hasDemoFor } from "@/components/playground/demo-names"
+import { AutoPreview } from "@/components/playground/auto-preview"
 import { ComponentDocSection } from "@/components/playground/component-doc-section"
 import { SafeSection } from "@/components/error-boundary"
 import { Badge } from "@/components/registry/n2-primitives/badge"
@@ -65,7 +64,11 @@ export default async function PlaygroundComponentPage({
   const firstFilePath = item.files?.[0]?.path ?? ""
   const registryType = item.registry_type?.replace("registry:", "") ?? "component"
   const installUrl = `https://mzizi.dev/api/v1/ui/${item.name}`
-  const hasDemo = hasDemoFor(item.name)
+  // Every component has source on disk, so one without a hand-written demo can still
+  // be rendered directly. `sourcePath` is repo-relative and comes from the file that
+  // actually implements the item, so the preview cannot point at a file that moved.
+  const sourcePath = (item as { sourcePath?: string }).sourcePath ?? ""
+  const showPreviewTab = /\.tsx$/.test(sourcePath)
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-8 py-8">
@@ -108,14 +111,16 @@ export default async function PlaygroundComponentPage({
       {/* Live preview (top-billed for the playground) */}
       <SafeSection section="Preview">
         <section className="space-y-3">
-          <h2 className="text-xl font-semibold">{hasDemo ? "Live preview" : "Source code"}</h2>
+          <h2 className="text-xl font-semibold">
+            {showPreviewTab ? "Live preview" : "Source code"}
+          </h2>
           <p className="text-sm text-muted-foreground">
-            {hasDemo
-              ? "Interactive preview with a light/dark toggle. Switch to Code to read the full source."
-              : "No interactive demo is registered for this component yet — the source is shown directly."}
+            {showPreviewTab
+              ? "Rendered straight from the component file, with a light/dark toggle. Switch to Code for the full source and its prop types."
+              : "This item has no renderable React source — the source is shown directly."}
           </p>
-          <ComponentPreview code={sourceCode} hasDemo={hasDemo}>
-            <DemoRenderer name={item.name} />
+          <ComponentPreview code={sourceCode} hasDemo={showPreviewTab}>
+            <AutoPreview sourcePath={sourcePath} name={item.name} />
           </ComponentPreview>
         </section>
       </SafeSection>

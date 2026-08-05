@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation"
 import { ComponentPreview } from "@/components/playground/component-preview"
 import { ApiTester } from "@/components/playground/api-tester"
-import { DemoRenderer } from "@/components/playground/demo-renderer"
-import { hasDemoFor } from "@/components/playground/demo-names"
+import { AutoPreview } from "@/components/playground/auto-preview"
 import { ComponentDocSection } from "@/components/playground/component-doc-section"
 import { SafeSection } from "@/components/error-boundary"
 import { Badge } from "@/components/registry/n2-primitives/badge"
@@ -45,7 +44,11 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
   const firstFilePath = item.files?.[0]?.path ?? ""
   const registryType = item.registry_type?.replace("registry:", "") ?? "component"
   const installUrl = `https://mzizi.dev/api/v1/ui/${item.name}`
-  const hasDemo = hasDemoFor(item.name)
+  // Every component is a real file, so every one can be rendered. There is no
+  // hand-written demo list any more -- that list gated the Preview tab off for 525
+  // of 571 components, which is why this page only ever showed code.
+  const sourcePath = (item as { sourcePath?: string }).sourcePath ?? ""
+  const canPreview = /\.tsx$/.test(sourcePath)
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-8 py-8">
@@ -93,14 +96,14 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
       {/* Preview + Code */}
       <SafeSection section="Preview">
         <section className="space-y-3">
-          <h2 className="text-xl font-semibold">{hasDemo ? "Preview" : "Source Code"}</h2>
+          <h2 className="text-xl font-semibold">{canPreview ? "Preview" : "Source Code"}</h2>
           <p className="text-sm text-muted-foreground">
-            {hasDemo
+            {canPreview
               ? "Interactive preview with light/dark mode toggle. Switch to Code tab to view the full source."
               : "View the full component source code below."}
           </p>
-          <ComponentPreview code={sourceCode} hasDemo={hasDemo}>
-            <DemoRenderer name={item.name} />
+          <ComponentPreview code={sourceCode} hasDemo={canPreview}>
+            <AutoPreview sourcePath={sourcePath} name={item.name} />
           </ComponentPreview>
         </section>
       </SafeSection>

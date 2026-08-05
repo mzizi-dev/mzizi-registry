@@ -30,12 +30,11 @@ Useful root commands:
 pnpm dev             # Next.js dev server
 pnpm typecheck       # typecheck the portal app
 pnpm test            # run the Vitest suite
-pnpm registry:sync   # regenerate registry.json from Supabase
-pnpm skills:sync     # refresh the skill snapshots from the Supabase `skills` table
-pnpm skills:verify   # CI-style drift check (non-zero exit on drift)
+pnpm registry:normalize # canonicalise registry.json (it is authored, not generated)
+pnpm registry:validate  # offline gate — every item resolves on disk and installs
 ```
 
-Skill content lives in the Supabase `skills` table — never hand-edit the generated `.md` snapshots. See [CLAUDE.md §15](CLAUDE.md) for the single-source-of-truth doctrine.
+Skills are authored in `nyuchi/mzizi-tools` (`mzizi-skills/skills/<name>/SKILL.md`, published as `@nyuchi/mzizi-skills`) and are not in this repo or in the database. The `skills:sync` / `skills:verify` scripts documented here before are gone with the projection they maintained. See [CLAUDE.md §15.23](CLAUDE.md).
 
 ### 3. Set up the database (optional for UI work)
 
@@ -163,15 +162,15 @@ function MyComponent({
 export { MyComponent, myComponentVariants }
 ```
 
-1. **Upsert the component into the Supabase `components` table** — Supabase is the source of truth. Include `source_code`, `architecture_layer`, `category`, `dependencies`, `registry_dependencies`, and `status = 'stable'`. The portal serves it from the DB on the next request — no rebuild required.
+1. **Write the component file** under `components/registry/n<N>-<label>/<name>.tsx` — the component IS the file, and the build compiles and typechecks it. Then add its item to `registry.json`: `name`, `type`, `description`, `dependencies`, `registryDependencies`, `files[].path`, and the `meta` block (`useCases`, `variants`, `sizes`, `features`, `a11y`, `owner`, `collection`).
 
-1. **Regenerate the registry snapshot.** `registry.json` is generated, never hand-edited (CLAUDE.md §15 rule 2); `pnpm registry:sync` rewrites it from Supabase and CI fails on drift via `pnpm registry:verify`:
+1. **Canonicalise and validate the manifest.** `registry.json` is authored (CLAUDE.md §15 rule 2); `pnpm registry:normalize` sorts and formats it, `pnpm registry:validate` proves the item resolves on disk and its dependencies are addressable, and CI runs both:
 
 ```bash
-pnpm registry:sync
+pnpm registry:normalize && pnpm registry:validate
 ```
 
-The generated entry looks like this:
+The entry looks like this:
 
 ```json
 {
@@ -237,7 +236,7 @@ Blocks are complete page compositions (dashboards, login pages, settings panels,
 }
 ```
 
-1. **Upsert into Supabase and run `pnpm registry:sync`** as with UI components.
+1. **Add the item to `registry.json` and run `pnpm registry:normalize`** as with UI components.
 
 ---
 
@@ -315,7 +314,7 @@ pnpm lint:json       # every tracked JSON parses
 pnpm typecheck       # tsc --noEmit
 pnpm test            # vitest single run
 pnpm audit:check     # pnpm audit --audit-level=moderate
-pnpm registry:verify # CI fails if registry.json drifts from Supabase
+pnpm registry:verify # CI fails if registry.json is not canonical
 pnpm tokens:verify   # CI fails if the design tokens drift from Supabase
 pnpm build           # next build (terminal gate)
 ```
@@ -366,7 +365,7 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 - [ ] Code follows TypeScript strict mode — no untyped `any`
 - [ ] Styling uses Tailwind utility classes only — no inline styles or hardcoded hex colors
 - [ ] Components use CVA + cn() + data-slot pattern
-- [ ] New components are upserted into the Supabase `components` table; `pnpm registry:sync` regenerates `registry.json`
+- [ ] New components are files under `components/registry/`, with their item + `meta` added to `registry.json` and `pnpm registry:normalize` run
 - [ ] Tests added for new functionality
 - [ ] Accessibility reviewed (APCA contrast, 56px default / 48px minimum touch targets, keyboard nav)
 - [ ] Brand wordmarks are lowercase (`mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`)

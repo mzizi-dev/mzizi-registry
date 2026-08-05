@@ -56,8 +56,21 @@ export type RegistryItem = {
   node?: number
   /** The directory label on disk, e.g. `primitives`. */
   nodeLabel?: string
-  /** Repo-relative path of the actual component file. */
+  /**
+   * Repo-relative path of the component's primary source file — the React/TypeScript one
+   * when there is one, since that is what `/api/v1/ui/{name}` and `npx shadcn add` serve.
+   */
   sourcePath?: string
+  /**
+   * Every source file for this component, keyed by extension without the dot:
+   * `{ tsx: "…/button.tsx", rs: "…/button.rs" }`.
+   *
+   * A component is one name with one contract and possibly several implementations — the
+   * React one and the Dioxus one are the same button (CLAUDE.md §8.9). This is what lets
+   * `/api/v1/ui/{name}` stay byte-identical for React while `/api/v1/rs/{name}` serves the
+   * Rust, without inventing a second registry entry that would drift from the first.
+   */
+  sources?: Record<string, string>
 }
 
 type Manifest = { items?: RegistryItem[] }
@@ -75,9 +88,26 @@ function parseNodeDir(dir: string): { node: number; label: string } | null {
   return { node, label: m[2] }
 }
 
+type SourceEntry = {
+  node: number
+  nodeLabel: string
+  sourcePath: string
+  sources: Record<string, string>
+}
+
+/**
+ * Extensions that serve the React/shadcn surface, in preference order.
+ *
+ * The winner becomes `sourcePath`, which is what `/api/v1/ui/{name}` returns. Picking the
+ * first file the directory happens to list would let `button.rs` become the answer to
+ * `GET /api/v1/ui/button` on a filesystem that enumerates differently — a `shadcn add`
+ * silently handing a consumer Rust.
+ */
+const PRIMARY_EXTENSIONS = ["tsx", "ts", "jsx", "js"]
+
 /** Every component file on disk, keyed by component name. */
-function readSourceIndex(): Map<string, { node: number; nodeLabel: string; sourcePath: string }> {
-  const index = new Map<string, { node: number; nodeLabel: string; sourcePath: string }>()
+function readSourceIndex(): Map<string, SourceEntry> {
+  const index = new Map<string, SourceEntry>()
   if (!existsSync(REGISTRY_SOURCE_ROOT)) return index
 
   for (const dir of readdirSync(REGISTRY_SOURCE_ROOT)) {
@@ -88,15 +118,33 @@ function readSourceIndex(): Map<string, { node: number; nodeLabel: string; sourc
     for (const file of readdirSync(dirPath)) {
       const filePath = safeSourcePath(dir, file)
       if (!filePath || !statSync(filePath).isFile()) continue
-      // The component name is the filename without its extension. A component may
-      // ship per-target variants (.tsx / .swift / .kt), which share one name.
+      // The component name is the filename without its extension, so a component's
+      // per-target implementations (`button.tsx` + `button.rs`) collapse onto one name —
+      // which is the point: one component, one contract, several targets.
       const name = basename(file, extname(file))
-      if (index.has(name)) continue
-      index.set(name, {
-        node: parsed.node,
-        nodeLabel: parsed.label,
-        sourcePath: `components/registry/${dir}/${file}`,
-      })
+      const ext = extname(file).replace(/^\./, "").toLowerCase()
+      const rel = `components/registry/${dir}/${file}`
+
+      const existing = index.get(name)
+      if (!existing) {
+        index.set(name, {
+          node: parsed.node,
+          nodeLabel: parsed.label,
+          sourcePath: rel,
+          sources: { [ext]: rel },
+        })
+        continue
+      }
+      // Same name in a different node directory is a genuine conflict, not a target
+      // variant — the node would be ambiguous. First one wins and the validator reports it.
+      if (existing.sources[ext]) continue
+      existing.sources[ext] = rel
+      const current = extname(existing.sourcePath).replace(/^\./, "").toLowerCase()
+      const rank = (e: string) => {
+        const i = PRIMARY_EXTENSIONS.indexOf(e)
+        return i === -1 ? PRIMARY_EXTENSIONS.length : i
+      }
+      if (rank(ext) < rank(current)) existing.sourcePath = rel
     }
   }
   return index
@@ -134,7 +182,13 @@ export function readComponents(): RegistryItem[] {
       console.error(`[mzizi] registry: ${item.name} is in registry.json with no file on disk`)
       continue
     }
-    out.push({ ...item, node: src.node, nodeLabel: src.nodeLabel, sourcePath: src.sourcePath })
+    out.push({
+      ...item,
+      node: src.node,
+      nodeLabel: src.nodeLabel,
+      sourcePath: src.sourcePath,
+      sources: src.sources,
+    })
   }
 
   _cache = out.sort((a, b) => a.name.localeCompare(b.name))

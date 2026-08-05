@@ -141,8 +141,8 @@ pnpm lint:fix         # ESLint with --fix
 pnpm typecheck        # TypeScript type checking (tsc --noEmit)
 pnpm test             # Run Vitest test suite once
 pnpm test:watch       # Vitest in watch mode
-pnpm registry:sync    # Regenerate registry.json from Supabase (571 items)
-pnpm registry:verify  # Non-mutating check — fails CI if registry.json drifts from Supabase
+pnpm registry:normalize # Rewrite registry.json in canonical form (571 items)
+pnpm registry:verify  # Non-mutating check — fails CI if registry.json is not canonical
 pnpm tokens:sync      # Regenerate every N1 token artifact from the DB (§8.4.1)
 pnpm tokens:verify    # Non-mutating check — fails CI if any token artifact drifted
 pnpm registry:validate # Offline gate — every registry item resolves on disk and installs
@@ -151,15 +151,39 @@ pnpm doctrine:verify  # Non-mutating check — fails if an extracted doctrine fi
 pnpm audit:check      # pnpm audit --audit-level=moderate --ignore-registry-errors
 ```
 
+The Rust half of the registry has its own toolchain (§8.9). It is not wrapped in pnpm scripts,
+because a `pnpm rust:check` that shells out to cargo only adds a layer that can disagree with
+what CI runs:
+
+```bash
+cargo fmt   --manifest-path mzizi-rs/Cargo.toml --all -- --check
+cargo check --manifest-path mzizi-rs/Cargo.toml --workspace --all-targets
+cargo clippy --manifest-path mzizi-rs/Cargo.toml --workspace --all-targets -- -D warnings
+cargo test  --manifest-path mzizi-rs/Cargo.toml --workspace   # contract tests vs the .tsx
+```
+
 `pnpm components:extract` is **gone**, with `scripts/extract-components.ts` and the
 `resolveComponentSource` disk-then-DB fallback. The migration those served is finished:
 `source_code` is empty on all 571 rows, so all three could only read a column that no
 longer holds anything. Source moves in one direction now, and that direction is "it is
 already in git". See `docs/component-source-migration.md`.
 
-`sync-registry.ts` takes one flag, `--check` (same as `pnpm registry:verify`). It writes
-`registry.json` and nothing else — the `--ui-only` / `--json-only` pair documented here
-before referred to a `components/ui/*` write path the script no longer has.
+**`pnpm registry:sync` is gone, and its direction is reversed.** `scripts/sync-registry.ts`
+REGENERATED `registry.json` from the Supabase `components` view. Running it today would
+delete the manifest's authored `meta` block — use cases, variants, sizes, features, a11y
+notes, owner, collection — because no database row holds any of that any more. A generator
+whose source has less information than its output does not regenerate, it truncates.
+
+`scripts/normalize-registry.ts` replaces it and only canonicalises FORM: keys sorted, items
+sorted by name, two-space indent, one trailing newline, so a diff shows what changed rather
+than a reordering. `--check` (= `pnpm registry:verify`) fails when the committed file is not
+canonical. It reads no database and needs no credentials.
+
+Whether the manifest is CORRECT is a different question, asked by `pnpm registry:validate`
+(`scripts/validate-registry.mjs`): every item resolves to a file on disk, every
+`registryDependencies` entry is addressable by the shadcn CLI, every declared npm dependency
+is installed here. Two scripts because they answer two questions — one asks "is the file
+tidy", the other asks "does it work".
 
 ---
 
@@ -274,6 +298,13 @@ design-portal/
 │   ├── _pagefind/                    # Static search index (built by postbuild)
 │   ├── icons/                        # Favicon assets
 │   └── llms.txt                      # LLM-readable registry summary
+├── mzizi-rs/                         # Cargo workspace — the Rust half of the registry (§8.9)
+│   ├── Cargo.toml                    #   workspace: mzizi-tokens (N1), mzizi-ui (N2/Dioxus)
+│   └── crates/
+│       ├── mzizi-tokens/src/lib.rs   #   #[path]-includes n1-tokens/nyuchi-tokens-rust.rs
+│       └── mzizi-ui/
+│           ├── src/lib.rs            #   #[path]-includes n2-primitives/<name>.rs
+│           └── tests/contract.rs     #   asserts each .rs agrees with its .tsx sibling
 ├── supabase/
 │   ├── schema.sql                    # Single-file schema snapshot
 │   ├── config.toml
@@ -332,26 +363,32 @@ Supabase (source of truth)
      │     ├──► Server components (architecture / brand / changelog / observability pages)
      │     └──► /observability dashboard (live charts from usage_events + fundi_issues + chaos_events)
      │
-     ├── app/mcp/route.ts (document-route MCP)
-     │     └──► createMziziMcpServer(supabase) — reads `component_documents` only
-     │
-     ├── pnpm registry:sync ──► registry.json          (committed snapshot, 571 items)
-     │                          (CI runs `pnpm registry:verify` to fail on drift)
-     │
      ├── pnpm tokens:sync ────► lib/tokens/palette.generated.ts, the globals.css
      │                          palette block, and the six N1 platform token files
      │                          (CI runs `pnpm tokens:verify` to fail on drift)
      │
      └── lib/db/client.ts (browser localStorage cache, fetched from /api/v1/ui)
 
-git (source of truth for component SOURCE)
+git (source of truth for THE COMPONENT REGISTRY, end to end)
      │
-     └── components/registry/n<N>-<label>/<name>.<ext>  — 571 files, read by
-         lib/registry-source.ts and served through /api/v1/ui/{name}, the MCP,
-         /source/[name], /components/[name] and /playground/[name]
+     ├── registry.json                                  — the authored manifest, 571 items:
+     │                                                     install contract + `meta`
+     │                                                     (use cases, variants, sizes,
+     │                                                      features, a11y, owner,
+     │                                                      collection, hasDemo)
+     │
+     └── components/registry/n<N>-<label>/<name>.<ext>  — 571 files, the components
+         │
+         └──► lib/registry.ts joins the two and is read by
+              /api/v1/ui/{name}, app/mcp/route.ts, /source/[name],
+              /components/[name] and /playground/[name]
 ```
 
-**`registry.json`** must exist in the repo root, but it is **never hand-edited**. It is regenerated dynamically from Supabase by `pnpm registry:sync` whenever a component is added, modified, or removed in the database. The file is committed so that diffs are visible in PRs and CI can detect drift via `pnpm registry:verify`.
+**`registry.json` is AUTHORED, not generated.** It used to be a snapshot regenerated from
+Supabase; it now carries the only copy of each component's documented contract, so editing a
+description or a use case is a pull request against this file. `pnpm registry:normalize`
+canonicalises its formatting and `pnpm registry:verify` fails CI when it is not canonical;
+`pnpm registry:validate` is the gate that checks it actually installs.
 
 **Required env vars:**
 
@@ -701,16 +738,17 @@ history, changelog and docs. Only the bytes moved.
 
 1. Write the file under `components/registry/n<N>-<label>/`, following the CVA + Radix +
    `cn()` pattern (see `button.tsx`)
-2. Insert the metadata row into `component_documents` under the right collection — with
-   `files[].path` (where the shadcn CLI places it in a **consumer's** project, which is
-   free to differ from where it lives here), node, category, dependencies, `status`
-3. Leave `kind` null. A non-null `kind` marks a row as something other than a component
-   (`doc_page`, `overview`, …) and the `components` view filters those out — that is what
-   keeps 20 retired documentation pages from being served as installable components
+2. Add its item to `registry.json` — `name`, `type`, `description`, `dependencies`,
+   `registryDependencies`, and `files[].path` (where the shadcn CLI places it in a
+   **consumer's** project, which is free to differ from where it lives here)
+3. Add its `meta` block in the same item — `useCases`, `variants`, `sizes`, `features`,
+   `a11y`, `owner`, `collection`. This is the component's documented contract and the
+   manifest is its only home; there is no database row to put it in
 4. `pnpm typecheck && pnpm lint && pnpm test` — the whole point of the file being on disk
-5. Run `pnpm registry:sync` to regenerate `registry.json`
+5. `pnpm registry:normalize` to canonicalise the manifest, then `pnpm registry:validate`
+   to prove the item resolves on disk and its dependencies are addressable
 6. Verify the API serves it: `curl http://localhost:11736/api/v1/ui/<component-name>`
-7. Commit both — CI runs `pnpm registry:verify` to fail if the snapshot drifts
+7. Commit both — CI runs `registry:verify` + `registry:validate`
 
 ### 8.4 Modifying Existing Components
 
@@ -719,9 +757,11 @@ history, changelog and docs. Only the bytes moved.
 - Preserve the existing CVA variant pattern — add variants, don't restructure
 - Keep Radix UI accessibility primitives intact
 - Don't break the shadcn registry schema — `https://ui.shadcn.com/schema/registry.json`
-- Bump the document's `currentVersion` and append to `component_versions` so the changelog
-  API reflects the change
-- Re-run `pnpm registry:sync` and commit the updated snapshot
+- Update the item's `meta` in `registry.json` when the change alters the contract — a new
+  variant that no `meta.variants` entry names is a component whose documentation is already
+  wrong
+- Append to `component_versions` so the changelog API reflects the change
+- Re-run `pnpm registry:normalize` and `pnpm registry:validate`, and commit the manifest
 
 ### 8.4.1 N1 token artifacts are generated — never hand-written
 
@@ -772,7 +812,7 @@ The portal dogfoods its own registry. The transitive closure of the brand compon
 
 **Two divergences between the registry's declared paths and the portal's reality**:
 
-1. **`components/mukoko/*` paths, `nyuchi-*` item names.** The registry is mid-rename; vendored files keep the `components/mukoko/*` path so that `pnpm registry:sync` sees them as unchanged. When the registry itself completes the rename to `components/nyuchi/*`, run `pnpm registry:sync` + rename locally in a single commit.
+1. **`components/mukoko/*` paths, `nyuchi-*` item names.** The registry is mid-rename; vendored files keep the `components/mukoko/*` path. When the registry itself completes the rename to `components/nyuchi/*`, update the `files[].path` entries in `registry.json` + rename locally in a single commit.
 2. **Brand component imports use `@/components/brand/*` paths** that don't exist in this repo. The portal keeps `nyuchi-logo.tsx` and `mineral-strip.tsx` under `@/components/layout/` instead. Vendored files are patched on install to target the portal's real paths.
 
 **Footer composition note.** `components/landing/footer.tsx` is deliberately NOT a one-line wrapper over `NyuchiFooter`. The portal footer has four portal-specific features: (1) the ecosystem brand grid, (2) a socials row, (3) an inline `ThemeToggle`, (4) a version line.
@@ -843,14 +883,41 @@ core-only; once Dioxus carries web _and_ mobile native from one codebase, Svelte
 alternative rather than the target. It stays production-ready and supported — `optional` is not
 deprecated, and `react` at `legacy` still holds the largest inventory by far.
 
-**No Rust ships yet, and the node documents say so.** There is no `Cargo.toml`, no `.rs` and no
-`.wasm` in this repo or in `nyuchi/mzizi-tools`: the harness is `lib/harness/index.tsx`, the
-token generator is `scripts/sync-tokens.ts`, the resilience primitives are `lib/*.ts`, and the
-fundi worker is TypeScript. Every Rust statement below and in
-`documentation-architecture-nodes` is therefore **target state, explicitly labelled** — each
-node's `rust.state` reads `target`, never `shipping`. Write it that way. A node that describes
-a Rust implementation in the present tense reads as shipped to every agent that queries it, and
-that is the drift this section exists to prevent.
+**Rust has started, and exactly how far it has got matters.** This section previously said "no
+Rust ships yet"; that is now wrong in one specific place and still right everywhere else, and
+conflating the two is the drift it warned about.
+
+**What ships:** a cargo workspace at `mzizi-rs/` with two crates — `mzizi-tokens` (N1, the
+generated token module) and `mzizi-ui` (N2, Dioxus primitives). The primitives are files under
+`components/registry/n2-primitives/<name>.rs`, beside their `.tsx` siblings, which the crate
+`#[path]`-includes. `cargo fmt --check`, `cargo check`, `clippy -D warnings` and `cargo test`
+run in CI's `Rust` job, and `Build` needs it.
+
+**What does not:** no WASM shared core. The harness is still `lib/harness/index.tsx`, the
+resilience primitives are still `lib/*.ts`, the N4 safety gates are still TypeScript, and the
+fundi worker is still TypeScript. Every Rust statement about N4, N5, N8 and N9 in
+`documentation-architecture-nodes` remains **target state, explicitly labelled** — `rust.state`
+reads `target`, never `shipping`. A node that describes a Rust implementation in the present
+tense reads as shipped to every agent that queries it.
+
+**The gate landed with the first component, not after it.** A `.rs` file in the registry with
+no crate compiling it is exactly what a `source_code` database column was: bytes nothing
+verifies. `__tests__/api/v1/rust-route.test.ts` fails if any `.rs` component is not included by
+a crate, so there is no window in which Rust ships unchecked.
+
+**`cargo check` is necessary and not sufficient.** Two files can each compile and still be
+different buttons — a renamed variant, a missing `data-slot`, a dropped class — and the symptom
+is a Dioxus app rendering markup the shared stylesheet does not style, which looks like a CSS
+bug in a repo where nothing is wrong. `mzizi-rs/crates/mzizi-ui/tests/contract.rs` reads each
+component's `.tsx` on disk and compares. Individual classes are asserted, never the whole
+string: Tailwind class order is not semantic, and a character-diff that fails on a reordering
+trains everyone to ignore it.
+
+**Do not machine-translate the `.tsx` files.** Write each Rust component against the
+component's _contract_ — props, variants, a11y semantics, the `data-slot` names — with the
+`.tsx` as reference, not input. A mechanical TSX→RSX pass carries every defect in the original
+across while `cargo check` waves it through, because a faithful port of a broken component
+still compiles.
 
 **Two different Rusts, and conflating them is the classic error.**
 
@@ -902,6 +969,7 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 | `GET /api/v1/brand`                        | Brand system (minerals, typography, spacing, ecosystem)                 | —         |
 | `GET /api/v1/ui`                           | Component registry index                                                | —         |
 | `GET /api/v1/ui/{name}`                    | Individual component (shadcn format, with source code)                  | —         |
+| `GET /api/v1/rs/{name}`                    | The same component's **Rust (Dioxus)** source; 404 when it has none     | —         |
 | `GET /api/v1/ui/{name}/docs`               | Component docs (use cases, variants, a11y)                              | —         |
 | `GET /api/v1/ui/{name}/versions`           | Component version history                                               | —         |
 | `GET /api/v1/ecosystem`                    | Architecture principles & framework decision                            | —         |
@@ -1157,7 +1225,7 @@ Three workflows in `.github/workflows/`:
 | **Type check (project)**   | `pnpm typecheck`                                                     | TypeScript error                                            |
 | **Security audit**         | `pnpm audit --audit-level=moderate --ignore-registry-errors`         | Unresolved vulnerability — update deps or add pnpm override |
 
-CI additionally runs `pnpm test`, `pnpm build`, and `pnpm registry:verify`.
+CI additionally runs `pnpm test`, `pnpm build`, `pnpm registry:verify`, and `pnpm registry:validate`.
 
 ### Deployment
 
@@ -1179,7 +1247,7 @@ When working on this codebase as an AI assistant:
 
    The test is _who edits it_. A JSON column is invisible to tsc, eslint, prettier and a reviewer, so anything a person writes and another person should check belongs in a file where the toolchain and a diff can see it. Anything generated by a script, bumped by a release, or appended by telemetry belongs in the database. See §8.3 and `docs/component-source-migration.md`.
 
-2. **`registry.json` is generated, not authored.** Never hand-edit it. CI runs `pnpm registry:verify` to catch drift.
+2. **`registry.json` is AUTHORED, not generated** — this reverses the old rule. It holds the only copy of each component's documented contract (`meta`: use cases, variants, sizes, features, a11y, owner, collection), so editing it IS the workflow. `pnpm registry:normalize` canonicalises its formatting; `pnpm registry:validate` proves every item still installs.
 3. **Never break the shadcn registry schema** — downstream apps depend on it.
 4. **Use the Seven African Minerals palette** (plus heritage / status / experimental sets — §7) — never introduce colors outside the token system.
 5. **Follow the CVA + Radix + cn() pattern** — every component uses this stack.

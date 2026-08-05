@@ -1,0 +1,20 @@
+[package]
+name = "mzizi-ui"
+description = "Mzizi N2 primitives for Dioxus — the Rust path for the component registry."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+mzizi-tokens = { path = "../mzizi-tokens", version = "0.1.0" }
+# A component LIBRARY, so no `launch`, no `devtools`, no renderer. Those belong to
+# the app that mounts these primitives — pulling a renderer in here would pick the
+# consumer's target for them, and Dioxus's whole point is that one codebase serves
+# web, desktop, iOS and Android.
+dioxus = { version = "0.7", default-features = false, features = ["macro", "signals", "hooks", "html"] }
