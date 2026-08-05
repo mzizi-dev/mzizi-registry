@@ -32,12 +32,28 @@ describe("GET /api/v1/ui", () => {
     mockGetAllComponents.mockReset()
   })
 
-  it("returns 503 when Supabase is not configured", async () => {
+  it("serves the registry with no database configured", async () => {
+    // This spec asserted 503 "Database not configured" — and asserting it is what kept the
+    // defect alive. `getAllComponents` reads `registry.json` and the files on disk, so the
+    // registry INDEX, the first route any consumer hits, answered 503 for content sitting in
+    // the deployed bundle and named a credential that would not have helped.
     mockIsSupabaseConfigured.mockReturnValue(false)
+    mockGetAllComponents.mockResolvedValue([
+      {
+        name: "button",
+        registry_type: "registry:ui",
+        description: "Displays a button or a component that looks like a button.",
+        dependencies: [],
+        registry_dependencies: [],
+      },
+    ])
 
-    const res = (await GET()) as unknown as { status: number; data: { error: string } }
-    expect(res.status).toBe(503)
-    expect(res.data.error).toBe("Database not configured")
+    const res = (await GET()) as unknown as {
+      status: number
+      data: { items: Array<{ name: string }> }
+    }
+    expect(res.status).toBe(200)
+    expect(res.data.items.map((i) => i.name)).toEqual(["button"])
   })
 
   it("returns registry payload with the correct schema and items", async () => {
