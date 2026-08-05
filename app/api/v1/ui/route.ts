@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { getAllComponents, isSupabaseConfigured } from "@/lib/db"
+import { getAllComponents } from "@/lib/db"
 
 const logger = createLogger("registry")
 
@@ -16,15 +16,10 @@ const CORS_CACHE = {
  */
 export async function GET() {
   try {
-    if (!isSupabaseConfigured()) {
-      return NextResponse.json(
-        {
-          error: "Database not configured",
-          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-        },
-        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
-      )
-    }
+    // The `isSupabaseConfigured()` guard that stood here is gone with the store it guarded.
+    // `getAllComponents` reads `registry.json` and the files on disk, so a missing anon key
+    // made the registry INDEX answer 503 for data in the deployed bundle — the one route a
+    // consumer hits first.
 
     const components = await getAllComponents()
     const items = components.map((c) => ({
