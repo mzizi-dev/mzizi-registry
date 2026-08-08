@@ -2632,3 +2632,296 @@ fn the_incident_spellings_match_the_typescript() {
         );
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// mzizi-chaos — the config options that did nothing, and a classifier that
+// could only say "systemic"
+// ═══════════════════════════════════════════════════════════════════════════
+
+// `ProbeResult` and `ProbeStatus` are aliased because mzizi-synthetic-probe
+// declares the same two names for different shapes — a journey step versus a
+// dependency check. The .ts has the same collision and never feels it, since
+// nothing imports both; a consumer who did would. Recorded here rather than
+// renamed, because renaming either changes a published type name.
+use mzizi_assurance::mzizi_chaos::{
+    BlastRadius, ChaosConfig, ProbeResult as ChaosProbe, ProbeStatus as ChaosStatus,
+    SYSTEMIC_FRACTION, classify_blast_radius, diagnose, injected_error_message,
+    injected_latency_ms, should_inject_error, should_inject_latency,
+};
+
+fn chaos_ts() -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../components/registry/n8-assurance/mzizi-chaos.tsx");
+    fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
+}
+
+fn probe(target: &str, status: ChaosStatus) -> ChaosProbe {
+    ChaosProbe {
+        target: target.to_owned(),
+        status,
+        latency_ms: 42.0,
+        error: None,
+    }
+}
+
+#[test]
+fn target_nodes_actually_narrows_the_blast_zone() {
+    // THE DEAD OPTION. `targetNodes` is documented "Nodes to target (empty =
+    // all)" and nothing in the .ts reads it — so a consumer who took the
+    // deliberate step of scoping chaos to one node got chaos everywhere, and
+    // the option bought them confidence rather than safety.
+    let scoped = ChaosConfig {
+        enabled: true,
+        error_probability: 1.0,
+        target_nodes: [5].into_iter().collect(),
+        ..ChaosConfig::default()
+    };
+    assert!(should_inject_error(&scoped, 5, 0.0), "N5 is in scope");
+    assert!(!should_inject_error(&scoped, 2, 0.0), "N2 is not");
+    assert!(scoped.targets(5));
+    assert!(!scoped.targets(2));
+
+    let everything = ChaosConfig {
+        enabled: true,
+        error_probability: 1.0,
+        ..ChaosConfig::default()
+    };
+    assert!(everything.targets(2), "an empty set means all");
+    assert!(everything.targets(12), "including nodes not yet invented");
+    assert!(should_inject_error(&everything, 12, 0.0));
+
+    assert!(
+        chaos_ts().contains("targetNodes"),
+        "the .ts still declares the field"
+    );
+}
+
+#[test]
+fn nothing_is_injected_while_chaos_is_disabled() {
+    let off = ChaosConfig {
+        error_probability: 1.0,
+        latency_probability: 1.0,
+        ..ChaosConfig::default()
+    };
+    assert!(!off.enabled, "off is the default, as in the .ts");
+    assert!(!should_inject_error(&off, 2, 0.0));
+    assert!(!should_inject_latency(&off, 2, 0.0));
+    assert_eq!(
+        injected_latency_ms(&off, 0.9),
+        0,
+        "the .ts computes a delay regardless, so a caller reaching for it \
+         directly slowed a system with chaos switched off"
+    );
+}
+
+#[test]
+fn the_probability_boundary_is_exact() {
+    let on = ChaosConfig {
+        enabled: true,
+        error_probability: 0.001,
+        latency_probability: 0.005,
+        ..ChaosConfig::default()
+    };
+    assert!(should_inject_error(&on, 2, 0.000_9));
+    assert!(!should_inject_error(&on, 2, 0.001), "strictly less than");
+    assert!(should_inject_latency(&on, 2, 0.004_9));
+    assert!(!should_inject_latency(&on, 2, 0.005));
+
+    let defaults = ChaosConfig::default();
+    assert!((defaults.error_probability - 0.001).abs() < f64::EPSILON);
+    assert!((defaults.latency_probability - 0.005).abs() < f64::EPSILON);
+    assert_eq!(defaults.max_latency_ms, 3000);
+    let ts = chaos_ts();
+    assert!(ts.contains("errorProbability: 0.001"), "error rate drifted");
+    assert!(
+        ts.contains("latencyProbability: 0.005"),
+        "latency rate drifted"
+    );
+    assert!(ts.contains("maxLatencyMs: 3000"), "latency ceiling drifted");
+}
+
+#[test]
+fn injected_latency_stays_inside_its_ceiling() {
+    let on = ChaosConfig {
+        enabled: true,
+        max_latency_ms: 3000,
+        ..ChaosConfig::default()
+    };
+    assert_eq!(injected_latency_ms(&on, 0.0), 0);
+    assert_eq!(injected_latency_ms(&on, 0.5), 1500);
+    assert_eq!(injected_latency_ms(&on, 0.999_999), 2999);
+    assert_eq!(injected_latency_ms(&on, 1.0), 3000, "clamped, not wrapped");
+    assert_eq!(injected_latency_ms(&on, 7.0), 3000);
+}
+
+#[test]
+fn an_injected_error_is_labelled_as_injected() {
+    // An injected failure that reads like a real one wastes an on-call hour.
+    let message = injected_error_message(5, "nyuchi-wallet-card");
+    assert!(message.starts_with("[nyuchi:chaos]"));
+    assert!(message.contains("Node 5"));
+    assert!(message.contains("nyuchi-wallet-card"));
+    assert!(
+        chaos_ts().contains("[nyuchi:chaos] Injected error in Node"),
+        "the marker drifted from the sibling"
+    );
+}
+
+#[test]
+fn one_failure_out_of_two_is_partial_not_systemic() {
+    // THE DEAD BAND. `errorCount < probes.length / 2` gives, for the .ts's own
+    // default of two probes: 0 → isolated, 1 → systemic, 2 → systemic. `partial`
+    // is unreachable, so a single failing dependency recommended "Activate
+    // incident response". A classifier whose error is toward paging is one
+    // people learn to disregard.
+    let one_of_two = vec![
+        probe("API", ChaosStatus::Healthy),
+        probe("Search", ChaosStatus::Error),
+    ];
+    assert_eq!(classify_blast_radius(&one_of_two), BlastRadius::Partial);
+
+    let one_of_four = vec![
+        probe("API", ChaosStatus::Healthy),
+        probe("Search", ChaosStatus::Healthy),
+        probe("Auth", ChaosStatus::Healthy),
+        probe("Queue", ChaosStatus::Timeout),
+    ];
+    assert_eq!(classify_blast_radius(&one_of_four), BlastRadius::Partial);
+
+    let two_of_four = vec![
+        probe("API", ChaosStatus::Error),
+        probe("Search", ChaosStatus::Healthy),
+        probe("Auth", ChaosStatus::Healthy),
+        probe("Queue", ChaosStatus::Timeout),
+    ];
+    assert_eq!(
+        classify_blast_radius(&two_of_four),
+        BlastRadius::Partial,
+        "exactly half is still partial — half your dependencies answering is \
+         not an outage"
+    );
+
+    let three_of_four = vec![
+        probe("API", ChaosStatus::Error),
+        probe("Search", ChaosStatus::Error),
+        probe("Auth", ChaosStatus::Healthy),
+        probe("Queue", ChaosStatus::Timeout),
+    ];
+    assert_eq!(classify_blast_radius(&three_of_four), BlastRadius::Systemic);
+
+    let both_of_two = vec![
+        probe("API", ChaosStatus::Error),
+        probe("Search", ChaosStatus::Timeout),
+    ];
+    assert_eq!(
+        classify_blast_radius(&both_of_two),
+        BlastRadius::Systemic,
+        "all three bands are reachable with two probes, which is the point"
+    );
+
+    // The threshold is EXCLUSIVE, and this spec exists because the first fix
+    // used `>=` — which leaves `partial` exactly as unreachable with two probes
+    // as the .ts did. Reproducing the bug you are fixing is easy; the assertion
+    // above is what caught it.
+    assert!((SYSTEMIC_FRACTION - 0.5).abs() < f64::EPSILON);
+}
+
+#[test]
+fn a_slow_dependency_is_not_a_down_one() {
+    // `degraded` does not count toward the blast radius, matching the .ts.
+    // Folding the two together would make every busy afternoon an outage.
+    let slow = vec![
+        probe("API", ChaosStatus::Degraded),
+        probe("Search", ChaosStatus::Degraded),
+    ];
+    assert_eq!(classify_blast_radius(&slow), BlastRadius::Isolated);
+    assert!(!ChaosStatus::Degraded.is_down());
+    assert!(ChaosStatus::Timeout.is_down());
+    assert!(ChaosStatus::Error.is_down());
+    assert!(!ChaosStatus::Healthy.is_down());
+}
+
+#[test]
+fn probing_nothing_answers_unknown_rather_than_isolated() {
+    // THE DEFAULT ENDPOINT LIST, and how it compounded the dead band. The .ts
+    // ships /api/weather?lat=-17.83&lon=31.05 as a default in a component
+    // anyone can install, so in any app that is not the weather app that probe
+    // fails every time — one out of two — which its classifier then calls a
+    // systemic outage. Installed anywhere else, it reported a systemic outage
+    // on every single diagnosis.
+    assert_eq!(classify_blast_radius(&[]), BlastRadius::Unknown);
+
+    let report = diagnose("nyuchi-wallet-card", "fetch failed", Vec::new(), 1.0);
+    assert_eq!(report.blast_radius, BlastRadius::Unknown);
+    assert!(
+        report.recommendation.contains("unknown"),
+        "not 'retry should resolve', which the .ts asserts on zero evidence"
+    );
+    assert!(
+        chaos_ts().contains("/api/weather?lat=-17.83&lon=31.05"),
+        "the .ts still hardcodes one app's endpoint as a registry default"
+    );
+}
+
+#[test]
+fn the_report_is_returned_rather_than_written_to_a_console() {
+    // The .ts console.warns JSON.stringify(report, null, 2) on every diagnosis,
+    // in a component whose own header says it runs in production, carrying an
+    // error message that is attacker-influenced whenever user input reaches an
+    // exception.
+    let report = diagnose(
+        "nyuchi-wallet-card",
+        "TypeError: fetch failed",
+        vec![
+            probe("API", ChaosStatus::Healthy),
+            probe("Search", ChaosStatus::Error),
+        ],
+        1_786_158_000_000.0,
+    );
+    assert_eq!(report.trigger_component, "nyuchi-wallet-card");
+    assert_eq!(report.trigger_error, "TypeError: fetch failed");
+    assert_eq!(report.probes.len(), 2);
+    assert_eq!(report.blast_radius, BlastRadius::Partial);
+    assert_eq!(
+        report.recommendation,
+        BlastRadius::Partial.recommendation(),
+        "the recommendation follows the classification, never set separately"
+    );
+}
+
+#[test]
+fn the_chaos_spellings_match_the_typescript() {
+    let ts = chaos_ts();
+    for status in [
+        ChaosStatus::Healthy,
+        ChaosStatus::Degraded,
+        ChaosStatus::Timeout,
+        ChaosStatus::Error,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", status.as_str())),
+            "probe status {}",
+            status.as_str()
+        );
+    }
+    for radius in [
+        BlastRadius::Isolated,
+        BlastRadius::Partial,
+        BlastRadius::Systemic,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", radius.as_str())),
+            "blast radius {}",
+            radius.as_str()
+        );
+        assert!(
+            ts.contains(radius.recommendation()),
+            "recommendation for {}",
+            radius.as_str()
+        );
+    }
+    // `unknown` has no .ts counterpart: zero probes there gives errorCount === 0,
+    // which is `isolated`.
+    assert!(!ts.contains("\"unknown\""));
+}

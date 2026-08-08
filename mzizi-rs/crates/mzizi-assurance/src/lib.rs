@@ -48,6 +48,9 @@ pub mod mzizi_synthetic_probe;
 #[path = "../../../../components/registry/n8-assurance/mzizi-a11y-audit.rs"]
 pub mod mzizi_a11y_audit;
 
+#[path = "../../../../components/registry/n8-assurance/mzizi-chaos.rs"]
+pub mod mzizi_chaos;
+
 #[path = "../../../../components/registry/n8-assurance/mzizi-perf-probe.rs"]
 pub mod mzizi_perf_probe;
 
