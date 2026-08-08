@@ -546,6 +546,25 @@ export interface ChangelogRow {
   title: string
   description: string | null
   /**
+   * Which version era this release belongs to.
+   *
+   * `public` is the 1.x line; `pre-1.0` is the internal 4.x iteration that
+   * 1.0.0 superseded (§14). Both exist in the same table, which is why no
+   * single sort key orders the changelog: by date, ten undated 4.1.x rows
+   * float above everything; by semver, 4.2.0 outranks the current 1.0.0.
+   * `line_rank` puts the public line first and the view is pre-sorted.
+   */
+  line?: "public" | "pre-1.0"
+  line_rank?: number
+  major?: number | null
+  minor?: number | null
+  patch?: number | null
+  /** initial / major / minor / patch, compared to the predecessor in the SAME line. */
+  release_kind?: "initial" | "major" | "minor" | "patch"
+  breaking?: boolean | null
+  /** Components added + modified + deprecated + removed by this release. */
+  components_touched?: number
+  /**
    * Ecosystem nodes touched by this release. Rendered as pill badges
    * coloured by helix classification (strand class for a node, gold for
    * a rung) via the nyuchi-changelog-renderer. The node set is never
@@ -654,10 +673,42 @@ export interface McpToolRegistryRow {
  *    explicitly, so re-adding it takes two edits rather than none.
  */
 export interface ComponentVersionRow {
+  /**
+   * Never null. It used to be, on 1,034 of 4,889 rows, because the view read
+   * `document->>'componentName'` and 1,472 archived entities have no such key —
+   * the row's own `name` column held the identity all along.
+   */
   component_name: string
-  version: string
+  /** The archived row's own name, before the componentName fallback. */
+  entity_name: string
+  /**
+   * What is being versioned. The view is called `component_versions` but the
+   * archive covers far more: 60 MCP tools, 11 architecture nodes, documentation
+   * pages, changelog entries, design tokens (`Body Large`, `raised`,
+   * `duration-quick`) and framework descriptors (`react:badge`). Filter on
+   * `component` to get a component's history.
+   */
+  entity_kind:
+    "component" | "tool" | "architecture" | "release" | "doctrine" | "documentation" | "other"
+  version: string | null
   version_number: number | null
+  /** The raw archived value — 12 ad-hoc strings. Kept so the mapping stays auditable. */
   change_type: string | null
+  /** `change_type` normalised. `unclassified` means the raw value said WHEN, not WHAT. */
+  change_kind: "added" | "changed" | "fixed" | "moved" | "metadata" | "docs" | "unclassified"
+  /**
+   * The release this change belongs to.
+   *
+   * Taken from the marker embedded in `change_type` when it encodes one — the
+   * largest change_type value, `4.1.1-alignment` on 2,132 rows, is a release
+   * marker wearing a change type's clothes — otherwise the newest release
+   * published on or before the change's timestamp. Null for changes that
+   * predate the first dated release.
+   */
+  release: string | null
+  /** The release marker parsed out of `change_type`, when there was one. */
+  release_marker: string | null
+  release_breaking: boolean | null
   comment: string | null
   description: string | null
   status: string | null

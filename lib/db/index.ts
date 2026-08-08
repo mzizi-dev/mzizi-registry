@@ -5,9 +5,15 @@
  * serves it over `/api/v1/*`, and `mzizi-mcp` is an HTTP client of that API — so the
  * database is not in the serving path for components or doctrine.
  *
- *   Components  →  content/registry/<collection>/<name>.json  (lib/registry.ts)
+ *   Components  →  registry.json, one authored item per component (lib/registry.ts)
  *                  + source on disk under components/registry/ (lib/registry-source.ts)
  *   Doctrine    →  content/doctrine/<collection>/<slug>.mdx    (lib/doctrine.ts)
+ *
+ * This block said `content/registry/<collection>/<name>.json`. That directory
+ * does not exist and never did — `content/` holds `doctrine/` only, and
+ * `lib/registry.ts` reads a single `registry.json` at the repo root. A path in a
+ * header is the first thing someone greps for, so a plausible-but-absent one
+ * costs more than no path at all.
  *
  * What is still Supabase, and why — it is written by a machine, not a person:
  *
@@ -68,7 +74,6 @@ import type {
   ChangelogListRow,
   ComponentVersionRow,
   McpToolRegistryRow,
-  DesignTokens,
   HelixClass,
   HelixModel,
   HelixNode,
@@ -771,51 +776,73 @@ export async function getAllAiInstructions(): Promise<AiInstructionRow[]> {
 // ── Changelog queries ───────────────────────────────────────────────
 
 /**
- * Get all changelog entries, most recent first.
+ * Every release, newest first, classified.
+ *
+ * Reads the `releases` view rather than `changelog` directly. Ordering the raw
+ * table by `released_at DESC` — what this did — opened the changelog with
+ * 4.1.8, 4.1.1, 4.1.2, 4.1.0 in arbitrary order and put the current release,
+ * 1.0.0, at position ELEVEN, because ten rows have no `released_at` and
+ * Postgres sorts NULLS FIRST on DESC.
+ *
+ * The view adds what a reader needs to classify a release rather than just
+ * read its title: `line` (the public 1.x line vs the pre-1.0 internal 4.x one
+ * it superseded), `release_kind` (initial / major / minor / patch, compared
+ * within its own line), and `components_touched`. It is ordered in the view, so
+ * no `.order()` here — adding one would silently override the two-era sort.
  */
 export async function getChangelogEntries(): Promise<ChangelogRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("changelog")
-    .select("*")
-    .order("released_at", { ascending: false })
+  const { data, error } = await getPublicClient().from("releases").select("*")
 
   if (error) throw new Error(error.message)
   return (data ?? []) as unknown as ChangelogRow[]
 }
 
 /**
- * Get a single changelog entry by version.
+ * Every changelog entry published under a version.
+ *
+ * Returns an ARRAY because a version number is not unique here: eight of them
+ * carry two or three entries with genuinely different titles and content
+ * (4.0.31 has three — Ubuntu pillars, a documentation sweep, and an audit
+ * remediation). They are separate changesets that shared a version number, not
+ * duplicates of one another, so picking one would silently drop real release
+ * notes.
+ *
+ * This used `.single()`, and PostgREST answers PGRST116 for BOTH "no rows" and
+ * "more than one row". The `if (error.code === "PGRST116") return null` branch
+ * therefore turned "this version has three entries" into "this version does not
+ * exist", and `/api/v1/changelog/4.0.31` answered 404 for a release that is in
+ * the table three times. Eight of sixty-four releases were unreachable that way.
  */
-export async function getChangelogByVersion(version: string): Promise<ChangelogRow | null> {
+export async function getChangelogByVersion(version: string): Promise<ChangelogRow[]> {
   const { data, error } = await getPublicClient()
     .from("changelog")
     .select("*")
     .eq("version", version)
-    .single()
+    .order("created_at", { ascending: true, nullsFirst: false })
 
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as ChangelogRow
+  if (error) throw new Error(error.message)
+  return (data ?? []) as unknown as ChangelogRow[]
 }
 
 /**
- * Get the latest released version string.
+ * The current release version.
+ *
+ * Reads the `releases` view, which orders across both version eras. Ordering
+ * `changelog` by `released_at DESC` — what this did — is wrong twice: ten rows
+ * have no `released_at`, and Postgres sorts NULLS FIRST on DESC, so this
+ * returned **4.1.8**. That is not the current version and not even the newest
+ * of the undated rows; it was whichever null landed first.
+ *
+ * Sorting by semver instead would return 4.2.0, also wrong: the version line
+ * was deliberately reset and 1.0.0 supersedes the whole 4.x line (§14). The
+ * view carries that as `line` / `line_rank` and is already sorted, so the first
+ * row is the answer.
  */
 export async function getLatestVersion(): Promise<string | null> {
-  const { data, error } = await getPublicClient()
-    .from("changelog")
-    .select("version")
-    .order("released_at", { ascending: false })
-    .limit(1)
-    .single()
+  const { data, error } = await getPublicClient().from("releases").select("version").limit(1)
 
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return (data as unknown as { version: string } | null)?.version ?? null
+  if (error) throw new Error(error.message)
+  return (data as unknown as Array<{ version: string }>)?.[0]?.version ?? null
 }
 
 /**
@@ -850,9 +877,15 @@ export async function upsertChangelog(entry: ChangelogInsert): Promise<Changelog
  */
 const VERSION_COLUMNS = [
   "component_name",
+  "entity_name",
+  "entity_kind",
   "version",
   "version_number",
   "change_type",
+  "change_kind",
+  "release",
+  "release_marker",
+  "release_breaking",
   "comment",
   "description",
   "status",
@@ -902,38 +935,27 @@ export async function getComponentVersion(
   return data as unknown as ComponentVersionRow
 }
 
-// ── Design token queries (from nyuchi-tokens component) ─────────────
-
-/**
- * Get the design tokens payload from the nyuchi-tokens component's source_code.
- *
- * In the migrated schema, design tokens (minerals, semantic colors, typography,
- * spacing, radii) live as a JSON payload in `components.source_code` where
- * `name = 'nyuchi-tokens'` — not in the legacy brand_* tables.
- *
- * Returns null if the component row is missing or source_code doesn't parse.
- */
-export async function getDesignTokens(): Promise<DesignTokens | null> {
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("source_code")
-    .eq("name", "nyuchi-tokens")
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-
-  const source = (data as unknown as { source_code: string | null } | null)?.source_code
-  if (!source) return null
-
-  try {
-    return JSON.parse(source) as DesignTokens
-  } catch {
-    return null
-  }
-}
+// ── Design token queries ────────────────────────────────────────────
+//
+// `getDesignTokens()` is DELETED, not repointed.
+//
+// It selected `source_code` from the `components` view where
+// `name = 'nyuchi-tokens'` and JSON.parse'd the result. That column has been
+// null on every row since component source moved to disk (§8.3), so the
+// function could only ever return null — and it had no callers anywhere in
+// `app/`, `lib/`, `components/` or `scripts/`.
+//
+// Repointing it at the file would have been the wrong fix twice over: nothing
+// wants it, and the token pipeline already runs the other way. `pnpm
+// tokens:sync` GENERATES `lib/tokens/palette.generated.ts` and the
+// `tokens:generated` block of `app/globals.css` from the Supabase
+// `styling-minerals` / `styling-heritage-colors` collections, with
+// `pnpm tokens:verify` as the drift gate (§8.4.1). A second reader that parsed
+// a component's source back into a token object would be a third copy of the
+// palette that nothing keeps in step.
+//
+// The `components` view no longer has a `source_code` column at all, so this
+// query would now raise 42703 rather than quietly returning null.
 
 // ── Layer summary query ─────────────────────────────────────────────
 

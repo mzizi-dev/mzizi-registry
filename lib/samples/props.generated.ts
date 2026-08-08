@@ -64,6 +64,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "agenda-view": [
+    {
+      "name": "events",
+      "type": "AgendaEvent[]",
+      "required": true
+    }
+  ],
   "ai-chat": [
     {
       "name": "messages",
@@ -83,6 +90,52 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "suggestedPrompts",
       "type": "string[]",
+      "required": false
+    }
+  ],
+  "ai-feedback": [
+    {
+      "name": "value",
+      "type": "FeedbackValue",
+      "required": false
+    },
+    {
+      "name": "onFeedback",
+      "type": "(value: FeedbackValue) => void",
+      "required": false
+    },
+    {
+      "name": "showTextInput",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onTextFeedback",
+      "type": "(text: string) => void",
+      "required": false
+    }
+  ],
+  "ai-response-card": [
+    {
+      "name": "content",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "sources",
+      "type": "AiSource[]",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "alert-dialog": [
+    {
+      "name": "size",
+      "type": "\"default\" | \"sm\"",
       "required": false
     }
   ],
@@ -243,6 +296,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "loading",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "api-key-display": [
+    {
+      "name": "apiKey",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
       "required": false
     }
   ],
@@ -448,6 +513,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "audio-player": [
+    {
+      "name": "src",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "artist",
+      "type": "string",
+      "required": false
+    }
+  ],
   "audio-waveform": [
     {
       "name": "data",
@@ -482,6 +564,38 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onSeek",
       "type": "(position: number) => void",
+      "required": false
+    }
+  ],
+  "audit-log-entry": [
+    {
+      "name": "actor",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "timestamp",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "ip",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "severity",
+      "type": "\"info\" | \"warning\" | \"error\" | \"critical\"",
       "required": false
     }
   ],
@@ -556,6 +670,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "suggestions",
       "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "avatar": [
+    {
+      "name": "size",
+      "type": "\"default\" | \"sm\" | \"lg\"",
       "required": false
     },
     {
@@ -738,6 +864,30 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "calendar": [
+    {
+      "name": "buttonVariant",
+      "type": "React.ComponentProps<typeof Button>[\"variant\"]",
+      "required": false
+    }
+  ],
+  "calendar-day-view": [
+    {
+      "name": "events",
+      "type": "DayEvent[]",
+      "required": true
+    },
+    {
+      "name": "date",
+      "type": "Date",
+      "required": true
+    },
+    {
+      "name": "onEventClick",
+      "type": "(event: DayEvent) => void",
+      "required": false
+    }
+  ],
   "calendar-month-view": [
     {
       "name": "year",
@@ -767,6 +917,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "todayHighlight",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "calendar-week-view": [
+    {
+      "name": "events",
+      "type": "WeekEvent[]",
+      "required": true
+    },
+    {
+      "name": "weekStart",
+      "type": "Date",
+      "required": true
+    },
+    {
+      "name": "onEventClick",
+      "type": "(event: WeekEvent) => void",
       "required": false
     }
   ],
@@ -859,6 +1026,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "card": [
+    {
+      "name": "size",
+      "type": "\"default\" | \"sm\"",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "carousel": [
     {
       "name": "opts",
@@ -881,6 +1060,48 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "cart-item": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "price",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "quantity",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "onQuantityChange",
+      "type": "(quantity: number) => void",
+      "required": true
+    },
+    {
+      "name": "onRemove",
+      "type": "() => void",
+      "required": true
+    }
+  ],
   "category-browser": [
     {
       "name": "categories",
@@ -891,6 +1112,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "onSelect",
       "type": "(name: string) => void",
       "required": false
+    }
+  ],
+  "changelog-entry": [
+    {
+      "name": "version",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "date",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "changes",
+      "type": "ChangeGroup[]",
+      "required": true
     }
   ],
   "chapter-list": [
@@ -984,6 +1222,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "chart-area-axes": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "chart-area-default": [
     {
       "name": "data",
@@ -1028,6 +1273,69 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "ariaLabel",
       "type": "string",
+      "required": false
+    }
+  ],
+  "chart-area-gradient": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-area-icons": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-area-interactive": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-area-legend": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-area-linear": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-area-stacked": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-area-stacked-expand": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-area-step": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-bar-active": [
+    {
+      "name": "loading",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -1078,6 +1386,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "chart-bar-horizontal": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "chart-bar-interactive": [
     {
       "name": "data",
@@ -1120,6 +1435,27 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "chart-bar-label": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-bar-label-custom": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-bar-mixed": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "chart-bar-multiple": [
     {
       "name": "data",
@@ -1154,6 +1490,20 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "ariaLabel",
       "type": "string",
+      "required": false
+    }
+  ],
+  "chart-bar-negative": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-bar-stacked": [
+    {
+      "name": "loading",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -1204,6 +1554,55 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "chart-line-dots": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-line-dots-colors": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-line-dots-custom": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-line-interactive": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-line-label": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-line-label-custom": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-line-linear": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "chart-line-multiple": [
     {
       "name": "data",
@@ -1241,6 +1640,76 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "chart-line-step": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-pie-donut": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-pie-donut-active": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-pie-donut-text": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-pie-interactive": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-pie-label": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-pie-label-custom": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-pie-label-list": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-pie-legend": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-pie-separator-none": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "chart-pie-simple": [
     {
       "name": "data",
@@ -1265,6 +1734,216 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "ariaLabel",
       "type": "string",
+      "required": false
+    }
+  ],
+  "chart-pie-stacked": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-default": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-dots": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-grid-circle": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-grid-circle-fill": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-grid-circle-no-lines": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-grid-custom": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-grid-fill": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-grid-none": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-icons": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-label-custom": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-legend": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-lines-only": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-multiple": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radar-radius": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radial-grid": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radial-label": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radial-shape": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radial-simple": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radial-stacked": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-radial-text": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-tooltip-advanced": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-tooltip-default": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-tooltip-formatter": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-tooltip-icons": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-tooltip-indicator-line": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-tooltip-indicator-none": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-tooltip-label-custom": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-tooltip-label-formatter": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "chart-tooltip-label-none": [
+    {
+      "name": "loading",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -1310,6 +1989,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "showAttachment",
       "type": "boolean",
       "required": false
+    }
+  ],
+  "chat-layout": [
+    {
+      "name": "sidebar",
+      "type": "React.ReactNode",
+      "required": true
+    },
+    {
+      "name": "content",
+      "type": "React.ReactNode",
+      "required": true
     }
   ],
   "chat-list": [
@@ -1368,6 +2059,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "loading",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "checklist": [
+    {
+      "name": "items",
+      "type": "ChecklistItem[]",
+      "required": true
+    },
+    {
+      "name": "onChange",
+      "type": "(items: ChecklistItem[]) => void",
+      "required": true
+    },
+    {
+      "name": "onAdd",
+      "type": "(text: string) => void",
       "required": false
     }
   ],
@@ -1439,6 +2147,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "code-tabs": [
+    {
+      "name": "tabs",
+      "type": "CodeTab[]",
+      "required": true
+    }
+  ],
   "color-picker": [
     {
       "name": "value",
@@ -1448,6 +2163,35 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onChange",
       "type": "(value: string) => void",
+      "required": false
+    }
+  ],
+  "combobox": [
+    {
+      "name": "showTrigger",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "showClear",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "command": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "showCloseButton",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -1475,6 +2219,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onOpenChange",
       "type": "(open: boolean) => void",
+      "required": false
+    }
+  ],
+  "comment-thread": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "comment",
+      "type": "Comment",
+      "required": true
+    },
+    {
+      "name": "depth",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "onReply",
+      "type": "(parentId: string) => void",
       "required": false
     }
   ],
@@ -1561,6 +2327,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onDateClick",
       "type": "(date: string) => void",
+      "required": false
+    }
+  ],
+  "context-menu": [
+    {
+      "name": "side",
+      "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
       "required": false
     }
   ],
@@ -1837,6 +2610,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "date-range-picker": [
+    {
+      "name": "dateRange",
+      "type": "DateRange",
+      "required": false
+    },
+    {
+      "name": "onDateRangeChange",
+      "type": "(range: DateRange | undefined) => void",
+      "required": false
+    },
+    {
+      "name": "presets",
+      "type": "DateRangePreset[]",
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false
+    }
+  ],
   "dependency-graph": [
     {
       "name": "nodes",
@@ -1901,6 +2696,27 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "description-list": [
+    {
+      "name": "detail",
+      "type": "React.ReactNode",
+      "required": true
+    }
+  ],
+  "dialog": [
+    {
+      "name": "showCloseButton",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "direction": [
+    {
+      "name": "direction",
+      "type": "React.ComponentProps<typeof Direction.DirectionProvider>[\"dir\"]",
+      "required": false
+    }
+  ],
   "driver-profile-card": [
     {
       "name": "name",
@@ -1940,6 +2756,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "memberSince",
       "type": "string",
+      "required": false
+    }
+  ],
+  "dropdown-menu": [
+    {
+      "name": "inset",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"destructive\"",
       "required": false
     }
   ],
@@ -1990,6 +2818,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "deprecated",
       "type": "boolean",
       "required": false
+    }
+  ],
+  "env-editor": [
+    {
+      "name": "variables",
+      "type": "EnvVariable[]",
+      "required": true
+    },
+    {
+      "name": "onChange",
+      "type": "(variables: EnvVariable[]) => void",
+      "required": true
     }
   ],
   "error-boundary": [
@@ -2205,6 +3045,35 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onRolloutChange",
       "type": "(pct: number) => void",
+      "required": false
+    }
+  ],
+  "field": [
+    {
+      "name": "variant",
+      "type": "\"legend\" | \"label\"",
+      "required": false
+    }
+  ],
+  "file-preview": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "thumbnail",
+      "type": "string",
       "required": false
     }
   ],
@@ -2634,6 +3503,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "input-otp": [
+    {
+      "name": "containerClassName",
+      "type": "string",
+      "required": false
+    }
+  ],
   "invite-link": [
     {
       "name": "url",
@@ -2662,6 +3538,43 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "onRegenerate",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "invoice-row": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "date",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "amount",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "\"paid\" | \"pending\" | \"overdue\"",
+      "required": true
+    },
+    {
+      "name": "onDownload",
       "type": "() => void",
       "required": false
     }
@@ -2832,6 +3745,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "lightbox": [
+    {
+      "name": "images",
+      "type": "LightboxImage[]",
+      "required": true
+    },
+    {
+      "name": "initialIndex",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": true
+    }
+  ],
   "location-picker": [
     {
       "name": "value",
@@ -2903,6 +3838,34 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "login-01": [
+    {
+      "name": "animation",
+      "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
+      "required": true
+    }
+  ],
+  "login-02": [
+    {
+      "name": "animation",
+      "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
+      "required": true
+    }
+  ],
+  "login-04": [
+    {
+      "name": "animation",
+      "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
+      "required": true
+    }
+  ],
+  "login-05": [
+    {
+      "name": "animation",
+      "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
+      "required": true
+    }
+  ],
   "logs-page": [
     {
       "name": "title",
@@ -2947,6 +3910,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "loading",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "maintenance-page": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "estimatedReturn",
+      "type": "string",
       "required": false
     }
   ],
@@ -3171,6 +4151,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "masonry-grid": [
+    {
+      "name": "columns",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "gap",
+      "type": "string",
+      "required": false
+    }
+  ],
   "media-filter-strip": [
     {
       "name": "filters",
@@ -3338,6 +4330,74 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mention-input": [
+    {
+      "name": "value",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "required": true
+    },
+    {
+      "name": "users",
+      "type": "MentionUser[]",
+      "required": true
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "menubar": [
+    {
+      "name": "inset",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"destructive\"",
+      "required": false
+    }
+  ],
+  "message-thread": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "messages",
+      "type": "ThreadMessage[]",
+      "required": true
+    },
+    {
+      "name": "onReply",
+      "type": "(parentId: string) => void",
+      "required": false
+    }
+  ],
+  "mfa-setup": [
+    {
+      "name": "qrCodeUrl",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "secret",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "onVerify",
+      "type": "(code: string) => void",
+      "required": true
+    }
+  ],
   "mobile-money-selector": [
     {
       "name": "providers",
@@ -3439,6 +4499,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-abr-content": [
+    {
+      "name": "override",
+      "type": "ContentQuality",
+      "required": false
+    }
+  ],
   "mzizi-chain-gate": [
     {
       "name": "currentChain",
@@ -3495,6 +4562,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "fallback",
       "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-chaos": [
+    {
+      "name": "config",
+      "type": "Partial<ChaosConfig>",
       "required": false
     }
   ],
@@ -3883,6 +4957,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-skeleton-set": [
+    {
+      "name": "variant",
+      "type": "\"row\" | \"compact\" | \"hero\"",
+      "required": false
+    }
+  ],
   "mzizi-sync-status": [
     {
       "name": "sync",
@@ -3970,6 +5051,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "navigation-menu": [
+    {
+      "name": "viewport",
       "type": "boolean",
       "required": false
     }
@@ -4065,6 +5153,33 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "note-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "timestamp",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "color",
+      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\"",
+      "required": false
+    }
+  ],
   "note-editor": [
     {
       "name": "title",
@@ -4132,6 +5247,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "onViewAll",
       "type": "() => void",
       "required": false
+    }
+  ],
+  "notification-center": [
+    {
+      "name": "items",
+      "type": "Notification[]",
+      "required": true
     }
   ],
   "notification-center-full": [
@@ -5451,6 +6573,33 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "nyuchi-event-card": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "time",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "location",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mineral",
+      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\"",
+      "required": false
+    }
+  ],
   "nyuchi-featured-card": [
     {
       "name": "title",
@@ -5564,6 +6713,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onClick",
       "type": "() => void",
+      "required": false
+    }
+  ],
+  "nyuchi-fundi": [
+    {
+      "name": "executors",
+      "type": "RemediationExecutors",
+      "required": true
+    },
+    {
+      "name": "autoHeal",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onPlanCreated",
+      "type": "(plan: HealingPlan) => void",
+      "required": false
+    },
+    {
+      "name": "onHealComplete",
+      "type": "(result: HealingResult) => void",
       "required": false
     }
   ],
@@ -6899,6 +8070,38 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "nyuchi-product-card": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "price",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "originalPrice",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "badge",
+      "type": "string",
+      "required": false
+    }
+  ],
   "nyuchi-product-results": [
     {
       "name": "heading",
@@ -7020,6 +8223,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "nyuchi-profile-page": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "nyuchi-profile-page-layout": [
     {
       "name": "coverUrl",
@@ -7084,6 +8294,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onBack",
       "type": "() => void",
+      "required": false
+    }
+  ],
+  "nyuchi-profile-settings": [
+    {
+      "name": "loading",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -8187,6 +9404,52 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "onboarding-flow": [
+    {
+      "name": "animation",
+      "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
+      "required": true
+    }
+  ],
+  "onboarding-tour": [
+    {
+      "name": "steps",
+      "type": "TourStep[]",
+      "required": true
+    },
+    {
+      "name": "active",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "onNext",
+      "type": "() => void",
+      "required": true
+    },
+    {
+      "name": "onSkip",
+      "type": "() => void",
+      "required": true
+    }
+  ],
+  "order-summary": [
+    {
+      "name": "items",
+      "type": "OrderSummaryItem[]",
+      "required": true
+    },
+    {
+      "name": "total",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    }
+  ],
   "org-profile-page": [
     {
       "name": "org",
@@ -8224,6 +9487,33 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "page-header": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "breadcrumbs",
+      "type": "BreadcrumbItem[]",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "backHref",
+      "type": "string",
+      "required": false
+    }
+  ],
   "pagination": [
     {
       "name": "isActive",
@@ -8236,6 +9526,38 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "password",
       "type": "string",
       "required": true
+    }
+  ],
+  "payment-method-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "brand",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "lastFour",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "expiry",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "isDefault",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onSetDefault",
+      "type": "() => void",
+      "required": false
     }
   ],
   "payment-page": [
@@ -8298,6 +9620,30 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "title",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "permission-badge": [
+    {
+      "name": "role",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "phone-input": [
+    {
+      "name": "value",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "required": false
+    },
+    {
+      "name": "defaultCountry",
       "type": "string",
       "required": false
     }
@@ -8389,6 +9735,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "creatorName",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "price-display": [
+    {
+      "name": "amount",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "originalAmount",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "discount",
       "type": "string",
       "required": false
     }
@@ -8501,6 +9869,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "pull-to-refresh": [
+    {
+      "name": "onRefresh",
+      "type": "() => void",
+      "required": true
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "quick-action-grid": [
     {
       "name": "actions",
@@ -8537,6 +9917,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "showValue",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "reaction-picker": [
+    {
+      "name": "reactions",
+      "type": "Reaction[]",
+      "required": true
+    },
+    {
+      "name": "onReact",
+      "type": "(emoji: string) => void",
+      "required": false
+    },
+    {
+      "name": "emojis",
+      "type": "string[]",
       "required": false
     }
   ],
@@ -8772,6 +10169,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "resizable": [
+    {
+      "name": "withHandle",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "revenue-dashboard-widget": [
     {
       "name": "totalEarnings",
@@ -8863,6 +10267,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "role-selector": [
+    {
+      "name": "roles",
+      "type": "Role[]",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(roleId: string) => void",
+      "required": true
+    }
+  ],
   "route-card": [
     {
       "name": "routeName",
@@ -8908,6 +10329,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "frequency",
       "type": "string",
       "required": false
+    }
+  ],
+  "schema-viewer": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": true
     }
   ],
   "search-bar": [
@@ -9013,6 +10441,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "select": [
+    {
+      "name": "size",
+      "type": "\"sm\" | \"default\"",
+      "required": false
+    }
+  ],
   "send-money-flow": [
     {
       "name": "step",
@@ -9107,6 +10542,25 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "session-list": [
+    {
+      "name": "sessions",
+      "type": "Session[]",
+      "required": true
+    },
+    {
+      "name": "onRevoke",
+      "type": "(sessionId: string) => void",
+      "required": true
+    }
+  ],
+  "settings-layout": [
+    {
+      "name": "sidebar",
+      "type": "React.ReactNode",
+      "required": true
+    }
+  ],
   "severity-badge": [
     {
       "name": "severity",
@@ -9143,6 +10597,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "description",
       "type": "string",
+      "required": false
+    }
+  ],
+  "sheet": [
+    {
+      "name": "side",
+      "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+      "required": false
+    },
+    {
+      "name": "showCloseButton",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -9183,6 +10649,34 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "signup-01": [
+    {
+      "name": "animation",
+      "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
+      "required": true
+    }
+  ],
+  "signup-02": [
+    {
+      "name": "animation",
+      "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
+      "required": true
+    }
+  ],
+  "signup-03": [
+    {
+      "name": "animation",
+      "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
+      "required": true
+    }
+  ],
+  "signup-04": [
+    {
+      "name": "animation",
+      "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
+      "required": true
+    }
+  ],
   "social-feed-page": [
     {
       "name": "stories",
@@ -9202,6 +10696,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "loading",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "source-citation": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "snippet",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "relevance",
+      "type": "number",
       "required": false
     }
   ],
@@ -9367,6 +10883,30 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "stepper": [
+    {
+      "name": "steps",
+      "type": "StepItem[]",
+      "required": true
+    },
+    {
+      "name": "activeStep",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "onStepClick",
+      "type": "(step: number) => void",
+      "required": false
+    }
+  ],
+  "sticky-bar": [
+    {
+      "name": "position",
+      "type": "\"top\" | \"bottom\"",
+      "required": false
+    }
+  ],
   "stop-card": [
     {
       "name": "name",
@@ -9421,6 +10961,60 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "streaming-text": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "onComplete",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "subscription-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "price",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "period",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "features",
+      "type": "string[]",
+      "required": true
+    },
+    {
+      "name": "highlighted",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "() => void",
+      "required": false
+    }
+  ],
   "subscription-gate": [
     {
       "name": "title",
@@ -9468,6 +11062,25 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "suggested-prompts": [
+    {
+      "name": "prompts",
+      "type": "string[]",
+      "required": true
+    },
+    {
+      "name": "onSelect",
+      "type": "(prompt: string) => void",
+      "required": false
+    }
+  ],
+  "switch": [
+    {
+      "name": "size",
+      "type": "\"sm\" | \"default\"",
+      "required": false
+    }
+  ],
   "symptom-checker": [
     {
       "name": "symptoms",
@@ -9482,6 +11095,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onSubmit",
       "type": "(symptoms: SymptomEntry[]) => void",
+      "required": false
+    }
+  ],
+  "tag-input": [
+    {
+      "name": "tags",
+      "type": "string[]",
+      "required": true
+    },
+    {
+      "name": "onTagsChange",
+      "type": "(tags: string[]) => void",
+      "required": true
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "maxTags",
+      "type": "number",
       "required": false
     }
   ],
@@ -9707,6 +11342,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "time-slot-picker": [
+    {
+      "name": "slots",
+      "type": "TimeSlot[]",
+      "required": true
+    },
+    {
+      "name": "selected",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "(time: string) => void",
+      "required": true
+    }
+  ],
   "time-tracker": [
     {
       "name": "initialSeconds",
@@ -9726,6 +11378,50 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "compact",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "todo-item": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "completed",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "priority",
+      "type": "\"low\" | \"medium\" | \"high\"",
+      "required": false
+    },
+    {
+      "name": "dueDate",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onToggle",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "toggle-group": [
+    {
+      "name": "spacing",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "orientation",
+      "type": "\"horizontal\" | \"vertical\"",
       "required": false
     }
   ],
@@ -9786,6 +11482,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "onClick",
       "type": "() => void",
       "required": false
+    }
+  ],
+  "toolbar": [
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": true
     }
   ],
   "transaction-history-page": [
@@ -9905,6 +11608,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "defaultExpandedIds",
       "type": "Set<string>",
+      "required": false
+    }
+  ],
+  "typing-indicator": [
+    {
+      "name": "name",
+      "type": "string",
       "required": false
     }
   ],
@@ -10088,6 +11798,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onRequestMore",
       "type": "() => void",
+      "required": false
+    }
+  ],
+  "video-player": [
+    {
+      "name": "src",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "poster",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
       "required": false
     }
   ],
@@ -10282,6 +12009,33 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "loading",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "webhook-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "events",
+      "type": "string[]",
+      "required": true
+    },
+    {
+      "name": "status",
+      "type": "\"active\" | \"inactive\"",
+      "required": true
+    },
+    {
+      "name": "lastTriggered",
+      "type": "string",
       "required": false
     }
   ]
