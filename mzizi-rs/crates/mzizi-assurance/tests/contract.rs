@@ -3076,3 +3076,333 @@ fn the_status_labels_and_colour_variables_match_the_tsx() {
          that this comment needs deleting too"
     );
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// rtl-conformity-check — the rule that did not count, and the one that never ran
+// ═══════════════════════════════════════════════════════════════════════════
+
+use mzizi_assurance::rtl_conformity_check::{
+    Direction, NON_MIRRORING_ICONS, ObservedNode as RtlNode, PHYSICAL_PROPERTIES, RtlConfig,
+    RtlLevel, RtlRule, audit as rtl_audit, check_node as rtl_check_node, has_bidi_chars,
+    is_directional, is_non_mirroring, worst_level as rtl_worst_level,
+};
+
+fn rtl_ts() -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../components/registry/n8-assurance/rtl-conformity-check.tsx");
+    fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
+}
+
+fn rtl_node(tag: &str) -> RtlNode {
+    RtlNode {
+        tag_name: tag.to_owned(),
+        ..RtlNode::default()
+    }
+}
+
+fn styled(tag: &str, property: &str, value: &str) -> RtlNode {
+    let mut node = rtl_node(tag);
+    node.inline_styles
+        .insert(property.to_owned(), value.to_owned());
+    node
+}
+
+fn rtl_registry() -> BTreeMap<String, u32> {
+    BTreeMap::new()
+}
+
+#[test]
+fn a_missing_dir_attribute_actually_lowers_the_score() {
+    // THE RULE THAT DID NOT COUNT. `direction-attribute` is pushed after the
+    // element loop and `passes` only ever moves inside it, so a page whose sole
+    // defect is that RTL does not work at all scored 100 — and it is the most
+    // serious finding the check can produce.
+    let clean = vec![rtl_node("P"), rtl_node("DIV")];
+
+    let no_dir = rtl_audit("/", None, &clean, &RtlConfig::default(), &rtl_registry());
+    assert_eq!(no_dir.violations.len(), 1);
+    assert_eq!(no_dir.violations[0].rule, RtlRule::DirectionAttribute);
+    assert_eq!(no_dir.violations[0].level, RtlLevel::Serious);
+    assert!(no_dir.score < 100, "score was {}", no_dir.score);
+    assert_eq!(
+        no_dir.score, 67,
+        "two elements pass, the document check does not"
+    );
+
+    let with_dir = rtl_audit(
+        "/",
+        Some(Direction::Ltr),
+        &clean,
+        &RtlConfig::default(),
+        &rtl_registry(),
+    );
+    assert!(with_dir.violations.is_empty());
+    assert_eq!(with_dir.score, 100);
+    assert_eq!(with_dir.direction, Some(Direction::Ltr));
+}
+
+#[test]
+fn dir_ltr_is_a_deliberate_answer_and_an_absent_dir_is_not() {
+    // The .ts collapses both to "ltr" with `?? "ltr"`, so a page that declares
+    // its direction and a page that says nothing report identically.
+    assert_eq!(Direction::parse("rtl"), Some(Direction::Rtl));
+    assert_eq!(Direction::parse("LTR"), Some(Direction::Ltr));
+    assert_eq!(Direction::parse("auto"), Some(Direction::Auto));
+    assert_eq!(Direction::parse("sideways"), None);
+}
+
+#[test]
+fn the_icon_rule_runs_on_the_ltr_build_too() {
+    // The .ts gates it on `docDir === "rtl"`, so the check that finds icons
+    // needing mirroring never fires on the build almost everyone audits. And
+    // whether a chevron carries a mirroring hint is a property of the ICON, not
+    // of the render you happen to be looking at.
+    let mut chevron = rtl_node("SVG");
+    chevron.data_slot = Some("chevron-right-icon".to_owned());
+
+    for direction in [Direction::Ltr, Direction::Rtl, Direction::Auto] {
+        let result = rtl_audit(
+            "/",
+            Some(direction),
+            std::slice::from_ref(&chevron),
+            &RtlConfig::default(),
+            &rtl_registry(),
+        );
+        assert_eq!(
+            result.violations.len(),
+            1,
+            "the icon rule must not depend on {}",
+            direction.as_str()
+        );
+        assert_eq!(result.violations[0].rule, RtlRule::IconMirroring);
+    }
+
+    assert!(
+        rtl_ts().contains("docDir === \"rtl\""),
+        "the .tsx still gates the icon rule on the current direction"
+    );
+}
+
+#[test]
+fn a_mirroring_hint_settles_the_question() {
+    let mut hinted = rtl_node("SVG");
+    hinted.data_slot = Some("arrow-left-icon".to_owned());
+    hinted.rtl_mirror_hint = Some("true".to_owned());
+    assert!(rtl_check_node(&hinted, &RtlConfig::default(), &rtl_registry()).is_empty());
+
+    let mut transformed = rtl_node("SVG");
+    transformed.data_slot = Some("arrow-left-icon".to_owned());
+    transformed
+        .inline_styles
+        .insert("transform".to_owned(), "scaleX(-1)".to_owned());
+    assert!(rtl_check_node(&transformed, &RtlConfig::default(), &rtl_registry()).is_empty());
+}
+
+#[test]
+fn icon_names_are_matched_by_segment_not_by_substring() {
+    // "research-icon".includes("search-icon") is TRUE, so the .ts exempts a
+    // research icon from mirroring using the magnifying glass's entry. And
+    // isDirectionalIcon matches "back", so background-icon is reported as a
+    // directional icon needing mirroring.
+    let non_mirroring: BTreeSet<String> = NON_MIRRORING_ICONS
+        .iter()
+        .map(|s| (*s).to_owned())
+        .collect();
+
+    assert!(is_non_mirroring("search-icon", &non_mirroring));
+    assert!(
+        is_non_mirroring("icon-search", &non_mirroring),
+        "order-free"
+    );
+    assert!(
+        !is_non_mirroring("research-icon", &non_mirroring),
+        "research is not search"
+    );
+
+    assert!(is_directional("arrow-left-icon"));
+    assert!(is_directional("chevron-right"));
+    assert!(!is_directional("background-icon"), "background is not back");
+    assert!(!is_directional("legend-icon"));
+
+    // And the two compose the way the rule needs: a background icon produces
+    // nothing at all.
+    let mut background = rtl_node("SVG");
+    background.data_slot = Some("background-icon".to_owned());
+    assert!(rtl_check_node(&background, &RtlConfig::default(), &rtl_registry()).is_empty());
+}
+
+#[test]
+fn bidi_detection_covers_the_blocks_real_arabic_arrives_in() {
+    // The .ts range list stops after the base blocks, so Arabic Supplement,
+    // Arabic Extended-A and — the big one — the Presentation Forms all read as
+    // non-bidi. Presentation forms are where a great deal of real-world Arabic
+    // arrives, particularly out of PDFs and older systems, so the rule passed
+    // exactly the content most likely to need it.
+    assert!(has_bidi_chars("مرحبا"), "base Arabic");
+    assert!(has_bidi_chars("שלום"), "Hebrew");
+    assert!(has_bidi_chars("\u{FEF0}"), "Arabic Presentation Forms-B");
+    assert!(has_bidi_chars("\u{FB50}"), "Arabic Presentation Forms-A");
+    assert!(has_bidi_chars("\u{FB2A}"), "Hebrew Presentation Forms");
+    assert!(has_bidi_chars("\u{0750}"), "Arabic Supplement");
+    assert!(has_bidi_chars("\u{08A0}"), "Arabic Extended-A");
+    assert!(!has_bidi_chars("hello world"));
+    assert!(!has_bidi_chars("你好"), "CJK is not bidi");
+
+    assert!(
+        !rtl_ts().contains("FB50"),
+        "the .tsx still omits the presentation forms"
+    );
+}
+
+#[test]
+fn bidi_prose_without_lang_or_dir_is_reported_once() {
+    let mut bare = rtl_node("P");
+    bare.text = Some("مرحبا بالعالم".to_owned());
+    let found = rtl_check_node(&bare, &RtlConfig::default(), &rtl_registry());
+    assert_eq!(found.len(), 1);
+    assert_eq!(found[0].rule, RtlRule::BidiText);
+    assert_eq!(found[0].level, RtlLevel::Moderate);
+
+    // Either attribute settles it.
+    let mut with_lang = bare.clone();
+    with_lang.lang = Some("ar".to_owned());
+    assert!(rtl_check_node(&with_lang, &RtlConfig::default(), &rtl_registry()).is_empty());
+
+    let mut with_dir = bare.clone();
+    with_dir.dir = Some("auto".to_owned());
+    assert!(rtl_check_node(&with_dir, &RtlConfig::default(), &rtl_registry()).is_empty());
+
+    // A tag that does not carry prose is not asked.
+    let mut heading = bare.clone();
+    heading.tag_name = "H1".to_owned();
+    assert!(rtl_check_node(&heading, &RtlConfig::default(), &rtl_registry()).is_empty());
+}
+
+#[test]
+fn every_physical_property_on_one_element_is_reported() {
+    // Not just the first: twelve wrong properties on one element are twelve
+    // edits, and the .ts gets this one right.
+    let mut node = rtl_node("DIV");
+    node.inline_styles
+        .insert("margin-left".to_owned(), "8px".to_owned());
+    node.inline_styles
+        .insert("padding-right".to_owned(), "4px".to_owned());
+    node.inline_styles
+        .insert("border-top-left-radius".to_owned(), "7px".to_owned());
+    // A logical property is fine and must not be flagged.
+    node.inline_styles
+        .insert("margin-inline-start".to_owned(), "8px".to_owned());
+
+    let found = rtl_check_node(&node, &RtlConfig::default(), &rtl_registry());
+    assert_eq!(found.len(), 3);
+    assert!(found.iter().all(|v| v.rule == RtlRule::LogicalProperties));
+    assert!(found.iter().all(|v| v.level == RtlLevel::Serious));
+    assert!(found[0].fix.contains("logical counterpart"));
+
+    // An empty value is not a declaration.
+    let blank = styled("DIV", "margin-left", "  ");
+    assert!(rtl_check_node(&blank, &RtlConfig::default(), &rtl_registry()).is_empty());
+}
+
+#[test]
+fn physical_text_alignment_is_reported_with_its_logical_replacement() {
+    let left = styled("P", "text-align", "left");
+    let found = rtl_check_node(&left, &RtlConfig::default(), &rtl_registry());
+    assert_eq!(found[0].rule, RtlRule::TextAlignment);
+    assert!(found[0].fix.contains("text-align: start"));
+
+    let right = styled("P", "text-align", "right");
+    assert!(
+        rtl_check_node(&right, &RtlConfig::default(), &rtl_registry())[0]
+            .fix
+            .contains("text-align: end")
+    );
+
+    // Logical values are already correct.
+    for value in ["start", "end", "center"] {
+        let ok = styled("P", "text-align", value);
+        assert!(
+            rtl_check_node(&ok, &RtlConfig::default(), &rtl_registry()).is_empty(),
+            "text-align: {value} is not physical"
+        );
+    }
+}
+
+#[test]
+fn the_rule_set_has_one_home() {
+    // The .ts writes the rule names twice — once in the type union and once in
+    // the runtime default array — so adding a rule to one and not the other is a
+    // silently disabled rule.
+    let all = RtlRule::all();
+    assert_eq!(all.len(), 5);
+    let ts = rtl_ts();
+    for rule in &all {
+        assert!(
+            ts.contains(&format!("\"{}\"", rule.as_str())),
+            "rule {}",
+            rule.as_str()
+        );
+    }
+
+    let only_alignment = RtlConfig {
+        rules: Some([RtlRule::TextAlignment].into_iter().collect()),
+        ..RtlConfig::default()
+    };
+    let left = styled("P", "text-align", "left");
+    assert_eq!(
+        rtl_check_node(&left, &only_alignment, &rtl_registry()).len(),
+        1
+    );
+
+    // And with direction-attribute disabled, a missing dir is not a finding and
+    // the denominator does not include it.
+    let result = rtl_audit(
+        "/",
+        None,
+        &[rtl_node("P")],
+        &only_alignment,
+        &rtl_registry(),
+    );
+    assert!(result.violations.is_empty());
+    assert_eq!(result.score, 100);
+}
+
+#[test]
+fn the_physical_property_list_matches_the_tsx() {
+    let ts = rtl_ts();
+    for property in PHYSICAL_PROPERTIES {
+        assert!(
+            ts.contains(&format!("\"{property}\"")),
+            "property {property}"
+        );
+    }
+    for icon in NON_MIRRORING_ICONS {
+        assert!(ts.contains(&format!("\"{icon}\"")), "non-mirroring {icon}");
+    }
+    for level in [
+        RtlLevel::Critical,
+        RtlLevel::Serious,
+        RtlLevel::Moderate,
+        RtlLevel::Minor,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", level.as_str())),
+            "level {}",
+            level.as_str()
+        );
+    }
+}
+
+#[test]
+fn the_worst_level_is_the_go_no_go_answer() {
+    let result = rtl_audit(
+        "/",
+        None,
+        &[styled("P", "text-align", "left")],
+        &RtlConfig::default(),
+        &rtl_registry(),
+    );
+    assert_eq!(rtl_worst_level(&result.violations), Some(RtlLevel::Serious));
+    assert_eq!(rtl_worst_level(&[]), None);
+}
