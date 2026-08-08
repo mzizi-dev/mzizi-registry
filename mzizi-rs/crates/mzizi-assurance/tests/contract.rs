@@ -1993,3 +1993,642 @@ fn the_wire_spellings_match_the_typescript() {
         "the touch-target floor drifted from the sibling"
     );
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// mzizi-perf-probe — thresholds, the fold, and what "not measured" means
+// ═══════════════════════════════════════════════════════════════════════════
+
+use mzizi_assurance::mzizi_perf_probe::{
+    ComponentPerf, DEFAULT_SAMPLE_RATE, MarkPair, Rating, Vital, VitalsAccumulator, build_report,
+    rate, should_sample as perf_should_sample,
+};
+
+fn perf_ts() -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../components/registry/n8-assurance/mzizi-perf-probe.ts");
+    fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
+}
+
+#[test]
+fn the_thresholds_match_the_typescript_table_exactly() {
+    // A drifted threshold silently reclassifies every historical measurement,
+    // and nothing about the report looks wrong afterwards.
+    let ts = perf_ts();
+    for vital in Vital::all() {
+        let (good, poor) = vital.thresholds();
+        let line = format!(
+            "{}: {{ good: {}, poor: {} }}",
+            vital.as_str(),
+            trim_float(good),
+            trim_float(poor)
+        );
+        assert!(ts.contains(&line), "threshold row drifted: {line}");
+    }
+}
+
+/// Render a threshold the way the `.ts` literal writes it: `2500`, not `2500.0`.
+fn trim_float(value: f64) -> String {
+    let s = format!("{value}");
+    s.strip_suffix(".0").map_or(s.clone(), str::to_owned)
+}
+
+#[test]
+fn an_unknown_metric_is_not_rated_good() {
+    // THE FAIL-OPEN. `rateMetric` looks the name up in a Record<string, …> and
+    // returns "good" when the lookup misses, so a typo or a metric added ahead
+    // of its threshold reports as healthy. CLAUDE.md §14 forbids exactly this
+    // shape for entitlement; it is no better for performance.
+    assert_eq!(Vital::parse("LCP"), Some(Vital::Lcp));
+    assert_eq!(
+        Vital::parse("TBT"),
+        None,
+        "an unknown name has no rating, which the caller must handle"
+    );
+    assert_eq!(
+        rate(Vital::Lcp, f64::NAN),
+        Rating::Unrated,
+        "a NaN compares false against every bound and would land on \
+         needs-improvement — a rating invented from a non-measurement"
+    );
+}
+
+#[test]
+fn the_rating_boundaries_are_inclusive_on_both_ends() {
+    assert_eq!(rate(Vital::Lcp, 2500.0), Rating::Good, "<= good is good");
+    assert_eq!(rate(Vital::Lcp, 2500.1), Rating::NeedsImprovement);
+    assert_eq!(rate(Vital::Lcp, 3999.9), Rating::NeedsImprovement);
+    assert_eq!(rate(Vital::Lcp, 4000.0), Rating::Poor, ">= poor is poor");
+    assert_eq!(rate(Vital::Cls, 0.1), Rating::Good);
+    assert_eq!(rate(Vital::Cls, 0.25), Rating::Poor);
+}
+
+#[test]
+fn cls_is_folded_to_one_value_not_appended_per_batch() {
+    // The .ts calls recordMetric inside the layout-shift observer callback, so a
+    // page with twelve shift batches reports twelve CLS metrics, each carrying
+    // the running total. Anyone averaging that array gets a meaningless number.
+    let mut vitals = VitalsAccumulator::new();
+    vitals.record(Vital::Cls, 0.02, "/wallet", 1.0);
+    vitals.record(Vital::Cls, 0.09, "/wallet", 2.0);
+    vitals.record(Vital::Cls, 0.31, "/wallet", 3.0);
+
+    assert_eq!(vitals.metrics().len(), 1, "one CLS entry, not three");
+    let cls = vitals.get(Vital::Cls).expect("CLS was recorded");
+    assert!(
+        (cls.value - 0.31).abs() < f64::EPSILON,
+        "the latest total wins"
+    );
+    assert_eq!(cls.rating, Rating::Poor);
+    assert!(Vital::Cls.is_cumulative());
+    assert!(!Vital::Lcp.is_cumulative());
+}
+
+#[test]
+fn an_unrated_metric_never_outranks_a_poor_one() {
+    // Worst-rating is the number somebody acts on. Letting an absence of
+    // judgement win would hide a real failure behind an unknown metric.
+    let mut vitals = VitalsAccumulator::new();
+    vitals.record(Vital::Lcp, 5000.0, "/wallet", 1.0);
+    vitals.record(Vital::Cls, f64::NAN, "/wallet", 2.0);
+    assert_eq!(vitals.worst_rating(), Some(Rating::Poor));
+
+    let empty = VitalsAccumulator::new();
+    assert_eq!(empty.worst_rating(), None);
+}
+
+#[test]
+fn an_unmeasured_component_says_so_rather_than_reporting_zero() {
+    // THE ZEROS. The .ts fills renderTimeMs / rerenderCount / mountTimeMs with
+    // literal 0 for every component, and usePerfMark writes performance.mark
+    // entries that nothing ever reads. A table of components all rendering in
+    // 0ms is not an empty dashboard — it says everything is perfect.
+    let seen = ComponentPerf::observed("nyuchi-wallet-card");
+    assert_eq!(seen.render_time_ms, None);
+    assert_eq!(seen.mount_duration_ms, None);
+    assert_eq!(seen.rerender_count, None);
+    assert!(!seen.is_measured());
+
+    let measured = ComponentPerf::from_marks(
+        "nyuchi-wallet-card",
+        MarkPair {
+            mount_ms: 120.0,
+            unmount_ms: Some(980.0),
+        },
+    );
+    assert_eq!(measured.mount_duration_ms, Some(860.0));
+    assert!(measured.is_measured());
+}
+
+#[test]
+fn a_negative_lifetime_is_a_measurement_error_not_a_fast_component() {
+    let backwards = ComponentPerf::from_marks(
+        "nyuchi-wallet-card",
+        MarkPair {
+            mount_ms: 980.0,
+            unmount_ms: Some(120.0),
+        },
+    );
+    assert_eq!(backwards.mount_duration_ms, None);
+
+    let still_mounted = ComponentPerf::from_marks(
+        "nyuchi-wallet-card",
+        MarkPair {
+            mount_ms: 980.0,
+            unmount_ms: None,
+        },
+    );
+    assert_eq!(still_mounted.mount_duration_ms, None);
+}
+
+#[test]
+fn total_render_time_is_a_sum_of_measurements_not_the_age_of_the_page() {
+    // The .ts sets totalRenderTimeMs to performance.now() inside a
+    // setTimeout(…, 5000), so it was never below 5000 and had nothing to do
+    // with rendering.
+    let vitals = VitalsAccumulator::new();
+
+    let unmeasured = build_report(
+        "/wallet",
+        1_786_158_000_000.0,
+        &vitals,
+        vec![ComponentPerf::observed("a"), ComponentPerf::observed("b")],
+        None,
+    );
+    assert_eq!(
+        unmeasured.total_render_time_ms, None,
+        "nothing measured is not zero and is certainly not 5000"
+    );
+    assert_eq!(unmeasured.components.len(), 2, "both were still seen");
+
+    let mut one = ComponentPerf::observed("a");
+    one.render_time_ms = Some(12.5);
+    let mut two = ComponentPerf::observed("b");
+    two.render_time_ms = Some(3.5);
+    let measured = build_report(
+        "/wallet",
+        1_786_158_000_000.0,
+        &vitals,
+        vec![one, two],
+        None,
+    );
+    assert_eq!(measured.total_render_time_ms, Some(16.0));
+}
+
+#[test]
+fn memory_stays_absent_rather_than_becoming_nan() {
+    // performance.memory is Chromium-only. Dividing undefined by 1048576 gives
+    // NaN — a number-shaped value that poisons any average computed from it.
+    let vitals = VitalsAccumulator::new();
+    let report = build_report("/wallet", 1.0, &vitals, Vec::new(), None);
+    assert_eq!(report.memory_usage_mb, None);
+    assert!(
+        perf_ts().contains("memoryUsageMB` is optional; absent is the honest answer"),
+        "the .ts still states the rule this preserves"
+    );
+}
+
+#[test]
+fn sampling_is_exact_at_both_ends_here_too() {
+    // RUM and the perf probe each carry their own copy of this. Deliberate
+    // duplication, not an oversight: a registry component has to be
+    // independently installable (CLAUDE.md §15.6), so a shared sampling module
+    // would be a dependency a consumer installing one component alone does not
+    // have. The `as perf_should_sample` alias above exists so this spec cannot
+    // accidentally exercise RUM's copy and report it as the perf probe's.
+    assert!(!perf_should_sample(0.0, 0.0), "a rate of 0 samples nothing");
+    assert!(
+        perf_should_sample(0.999_999, 1.0),
+        "a rate of 1 samples everything"
+    );
+    assert!(perf_should_sample(0.05, DEFAULT_SAMPLE_RATE));
+    assert!(!perf_should_sample(0.1, DEFAULT_SAMPLE_RATE));
+    assert!(
+        perf_ts().contains("sampleRate = 0.1"),
+        "the default sample rate drifted from the sibling"
+    );
+}
+
+#[test]
+fn the_vital_and_rating_spellings_match_the_typescript() {
+    let ts = perf_ts();
+    for vital in Vital::all() {
+        assert!(
+            ts.contains(&format!("\"{}\"", vital.as_str())),
+            "vital {}",
+            vital.as_str()
+        );
+    }
+    for rating in [Rating::Good, Rating::NeedsImprovement, Rating::Poor] {
+        assert!(
+            ts.contains(&format!("\"{}\"", rating.as_str())),
+            "rating {}",
+            rating.as_str()
+        );
+    }
+    // `unrated` has no .ts counterpart because the .ts cannot express it — it
+    // answers "good" instead, which is defect 1.
+    assert!(!ts.contains("\"unrated\""));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// mzizi-incident-manager — ids, the no-op transition, and the postmortem
+// ═══════════════════════════════════════════════════════════════════════════
+
+use mzizi_assurance::mzizi_incident_manager::{
+    ActionItem, AffectedComponent, IncidentError, IncidentLog, IncidentSeverity, IncidentState,
+    NewIncident, Transitioned, component_link, escape_markdown, postmortem,
+};
+
+fn incident_ts() -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../components/registry/n8-assurance/mzizi-incident-manager.ts");
+    fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
+}
+
+const T0: f64 = 1_786_158_000_000.0;
+
+fn opened() -> IncidentLog {
+    let mut log = IncidentLog::new();
+    log.open(
+        "inc-1",
+        IncidentSeverity::Sev2,
+        NewIncident {
+            title: "Wallet balance not loading".to_owned(),
+            ..NewIncident::default()
+        },
+        T0,
+    )
+    .expect("a fresh id");
+    log
+}
+
+#[test]
+fn two_incidents_in_the_same_millisecond_do_not_erase_each_other() {
+    // THE CLOCK-AS-IDENTITY BUG, again. `inc-${Date.now().toString(36)}` plus
+    // `incidents.set(id, …)` means the second incident in a millisecond
+    // OVERWRITES the first — timeline and all — with nobody told. Detection is
+    // precisely when a burst arrives: one outage trips several alerts at once.
+    let mut log = opened();
+    let clash = log.open("inc-1", IncidentSeverity::Sev1, NewIncident::default(), T0);
+    assert_eq!(clash.unwrap_err(), IncidentError::DuplicateId);
+
+    assert_eq!(
+        log.get("inc-1").map(|i| i.severity),
+        Some(IncidentSeverity::Sev2),
+        "the original survived rather than being replaced"
+    );
+    assert!(
+        !incident_ts().contains("randomUUID"),
+        "if the .ts gained a real id source, drop the host-supplied id here too"
+    );
+    assert!(
+        incident_ts().contains("Date.now().toString(36)"),
+        "the .ts still derives its id from the clock"
+    );
+}
+
+#[test]
+fn resolving_an_already_resolved_incident_changes_nothing() {
+    // The .ts has no guard on the current state, so resolved → resolved rewrites
+    // resolvedAt, recomputes TTR from the new timestamp, and fires onResolved a
+    // second time: a duplicate page, and a TTR that grows on every click.
+    let mut log = opened();
+    let first = log
+        .transition(
+            "inc-1",
+            IncidentState::Resolved,
+            "ops",
+            None,
+            T0 + 600_000.0,
+        )
+        .expect("the incident exists");
+    assert!(first.resolved_now());
+    assert_eq!(log.get("inc-1").unwrap().ttr_minutes(), Some(10.0));
+
+    let again = log
+        .transition(
+            "inc-1",
+            IncidentState::Resolved,
+            "ops",
+            None,
+            T0 + 9_000_000.0,
+        )
+        .expect("the incident exists");
+    assert_eq!(again, Transitioned::NoChange(IncidentState::Resolved));
+    assert!(!again.resolved_now(), "no second page");
+    assert_eq!(
+        log.get("inc-1").unwrap().ttr_minutes(),
+        Some(10.0),
+        "TTR did not grow"
+    );
+    assert_eq!(
+        log.get("inc-1").unwrap().timeline.len(),
+        2,
+        "the no-op recorded nothing"
+    );
+}
+
+#[test]
+fn a_regression_may_reopen_and_re_resolve() {
+    // What is NOT constrained: monitoring → mitigating is a regression and
+    // resolved → triaging is a reopen. An incident tool that refuses either is
+    // one people work around.
+    let mut log = opened();
+    log.transition("inc-1", IncidentState::Resolved, "ops", None, T0 + 60_000.0)
+        .unwrap();
+    let reopened = log
+        .transition(
+            "inc-1",
+            IncidentState::Triaging,
+            "ops",
+            None,
+            T0 + 120_000.0,
+        )
+        .unwrap();
+    assert_eq!(
+        reopened,
+        Transitioned::Moved {
+            from: IncidentState::Resolved,
+            to: IncidentState::Triaging
+        }
+    );
+    assert!(log.get("inc-1").unwrap().state.is_active());
+
+    let re_resolved = log
+        .transition(
+            "inc-1",
+            IncidentState::Resolved,
+            "ops",
+            None,
+            T0 + 300_000.0,
+        )
+        .unwrap();
+    assert!(re_resolved.resolved_now(), "a genuine second resolution");
+    assert_eq!(log.get("inc-1").unwrap().ttr_minutes(), Some(5.0));
+}
+
+#[test]
+fn every_mutation_on_an_unknown_id_is_refused_rather_than_ignored() {
+    // `if (!inc) return` — so transitioning, annotating or root-causing a typo'd
+    // id succeeded from the caller's point of view and changed nothing.
+    let mut log = opened();
+    assert_eq!(
+        log.transition("inc-typo", IncidentState::Triaging, "ops", None, T0)
+            .unwrap_err(),
+        IncidentError::NotFound
+    );
+    assert_eq!(
+        log.note("inc-typo", "ops", "looked", None, T0).unwrap_err(),
+        IncidentError::NotFound
+    );
+    assert_eq!(
+        log.set_root_cause("inc-typo", "cache").unwrap_err(),
+        IncidentError::NotFound
+    );
+    assert_eq!(
+        log.add_action_item(
+            "inc-typo",
+            ActionItem {
+                description: "add a probe".to_owned(),
+                owner: "ops".to_owned(),
+                due_date: None,
+                done: false,
+            }
+        )
+        .unwrap_err(),
+        IncidentError::NotFound
+    );
+}
+
+#[test]
+fn time_to_detect_is_computed_when_there_is_something_to_measure_from() {
+    // The .ts declares ttdMinutes as a duration and never assigns it, because
+    // nothing records when the impact began.
+    let unmeasurable = opened();
+    assert_eq!(unmeasurable.get("inc-1").unwrap().ttd_minutes(), None);
+    assert!(
+        postmortem(unmeasurable.get("inc-1").unwrap()).contains("impact start unrecorded"),
+        "the document says why, rather than printing 0"
+    );
+
+    let mut log = IncidentLog::new();
+    log.open(
+        "inc-2",
+        IncidentSeverity::Sev1,
+        NewIncident {
+            impact_started_at_ms: Some(T0 - 420_000.0),
+            ..NewIncident::default()
+        },
+        T0,
+    )
+    .unwrap();
+    assert_eq!(log.get("inc-2").unwrap().ttd_minutes(), Some(7.0));
+}
+
+#[test]
+fn active_and_worst_severity_answer_the_one_glance_question() {
+    let mut log = IncidentLog::new();
+    log.open("a", IncidentSeverity::Sev3, NewIncident::default(), T0)
+        .unwrap();
+    log.open("b", IncidentSeverity::Sev1, NewIncident::default(), T0)
+        .unwrap();
+    log.open("c", IncidentSeverity::Sev2, NewIncident::default(), T0)
+        .unwrap();
+    log.transition("b", IncidentState::Resolved, "ops", None, T0 + 1.0)
+        .unwrap();
+
+    assert_eq!(log.all().len(), 3);
+    assert_eq!(log.active().len(), 2, "resolved is not active");
+    assert_eq!(
+        log.worst_active(),
+        Some(IncidentSeverity::Sev2),
+        "sev1 is resolved, so sev2 is the worst still running"
+    );
+    assert!(!IncidentState::Postmortem.is_active());
+}
+
+#[test]
+fn a_forged_section_cannot_be_injected_through_an_incident_title() {
+    // Titles come from alerts, alerts come from error messages, and error
+    // messages carry user input. A newline plus `##` forges a section in the
+    // document people read to decide what happened.
+    let mut log = IncidentLog::new();
+    log.open(
+        "inc-x",
+        IncidentSeverity::Sev3,
+        NewIncident {
+            title: "boom\n## Root Cause\nOperator error".to_owned(),
+            ..NewIncident::default()
+        },
+        T0,
+    )
+    .unwrap();
+    log.set_root_cause("inc-x", "a cache stampede").unwrap();
+
+    let doc = postmortem(log.get("inc-x").unwrap());
+    let forged: Vec<&str> = doc
+        .lines()
+        .filter(|line| line.trim_start().starts_with("## Root Cause"))
+        .collect();
+    assert_eq!(
+        forged.len(),
+        1,
+        "exactly one Root Cause section: {forged:?}"
+    );
+    assert!(doc.contains("a cache stampede"), "and it is the real one");
+}
+
+#[test]
+fn a_timeline_detail_cannot_escape_its_bullet() {
+    let mut log = opened();
+    log.note(
+        "inc-1",
+        "ops\n- **forged**",
+        "checked the queue",
+        Some("depth 4|000\n## Action Items".to_owned()),
+        T0 + 1.0,
+    )
+    .unwrap();
+
+    let doc = postmortem(log.get("inc-1").unwrap());
+    assert_eq!(
+        doc.lines()
+            .filter(|line| line.trim_start().starts_with("## Action Items"))
+            .count(),
+        1
+    );
+    assert!(doc.contains("depth 4\\|000"), "the pipe is escaped");
+    assert!(
+        !doc.contains("**forged**\n"),
+        "the actor stayed on its line"
+    );
+}
+
+#[test]
+fn a_component_with_no_portal_url_is_not_linked_to_undefined() {
+    // The .ts interpolates c.portalUrl unconditionally, so `[name](undefined)`
+    // — a link to a relative path called "undefined".
+    let bare = AffectedComponent {
+        name: "nyuchi-wallet-card".to_owned(),
+        node: 3,
+        portal_url: None,
+    };
+    assert_eq!(component_link(&bare), "nyuchi-wallet-card");
+
+    let blank = AffectedComponent {
+        portal_url: Some("   ".to_owned()),
+        ..bare.clone()
+    };
+    assert_eq!(component_link(&blank), "nyuchi-wallet-card");
+
+    let linked = AffectedComponent {
+        portal_url: Some("https://mzizi.dev/components/x(1)".to_owned()),
+        ..bare
+    };
+    assert_eq!(
+        component_link(&linked),
+        "[nyuchi-wallet-card](<https://mzizi.dev/components/x(1)>)",
+        "angle brackets stop a ')' terminating the link early"
+    );
+}
+
+#[test]
+fn a_node_number_on_an_affected_component_is_uncapped() {
+    // Node numbers are labels, not a sequence (CLAUDE.md §9). A cap of 10 hid
+    // N11 and a cap of 11 would hide N12.
+    let mut log = IncidentLog::new();
+    log.open(
+        "inc-n",
+        IncidentSeverity::Sev4,
+        NewIncident {
+            title: "docs build".to_owned(),
+            affected_components: vec![AffectedComponent {
+                name: "mzizi-skill-index".to_owned(),
+                node: 12,
+                portal_url: None,
+            }],
+            ..NewIncident::default()
+        },
+        T0,
+    )
+    .unwrap();
+    assert!(postmortem(log.get("inc-n").unwrap()).contains("(Node 12)"));
+}
+
+#[test]
+fn an_empty_section_says_so_rather_than_rendering_blank() {
+    let doc = postmortem(opened().get("inc-1").unwrap());
+    assert!(doc.contains("## Affected Components\n_None recorded_"));
+    assert!(doc.contains("## Affected Mini-Apps\n_None recorded_"));
+    assert!(doc.contains("## Root Cause\n_To be determined_"));
+    assert!(doc.contains("## Action Items\n_None yet_"));
+}
+
+#[test]
+fn an_action_item_shows_whether_it_is_done() {
+    let mut log = opened();
+    log.add_action_item(
+        "inc-1",
+        ActionItem {
+            description: "add a synthetic probe".to_owned(),
+            owner: "ops".to_owned(),
+            due_date: Some("2026-09-01".to_owned()),
+            done: false,
+        },
+    )
+    .unwrap();
+    log.add_action_item(
+        "inc-1",
+        ActionItem {
+            description: "raise the timeout".to_owned(),
+            owner: "ops".to_owned(),
+            due_date: None,
+            done: true,
+        },
+    )
+    .unwrap();
+
+    let doc = postmortem(log.get("inc-1").unwrap());
+    assert!(doc.contains("- [ ] add a synthetic probe (Owner: ops, Due: 2026-09-01)"));
+    assert!(doc.contains("- [x] raise the timeout (Owner: ops)"));
+}
+
+#[test]
+fn escape_markdown_takes_the_backslash_first() {
+    // Otherwise the escapes it adds are themselves escapable.
+    assert_eq!(escape_markdown("a\\|b"), "a\\\\\\|b");
+    assert_eq!(escape_markdown("one\ntwo"), "one two");
+}
+
+#[test]
+fn the_incident_spellings_match_the_typescript() {
+    let ts = incident_ts();
+    for severity in [
+        IncidentSeverity::Sev1,
+        IncidentSeverity::Sev2,
+        IncidentSeverity::Sev3,
+        IncidentSeverity::Sev4,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", severity.as_str())),
+            "severity {}",
+            severity.as_str()
+        );
+    }
+    for state in [
+        IncidentState::Detected,
+        IncidentState::Triaging,
+        IncidentState::Mitigating,
+        IncidentState::Monitoring,
+        IncidentState::Resolved,
+        IncidentState::Postmortem,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", state.as_str())),
+            "state {}",
+            state.as_str()
+        );
+    }
+}
