@@ -43,6 +43,32 @@ green run — the skip prints what was not checked and why.
 `--text` is the debugging tool. When an expectation fails, the answer is almost
 always in what the page rendered instead, and dumping it takes one command.
 
+**`--base` against a Vercel preview does not work, and the script says so.**
+Preview deployments sit behind Vercel SSO, so the route 302s off-origin and the
+browser faithfully renders 2,035 characters of "Log in to Vercel". Left alone the
+check would report `its content did not render` — the checker blaming the site
+for the checker's own problem, which is the same mistake as expecting a
+capitalised `Malachite`. On failure it now probes for an off-origin redirect and
+reports the real cause instead:
+
+```
+✗ /tokens
+    rendered 2035 chars of prose, but not "malachite".
+    NOT a rendering failure — the URL redirects off-origin to https://vercel.com,
+    so the browser rendered that page rather than this route — an auth wall
+    (Vercel SSO, Cloudflare Access, …), not an empty page.
+```
+
+An off-origin redirect is the general signal, so this covers Cloudflare Access
+and anything else without naming a vendor. Same-origin redirects are not
+reported, because this site has legitimate ones
+(`/architecture/layers/:n` → `/architecture/nodes/:n`). The probe only runs on
+failure, so the happy path still costs one request per route.
+
+Checking a protected preview needs a bypass token
+(`VERCEL_AUTOMATION_BYPASS_SECRET`), which is why the practical targets today are
+production and a local dev server.
+
 Kitesurf is in free beta and uses 3–7× less CPU and memory than Chromium for
 exactly this kind of task. It is not pixel-perfect, which does not matter here —
 see _What this does not check_.
