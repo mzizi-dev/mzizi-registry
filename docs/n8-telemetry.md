@@ -25,8 +25,12 @@ than inferred:
   without setting an endpoint was posting into a void that looked exactly like
   working RUM. Fixed here: there is no default, and no endpoint means no POST.
 - `mzizi-error-tracker`'s one instruction for getting a critical error out was a
-  commented-out import of `@/lib/fundi/nyuchi-fundi-reporter`. That file does not
-  exist in this repo and never has.
+  commented-out import of `@/lib/fundi/nyuchi-fundi-reporter` — one directory off
+  from where the shadcn CLI installs it (`lib/nyuchi-fundi-reporter.ts`). I first
+  read that as "the file does not exist" and deleted the pointer; it does exist,
+  as an N9 registry component, so the fix was the path. Both exits are documented
+  now: **N9 files an issue** (healing) and **N8 emits a span** (observation), and
+  they are not alternatives — see "Two exits" below.
 - `pnpm browser:check` — a synthetic probe by any reading — printed to a console
   and exited non-zero. `mzizi-synthetic-probe` had already declared the exact
   contract it should have implemented, down to saying in its own body _"here we
@@ -136,6 +140,26 @@ an auth wall (Vercel SSO, Cloudflare Access, …), not an empty page.
 That distinction is the point of putting prose on the wire. fundi filing a
 GitHub issue for an auth-wall failure would be a false positive; with the reason
 attached it can tell the two apart without re-running anything.
+
+## Two exits, and they are not alternatives
+
+A signal leaving a component has two destinations, and wiring only one is a
+failure mode in both directions:
+
+| Exit            | Component                    | What it is for                                                                                                                     |
+| --------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Healing**     | `nyuchi-fundi-reporter` (N9) | Files a GitHub issue against `nyuchi/mzizi`, deduplicated by a per-component cooldown. A named defect a human can merge a fix for. |
+| **Observation** | `mzizi-otel` (N8)            | Emits an OTLP span. Every event, not just the critical ones, readable by any agent or service rather than by fundi alone.          |
+
+Route `onCritical` to N9 and `onError` to OTLP. Sending every error to N9 opens
+an issue per render failure; emitting only to OTLP means nothing gets fixed
+unless somebody happens to be watching a dashboard.
+
+The reporter's issue destination was a hardcoded `nyuchi/design-portal` — this
+repo's name before the Mzizi rename. GitHub redirects API calls for a renamed
+repo, so it kept working and had no symptom, which is exactly why it survived.
+A stale constant that still functions is invisible until the redirect is
+retired, and then every consumer's reporter breaks at once.
 
 ## Still not wired — stated plainly
 
