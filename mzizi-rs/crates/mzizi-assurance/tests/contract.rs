@@ -1344,6 +1344,7 @@ fn el(slot: &str, tag: &str) -> ObservedElement {
         tag_name: tag.to_owned(),
         portal_url: Some("https://mzizi.dev/components/button".to_owned()),
         aria_label: Some("Save".to_owned()),
+        aria_labelledby: None,
         role: None,
         has_text: true,
     }
@@ -1416,6 +1417,12 @@ fn an_interactive_element_needs_a_name_from_somewhere() {
     with_text.has_text = true;
     assert!(with_text.has_accessible_name());
 
+    // aria-labelledby names it too. The .ts never looked at that attribute at
+    // all, while mzizi-a11y-audit always did.
+    let mut labelled_by = bare.clone();
+    labelled_by.aria_labelledby = Some("heading-1".to_owned());
+    assert!(labelled_by.has_accessible_name());
+
     // role=button makes a div interactive.
     let mut div = el("card", "DIV");
     div.role = Some("button".to_owned());
@@ -1423,6 +1430,66 @@ fn an_interactive_element_needs_a_name_from_somewhere() {
     let mut span = el("card", "SPAN");
     span.role = None;
     assert!(!span.is_interactive());
+}
+
+#[test]
+fn a_role_is_not_an_accessible_name() {
+    // THE .ts RULE COULD NEVER FIRE FOR THE ELEMENTS IT WAS WIDENED TO COVER.
+    // `const ariaLabel = getAttribute("aria-label") || getAttribute("role")`,
+    // then `if (isButton && !ariaLabel && !text)`. Any element carrying
+    // role="button" supplies its own "name" via the same attribute that put it
+    // in scope, so it is exempted by construction.
+    let mut div = el("card", "DIV");
+    div.aria_label = None;
+    div.aria_labelledby = None;
+    div.has_text = false;
+    div.role = Some("button".to_owned());
+
+    assert!(div.is_interactive(), "role=button is interactive");
+    assert!(
+        !div.has_accessible_name(),
+        "a role says what a thing IS, never what it is CALLED"
+    );
+
+    let found = check_element(&div, Some(&registry()), &BTreeSet::new());
+    let kinds: BTreeSet<ViolationType> = found.iter().map(|v| v.violation_type).collect();
+    assert!(
+        kinds.contains(&ViolationType::MissingAria),
+        "the unnamed role=button must be reported"
+    );
+}
+
+#[test]
+fn the_two_n8_components_agree_on_what_a_name_is() {
+    // Two definitions of "accessible name" across one node meant the same
+    // button was a violation on one surface and a pass on the other, and
+    // whichever a consumer saw first was the one they believed.
+    use mzizi_assurance::mzizi_a11y_audit::ObservedNode;
+
+    for (aria, labelledby, text, expected) in [
+        (None, None, false, false),
+        (Some("Save"), None, false, true),
+        (None, Some("h1"), false, true),
+        (None, None, true, true),
+    ] {
+        let mut conformity = el("button", "BUTTON");
+        conformity.aria_label = aria.map(str::to_owned);
+        conformity.aria_labelledby = labelledby.map(str::to_owned);
+        conformity.has_text = text;
+        conformity.role = Some("button".to_owned());
+
+        let audit = ObservedNode {
+            tag_name: "BUTTON".to_owned(),
+            aria_label: aria.map(str::to_owned),
+            aria_labelledby: labelledby.map(str::to_owned),
+            text: text.then(|| "Save".to_owned()),
+            role: Some("button".to_owned()),
+            ..ObservedNode::default()
+        };
+
+        assert_eq!(conformity.has_accessible_name(), expected);
+        assert_eq!(audit.accessible_name().is_some(), expected);
+    }
 }
 
 #[test]
@@ -1511,4 +1578,418 @@ fn conformity_unions_keep_their_typescript_spellings() {
     }
     assert!(ts.contains("data-slot"), "the slot attribute drifted");
     assert!(ts.contains("data-portal"), "the portal attribute drifted");
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// mzizi-a11y-audit — the rules, the score, and the heading order
+// ═══════════════════════════════════════════════════════════════════════════
+
+use mzizi_assurance::mzizi_a11y_audit::{
+    A11yConfig, A11yLevel, HitBox, ObservedNode, Rule, audit, check_node, css_selector,
+    guess_node_from_slot, meets_threshold, resolve_node, worst_level,
+};
+
+fn a11y_ts() -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../components/registry/n8-assurance/mzizi-a11y-audit.ts");
+    fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
+}
+
+fn node(tag: &str) -> ObservedNode {
+    ObservedNode {
+        tag_name: tag.to_owned(),
+        visible: true,
+        ..ObservedNode::default()
+    }
+}
+
+fn button(name: Option<&str>, hit: Option<(f64, f64)>) -> ObservedNode {
+    ObservedNode {
+        aria_label: name.map(str::to_owned),
+        hit_box: hit.map(|(width, height)| HitBox { width, height }),
+        ..node("BUTTON")
+    }
+}
+
+fn no_registry() -> BTreeMap<String, u32> {
+    BTreeMap::new()
+}
+
+#[test]
+fn one_element_reports_every_rule_it_breaks() {
+    // THE PRIMARY BUG. The .ts chains its rules with `else if`, so the first
+    // finding hides the rest — and a button with no accessible name is exactly
+    // the button most likely to also be too small to hit.
+    let broken = button(None, Some((24.0, 24.0)));
+
+    let found = check_node(&broken, None, &A11yConfig::default(), &no_registry());
+    let rules: BTreeSet<Rule> = found.iter().map(|v| v.rule).collect();
+    assert!(rules.contains(&Rule::ButtonName), "the name rule ran");
+    assert!(rules.contains(&Rule::TouchTarget), "the size rule ran too");
+    assert_eq!(found.len(), 2);
+}
+
+#[test]
+fn an_image_with_no_alt_is_still_checked_for_everything_else() {
+    // Same else-if chain, seen from the img branch: in the .ts an <img> missing
+    // alt exits before any other rule is considered.
+    let img = ObservedNode {
+        role: Some("button".to_owned()),
+        hit_box: Some(HitBox {
+            width: 16.0,
+            height: 16.0,
+        }),
+        ..node("IMG")
+    };
+
+    let found = check_node(&img, None, &A11yConfig::default(), &no_registry());
+    let rules: BTreeSet<Rule> = found.iter().map(|v| v.rule).collect();
+    assert!(rules.contains(&Rule::ImgAlt));
+    assert!(rules.contains(&Rule::ButtonName));
+    assert!(rules.contains(&Rule::TouchTarget));
+}
+
+#[test]
+fn an_empty_alt_is_a_decorative_image_and_passes() {
+    // `alt=""` is the documented way to say "decorative". Absent is the defect.
+    let mut decorative = node("IMG");
+    decorative.alt = Some(String::new());
+    assert!(
+        check_node(&decorative, None, &A11yConfig::default(), &no_registry()).is_empty(),
+        "alt=\"\" is a deliberate answer, not a missing one"
+    );
+
+    let missing = node("IMG");
+    assert_eq!(
+        check_node(&missing, None, &A11yConfig::default(), &no_registry())[0].rule,
+        Rule::ImgAlt
+    );
+}
+
+#[test]
+fn a_conformant_button_counts_as_a_pass() {
+    // THE SCORE INVERSION. In the .ts `passes++` lives only in branches an
+    // interactive element cannot reach, so a page of correct buttons scored
+    // LOWER than a page of divs — the number moved the wrong way as
+    // accessibility improved.
+    let good = button(Some("Save"), Some((44.0, 44.0)));
+    let result = audit(
+        "/wallet",
+        &[good.clone(), good.clone(), good],
+        &A11yConfig::default(),
+        &no_registry(),
+    );
+
+    assert_eq!(result.total_elements, 3);
+    assert_eq!(result.passes, 3, "a correct button is a pass");
+    assert_eq!(result.score, 100);
+    assert!(result.violations.is_empty());
+}
+
+#[test]
+fn the_score_falls_only_as_violations_rise() {
+    let good = button(Some("Save"), Some((44.0, 44.0)));
+    let bad = button(None, Some((44.0, 44.0)));
+    let result = audit(
+        "/wallet",
+        &[good.clone(), good, bad],
+        &A11yConfig::default(),
+        &no_registry(),
+    );
+    assert_eq!(result.passes, 2);
+    assert_eq!(result.score, 67);
+    assert!(!meets_threshold(&result, 90));
+    assert!(meets_threshold(&result, 60));
+}
+
+#[test]
+fn an_empty_page_is_not_a_division_by_zero() {
+    let result = audit("/", &[], &A11yConfig::default(), &no_registry());
+    assert_eq!(result.score, 100);
+    assert_eq!(result.total_elements, 0, "the count says it was untested");
+}
+
+#[test]
+fn the_touch_target_floor_measures_the_hit_area_not_the_painted_box() {
+    // Mzizi's control scale is h-8 / h-9 / h-10 — 32-40px — by deliberate
+    // decision (CLAUDE.md §8.2), and §8.2 says a dense control earns its hit
+    // area through padding or spacing. The .ts measures getBoundingClientRect(),
+    // so every correctly-built Mzizi control failed this rule: a design system
+    // that fails its own audit universally teaches everyone to ignore the audit.
+    let dense_but_padded = ObservedNode {
+        hit_box: Some(HitBox {
+            width: 48.0,
+            height: 48.0,
+        }),
+        ..button(Some("Save"), None)
+    };
+    assert!(
+        check_node(
+            &dense_but_padded,
+            None,
+            &A11yConfig::default(),
+            &no_registry()
+        )
+        .is_empty(),
+        "an h-9 control with real padding around it is not a violation"
+    );
+
+    let genuinely_small = button(Some("Save"), Some((44.0, 30.0)));
+    let found = check_node(
+        &genuinely_small,
+        None,
+        &A11yConfig::default(),
+        &no_registry(),
+    );
+    assert_eq!(found[0].rule, Rule::TouchTarget);
+    assert_eq!(found[0].level, A11yLevel::Moderate);
+    assert!(
+        found[0].message.contains("44×30px"),
+        "the message names the measured size: {}",
+        found[0].message
+    );
+}
+
+#[test]
+fn an_unmeasured_or_hidden_control_is_not_accused_of_being_small() {
+    // No hit box means the host could not measure, which is not evidence of a
+    // small target. Reporting one would be inventing a finding.
+    let unmeasured = button(Some("Save"), None);
+    assert!(check_node(&unmeasured, None, &A11yConfig::default(), &no_registry()).is_empty());
+
+    let mut hidden = button(Some("Save"), Some((0.0, 0.0)));
+    hidden.visible = false;
+    assert!(check_node(&hidden, None, &A11yConfig::default(), &no_registry()).is_empty());
+}
+
+#[test]
+fn the_heading_order_rule_actually_evaluates_something() {
+    // The .ts carries `// Rule: Headings should be in order` above a branch that
+    // matches H1-H6 and then only counts a pass. A stated rule that evaluates
+    // nothing reads as coverage and is worse than an absent one.
+    let page = vec![node("H1"), node("H2"), node("H4"), node("P")];
+    let result = audit("/docs", &page, &A11yConfig::default(), &no_registry());
+
+    assert_eq!(result.violations.len(), 1);
+    assert_eq!(result.violations[0].rule, Rule::HeadingOrder);
+    assert_eq!(result.violations[0].element, "H4");
+    assert!(result.violations[0].message.contains("h2 → h4"));
+}
+
+#[test]
+fn a_heading_may_close_a_section_without_skipping() {
+    // h4 → h2 goes back UP the outline, which ends a section rather than
+    // leaving a gap. Only descending more than one level is a skip.
+    let page = vec![node("H1"), node("H2"), node("H3"), node("H2")];
+    let result = audit("/docs", &page, &A11yConfig::default(), &no_registry());
+    assert!(result.violations.is_empty(), "{:?}", result.violations);
+}
+
+#[test]
+fn the_first_heading_on_a_page_is_compared_against_nothing_above_it() {
+    let starts_deep = audit(
+        "/docs",
+        &[node("H3")],
+        &A11yConfig::default(),
+        &no_registry(),
+    );
+    assert_eq!(starts_deep.violations.len(), 1, "h3 with no h1 or h2 above");
+
+    let starts_right = audit(
+        "/docs",
+        &[node("H1")],
+        &A11yConfig::default(),
+        &no_registry(),
+    );
+    assert!(starts_right.violations.is_empty());
+}
+
+#[test]
+fn heading_order_reads_document_order() {
+    // Which is why `audit` takes a slice in the order the host saw them, and why
+    // that is stated in the signature's docs rather than assumed.
+    let forwards = audit(
+        "/docs",
+        &[node("H1"), node("H2"), node("H3")],
+        &A11yConfig::default(),
+        &no_registry(),
+    );
+    assert!(forwards.violations.is_empty());
+
+    let shuffled = audit(
+        "/docs",
+        &[node("H3"), node("H1"), node("H2")],
+        &A11yConfig::default(),
+        &no_registry(),
+    );
+    assert_eq!(shuffled.violations.len(), 1);
+}
+
+#[test]
+fn a_disabled_rule_produces_nothing_and_an_empty_set_is_not_absence() {
+    let broken = button(None, Some((10.0, 10.0)));
+
+    let names_only = A11yConfig {
+        rules: Some([Rule::ButtonName].into_iter().collect()),
+        ..A11yConfig::default()
+    };
+    let found = check_node(&broken, None, &names_only, &no_registry());
+    assert_eq!(found.len(), 1);
+    assert_eq!(found[0].rule, Rule::ButtonName);
+
+    let nothing = A11yConfig {
+        rules: Some(BTreeSet::new()),
+        ..A11yConfig::default()
+    };
+    assert!(
+        check_node(&broken, None, &nothing, &no_registry()).is_empty(),
+        "an explicitly empty rule set runs no rules"
+    );
+    assert_eq!(
+        check_node(&broken, None, &A11yConfig::default(), &no_registry()).len(),
+        2,
+        "unconfigured runs every rule"
+    );
+}
+
+#[test]
+fn a_selector_survives_an_id_that_is_not_an_identifier() {
+    // The .ts emits `#${el.id}` raw, so an id with a space, a quote or a leading
+    // digit yields a selector that does not parse — and finding the element
+    // again is the selector's only job.
+    let mut plain = node("BUTTON");
+    plain.id = Some("save-button".to_owned());
+    assert_eq!(css_selector(&plain), "#save-button");
+
+    let mut awkward = node("BUTTON");
+    awkward.id = Some("2 items\"".to_owned());
+    assert_eq!(css_selector(&awkward), "[id=\"2 items\\\"\"]");
+
+    let mut slotted = node("BUTTON");
+    slotted.data_slot = Some("nyuchi-wallet-card".to_owned());
+    assert_eq!(css_selector(&slotted), "[data-slot=\"nyuchi-wallet-card\"]");
+
+    let mut classy = node("BUTTON");
+    classy.first_class = Some("inline-flex".to_owned());
+    assert_eq!(css_selector(&classy), "button.inline-flex");
+
+    // A Tailwind arbitrary-variant class is not a bare identifier.
+    let mut arbitrary = node("BUTTON");
+    arbitrary.first_class = Some("[&>svg]:size-4".to_owned());
+    assert_eq!(
+        css_selector(&arbitrary),
+        "button[class~=\"[&>svg]:size-4\"]"
+    );
+
+    assert_eq!(css_selector(&node("SPAN")), "span");
+}
+
+#[test]
+fn the_registry_outranks_the_slot_name_heuristic() {
+    // guessNodeFromSlot can only ever answer 2, 3 or 6, so an N7 shell component
+    // is labelled N6 and routed to the wrong owner — and N1, N4, N5 and N8-N12
+    // are answers it cannot reach at all.
+    assert_eq!(guess_node_from_slot("nyuchi-wallet-card"), Some(3));
+    assert_eq!(guess_node_from_slot("dashboard-page"), Some(6));
+    assert_eq!(guess_node_from_slot("button"), Some(2));
+
+    let registry: BTreeMap<String, u32> =
+        [("nyuchi-app-shell".to_owned(), 7)].into_iter().collect();
+    assert_eq!(
+        resolve_node(Some("nyuchi-app-shell"), &registry),
+        Some(7),
+        "the registry knows the real node"
+    );
+    assert_eq!(
+        resolve_node(Some("nyuchi-app-shell"), &no_registry()),
+        Some(3),
+        "the heuristic is the fallback, and it is wrong here"
+    );
+    assert_eq!(resolve_node(None, &registry), None);
+}
+
+#[test]
+fn a_violation_carries_the_component_identity_it_was_found_on() {
+    let mut broken = button(None, None);
+    broken.data_slot = Some("nyuchi-wallet-card".to_owned());
+    broken.data_portal = Some("https://mzizi.dev/components/nyuchi-wallet-card".to_owned());
+
+    let registry: BTreeMap<String, u32> =
+        [("nyuchi-wallet-card".to_owned(), 3)].into_iter().collect();
+    let found = check_node(&broken, None, &A11yConfig::default(), &registry);
+    assert_eq!(
+        found[0].component_name.as_deref(),
+        Some("nyuchi-wallet-card")
+    );
+    assert_eq!(found[0].node, Some(3));
+    assert!(found[0].portal_url.is_some());
+    assert!(
+        !found[0].fix.is_empty(),
+        "a finding says what to do about it"
+    );
+}
+
+#[test]
+fn a_lowercase_tag_is_the_same_element() {
+    // The DOM reports uppercase; server-rendered HTML handed to a CI run does not.
+    let mut lower = button(None, None);
+    lower.tag_name = "button".to_owned();
+    assert!(lower.is_button());
+    assert_eq!(
+        check_node(&lower, None, &A11yConfig::default(), &no_registry())[0].rule,
+        Rule::ButtonName
+    );
+}
+
+#[test]
+fn worst_level_gives_one_go_no_go_answer() {
+    let page = vec![
+        node("IMG"),
+        button(Some("Save"), Some((20.0, 20.0))),
+        button(Some("Save"), Some((44.0, 44.0))),
+    ];
+    let result = audit("/wallet", &page, &A11yConfig::default(), &no_registry());
+    assert_eq!(worst_level(&result.violations), Some(A11yLevel::Critical));
+    assert_eq!(worst_level(&[]), None);
+}
+
+#[test]
+fn the_wire_spellings_match_the_typescript() {
+    // A renamed rule or level silently reclassifies every historical finding.
+    let ts = a11y_ts();
+    for level in [
+        A11yLevel::Critical,
+        A11yLevel::Serious,
+        A11yLevel::Moderate,
+        A11yLevel::Minor,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", level.as_str())),
+            "level {}",
+            level.as_str()
+        );
+    }
+    for rule in [Rule::ImgAlt, Rule::ButtonName, Rule::TouchTarget] {
+        assert!(
+            ts.contains(&format!("\"{}\"", rule.as_str())),
+            "rule {}",
+            rule.as_str()
+        );
+    }
+    // heading-order is deliberately absent from the .ts as a STRING: it is a
+    // comment there and a rule here. Asserting it would demand the defect.
+    assert!(
+        !ts.contains("\"heading-order\""),
+        "the .ts gained a heading-order rule — reconcile the two, do not just \
+         delete this assertion"
+    );
+    assert!(
+        ts.contains("Headings should be in order"),
+        "the .ts still states the rule it does not implement"
+    );
+    assert!(
+        ts.contains("44"),
+        "the touch-target floor drifted from the sibling"
+    );
 }
