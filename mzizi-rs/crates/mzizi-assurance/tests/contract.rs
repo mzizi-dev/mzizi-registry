@@ -1152,3 +1152,179 @@ fn unknown_is_never_inferred_only_stated() {
         assert!(s.is_unhealthy());
     }
 }
+
+// ── rum ────────────────────────────────────────────────────────────────────
+
+use mzizi_assurance::mzizi_rum::{
+    Connection, Device, RumBuffer, RumEvent, RumEventType, device_for, path_only, should_sample,
+};
+
+fn rum_event(t: RumEventType) -> RumEvent {
+    RumEvent {
+        event_type: t,
+        timestamp_ms: 1000.0,
+        url: "/wallet".to_owned(),
+        mini_app: Some("wallet".to_owned()),
+        device: Device::Mobile,
+        connection: Connection::FourG,
+        metrics: vec![("ttfb".to_owned(), 120.0)],
+    }
+}
+
+#[test]
+fn an_unsampled_session_discards_rather_than_hoards() {
+    // THE BUG THIS PORT FIXES. The .ts returns early from the constructor when
+    // unsampled — BEFORE init() — so no flush timer exists, but record() stays
+    // public and keeps pushing. Events pile up with nothing to drain them, in
+    // nine sessions out of ten at the default 10% rate.
+    let mut buffer = RumBuffer::new(false, 100);
+    assert!(!buffer.is_sampled());
+    for _ in 0..1000 {
+        assert!(!buffer.record(rum_event(RumEventType::Interaction)));
+    }
+    assert!(buffer.is_empty(), "an unsampled buffer must hold nothing");
+}
+
+#[test]
+fn a_sampled_buffer_is_bounded() {
+    // A flush that fails is swallowed by design — RUM must never surface its own
+    // network error to the user it measures. Correct, and unbounded without a
+    // ceiling: an unreachable endpoint accumulates for the whole session.
+    let mut buffer = RumBuffer::new(true, 3);
+    for i in 0..10 {
+        let mut e = rum_event(RumEventType::Navigation);
+        e.timestamp_ms = f64::from(i);
+        buffer.record(e);
+    }
+    assert_eq!(buffer.len(), 3);
+    assert_eq!(buffer.drain()[2].timestamp_ms, 9.0, "the newest survives");
+}
+
+#[test]
+fn draining_empties_the_buffer() {
+    let mut buffer = RumBuffer::new(true, 100);
+    buffer.record(rum_event(RumEventType::Pageload));
+    assert_eq!(buffer.drain().len(), 1);
+    assert!(buffer.is_empty());
+    assert!(buffer.drain().is_empty(), "draining twice is not an error");
+}
+
+#[test]
+fn sampling_is_exact_at_both_ends() {
+    // A `>=` on the wrong side makes rate 0.0 sample one draw in a billion, or
+    // rate 1.0 miss one — and nobody notices either.
+    assert!(
+        !should_sample(0.0, 0.0),
+        "rate 0 samples nothing, including draw 0"
+    );
+    assert!(should_sample(0.0, 1.0));
+    assert!(should_sample(0.999_999, 1.0), "rate 1 samples everything");
+    assert!(should_sample(0.09, 0.1));
+    assert!(!should_sample(0.1, 0.1), "the boundary is exclusive");
+}
+
+#[test]
+fn viewport_breakpoints_match_the_typescript() {
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n8-assurance/mzizi-rum.ts"),
+    )
+    .expect("the rum TypeScript sibling");
+    assert!(ts.contains("innerWidth < 640"), "mobile breakpoint drifted");
+    assert!(
+        ts.contains("innerWidth < 1024"),
+        "tablet breakpoint drifted"
+    );
+    assert_eq!(device_for(639), Device::Mobile);
+    assert_eq!(device_for(640), Device::Tablet);
+    assert_eq!(device_for(1023), Device::Tablet);
+    assert_eq!(device_for(1024), Device::Desktop);
+}
+
+#[test]
+fn a_query_string_can_never_reach_the_wire() {
+    // This component's premise is that it collects no PII, and a query string is
+    // where session tokens, reset links and search terms live.
+    assert_eq!(path_only("/wallet?token=secret"), "/wallet");
+    assert_eq!(
+        path_only("https://app.test/wallet?token=secret#frag"),
+        "/wallet"
+    );
+    assert_eq!(path_only("https://app.test"), "/");
+    assert_eq!(path_only("/wallet"), "/wallet");
+    assert_eq!(path_only("/reset#token=secret"), "/reset");
+}
+
+#[test]
+fn rum_unions_keep_their_typescript_spellings() {
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n8-assurance/mzizi-rum.ts"),
+    )
+    .expect("the rum TypeScript sibling");
+    for t in [
+        RumEventType::Pageload,
+        RumEventType::Interaction,
+        RumEventType::Navigation,
+        RumEventType::Network,
+        RumEventType::Error,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", t.as_str())),
+            "event type {}",
+            t.as_str()
+        );
+    }
+    for d in [Device::Mobile, Device::Tablet, Device::Desktop] {
+        assert!(
+            ts.contains(&format!("\"{}\"", d.as_str())),
+            "device {}",
+            d.as_str()
+        );
+    }
+    for c in [
+        Connection::FourG,
+        Connection::ThreeG,
+        Connection::TwoG,
+        Connection::SlowTwoG,
+        Connection::Wifi,
+        Connection::Unknown,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", c.as_str())),
+            "connection {}",
+            c.as_str()
+        );
+    }
+    assert_eq!(
+        Connection::from_str_or_unknown("nonsense"),
+        Connection::Unknown
+    );
+}
+
+#[test]
+fn the_typescript_still_has_no_default_endpoint() {
+    // It defaulted to https://mzizi.dev/api/rum, a route that returns 404, inside
+    // a catch that correctly swallows delivery failures — silent data loss that
+    // looked exactly like working RUM. Asserted on behaviour, not on the string,
+    // because the file explains the defect in its own prose.
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n8-assurance/mzizi-rum.ts"),
+    )
+    .expect("the rum TypeScript sibling");
+    let code_only: String = ts
+        .lines()
+        .filter(|l| {
+            let t = l.trim_start();
+            !(t.starts_with("//") || t.starts_with('*') || t.starts_with("/*"))
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+    for forbidden in ["?? \"http", "?? `http", "|| \"http"] {
+        assert!(
+            !code_only.contains(forbidden),
+            "a default endpoint returned ({forbidden}…)"
+        );
+    }
+}
