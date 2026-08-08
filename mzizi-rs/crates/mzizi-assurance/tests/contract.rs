@@ -3406,3 +3406,38 @@ fn the_worst_level_is_the_go_no_go_answer() {
     assert_eq!(rtl_worst_level(&result.violations), Some(RtlLevel::Serious));
     assert_eq!(rtl_worst_level(&[]), None);
 }
+
+#[test]
+fn the_exporter_shim_does_not_claim_the_core_is_missing() {
+    // The .ts header is a doctrine surface: it is installed into consumer apps,
+    // so a stale claim there travels further than one on a page. It said "there
+    // are zero .rs files under those four directories" and called itself a
+    // stopgap for a core nobody had started — true when written, false the
+    // moment mzizi-otel.rs landed beside it.
+    //
+    // This asserts BEHAVIOUR rather than banning words: the file may name the
+    // old state in order to disown it, exactly as public/llms.txt is allowed to
+    // name the retired axis model. What it may not do is assert the absence.
+    // Checked PER PARAGRAPH, which is the point. A first attempt banned the
+    // substring outright and failed on the very sentence that retracts it —
+    // the same self-tripping the llms.txt doctrine test was built to avoid.
+    let ts = ts_sibling();
+    for paragraph in ts.split("\n *\n") {
+        for claim in ["zero `.rs` files", "Today none of them are"] {
+            if paragraph.contains(claim) {
+                assert!(
+                    paragraph.contains("no longer true") || paragraph.contains("used to say"),
+                    "a paragraph asserts `{claim}` without retracting it:\n{paragraph}"
+                );
+            }
+        }
+    }
+
+    // And it must keep saying the thing that IS still true, so "the core landed"
+    // is never read as "one binary serves every target".
+    assert!(
+        ts.contains("there is no WASM build"),
+        "the shim must keep stating that the two agree by contract test, not by \
+         sharing a binary — when a WASM build lands, update this assertion"
+    );
+}
