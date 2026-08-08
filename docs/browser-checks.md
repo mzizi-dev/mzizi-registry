@@ -1,9 +1,10 @@
 # Browser checks — proving a page actually rendered
 
 `pnpm browser:check` renders pages through [Kitesurf](https://developers.cloudflare.com/browser-run/kitesurf/)
-and asserts each one produced its own content. `scripts/kitesurf.mjs` is the whole
-implementation; this file is the why, the dev setup, and how fundi runs the same
-check from a Worker.
+and asserts each one produced its own content, then reports the run to N8
+assurance over OTLP. `scripts/kitesurf.ts` is the runner and
+`components/registry/n8-assurance/mzizi-otel.ts` is the exporter; this file is
+the why, the dev setup, and how fundi runs the same check from a Worker.
 
 ## The gap it closes
 
@@ -112,8 +113,11 @@ no HTML parsing at all — which removed both bugs the first version shipped wit
    trap documented in `scripts/extract-props.ts`.
 
 Both were self-inflicted, and neither can recur when the extraction happens
-server-side. It also means the script has **zero dependencies**, and a Worker
-gets the identical result with no parsing library.
+server-side. It also means **no parsing library is involved anywhere** — not in
+the runner, and not in a Worker doing the same thing. (The runner itself runs
+under `tsx`, like every other script here, so it can import `mzizi-otel` rather
+than carrying a second copy of the exporter; `mzizi-otel` is the piece that has
+to stay dependency-free, and does.)
 
 Kitesurf supports a subset of Quick Actions. Verified against `mzizi.dev`:
 
