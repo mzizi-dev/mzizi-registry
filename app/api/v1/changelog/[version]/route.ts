@@ -38,9 +38,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ ver
       return NextResponse.json({ error: "Database not configured" }, { status: 503, headers: CORS })
     }
 
-    const entry = await getChangelogByVersion(version)
+    const entries = await getChangelogByVersion(version)
 
-    if (!entry) {
+    if (entries.length === 0) {
       trackApiCall({
         endpoint: `/api/v1/changelog/${version}`,
         durationMs: Date.now() - start,
@@ -58,7 +58,22 @@ export async function GET(_request: Request, { params }: { params: Promise<{ ver
       statusCode: 200,
     })
 
-    return NextResponse.json(entry, { headers: CORS_CACHE })
+    // `data` is an ARRAY, matching `/api/v1/changelog`, because a version is not
+    // unique: eight of them carry two or three entries with different titles and
+    // content. Serving the first would drop real release notes, and the previous
+    // `.single()` served none at all — PostgREST answers PGRST116 for "more than
+    // one row" as well as "no rows", so those eight versions 404'd.
+    //
+    // The first entry is also spread at the top level so a consumer written
+    // against the old single-object shape keeps working.
+    return NextResponse.json(
+      {
+        ...entries[0],
+        data: entries,
+        meta: { version, entries: entries.length },
+      },
+      { headers: CORS_CACHE }
+    )
   } catch (error) {
     logger.error("Changelog entry error", {
       error: error instanceof Error ? error : new Error(String(error)),
