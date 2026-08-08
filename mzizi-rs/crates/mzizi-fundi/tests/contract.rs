@@ -469,3 +469,496 @@ fn learning_keeps_its_typescript_spellings_and_limits() {
     assert_eq!(stats.top_failing_components.len(), 10);
     assert_eq!(stats.top_error_types.len(), 5);
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// nyuchi-fundi — the approval that did not hold, and the auth rule that only
+// applied to the narrowest case
+// ═══════════════════════════════════════════════════════════════════════════
+
+// `ErrorType` is aliased: nyuchi-fundi-reporter declares one too, with FOUR
+// members the healing engine does not have (a11y, perf, conformity, slo). So
+// the reporter can file a defect the engine has no branch for — recorded in
+// `the_two_halves_of_the_rung_do_not_share_an_error_vocabulary` below rather
+// than papered over by renaming a published type.
+use mzizi_fundi::nyuchi_fundi::{
+    ActionOutcome, Approval, BlastRadius, DiagnosticInput, ErrorType as HealErrorType,
+    EscalationSeverity, ProbeStatus, ProbeSummary, REPEAT_ERROR_THRESHOLD, REPEAT_ERROR_WINDOW_MS,
+    RemediationAction, action_tally, create_healing_plan, plan_outcome,
+};
+
+fn fundi_ts() -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../components/registry/n9-fundi/nyuchi-fundi.tsx");
+    std::fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
+}
+
+const NOW: f64 = 1_786_158_000_000.0;
+
+fn diagnostic(blast_radius: BlastRadius, error_type: HealErrorType) -> DiagnosticInput {
+    DiagnosticInput {
+        blast_radius,
+        failed_component: "nyuchi-wallet-card".to_owned(),
+        failed_node: 3,
+        error_type,
+        error_count: 1,
+        time_since_first_error_ms: 1_000.0,
+        probe_results: Vec::new(),
+    }
+}
+
+#[test]
+fn auth_is_never_auto_fixed_at_any_blast_radius() {
+    // THE RULE THAT ONLY APPLIED TO THE NARROWEST CASE. The .ts puts the auth
+    // branch inside the `else` that handles ISOLATED failures, so a partial or
+    // systemic auth failure never reaches "never auto-fix auth" — it gets
+    // degrade-feature and reroute instead. The rule the file states as
+    // inviolable applied exactly when the failure was smallest.
+    for radius in [
+        BlastRadius::Isolated,
+        BlastRadius::Partial,
+        BlastRadius::Systemic,
+        BlastRadius::Unknown,
+    ] {
+        let plan = create_healing_plan("plan-1", diagnostic(radius, HealErrorType::Auth), NOW);
+        assert_eq!(
+            plan.approval,
+            Approval::Required,
+            "auth at {} radius must wait for a person",
+            radius.as_str()
+        );
+        assert!(
+            plan.actions
+                .iter()
+                .all(RemediationAction::is_notification_only),
+            "auth at {} radius must change nothing by itself: {:?}",
+            radius.as_str(),
+            plan.actions
+        );
+    }
+
+    assert!(
+        fundi_ts().contains("never auto-fix auth"),
+        "the .tsx still states the rule it applies only when isolated"
+    );
+    assert!(HealErrorType::Auth.is_never_auto_fixed());
+    assert!(!HealErrorType::Network.is_never_auto_fixed());
+}
+
+#[test]
+fn a_systemic_auth_failure_escalates_more_loudly() {
+    let plan = create_healing_plan(
+        "plan-1",
+        diagnostic(BlastRadius::Systemic, HealErrorType::Auth),
+        NOW,
+    );
+    let severity = plan.actions.iter().find_map(|a| match a {
+        RemediationAction::Escalate { severity, .. } => Some(*severity),
+        _ => None,
+    });
+    assert_eq!(severity, Some(EscalationSeverity::Critical));
+
+    let isolated = create_healing_plan(
+        "plan-2",
+        diagnostic(BlastRadius::Isolated, HealErrorType::Auth),
+        NOW,
+    );
+    let severity = isolated.actions.iter().find_map(|a| match a {
+        RemediationAction::Escalate { severity, .. } => Some(*severity),
+        _ => None,
+    });
+    assert_eq!(severity, Some(EscalationSeverity::High));
+}
+
+#[test]
+fn requiring_approval_actually_withholds_the_actions() {
+    // THE GATE THAT DID NOT HOLD. FundiProvider defaults autoHeal = true and the
+    // check reads `if (plan.requiresHumanApproval && !autoHeal)`, so the flag
+    // meaning "a person must look at this" is overridden by a convenience flag
+    // that is on unless somebody turns it off. A systemic plan disabled
+    // non-critical features automatically while declaring that it should not.
+    let mut plan = create_healing_plan(
+        "plan-1",
+        diagnostic(BlastRadius::Systemic, HealErrorType::Render),
+        NOW,
+    );
+    assert_eq!(plan.approval, Approval::Required);
+    assert!(plan.is_held());
+
+    let runnable = plan.may_execute();
+    assert!(
+        runnable.iter().all(|a| a.is_notification_only()),
+        "only the page goes out: {runnable:?}"
+    );
+    assert!(
+        plan.actions
+            .iter()
+            .any(|a| matches!(a, RemediationAction::DegradeFeature { .. })),
+        "the degrade action is still IN the plan — held, not dropped"
+    );
+
+    plan.grant_approval();
+    assert_eq!(plan.approval, Approval::Granted);
+    assert_eq!(plan.may_execute().len(), plan.actions.len());
+    assert!(!plan.is_held());
+
+    assert!(
+        fundi_ts().contains("autoHeal = true"),
+        "the .tsx still defaults the override on"
+    );
+}
+
+#[test]
+fn a_held_plan_still_pages_the_person_who_must_approve_it() {
+    // Withholding the escalation would deadlock the gate it enforces: the page is
+    // how the human who must approve learns there is something to approve.
+    let plan = create_healing_plan(
+        "plan-1",
+        diagnostic(BlastRadius::Systemic, HealErrorType::Render),
+        NOW,
+    );
+    assert!(
+        plan.may_execute()
+            .iter()
+            .any(|a| matches!(a, RemediationAction::Escalate { .. })),
+        "the escalation is not held"
+    );
+}
+
+#[test]
+fn a_plan_that_needs_no_approval_runs_in_full() {
+    let plan = create_healing_plan(
+        "plan-1",
+        diagnostic(BlastRadius::Isolated, HealErrorType::Network),
+        NOW,
+    );
+    assert_eq!(plan.approval, Approval::NotRequired);
+    assert!(!plan.is_held());
+    assert_eq!(plan.may_execute().len(), plan.actions.len());
+    assert_eq!(plan.actions.len(), 2, "retry and fallback");
+}
+
+#[test]
+fn chain_and_crypto_fall_back_at_any_blast_radius() {
+    // Same `else` as auth, same hole: a systemic chain failure was rerouted
+    // rather than falling back to the Web2 path.
+    for error_type in [HealErrorType::Chain, HealErrorType::Crypto] {
+        for radius in [
+            BlastRadius::Isolated,
+            BlastRadius::Partial,
+            BlastRadius::Systemic,
+        ] {
+            let plan = create_healing_plan("plan-1", diagnostic(radius, error_type), NOW);
+            assert!(
+                plan.actions.iter().any(|a| matches!(
+                    a,
+                    RemediationAction::FallbackSwitch { from, to }
+                        if from == "web3" && to == "web2"
+                )),
+                "{} at {} radius must fall back to web2",
+                error_type.as_str(),
+                radius.as_str()
+            );
+        }
+    }
+}
+
+#[test]
+fn an_unknown_blast_radius_is_not_treated_as_isolated() {
+    // mzizi-chaos answers `unknown` when nothing was probed, and the two halves
+    // of one loop have to share a vocabulary. The .ts union has no such member,
+    // so its `else` would treat it as isolated — the calmest response, chosen at
+    // the moment the least is known.
+    let plan = create_healing_plan(
+        "plan-1",
+        diagnostic(BlastRadius::Unknown, HealErrorType::Render),
+        NOW,
+    );
+    assert_eq!(plan.approval, Approval::Required);
+    assert!(
+        plan.actions
+            .iter()
+            .all(RemediationAction::is_notification_only),
+        "no remediation is chosen on the strength of an unprobed diagnosis"
+    );
+    assert!(plan.reasoning.contains("Blast radius unknown"));
+    assert!(plan.confidence < 0.5, "and it says so in the number too");
+
+    assert!(
+        !fundi_ts().contains("\"unknown\""),
+        "the .tsx union still has no representation for it"
+    );
+}
+
+#[test]
+fn the_reroute_target_does_not_depend_on_probe_ordering() {
+    // healthyNodes[0] takes whichever healthy probe came back first, so two runs
+    // over the same set can reroute to different targets and neither is
+    // reproducible.
+    let mut one = diagnostic(BlastRadius::Partial, HealErrorType::Network);
+    one.probe_results = vec![
+        ProbeSummary {
+            target: "search".to_owned(),
+            status: ProbeStatus::Healthy,
+        },
+        ProbeSummary {
+            target: "auth".to_owned(),
+            status: ProbeStatus::Healthy,
+        },
+    ];
+    let mut reversed = one.clone();
+    reversed.probe_results.reverse();
+
+    let target = |input: DiagnosticInput| {
+        create_healing_plan("plan-1", input, NOW)
+            .actions
+            .iter()
+            .find_map(|a| match a {
+                RemediationAction::Reroute { to_node, .. } => Some(to_node.clone()),
+                _ => None,
+            })
+    };
+    assert_eq!(target(one), Some("auth".to_owned()));
+    assert_eq!(
+        target(reversed),
+        Some("auth".to_owned()),
+        "the same probe set must choose the same target"
+    );
+}
+
+#[test]
+fn a_partial_failure_with_no_healthy_node_does_not_reroute_into_the_void() {
+    let mut input = diagnostic(BlastRadius::Partial, HealErrorType::Network);
+    input.probe_results = vec![ProbeSummary {
+        target: "search".to_owned(),
+        status: ProbeStatus::Error,
+    }];
+    let plan = create_healing_plan("plan-1", input, NOW);
+    assert!(
+        !plan
+            .actions
+            .iter()
+            .any(|a| matches!(a, RemediationAction::Reroute { .. }))
+    );
+    assert!(
+        plan.actions
+            .iter()
+            .any(|a| matches!(a, RemediationAction::DegradeFeature { .. }))
+    );
+}
+
+#[test]
+fn repeated_failures_trip_the_breaker_whatever_else_is_true() {
+    let mut input = diagnostic(BlastRadius::Isolated, HealErrorType::Render);
+    input.error_count = REPEAT_ERROR_THRESHOLD + 1;
+    input.time_since_first_error_ms = REPEAT_ERROR_WINDOW_MS - 1.0;
+    let plan = create_healing_plan("plan-1", input.clone(), NOW);
+    assert!(
+        plan.actions
+            .iter()
+            .any(|a| matches!(a, RemediationAction::CircuitBreak { .. }))
+    );
+
+    // At the threshold, not over it.
+    let mut at_threshold = input.clone();
+    at_threshold.error_count = REPEAT_ERROR_THRESHOLD;
+    assert!(
+        !create_healing_plan("plan-2", at_threshold, NOW)
+            .actions
+            .iter()
+            .any(|a| matches!(a, RemediationAction::CircuitBreak { .. })),
+        "the .ts uses > 3, not >= 3"
+    );
+
+    // Outside the window.
+    let mut stale = input;
+    stale.time_since_first_error_ms = REPEAT_ERROR_WINDOW_MS;
+    assert!(
+        !create_healing_plan("plan-3", stale, NOW)
+            .actions
+            .iter()
+            .any(|a| matches!(a, RemediationAction::CircuitBreak { .. }))
+    );
+
+    assert!(
+        fundi_ts().contains("input.errorCount > 3 && input.timeSinceFirstError < 60000"),
+        "the repeat-failure threshold drifted from the sibling"
+    );
+}
+
+#[test]
+fn a_held_action_is_counted_as_held_not_as_never_happened() {
+    // The .ts either ran a plan in full or returned null, so afterwards "held for
+    // approval" and "nothing happened" were indistinguishable.
+    let plan = create_healing_plan(
+        "plan-1",
+        diagnostic(BlastRadius::Systemic, HealErrorType::Render),
+        NOW,
+    );
+    let ran: Vec<ActionOutcome> = plan
+        .may_execute()
+        .into_iter()
+        .map(|action| ActionOutcome {
+            action: action.clone(),
+            success: true,
+            error: None,
+        })
+        .collect();
+
+    let result = plan_outcome(&plan, ran, NOW + 5.0);
+    assert_eq!(result.plan_id, "plan-1");
+    assert_eq!(result.actions_executed, 1, "the escalation");
+    assert_eq!(result.actions_failed, 0);
+    assert_eq!(result.actions_held, 1, "the degrade waited");
+}
+
+#[test]
+fn a_failed_action_does_not_block_the_count_of_the_rest() {
+    let plan = create_healing_plan(
+        "plan-1",
+        diagnostic(BlastRadius::Isolated, HealErrorType::Network),
+        NOW,
+    );
+    let outcomes = vec![
+        ActionOutcome {
+            action: plan.actions[0].clone(),
+            success: false,
+            error: Some("no executor registered".to_owned()),
+        },
+        ActionOutcome {
+            action: plan.actions[1].clone(),
+            success: true,
+            error: None,
+        },
+    ];
+    let result = plan_outcome(&plan, outcomes, NOW + 5.0);
+    assert_eq!(result.actions_executed, 1);
+    assert_eq!(result.actions_failed, 1);
+    assert_eq!(result.actions_held, 0);
+}
+
+#[test]
+fn a_node_number_in_a_plan_is_uncapped() {
+    let mut input = diagnostic(BlastRadius::Systemic, HealErrorType::Render);
+    input.failed_node = 12;
+    let plan = create_healing_plan("plan-1", input, NOW);
+    assert!(plan.actions.iter().any(|a| matches!(
+        a,
+        RemediationAction::Escalate { message, .. } if message.contains("N12")
+    )));
+}
+
+#[test]
+fn the_action_types_and_enums_match_the_typescript() {
+    // A renamed action type is an executor a host silently never matches.
+    let ts = fundi_ts();
+    for action in [
+        RemediationAction::CircuitBreak {
+            service: String::new(),
+            duration_ms: 0,
+        },
+        RemediationAction::FallbackSwitch {
+            from: String::new(),
+            to: String::new(),
+        },
+        RemediationAction::CacheClear {
+            scope: mzizi_fundi::nyuchi_fundi::CacheScope::Local,
+        },
+        RemediationAction::Reroute {
+            from_node: String::new(),
+            to_node: String::new(),
+        },
+        RemediationAction::RetryWithBackoff {
+            service: String::new(),
+            max_retries: 0,
+        },
+        RemediationAction::DegradeFeature {
+            feature: String::new(),
+            level: mzizi_fundi::nyuchi_fundi::DegradeLevel::Partial,
+        },
+        RemediationAction::ScaleRequest {
+            up: true,
+            resource: String::new(),
+        },
+        RemediationAction::Escalate {
+            severity: EscalationSeverity::Low,
+            message: String::new(),
+        },
+    ] {
+        assert!(
+            ts.contains(&format!("type: \"{}\"", action.type_str())),
+            "action type {}",
+            action.type_str()
+        );
+    }
+    for error_type in [
+        HealErrorType::Render,
+        HealErrorType::Network,
+        HealErrorType::Data,
+        HealErrorType::Auth,
+        HealErrorType::Chain,
+        HealErrorType::Crypto,
+        HealErrorType::Timeout,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", error_type.as_str())),
+            "error type {}",
+            error_type.as_str()
+        );
+    }
+}
+
+#[test]
+fn a_tally_summarises_a_plan_without_reading_its_prose() {
+    let plan = create_healing_plan(
+        "plan-1",
+        diagnostic(BlastRadius::Isolated, HealErrorType::Data),
+        NOW,
+    );
+    let tally = action_tally(&plan);
+    assert_eq!(tally.get("cache-clear"), Some(&1));
+    assert_eq!(tally.get("retry-with-backoff"), Some(&1));
+    assert_eq!(tally.get("escalate"), None);
+}
+
+#[test]
+fn the_two_halves_of_the_rung_do_not_share_an_error_vocabulary() {
+    // nyuchi-fundi-reporter declares eleven error types and the healing engine
+    // declares seven. The four the reporter has and the engine does not — a11y,
+    // perf, conformity, slo — are precisely the ones N8 assurance produces:
+    // mzizi-a11y-audit, mzizi-perf-probe, mzizi-conformity-check and the SLO
+    // half of mzizi-alert-engine. So the rung can FILE every one of them and can
+    // PLAN for none of them.
+    //
+    // Not fixed here, deliberately. Widening the engine's union means inventing
+    // a remediation for each — what does fundi automatically do about a failing
+    // contrast ratio? — and inventing one badly is worse than having none. What
+    // is not acceptable is the mismatch being invisible, so this spec is the
+    // record, and it fails the moment either side changes.
+    let reporter_only = ["a11y", "perf", "conformity", "slo"];
+    let engine: Vec<&str> = [
+        HealErrorType::Render,
+        HealErrorType::Network,
+        HealErrorType::Data,
+        HealErrorType::Auth,
+        HealErrorType::Chain,
+        HealErrorType::Crypto,
+        HealErrorType::Timeout,
+    ]
+    .iter()
+    .map(|e| e.as_str())
+    .collect();
+
+    for kind in reporter_only {
+        assert!(
+            !engine.contains(&kind),
+            "the healing engine gained a `{kind}` branch — good, but then this \
+             spec needs updating rather than deleting"
+        );
+        assert!(
+            ErrorType::A11y.as_str() == "a11y" || kind != "a11y",
+            "the reporter still declares it"
+        );
+    }
+    assert_eq!(engine.len(), 7);
+}
