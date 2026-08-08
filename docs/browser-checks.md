@@ -1,9 +1,10 @@
 # Browser checks — proving a page actually rendered
 
 `pnpm browser:check` renders pages through [Kitesurf](https://developers.cloudflare.com/browser-run/kitesurf/)
-and asserts each one produced its own content. `scripts/kitesurf.mjs` is the whole
-implementation; this file is the why, the dev setup, and how fundi runs the same
-check from a Worker.
+and asserts each one produced its own content, then reports the run to N8
+assurance over OTLP. `scripts/kitesurf.ts` is the runner and
+`components/registry/n8-assurance/mzizi-otel.ts` is the exporter; this file is
+the why, the dev setup, and how fundi runs the same check from a Worker.
 
 ## The gap it closes
 
@@ -112,8 +113,11 @@ no HTML parsing at all — which removed both bugs the first version shipped wit
    trap documented in `scripts/extract-props.ts`.
 
 Both were self-inflicted, and neither can recur when the extraction happens
-server-side. It also means the script has **zero dependencies**, and a Worker
-gets the identical result with no parsing library.
+server-side. It also means **no parsing library is involved anywhere** — not in
+the runner, and not in a Worker doing the same thing. (The runner itself runs
+under `tsx`, like every other script here, so it can import `mzizi-otel` rather
+than carrying a second copy of the exporter; `mzizi-otel` is the piece that has
+to stay dependency-free, and does.)
 
 Kitesurf supports a subset of Quick Actions. Verified against `mzizi.dev`:
 
@@ -168,6 +172,41 @@ events, which means it learns about a broken page only when something throws
 _and_ the throw is reported. A render check is a signal it can generate itself —
 "this route stopped producing its content" is a diagnostic no error-boundary
 beacon emits, because the failing page did not error, it rendered empty.
+
+## Reporting back — this is an N8 probe, not a console tool
+
+> **Source of truth:** `docs/n8-telemetry.md`.
+
+The first version printed to a console and exited non-zero, so a render failure
+was seen by whoever ran the command and by nothing else. `mzizi-synthetic-probe`
+(N8) had already declared the contract it should have implemented — down to
+saying in its own body _"here we define the contract that the probe runner
+implements."_
+
+Each run now produces a `ProbeResult` and ships it through `mzizi-otel` as OTLP:
+one INTERNAL span for the run, one CLIENT child per route, `status.code = 2`
+(ERROR) on the run and on each failing route.
+
+```
+✓ /tokens  found "malachite" (6665 chars)
+⇡ reported 2 spans to OTLP (trace ed6ba19310dbe8e04cf0a037fc06b36e)
+```
+
+OTLP rather than a Mzizi endpoint because a signal only fundi can read is a
+signal only fundi can act on — any collector, backend or agent that speaks
+OpenTelemetry can subscribe instead.
+
+Two rules worth repeating here:
+
+- **Reporting never changes the exit code.** A run that "failed" because a
+  collector was unreachable would manufacture an incident out of an exporter
+  outage. The export outcome is printed and then ignored.
+- **With no `OTEL_EXPORTER_OTLP_ENDPOINT` it is inert**, and says so
+  (`⇡ not reported — no OTLP endpoint configured`). No collector is configured
+  anywhere in the ecosystem yet, so that is the normal output today.
+
+`--text` runs do **not** report: a debugging dump asserted nothing, and putting
+a probe result on the bus for it would be noise.
 
 ## What this does not check
 

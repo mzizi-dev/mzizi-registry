@@ -10683,6 +10683,42 @@
     },
     {
       "dependencies": [],
+      "description": "OTLP exporter for N8 assurance signals. Turns probe results, tracked errors and fired alerts into OpenTelemetry spans and POSTs them to any OTLP/HTTP collector, so a Mzizi signal can be consumed by any agent or service that speaks OpenTelemetry. Zero dependencies and no Node built-ins - runs unchanged in Node, a Cloudflare Worker, Deno or a browser.",
+      "files": [
+        {
+          "path": "lib/mzizi-otel.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Non-visual infrastructure - no direct a11y requirements"
+        ],
+        "collection": "observability",
+        "features": [
+          "OTLP/HTTP JSON traces - no @opentelemetry/* dependency",
+          "Maps the N8 ProbeResult contract to a run span plus one child span per step",
+          "Honours OTEL_EXPORTER_OTLP_ENDPOINT and OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+          "Never throws and never changes the caller's verdict",
+          "Inert with no endpoint configured - no default collector is invented"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "useCases": [
+          "Ship synthetic probe results to a collector",
+          "Give mzizi-rum / mzizi-error-tracker / mzizi-alert-engine a sink for their callbacks",
+          "Let other agents subscribe to Mzizi assurance events over a standard protocol",
+          "Emit assurance telemetry from a Cloudflare Worker, where the OTel JS SDK does not run"
+        ]
+      },
+      "name": "mzizi-otel",
+      "registryDependencies": [
+        "https://mzizi.dev/api/v1/ui/mzizi-synthetic-probe"
+      ],
+      "type": "registry:lib"
+    },
+    {
+      "dependencies": [],
       "description": "Web Vitals and performance monitoring. Tracks LCP, FID, CLS, INP, TTFB per page and per component (using data-portal backlinks). Reports to analytics. Competitors: Lighthouse, Web Vitals library, Vercel Analytics.",
       "files": [
         {
