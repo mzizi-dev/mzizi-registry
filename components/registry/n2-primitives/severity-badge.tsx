@@ -13,14 +13,14 @@ type Severity = "low" | "moderate" | "high" | "severe" | "extreme" | "cold"
 
 const severityColors: Record<Severity, { bg: string; text: string; dot: string }> = {
   low: {
-    bg: "bg-[var(--severity-low, #22C55E)]/10",
-    text: "text-[var(--severity-low, #22C55E)]",
-    dot: "bg-[var(--severity-low, #22C55E)]",
+    bg: "bg-[var(--severity-low,#22C55E)]/10",
+    text: "text-[var(--severity-low,#22C55E)]",
+    dot: "bg-[var(--severity-low,#22C55E)]",
   },
   moderate: {
-    bg: "bg-[var(--severity-moderate, #F59E0B)]/10",
-    text: "text-[var(--severity-moderate, #F59E0B)]",
-    dot: "bg-[var(--severity-moderate, #F59E0B)]",
+    bg: "bg-[var(--severity-moderate,#F59E0B)]/10",
+    text: "text-[var(--severity-moderate,#F59E0B)]",
+    dot: "bg-[var(--severity-moderate,#F59E0B)]",
   },
   high: {
     bg: "bg-[var(--severity-high,#FF7043)]/10",

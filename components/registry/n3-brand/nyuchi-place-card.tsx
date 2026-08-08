@@ -141,7 +141,13 @@ function NyuchiPlaceCard({
               </span>
             )}
             {openNow != null && (
-              <span style={{ color: openNow ? "#4ADE80" : "#F87171" }}>
+              <span
+                style={{
+                  color: openNow
+                    ? "var(--status-success, #4ADE80)"
+                    : "var(--status-error, #F87171)",
+                }}
+              >
                 {openNow ? "Open" : "Closed"}
               </span>
             )}
@@ -210,7 +216,9 @@ function NyuchiPlaceCard({
         {openNow != null && (
           <span
             className="text-[10px] font-medium"
-            style={{ color: openNow ? "#4ADE80" : "#F87171" }}
+            style={{
+              color: openNow ? "var(--status-success, #4ADE80)" : "var(--status-error, #F87171)",
+            }}
           >
             {openNow ? "Open" : "Closed"}
           </span>

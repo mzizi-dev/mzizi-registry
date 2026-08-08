@@ -134,7 +134,7 @@ export function NyuchiProfilePageLayout({
               {primaryAction && (
                 <button
                   onClick={primaryAction.onClick}
-                  className="bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] h-12 flex-1 rounded-full text-[13px] font-medium text-[#0A0A0A] transition-opacity hover:opacity-80"
+                  className="bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] h-12 flex-1 rounded-full text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
                 >
                   {primaryAction.label}
                 </button>

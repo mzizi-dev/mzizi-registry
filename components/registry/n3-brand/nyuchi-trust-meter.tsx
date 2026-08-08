@@ -107,12 +107,12 @@ function NyuchiTrustMeter({
   /* Score color thresholds */
   const scoreColor =
     trustScore >= 0.4
-      ? "#4ADE80" /* Green — strong */
+      ? "var(--status-success, #4ADE80)" /* Green — strong */
       : trustScore >= 0.2
-        ? "#FBBF24" /* Amber — growing */
+        ? "var(--status-warning, #FBBF24)" /* Amber — growing */
         : trustScore >= 0.05
-          ? "#FB923C" /* Orange — low */
-          : "#6B6B66" /* Grey — none */
+          ? "var(--status-warning, #FB923C)" /* Orange — low */
+          : "var(--status-neutral, #6B6B66)" /* Grey — none */
 
   const signals: TrustSignal[] = [
     {
@@ -129,7 +129,7 @@ function NyuchiTrustMeter({
         statusScore + 0.5,
         0
       ) /* Normalize: -0.05–0.0 → 0.45–0.50 range for display */,
-      color: statusScore >= 0 ? "#4ADE80" : "#F87171",
+      color: statusScore >= 0 ? "var(--status-success, #4ADE80)" : "var(--status-error, #F87171)",
       detail: statusLabel,
     },
     {

@@ -128,7 +128,7 @@ export function NyuchiSearchView({
             className={cn(
               "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors",
               activeCategory === cat.key
-                ? "text-[#0A0A0A]"
+                ? "text-[var(--brand-accent-foreground,#0A0A0A)]"
                 : "bg-muted text-muted-foreground hover:text-foreground"
             )}
             style={

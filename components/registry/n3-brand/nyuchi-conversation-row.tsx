@@ -90,7 +90,7 @@ function NyuchiConversationRow({
           )}
         </div>
         {isOnline && (
-          <div className="absolute right-0 bottom-0 size-3 rounded-full bg-[#4ADE80] ring-2 ring-card" />
+          <div className="absolute right-0 bottom-0 size-3 rounded-full bg-[var(--status-success,#4ADE80)] ring-2 ring-card" />
         )}
       </div>
       {/* Content */}
