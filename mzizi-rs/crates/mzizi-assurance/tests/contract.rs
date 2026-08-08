@@ -990,3 +990,165 @@ fn severity_keeps_its_typescript_spelling() {
     assert!(ts.contains("node === 7"), "shell rule drifted");
     assert!(ts.contains("> 10"), "blast-radius threshold drifted");
 }
+
+// ── the api probe ──────────────────────────────────────────────────────────
+
+use mzizi_assurance::mzizi_api_probe::{
+    EndpointStatus, Outcome, check, classify, default_endpoints, degraded_threshold_for,
+    worst_status,
+};
+
+#[test]
+fn a_timeout_is_a_reported_fact_not_a_guess_at_prose() {
+    // THE BUG THIS PORT FIXES. The .ts writes String(err).includes("abort"), and
+    // an abort reads differently per runtime — "The operation was aborted",
+    // "This operation was aborted", "signal is aborted without reason". The same
+    // timeout therefore classified as `timeout` in one host and `down` in
+    // another, and `down` pages people where `timeout` often does not.
+    assert_eq!(
+        classify(&Outcome::TimedOut, 5000.0, 2000.0),
+        EndpointStatus::Timeout
+    );
+    // Even an error whose text happens to contain "abort" is not a timeout.
+    let failed = Outcome::Failed {
+        error: "connection aborted by peer".to_owned(),
+    };
+    assert_eq!(classify(&failed, 10.0, 2000.0), EndpointStatus::Down);
+}
+
+#[test]
+fn the_degraded_threshold_cannot_contradict_the_timeout() {
+    // The .ts hardcodes 2000ms while the timeout is configurable at 5000. Set
+    // the timeout below 2000 and Degraded becomes unreachable — the request
+    // aborts before it can ever be classified slow.
+    assert!(degraded_threshold_for(5000.0) < 5000.0);
+    assert!(degraded_threshold_for(1000.0) < 1000.0);
+    assert_eq!(degraded_threshold_for(100.0), 250.0, "floored, never zero");
+}
+
+#[test]
+fn a_slow_success_is_degraded_and_a_slow_failure_is_down() {
+    // A slow 500 is an outage, not a slowdown. Calling it degraded would
+    // understate it.
+    let ok = Outcome::Responded { status_code: 200 };
+    assert_eq!(classify(&ok, 100.0, 2000.0), EndpointStatus::Healthy);
+    assert_eq!(classify(&ok, 3000.0, 2000.0), EndpointStatus::Degraded);
+    let err = Outcome::Responded { status_code: 500 };
+    assert_eq!(classify(&err, 3000.0, 2000.0), EndpointStatus::Down);
+    assert_eq!(classify(&err, 10.0, 2000.0), EndpointStatus::Down);
+}
+
+#[test]
+fn redirects_count_as_alive() {
+    let redirect = Outcome::Responded { status_code: 308 };
+    assert_eq!(classify(&redirect, 10.0, 2000.0), EndpointStatus::Healthy);
+    let gone = Outcome::Responded { status_code: 410 };
+    assert_eq!(classify(&gone, 10.0, 2000.0), EndpointStatus::Down);
+}
+
+#[test]
+fn a_check_carries_the_status_code_only_when_there_was_one() {
+    let ep = &default_endpoints("https://mzizi.dev")[0];
+    let responded = check(
+        ep,
+        &Outcome::Responded { status_code: 204 },
+        10.0,
+        1000.0,
+        2000.0,
+    );
+    assert_eq!(responded.status_code, Some(204));
+    assert!(responded.error.is_none());
+
+    let timed_out = check(ep, &Outcome::TimedOut, 5000.0, 1000.0, 2000.0);
+    assert_eq!(timed_out.status_code, None);
+    assert!(
+        timed_out
+            .error
+            .as_deref()
+            .is_some_and(|e| e.contains("timed out"))
+    );
+}
+
+#[test]
+fn one_endpoint_down_makes_the_whole_set_down() {
+    // Worst, not most common: nine healthy endpoints do not cancel out an
+    // outage, and an average would hide the only case worth seeing.
+    let ep = default_endpoints("https://mzizi.dev");
+    let checks = vec![
+        check(
+            &ep[0],
+            &Outcome::Responded { status_code: 200 },
+            10.0,
+            0.0,
+            2000.0,
+        ),
+        check(
+            &ep[1],
+            &Outcome::Responded { status_code: 200 },
+            10.0,
+            0.0,
+            2000.0,
+        ),
+        check(
+            &ep[2],
+            &Outcome::Failed {
+                error: "refused".to_owned(),
+            },
+            1.0,
+            0.0,
+            2000.0,
+        ),
+    ];
+    assert_eq!(worst_status(&checks), EndpointStatus::Down);
+    assert_eq!(worst_status(&checks[..2]), EndpointStatus::Healthy);
+    assert_eq!(
+        worst_status(&[]),
+        EndpointStatus::Unknown,
+        "nothing probed is not healthy"
+    );
+}
+
+#[test]
+fn default_endpoints_match_the_typescript_and_tolerate_a_trailing_slash() {
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n8-assurance/mzizi-api-probe.ts"),
+    )
+    .expect("the api-probe TypeScript sibling");
+    for ep in default_endpoints("https://mzizi.dev") {
+        assert!(
+            ts.contains(ep.component_name.as_str()),
+            "{} missing",
+            ep.component_name
+        );
+        assert!(ts.contains(&format!("node: {}", ep.node)) || ts.contains(&ep.node.to_string()));
+    }
+    for status in [
+        EndpointStatus::Healthy,
+        EndpointStatus::Degraded,
+        EndpointStatus::Down,
+        EndpointStatus::Timeout,
+        EndpointStatus::Unknown,
+    ] {
+        assert!(ts.contains(&format!("\"{}\"", status.as_str())));
+    }
+    assert_eq!(
+        default_endpoints("https://mzizi.dev/")[0].url,
+        default_endpoints("https://mzizi.dev")[0].url
+    );
+}
+
+#[test]
+fn unknown_is_never_inferred_only_stated() {
+    // A host that has not probed yet needs to say so. A dashboard rendering
+    // "unknown" is honest where defaulting to "healthy" is not.
+    assert!(!EndpointStatus::Unknown.is_unhealthy());
+    assert!(!EndpointStatus::Healthy.is_unhealthy());
+    for s in [
+        EndpointStatus::Degraded,
+        EndpointStatus::Down,
+        EndpointStatus::Timeout,
+    ] {
+        assert!(s.is_unhealthy());
+    }
+}

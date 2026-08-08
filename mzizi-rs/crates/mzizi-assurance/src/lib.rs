@@ -27,6 +27,9 @@
 //! in a way that changes its caller's verdict, so a probe can never report
 //! "failed" merely because a collector was unreachable.
 
+#[path = "../../../../components/registry/n8-assurance/mzizi-api-probe.rs"]
+pub mod mzizi_api_probe;
+
 #[path = "../../../../components/registry/n8-assurance/mzizi-error-tracker.rs"]
 pub mod mzizi_error_tracker;
 
