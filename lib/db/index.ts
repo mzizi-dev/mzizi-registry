@@ -838,10 +838,36 @@ export async function upsertChangelog(entry: ChangelogInsert): Promise<Changelog
 /**
  * Get version history for a component, most recent first.
  */
+/**
+ * The columns `/api/v1/ui/{name}/versions` serves.
+ *
+ * Named explicitly rather than `*` because the `component_versions` view also
+ * projects `source_code` out of each archived version's `sourceCode` key, and
+ * `*` served it: a public, and by then STALE, second copy of component source
+ * that lives on disk in git (§8.3). Component source has exactly one home and
+ * this route is not it. A new column added to the view is now invisible here
+ * until someone adds it deliberately, which is the point.
+ */
+const VERSION_COLUMNS = [
+  "component_name",
+  "version",
+  "version_number",
+  "change_type",
+  "comment",
+  "description",
+  "status",
+  "ecosystem_node",
+  "category",
+  "subcategory",
+  "tags",
+  "changed_by",
+  "created_at",
+].join(", ")
+
 export async function getComponentVersions(componentName: string): Promise<ComponentVersionRow[]> {
   const { data, error } = await getPublicClient()
     .from("component_versions")
-    .select("*")
+    .select(VERSION_COLUMNS)
     .eq("component_name", componentName)
     // `component_versions` has no `released_at` — it is a VIEW whose timestamp
     // column is `created_at`. Ordering by a column that does not exist made
@@ -864,7 +890,7 @@ export async function getComponentVersion(
 ): Promise<ComponentVersionRow | null> {
   const { data, error } = await getPublicClient()
     .from("component_versions")
-    .select("*")
+    .select(VERSION_COLUMNS)
     .eq("component_name", componentName)
     .eq("version", version)
     .single()
