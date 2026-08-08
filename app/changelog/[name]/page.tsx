@@ -131,9 +131,29 @@ export default async function ComponentChangelogPage({
                     {releasedOn(entry.created_at)}
                   </time>
                 ) : null}
-                {entry.change_type ? (
+                {/*
+                  `change_kind` is the normalised value, not the raw
+                  `change_type`. The raw set held 12 ad-hoc strings, the largest
+                  of which — `4.1.1-alignment`, on 2,132 rows — was a release
+                  marker rather than a kind of change, so rendering it read as a
+                  change type that no other row shared. The release it encodes is
+                  shown as a release instead, which is what it always was.
+                */}
+                {entry.change_kind && entry.change_kind !== "unclassified" ? (
                   <span className="font-mono text-[11px] tracking-wide text-muted-foreground uppercase">
-                    {entry.change_type}
+                    {entry.change_kind}
+                  </span>
+                ) : null}
+                {entry.release ? (
+                  <span
+                    className="rounded-full border border-border px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
+                    title={
+                      entry.release_marker
+                        ? "Release recorded on the change itself"
+                        : "Newest release published on or before this change"
+                    }
+                  >
+                    {entry.release_breaking ? "breaking · " : ""}v{entry.release}
                   </span>
                 ) : null}
               </header>

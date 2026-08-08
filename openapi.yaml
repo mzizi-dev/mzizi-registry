@@ -741,7 +741,13 @@ paths:
   /changelog:
     get:
       summary: List releases
-      description: Returns all rows from `changelog`, newest first.
+      description: >-
+        Every release, newest first, classified. Reads the `releases` view rather
+        than the `changelog` table: ordering that table by `released_at` put ten
+        undated 4.1.x rows above the current 1.0.0, because Postgres sorts NULLS
+        FIRST on DESC. Ordering by semver instead would put 4.2.0 above 1.0.0,
+        which is equally wrong — the version line was deliberately reset. `line`
+        carries the era and the response is pre-sorted by it.
       operationId: listChangelog
       tags: [Content]
       responses:
@@ -752,30 +758,54 @@ paths:
               schema:
                 type: object
                 properties:
-                  releases:
+                  data:
                     type: array
                     items:
                       $ref: "#/components/schemas/ChangelogEntry"
+                  meta:
+                    type: object
+                    properties:
+                      total: { type: integer }
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
   /changelog/{version}:
     get:
-      summary: Get a release by version
+      summary: Get every entry published under a version
+      description: >-
+        `data` is an ARRAY: a version number is not unique. Eight of them carry
+        two or three entries with different titles and content (4.0.31 has
+        three). This route used a single-row query, and PostgREST answers the
+        same error code for "more than one row" as for "no rows", so those
+        eight versions answered 404 for a release that exists. The first entry
+        is also spread at the top level so consumers written against the older
+        single-object shape keep working.
       operationId: getRelease
       tags: [Content]
       parameters:
         - name: version
           in: path
           required: true
-          schema: { type: string, example: "4.0.40" }
+          schema: { type: string, example: "4.0.31" }
       responses:
         "200":
-          description: Release
+          description: Every entry published under this version
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ChangelogEntry"
+                allOf:
+                  - $ref: "#/components/schemas/ChangelogEntry"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ChangelogEntry"
+                      meta:
+                        type: object
+                        properties:
+                          version: { type: string }
+                          entries: { type: integer }
         "404":
           $ref: "#/components/responses/NotFound"
         "503":
@@ -1997,6 +2027,30 @@ components:
         version: { type: string, example: "4.0.40" }
         title: { type: string }
         description: { type: string }
+        line:
+          type: string
+          enum: [public, "pre-1.0"]
+          description: >-
+            Which version era this release belongs to. `public` is the 1.x line;
+            `pre-1.0` is the internal 4.x iteration that 1.0.0 superseded. Both
+            live in one table, which is why no single sort key orders the
+            changelog correctly.
+        line_rank:
+          type: integer
+          description: "Sort weight for `line` — public outranks pre-1.0."
+        major: { type: integer, nullable: true }
+        minor: { type: integer, nullable: true }
+        patch: { type: integer, nullable: true }
+        release_kind:
+          type: string
+          enum: [initial, major, minor, patch]
+          description: >-
+            Compared to the predecessor within the SAME line — a patch bump in
+            4.1.x is not a major bump merely because 1.0.0 exists.
+        breaking: { type: boolean, nullable: true }
+        components_touched:
+          type: integer
+          description: "components_added + modified + deprecated + removed."
         nodes_affected:
           type: array
           description: >-
