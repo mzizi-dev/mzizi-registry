@@ -5,6 +5,22 @@
    ═══════════════════════════════════════════════════════════════ */
 
 /**
+ * STOPGAP — N8 IS A RUST NODE AND THIS FILE IS TYPESCRIPT.
+ *
+ * N4, N5, N8 and N9 are the core: the nodes holding logic rather than UI, and
+ * doctrine puts them in Rust — N4/N5/N8 as a WASM shared core, N9 as a
+ * `workers-rs` edge worker. Today none of them are; there are zero `.rs` files
+ * under those four directories.
+ *
+ * When the core lands, the split is: payload construction, id generation,
+ * endpoint resolution and the never-throw contract are shared-core logic and
+ * move to Rust. What stays per-target is only the thin call that sends.
+ *
+ * This exists in TypeScript because a consumer app's browser has to be able to
+ * emit at all, and because two live defects were found through building it. It
+ * is not the pattern to copy for a new N4/N5/N8/N9 component. See
+ * `docs/n8-telemetry.md`.
+ *
  * WHY THIS EXISTS.
  *
  * N8's covenant is "what breaks is seen before users feel it." Every other N8
