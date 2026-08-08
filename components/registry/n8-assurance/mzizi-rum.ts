@@ -32,7 +32,19 @@ export interface RumConfig {
   sampleRate?: number
   /** Flush interval in ms */
   flushInterval?: number
-  /** Endpoint to POST events to */
+  /**
+   * Endpoint to POST batches to.
+   *
+   * **There is no default.** This used to default to `https://mzizi.dev/api/rum`,
+   * a route that has never existed — so every consumer who installed this
+   * component and did not set an endpoint POSTed their batches into a 404, and
+   * the `catch` below (correctly) swallowed it. Silent data loss that looked
+   * exactly like working RUM.
+   *
+   * Unset means "do not POST"; use `onFlush` to route batches yourself, or send
+   * them to a collector with `mzizi-otel`. Inventing a destination for a
+   * consumer's telemetry is not a sane default even when the destination works.
+   */
   endpoint?: string
   /** Custom event handler instead of posting */
   onEvent?: (event: RumEvent) => void
@@ -51,7 +63,7 @@ class RumCollector {
     this.config = {
       sampleRate: config.sampleRate ?? 0.1,
       flushInterval: config.flushInterval ?? 30000,
-      endpoint: config.endpoint ?? "https://mzizi.dev/api/rum",
+      endpoint: config.endpoint ?? "",
       onEvent: config.onEvent ?? (() => {}),
       onFlush: config.onFlush ?? (() => {}),
     }
@@ -113,6 +125,10 @@ class RumCollector {
     const batch = [...this.events]
     this.events = []
     this.config.onFlush(batch)
+    // No endpoint means the consumer routes batches themselves via `onFlush`.
+    // Posting to a guessed address instead is how this component spent its
+    // whole life writing into a 404.
+    if (!this.config.endpoint) return
     try {
       await fetch(this.config.endpoint, {
         method: "POST",

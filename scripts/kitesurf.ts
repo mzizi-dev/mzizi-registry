@@ -1,6 +1,7 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S tsx
 /**
- * Render pages through Cloudflare Kitesurf and assert they actually painted.
+ * Render pages through Cloudflare Kitesurf, assert they actually painted, and
+ * report the run to N8 assurance over OTLP.
  *
  *   pnpm browser:check                                  # the default route set
  *   pnpm browser:check --base http://localhost:11736    # against a dev server
@@ -20,15 +21,22 @@
  * a frame around a hole" is rendering it and looking for content that should be
  * there.
  *
- * WHY KITESURF RATHER THAN PLAYWRIGHT.
+ * THIS IS AN N8 PROBE RUNNER, NOT A STANDALONE SCRIPT.
  *
- * fundi is a Cloudflare Worker. It cannot spawn a browser process, so a
- * Playwright checker would serve developers and be useless to the agent that
- * most needs it. Browser Run is a `fetch` call, so the same check runs from a
- * laptop, from CI, and from inside fundi's heal loop — see
- * `docs/browser-checks.md` for the Worker binding, which needs no API token.
- * Kitesurf because it is 3-7x lighter than Chromium and this needs text, not
- * pixels.
+ * `mzizi-synthetic-probe` (N8) already declared this contract — `SyntheticJourney`,
+ * `ProbeStep`, `ProbeResult`, `onResult`/`onAlert` — and its body says, in as many
+ * words, "here we define the contract that the probe runner implements". The first
+ * version of this file ignored all of it and printed to a console, so a render
+ * failure was seen by whoever ran the command and by nothing else. It now produces
+ * a `ProbeResult` and ships it through `mzizi-otel`, which is what makes the signal
+ * reach the rung that acts on it.
+ *
+ * That component's comment also says the runner "would use Puppeteer/Playwright".
+ * It cannot: **fundi is a Cloudflare Worker and cannot spawn a browser process.**
+ * Browser Run is a `fetch`, so the same check runs from a laptop, from CI, and
+ * from inside fundi's heal loop — from a Worker via `env.BROWSER.quickAction()`,
+ * which needs no API token. Kitesurf because it is 3-7x lighter than Chromium and
+ * this needs text, not pixels. See `docs/browser-checks.md`.
  *
  * ─────────────────────────────────────────────────────────────────────────────
  * WHY `/markdown` AND NOT `/content` + AN HTML PARSER.
@@ -83,10 +91,20 @@
  */
 
 import { argv, env, exit } from "node:process"
+import { exportProbeResult } from "@/components/registry/n8-assurance/mzizi-otel"
+import type { ProbeResult } from "@/components/registry/n8-assurance/mzizi-synthetic-probe"
 
 const ACCOUNT = env.CLOUDFLARE_ACCOUNT_ID ?? "125a2dfbc21f76a25c980609609e8218"
 const TOKEN = env.CLOUDFLARE_API_TOKEN ?? ""
 const API = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT}/browser-rendering`
+
+/** The journey id every run reports under. A collector groups on this. */
+const JOURNEY_ID = "mzizi-browser-render"
+
+interface Route {
+  path: string
+  expect: string
+}
 
 /**
  * Route -> a string only that route's own BODY can produce.
@@ -100,7 +118,7 @@ const API = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT}/browser-re
  * page that was rendering perfectly — a brittle assertion reports its author's
  * assumption as the site's defect.
  */
-const ROUTES = [
+const ROUTES: Route[] = [
   // A `meta.features` entry — served from registry.json, rendered by the detail body.
   { path: "/components/button", expect: "Polymorphic rendering via asChild" },
   // The oldest version row. `/changelog/{name}` is the route that shipped empty.
@@ -114,7 +132,7 @@ const ROUTES = [
 ]
 
 /** Drop the `<meta>`-derived YAML block `/markdown` prepends. See the header. */
-function body(markdown) {
+function body(markdown: string): string {
   return markdown.replace(/^---\n[\s\S]*?\n---\n/, "")
 }
 
@@ -138,7 +156,7 @@ function body(markdown) {
  * Only runs on failure, so the happy path still costs one request per route.
  * Best-effort: a probe that itself fails must not replace the real result.
  */
-async function diagnose(url) {
+async function diagnose(url: string): Promise<string | null> {
   try {
     const res = await fetch(url, { redirect: "manual" })
     const location = res.headers.get("location")
@@ -159,18 +177,55 @@ async function diagnose(url) {
   return null
 }
 
-async function render(url) {
+type RenderResult = { ok: true; text: string } | { ok: false; detail: string }
+
+async function render(url: string): Promise<RenderResult> {
   const res = await fetch(`${API}/markdown?browser=kitesurf`, {
     method: "POST",
     headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" },
     body: JSON.stringify({ url }),
   })
-  const payload = await res.json().catch(() => null)
+  const payload = (await res.json().catch(() => null)) as {
+    success?: boolean
+    result?: string
+    errors?: { message: string }[]
+  } | null
   if (!res.ok || !payload?.success) {
     const detail = payload?.errors?.map((e) => e.message).join("; ") ?? `HTTP ${res.status}`
     return { ok: false, detail }
   }
   return { ok: true, text: body(String(payload.result ?? "")) }
+}
+
+/**
+ * Ship the run to N8 assurance.
+ *
+ * Reporting NEVER changes the exit code. A run that "failed" because a collector
+ * was unreachable would manufacture an incident out of an exporter outage, which
+ * is the opposite of what an assurance signal is for. The outcome is printed so
+ * a silent no-export is visible, and then ignored.
+ *
+ * With no collector configured this is inert — which is the normal case today,
+ * because the ecosystem does not run one yet. `docs/browser-checks.md` records
+ * that, rather than this pretending to emit somewhere.
+ */
+async function report(result: ProbeResult, base: string): Promise<void> {
+  const outcome = await exportProbeResult(
+    result,
+    {
+      serviceName: "mzizi-browser-check",
+      environment: base.includes("localhost") ? "local" : "production",
+      // Endpoint comes from OTEL_EXPORTER_OTLP_ENDPOINT. No default: sending a
+      // consumer's telemetry to an address they never chose is not a default.
+    },
+    { "mzizi.check": "browser-render", "url.base": base }
+  )
+
+  if (outcome.exported) {
+    console.log(`⇡ reported ${outcome.spanCount} spans to OTLP (trace ${outcome.traceId})`)
+  } else {
+    console.log(`⇡ not reported — ${outcome.reason}`)
+  }
 }
 
 async function main() {
@@ -198,37 +253,75 @@ async function main() {
     exit(0)
   }
 
+  const runStart = Date.now()
+  const steps: ProbeResult["steps"] = []
   let failed = 0
+
   for (const route of targets) {
+    const stepStart = Date.now()
     const result = await render(base + route.path)
+    const durationMs = Date.now() - stepStart
+
     if (!result.ok) {
       console.error(`✗ ${route.path}\n    render failed: ${result.detail}`)
+      steps.push({
+        description: route.path,
+        status: "fail",
+        durationMs,
+        error: `render failed: ${result.detail}`,
+      })
       failed++
       continue
     }
+
     if (dumpText) {
       console.log(`\n──── ${route.path} (${result.text.length} chars) ────\n${result.text}`)
       continue
     }
+
     if (!result.text.includes(route.expect)) {
       const reason = await diagnose(base + route.path)
+      const detail = reason
+        ? `NOT a rendering failure — ${reason}`
+        : `That is the chrome-around-a-hole shape: the frame rendered, its content did not.`
       console.error(
         `✗ ${route.path}\n    rendered ${result.text.length} chars of prose, but not ` +
-          `${JSON.stringify(route.expect)}.\n` +
-          (reason
-            ? `    NOT a rendering failure — ${reason}`
-            : `    That is the chrome-around-a-hole shape: the frame rendered, its content did not.`) +
-          `\n    \`pnpm browser:check --text ${route.path}\` shows what it did render.`
+          `${JSON.stringify(route.expect)}.\n    ${detail}\n` +
+          `    \`pnpm browser:check --text ${route.path}\` shows what it did render.`
       )
+      steps.push({
+        description: route.path,
+        status: "fail",
+        durationMs,
+        error: `missing ${JSON.stringify(route.expect)} — ${detail}`,
+      })
       failed++
       continue
     }
+
     console.log(
       `✓ ${route.path}  found ${JSON.stringify(route.expect)} (${result.text.length} chars)`
     )
+    steps.push({ description: route.path, status: "pass", durationMs })
   }
 
+  // `--text` is a debugging dump, not a run. Reporting it would put a probe
+  // result on the bus for something that asserted nothing.
   if (dumpText) return
+
+  const probe: ProbeResult = {
+    journeyId: JOURNEY_ID,
+    timestamp: new Date(runStart).toISOString(),
+    // Browser Run picks the edge location; this process only knows it did not
+    // choose one. Claiming a region we did not measure would be worse than
+    // saying so.
+    region: "cloudflare-edge",
+    status: failed > 0 ? "fail" : "pass",
+    durationMs: Date.now() - runStart,
+    steps,
+  }
+  await report(probe, base)
+
   if (failed > 0) {
     console.error(`\n${failed} of ${targets.length} route(s) did not render their content.`)
     exit(1)
@@ -237,6 +330,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error("kitesurf: " + (err?.message ?? String(err)))
+  console.error("kitesurf: " + (err instanceof Error ? err.message : String(err)))
   exit(1)
 })

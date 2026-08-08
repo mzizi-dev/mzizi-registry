@@ -36,9 +36,58 @@ export interface ErrorTrackerConfig {
   onCritical?: (error: TrackedError) => void
 }
 
-// N9 fundi integration: Critical errors are reported to Fundi via GitHub issues
-// import { getFundiReporter } from "@/lib/fundi/nyuchi-fundi-reporter"
-// On critical error: getFundiReporter().report({ component, node, severity, errorType, source: "error-tracker", ... })
+// A critical error has TWO exits, and they are not alternatives.
+//
+// The import path here used to read `@/lib/fundi/nyuchi-fundi-reporter`, one
+// directory off: `nyuchi-fundi-reporter` (N9) is a real registry component and
+// the shadcn CLI installs it to `lib/nyuchi-fundi-reporter.ts`. Wrong path, real
+// file — so the fix is the path, not the pointer.
+//
+//   1. N9 fundi — files a GitHub issue, deduplicated by a per-component cooldown.
+//      This is the healing path: a named defect a human can merge a fix for.
+//
+//        import { getFundiReporter } from "@/lib/nyuchi-fundi-reporter"
+//
+//        createErrorTracker({
+//          onCritical: (e) => getFundiReporter().report({
+//            component: e.componentName ?? "unknown",
+//            node: e.node ?? 8,
+//            severity: e.severity,
+//            errorType: "render",
+//            source: "error-tracker",
+//            title: e.message,
+//            description: e.stack ?? e.message,
+//            blastRadius: e.blastRadius,
+//          }),
+//        })
+//
+//   2. N8 mzizi-otel — emits an OTLP span. This is the observation path: every
+//      error, not just the critical ones, readable by any agent or service that
+//      speaks OpenTelemetry rather than by fundi alone.
+//
+//        import { exportSpans, otelStatus } from "./mzizi-otel"
+//
+//        createErrorTracker({
+//          onError: (e) => exportSpans(
+//            [{
+//              name: `error ${e.componentName ?? "unknown"}`,
+//              startTimeMs: Date.parse(e.firstSeen),
+//              endTimeMs: Date.parse(e.lastSeen),
+//              attributes: {
+//                "mzizi.node": e.node ?? 8,
+//                "mzizi.component": e.componentName,
+//                "mzizi.blast_radius": e.blastRadius.length,
+//                "error.message": e.message,
+//              },
+//              status: { code: otelStatus.ERROR, message: e.message },
+//            }],
+//            { serviceName: "my-app" },
+//          ),
+//        })
+//
+// Wire both. Reporting every error to N9 would open an issue per render failure;
+// emitting only to OTLP means nothing ever gets fixed unless somebody is watching
+// a dashboard.
 
 class ErrorTrackerCore {
   private errors = new Map<string, TrackedError>()
