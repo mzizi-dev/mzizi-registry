@@ -51,6 +51,9 @@ pub mod mzizi_a11y_audit;
 #[path = "../../../../components/registry/n8-assurance/mzizi-chaos.rs"]
 pub mod mzizi_chaos;
 
+#[path = "../../../../components/registry/n8-assurance/mzizi-platform-health.rs"]
+pub mod mzizi_platform_health;
+
 #[path = "../../../../components/registry/n8-assurance/mzizi-perf-probe.rs"]
 pub mod mzizi_perf_probe;
 

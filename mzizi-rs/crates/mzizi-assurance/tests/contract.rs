@@ -2925,3 +2925,154 @@ fn the_chaos_spellings_match_the_typescript() {
     // which is `isolated`.
     assert!(!ts.contains("\"unknown\""));
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// mzizi-platform-health — the rollup, and the empty list that rendered green
+// ═══════════════════════════════════════════════════════════════════════════
+
+use mzizi_assurance::mzizi_platform_health::{
+    Overall, ServiceHealth, ServiceStatus, overall, tally,
+};
+
+fn health_ts() -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../components/registry/n8-assurance/mzizi-platform-health.tsx");
+    fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
+}
+
+fn service(name: &str, status: ServiceStatus) -> ServiceHealth {
+    ServiceHealth {
+        name: name.to_owned(),
+        status,
+        latency_ms: Some(42.0),
+        message: None,
+    }
+}
+
+#[test]
+fn an_empty_service_list_does_not_report_all_systems_operational() {
+    // THE WORST ONE IN THE NODE. `services.every(…)` is true for an empty array,
+    // so a panel whose fetch failed, or whose list has not loaded, or whose
+    // config is wrong, renders green and says "All Systems Operational".
+    // A status page is the one surface whose entire job is to be trusted at a
+    // glance, and knowing nothing rendered as knowing everything was fine.
+    assert_eq!(overall(&[]), Overall::Unknown);
+    assert_eq!(overall(&[]).headline(), "Status Unavailable");
+    assert!(!overall(&[]).needs_attention(), "unknown is not an alarm");
+
+    assert!(
+        health_ts().contains("services.every((s) => s.status === \"operational\")"),
+        "the .tsx still rolls up with .every, which is vacuously true"
+    );
+}
+
+#[test]
+fn planned_maintenance_is_not_an_issue_detected() {
+    // `allOk` is false for any non-operational status and the fallback branch is
+    // `degraded`, so a service someone deliberately took down on a schedule
+    // turned the header amber and announced a problem. A status page that cries
+    // about planned work is one people stop reading.
+    let scheduled = vec![
+        service("API", ServiceStatus::Operational),
+        service("Search", ServiceStatus::Maintenance),
+    ];
+    assert_eq!(overall(&scheduled), Overall::UnderMaintenance);
+    assert_eq!(overall(&scheduled).headline(), "Planned Maintenance");
+    assert!(!overall(&scheduled).needs_attention());
+    assert!(!ServiceStatus::Maintenance.is_problem());
+}
+
+#[test]
+fn an_unmeasured_service_is_not_a_degraded_one() {
+    // Same fallback branch. "We could not determine this service's state" and
+    // "this service is impaired" are different claims, and a status page that
+    // cannot tell them apart cannot be used to decide anything.
+    let unmeasured = vec![
+        service("API", ServiceStatus::Operational),
+        service("Search", ServiceStatus::Unknown),
+    ];
+    assert_eq!(overall(&unmeasured), Overall::Unknown);
+    assert!(!ServiceStatus::Unknown.is_problem());
+
+    // And unknown outranks maintenance: an unmeasured service MIGHT be down, a
+    // scheduled one is known not to be.
+    let both = vec![
+        service("API", ServiceStatus::Maintenance),
+        service("Search", ServiceStatus::Unknown),
+    ];
+    assert_eq!(overall(&both), Overall::Unknown);
+}
+
+#[test]
+fn the_worst_status_wins_the_headline() {
+    let all_good = vec![
+        service("API", ServiceStatus::Operational),
+        service("Search", ServiceStatus::Operational),
+    ];
+    assert_eq!(overall(&all_good), Overall::Operational);
+    assert_eq!(overall(&all_good).headline(), "All Systems Operational");
+
+    let one_slow = vec![
+        service("API", ServiceStatus::Operational),
+        service("Search", ServiceStatus::Degraded),
+    ];
+    assert_eq!(overall(&one_slow), Overall::Degraded);
+
+    // An outage outranks everything, including a degraded service beside it.
+    let one_down = vec![
+        service("API", ServiceStatus::Degraded),
+        service("Search", ServiceStatus::Outage),
+        service("Auth", ServiceStatus::Maintenance),
+    ];
+    assert_eq!(overall(&one_down), Overall::Outage);
+    assert_eq!(overall(&one_down).headline(), "Issues Detected");
+    assert!(overall(&one_down).needs_attention());
+}
+
+#[test]
+fn a_tally_counts_one_state_at_a_time() {
+    let mixed = vec![
+        service("API", ServiceStatus::Operational),
+        service("Search", ServiceStatus::Operational),
+        service("Auth", ServiceStatus::Outage),
+    ];
+    assert_eq!(tally(&mixed, ServiceStatus::Operational), 2);
+    assert_eq!(tally(&mixed, ServiceStatus::Outage), 1);
+    assert_eq!(tally(&mixed, ServiceStatus::Unknown), 0);
+}
+
+#[test]
+fn the_status_labels_and_colour_variables_match_the_tsx() {
+    // The label is what a reader sees beside the service name, and the variable
+    // is what every target resolves for the dot. A drift in either makes two
+    // panels showing the same services look like different systems.
+    let ts = health_ts();
+    for status in [
+        ServiceStatus::Operational,
+        ServiceStatus::Degraded,
+        ServiceStatus::Outage,
+        ServiceStatus::Maintenance,
+        ServiceStatus::Unknown,
+    ] {
+        assert!(
+            ts.contains(&format!("label: \"{}\"", status.label())),
+            "label for {}",
+            status.as_str()
+        );
+        assert!(
+            ts.contains(status.color_var()),
+            "colour variable for {}",
+            status.as_str()
+        );
+    }
+    // The VALUE is not asserted, and must not be: the .tsx pairs each variable
+    // with a raw hex fallback (#22C55E and friends), which is a design value
+    // defined outside N1 — §7.4 forbids it, and copying it here would put the
+    // same wrong value in a second place. The fix is a token.
+    assert!(
+        ts.contains("#22C55E"),
+        "when the hex fallbacks become tokens, this assertion is the reminder \
+         that this comment needs deleting too"
+    );
+}
