@@ -206,7 +206,7 @@ export function NyuchiRoutePlanner({
                 e.stopPropagation()
                 onBook()
               }}
-              className="h-12 flex-1 rounded-full bg-[var(--color-gold,#FFD740)] text-[13px] font-medium text-[#0A0A0A] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+              className="h-12 flex-1 rounded-full bg-[var(--color-gold,#FFD740)] text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
             >
               Book Ride
             </button>

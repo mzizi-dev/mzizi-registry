@@ -146,6 +146,15 @@
   --color-neutral: var(--neutral);
   --color-offline: var(--offline);
   --color-syncing: var(--syncing);
+  /* §7.4 rule 2: a new colour token is registered in @theme as well as declared
+   * in both blocks, or no utility class generates for it. The `--status-*` set
+   * skipped all three steps for long enough that 243 components referenced a
+   * property nothing defined. */
+  --color-status-success: var(--status-success);
+  --color-status-warning: var(--status-warning);
+  --color-status-error: var(--status-error);
+  --color-status-info: var(--status-info);
+  --color-status-neutral: var(--status-neutral);
   /* Experimental Seven — computed palette (bundu newsroom, 2026-07-05):
      heptagon hues offset 17°, prime saturations, foregrounds solved to P7. */
   --color-ember: var(--exp-ember);
@@ -253,6 +262,32 @@
   --neutral: #55514b;
   --offline: #674c32;
   --syncing: #1c5962;
+
+  /*
+   * The `--status-*` aliases. These are NOT a second palette — they are the
+   * names N1 declares.
+   *
+   * `nyuchi-tokens.ts`'s `statusTokens` gives each status a `css` field naming
+   * `--status-success` / `--status-warning` / `--status-error` / `--status-info`
+   * / `--status-neutral`, and 243 registry components reference those names.
+   * This file implemented `--success` / `--warning` / `--destructive` instead
+   * and never defined the `--status-*` set, so every one of those 243
+   * references fell through to the hex fallback baked into the component. They
+   * read as tokenised and rendered as hardcoded — the worst of both, because
+   * nothing looked broken and the theme did nothing.
+   *
+   * Aliased rather than given their own values so there is still ONE decision
+   * per status. N1's own hexes (#22C55E etc.) stay where they are: they are the
+   * per-component `var(--token, #hex)` fallback for a consumer app that has not
+   * defined the properties (§7.6), not a value this file should restate.
+   *
+   * `error` maps to `--destructive`, which is the existing name for that role.
+   */
+  --status-success: var(--success);
+  --status-warning: var(--warning);
+  --status-error: var(--destructive);
+  --status-info: var(--info);
+  --status-neutral: var(--neutral);
   /* Experimental Seven — computed, light-base values (≥7:1) */
   --exp-ember: #843d20;
   --exp-acacia: #4d5615;
@@ -380,6 +415,15 @@
   --neutral: #a09c93;
   --offline: #ba9570;
   --syncing: #36abba;
+
+  /* The `--status-*` aliases — see the note in `:root`. Redeclared here so the
+   * alias resolves against the DARK values; a `var()` alias declared only in
+   * `:root` would keep resolving to the light value inside `.dark`. */
+  --status-success: var(--success);
+  --status-warning: var(--warning);
+  --status-error: var(--destructive);
+  --status-info: var(--info);
+  --status-neutral: var(--neutral);
   /* Experimental Seven — computed, dark-base values (≥7:1) */
   --exp-ember: #da8766;
   --exp-acacia: #93a528;

@@ -187,7 +187,12 @@ function NyuchiVerifiedBadge({
         className={cn(badgeSizeVariants({ size }), "opacity-40", className)}
         style={{ backgroundColor: "rgba(107,107,102,0.15)" }}
       >
-        <Ban width={iconSize} height={iconSize} strokeWidth={2.5} color="#6B6B66" />
+        <Ban
+          width={iconSize}
+          height={iconSize}
+          strokeWidth={2.5}
+          color="var(--status-neutral, #6B6B66)"
+        />
       </span>
     )
   }

@@ -72,7 +72,7 @@ export function NyuchiFeatureGate({
         className
       )}
     >
-      <div className="bg-[var(--status-info, #3B82F6)]/15 flex size-10 shrink-0 items-center justify-center rounded-full">
+      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--status-info,#3B82F6)]/15">
         <svg
           width="20"
           height="20"

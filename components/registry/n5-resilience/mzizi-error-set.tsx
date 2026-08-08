@@ -150,7 +150,7 @@ function NotFound({
         {onHome && (
           <button
             onClick={onHome}
-            className="bg-[var(--status-success, #22C55E)] flex h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold text-background"
+            className="flex h-11 items-center gap-2 rounded-full bg-[var(--status-success,#22C55E)] px-5 text-sm font-semibold text-background"
           >
             <Home className="size-4" />
             Home
@@ -192,7 +192,7 @@ function OfflineBanner({
       className={cn(
         "flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium",
         isOnline
-          ? "bg-[var(--status-warning, #F59E0B)]/10 text-[var(--status-warning, #F59E0B)]"
+          ? "bg-[var(--status-warning,#F59E0B)]/10 text-[var(--status-warning,#F59E0B)]"
           : "bg-foreground/5 text-muted-foreground",
         className
       )}
@@ -319,7 +319,7 @@ function SectionFallback({
         className
       )}
     >
-      <AlertTriangle className="text-[var(--status-error, #EF4444)] size-8" />
+      <AlertTriangle className="size-8 text-[var(--status-error,#EF4444)]" />
       <p className="mt-3 text-sm font-medium text-foreground">{sectionName} could not load</p>
       {error && (
         <p className="mt-1 text-xs text-muted-foreground">

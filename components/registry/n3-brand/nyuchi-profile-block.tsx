@@ -50,7 +50,7 @@ const TIER_DISPLAY: Record<
   unverified: {
     label: "Unverified",
     mineral: null,
-    fg: "#6B6B66",
+    fg: "var(--status-neutral, #6B6B66)",
     bg: "rgba(107,107,102,0.15)",
     icon: "circle",
   },
@@ -208,11 +208,11 @@ export function NyuchiProfileBlock({
   const trustColor =
     trustScore != null
       ? trustScore >= 0.4
-        ? "#4ADE80" /* Green — strong trust */
+        ? "var(--status-success, #4ADE80)" /* Green — strong trust */
         : trustScore >= 0.2
-          ? "#FBBF24" /* Amber — growing trust */
-          : "#F87171" /* Red — low trust */
-      : "#6B6B66"
+          ? "var(--status-warning, #FBBF24)" /* Amber — growing trust */
+          : "var(--status-error, #F87171)" /* Red — low trust */
+      : "var(--status-neutral, #6B6B66)"
 
   return (
     <div

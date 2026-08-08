@@ -82,7 +82,7 @@ export function NyuchiRateGate({
         className
       )}
     >
-      <div className="bg-[var(--status-warning, #F59E0B)]/15 flex size-12 shrink-0 items-center justify-center rounded-full">
+      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[var(--status-warning,#F59E0B)]/15">
         <svg
           width="24"
           height="24"
@@ -110,7 +110,7 @@ export function NyuchiRateGate({
         {remainingAttempts != null && maxAttempts != null && (
           <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-muted">
             <div
-              className="bg-[var(--status-warning, #F59E0B)] h-full rounded-full transition-all"
+              className="h-full rounded-full bg-[var(--status-warning,#F59E0B)] transition-all"
               style={{ width: `${(remainingAttempts / maxAttempts) * 100}%` }}
             />
           </div>
