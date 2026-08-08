@@ -27,5 +27,8 @@
 //! in a way that changes its caller's verdict, so a probe can never report
 //! "failed" merely because a collector was unreachable.
 
+#[path = "../../../../components/registry/n8-assurance/mzizi-synthetic-probe.rs"]
+pub mod mzizi_synthetic_probe;
+
 #[path = "../../../../components/registry/n8-assurance/mzizi-otel.rs"]
 pub mod mzizi_otel;

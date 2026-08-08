@@ -446,82 +446,21 @@ pub fn build_trace_request(
 
 // ── the N8 probe bridge ────────────────────────────────────────────────────
 
-/// Outcome of one probe step.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum StepStatus {
-    /// The step asserted what it set out to assert.
-    Pass,
-    /// The step failed.
-    Fail,
-}
-
-/// Outcome of a whole probe run.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ProbeStatus {
-    /// Every step passed.
-    Pass,
-    /// At least one step failed.
-    Fail,
-    /// The run exceeded its allotted time.
-    Timeout,
-    /// The runner itself could not complete.
-    Error,
-}
-
-impl ProbeStatus {
-    /// Whether this outcome should surface as an OTLP `ERROR` status.
-    #[must_use]
-    pub const fn is_failure(self) -> bool {
-        !matches!(self, Self::Pass)
-    }
-
-    /// The wire spelling, matching the `.ts` sibling's string union.
-    #[must_use]
-    pub const fn as_str(self) -> &'static str {
-        match self {
-            Self::Pass => "pass",
-            Self::Fail => "fail",
-            Self::Timeout => "timeout",
-            Self::Error => "error",
-        }
-    }
-}
-
-/// One step of a probe run.
-#[derive(Debug, Clone)]
-pub struct ProbeStep {
-    /// What the step checked, used as the span name.
-    pub description: String,
-    /// Whether it passed.
-    pub status: StepStatus,
-    /// How long it took.
-    pub duration_ms: f64,
-    /// Why it failed, when it did.
-    ///
-    /// Carried onto the wire as `error.message` rather than left in prose,
-    /// because the consumer acting on it is usually not a human. A render check
-    /// that failed because the URL sat behind an auth wall is not the same
-    /// incident as a page that rendered empty, and fundi filing an issue for the
-    /// first would be a false positive.
-    pub error: Option<String>,
-}
-
-/// The result of a probe run — the contract `mzizi-synthetic-probe` declares.
-#[derive(Debug, Clone)]
-pub struct ProbeResult {
-    /// Which journey ran. A collector groups on this.
-    pub journey_id: String,
-    /// When the run started, in milliseconds since the Unix epoch.
-    pub started_at_ms: f64,
-    /// Where it ran from.
-    pub region: String,
-    /// The run's outcome.
-    pub status: ProbeStatus,
-    /// Total run duration.
-    pub duration_ms: f64,
-    /// Each step, in order.
-    pub steps: Vec<ProbeStep>,
-}
+// The probe types are NOT redefined here. `mzizi-synthetic-probe` owns them, and
+// this module borrows them exactly as the `.ts` sibling does with its
+// `import type { ProbeResult } from "./mzizi-synthetic-probe"` and its declared
+// `registryDependencies` entry.
+//
+// The first draft of this file defined its own, which duplicated the contract and
+// got it subtly wrong within one sitting: the `.ts` has TWO step shapes — the
+// input `ProbeStep` a runner executes, and an anonymous outcome shape inside
+// `ProbeResult` — and the copy here collapsed them into one. Two definitions of a
+// wire contract drift; one does not.
+//
+// Rust has no type-only import, so this is a real intra-crate dependency rather
+// than an erased one. That is fine and is the distribution model: a Rust consumer
+// takes the crate, where the `.ts` consumer takes two installed files.
+use super::mzizi_synthetic_probe::{ProbeResult, StepStatus};
 
 /// Turn a [`ProbeResult`] into a run span plus one child span per step.
 ///

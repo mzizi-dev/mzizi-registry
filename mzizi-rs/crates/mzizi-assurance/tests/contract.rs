@@ -28,9 +28,12 @@ use std::fs;
 use std::path::PathBuf;
 
 use mzizi_assurance::mzizi_otel::{
-    AttributeValue, NotExported, OtelConfig, ProbeResult, ProbeStatus, ProbeStep, SpanId, SpanKind,
-    StatusCode, StepStatus, TraceId, build_trace_body, build_trace_request, probe_result_to_spans,
-    resolve_traces_url,
+    AttributeValue, NotExported, OtelConfig, SpanId, SpanKind, StatusCode, TraceId,
+    build_trace_body, build_trace_request, probe_result_to_spans, resolve_traces_url,
+};
+// The probe contract has ONE home, and it is not the exporter.
+use mzizi_assurance::mzizi_synthetic_probe::{
+    ProbeResult, ProbeStatus, StepResult, StepStatus, auth_flow, should_alert, wallet_flow,
 };
 
 /// Read the TypeScript sibling that this core has to agree with.
@@ -75,13 +78,13 @@ fn passing() -> ProbeResult {
         status: ProbeStatus::Pass,
         duration_ms: 1200.0,
         steps: vec![
-            ProbeStep {
+            StepResult {
                 description: "/tokens".to_owned(),
                 status: StepStatus::Pass,
                 duration_ms: 500.0,
                 error: None,
             },
-            ProbeStep {
+            StepResult {
                 description: "/architecture".to_owned(),
                 status: StepStatus::Pass,
                 duration_ms: 700.0,
@@ -95,13 +98,13 @@ fn failing() -> ProbeResult {
     ProbeResult {
         status: ProbeStatus::Fail,
         steps: vec![
-            ProbeStep {
+            StepResult {
                 description: "/tokens".to_owned(),
                 status: StepStatus::Pass,
                 duration_ms: 500.0,
                 error: None,
             },
-            ProbeStep {
+            StepResult {
                 description: "/changelog/button".to_owned(),
                 status: StepStatus::Fail,
                 duration_ms: 700.0,
@@ -471,4 +474,128 @@ fn the_typescript_still_declares_no_default_endpoint() {
              chose is the /api/rum defect restated."
         );
     }
+}
+
+// ── the probe contract ─────────────────────────────────────────────────────
+
+#[test]
+fn a_run_status_is_derived_from_its_steps_not_asserted_by_the_runner() {
+    // A runner reporting a passing run that contains a failed step would be
+    // believed, and this constructor is the one place that can prevent it. The
+    // invariant lives in the type rather than in a rule somebody remembers.
+    let steps = vec![
+        StepResult {
+            description: "/ok".to_owned(),
+            status: StepStatus::Pass,
+            duration_ms: 10.0,
+            error: None,
+        },
+        StepResult {
+            description: "/bad".to_owned(),
+            status: StepStatus::Fail,
+            duration_ms: 20.0,
+            error: Some("boom".to_owned()),
+        },
+    ];
+    let result = ProbeResult::from_steps("j", "local", STARTED_AT_MS, 30.0, steps);
+    assert_eq!(result.status, ProbeStatus::Fail);
+    assert_eq!(result.failed_step_count(), 1);
+    assert_eq!(
+        result.first_failure().and_then(|s| s.error.as_deref()),
+        Some("boom")
+    );
+}
+
+#[test]
+fn an_all_passing_run_derives_pass() {
+    let result = ProbeResult::from_steps(
+        "j",
+        "local",
+        STARTED_AT_MS,
+        10.0,
+        vec![StepResult {
+            description: "/ok".to_owned(),
+            status: StepStatus::Pass,
+            duration_ms: 10.0,
+            error: None,
+        }],
+    );
+    assert_eq!(result.status, ProbeStatus::Pass);
+    assert!(!result.status.is_failure());
+    assert!(result.first_failure().is_none());
+}
+
+#[test]
+fn timeout_and_error_are_failures_but_not_the_same_failure() {
+    // A journey that failed and a runner that could not complete warrant
+    // different responses, so they stay distinct on the wire.
+    assert!(ProbeStatus::Timeout.is_failure());
+    assert!(ProbeStatus::Error.is_failure());
+    assert_ne!(ProbeStatus::Timeout.as_str(), ProbeStatus::Error.as_str());
+}
+
+#[test]
+fn alerting_is_a_separate_decision_from_failing() {
+    // "Did it fail" and "should somebody be woken" are different questions.
+    let mut journey = wallet_flow();
+    assert!(should_alert(&journey, &failing()));
+    assert!(!should_alert(&journey, &passing()));
+    journey.alert_on_failure = false;
+    assert!(!should_alert(&journey, &failing()));
+}
+
+#[test]
+fn journey_templates_match_the_typescript() {
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n8-assurance/mzizi-synthetic-probe.ts"),
+    )
+    .expect("the synthetic-probe TypeScript sibling");
+
+    let auth = auth_flow("wallet");
+    assert_eq!(auth.id, "auth-wallet");
+    assert_eq!(auth.nodes, vec![6, 4, 7]);
+    let wallet = wallet_flow();
+    assert_eq!(wallet.id, "wallet-balance");
+    assert_eq!(wallet.nodes, vec![6, 4, 3, 2]);
+
+    // Every selector the Rust templates drive must exist in the TypeScript, or
+    // the two implementations probe different pages while reporting the same
+    // journey id — which a collector would happily graph as one series.
+    for journey in [&auth, &wallet] {
+        for step in &journey.steps {
+            if let Some(target) = &step.target {
+                assert!(
+                    ts.contains(target.as_str()),
+                    "journey `{}` drives `{target}`, absent from the TypeScript sibling",
+                    journey.id
+                );
+            }
+            assert!(ts.contains(step.description.as_str()));
+        }
+    }
+}
+
+#[test]
+fn every_step_type_keeps_its_typescript_spelling() {
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n8-assurance/mzizi-synthetic-probe.ts"),
+    )
+    .expect("the synthetic-probe TypeScript sibling");
+    for spelling in ["navigate", "click", "input", "assert", "wait", "screenshot"] {
+        assert!(
+            ts.contains(&format!("\"{spelling}\"")),
+            "step type `{spelling}` is not in the TypeScript union"
+        );
+    }
+}
+
+#[test]
+fn the_node_list_on_a_journey_is_uncapped() {
+    // Node numbers are labels, not a sequence. Any upper bound here would be the
+    // defect rather than its current value — a cap of 10 hid N11 once already.
+    let mut journey = wallet_flow();
+    journey.nodes.push(97);
+    assert!(journey.nodes.contains(&97));
 }
