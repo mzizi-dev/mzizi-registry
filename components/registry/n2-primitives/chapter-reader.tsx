@@ -1,11 +1,95 @@
 "use client"
 
 import * as React from "react"
+import DOMPurify from "dompurify"
+
 import { cn } from "@/lib/utils"
+
+/**
+ * Tags a chapter body may contain.
+ *
+ * `content` is an HTML string written into the DOM, and a chapter body is
+ * externally authored by construction — a serialised book, a CMS field, a
+ * community submission. It was injected raw, so any caller passing content it
+ * did not write itself shipped stored XSS, and nothing in the component or its
+ * registry entry said the prop had to be sanitised first.
+ *
+ * An allow-list rather than a deny-list: prose needs a small, closed set of
+ * tags, and a deny-list has to anticipate every sink browsers grow next. No
+ * `style`, no `id`, and no event handlers — DOMPurify strips `on*` regardless,
+ * but the narrow attribute list is what keeps a chapter from restyling the page
+ * around it.
+ */
+const ALLOWED_TAGS = [
+  "p",
+  "br",
+  "hr",
+  "blockquote",
+  "pre",
+  "code",
+  "strong",
+  "b",
+  "em",
+  "i",
+  "u",
+  "s",
+  "sup",
+  "sub",
+  "mark",
+  "small",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "ul",
+  "ol",
+  "li",
+  "dl",
+  "dt",
+  "dd",
+  "a",
+  "img",
+  "figure",
+  "figcaption",
+  "span",
+  "div",
+  "table",
+  "thead",
+  "tbody",
+  "tfoot",
+  "tr",
+  "th",
+  "td",
+  "caption",
+]
+const ALLOWED_ATTR = [
+  "href",
+  "title",
+  "alt",
+  "src",
+  "width",
+  "height",
+  "lang",
+  "dir",
+  "colspan",
+  "rowspan",
+]
+
+function sanitize(html: string): string {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS,
+    ALLOWED_ATTR,
+    // Drop javascript:, data: and every other scheme that is not a document.
+    ALLOWED_URI_REGEXP: /^(?:https?|mailto|tel|#|\/|\.)/i,
+  })
+}
 
 interface ChapterReaderProps extends React.ComponentProps<"article"> {
   title: string
   chapterNumber?: number
+  /** Chapter body as HTML. Sanitised on render — see `sanitize` above. */
   content: string
   authorName?: string
   wordCount?: number
@@ -83,7 +167,7 @@ function ChapterReader({
           fontSizeClasses[fontSize]
         )}
         style={{ fontFamily: "var(--font-serif, serif)" }}
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: sanitize(content) }}
       />
 
       {/* Navigation */}
