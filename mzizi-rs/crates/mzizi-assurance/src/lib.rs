@@ -27,6 +27,9 @@
 //! in a way that changes its caller's verdict, so a probe can never report
 //! "failed" merely because a collector was unreachable.
 
+#[path = "../../../../components/registry/n8-assurance/mzizi-conformity-check.rs"]
+pub mod mzizi_conformity_check;
+
 #[path = "../../../../components/registry/n8-assurance/mzizi-rum.rs"]
 pub mod mzizi_rum;
 
