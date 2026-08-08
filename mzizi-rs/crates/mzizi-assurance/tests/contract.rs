@@ -1328,3 +1328,187 @@ fn the_typescript_still_has_no_default_endpoint() {
         );
     }
 }
+
+// ── conformity ─────────────────────────────────────────────────────────────
+
+use std::collections::BTreeSet;
+
+use mzizi_assurance::mzizi_conformity_check::{
+    ObservedElement, ViolationSeverity, ViolationType, check_conformity, check_element,
+    selector_for, worst_severity,
+};
+
+fn el(slot: &str, tag: &str) -> ObservedElement {
+    ObservedElement {
+        slot: slot.to_owned(),
+        tag_name: tag.to_owned(),
+        portal_url: Some("https://mzizi.dev/components/button".to_owned()),
+        aria_label: Some("Save".to_owned()),
+        role: None,
+        has_text: true,
+    }
+}
+
+fn registry() -> BTreeSet<String> {
+    ["button", "card"].iter().map(|s| (*s).to_owned()).collect()
+}
+
+#[test]
+fn one_bad_button_does_not_condemn_every_other_button() {
+    // THE BUG THIS PORT FIXES. The .ts counts conformance by SLOT NAME —
+    // "has any element with this slot had a violation" — so twenty conformant
+    // buttons and one broken one scored zero for all twenty-one.
+    let mut broken = el("button", "BUTTON");
+    broken.portal_url = None;
+    let elements = vec![el("button", "BUTTON"), el("button", "BUTTON"), broken];
+
+    let report = check_conformity("/wallet", &elements, Some(&registry()), &BTreeSet::new());
+    assert_eq!(report.total_components, 3);
+    assert_eq!(report.conformant, 2, "the two good buttons still count");
+    assert_eq!(report.score, 67);
+}
+
+#[test]
+fn an_unregistered_component_is_still_checked_for_everything_else() {
+    // The .ts returns early on `unregistered`, so a component that is also
+    // deprecated and also missing its accessible name reports one problem
+    // instead of three. Being absent from the registry does not make an
+    // accessibility defect untrue.
+    let mut element = el("mystery", "BUTTON");
+    element.portal_url = None;
+    element.aria_label = None;
+    element.has_text = false;
+
+    let deprecated: BTreeSet<String> = ["mystery".to_owned()].into_iter().collect();
+    let found = check_element(&element, Some(&registry()), &deprecated);
+    let kinds: BTreeSet<ViolationType> = found.iter().map(|v| v.violation_type).collect();
+    assert!(kinds.contains(&ViolationType::Unregistered));
+    assert!(kinds.contains(&ViolationType::MissingPortal));
+    assert!(kinds.contains(&ViolationType::Deprecated));
+    assert!(kinds.contains(&ViolationType::MissingAria));
+    assert_eq!(found.len(), 4);
+}
+
+#[test]
+fn every_violation_reaches_the_caller() {
+    // The .ts only passes `unregistered` to onViolation — every other branch
+    // just pushes — so a consumer wiring that callback to an alert saw one type
+    // out of four. Returning them all makes a second code path impossible.
+    let mut element = el("card", "DIV");
+    element.portal_url = None;
+    let found = check_element(&element, Some(&registry()), &BTreeSet::new());
+    assert_eq!(found.len(), 1);
+    assert_eq!(found[0].violation_type, ViolationType::MissingPortal);
+    assert_eq!(found[0].severity, ViolationSeverity::Info);
+}
+
+#[test]
+fn an_interactive_element_needs_a_name_from_somewhere() {
+    let mut bare = el("button", "BUTTON");
+    bare.aria_label = None;
+    bare.role = None;
+    bare.has_text = false;
+    assert!(!bare.has_accessible_name());
+    assert!(bare.is_interactive());
+
+    // Any one of the three sources is enough.
+    let mut with_text = bare.clone();
+    with_text.has_text = true;
+    assert!(with_text.has_accessible_name());
+
+    // role=button makes a div interactive.
+    let mut div = el("card", "DIV");
+    div.role = Some("button".to_owned());
+    assert!(div.is_interactive());
+    let mut span = el("card", "SPAN");
+    span.role = None;
+    assert!(!span.is_interactive());
+}
+
+#[test]
+fn a_tag_name_is_matched_case_insensitively() {
+    // The DOM reports uppercase; server-rendered HTML and other hosts may not.
+    let mut lower = el("button", "button");
+    lower.aria_label = None;
+    lower.has_text = false;
+    assert!(
+        lower.is_interactive(),
+        "a lowercase tag is the same element"
+    );
+}
+
+#[test]
+fn a_selector_survives_a_quote_in_the_slot() {
+    // The selector's whole job is finding the element again, and an unescaped
+    // quote produces one that does not parse.
+    assert_eq!(selector_for("button"), "[data-slot=\"button\"]");
+    assert_eq!(selector_for("a\"b"), "[data-slot=\"a\\\"b\"]");
+}
+
+#[test]
+fn no_registry_means_no_unregistered_finding() {
+    // A host that does not know the registry cannot claim anything is missing
+    // from it — that is absence of evidence.
+    let found = check_element(&el("anything", "DIV"), None, &BTreeSet::new());
+    assert!(
+        found
+            .iter()
+            .all(|v| v.violation_type != ViolationType::Unregistered)
+    );
+}
+
+#[test]
+fn an_empty_page_scores_100_rather_than_dividing_by_zero() {
+    let report = check_conformity("/", &[], Some(&registry()), &BTreeSet::new());
+    assert_eq!(report.score, 100);
+    assert_eq!(
+        report.total_components, 0,
+        "which is how you tell it from a tested page"
+    );
+}
+
+#[test]
+fn worst_severity_is_the_go_no_go_answer() {
+    let mut deprecated_el = el("card", "DIV");
+    deprecated_el.portal_url = None;
+    let deprecated: BTreeSet<String> = ["card".to_owned()].into_iter().collect();
+    let found = check_element(&deprecated_el, Some(&registry()), &deprecated);
+    assert_eq!(worst_severity(&found), Some(ViolationSeverity::Error));
+    assert_eq!(worst_severity(&[]), None);
+}
+
+#[test]
+fn conformity_unions_keep_their_typescript_spellings() {
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n8-assurance/mzizi-conformity-check.ts"),
+    )
+    .expect("the conformity-check TypeScript sibling");
+    for t in [
+        ViolationType::Unregistered,
+        ViolationType::MissingPortal,
+        ViolationType::Deprecated,
+        ViolationType::VersionMismatch,
+        ViolationType::MissingAria,
+        ViolationType::MissingSlot,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", t.as_str())),
+            "violation type {}",
+            t.as_str()
+        );
+    }
+    for s in [
+        ViolationSeverity::Info,
+        ViolationSeverity::Warning,
+        ViolationSeverity::Error,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", s.as_str())),
+            "severity {}",
+            s.as_str()
+        );
+    }
+    assert!(ts.contains("data-slot"), "the slot attribute drifted");
+    assert!(ts.contains("data-portal"), "the portal attribute drifted");
+}
