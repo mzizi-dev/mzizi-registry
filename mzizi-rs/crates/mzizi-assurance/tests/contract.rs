@@ -599,3 +599,213 @@ fn the_node_list_on_a_journey_is_uncapped() {
     journey.nodes.push(97);
     assert!(journey.nodes.contains(&97));
 }
+
+// ── the alert engine ───────────────────────────────────────────────────────
+
+use mzizi_assurance::mzizi_alert_engine::{
+    Alert, AlertLog, AlertSeverity, AlertState, Escalation, SloDefinition, SloMetric, burn_rate,
+    escalate_to, evaluate_slo,
+};
+
+fn ladder() -> Vec<Escalation> {
+    vec![
+        Escalation {
+            burn_rate: 1.0,
+            severity: AlertSeverity::Warning,
+        },
+        Escalation {
+            burn_rate: 2.0,
+            severity: AlertSeverity::Critical,
+        },
+        Escalation {
+            burn_rate: 5.0,
+            severity: AlertSeverity::Page,
+        },
+    ]
+}
+
+fn slo() -> SloDefinition {
+    SloDefinition {
+        id: "api-availability".to_owned(),
+        name: "API availability".to_owned(),
+        target: 99.9,
+        window_hours: 720,
+        metric: SloMetric::Availability,
+        mini_apps: vec!["wallet".to_owned()],
+        escalation: ladder(),
+    }
+}
+
+#[test]
+fn meeting_the_objective_burns_nothing() {
+    assert_eq!(burn_rate(99.95, 99.9), 0.0);
+    assert_eq!(burn_rate(99.9, 99.9), 0.0);
+}
+
+#[test]
+fn burn_rate_counts_error_budget_consumed() {
+    // Target 99.9 leaves a 0.1 budget; observing 99.8 consumes exactly one.
+    assert!((burn_rate(99.8, 99.9) - 1.0).abs() < 1e-9);
+    assert!((burn_rate(99.7, 99.9) - 2.0).abs() < 1e-9);
+}
+
+#[test]
+fn an_unmeetable_objective_says_so_rather_than_dividing_by_zero() {
+    // A 100% target leaves no budget. The .ts divides straight through and gets
+    // Infinity by accident; here it is deliberate, so a caller can notice the
+    // objective was probably a mistake.
+    assert_eq!(burn_rate(99.9, 100.0), f64::INFINITY);
+    assert_eq!(burn_rate(100.0, 100.0), 0.0);
+}
+
+#[test]
+fn one_breach_reaches_exactly_one_rung() {
+    // THE BUG THIS PORT FIXES. The .ts fires once per matching tier, so a burn
+    // rate of 6 against this ladder produced three alerts — and one of them
+    // pages a human, three times, for a single breach.
+    assert_eq!(
+        escalate_to(&ladder(), 6.0).map(|e| e.severity),
+        Some(AlertSeverity::Page)
+    );
+    assert_eq!(
+        escalate_to(&ladder(), 2.5).map(|e| e.severity),
+        Some(AlertSeverity::Critical)
+    );
+    assert_eq!(
+        escalate_to(&ladder(), 1.0).map(|e| e.severity),
+        Some(AlertSeverity::Warning)
+    );
+    assert_eq!(escalate_to(&ladder(), 0.5), None);
+}
+
+#[test]
+fn rung_order_in_the_ladder_does_not_change_the_answer() {
+    // A caller should not have to sort their config for it to behave.
+    let mut reversed = ladder();
+    reversed.reverse();
+    assert_eq!(
+        escalate_to(&reversed, 6.0).map(|e| e.severity),
+        escalate_to(&ladder(), 6.0).map(|e| e.severity)
+    );
+}
+
+#[test]
+fn a_tie_breaks_toward_the_louder_severity() {
+    // Under-alerting a breach is the worse error.
+    let tied = vec![
+        Escalation {
+            burn_rate: 2.0,
+            severity: AlertSeverity::Warning,
+        },
+        Escalation {
+            burn_rate: 2.0,
+            severity: AlertSeverity::Page,
+        },
+    ];
+    assert_eq!(
+        escalate_to(&tied, 3.0).map(|e| e.severity),
+        Some(AlertSeverity::Page)
+    );
+}
+
+#[test]
+fn evaluating_an_slo_yields_at_most_one_alert() {
+    assert!(evaluate_slo(&slo(), 99.95, "a1", 1000.0).is_none());
+    let alert = evaluate_slo(&slo(), 99.4, "a1", 1000.0).expect("breached");
+    assert_eq!(alert.severity, AlertSeverity::Page);
+    assert_eq!(alert.state, AlertState::Firing);
+    assert_eq!(alert.slo_id.as_deref(), Some("api-availability"));
+    assert_eq!(alert.affected_mini_apps, vec!["wallet".to_owned()]);
+    assert!(
+        alert
+            .runbook_url
+            .as_deref()
+            .is_some_and(|u| u.ends_with("api-availability"))
+    );
+}
+
+#[test]
+fn a_displaced_alert_is_returned_rather_than_silently_destroyed() {
+    // With the .ts's colliding `alert-${Date.now()}` ids this quietly dropped
+    // alerts. A caller that ignores the return value at least had the chance not
+    // to.
+    let mut log = AlertLog::new();
+    let first = evaluate_slo(&slo(), 99.4, "same-id", 1000.0).expect("breached");
+    let second = evaluate_slo(&slo(), 99.0, "same-id", 2000.0).expect("breached");
+    assert!(log.fire(first.clone()).is_none());
+    assert_eq!(
+        log.fire(second).as_ref().map(|a| a.fired_at_ms),
+        Some(1000.0)
+    );
+    assert_eq!(log.len(), 1);
+}
+
+#[test]
+fn resolving_moves_an_alert_out_of_active() {
+    let mut log = AlertLog::new();
+    log.fire(evaluate_slo(&slo(), 99.4, "a1", 1000.0).expect("breached"));
+    assert_eq!(log.active().len(), 1);
+    assert!(log.resolve("a1", 5000.0));
+    assert!(log.active().is_empty());
+    assert_eq!(log.all().len(), 1, "resolved alerts stay in the record");
+    assert!(!log.resolve("nope", 1.0), "an unknown id reports failure");
+}
+
+#[test]
+fn severity_and_state_keep_their_typescript_spellings() {
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n8-assurance/mzizi-alert-engine.ts"),
+    )
+    .expect("the alert-engine TypeScript sibling");
+    for s in [
+        AlertSeverity::Info,
+        AlertSeverity::Warning,
+        AlertSeverity::Critical,
+        AlertSeverity::Page,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", s.as_str())),
+            "severity {} missing",
+            s.as_str()
+        );
+    }
+    for s in [
+        AlertState::Firing,
+        AlertState::Pending,
+        AlertState::Resolved,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", s.as_str())),
+            "state {} missing",
+            s.as_str()
+        );
+    }
+    for m in [
+        SloMetric::Availability,
+        SloMetric::LatencyP99,
+        SloMetric::ErrorRate,
+        SloMetric::SuccessRate,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", m.as_str())),
+            "metric {} missing",
+            m.as_str()
+        );
+    }
+    assert!(
+        ts.contains("mzizi.dev/runbooks/"),
+        "runbook URL shape drifted"
+    );
+}
+
+#[test]
+fn an_alert_is_constructible_without_a_dom() {
+    // affectedComponents falls back to document.querySelectorAll in the .ts.
+    // A Worker and a native shell have no document, so the core takes the list.
+    let alert = Alert {
+        affected_components: vec!["button".to_owned()],
+        ..evaluate_slo(&slo(), 99.4, "a1", 1000.0).expect("breached")
+    };
+    assert_eq!(alert.affected_components, vec!["button".to_owned()]);
+}
