@@ -36,7 +36,8 @@
     "doctrine:verify": "tsx scripts/extract-doctrine.ts --check",
     "props:extract": "tsx scripts/extract-props.ts",
     "props:verify": "tsx scripts/extract-props.ts --check",
-    "samples:push": "tsx scripts/push-samples.ts"
+    "samples:push": "tsx scripts/push-samples.ts",
+    "browser:check": "node scripts/kitesurf.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
