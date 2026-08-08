@@ -118,6 +118,47 @@ function body(markdown) {
   return markdown.replace(/^---\n[\s\S]*?\n---\n/, "")
 }
 
+/**
+ * On a failure, tell "the page rendered empty" apart from "you were never
+ * looking at the page".
+ *
+ * Pointing `--base` at a Vercel preview renders **Vercel's login page** — the
+ * deployment sits behind SSO, so `/tokens` 302s off-origin and the browser
+ * faithfully returns 2,035 characters of "Log in to Vercel". The expectation
+ * then fails and, without this, the script reports the chrome-around-a-hole
+ * message: the checker blaming the site for the checker's own problem. That is
+ * the same mistake as expecting a capitalised `Malachite`, and it is worth
+ * catching in code rather than in a doc nobody reads mid-debugging.
+ *
+ * An off-origin redirect is the general signal — it covers Vercel SSO,
+ * Cloudflare Access and any other auth wall without naming a vendor. A
+ * same-origin redirect is not reported, because this site has legitimate ones
+ * (`/architecture/layers/:n` → `/architecture/nodes/:n`).
+ *
+ * Only runs on failure, so the happy path still costs one request per route.
+ * Best-effort: a probe that itself fails must not replace the real result.
+ */
+async function diagnose(url) {
+  try {
+    const res = await fetch(url, { redirect: "manual" })
+    const location = res.headers.get("location")
+    if (location) {
+      const target = new URL(location, url)
+      if (target.origin !== new URL(url).origin) {
+        return (
+          `the URL redirects off-origin to ${target.origin}, so the browser rendered ` +
+          `that page rather than this route — an auth wall (Vercel SSO, Cloudflare ` +
+          `Access, …), not an empty page. This route cannot be checked without a bypass token.`
+        )
+      }
+    }
+    if (!res.ok && res.status < 300) return `the URL answers HTTP ${res.status}.`
+  } catch {
+    // A failed probe is not evidence of anything; fall through to the plain report.
+  }
+  return null
+}
+
 async function render(url) {
   const res = await fetch(`${API}/markdown?browser=kitesurf`, {
     method: "POST",
@@ -170,11 +211,14 @@ async function main() {
       continue
     }
     if (!result.text.includes(route.expect)) {
+      const reason = await diagnose(base + route.path)
       console.error(
         `✗ ${route.path}\n    rendered ${result.text.length} chars of prose, but not ` +
           `${JSON.stringify(route.expect)}.\n` +
-          `    That is the chrome-around-a-hole shape: the frame rendered, its content did not.\n` +
-          `    \`pnpm browser:check --text ${route.path}\` shows what it did render.`
+          (reason
+            ? `    NOT a rendering failure — ${reason}`
+            : `    That is the chrome-around-a-hole shape: the frame rendered, its content did not.`) +
+          `\n    \`pnpm browser:check --text ${route.path}\` shows what it did render.`
       )
       failed++
       continue
