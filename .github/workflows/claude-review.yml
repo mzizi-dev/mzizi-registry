@@ -66,10 +66,27 @@ jobs:
 
             Focus areas:
             - Code quality and adherence to existing patterns (CVA + Radix + cn())
-            - No hardcoded colors — must use CSS custom properties from globals.css
-            - Accessibility: APCA 3.0 AAA contrast, 56px default / 48px minimum touch targets
-            - Brand wordmarks must be lowercase (mukoko, nyuchi, shamwari, bundu, nhimbe)
+            - No hardcoded colors — must use CSS custom properties from globals.css (§7.4)
+            - Accessibility: APCA 3.0 AAA contrast. The control scale is DENSE — h-8
+              small, h-9 default, h-10 large (§8.2). Do not ask for 56px defaults or a
+              48px minimum: that doctrine was retired because the shipped primitives
+              never followed it. A dense control that is a TOUCH target should earn its
+              hit area through surrounding spacing or padding beyond the visual box.
+            - Brand wordmarks must be lowercase (mzizi, mukoko, nyuchi, shamwari, bundu, nhimbe)
             - TypeScript strict mode compliance
-            - Security vulnerabilities (OWASP top 10)
-            - Registry schema compatibility (shadcn format)
-            - Supabase-first architecture — source code and docs live in the DB, not the filesystem
+            - Security vulnerabilities (OWASP top 10). Registry components are installed
+              into other people's apps, so treat any prop rendered through
+              dangerouslySetInnerHTML or innerHTML, and any URL interpolated into an
+              href, as untrusted unless the component sanitises it.
+            - Registry schema compatibility (shadcn format). A registryDependencies entry
+              must be a bare name ONLY if that component exists upstream at
+              ui.shadcn.com; anything Mzizi-only needs the absolute
+              https://mzizi.dev/api/v1/ui/<name> form. Every npm package a component
+              imports must appear in its `dependencies`.
+            - Component source lives ON DISK, in git, under
+              components/registry/n<N>-<label>/ (§8.3), and doctrine lives in this repo
+              as MDX (§15.17). This bullet previously read "Supabase-first architecture
+              — source code and docs live in the DB, not the filesystem", which is the
+              exact opposite of where both now live, so the reviewer was being told to
+              flag correct code. Supabase still owns component METADATA, tokens,
+              changelog and the event streams (§15.1).
