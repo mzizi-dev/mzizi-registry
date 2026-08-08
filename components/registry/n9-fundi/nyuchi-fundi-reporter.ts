@@ -1,6 +1,20 @@
 "use client"
 
-const GITHUB_REPO = "nyuchi/design-portal"
+/**
+ * Where a fundi report becomes an issue.
+ *
+ * This said `nyuchi/design-portal`, the repo's name before the Mzizi rename —
+ * it is `nyuchi/mzizi` now. GitHub redirects API calls for a renamed repo, so
+ * this kept working and had no symptom, which is exactly why it survived: a
+ * stale constant that still functions is invisible until the redirect is
+ * retired, and then every consumer's reporter breaks at once.
+ *
+ * Mzizi's own tracker is the right destination and that is deliberate: a
+ * consumer installs these components, so a defect they hit is a defect in this
+ * registry, and it belongs where the fix will be made rather than in their
+ * backlog.
+ */
+const GITHUB_REPO = "nyuchi/mzizi"
 
 export interface FundiReport {
   component: string
