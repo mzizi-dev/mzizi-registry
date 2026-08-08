@@ -54,6 +54,26 @@ another agent, a dashboard — without this repo knowing any of them exist.
 `mzizi-otel`. It is a registry component rather than repo tooling because the
 apps that need to emit are consumer apps, not this one.
 
+> **This file is TypeScript, and N8 is a Rust node. Treat it as a stopgap.**
+>
+> The doctrine is that N4, N5, N8 and N9 — the core, the nodes holding logic
+> rather than UI — are built in Rust: N4/N5/N8 as a WASM shared core, N9 as a
+> `workers-rs` edge worker. Today **none of them are**; there are zero `.rs`
+> files under those four directories and the Rust workspace covers only N1
+> tokens and N2 primitives.
+>
+> So this exporter is not the destination. The split when the core lands:
+> **payload construction, id generation, endpoint resolution and the
+> never-throw contract are `shared-core` logic and belong in Rust**; what stays
+> per-target is the thin call that actually sends — `fetch` in a browser,
+> `env.BROWSER`/`fetch` in a Worker.
+>
+> It exists in TypeScript now because a consumer app's browser has to be able to
+> emit at all, and because two live defects (`mzizi-rum` writing into a 404,
+> `nyuchi-fundi-reporter` filing against a renamed repo) were found through it
+> and should not wait on a WASM core that has not been started. **Do not copy
+> this file as the pattern for a new N4/N5/N8/N9 component.**
+
 ```ts
 import { exportProbeResult } from "./mzizi-otel"
 
