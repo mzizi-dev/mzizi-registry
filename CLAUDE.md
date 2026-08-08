@@ -892,7 +892,23 @@ The portal dogfoods its own registry. The transitive closure of the brand compon
 }
 ```
 
-### 8.9 Multi-target — mobile-first, Rust-first, and who gets components vs instructions
+**`files[].path` here is CONSUMER-shaped, not repo-shaped, and that is deliberate.**
+`"components/ui/button.tsx"` is where the shadcn CLI writes the file in **someone
+else's** project. In this repo the same component lives at
+`components/registry/n2-primitives/button.tsx`, and `lib/registry.ts` resolves it
+by **name + node directory** — never by walking `path`. Two different questions,
+two different answers; reading `path` as a repo path is how a "file not found"
+gets chased in the wrong tree.
+
+**`target` is the field that would make the destination explicit, and no item
+uses it** — 0 of 573. The CLI derives the destination from `type` when `target`
+is absent (`registry:ui` → `components/ui/`, `registry:lib` → `lib/`, …), and
+because our `path` values already match what that derivation produces, installs
+land correctly. So this is **not** a live defect, and it is written down because
+it is the kind that becomes one silently: the moment an item needs a destination
+the `type` derivation does not produce — anything outside the conventional
+directory for its type — `target` is the field to set, and `path` is not a
+substitute for it.
 
 Mzizi is **mobile-first**. Next.js/React is still here and still shipping, but the direction is
 **Rust across the stack**, with first-class native targets: **Swift** (iOS/macOS), **Kotlin**
