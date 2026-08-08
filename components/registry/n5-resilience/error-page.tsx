@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Home } from "@/lib/icons"
 
@@ -53,11 +55,18 @@ function ErrorPage({ code = 404, title, description }: ErrorPageProps) {
 
         {/* Actions */}
         <div className="mt-8 flex items-center justify-center gap-3">
-          <Button variant="outline" asChild>
-            <a href="javascript:history.back()">
-              <ArrowLeft className="size-4" />
-              Go back
-            </a>
+          {/*
+            Was `<a href="javascript:history.back()">`. A `javascript:` URL is
+            blocked by any Content-Security-Policy without `unsafe-inline`, so
+            in a consumer app with a CSP — which an app shipping an error page
+            probably has — the button rendered and did nothing. It is also not
+            a link: it navigates history rather than to an href, so it has no
+            meaningful target for middle-click or "open in new tab", and screen
+            readers announced a link with no destination.
+          */}
+          <Button variant="outline" type="button" onClick={() => window.history.back()}>
+            <ArrowLeft className="size-4" />
+            Go back
           </Button>
           <Button asChild>
             <a href="/">
