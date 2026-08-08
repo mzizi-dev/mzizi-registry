@@ -5,6 +5,7 @@
 // and health monitoring via the harness. Zero manual config.
 
 import * as React from "react"
+import DOMPurify from "dompurify"
 import {
   X,
   Image as ImageIcon,
@@ -18,6 +19,84 @@ import {
   Plus,
 } from "@/lib/icons"
 import { cn } from "@/lib/utils"
+
+/**
+ * Tags an article body may contain.
+ *
+ * `content` is an HTML string written into the DOM. An article body is
+ * externally authored by construction — a CMS field, a syndicated feed, a
+ * contributor submission — and it was injected raw, so any caller passing
+ * content it did not write itself shipped stored XSS. Nothing in the component
+ * or its registry entry said the prop had to be sanitised first.
+ *
+ * An allow-list rather than a deny-list: prose needs a small, closed set of
+ * tags, and a deny-list has to anticipate every sink browsers grow next.
+ */
+const ALLOWED_TAGS = [
+  "p",
+  "br",
+  "hr",
+  "blockquote",
+  "pre",
+  "code",
+  "strong",
+  "b",
+  "em",
+  "i",
+  "u",
+  "s",
+  "sup",
+  "sub",
+  "mark",
+  "small",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "ul",
+  "ol",
+  "li",
+  "dl",
+  "dt",
+  "dd",
+  "a",
+  "img",
+  "figure",
+  "figcaption",
+  "span",
+  "div",
+  "table",
+  "thead",
+  "tbody",
+  "tfoot",
+  "tr",
+  "th",
+  "td",
+  "caption",
+]
+const ALLOWED_ATTR = [
+  "href",
+  "title",
+  "alt",
+  "src",
+  "width",
+  "height",
+  "lang",
+  "dir",
+  "colspan",
+  "rowspan",
+]
+
+function sanitize(html: string): string {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS,
+    ALLOWED_ATTR,
+    // Drop javascript:, data: and every other scheme that is not a document.
+    ALLOWED_URI_REGEXP: /^(?:https?|mailto|tel|#|\/|\.)/i,
+  })
+}
 
 /* ═══════════════════════════════════════════════════════════════
    NYUCHI MEDIA COMPONENTS
@@ -250,7 +329,7 @@ export function NyuchiReaderMode({
         <div
           className="mt-8 font-serif"
           style={{ fontSize, lineHeight }}
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: sanitize(content) }}
         />
       </article>
     </div>
