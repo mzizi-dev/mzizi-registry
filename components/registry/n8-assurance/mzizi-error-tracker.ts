@@ -36,9 +36,36 @@ export interface ErrorTrackerConfig {
   onCritical?: (error: TrackedError) => void
 }
 
-// N9 fundi integration: Critical errors are reported to Fundi via GitHub issues
-// import { getFundiReporter } from "@/lib/fundi/nyuchi-fundi-reporter"
-// On critical error: getFundiReporter().report({ component, node, severity, errorType, source: "error-tracker", ... })
+// N9 fundi integration — how a critical error actually reaches the rung.
+//
+// This block used to point at `@/lib/fundi/nyuchi-fundi-reporter`, which does not
+// exist in this repo and never has, so the one instruction here for getting a
+// signal out named a file nobody could install.
+//
+// The sink is `mzizi-otel` (N8): give `onCritical` an exporter and the error
+// leaves as an OTLP span that fundi — or any other agent or service that speaks
+// OpenTelemetry — can subscribe to. A bespoke reporter would have been readable
+// by fundi alone.
+//
+//   import { exportSpans, otelStatus } from "./mzizi-otel"
+//
+//   createErrorTracker({
+//     onCritical: (e) => exportSpans(
+//       [{
+//         name: `error ${e.componentName ?? "unknown"}`,
+//         startTimeMs: Date.parse(e.firstSeen),
+//         endTimeMs: Date.parse(e.lastSeen),
+//         attributes: {
+//           "mzizi.node": e.node ?? 8,
+//           "mzizi.component": e.componentName,
+//           "mzizi.blast_radius": e.blastRadius.length,
+//           "error.message": e.message,
+//         },
+//         status: { code: otelStatus.ERROR, message: e.message },
+//       }],
+//       { serviceName: "my-app" },
+//     ),
+//   })
 
 class ErrorTrackerCore {
   private errors = new Map<string, TrackedError>()
