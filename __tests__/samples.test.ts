@@ -136,3 +136,55 @@ describe("prop resolution", () => {
     }
   })
 })
+
+describe("preview coverage", () => {
+  /**
+   * A floor, not a target.
+   *
+   * `scripts/extract-props.ts` only understood a named `interface FooProps`
+   * declaration, and most of this registry declares props INLINE on the
+   * component's parameter — either `}: React.ComponentProps<"div"> & { … }` or
+   * a bare `}: { … }`. So 256 of 572 components extracted zero props, and a
+   * component with no props resolves to no sample data, which renders the
+   * "needs props" fallback rather than the component doing its job. Nothing
+   * failed; the previews were just empty.
+   *
+   * These numbers are deliberately below the measured values so ordinary
+   * additions do not trip them. What they catch is a regression in the
+   * EXTRACTOR — the failure that is invisible because it produces a smaller
+   * object rather than an error.
+   */
+  it("extracts props for most of the registry", () => {
+    expect(Object.keys(COMPONENT_PROPS).length).toBeGreaterThanOrEqual(450)
+  })
+
+  it("resolves at least one prop for the large majority of them", () => {
+    let resolved = 0
+    for (const [name, props] of Object.entries(COMPONENT_PROPS)) {
+      if (!props.length) continue
+      if (resolvePropsFor(name).matched.length > 0) resolved++
+    }
+    expect(resolved).toBeGreaterThanOrEqual(400)
+  })
+
+  it("never extracts a prop whose type swallowed the next one", () => {
+    // The `=>` trap: counting `>` as a closing bracket drives depth negative on
+    // an arrow-function prop, and every later member collapses into the
+    // previous one's type — `onChange` came out as
+    // `"(value: AddressValue) => void className?: string"`, taking `className`
+    // with it.
+    //
+    // The tell is a member declaration following `=> void` (or `=> Promise<…>`)
+    // with NO separator. A nested object type like
+    // `{ name: string; avatar?: string }` has separators and is perfectly
+    // legitimate — an earlier version of this assertion flagged
+    // `article-page.author` for exactly that and was wrong.
+    for (const [component, props] of Object.entries(COMPONENT_PROPS)) {
+      for (const prop of props) {
+        expect(prop.type, `${component}.${prop.name} swallowed the prop after it`).not.toMatch(
+          /=>\s*[\w<>[\]|]+\s+\w+\??:/
+        )
+      }
+    }
+  })
+})

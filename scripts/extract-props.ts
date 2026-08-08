@@ -64,22 +64,65 @@ function stripComments(src: string): string {
  * nested closing brace, so `{ a: { b: string }, c: number }` loses `c`. Counting braces is
  * the only way to read a nested type correctly.
  */
+/** Read the balanced `{ … }` starting at (or just before) `openBraceAt`. */
+function balancedBody(src: string, openBraceAt: number): string | null {
+  let depth = 0
+  for (let i = openBraceAt; i < src.length; i++) {
+    if (src[i] === "{") depth++
+    else if (src[i] === "}") {
+      depth--
+      if (depth === 0) return src.slice(openBraceAt + 1, i)
+    }
+  }
+  return null
+}
+
 function propsBody(src: string): string | null {
+  // FORM 1 — a named declaration: `interface FooProps extends X { … }`.
+  //
   // `extends VariantProps<typeof listingCardVariants>` sits between the name and the brace,
   // and a pattern that does not allow for it silently matches nothing — `nyuchi-listing-card`
   // and every other CVA-composed brand component extracted zero props, which reads
   // identically to "this component takes no props".
   const decl = /(?:type|interface)\s+\w*Props\w*\s*(?:extends\s+[^{]+?)?(?:=\s*)?\{/.exec(src)
-  if (!decl) return null
-  let depth = 0
-  const start = decl.index + decl[0].length
-  for (let i = start - 1; i < src.length; i++) {
-    if (src[i] === "{") depth++
-    else if (src[i] === "}") {
-      depth--
-      if (depth === 0) return src.slice(start, i)
-    }
-  }
+  if (decl) return balancedBody(src, decl.index + decl[0].length - 1)
+
+  // FORM 2 — declared INLINE on the component's own parameter, which is what most of this
+  // registry actually does:
+  //
+  //   function AudioPlayer({ src, title, … }: React.ComponentProps<"div"> & {
+  //     src: string
+  //     title?: string
+  //   }) {
+  //
+  // Only form 1 was handled, so 256 of 572 components extracted zero props — and a component
+  // with no props resolves to no sample data, which is a preview rendering its "needs props"
+  // fallback rather than the component doing its job. `alert`, `audio-player` and
+  // `ai-response-card` all look propless from the outside for this reason alone.
+  //
+  // The search is for a destructured parameter annotated with an intersection that ENDS in an
+  // object literal. `React.ComponentProps<"div">` on its own contributes nothing this can
+  // resolve (it is every DOM attribute), so a signature with no literal half is correctly
+  // skipped rather than guessed at.
+  const inline = /\)?\s*}\s*:\s*[^{}()]*?&\s*\{/.exec(src)
+  if (inline) return balancedBody(src, inline.index + inline[0].length - 1)
+
+  // FORM 3 — a bare inline object literal with no intersection at all:
+  //
+  //   function CartItem({ name, price, … }: {
+  //     name: string
+  //     price: number
+  //   }) {
+  //
+  // This is the most common shape in the registry after form 2, and it is the one a
+  // pattern written for `X & { … }` cannot see, because there is no `&`. `cart-item`,
+  // `agenda-view` and `changelog-entry` all declare every prop they have this way.
+  //
+  // Anchored on `}` + `:` + `{` so it matches a destructured PARAMETER annotation and not,
+  // say, an object literal inside a function body.
+  const bare = /}\s*:\s*\{/.exec(src)
+  if (bare) return balancedBody(src, bare.index + bare[0].length - 1)
+
   return null
 }
 
