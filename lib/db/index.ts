@@ -5,9 +5,15 @@
  * serves it over `/api/v1/*`, and `mzizi-mcp` is an HTTP client of that API — so the
  * database is not in the serving path for components or doctrine.
  *
- *   Components  →  content/registry/<collection>/<name>.json  (lib/registry.ts)
+ *   Components  →  registry.json, one authored item per component (lib/registry.ts)
  *                  + source on disk under components/registry/ (lib/registry-source.ts)
  *   Doctrine    →  content/doctrine/<collection>/<slug>.mdx    (lib/doctrine.ts)
+ *
+ * This block said `content/registry/<collection>/<name>.json`. That directory
+ * does not exist and never did — `content/` holds `doctrine/` only, and
+ * `lib/registry.ts` reads a single `registry.json` at the repo root. A path in a
+ * header is the first thing someone greps for, so a plausible-but-absent one
+ * costs more than no path at all.
  *
  * What is still Supabase, and why — it is written by a machine, not a person:
  *
@@ -68,7 +74,6 @@ import type {
   ChangelogListRow,
   ComponentVersionRow,
   McpToolRegistryRow,
-  DesignTokens,
   HelixClass,
   HelixModel,
   HelixNode,
@@ -902,38 +907,27 @@ export async function getComponentVersion(
   return data as unknown as ComponentVersionRow
 }
 
-// ── Design token queries (from nyuchi-tokens component) ─────────────
-
-/**
- * Get the design tokens payload from the nyuchi-tokens component's source_code.
- *
- * In the migrated schema, design tokens (minerals, semantic colors, typography,
- * spacing, radii) live as a JSON payload in `components.source_code` where
- * `name = 'nyuchi-tokens'` — not in the legacy brand_* tables.
- *
- * Returns null if the component row is missing or source_code doesn't parse.
- */
-export async function getDesignTokens(): Promise<DesignTokens | null> {
-  const { data, error } = await getPublicClient()
-    .from("components")
-    .select("source_code")
-    .eq("name", "nyuchi-tokens")
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-
-  const source = (data as unknown as { source_code: string | null } | null)?.source_code
-  if (!source) return null
-
-  try {
-    return JSON.parse(source) as DesignTokens
-  } catch {
-    return null
-  }
-}
+// ── Design token queries ────────────────────────────────────────────
+//
+// `getDesignTokens()` is DELETED, not repointed.
+//
+// It selected `source_code` from the `components` view where
+// `name = 'nyuchi-tokens'` and JSON.parse'd the result. That column has been
+// null on every row since component source moved to disk (§8.3), so the
+// function could only ever return null — and it had no callers anywhere in
+// `app/`, `lib/`, `components/` or `scripts/`.
+//
+// Repointing it at the file would have been the wrong fix twice over: nothing
+// wants it, and the token pipeline already runs the other way. `pnpm
+// tokens:sync` GENERATES `lib/tokens/palette.generated.ts` and the
+// `tokens:generated` block of `app/globals.css` from the Supabase
+// `styling-minerals` / `styling-heritage-colors` collections, with
+// `pnpm tokens:verify` as the drift gate (§8.4.1). A second reader that parsed
+// a component's source back into a token object would be a third copy of the
+// palette that nothing keeps in step.
+//
+// The `components` view no longer has a `source_code` column at all, so this
+// query would now raise 42703 rather than quietly returning null.
 
 // ── Layer summary query ─────────────────────────────────────────────
 

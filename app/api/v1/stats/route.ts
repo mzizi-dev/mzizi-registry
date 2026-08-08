@@ -1,44 +1,35 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getUsageStats } from "@/lib/metrics"
-import { getPublicClient, isSupabaseConfigured } from "@/lib/db"
-import { componentsOnDisk } from "@/lib/registry-source"
+import { readNodeCounts } from "@/lib/registry"
 
 const logger = createLogger("api")
 
 /**
- * Count stable components grouped by architecture_layer. Returns an empty
- * object if Supabase is unreachable or the layer column is missing — callers
- * should treat the absence of data as "don't render layer breakdown".
+ * Count components per node, from the registry on disk.
+ *
+ * This used to `select("name, layer, source_code")` from the `components` view
+ * and treat any error as "no data" by returning `{}`. Two things were wrong
+ * with that, and the second hid the first:
+ *
+ *   - The component set is not in the database. It is `registry.json` plus the
+ *     files under `components/registry/`, both of which are in the deployed
+ *     bundle. Asking Postgres how many components exist is a network round trip
+ *     to a less authoritative answer than a local read.
+ *   - The `catch`/`if (error) return {}` meant a broken query was
+ *     indistinguishable from an empty registry. `/api/v1/stats` served
+ *     `"layers": {}` and looked healthy. When `source_code` was dropped from
+ *     the view, the query started failing with 42703 and nothing changed in the
+ *     response — which is precisely the failure mode the whole extraction was
+ *     about.
+ *
+ * Keyed by node number as a string, so the shape consumers already parse is
+ * unchanged. A registry with no components yields `{}` — but now that means the
+ * registry is empty, not that a query failed.
  */
-async function getLayerBreakdown(): Promise<Record<string, number>> {
-  if (!isSupabaseConfigured()) return {}
-  try {
-    const { data, error } = await getPublicClient()
-      .from("components")
-      .select("name, layer, source_code")
-
-    if (error || !data) return {}
-
-    // "Has source" used to be `source_code is not null`. Source is moving to
-    // disk node by node, so during the migration it is either place; once the
-    // last node drops, the `source_code` half of this goes with it.
-    const onDisk = new Set(componentsOnDisk())
-
-    const breakdown: Record<string, number> = {}
-    for (const row of data as unknown as Array<{
-      name: string
-      layer: string | null
-      source_code: string | null
-    }>) {
-      if (!onDisk.has(row.name) && !row.source_code) continue
-      const key = row.layer ?? "unknown"
-      breakdown[key] = (breakdown[key] ?? 0) + 1
-    }
-    return breakdown
-  } catch {
-    return {}
-  }
+function getLayerBreakdown(): Record<string, number> {
+  const counts = readNodeCounts()
+  return Object.fromEntries(Object.entries(counts).map(([node, total]) => [node, total]))
 }
 
 const CORS = {
@@ -61,7 +52,8 @@ export async function GET(request: Request) {
     const daysParam = url.searchParams.get("days")
     const days = daysParam ? Math.min(Math.max(parseInt(daysParam, 10) || 30, 1), 90) : 30
 
-    const [stats, layers] = await Promise.all([getUsageStats(days), getLayerBreakdown()])
+    const stats = await getUsageStats(days)
+    const layers = getLayerBreakdown()
 
     logger.info("Stats served", {
       data: { days, totalCalls: stats.total_api_calls + stats.total_mcp_calls },
