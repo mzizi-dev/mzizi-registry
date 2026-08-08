@@ -45,5 +45,8 @@ pub mod mzizi_alert_engine;
 #[path = "../../../../components/registry/n8-assurance/mzizi-synthetic-probe.rs"]
 pub mod mzizi_synthetic_probe;
 
+#[path = "../../../../components/registry/n8-assurance/mzizi-a11y-audit.rs"]
+pub mod mzizi_a11y_audit;
+
 #[path = "../../../../components/registry/n8-assurance/mzizi-otel.rs"]
 pub mod mzizi_otel;

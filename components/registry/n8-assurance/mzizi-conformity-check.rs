@@ -41,6 +41,21 @@
 //! absent from the registry does not make the other findings untrue, and the
 //! aria one is a real accessibility defect either way.
 //!
+//! **4. The `missing_aria` rule could never fire for a `role="button"` element.**
+//! The `.ts` computes `const ariaLabel = el.getAttribute("aria-label") ||
+//! el.getAttribute("role")` and then refuses to report when `ariaLabel` is truthy
+//! — so any element carrying `role="button"` supplies its own "name" and is
+//! exempted by the very attribute that brought it into the rule's scope. The rule
+//! was widened past `<button>` specifically to catch those elements and then
+//! excluded all of them; only a literal `<button>` with no `role`, no `aria-label`
+//! and no text could ever be reported.
+//!
+//! A role is not a name. `mzizi-a11y-audit` had the correct definition all along
+//! — `aria-label`, `aria-labelledby`, or text — and two N8 components disagreeing
+//! about what an accessible name IS meant the same button was a violation on one
+//! surface and a pass on the other. [`ObservedElement::has_accessible_name`] now
+//! matches the audit, `aria-labelledby` included.
+//!
 //! # Two variants that never had a producer
 //!
 //! `version_mismatch` and `missing_slot` are declared in the `.ts` union and
@@ -121,7 +136,10 @@ pub struct ObservedElement {
     pub portal_url: Option<String>,
     /// The `aria-label`, when present.
     pub aria_label: Option<String>,
-    /// The `role`, when present.
+    /// The `aria-labelledby`, when present.
+    pub aria_labelledby: Option<String>,
+    /// The `role`, when present. Decides whether the element is INTERACTIVE; it
+    /// is not a source of an accessible name.
     pub role: Option<String>,
     /// Whether the element has any non-whitespace text.
     pub has_text: bool,
@@ -135,9 +153,12 @@ impl ObservedElement {
     }
 
     /// Whether a screen reader would announce a name for it.
+    ///
+    /// `role` is deliberately absent. Counting it — as the `.ts` does — makes the
+    /// rule unfireable for the `role="button"` elements it exists to cover.
     #[must_use]
     pub fn has_accessible_name(&self) -> bool {
-        self.aria_label.is_some() || self.role.is_some() || self.has_text
+        self.aria_label.is_some() || self.aria_labelledby.is_some() || self.has_text
     }
 }
 
