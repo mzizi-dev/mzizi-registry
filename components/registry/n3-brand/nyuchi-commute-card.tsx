@@ -118,7 +118,7 @@ export function NyuchiCommuteCard({
               e.stopPropagation()
               onStart()
             }}
-            className="h-10 rounded-full bg-[var(--color-gold,#FFD740)] px-4 text-[12px] font-medium text-[#0A0A0A] transition-opacity hover:opacity-80"
+            className="h-10 rounded-full bg-[var(--color-gold,#FFD740)] px-4 text-[12px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
           >
             Go →
           </button>

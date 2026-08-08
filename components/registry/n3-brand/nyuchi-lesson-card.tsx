@@ -153,7 +153,7 @@ export function NyuchiLessonCard({
               e.stopPropagation()
               onStart()
             }}
-            className="h-10 rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-[12px] font-medium text-[#0A0A0A] hover:opacity-80"
+            className="h-10 rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-[12px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
           >
             {progress > 0 ? "Continue" : "Start"}
           </button>

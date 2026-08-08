@@ -174,7 +174,7 @@ export function NyuchiFeedPage<T>({
             {onCreateAction && (
               <button
                 onClick={onCreateAction}
-                className="bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] mt-6 h-12 rounded-full px-6 text-[13px] font-medium text-[#0A0A0A] transition-opacity hover:opacity-80"
+                className="bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] mt-6 h-12 rounded-full px-6 text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
               >
                 {createLabel}
               </button>
@@ -188,7 +188,7 @@ export function NyuchiFeedPage<T>({
         <button
           onClick={onCreateAction}
           aria-label={createLabel}
-          className="bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] fixed right-5 bottom-24 z-40 flex size-14 items-center justify-center rounded-full text-[#0A0A0A] shadow-lg transition-opacity hover:opacity-80 md:hidden"
+          className="bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] fixed right-5 bottom-24 z-40 flex size-14 items-center justify-center rounded-full text-[var(--brand-accent-foreground,#0A0A0A)] shadow-lg transition-opacity hover:opacity-80 md:hidden"
         >
           <span className="text-xl font-bold">+</span>
         </button>
