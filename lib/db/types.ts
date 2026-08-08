@@ -635,24 +635,53 @@ export interface McpToolRegistryRow {
 
 // ── Component version table types ───────────────────────────────────
 
+/**
+ * A row of `public.component_versions` — a VIEW that unnests
+ * `component_documents.document->'versions'`, not a table.
+ *
+ * Two things this type used to get wrong, both hidden by the
+ * `as unknown as ComponentVersionRow[]` cast at the call site:
+ *
+ * 1. It declared `id`, `changes`, `released_at` and `metadata`, none of which
+ *    the view has, and omitted nine columns that it does. A cast through
+ *    `unknown` asserts a shape rather than checking one, so tsc had nothing to
+ *    disagree with and the type documented a payload nobody ever received.
+ * 2. It carried `source_code`. The view still projects `sourceCode` out of each
+ *    archived version, so `select("*")` served component source over
+ *    `/api/v1/ui/{name}/versions` — a second, STALE copy of bytes that live on
+ *    disk in git (§8.3). `button` came back at 3,637 chars against 3,921 on
+ *    disk. It is deliberately absent here and the query names its columns
+ *    explicitly, so re-adding it takes two edits rather than none.
+ */
 export interface ComponentVersionRow {
-  id: number
   component_name: string
   version: string
-  changes: string | null
-  source_code: string | null
-  released_at: string
-  metadata: Record<string, unknown> | null
-  created_at: string
+  version_number: number | null
+  change_type: string | null
+  comment: string | null
+  description: string | null
+  status: string | null
+  ecosystem_node: number | null
+  category: string | null
+  subcategory: string | null
+  tags: string[] | null
+  changed_by: string | null
+  created_at: string | null
 }
 
 export interface ComponentVersionInsert {
   component_name: string
   version: string
-  changes?: string | null
-  source_code?: string | null
-  released_at: string
-  metadata?: Record<string, unknown> | null
+  version_number?: number | null
+  change_type?: string | null
+  comment?: string | null
+  description?: string | null
+  status?: string | null
+  ecosystem_node?: number | null
+  category?: string | null
+  subcategory?: string | null
+  tags?: string[] | null
+  changed_by?: string | null
 }
 
 // ── Design token types (from nyuchi-tokens component source_code) ──
