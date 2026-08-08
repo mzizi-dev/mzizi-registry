@@ -809,3 +809,184 @@ fn an_alert_is_constructible_without_a_dom() {
     };
     assert_eq!(alert.affected_components, vec!["button".to_owned()]);
 }
+
+// ── the error tracker ──────────────────────────────────────────────────────
+
+use mzizi_assurance::mzizi_error_tracker::{
+    ErrorContext, ErrorLog, ErrorLogConfig, Severity, Tracked, classify_severity,
+};
+
+fn ctx(node: Option<u32>, blast: usize) -> ErrorContext {
+    ErrorContext {
+        component_name: Some("button".to_owned()),
+        node,
+        mini_app: Some("wallet".to_owned()),
+        url: Some("/wallet".to_owned()),
+        blast_radius: (0..blast).map(|i| format!("sib-{i}")).collect(),
+    }
+}
+
+#[test]
+fn a_token_or_safety_failure_is_always_critical() {
+    // N1 and N4 are core guarantees. If design values or safety gates fail,
+    // everything downstream is already wrong, so nothing else can lower this.
+    assert_eq!(
+        classify_severity("anything", Some(1), 0),
+        Severity::Critical
+    );
+    assert_eq!(
+        classify_severity("anything", Some(4), 0),
+        Severity::Critical
+    );
+    assert_eq!(
+        classify_severity("Cannot read x", Some(1), 50),
+        Severity::Critical
+    );
+}
+
+#[test]
+fn shell_failures_and_wide_blast_radii_are_high() {
+    assert_eq!(classify_severity("x", Some(7), 0), Severity::High);
+    assert_eq!(classify_severity("x", Some(2), 11), Severity::High);
+    assert_eq!(
+        classify_severity("x", Some(2), 10),
+        Severity::Low,
+        "boundary is >10"
+    );
+}
+
+#[test]
+fn the_typeerror_heuristic_is_preserved_including_its_flaw() {
+    // "TypeError" is normally the error's NAME, not part of its message, so that
+    // branch rarely fires and the neighbouring "Cannot read" test is what
+    // actually catches those. Preserved rather than fixed: changing it would
+    // silently reclassify live errors, which is a product decision.
+    assert_eq!(
+        classify_severity("Cannot read properties of undefined", None, 0),
+        Severity::Medium
+    );
+    assert_eq!(
+        classify_severity("TypeError: nope", None, 0),
+        Severity::Medium
+    );
+    assert_eq!(classify_severity("something else", None, 0), Severity::Low);
+}
+
+#[test]
+fn recurrences_group_and_count_rather_than_multiply() {
+    let mut log = ErrorLog::new(ErrorLogConfig::default());
+    let (first, _) = log.track("boom", None, &ctx(Some(2), 0), "id-1", 1_000.0);
+    assert_eq!(first, Tracked::New);
+    let (again, error) = log.track("boom", None, &ctx(Some(2), 0), "id-2", 2_000.0);
+    assert_eq!(again, Tracked::Recurrence);
+    assert_eq!(error.count, 2);
+    assert_eq!(error.first_seen_ms, 1_000.0);
+    assert_eq!(error.last_seen_ms, 2_000.0);
+    assert_eq!(log.len(), 1);
+}
+
+#[test]
+fn a_recurrence_unresolves_because_it_was_not_settled() {
+    let mut log = ErrorLog::new(ErrorLogConfig::default());
+    log.track("boom", None, &ctx(None, 0), "id-1", 1_000.0);
+    let key = ErrorLog::dedup_key("boom", Some("button"));
+    assert!(log.resolve(&key));
+    assert!(log.unresolved().is_empty());
+    log.track("boom", None, &ctx(None, 0), "id-2", 2_000.0);
+    assert_eq!(log.unresolved().len(), 1);
+}
+
+#[test]
+fn auto_resolve_actually_exists() {
+    // THE DEFECT THIS PORT FIXES. The .ts declares autoResolveMinutes, defaults
+    // it to 60 via Required<>, and never reads it — so every error stayed
+    // unresolved forever while a dashboard counted them. A config option that
+    // does nothing is worse than an absent one, because it is believed.
+    let mut log = ErrorLog::new(ErrorLogConfig {
+        auto_resolve_minutes: 60.0,
+        ..ErrorLogConfig::default()
+    });
+    log.track("boom", None, &ctx(None, 0), "id-1", 0.0);
+    assert_eq!(
+        log.auto_resolve(59.0 * 60_000.0),
+        0,
+        "still inside the window"
+    );
+    assert_eq!(log.auto_resolve(60.0 * 60_000.0), 1, "the window elapsed");
+    assert!(log.unresolved().is_empty());
+    assert_eq!(
+        log.auto_resolve(120.0 * 60_000.0),
+        0,
+        "already resolved, not recounted"
+    );
+}
+
+#[test]
+fn eviction_drops_the_least_recently_seen_and_never_the_new_one() {
+    // Evicting what you were just asked to record is not eviction, it is a
+    // silent drop — and with max_errors of 1 that is exactly what a naive
+    // implementation does.
+    let mut log = ErrorLog::new(ErrorLogConfig {
+        max_errors: 2,
+        dedup: true,
+        auto_resolve_minutes: 60.0,
+    });
+    let mut c = ctx(None, 0);
+    for (i, t) in [("a", 1_000.0), ("b", 2_000.0), ("c", 3_000.0)] {
+        c.component_name = Some(i.to_owned());
+        log.track("boom", None, &c, i, t);
+    }
+    assert_eq!(log.len(), 2);
+    let held: Vec<_> = log
+        .all()
+        .iter()
+        .map(|e| e.component_name.clone().unwrap())
+        .collect();
+    assert!(
+        !held.contains(&"a".to_owned()),
+        "the oldest should have gone"
+    );
+    assert!(held.contains(&"c".to_owned()), "the newest must survive");
+}
+
+#[test]
+fn dedup_off_uses_the_supplied_id_rather_than_a_clock() {
+    // The .ts uses Date.now().toString() here, which collides for two errors in
+    // the same millisecond — which an error storm produces by construction, and
+    // an error storm is exactly when dedup gets turned off.
+    let mut log = ErrorLog::new(ErrorLogConfig {
+        dedup: false,
+        ..ErrorLogConfig::default()
+    });
+    log.track("boom", None, &ctx(None, 0), "id-1", 1_000.0);
+    log.track("boom", None, &ctx(None, 0), "id-2", 1_000.0);
+    assert_eq!(log.len(), 2, "same millisecond, distinct ids, both kept");
+}
+
+#[test]
+fn severity_keeps_its_typescript_spelling() {
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n8-assurance/mzizi-error-tracker.ts"),
+    )
+    .expect("the error-tracker TypeScript sibling");
+    for s in [
+        Severity::Low,
+        Severity::Medium,
+        Severity::High,
+        Severity::Critical,
+    ] {
+        assert!(
+            ts.contains(&format!("\"{}\"", s.as_str())),
+            "severity {} missing",
+            s.as_str()
+        );
+    }
+    // The classification thresholds are the contract, not implementation detail.
+    assert!(
+        ts.contains("node === 1 || ctx?.node === 4"),
+        "critical-node rule drifted"
+    );
+    assert!(ts.contains("node === 7"), "shell rule drifted");
+    assert!(ts.contains("> 10"), "blast-radius threshold drifted");
+}
