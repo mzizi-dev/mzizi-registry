@@ -46,12 +46,33 @@ const NOT_SOURCE = new Set([".ds_store", ".map", ".snap", ".log"])
 /** Only N1 may define raw colour values (CLAUDE.md §7.4). */
 const TOKENS_NODE_DIR = "n1-tokens"
 
-/**
- * Interactive heights below the 48px floor (CLAUDE.md §8.2: 56px default,
- * 48px minimum, "non-negotiable for the African mobile market").
- * Tailwind: h-8=32 h-9=36 h-10=40 h-11=44, size-* likewise.
+/*
+ * There is deliberately NO touch-target check here any more.
+ *
+ * There was one: `/\b(?:h|size)-(?:8|9|10|11)\b/` — everything under 48px —
+ * written when §8.2 declared a 56px default and a 48px "non-negotiable"
+ * minimum. §8.2 has since recorded that the shipped primitives never did that,
+ * that the doctrine described a system which did not exist, and that density
+ * won: the scale is `h-8` small, `h-9` default, `h-10` large. So the check
+ * flagged the exact sizes doctrine now mandates, on 125 components — and a gate
+ * that calls correct code wrong is why nobody read this output, with 85
+ * genuinely broken install paths sitting in the same list.
+ *
+ * Narrowing it to "below `h-8`" was tried and is worse: 146 warnings, because
+ * the pattern greps the whole FILE for a size class and for `onClick`, so
+ * `<ArrowLeft className="size-4" />` inside a button counts as an undersized
+ * control. A file-level regex cannot tell an icon from the control containing
+ * it.
+ *
+ * And the rule §8.2 actually states is not about the number at all: a dense
+ * control on a touch surface must "earn its hit area some other way —
+ * surrounding spacing, or padding the interactive area beyond the visual box."
+ * That is a question about rendered layout. Answering it needs a rendered tree,
+ * which belongs in the a11y audit, not in an offline manifest validator.
+ *
+ * Leaving it out is the honest state. Re-adding a regex version would restore
+ * the noise that hid the real findings.
  */
-const SHORT_TARGET = /\b(?:h|size)-(?:8|9|10|11)\b/g
 
 /**
  * Components that genuinely exist upstream at ui.shadcn.com.
@@ -303,11 +324,7 @@ function main() {
         }
       }
 
-      // §8.2 — touch-target floor.
-      const short = [...new Set(src.match(SHORT_TARGET) ?? [])]
-      if (short.length > 0 && /<button|role="button"|onClick=/.test(src)) {
-        warn(n, `has interactive elements below the 48px touch floor (${short.join(", ")}). §8.2`)
-      }
+      // §8.2 touch targets are not checked here — see the note by NOT_SOURCE.
     }
   }
 
