@@ -151,6 +151,7 @@ pnpm doctrine:verify  # Non-mutating check — fails if an extracted doctrine fi
 pnpm props:extract    # Read component prop types into lib/samples/props.generated.ts (§8.10)
 pnpm props:verify     # Non-mutating check — fails if the extracted props are stale
 pnpm samples:push     # Project lib/samples/data.ts into MongoDB `mzizi_samples` (§8.10)
+pnpm browser:check    # Render pages through Kitesurf and assert they painted (§13.1)
 pnpm audit:check      # pnpm audit --audit-level=moderate --ignore-registry-errors
 ```
 
@@ -1272,6 +1273,49 @@ __tests__/
 pnpm test             # Run all tests once
 pnpm test:watch       # Watch mode for development
 ```
+
+### 13.1 Browser checks — the one thing the offline gates cannot answer
+
+> **Source of truth:** `docs/browser-checks.md`. This is the summary.
+
+`pnpm browser:check` renders pages through Cloudflare **Kitesurf** and asserts
+each produced its own content. It exists because `/changelog/{name}` shipped page
+chrome with **no article body** while every gate was green: typecheck, lint,
+tests and build all passed, and the route answered HTTP 200 with ~140 KB of HTML.
+`new Date(undefined).toISOString()` threw inside the article and React swallowed
+it into an empty region, with the header, sidebar and footer rendering around the
+hole.
+
+A status code and a byte count were both true and both useless. Nothing offline
+can close that gap — a unit test renders a component in jsdom, not the deployed
+page, and `pnpm build` proves a route compiles, not that it paints.
+
+**It is a `fetch`, not Playwright, and that is a requirement rather than a
+preference.** fundi is a Cloudflare Worker and cannot spawn a browser process, so
+a local-browser checker would serve developers and be useless to the N9 rung that
+most needs it. Browser Run is reachable identically from a laptop, from CI, and
+from inside fundi's heal loop — from a Worker via `env.BROWSER.quickAction()`,
+which needs no API token at all.
+
+Rules that are easy to get wrong, each one a bug this already shipped:
+
+- **Assert a string, never a length.** A threshold cannot tell content from
+  chrome; the first version green-ticked navigation on all five routes.
+- **Match the body, never the raw response.** `/markdown` prefixes a YAML block
+  built from the page's `<meta>` tags, so an expectation drawn from the
+  description passes against a page that rendered nothing.
+- **Do not parse the HTML here.** `<main>` on this site wraps the _sidebar_, and
+  `/<[^>]+>/g` breaks on Tailwind's `[&>svg]:` attributes. `/markdown` extracts
+  in the browser's own context, which is why the script has no dependencies.
+- **Kitesurf supports a subset of Quick Actions.** `/markdown`, `/content`,
+  `/accessibilityTree` and `/screenshot` work; `/scrape` and `/links` answer
+  `Action "…" is not supported by the kitesurf browser`.
+- **No colour or contrast assertions.** Kitesurf trades CSS exactness for cost,
+  so it cannot gate the APCA floor. Rendered-or-not is what it can answer.
+
+Without `CLOUDFLARE_API_TOKEN` it skips loudly and exits 0 — visibly, never
+looking like a green run. It is not in `ci.yml` yet for that reason: a check that
+reads as broken on every fork is one everyone learns to ignore.
 
 ---
 
