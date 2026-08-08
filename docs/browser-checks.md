@@ -169,6 +169,41 @@ _and_ the throw is reported. A render check is a signal it can generate itself �
 "this route stopped producing its content" is a diagnostic no error-boundary
 beacon emits, because the failing page did not error, it rendered empty.
 
+## Reporting back — this is an N8 probe, not a console tool
+
+> **Source of truth:** `docs/n8-telemetry.md`.
+
+The first version printed to a console and exited non-zero, so a render failure
+was seen by whoever ran the command and by nothing else. `mzizi-synthetic-probe`
+(N8) had already declared the contract it should have implemented — down to
+saying in its own body _"here we define the contract that the probe runner
+implements."_
+
+Each run now produces a `ProbeResult` and ships it through `mzizi-otel` as OTLP:
+one INTERNAL span for the run, one CLIENT child per route, `status.code = 2`
+(ERROR) on the run and on each failing route.
+
+```
+✓ /tokens  found "malachite" (6665 chars)
+⇡ reported 2 spans to OTLP (trace ed6ba19310dbe8e04cf0a037fc06b36e)
+```
+
+OTLP rather than a Mzizi endpoint because a signal only fundi can read is a
+signal only fundi can act on — any collector, backend or agent that speaks
+OpenTelemetry can subscribe instead.
+
+Two rules worth repeating here:
+
+- **Reporting never changes the exit code.** A run that "failed" because a
+  collector was unreachable would manufacture an incident out of an exporter
+  outage. The export outcome is printed and then ignored.
+- **With no `OTEL_EXPORTER_OTLP_ENDPOINT` it is inert**, and says so
+  (`⇡ not reported — no OTLP endpoint configured`). No collector is configured
+  anywhere in the ecosystem yet, so that is the normal output today.
+
+`--text` runs do **not** report: a debugging dump asserted nothing, and putting
+a probe result on the bus for it would be noise.
+
 ## What this does not check
 
 - **Contrast and colour.** Kitesurf trades CSS exactness for cost, so a computed

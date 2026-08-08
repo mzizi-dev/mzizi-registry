@@ -1317,6 +1317,58 @@ Without `CLOUDFLARE_API_TOKEN` it skips loudly and exits 0 — visibly, never
 looking like a green run. It is not in `ci.yml` yet for that reason: a check that
 reads as broken on every fork is one everyone learns to ignore.
 
+**It reports through N8, and the protocol is OTLP** — see §13.2.
+
+### 13.2 N8 assurance telemetry — the sink is OpenTelemetry
+
+> **Source of truth:** `docs/n8-telemetry.md`. This is the summary.
+
+N8's covenant is "what breaks is seen before users feel it", and five of its
+components (`mzizi-synthetic-probe`, `mzizi-rum`, `mzizi-error-tracker`,
+`mzizi-alert-engine`, and the browser check) ended in a callback with **no sink
+behind it** — so a signal was seen by whoever installed the component and by
+nobody else. `mzizi-otel` is that sink.
+
+**The protocol is OTLP, and that choice is load-bearing: a signal only fundi can
+read is a signal only fundi can act on.** A `mzizi.dev/api/assurance` route would
+make Mzizi the only possible consumer and require shipping a client for every
+service that later wants in. OpenTelemetry is what collectors, backends and agent
+runtimes already speak, so an assurance event is subscribable by services this
+repo does not know exist.
+
+Rules, each of them a defect that shipped:
+
+- **No default endpoint, ever.** `mzizi-rum` defaulted to
+  `https://mzizi.dev/api/rum` — a route that returns **404** and has never
+  existed — inside a `catch` that correctly swallows delivery failures. Every
+  consumer who installed RUM without setting an endpoint was posting into a void
+  that looked exactly like working RUM. Unset now means "do not POST".
+- **Telemetry never changes the caller's verdict.** A probe reporting "failed"
+  because its collector was unreachable manufactures an incident out of an
+  exporter outage. The exporter never throws and returns
+  `{ exported: false, reason }`.
+- **No `@opentelemetry/*` dependency.** OTLP/HTTP JSON is a documented wire
+  format; the SDK assumes a Node runtime and **fundi is a Worker**. A hand-built
+  payload runs unchanged in Node, a Worker, Deno and a browser, and keeps the
+  component independently installable (§15.6). The cost — no context
+  propagation, batching or retry — is stated in the file: this carries discrete
+  assurance events, not request traces.
+- **`OTEL_EXPORTER_OTLP_ENDPOINT` is a base** (gets `/v1/traces` appended);
+  **`OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` is complete** (used verbatim). The
+  asymmetry is the spec's; appending to the second yields `/v1/traces/v1/traces`.
+- **Wire shape is tested, not eyeballed.** A malformed OTLP body fails silently —
+  200 back, span dropped, empty dashboard. `__tests__/lib/otel.test.ts` asserts
+  32/16-hex ids, integer **nanosecond strings** (JSON has no int64), typed
+  attribute values, and ERROR status on the run plus the failing step only.
+- **`mzizi.*` for Mzizi facts.** Mzizi-specific attributes do not squat on OTel
+  semantic-convention names.
+
+**Not yet wired, stated plainly:** no collector is configured anywhere in the
+ecosystem, so `browser:check` reports `not reported — no OTLP endpoint
+configured` today. §17's diagram claims a loop whose RPCs
+(`record_observability_event`, `create_fundi_issue`) have **zero call sites in
+this repo** — this adds the emitter and the protocol, not the closed loop.
+
 ---
 
 ## 14. CI/CD & Versioning
