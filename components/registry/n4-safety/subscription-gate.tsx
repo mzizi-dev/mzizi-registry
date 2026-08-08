@@ -79,7 +79,7 @@ function SubscriptionGate({
           <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
             {features.map((f, i) => (
               <li key={i} className="flex items-center gap-1.5">
-                <span className="text-[var(--status-success, #22C55E)]">✓</span>
+                <span className="text-[var(--status-success,#22C55E)]">✓</span>
                 {f}
               </li>
             ))}

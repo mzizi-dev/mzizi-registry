@@ -118,7 +118,7 @@ export function NyuchiHealthDashboard({
                   className={cn(
                     "text-[10px] font-medium",
                     v.trend === "up"
-                      ? "text-[var(--status-success, #22C55E)]"
+                      ? "text-[var(--status-success,#22C55E)]"
                       : v.trend === "down"
                         ? "text-red-400"
                         : "text-muted-foreground"
@@ -136,7 +136,7 @@ export function NyuchiHealthDashboard({
           <p className="text-[11px] font-semibold text-muted-foreground">Upcoming</p>
           {appointments.slice(0, 2).map((a, i) => (
             <div key={i} className="flex items-center gap-3">
-              <div className="bg-[var(--status-success, #22C55E)]/10 flex size-8 items-center justify-center rounded-full text-sm">
+              <div className="flex size-8 items-center justify-center rounded-full bg-[var(--status-success,#22C55E)]/10 text-sm">
                 🏥
               </div>
               <div className="min-w-0 flex-1">
@@ -158,7 +158,7 @@ export function NyuchiHealthDashboard({
                 className={cn(
                   "flex size-5 items-center justify-center rounded-full border-2 text-[10px]",
                   m.taken
-                    ? "border-[var(--status-success, #22C55E)] bg-[var(--status-success, #22C55E)]/20 text-[var(--status-success, #22C55E)]"
+                    ? "border-[var(--status-success,#22C55E)] bg-[var(--status-success,#22C55E)]/20 text-[var(--status-success,#22C55E)]"
                     : "border-border text-transparent"
                 )}
               >
@@ -180,7 +180,7 @@ export function NyuchiHealthDashboard({
         <div className="border-t border-border p-3">
           <button
             onClick={onViewAll}
-            className="bg-[var(--status-success, #22C55E)] flex h-12 w-full items-center justify-center rounded-full text-[13px] font-medium text-[#0A0A0A] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+            className="flex h-12 w-full items-center justify-center rounded-full bg-[var(--status-success,#22C55E)] text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
           >
             View All Health Data
           </button>

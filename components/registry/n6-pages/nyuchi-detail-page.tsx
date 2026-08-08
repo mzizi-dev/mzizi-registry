@@ -92,7 +92,7 @@ export function NyuchiDetailPage({
                 className={cn(
                   "flex size-10 items-center justify-center rounded-full backdrop-blur-sm",
                   saved
-                    ? "bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] text-[#0A0A0A]"
+                    ? "bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] text-[var(--brand-accent-foreground,#0A0A0A)]"
                     : "bg-background/80 text-foreground"
                 )}
                 aria-label={saved ? "Unsave" : "Save"}
@@ -136,7 +136,7 @@ export function NyuchiDetailPage({
           <div className="mx-auto flex max-w-2xl gap-2">
             <button
               onClick={ctaAction}
-              className="bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] h-14 flex-1 rounded-full text-[15px] font-semibold text-[#0A0A0A] transition-opacity hover:opacity-80"
+              className="bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] h-14 flex-1 rounded-full text-[15px] font-semibold text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
             >
               {ctaLabel}
             </button>

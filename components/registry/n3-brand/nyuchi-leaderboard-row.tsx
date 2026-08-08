@@ -129,9 +129,9 @@ function NyuchiLeaderboardRow({
             className={cn(
               "flex items-center gap-0.5 text-[10px]",
               trend === "up"
-                ? "text-[#4ADE80]"
+                ? "text-[var(--status-success,#4ADE80)]"
                 : trend === "down"
-                  ? "text-[#F87171]"
+                  ? "text-[var(--status-error,#F87171)]"
                   : "text-muted-foreground"
             )}
           >

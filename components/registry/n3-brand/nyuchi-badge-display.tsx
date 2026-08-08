@@ -21,7 +21,7 @@ interface BadgeItem {
 }
 
 const rarityColors = {
-  common: "#6B6B66",
+  common: "var(--status-neutral, #6B6B66)",
   uncommon: "var(--color-cobalt,#00B0FF)",
   rare: "var(--color-tanzanite,#B388FF)",
   legendary: "var(--color-gold,#FFD740)",

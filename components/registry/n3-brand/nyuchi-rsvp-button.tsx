@@ -26,15 +26,30 @@ const statusDisplay: Record<
     bg: "var(--brand-accent, var(--color-malachite))",
     fg: "var(--brand-accent-foreground, var(--color-background, var(--muted,#050504)))",
   },
-  pending: { label: "Pending", icon: Clock, bg: "rgba(251,191,36,0.15)", fg: "#FBBF24" },
-  confirmed: { label: "Confirmed", icon: Check, bg: "rgba(74,222,128,0.15)", fg: "#4ADE80" },
+  pending: {
+    label: "Pending",
+    icon: Clock,
+    bg: "rgba(251,191,36,0.15)",
+    fg: "var(--status-warning, #FBBF24)",
+  },
+  confirmed: {
+    label: "Confirmed",
+    icon: Check,
+    bg: "rgba(74,222,128,0.15)",
+    fg: "var(--status-success, #4ADE80)",
+  },
   waitlisted: {
     label: "Waitlisted",
     icon: Users,
     bg: "rgba(179,136,255,0.15)",
     fg: "var(--color-tanzanite,#B388FF)",
   },
-  declined: { label: "Declined", icon: X, bg: "rgba(248,113,113,0.15)", fg: "#F87171" },
+  declined: {
+    label: "Declined",
+    icon: X,
+    bg: "rgba(248,113,113,0.15)",
+    fg: "var(--status-error, #F87171)",
+  },
 }
 
 interface NyuchiRSVPButtonProps {

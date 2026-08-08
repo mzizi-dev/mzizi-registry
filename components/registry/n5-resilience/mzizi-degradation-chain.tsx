@@ -74,7 +74,7 @@ export function NyuchiDegradationChain<T>({
       className={className}
     >
       {state.degraded && state.level < levels.length && (
-        <p className="text-[var(--status-warning, #F59E0B)] mb-2 text-xs" role="status">
+        <p className="mb-2 text-xs text-[var(--status-warning,#F59E0B)]" role="status">
           Showing {levels[state.level].label} (personalized content unavailable)
         </p>
       )}

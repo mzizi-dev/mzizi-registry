@@ -46,6 +46,23 @@ const NOT_SOURCE = new Set([".ds_store", ".map", ".snap", ".log"])
 /** Only N1 may define raw colour values (CLAUDE.md §7.4). */
 const TOKENS_NODE_DIR = "n1-tokens"
 
+/**
+ * Components whose hexes are DATA, not styling.
+ *
+ * A named list of two rather than a pattern, because a pattern that exempts
+ * "anything that looks like a palette" would silently swallow the next real
+ * violation — and the §8.2 touch-target check already taught this repo what an
+ * unactionable gate costs.
+ *
+ * `color-picker` and `caption-editor` present colours for a user to CHOOSE. The
+ * hex is the value the component returns, so it has to be a literal: a swatch
+ * rendered as `var(--color-cobalt)` cannot report which colour was picked. They
+ * do duplicate N1's palette, which is a real (smaller) problem — the fix is to
+ * source the swatch list from N1 rather than retype it, and that needs an
+ * import a self-contained registry component (§15.6) cannot currently make.
+ */
+const LITERAL_COLOUR_DATA = new Set(["color-picker", "caption-editor"])
+
 /*
  * There is deliberately NO touch-target check here any more.
  *
@@ -310,11 +327,15 @@ function main() {
       const src = readFileSync(join(REGISTRY_DIR, onDisk.rel), "utf8")
 
       // §7.4 — only N1 defines raw colour values.
-      if (onDisk.dir !== TOKENS_NODE_DIR) {
-        const hexes = src.match(/#[0-9a-fA-F]{6}\b/g) ?? []
+      if (onDisk.dir !== TOKENS_NODE_DIR && !LITERAL_COLOUR_DATA.has(n)) {
+        // Third-party brand marks are stripped before the scan: a `fill="#4285F4"`
+        // in Google's "G" is that company's identity, not a Mzizi design
+        // decision, and §7.4 already exempts SVG where Tailwind cannot reach.
+        const scannable = src.replace(/\b(?:fill|stroke|stop-color)=["']#[0-9a-fA-F]{6}["']/g, "")
+        const hexes = scannable.match(/#[0-9a-fA-F]{6}\b/g) ?? []
         // A hex inside a `var(--token, #fallback)` is the documented fallback
         // form, so only flag hexes that are NOT preceded by a comma in a var().
-        const bare = hexes.filter((h) => !new RegExp(`var\\([^)]*,\\s*${h}`).test(src))
+        const bare = hexes.filter((h) => !new RegExp(`var\\([^)]*,\\s*${h}`).test(scannable))
         if (bare.length > 0) {
           warn(
             n,
