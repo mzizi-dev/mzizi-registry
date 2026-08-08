@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import DOMPurify from "dompurify"
 import {
   BoldIcon,
   ItalicIcon,
@@ -38,7 +39,41 @@ function RichTextEditor({
 
   React.useEffect(() => {
     if (editorRef.current && value !== undefined && editorRef.current.innerHTML !== value) {
-      editorRef.current.innerHTML = value
+      // `value` is a controlled HTML string. It round-trips through the editor,
+      // so on a collaborative or draft-restoring surface it is whatever the
+      // last author — not necessarily this user — put in it. Assigning it to
+      // `innerHTML` raw made that a stored-XSS sink. The allow-list matches
+      // what the toolbar can actually produce (bold/italic/underline, headings,
+      // lists, links); anything the editor cannot create has no business
+      // arriving through its value either.
+      editorRef.current.innerHTML = DOMPurify.sanitize(value, {
+        ALLOWED_TAGS: [
+          "p",
+          "br",
+          "div",
+          "span",
+          "b",
+          "strong",
+          "i",
+          "em",
+          "u",
+          "s",
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "h5",
+          "h6",
+          "ul",
+          "ol",
+          "li",
+          "blockquote",
+          "a",
+        ],
+        ALLOWED_ATTR: ["href", "title"],
+        // Drop javascript:, data: and every other scheme that is not a document.
+        ALLOWED_URI_REGEXP: /^(?:https?|mailto|tel|#|\/|\.)/i,
+      })
     }
   }, [value])
 
@@ -47,7 +82,14 @@ function RichTextEditor({
       document.execCommand("formatBlock", false, action.split(":")[1])
     } else if (action === "createLink") {
       const url = window.prompt("Enter URL:")
-      if (url) document.execCommand("createLink", false, url)
+      // A typed `javascript:` URL becomes an anchor in the document, which then
+      // rides out through `value` to every later reader of this content. The
+      // sanitiser on the way back in would strip it, so accepting it here would
+      // only produce a link that silently disappears on reload — refuse it at
+      // the point the author can still fix it.
+      if (url && /^(?:https?:|mailto:|tel:|#|\/|\.)/i.test(url.trim())) {
+        document.execCommand("createLink", false, url.trim())
+      }
     } else {
       document.execCommand(action, false)
     }
