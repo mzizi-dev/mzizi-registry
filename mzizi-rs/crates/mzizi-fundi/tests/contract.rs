@@ -296,3 +296,176 @@ fn the_typescript_still_files_against_the_renamed_repo() {
         "the stale repo name returned"
     );
 }
+
+// ── learning ───────────────────────────────────────────────────────────────
+
+use mzizi_fundi::nyuchi_fundi_learning::{
+    HealingOutcome, LearningLog, ResolvedBy, Severity as LearnSeverity,
+};
+
+fn outcome(
+    component: &str,
+    error_type: &str,
+    sev: LearnSeverity,
+    recurred: bool,
+) -> HealingOutcome {
+    HealingOutcome {
+        issue_id: 1,
+        component: component.to_owned(),
+        node: 2,
+        error_type: error_type.to_owned(),
+        severity: sev,
+        plan_actions: vec!["patch".to_owned()],
+        actual_fix: "patched".to_owned(),
+        fundi_was_correct: true,
+        time_to_resolve_minutes: 10.0,
+        recurred,
+        resolved_by: ResolvedBy::Fundi,
+        recorded_at_ms: 0.0,
+    }
+}
+
+#[test]
+fn recurrence_escalates_severity_and_never_lowers_it() {
+    // THE BUG THIS PORT FIXES. The .ts returns "high" outright once something
+    // has recurred more than twice — LOWERING a critical defect that keeps
+    // coming back. Recurrence is evidence the first assessment was too generous,
+    // never too harsh.
+    let mut log = LearningLog::default();
+    for _ in 0..3 {
+        log.record(outcome("button", "render", LearnSeverity::Critical, true));
+    }
+    assert_eq!(
+        log.suggest_severity("button", "render"),
+        LearnSeverity::Critical,
+        "a repeatedly recurring critical defect must not be downgraded"
+    );
+
+    let mut low = LearningLog::default();
+    for _ in 0..3 {
+        low.record(outcome("card", "render", LearnSeverity::Low, true));
+    }
+    assert_eq!(
+        low.suggest_severity("card", "render"),
+        LearnSeverity::High,
+        "and it does escalate"
+    );
+}
+
+#[test]
+fn few_recurrences_keep_the_last_severity() {
+    let mut log = LearningLog::default();
+    log.record(outcome("button", "render", LearnSeverity::Low, true));
+    log.record(outcome("button", "render", LearnSeverity::Low, true));
+    assert_eq!(log.suggest_severity("button", "render"), LearnSeverity::Low);
+}
+
+#[test]
+fn no_history_suggests_medium() {
+    let log = LearningLog::default();
+    assert_eq!(
+        log.suggest_severity("unseen", "render"),
+        LearnSeverity::Medium
+    );
+    // And an unrecognised wire value is Medium too — an unknown risk treated as
+    // harmless is how things get missed.
+    assert_eq!(
+        LearnSeverity::from_str_or_medium("nonsense"),
+        LearnSeverity::Medium
+    );
+}
+
+#[test]
+fn history_is_bounded() {
+    // The .ts pushes forever, in a component whose whole purpose is to
+    // accumulate — so a long-lived Worker or session leaks until it dies.
+    let mut log = LearningLog::new(3);
+    for i in 0..10 {
+        log.record(outcome(
+            &format!("c{i}"),
+            "render",
+            LearnSeverity::Low,
+            false,
+        ));
+    }
+    assert_eq!(log.outcomes().len(), 3);
+    assert_eq!(log.outcomes()[2].component, "c9", "the newest is kept");
+}
+
+#[test]
+fn both_readings_of_accuracy_are_available() {
+    // accuracy counts correct diagnoses over ALL outcomes, including ones fundi
+    // never attempted. That is the .ts's definition and it is preserved rather
+    // than quietly redefined in the flattering direction.
+    let mut log = LearningLog::default();
+    log.record(outcome("a", "render", LearnSeverity::Low, false));
+    log.record(HealingOutcome {
+        fundi_was_correct: false,
+        resolved_by: ResolvedBy::Human,
+        ..outcome("b", "render", LearnSeverity::Low, false)
+    });
+    let stats = log.stats();
+    assert_eq!(stats.total_issues, 2);
+    assert_eq!(stats.auto_fixed, 1);
+    assert_eq!(stats.human_fixed, 1);
+    assert!((stats.accuracy - 0.5).abs() < 1e-9, "over all outcomes");
+    assert!(
+        (stats.accuracy_over_attempts - 1.0).abs() < 1e-9,
+        "over attempts only"
+    );
+}
+
+#[test]
+fn rankings_are_deterministic_when_counts_tie() {
+    // The .ts sorts a Map whose iteration order is insertion order, so equal
+    // counts swap places depending on which failed first — and a "top failing
+    // components" list that reshuffles between refreshes is one nobody trusts.
+    let mut log = LearningLog::default();
+    log.record(outcome("zebra", "render", LearnSeverity::Low, false));
+    log.record(outcome("alpha", "render", LearnSeverity::Low, false));
+    let top = log.stats().top_failing_components;
+    assert_eq!(top[0].name, "alpha", "ties break by name, not by arrival");
+    assert_eq!(top[1].name, "zebra");
+}
+
+#[test]
+fn empty_stats_are_zero_not_nan() {
+    // total is a denominator in three places; dividing by it unguarded yields
+    // NaN, which serialises to null and renders as a blank tile.
+    let stats = LearningLog::default().stats();
+    assert_eq!(stats.total_issues, 0);
+    assert_eq!(stats.accuracy, 0.0);
+    assert_eq!(stats.recurrence_rate, 0.0);
+    assert!(stats.top_failing_components.is_empty());
+}
+
+#[test]
+fn learning_keeps_its_typescript_spellings_and_limits() {
+    let ts = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n9-fundi/nyuchi-fundi-learning.ts"),
+    )
+    .expect("the fundi-learning TypeScript sibling");
+    for r in [ResolvedBy::Fundi, ResolvedBy::Human, ResolvedBy::Both] {
+        assert!(
+            ts.contains(&format!("\"{}\"", r.as_str())),
+            "resolvedBy {}",
+            r.as_str()
+        );
+    }
+    assert!(ts.contains("slice(0, 10)"), "top-components limit drifted");
+    assert!(ts.contains("slice(0, 5)"), "top-error-types limit drifted");
+
+    let mut log = LearningLog::default();
+    for i in 0..20 {
+        log.record(outcome(
+            &format!("c{i}"),
+            &format!("t{i}"),
+            LearnSeverity::Low,
+            false,
+        ));
+    }
+    let stats = log.stats();
+    assert_eq!(stats.top_failing_components.len(), 10);
+    assert_eq!(stats.top_error_types.len(), 5);
+}
