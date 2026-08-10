@@ -3,11 +3,11 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const mineralBorders: Record<string, string> = {
-  cobalt: "border-t-[var(--color-primary, var(--color-cobalt, #00B0FF))]",
-  tanzanite: "border-t-[var(--color-accent, var(--color-tanzanite, #B388FF))]",
-  malachite: "border-t-[var(--status-success, var(--color-malachite, #64FFDA))]",
-  gold: "border-t-[var(--status-warning, var(--color-gold, #FFD740))]",
-  terracotta: "border-t-[var(--status-error, var(--color-terracotta, #D4A574))]",
+  cobalt: "border-t-[var(--color-primary,var(--color-cobalt,#00B0FF))]",
+  tanzanite: "border-t-[var(--color-accent,var(--color-tanzanite,#B388FF))]",
+  malachite: "border-t-[var(--status-success,var(--color-malachite,#64FFDA))]",
+  gold: "border-t-[var(--status-warning,var(--color-gold,#FFD740))]",
+  terracotta: "border-t-[var(--status-error,var(--color-terracotta,#D4A574))]",
 }
 
 function NoteCard({

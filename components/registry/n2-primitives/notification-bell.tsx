@@ -99,7 +99,7 @@ function NotificationBell({
                         {notification.title}
                       </p>
                       {!notification.read && (
-                        <span className="bg-[var(--notification-info, var(--color-cobalt, #00B0FF))] mt-1 size-2 shrink-0 rounded-full" />
+                        <span className="mt-1 size-2 shrink-0 rounded-full bg-[var(--notification-info,var(--color-cobalt,#00B0FF))]" />
                       )}
                     </div>
                     {notification.description && (

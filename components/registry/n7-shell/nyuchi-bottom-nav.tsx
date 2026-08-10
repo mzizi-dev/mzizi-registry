@@ -80,7 +80,7 @@ export function NyuchiBottomNav({ items, activeId, className }: NyuchiBottomNavP
               aria-label={item.label}
               className={cn(
                 "flex size-[52px] -translate-y-6 items-center justify-center rounded-full",
-                "bg-[var(--brand-accent,var(--color-primary, #00B0FF))] shadow-[0_4px_20px_var(--brand-accent-glow,rgba(100,255,218,0.3))]",
+                "bg-[var(--brand-accent,var(--color-primary,#00B0FF))] shadow-[0_4px_20px_var(--brand-accent-glow,rgba(100,255,218,0.3))]",
                 "transition-transform active:scale-95"
               )}
             >
@@ -99,13 +99,13 @@ export function NyuchiBottomNav({ items, activeId, className }: NyuchiBottomNavP
               "relative flex min-w-[56px] flex-col items-center gap-[3px] py-1",
               "text-[10px] font-medium transition-colors",
               active
-                ? "text-[var(--brand-accent,var(--color-primary, #00B0FF))]"
+                ? "text-[var(--brand-accent,var(--color-primary,#00B0FF))]"
                 : "text-muted-foreground"
             )}
           >
             {/* Active top accent bar — brand identity marker */}
             {active && (
-              <span className="bg-[var(--brand-accent,var(--color-primary, #00B0FF))] absolute -top-[9px] h-[2.5px] w-7 rounded-full" />
+              <span className="absolute -top-[9px] h-[2.5px] w-7 rounded-full bg-[var(--brand-accent,var(--color-primary,#00B0FF))]" />
             )}
             <Icon className={cn("size-[21px]", active ? "stroke-[2.2]" : "stroke-[1.8]")} />
             <span>{item.label}</span>

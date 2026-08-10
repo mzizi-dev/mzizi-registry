@@ -25,11 +25,11 @@ function MaintenancePage({
     >
       {/* Mineral accent bar */}
       <div className="flex gap-1">
-        <div className="bg-[var(--color-primary, var(--color-cobalt, #00B0FF))] h-1 w-8 rounded-full" />
-        <div className="bg-[var(--color-accent, var(--color-tanzanite, #B388FF))] h-1 w-8 rounded-full" />
-        <div className="bg-[var(--status-success, var(--color-malachite, #64FFDA))] h-1 w-8 rounded-full" />
-        <div className="bg-[var(--status-warning, var(--color-gold, #FFD740))] h-1 w-8 rounded-full" />
-        <div className="bg-[var(--status-error, var(--color-terracotta, #D4A574))] h-1 w-8 rounded-full" />
+        <div className="h-1 w-8 rounded-full bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]" />
+        <div className="h-1 w-8 rounded-full bg-[var(--color-accent,var(--color-tanzanite,#B388FF))]" />
+        <div className="h-1 w-8 rounded-full bg-[var(--status-success,var(--color-malachite,#64FFDA))]" />
+        <div className="h-1 w-8 rounded-full bg-[var(--status-warning,var(--color-gold,#FFD740))]" />
+        <div className="h-1 w-8 rounded-full bg-[var(--status-error,var(--color-terracotta,#D4A574))]" />
       </div>
 
       {/* Nyuchi mark */}

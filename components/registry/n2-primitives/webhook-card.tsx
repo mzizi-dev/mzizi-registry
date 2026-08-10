@@ -52,7 +52,7 @@ function WebhookCard({
           className={cn(
             "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium",
             status === "active"
-              ? "bg-[var(--status-success, var(--color-malachite, #64FFDA))]/15 text-[var(--status-success, var(--color-malachite, #64FFDA))]"
+              ? "bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 text-[var(--status-success,var(--color-malachite,#64FFDA))]"
               : "bg-muted text-muted-foreground"
           )}
         >
@@ -60,7 +60,7 @@ function WebhookCard({
             className={cn(
               "size-1.5 rounded-full",
               status === "active"
-                ? "bg-[var(--status-success, var(--color-malachite, #64FFDA))]"
+                ? "bg-[var(--status-success,var(--color-malachite,#64FFDA))]"
                 : "bg-muted-foreground"
             )}
           />

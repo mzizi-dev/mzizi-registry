@@ -16,11 +16,11 @@ interface StatusIndicatorProps {
 }
 
 const STATUS_STYLES: Record<StatusType, string> = {
-  online: "bg-[var(--status-success, var(--color-malachite, #64FFDA))]",
-  live: "bg-[var(--status-success, var(--color-malachite, #64FFDA))]",
+  online: "bg-[var(--status-success,var(--color-malachite,#64FFDA))]",
+  live: "bg-[var(--status-success,var(--color-malachite,#64FFDA))]",
   offline: "bg-muted-foreground",
   busy: "bg-destructive",
-  away: "bg-[var(--status-warning, var(--color-gold, #FFD740))]",
+  away: "bg-[var(--status-warning,var(--color-gold,#FFD740))]",
 }
 
 const STATUS_LABELS: Record<StatusType, string> = {

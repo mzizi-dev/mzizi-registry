@@ -69,7 +69,7 @@ export function NyuchiChainGate({
         className
       )}
     >
-      <div className="bg-[var(--status-info, #3B82F6)]/15 flex size-14 items-center justify-center rounded-full">
+      <div className="flex size-14 items-center justify-center rounded-full bg-[var(--status-info,#3B82F6)]/15">
         <svg
           width="28"
           height="28"

@@ -52,7 +52,7 @@ function ApiKeyDisplay({
           aria-label="Copy API key"
         >
           {copied ? (
-            <Check className="text-[var(--status-success, var(--color-malachite, #64FFDA))] size-4" />
+            <Check className="size-4 text-[var(--status-success,var(--color-malachite,#64FFDA))]" />
           ) : (
             <Copy className="size-4" />
           )}
