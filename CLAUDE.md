@@ -540,7 +540,8 @@ Three layers of error isolation:
 **API error handling:**
 
 - API routes return proper HTTP status codes (400, 404, 500, 503 when Supabase env vars are missing)
-- All errors logged via `createLogger("<scope>")` from `lib/observability.ts`, with `[mzizi]` prefix for grep-ability
+- All errors logged via `createLogger("<scope>")` from `lib/observability.ts`, with the `[mzizi:<module>]` prefix for grep-ability. **One prefix, everywhere.** This line was true as doctrine and false in code for a long time: `[mzizi` had **zero** occurrences while `[mukoko:` had 19 (the vendored `lib/` copies) and `[nyuchi:` had 15 (their registry originals). Both are wrong for the same reason — a Mzizi component installed into a nyuchi, bundu or sister-brand app must not announce a _consumer_ brand's name in that app's logs. `__tests__/registry/injection-and-classes.test.ts` now fails on either.
+- **A vendored `lib/` copy and its registry original must not diverge.** They had, silently and in three ways: the prefix above, a hardcoded status-colour map that the vendored copy had locally fixed and never sent back, and `console.info` → `console.warn` on the recovery and success paths. That last one is instructive — it was **lint pressure**, not intent: ESLint's `no-console` allows only `warn`/`error`, `components/registry/**` is not linted, and `lib/**` is, so the linted copy drifted to `warn` and started reporting successes as warnings. The fix is an explicit `eslint-disable-next-line` in **both** copies, not a level that misreports
 - Resilience patterns (circuit-breaker, retry, timeout, fallback-chain, ai-safety, chaos) are vendored in `lib/`; their canonical source lives in the Supabase `components` table as `registry:lib` items and is installed by consumer apps via the shadcn CLI
 
 ---
@@ -821,7 +822,40 @@ The rules, each of them a defect that actually shipped:
    exactly the apps careful enough to have a CSP — and it announces to a screen reader as
    a link with no destination. It is a `<button onClick>`.
 
-### 8.4.3 The manifest is an install contract — two ways it silently breaks
+### 8.4.3 A Tailwind arbitrary value never contains a space
+
+`bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))]`
+generates **no CSS and matches no element**, and 111 of them shipped across 39
+installable components before anyone measured it.
+
+A Tailwind candidate is whitespace-delimited, so a spaced arbitrary value is split
+**twice** — once by the extractor, which therefore emits no rule, and again by the
+browser's own class-token parser, which therefore matches no element even in the
+handful of cases where an identical space-free class elsewhere happened to emit a
+rule. The element ends up with no background, colour or border at all.
+
+Every property affected was a primary one (60 background, 37 text colour, 12
+border/ring). On `nyuchi-detail-page` the broken class was the **only** background
+on the primary pill CTA, so it rendered transparent with dark text — in a consumer's
+app, never in review.
+
+**What makes this the worst kind of defect:** nothing in this repo could see it.
+The portal never scans the registry components (they are HTTP payload served by
+`/api/v1/ui/{name}`, not compiled in), so `pnpm build` emits no rules for them
+either way and grepping `.next` proves nothing. Typecheck, lint, tests and build
+were all green throughout.
+
+Write `bg-[var(--a,var(--b,#hex))]` — no spaces — or use `_` where a space is
+genuinely required by the CSS value. `pnpm registry:validate` now fails on any
+spaced arbitrary value, as an **error** rather than a warning: a failure this
+invisible would be read past exactly as the original was.
+
+> **Do not "verify" this with a standalone extractor probe without a control.**
+> An earlier attempt reported 0 rules generated for a plainly-valid space-free
+> class, which means the harness was broken, not the input. Any probe must first
+> prove it emits a rule for a known-good class, or its result is void.
+
+### 8.4.4 The manifest is an install contract — two ways it silently breaks
 
 Both of these leave every gate green (typecheck, lint, tests, build) while `npx shadcn add`
 fails in someone else's project, which is why `pnpm registry:validate` checks them:
