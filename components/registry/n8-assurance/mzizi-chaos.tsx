@@ -56,7 +56,7 @@ export function getInjectedLatency(config: ChaosConfig = DEFAULT_CONFIG): number
 
 export class ChaosInjectedError extends Error {
   constructor(node: number, component: string) {
-    super(`[nyuchi:chaos] Injected error in Node ${node} component "${component}"`)
+    super(`[mzizi:chaos] Injected error in Node ${node} component "${component}"`)
     this.name = "ChaosInjectedError"
   }
 }
@@ -135,7 +135,7 @@ export async function diagnoseBlastRadius(
   }
 
   // Log structured diagnostic report
-  console.warn("[nyuchi:chaos] Diagnostic report:", JSON.stringify(report, null, 2))
+  console.warn("[mzizi:chaos] Diagnostic report:", JSON.stringify(report, null, 2))
   return report
 }
 

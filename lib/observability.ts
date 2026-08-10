@@ -1,8 +1,8 @@
 /**
- * Observability utilities for the Mukoko ecosystem.
+ * Observability utilities for the Mzizi design system.
  *
  * Provides structured logging, performance timing, and error tracking
- * with the [mukoko] prefix for grep-ability across all services.
+ * with the [mzizi] prefix for grep-ability across all services.
  *
  * Install via: npx shadcn@latest add https://mzizi.dev/api/v1/ui/observability
  */
@@ -30,12 +30,12 @@ const LOG_METHODS: Record<LogLevel, (...args: unknown[]) => void> = {
 }
 
 function formatPrefix(level: LogLevel, module?: string): string {
-  const tag = module ? `[mukoko:${module}]` : "[mukoko]"
+  const tag = module ? `[mzizi:${module}]` : "[mzizi]"
   return `${tag} ${level.toUpperCase()}`
 }
 
 /**
- * Structured logger with [mukoko] prefix.
+ * Structured logger with [mzizi] prefix.
  *
  * @example
  * ```ts
@@ -89,7 +89,7 @@ function emit(level: LogLevel, message: string, ctx?: LogContext) {
  *   return await fetch("/api/weather")
  * })
  *
- * // Logs: [mukoko] PERF fetch-weather completed in 142ms
+ * // Logs: [mzizi] PERF fetch-weather completed in 142ms
  * ```
  */
 export async function measure<T>(
@@ -147,10 +147,10 @@ export function trackError(error: unknown, ctx?: LogContext) {
  *
  * const logger = createLogger("registry")
  * logger.info("Component served", { data: { name: "button" } })
- * // Logs: [mukoko:registry] INFO Component served { name: "button" }
+ * // Logs: [mzizi:registry] INFO Component served { name: "button" }
  *
  * logger.error("File not found", { error: new Error("ENOENT") })
- * // Logs: [mukoko:registry] ERROR File not found Error: ENOENT
+ * // Logs: [mzizi:registry] ERROR File not found Error: ENOENT
  * ```
  */
 export function createLogger(module: string) {

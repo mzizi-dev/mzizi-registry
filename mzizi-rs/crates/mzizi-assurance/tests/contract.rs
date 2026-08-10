@@ -2759,11 +2759,11 @@ fn injected_latency_stays_inside_its_ceiling() {
 fn an_injected_error_is_labelled_as_injected() {
     // An injected failure that reads like a real one wastes an on-call hour.
     let message = injected_error_message(5, "nyuchi-wallet-card");
-    assert!(message.starts_with("[nyuchi:chaos]"));
+    assert!(message.starts_with("[mzizi:chaos]"));
     assert!(message.contains("Node 5"));
     assert!(message.contains("nyuchi-wallet-card"));
     assert!(
-        chaos_ts().contains("[nyuchi:chaos] Injected error in Node"),
+        chaos_ts().contains("[mzizi:chaos] Injected error in Node"),
         "the marker drifted from the sibling"
     );
 }

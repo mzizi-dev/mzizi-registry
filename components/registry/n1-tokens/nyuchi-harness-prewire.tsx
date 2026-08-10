@@ -70,7 +70,7 @@ interface ScopedLogger {
 }
 
 function createScopedLogger(componentName: string): ScopedLogger {
-  const prefix = `[nyuchi:${componentName}]`
+  const prefix = `[mzizi:${componentName}]`
   return {
     debug: (msg, data) => console.debug(`${prefix} ${msg}`, data || ""),
     info: (msg, data) => console.info(`${prefix} ${msg}`, data || ""),
@@ -258,7 +258,7 @@ function useTokenVerifier(componentName: string) {
 
     if (missing.length > 0) {
       console.warn(
-        `[nyuchi:${componentName}] Missing CSS tokens: ${missing.join(", ")}. ` +
+        `[mzizi:${componentName}] Missing CSS tokens: ${missing.join(", ")}. ` +
           `Wrap your app in <NyuchiThemeProvider> to inject design tokens.`
       )
     }
