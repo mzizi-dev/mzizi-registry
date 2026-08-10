@@ -31,7 +31,7 @@ function PriceDisplay({
         </span>
       )}
       {discount && (
-        <span className="bg-[var(--status-success, var(--color-malachite, #64FFDA))]/15 text-[var(--status-success, var(--color-malachite, #64FFDA))] rounded-full px-2 py-0.5 text-xs font-medium">
+        <span className="rounded-full bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 px-2 py-0.5 text-xs font-medium text-[var(--status-success,var(--color-malachite,#64FFDA))]">
           {discount}
         </span>
       )}

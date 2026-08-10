@@ -3,8 +3,8 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const severityStyles = {
-  info: "text-[var(--color-primary, var(--color-cobalt, #00B0FF))]",
-  warning: "text-[var(--status-warning, var(--color-gold, #FFD740))]",
+  info: "text-[var(--color-primary,var(--color-cobalt,#00B0FF))]",
+  warning: "text-[var(--status-warning,var(--color-gold,#FFD740))]",
   error: "text-destructive",
   critical: "text-destructive font-semibold",
 } as const
@@ -36,8 +36,8 @@ function AuditLogEntry({
     >
       <span
         className={cn("size-1.5 shrink-0 rounded-full", {
-          "bg-[var(--color-primary, var(--color-cobalt, #00B0FF))]": severity === "info",
-          "bg-[var(--status-warning, var(--color-gold, #FFD740))]": severity === "warning",
+          "bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]": severity === "info",
+          "bg-[var(--status-warning,var(--color-gold,#FFD740))]": severity === "warning",
           "bg-destructive": severity === "error" || severity === "critical",
         })}
       />

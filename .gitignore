@@ -38,3 +38,8 @@ public/_pagefind/
 .claude/settings.local.json
 # Rust build artifacts (mzizi-rs cargo workspace)
 mzizi-rs/target/
+
+# Claude Code dev tooling — used locally, never tracked.
+# Kept on disk so the harness still reads them; the repo does not carry them.
+CLAUDE.md
+.claude/

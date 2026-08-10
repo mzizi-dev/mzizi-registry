@@ -137,7 +137,7 @@ pub fn injected_latency_ms(config: &ChaosConfig, draw: f64) -> u32 {
 /// wastes an on-call hour, and this string is what tells them apart in a log.
 #[must_use]
 pub fn injected_error_message(node: u32, component: &str) -> String {
-    format!("[nyuchi:chaos] Injected error in Node {node} component \"{component}\"")
+    format!("[mzizi:chaos] Injected error in Node {node} component \"{component}\"")
 }
 
 /// How a probe answered.

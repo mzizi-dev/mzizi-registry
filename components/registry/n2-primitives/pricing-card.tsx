@@ -92,7 +92,7 @@ function PricingCard({
         <ul className="flex-1 space-y-2.5">
           {features.map((feature) => (
             <li key={feature} className="flex items-start gap-2 text-sm">
-              <Check className="text-[var(--status-success, var(--color-malachite, #64FFDA))] mt-0.5 size-4 shrink-0" />
+              <Check className="mt-0.5 size-4 shrink-0 text-[var(--status-success,var(--color-malachite,#64FFDA))]" />
               <span>{feature}</span>
             </li>
           ))}

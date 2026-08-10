@@ -2,10 +2,9 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { paletteColor } from "@/lib/tokens"
 
 /* ═══════════════════════════════════════════════════════════════
-   MUKOKO RESILIENCE — Self-Monitoring Infrastructure
+   MZIZI RESILIENCE — Self-Monitoring Infrastructure
    
    The principle: infrastructure monitors itself. When something
    breaks, the system degrades gracefully, logs the failure,
@@ -126,7 +125,7 @@ class HealthMonitor {
     // Log to observability (structured logging)
     if (typeof console !== "undefined") {
       console.error(
-        `[mukoko:resilience] Section "${sectionName}" error #${(existing?.errorCount || 0) + 1}`,
+        `[mzizi:resilience] Section "${sectionName}" error #${(existing?.errorCount || 0) + 1}`,
         { section: sectionName, error: error.message, stack: error.stack?.split("\\n").slice(0, 5) }
       )
     }
@@ -140,7 +139,8 @@ class HealthMonitor {
     })
 
     if (typeof console !== "undefined") {
-      console.warn(`[mukoko:resilience] Section "${sectionName}" recovered`)
+      // eslint-disable-next-line no-console -- a recovery/success event is informational; warn would train readers to ignore warnings
+      console.info(`[mzizi:resilience] Section "${sectionName}" recovered`)
     }
   }
 
@@ -186,7 +186,7 @@ export function useHealthMonitor() {
   }
 }
 
-// ─── MUKOKO SECTION ────────────────────────────────────────
+// ─── MZIZI SECTION ────────────────────────────────────────
 // The mandatory wrapper for every brand component section.
 // Provides error isolation, loading state, and health reporting.
 
@@ -399,16 +399,13 @@ export async function resilientFetch<T>({
       const durationMs = Math.round(performance.now() - start)
 
       healthMonitor.report(section, { status: "healthy", dataSource: "cloud" })
-      console.warn(
-        `[mukoko:resilience] ${section} fetched in ${durationMs}ms (attempt ${attempts})`
-      )
+      // eslint-disable-next-line no-console -- a recovery/success event is informational; warn would train readers to ignore warnings
+      console.info(`[mzizi:resilience] ${section} fetched in ${durationMs}ms (attempt ${attempts})`)
 
       return { data: result, error: null, source: "primary", attempts, durationMs }
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err))
-      console.warn(
-        `[mukoko:resilience] ${section} attempt ${attempts} failed: ${lastError.message}`
-      )
+      console.warn(`[mzizi:resilience] ${section} attempt ${attempts} failed: ${lastError.message}`)
 
       // Exponential backoff between retries
       if (i < maxRetries) {
@@ -424,9 +421,8 @@ export async function resilientFetch<T>({
       const durationMs = Math.round(performance.now() - start)
 
       healthMonitor.report(section, { status: "degraded", dataSource: "cache" })
-      console.warn(
-        `[mukoko:resilience] ${section} using fallback after ${attempts} failed attempts`
-      )
+      // eslint-disable-next-line no-console -- a recovery/success event is informational; warn would train readers to ignore warnings
+      console.info(`[mzizi:resilience] ${section} using fallback after ${attempts} failed attempts`)
 
       return { data: result, error: lastError, source: "fallback", attempts, durationMs }
     } catch (fallbackErr) {
@@ -452,11 +448,15 @@ export function NyuchiHealthPanel({ className }: NyuchiHealthPanelProps) {
   const { reports, systemHealth } = useHealthMonitor()
   const entries = Array.from(reports.entries())
 
+  // Status tokens with a hex fallback, so the panel stays independently
+  // installable: an app that has not defined the tokens still renders, and one
+  // that has retunes with its theme. The bare hexes these replaced were
+  // Tailwind defaults, not the seven-mineral status set.
   const healthColors: Record<SectionHealth, string> = {
-    healthy: "#4ADE80",
-    degraded: "#FBBF24",
-    error: "#F87171",
-    loading: paletteColor("cobalt"),
+    healthy: "var(--success,#4ADE80)",
+    degraded: "var(--warning,#FBBF24)",
+    error: "var(--destructive,#F87171)",
+    loading: "var(--info,#00B0FF)",
   }
 
   return (

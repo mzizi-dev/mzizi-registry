@@ -62,7 +62,7 @@ function Rating({
               "transition-colors",
               readOnly ? "cursor-default" : "cursor-pointer",
               isFilled
-                ? "text-[var(--status-warning, var(--color-gold, #FFD740))]"
+                ? "text-[var(--status-warning,var(--color-gold,#FFD740))]"
                 : "text-muted-foreground/30"
             )}
           >

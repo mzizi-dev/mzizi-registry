@@ -68,7 +68,7 @@ export function NyuchiCreatePage({
               "min-h-[48px] rounded-full px-4 py-1.5 text-sm font-semibold",
               submitting
                 ? "text-muted-foreground"
-                : "text-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))]"
+                : "text-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))]"
             )}
           >
             {submitting ? "Saving..." : submitLabel}
@@ -85,7 +85,7 @@ export function NyuchiCreatePage({
               className={cn(
                 "h-1 flex-1 rounded-full transition-colors",
                 i <= (currentStep ?? 0)
-                  ? "bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))]"
+                  ? "bg-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))]"
                   : "bg-muted"
               )}
             />
@@ -109,7 +109,7 @@ export function NyuchiCreatePage({
               "flex h-14 w-full items-center justify-center rounded-full text-[15px] font-semibold transition-opacity",
               submitting
                 ? "bg-muted text-muted-foreground"
-                : "bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
+                : "bg-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))] text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
             )}
           >
             {submitting ? "Saving..." : submitLabel}

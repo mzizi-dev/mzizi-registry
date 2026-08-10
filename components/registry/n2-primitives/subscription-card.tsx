@@ -47,7 +47,7 @@ function SubscriptionCard({
       data-highlighted={highlighted || undefined}
       className={cn(
         "flex flex-col gap-6 rounded-[var(--radius-lg,14px)] bg-card p-6 text-card-foreground ring-1 ring-foreground/10 transition-shadow",
-        highlighted && "ring-[var(--color-primary, var(--color-cobalt, #00B0FF))] shadow-lg ring-2",
+        highlighted && "shadow-lg ring-2 ring-[var(--color-primary,var(--color-cobalt,#00B0FF))]",
         className
       )}
       {...props}
@@ -62,7 +62,7 @@ function SubscriptionCard({
       <ul className="flex flex-1 flex-col gap-2.5">
         {features.map((feature) => (
           <li key={feature} className="flex items-start gap-2 text-sm text-foreground">
-            <Check className="text-[var(--status-success, var(--color-malachite, #64FFDA))] mt-0.5 size-4 shrink-0" />
+            <Check className="mt-0.5 size-4 shrink-0 text-[var(--status-success,var(--color-malachite,#64FFDA))]" />
             <span>{feature}</span>
           </li>
         ))}
@@ -74,7 +74,7 @@ function SubscriptionCard({
           className={cn(
             "inline-flex h-10 items-center justify-center rounded-full px-6 text-sm font-medium transition-colors",
             highlighted
-              ? "bg-[var(--color-primary, var(--color-cobalt, #00B0FF))] hover:bg-[var(--color-primary, var(--color-cobalt, #00B0FF))]/90 text-white"
+              ? "bg-[var(--color-primary,var(--color-cobalt,#00B0FF))] text-white hover:bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]/90"
               : "border border-border bg-input/30 text-foreground hover:bg-input/50"
           )}
         >
