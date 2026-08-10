@@ -48,6 +48,25 @@ export interface IncidentManagerConfig {
   onResolved?: (incident: Incident) => void
 }
 
+/* ─── Markdown neutralisation ───────────────────────────────────────────────
+   An incident title comes from an alert, an alert comes from an error message,
+   and an error message carries user input whenever user input reaches an
+   exception. A newline plus `##` in a title forges a section heading; a `)` in
+   a portal URL terminates its link early. A postmortem is read as a record of
+   what happened, which is precisely why its structure must not be forgeable by
+   the failure it describes.                                                 */
+
+/** Neutralise Markdown structure in an untrusted single-line value. */
+function mdText(s: string): string {
+  return s.replace(/[\r\n]+/g, " ").replace(/([\\`*_{}[\]()#+\-.!|>])/g, "\\$1")
+}
+
+/** A URL becomes a link only if it is one; otherwise render the name as text. */
+function mdLink(name: string, url?: string): string {
+  const safe = url && /^https?:\/\//i.test(url) && !/[()\s]/.test(url)
+  return safe ? `[${mdText(name)}](${url})` : mdText(name)
+}
+
 class IncidentManagerCore {
   private incidents = new Map<string, Incident>()
   private config: IncidentManagerConfig
@@ -133,7 +152,7 @@ class IncidentManagerCore {
   generatePostmortem(id: string): string {
     const inc = this.incidents.get(id)
     if (!inc) return ""
-    return `# Incident Postmortem: ${inc.title}\n\n**Severity:** ${inc.severity}\n**Detected:** ${inc.detectedAt}\n**Resolved:** ${inc.resolvedAt || "Ongoing"}\n**TTR:** ${inc.ttrMinutes ?? "N/A"} minutes\n**Commander:** ${inc.commander || "Unassigned"}\n\n## Affected Components\n${inc.affectedComponents.map((c) => `- [${c.name}](${c.portalUrl}) (Node ${c.node})`).join("\n")}\n\n## Affected Mini-Apps\n${inc.affectedMiniApps.join(", ")}\n\n## Timeline\n${inc.timeline.map((t) => `- **${t.timestamp}** [${t.actor}] ${t.action}${t.details ? ` — ${t.details}` : ""}`).join("\n")}\n\n## Root Cause\n${inc.rootCause || "_To be determined_"}\n\n## Action Items\n${(inc.actionItems || []).map((a) => `- [ ] ${a.description} (Owner: ${a.owner}${a.dueDate ? `, Due: ${a.dueDate}` : ""})`).join("\n") || "_None yet_"}\n`
+    return `# Incident Postmortem: ${mdText(inc.title)}\n\n**Severity:** ${mdText(inc.severity)}\n**Detected:** ${inc.detectedAt}\n**Resolved:** ${inc.resolvedAt || "Ongoing"}\n**TTR:** ${inc.ttrMinutes ?? "N/A"} minutes\n**Commander:** ${mdText(inc.commander || "Unassigned")}\n\n## Affected Components\n${inc.affectedComponents.map((c) => `- ${mdLink(c.name, c.portalUrl)} (Node ${c.node})`).join("\n")}\n\n## Affected Mini-Apps\n${inc.affectedMiniApps.map(mdText).join(", ")}\n\n## Timeline\n${inc.timeline.map((t) => `- **${t.timestamp}** [${mdText(t.actor)}] ${mdText(t.action)}${t.details ? ` — ${mdText(t.details)}` : ""}`).join("\n")}\n\n## Root Cause\n${inc.rootCause ? mdText(inc.rootCause) : "_To be determined_"}\n\n## Action Items\n${(inc.actionItems || []).map((a) => `- [ ] ${mdText(a.description)} (Owner: ${mdText(a.owner)}${a.dueDate ? `, Due: ${mdText(a.dueDate)}` : ""})`).join("\n") || "_None yet_"}\n`
   }
 
   getActive(): Incident[] {
