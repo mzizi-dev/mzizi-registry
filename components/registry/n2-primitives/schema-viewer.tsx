@@ -18,17 +18,17 @@ interface JsonSchema {
 function TypeBadge({ type }: { type: string }) {
   const colorMap: Record<string, string> = {
     string:
-      "bg-[var(--color-primary, var(--color-cobalt, #00B0FF))]/15 text-[var(--color-primary, var(--color-cobalt, #00B0FF))]",
+      "bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]/15 text-[var(--color-primary,var(--color-cobalt,#00B0FF))]",
     number:
-      "bg-[var(--status-warning, var(--color-gold, #FFD740))]/15 text-[var(--status-warning, var(--color-gold, #FFD740))]",
+      "bg-[var(--status-warning,var(--color-gold,#FFD740))]/15 text-[var(--status-warning,var(--color-gold,#FFD740))]",
     integer:
-      "bg-[var(--status-warning, var(--color-gold, #FFD740))]/15 text-[var(--status-warning, var(--color-gold, #FFD740))]",
+      "bg-[var(--status-warning,var(--color-gold,#FFD740))]/15 text-[var(--status-warning,var(--color-gold,#FFD740))]",
     boolean:
-      "bg-[var(--color-accent, var(--color-tanzanite, #B388FF))]/15 text-[var(--color-accent, var(--color-tanzanite, #B388FF))]",
+      "bg-[var(--color-accent,var(--color-tanzanite,#B388FF))]/15 text-[var(--color-accent,var(--color-tanzanite,#B388FF))]",
     object:
-      "bg-[var(--status-error, var(--color-terracotta, #D4A574))]/15 text-[var(--status-error, var(--color-terracotta, #D4A574))]",
+      "bg-[var(--status-error,var(--color-terracotta,#D4A574))]/15 text-[var(--status-error,var(--color-terracotta,#D4A574))]",
     array:
-      "bg-[var(--status-success, var(--color-malachite, #64FFDA))]/15 text-[var(--status-success, var(--color-malachite, #64FFDA))]",
+      "bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 text-[var(--status-success,var(--color-malachite,#64FFDA))]",
   }
   return (
     <span

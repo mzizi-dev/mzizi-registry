@@ -52,7 +52,7 @@ function ReviewCard({
               className={cn(
                 "size-4",
                 i < rating
-                  ? "fill-[var(--status-warning, var(--color-gold, #FFD740))] text-[var(--status-warning, var(--color-gold, #FFD740))]"
+                  ? "fill-[var(--status-warning,var(--color-gold,#FFD740))] text-[var(--status-warning,var(--color-gold,#FFD740))]"
                   : "text-muted-foreground/30"
               )}
             />

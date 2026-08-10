@@ -10,10 +10,10 @@ const permissionBadgeVariants = cva(
       variant: {
         admin: "bg-destructive/10 text-destructive",
         editor:
-          "bg-[var(--tier-otp, var(--color-cobalt, #00B0FF))]/15 text-[var(--tier-otp, var(--color-cobalt, #00B0FF))]",
+          "bg-[var(--tier-otp,var(--color-cobalt,#00B0FF))]/15 text-[var(--tier-otp,var(--color-cobalt,#00B0FF))]",
         viewer: "bg-muted text-muted-foreground",
         owner:
-          "bg-[var(--tier-licensed, var(--color-gold, #FFD740))]/15 text-[var(--tier-licensed, var(--color-gold, #FFD740))]",
+          "bg-[var(--tier-licensed,var(--color-gold,#FFD740))]/15 text-[var(--tier-licensed,var(--color-gold,#FFD740))]",
       },
     },
     defaultVariants: { variant: "viewer" },

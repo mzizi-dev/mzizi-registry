@@ -72,7 +72,7 @@ export function NyuchiProfilePageLayout({
     >
       {/* Cover */}
       <div
-        className="from-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))]/20 relative h-40 bg-gradient-to-br to-muted sm:h-52"
+        className="relative h-40 bg-gradient-to-br from-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))]/20 to-muted sm:h-52"
         style={
           coverUrl
             ? {
@@ -134,7 +134,7 @@ export function NyuchiProfilePageLayout({
               {primaryAction && (
                 <button
                   onClick={primaryAction.onClick}
-                  className="bg-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] h-12 flex-1 rounded-full text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
+                  className="h-12 flex-1 rounded-full bg-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))] text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
                 >
                   {primaryAction.label}
                 </button>
@@ -162,7 +162,7 @@ export function NyuchiProfilePageLayout({
                 className={cn(
                   "min-h-[48px] shrink-0 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
                   active === t.id
-                    ? "border-[var(--brand-accent,var(--status-success, var(--color-malachite, #64FFDA)))] text-foreground"
+                    ? "border-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))] text-foreground"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >

@@ -45,7 +45,7 @@ function MfaSetup({
           className={cn(
             "flex size-7 items-center justify-center rounded-full text-xs font-medium",
             step >= 1
-              ? "bg-[var(--color-primary, var(--color-cobalt, #00B0FF))] text-white"
+              ? "bg-[var(--color-primary,var(--color-cobalt,#00B0FF))] text-white"
               : "bg-muted text-muted-foreground"
           )}
         >
@@ -56,7 +56,7 @@ function MfaSetup({
           className={cn(
             "flex size-7 items-center justify-center rounded-full text-xs font-medium",
             step >= 2
-              ? "bg-[var(--color-primary, var(--color-cobalt, #00B0FF))] text-white"
+              ? "bg-[var(--color-primary,var(--color-cobalt,#00B0FF))] text-white"
               : "bg-muted text-muted-foreground"
           )}
         >
@@ -81,7 +81,7 @@ function MfaSetup({
                 aria-label="Copy secret"
               >
                 {copied ? (
-                  <Check className="text-[var(--status-success, var(--color-malachite, #64FFDA))] size-3.5" />
+                  <Check className="size-3.5 text-[var(--status-success,var(--color-malachite,#64FFDA))]" />
                 ) : (
                   <Copy className="size-3.5" />
                 )}
@@ -100,7 +100,7 @@ function MfaSetup({
 
       {step === 2 && (
         <div className="flex flex-col items-center gap-4">
-          <ShieldCheck className="text-[var(--status-success, var(--color-malachite, #64FFDA))] size-8" />
+          <ShieldCheck className="size-8 text-[var(--status-success,var(--color-malachite,#64FFDA))]" />
           <h3 className="text-sm font-medium text-foreground">Enter Verification Code</h3>
           <p className="text-center text-xs text-muted-foreground">
             Enter the 6-digit code from your authenticator app

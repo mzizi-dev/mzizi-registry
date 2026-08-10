@@ -13,7 +13,7 @@ const priorityVariants = cva(
       priority: {
         low: "bg-muted text-muted-foreground",
         medium:
-          "bg-[var(--status-warning, var(--color-gold, #FFD740))]/15 text-[var(--status-warning, var(--color-gold, #FFD740))]",
+          "bg-[var(--status-warning,var(--color-gold,#FFD740))]/15 text-[var(--status-warning,var(--color-gold,#FFD740))]",
         high: "bg-destructive/10 text-destructive",
       },
     },

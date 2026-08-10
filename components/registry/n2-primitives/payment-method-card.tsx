@@ -45,7 +45,7 @@ function PaymentMethodCard({
       data-default={isDefault || undefined}
       className={cn(
         "flex items-center gap-4 rounded-[var(--radius-xl,17px)] bg-card p-4 ring-1 ring-foreground/10 transition-shadow",
-        isDefault && "ring-[var(--color-primary, var(--color-cobalt, #00B0FF))]/40 ring-2",
+        isDefault && "ring-2 ring-[var(--color-primary,var(--color-cobalt,#00B0FF))]/40",
         className
       )}
       {...props}
@@ -62,7 +62,7 @@ function PaymentMethodCard({
       </div>
       <span className="text-xs text-muted-foreground tabular-nums">{expiry}</span>
       {isDefault ? (
-        <span className="bg-[var(--color-primary, var(--color-cobalt, #00B0FF))]/15 text-[var(--color-primary, var(--color-cobalt, #00B0FF))] rounded-full px-2 py-0.5 text-xs font-medium">
+        <span className="rounded-full bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]/15 px-2 py-0.5 text-xs font-medium text-[var(--color-primary,var(--color-cobalt,#00B0FF))]">
           Default
         </span>
       ) : (

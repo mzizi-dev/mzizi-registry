@@ -46,7 +46,7 @@ function StatsCard({
               <span
                 className={cn(
                   "inline-flex items-center gap-0.5",
-                  trend === "up" && "text-[var(--status-success, var(--color-malachite, #64FFDA))]",
+                  trend === "up" && "text-[var(--status-success,var(--color-malachite,#64FFDA))]",
                   trend === "down" && "text-destructive"
                 )}
               >

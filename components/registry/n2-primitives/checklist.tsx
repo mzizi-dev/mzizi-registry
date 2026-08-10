@@ -47,7 +47,7 @@ function Checklist({
       <div className="flex items-center gap-3">
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
           <div
-            className="bg-[var(--status-success, var(--color-malachite, #64FFDA))] h-full rounded-full transition-all duration-300"
+            className="h-full rounded-full bg-[var(--status-success,var(--color-malachite,#64FFDA))] transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>

@@ -9,11 +9,11 @@ interface ChangeGroup {
 
 const typeStyles = {
   added:
-    "bg-[var(--status-success, var(--color-malachite, #64FFDA))]/15 text-[var(--status-success, var(--color-malachite, #64FFDA))]",
+    "bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 text-[var(--status-success,var(--color-malachite,#64FFDA))]",
   changed:
-    "bg-[var(--color-primary, var(--color-cobalt, #00B0FF))]/15 text-[var(--color-primary, var(--color-cobalt, #00B0FF))]",
+    "bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]/15 text-[var(--color-primary,var(--color-cobalt,#00B0FF))]",
   fixed:
-    "bg-[var(--status-warning, var(--color-gold, #FFD740))]/15 text-[var(--status-warning, var(--color-gold, #FFD740))]",
+    "bg-[var(--status-warning,var(--color-gold,#FFD740))]/15 text-[var(--status-warning,var(--color-gold,#FFD740))]",
   removed: "bg-destructive/10 text-destructive",
 } as const
 
