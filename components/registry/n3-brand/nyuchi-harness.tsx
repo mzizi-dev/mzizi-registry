@@ -17,7 +17,7 @@ export interface ScopedLogger {
 }
 
 function createScopedLogger(name: string): ScopedLogger {
-  const prefix = `[nyuchi:${name}]`
+  const prefix = `[mzizi:${name}]`
   /* eslint-disable no-console -- this component IS the console logger the rest
      of the system calls; `debug` and `info` are its own levels, not stray
      debugging left in a component. */
