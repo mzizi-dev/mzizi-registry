@@ -6,9 +6,9 @@ import { Download } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 const statusStyles = {
-  paid: "bg-[var(--status-success, var(--color-malachite, #64FFDA))]/15 text-[var(--status-success, var(--color-malachite, #64FFDA))]",
+  paid: "bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 text-[var(--status-success,var(--color-malachite,#64FFDA))]",
   pending:
-    "bg-[var(--status-warning, var(--color-gold, #FFD740))]/15 text-[var(--status-warning, var(--color-gold, #FFD740))]",
+    "bg-[var(--status-warning,var(--color-gold,#FFD740))]/15 text-[var(--status-warning,var(--color-gold,#FFD740))]",
   overdue: "bg-destructive/10 text-destructive",
 } as const
 

@@ -207,7 +207,7 @@ export async function executeHealingPlan(
    */
   // eslint-disable-next-line no-console
   console.info(
-    `[nyuchi:fundi] Healing complete: ${result.actionsExecuted}/${plan.actions.length} actions succeeded`,
+    `[mzizi:fundi] Healing complete: ${result.actionsExecuted}/${plan.actions.length} actions succeeded`,
     JSON.stringify(result, null, 2)
   )
   return result
@@ -253,10 +253,10 @@ export function FundiProvider({
       onPlanCreated?.(plan)
       // See the note in executeHealingPlan — the log is the artifact.
       // eslint-disable-next-line no-console
-      console.info(`[nyuchi:fundi] Healing plan created: ${plan.reasoning}`)
+      console.info(`[mzizi:fundi] Healing plan created: ${plan.reasoning}`)
 
       if (plan.requiresHumanApproval && !autoHeal) {
-        console.warn("[nyuchi:fundi] Plan requires human approval — waiting")
+        console.warn("[mzizi:fundi] Plan requires human approval — waiting")
         return null
       }
 

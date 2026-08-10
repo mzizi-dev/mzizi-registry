@@ -140,7 +140,7 @@ function OnboardingTour({
             <button
               type="button"
               onClick={onNext}
-              className="bg-[var(--color-primary, var(--color-cobalt, #00B0FF))] hover:bg-[var(--color-primary, var(--color-cobalt, #00B0FF))]/90 rounded-4xl px-3 py-1 text-xs font-medium text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+              className="rounded-4xl bg-[var(--color-primary,var(--color-cobalt,#00B0FF))] px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
             >
               {active === steps.length - 1 ? "Done" : "Next"}
             </button>

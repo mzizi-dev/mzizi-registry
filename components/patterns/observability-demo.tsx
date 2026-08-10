@@ -42,7 +42,7 @@ export function ObservabilityDemo() {
       module: "demo",
       data: { action: "click", target: "basic-log" },
     })
-    addEntry("info", '[mukoko:demo] INFO User clicked the log button { action: "click" }')
+    addEntry("info", '[mzizi:demo] INFO User clicked the log button { action: "click" }')
   }
 
   function handleScopedLogger() {
@@ -53,15 +53,12 @@ export function ObservabilityDemo() {
     logger.warn("Cache miss — fetching from API", {
       data: { location: "Bulawayo" },
     })
-    addEntry("info", '[mukoko:weather] INFO Forecast loaded { location: "Harare", temp: 28 }')
-    addEntry(
-      "warn",
-      '[mukoko:weather] WARN Cache miss — fetching from API { location: "Bulawayo" }'
-    )
+    addEntry("info", '[mzizi:weather] INFO Forecast loaded { location: "Harare", temp: 28 }')
+    addEntry("warn", '[mzizi:weather] WARN Cache miss — fetching from API { location: "Bulawayo" }')
   }
 
   async function handleMeasure() {
-    addEntry("info", "[mukoko:perf] INFO Measuring simulated API call...")
+    addEntry("info", "[mzizi:perf] INFO Measuring simulated API call...")
     const result = await measure(
       "simulated-api-call",
       async () => {
@@ -71,7 +68,7 @@ export function ObservabilityDemo() {
       { module: "demo" }
     )
     const duration = Math.round(Math.random() * 350 + 150)
-    addEntry("info", `[mukoko:demo] INFO simulated-api-call completed in ~${duration}ms`)
+    addEntry("info", `[mzizi:demo] INFO simulated-api-call completed in ~${duration}ms`)
     return result
   }
 
@@ -85,7 +82,7 @@ export function ObservabilityDemo() {
       })
       addEntry(
         "error",
-        '[mukoko:weather] ERROR Failed to parse weather data { endpoint: "/api/forecast", statusCode: 500 }'
+        '[mzizi:weather] ERROR Failed to parse weather data { endpoint: "/api/forecast", statusCode: 500 }'
       )
     }
   }

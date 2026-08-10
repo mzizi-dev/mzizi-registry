@@ -41,7 +41,7 @@ function CodeTabs({
             className={cn(
               "px-4 py-2 text-xs font-medium transition-colors",
               index === activeIndex
-                ? "border-[var(--color-primary, var(--color-cobalt, #00B0FF))] border-b-2 text-foreground"
+                ? "border-b-2 border-[var(--color-primary,var(--color-cobalt,#00B0FF))] text-foreground"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >

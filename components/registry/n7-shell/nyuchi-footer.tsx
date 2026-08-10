@@ -130,7 +130,7 @@ export function NyuchiFooter({
                     rel={link.external ? "noopener noreferrer" : undefined}
                     className={cn(
                       "text-sm text-muted-foreground transition-colors",
-                      "hover:text-[var(--brand-accent,var(--color-primary, #00B0FF))]",
+                      "hover:text-[var(--brand-accent,var(--color-primary,#00B0FF))]",
                       /* L3: A11Y — Focus ring tokens + min touch target */
                       "flex min-h-[48px] items-center",
                       "rounded-[var(--radius-inner,7px)]",

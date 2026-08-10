@@ -345,6 +345,30 @@ function main() {
         }
       }
 
+      // A Tailwind candidate is whitespace-delimited, so an arbitrary value
+      // containing a space is split TWICE: the extractor generates no rule, and
+      // the browser's class-token parser matches no element even where an
+      // identical space-free class elsewhere happened to emit one. The result is
+      // an element with no background, colour or border at all — silent, absent
+      // from every gate, and visible only in a consumer's app. 111 of these
+      // shipped across 39 components before anyone measured it.
+      //
+      // This is an error, not a warning: the failure mode is invisible, so a
+      // warning would be read past exactly like the original was.
+      for (const line of src.split("\n")) {
+        for (const tok of line.split(/\s+/)) {
+          const opened = (tok.match(/\[/g) ?? []).length
+          const closed = (tok.match(/\]/g) ?? []).length
+          if (opened > closed && /[-a-zA-Z0-9_@:./!]*[a-z0-9]-\[/.test(tok)) {
+            err(
+              n,
+              `spaced Tailwind arbitrary value generates no CSS: ${tok.slice(0, 60)}… ` +
+                `— remove the whitespace inside [...] (or use _)`
+            )
+          }
+        }
+      }
+
       // §8.2 touch targets are not checked here — see the note by NOT_SOURCE.
     }
   }

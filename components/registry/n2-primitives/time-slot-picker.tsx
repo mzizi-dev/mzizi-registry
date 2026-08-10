@@ -45,7 +45,7 @@ function TimeSlotPicker({
             className={cn(
               "inline-flex h-10 items-center justify-center rounded-[var(--radius-lg,14px)] text-sm font-medium tabular-nums transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
               isSelected
-                ? "bg-[var(--color-primary, var(--color-cobalt, #00B0FF))] text-white"
+                ? "bg-[var(--color-primary,var(--color-cobalt,#00B0FF))] text-white"
                 : slot.available
                   ? "border border-border bg-input/30 text-foreground hover:bg-input/50"
                   : "cursor-not-allowed bg-muted text-muted-foreground opacity-50"

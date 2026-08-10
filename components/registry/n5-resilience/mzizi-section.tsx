@@ -56,7 +56,7 @@ class SectionBoundary extends React.Component<
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState((s) => ({ errorCount: s.errorCount + 1 }))
     this.props.onError?.(error)
-    console.error(`[nyuchi:${this.props.name}] Section error:`, error, info.componentStack)
+    console.error(`[mzizi:${this.props.name}] Section error:`, error, info.componentStack)
   }
 
   render() {

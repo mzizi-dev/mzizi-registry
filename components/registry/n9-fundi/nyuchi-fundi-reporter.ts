@@ -48,6 +48,31 @@ export interface ReporterConfig {
   onReported?: (report: FundiReport, issueUrl?: string) => void
 }
 
+/* ─── Markdown neutralisation ───────────────────────────────────────────────
+   Every field below originates in a runtime error message, and an error message
+   carries user input whenever user input reaches an exception. GitHub sanitises
+   rendered HTML, so the risk here is not script execution — it is CONTENT
+   FORGERY: a newline plus `---` forges the "Filed by" provenance footer this
+   file appends, and a `|` forges table columns. A triager trusts an automated
+   issue's own footer without checking it, which is exactly what makes a forged
+   one effective.                                                            */
+
+/** Neutralise Markdown structure in an untrusted single-line value. */
+function mdCell(s: string): string {
+  return s.replace(/[\r\n]+/g, " ").replace(/([\\`*_{}[\]()#+\-.!|>])/g, "\\$1")
+}
+
+/** Make a value safe inside a backtick code span (a backtick closes it). */
+function codeSpan(s: string): string {
+  return s.replace(/[\r\n]+/g, " ").replace(/`/g, "'")
+}
+
+/** A URL becomes a link only if it is one; a `)` would terminate it early. */
+function mdLink(label: string, url: string): string {
+  const safe = /^https?:\/\//i.test(url) && !/[()\s]/.test(url)
+  return safe ? `[${mdCell(label)}](${url})` : mdCell(url)
+}
+
 class FundiReporterCore {
   private config: ReporterConfig
   private cooldowns = new Map<string, number>()
@@ -97,24 +122,24 @@ class FundiReporterCore {
       return { queued: true }
     }
 
-    console.warn("[nyuchi:fundi-reporter] No endpoint configured.", report)
+    console.warn("[mzizi:fundi-reporter] No endpoint configured.", report)
     return { queued: false }
   }
 
   private buildIssueBody(r: FundiReport): string {
     let b = "## Component Failure Report\n\n"
     b += `| Field | Value |\n|---|---|\n`
-    b += `| Component | \`${r.component}\` |\n`
+    b += `| Component | \`${codeSpan(r.component)}\` |\n`
     b += `| Node | ${r.node} |\n`
-    b += `| Severity | ${r.severity} |\n`
-    b += `| Error Type | ${r.errorType} |\n`
-    b += `| Source | ${r.source} |\n`
-    if (r.portalUrl) b += `| Portal | [View](${r.portalUrl}) |\n`
-    b += `\n### Description\n\n${r.description}\n`
+    b += `| Severity | ${mdCell(r.severity)} |\n`
+    b += `| Error Type | ${mdCell(r.errorType)} |\n`
+    b += `| Source | ${mdCell(r.source)} |\n`
+    if (r.portalUrl) b += `| Portal | ${mdLink("View", r.portalUrl)} |\n`
+    b += `\n### Description\n\n${mdCell(r.description)}\n`
     if (r.affectedMiniApps?.length)
-      b += `\n### Affected Mini-Apps\n\n${r.affectedMiniApps.join(", ")}\n`
+      b += `\n### Affected Mini-Apps\n\n${r.affectedMiniApps.map(mdCell).join(", ")}\n`
     if (r.blastRadius?.length)
-      b += `\n### Blast Radius\n\n${r.blastRadius.map((c) => `\`${c}\``).join(", ")}\n`
+      b += `\n### Blast Radius\n\n${r.blastRadius.map((c) => `\`${codeSpan(c)}\``).join(", ")}\n`
     if (r.diagnostic)
       b += `\n### Diagnostic\n\n\`\`\`json\n${JSON.stringify(r.diagnostic, null, 2)}\n\`\`\`\n`
     b += "\n---\n*Filed by nyuchi-fundi-reporter (the N8 assurance to N9 fundi bridge)*\n"

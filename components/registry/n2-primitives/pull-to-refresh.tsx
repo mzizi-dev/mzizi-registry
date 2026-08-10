@@ -67,14 +67,14 @@ function PullToRefresh({
         style={{ height: loading ? `${THRESHOLD * 0.6}px` : `${pullDistance}px` }}
       >
         {loading ? (
-          <Loader2 className="text-[var(--color-primary, var(--color-cobalt, #00B0FF))] size-5 animate-spin" />
+          <Loader2 className="size-5 animate-spin text-[var(--color-primary,var(--color-cobalt,#00B0FF))]" />
         ) : (
           <div
             className="flex flex-col items-center gap-1 transition-opacity"
             style={{ opacity: progress }}
           >
             <Loader2
-              className="text-[var(--color-primary, var(--color-cobalt, #00B0FF))] size-5 transition-transform"
+              className="size-5 text-[var(--color-primary,var(--color-cobalt,#00B0FF))] transition-transform"
               style={{ transform: `rotate(${progress * 360}deg)` }}
             />
             {progress >= 1 && (

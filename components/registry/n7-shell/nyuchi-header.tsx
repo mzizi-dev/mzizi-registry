@@ -141,7 +141,7 @@ export function NyuchiHeader({
       {pillActions && pillActions.length > 0 && (
         <div
           data-slot="pill-actions"
-          className="bg-[var(--brand-accent,var(--color-primary, #00B0FF))] flex items-center gap-1 rounded-full p-1"
+          className="flex items-center gap-1 rounded-full bg-[var(--brand-accent,var(--color-primary,#00B0FF))] p-1"
         >
           {pillActions.map((action, i) => {
             const Icon = action.icon

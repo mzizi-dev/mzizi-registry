@@ -110,7 +110,7 @@ function AppSwitcher({ apps = DEFAULT_APPS, currentApp, className }: AppSwitcher
                   "rounded-[var(--radius-inner,7px)]",
                   "hover:bg-muted",
                   isCurrent &&
-                    "bg-[var(--brand-accent,var(--color-primary, #00B0FF))]/10 font-medium",
+                    "bg-[var(--brand-accent,var(--color-primary,#00B0FF))]/10 font-medium",
                   /* L3: A11Y — Min touch target + focus ring */
                   "min-h-[48px]",
                   "focus-visible:outline-[length:var(--focusRing-width,2px)]",

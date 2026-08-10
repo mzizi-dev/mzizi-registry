@@ -161,7 +161,7 @@ export function NyuchiSidebar({
                         className={cn(
                           /* L1: TOKENS — Active state uses brand accent */
                           active &&
-                            "bg-[var(--brand-accent,var(--color-primary, #00B0FF))]/10 text-[var(--brand-accent,var(--color-primary, #00B0FF))]",
+                            "bg-[var(--brand-accent,var(--color-primary,#00B0FF))]/10 text-[var(--brand-accent,var(--color-primary,#00B0FF))]",
                           /* L3: A11y — Focus ring tokens + min touch target */
                           "min-h-[48px]",
                           "focus-visible:outline-[length:var(--focusRing-width,2px)]",
@@ -177,7 +177,7 @@ export function NyuchiSidebar({
 
                       {/* L1: TOKENS — Badge uses mineral accent */}
                       {item.badge != null && (
-                        <SidebarMenuBadge className="bg-[var(--brand-accent,var(--color-primary, #00B0FF))]/15 text-[var(--brand-accent,var(--color-primary, #00B0FF))] font-semibold">
+                        <SidebarMenuBadge className="bg-[var(--brand-accent,var(--color-primary,#00B0FF))]/15 font-semibold text-[var(--brand-accent,var(--color-primary,#00B0FF))]">
                           {item.badge}
                         </SidebarMenuBadge>
                       )}
@@ -194,7 +194,7 @@ export function NyuchiSidebar({
                                   isActive={childActive}
                                   className={cn(
                                     childActive &&
-                                      "text-[var(--brand-accent,var(--color-primary, #00B0FF))]",
+                                      "text-[var(--brand-accent,var(--color-primary,#00B0FF))]",
                                     "min-h-[48px]",
                                     "focus-visible:outline-[length:var(--focusRing-width,2px)]",
                                     "focus-visible:outline-[var(--color-primary)]"

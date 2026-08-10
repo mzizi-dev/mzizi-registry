@@ -31,7 +31,7 @@ function CopyableDetail({ detail }: { detail: React.ReactNode }) {
         aria-label="Copy value"
       >
         {copied ? (
-          <Check className="text-[var(--status-success, var(--color-malachite, #64FFDA))] size-3" />
+          <Check className="size-3 text-[var(--status-success,var(--color-malachite,#64FFDA))]" />
         ) : (
           <Copy className="size-3" />
         )}
