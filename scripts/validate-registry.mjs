@@ -276,6 +276,26 @@ function main() {
     const hasFiles = Array.isArray(item.files) && item.files.length > 0
 
     if (!hasFiles && !isDataItem) err(n, "has no files[] and no cssVars/css — it installs nothing")
+
+    // — a data item must declare its node, because nothing else can —
+    //
+    // Every filed component gets its node from the directory it lives in. A data item has no
+    // directory, so an undeclared node is simply absent, and absent is not neutral: it drops
+    // the item out of `/api/v1/ui?node=N` and out of `mzizi_list_components({ node: N })`.
+    // That is exactly what happened — listing N1 returned the 17 libraries and omitted
+    // `nyuchi-tokens`, the item those libraries and 431 components depend on.
+    if (isDataItem && !hasFiles) {
+      if (typeof item.meta?.node !== "number" || item.meta.node < 1) {
+        err(
+          n,
+          "is a data item with no file, so its node cannot be derived from a directory — " +
+            "declare `meta.node` (a positive integer) or it vanishes from every node-filtered list."
+        )
+      }
+      if (typeof item.meta?.nodeLabel !== "string" || !item.meta.nodeLabel) {
+        err(n, "is a data item with no file — declare `meta.nodeLabel` alongside `meta.node`.")
+      }
+    }
     if (isDataItem && hasFiles) {
       err(
         n,

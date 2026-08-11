@@ -64,6 +64,21 @@ export type RegistryMeta = {
   /** The authored collection, e.g. `primitives`, `brand`, `pages`. */
   collection?: string
   hasDemo?: boolean
+  /**
+   * The node, for a DATA item only — one with `cssVars`/`css` and no file.
+   *
+   * Every other item derives its node from the directory the file lives in, which is what
+   * stops the node disagreeing with where the code actually is. A data item has no
+   * directory, so there is nothing to derive from and the manifest is the only source.
+   *
+   * Declaring it is not cosmetic. Without it `nyuchi-tokens` carried no `node`, so
+   * `/api/v1/ui?node=1` — and `mzizi_list_components({ node: 1 })` on top of it — returned
+   * the 17 N1 libraries and silently omitted the tokens themselves: the one item that IS
+   * N1, and the one every consumer is told to install first.
+   */
+  node?: number
+  /** The node's label, for a DATA item only. See `node` above. */
+  nodeLabel?: string
 }
 
 export type RegistryItem = {
@@ -229,7 +244,15 @@ export function readComponents(): RegistryItem[] {
     // Without this branch the item is dropped here and `/api/v1/ui/nyuchi-tokens` answers
     // 404 — the tokens would be correct in the manifest and invisible to every consumer.
     if (!item.files?.length && (item.cssVars || item.css)) {
-      out.push({ ...item })
+      // The node comes from the manifest here and ONLY here, because there is no directory
+      // to read it from. Every filed component still derives it from disk below, so the
+      // invariant that matters — a component's node cannot disagree with where its code is
+      // — is untouched: an item with no code has no place to disagree with.
+      out.push({
+        ...item,
+        ...(typeof item.meta?.node === "number" ? { node: item.meta.node } : {}),
+        ...(item.meta?.nodeLabel ? { nodeLabel: item.meta.nodeLabel } : {}),
+      })
       continue
     }
 
