@@ -1,0 +1,21 @@
+[package]
+name = "mzizi-discovery"
+description = "Mzizi N11 discovery — the machine-visibility rung: page metadata and Schema.org JSON-LD."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+# No dependencies, matching N8 and N9.
+#
+# `serde_json` is the reflexive one and it is declined for the reason N8 states:
+# these components compile into every consumer, and JSON-LD is a small, fully
+# specified shape. The escaping this node needs is stricter than serde's default
+# anyway — `<`, `>` and `&` must become \u escapes so a caller-supplied string
+# cannot close the <script> element carrying it.
+[dependencies]
