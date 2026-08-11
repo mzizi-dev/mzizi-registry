@@ -11968,6 +11968,55 @@
     },
     {
       "author": "Bundu Foundation, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "baseColor": "neutral",
+      "categories": [
+        "styling-libs"
+      ],
+      "dependencies": [
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge",
+        "lucide-react",
+        "tw-animate-css",
+        "radix-ui"
+      ],
+      "description": "The whole Mzizi design system as one installable foundation. `shadcn init` writes the project configuration — new-york style, lucide icons, neutral base, the @/ aliases every component imports through — installs the runtime packages the registry depends on, and pulls N1's 324 design tokens via nyuchi-tokens. Start a project with this and every one of the other 573 components installs into a project already shaped to receive it.",
+      "docs": "Use it for: Starting a new Nyuchi or Bundu app from zero, Scaffolding by the mzizi CLI (fundi), Giving an agent one command that shapes a project for the registry.\nIncludes: Writes components.json — style, aliases, icon library, base colour, Installs the runtime packages every registry component needs, Pulls all 324 N1 design tokens through nyuchi-tokens, One `shadcn init` instead of manual setup plus N adds.\nAccessibility: Inherits N1's AAA contrast pairings and touch-target tokens.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/mzizi-base",
+      "iconLibrary": "lucide",
+      "meta": {
+        "a11y": [
+          "Inherits N1's AAA contrast pairings and touch-target tokens"
+        ],
+        "collection": "styling-libs",
+        "features": [
+          "Writes components.json — style, aliases, icon library, base colour",
+          "Installs the runtime packages every registry component needs",
+          "Pulls all 324 N1 design tokens through nyuchi-tokens",
+          "One `shadcn init` instead of manual setup plus N adds"
+        ],
+        "node": 1,
+        "nodeLabel": "tokens",
+        "owner": "bundu",
+        "useCases": [
+          "Starting a new Nyuchi or Bundu app from zero",
+          "Scaffolding by the mzizi CLI (fundi)",
+          "Giving an agent one command that shapes a project for the registry"
+        ]
+      },
+      "name": "mzizi-base",
+      "registryDependencies": [
+        "https://mzizi.dev/api/v1/ui/nyuchi-tokens",
+        "https://mzizi.dev/api/v1/ui/utils"
+      ],
+      "style": "new-york",
+      "tailwind": {
+        "baseColor": "neutral"
+      },
+      "title": "mzizi Base",
+      "type": "registry:base"
+    },
+    {
+      "author": "Bundu Foundation, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": [
         "safety"
       ],
