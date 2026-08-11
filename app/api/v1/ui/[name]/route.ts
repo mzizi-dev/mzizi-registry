@@ -61,7 +61,16 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     // A DATA item (registry:theme / registry:style) carries `cssVars`/`css` and no file.
     // Served before the source lookup, because there is no source to look up and the 404
     // below would otherwise hide the design tokens from every consumer.
-    const isDataItem = Boolean(component.cssVars || component.css)
+    // A `registry:base` carries its payload as CONFIG and dependencies, with no cssVars of
+    // its own — `mzizi-base` pulls N1 through registryDependencies rather than duplicating
+    // 324 values. Testing only for cssVars/css would send it down the source path below and
+    // 404 the one item a new project installs first.
+    const isDataItem = Boolean(
+      component.cssVars ||
+      component.css ||
+      component.type === "registry:base" ||
+      component.type === "registry:style"
+    )
     if (isDataItem && !component.files?.length) {
       logger.info("Theme item served", {
         data: { name, cssVarGroups: Object.keys(component.cssVars ?? {}) },
@@ -86,6 +95,13 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
           registryDependencies: component.registryDependencies,
           ...(component.cssVars ? { cssVars: component.cssVars } : {}),
           ...(component.css ? { css: component.css } : {}),
+          // The base's payload IS this config — drop it and `shadcn init mzizi-base`
+          // writes a default components.json, which is the same class of silent-empty
+          // failure as serving a component with no content.
+          ...(component.style ? { style: component.style } : {}),
+          ...(component.iconLibrary ? { iconLibrary: component.iconLibrary } : {}),
+          ...(component.baseColor ? { baseColor: component.baseColor } : {}),
+          ...(component.tailwind ? { tailwind: component.tailwind } : {}),
         },
         { headers: CORS_CACHE }
       )

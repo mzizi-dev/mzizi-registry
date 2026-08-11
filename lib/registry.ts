@@ -116,6 +116,19 @@ export type RegistryItem = {
   }
   /** Raw CSS the item contributes, for rules that are not custom properties. */
   css?: Record<string, unknown>
+  /**
+   * Project configuration, for `registry:base` / `registry:style` items.
+   *
+   * These sit at the TOP LEVEL of a registry item, which is what the published
+   * registry-item schema declares — not inside a `config` object, which is what the docs
+   * example shows. Only the top-level form works: verified against shadcn 4.16.2 by running
+   * a real `init` twice, once per shape. Top level wrote a correct `components.json` and
+   * merged the item's cssVars; nested `config` errored out and merged nothing.
+   */
+  style?: string
+  iconLibrary?: string
+  baseColor?: string
+  tailwind?: Record<string, unknown>
   /** Display name shown by a registry browser and the CLI. */
   title?: string
   categories?: string[]
@@ -143,6 +156,26 @@ export type RegistryItem = {
 }
 
 type Manifest = { items?: RegistryItem[] }
+
+/**
+ * Items whose payload is DATA, not a source file.
+ *
+ * Two kinds, and the distinction is not "has cssVars":
+ *
+ *   registry:theme   the tokens themselves (nyuchi-tokens) — payload is `cssVars`/`css`
+ *   registry:base    a project foundation (mzizi-base)     — payload is the CONFIG
+ *                    (style / iconLibrary / baseColor / tailwind) plus dependencies
+ *
+ * A base legitimately carries no `cssVars` at all: `mzizi-base` pulls N1 through
+ * `registryDependencies: ["nyuchi-tokens"]` rather than duplicating 324 values, because N1
+ * is the only node allowed to define CSS values. Testing for `cssVars` alone would drop it
+ * here and answer 404 for the one item a new project installs first.
+ */
+function isDataItem(item: RegistryItem): boolean {
+  return Boolean(
+    item.cssVars || item.css || item.type === "registry:base" || item.type === "registry:style"
+  )
+}
 
 let _cache: RegistryItem[] | null = null
 
@@ -254,7 +287,7 @@ export function readComponents(): RegistryItem[] {
     //
     // Without this branch the item is dropped here and `/api/v1/ui/nyuchi-tokens` answers
     // 404 — the tokens would be correct in the manifest and invisible to every consumer.
-    if (!item.files?.length && (item.cssVars || item.css)) {
+    if (!item.files?.length && isDataItem(item)) {
       // The node comes from the manifest here and ONLY here, because there is no directory
       // to read it from. Every filed component still derives it from disk below, so the
       // invariant that matters — a component's node cannot disagree with where its code is
