@@ -65,8 +65,16 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       {
         name: component.name,
         description: component.description,
-        layer: component.layer,
-        category: component.category,
+        // `layer` and `category` were served here off `ComponentRow`, a shape this value
+        // has not had since the registry moved to disk — both were always `undefined` and
+        // `JSON.stringify` dropped them, so the payload silently lost two documented keys.
+        // `layer` does not come back under any name: the axis/layer model is retired and
+        // must not be served, nested or relabelled (§9). `node` is the unit that replaced
+        // it, and unlike `layer` it is real — derived from the directory on disk.
+        node: component.node,
+        nodeLabel: component.nodeLabel,
+        owner: component.meta?.owner,
+        collection: component.meta?.collection,
         docs: component.docs ?? null,
         demo: component.demo ?? null,
       },
