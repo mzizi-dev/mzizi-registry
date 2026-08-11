@@ -19112,6 +19112,8 @@
           "Multi-platform generators"
         ],
         "hasDemo": true,
+        "node": 1,
+        "nodeLabel": "tokens",
         "owner": "bundu",
         "useCases": [
           "Design token provider for all Nyuchi apps",
