@@ -6,6 +6,8 @@
  * indexable, and protected by RLS.
  */
 
+import type { RegistryItem } from "@/lib/registry"
+
 // ── Row types (what comes back from Supabase) ───────────────────────
 
 export interface ComponentRow {
@@ -108,7 +110,15 @@ export type ComponentCategory =
 
 // ── Enriched types ──────────────────────────────────────────────────
 
-export interface ComponentWithDocs extends ComponentRow {
+/**
+ * A registry item plus its docs and demo flag.
+ *
+ * Extends `RegistryItem` — what the registry reader actually produces — not `ComponentRow`,
+ * which is the retired Supabase row shape and names `registry_type` where an item has
+ * `type`. Anything typed as `ComponentRow` while holding a registry item can read fields
+ * that are always `undefined` and the compiler will agree with it.
+ */
+export interface ComponentWithDocs extends RegistryItem {
   docs?: ComponentDocRow | null
   demo?: ComponentDemoRow | null
 }

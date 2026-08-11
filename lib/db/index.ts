@@ -37,7 +37,7 @@
  */
 
 import { doctrineRows, readDoctrineSorted, DOCTRINE } from "@/lib/doctrine"
-import { readComponent, readComponents, readNodeCounts } from "@/lib/registry"
+import { readComponent, readComponents, readNodeCounts, type RegistryItem } from "@/lib/registry"
 import { createClient } from "@supabase/supabase-js"
 import type {
   ComponentRow,
@@ -203,9 +203,17 @@ export async function getComponent(name: string): Promise<ComponentRow | null> {
 
 /**
  * Get all components, sorted by name.
+ *
+ * Returns `RegistryItem`, which is what `readComponents()` actually produces. It used to
+ * claim `ComponentRow` — the retired Supabase row shape — through an `as unknown as` cast,
+ * and that cast was not cosmetic: `ComponentRow` names `registry_type` and
+ * `registry_dependencies` where a registry item has `type` and `registryDependencies`, so
+ * `/api/v1/ui` read two fields that do not exist, TypeScript approved, and the index
+ * silently served every item without its `type`. A cast that renames fields is a lie the
+ * compiler is obliged to believe.
  */
-export async function getAllComponents(): Promise<ComponentRow[]> {
-  return readComponents() as unknown as ComponentRow[]
+export async function getAllComponents(): Promise<RegistryItem[]> {
+  return readComponents()
 }
 
 /**
