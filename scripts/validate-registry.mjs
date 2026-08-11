@@ -93,77 +93,29 @@ const LITERAL_COLOUR_DATA = new Set(["color-picker", "caption-editor"])
  * the noise that hid the real findings.
  */
 
-/**
- * Components that genuinely exist upstream at ui.shadcn.com.
+/*
+ * There is deliberately NO allow-list of "real upstream primitives" any more.
  *
- * A bare `registryDependencies` entry is resolved by the CLI against the default
- * registry, so a bare name is CORRECT for these and wrong for anything
- * Mzizi-only. Without this distinction the check fires on `button` and `card`
- * — 657 warnings, none of them actionable — and a gate nobody can act on is a
- * gate everybody ignores.
+ * There was one — `SHADCN_PRIMITIVES`, ~60 names — and the rule beside it said a bare
+ * `registryDependencies` entry is "CORRECT for these and wrong for anything Mzizi-only".
+ * That rule is why 567 edges across 41 names shipped bare, and all 41 of those names are
+ * items in THIS registry.
+ *
+ * The premise was wrong. A bare name does not mean "take the upstream one where an upstream
+ * one exists" — the CLI resolves every bare name against ui.shadcn.com, full stop. So
+ * installing `nyuchi-listing-card` from production pulled shadcn's badge (1776 B), card
+ * (1987 B) and avatar (2916 B) instead of ours (1909 / 4306 / 3429): a brand component
+ * standing on stock primitives, with no mineral tokens and no pill buttons, and nothing
+ * anywhere reported a problem.
+ *
+ * Mzizi HAS its own button, card, badge, input, avatar and so on. If the registry ships
+ * them, they are what a consumer of the registry must get. So there is no such thing as a
+ * name we are happy to hand to another registry, and no list to maintain.
+ *
+ * The addressable forms are an absolute URL (works everywhere, what the manifest uses now)
+ * and `@mzizi/<name>` (pinnable, needs a `registries` mapping in the consumer's
+ * components.json — which a registry:base cannot write, so the CLI and template app do it).
  */
-const SHADCN_PRIMITIVES = new Set([
-  "accordion",
-  "alert",
-  "alert-dialog",
-  "aspect-ratio",
-  "avatar",
-  "badge",
-  "breadcrumb",
-  "button",
-  "button-group",
-  "calendar",
-  "card",
-  "carousel",
-  "chart",
-  "checkbox",
-  "collapsible",
-  "combobox",
-  "command",
-  "context-menu",
-  "data-table",
-  "date-picker",
-  "dialog",
-  "drawer",
-  "dropdown-menu",
-  "empty",
-  "field",
-  "form",
-  "hover-card",
-  "input",
-  "input-group",
-  "input-otp",
-  "item",
-  "kbd",
-  "label",
-  "menubar",
-  "navigation-menu",
-  "pagination",
-  "popover",
-  "progress",
-  "radio-group",
-  "resizable",
-  "scroll-area",
-  "select",
-  "separator",
-  "sheet",
-  "sidebar",
-  "skeleton",
-  "slider",
-  "sonner",
-  "spinner",
-  "switch",
-  "table",
-  "tabs",
-  "textarea",
-  "toast",
-  "toggle",
-  "toggle-group",
-  "tooltip",
-  "typography",
-  "utils",
-  "use-mobile",
-])
 
 const errors = []
 const warnings = []
@@ -439,15 +391,26 @@ function main() {
         }
         continue
       }
-      // A bare name resolves against ui.shadcn.com. That is correct for a real
-      // upstream primitive and broken for anything Mzizi-only, which will 404.
-      if (SHADCN_PRIMITIVES.has(dep)) continue
+      // A bare name resolves against ui.shadcn.com — ALWAYS, including when this registry
+      // has an item by that name. That used to be treated as correct for the ~60 "real
+      // upstream primitives", and it is the rule that produced the defect below.
+      //
+      // 567 edges across 41 names were bare, and all 41 are items here. Measured against
+      // production: installing `nyuchi-listing-card` pulled shadcn's badge (1776 B), card
+      // (1987 B) and avatar (2916 B) instead of ours (1909 / 4306 / 3429). The brand
+      // component landed on stock primitives — no mineral tokens, no pill buttons — and
+      // nothing errored, because a well-formed component from the wrong registry looks
+      // exactly like a well-formed component.
+      //
+      // So a bare name for one of OUR items is an error, not a warning: a warning is what
+      // this check emitted before, and 567 edges shipped anyway.
       if (names.has(dep)) {
-        warn(
+        err(
           n,
-          `registryDependencies "${dep}" is a bare name, but "${dep}" is Mzizi-only — it does ` +
-            `not exist at ui.shadcn.com, which is where the CLI will look. ` +
-            `Use https://mzizi.dev/api/v1/ui/${dep}`
+          `registryDependencies "${dep}" is a bare name and "${dep}" is an item in THIS ` +
+            `registry — the CLI resolves bare names against ui.shadcn.com, so a consumer ` +
+            `gets shadcn's ${dep}, not ours. Use https://mzizi.dev/api/v1/ui/${dep} (or ` +
+            `"@mzizi/${dep}" once consumers carry the registries mapping).`
         )
       } else {
         err(

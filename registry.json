@@ -192,7 +192,7 @@
       },
       "name": "address-input",
       "registryDependencies": [
-        "input"
+        "https://mzizi.dev/api/v1/ui/input"
       ],
       "title": "Address Input",
       "type": "registry:ui"
@@ -563,7 +563,7 @@
       },
       "name": "alert-dialog",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Alert Dialog",
       "type": "registry:ui"
@@ -606,8 +606,8 @@
       },
       "name": "analytics-dashboard-card",
       "registryDependencies": [
-        "card",
-        "chart"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Analytics Dashboard Card",
       "type": "registry:ui"
@@ -698,9 +698,9 @@
       },
       "name": "ancestry-memorial",
       "registryDependencies": [
-        "card",
-        "avatar",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Ancestry Memorial",
       "type": "registry:ui"
@@ -878,8 +878,8 @@
       },
       "name": "api-usage-meter",
       "registryDependencies": [
-        "card",
-        "progress"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/progress"
       ],
       "title": "API Usage Meter",
       "type": "registry:ui"
@@ -929,8 +929,8 @@
       },
       "name": "app-switcher",
       "registryDependencies": [
-        "popover",
-        "button",
+        "https://mzizi.dev/api/v1/ui/popover",
+        "https://mzizi.dev/api/v1/ui/button",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "App Switcher",
@@ -974,10 +974,10 @@
       },
       "name": "appointment-card",
       "registryDependencies": [
-        "card",
-        "avatar",
-        "button",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Appointment Card",
       "type": "registry:ui"
@@ -1022,7 +1022,7 @@
       },
       "name": "arc-gauge",
       "registryDependencies": [
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "Arc Gauge",
       "type": "registry:ui"
@@ -1200,9 +1200,9 @@
       },
       "name": "assignee-picker",
       "registryDependencies": [
-        "combobox",
-        "avatar",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/combobox",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Assignee Picker",
       "type": "registry:ui"
@@ -1374,9 +1374,9 @@
       },
       "name": "author-bio-card",
       "registryDependencies": [
-        "card",
-        "avatar",
-        "button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/button",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "title": "Author Bio Card",
@@ -1609,8 +1609,8 @@
       },
       "name": "batch-action-bar",
       "registryDependencies": [
-        "button-group",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/button-group",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Batch Action Bar",
       "type": "registry:ui"
@@ -1756,7 +1756,7 @@
       },
       "name": "booking-calendar",
       "registryDependencies": [
-        "calendar",
+        "https://mzizi.dev/api/v1/ui/calendar",
         "https://mzizi.dev/api/v1/ui/time-slot-picker"
       ],
       "title": "Booking Calendar",
@@ -1802,10 +1802,10 @@
       },
       "name": "booking-confirmation",
       "registryDependencies": [
-        "card",
-        "button",
-        "separator",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/separator",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Booking Confirmation",
       "type": "registry:ui"
@@ -1900,7 +1900,7 @@
       },
       "name": "bottom-sheet",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Bottom Sheet",
       "type": "registry:ui"
@@ -2108,7 +2108,7 @@
       },
       "name": "button-group",
       "registryDependencies": [
-        "separator"
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Button Group",
       "type": "registry:ui"
@@ -2159,7 +2159,7 @@
       },
       "name": "calendar",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Calendar",
       "type": "registry:ui"
@@ -2247,7 +2247,7 @@
       },
       "name": "calendar-month-view",
       "registryDependencies": [
-        "calendar"
+        "https://mzizi.dev/api/v1/ui/calendar"
       ],
       "title": "Calendar Month View",
       "type": "registry:ui"
@@ -2334,7 +2334,7 @@
       },
       "name": "camera-viewfinder",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Camera Viewfinder",
       "type": "registry:ui"
@@ -2424,7 +2424,7 @@
       },
       "name": "caption-editor",
       "registryDependencies": [
-        "input",
+        "https://mzizi.dev/api/v1/ui/input",
         "https://mzizi.dev/api/v1/ui/color-picker"
       ],
       "title": "Caption Editor",
@@ -2524,7 +2524,7 @@
       },
       "name": "carousel",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Carousel",
       "type": "registry:ui"
@@ -2739,7 +2739,7 @@
       },
       "name": "chapter-list",
       "registryDependencies": [
-        "accordion"
+        "https://mzizi.dev/api/v1/ui/accordion"
       ],
       "title": "Chapter List",
       "type": "registry:ui"
@@ -2782,7 +2782,7 @@
       },
       "name": "chapter-reader",
       "registryDependencies": [
-        "scroll-area"
+        "https://mzizi.dev/api/v1/ui/scroll-area"
       ],
       "title": "Chapter Reader",
       "type": "registry:ui"
@@ -2875,7 +2875,7 @@
       },
       "name": "chart-area-axes",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Axes",
       "type": "registry:block"
@@ -2923,7 +2923,7 @@
       },
       "name": "chart-area-default",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Default",
       "type": "registry:block"
@@ -2971,7 +2971,7 @@
       },
       "name": "chart-area-gradient",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Gradient",
       "type": "registry:block"
@@ -3019,7 +3019,7 @@
       },
       "name": "chart-area-icons",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Icons",
       "type": "registry:block"
@@ -3067,7 +3067,7 @@
       },
       "name": "chart-area-interactive",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Interactive",
       "type": "registry:block"
@@ -3115,7 +3115,7 @@
       },
       "name": "chart-area-legend",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Legend",
       "type": "registry:block"
@@ -3163,7 +3163,7 @@
       },
       "name": "chart-area-linear",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Linear",
       "type": "registry:block"
@@ -3211,7 +3211,7 @@
       },
       "name": "chart-area-stacked",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Stacked",
       "type": "registry:block"
@@ -3259,7 +3259,7 @@
       },
       "name": "chart-area-stacked-expand",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Stacked Expand",
       "type": "registry:block"
@@ -3307,7 +3307,7 @@
       },
       "name": "chart-area-step",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Area Step",
       "type": "registry:block"
@@ -3355,7 +3355,7 @@
       },
       "name": "chart-bar-active",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Active",
       "type": "registry:block"
@@ -3403,7 +3403,7 @@
       },
       "name": "chart-bar-default",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Default",
       "type": "registry:block"
@@ -3451,7 +3451,7 @@
       },
       "name": "chart-bar-horizontal",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Horizontal",
       "type": "registry:block"
@@ -3499,7 +3499,7 @@
       },
       "name": "chart-bar-interactive",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Interactive",
       "type": "registry:block"
@@ -3547,7 +3547,7 @@
       },
       "name": "chart-bar-label",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Label",
       "type": "registry:block"
@@ -3595,7 +3595,7 @@
       },
       "name": "chart-bar-label-custom",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Label Custom",
       "type": "registry:block"
@@ -3643,7 +3643,7 @@
       },
       "name": "chart-bar-mixed",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Mixed",
       "type": "registry:block"
@@ -3691,7 +3691,7 @@
       },
       "name": "chart-bar-multiple",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Multiple",
       "type": "registry:block"
@@ -3739,7 +3739,7 @@
       },
       "name": "chart-bar-negative",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Negative",
       "type": "registry:block"
@@ -3787,7 +3787,7 @@
       },
       "name": "chart-bar-stacked",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Bar Stacked",
       "type": "registry:block"
@@ -3835,7 +3835,7 @@
       },
       "name": "chart-line-default",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Default",
       "type": "registry:block"
@@ -3883,7 +3883,7 @@
       },
       "name": "chart-line-dots",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Dots",
       "type": "registry:block"
@@ -3931,7 +3931,7 @@
       },
       "name": "chart-line-dots-colors",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Dots Colors",
       "type": "registry:block"
@@ -3979,7 +3979,7 @@
       },
       "name": "chart-line-dots-custom",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Dots Custom",
       "type": "registry:block"
@@ -4027,7 +4027,7 @@
       },
       "name": "chart-line-interactive",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Interactive",
       "type": "registry:block"
@@ -4075,7 +4075,7 @@
       },
       "name": "chart-line-label",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Label",
       "type": "registry:block"
@@ -4123,7 +4123,7 @@
       },
       "name": "chart-line-label-custom",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Label Custom",
       "type": "registry:block"
@@ -4171,7 +4171,7 @@
       },
       "name": "chart-line-linear",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Linear",
       "type": "registry:block"
@@ -4219,7 +4219,7 @@
       },
       "name": "chart-line-multiple",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Multiple",
       "type": "registry:block"
@@ -4267,7 +4267,7 @@
       },
       "name": "chart-line-step",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Line Step",
       "type": "registry:block"
@@ -4315,7 +4315,7 @@
       },
       "name": "chart-pie-donut",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Donut",
       "type": "registry:block"
@@ -4363,7 +4363,7 @@
       },
       "name": "chart-pie-donut-active",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Donut Active",
       "type": "registry:block"
@@ -4411,7 +4411,7 @@
       },
       "name": "chart-pie-donut-text",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Donut Text",
       "type": "registry:block"
@@ -4459,7 +4459,7 @@
       },
       "name": "chart-pie-interactive",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Interactive",
       "type": "registry:block"
@@ -4507,7 +4507,7 @@
       },
       "name": "chart-pie-label",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Label",
       "type": "registry:block"
@@ -4555,7 +4555,7 @@
       },
       "name": "chart-pie-label-custom",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Label Custom",
       "type": "registry:block"
@@ -4603,7 +4603,7 @@
       },
       "name": "chart-pie-label-list",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Label List",
       "type": "registry:block"
@@ -4651,7 +4651,7 @@
       },
       "name": "chart-pie-legend",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Legend",
       "type": "registry:block"
@@ -4699,7 +4699,7 @@
       },
       "name": "chart-pie-separator-none",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Separator None",
       "type": "registry:block"
@@ -4747,7 +4747,7 @@
       },
       "name": "chart-pie-simple",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Simple",
       "type": "registry:block"
@@ -4795,7 +4795,7 @@
       },
       "name": "chart-pie-stacked",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Pie Stacked",
       "type": "registry:block"
@@ -4843,7 +4843,7 @@
       },
       "name": "chart-radar-default",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Default",
       "type": "registry:block"
@@ -4891,7 +4891,7 @@
       },
       "name": "chart-radar-dots",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Dots",
       "type": "registry:block"
@@ -4939,7 +4939,7 @@
       },
       "name": "chart-radar-grid-circle",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Grid Circle",
       "type": "registry:block"
@@ -4987,7 +4987,7 @@
       },
       "name": "chart-radar-grid-circle-fill",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Grid Circle Fill",
       "type": "registry:block"
@@ -5035,7 +5035,7 @@
       },
       "name": "chart-radar-grid-circle-no-lines",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Grid Circle No Lines",
       "type": "registry:block"
@@ -5083,7 +5083,7 @@
       },
       "name": "chart-radar-grid-custom",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Grid Custom",
       "type": "registry:block"
@@ -5131,7 +5131,7 @@
       },
       "name": "chart-radar-grid-fill",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Grid Fill",
       "type": "registry:block"
@@ -5179,7 +5179,7 @@
       },
       "name": "chart-radar-grid-none",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Grid None",
       "type": "registry:block"
@@ -5227,7 +5227,7 @@
       },
       "name": "chart-radar-icons",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Icons",
       "type": "registry:block"
@@ -5275,7 +5275,7 @@
       },
       "name": "chart-radar-label-custom",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Label Custom",
       "type": "registry:block"
@@ -5323,7 +5323,7 @@
       },
       "name": "chart-radar-legend",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Legend",
       "type": "registry:block"
@@ -5371,7 +5371,7 @@
       },
       "name": "chart-radar-lines-only",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Lines Only",
       "type": "registry:block"
@@ -5419,7 +5419,7 @@
       },
       "name": "chart-radar-multiple",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Multiple",
       "type": "registry:block"
@@ -5467,7 +5467,7 @@
       },
       "name": "chart-radar-radius",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radar Radius",
       "type": "registry:block"
@@ -5515,7 +5515,7 @@
       },
       "name": "chart-radial-grid",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radial Grid",
       "type": "registry:block"
@@ -5563,7 +5563,7 @@
       },
       "name": "chart-radial-label",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radial Label",
       "type": "registry:block"
@@ -5611,7 +5611,7 @@
       },
       "name": "chart-radial-shape",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radial Shape",
       "type": "registry:block"
@@ -5659,7 +5659,7 @@
       },
       "name": "chart-radial-simple",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radial Simple",
       "type": "registry:block"
@@ -5707,7 +5707,7 @@
       },
       "name": "chart-radial-stacked",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radial Stacked",
       "type": "registry:block"
@@ -5755,7 +5755,7 @@
       },
       "name": "chart-radial-text",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Radial Text",
       "type": "registry:block"
@@ -5803,7 +5803,7 @@
       },
       "name": "chart-tooltip-advanced",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Tooltip Advanced",
       "type": "registry:block"
@@ -5851,7 +5851,7 @@
       },
       "name": "chart-tooltip-default",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Tooltip Default",
       "type": "registry:block"
@@ -5899,7 +5899,7 @@
       },
       "name": "chart-tooltip-formatter",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Tooltip Formatter",
       "type": "registry:block"
@@ -5947,7 +5947,7 @@
       },
       "name": "chart-tooltip-icons",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Tooltip Icons",
       "type": "registry:block"
@@ -5995,7 +5995,7 @@
       },
       "name": "chart-tooltip-indicator-line",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Tooltip Indicator Line",
       "type": "registry:block"
@@ -6043,7 +6043,7 @@
       },
       "name": "chart-tooltip-indicator-none",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Tooltip Indicator None",
       "type": "registry:block"
@@ -6091,7 +6091,7 @@
       },
       "name": "chart-tooltip-label-custom",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Tooltip Label Custom",
       "type": "registry:block"
@@ -6139,7 +6139,7 @@
       },
       "name": "chart-tooltip-label-formatter",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Tooltip Label Formatter",
       "type": "registry:block"
@@ -6187,7 +6187,7 @@
       },
       "name": "chart-tooltip-label-none",
       "registryDependencies": [
-        "chart"
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Chart Tooltip Label None",
       "type": "registry:block"
@@ -6641,7 +6641,7 @@
       "name": "co-author-strip",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/avatar-group",
-        "tooltip"
+        "https://mzizi.dev/api/v1/ui/tooltip"
       ],
       "title": "Co Author Strip",
       "type": "registry:ui"
@@ -6867,7 +6867,7 @@
       },
       "name": "color-picker",
       "registryDependencies": [
-        "input"
+        "https://mzizi.dev/api/v1/ui/input"
       ],
       "title": "Color Picker",
       "type": "registry:ui"
@@ -6917,8 +6917,8 @@
       },
       "name": "combobox",
       "registryDependencies": [
-        "button",
-        "input-group"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/input-group"
       ],
       "title": "Combobox",
       "type": "registry:ui"
@@ -6967,8 +6967,8 @@
       },
       "name": "command",
       "registryDependencies": [
-        "dialog",
-        "input-group"
+        "https://mzizi.dev/api/v1/ui/dialog",
+        "https://mzizi.dev/api/v1/ui/input-group"
       ],
       "title": "Command",
       "type": "registry:ui"
@@ -7015,7 +7015,7 @@
       },
       "name": "command-center",
       "registryDependencies": [
-        "command"
+        "https://mzizi.dev/api/v1/ui/command"
       ],
       "title": "Command Center",
       "type": "registry:block"
@@ -7059,9 +7059,9 @@
       },
       "name": "comment-on-paragraph",
       "registryDependencies": [
-        "popover",
-        "textarea",
-        "avatar"
+        "https://mzizi.dev/api/v1/ui/popover",
+        "https://mzizi.dev/api/v1/ui/textarea",
+        "https://mzizi.dev/api/v1/ui/avatar"
       ],
       "title": "Comment On Paragraph",
       "type": "registry:ui"
@@ -7237,8 +7237,8 @@
       "name": "content-calendar",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/calendar-week-view",
-        "card",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Content Calendar",
       "type": "registry:ui"
@@ -7330,8 +7330,8 @@
       },
       "name": "contrast-mode-toggle",
       "registryDependencies": [
-        "toggle-group",
-        "button"
+        "https://mzizi.dev/api/v1/ui/toggle-group",
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Contrast Mode Toggle",
       "type": "registry:ui"
@@ -7422,7 +7422,7 @@
       },
       "name": "copy-button",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Copy Button",
       "type": "registry:ui"
@@ -7464,8 +7464,8 @@
       },
       "name": "currency-input",
       "registryDependencies": [
-        "input",
-        "select"
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/select"
       ],
       "title": "Currency Input",
       "type": "registry:ui"
@@ -7509,11 +7509,11 @@
       },
       "name": "dao-proposal-card",
       "registryDependencies": [
-        "card",
-        "progress",
-        "badge",
-        "button",
-        "avatar"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/progress",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/avatar"
       ],
       "title": "Dao Proposal Card",
       "type": "registry:ui"
@@ -7562,10 +7562,10 @@
       },
       "name": "dashboard-01",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Dashboard 01",
       "type": "registry:block"
@@ -7660,10 +7660,10 @@
       },
       "name": "data-table",
       "registryDependencies": [
-        "button",
-        "dropdown-menu",
-        "input",
-        "table"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/dropdown-menu",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/table"
       ],
       "title": "Data Table",
       "type": "registry:ui"
@@ -7704,7 +7704,7 @@
       },
       "name": "date-label",
       "registryDependencies": [
-        "tooltip"
+        "https://mzizi.dev/api/v1/ui/tooltip"
       ],
       "title": "Date Label",
       "type": "registry:ui"
@@ -7753,9 +7753,9 @@
       },
       "name": "date-picker",
       "registryDependencies": [
-        "button",
-        "calendar",
-        "popover"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/calendar",
+        "https://mzizi.dev/api/v1/ui/popover"
       ],
       "title": "Date Picker",
       "type": "registry:ui"
@@ -7886,8 +7886,8 @@
       },
       "name": "deployment-status-card",
       "registryDependencies": [
-        "card",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/status-indicator"
       ],
       "title": "Deployment Status Card",
@@ -7984,7 +7984,7 @@
       },
       "name": "dialog",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Dialog",
       "type": "registry:ui"
@@ -8162,8 +8162,8 @@
       },
       "name": "driver-profile-card",
       "registryDependencies": [
-        "card",
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/rating",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
@@ -8307,7 +8307,7 @@
       },
       "name": "empty-state",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Empty State",
       "type": "registry:block"
@@ -8489,7 +8489,7 @@
       },
       "name": "error-page",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Error Page",
       "type": "registry:block"
@@ -8533,8 +8533,8 @@
       "name": "escrow-status",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/stepper",
-        "card",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Escrow Status",
       "type": "registry:ui"
@@ -8576,7 +8576,7 @@
       },
       "name": "event-block",
       "registryDependencies": [
-        "badge"
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Event Block",
       "type": "registry:ui"
@@ -8620,9 +8620,9 @@
       },
       "name": "event-rsvp-inline",
       "registryDependencies": [
-        "card",
-        "button-group",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button-group",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Event Rsvp Inline",
       "type": "registry:ui"
@@ -8664,7 +8664,7 @@
       },
       "name": "exchange-rate",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/currency-input"
       ],
       "title": "Exchange Rate",
@@ -8751,8 +8751,8 @@
       },
       "name": "fare-calculator",
       "registryDependencies": [
-        "card",
-        "separator",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/separator",
         "https://mzizi.dev/api/v1/ui/currency-input"
       ],
       "title": "Fare Calculator",
@@ -8796,9 +8796,9 @@
       },
       "name": "feature-flag-toggle",
       "registryDependencies": [
-        "switch",
-        "slider",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/switch",
+        "https://mzizi.dev/api/v1/ui/slider",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Feature Flag Toggle",
       "type": "registry:ui"
@@ -8848,8 +8848,8 @@
       },
       "name": "field",
       "registryDependencies": [
-        "label",
-        "separator"
+        "https://mzizi.dev/api/v1/ui/label",
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Field",
       "type": "registry:ui"
@@ -8941,7 +8941,7 @@
       },
       "name": "file-upload",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "File Upload",
       "type": "registry:ui"
@@ -8989,8 +8989,8 @@
       },
       "name": "filter-bar",
       "registryDependencies": [
-        "badge",
-        "button"
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Filter Bar",
       "type": "registry:ui"
@@ -9034,9 +9034,9 @@
       },
       "name": "font-settings-panel",
       "registryDependencies": [
-        "slider",
-        "radio-group",
-        "card"
+        "https://mzizi.dev/api/v1/ui/slider",
+        "https://mzizi.dev/api/v1/ui/radio-group",
+        "https://mzizi.dev/api/v1/ui/card"
       ],
       "title": "Font Settings Panel",
       "type": "registry:ui"
@@ -9087,7 +9087,7 @@
       },
       "name": "form",
       "registryDependencies": [
-        "label"
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Form",
       "type": "registry:ui"
@@ -9128,7 +9128,7 @@
       },
       "name": "gas-estimator",
       "registryDependencies": [
-        "card"
+        "https://mzizi.dev/api/v1/ui/card"
       ],
       "title": "Gas Estimator",
       "type": "registry:ui"
@@ -9171,9 +9171,9 @@
       },
       "name": "group-info-card",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/avatar-group",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Group Info Card",
       "type": "registry:ui"
@@ -9258,9 +9258,9 @@
       },
       "name": "health-record-summary",
       "registryDependencies": [
-        "card",
-        "accordion",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/accordion",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Health Record Summary",
       "type": "registry:ui"
@@ -9303,7 +9303,7 @@
       },
       "name": "horizontal-scroll",
       "registryDependencies": [
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "Horizontal Scroll",
       "type": "registry:ui"
@@ -9486,7 +9486,7 @@
       },
       "name": "info-row",
       "registryDependencies": [
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "Info Row",
       "type": "registry:ui"
@@ -9677,9 +9677,9 @@
       },
       "name": "input-group",
       "registryDependencies": [
-        "button",
-        "input",
-        "textarea"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/textarea"
       ],
       "title": "Input Group",
       "type": "registry:ui"
@@ -9769,7 +9769,7 @@
       },
       "name": "invite-link",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/copy-button"
       ],
       "title": "Invite Link",
@@ -9867,7 +9867,7 @@
       },
       "name": "item",
       "registryDependencies": [
-        "separator"
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Item",
       "type": "registry:ui"
@@ -9912,8 +9912,8 @@
       "name": "itinerary-timeline",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/timeline",
-        "badge",
-        "separator"
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Itinerary Timeline",
       "type": "registry:ui"
@@ -10221,8 +10221,8 @@
       },
       "name": "language-switcher",
       "registryDependencies": [
-        "select",
-        "button"
+        "https://mzizi.dev/api/v1/ui/select",
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Language Switcher",
       "type": "registry:ui"
@@ -10267,7 +10267,7 @@
       },
       "name": "lazy-section",
       "registryDependencies": [
-        "use-mobile",
+        "https://mzizi.dev/api/v1/ui/use-mobile",
         "https://mzizi.dev/api/v1/ui/observability"
       ],
       "title": "Lazy Section",
@@ -10404,7 +10404,7 @@
       "name": "location-picker",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/map-view",
-        "input"
+        "https://mzizi.dev/api/v1/ui/input"
       ],
       "title": "Location Picker",
       "type": "registry:ui"
@@ -10450,7 +10450,7 @@
       "name": "location-share",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/map-view",
-        "card"
+        "https://mzizi.dev/api/v1/ui/card"
       ],
       "title": "Location Share",
       "type": "registry:ui"
@@ -10534,10 +10534,10 @@
       },
       "name": "login-01",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Login 01",
@@ -10579,10 +10579,10 @@
       },
       "name": "login-02",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Login 02",
@@ -10624,10 +10624,10 @@
       },
       "name": "login-03",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Login 03",
@@ -10669,10 +10669,10 @@
       },
       "name": "login-04",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Login 04",
@@ -10714,10 +10714,10 @@
       },
       "name": "login-05",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Login 05",
@@ -10850,7 +10850,7 @@
       "name": "map-card",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/map-view",
-        "card"
+        "https://mzizi.dev/api/v1/ui/card"
       ],
       "title": "Map Card",
       "type": "registry:ui"
@@ -11249,7 +11249,7 @@
       },
       "name": "media-filter-strip",
       "registryDependencies": [
-        "scroll-area"
+        "https://mzizi.dev/api/v1/ui/scroll-area"
       ],
       "title": "Media Filter Strip",
       "type": "registry:ui"
@@ -11336,10 +11336,10 @@
       },
       "name": "medication-reminder",
       "registryDependencies": [
-        "card",
-        "badge",
-        "button",
-        "progress"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/progress"
       ],
       "title": "Medication Reminder",
       "type": "registry:ui"
@@ -11388,8 +11388,8 @@
       },
       "name": "mega-menu",
       "registryDependencies": [
-        "popover",
-        "button"
+        "https://mzizi.dev/api/v1/ui/popover",
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Mega Menu",
       "type": "registry:ui"
@@ -11433,8 +11433,8 @@
       },
       "name": "member-list",
       "registryDependencies": [
-        "avatar",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/search-bar",
         "https://mzizi.dev/api/v1/ui/virtual-list"
       ],
@@ -11706,8 +11706,8 @@
       },
       "name": "mobile-money-selector",
       "registryDependencies": [
-        "card",
-        "radio-group"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/radio-group"
       ],
       "title": "Mobile Money Selector",
       "type": "registry:ui"
@@ -11748,10 +11748,10 @@
       },
       "name": "moderation-queue-item",
       "registryDependencies": [
-        "card",
-        "button-group",
-        "badge",
-        "avatar"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button-group",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/avatar"
       ],
       "title": "Moderation Queue Item",
       "type": "registry:ui"
@@ -12229,7 +12229,7 @@
       "name": "mzizi-content-gate",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "mzizi Content Gate",
       "type": "registry:ui"
@@ -12450,8 +12450,8 @@
       },
       "name": "mzizi-error-set",
       "registryDependencies": [
-        "button",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -12886,7 +12886,7 @@
       "name": "mzizi-permission-gate",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "mzizi Permission Gate",
       "type": "registry:ui"
@@ -13108,7 +13108,7 @@
       "name": "mzizi-section",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
-        "utils",
+        "https://mzizi.dev/api/v1/ui/utils",
         "https://mzizi.dev/api/v1/ui/error-boundary",
         "https://mzizi.dev/api/v1/ui/section-error-boundary"
       ],
@@ -13164,7 +13164,7 @@
       },
       "name": "mzizi-skeleton-set",
       "registryDependencies": [
-        "skeleton",
+        "https://mzizi.dev/api/v1/ui/skeleton",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "mzizi Skeleton Set",
@@ -13297,7 +13297,7 @@
       "name": "mzizi-trust-gate",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "mzizi Trust Gate",
       "type": "registry:ui"
@@ -13529,9 +13529,9 @@
       },
       "name": "nft-card",
       "registryDependencies": [
-        "card",
-        "badge",
-        "button"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Nft Card",
       "type": "registry:ui"
@@ -13574,10 +13574,10 @@
       },
       "name": "node-status-card",
       "registryDependencies": [
-        "card",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/status-indicator",
-        "progress"
+        "https://mzizi.dev/api/v1/ui/progress"
       ],
       "title": "Node Status Card",
       "type": "registry:ui"
@@ -13666,7 +13666,7 @@
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/rich-text-editor",
         "https://mzizi.dev/api/v1/ui/tag-input",
-        "input"
+        "https://mzizi.dev/api/v1/ui/input"
       ],
       "title": "Note Editor",
       "type": "registry:ui"
@@ -13714,10 +13714,10 @@
       },
       "name": "notification-bell",
       "registryDependencies": [
-        "button",
-        "popover",
-        "scroll-area",
-        "separator"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/popover",
+        "https://mzizi.dev/api/v1/ui/scroll-area",
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Notification Bell",
       "type": "registry:ui"
@@ -13764,12 +13764,12 @@
       },
       "name": "notification-center",
       "registryDependencies": [
-        "badge",
-        "button",
-        "card",
-        "scroll-area",
-        "separator",
-        "tabs"
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/scroll-area",
+        "https://mzizi.dev/api/v1/ui/separator",
+        "https://mzizi.dev/api/v1/ui/tabs"
       ],
       "title": "Notification Center",
       "type": "registry:block"
@@ -13908,8 +13908,8 @@
       },
       "name": "novel-cover",
       "registryDependencies": [
-        "card",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/rating"
       ],
       "title": "Novel Cover",
@@ -13958,7 +13958,7 @@
       },
       "name": "number-input",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Number Input",
       "type": "registry:ui"
@@ -14052,7 +14052,7 @@
       },
       "name": "nyuchi-action-sheet",
       "registryDependencies": [
-        "sheet",
+        "https://mzizi.dev/api/v1/ui/sheet",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Action Sheet",
@@ -14145,7 +14145,7 @@
       },
       "name": "nyuchi-alert-banner",
       "registryDependencies": [
-        "alert",
+        "https://mzizi.dev/api/v1/ui/alert",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Alert Banner",
@@ -14191,7 +14191,7 @@
       },
       "name": "nyuchi-application-tracker",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Application Tracker",
@@ -14243,7 +14243,7 @@
       "name": "nyuchi-article-card",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -14298,7 +14298,7 @@
       "name": "nyuchi-auth-card",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "nyuchi Auth Card",
       "type": "registry:ui"
@@ -14395,7 +14395,7 @@
       },
       "name": "nyuchi-avatar-stack",
       "registryDependencies": [
-        "avatar"
+        "https://mzizi.dev/api/v1/ui/avatar"
       ],
       "title": "nyuchi Avatar Stack",
       "type": "registry:ui"
@@ -14444,8 +14444,8 @@
       },
       "name": "nyuchi-badge-display",
       "registryDependencies": [
-        "badge",
-        "tooltip",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/tooltip",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Badge Display",
@@ -14496,8 +14496,8 @@
       },
       "name": "nyuchi-balance-display",
       "registryDependencies": [
-        "card",
-        "button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Balance Display",
@@ -14598,9 +14598,9 @@
       },
       "name": "nyuchi-calendar",
       "registryDependencies": [
-        "calendar",
-        "card",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/calendar",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Calendar",
@@ -14734,7 +14734,7 @@
       },
       "name": "nyuchi-commute-card",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Commute Card",
@@ -14829,9 +14829,9 @@
       },
       "name": "nyuchi-content-composer",
       "registryDependencies": [
-        "textarea",
-        "button",
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/textarea",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Content Composer",
@@ -14877,8 +14877,8 @@
       },
       "name": "nyuchi-conversation-row",
       "registryDependencies": [
-        "avatar",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Conversation Row",
@@ -15023,14 +15023,14 @@
       },
       "name": "nyuchi-create-listing",
       "registryDependencies": [
-        "card",
-        "button",
-        "input",
-        "switch",
-        "select",
-        "textarea",
-        "badge",
-        "separator",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/switch",
+        "https://mzizi.dev/api/v1/ui/select",
+        "https://mzizi.dev/api/v1/ui/textarea",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/separator",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Create Listing",
@@ -15131,8 +15131,8 @@
       },
       "name": "nyuchi-credential-card",
       "registryDependencies": [
-        "card",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -15187,7 +15187,7 @@
         "https://mzizi.dev/api/v1/ui/nyuchi-sidebar",
         "https://mzizi.dev/api/v1/ui/nyuchi-header",
         "https://mzizi.dev/api/v1/ui/nyuchi-bottom-nav",
-        "sidebar",
+        "https://mzizi.dev/api/v1/ui/sidebar",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Dashboard Layout",
@@ -15330,9 +15330,9 @@
       },
       "name": "nyuchi-detail-layout",
       "registryDependencies": [
-        "separator",
-        "button",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/separator",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -15611,7 +15611,7 @@
       },
       "name": "nyuchi-empty-state",
       "registryDependencies": [
-        "empty",
+        "https://mzizi.dev/api/v1/ui/empty",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Empty State",
@@ -15707,7 +15707,7 @@
       "name": "nyuchi-escalation-card",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "nyuchi Escalation Card",
       "type": "registry:ui"
@@ -15820,7 +15820,7 @@
       },
       "name": "nyuchi-featured-card",
       "registryDependencies": [
-        "badge"
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "nyuchi Featured Card",
       "type": "registry:ui"
@@ -15924,7 +15924,7 @@
       },
       "name": "nyuchi-footer",
       "registryDependencies": [
-        "separator",
+        "https://mzizi.dev/api/v1/ui/separator",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Footer",
@@ -15969,7 +15969,7 @@
       },
       "name": "nyuchi-forecast-card",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Forecast Card",
@@ -16137,7 +16137,7 @@
       "name": "nyuchi-gauge-card",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/arc-gauge",
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Gauge Card",
@@ -16234,8 +16234,8 @@
       },
       "name": "nyuchi-group-card",
       "registryDependencies": [
-        "card",
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Group Card",
@@ -16279,7 +16279,7 @@
       },
       "name": "nyuchi-harness",
       "registryDependencies": [
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "nyuchi Harness",
       "type": "registry:lib"
@@ -16376,8 +16376,8 @@
       },
       "name": "nyuchi-header",
       "registryDependencies": [
-        "button",
-        "sidebar",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/sidebar",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Header",
@@ -16423,7 +16423,7 @@
       },
       "name": "nyuchi-health-dashboard",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "https://mzizi.dev/api/v1/ui/vitals-display",
         "https://mzizi.dev/api/v1/ui/appointment-card",
@@ -16476,7 +16476,7 @@
       },
       "name": "nyuchi-hero-stat",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Hero Stat",
@@ -16574,7 +16574,7 @@
       },
       "name": "nyuchi-job-card",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
@@ -16669,7 +16669,7 @@
       },
       "name": "nyuchi-leaderboard-row",
       "registryDependencies": [
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -16715,8 +16715,8 @@
       },
       "name": "nyuchi-lesson-card",
       "registryDependencies": [
-        "card",
-        "progress",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/progress",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Lesson Card",
@@ -16772,9 +16772,9 @@
       },
       "name": "nyuchi-listing-card",
       "registryDependencies": [
-        "card",
-        "badge",
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Listing Card",
@@ -16871,8 +16871,8 @@
       },
       "name": "nyuchi-media",
       "registryDependencies": [
-        "dialog",
-        "carousel",
+        "https://mzizi.dev/api/v1/ui/dialog",
+        "https://mzizi.dev/api/v1/ui/carousel",
         "https://mzizi.dev/api/v1/ui/lightbox",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -16922,7 +16922,7 @@
       },
       "name": "nyuchi-message-bubble",
       "registryDependencies": [
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -17063,9 +17063,9 @@
       },
       "name": "nyuchi-mission-card",
       "registryDependencies": [
-        "card",
-        "badge",
-        "progress",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/progress",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Mission Card",
@@ -17205,8 +17205,8 @@
       },
       "name": "nyuchi-notification-item",
       "registryDependencies": [
-        "avatar",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Notification Item",
@@ -17257,7 +17257,7 @@
       "name": "nyuchi-offer-card",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-listing-card",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -17407,7 +17407,7 @@
       "name": "nyuchi-payment-mandate-card",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "nyuchi Payment Mandate Card",
       "type": "registry:ui"
@@ -17457,7 +17457,7 @@
       },
       "name": "nyuchi-payment-summary",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Payment Summary",
@@ -17548,7 +17548,7 @@
       },
       "name": "nyuchi-phrase-card",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Phrase Card",
@@ -17647,8 +17647,8 @@
       },
       "name": "nyuchi-platform",
       "registryDependencies": [
-        "button",
-        "card",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-tokens"
       ],
       "title": "nyuchi Platform",
@@ -17750,7 +17750,7 @@
       "name": "nyuchi-product-results",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "nyuchi Product Results",
       "type": "registry:ui"
@@ -17799,12 +17799,12 @@
       },
       "name": "nyuchi-profile-block",
       "registryDependencies": [
-        "avatar",
-        "button",
-        "separator",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/separator",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
-        "badge",
-        "progress",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/progress",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Profile Block",
@@ -17903,12 +17903,12 @@
       },
       "name": "nyuchi-profile-page",
       "registryDependencies": [
-        "avatar",
-        "badge",
-        "button",
-        "card",
-        "separator",
-        "tabs",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/separator",
+        "https://mzizi.dev/api/v1/ui/tabs",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Profile Page",
@@ -17962,8 +17962,8 @@
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "https://mzizi.dev/api/v1/ui/nyuchi-profile-block",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
-        "tabs",
-        "avatar"
+        "https://mzizi.dev/api/v1/ui/tabs",
+        "https://mzizi.dev/api/v1/ui/avatar"
       ],
       "title": "nyuchi Profile Page Layout",
       "type": "registry:ui"
@@ -18014,14 +18014,14 @@
       },
       "name": "nyuchi-profile-settings",
       "registryDependencies": [
-        "avatar",
-        "button",
-        "card",
-        "input",
-        "label",
-        "separator",
-        "switch",
-        "textarea",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
+        "https://mzizi.dev/api/v1/ui/separator",
+        "https://mzizi.dev/api/v1/ui/switch",
+        "https://mzizi.dev/api/v1/ui/textarea",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Profile Settings",
@@ -18070,7 +18070,7 @@
       },
       "name": "nyuchi-programme-item",
       "registryDependencies": [
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Programme Item",
@@ -18118,8 +18118,8 @@
       },
       "name": "nyuchi-provider-card",
       "registryDependencies": [
-        "card",
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
@@ -18272,8 +18272,8 @@
       },
       "name": "nyuchi-review-card",
       "registryDependencies": [
-        "card",
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/rating",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
@@ -18411,7 +18411,7 @@
       },
       "name": "nyuchi-route-planner",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "https://mzizi.dev/api/v1/ui/route-card",
         "https://mzizi.dev/api/v1/ui/stop-card",
@@ -18462,7 +18462,7 @@
       },
       "name": "nyuchi-rsvp-button",
       "registryDependencies": [
-        "button",
+        "https://mzizi.dev/api/v1/ui/button",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Rsvp Button",
@@ -18617,8 +18617,8 @@
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
         "https://mzizi.dev/api/v1/ui/nyuchi-profile-settings",
-        "switch",
-        "select"
+        "https://mzizi.dev/api/v1/ui/switch",
+        "https://mzizi.dev/api/v1/ui/select"
       ],
       "title": "nyuchi Settings Page",
       "type": "registry:ui"
@@ -18667,7 +18667,7 @@
       },
       "name": "nyuchi-share-card",
       "registryDependencies": [
-        "sheet",
+        "https://mzizi.dev/api/v1/ui/sheet",
         "https://mzizi.dev/api/v1/ui/share-dialog",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -18719,10 +18719,10 @@
       },
       "name": "nyuchi-sidebar",
       "registryDependencies": [
-        "sidebar",
-        "separator",
-        "badge",
-        "tooltip",
+        "https://mzizi.dev/api/v1/ui/sidebar",
+        "https://mzizi.dev/api/v1/ui/separator",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/tooltip",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Sidebar",
@@ -18816,7 +18816,7 @@
       },
       "name": "nyuchi-source-badge",
       "registryDependencies": [
-        "badge",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -18919,7 +18919,7 @@
       },
       "name": "nyuchi-stats-row",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Stats Row",
@@ -19014,7 +19014,7 @@
       },
       "name": "nyuchi-suitability-card",
       "registryDependencies": [
-        "card",
+        "https://mzizi.dev/api/v1/ui/card",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Suitability Card",
@@ -19109,8 +19109,8 @@
       },
       "name": "nyuchi-ticket-card",
       "registryDependencies": [
-        "card",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -19161,7 +19161,7 @@
       },
       "name": "nyuchi-timeline",
       "registryDependencies": [
-        "avatar",
+        "https://mzizi.dev/api/v1/ui/avatar",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Timeline",
@@ -19824,7 +19824,7 @@
       },
       "name": "nyuchi-transaction-row",
       "registryDependencies": [
-        "badge",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Transaction Row",
@@ -19874,9 +19874,9 @@
       },
       "name": "nyuchi-trust-meter",
       "registryDependencies": [
-        "card",
-        "progress",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/progress",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
@@ -20021,8 +20021,8 @@
       },
       "name": "nyuchi-user-menu",
       "registryDependencies": [
-        "avatar",
-        "dropdown-menu",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/dropdown-menu",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi User Menu",
@@ -20082,7 +20082,7 @@
       },
       "name": "nyuchi-verified-badge",
       "registryDependencies": [
-        "tooltip",
+        "https://mzizi.dev/api/v1/ui/tooltip",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "nyuchi Verified Badge",
@@ -20171,7 +20171,7 @@
       "name": "offline-banner",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/nyuchi-harness",
-        "utils"
+        "https://mzizi.dev/api/v1/ui/utils"
       ],
       "title": "Offline Banner",
       "type": "registry:ui"
@@ -20221,12 +20221,12 @@
       },
       "name": "onboarding-flow",
       "registryDependencies": [
-        "avatar",
-        "badge",
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Onboarding Flow",
@@ -20462,7 +20462,7 @@
       },
       "name": "pagination",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Pagination",
       "type": "registry:ui"
@@ -20641,8 +20641,8 @@
       },
       "name": "payment-pin-pad",
       "registryDependencies": [
-        "button",
-        "dialog"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/dialog"
       ],
       "title": "Payment Pin Pad",
       "type": "registry:ui"
@@ -20778,8 +20778,8 @@
       },
       "name": "pinned-message",
       "registryDependencies": [
-        "card",
-        "button"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Pinned Message",
       "type": "registry:ui"
@@ -20822,8 +20822,8 @@
       },
       "name": "pod-storage-meter",
       "registryDependencies": [
-        "card",
-        "progress"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/progress"
       ],
       "title": "Pod Storage Meter",
       "type": "registry:ui"
@@ -20865,10 +20865,10 @@
       },
       "name": "poll",
       "registryDependencies": [
-        "card",
-        "button",
-        "progress",
-        "radio-group"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/progress",
+        "https://mzizi.dev/api/v1/ui/radio-group"
       ],
       "title": "Poll",
       "type": "registry:ui"
@@ -21004,10 +21004,10 @@
       },
       "name": "pricing-card",
       "registryDependencies": [
-        "badge",
-        "button",
-        "card",
-        "separator"
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Pricing Card",
       "type": "registry:ui"
@@ -21050,8 +21050,8 @@
       },
       "name": "priority-selector",
       "registryDependencies": [
-        "toggle-group",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/toggle-group",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Priority Selector",
       "type": "registry:ui"
@@ -21504,7 +21504,7 @@
       "name": "read-receipts",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/avatar-group",
-        "tooltip"
+        "https://mzizi.dev/api/v1/ui/tooltip"
       ],
       "title": "Read Receipts",
       "type": "registry:ui"
@@ -21548,7 +21548,7 @@
       },
       "name": "reading-progress",
       "registryDependencies": [
-        "progress"
+        "https://mzizi.dev/api/v1/ui/progress"
       ],
       "title": "Reading Progress",
       "type": "registry:ui"
@@ -21593,7 +21593,7 @@
       },
       "name": "recording-controls",
       "registryDependencies": [
-        "button-group"
+        "https://mzizi.dev/api/v1/ui/button-group"
       ],
       "title": "Recording Controls",
       "type": "registry:ui"
@@ -21638,9 +21638,9 @@
       },
       "name": "recurrence-picker",
       "registryDependencies": [
-        "select",
-        "checkbox",
-        "date-picker",
+        "https://mzizi.dev/api/v1/ui/select",
+        "https://mzizi.dev/api/v1/ui/checkbox",
+        "https://mzizi.dev/api/v1/ui/date-picker",
         "https://mzizi.dev/api/v1/ui/number-input"
       ],
       "title": "Recurrence Picker",
@@ -21683,9 +21683,9 @@
       },
       "name": "reminder-card",
       "registryDependencies": [
-        "card",
-        "button",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Reminder Card",
       "type": "registry:ui"
@@ -21868,8 +21868,8 @@
       },
       "name": "revenue-dashboard-widget",
       "registryDependencies": [
-        "card",
-        "chart"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Revenue Dashboard Widget",
       "type": "registry:ui"
@@ -21963,7 +21963,7 @@
       },
       "name": "rich-text-editor",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Rich Text Editor",
       "type": "registry:ui"
@@ -22049,9 +22049,9 @@
       },
       "name": "route-card",
       "registryDependencies": [
-        "card",
-        "badge",
-        "separator"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Route Card",
       "type": "registry:ui"
@@ -22244,9 +22244,9 @@
       },
       "name": "search-bar",
       "registryDependencies": [
-        "input",
-        "button",
-        "kbd"
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/kbd"
       ],
       "title": "Search Bar",
       "type": "registry:ui"
@@ -22294,11 +22294,11 @@
       },
       "name": "search-results",
       "registryDependencies": [
-        "badge",
-        "button",
-        "card",
-        "input",
-        "separator"
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Search Results",
       "type": "registry:block"
@@ -22344,8 +22344,8 @@
       "name": "section-error-boundary",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/observability",
-        "utils",
-        "button"
+        "https://mzizi.dev/api/v1/ui/utils",
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Section Error Boundary",
       "type": "registry:ui"
@@ -22755,8 +22755,8 @@
       },
       "name": "severity-badge",
       "registryDependencies": [
-        "utils",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/utils",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Severity Badge",
       "type": "registry:ui"
@@ -22804,10 +22804,10 @@
       },
       "name": "share-dialog",
       "registryDependencies": [
-        "dialog",
-        "button",
-        "input",
-        "separator"
+        "https://mzizi.dev/api/v1/ui/dialog",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Share Dialog",
       "type": "registry:ui"
@@ -22858,7 +22858,7 @@
       },
       "name": "sheet",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Sheet",
       "type": "registry:ui"
@@ -22911,13 +22911,13 @@
       },
       "name": "sidebar",
       "registryDependencies": [
-        "button",
-        "input",
-        "separator",
-        "sheet",
-        "skeleton",
-        "tooltip",
-        "use-mobile"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/separator",
+        "https://mzizi.dev/api/v1/ui/sheet",
+        "https://mzizi.dev/api/v1/ui/skeleton",
+        "https://mzizi.dev/api/v1/ui/tooltip",
+        "https://mzizi.dev/api/v1/ui/use-mobile"
       ],
       "title": "Sidebar",
       "type": "registry:ui"
@@ -22966,10 +22966,10 @@
       },
       "name": "sidebar-01",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 01",
       "type": "registry:block"
@@ -23018,10 +23018,10 @@
       },
       "name": "sidebar-02",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 02",
       "type": "registry:block"
@@ -23070,10 +23070,10 @@
       },
       "name": "sidebar-03",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 03",
       "type": "registry:block"
@@ -23122,10 +23122,10 @@
       },
       "name": "sidebar-04",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 04",
       "type": "registry:block"
@@ -23174,10 +23174,10 @@
       },
       "name": "sidebar-05",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 05",
       "type": "registry:block"
@@ -23226,10 +23226,10 @@
       },
       "name": "sidebar-06",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 06",
       "type": "registry:block"
@@ -23278,10 +23278,10 @@
       },
       "name": "sidebar-07",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 07",
       "type": "registry:block"
@@ -23330,10 +23330,10 @@
       },
       "name": "sidebar-08",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 08",
       "type": "registry:block"
@@ -23382,10 +23382,10 @@
       },
       "name": "sidebar-09",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 09",
       "type": "registry:block"
@@ -23434,10 +23434,10 @@
       },
       "name": "sidebar-10",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 10",
       "type": "registry:block"
@@ -23485,10 +23485,10 @@
       },
       "name": "sidebar-11",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 11",
       "type": "registry:block"
@@ -23537,10 +23537,10 @@
       },
       "name": "sidebar-12",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 12",
       "type": "registry:block"
@@ -23589,10 +23589,10 @@
       },
       "name": "sidebar-13",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 13",
       "type": "registry:block"
@@ -23641,10 +23641,10 @@
       },
       "name": "sidebar-14",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 14",
       "type": "registry:block"
@@ -23693,10 +23693,10 @@
       },
       "name": "sidebar-15",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 15",
       "type": "registry:block"
@@ -23745,10 +23745,10 @@
       },
       "name": "sidebar-16",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label"
       ],
       "title": "Sidebar 16",
       "type": "registry:block"
@@ -23789,10 +23789,10 @@
       },
       "name": "signup-01",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Signup 01",
@@ -23834,10 +23834,10 @@
       },
       "name": "signup-02",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Signup 02",
@@ -23879,10 +23879,10 @@
       },
       "name": "signup-03",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Signup 03",
@@ -23924,10 +23924,10 @@
       },
       "name": "signup-04",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Signup 04",
@@ -23969,10 +23969,10 @@
       },
       "name": "signup-05",
       "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "label",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/input",
+        "https://mzizi.dev/api/v1/ui/label",
         "https://mzizi.dev/api/v1/ui/nyuchi-harness"
       ],
       "title": "Signup 05",
@@ -24384,7 +24384,7 @@
       },
       "name": "stats-card",
       "registryDependencies": [
-        "card"
+        "https://mzizi.dev/api/v1/ui/card"
       ],
       "title": "Stats Card",
       "type": "registry:ui"
@@ -24643,8 +24643,8 @@
       },
       "name": "stop-card",
       "registryDependencies": [
-        "card",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Stop Card",
       "type": "registry:ui"
@@ -24823,9 +24823,9 @@
       },
       "name": "subscription-gate",
       "registryDependencies": [
-        "card",
-        "button",
-        "badge"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/badge"
       ],
       "title": "Subscription Gate",
       "type": "registry:ui"
@@ -24958,9 +24958,9 @@
       },
       "name": "symptom-checker",
       "registryDependencies": [
-        "card",
-        "checkbox",
-        "slider",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/checkbox",
+        "https://mzizi.dev/api/v1/ui/slider",
         "https://mzizi.dev/api/v1/ui/stepper"
       ],
       "title": "Symptom Checker",
@@ -25144,11 +25144,11 @@
       },
       "name": "task-board",
       "registryDependencies": [
-        "card",
-        "badge",
-        "avatar",
-        "checkbox",
-        "progress"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/checkbox",
+        "https://mzizi.dev/api/v1/ui/progress"
       ],
       "title": "Task Board",
       "type": "registry:ui"
@@ -25237,9 +25237,9 @@
       },
       "name": "telemedicine-widget",
       "registryDependencies": [
-        "card",
-        "button",
-        "avatar"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/avatar"
       ],
       "title": "Telemedicine Widget",
       "type": "registry:ui"
@@ -25282,8 +25282,8 @@
       },
       "name": "text-size-adjuster",
       "registryDependencies": [
-        "slider",
-        "button-group"
+        "https://mzizi.dev/api/v1/ui/slider",
+        "https://mzizi.dev/api/v1/ui/button-group"
       ],
       "title": "Text Size Adjuster",
       "type": "registry:ui"
@@ -25377,7 +25377,7 @@
       },
       "name": "time-picker",
       "registryDependencies": [
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Time Picker",
       "type": "registry:ui"
@@ -25510,7 +25510,7 @@
       },
       "name": "time-tracker",
       "registryDependencies": [
-        "button-group"
+        "https://mzizi.dev/api/v1/ui/button-group"
       ],
       "title": "Time Tracker",
       "type": "registry:ui"
@@ -25691,7 +25691,7 @@
       },
       "name": "toaster",
       "registryDependencies": [
-        "toast",
+        "https://mzizi.dev/api/v1/ui/toast",
         "https://mzizi.dev/api/v1/ui/use-toast"
       ],
       "title": "Toaster",
@@ -25843,7 +25843,7 @@
       },
       "name": "toggle-group",
       "registryDependencies": [
-        "toggle"
+        "https://mzizi.dev/api/v1/ui/toggle"
       ],
       "title": "Toggle Group",
       "type": "registry:ui"
@@ -25886,8 +25886,8 @@
       },
       "name": "token-balance-card",
       "registryDependencies": [
-        "card",
-        "separator"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Token Balance Card",
       "type": "registry:ui"
@@ -26122,8 +26122,8 @@
       },
       "name": "transaction-receipt",
       "registryDependencies": [
-        "card",
-        "separator"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/separator"
       ],
       "title": "Transaction Receipt",
       "type": "registry:ui"
@@ -26171,8 +26171,8 @@
       },
       "name": "transfer-list",
       "registryDependencies": [
-        "button",
-        "input"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/input"
       ],
       "title": "Transfer List",
       "type": "registry:ui"
@@ -26215,8 +26215,8 @@
       },
       "name": "translation-indicator",
       "registryDependencies": [
-        "badge",
-        "tooltip"
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/tooltip"
       ],
       "title": "Translation Indicator",
       "type": "registry:ui"
@@ -26480,7 +26480,7 @@
       },
       "name": "use-toast",
       "registryDependencies": [
-        "toast"
+        "https://mzizi.dev/api/v1/ui/toast"
       ],
       "title": "Use Toast",
       "type": "registry:hook"
@@ -26523,9 +26523,9 @@
       },
       "name": "user-management-row",
       "registryDependencies": [
-        "avatar",
-        "badge",
-        "dropdown-menu",
+        "https://mzizi.dev/api/v1/ui/avatar",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/dropdown-menu",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "title": "User Management Row",
@@ -26615,10 +26615,10 @@
       },
       "name": "vehicle-card",
       "registryDependencies": [
-        "card",
-        "badge",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
         "https://mzizi.dev/api/v1/ui/rating",
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Vehicle Card",
       "type": "registry:ui"
@@ -26709,9 +26709,9 @@
       },
       "name": "verification-review-card",
       "registryDependencies": [
-        "card",
-        "badge",
-        "button-group",
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/badge",
+        "https://mzizi.dev/api/v1/ui/button-group",
         "https://mzizi.dev/api/v1/ui/nyuchi-verified-badge"
       ],
       "title": "Verification Review Card",
@@ -26800,7 +26800,7 @@
       },
       "name": "video-trimmer",
       "registryDependencies": [
-        "slider"
+        "https://mzizi.dev/api/v1/ui/slider"
       ],
       "title": "Video Trimmer",
       "type": "registry:ui"
@@ -26887,8 +26887,8 @@
       },
       "name": "vitals-display",
       "registryDependencies": [
-        "card",
-        "chart"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/chart"
       ],
       "title": "Vitals Display",
       "type": "registry:ui"
@@ -26932,7 +26932,7 @@
       "name": "voice-note-player",
       "registryDependencies": [
         "https://mzizi.dev/api/v1/ui/audio-waveform",
-        "button"
+        "https://mzizi.dev/api/v1/ui/button"
       ],
       "title": "Voice Note Player",
       "type": "registry:ui"
@@ -26973,8 +26973,8 @@
       },
       "name": "vote-buttons",
       "registryDependencies": [
-        "button-group",
-        "progress"
+        "https://mzizi.dev/api/v1/ui/button-group",
+        "https://mzizi.dev/api/v1/ui/progress"
       ],
       "title": "Vote Buttons",
       "type": "registry:ui"
@@ -27015,8 +27015,8 @@
       },
       "name": "wallet-card",
       "registryDependencies": [
-        "card",
-        "carousel"
+        "https://mzizi.dev/api/v1/ui/card",
+        "https://mzizi.dev/api/v1/ui/carousel"
       ],
       "title": "Wallet Card",
       "type": "registry:ui"
@@ -27061,8 +27061,8 @@
       },
       "name": "wallet-connect-button",
       "registryDependencies": [
-        "button",
-        "dropdown-menu"
+        "https://mzizi.dev/api/v1/ui/button",
+        "https://mzizi.dev/api/v1/ui/dropdown-menu"
       ],
       "title": "Wallet Connect Button",
       "type": "registry:ui"
