@@ -145,9 +145,16 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       )
     }
 
+    // `target` is the install destination and MUST be projected. shadcn defines `path` as
+    // the file's SOURCE location in the registry repo — here, `components/registry/n<N>-…` —
+    // and `target` as where it lands in the consumer's project. Dropping `target` would send
+    // the CLI back to deriving a destination from `type` plus the basename of `path`, which
+    // for `button` means `components/ui/button.tsx` (right, by luck) and for
+    // `accessibility-audit` means a `.md` file landing in `components/ui/` (wrong).
     const files = declared.map((file) => ({
       path: file.path,
       type: file.type,
+      ...(file.target ? { target: file.target } : {}),
       content: source,
     }))
 

@@ -79,6 +79,14 @@ jobs:
       - name: Verify registry item metadata is current
         run: pnpm registry:metadata:check
 
+      # `files[].path` must be where the file IS in this repo and `files[].target` where it
+      # GOES in the consumer's. They were merged into one field for the registry's whole
+      # life — the install destination sat in `path` — which our own API hid, because it
+      # resolves sources by component name and never reads `path`. `shadcn registry
+      # validate nyuchi/mzizi` did not hide it: 574 of 574 items failed.
+      - name: Verify registry source paths and install targets
+        run: pnpm registry:paths:check
+
       # The extracted prop map is what lets a preview resolve sample data for a component
       # (§8.10). If it goes stale the previews silently degrade to empty — nothing errors,
       # they just stop showing anything, which is the failure mode this whole session has

@@ -29,6 +29,8 @@
     "registry:metadata": "node scripts/generate-item-metadata.mjs",
     "registry:metadata:check": "node scripts/generate-item-metadata.mjs --check",
     "registry:normalize": "tsx scripts/normalize-registry.ts",
+    "registry:paths": "node scripts/generate-file-paths.mjs",
+    "registry:paths:check": "node scripts/generate-file-paths.mjs --check",
     "registry:validate": "node scripts/validate-registry.mjs",
     "registry:verify": "tsx scripts/normalize-registry.ts --check",
     "samples:push": "tsx scripts/push-samples.ts",
