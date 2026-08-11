@@ -2,7 +2,7 @@
   "name": "mzizi",
   "version": "1.0.0",
   "private": true,
-  "description": "Mzizi \u2014 an open-architecture project of the Bundu Foundation. Open 3D frontend architecture, component registry, and MCP server, operated and developed by Nyuchi.",
+  "description": "Mzizi — an open-architecture project of the Bundu Foundation. Open 3D frontend architecture, component registry, and MCP server, operated and developed by Nyuchi.",
   "homepage": "https://mzizi.dev",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
@@ -139,7 +139,7 @@
     "postcss": "^8.5.25",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
-    "shadcn": "^4.16.0",
+    "shadcn": "^4.16.2",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.1",
     "tw-animate-css": "1.4.0",
