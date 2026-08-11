@@ -45,6 +45,27 @@ function safeSourcePath(...segments: string[]): string | null {
 
 export type RegistryFile = { path: string; type?: string }
 
+/**
+ * The authored `meta` block from `registry.json` — a component's documented contract.
+ *
+ * It was spread into every item by `readComponents()` and declared nowhere, so nothing
+ * could read `owner` or `collection` without a cast. That is how `/api/v1/ui` shipped an
+ * index with no way to filter by either: the data was always there, the type said it was
+ * not. Declaring it is what makes the index able to serve it (CLAUDE.md §6.1).
+ */
+export type RegistryMeta = {
+  useCases?: string[]
+  variants?: string[]
+  sizes?: string[]
+  features?: string[]
+  a11y?: string[]
+  /** `mzizi` | `nyuchi` | `bundu` | `framework`. */
+  owner?: string
+  /** The authored collection, e.g. `primitives`, `brand`, `pages`. */
+  collection?: string
+  hasDemo?: boolean
+}
+
 export type RegistryItem = {
   name: string
   type?: string
@@ -52,6 +73,8 @@ export type RegistryItem = {
   dependencies?: string[]
   registryDependencies?: string[]
   files?: RegistryFile[]
+  /** The authored contract from `registry.json`. */
+  meta?: RegistryMeta
   /** Derived from the directory on disk, e.g. `n2-primitives` → 2. */
   node?: number
   /** The directory label on disk, e.g. `primitives`. */
