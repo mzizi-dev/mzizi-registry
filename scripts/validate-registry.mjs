@@ -35,6 +35,8 @@
 
 import { readFileSync, existsSync, readdirSync } from "node:fs"
 import { basename, extname, join } from "node:path"
+// TypeScript's own parser, so the JSX check below is exact rather than a regex guess.
+import ts from "typescript"
 
 const ROOT = process.cwd()
 const REGISTRY_JSON = join(ROOT, "registry.json")
@@ -257,6 +259,65 @@ function main() {
     if (!item.name) err("(item)", "has no name")
     if (!item.type) err(n, "has no type (registry:ui | registry:lib | …)")
     if (!Array.isArray(item.files) || item.files.length === 0) err(n, "has no files[]")
+
+    // — a component is ONE source file, so it may declare exactly one —
+    //
+    // `readComponentSource(name)` resolves a component by NAME, not by install path, so
+    // there has only ever been one file's worth of content to serve. Five items declared
+    // more (nyuchi-tokens declared four), and `/api/v1/ui/{name}` filled the extras with
+    // an empty string: `npx shadcn add nyuchi-tokens` wrote three EMPTY files over the
+    // consumer's own. Nothing caught it, because every item resolved on disk — the check
+    // above passes on the component, and the defect was in the file list beside it.
+    if (Array.isArray(item.files) && item.files.length > 1) {
+      err(
+        n,
+        `declares ${item.files.length} files (${item.files.map((f) => f.path).join(", ")}) but a ` +
+          "component has exactly one source. The extra paths have no content and install as " +
+          "empty files — declare only the file that exists."
+      )
+    }
+
+    // — a source containing JSX must install to a .tsx path —
+    //
+    // `nyuchi-resilience` shipped 18 KB of JSX into `lib/resilience/health-monitor.ts`;
+    // `nyuchi-data`, `nyuchi-platform`, `nyuchi-layout` and `nyuchi-locale` each declared a
+    // JSX source as `index.ts`. TypeScript reads `<Foo>` in a .ts file as a type assertion,
+    // so these fail with a wall of syntax errors in the CONSUMER's build, with nothing
+    // pointing back here.
+    //
+    // The rule is about JSX, NOT about extensions matching. A first cut compared source and
+    // install extensions and flagged `ai-safety` — a .tsx file that contains no JSX and
+    // compiles fine as .ts. Renaming it would have been churn dressed as a fix, and worse,
+    // would have left anyone who already installed `lib/ai-safety.ts` with a second copy.
+    //
+    // TypeScript's own parser decides, because no regex can: `<T>`, `React.useState<X>` and
+    // `<b>bold</b>` inside a doc comment all look like JSX to a pattern and are not.
+    {
+      const src = disk.get(n)
+      const declaredPath = item.files?.[0]?.path
+      // `rel` is relative to components/registry (e.g. `n1-tokens/nyuchi-tokens.ts`), and a
+      // component's primary source is not always TypeScript — some are .md or .rs.
+      const isTs = src && /\.tsx?$/.test(src.rel ?? "")
+      if (src && isTs && declaredPath && !declaredPath.endsWith(".tsx")) {
+        const abs = join(ROOT, "components", "registry", src.rel)
+        const text = readFileSync(abs, "utf8")
+        const parsed = ts.createSourceFile(
+          abs,
+          text,
+          ts.ScriptTarget.Latest,
+          true,
+          ts.ScriptKind.TS
+        )
+        const syntaxErrors = parsed.parseDiagnostics?.length ?? 0
+        if (syntaxErrors > 0) {
+          err(
+            n,
+            `source contains JSX but installs to ${declaredPath}. Parsed as TypeScript it ` +
+              `produces ${syntaxErrors} syntax error(s) — it must install to a .tsx path.`
+          )
+        }
+      }
+    }
 
     // — every advertised component must exist on disk (bug 2 and 3) —
     const onDisk = disk.get(n)
