@@ -258,7 +258,32 @@ function main() {
     // — shape the shadcn CLI requires —
     if (!item.name) err("(item)", "has no name")
     if (!item.type) err(n, "has no type (registry:ui | registry:lib | …)")
-    if (!Array.isArray(item.files) || item.files.length === 0) err(n, "has no files[]")
+
+    /**
+     * A DATA item carries `cssVars` or `css` instead of a file, and that is not a
+     * degenerate component — it is what a `registry:theme` IS.
+     *
+     * `nyuchi-tokens` is the case: N1's covenant is that it is the only node allowed to
+     * define CSS values, and it discharges that by shipping the 214 custom properties
+     * themselves, generated from `app/globals.css`. It has no source file on disk and
+     * should not: a `.ts` file is React-only, and the whole point of moving the tokens
+     * into `cssVars` is that the shadcn CLI merges them into ANY consuming project.
+     *
+     * The two checks below assume every item is a component with a file. Applied to a
+     * theme they demand exactly the thing that made the registry framework-specific.
+     */
+    const isDataItem = Boolean(item.cssVars || item.css)
+    const hasFiles = Array.isArray(item.files) && item.files.length > 0
+
+    if (!hasFiles && !isDataItem) err(n, "has no files[] and no cssVars/css — it installs nothing")
+    if (isDataItem && hasFiles) {
+      err(
+        n,
+        "carries both cssVars/css and files[]. Keep the token DATA and the typed accessor " +
+          "as separate items (nyuchi-tokens vs nyuchi-tokens-typescript) so a non-React " +
+          "consumer can take the tokens without the TypeScript."
+      )
+    }
 
     // — a component is ONE source file, so it may declare exactly one —
     //
@@ -320,8 +345,9 @@ function main() {
     }
 
     // — every advertised component must exist on disk (bug 2 and 3) —
+    // A data item's payload IS its cssVars/css, so "no source file" is correct for it.
     const onDisk = disk.get(n)
-    if (!onDisk) {
+    if (!onDisk && !isDataItem) {
       err(
         n,
         "is advertised in registry.json but has NO source file under components/registry/. " +

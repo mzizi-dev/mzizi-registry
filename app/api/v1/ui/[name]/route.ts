@@ -58,6 +58,39 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       )
     }
 
+    // A DATA item (registry:theme / registry:style) carries `cssVars`/`css` and no file.
+    // Served before the source lookup, because there is no source to look up and the 404
+    // below would otherwise hide the design tokens from every consumer.
+    const isDataItem = Boolean(component.cssVars || component.css)
+    if (isDataItem && !component.files?.length) {
+      logger.info("Theme item served", {
+        data: { name, cssVarGroups: Object.keys(component.cssVars ?? {}) },
+      })
+      trackApiCall({
+        endpoint: `/api/v1/ui/${name}`,
+        durationMs: Date.now() - start,
+        statusCode: 200,
+        componentName: name,
+      })
+      return NextResponse.json(
+        {
+          $schema: "https://ui.shadcn.com/schema/registry-item.json",
+          name: component.name,
+          type: component.type,
+          title: component.title,
+          description: component.description,
+          author: component.author,
+          categories: component.categories,
+          docs: component.docs,
+          dependencies: component.dependencies,
+          registryDependencies: component.registryDependencies,
+          ...(component.cssVars ? { cssVars: component.cssVars } : {}),
+          ...(component.css ? { css: component.css } : {}),
+        },
+        { headers: CORS_CACHE }
+      )
+    }
+
     const source = readComponentSource(name)
 
     if (source === null) {
@@ -134,7 +167,15 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
         $schema: "https://ui.shadcn.com/schema/registry-item.json",
         name: component.name,
         type: component.type,
+        // `title`, `author`, `categories` and `docs` are schema fields the CLI and any
+        // registry browser display. They are generated onto every item, and were being
+        // dropped here — present in registry.json, invisible to every consumer, which is
+        // the same shape of bug as the missing `type`.
+        title: component.title,
         description: component.description,
+        author: component.author,
+        categories: component.categories,
+        docs: component.docs,
         dependencies: component.dependencies,
         registryDependencies: component.registryDependencies,
         files,
