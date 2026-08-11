@@ -76,10 +76,46 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
 
     // `files` is optional on a registry item, and an item without one is not installable.
     // Falling through to `.map()` would have thrown a 500 where a 404 is the honest answer.
-    const files = (component.files ?? []).map((file, i) => ({
+    const declared = component.files ?? []
+
+    // A component is ONE source file. `readComponentSource(name)` resolves it by component
+    // NAME (components/registry/n<N>-<label>/<name>.<ext>), not by the install path, so
+    // there is no second file to read and never was.
+    //
+    // This used to be `content: i === 0 ? source : ""` — every file after the first was
+    // hardcoded to an empty string. Five components declared more files than exist, so
+    // `npx shadcn add nyuchi-tokens` wrote lib/tokens/primitives.ts, semantic.ts and
+    // components.ts as EMPTY FILES over whatever the consumer had. The doc comment on this
+    // route promised the opposite in as many words — "a component whose file is missing is
+    // a 404 and never a 200 with an empty body" — while the code below it did exactly that.
+    //
+    // Refusing is the only honest answer: an empty file is indistinguishable from a
+    // deliberately empty module, so it fails at the consumer's build rather than here.
+    if (declared.length > 1) {
+      logger.error("Registry item declares more files than it has sources", {
+        data: { name, declared: declared.map((f) => f.path) },
+      })
+      trackApiCall({
+        endpoint: `/api/v1/ui/${name}`,
+        durationMs: Date.now() - start,
+        statusCode: 500,
+        componentName: name,
+      })
+      return NextResponse.json(
+        {
+          error:
+            `Registry item "${name}" declares ${declared.length} files but a component has ` +
+            `exactly one source. This is a manifest bug in registry.json, not a bad request — ` +
+            `serving it would hand you empty files.`,
+        },
+        { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }
+      )
+    }
+
+    const files = declared.map((file) => ({
       path: file.path,
       type: file.type,
-      content: i === 0 ? source : "",
+      content: source,
     }))
 
     logger.info("Component served", {
