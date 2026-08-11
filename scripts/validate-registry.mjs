@@ -272,8 +272,23 @@ function main() {
      * The two checks below assume every item is a component with a file. Applied to a
      * theme they demand exactly the thing that made the registry framework-specific.
      */
-    const isDataItem = Boolean(item.cssVars || item.css)
+    // A `registry:base`/`registry:style` is a data item whose payload is the project CONFIG,
+    // not cssVars — `mzizi-base` deliberately has none, pulling N1 through
+    // registryDependencies so the tokens are defined in exactly one place.
+    const isConfigItem = item.type === "registry:base" || item.type === "registry:style"
+    const isDataItem = Boolean(item.cssVars || item.css || isConfigItem)
     const hasFiles = Array.isArray(item.files) && item.files.length > 0
+
+    // A base that carries no config writes a DEFAULT components.json — the project ends up
+    // shaped for stock shadcn, not for this registry, and nothing errors.
+    if (isConfigItem && !item.style && !item.iconLibrary && !item.baseColor && !item.tailwind) {
+      err(
+        item.name,
+        `is a ${item.type} but carries no configuration (style / iconLibrary / baseColor / ` +
+          "tailwind). These belong at the TOP LEVEL of the item — the `config: {…}` shape in " +
+          "shadcn's docs example is not read by the CLI (verified against 4.16.2)."
+      )
+    }
 
     if (!hasFiles && !isDataItem) err(n, "has no files[] and no cssVars/css — it installs nothing")
 
