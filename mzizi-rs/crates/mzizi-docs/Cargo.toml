@@ -1,0 +1,15 @@
+[package]
+name = "mzizi-docs"
+description = "Mzizi N10 documentation — the self-describing rung: the system explaining itself."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+# No dependencies, matching N8, N9 and N11.
+[dependencies]
