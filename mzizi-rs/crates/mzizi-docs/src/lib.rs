@@ -17,3 +17,6 @@
 
 #[path = "../../../../components/registry/n10-documentation/nyuchi-ai-context.rs"]
 pub mod nyuchi_ai_context;
+
+#[path = "../../../../components/registry/n10-documentation/nyuchi-docs-api.rs"]
+pub mod nyuchi_docs_api;
