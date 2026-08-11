@@ -89,9 +89,16 @@ export default async function ComponentChangelogPage({
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
           {component.description}
         </p>
-        {component.added_in_version ? (
+        {/*
+          `added_in_version` was a Supabase column and is `undefined` on a registry item,
+          so this line never rendered. It is not replaced by a disk field: when a component
+          was added is history, and history is what the `versions` list below already
+          shows — deriving a second, possibly disagreeing answer would be the drift this
+          repo keeps removing.
+        */}
+        {component.node ? (
           <p className="mt-3 font-mono text-xs text-muted-foreground">
-            Added in v{component.added_in_version}
+            N{component.node} · {component.nodeLabel ?? "registry"}
           </p>
         ) : null}
       </header>

@@ -197,8 +197,8 @@ function docRowFromMeta(name: string, meta: RegistryMeta): ComponentDocRow {
 /**
  * Get a single component by name.
  */
-export async function getComponent(name: string): Promise<ComponentRow | null> {
-  return readComponent(name) as unknown as ComponentRow | null
+export async function getComponent(name: string): Promise<RegistryItem | null> {
+  return readComponent(name)
 }
 
 /**

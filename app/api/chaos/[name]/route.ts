@@ -108,8 +108,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       {
         name: component.name,
         description: `Chaos surface for ${component.name}. Faults are injected in-process via the N8 chaos lib — install with \`npx shadcn@latest add https://mzizi.dev/api/v1/ui/chaos\`.`,
-        layer: component.layer ?? null,
-        registry_type: component.registry_type,
+        // `layer` and `registry_type` were retired-shape reads that always served
+        // `undefined`. `node` replaces `layer` (§9); `type` is the real field name.
+        node: component.node ?? null,
+        type: component.type ?? null,
         supported_faults: faults,
         engine: {
           runtime: "in-process",

@@ -62,7 +62,7 @@ export default async function PlaygroundComponentPage({
   // Source lives on disk, not in the registry document (@/lib/registry-source).
   const sourceCode = readComponentSource(name) ?? "// Source not available"
   const firstFilePath = item.files?.[0]?.path ?? ""
-  const registryType = item.registry_type?.replace("registry:", "") ?? "component"
+  const registryType = item.type?.replace("registry:", "") ?? "component"
   const installUrl = `https://mzizi.dev/api/v1/ui/${item.name}`
   // Every component has source on disk, so one without a hand-written demo can still
   // be rendered directly. `sourcePath` is repo-relative and comes from the file that
@@ -99,9 +99,9 @@ export default async function PlaygroundComponentPage({
           <Badge variant="outline" className="font-mono text-xs">
             {registryType}
           </Badge>
-          {item.layer && (
+          {item.node && (
             <Badge variant="secondary" className="font-mono text-xs">
-              N{item.layer}
+              N{item.node}
             </Badge>
           )}
         </div>
@@ -162,7 +162,7 @@ export default async function PlaygroundComponentPage({
 
       {/* Dependencies */}
       {((item.dependencies && item.dependencies.length > 0) ||
-        (item.registry_dependencies && item.registry_dependencies.length > 0)) && (
+        (item.registryDependencies && item.registryDependencies.length > 0)) && (
         <SafeSection section="Dependencies">
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">Dependencies</h2>
@@ -172,7 +172,7 @@ export default async function PlaygroundComponentPage({
                   {dep}
                 </Badge>
               ))}
-              {item.registry_dependencies?.map((dep) => (
+              {item.registryDependencies?.map((dep) => (
                 <Badge key={dep} variant="outline">
                   <a href={`/playground/${dep}`} className="hover:underline">
                     {dep}
