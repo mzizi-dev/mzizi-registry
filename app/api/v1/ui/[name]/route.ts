@@ -74,7 +74,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       )
     }
 
-    const files = component.files.map((file, i) => ({
+    // `files` is optional on a registry item, and an item without one is not installable.
+    // Falling through to `.map()` would have thrown a 500 where a 404 is the honest answer.
+    const files = (component.files ?? []).map((file, i) => ({
       path: file.path,
       type: file.type,
       content: i === 0 ? source : "",
@@ -95,10 +97,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       {
         $schema: "https://ui.shadcn.com/schema/registry-item.json",
         name: component.name,
-        type: component.registry_type,
+        type: component.type,
         description: component.description,
         dependencies: component.dependencies,
-        registryDependencies: component.registry_dependencies,
+        registryDependencies: component.registryDependencies,
         files,
       },
       { headers: CORS_CACHE }

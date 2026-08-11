@@ -54,7 +54,7 @@ export default async function SourcePage({ params }: { params: Promise<{ name: s
     return (
       <article className="mx-auto max-w-4xl py-12">
         <p className="font-mono text-[11px] tracking-widest text-muted-foreground uppercase">
-          {component.layer ?? "—"} · {component.category ?? "—"}
+          {component.node ? `N${component.node}` : "—"} · {component.meta?.collection ?? "—"}
         </p>
         <h1 className="mt-3 font-serif text-3xl font-bold">{component.name}</h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -90,8 +90,8 @@ export default async function SourcePage({ params }: { params: Promise<{ name: s
 
       <header className="mb-6">
         <p className="mb-3 font-mono text-[11px] tracking-widest text-muted-foreground uppercase">
-          Source · {component.registry_type} · {component.layer ?? "—"} ·{" "}
-          {component.category ?? "—"}
+          Source · {component.type ?? "—"} · {component.node ? `N${component.node}` : "—"} ·{" "}
+          {component.meta?.collection ?? "—"}
         </p>
         <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {component.name}

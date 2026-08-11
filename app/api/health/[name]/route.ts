@@ -26,7 +26,7 @@ const COMPONENT_NAME_PATTERN = /^[a-z][a-z0-9-]*$/
  *   410 — component exists but `status: "deprecated"`
  *   503 — Supabase unconfigured (operator action required)
  *
- * The body is small JSON (name, status, layer, registry_type, last_checked).
+ * The body is small JSON (name, status, node, type, last_checked).
  * `Cache-Control: no-cache, no-store` because callers want a fresh probe
  * — same convention as `/api/v1/health`.
  */
@@ -81,10 +81,15 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     const probe = {
       status: "stable" as const,
       name: component.name,
-      registry_type: component.registry_type,
-      layer: component.layer ?? null,
-      category: component.category ?? null,
-      added_in_version: component.added_in_version ?? null,
+      // Was `registry_type` / `layer` / `category` / `added_in_version`: four columns
+      // from the retired Supabase row shape, every one of them `undefined` on a registry
+      // item and dropped by JSON.stringify. `layer` does not return under any name — the
+      // axis/layer model is retired (§9) and `node` is the unit that replaced it.
+      // `added_in_version` has no equivalent on disk; version history lives in
+      // /api/v1/ui/{name}/versions, so this probe stops pretending to carry it.
+      type: component.type ?? null,
+      node: component.node ?? null,
+      collection: component.meta?.collection ?? null,
       last_checked: new Date().toISOString(),
     }
 

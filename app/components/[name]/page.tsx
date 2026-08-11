@@ -42,7 +42,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
   // Source lives on disk, not in the registry document (@/lib/registry-source).
   const sourceCode = readComponentSource(name) ?? "// Source not available"
   const firstFilePath = item.files?.[0]?.path ?? ""
-  const registryType = item.registry_type?.replace("registry:", "") ?? "component"
+  const registryType = item.type?.replace("registry:", "") ?? "component"
   const installUrl = `https://mzizi.dev/api/v1/ui/${item.name}`
   // Every component is a real file, so every one can be rendered. There is no
   // hand-written demo list any more -- that list gated the Preview tab off for 525
@@ -79,9 +79,9 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
           <Badge variant="outline" className="font-mono text-xs">
             {registryType}
           </Badge>
-          {item.layer && (
+          {item.node && (
             <Badge variant="secondary" className="font-mono text-xs">
-              N{item.layer}
+              N{item.node}
             </Badge>
           )}
         </div>
@@ -120,7 +120,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
 
       {/* Dependencies */}
       {((item.dependencies && item.dependencies.length > 0) ||
-        (item.registry_dependencies && item.registry_dependencies.length > 0)) && (
+        (item.registryDependencies && item.registryDependencies.length > 0)) && (
         <SafeSection section="Dependencies">
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">Dependencies</h2>
@@ -130,7 +130,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
                   {dep}
                 </Badge>
               ))}
-              {item.registry_dependencies?.map((dep) => (
+              {item.registryDependencies?.map((dep) => (
                 <Badge key={dep} variant="outline">
                   <a href={`/components/${dep}`} className="hover:underline">
                     {dep}
