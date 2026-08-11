@@ -75,6 +75,26 @@ export type RegistryItem = {
   files?: RegistryFile[]
   /** The authored contract from `registry.json`. */
   meta?: RegistryMeta
+  /**
+   * Design tokens as CSS custom properties, keyed `theme` / `light` / `dark`.
+   *
+   * shadcn's first-class field for exactly this (registry-item.json). The CLI merges these
+   * into the consuming project's stylesheet, which is what makes N1 framework-agnostic —
+   * 431 of the registry's components reference `var(--…)` and nothing shipped a definition
+   * until these existed.
+   */
+  cssVars?: {
+    theme?: Record<string, string>
+    light?: Record<string, string>
+    dark?: Record<string, string>
+  }
+  /** Raw CSS the item contributes, for rules that are not custom properties. */
+  css?: Record<string, unknown>
+  /** Display name shown by a registry browser and the CLI. */
+  title?: string
+  categories?: string[]
+  docs?: string
+  author?: string
   /** Derived from the directory on disk, e.g. `n2-primitives` → 2. */
   node?: number
   /** The directory label on disk, e.g. `primitives`. */
@@ -200,6 +220,19 @@ export function readComponents(): RegistryItem[] {
   const out: RegistryItem[] = []
   for (const item of manifest.items ?? []) {
     if (!item?.name) continue
+
+    // A DATA item's payload is `cssVars`/`css`, not a file — that is what a `registry:theme`
+    // is. `nyuchi-tokens` carries the 214 design tokens themselves, generated from
+    // app/globals.css, and has no source on disk BY DESIGN: a `.ts` file is React-only, and
+    // the point of moving N1 into cssVars is that the shadcn CLI merges it into any project.
+    //
+    // Without this branch the item is dropped here and `/api/v1/ui/nyuchi-tokens` answers
+    // 404 — the tokens would be correct in the manifest and invisible to every consumer.
+    if (!item.files?.length && (item.cssVars || item.css)) {
+      out.push({ ...item })
+      continue
+    }
+
     const src = sources.get(item.name)
     if (!src) {
       console.error(`[mzizi] registry: ${item.name} is in registry.json with no file on disk`)

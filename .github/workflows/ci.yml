@@ -66,6 +66,19 @@ jobs:
       - name: Verify registry.json is canonical
         run: pnpm registry:verify
 
+      # N1's tokens are the one thing 431 of 573 components depend on, and they reach a
+      # consumer only as `cssVars` on the nyuchi-tokens item. That is generated from
+      # app/globals.css, so this asserts the two have not drifted — a stale copy would
+      # ship the wrong palette while every other gate stayed green.
+      - name: Verify the theme tokens match app/globals.css
+        run: pnpm tokens:registry:check
+
+      # title / categories / docs / author are derived from data already on each item.
+      # Checked rather than hand-maintained so 574 items cannot fall out of step one at
+      # a time.
+      - name: Verify registry item metadata is current
+        run: pnpm registry:metadata:check
+
       # The extracted prop map is what lets a preview resolve sample data for a component
       # (§8.10). If it goes stale the previews silently degrade to empty — nothing errors,
       # they just stop showing anything, which is the failure mode this whole session has

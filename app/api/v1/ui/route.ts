@@ -80,7 +80,9 @@ export async function GET(request: Request) {
     const items = page.map((c) => ({
       name: c.name,
       type: c.type,
+      title: c.title,
       description: c.description,
+      categories: c.categories,
       dependencies: c.dependencies,
       registryDependencies: c.registryDependencies,
       // Everything below is what makes the index filterable. It was always on the item and
