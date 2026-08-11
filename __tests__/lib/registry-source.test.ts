@@ -12,16 +12,38 @@ import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 
 /**
- * Resolve a component's file the way a human would — by name, in its node
- * directory, whatever extension it carries. The extension is owned by the
- * registry (`files[0].path`), so hardcoding `.tsx` here made the suite fail the
- * moment `nyuchi-seo` was corrected to the `.ts` its registry row declares.
+ * Extension preference, identical to `PRIMARY_EXTENSIONS` in
+ * `lib/registry-source.ts` and `lib/registry.ts`.
+ */
+const PRIMARY_EXTENSIONS = [".tsx", ".ts", ".jsx", ".js"]
+
+/**
+ * Resolve a component's PRIMARY file — the one `readComponentSource` is
+ * specified to return.
+ *
+ * This used to take the first `readdir` hit for the name, on the assumption that
+ * a component has one file. That assumption died with the Rust build-out: a
+ * component is one name with several target implementations (§8.9), so
+ * `nyuchi-seo` is now `nyuchi-seo.ts` AND `nyuchi-seo.rs`, and `find` returned
+ * whichever the filesystem happened to list first. The suite then compared the
+ * `.rs` against the `.ts` the reader correctly served, and failed on the reader
+ * being right.
+ *
+ * Ranking here rather than picking one extension keeps the assertion honest —
+ * "the bytes the route serves are the bytes in the repo" — while resolving the
+ * same file the reader documents itself as resolving. Every component that gains
+ * a `.rs` sibling from here on would otherwise break this test in turn.
  */
 function fileOnDisk(nodeDir: string, name: string): string {
   const dir = join(process.cwd(), "components/registry", nodeDir)
-  const match = readdirSync(dir).find((f) => f.replace(/\.[^.]+$/, "") === name)
-  if (!match) throw new Error(`no file for "${name}" in ${nodeDir}`)
-  return readFileSync(join(dir, match), "utf8")
+  const candidates = readdirSync(dir).filter((f) => f.replace(/\.[^.]+$/, "") === name)
+  if (candidates.length === 0) throw new Error(`no file for "${name}" in ${nodeDir}`)
+  const rank = (f: string) => {
+    const i = PRIMARY_EXTENSIONS.indexOf(f.slice(f.lastIndexOf(".")).toLowerCase())
+    return i === -1 ? PRIMARY_EXTENSIONS.length : i
+  }
+  const primary = candidates.sort((a, b) => rank(a) - rank(b))[0]
+  return readFileSync(join(dir, primary), "utf8")
 }
 import {
   componentsOnDisk,

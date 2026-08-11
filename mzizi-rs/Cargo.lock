@@ -476,6 +476,14 @@ name = "mzizi-assurance"
 version = "0.1.0"
 
 [[package]]
+name = "mzizi-discovery"
+version = "0.1.0"
+
+[[package]]
+name = "mzizi-docs"
+version = "0.1.0"
+
+[[package]]
 name = "mzizi-fundi"
 version = "0.1.0"
 
