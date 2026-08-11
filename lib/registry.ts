@@ -43,7 +43,18 @@ function safeSourcePath(...segments: string[]): string | null {
   return candidate
 }
 
-export type RegistryFile = { path: string; type?: string }
+/**
+ * A file on a registry item, in shadcn's terms (registry-item.json):
+ *
+ *   path    where the file IS — its source location in this repository
+ *   target  where the file GOES — the destination in the consumer's project
+ *
+ * They were conflated: `path` held the destination and `target` was absent, so
+ * `shadcn registry validate` failed on every item and `npx shadcn add nyuchi/mzizi/button`
+ * — the GitHub-registry route, which reads files straight out of the repo at `path` — could
+ * not resolve a single file.
+ */
+export type RegistryFile = { path: string; type?: string; target?: string }
 
 /**
  * The authored `meta` block from `registry.json` — a component's documented contract.
