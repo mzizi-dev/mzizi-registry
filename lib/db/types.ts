@@ -118,7 +118,17 @@ export type ComponentCategory =
  * `type`. Anything typed as `ComponentRow` while holding a registry item can read fields
  * that are always `undefined` and the compiler will agree with it.
  */
-export interface ComponentWithDocs extends RegistryItem {
+export interface ComponentWithDocs extends Omit<RegistryItem, "docs"> {
+  /**
+   * The structured docs ROW (use cases, variants, a11y) served by
+   * `/api/v1/ui/{name}/docs`.
+   *
+   * `RegistryItem.docs` is a different thing that happens to share the name: shadcn's
+   * registry-item schema defines `docs` as a STRING the CLI prints after installing.
+   * Both are real and both are called `docs`, so this omits the shadcn one rather than
+   * widening either — collapsing them would either break the /docs payload or put an
+   * object where the schema says string.
+   */
   docs?: ComponentDocRow | null
   demo?: ComponentDemoRow | null
 }
