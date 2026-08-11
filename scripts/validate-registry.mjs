@@ -322,6 +322,29 @@ function main() {
       )
     }
 
+    // — `path` is the SOURCE, `target` is the DESTINATION —
+    //
+    // shadcn's schema is explicit about which is which, and this registry had them merged:
+    // every item declared the install destination as `path` and no `target` at all. Our own
+    // API hid it, because `/api/v1/ui/{name}` resolves the source by component NAME and
+    // inlines the content — `path` was never read as a source, so a wrong one cost nothing
+    // locally. It cost the GitHub-registry channel entirely: `shadcn registry validate
+    // nyuchi/mzizi` failed on all 574 items, because that path is resolved against the repo.
+    for (const file of item.files ?? []) {
+      const p = file.path ?? ""
+      if (!p.startsWith("components/registry/")) {
+        err(
+          n,
+          `file path "${p}" is not a source path. \`path\` must point at the file as it ` +
+            "exists in THIS repo (components/registry/n<N>-<label>/…); the install " +
+            "destination belongs in `target`."
+        )
+      }
+      if (!file.target) {
+        err(n, `file "${p}" has no \`target\` — nothing says where it installs.`)
+      }
+    }
+
     // — a source containing JSX must install to a .tsx path —
     //
     // `nyuchi-resilience` shipped 18 KB of JSX into `lib/resilience/health-monitor.ts`;
@@ -339,7 +362,10 @@ function main() {
     // `<b>bold</b>` inside a doc comment all look like JSX to a pattern and are not.
     {
       const src = disk.get(n)
-      const declaredPath = item.files?.[0]?.path
+      // The INSTALL path is `target`. It used to be `path`, and reading `path` here now
+      // would compare the source's extension against itself and never fire — the gate would
+      // still print green while checking nothing.
+      const declaredPath = item.files?.[0]?.target
       // `rel` is relative to components/registry (e.g. `n1-tokens/nyuchi-tokens.ts`), and a
       // component's primary source is not always TypeScript — some are .md or .rs.
       const isTs = src && /\.tsx?$/.test(src.rel ?? "")
