@@ -87,9 +87,9 @@ export function generateAIContext(options: AIContextOptions = {}): string {
         `Live counts: ${counts.totalComponents} components total, ` +
           `${counts.totalStable} stable, across ${counts.totalNodes} nodes.`
       )
-      parts.push("Source: mzizi.dev | GitHub: nyuchi/design-portal")
+      parts.push("Source: mzizi.dev | GitHub: nyuchi/mzizi")
     } else {
-      parts.push("Source: mzizi.dev | GitHub: nyuchi/design-portal")
+      parts.push("Source: mzizi.dev | GitHub: nyuchi/mzizi")
       parts.push("For live counts: SELECT * FROM get_system_counts();")
     }
 

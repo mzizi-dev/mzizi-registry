@@ -1,6 +1,6 @@
 # Contributing to Mzizi
 
-Thank you for your interest in contributing to **Mzizi** — the open component registry, brand system, and DNA-helix architecture portal for the bundu ecosystem (the `design-portal` repository).
+Thank you for your interest in contributing to **Mzizi** — the open component registry, brand system, and DNA-helix architecture portal for the bundu ecosystem (the `mzizi` repository).
 
 This guide covers everything you need to get started, from setting up your environment to opening a pull request.
 
@@ -12,8 +12,8 @@ This guide covers everything you need to get started, from setting up your envir
 
 ```bash
 # Fork via GitHub, then clone your fork
-git clone https://github.com/<your-username>/design-portal.git
-cd design-portal
+git clone https://github.com/<your-username>/mzizi.git
+cd mzizi
 ```
 
 ### 2. Install dependencies

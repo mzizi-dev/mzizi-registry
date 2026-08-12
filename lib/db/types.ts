@@ -994,7 +994,7 @@ export interface UbuntuPrincipleInsert {
 //
 // The /observability dashboard reads from four public tables (and the
 // `get_system_counts()` RPC). All rows are public-read via RLS — see
-// nyuchi/design-portal#82.
+// nyuchi/mzizi#82.
 
 export interface FundiIssueRow {
   id: number

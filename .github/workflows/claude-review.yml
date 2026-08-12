@@ -59,7 +59,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
-            Review this PR (or respond to this comment/review) for the design-portal project.
+            Review this PR (or respond to this comment/review) for the mzizi project.
 
             On PR open / synchronize: review the full diff.
             On a comment or review: read the comment and either answer the question directly or take the action the commenter is asking for (review the surrounding code, propose a patch, etc.). Tie the response back to the conversation thread — don't repeat a full PR review unless asked.
