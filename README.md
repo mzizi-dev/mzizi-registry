@@ -2,9 +2,9 @@
 
 > An open-architecture project of the Bundu Foundation — the canonical component registry, brand system, DNA-helix frontend architecture, and AI-native developer portal for the bundu ecosystem. Operated and developed by Nyuchi.
 
-[![CI](https://github.com/nyuchi/design-portal/actions/workflows/ci.yml/badge.svg)](https://github.com/nyuchi/design-portal/actions/workflows/ci.yml)
-[![Release](https://github.com/nyuchi/design-portal/actions/workflows/release.yml/badge.svg)](https://github.com/nyuchi/design-portal/actions/workflows/release.yml)
-[![CodeQL](https://github.com/nyuchi/design-portal/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nyuchi/design-portal/security/code-scanning)
+[![CI](https://github.com/nyuchi/mzizi/actions/workflows/ci.yml/badge.svg)](https://github.com/nyuchi/mzizi/actions/workflows/ci.yml)
+[![Release](https://github.com/nyuchi/mzizi/actions/workflows/release.yml/badge.svg)](https://github.com/nyuchi/mzizi/actions/workflows/release.yml)
+[![CodeQL](https://github.com/nyuchi/mzizi/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nyuchi/mzizi/security/code-scanning)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 **Version:** 1.0.0 | **Live:** [mzizi.dev](https://mzizi.dev) | **Product docs:** [docs.bundu.org](https://docs.bundu.org) | **Engineering docs:** [docs.nyuchi.com](https://docs.nyuchi.com) | **Observability:** [mzizi.dev/observability](https://mzizi.dev/observability)
@@ -210,8 +210,8 @@ If `pnpm check` is green, CI will be too.
 ## Local Development
 
 ```bash
-git clone https://github.com/nyuchi/design-portal.git
-cd design-portal
+git clone https://github.com/nyuchi/mzizi.git
+cd mzizi
 pnpm install
 
 cp .env.example .env.local
@@ -229,7 +229,7 @@ pnpm dev
 
 | Repository                                                               | URL                                                | Role                                                                                                        |
 | ------------------------------------------------------------------------ | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **[design-portal](https://github.com/nyuchi/design-portal)** (this repo) | [mzizi.dev](https://mzizi.dev)                     | Mzizi portal — registry, brand, DNA-helix architecture, document-route MCP                                  |
+| **[mzizi](https://github.com/nyuchi/mzizi)** (this repo) | [mzizi.dev](https://mzizi.dev)                     | Mzizi portal — registry, brand, DNA-helix architecture, document-route MCP                                  |
 | **[nyuchi/mzizi-tools](https://github.com/nyuchi/mzizi-tools)**          | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
 | **[nyuchi/mukoko-platform](https://github.com/nyuchi/mukoko-platform)**  | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform (will be renamed `nyuchi-console`)                                            |
 | **[nyuchi/bundu-docs](https://github.com/nyuchi/bundu-docs)**            | [docs.bundu.org](https://docs.bundu.org)           | Outward-facing product documentation (Astro Starlight)                                                      |
@@ -254,7 +254,7 @@ The version-bump propagation surfaces are listed in [`CLAUDE.md`](CLAUDE.md) §1
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and the PR process. For questions and ideas, use [GitHub Discussions](https://github.com/nyuchi/design-portal/discussions).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and the PR process. For questions and ideas, use [GitHub Discussions](https://github.com/nyuchi/mzizi/discussions).
 
 ## Code of Conduct
 
@@ -262,7 +262,7 @@ See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Built on Ubuntu: _umuntu ngumuntu 
 
 ## Security
 
-See [SECURITY.md](SECURITY.md) or report privately via [GitHub Security Advisories](https://github.com/nyuchi/design-portal/security/advisories/new).
+See [SECURITY.md](SECURITY.md) or report privately via [GitHub Security Advisories](https://github.com/nyuchi/mzizi/security/advisories/new).
 
 ## Governance & License
 

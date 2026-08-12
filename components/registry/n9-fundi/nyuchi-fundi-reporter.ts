@@ -3,7 +3,7 @@
 /**
  * Where a fundi report becomes an issue.
  *
- * This said `nyuchi/design-portal`, the repo's name before the Mzizi rename —
+ * This said `nyuchi/mzizi`, the repo's name before the Mzizi rename —
  * it is `nyuchi/mzizi` now. GitHub redirects API calls for a renamed repo, so
  * this kept working and had no symptom, which is exactly why it survived: a
  * stale constant that still functions is invisible until the redirect is

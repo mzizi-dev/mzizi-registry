@@ -181,7 +181,7 @@ Route `onCritical` to N9 and `onError` to OTLP. Sending every error to N9 opens
 an issue per render failure; emitting only to OTLP means nothing gets fixed
 unless somebody happens to be watching a dashboard.
 
-The reporter's issue destination was a hardcoded `nyuchi/design-portal` — this
+The reporter's issue destination was a hardcoded `nyuchi/mzizi` — this
 repo's name before the Mzizi rename. GitHub redirects API calls for a renamed
 repo, so it kept working and had no symptom, which is exactly why it survived.
 A stale constant that still functions is invisible until the redirect is

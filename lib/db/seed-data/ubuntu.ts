@@ -1,7 +1,7 @@
 /**
  * Ubuntu Pillars and Principles — seed data mirror.
  *
- * Issue nyuchi/design-portal#45. The production `ubuntu_pillars` and
+ * Issue nyuchi/mzizi#45. The production `ubuntu_pillars` and
  * `ubuntu_principles` tables on `grjsboqkaywpwatvrzmy` were seeded
  * out-of-band on 2026-04-22. This module mirrors those rows verbatim
  * for branch databases — local Supabase stacks, ephemeral preview
