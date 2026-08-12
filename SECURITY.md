@@ -20,7 +20,7 @@ The authoritative current version is served live at `GET /api/v1/changelog` (fir
 
 Use GitHub's private security advisory flow so we can investigate and ship a fix before disclosure:
 
-1. Go to <https://github.com/nyuchi/design-portal/security/advisories/new>
+1. Go to <https://github.com/nyuchi/mzizi/security/advisories/new>
 2. Fill in: a clear title, a description, steps to reproduce, affected version / endpoint, impact (confidentiality / integrity / availability), and any suggested mitigation
 3. Submit — the maintainers are notified privately
 
@@ -111,11 +111,11 @@ This chains every CI gate — `format:check`, `lint`, `lint:colors`, `lint:md`, 
 
 CI workflows that gate merge to `main`:
 
-| Workflow                                                                 | Security-relevant jobs                                                                                                             |
-| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| [`ci.yml`](.github/workflows/ci.yml)                                     | `Security Audit` (pnpm audit, fails on moderate+), `Lint`, `Type Check`, `Test`, `Build`                                           |
-| [`lint.yml`](.github/workflows/lint.yml)                                 | `lint / actionlint` (workflow YAML lint), `lint / yamllint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`      |
-| [CodeQL](https://github.com/nyuchi/design-portal/security/code-scanning) | `Analyze (actions)` and `Analyze (javascript-typescript)` — autocatches `actions/missing-workflow-permissions`, common JS/TS sinks |
+| Workflow                                                         | Security-relevant jobs                                                                                                             |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [`ci.yml`](.github/workflows/ci.yml)                             | `Security Audit` (pnpm audit, fails on moderate+), `Lint`, `Type Check`, `Test`, `Build`                                           |
+| [`lint.yml`](.github/workflows/lint.yml)                         | `lint / actionlint` (workflow YAML lint), `lint / yamllint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`      |
+| [CodeQL](https://github.com/nyuchi/mzizi/security/code-scanning) | `Analyze (actions)` and `Analyze (javascript-typescript)` — autocatches `actions/missing-workflow-permissions`, common JS/TS sinks |
 
 Every job in every workflow declares an explicit `permissions:` block (`contents: read` by default) — required by the org-wide `actions/missing-workflow-permissions` CodeQL rule.
 
@@ -125,7 +125,7 @@ Per `CLAUDE.md` §15 rule 22, **security findings from any review/audit (`/secur
 
 ## Contact
 
-- Primary: GitHub security advisories — <https://github.com/nyuchi/design-portal/security/advisories/new>
+- Primary: GitHub security advisories — <https://github.com/nyuchi/mzizi/security/advisories/new>
 - Fallback: `security@nyuchi.com`
 
 Thank you for helping keep the bundu ecosystem safe.
