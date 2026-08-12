@@ -111,10 +111,10 @@ This chains every CI gate — `format:check`, `lint`, `lint:colors`, `lint:md`, 
 
 CI workflows that gate merge to `main`:
 
-| Workflow                                                                 | Security-relevant jobs                                                                                                             |
-| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| [`ci.yml`](.github/workflows/ci.yml)                                     | `Security Audit` (pnpm audit, fails on moderate+), `Lint`, `Type Check`, `Test`, `Build`                                           |
-| [`lint.yml`](.github/workflows/lint.yml)                                 | `lint / actionlint` (workflow YAML lint), `lint / yamllint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`      |
+| Workflow                                                         | Security-relevant jobs                                                                                                             |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [`ci.yml`](.github/workflows/ci.yml)                             | `Security Audit` (pnpm audit, fails on moderate+), `Lint`, `Type Check`, `Test`, `Build`                                           |
+| [`lint.yml`](.github/workflows/lint.yml)                         | `lint / actionlint` (workflow YAML lint), `lint / yamllint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`      |
 | [CodeQL](https://github.com/nyuchi/mzizi/security/code-scanning) | `Analyze (actions)` and `Analyze (javascript-typescript)` — autocatches `actions/missing-workflow-permissions`, common JS/TS sinks |
 
 Every job in every workflow declares an explicit `permissions:` block (`contents: read` by default) — required by the org-wide `actions/missing-workflow-permissions` CodeQL rule.
