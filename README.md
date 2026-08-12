@@ -227,20 +227,20 @@ pnpm dev
 
 ## Ecosystem
 
-| Repository                                                               | URL                                                | Role                                                                                                        |
-| ------------------------------------------------------------------------ | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **[mzizi](https://github.com/nyuchi/mzizi)** (this repo) | [mzizi.dev](https://mzizi.dev)                     | Mzizi portal — registry, brand, DNA-helix architecture, document-route MCP                                  |
-| **[nyuchi/mzizi-tools](https://github.com/nyuchi/mzizi-tools)**          | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
-| **[nyuchi/mukoko-platform](https://github.com/nyuchi/mukoko-platform)**  | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform (will be renamed `nyuchi-console`)                                            |
-| **[nyuchi/bundu-docs](https://github.com/nyuchi/bundu-docs)**            | [docs.bundu.org](https://docs.bundu.org)           | Outward-facing product documentation (Astro Starlight)                                                      |
-| **[nyuchi/nyuchi-docs](https://github.com/nyuchi/nyuchi-docs)**          | [docs.nyuchi.com](https://docs.nyuchi.com)         | Engineering / how-things-are-done docs (Astro Starlight)                                                    |
-| mukoko                                                                   | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
-| mukoko weather                                                           | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
-| mukoko news                                                              | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
-| nhimbe                                                                   | [nhimbe.com](https://nhimbe.com)                   | Events and cultural gatherings                                                                              |
-| shamwari                                                                 | [shamwari.ai](https://shamwari.ai)                 | Sovereign AI companion                                                                                      |
-| nyuchi                                                                   | [nyuchi.com](https://nyuchi.com)                   | Enterprise layer                                                                                            |
-| bundu                                                                    | [bundu.family](https://bundu.family)               | The ecosystem                                                                                               |
+| Repository                                                              | URL                                                | Role                                                                                                        |
+| ----------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **[mzizi](https://github.com/nyuchi/mzizi)** (this repo)                | [mzizi.dev](https://mzizi.dev)                     | Mzizi portal — registry, brand, DNA-helix architecture, document-route MCP                                  |
+| **[nyuchi/mzizi-tools](https://github.com/nyuchi/mzizi-tools)**         | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
+| **[nyuchi/mukoko-platform](https://github.com/nyuchi/mukoko-platform)** | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform (will be renamed `nyuchi-console`)                                            |
+| **[nyuchi/bundu-docs](https://github.com/nyuchi/bundu-docs)**           | [docs.bundu.org](https://docs.bundu.org)           | Outward-facing product documentation (Astro Starlight)                                                      |
+| **[nyuchi/nyuchi-docs](https://github.com/nyuchi/nyuchi-docs)**         | [docs.nyuchi.com](https://docs.nyuchi.com)         | Engineering / how-things-are-done docs (Astro Starlight)                                                    |
+| mukoko                                                                  | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
+| mukoko weather                                                          | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
+| mukoko news                                                             | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
+| nhimbe                                                                  | [nhimbe.com](https://nhimbe.com)                   | Events and cultural gatherings                                                                              |
+| shamwari                                                                | [shamwari.ai](https://shamwari.ai)                 | Sovereign AI companion                                                                                      |
+| nyuchi                                                                  | [nyuchi.com](https://nyuchi.com)                   | Enterprise layer                                                                                            |
+| bundu                                                                   | [bundu.family](https://bundu.family)               | The ecosystem                                                                                               |
 
 ---
 
