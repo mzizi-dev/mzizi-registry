@@ -109,7 +109,7 @@ const jsonLd = {
       name: "Bundu Foundation",
       description:
         "The Bundu Foundation governs Mzizi, an open-architecture project operated and developed by Nyuchi.",
-      sameAs: ["https://github.com/nyuchi/design-portal"],
+      sameAs: ["https://github.com/nyuchi/mzizi"],
     },
     {
       "@type": "SoftwareApplication",
