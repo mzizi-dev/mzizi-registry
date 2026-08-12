@@ -482,6 +482,9 @@ version = "0.1.0"
 [[package]]
 name = "mzizi-docs"
 version = "0.1.0"
+dependencies = [
+ "dioxus",
+]
 
 [[package]]
 name = "mzizi-fundi"
