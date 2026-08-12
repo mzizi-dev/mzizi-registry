@@ -31,6 +31,7 @@ members = [
   "crates/mzizi-fundi",
   "crates/mzizi-discovery",
   "crates/mzizi-docs",
+  "crates/mzizi-shell",
 ]
 
 [workspace.package]

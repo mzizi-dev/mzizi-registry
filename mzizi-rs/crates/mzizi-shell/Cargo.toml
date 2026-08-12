@@ -1,0 +1,27 @@
+[package]
+name = "mzizi-shell"
+description = "Mzizi N7 shell — the app-chrome rung: header, nav, connectivity, theme, lifecycle."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+# Dioxus, for the components that render — matching mzizi-ui and mzizi-docs.
+dioxus = { version = "0.7", default-features = false, features = ["macro", "signals", "hooks", "html"] }
+
+# `regex`, and this is the one crate in the workspace that carries it.
+#
+# Every other crate here hand-rolls its parsing (N8's JSON, N11's JSON-LD) because the shape
+# is small and fully specified. Deep-link route matching is not that: the .tsx uses native
+# RegExp, named capture groups, and anchoring, and hand-writing a second regex engine to avoid
+# one dependency would be the wrong trade — slower, more surface for a subtle bug, and no
+# actual independence gained, since the .tsx's behaviour IS regex semantics. `regex` is
+# std-only (no external C library, no build-time codegen surprises), which is why it is the
+# one exception rather than the first of many.
+regex = "1"
