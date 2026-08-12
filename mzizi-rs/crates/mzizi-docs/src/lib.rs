@@ -20,3 +20,9 @@ pub mod nyuchi_ai_context;
 
 #[path = "../../../../components/registry/n10-documentation/nyuchi-docs-api.rs"]
 pub mod nyuchi_docs_api;
+
+#[path = "../../../../components/registry/n10-documentation/nyuchi-changelog-renderer.rs"]
+pub mod nyuchi_changelog_renderer;
+
+#[path = "../../../../components/registry/n10-documentation/nyuchi-docs-engine.rs"]
+pub mod nyuchi_docs_engine;
