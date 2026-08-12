@@ -11,5 +11,11 @@ homepage.workspace = true
 [lints]
 workspace = true
 
-# No dependencies, matching N8, N9 and N11.
+# Dioxus, and only for the two RENDERING components.
+#
+# `nyuchi-ai-context` and `nyuchi-docs-api` need nothing and get nothing — they are string
+# assembly and routing. But N10 also ships a changelog timeline and a documentation portal,
+# and a component that renders needs a renderer. The version matches `mzizi-ui`, so a
+# consumer composing an N10 portal out of N2 primitives links one Dioxus.
 [dependencies]
+dioxus = { version = "0.7", default-features = false, features = ["macro", "signals", "hooks", "html"] }
