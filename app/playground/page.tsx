@@ -16,7 +16,7 @@ import { ComponentGallery } from "@/components/playground/component-gallery"
 export const metadata: Metadata = {
   title: "Playground",
   description:
-    "Interactive playground for the Mzizi component registry — live preview, variants, props inspector, and an API tester for every stable component.",
+    "Explore the benchmark corpus's reference implementations — live preview, variants, props inspector, and an API tester for every stable component.",
 }
 
 export const revalidate = 300
@@ -29,8 +29,9 @@ export default function PlaygroundPage() {
           Playground
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Interactive playground for the full Mzizi registry. Pick a component to open its live
-          preview, browse its variants, and call the registry API live to fetch its source.
+          Explore the corpus's reference implementations — the behaviour the Mzizi framework's
+          output is judged against. Pick a component to open its live preview, browse its variants,
+          and call the registry API live to fetch its source.
         </p>
         <pre className="overflow-x-auto rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs">
           <code>npx shadcn@latest add https://mzizi.dev/api/v1/ui/&lt;component-name&gt;</code>

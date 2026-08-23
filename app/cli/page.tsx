@@ -5,8 +5,9 @@ import { CopyCommand } from "@/components/landing/copy-command"
 
 // CLI INSTRUCTIONS — mzizi.dev/cli
 //
-// The public instruction surface for @nyuchi/mzizi-cli — the fundi agent.
-// The package lives in nyuchi/mzizi-tools (`mzizi-cli/`); this page is its
+// The public instruction surface for @nyuchi/mzizi-cli — the fundi agent,
+// the Nyuchi-owned console over the Mzizi research program. The package
+// lives in nyuchi/mzizi-tools (`mzizi-cli/`); this page is its
 // human-readable manual so consumers do not have to read the monorepo to get
 // started.
 //
@@ -17,7 +18,7 @@ import { CopyCommand } from "@/components/landing/copy-command"
 export const metadata: Metadata = {
   title: "CLI",
   description:
-    "@nyuchi/mzizi-cli — the fundi agent. Explore a project, plan a change against the Mzizi registry, and apply it. Install, configure, and command reference.",
+    "@nyuchi/mzizi-cli — the fundi agent, the command-line surface of the Mzizi research program. Explore a project, plan a change against the Phase 0 corpus, and apply it. Install, configure, and command reference.",
 }
 
 export default function CliPage() {
@@ -31,8 +32,10 @@ export default function CliPage() {
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
           <code className="font-mono text-xs">@nyuchi/mzizi-cli</code> ships{" "}
           <strong className="font-semibold text-foreground">fundi</strong>: an agent that reads your
-          project off disk, plans a change against the live registry, and applies it only when you
-          tell it to. The SDK and the CLI are one package.
+          project off disk, plans a change against the live registry — the Phase 0 benchmark corpus
+          of the Mzizi research program — and applies it only when you tell it to. The SDK and the
+          CLI are one package. It is the command-line surface of the program today, and the natural
+          home of the compiler toolchain as the Mzizi language lands.
         </p>
       </header>
 
@@ -75,7 +78,7 @@ export default function CliPage() {
               fundi plan &lt;goal&gt;
             </h3>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Plans the work against the live registry and returns the steps. The planner runs
+              Plans the work against the live corpus and returns the steps. The planner runs
               read-only — it can read files, list directories, and fetch skills and components, but
               writing and shelling out are blocked at this stage. A plan is inert until applied, so
               read it first.
@@ -181,7 +184,7 @@ export default function CliPage() {
           Use it with the rest
         </h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          The CLI is one of three surfaces over the same registry. Pair it with the{" "}
+          The CLI is one of three agent-facing surfaces over the same corpus. Pair it with the{" "}
           <Link className="underline hover:text-foreground" href="/skills">
             skills bundle
           </Link>{" "}

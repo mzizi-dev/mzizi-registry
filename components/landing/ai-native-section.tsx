@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Section, SectionHeader } from "@/components/landing/section"
-import { Check, Copy, Bot, Zap, BarChart2, Terminal } from "lucide-react"
+import { Check, Copy, Bot, Zap, BarChart2, FlaskConical } from "lucide-react"
 import { LiveMcpStats } from "@/components/live-mcp-stats"
 
 function CopySnippet({ code, label }: { code: string; label: string }) {
@@ -40,23 +40,23 @@ const mcpConfig = `{
   }
 }`
 
-const skillUsage = `# In any Claude Code session:
-/nyuchi-design
-/bundu-design
-/mukoko-design
+const benchmarkProtocol = `# Phase 0 — same agent, same corpus, three languages
+subjects:  Mzizi syntax · raw Dioxus · Leptos
+corpus:    this registry, reauthored end to end
+metrics:   tokens consumed
+           iterations to a clean compile
+           defect rate*
 
-# Or ask Claude directly:
-@mzizi get_component button
-@mzizi scaffold_component data-table`
+* defect = compiles cleanly, behaviorally wrong`
 
 export function AiNativeSection() {
   return (
     <Section>
       <SectionHeader
         align="center"
-        eyebrow="AI-native"
-        title="Your design system, inside your AI assistant"
-        sub="Mzizi ships with a Model Context Protocol server and a Claude Code skill. Your AI assistant can browse components, generate scaffolds, and fetch source code — without leaving the conversation."
+        eyebrow="Machine authorship"
+        title="Designed for the author that never sleeps"
+        sub="The framework's thesis is that agents are the primary authors of the next web — so the project itself is run that way. The corpus is exposed to agents over MCP, the benchmark is defined in the open, and the telemetry is public."
       />
 
       <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -74,8 +74,9 @@ export function AiNativeSection() {
             </div>
           </div>
           <p className="text-xs leading-relaxed text-muted-foreground">
-            Connect Claude Code, Cursor, or any MCP-compatible assistant to the full component
-            registry. Browse, search, scaffold, and fetch source — live from the database.
+            Connect Claude Code, Cursor, or any MCP-compatible assistant to the benchmark corpus.
+            Browse, search, and fetch component source — the same fixed component set the framework
+            is measured against, live from the database.
           </p>
           <CopySnippet code={mcpConfig} label=".claude/settings.json" />
           <div className="mt-auto grid grid-cols-2 gap-1.5">
@@ -97,39 +98,30 @@ export function AiNativeSection() {
           </div>
         </div>
 
-        {/* Claude Code Skill */}
+        {/* The benchmark */}
         <div className="flex flex-col gap-4 rounded-[var(--radius-xl)] border border-border bg-card p-6">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-tanzanite)]/10">
-              <Terminal className="size-5 text-[var(--color-tanzanite)]" />
+              <FlaskConical className="size-5 text-[var(--color-tanzanite)]" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-foreground">Claude Code Skill</h3>
-              <p className="text-xs text-muted-foreground">Slash command · Design system aware</p>
+              <h3 className="text-sm font-semibold text-foreground">The Benchmark</h3>
+              <p className="text-xs text-muted-foreground">Phase 0 · Defined before the results</p>
             </div>
           </div>
           <p className="text-xs leading-relaxed text-muted-foreground">
-            Three design skills —{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">
-              nyuchi-design
-            </code>
-            ,{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">bundu-design</code>
-            ,{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">
-              mukoko-design
-            </code>{" "}
-            — teach Claude Code the Seven African Minerals palette, component patterns, Ubuntu
-            design principles, and APCA accessibility standards.
+            One experiment scores the whole thesis: an LLM agent authors Mzizi&apos;s own component
+            corpus in Mzizi syntax versus raw Dioxus and Leptos. The protocol is fixed up front, so
+            the numbers — good or bad — mean something.
           </p>
-          <CopySnippet code={skillUsage} label="Usage" />
+          <CopySnippet code={benchmarkProtocol} label="Benchmark protocol" />
           <ul className="mt-auto space-y-1.5 text-xs text-muted-foreground">
             {[
-              "Seven African Minerals palette",
-              "CVA + Radix + cn() patterns",
-              "Ubuntu design checklist",
-              "APCA Lc 90+ contrast guide",
-              "56px touch target enforcement",
+              "Fixed corpus — no cherry-picked tasks",
+              "Same agent and harness for every language",
+              "Tokens, iterations, and defects all reported",
+              "Contract tests define “behaviorally wrong”",
+              "Results published raw, not as marketing",
             ].map((f) => (
               <li key={f} className="flex items-center gap-2">
                 <span className="size-1 shrink-0 rounded-full bg-[var(--color-tanzanite)]" />
@@ -151,9 +143,9 @@ export function AiNativeSection() {
             </div>
           </div>
           <p className="text-xs leading-relaxed text-muted-foreground">
-            Usage metrics are public — aligned with the bundu open data philosophy. See which
-            components are most installed, API latency, error rates, and MCP tool usage in real
-            time.
+            Research telemetry is public — aligned with the Bundu open data philosophy. Corpus
+            usage, API latency, error rates, and MCP tool traffic are live today; Phase 0 benchmark
+            results land here when they exist.
           </p>
           <div className="space-y-2">
             <a
@@ -173,11 +165,11 @@ export function AiNativeSection() {
           </div>
           <ul className="mt-auto space-y-1.5 text-xs text-muted-foreground">
             {[
-              "Most installed components",
+              "Corpus usage and install counts",
               "API call volumes + latency",
               "MCP tool usage breakdown",
               "Error rates by endpoint",
-              "30-day traffic trends",
+              "Benchmark results, when they land",
             ].map((f) => (
               <li key={f} className="flex items-center gap-2">
                 <span className="size-1 shrink-0 rounded-full bg-[var(--color-malachite)]" />

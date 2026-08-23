@@ -6,7 +6,11 @@ import type { HelixNode } from "@/lib/db/types"
 
 export const revalidate = 3600
 
-// NODE DETAIL — one element of the Mzizi DNA double helix.
+// NODE DETAIL — one slice of the Phase 0 benchmark corpus.
+//
+// Under the framework reframing, N1–N12 are the taxonomy of the corpus the
+// Mzizi language is measured against: each node is a fixed, known-ground-truth
+// set of components with reference implementations and behavior contracts.
 //
 // Replaces the axis-era `/architecture/layers/[n]`, which read
 // `get_layer_detail()` and printed `L{n} · {sub_label} · {axis_name}` for
@@ -73,7 +77,7 @@ export default async function NodeDetailPage({ params }: { params: Promise<{ n: 
       <article className="mx-auto max-w-3xl py-12">
         <h1 className="font-serif text-3xl font-bold">N{parsed}</h1>
         <p className="mt-4 text-sm text-muted-foreground">
-          Supabase is not configured. Every element of the helix is read live from{" "}
+          Supabase is not configured. Every slice of the benchmark corpus is read live from{" "}
           <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
             component_documents
           </code>{" "}
@@ -98,7 +102,7 @@ export default async function NodeDetailPage({ params }: { params: Promise<{ n: 
         href="/architecture"
         className="mb-6 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
-        <ArrowLeft className="size-3" /> The whole helix
+        <ArrowLeft className="size-3" /> The whole corpus
       </Link>
 
       <header className="mb-8">
@@ -138,6 +142,20 @@ export default async function NodeDetailPage({ params }: { params: Promise<{ n: 
         </section>
       ) : null}
 
+      <section className="mb-10 rounded-2xl border border-border bg-muted/10 p-6">
+        <p className="mb-2 font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+          Role in the Phase 0 benchmark
+        </p>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          This {element.type} is one slice of the fixed benchmark corpus the Mzizi framework is
+          measured against. Each component here has a reference implementation read from disk and a
+          behavior contract; when the benchmark agent re-authors it in Mzizi syntax (versus raw
+          Dioxus and Leptos), the run is scored on tokens consumed, iterations to a clean compile,
+          and defect rate — a defect being code that compiles cleanly but fails the contract. No
+          benchmark has been run yet; the corpus is the ground truth being prepared for it.
+        </p>
+      </section>
+
       {element.stakeholder ? (
         <section className="mb-10">
           <h2 className="mb-3 font-serif text-xl font-semibold">Stakeholder</h2>
@@ -163,7 +181,9 @@ export default async function NodeDetailPage({ params }: { params: Promise<{ n: 
 
       <section className="mb-10">
         <header className="mb-2 flex items-baseline justify-between gap-3">
-          <h2 className="font-serif text-xl font-semibold">Components on this {element.type}</h2>
+          <h2 className="font-serif text-xl font-semibold">
+            Corpus components on this {element.type}
+          </h2>
           <span className="font-mono text-xs text-muted-foreground">
             {element.component_count} {element.component_count === 1 ? "component" : "components"}
           </span>
