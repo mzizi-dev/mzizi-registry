@@ -11,7 +11,7 @@ import { ExploreSection } from "@/components/landing/explore-section"
 export const metadata: Metadata = {
   title: "Mzizi",
   description:
-    "An open-architecture project of the Bundu Foundation — components, brand, MCP server, and AI-native developer tooling. Operated and developed by Nyuchi.",
+    "A Rust framework for the agentic web — a Bundu Foundation research project. Syntax, type system, and compiler feedback loop designed for machine authorship, measured against a fixed benchmark corpus.",
 }
 
 export const revalidate = 300

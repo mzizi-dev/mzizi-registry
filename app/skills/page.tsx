@@ -21,7 +21,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: "Skills",
   description:
-    "Mzizi agent skills for AI assistants: install the @nyuchi/mzizi-skills bundle, the mzizi Claude Code plugin, or read any skill over HTTP and MCP.",
+    "Mzizi agent skills for AI assistants — the doctrine of the Mzizi research program, loadable on demand. Install the @nyuchi/mzizi-skills bundle, the mzizi Claude Code plugin, or read any skill over HTTP and MCP.",
 }
 
 const NPM_PACKAGE = "@nyuchi/mzizi-skills"
@@ -39,9 +39,10 @@ export default async function SkillsPage() {
           Agent skills
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Doctrine an AI assistant can load on demand — the design system, the brand constellation,
-          and the engineering patterns behind the bundu ecosystem. Install the bundle once and any
-          assistant working in the repo has the rules on hand instead of guessing at them.
+          Doctrine an AI assistant can load on demand — the Mzizi framework&rsquo;s architecture,
+          the Phase 0 benchmark corpus, and the engineering patterns behind the Bundu ecosystem.
+          Install the bundle once and any assistant working in the repo has the research
+          program&rsquo;s rules on hand instead of guessing at them.
         </p>
       </header>
 

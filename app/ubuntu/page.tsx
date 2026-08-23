@@ -18,7 +18,7 @@ export const revalidate = 3600
 export const metadata = {
   title: "Ubuntu",
   description:
-    "The Ubuntu doctrine of the Mukoko platform: Five Pillars (where Ubuntu is situated), Five Principles (how Ubuntu is embodied), and the Five Questions (the product decision filter). African scholarship, sovereign derivation.",
+    "The research ethos of the Bundu Foundation: Five Pillars (where Ubuntu is situated), Five Principles (how Ubuntu is embodied), and the Five Questions (the decision filter for the Mzizi research program). African scholarship, sovereign derivation.",
 }
 
 function PillarCard({ pillar }: { pillar: UbuntuPillarRow }) {
@@ -46,7 +46,7 @@ function PillarCard({ pillar }: { pillar: UbuntuPillarRow }) {
           </div>
           <div>
             <dt className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-              Platform surface
+              Surface
             </dt>
             <dd className="mt-1 text-foreground">{pillar.platform_surface}</dd>
           </div>
@@ -81,7 +81,7 @@ function PrincipleCard({ principle }: { principle: UbuntuPrincipleRow }) {
         <dl className="space-y-2 border-t border-border pt-3">
           <div>
             <dt className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-              Platform expression
+              Expression
             </dt>
             <dd className="mt-1 text-foreground">{principle.expression}</dd>
           </div>
@@ -136,7 +136,7 @@ export default async function UbuntuPage() {
       {/* ── 1. Ubuntu intro ─────────────────────────────────────────── */}
       <header className="mb-12">
         <p className="mb-3 font-mono text-[11px] tracking-widest text-muted-foreground sm:text-xs">
-          UBUNTU DOCTRINE
+          RESEARCH ETHOS · BUNDU FOUNDATION
         </p>
         <h1 className="mb-4 font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
           Ubuntu
@@ -151,12 +151,18 @@ export default async function UbuntuPage() {
           carries the same shape: ndiri nekuti tiri.
         </p>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Ubuntu is the philosophical substrate of the Mukoko platform. It does not live at one node
-          of the architecture — it is the genetic code the whole helix is read from. The doctrine
-          has three five-fold expressions: <strong className="text-foreground">Pillars</strong>{" "}
-          (where Ubuntu is situated), <strong className="text-foreground">Principles</strong> (how
-          Ubuntu is embodied), and <strong className="text-foreground">Questions</strong> (the
-          decision filter that evaluates whether a product change ships).
+          Ubuntu is why Mzizi is structured the way it is. A framework for the agentic web could be
+          a company&apos;s proprietary moat; instead it is{" "}
+          <strong className="text-foreground">Bundu Foundation research</strong> — the framework IP
+          held by the Foundation, published under{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">@bundu</code>, its
+          benchmark corpus open as community ground truth, its results published rather than
+          claimed. &ldquo;I am because we are&rdquo; is the working method: research that only means
+          something when the community can run it, check it, and build on it. The ethos has three
+          five-fold expressions: <strong className="text-foreground">Pillars</strong> (where Ubuntu
+          is situated), <strong className="text-foreground">Principles</strong> (how Ubuntu is
+          embodied), and <strong className="text-foreground">Questions</strong> (the decision filter
+          every research and design decision passes through).
         </p>
       </header>
 
@@ -207,9 +213,10 @@ export default async function UbuntuPage() {
             The Five Principles
           </h2>
           <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            The behavioural virtues that translate Ubuntu into software. From Lovemore Mbigi&apos;s
-            Collective Fingers Theory — <em>chara chimwe hachitswanyi inda</em>, one finger cannot
-            crush a louse. Rendered live from{" "}
+            The behavioural virtues that translate Ubuntu into a way of doing research. From
+            Lovemore Mbigi&apos;s Collective Fingers Theory —{" "}
+            <em>chara chimwe hachitswanyi inda</em>, one finger cannot crush a louse. Rendered live
+            from{" "}
             <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
               ubuntu_principles
             </code>
@@ -248,8 +255,8 @@ export default async function UbuntuPage() {
           </h2>
           <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             The Pillars name the spheres. The Principles name the virtues. The Questions evaluate
-            every product decision against both. A change that fails any one of these questions does
-            not ship. Stored in{" "}
+            every decision in the research program against both — a language feature, a benchmark
+            rule, a publication. A decision that fails any one of them does not proceed. Stored in{" "}
             <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
               brand_meta.philosophy.ubuntuQuestions
             </code>
@@ -337,7 +344,7 @@ export default async function UbuntuPage() {
           Restorative justice is not one of the five principles. It is a modern American framework
           developed in juvenile justice and therapeutic discourse, not an African one. Ubuntu
           addresses harm through the continuous practice of the virtues above, not through a
-          separate remedial process. The community does not define itself by how it handles
+          separate remedial process. The research community does not define itself by how it handles
           wrongdoing — it defines itself by how it lives.
         </blockquote>
       </section>
