@@ -1,5 +1,5 @@
 {
-  // Markdownlint configuration for the Nyuchi Design Portal docs.
+  // Markdownlint configuration for the Mzizi docs.
   // Goals: catch real formatting mistakes (broken headings, stray blanks)
   // without fighting long URLs, tables, inline HTML, or in-code examples.
   "config": {

@@ -1,6 +1,6 @@
-# Supabase — Nyuchi Design Portal
+# Supabase — Mzizi
 
-This directory captures the Supabase side of the design portal. The
+This directory captures the Supabase side of the Mzizi registry. The
 database itself is the source of truth; the files here document and
 reproduce its structure.
 

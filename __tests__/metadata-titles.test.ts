@@ -13,6 +13,11 @@
 //
 // Two pages also carried names that no longer exist: "mzizi design portal" and
 // "nyuchi design portal" both predate the rename to Mzizi.
+//
+// The retired-name check originally read only double-quoted titles, and three
+// dynamic routes — /components/[name], /source/[name], /changelog/[name] — wrote
+// theirs as template literals. All three shipped "— nyuchi design portal" while
+// this file was green. Both quoting styles are now read.
 
 import { describe, expect, it } from "vitest"
 import { readdirSync, readFileSync, statSync } from "node:fs"
@@ -34,6 +39,12 @@ function pageFiles(dir: string): string[] {
 function titlesIn(source: string): string[] {
   const out: string[] = []
   for (const m of source.matchAll(/\btitle:\s*"([^"]+)"/g)) out.push(m[1])
+  // Template literals too. Three live routes carried a retired name for exactly
+  // this reason: `title: \`${item.name} — nyuchi design portal\`` is a backtick
+  // string, so a double-quote-only pattern walked straight past it. A guard that
+  // only inspects one of the two ways to write a title is a guard with a hole in
+  // the shape of the bug it exists to catch.
+  for (const m of source.matchAll(/\btitle:\s*`([^`]+)`/g)) out.push(m[1])
   return out
 }
 

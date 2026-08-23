@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in the Nyuchi Design Portal
+about: Report a bug in Mzizi
 title: "[Bug] "
 labels: bug
 assignees: ""
