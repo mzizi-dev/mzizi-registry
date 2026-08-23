@@ -6,7 +6,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: "Colour tokens",
   description:
-    "The seven minerals and seven heritage tones — the Mzizi colour system, grouped by family, every value sourced live from the design database.",
+    "The benchmark corpus's design-token substrate — seven minerals and seven heritage tones, grouped by family, every value sourced live from the design database.",
 }
 
 const FAMILIES: { id: MineralToken["family"]; label: string; blurb: string }[] = [
@@ -177,11 +177,13 @@ export default function TokensPage() {
           Seven Minerals &amp; Seven Heritage
         </h1>
         <p className="max-w-2xl text-base text-muted-foreground">
-          The Mzizi palette layers three systems. <strong>Surfaces</strong> set the ambient page
-          ground and elevation ladder; <strong>seven minerals</strong> carry brand meaning — each
-          with a role and family; and <strong>seven heritage tones</strong> are atmospheric anchors
-          for surfaces and mood. Every value here is sourced live from the design database and is
-          theme-adaptive across light and dark.
+          The benchmark corpus's design-token substrate — the fixed colour ground every reference
+          component (and every Rust sibling) is rendered and contract-tested against. It layers
+          three systems: <strong>surfaces</strong> set the ambient page ground and elevation ladder;{" "}
+          <strong>seven minerals</strong> carry brand meaning — each with a role and family; and{" "}
+          <strong>seven heritage tones</strong> are atmospheric anchors for surfaces and mood. Every
+          value here is sourced live from the design database and is theme-adaptive across light and
+          dark.
         </p>
       </header>
 

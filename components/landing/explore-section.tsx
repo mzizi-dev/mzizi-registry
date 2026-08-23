@@ -13,11 +13,11 @@ export async function ExploreSection() {
 
   const sections = [
     {
-      title: "Components",
+      title: "Benchmark corpus",
       description:
         counts.ui > 0
-          ? `${counts.ui} production-ready UI components. Browse, preview, and install.`
-          : "Production-ready UI components. Browse, preview, and install.",
+          ? `${counts.ui} live UI components — the fixed proving ground the framework is measured against.`
+          : "Live UI components — the fixed proving ground the framework is measured against.",
       href: "/components",
       icon: Layers,
       mineral: "bg-[var(--color-cobalt)]",
@@ -25,8 +25,8 @@ export async function ExploreSection() {
       external: false,
     },
     {
-      title: "Architecture",
-      description: "The open Mzizi DNA double helix — nodes on strands, plus cross-cutting rungs.",
+      title: "Research charter",
+      description: "The full charter — the thesis, the four design goals, and the five phases.",
       href: "/architecture",
       icon: Box,
       mineral: "bg-[var(--color-tanzanite)]",
@@ -34,7 +34,8 @@ export async function ExploreSection() {
     },
     {
       title: "Observability",
-      description: "Live usage metrics for the registry, the API, and the MCP server.",
+      description:
+        "Live telemetry for the corpus, the API, and the MCP server — benchmark results land here.",
       href: "/observability",
       icon: Activity,
       mineral: "bg-[var(--color-malachite)]",
@@ -42,15 +43,15 @@ export async function ExploreSection() {
     },
     {
       title: "Documentation",
-      description: "Installation, theming, CLI, and contributing guides.",
+      description: "The charter in long form — goals, phasing, and integration posture.",
       href: "https://docs.bundu.org/mzizi",
       icon: BookOpen,
       mineral: "bg-[var(--color-gold)]",
       external: true,
     },
     {
-      title: "API & Registry",
-      description: "REST API, MCP server, and the OpenAPI contract.",
+      title: "API & MCP",
+      description: "REST API, MCP server, and the OpenAPI contract — the corpus, machine-readable.",
       href: "/api/v1",
       icon: Code,
       mineral: "bg-[var(--color-terracotta)]",
@@ -63,8 +64,8 @@ export async function ExploreSection() {
       <SectionHeader
         align="center"
         eyebrow="Explore"
-        title="Everything you need to build"
-        sub="Design system, component library, architecture reference, and developer docs — all in one place."
+        title="Follow the research"
+        sub="The corpus, the charter, the telemetry, and the agent surfaces — everything measurable about the project, in one place."
       />
 
       <div className="mt-12 grid gap-4 sm:grid-cols-2 md:grid-cols-3">

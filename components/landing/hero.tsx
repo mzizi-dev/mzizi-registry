@@ -1,7 +1,6 @@
 import { Button } from "@/components/registry/n2-primitives/button"
 import { Badge } from "@/components/registry/n2-primitives/badge"
 import { ArrowRight } from "lucide-react"
-import { CopyCommand } from "@/components/landing/copy-command"
 import { getRegistryCounts } from "@/lib/db"
 
 const minerals = [
@@ -35,7 +34,7 @@ export async function Hero() {
     lib: 0,
   }))
 
-  const totalLabel = counts.total > 0 ? `${counts.total}` : "production-ready"
+  const corpusLabel = counts.total > 0 ? `${counts.total}-component` : "fixed"
 
   return (
     <section className="relative flex flex-col items-center gap-8 px-4 pt-12 pb-16 text-center sm:gap-10 sm:px-6 md:pt-20 md:pb-32">
@@ -54,7 +53,7 @@ export async function Hero() {
             ))}
           </span>
           <span className="truncate text-muted-foreground sm:whitespace-normal">
-            Ndiri nekuti tiri — I am because we are
+            A Bundu Foundation research project · Phase 0
           </span>
         </Badge>
 
@@ -75,40 +74,39 @@ export async function Hero() {
 
       <div className="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
         <h1 className="font-serif text-[clamp(1.75rem,6vw,2rem)] leading-[1.1] font-bold tracking-tight text-balance text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
-          The design system
+          A Rust framework
           <br />
-          for the bundu ecosystem
+          for the agentic web
         </h1>
         <p className="max-w-xl text-sm leading-relaxed text-pretty text-muted-foreground sm:text-base md:text-lg">
-          {totalLabel} components, blocks, and charts rooted in the Seven African Minerals palette.
-          One design system powering mukoko, nyuchi, and every app in the bundu family. Install with
-          the shadcn CLI — no packages, no lock-in.
+          Every existing framework was designed assuming a human is typing. Mzizi&apos;s syntax,
+          type system, and compiler feedback loop are designed for machine authorship — an agent
+          iterating against a compiler in a tight loop, thousands of times — and measured against a{" "}
+          {corpusLabel} benchmark corpus.
         </p>
       </div>
 
       <div className="flex w-full flex-col items-center gap-4 sm:gap-5">
-        <CopyCommand />
         <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row sm:gap-3">
           <Button size="lg" className="w-full gap-2 sm:w-auto" asChild>
-            <a href="/components">
-              Browse components
+            <a href="/architecture">
+              Read the research charter
               <ArrowRight className="size-4" />
             </a>
           </Button>
           <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
-            <a href="https://docs.bundu.org/mzizi" target="_blank" rel="noopener noreferrer">
-              Documentation
-            </a>
+            <a href="/components">The benchmark corpus</a>
           </Button>
         </div>
       </div>
 
-      {/* Registry stats — live counts from the DB (Palette is a brand constant). */}
+      {/* Charter stats — the corpus count is live from the DB; the rest are
+          fixed properties of the research program. */}
       <div className="flex flex-wrap items-center justify-center gap-6 pt-4 sm:gap-8">
         {[
-          { label: "Registry Items", value: counts.total > 0 ? `${counts.total}` : "—" },
-          { label: "UI Components", value: counts.ui > 0 ? `${counts.ui}` : "—" },
-          { label: "Blocks", value: counts.blocks > 0 ? `${counts.blocks}` : "—" },
+          { label: "Corpus Components", value: counts.total > 0 ? `${counts.total}` : "—" },
+          { label: "Design Goals", value: "4" },
+          { label: "Current Phase", value: "0" },
           { label: "Palette", value: "7 minerals" },
         ].map((stat) => (
           <div key={stat.label} className="flex flex-col items-center gap-0.5">

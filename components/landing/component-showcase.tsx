@@ -5,10 +5,11 @@ import { readComponent } from "@/lib/registry"
 import { Section, SectionHeader } from "@/components/landing/section"
 
 /**
- * Live component band — show, don't tell. A curated grid of *actual* rendered
- * components, so a first-time visitor sees the quality on the landing rather than
- * reading about it. Only self-contained, non-modal components are featured so nothing
- * opens an overlay from the grid.
+ * Live corpus band — show, don't tell. A curated grid of *actual* rendered
+ * components from the benchmark corpus, so a first-time visitor sees that the
+ * proving ground is real, running software — not a synthetic task list. Only
+ * self-contained, non-modal components are featured so nothing opens an
+ * overlay from the grid.
  *
  * A server component: it resolves each featured item to the file that implements it,
  * then hands that to AutoPreview (a client component) to render. Previously it pulled
@@ -34,9 +35,9 @@ export function ComponentShowcase() {
   return (
     <Section bordered>
       <SectionHeader
-        eyebrow="The library"
-        title="Components that look shipped, out of the box"
-        sub="Real components, rendered live — theme-adaptive, accessible, and installed straight into your repo with the shadcn CLI. This is the same registry your AI assistant reads."
+        eyebrow="The proving ground"
+        title="The benchmark corpus, rendered live"
+        sub="Mzizi is measured against a fixed component set: this registry. In Phase 0, an LLM agent reauthors these exact components — in Mzizi syntax, in raw Dioxus, in Leptos — and the results are compared. Real, running components make an honest benchmark; here is a sample of the corpus."
       />
 
       <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -70,7 +71,7 @@ export function ComponentShowcase() {
           href="/components"
           className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground hover:underline"
         >
-          Browse all components
+          Browse the full corpus
           <ArrowRight className="size-4" />
         </Link>
       </div>

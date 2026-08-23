@@ -17,7 +17,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: "Tools",
   description:
-    "Published Mzizi tools — MCP server, SDK, skills bundle, and CLI. Install via npm or npx.",
+    "Published Mzizi tools — the agent-facing surface of the research program: MCP server, SDK, skills bundle, and CLI. Install via npm or npx.",
 }
 
 interface ToolCardData {
@@ -31,28 +31,30 @@ interface ToolCardData {
 const KNOWN_TOOLS: ToolCardData[] = [
   {
     name: "mzizi-mcp",
-    description: "Model Context Protocol server exposing the Mzizi registry to AI assistants.",
+    description:
+      "Model Context Protocol server giving AI assistants live access to the Phase 0 corpus, skills, and doctrine.",
     category: "mcp",
     status: "stable",
     version: null,
   },
   {
     name: "mzizi-sdk",
-    description: "TypeScript SDK for the Mzizi API — fetch components, brand tokens, and skills.",
+    description:
+      "TypeScript SDK for the Mzizi API — fetch corpus components, brand tokens, and skills.",
     category: "sdk",
     status: "alpha",
     version: null,
   },
   {
     name: "mzizi-skills",
-    description: "Markdown bundle of design-system skills for any AI assistant.",
+    description: "Markdown bundle of Mzizi doctrine skills for any AI assistant.",
     category: "skills",
     status: "stable",
     version: null,
   },
   {
     name: "mzizi-cli",
-    description: "Bootstrap and maintain Bundu ecosystem apps from the registry.",
+    description: "Bootstrap and maintain Bundu ecosystem apps from the Phase 0 corpus.",
     category: "cli",
     status: "stable",
     version: null,
@@ -101,8 +103,11 @@ export default async function ToolsPage() {
           Published Mzizi tools
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          The Mzizi distribution surface — MCP server, SDK, skills bundle, and CLI. Each tool is
-          installable via npm or npx and lives in the bundu ecosystem GitHub org.
+          The agent-facing surface of the Mzizi research program — MCP server, SDK, skills bundle,
+          and CLI. This is how agents (and people) read the Phase 0 benchmark corpus, the
+          architecture, and the doctrine today, and where the compiler toolchain lands as Phase 0
+          ships. Each tool is installable via npm or npx and lives in the Bundu ecosystem GitHub
+          org.
         </p>
       </header>
 
