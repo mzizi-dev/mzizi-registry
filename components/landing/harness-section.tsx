@@ -1,55 +1,54 @@
-import { Activity, Accessibility, Sparkles, Shield, HeartPulse, Languages } from "lucide-react"
+import { Layers, Cpu, Zap, Box, Monitor, Puzzle } from "lucide-react"
 import { Section, SectionHeader } from "@/components/landing/section"
 
 /**
- * The Harness spotlight — Mzizi's differentiator. Component libraries ship
- * components; Mzizi ships the *spine* that wires every component to
- * infrastructure with zero config. The harness IS the `spine` strand on the
- * engineering backbone: it pre-wires N3 brand, N4 safety and N5 resilience
- * to observability, a11y, motion and resilience.
+ * Integration posture — Mzizi is a language and compiler, not a parallel
+ * universe. Rendering, ML, and deployment are borrowed from the best of the
+ * Rust ecosystem so the research budget goes where the thesis lives: syntax,
+ * type system, and the compiler feedback loop.
  */
 
-const capabilities: Array<{
-  icon: typeof Activity
+const integrations: Array<{
+  icon: typeof Layers
   name: string
   mineral: string
   desc: string
 }> = [
   {
-    icon: Activity,
-    name: "Observability",
+    icon: Layers,
+    name: "Rendering — Dioxus",
     mineral: "cobalt",
-    desc: "A scoped logger per component and render timing, reported to the health monitor.",
+    desc: "Mzizi compiles to Dioxus's component model. No rebuilt renderer — that problem is already solved.",
   },
   {
-    icon: Accessibility,
-    name: "Accessibility",
+    icon: Box,
+    name: "Artifact — WASM",
     mineral: "malachite",
-    desc: "Auto-mounted aria-live region, announce(), and focus-ring tokens — for free.",
+    desc: "The compiled output is standalone WASM — embeddable in any host page, framework or none.",
   },
   {
-    icon: Sparkles,
-    name: "Motion",
-    mineral: "tanzanite",
-    desc: "Entry animation from the motion tokens, automatically honouring reduced-motion.",
-  },
-  {
-    icon: Shield,
-    name: "Error boundary",
-    mineral: "copper",
-    desc: "A branded fallback with retry and structured error tracking around every section.",
-  },
-  {
-    icon: HeartPulse,
-    name: "Health",
-    mineral: "gold",
-    desc: "Reports healthy / degraded / error / loading to the global health monitor.",
-  },
-  {
-    icon: Languages,
-    name: "Locale",
+    icon: Monitor,
+    name: "Native — desktop",
     mineral: "sodalite",
-    desc: "Text direction (RTL/LTR) and a string-token accessor via useLocale.",
+    desc: "The same program also compiles native for desktop. One corpus, two artifacts, zero rewrites.",
+  },
+  {
+    icon: Zap,
+    name: "Edge — Workers",
+    mineral: "gold",
+    desc: "Edge-first on Cloudflare Workers via workers-rs — the default deployment target, not an afterthought.",
+  },
+  {
+    icon: Cpu,
+    name: "ML — Candle",
+    mineral: "copper",
+    desc: "Inference runs through Candle. Mzizi makes tensors reachable from the language; it doesn't compete with the runtime.",
+  },
+  {
+    icon: Puzzle,
+    name: "Adapters — Astro & co.",
+    mineral: "tanzanite",
+    desc: "Astro and other frameworks are thin optional adapters around the artifact — distribution, never compile targets.",
   },
 ]
 
@@ -57,36 +56,39 @@ export function HarnessSection() {
   return (
     <Section bordered muted>
       <SectionHeader
-        eyebrow="The helix"
-        title="One harness wires every component"
-        sub="Other libraries hand you components. Mzizi ships the spine that connects them to infrastructure — observability, accessibility, motion, resilience and health — with zero config. Wrap a section or call the hook; everything else is wired."
+        eyebrow="Integration posture"
+        title="Interop, not reinvention"
+        sub="Mzizi is a language and a compiler — not a renderer, a tensor runtime, or a hosting platform. Everything below the language is borrowed from the Rust ecosystem, so the research budget stays on the thesis: syntax, types, and the feedback loop."
       />
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-start">
-        {/* Usage — show, don't tell */}
+        {/* The contract — show what the corpus is held to, honestly */}
         <div className="flex flex-col gap-3">
           <span className="font-mono text-xs tracking-widest text-muted-foreground uppercase">
-            Drop-in
+            The contract
           </span>
           <pre className="overflow-x-auto rounded-xl border border-border bg-background p-4 font-mono text-xs leading-relaxed">
-            <code>{`// Declarative — wrap any section
-<NyuchiHarness name="events-feed" skeleton={<FeedSkeleton />}>
-  <EventsFeed />
-</NyuchiHarness>
-
-// Imperative — inside a component
-const { log, motion, announce } = useNyuchiHarness("listing-card")`}</code>
+            <code>{`// The oracle behind the Phase 0 defect metric: every corpus
+// component carries a behavioral contract test (Rust/Dioxus).
+#[test]
+fn button_outline_contract() {
+    let dom = render(rsx! {
+        Button { variant: Variant::Outline, "Ship it" }
+    });
+    assert_eq!(dom.roles("button").count(), 1);
+    assert!(dom.meets_contrast(Apca::Lc90));
+}`}</code>
           </pre>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Tokens (N1) and primitives (N2) stay pure. Brand (N3), safety (N4) and resilience (N5)
-            components plug into the same harness — so behaviour is consistent across the whole
-            system, not re-implemented per component.
+            &quot;Compiles cleanly but behaviorally wrong&quot; is only measurable if behavior is
+            pinned down. Contract tests like this one define correctness per component — the same
+            oracle scores the agent&apos;s output in Mzizi syntax, raw Dioxus, and Leptos.
           </p>
         </div>
 
-        {/* Capabilities */}
+        {/* Integration surface */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {capabilities.map((c) => {
+          {integrations.map((c) => {
             const Icon = c.icon
             return (
               <div

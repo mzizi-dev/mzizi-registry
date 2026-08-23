@@ -18,7 +18,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: "Changelog",
   description:
-    "Release notes for the Mzizi component registry — each entry tagged with the nodes and rungs of the DNA double helix it touched.",
+    "The corpus record — every change to the Mzizi benchmark corpus, each entry tagged with the nodes and rungs of the DNA double helix it touched.",
 }
 
 function formatDate(iso: string | null | undefined): string {
@@ -39,7 +39,7 @@ export default async function ChangelogPage() {
             Changelog
           </h1>
           <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Release notes for the Mzizi component registry.
+            The corpus record — every change to the benchmark corpus, versioned.
           </p>
         </header>
         <p className="rounded-xl border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
@@ -65,15 +65,16 @@ export default async function ChangelogPage() {
           Changelog
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Every Mzizi release, newest first. Each entry is tagged with the nodes and rungs of the
-          DNA double helix it touched — colour-coded by helix classification: cobalt for a core
+          The corpus record — every change to the benchmark corpus, newest first. Ground truth only
+          counts if its history is auditable, so each entry is tagged with the nodes and rungs of
+          the DNA double helix it touched — colour-coded by helix classification: cobalt for a core
           guarantee, tanzanite for shipped, malachite for swappable, gold for a cross-cutting rung.
         </p>
       </header>
 
       {entries.length === 0 ? (
         <p className="rounded-xl border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
-          No changelog entries available yet.
+          The corpus record has no entries yet.
         </p>
       ) : (
         <ol
