@@ -1,4 +1,4 @@
-// Shared CORS helpers for every Nyuchi Design Portal edge function.
+// Shared CORS helpers for every Mzizi edge function.
 //
 // The portal is public by design — all endpoints serve `Access-Control-Allow-Origin: *`.
 // Only the methods differ per function, which is why this file exports a small

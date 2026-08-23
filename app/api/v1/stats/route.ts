@@ -63,9 +63,9 @@ export async function GET(request: Request) {
       {
         "@context": "https://schema.org",
         "@type": "Dataset",
-        name: "Nyuchi Design Portal — Usage Statistics",
+        name: "Mzizi — Usage Statistics",
         description:
-          "Public API and MCP usage metrics for the Nyuchi Design Portal. Open data aligned with the bundu ecosystem philosophy.",
+          "Public API and MCP usage metrics for the Mzizi component registry. Open data aligned with the bundu ecosystem philosophy.",
         license: "https://creativecommons.org/licenses/by/4.0/",
         ...stats,
         layers,

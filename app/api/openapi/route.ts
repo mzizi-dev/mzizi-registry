@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 /**
  * GET /api/openapi
  *
- * Serves the OpenAPI 3.1 specification for the Nyuchi Design Portal API.
+ * Serves the OpenAPI 3.1 specification for the Mzizi registry API.
  * Returns the raw YAML by default, or JSON if ?format=json is requested.
  */
 export async function GET(request: Request) {

@@ -290,7 +290,7 @@ export interface ComponentHarnessResult {
 }
 
 // ─── OBSERVABILITY (domain-gated) ────────────────────────────
-// Design portal backlinks and observability only render on allowed domains.
+// Registry backlinks and observability only render on allowed domains.
 // This protects privacy: no tracking on unauthorized domains.
 // Domains are controlled via the observability_domains table.
 

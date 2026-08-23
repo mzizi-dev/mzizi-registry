@@ -95,7 +95,7 @@ export const primitives = {
     info: { value: "#00B0FF" },
   },
 
-  // ─── SPACING SCALE (design portal canonical) ───────────────
+  // ─── SPACING SCALE (canonical) ───────────────
   spacing: {
     "0": { value: "0px" },
     xs: { value: "4px", description: "Tight gaps, icon padding" },
@@ -108,7 +108,7 @@ export const primitives = {
     "3xl": { value: "64px", description: "Page section spacing" },
   },
 
-  // ─── BORDER RADIUS (design portal canonical) ──────────────
+  // ─── BORDER RADIUS (canonical) ──────────────
   // Base unit: 7px (--radius-unit). Ecosystem numbers: 7, 12, 14, 17.
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
@@ -121,7 +121,7 @@ export const primitives = {
     circle: { value: "50%", description: "Perfect circles" },
   },
 
-  // ─── TYPOGRAPHY (design portal canonical) ─────────────────
+  // ─── TYPOGRAPHY (canonical) ─────────────────
   // Noto Sans/Serif chosen for cross-language compatibility
   // (800+ languages including African languages and diacritics)
   fontFamily: {
@@ -139,7 +139,7 @@ export const primitives = {
     },
   },
 
-  // Type scale (design portal canonical)
+  // Type scale (canonical)
   fontSize: {
     caption: { value: "12px", description: "0.75rem — Labels, metadata, timestamps" },
     bodySmall: { value: "14px", description: "0.875rem — Secondary text, descriptions" },
@@ -161,14 +161,14 @@ export const primitives = {
     bold: { value: "700" },
   },
 
-  // ─── TOUCH TARGETS (design portal canonical) ──────────────
+  // ─── TOUCH TARGETS (canonical) ──────────────
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
     default: { value: "56px", description: "Default interactive element height" },
     sm: { value: "48px", description: "Minimum — NEVER below this" },
   },
 
-  // ─── MOTION (design portal canonical) ─────────────────────
+  // ─── MOTION (canonical) ─────────────────────
   motion: {
     duration: {
       quick: { value: "100ms", description: "Micro-interactions, toggles" },
@@ -222,7 +222,7 @@ export const primitives = {
 
 // ═══════════════════════════════════════════════════════════════
 // TIER 2 — SEMANTIC TOKENS
-// These change per theme. Values from design portal canonical.
+// These change per theme. Values from the canonical token set.
 // ═══════════════════════════════════════════════════════════════
 
 export type ThemeMode = "dark" | "light" | "high-contrast"

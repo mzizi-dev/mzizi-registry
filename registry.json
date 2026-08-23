@@ -1034,7 +1034,7 @@
       ],
       "dependencies": [],
       "description": "Nyuchi ecosystem architecture specification — local-first data strategy and sovereignty assessment.",
-      "docs": "Use it for: Architecture specification display in design portal, Sovereignty assessment documentation, Data-layer strategy visualization, System design reference for AI assistants, Architecture review and audit tooling.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/architecture",
+      "docs": "Use it for: Architecture specification display in the registry, Sovereignty assessment documentation, Data-layer strategy visualization, System design reference for AI assistants, Architecture review and audit tooling.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/architecture",
       "files": [
         {
           "path": "components/registry/n2-primitives/architecture.ts",
@@ -1054,7 +1054,7 @@
         "hasDemo": true,
         "owner": "mzizi",
         "useCases": [
-          "Architecture specification display in design portal",
+          "Architecture specification display in the registry",
           "Sovereignty assessment documentation",
           "Data-layer strategy visualization",
           "System design reference for AI assistants",
@@ -10233,7 +10233,7 @@
         "primitives"
       ],
       "dependencies": [],
-      "description": "TikTok-style progressive lazy section with sequential mount queue and bidirectional visibility. Only ONE section mounts at a time via a global FIFO queue, preventing DOM/Canvas surges that OOM mobile browsers. Sections unmount when scrolled far off-screen (1500px margin) to cap peak memory. Adaptive timing: 150ms settle on mobile, 50ms on desktop. Production-proven in mukoko-weather with 7 Chart.js sections. The design portal's most critical performance primitive.",
+      "description": "TikTok-style progressive lazy section with sequential mount queue and bidirectional visibility. Only ONE section mounts at a time via a global FIFO queue, preventing DOM/Canvas surges that OOM mobile browsers. Sections unmount when scrolled far off-screen (1500px margin) to cap peak memory. Adaptive timing: 150ms settle on mobile, 50ms on desktop. Production-proven in mukoko-weather with 7 Chart.js sections. The registry's most critical performance primitive.",
       "docs": "Use it for: Chart-heavy dashboards on mobile (mukoko-weather pattern), Feed pages with multiple heavy sections, Long-form content with embedded media, Image-heavy galleries with staggered loading, Any mobile surface with multiple Canvas/WebGL contexts.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/lazy-section",
       "files": [
         {
@@ -11932,7 +11932,7 @@
         "assurance"
       ],
       "dependencies": [],
-      "description": "API endpoint health checker. Pings all design portal API endpoints (from component_backlinks) and reports status codes, latency, and error rates. Feeds into nyuchi-platform-health. Uses the backlinks system built in v4.8.0.",
+      "description": "API endpoint health checker. Pings all Mzizi registry API endpoints (from component_backlinks) and reports status codes, latency, and error rates. Feeds into nyuchi-platform-health. Uses the backlinks system built in v4.8.0.",
       "docs": "Use it for: Platform monitoring, L8 assurance observability.\nVariants: default.\nIncludes: Z-axis depth observability, Cross-layer blast radius analysis via data-portal backlinks, L9 Fundi integration for auto-healing.\nAccessibility: Non-visual infrastructure — no direct a11y requirements.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/mzizi-api-probe",
       "files": [
         {
@@ -22874,7 +22874,7 @@
         "radix-ui"
       ],
       "description": "A composable, themeable and customizable sidebar component.",
-      "docs": "Use it for: Customizable sidebar shell for any app, Design-portal sidebar foundation, Base for all sidebar variants, Composable sidebar parts (header, content, footer), Theme-aware sidebar with collapse support.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute, Radix UI primitive.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/sidebar",
+      "docs": "Use it for: Customizable sidebar shell for any app, Registry sidebar foundation, Base for all sidebar variants, Composable sidebar parts (header, content, footer), Theme-aware sidebar with collapse support.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute, Radix UI primitive.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/sidebar",
       "files": [
         {
           "path": "components/registry/n2-primitives/sidebar.tsx",
@@ -22897,7 +22897,7 @@
         "owner": "framework",
         "useCases": [
           "Customizable sidebar shell for any app",
-          "Design-portal sidebar foundation",
+          "Registry sidebar foundation",
           "Base for all sidebar variants",
           "Composable sidebar parts (header, content, footer)",
           "Theme-aware sidebar with collapse support"
