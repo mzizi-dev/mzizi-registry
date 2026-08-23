@@ -18,7 +18,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "mzizi",
     short_name: "mzizi",
     description:
-      "The Mzizi design system — component registry, brand, and the DNA-helix frontend architecture. An open-architecture project of the Bundu Foundation.",
+      "Mzizi — a Rust framework for the agentic web. Syntax, type system, and compiler feedback loop designed for machine authorship. A Bundu Foundation research project.",
     start_url: "/",
     display: "standalone",
     background_color: "#faf9f5",

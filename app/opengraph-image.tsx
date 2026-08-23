@@ -2,7 +2,7 @@ import { renderMziziOg, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og/mzizi-og"
 
 // Node runtime: the shared template reads the site-icon PNG off disk.
 export const runtime = "nodejs"
-export const alt = "mzizi — open architecture on the Seven African Minerals design system"
+export const alt = "mzizi — a Rust framework for the agentic web, a Bundu Foundation research project"
 export const size = OG_SIZE
 export const contentType = OG_CONTENT_TYPE
 

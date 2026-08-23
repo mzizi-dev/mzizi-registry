@@ -17,11 +17,13 @@ import {
 // surfaces only; long-form guides live in the standalone Mintlify
 // docs site at docs.bundu.org/mzizi.
 //
-//   Explore       — the component gallery, tools, skills, the CLI, and the architecture explorer
-//   Playground    — interactive registry browser (live preview + API tester)
-//   Doctrine      — Ubuntu Five Pillars + Five Principles (issue #45)
-//   Releases      — the node-aware changelog (issue #85)
-//   Observability — live registry / API / MCP usage metrics
+//   Framework     — the research architecture (charter layers, phases) and
+//                   the benchmark's measurement discipline
+//   Corpus        — the benchmark corpus: the fixed component set the
+//                   framework is measured against, its tokens, its playground
+//   Agent tooling — the agent-facing surface: tools, skills, the CLI
+//   Doctrine      — Ubuntu, the Bundu Foundation research ethos
+//   Releases      — the node-aware corpus changelog
 //   Documentation — external link to the Mintlify docs site
 //
 // Header nav (top-right) and sidebar (left) share this file so the two
@@ -45,20 +47,27 @@ export interface NavGroup {
 
 export const SIDEBAR_NAV: NavGroup[] = [
   {
-    label: "Explore",
+    label: "Framework",
     items: [
-      { label: "Components", href: "/components", icon: Layers },
-      { label: "Colour tokens", href: "/tokens", icon: Palette },
-      { label: "Tools", href: "/tools", icon: Wrench },
-      { label: "Skills", href: "/skills", icon: BookOpen },
-      { label: "CLI", href: "/cli", icon: Terminal },
       { label: "Architecture", href: "/architecture", icon: Box },
       { label: "Observability", href: "/observability", icon: Activity },
     ],
   },
   {
-    label: "Playground",
-    items: [{ label: "Playground", href: "/playground", icon: Sparkles }],
+    label: "Corpus",
+    items: [
+      { label: "Components", href: "/components", icon: Layers },
+      { label: "Colour tokens", href: "/tokens", icon: Palette },
+      { label: "Playground", href: "/playground", icon: Sparkles },
+    ],
+  },
+  {
+    label: "Agent tooling",
+    items: [
+      { label: "Tools", href: "/tools", icon: Wrench },
+      { label: "Skills", href: "/skills", icon: BookOpen },
+      { label: "CLI", href: "/cli", icon: Terminal },
+    ],
   },
   {
     label: "Doctrine",
@@ -79,10 +88,10 @@ export const SIDEBAR_NAV: NavGroup[] = [
 // Header top-level nav (desktop-only). Mirrors the sidebar so the header
 // and sidebar tell the same story.
 export const HEADER_NAV: NavItem[] = [
-  { label: "Components", href: "/components" },
-  { label: "Tokens", href: "/tokens" },
   { label: "Architecture", href: "/architecture" },
+  { label: "Corpus", href: "/components" },
   { label: "Playground", href: "/playground" },
+  { label: "CLI", href: "/cli" },
   { label: "Docs", href: "https://docs.bundu.org/mzizi", external: true },
 ]
 
