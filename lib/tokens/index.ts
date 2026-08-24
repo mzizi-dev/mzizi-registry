@@ -20,7 +20,7 @@
  *   - Rust: const values + config structs
  *   - Python: Config dataclass
  *
- * TEN LISTING THEMES:
+ * FOURTEEN LISTING THEMES:
  *   Seven African Minerals (geological) + Seven Heritage Colors (atmospheric)
  *
  * "Thou hast ordered all things in measure, and number, and weight."
@@ -299,7 +299,14 @@ export const semanticTokens: Record<ThemeMode, Record<string, { value: string }>
 }
 
 // ═══════════════════════════════════════════════════════════════
-// LISTING THEMES — Ten Colors of Africa
+// LISTING THEMES — Fourteen Colours of Africa
+//
+// This header said "Ten Colors of Africa" directly above fourteen entries, and
+// the module header above said "TEN LISTING THEMES" directly above "Seven
+// African Minerals + Seven Heritage Colors". The data was right; the prose was
+// stale, which is the drift that reads as lost tokens when someone counts the
+// comment instead of the map. `__tests__/tokens-seven-fold.test.ts` now asserts
+// the counts so a claim cannot outlive the thing it describes.
 // Seven Minerals (geological) + Seven Heritage (atmospheric)
 // Each theme provides a background gradient for listing pages.
 // ═══════════════════════════════════════════════════════════════
@@ -1212,7 +1219,7 @@ export const mineralChartConfig = {
       color: "var(--color-malachite, #64FFDA)",
     },
   }),
-  /** Five-series chart — all five minerals */
+  /** Seven-series chart — all seven minerals */
   fiveMinerals: (labels: [string, string, string, string, string]) => ({
     [labels[0].toLowerCase().replace(/\\s/g, "_")]: {
       label: labels[0],
