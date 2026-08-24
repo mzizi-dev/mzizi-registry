@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { isSupabaseConfigured, getBrandSystem } from "@/lib/db"
+import { experimentalColors, heritageColors } from "@/lib/tokens/palette.generated"
 
 const logger = createLogger("brand")
 
@@ -104,6 +105,43 @@ export async function GET() {
         dark: c.dark_value,
         usage: c.usage,
       })),
+      // Heritage and experimental come from the committed palette snapshot, not
+      // from a DB read, because there is no `brand_heritage` or
+      // `brand_experimental` view to read — `getBrandSystem()` only ever fetched
+      // minerals. That is why /api/v1/brand served 7 of the 21 colour families
+      // and `mzizi_get_tokens(family: "heritage")` errored despite the MCP tool
+      // advertising `heritage` in its own schema.
+      //
+      // The snapshot is the right source rather than a stopgap: it is generated
+      // from the same Supabase collections by `scripts/sync-tokens.ts` and CI
+      // fails via `pnpm tokens:verify` if it drifts, so this is DB-derived data
+      // with a build-time guarantee and no request-time round trip. Minerals are
+      // deliberately left on their existing DB read — changing that would alter
+      // a payload 571 components and the MCP already depend on.
+      heritage: heritageColors.map((h) => ({
+        name: h.name,
+        hex: h.darkHex,
+        lightHex: h.lightHex,
+        darkHex: h.darkHex,
+        cssVar: h.cssVar,
+        origin: h.origin,
+        symbolism: h.symbolism,
+        usage: h.usage,
+      })),
+      experimental: experimentalColors.map((e) => ({
+        name: e.name,
+        hex: e.darkHex,
+        lightHex: e.lightHex,
+        darkHex: e.darkHex,
+        containerLight: e.containerLight,
+        containerDark: e.containerDark,
+        onContainerLight: e.onContainerLight,
+        onContainerDark: e.onContainerDark,
+        uiLight: e.uiLight,
+        uiDark: e.uiDark,
+        cssVar: `--color-${e.name}`,
+        heptagonIndex: e.heptagonIndex,
+      })),
       componentSpecs: dbBrand.meta.component_specs,
       accessibility: dbBrand.meta.accessibility,
       voiceAndTone: dbBrand.meta.voice_and_tone,
@@ -111,7 +149,13 @@ export async function GET() {
     }
 
     logger.info("Brand system served", {
-      data: { version: brandSystem.version },
+      data: {
+        version: brandSystem.version,
+        colourFamilies:
+          brandSystem.minerals.length +
+          brandSystem.heritage.length +
+          brandSystem.experimental.length,
+      },
     })
 
     return NextResponse.json(brandSystem, { headers: CORS_CACHE })
