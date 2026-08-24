@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ name: str
   const item = await getComponent(name).catch(() => null)
   if (!item) return { title: "Not Found" }
   return {
-    title: `${item.name} — nyuchi design portal`,
+    title: item.name,
     description: item.description,
   }
 }

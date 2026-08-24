@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ name: str
     return { title: "Component not found" }
   }
   return {
-    title: `Changelog: ${name} — nyuchi design portal`,
+    title: `Changelog: ${name}`,
     description: `Per-version release notes for the \`${name}\` registry component, newest first.`,
   }
 }

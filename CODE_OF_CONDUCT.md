@@ -4,7 +4,7 @@
 
 **Umuntu ngumuntu ngabantu** — A person is a person through other persons.
 
-The nyuchi design portal is built on the Ubuntu philosophy: we are who we are through our relationships with others. This community exists because people share, build, and grow together. Every contribution — a bug report, a component, a translation, a question — makes this system stronger for everyone.
+Mzizi is built on the Ubuntu philosophy: we are who we are through our relationships with others. This community exists because people share, build, and grow together. Every contribution — a bug report, a component, a translation, a question — makes this system stronger for everyone.
 
 We are building technology for Africa, rooted in African values. That means community first, dignity always, and shared prosperity as the measure of success.
 
@@ -12,7 +12,7 @@ We are building technology for Africa, rooted in African values. That means comm
 
 ## Our Pledge
 
-We as contributors and maintainers pledge to make participation in the nyuchi design portal community a welcoming, respectful, and empowering experience for everyone — regardless of age, body, disability, ethnicity, sex characteristics, gender identity, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
+We as contributors and maintainers pledge to make participation in the Mzizi community a welcoming, respectful, and empowering experience for everyone — regardless of age, body, disability, ethnicity, sex characteristics, gender identity, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
 
 We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
 

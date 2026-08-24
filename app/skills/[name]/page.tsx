@@ -32,9 +32,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { name } = await params
   const skill = isSupabaseConfigured() ? await getSkill(name).catch(() => null) : null
-  if (!skill) return { title: `${name} — Mzizi skills` }
+  if (!skill) return { title: `Skill: ${name}` }
   return {
-    title: `${skill.name} — Mzizi skills`,
+    title: `Skill: ${skill.name}`,
     description: skill.description ?? undefined,
   }
 }

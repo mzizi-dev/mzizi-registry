@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Nyuchi Design Portal — Pre-commit hook
+# Mzizi — Pre-commit hook
 # All checks must pass before a commit is allowed.
 # This is the canonical quality gate for the ecosystem's design system registry.
 

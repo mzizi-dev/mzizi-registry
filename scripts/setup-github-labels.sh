@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # setup-github-labels.sh
 #
-# Creates the canonical label set for nyuchitech/design-portal.
+# Creates the canonical label set for nyuchi/mzizi.
 # Requires the GitHub CLI (gh) and repo write access.
 #
 # Usage:
@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-REPO="${1:-nyuchitech/design-portal}"
+REPO="${1:-nyuchi/mzizi}"
 echo "Setting up labels for: $REPO"
 
 create_label() {

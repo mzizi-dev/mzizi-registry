@@ -1,4 +1,4 @@
--- Nyuchi Design Portal — canonical Supabase `public` schema
+-- Mzizi — canonical Supabase `public` schema
 --
 -- This file is the single source of truth for the database structure:
 -- 41 tables, 2 views, 14 functions, ~31 triggers, ~50 RLS policies.

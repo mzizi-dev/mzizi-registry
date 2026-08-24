@@ -19,7 +19,7 @@ export interface EndpointCheck {
 }
 
 export interface ApiProbeConfig {
-  /** Base URL of the design portal */
+  /** Base URL of the registry */
   baseUrl?: string
   /** Timeout per request in ms */
   timeout?: number
