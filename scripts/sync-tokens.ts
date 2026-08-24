@@ -3,9 +3,9 @@
  * Sync the seven-mineral + seven-heritage colour palette from the Supabase
  * document store into the committed token artifacts.
  *
- * The DB is the single source of truth (collections `styling-minerals` and
- * `styling-heritage-colors` in `component_documents`). This script projects
- * those rows into:
+ * The DB is the single source of truth (collections `styling-minerals`,
+ * `styling-heritage-colors` and `styling-experimental` in
+ * `component_documents`). This script projects those rows into:
  *   - lib/tokens/palette.generated.ts   (typed snapshot consumed by lib/tokens)
  *   - app/globals.css                   (the marked palette regions only)
  *   - components/registry/n1-tokens/nyuchi-tokens-<platform>.<ext>
@@ -24,6 +24,26 @@
  * the repo with two competing sources for the same values. Those are deleted;
  * this script is the only generator, and `tokens:verify` now covers every file
  * it writes, so the banner is true for the first time.
+ *
+ * The EXPERIMENTAL SEVEN (`styling-experimental`: ember, acacia, fern, lagoon,
+ * storm, dusk, protea — a heptagon of hues offset 17 degrees, prime
+ * saturations, foregrounds solved to P7) were outside this script's scope until
+ * now. Their `--exp-*` custom properties in globals.css sit OUTSIDE the
+ * `tokens:generated:*` markers, so they were hand-maintained in CSS while also
+ * living in the DB, with nothing checking the two agreed — the same
+ * two-sources-for-one-value defect the rest of this file was written to remove.
+ *
+ * This script now (a) emits them into palette.generated.ts so TypeScript
+ * consumers can reach them the way they reach minerals, and (b) VERIFIES the
+ * hand-written `--exp-*` values against the DB rather than regenerating them.
+ * Verifying instead of generating is deliberate: it closes the drift hole with
+ * zero risk of changing a shipped colour. Moving that CSS inside the markers is
+ * a follow-up, and only worth doing once the values are known to agree.
+ *
+ * Experimental tones are NOT emitted to the six platform targets. Those files
+ * carry the stable mineral + heritage palette that native consumers compile
+ * against; an experimental set can change, and widening a published surface is
+ * a separate decision from ending a drift hole.
  *
  * Modes:
  *   pnpm tokens:sync     regenerate the artifacts from the DB
@@ -75,6 +95,19 @@ interface Mineral {
   symbolism: string
   usage: string
 }
+interface Experimental {
+  name: string
+  lightHex: string
+  darkHex: string
+  containerLight: string
+  containerDark: string
+  onContainerLight: string
+  onContainerDark: string
+  uiLight: string
+  uiDark: string
+  heptagonIndex: number
+  sortOrder: number
+}
 interface Heritage {
   name: string
   cssVar: string
@@ -91,7 +124,11 @@ function fail(msg: string): never {
   process.exit(1)
 }
 
-async function fetchPalette(): Promise<{ minerals: Mineral[]; heritage: Heritage[] }> {
+async function fetchPalette(): Promise<{
+  minerals: Mineral[]
+  heritage: Heritage[]
+  experimental: Experimental[]
+}> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   if (!url || !key) fail("NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY are required")
@@ -100,7 +137,7 @@ async function fetchPalette(): Promise<{ minerals: Mineral[]; heritage: Heritage
   const { data, error } = await supabase
     .from("component_documents")
     .select("collection, document")
-    .in("collection", ["styling-minerals", "styling-heritage-colors"])
+    .in("collection", ["styling-minerals", "styling-heritage-colors", "styling-experimental"])
   if (error) fail(`Supabase read failed: ${error.message}`)
 
   const docs = (data ?? []).map((r) => r.document as Record<string, unknown>)
@@ -141,12 +178,37 @@ async function fetchPalette(): Promise<{ minerals: Mineral[]; heritage: Heritage
     }))
     .sort((a, b) => a.sortOrder - b.sortOrder)
 
+  const experimental: Experimental[] = docs
+    .filter((d) => d.collection === "styling-experimental")
+    .map((d) => ({
+      name: str(d, "name"),
+      lightHex: str(d, "light_hex"),
+      darkHex: str(d, "dark_hex"),
+      containerLight: str(d, "container_light"),
+      containerDark: str(d, "container_dark"),
+      onContainerLight: str(d, "on_container_light"),
+      onContainerDark: str(d, "on_container_dark"),
+      uiLight: str(d, "ui_light"),
+      uiDark: str(d, "ui_dark"),
+      heptagonIndex: num(d, "heptagon_index"),
+      sortOrder: num(d, "sort_order"),
+    }))
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+
+  // Seven is the system, not a coincidence — the collections are a heptagon
+  // each. A count that is not seven means a row was added or lost, and the
+  // whole point of this gate is that such a change cannot land silently.
   if (minerals.length !== 7) fail(`expected 7 minerals, got ${minerals.length}`)
   if (heritage.length !== 7) fail(`expected 7 heritage tones, got ${heritage.length}`)
-  return { minerals, heritage }
+  if (experimental.length !== 7) fail(`expected 7 experimental tones, got ${experimental.length}`)
+  return { minerals, heritage, experimental }
 }
 
-function renderPaletteModule(minerals: Mineral[], heritage: Heritage[]): string {
+function renderPaletteModule(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[]
+): string {
   const mineral = (m: Mineral) =>
     `  {
     name: ${JSON.stringify(m.name)},
@@ -176,12 +238,29 @@ function renderPaletteModule(minerals: Mineral[], heritage: Heritage[]): string 
     usage: ${JSON.stringify(h.usage)},
   },`
 
+  const exp = (e: Experimental) =>
+    `  {
+    name: ${JSON.stringify(e.name)},
+    lightHex: ${JSON.stringify(e.lightHex)},
+    darkHex: ${JSON.stringify(e.darkHex)},
+    containerLight: ${JSON.stringify(e.containerLight)},
+    containerDark: ${JSON.stringify(e.containerDark)},
+    onContainerLight: ${JSON.stringify(e.onContainerLight)},
+    onContainerDark: ${JSON.stringify(e.onContainerDark)},
+    uiLight: ${JSON.stringify(e.uiLight)},
+    uiDark: ${JSON.stringify(e.uiDark)},
+    heptagonIndex: ${e.heptagonIndex},
+    sortOrder: ${e.sortOrder},
+  },`
+
   return `/**
- * SEVEN MINERALS + SEVEN HERITAGE — canonical colour palette snapshot.
+ * SEVEN MINERALS + SEVEN HERITAGE + SEVEN EXPERIMENTAL — canonical colour
+ * palette snapshot.
  *
  * AUTO-GENERATED by \`scripts/sync-tokens.ts\` from the Supabase document store
- * (collections \`styling-minerals\` and \`styling-heritage-colors\`). The database
- * is the single source of truth — DO NOT EDIT THIS FILE BY HAND.
+ * (collections \`styling-minerals\`, \`styling-heritage-colors\` and
+ * \`styling-experimental\`). The database is the single source of truth — DO NOT
+ * EDIT THIS FILE BY HAND.
  *
  *   pnpm tokens:sync     regenerate this file + the globals.css palette block
  *   pnpm tokens:verify   CI gate — fails if this snapshot drifts from the DB
@@ -189,6 +268,13 @@ function renderPaletteModule(minerals: Mineral[], heritage: Heritage[]): string 
  * Two mineral families: \`deep-earth\` (cobalt, tanzanite, malachite, sodalite)
  * and \`hand\` (gold, terracotta, copper). Heritage tones are atmospheric
  * anchors with no family/role.
+ *
+ * The experimental seven are a computed heptagon — hues offset 17 degrees,
+ * prime saturations, foregrounds solved to P7 — carrying a \`heptagonIndex\`
+ * (0–6) that fixes each tone's position on the wheel. They are exported here so
+ * TypeScript can reach them; their \`--exp-*\` custom properties in globals.css
+ * remain hand-written and are verified against these values by
+ * \`pnpm tokens:verify\`.
  */
 
 export interface MineralToken {
@@ -225,6 +311,25 @@ ${minerals.map(mineral).join("\n")}
 
 export const heritageColors: HeritageToken[] = [
 ${heritage.map(heri).join("\n")}
+]
+
+export interface ExperimentalToken {
+  name: string
+  lightHex: string
+  darkHex: string
+  containerLight: string
+  containerDark: string
+  onContainerLight: string
+  onContainerDark: string
+  uiLight: string
+  uiDark: string
+  /** Position on the seven-point hue wheel, 0-6. */
+  heptagonIndex: number
+  sortOrder: number
+}
+
+export const experimentalColors: ExperimentalToken[] = [
+${experimental.map(exp).join("\n")}
 ]
 `
 }
@@ -591,10 +696,61 @@ function spliceRegion(css: string, region: string, body: string): string {
 /** Strip whitespace so value drift is caught but formatting differences are not. */
 const norm = (s: string) => s.replace(/\s+/g, "")
 
-async function main() {
-  const { minerals, heritage } = await fetchPalette()
+/**
+ * Verify the hand-written `--exp-*` block in globals.css against the DB.
+ *
+ * These properties live OUTSIDE the `tokens:generated:*` markers, so this
+ * script does not own them and must not rewrite them — a generated colour that
+ * differs by one digit from the shipped one is a visual regression nobody
+ * reviewed. Verifying gets the guarantee (the CSS cannot silently disagree with
+ * the DB) without taking the risk.
+ *
+ * Each tone contributes four properties per theme. Light values are asserted
+ * inside the `:root` block and dark inside `.dark`, because a value present in
+ * the wrong theme block is exactly the defect that shipped dark colours to
+ * light-theme consumers in the platform files.
+ */
+function checkExperimentalCss(css: string, experimental: Experimental[]): string[] {
+  const drift: string[] = []
+  // Split on the `.dark {` BLOCK OPENER, not on the substring `.dark` — line 5
+  // is `@custom-variant dark (&:is(.dark *))`, so a plain indexOf puts the whole
+  // file in the dark half and every light assertion fails spuriously. (It did.)
+  const darkAt = css.search(/^\.dark\s*\{/m)
+  if (darkAt === -1) {
+    drift.push("globals.css has no `.dark {` block — cannot locate dark-theme values")
+    return drift
+  }
+  const light = css.slice(0, darkAt)
+  const dark = css.slice(darkAt)
 
-  const paletteModule = renderPaletteModule(minerals, heritage)
+  const has = (block: string, prop: string, value: string) =>
+    new RegExp(`--${prop}\\s*:\\s*${value}\\s*;`, "i").test(block)
+
+  for (const e of experimental) {
+    const cases: [string, string, string, string][] = [
+      ["light", `exp-${e.name}`, e.lightHex, "light_hex"],
+      ["dark", `exp-${e.name}`, e.darkHex, "dark_hex"],
+      ["light", `exp-${e.name}-container`, e.containerLight, "container_light"],
+      ["dark", `exp-${e.name}-container`, e.containerDark, "container_dark"],
+      ["light", `exp-${e.name}-on`, e.onContainerLight, "on_container_light"],
+      ["dark", `exp-${e.name}-on`, e.onContainerDark, "on_container_dark"],
+      ["light", `exp-${e.name}-ui`, e.uiLight, "ui_light"],
+      ["dark", `exp-${e.name}-ui`, e.uiDark, "ui_dark"],
+    ]
+    for (const [theme, prop, value, column] of cases) {
+      if (!value) continue // the DB does not define every rung for every tone
+      if (!has(theme === "light" ? light : dark, prop, value)) {
+        drift.push(`--${prop} (${theme}) != ${column} ${value}`)
+      }
+    }
+  }
+  return drift
+}
+
+async function main() {
+  const { minerals, heritage, experimental } = await fetchPalette()
+
+  const paletteModule = renderPaletteModule(minerals, heritage, experimental)
   let css = await readFile(GLOBALS_CSS, "utf8")
   css = spliceRegion(css, "theme", renderThemeBlock(minerals, heritage))
   css = spliceRegion(css, "light", renderVars(minerals, heritage, "light"))
@@ -618,11 +774,22 @@ async function main() {
       const onDisk = await readFile(p.path, "utf8").catch(() => null)
       if (onDisk === null || norm(onDisk) !== norm(p.body)) drift.push(p.label)
     }
+    const expDrift = checkExperimentalCss(onDiskCss, experimental)
+    if (expDrift.length) {
+      fail(
+        `globals.css --exp-* values drifted from styling-experimental:\n  ` +
+          expDrift.join("\n  ") +
+          `\nThese properties are hand-written (outside the tokens:generated markers), ` +
+          `so \`pnpm tokens:sync\` will NOT fix them — edit globals.css to match the DB, ` +
+          `or change the DB if the CSS is right.`
+      )
+    }
     if (drift.length) {
       fail(`token artifacts drifted from the DB: ${drift.join(", ")}. Run \`pnpm tokens:sync\`.`)
     }
     console.log(
-      `✓ tokens in sync with the DB (7 minerals, 7 heritage; ${platforms.length} platform targets)`
+      `✓ tokens in sync with the DB (7 minerals, 7 heritage, 7 experimental; ` +
+        `${platforms.length} platform targets)`
     )
     return
   }
@@ -630,9 +797,22 @@ async function main() {
   await writeFile(PALETTE_TS, paletteModule)
   await writeFile(GLOBALS_CSS, css)
   for (const p of platforms) await writeFile(p.path, p.body)
+  const expDrift = checkExperimentalCss(css, experimental)
+  if (expDrift.length) {
+    // Not a hard failure on write: the sync's job is the artifacts it owns, and
+    // the --exp-* block is not one of them. Warn loudly so it gets fixed, and
+    // let `tokens:verify` be the gate that actually blocks.
+    console.warn(
+      `! globals.css --exp-* values disagree with styling-experimental ` +
+        `(${expDrift.length} propert${expDrift.length === 1 ? "y" : "ies"}); ` +
+        `run \`pnpm tokens:verify\` for the list. Not rewritten — those properties ` +
+        `are hand-maintained.`
+    )
+  }
   console.log(
-    `✓ synced ${minerals.length} minerals + ${heritage.length} heritage tones → ` +
-      `palette.generated.ts, globals.css, ${platforms.length} platform targets`
+    `✓ synced ${minerals.length} minerals + ${heritage.length} heritage + ` +
+      `${experimental.length} experimental → palette.generated.ts, globals.css, ` +
+      `${platforms.length} platform targets`
   )
 }
 
