@@ -6,7 +6,7 @@ import { Badge } from "@/components/registry/n2-primitives/badge"
 // STATUS BADGE
 //
 // Pill-shaped lifecycle indicator built on the shadcn `Badge` primitive.
-// Three statuses, each tinted with a Five-African-Minerals colour:
+// Three statuses, each tinted with a Seven-African-Minerals colour:
 //   - stable     → Malachite (cyan) — assurance, ready for production
 //   - alpha      → Gold (yellow)    — preview / unstable surface
 //   - deprecated → Terracotta (warm) — slated for removal
