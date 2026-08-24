@@ -100,7 +100,7 @@ export async function generateMetadata({
   }
   const tool = KNOWN_TOOLS[name]
   return {
-    title: `${tool.name} — Mzizi tools`,
+    title: `Tool: ${tool.name}`,
     description: tool.description,
   }
 }

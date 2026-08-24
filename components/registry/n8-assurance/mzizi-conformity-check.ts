@@ -34,7 +34,7 @@ export interface ConformityReport {
 }
 
 export interface ConformityCheckConfig {
-  /** Known registered components from the design portal */
+  /** Known registered components from the registry */
   registry?: Set<string>
   /** Deprecated component names */
   deprecated?: Set<string>

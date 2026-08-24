@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ name: str
     return { title: "Component not found" }
   }
   return {
-    title: `Source: ${name} — nyuchi design portal`,
+    title: `Source: ${name}`,
     description: `Read the full TypeScript source for the \`${name}\` registry component.`,
   }
 }

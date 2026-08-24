@@ -13,7 +13,7 @@ import * as React from "react"
 
 // BACKLINKS: Uses data-portal and data-slot attributes to identify components
 // during chaos injection. When injecting an error, Fundi reads the data-portal
-// attribute to link the failure back to the design portal documentation.
+// attribute to link the failure back to the registry documentation.
 
 export interface ChaosConfig {
   /** Enable chaos injection (default: false in dev, configurable in prod) */

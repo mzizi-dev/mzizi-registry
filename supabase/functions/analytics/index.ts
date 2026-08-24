@@ -1,4 +1,4 @@
-// Nyuchi Design Portal — analytics edge function.
+// Mzizi — analytics edge function.
 //
 // Fire-and-forget ingest endpoint. Accepts usage events from the portal itself,
 // from downstream ecosystem apps (mukoko-*, nhimbe, shamwari), and from the

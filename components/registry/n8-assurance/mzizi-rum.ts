@@ -52,7 +52,7 @@ export interface RumConfig {
 }
 
 // BACKLINKS: RUM events are enriched with data-portal attributes
-// to link performance metrics back to specific components in the design portal.
+// to link performance metrics back to specific components in the registry.
 
 class RumCollector {
   private events: RumEvent[] = []

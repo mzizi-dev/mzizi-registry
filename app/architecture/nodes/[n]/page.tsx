@@ -40,12 +40,12 @@ export async function generateMetadata({ params }: { params: Promise<{ n: string
   const { n } = await params
   const parsed = parseNode(n)
   if (parsed === null) return { title: "Node not found" }
-  if (!isSupabaseConfigured()) return { title: `N${parsed} — Mzizi` }
+  if (!isSupabaseConfigured()) return { title: `N${parsed}` }
 
   const element = await getHelixNode(parsed).catch(() => null)
-  if (!element) return { title: `N${parsed} — Mzizi` }
+  if (!element) return { title: `N${parsed}` }
   return {
-    title: `N${element.node_number} ${element.title} — Mzizi`,
+    title: `N${element.node_number} ${element.title}`,
     description: element.description,
   }
 }
