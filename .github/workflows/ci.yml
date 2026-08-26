@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Manual trigger. Added because on 2026-08-26 neither this workflow nor its
+  # sibling produced ANY run for PR #265 — zero runs created, both workflows
+  # `active`, valid, correctly triggered on `pull_request: [main]`, while the
+  # GitHub-managed CodeQL and Dependabot workflows kept running. With no
+  # dispatch trigger anywhere in the repo there was no way to run the checks
+  # at all, or to tell an environmental block from a trigger misfire.
+  workflow_dispatch:
 
 # Top-level default keeps the entire workflow read-only. Each job
 # re-declares its own permissions so CodeQL
