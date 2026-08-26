@@ -14,7 +14,7 @@ import {
    BAR CHART — Default
    Layer 2 Primitive Block
    
-   ✅ TOKENS — Five African Minerals chart colors
+   ✅ TOKENS — Seven African Minerals chart colors
    ✅ ARIA — role="figure", aria-label
    ✅ LOADING — via ChartContainer loading prop
    ✅ I18N — accepts pre-formatted labels

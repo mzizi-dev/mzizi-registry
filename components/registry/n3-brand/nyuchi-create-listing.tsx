@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils"
    - Pill-shaped publish button, full-width, bottom-sticky
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Predefined gradient themes (Five African Minerals) ─────── */
+/* ── Predefined gradient themes (Seven African Minerals) ────── */
 const MINERAL_GRADIENTS: [string, string][] = [
   ["var(--color-malachite-light,#004D40)", "#00695C"], // Malachite
   ["var(--color-tanzanite-light,#4B0082)", "#6A1B9A"], // Tanzanite

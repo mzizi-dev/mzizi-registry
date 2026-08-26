@@ -21,7 +21,7 @@
  *   - Python: Config dataclass
  *
  * TEN LISTING THEMES:
- *   Five African Minerals (geological) + Five Heritage Colors (atmospheric)
+ *   Seven African Minerals (geological) + Seven Heritage Colors (atmospheric)
  *
  * "Thou hast ordered all things in measure, and number, and weight."
  * — The Bundu Order, v4.0.2
@@ -33,7 +33,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 export const primitives = {
-  // ─── FIVE AFRICAN MINERALS (geological, from underground) ───
+  // ─── SEVEN AFRICAN MINERALS (geological, from underground) ──
   // Each mineral has a dark-mode and light-mode value.
   // Dark mode values are used in the Nyuchi default dark theme.
   // Light mode values are used for light theme and text-on-light.
@@ -94,7 +94,7 @@ export const primitives = {
       description: "Text on terracotta container (dark)",
     },
 
-    // ─── FIVE HERITAGE COLORS (atmospheric, from above ground) ───
+    // ─── SEVEN HERITAGE COLORS (atmospheric, from above ground) ──
     // African fashion, sunset, savanna, rivers, ancient and biblical.
     indigo: {
       value: "#8C9EFF",
@@ -344,7 +344,7 @@ export const semanticTokens: Record<ThemeMode, Record<string, { value: string }>
 
 // ═══════════════════════════════════════════════════════════════
 // LISTING THEMES — Ten Colors of Africa
-// Five Minerals (geological) + Five Heritage (atmospheric)
+// Seven Minerals (geological) + Seven Heritage (atmospheric)
 // Each theme provides a background gradient for listing pages.
 // ═══════════════════════════════════════════════════════════════
 
@@ -860,7 +860,7 @@ export function generateTokens(format: PlatformFormat): string {
 // SEMANTIC STATUS & ALERT TOKEN SYSTEM
 //
 // IMPORTANT: These use GLOBALLY RECOGNIZED accessibility colors,
-// NOT the Five African Minerals. The minerals are brand identity
+// NOT the Seven African Minerals. The minerals are brand identity
 // (links, CTAs, achievements, community). Status colors are a
 // SEPARATE universal system that works across all languages,
 // literacy levels, and cultures. Color is the first thing people
@@ -1177,7 +1177,7 @@ export function generateStatusCSS(): string {
 }
 
 // CHART COLOR SYSTEM
-// Maps chart indices to Five African Minerals + Heritage colors.
+// Maps chart indices to Seven African Minerals + Heritage colors.
 // Replaces shadcn default --chart-1..5 with Nyuchi mineral palette.
 // Import mineralChartConfig in any chart block for instant brand compliance.
 // ═══════════════════════════════════════════════════════════════
@@ -1217,7 +1217,7 @@ export const mineralChartConfig = {
       color: "var(--color-malachite, #64FFDA)",
     },
   }),
-  /** Five-series chart — all five minerals */
+  /** Seven-series chart — all seven minerals */
   fiveMinerals: (labels: [string, string, string, string, string]) => ({
     [labels[0].toLowerCase().replace(/\\s/g, "_")]: {
       label: labels[0],

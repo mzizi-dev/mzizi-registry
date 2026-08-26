@@ -34,7 +34,7 @@ tags:
   - name: Discovery
     description: API metadata, health, search, stats
   - name: Brand
-    description: Five African Minerals design system
+    description: Seven African Minerals design system
   - name: Registry
     description: Component registry (shadcn-compatible)
   - name: Architecture
@@ -72,7 +72,7 @@ paths:
     get:
       summary: Brand System
       description: |
-        Returns the complete Nyuchi brand system — Five African Minerals palette,
+        Returns the complete Nyuchi brand system — Seven African Minerals palette,
         typography, spacing, ecosystem brands, accessibility standards, and voice & tone.
 
         Reads from Supabase. Returns 503 if database is not configured.
