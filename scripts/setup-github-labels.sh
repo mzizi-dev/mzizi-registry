@@ -50,7 +50,7 @@ create_label "priority:low"      "D4A574" "Nice to have"
 
 # ── Scope ───────────────────────────────────────────────────────────────────
 echo "Scope labels..."
-create_label "scope:design-system"  "0047AB" "Affects the Five African Minerals design system"
+create_label "scope:design-system"  "0047AB" "Affects the Seven African Minerals design system"
 create_label "scope:brand"          "B388FF" "Brand documentation or tokens"
 create_label "scope:architecture"   "64FFDA" "Architecture documentation or decisions"
 create_label "scope:ecosystem"      "D4A574" "Affects multiple bundu ecosystem apps"

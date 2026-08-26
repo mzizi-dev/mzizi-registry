@@ -6831,7 +6831,7 @@
         "primitives"
       ],
       "dependencies": [],
-      "description": "Color selector with hex input and preset swatches including Five African Minerals.",
+      "description": "Color selector with hex input and preset swatches including the Seven African Minerals.",
       "docs": "Use it for: Theme customization in settings, Design tool color pickers, Brand color selection in admin interfaces, Calendar event color assignment, Tag color selection.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/color-picker",
       "files": [
         {
@@ -18931,7 +18931,7 @@
         "brand"
       ],
       "dependencies": [],
-      "description": "Branded success/confirmation screen with mineral-colored checkmark, title, message, and optional actions. Extracted from payment-page, checkout-page, and booking-page where the same checkmark + title pattern was repeated. Uses Five African Minerals for the success indicator.",
+      "description": "Branded success/confirmation screen with mineral-colored checkmark, title, message, and optional actions. Extracted from payment-page, checkout-page, and booking-page where the same checkmark + title pattern was repeated. Uses the Seven African Minerals for the success indicator.",
       "docs": "Use it for: events, wallet, transport, bushtrade, nhimbe.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/nyuchi-success-screen",
       "files": [
         {
@@ -19552,7 +19552,7 @@
       },
       "dependencies": [],
       "description": "The Mzizi N1 design tokens as CSS custom properties — the Seven African Minerals and Seven Heritage colours with light/dark pairs, the four-level AAA surface system, radius scale, type scale, motion durations and touch targets. Generated from app/globals.css, so the registry and the site cannot disagree. Framework-agnostic by construction: the shadcn CLI merges these into whatever stylesheet the consuming project uses. Install this first — 431 of the registry's components reference these variables.",
-      "docs": "Use it for: Design token provider for all Nyuchi apps, CSS custom properties for colors, spacing, radii, motion, Multi-platform export: Swift, Kotlin, ArkTS, Rust, Python, Brand overrides per mini-app.\nVariants: light, dark, high-contrast.\nIncludes: Five African Minerals palette with light/dark pairs, Four-level AAA surface system, 8 semantic token categories, Brand override per mini-app, Multi-platform generators.\nAccessibility: AAA contrast on all text-surface combinations, prefers-contrast: more support, prefers-reduced-motion: respects motion tokens.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/nyuchi-tokens",
+      "docs": "Use it for: Design token provider for all Nyuchi apps, CSS custom properties for colors, spacing, radii, motion, Multi-platform export: Swift, Kotlin, ArkTS, Rust, Python, Brand overrides per mini-app.\nVariants: light, dark, high-contrast.\nIncludes: Seven African Minerals palette with light/dark pairs, Four-level AAA surface system, 8 semantic token categories, Brand override per mini-app, Multi-platform generators.\nAccessibility: AAA contrast on all text-surface combinations, prefers-contrast: more support, prefers-reduced-motion: respects motion tokens.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/nyuchi-tokens",
       "meta": {
         "a11y": [
           "AAA contrast on all text-surface combinations",
@@ -19561,7 +19561,7 @@
         ],
         "collection": "styling-libs",
         "features": [
-          "Five African Minerals palette with light/dark pairs",
+          "Seven African Minerals palette with light/dark pairs",
           "Four-level AAA surface system",
           "8 semantic token categories",
           "Brand override per mini-app",
@@ -19740,7 +19740,7 @@
       ],
       "dependencies": [],
       "description": "TypeScript constants mirroring the Mzizi N1 token set: typed primitive/semantic/component values plus the helpers (resolveColor, hexWithAlpha, generateCSSVariables) that components need at runtime. The canonical token DATA is nyuchi-tokens, which ships the CSS custom properties themselves; this is the typed accessor for code that must read a token value rather than reference it in CSS.",
-      "docs": "Use it for: Design token provider for all Nyuchi apps, CSS custom properties for colors, spacing, radii, motion, Multi-platform export: Swift, Kotlin, ArkTS, Rust, Python, Brand overrides per mini-app.\nVariants: light, dark, high-contrast.\nIncludes: Five African Minerals palette with light/dark pairs, Four-level AAA surface system, 8 semantic token categories, Brand override per mini-app, Multi-platform generators.\nAccessibility: AAA contrast on all text-surface combinations, prefers-contrast: more support, prefers-reduced-motion: respects motion tokens.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/nyuchi-tokens-typescript",
+      "docs": "Use it for: Design token provider for all Nyuchi apps, CSS custom properties for colors, spacing, radii, motion, Multi-platform export: Swift, Kotlin, ArkTS, Rust, Python, Brand overrides per mini-app.\nVariants: light, dark, high-contrast.\nIncludes: Seven African Minerals palette with light/dark pairs, Four-level AAA surface system, 8 semantic token categories, Brand override per mini-app, Multi-platform generators.\nAccessibility: AAA contrast on all text-surface combinations, prefers-contrast: more support, prefers-reduced-motion: respects motion tokens.\nInstall: npx shadcn@latest add https://mzizi.dev/api/v1/ui/nyuchi-tokens-typescript",
       "files": [
         {
           "path": "components/registry/n1-tokens/nyuchi-tokens-typescript.ts",
@@ -19756,7 +19756,7 @@
         ],
         "collection": "styling-libs",
         "features": [
-          "Five African Minerals palette with light/dark pairs",
+          "Seven African Minerals palette with light/dark pairs",
           "Four-level AAA surface system",
           "8 semantic token categories",
           "Brand override per mini-app",

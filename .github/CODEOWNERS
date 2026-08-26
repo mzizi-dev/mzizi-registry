@@ -9,7 +9,7 @@
 # Default: all changes request review from the core team
 *                               @nyuchi/core
 
-# Design system — Five African Minerals tokens, globals.css
+# Design system — Seven African Minerals tokens, globals.css
 app/globals.css                 @nyuchi/core
 
 # Database access layer — Supabase queries + types (post-#43 the
