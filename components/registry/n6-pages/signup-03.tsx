@@ -22,8 +22,8 @@ import { Label } from "@/components/ui/label"
 import { Check } from "@/lib/icons"
 
 const features = [
-  "82 production-ready components",
-  "Five African Minerals design system",
+  "Production-ready component registry",
+  "Seven African Minerals design system",
   "Accessible and theme-aware",
   "Install via shadcn CLI",
 ]

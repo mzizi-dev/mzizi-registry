@@ -15,6 +15,7 @@
 // snapshot and `pnpm tokens:verify` is what proves it matches the database.
 
 import { describe, expect, it } from "vitest"
+import { execSync } from "node:child_process"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { experimentalColors, heritageColors, minerals } from "@/lib/tokens/palette.generated"
@@ -120,5 +121,54 @@ describe("the ListingTheme union and the map agree", () => {
     const declared = [...block![1].matchAll(/\|\s*"([^"]+)"/g)].map((m) => m[1]).sort()
     const defined = Object.keys(listingThemes).sort()
     expect(declared).toEqual(defined)
+  })
+})
+
+/**
+ * "Five African Minerals" is the retired pre-Seven palette name.
+ *
+ * `__tests__/api/v1/architecture-routes.test.ts` already asserts this — but only
+ * against ONE API route's text, so the name survived in fourteen other places:
+ * a rendered `<CardDescription>`, a rendered feature list, the published plugin
+ * keyword, six strings in `registry.json` (which the shadcn CLI prints after
+ * install), and seven comments in the token source itself.
+ *
+ * A guard aimed at one route cannot see the other thirteen. This one walks the
+ * tracked tree.
+ *
+ * MATCHED CASE-SENSITIVELY, and that is what makes it safe to run repo-wide.
+ * The legitimate historical references — "emitted five minerals and five
+ * heritage tones against a seven-and-seven system", "every one carried FIVE
+ * minerals" — never write the proper noun, so a citation of the retired name and
+ * a use of it are distinguishable without a heuristic. That distinction is the
+ * whole reason a prose guard is viable here and was not viable for the count
+ * claims above.
+ */
+describe("the retired palette name", () => {
+  const EXEMPT = [
+    // Historical by definition — it records that the name WAS used and is not.
+    "CHANGELOG.md",
+    // Tests cite the retired name in order to forbid it.
+    "__tests__/",
+  ]
+
+  it("appears nowhere outside the changelog and the tests", () => {
+    const tracked = execSync("git ls-files", { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 })
+      .split("\n")
+      .filter(Boolean)
+      .filter((f) => !EXEMPT.some((e) => f.startsWith(e)))
+      .filter((f) => !/\.(png|jpg|jpeg|gif|webp|avif|ico|woff2?|ttf|pdf|lock)$/i.test(f))
+
+    const offenders: string[] = []
+    for (const file of tracked) {
+      let body: string
+      try {
+        body = readFileSync(join(process.cwd(), file), "utf8")
+      } catch {
+        continue // deleted or unreadable in this checkout
+      }
+      if (body.includes("Five African Minerals")) offenders.push(file)
+    }
+    expect(offenders).toEqual([])
   })
 })
