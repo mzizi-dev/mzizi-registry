@@ -21,7 +21,7 @@
     "mzizi": {
       "type": "url",
       "url": "https://mzizi.dev/mcp",
-      "description": "Mzizi MCP — components, brand tokens, open 3D architecture, skills, changelog. Streamable HTTP transport."
+      "description": "Mzizi MCP — the component registry: list and read components, browse collections by node, and check registry status. Streamable HTTP transport."
     }
   },
   "permissions": {
