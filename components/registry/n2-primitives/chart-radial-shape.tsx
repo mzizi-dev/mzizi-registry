@@ -36,7 +36,7 @@ export function ChartRadialShape({ loading = false }: { loading?: boolean } = {}
     >
       <CardHeader>
         <CardTitle>Radial - Custom Shape</CardTitle>
-        <CardDescription>Five African Minerals radial</CardDescription>
+        <CardDescription>Seven African Minerals radial</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer
