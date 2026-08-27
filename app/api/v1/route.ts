@@ -88,7 +88,7 @@ export async function GET() {
             description: "Five Ubuntu principles — operating rules translating Ubuntu to software.",
           },
           mcp: {
-            href: "/mcp",
+            href: "https://mcp.mzizi.dev/mcp",
             description: "Model Context Protocol server — Streamable HTTP transport.",
           },
           search: {

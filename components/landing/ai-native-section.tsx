@@ -35,7 +35,7 @@ const mcpConfig = `{
   "mcpServers": {
     "mzizi": {
       "type": "url",
-      "url": "https://mzizi.dev/mcp"
+      "url": "https://mcp.mzizi.dev/mcp"
     }
   }
 }`

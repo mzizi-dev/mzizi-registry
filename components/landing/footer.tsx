@@ -54,7 +54,7 @@ const columns: FooterColumn[] = [
     links: [
       { label: "Registry API", href: "/api/v1" },
       { label: "OpenAPI", href: "/api/openapi" },
-      { label: "MCP server", href: "/mcp" },
+      { label: "MCP server", href: "https://mcp.mzizi.dev/mcp" },
       { label: "llms.txt", href: "/llms.txt" },
     ],
   },

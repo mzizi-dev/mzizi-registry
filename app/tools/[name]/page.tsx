@@ -39,7 +39,7 @@ const KNOWN_TOOLS: Record<string, KnownTool> = {
     install: "npx @nyuchi/mzizi-mcp",
     binary: "mzizi-mcp",
     description:
-      "Model Context Protocol server exposing the Mzizi registry, brand tokens, design tokens, and architecture data to AI assistants via Streamable HTTP. Mirrors the live /mcp endpoint.",
+      "Model Context Protocol server exposing the Mzizi registry, brand tokens, design tokens, and architecture data to AI assistants via Streamable HTTP. Mirrors the live mcp.mzizi.dev/mcp endpoint.",
     defaultStatus: "stable",
   },
   "mzizi-sdk": {
