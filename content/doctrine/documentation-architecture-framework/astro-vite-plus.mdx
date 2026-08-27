@@ -41,10 +41,21 @@ a low-end Android on an intermittent connection can paint. A framework that
 requires its own runtime to render its own markup has made discoverability and
 performance into opt-ins.
 
-**Underneath is Rust or TypeScript.** Rust where the logic is shared, hot, or
-needs to outlive a JavaScript runtime — compiled to WebAssembly for the browser
-and to native for workers and servers. TypeScript where the work is glue,
-integration, or genuinely web-shaped. Not both for the same job.
+**Underneath is Rust first, TypeScript second.** Rust is the default: shared
+logic, anything hot, anything that should outlive a JavaScript runtime —
+compiled to WebAssembly for the browser and to native for workers and servers.
+TypeScript is the fallback, for glue, integration, and work that is genuinely
+web-shaped. Reach for TypeScript because Rust does not fit, not because it is
+quicker to start.
+
+**There is no third UI framework.** Not Svelte, not React, not Vue. Astro
+renders the markup and hosts islands; a component framework underneath it is a
+second way to build the same thing, and the cost of a second way is not the
+bundle — it is that every future component now has a choice to make and a
+convention to look up. Two surfaces still carry Svelte, and both are the thing
+being removed rather than the standard: `@nyuchi/mzizi-console-app` (moving to a
+Rust UI) and `@nyuchi/nyuchi-docs-search` (Astro plus TypeScript). Neither is a
+precedent to copy.
 
 **Under both is Vite+.** One toolchain — Rolldown to bundle, Vitest to test,
 oxlint to lint, oxfmt to format, tsgolint to type check — invoked as `vp build`,
