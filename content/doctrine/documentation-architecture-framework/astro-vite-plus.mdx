@@ -1,0 +1,73 @@
+---
+_bodyField: "rationale"
+_schemaVersion: "v1"
+approach: "web-first"
+currentVersion: 2
+dnaRole: "documentation"
+doctrineVersion: "4.2.0"
+framework: "Astro + Vite+ (Capacitor shell)"
+harmony_os:
+  status: "planned"
+  approach: "Huawei ships their own WebView engine (Chromium-based, maintained independently of Google). A web-standards Capacitor application runs on HarmonyOS without requiring Google Mobile Services, Google Play, or any American-controlled infrastructure."
+  rationale: "Mukoko's own authentication and wallet replace the platform services that would otherwise require GMS. HarmonyOS compatibility is structurally solved rather than patched."
+kind: "architecture"
+model: "mzizi-dna-helix"
+name: "astro-vite-plus"
+node: 0
+owner: "nyuchi"
+platforms:
+- name: "android"
+  status: "production"
+  strategy: "capacitor-native"
+- name: "ios"
+  status: "production"
+  strategy: "capacitor-native"
+- name: "web"
+  status: "production"
+  strategy: "pwa"
+- name: "harmonyos"
+  status: "planned"
+  strategy: "webview"
+sovereignty_advantage: "No framework vendor holds the platform hostage. Sub-apps are web applications that can run in any browser, on HarmonyOS's WebView, or on a future Nyuchi-built runtime. Astro emits HTML by default rather than a framework runtime, so the output survives the framework."
+strand: "transcription"
+---
+
+The rule is three layers, and it is not negotiable per project.
+
+**The UI is Astro.** Astro renders to HTML by default and ships JavaScript only
+where a component asks for it. That matters more here than developer comfort: a
+page that is HTML when it lands is a page N11 can index, a crawler can read, and
+a low-end Android on an intermittent connection can paint. A framework that
+requires its own runtime to render its own markup has made discoverability and
+performance into opt-ins.
+
+**Underneath is Rust or TypeScript.** Rust where the logic is shared, hot, or
+needs to outlive a JavaScript runtime — compiled to WebAssembly for the browser
+and to native for workers and servers. TypeScript where the work is glue,
+integration, or genuinely web-shaped. Not both for the same job.
+
+**Under both is Vite+.** One toolchain — Rolldown to bundle, Vitest to test,
+oxlint to lint, oxfmt to format, tsgolint to type check — invoked as `vp build`,
+`vp test`, `vp check`. The point is not speed, though Rolldown is roughly seven
+times faster than the esbuild path it replaced on this codebase. The point is
+that a repository with four bundlers has four ways to be broken and four things
+to learn before you can fix any of them.
+
+Capacitor remains the native shell. It runs web standards — HTML, CSS,
+JavaScript — inside a native WebView, and web standards are governed by the W3C
+and WHATWG, with JavaScript at ECMA International. The two dominant
+cross-platform frameworks are controlled by large American corporations. This is
+also the architecture WeChat and Alipay converged on: a runtime hosting
+mini-applications built on web standards. Capacitor wraps whatever the web layer
+emits, so moving the UI from Next.js to Astro leaves the native story intact.
+
+**Where Vite+ stops.** It has no YAML support — `vp fmt` on a workflow file
+reports that every matched file was excluded and changes nothing. So actionlint
+and yamllint remain separate jobs in CI. "One toolchain" is true of application
+code and cannot be true of CI configuration, and pretending otherwise would mean
+dropping the linter that catches script injection in workflows.
+
+**What this supersedes.** The previous version of this document named Next.js +
+Capacitor as the framework. Next.js remains in the tree at mzizi.dev while that
+site is migrated to Astro; it is the thing being removed, not the standard. No
+new surface starts on it.
