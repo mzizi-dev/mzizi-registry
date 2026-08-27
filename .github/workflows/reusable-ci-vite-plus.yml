@@ -1,0 +1,290 @@
+# Reusable workflow: Vite+ CI (the org's standard build and check policy).
+#
+# THIS LIVES IN nyuchi/mzizi, NOT nyuchi/.github, ON PURPOSE. GitHub resolves a
+# reusable workflow from any repository the caller can read, and nyuchi/mzizi is
+# public — so every repo in the org can call it today. nyuchi/.github would be
+# the conventional home, but its name begins with a dot, which makes it
+# unattachable to an agent session and so unmaintainable by the tooling that
+# maintains everything else here. The Mzizi build rule living in the Mzizi
+# repository is a defensible second choice; a rule nobody can edit is not.
+#
+# ONE toolchain for everything that is code. Vite+ (https://viteplus.dev)
+# bundles Rolldown, Vitest, oxlint, oxfmt and tsgolint behind a single `vp`
+# binary, so `vp check` replaces prettier + eslint + tsc, `vp test` replaces
+# vitest, and `vp build` replaces per-framework build commands.
+#
+# Call from a caller workflow in any repo:
+#
+#   name: CI
+#   on:
+#     pull_request:
+#     push:
+#       branches: [main]
+#   jobs:
+#     vite-plus:
+#       uses: nyuchi/mzizi/.github/workflows/reusable-ci-vite-plus.yml@main
+#
+# The rendered check names are `vite-plus / check`, `vite-plus / test` and
+# `vite-plus / build` when the caller job is named `vite-plus`. Put those three
+# in your repo's main-branch ruleset. See MIGRATION at the bottom for the order
+# to do that in — get it wrong and every PR in the repo blocks.
+#
+# WHAT THIS DOES NOT COVER, AND CANNOT
+#
+# Vite+ formats .ts/.js/.mts, .json/.jsonc and .md/.mdx. It does NOT touch YAML
+# — verified, not assumed: `vp fmt` on a .yml/.yaml file reports "Expected at
+# least one target file. All matched files may have been excluded by ignore
+# rules." and leaves the file untouched.
+#
+# So `actionlint` and `yamllint` must survive in reusable-lint.yml. They are not
+# leftovers to tidy away later: actionlint is what catches script injection in
+# workflow files, which is precisely the class of bug a CI consolidation is
+# tempting enough to skip over. "Only Vite+" is true for application code and
+# cannot be true for CI configuration, because the tool has no YAML support.
+#
+# Each consuming repo owns its Vite+ config. Type checking is OPT-IN and must be
+# enabled per package:
+#
+#   // vite.config.ts
+#   import { defineConfig } from "vite-plus";
+#   export default defineConfig({
+#     lint: { options: { typeAware: true, typeCheck: true } },
+#   });
+#
+# Without that block `vp check` runs oxlint only and reports "pass" on a file
+# containing `const x: number = "nope"` — verified against tsc, which flags
+# TS2322 on the same line. A repo adopting this workflow without it will get a
+# shorter, greener CI that has stopped type checking.
+#
+# CommonJS packages are a known gap: their config must be `vite.config.mts`
+# (many Vite plugins are ESM-only), and the Vite+ lint config loader does not
+# read `.mts`. Those packages need `tsc --noEmit &&` in front of their `check`
+# script until that is fixed upstream. The tell is timing — ~20ms means the type
+# check did not run; a package it actually type checks takes ~900ms.
+#
+# The caller must grant `contents: read` (the workflow default).
+
+name: Reusable / Vite+ CI
+
+on:
+  workflow_call:
+    inputs:
+      node-version-file:
+        description: File pinning the Node version (.nvmrc, .node-version, …).
+        type: string
+        default: .nvmrc
+      node-version:
+        description: Explicit Node version. Used only when node-version-file is absent.
+        type: string
+        default: "24"
+      pnpm-version:
+        description: pnpm version to install.
+        type: string
+        default: "10.33.0"
+      check-script:
+        description: Package script running `vp check`.
+        type: string
+        default: check
+      test-script:
+        description: Package script running `vp test`.
+        type: string
+        default: test
+      build-script:
+        description: Package script running `vp build`.
+        type: string
+        default: build
+      working-directory:
+        description: Directory to run in.
+        type: string
+        default: "."
+      skip-build:
+        description: Skip the build job (for repos that only publish libraries via a separate release workflow).
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+        with:
+          version: ${{ inputs.pnpm-version }}
+
+      - name: Resolve Node version
+        id: node
+        shell: bash
+        env:
+          VERSION_FILE: ${{ inputs.node-version-file }}
+          FALLBACK: ${{ inputs.node-version }}
+        run: |
+          set -euo pipefail
+          # Prefer the pinned file so the repo stays the source of truth; fall
+          # back to the input only when the file is genuinely absent.
+          if [[ -f "$VERSION_FILE" ]]; then
+            echo "file=$VERSION_FILE" >> "$GITHUB_OUTPUT"
+          else
+            # Guard against injection through the version input.
+            if [[ ! "$FALLBACK" =~ ^[0-9]+(\.[0-9]+){0,2}$ ]]; then
+              echo "::error::Invalid node-version '$FALLBACK' — expected a numeric version."
+              exit 1
+            fi
+            echo "version=$FALLBACK" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version-file: ${{ steps.node.outputs.file }}
+          node-version: ${{ steps.node.outputs.version }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+        working-directory: ${{ inputs.working-directory }}
+
+      # `vp check` = oxfmt + oxlint + tsgolint in one pass. This single step is
+      # what replaces the separate prettier, eslint and tsc jobs.
+      - name: vp check
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          SCRIPT: ${{ inputs.check-script }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$SCRIPT" =~ ^[A-Za-z0-9:_-]+$ ]]; then
+            echo "::error::Invalid check-script '$SCRIPT'."
+            exit 1
+          fi
+          pnpm run "$SCRIPT"
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+        with:
+          version: ${{ inputs.pnpm-version }}
+
+      - name: Resolve Node version
+        id: node
+        shell: bash
+        env:
+          VERSION_FILE: ${{ inputs.node-version-file }}
+          FALLBACK: ${{ inputs.node-version }}
+        run: |
+          set -euo pipefail
+          if [[ -f "$VERSION_FILE" ]]; then
+            echo "file=$VERSION_FILE" >> "$GITHUB_OUTPUT"
+          else
+            if [[ ! "$FALLBACK" =~ ^[0-9]+(\.[0-9]+){0,2}$ ]]; then
+              echo "::error::Invalid node-version '$FALLBACK' — expected a numeric version."
+              exit 1
+            fi
+            echo "version=$FALLBACK" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version-file: ${{ steps.node.outputs.file }}
+          node-version: ${{ steps.node.outputs.version }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+        working-directory: ${{ inputs.working-directory }}
+
+      - name: vp test
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          SCRIPT: ${{ inputs.test-script }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$SCRIPT" =~ ^[A-Za-z0-9:_-]+$ ]]; then
+            echo "::error::Invalid test-script '$SCRIPT'."
+            exit 1
+          fi
+          pnpm run "$SCRIPT"
+
+  build:
+    name: build
+    if: ${{ !inputs.skip-build }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+        with:
+          version: ${{ inputs.pnpm-version }}
+
+      - name: Resolve Node version
+        id: node
+        shell: bash
+        env:
+          VERSION_FILE: ${{ inputs.node-version-file }}
+          FALLBACK: ${{ inputs.node-version }}
+        run: |
+          set -euo pipefail
+          if [[ -f "$VERSION_FILE" ]]; then
+            echo "file=$VERSION_FILE" >> "$GITHUB_OUTPUT"
+          else
+            if [[ ! "$FALLBACK" =~ ^[0-9]+(\.[0-9]+){0,2}$ ]]; then
+              echo "::error::Invalid node-version '$FALLBACK' — expected a numeric version."
+              exit 1
+            fi
+            echo "version=$FALLBACK" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version-file: ${{ steps.node.outputs.file }}
+          node-version: ${{ steps.node.outputs.version }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+        working-directory: ${{ inputs.working-directory }}
+
+      - name: vp build
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          SCRIPT: ${{ inputs.build-script }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$SCRIPT" =~ ^[A-Za-z0-9:_-]+$ ]]; then
+            echo "::error::Invalid build-script '$SCRIPT'."
+            exit 1
+          fi
+          pnpm run "$SCRIPT"
+
+# MIGRATION — the order is load-bearing
+#
+# The five current contexts (`lint / actionlint`, `lint / JSON validity`,
+# `lint / prettier`, `lint / markdownlint`, `lint / yamllint`) are REQUIRED by
+# the org-wide ruleset. A required context that never reports blocks the PR
+# forever, so new jobs must start reporting BEFORE old ones are removed.
+#
+#   1. Add this workflow to a repo's callers. Old and new run side by side.
+#   2. Land one PR per repo adopting the Vite+ script contract
+#      (check / test / build / lint / fmt) — the checks are advisory at this point.
+#   3. Add `vite-plus / check`, `vite-plus / test`, `vite-plus / build` to the
+#      ruleset's required list. Now eight contexts are required.
+#   4. Remove `lint / prettier` and `lint / JSON validity` from the ruleset —
+#      `vp check` covers both (oxfmt formats md/mdx/json/jsonc, and it cannot
+#      format JSON it cannot parse, which is what the validity job tested).
+#   5. Delete the prettier and jsonlint jobs from reusable-lint.yml.
+#
+# Doing 5 before 3 blocks every PR in every repo the ruleset covers.
+#
+# `lint / markdownlint` is a judgement call. `vp fmt` normalises Markdown, but
+# markdownlint enforces RULES (line length, inline HTML, heading increments)
+# that formatting does not. Keeping it costs one fast job; dropping it is a real
+# loss of coverage, not a consolidation.
