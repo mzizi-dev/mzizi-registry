@@ -17,7 +17,7 @@ info:
 
     **Registry:** the stable registry across the nodes and rungs of the Mzizi DNA double helix — served from the Supabase `components` table (live count via `GET /api/v1/stats` → `stable`; counts are never hardcoded in this spec so it cannot drift from the database)
 
-    **MCP Server:** `https://mzizi.dev/mcp` (Streamable HTTP transport)
+    **MCP Server:** `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport; `mzizi.dev/mcp` 308-redirects here)
   contact:
     name: Bundu Foundation
   license:

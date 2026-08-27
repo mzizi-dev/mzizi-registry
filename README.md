@@ -15,7 +15,7 @@
 
 ## What is Mzizi?
 
-**Mzizi** (Swahili for _root_) is an independent open-architecture project of the **Bundu Foundation**, operated and developed by **Nyuchi**. It owns the open DNA-helix frontend architecture, the component registry served at `mzizi.dev/r/`, the Mzizi API at `mzizi.dev/api`, the Seven African Minerals design system, and the document-route Model Context Protocol (MCP) server at `mzizi.dev/mcp`. It is **not** a Nyuchi product — it is a Bundu-governed standard the whole bundu ecosystem (Mukoko consumer mini-apps, Nyuchi enterprise products, sister brands) installs from. Backed by a DB-first architecture (Supabase) and served as a shadcn-compatible API, every component is installable into any project with one command.
+**Mzizi** (Swahili for _root_) is an independent open-architecture project of the **Bundu Foundation**, operated and developed by **Nyuchi**. It owns the open DNA-helix frontend architecture, the component registry served at `mzizi.dev/r/`, the Mzizi API at `mzizi.dev/api`, the Seven African Minerals design system, and the Model Context Protocol (MCP) server at `mcp.mzizi.dev/mcp`. It is **not** a Nyuchi product — it is a Bundu-governed standard the whole bundu ecosystem (Mukoko consumer mini-apps, Nyuchi enterprise products, sister brands) installs from. Backed by a DB-first architecture (Supabase) and served as a shadcn-compatible API, every component is installable into any project with one command.
 
 ---
 
@@ -40,14 +40,16 @@ Every install carries the canonical typography (Noto Sans / Noto Serif / JetBrai
 
 ## AI-Native: MCP server
 
-The portal exposes a **document-route MCP server** at `https://mzizi.dev/mcp` (Streamable HTTP transport). Each tool returns a whole self-contained JSON document per component — one fetch, no joins. Configure it in `.claude/settings.json`:
+There is **one** Mzizi MCP server: `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport, the `mzizi-mcp` Worker in [`nyuchi/mzizi-tools`](https://github.com/nyuchi/mzizi-tools)). Each tool returns a whole self-contained JSON document per component — one fetch, no joins. Access is gated by a **free WorkOS AuthKit signup**; `mzizi.dev/api/v1` remains open and unauthenticated for anything that needs no account.
+
+The portal used to serve a second, smaller MCP in-process at `mzizi.dev/mcp`. That route is now a **308** to the one above — method and body preserved, so an in-flight JSON-RPC `POST` survives the hop and existing clients keep working. Configure new clients against the real endpoint:
 
 ```json
 {
   "mcpServers": {
     "mzizi": {
       "type": "url",
-      "url": "https://mzizi.dev/mcp"
+      "url": "https://mcp.mzizi.dev/mcp"
     }
   }
 }
@@ -129,7 +131,7 @@ All endpoints under `/api/v1/`. Full spec in [`openapi.yaml`](openapi.yaml) (als
 | `/api/v1/stats?days=`                          | GET      | Open-data usage metrics (CC BY 4.0, `?days=7\|30\|90`)           |
 | `/api/v1/health`                               | GET      | Service health check                                             |
 | `/api/openapi`                                 | GET      | OpenAPI 3.1 specification (YAML)                                 |
-| `/mcp`                                         | POST/GET | MCP server (Streamable HTTP)                                     |
+| `/mcp`                                         | POST/GET | **308** → `mcp.mzizi.dev/mcp` (the one MCP server)               |
 
 ---
 
@@ -217,8 +219,6 @@ pnpm install
 cp .env.example .env.local
 # NEXT_PUBLIC_SUPABASE_URL=...
 # NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-# SUPABASE_URL=...                # alias used by @supabase/server (/mcp)
-# SUPABASE_PUBLISHABLE_KEY=...    # alias used by @supabase/server (/mcp)
 
 pnpm dev
 ```

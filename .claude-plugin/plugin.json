@@ -20,12 +20,12 @@
   "mcpServers": {
     "mzizi": {
       "type": "url",
-      "url": "https://mzizi.dev/mcp",
+      "url": "https://mcp.mzizi.dev/mcp",
       "description": "Mzizi MCP — the component registry: list and read components, browse collections by node, and check registry status. Streamable HTTP transport."
     }
   },
   "permissions": {
-    "network": ["mzizi.dev", "assets.nyuchi.com"]
+    "network": ["mzizi.dev", "mcp.mzizi.dev", "assets.nyuchi.com"]
   },
   "keywords": [
     "design-system",

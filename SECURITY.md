@@ -58,7 +58,7 @@ This policy covers anything the portal itself owns:
 - The content API (`/api/v1/changelog`, `/api/v1/ai/instructions`) — `/api/v1/docs/*` is HTTP 410 (long-form docs moved to the bundu-docs / nyuchi-docs Starlight sites, see CLAUDE.md §15.18)
 - The fundi self-healing surface (`/api/v1/fundi`, `/api/v1/fundi/{id}`, `/api/v1/fundi/stats`)
 - The brand + architecture APIs (`/api/v1/brand`, `/api/v1/ecosystem`, `/api/v1/data-layer`, `/api/v1/pipeline`, `/api/v1/sovereignty`)
-- The Model Context Protocol server at `/mcp` (Streamable HTTP)
+- The `/mcp` route (a 308 to `mcp.mzizi.dev/mcp`, the one MCP server — report issues in that server itself to `nyuchi/mzizi-tools`)
 - Component source code served via the registry — an XSS or RCE-by-scaffold is in scope
 - Supabase row-level security policies captured in `supabase/schema.sql`
 - GitHub Actions workflows in `.github/workflows/` — malicious-input, token-exfiltration, or privilege-escalation issues

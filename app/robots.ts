@@ -6,9 +6,10 @@ import type { MetadataRoute } from "next"
  * The site is a public design system + API intentionally optimised for AI
  * consumption. All read routes (/, /api/v1/*, /openapi, /llms.txt) are
  * allowed for every crawler, including every AI training and answer-engine
- * bot we're aware of. The /mcp JSON-RPC endpoint is not useful to crawl
- * (POST-only, streamable HTTP transport) so it's disallowed to keep crawl
- * budgets focused on indexable surfaces.
+ * bot we're aware of. /mcp stays disallowed: it is now a 308 to
+ * mcp.mzizi.dev/mcp, and a crawler following it lands on a POST-only JSON-RPC
+ * endpoint behind an auth gate. Nothing indexable either side of the hop, so
+ * the disallow keeps crawl budgets on surfaces that are.
  */
 export default function robots(): MetadataRoute.Robots {
   const DISALLOW_FROM_CRAWL = ["/mcp"]

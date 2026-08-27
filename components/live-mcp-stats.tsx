@@ -4,16 +4,31 @@ import { useEffect, useState } from "react"
 
 interface McpStats {
   tools: number
-  resources: number
 }
 
 /**
- * Live-fetches the MCP server's registered tool + resource counts via
- * JSON-RPC. Never hardcoded — the source of truth is the running server
- * at /mcp, so this component can never drift from reality.
+ * Cross-origin on purpose. The one Mzizi MCP lives on its own host; this is its
+ * only unauthenticated view, and it is CORS-open for this reader.
+ */
+const CATALOGUE_URL = "https://mcp.mzizi.dev/catalogue.json"
+
+/**
+ * Live-fetches the MCP server's registered tool count. Never hardcoded — the
+ * source of truth is the running server, so this component cannot drift.
+ *
+ * It used to POST `tools/list` at this app's own `/mcp`. That route is now a
+ * 308 to `mcp.mzizi.dev/mcp`, which is behind WorkOS AuthKit and answers 401 to
+ * an anonymous `tools/list` — correctly. So the read moved to
+ * `mcp.mzizi.dev/catalogue.json`, published for exactly this: it NAMES the
+ * tools and cannot call one, which is all a landing page ever needed.
+ *
+ * The resource formats are gone with it. The catalogue does not enumerate
+ * resource URIs — an unauthenticated caller has no business doing that — and
+ * nothing rendered them; keeping the variants would have meant printing a
+ * confident `0`, and a wrong number is worse than an absent one.
  *
  * Usage:
- *   <LiveMcpStats />                       → "<N> tools and <M> resources"
+ *   <LiveMcpStats />                       → "<N> tools"
  *   <LiveMcpStats format="tools" />        → "<N> tools"
  *   <LiveMcpStats format="tools-only" />   → "<N>"
  *   <LiveMcpStats className="..." />
@@ -22,7 +37,7 @@ export function LiveMcpStats({
   format = "full",
   className,
 }: {
-  format?: "full" | "tools" | "resources" | "tools-only" | "resources-only"
+  format?: "full" | "tools" | "tools-only"
   className?: string
 }) {
   const [stats, setStats] = useState<McpStats | null>(null)
@@ -31,28 +46,18 @@ export function LiveMcpStats({
     const controller = new AbortController()
     const signal = controller.signal
 
-    async function rpc(method: string, id: number) {
-      const res = await fetch("/mcp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json, text/event-stream",
-        },
-        body: JSON.stringify({ jsonrpc: "2.0", id, method, params: {} }),
-        signal,
+    fetch(CATALOGUE_URL, { signal, headers: { Accept: "application/json" } })
+      .then((res) => {
+        if (!res.ok) throw new Error(`catalogue failed: ${res.status}`)
+        return res.json()
       })
-      if (!res.ok) throw new Error(`MCP ${method} failed: ${res.status}`)
-      const data = await res.json()
-      return data.result
-    }
-
-    Promise.all([rpc("tools/list", 1), rpc("resources/list", 2)])
-      .then(([tools, resources]) => {
+      .then((data: { tools?: unknown[] }) => {
         if (signal.aborted) return
-        setStats({
-          tools: Array.isArray(tools?.tools) ? tools.tools.length : 0,
-          resources: Array.isArray(resources?.resources) ? resources.resources.length : 0,
-        })
+        // Only set state when the payload is the shape claimed. A malformed
+        // response falling through to `length` on a non-array would render "0
+        // tools", which reads as a working server with nothing on it.
+        if (!Array.isArray(data.tools)) return
+        setStats({ tools: data.tools.length })
       })
       .catch(() => {
         // Graceful degradation — the surrounding prose still makes sense
@@ -63,24 +68,16 @@ export function LiveMcpStats({
   }, [])
 
   if (!stats) {
-    return <span className={className}>tools and resources</span>
+    return <span className={className}>tools</span>
   }
 
   switch (format) {
     case "tools":
+    case "full":
       return <span className={className}>{stats.tools} tools</span>
-    case "resources":
-      return <span className={className}>{stats.resources} resources</span>
     case "tools-only":
       return <span className={className}>{stats.tools}</span>
-    case "resources-only":
-      return <span className={className}>{stats.resources}</span>
-    case "full":
     default:
-      return (
-        <span className={className}>
-          {stats.tools} tools and {stats.resources} resources
-        </span>
-      )
+      return <span className={className}>{stats.tools} tools</span>
   }
 }
