@@ -3,7 +3,7 @@ _bodyField: "rationale"
 _schemaVersion: "v1"
 currentVersion: 1
 dnaRole: "documentation"
-doctrineVersion: "4.1.0"
+doctrineVersion: "4.2.0"
 forkable: true
 governance: "corporate-open"
 kind: "architecture"
@@ -11,12 +11,30 @@ license: "MIT"
 model: "mzizi-dna-helix"
 node: 0
 owner: "nyuchi"
-role: "UI framework"
+role: "UI framework — being removed"
 self_hostable: true
 sort_order: 0
-sovereignty_risk: "low"
+sovereignty_risk: "medium"
 strand: "transcription"
 technology: "Next.js"
 ---
 
 Vercel-maintained but MIT licensed with open community.
+
+**Being removed.** The UI is Astro (see
+`documentation-architecture-framework/astro-vite-plus`), and no new surface
+starts on Next.js. It remains in the tree at mzizi.dev until that site is
+migrated.
+
+The licence was never the concern, which is why this entry read `low` for so
+long and why that reading was too narrow. Sovereignty risk in a framework is
+not only "can we fork it" — it is **how much of the application only runs on
+one vendor's platform**. Next.js is MIT and forkable, but its App Router,
+image optimisation, ISR and middleware are tuned for Vercel's runtime, and the
+production build of this portal is served by Vercel today. That is a
+deployment dependency a fork does not dissolve, so the risk is `medium`, not
+`low`.
+
+Astro emits HTML and static assets that any host serves, and Cloudflare
+Workers is the default host. That is the reduction: not a better licence, a
+smaller surface that has to run somewhere specific.

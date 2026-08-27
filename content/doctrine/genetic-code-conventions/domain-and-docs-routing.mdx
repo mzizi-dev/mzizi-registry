@@ -52,8 +52,20 @@ Every Bundu Foundation project has three surfaces, on three homes:
 
 ## Deployment
 
-- Sites deploy to **Vercel**.
-- Tools that need a backend deploy to **Cloudflare Workers**.
+- Everything deploys to **Cloudflare Workers**. Sites, tools, APIs, MCP
+  servers — one platform, one deploy story, one place to look when something
+  is down.
+- A site is a Worker with **Static Assets**: Astro emits HTML and assets, and
+  the Worker serves them. `docs.nyuchi.com` already runs this way.
+- **Vercel is being removed.** It was the rule for sites and is now the
+  exception being retired: `mzizi.dev` is still served by Vercel until its
+  Astro migration lands, and nothing new goes there.
+
+The reason is not price or preference. Two deploy targets means two sets of
+environment variables, two build configurations, two runtime models, and two
+answers to "where does this run" for every new surface — and the split ran
+straight through the middle of single products, with a site on one platform
+calling an API on the other.
 
 ## Source
 

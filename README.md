@@ -145,21 +145,21 @@ Raw data: `GET https://mzizi.dev/api/v1/stats` — licensed CC BY 4.0.
 
 ## Tech Stack
 
-| Layer                | Technology                                         | Version        |
-| -------------------- | -------------------------------------------------- | -------------- |
-| Framework            | Next.js (App Router)                               | 16.2.4         |
-| Language             | TypeScript (strict mode)                           | 6.0.3          |
-| Styling              | Tailwind CSS 4 + CSS custom properties             | 4.2.4          |
-| Component Primitives | Radix UI + Base UI                                 | radix-ui 1.4.3 |
-| Variant Management   | class-variance-authority (CVA)                     | 0.7.1          |
-| Charts               | Recharts                                           | 3.8.1          |
-| Forms                | react-hook-form + zod                              | 7.73.1 / 4.3.6 |
-| Database             | Supabase (PostgreSQL)                              | 2.104.0        |
-| MCP request context  | `@supabase/server` (`createSupabaseContext`, anon) | latest         |
-| MCP SDK              | @modelcontextprotocol/sdk                          | 1.29.0         |
-| Icons                | Lucide React                                       | 1.8.0          |
-| Testing              | Vitest + Testing Library                           | 4.1.5          |
-| CI/CD                | GitHub Actions + Vercel                            | —              |
+| Layer                | Technology                                                       | Version        |
+| -------------------- | ---------------------------------------------------------------- | -------------- |
+| Framework            | Next.js (App Router)                                             | 16.2.4         |
+| Language             | TypeScript (strict mode)                                         | 6.0.3          |
+| Styling              | Tailwind CSS 4 + CSS custom properties                           | 4.2.4          |
+| Component Primitives | Radix UI + Base UI                                               | radix-ui 1.4.3 |
+| Variant Management   | class-variance-authority (CVA)                                   | 0.7.1          |
+| Charts               | Recharts                                                         | 3.8.1          |
+| Forms                | react-hook-form + zod                                            | 7.73.1 / 4.3.6 |
+| Database             | Supabase (PostgreSQL)                                            | 2.104.0        |
+| MCP request context  | `@supabase/server` (`createSupabaseContext`, anon)               | latest         |
+| MCP SDK              | @modelcontextprotocol/sdk                                        | 1.29.0         |
+| Icons                | Lucide React                                                     | 1.8.0          |
+| Testing              | Vitest + Testing Library                                         | 4.1.5          |
+| CI/CD                | GitHub Actions; deploys to Vercel — moving to Cloudflare Workers | —              |
 
 ---
 
