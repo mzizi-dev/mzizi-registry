@@ -1,0 +1,8 @@
+# Local development values for `pnpm api:dev`. Copy to `.dev.vars`, which is
+# gitignored. These are read from the environment at request time by `lib/db`.
+#
+# The `NEXT_PUBLIC_` prefix is inherited from `lib/db`, which is shared with the
+# Next app — it does not mean anything here, and renaming it would fork a module
+# both surfaces import.
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=

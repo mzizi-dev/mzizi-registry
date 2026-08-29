@@ -19,8 +19,11 @@ export default tseslint.config(
       ".next/**",
       // OpenNext build output, and wrangler's local state. Both are
       // generated (and gitignored) — same reasoning as `.next/**` above.
-      ".open-next/**",
-      ".wrangler/**",
+      "**/.open-next/**",
+      // Anchored with `**/` because a flat-config glob is relative to this
+      // file: a bare `.wrangler/**` matches only the repo root and misses
+      // `mzizi-api/.wrangler/`, which is where the API Worker's dev build lands.
+      "**/.wrangler/**",
       "node_modules/**",
       "packages/*/node_modules/**",
       "packages/*/dist/**",

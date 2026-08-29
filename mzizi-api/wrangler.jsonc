@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mzizi-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-22",
+  // `nodejs_compat` is what makes `process.env` readable, which is how
+  // `lib/db` finds its Supabase credentials — unchanged from the app.
+  "compatibility_flags": ["nodejs_compat"],
+
+  // The reason this Worker can import the app's route handlers verbatim.
+  // See `src/next-server.ts` for why one alias is enough.
+  "alias": {
+    "next/server": "./src/next-server.ts",
+  },
+
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+}
