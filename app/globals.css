@@ -289,6 +289,7 @@
   --status-info: var(--info);
   --status-neutral: var(--neutral);
   /* Experimental Seven — computed, light-base values (≥7:1) */
+  /* tokens:generated:experimental-light:start */
   --exp-ember: #843d20;
   --exp-acacia: #4d5615;
   --exp-fern: #175e17;
@@ -318,6 +319,7 @@
   --exp-protea-container: #ebdbe4;
   --exp-protea-on: #841656;
   --exp-protea-ui: #d34998;
+  /* tokens:generated:experimental-light:end */
   /* Surface-elevation rungs (DB, light) */
   --surface: #eeeeec;
   --container: #e5e4e1;
@@ -425,6 +427,7 @@
   --status-info: var(--info);
   --status-neutral: var(--neutral);
   /* Experimental Seven — computed, dark-base values (≥7:1) */
+  /* tokens:generated:experimental-dark:start */
   --exp-ember: #da8766;
   --exp-acacia: #93a528;
   --exp-fern: #2cb42b;
@@ -454,6 +457,7 @@
   --exp-protea-container: #35212d;
   --exp-protea-on: #ed98c9;
   --exp-protea-ui: #ca3188;
+  /* tokens:generated:experimental-dark:end */
   /* Surface-elevation rungs (DB, dark) */
   --surface: #131211;
   --container: #1e1d1a;
