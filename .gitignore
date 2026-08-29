@@ -48,3 +48,4 @@ CLAUDE.md
 .open-next/
 .wrangler/
 .env.production.local
+.dev.vars

@@ -82,6 +82,8 @@ jobs:
           pnpm doctrine:generate:check
           pnpm registry:index:check
           pnpm registry:source:check
+          pnpm openapi:generate:check
+          pnpm api:routes:check
 
       - name: Build the Worker
         run: pnpm exec opennextjs-cloudflare build

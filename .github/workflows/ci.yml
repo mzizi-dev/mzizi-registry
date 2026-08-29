@@ -101,6 +101,29 @@ jobs:
       - name: Verify the extracted component props are current
         run: pnpm props:verify
 
+      # The six build-time artifacts that replaced request-time filesystem
+      # reads. Each has a generator, a committed output and a `--check` that
+      # fails when the two disagree.
+      #
+      # These were gated only in the deploy workflow, which is too late: a
+      # stale artifact could merge and sit on `main` until someone deployed.
+      # They cannot be checked in the `Build` job either — `prebuild` runs the
+      # generators, so `pnpm build` silently regenerates what it was supposed
+      # to be verifying, and passes. Here is the only place the committed file
+      # is compared against its source before anything overwrites it.
+      #
+      # `Build` needs this job, so a failure here blocks the merge even though
+      # `Registry Snapshot` is not itself in the required set (see #267).
+      - name: Verify the generated artifacts match their sources
+        run: |
+          set -euo pipefail
+          pnpm skills:generate:check
+          pnpm doctrine:generate:check
+          pnpm registry:index:check
+          pnpm registry:source:check
+          pnpm openapi:generate:check
+          pnpm api:routes:check
+
   rust:
     name: Rust
     runs-on: ubuntu-latest
