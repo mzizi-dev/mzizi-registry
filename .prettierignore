@@ -66,3 +66,4 @@ components/ui/
 # cannot pass at the same time. The generator owns the formatting — same reasoning
 # as `registry.json` and `content/doctrine/` above. See CLAUDE.md §8.10.
 lib/samples/props.generated.ts
+lib/registry-source.generated.json
