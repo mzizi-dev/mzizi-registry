@@ -16,8 +16,8 @@
  * file in a CONSUMER's project. It is unrelated to where the file lives here.
  */
 
-import { existsSync, readFileSync, readdirSync } from "node:fs"
-import { basename, extname, join } from "node:path"
+import SOURCES from "./registry-source.generated.json"
+import { basename, extname } from "node:path"
 
 /**
  * Resolved against `process.cwd()` so it works in `next dev`, in a Vercel
@@ -25,7 +25,10 @@ import { basename, extname, join } from "node:path"
  * bundle explicitly — see `outputFileTracingIncludes` in `next.config.mjs`,
  * without which these reads succeed locally and 404 in production.
  */
-const REGISTRY_ROOT = join(process.cwd(), "components", "registry")
+// `REGISTRY_ROOT` is gone with the filesystem reads. The index is built from
+// the keys of the generated artifact, and the "path" a component resolves to is
+// now that artifact's key — `<node-dir>/<file>` — rather than an absolute path.
+// Nothing outside this module ever saw those paths, so the change is internal.
 
 /**
  * Files that are never a component's source, whatever directory they land in.
@@ -78,31 +81,32 @@ function buildIndex(): RegistryIndex {
   // name → the node directories it appeared in, and the paths under each
   const dirs = new Map<string, Map<string, string[]>>()
 
-  if (existsSync(REGISTRY_ROOT)) {
-    for (const dir of readdirSync(REGISTRY_ROOT, { withFileTypes: true })) {
-      if (!dir.isDirectory()) continue
-      const nodeDir = join(REGISTRY_ROOT, dir.name)
-      for (const entry of readdirSync(nodeDir)) {
-        if (entry.startsWith(".")) continue
-        const dotted = extname(entry)
-        if (NOT_SOURCE.has(dotted.toLowerCase())) continue
-        const ext = dotted.replace(/^\./, "").toLowerCase()
-        const name = basename(entry, dotted)
-        const path = join(nodeDir, entry)
+  for (const key of Object.keys(SOURCES)) {
+    const slash = key.indexOf("/")
+    if (slash === -1) continue
+    const dirName = key.slice(0, slash)
+    const entry = key.slice(slash + 1)
+    if (entry.includes("/") || entry.startsWith(".")) continue
 
-        const perDir = dirs.get(name) ?? new Map<string, string[]>()
-        perDir.set(dir.name, [...(perDir.get(dir.name) ?? []), path])
-        dirs.set(name, perDir)
+    const dotted = extname(entry)
+    if (NOT_SOURCE.has(dotted.toLowerCase())) continue
+    const ext = dotted.replace(/^\./, "").toLowerCase()
+    const name = basename(entry, dotted)
+    // The artifact key IS the path now. Keeping the same variable name means the
+    // ambiguity, ranking and target-map logic below is untouched.
+    const path = key
 
-        const byExt = targets.get(name) ?? {}
-        if (!byExt[ext]) byExt[ext] = path
-        targets.set(name, byExt)
+    const perDir = dirs.get(name) ?? new Map<string, string[]>()
+    perDir.set(dirName, [...(perDir.get(dirName) ?? []), path])
+    dirs.set(name, perDir)
 
-        const current = files.get(name)
-        if (!current || primaryRank(ext) < primaryRank(extname(current).replace(/^\./, ""))) {
-          files.set(name, path)
-        }
-      }
+    const byExt = targets.get(name) ?? {}
+    if (!byExt[ext]) byExt[ext] = path
+    targets.set(name, byExt)
+
+    const current = files.get(name)
+    if (!current || primaryRank(ext) < primaryRank(extname(current).replace(/^\./, ""))) {
+      files.set(name, path)
     }
   }
 
@@ -161,7 +165,20 @@ export function readComponentSourceFor(name: string, ext: string): string | null
   return readAt(name, index().targets.get(name)?.[ext.toLowerCase()])
 }
 
-/** Every target a component ships, keyed by extension: `{ tsx: "…", rs: "…" }`. */
+/**
+ * Every target a component ships, keyed by extension: `{ tsx: "…", rs: "…" }`.
+ *
+ * The VALUES changed shape when the sources moved into the generated artifact:
+ * they were absolute filesystem paths (`/var/task/components/registry/n2-…`)
+ * and are now registry-relative keys (`n2-primitives/button.tsx`). Called out
+ * rather than left to be discovered, because it is a visible change to an
+ * exported signature's meaning even though the type is identical.
+ *
+ * Safe to make: this export has no callers anywhere in the app, the scripts or
+ * the tests — checked, not assumed. And the old values were paths on whatever
+ * machine did the build, which were never meaningful to a caller; the keys were
+ * always the useful half. The new values at least address something real.
+ */
 export function componentTargets(name: string): Record<string, string> {
   assertUnambiguous(name)
   return { ...(index().targets.get(name) ?? {}) }
@@ -182,7 +199,16 @@ function assertUnambiguous(name: string): void {
 function readAt(name: string, path: string | undefined): string | null {
   assertUnambiguous(name)
   if (!path) return null
-  const source = readFileSync(path, "utf8")
+  const source = (SOURCES as Record<string, string>)[path]
+  // UNREACHABLE by construction, and kept anyway: the index is built from
+  // `Object.keys(SOURCES)`, so every path it holds is a key of the artifact.
+  // A mutation test confirmed no spec reaches this line. It stays because the
+  // invariant is an implementation detail of `buildIndex` — if that ever draws
+  // its keys from anywhere else, this is the difference between a null and a
+  // crash on `.trim()`. It is one comparison, not a fallback path.
+  if (source === undefined) return null
+  // Empty stays null, never "". A 200 carrying an empty body is exactly how the
+  // pre-migration source bugs hid across 571 components.
   return source.trim().length === 0 ? null : source
 }
 
