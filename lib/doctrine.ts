@@ -19,20 +19,17 @@
  * `pnpm doctrine:verify` fails if a file drifts from that shape.
  */
 
-import { readdirSync, readFileSync, existsSync } from "fs"
-import { join, resolve, sep } from "path"
-
-const DOCTRINE_ROOT = join(process.cwd(), "content", "doctrine")
+import { DOCTRINE_SOURCES } from "./doctrine.generated"
 
 /**
  * A single safe path segment: letters, digits, dot, underscore, hyphen — and never
  * `.` or `..` on their own.
  *
  * `collection` and `slug` reach these functions from callers that may be handling a
- * request parameter, so treating them as trusted is a path-traversal read: a `slug` of
- * `../../../etc/passwd` would resolve outside the content tree. Validating the segment
- * is the fix; a `replace()` that strips separators is not, because it leaves `..`
- * intact.
+ * request parameter. When these were filesystem paths, treating them as trusted was a
+ * path-traversal read. They are now object keys, so the stakes are lower — but a
+ * caller passing `..` should still get "not found" rather than a memoised empty
+ * entry, and the check costs nothing.
  */
 const SAFE_SEGMENT = /^[A-Za-z0-9._-]+$/
 
@@ -40,19 +37,17 @@ function isSafeSegment(s: string): boolean {
   return SAFE_SEGMENT.test(s) && s !== "." && s !== ".."
 }
 
-/**
- * Join segments under DOCTRINE_ROOT, or return null if any segment is unsafe or the
- * result escapes the root. The containment check is belt-and-braces behind the segment
- * validation — defence in depth is cheap here and the failure mode is reading arbitrary
- * files off the server.
- */
-function safeDoctrinePath(...segments: string[]): string | null {
-  if (!segments.every(isSafeSegment)) return null
-  const candidate = resolve(DOCTRINE_ROOT, ...segments)
-  const root = resolve(DOCTRINE_ROOT)
-  if (candidate !== root && !candidate.startsWith(root + sep)) return null
-  return candidate
-}
+// `safeDoctrinePath` lived here: it joined segments under the doctrine root and
+// refused anything escaping it, because `collection` and `slug` arrive from
+// request parameters and a slug of `../../../etc/passwd` would otherwise read a
+// file off the server.
+//
+// It is deleted because there is no path to build any more. Lookups go through
+// an object keyed by collection and slug, so a traversal attempt is a key that
+// does not exist. `isSafeSegment` is kept and still checked at both entry
+// points — the property it enforces is now about what gets memoised rather than
+// what gets opened, and losing the validation entirely would be the wrong
+// lesson to draw from removing the filesystem.
 
 export type DoctrineDocument = {
   /** Frontmatter fields, as written by `doctrine:extract`. */
@@ -189,29 +184,55 @@ function parseFrontmatter(source: string): { data: Record<string, unknown>; body
   return { data: (parsed as Record<string, unknown>) ?? {}, body }
 }
 
-/** Every document in a doctrine collection. Returns [] when the directory is absent. */
-export function readDoctrineCollection(collection: string): DoctrineDocument[] {
-  const dir = safeDoctrinePath(collection)
-  if (!dir || !existsSync(dir)) return []
+/**
+ * Parsed collections, memoised.
+ *
+ * The previous implementation re-read and re-parsed the directory on every call.
+ * Reading from an in-memory map makes that cheap, but 103 documents parsed per
+ * request would still be waste for content that cannot change between
+ * deployments — the sources are frozen into the bundle at build time.
+ */
+const parsed = new Map<string, DoctrineDocument[]>()
 
-  return readdirSync(dir)
-    .filter((f) => f.endsWith(".mdx") && isSafeSegment(f))
-    .sort()
-    .map((file) => {
-      const path = safeDoctrinePath(collection, file)
-      if (!path) return null
-      const { data, body } = parseFrontmatter(readFileSync(path, "utf8"))
-      return { data, body, slug: file.replace(/\.mdx$/, "") }
+/** Every document in a doctrine collection. Returns [] when the collection is absent. */
+export function readDoctrineCollection(collection: string): DoctrineDocument[] {
+  const cached = parsed.get(collection)
+  if (cached) return cached
+
+  // `isSafeSegment` still runs. It no longer guards a path — a traversal
+  // attempt is now just a key that is not in the map — but rejecting it here
+  // keeps a malformed collection name from being memoised, and keeps the
+  // validation next to the lookup rather than relying on the map's shape.
+  if (!isSafeSegment(collection)) return []
+
+  const docs = DOCTRINE_SOURCES[collection]
+  if (!docs) return []
+
+  // Sort by FILENAME, not by slug. The previous implementation sorted the
+  // output of `readdirSync`, i.e. `<slug>.mdx`, and that is not the same order:
+  // `-` (0x2D) sorts before `.` (0x2E), so `personal-sovereign.mdx` precedes
+  // `personal.mdx` while the bare slug `personal` precedes `personal-sovereign`.
+  // The order flips for any collection where one slug is a prefix of another,
+  // which `documentation-architecture-data-ownership` is.
+  //
+  // Callers of `readDoctrineCollection` render in the order they receive, so
+  // this is display order on a live page. Preserved deliberately rather than
+  // "improved" — changing it is a decision, not a refactor side effect.
+  const out = Object.keys(docs)
+    .sort((a, b) => (a + ".mdx" < b + ".mdx" ? -1 : a === b ? 0 : 1))
+    .map((slug) => {
+      const { data, body } = parseFrontmatter(docs[slug]!)
+      return { data, body, slug }
     })
-    .filter((d): d is DoctrineDocument => d !== null)
+
+  parsed.set(collection, out)
+  return out
 }
 
 /** One document by slug, or null. An unsafe collection or slug is simply not found. */
 export function readDoctrineDocument(collection: string, slug: string): DoctrineDocument | null {
-  const path = safeDoctrinePath(collection, `${slug}.mdx`)
-  if (!path || !existsSync(path)) return null
-  const { data, body } = parseFrontmatter(readFileSync(path, "utf8"))
-  return { data, body, slug }
+  if (!isSafeSegment(collection) || !isSafeSegment(slug)) return null
+  return readDoctrineCollection(collection).find((d) => d.slug === slug) ?? null
 }
 
 /**
@@ -219,7 +240,17 @@ export function readDoctrineDocument(collection: string, slug: string): Doctrine
  * `sort_order` through from the row, so display order survives the move.
  */
 export function readDoctrineSorted(collection: string): DoctrineDocument[] {
-  return readDoctrineCollection(collection).sort((a, b) => {
+  // Copy before sorting. `Array.prototype.sort` mutates, and
+  // `readDoctrineCollection` now returns a MEMOISED array — so sorting it in
+  // place permanently reorders the cache, and every later caller expecting
+  // slug order silently gets sort_order instead.
+  //
+  // This was harmless while each call re-read the directory and returned a
+  // fresh array. Adding the cache is what made an in-place sort a bug, and no
+  // unit test caught it: it only shows up when both functions are called for
+  // the same collection in one process, which is exactly what production does
+  // and what a differential dump against the previous implementation exposed.
+  return [...readDoctrineCollection(collection)].sort((a, b) => {
     const ao = typeof a.data.sort_order === "number" ? a.data.sort_order : Number.MAX_SAFE_INTEGER
     const bo = typeof b.data.sort_order === "number" ? b.data.sort_order : Number.MAX_SAFE_INTEGER
     return ao !== bo ? ao - bo : a.slug.localeCompare(b.slug)
