@@ -45,6 +45,10 @@
  * against; an experimental set can change, and widening a published surface is
  * a separate decision from ending a drift hole.
  *
+ * Every artifact prettier has a parser for is passed through prettier before it
+ * is written or compared (see `prettified()`), so `pnpm tokens:sync` leaves the
+ * tree formatted rather than needing a format pass afterwards.
+ *
  * Modes:
  *   pnpm tokens:sync     regenerate the artifacts from the DB
  *   pnpm tokens:verify   non-mutating CI gate; exits non-zero if an artifact
@@ -58,6 +62,7 @@
 import { readFile, writeFile } from "fs/promises"
 import { join } from "path"
 import { createClient } from "@supabase/supabase-js"
+import { format, getFileInfo, resolveConfig } from "prettier"
 
 const CHECK = process.argv.includes("--check")
 
@@ -693,6 +698,39 @@ function spliceRegion(css: string, region: string, body: string): string {
   return css.slice(0, s + start.length) + "\n" + body + "\n  " + css.slice(e)
 }
 
+/**
+ * Run an emitted artifact through prettier before it is written or compared.
+ *
+ * The renderers above hand-indent their templates, which is a guess at what
+ * prettier does — and it was wrong: they emitted four-space object bodies while
+ * prettier's config says two, so every `tokens:sync` left
+ * `nyuchi-tokens-react-native.ts` 88 lines dirty and `pnpm format:check`
+ * failing. `tokens:verify` could not see it, by design: it compares with
+ * `norm()` so that a reformat never trips the value-drift gate. That gate is
+ * right and stays; the defect was upstream, in a generator imitating a
+ * formatter instead of asking it.
+ *
+ * So this asks. `.prettierrc` is the single source of truth for formatting, and
+ * resolving it per file (rather than baking options in here) means the
+ * generator keeps agreeing with `format:check` when that config changes.
+ *
+ * Content is returned untouched when prettier has nothing to say about the
+ * file: the Swift, Kotlin, ArkTS, Python and Rust targets have no prettier
+ * parser, and a path listed in `.prettierignore` is one whose generator owns
+ * its formatting on purpose (`registry.json`, `components/ui/` — see the
+ * comments there). In both cases the renderer's own indentation is the
+ * committed shape, and reformatting it would be the drift, not the fix.
+ */
+async function prettified(filePath: string, source: string): Promise<string> {
+  const { ignored, inferredParser } = await getFileInfo(filePath, {
+    ignorePath: join(process.cwd(), ".prettierignore"),
+    resolveConfig: true,
+  })
+  if (ignored || !inferredParser) return source
+  const options = await resolveConfig(filePath)
+  return format(source, { ...options, filepath: filePath })
+}
+
 /** Strip whitespace so value drift is caught but formatting differences are not. */
 const norm = (s: string) => s.replace(/\s+/g, "")
 
@@ -750,17 +788,28 @@ function checkExperimentalCss(css: string, experimental: Experimental[]): string
 async function main() {
   const { minerals, heritage, experimental } = await fetchPalette()
 
-  const paletteModule = renderPaletteModule(minerals, heritage, experimental)
+  const paletteModule = await prettified(
+    PALETTE_TS,
+    renderPaletteModule(minerals, heritage, experimental)
+  )
   let css = await readFile(GLOBALS_CSS, "utf8")
   css = spliceRegion(css, "theme", renderThemeBlock(minerals, heritage))
   css = spliceRegion(css, "light", renderVars(minerals, heritage, "light"))
   css = spliceRegion(css, "dark", renderVars(minerals, heritage, "dark"))
+  css = await prettified(GLOBALS_CSS, css)
 
-  const platforms = PLATFORM_TARGETS.map((t) => ({
-    path: join(N1, t.file),
-    label: `components/registry/n1-tokens/${t.file}`,
-    body: t.render(minerals, heritage),
-  }))
+  // Formatting happens here, on the way to BOTH branches, so `--check` measures
+  // the bytes `tokens:sync` would actually write.
+  const platforms = await Promise.all(
+    PLATFORM_TARGETS.map(async (t) => {
+      const path = join(N1, t.file)
+      return {
+        path,
+        label: `components/registry/n1-tokens/${t.file}`,
+        body: await prettified(path, t.render(minerals, heritage)),
+      }
+    })
+  )
 
   if (CHECK) {
     const onDiskPalette = await readFile(PALETTE_TS, "utf8")
