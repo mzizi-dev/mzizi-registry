@@ -21,11 +21,15 @@
  * with where the file actually is.
  */
 
-import { readdirSync, readFileSync, existsSync, statSync } from "fs"
-import { join, resolve, sep, extname, basename } from "path"
+import manifestJson from "../registry.json"
+import { REGISTRY_FILES } from "./registry.generated"
+import { extname, basename } from "path"
 
-const REGISTRY_SOURCE_ROOT = join(process.cwd(), "components", "registry")
-const MANIFEST_PATH = join(process.cwd(), "registry.json")
+// `REGISTRY_SOURCE_ROOT` and `MANIFEST_PATH` are gone with the filesystem reads.
+// The manifest is imported directly and the file listing comes from
+// `lib/registry.generated.ts`, so this module needs no paths and no `fs` — which
+// is what lets it run on Cloudflare Workers.
+const SOURCE_PREFIX = "components/registry"
 
 /** Only letters, digits, dot, underscore, hyphen — never bare `.` or `..`. */
 const SAFE_SEGMENT = /^[A-Za-z0-9._-]+$/
@@ -34,14 +38,11 @@ function isSafeSegment(s: string): boolean {
   return SAFE_SEGMENT.test(s) && s !== "." && s !== ".."
 }
 
-/** Join under the source root, or null if a segment is unsafe or the path escapes. */
-function safeSourcePath(...segments: string[]): string | null {
-  if (!segments.every(isSafeSegment)) return null
-  const candidate = resolve(REGISTRY_SOURCE_ROOT, ...segments)
-  const root = resolve(REGISTRY_SOURCE_ROOT)
-  if (candidate !== root && !candidate.startsWith(root + sep)) return null
-  return candidate
-}
+// `safeSourcePath` is deleted with the filesystem reads it guarded — there is no
+// path to build. `isSafeSegment` is kept and applied to the directory and file
+// names coming out of the generated listing: they are build-time data rather
+// than request input now, but a name with a separator or a `..` in it would
+// still produce a wrong `sourcePath`, and that string is handed to consumers.
 
 /**
  * A file on a registry item, in shadcn's terms (registry-item.json):
@@ -210,22 +211,38 @@ const PRIMARY_EXTENSIONS = ["tsx", "ts", "jsx", "js"]
 /** Every component file on disk, keyed by component name. */
 function readSourceIndex(): Map<string, SourceEntry> {
   const index = new Map<string, SourceEntry>()
-  if (!existsSync(REGISTRY_SOURCE_ROOT)) return index
 
-  for (const dir of readdirSync(REGISTRY_SOURCE_ROOT)) {
+  // Grouped from the generated listing rather than walked. The listing is
+  // emitted sorted, and the original `readdirSync(...)` was NOT sorted — but
+  // every ordering-sensitive decision below (primary-extension rank,
+  // first-node-wins on a duplicate) is explicit, so a stable order can only
+  // make the outcome more deterministic than it was, never different in kind.
+  const byDir = new Map<string, string[]>()
+  for (const rel of REGISTRY_FILES) {
+    const slash = rel.indexOf("/")
+    if (slash === -1) continue
+    const dir = rel.slice(0, slash)
+    const file = rel.slice(slash + 1)
+    // A nested path would break the `<dir>/<file>` assumption below, and an
+    // unsafe segment would end up in a `sourcePath` served to consumers. The
+    // generator emits neither; skipping is safer than trusting that.
+    if (file.includes("/") || !isSafeSegment(dir) || !isSafeSegment(file)) continue
+    const list = byDir.get(dir)
+    if (list) list.push(file)
+    else byDir.set(dir, [file])
+  }
+
+  for (const [dir, files] of byDir) {
     const parsed = parseNodeDir(dir)
-    const dirPath = safeSourcePath(dir)
-    if (!parsed || !dirPath || !statSync(dirPath).isDirectory()) continue
+    if (!parsed) continue
 
-    for (const file of readdirSync(dirPath)) {
-      const filePath = safeSourcePath(dir, file)
-      if (!filePath || !statSync(filePath).isFile()) continue
+    for (const file of files) {
       // The component name is the filename without its extension, so a component's
       // per-target implementations (`button.tsx` + `button.rs`) collapse onto one name —
       // which is the point: one component, one contract, several targets.
       const name = basename(file, extname(file))
       const ext = extname(file).replace(/^\./, "").toLowerCase()
-      const rel = `components/registry/${dir}/${file}`
+      const rel = `${SOURCE_PREFIX}/${dir}/${file}`
 
       const existing = index.get(name)
       if (!existing) {
@@ -261,19 +278,13 @@ function readSourceIndex(): Map<string, SourceEntry> {
  */
 export function readComponents(): RegistryItem[] {
   if (_cache) return _cache
-  if (!existsSync(MANIFEST_PATH)) {
-    _cache = []
-    return _cache
-  }
 
-  let manifest: Manifest
-  try {
-    manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf8")) as Manifest
-  } catch {
-    console.error("[mzizi] registry: registry.json is not valid JSON")
-    _cache = []
-    return _cache
-  }
+  // Imported, not read. The parse-failure branch that stood here is gone with
+  // the `readFileSync`: `registry.json` is now resolved by the bundler, so
+  // malformed JSON fails the BUILD rather than degrading a live request to an
+  // empty registry. That is the better failure — an empty registry is a 404 on
+  // every component, and it used to be reachable at runtime.
+  const manifest = manifestJson as unknown as Manifest
 
   const sources = readSourceIndex()
   const out: RegistryItem[] = []
