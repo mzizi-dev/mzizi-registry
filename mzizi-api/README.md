@@ -66,5 +66,10 @@ rotating a key does not need a rebuild.
 
 ## Deploying
 
-Not wired to a workflow yet, deliberately: publishing this Worker and pointing
-`api.mzizi.dev` at it is a cutover decision, not a side effect of merging.
+Through the **Cloudflare GitHub app**, configured in the Cloudflare dashboard —
+not from CI. See [`docs/deploying.md`](../docs/deploying.md) for the build and
+deploy commands and, more importantly, for the one setting that is easy to get
+backwards: this Worker needs the Supabase values as **Worker secrets**, because
+it reads them at request time. The portal needs the same two as **build
+variables**, because Next inlines them at compile time. Each is silently useless
+in the other's place.
