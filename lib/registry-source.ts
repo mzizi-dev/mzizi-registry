@@ -19,12 +19,6 @@
 import SOURCES from "./registry-source.generated.json"
 import { basename, extname } from "node:path"
 
-/**
- * Resolved against `process.cwd()` so it works in `next dev`, in a Vercel
- * lambda, and in a script. The directory has to be traced into the deployed
- * bundle explicitly — see `outputFileTracingIncludes` in `next.config.mjs`,
- * without which these reads succeed locally and 404 in production.
- */
 // `REGISTRY_ROOT` is gone with the filesystem reads. The index is built from
 // the keys of the generated artifact, and the "path" a component resolves to is
 // now that artifact's key — `<node-dir>/<file>` — rather than an absolute path.
