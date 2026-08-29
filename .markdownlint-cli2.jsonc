@@ -26,6 +26,7 @@
   "ignores": [
     "node_modules/**",
     ".next/**",
+    ".open-next/**",
     "public/_pagefind/**",
     "CHANGELOG.md",
     ".github/ISSUE_TEMPLATE/**",

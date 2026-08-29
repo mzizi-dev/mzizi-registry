@@ -1,5 +1,7 @@
 # Build outputs
 .next/
+.open-next/
+.wrangler/
 out/
 dist/
 build/

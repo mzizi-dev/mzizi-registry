@@ -1,0 +1,135 @@
+# Deploy mzizi.dev to Cloudflare Workers.
+#
+# The app half of leaving Vercel is done: nothing under lib/ or app/ reads the
+# filesystem at request time, and `@opennextjs/cloudflare` builds the Next app
+# into a Worker. This is the deploy half — modelled on
+# nyuchi/mzizi-tools/.github/workflows/deploy-mzizi-mcp.yml so both Workers ship
+# the same way.
+#
+# ONE-TIME SETUP — repository secrets, Settings → Secrets and variables → Actions:
+#
+#   CLOUDFLARE_API_TOKEN            Workers Scripts:Edit (plus Workers Routes:Edit
+#                                   and DNS:Edit once the domain is attached)
+#   CLOUDFLARE_ACCOUNT_ID           the account hosting the Worker
+#   NEXT_PUBLIC_SUPABASE_URL        the project URL
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY   the project's anon key
+#
+# The two Supabase values are build-time, not runtime: Next inlines every
+# NEXT_PUBLIC_* variable into the bundle when it compiles. Setting them as
+# Worker secrets instead would do nothing — the built code would carry empty
+# strings and every database-backed route would answer 503 "Database not
+# configured". Both are already shipped to browsers today, so this is not a new
+# exposure.
+#
+# WHY MANUAL, NOT ON PUSH. Turning this into `on: push` is the cutover: it makes
+# Cloudflare the thing that serves what lands on main. That should be a
+# deliberate act by someone who can also point DNS and retire the Vercel
+# project, not a side effect of merging this file. Run it by hand, confirm the
+# workers.dev URL serves correctly, then add the push trigger and the route.
+
+name: Deploy Worker (mzizi.dev)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "deploy" to confirm publishing to Cloudflare'
+        required: true
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Guard the confirmation input
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+        run: |
+          set -euo pipefail
+          if [ "$CONFIRM" != "deploy" ]; then
+            echo "::error::Publishing is gated. Re-run and type 'deploy' to confirm."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The same gates a pull request has to clear. A deploy path that skips
+      # them is how a broken build reaches production faster than a reviewed one.
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+
+      # Every generated artifact must match its source, or the Worker ships
+      # skills, doctrine or component source that disagree with the repo.
+      - name: Verify generated artifacts are current
+        run: |
+          set -euo pipefail
+          pnpm skills:generate:check
+          pnpm doctrine:generate:check
+          pnpm registry:index:check
+          pnpm registry:source:check
+
+      - name: Build the Worker
+        run: pnpm exec opennextjs-cloudflare build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+      - name: Publish to Cloudflare Workers
+        id: publish
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
+
+      # Verified against what is live, not against the build log. A deploy that
+      # reports success and then serves 500s is the failure this catches.
+      #
+      # The base URL comes from the deploy output rather than a hardcoded
+      # workers.dev hostname: guessing the account's subdomain would turn a
+      # healthy deploy into a wall of connection failures.
+      - name: Smoke-test the deployed Worker
+        env:
+          BASE: ${{ steps.publish.outputs.deployment-url }}
+        run: |
+          set -euo pipefail
+          if [ -z "${BASE:-}" ]; then
+            echo "::error::wrangler reported no deployment URL; cannot verify the deploy."
+            exit 1
+          fi
+          echo "Verifying $BASE"
+          fail=0
+          check() {
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "$BASE$1" || echo 000)
+            if [ "$code" != "$2" ]; then
+              echo "::error::$1 returned $code, expected $2"
+              fail=1
+            else
+              echo "  ok  $1 -> $code"
+            fi
+          }
+          check / 200
+          check /api/v1/skills 200
+          check /api/v1/ecosystem 200
+          check /api/v1/ui/button 200
+          # A TypeScript-only component. A 200 from /rs here would mean the Rust
+          # registry is serving the wrong language, which is worse than a 404.
+          check /api/v1/rs/data-table 404
+          # The retired second MCP must stay a redirect, not become a page.
+          check /mcp 308
+          exit "$fail"
