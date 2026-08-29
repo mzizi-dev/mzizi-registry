@@ -43,3 +43,7 @@ mzizi-rs/target/
 # Kept on disk so the harness still reads them; the repo does not carry them.
 CLAUDE.md
 .claude/
+
+# OpenNext build output (Cloudflare Workers)
+.open-next/
+.wrangler/
