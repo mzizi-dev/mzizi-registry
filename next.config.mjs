@@ -30,9 +30,20 @@ const withMDX = createMDX({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+
+  // There is deliberately no `typescript: { ignoreBuildErrors: true }` here.
+  // It stood in this file until #274 and meant `next build` — the step that
+  // produces what users actually get — compiled and shipped regardless of type
+  // errors. `pnpm typecheck` was the only real gate, and it is a convention
+  // (pre-commit hook) plus a CI job the deploy does not depend on.
+  //
+  // Without the flag Next runs `tsc` itself as part of the build, over a
+  // tsconfig that includes `.next/types/**` — the generated route types. CI's
+  // `Type Check` job runs `pnpm typecheck` on a bare checkout, where that
+  // directory does not exist yet, so those generated types are only ever
+  // checked here. Do not put the flag back: it removes the last gate the
+  // deploy path has of its own.
+
   images: {
     unoptimized: true,
   },
