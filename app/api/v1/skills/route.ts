@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { isSupabaseConfigured, listSkills } from "@/lib/db"
+import { listSkills, skillsVersion } from "@/lib/skills"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("skills-list")
@@ -17,32 +17,19 @@ export const revalidate = 3600
 /**
  * GET /api/v1/skills
  *
- * List every published skill from the Supabase `skills` table. Returns
- * the lightweight summary shape (no `body_mdx`) — use
- * `GET /api/v1/skills/{name}` to fetch a single skill's MDX body.
+ * Every published skill, without `body_mdx` — use `GET /api/v1/skills/{name}`
+ * for one in full.
  *
- * Wraps the `list_skills()` SQL helper. Counts and metadata are joined
- * live; never hardcoded.
+ * Served from `@nyuchi/mzizi-skills`, the published bundle, not from Supabase.
+ * The `isSupabaseConfigured()` guard that stood here is gone with the store it
+ * guarded: a missing anon key made this route answer 503 for content that ships
+ * in the deployment, and pointed whoever hit it at a credential that would not
+ * have helped. See `lib/skills.ts` for why the database copy was removed.
  */
 export async function GET() {
   const start = Date.now()
   try {
-    if (!isSupabaseConfigured()) {
-      trackApiCall({
-        endpoint: "/api/v1/skills",
-        durationMs: Date.now() - start,
-        statusCode: 503,
-      })
-      return NextResponse.json(
-        {
-          error: "Database not configured",
-          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-        },
-        { status: 503, headers: CORS }
-      )
-    }
-
-    const skills = await listSkills()
+    const skills = listSkills()
     trackApiCall({
       endpoint: "/api/v1/skills",
       durationMs: Date.now() - start,
@@ -50,7 +37,7 @@ export async function GET() {
     })
 
     return NextResponse.json(
-      { data: skills, meta: { count: skills.length } },
+      { data: skills, meta: { count: skills.length, version: skillsVersion() } },
       { headers: CORS_CACHE }
     )
   } catch (error) {

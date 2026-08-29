@@ -78,8 +78,6 @@ import type {
   HelixModel,
   HelixNode,
   HelixStrand,
-  SkillRow,
-  SkillSummary,
   UbuntuPillarRow,
   UbuntuPrincipleRow,
   FundiIssueRow,
@@ -1168,49 +1166,22 @@ export function helixClassOf(element: HelixNode): HelixClass {
   }
 }
 
-// ── Skills — issue #54 / #58 (FRD-15 Part A, `skills` table) ────────
+// ── Skills — moved out of the database ──────────────────────────────
 //
-// Agent-skill MDX bodies. Three RPC helpers in Supabase:
-//   list_skills()           returns the index without body_mdx
-//   get_skill(name)          returns one row including body_mdx
-//   get_skills_summary()     returns the index without body_mdx (alias)
-
-/**
- * Live fetch of all skills via the `list_skills()` RPC. Returns an empty
- * array if Supabase isn't configured. Body MDX is omitted — use
- * {@link getSkill} when the full body is needed.
- */
-export async function listSkills(): Promise<SkillSummary[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("list_skills")
-  if (error || !Array.isArray(data)) return []
-  return data as SkillSummary[]
-}
-
-/**
- * Lightweight summary list (same shape as {@link listSkills}). Wraps the
- * `get_skills_summary()` SQL helper.
- */
-export async function getSkillsSummary(): Promise<SkillSummary[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("get_skills_summary")
-  if (error || !Array.isArray(data)) return []
-  return data as SkillSummary[]
-}
-
-/**
- * Fetch a single skill (with full `body_mdx`) via `get_skill(name)`.
- * Returns null when Supabase isn't configured or the row is missing.
- */
-export async function getSkill(name: string): Promise<SkillRow | null> {
-  if (!isSupabaseConfigured()) return null
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("get_skill", { p_name: name })
-  if (error || !Array.isArray(data) || data.length === 0) return null
-  return data[0] as SkillRow
-}
+// `listSkills`, `getSkill` and `getSkillsSummary` lived here, wrapping the
+// `list_skills()`, `get_skill()` and `get_skills_summary()` RPCs against the
+// Supabase `skills` collection. They are deleted, not deprecated.
+//
+// Skills are authored in nyuchi/mzizi-tools and published as
+// `@nyuchi/mzizi-skills`. `lib/skills.ts` reads that package; the routes and
+// pages read `lib/skills.ts`. The database copy was a second home for the same
+// content, kept in step by a script somebody had to remember to run — and it
+// was not run, so this app served skills instructing agents to write into a
+// column that had been cleared.
+//
+// Leaving these functions behind as an unused fallback would leave exactly the
+// thing that caused it: a second way to answer the same question, ready for the
+// next caller who reaches for the nearest import.
 
 // ── Ubuntu doctrine — issue #45 (`ubuntu_pillars`, `ubuntu_principles`) ──
 //

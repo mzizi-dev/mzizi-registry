@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
-import { listSkills, isSupabaseConfigured } from "@/lib/db"
+import { listSkills } from "@/lib/skills"
 import { CopyCommand } from "@/components/landing/copy-command"
 
 // SKILLS INDEX — mzizi.dev/skills
@@ -27,7 +27,9 @@ export const metadata: Metadata = {
 const NPM_PACKAGE = "@nyuchi/mzizi-skills"
 
 export default async function SkillsPage() {
-  const skills = isSupabaseConfigured() ? await listSkills().catch(() => []) : []
+  // No guard and no catch: the bundle ships with this deployment, so a failure
+  // here is a build defect and should surface, not render an empty page.
+  const skills = listSkills()
 
   return (
     <article className="mx-auto w-full max-w-3xl space-y-10 py-8">
@@ -107,11 +109,6 @@ export default async function SkillsPage() {
                     <p className="text-xs leading-relaxed text-muted-foreground">
                       {skill.description}
                     </p>
-                  ) : null}
-                  {skill.requires_mcp ? (
-                    <span className="mt-auto pt-2 font-mono text-[10px] text-muted-foreground uppercase">
-                      pairs with the MCP
-                    </span>
                   ) : null}
                 </Link>
               </li>

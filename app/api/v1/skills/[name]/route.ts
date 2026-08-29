@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { getSkill, isSupabaseConfigured } from "@/lib/db"
+import { getSkill, listSkillNames, skillsVersion } from "@/lib/skills"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("skill-by-name")
 
 const CORS = { "Access-Control-Allow-Origin": "*" }
+
+const CORS_CACHE = {
+  "Cache-Control": "public, max-age=3600, s-maxage=86400",
+  "Access-Control-Allow-Origin": "*",
+}
 
 export const revalidate = 3600
 
@@ -14,18 +19,17 @@ const SKILL_NAME_PATTERN = /^[a-z][a-z0-9-]*$/
 /**
  * GET /api/v1/skills/[name]
  *
- * Single skill (with full `body_mdx`) by name. Returns 404 if the skill
- * doesn't exist, 400 if the name doesn't match the kebab-case pattern,
- * 503 if Supabase is unconfigured.
+ * One skill in full, including `body_mdx`. 400 on a name that is not
+ * kebab-case, 404 when no such skill exists.
  *
- * Response body is `application/json` containing the row. Consumers that
- * want the raw MDX body for direct write to disk should read
- * `data.body_mdx`. The CLI's `nyuchi-design skills install` command
- * does exactly that.
+ * Served from `@nyuchi/mzizi-skills` rather than Supabase — see `lib/skills.ts`.
+ * The name pattern is kept even though the lookup is now an in-memory find:
+ * rejecting a malformed name with 400 rather than 404 tells a caller their
+ * request was wrong, not that the skill is missing.
  *
- * The body MDX is content the agent will execute, so we serve it with
- * a 1h public / 1d s-maxage cache (skills change rarely; consumers
- * re-fetch lazily).
+ * The body is content an agent will act on, so it is cached 1h public / 1d
+ * shared. It can only change with a deployment now, which makes that cache
+ * strictly safer than it was against a live table.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ name: string }> }) {
   const start = Date.now()
@@ -43,50 +47,37 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     )
   }
 
-  if (!isSupabaseConfigured()) {
-    trackApiCall({
-      endpoint: `/api/v1/skills/${name}`,
-      durationMs: Date.now() - start,
-      statusCode: 503,
-    })
-    return NextResponse.json({ error: "Database not configured" }, { status: 503, headers: CORS })
-  }
-
   try {
-    const skill = await getSkill(name)
+    const skill = getSkill(name)
     if (!skill) {
       trackApiCall({
-        endpoint: `/api/v1/skills/${name}`,
+        endpoint: "/api/v1/skills/[name]",
         durationMs: Date.now() - start,
         statusCode: 404,
       })
+      // Name the alternatives: the set is small, fixed at build time, and a
+      // caller who mistyped is one line from the right answer.
       return NextResponse.json(
-        { error: `Skill "${name}" not found` },
+        { error: "Skill not found", received: name, available: listSkillNames() },
         { status: 404, headers: CORS }
       )
     }
 
     trackApiCall({
-      endpoint: `/api/v1/skills/${name}`,
+      endpoint: "/api/v1/skills/[name]",
       durationMs: Date.now() - start,
       statusCode: 200,
     })
     return NextResponse.json(
-      { data: skill },
-      {
-        headers: {
-          ...CORS,
-          "Cache-Control": "public, max-age=3600, s-maxage=86400",
-        },
-      }
+      { data: skill, meta: { version: skillsVersion() } },
+      { headers: CORS_CACHE }
     )
   } catch (error) {
     logger.error("Skill fetch error", {
       error: error instanceof Error ? error : new Error(String(error)),
-      data: { name },
     })
     trackApiCall({
-      endpoint: `/api/v1/skills/${name}`,
+      endpoint: "/api/v1/skills/[name]",
       durationMs: Date.now() - start,
       statusCode: 500,
     })
