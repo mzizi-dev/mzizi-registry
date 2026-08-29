@@ -27,18 +27,26 @@
  *
  * The EXPERIMENTAL SEVEN (`styling-experimental`: ember, acacia, fern, lagoon,
  * storm, dusk, protea — a heptagon of hues offset 17 degrees, prime
- * saturations, foregrounds solved to P7) were outside this script's scope until
- * now. Their `--exp-*` custom properties in globals.css sit OUTSIDE the
- * `tokens:generated:*` markers, so they were hand-maintained in CSS while also
- * living in the DB, with nothing checking the two agreed — the same
- * two-sources-for-one-value defect the rest of this file was written to remove.
+ * saturations, foregrounds solved to P7) are generated too, into
+ * palette.generated.ts and into the `experimental-light` / `experimental-dark`
+ * regions of globals.css.
  *
- * This script now (a) emits them into palette.generated.ts so TypeScript
- * consumers can reach them the way they reach minerals, and (b) VERIFIES the
- * hand-written `--exp-*` values against the DB rather than regenerating them.
- * Verifying instead of generating is deliberate: it closes the drift hole with
- * zero risk of changing a shipped colour. Moving that CSS inside the markers is
- * a follow-up, and only worth doing once the values are known to agree.
+ * They arrived here in two steps, and the first one is worth recording. Their
+ * `--exp-*` custom properties were hand-written in CSS while the same values
+ * lived in the DB, with nothing checking the two agreed. The first step VERIFIED
+ * the CSS against the DB instead of regenerating it, because the two had never
+ * been compared and a generated colour differing by one digit from the shipped
+ * one is a visual regression nobody reviewed. That closed the drift hole at zero
+ * risk, and it established the fact that made this step safe: the values agree.
+ *
+ * Generating them is the rest of the fix, because a verified copy is still a
+ * copy. Editing globals.css by hand used to earn a CI failure telling you to
+ * reconcile two files; now there is one file to edit, the DB, and an eighth tone
+ * is an insert plus `pnpm tokens:sync` rather than an insert plus a hand edit
+ * that CI then argues with. `checkExperimentalCss()` is gone with them —
+ * verifying generated values against their own source is dead weight, and
+ * `tokens:verify` still fails on a hand-edited `--exp-*` for the same reason it
+ * fails on a hand-edited `--mineral-*`: the region no longer matches the DB.
  *
  * Experimental tones are NOT emitted to the six platform targets. Those files
  * carry the stable mineral + heritage palette that native consumers compile
@@ -277,9 +285,8 @@ function renderPaletteModule(
  * The experimental seven are a computed heptagon — hues offset 17 degrees,
  * prime saturations, foregrounds solved to P7 — carrying a \`heptagonIndex\`
  * (0–6) that fixes each tone's position on the wheel. They are exported here so
- * TypeScript can reach them; their \`--exp-*\` custom properties in globals.css
- * remain hand-written and are verified against these values by
- * \`pnpm tokens:verify\`.
+ * TypeScript can reach them, and their \`--exp-*\` custom properties in
+ * globals.css are generated from the same rows.
  */
 
 export interface MineralToken {
@@ -371,6 +378,39 @@ function renderVars(minerals: Mineral[], heritage: Heritage[], mode: "light" | "
     )
     .join("\n")
   return `${m}\n${h}`
+}
+
+/**
+ * The experimental seven, as the `--exp-*` custom properties for one theme.
+ * (The header explains why these are generated rather than verified.)
+ *
+ * The two-part shape — seven base values, then the container / on / ui rungs
+ * tone by tone — and the mid-block comment reproduce the hand-written block
+ * exactly, down to the byte. That is not tidiness: the whole argument for
+ * generating these was that the DB and the CSS already agree, so the change
+ * that adopts generation must be provably free of colour changes. A reordered
+ * or reformatted block would bury a real value change in noise, which is the
+ * failure mode this file exists to prevent.
+ */
+function renderExperimentalVars(experimental: Experimental[], mode: "light" | "dark"): string {
+  const lower = (hex: string) => hex.toLowerCase()
+  const base = experimental
+    .map((x) => `  --exp-${x.name}: ${lower(mode === "light" ? x.lightHex : x.darkHex)};`)
+    .join("\n")
+  const tiers = experimental
+    .map((x) => {
+      const con = mode === "light" ? x.containerLight : x.containerDark
+      const onc = mode === "light" ? x.onContainerLight : x.onContainerDark
+      const ui = mode === "light" ? x.uiLight : x.uiDark
+      return (
+        `  --exp-${x.name}-container: ${lower(con)};\n` +
+        `  --exp-${x.name}-on: ${lower(onc)};\n` +
+        `  --exp-${x.name}-ui: ${lower(ui)};`
+      )
+    })
+    .join("\n")
+  const heading = `  /* Experimental Seven — container / on-container / UI tiers (${mode}) */`
+  return `${base}\n${heading}\n${tiers}`
 }
 
 // ─── Platform outputs ────────────────────────────────────────────────────────
@@ -734,57 +774,6 @@ async function prettified(filePath: string, source: string): Promise<string> {
 /** Strip whitespace so value drift is caught but formatting differences are not. */
 const norm = (s: string) => s.replace(/\s+/g, "")
 
-/**
- * Verify the hand-written `--exp-*` block in globals.css against the DB.
- *
- * These properties live OUTSIDE the `tokens:generated:*` markers, so this
- * script does not own them and must not rewrite them — a generated colour that
- * differs by one digit from the shipped one is a visual regression nobody
- * reviewed. Verifying gets the guarantee (the CSS cannot silently disagree with
- * the DB) without taking the risk.
- *
- * Each tone contributes four properties per theme. Light values are asserted
- * inside the `:root` block and dark inside `.dark`, because a value present in
- * the wrong theme block is exactly the defect that shipped dark colours to
- * light-theme consumers in the platform files.
- */
-function checkExperimentalCss(css: string, experimental: Experimental[]): string[] {
-  const drift: string[] = []
-  // Split on the `.dark {` BLOCK OPENER, not on the substring `.dark` — line 5
-  // is `@custom-variant dark (&:is(.dark *))`, so a plain indexOf puts the whole
-  // file in the dark half and every light assertion fails spuriously. (It did.)
-  const darkAt = css.search(/^\.dark\s*\{/m)
-  if (darkAt === -1) {
-    drift.push("globals.css has no `.dark {` block — cannot locate dark-theme values")
-    return drift
-  }
-  const light = css.slice(0, darkAt)
-  const dark = css.slice(darkAt)
-
-  const has = (block: string, prop: string, value: string) =>
-    new RegExp(`--${prop}\\s*:\\s*${value}\\s*;`, "i").test(block)
-
-  for (const e of experimental) {
-    const cases: [string, string, string, string][] = [
-      ["light", `exp-${e.name}`, e.lightHex, "light_hex"],
-      ["dark", `exp-${e.name}`, e.darkHex, "dark_hex"],
-      ["light", `exp-${e.name}-container`, e.containerLight, "container_light"],
-      ["dark", `exp-${e.name}-container`, e.containerDark, "container_dark"],
-      ["light", `exp-${e.name}-on`, e.onContainerLight, "on_container_light"],
-      ["dark", `exp-${e.name}-on`, e.onContainerDark, "on_container_dark"],
-      ["light", `exp-${e.name}-ui`, e.uiLight, "ui_light"],
-      ["dark", `exp-${e.name}-ui`, e.uiDark, "ui_dark"],
-    ]
-    for (const [theme, prop, value, column] of cases) {
-      if (!value) continue // the DB does not define every rung for every tone
-      if (!has(theme === "light" ? light : dark, prop, value)) {
-        drift.push(`--${prop} (${theme}) != ${column} ${value}`)
-      }
-    }
-  }
-  return drift
-}
-
 async function main() {
   const { minerals, heritage, experimental } = await fetchPalette()
 
@@ -796,6 +785,8 @@ async function main() {
   css = spliceRegion(css, "theme", renderThemeBlock(minerals, heritage))
   css = spliceRegion(css, "light", renderVars(minerals, heritage, "light"))
   css = spliceRegion(css, "dark", renderVars(minerals, heritage, "dark"))
+  css = spliceRegion(css, "experimental-light", renderExperimentalVars(experimental, "light"))
+  css = spliceRegion(css, "experimental-dark", renderExperimentalVars(experimental, "dark"))
   css = await prettified(GLOBALS_CSS, css)
 
   // Formatting happens here, on the way to BOTH branches, so `--check` measures
@@ -823,16 +814,6 @@ async function main() {
       const onDisk = await readFile(p.path, "utf8").catch(() => null)
       if (onDisk === null || norm(onDisk) !== norm(p.body)) drift.push(p.label)
     }
-    const expDrift = checkExperimentalCss(onDiskCss, experimental)
-    if (expDrift.length) {
-      fail(
-        `globals.css --exp-* values drifted from styling-experimental:\n  ` +
-          expDrift.join("\n  ") +
-          `\nThese properties are hand-written (outside the tokens:generated markers), ` +
-          `so \`pnpm tokens:sync\` will NOT fix them — edit globals.css to match the DB, ` +
-          `or change the DB if the CSS is right.`
-      )
-    }
     if (drift.length) {
       fail(`token artifacts drifted from the DB: ${drift.join(", ")}. Run \`pnpm tokens:sync\`.`)
     }
@@ -846,18 +827,6 @@ async function main() {
   await writeFile(PALETTE_TS, paletteModule)
   await writeFile(GLOBALS_CSS, css)
   for (const p of platforms) await writeFile(p.path, p.body)
-  const expDrift = checkExperimentalCss(css, experimental)
-  if (expDrift.length) {
-    // Not a hard failure on write: the sync's job is the artifacts it owns, and
-    // the --exp-* block is not one of them. Warn loudly so it gets fixed, and
-    // let `tokens:verify` be the gate that actually blocks.
-    console.warn(
-      `! globals.css --exp-* values disagree with styling-experimental ` +
-        `(${expDrift.length} propert${expDrift.length === 1 ? "y" : "ies"}); ` +
-        `run \`pnpm tokens:verify\` for the list. Not rewritten — those properties ` +
-        `are hand-maintained.`
-    )
-  }
   console.log(
     `✓ synced ${minerals.length} minerals + ${heritage.length} heritage + ` +
       `${experimental.length} experimental → palette.generated.ts, globals.css, ` +

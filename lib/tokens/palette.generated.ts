@@ -17,9 +17,8 @@
  * The experimental seven are a computed heptagon — hues offset 17 degrees,
  * prime saturations, foregrounds solved to P7 — carrying a `heptagonIndex`
  * (0–6) that fixes each tone's position on the wheel. They are exported here so
- * TypeScript can reach them; their `--exp-*` custom properties in globals.css
- * remain hand-written and are verified against these values by
- * `pnpm tokens:verify`.
+ * TypeScript can reach them, and their `--exp-*` custom properties in
+ * globals.css are generated from the same rows.
  */
 
 export interface MineralToken {
