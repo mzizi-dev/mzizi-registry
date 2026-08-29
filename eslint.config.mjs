@@ -17,6 +17,10 @@ export default tseslint.config(
   {
     ignores: [
       ".next/**",
+      // OpenNext build output, and wrangler's local state. Both are
+      // generated (and gitignored) — same reasoning as `.next/**` above.
+      ".open-next/**",
+      ".wrangler/**",
       "node_modules/**",
       "packages/*/node_modules/**",
       "packages/*/dist/**",

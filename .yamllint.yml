@@ -9,6 +9,8 @@ extends: default
 
 ignore: |
   .next/
+  .open-next/
+  .wrangler/
   node_modules/
   public/_pagefind/
   pnpm-lock.yaml

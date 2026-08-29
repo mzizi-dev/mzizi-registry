@@ -47,3 +47,4 @@ CLAUDE.md
 # OpenNext build output (Cloudflare Workers)
 .open-next/
 .wrangler/
+.env.production.local
