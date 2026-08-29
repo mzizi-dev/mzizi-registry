@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mzizi",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-05-22",
+
+  // `nodejs_compat` is required by OpenNext: the Next.js server it wraps uses
+  // Node built-ins. `global_fetch_strictly_public` makes the Worker's own fetch
+  // behave like a browser's — a request to this Worker's own hostname goes back
+  // out through the edge rather than short-circuiting internally, which is what
+  // Next expects when a route fetches an absolute URL on the same origin.
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+
+  // Next's static output. `.open-next/assets` holds /_next/static and public/,
+  // served straight from the edge without waking the Worker.
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}
