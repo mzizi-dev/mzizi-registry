@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { getSkillsSummary, isSupabaseConfigured } from "@/lib/db"
+import { listSkills, skillsVersion } from "@/lib/skills"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("skills-summary")
@@ -17,37 +17,25 @@ export const revalidate = 3600
 /**
  * GET /api/v1/skills/summary
  *
- * Lightweight skill index — same shape as `GET /api/v1/skills` but
- * served via the `get_skills_summary()` SQL helper. Useful for clients
- * that explicitly want the summary contract (e.g. the CLI's `skills
- * update` subcommand re-fetches this to detect version drift cheaply).
+ * The same shape as `GET /api/v1/skills`. The two routes overlap today;
+ * reserving this URL keeps room to evolve the list route (filtering,
+ * pagination) without breaking the contract the CLI's `skills update` depends
+ * on for cheap drift detection.
  *
- * The two routes overlap in shape today, but reserving the `/summary`
- * URL gives us room to evolve `GET /api/v1/skills` (e.g. add filtering,
- * pagination) without breaking the contract `nyuchi-design skills
- * update` depends on.
+ * Both now read `@nyuchi/mzizi-skills` rather than the `get_skills_summary()`
+ * SQL helper, so "cheap" is now free — no round trip at all.
  */
 export async function GET() {
   const start = Date.now()
   try {
-    if (!isSupabaseConfigured()) {
-      trackApiCall({
-        endpoint: "/api/v1/skills/summary",
-        durationMs: Date.now() - start,
-        statusCode: 503,
-      })
-      return NextResponse.json({ error: "Database not configured" }, { status: 503, headers: CORS })
-    }
-
-    const skills = await getSkillsSummary()
+    const skills = listSkills()
     trackApiCall({
       endpoint: "/api/v1/skills/summary",
       durationMs: Date.now() - start,
       statusCode: 200,
     })
-
     return NextResponse.json(
-      { data: skills, meta: { count: skills.length } },
+      { data: skills, meta: { count: skills.length, version: skillsVersion() } },
       { headers: CORS_CACHE }
     )
   } catch (error) {

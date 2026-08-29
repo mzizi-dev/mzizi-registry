@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
-import { getSkill, listSkills, isSupabaseConfigured } from "@/lib/db"
+import { getSkill, listSkillNames, skillsVersion } from "@/lib/skills"
 import { CopyCommand } from "@/components/landing/copy-command"
 
 // SKILL DETAIL — mzizi.dev/skills/[name]
@@ -20,9 +20,11 @@ import { CopyCommand } from "@/components/landing/copy-command"
 export const revalidate = 3600
 
 export async function generateStaticParams() {
-  if (!isSupabaseConfigured()) return []
-  const skills = await listSkills().catch(() => [])
-  return skills.map((skill) => ({ name: skill.name }))
+  // Every skill prerenders. The guard that returned [] when Supabase was
+  // unconfigured is gone with the database read: the bundle is present at build
+  // time by construction, so returning nothing here could only ever have meant
+  // silently shipping zero skill pages.
+  return listSkillNames().map((name) => ({ name }))
 }
 
 export async function generateMetadata({
@@ -31,7 +33,7 @@ export async function generateMetadata({
   params: Promise<{ name: string }>
 }): Promise<Metadata> {
   const { name } = await params
-  const skill = isSupabaseConfigured() ? await getSkill(name).catch(() => null) : null
+  const skill = getSkill(name)
   if (!skill) return { title: `Skill: ${name}` }
   return {
     title: `Skill: ${skill.name}`,
@@ -41,7 +43,7 @@ export async function generateMetadata({
 
 export default async function SkillDetailPage({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
-  const skill = isSupabaseConfigured() ? await getSkill(name).catch(() => null) : null
+  const skill = getSkill(name)
 
   if (!skill) notFound()
 
@@ -65,20 +67,25 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ na
         ) : null}
       </header>
 
-      <dl className="grid grid-cols-2 gap-3 rounded-xl border border-border bg-card p-4 text-xs sm:grid-cols-4">
+      {/*
+        `version`, `requires_mcp` and `applies_to` used to render here. They were
+        envelope fields on the Supabase row that no writer maintained, so they
+        froze at whatever was set when the row was created — `ecosystem-app-setup`
+        advertised `applies_to: ["next.js"]` on a page whose body bootstraps
+        Astro. Stale metadata on a public page is worse than none, because a
+        reader has no way to tell. What replaces them is what the bundle actually
+        knows: which release this deployment serves, and where the skill is
+        authored. (nyuchi/mzizi-tools#87 decides whether `applies_to` comes back
+        as git-owned frontmatter.)
+      */}
+      <dl className="grid grid-cols-1 gap-3 rounded-xl border border-border bg-card p-4 text-xs sm:grid-cols-3">
         <div className="space-y-1">
-          <dt className="font-mono text-[10px] text-muted-foreground uppercase">Version</dt>
-          <dd className="font-mono text-foreground">{skill.version ?? "—"}</dd>
+          <dt className="font-mono text-[10px] text-muted-foreground uppercase">Bundle</dt>
+          <dd className="font-mono text-foreground">@nyuchi/mzizi-skills {skillsVersion()}</dd>
         </div>
-        <div className="space-y-1">
-          <dt className="font-mono text-[10px] text-muted-foreground uppercase">Needs MCP</dt>
-          <dd className="font-mono text-foreground">{skill.requires_mcp ? "yes" : "no"}</dd>
-        </div>
-        <div className="col-span-2 space-y-1">
-          <dt className="font-mono text-[10px] text-muted-foreground uppercase">Applies to</dt>
-          <dd className="font-mono text-foreground">
-            {skill.applies_to?.length ? skill.applies_to.join(", ") : "any"}
-          </dd>
+        <div className="col-span-1 space-y-1 sm:col-span-2">
+          <dt className="font-mono text-[10px] text-muted-foreground uppercase">Authored in</dt>
+          <dd className="font-mono break-all text-foreground">{skill.source}</dd>
         </div>
       </dl>
 

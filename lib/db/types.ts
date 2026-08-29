@@ -512,43 +512,27 @@ export interface AiInstructionInsert {
   metadata?: Record<string, unknown> | null
 }
 
-// ── Skills table types ──────────────────────────────────────────────
-
-/**
- * Agent-skill MDX bodies. **Read-only from this repo** — the source of truth is
- * git: `mzizi-skills/skills/<name>/SKILL.md` in `nyuchi/mzizi-tools`, published
- * as the npm package `@nyuchi/mzizi-skills` and projected into this table by
- * that repo's `pnpm skills:sync`. The portal serves what it finds here via the
- * HTTP API at `/api/v1/skills/{name}` and the MCP `get_skill` tool; consumers
- * install the package (`npx skills add @nyuchi/mzizi-skills`). Never write to
- * this table from the portal — see CLAUDE.md §15.23.
- *
- * Distinct from `ai_instructions` — those are per-AI-target system prompts
- * (one row per target like `claude-system-prompt`, `mcp-server`,
- * `github-copilot`); skills are reusable workflows an agent invokes on
- * specific tasks (one row per skill like `nyuchi-design`,
- * `scaffold-component`, `ecosystem-app-setup`).
- */
-export interface SkillRow {
-  id: number
-  name: string
-  description: string
-  body_mdx: string
-  agents: string[]
-  requires_mcp: boolean
-  applies_to: string[]
-  status: string | null
-  version: string
-  created_at: string
-  updated_at: string
-}
-
-/**
- * Lightweight summary shape returned by `list_skills()` and
- * `get_skills_summary()` SQL helpers — same as `SkillRow` minus the heavy
- * `body_mdx` field, for consumers that only need the index.
- */
-export type SkillSummary = Omit<SkillRow, "body_mdx" | "id" | "created_at">
+// ── Skills — no longer a table ──────────────────────────────────────
+//
+// This block used to document the `skills` table as "read-only from this repo,
+// source of truth is git, projected into this table by mzizi-tools' skills:sync".
+// That description was accurate and the arrangement was still wrong: it named
+// git as the source of truth and then read the projection anyway, which is a
+// second copy however carefully the comment describes it. The sync was not run,
+// and the projection went stale for weeks.
+//
+// SkillRow and SkillSummary are gone with the `skills` collection they
+// described. Skills are served from `@nyuchi/mzizi-skills` through
+// `lib/skills.ts`, which declares its own `Skill` and `SkillSummary` beside the
+// reader that produces them — a shape belongs next to the code that builds it,
+// not in a file shared with database rows it is no longer one of.
+//
+// Note what the old row carried: `requires_mcp`, `applies_to`, `version`,
+// `status`. Nothing wrote them after the row was created, so they froze —
+// `ecosystem-app-setup` advertised `applies_to: ["next.js"]` while its body
+// bootstrapped Astro. They are deliberately NOT reproduced in the new shape.
+// nyuchi/mzizi-tools#87 decides whether `applies_to` returns as git-owned
+// frontmatter, which is the only way it can stay true.
 
 // ── Changelog table types ───────────────────────────────────────────
 //

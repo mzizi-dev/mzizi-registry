@@ -57,6 +57,9 @@ importers:
       '@next/mdx':
         specifier: ^16.2.12
         version: 16.2.12(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.18)(react@19.2.8))
+      '@nyuchi/mzizi-skills':
+        specifier: 0.5.1
+        version: 0.5.1
       '@radix-ui/react-accordion':
         specifier: 1.2.20
         version: 1.2.20(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1248,6 +1251,10 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@nyuchi/mzizi-skills@0.5.1':
+    resolution: {integrity: sha512-umSX86LftAd3oDR+uq0kxdzVOfTNOp+NKbj6iivK5YWbp03C2N4T76NfuiJDvoXrKX2CDr/H4DnzqnmO87jL3w==}
+    engines: {node: '>=20'}
 
   '@open-draft/deferred-promise@2.2.0':
     resolution: {integrity: sha512-CecwLWx3rhxVQF6V4bAgPS5t+So2sTbPgAzafKkVizyi7tlwpcFpdFqq+wqF2OwNBmqFuu6tOyouTuxgpMfzmA==}
@@ -6387,6 +6394,8 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
+
+  '@nyuchi/mzizi-skills@0.5.1': {}
 
   '@open-draft/deferred-promise@2.2.0':
     optional: true
