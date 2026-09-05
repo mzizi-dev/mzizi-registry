@@ -154,7 +154,7 @@
     "markdownlint-cli2": "0.23.2",
     "mongodb": "^7.5.0",
     "pagefind": "^1.5.2",
-    "postcss": "^8.5.25",
+    "postcss": "^8.5.26",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "shadcn": "^4.16.2",
