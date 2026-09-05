@@ -10,7 +10,7 @@ export const revalidate = 3600
 export const metadata = {
   title: "Architecture — a Rust framework for the agentic web",
   description:
-    "The research architecture of the Mzizi framework: a novel syntax, type system, and compiler feedback loop designed for machine authorship, with Dioxus rendering interop, Candle ML, and an edge-first WASM artifact. Phase 0: language design + benchmark.",
+    "Why Mzizi exists: a novel syntax, type system, and compiler feedback loop designed for an agent iterating against a compiler, not a human typing — with Dioxus rendering interop, Candle ML, an edge-first WASM artifact, and the harness that wires observability into every component. Phase 0: language design + benchmark.",
 }
 
 const STRAND_BADGE: Record<string, string> = {
@@ -350,6 +350,49 @@ export default async function ArchitecturePage() {
         </dl>
       </header>
 
+      {/* ── The problem ─────────────────────────────────────────────── */}
+      <section className="mb-12">
+        <header className="mb-6 flex flex-col gap-2">
+          <h2 className="font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            The problem
+          </h2>
+          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Not &ldquo;can an agent write React&rdquo; — it already can. The question is what an
+            agent pays for writing a language that was never designed with it as the reader.
+          </p>
+        </header>
+        <div className="space-y-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+          <p>
+            A human author tolerates ambiguity, reads a paragraph of prose in a compiler error, and
+            pays a compile once per sitting. None of that is free — it is a set of design decisions
+            every existing framework made for its actual reader, and every one of them becomes a
+            cost when the reader is an agent instead: ambiguous syntax is a guess that burns an
+            iteration when the agent picks the wrong one of several equivalent forms; a compiler
+            error written as prose for a human skimming a terminal has to be re-parsed for the fix
+            before it can be acted on; and an agent that iterates against the compiler hundreds or
+            thousands of times per task feels every millisecond of build latency multiplied by every
+            one of those loops, in a way a human running the build once and going to make coffee
+            never does.
+          </p>
+          <p>
+            Token efficiency is the sharpest version of the same problem. A human holds a mental
+            model of a codebase that persists between sittings; an agent&apos;s working memory is
+            the context window in front of it, and every syntactic redundancy is a byte of program
+            the agent cannot also hold, read, or rewrite in the same pass.
+          </p>
+          <p>
+            <span className="text-foreground">
+              No language or compiler has been designed against that reader on purpose.
+            </span>{" "}
+            Frameworks add agent-facing tooling — linters, codegen, copilot integrations — around a
+            syntax and compiler that were fixed before agents were a consideration. Mzizi inverts
+            which decision comes first: the four goals below are what a language looks like when the
+            agent-as-author is the starting constraint, not a retrofit. Phase 0 is where that
+            inversion gets tested against a fixed benchmark rather than argued for in prose.
+          </p>
+        </div>
+      </section>
+
       {/* ── The four design goals ───────────────────────────────────── */}
       <section className="mb-12">
         <header className="mb-6 flex flex-col gap-2">
@@ -469,6 +512,66 @@ export default async function ArchitecturePage() {
             Nyuchi owns the Fundi console that operates around it.
           </p>
         </div>
+      </section>
+
+      {/* ── The harness ──────────────────────────────────────────────── */}
+      <section className="mb-12 border-t border-border pt-10">
+        <header className="mb-6 flex flex-col gap-2">
+          <h2 className="font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            The harness
+          </h2>
+          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Doctrine calls it the <span className="text-foreground">spine strand</span>: not a layer
+            of styling, a structural one — the pre-wiring that makes N3 brand, N4 safety, and N5
+            resilience components one framework instead of a parts list, the way a sugar-phosphate
+            backbone holds the DNA bases in place rather than being one of them.
+          </p>
+        </header>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-2 rounded-xl border border-border bg-background p-5">
+            <p className="font-mono text-[10px] tracking-widest text-[var(--color-gold)] uppercase">
+              What it wires today
+            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Every brand, safety, and resilience component destructures{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
+                {"{ log, motion, LiveRegion }"}
+              </code>{" "}
+              from it — scoped observability, reduced-motion-aware entry animation, and an
+              accessible shared live region, wired once instead of once per component. N2 primitives
+              never import it; N1 tokens are pure data. It is TypeScript today,{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">lib/harness</code> in
+              this repo, currently named{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">nyuchi-harness</code>{" "}
+              in the registry — on the same target this whole page states for everything else: one
+              shared Rust/WASM core behind the same interface, implemented once instead of once per
+              framework.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 rounded-xl border border-border bg-background p-5">
+            <p className="font-mono text-[10px] tracking-widest text-[var(--color-gold)] uppercase">
+              Why N8 and N9 depend on it
+            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              N8 assurance&apos;s own implementation rule is explicit:{" "}
+              <span className="text-foreground">
+                every brand component emits render timing and error events through the harness
+              </span>{" "}
+              — that is the only channel those signals travel on. A component wired to nothing still
+              compiles and still renders; it is simply invisible to N8, and by extension to N9
+              fundi, which only ever sees what N8 already caught. Harness attachment is not cosmetic
+              wiring around a component — it is the precondition for the observability and
+              self-healing chain existing for that component at all.
+            </p>
+          </div>
+        </div>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          And unlike a static page, this is checkable rather than trusted: every node and strand
+          description above — this one included — is a document served live by the{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">mzizi.dev/mcp</code>{" "}
+          server. An agent building against Mzizi can ask it directly which components are actually
+          wired, rather than take this paragraph&apos;s word for it.
+        </p>
       </section>
 
       {/* ── The benchmark corpus ────────────────────────────────────── */}

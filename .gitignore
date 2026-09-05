@@ -41,8 +41,19 @@ mzizi-rs/target/
 
 # Claude Code dev tooling — used locally, never tracked.
 # Kept on disk so the harness still reads them; the repo does not carry them.
+#
+# .claude/* (not .claude/), so the exception below actually works: a
+# trailing-slash directory exclusion stops git from ever descending into
+# it, so a later `!.claude/hooks/` negation is silently ignored. Matching
+# each top-level entry individually lets specific ones be re-included.
 CLAUDE.md
-.claude/
+.claude/*
+
+# Exception: the SessionStart hook and its settings are tracked, so
+# Claude Code on the web can install dependencies without a manual step.
+!.claude/settings.json
+!.claude/hooks/
+!.claude/hooks/*
 
 # OpenNext build output (Cloudflare Workers)
 .open-next/
