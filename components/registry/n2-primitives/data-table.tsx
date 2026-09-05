@@ -2,16 +2,24 @@
 
 import * as React from "react"
 import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  type SortingState,
-  type VisibilityState,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFns,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+  useTable,
+  type ColumnDef as TanstackColumnDef,
+  type ColumnFiltersState,
+  type ColumnVisibilityState,
+  type RowData,
+  type SortingState,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown } from "@/lib/icons"
 
@@ -33,14 +41,42 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+// ── Table Features (v9 composition API) ─────────────────────────────
+// This primitive accepts arbitrary consumer-defined columns, so the full
+// built-in filter/sort function registries are registered (rather than
+// tree-shaking down to a handful of named functions) — that keeps the
+// "auto" resolution v8 used to pick a filter/sort strategy per column's
+// value type working for any column a consumer defines.
+const features = tableFeatures({
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  sortFns,
+})
+
+type Features = typeof features
+
 // ── Re-exports for consumers ────────────────────────────────────────
-export type { ColumnDef } from "@tanstack/react-table"
+// Keep the public `ColumnDef<TData, TValue>` shape (2 generics) that
+// consumers already depend on, bound to this component's fixed feature set —
+// v9's ColumnDef itself now takes a `TFeatures` generic first.
+export type ColumnDef<TData extends RowData, TValue = unknown> = TanstackColumnDef<
+  Features,
+  TData,
+  TValue
+>
 
 // ── DataTable ───────────────────────────────────────────────────────
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps<TData extends RowData, TValue> {
+  columns?: ColumnDef<TData, TValue>[]
+  data?: TData[]
   /** Column key to use for the search/filter input. Omit to hide the filter. */
   filterColumn?: string
   /** Placeholder text for the filter input */
@@ -54,9 +90,9 @@ interface DataTableProps<TData, TValue> {
   className?: string
 }
 
-function DataTable<TData, TValue>({
-  columns,
-  data,
+function DataTable<TData extends RowData, TValue>({
+  columns = [],
+  data = [],
   filterColumn,
   filterPlaceholder = "Filter...",
   showColumnToggle = true,
@@ -66,18 +102,21 @@ function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data,
-    columns,
+    // `columns` carries the public `ColumnDef<TData, TValue>` shape (a single
+    // TValue shared across the array); v9's `useTable` wants each column's own
+    // cell-value type reflected against `unknown`, which TS can't verify from
+    // that shared-TValue shape. The row model itself is untyped per-cell at
+    // render time (flexRender resolves each cell's own context), so this is a
+    // type-level mismatch only.
+    columns: columns as unknown as TanstackColumnDef<Features, TData, unknown>[],
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -87,7 +126,7 @@ function DataTable<TData, TValue>({
       rowSelection,
     },
     initialState: {
-      pagination: { pageSize },
+      pagination: { pageIndex: 0, pageSize },
     },
   })
 
@@ -214,9 +253,9 @@ interface DataTableColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement
   title: string
 }
 
-function DataTableColumnHeader({ title, className }: DataTableColumnHeaderProps) {
+function DataTableColumnHeader({ title, className, ...rest }: DataTableColumnHeaderProps) {
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("flex items-center gap-2", className)} {...rest}>
       {title}
       <ArrowUpDown className="size-4" />
     </div>
