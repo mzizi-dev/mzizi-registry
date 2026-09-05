@@ -55,8 +55,8 @@ importers:
         specifier: ^1.30.0
         version: 1.30.0(zod@4.4.3)
       '@next/mdx':
-        specifier: ^16.2.12
-        version: 16.2.12(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.18)(react@19.2.8))
+        specifier: ^16.3.3
+        version: 16.3.3(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.18)(react@19.2.8))
       '@nyuchi/mzizi-skills':
         specifier: 0.5.1
         version: 0.5.1
@@ -1801,8 +1801,8 @@ packages:
   '@next/eslint-plugin-next@16.2.12':
     resolution: {integrity: sha512-uF2z/qAK2q7B5/6CpnFcBRX6jOq5iCO+Uqh1UkJhXljX1JwLarLYhhoJadO6dPb6moTprOKewMXheBcbIoSbug==}
 
-  '@next/mdx@16.2.12':
-    resolution: {integrity: sha512-bbKvq/7SIJZgQFRYL3wwnzLwCBviQfWi5UR61RDWwaMX3fV6iSqKfVr5SErRNA/PhMer/ylvErX4SVaGNrwKcw==}
+  '@next/mdx@16.3.3':
+    resolution: {integrity: sha512-DR5rq7bLDntGu49rUBAYOEjDwXsMHJ/Q/qjF+7dxLZwq9RZOVm/YoaVfrf1Mal3zBf3expNVtn8oQp590bt/Gw==}
     peerDependencies:
       '@mdx-js/loader': '>=0.15.0'
       '@mdx-js/react': '>=0.15.0'
@@ -8300,7 +8300,7 @@ snapshots:
     dependencies:
       fast-glob: 3.3.1
 
-  '@next/mdx@16.2.12(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.18)(react@19.2.8))':
+  '@next/mdx@16.3.3(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.18)(react@19.2.8))':
     dependencies:
       source-map: 0.7.6
     optionalDependencies:
