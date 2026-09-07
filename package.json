@@ -152,7 +152,7 @@
     "jsdom": "^30.0.1",
     "lint-staged": "^17.2.0",
     "markdownlint-cli2": "0.23.2",
-    "mongodb": "^7.5.0",
+    "mongodb": "^7.6.0",
     "pagefind": "^1.5.2",
     "postcss": "^8.5.26",
     "prettier": "^3.9.6",
