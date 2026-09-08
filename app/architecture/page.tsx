@@ -18,7 +18,8 @@ const STRAND_BADGE: Record<string, string> = {
   shipped: "bg-[var(--color-tanzanite-container)] text-[var(--color-tanzanite-on-container)]",
   swappable: "bg-[var(--color-malachite-container)] text-[var(--color-malachite-on-container)]",
   spine: "bg-[var(--color-copper-container)] text-[var(--color-copper-on-container)]",
-  "genetic-code": "bg-[var(--color-terracotta-container)] text-[var(--color-terracotta-on-container)]",
+  "genetic-code":
+    "bg-[var(--color-terracotta-container)] text-[var(--color-terracotta-on-container)]",
   transcription: "bg-[var(--color-sodalite-container)] text-[var(--color-sodalite-on-container)]",
 }
 const RUNG_BADGE = "bg-[var(--color-gold-container)] text-[var(--color-gold-on-container)]"
