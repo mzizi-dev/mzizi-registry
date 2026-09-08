@@ -16,7 +16,7 @@
     "cf:build": "opennextjs-cloudflare build",
     "cf:deploy": "opennextjs-cloudflare deploy",
     "cf:preview": "opennextjs-cloudflare preview",
-    "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm build",
+    "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm node-map:generate:check && pnpm build",
     "dev": "next dev --port ${PORT:-11736}",
     "doctrine:extract": "tsx scripts/extract-doctrine.ts",
     "doctrine:generate": "node scripts/generate-doctrine.mjs",
@@ -30,10 +30,13 @@
     "lint:json": "node -e \"const{execSync}=require('child_process');const fs=require('fs');const files=execSync(\\\"git ls-files '*.json' ':!pnpm-lock.yaml'\\\").toString().trim().split('\\n').filter(Boolean);let fail=0;for(const f of files){try{JSON.parse(fs.readFileSync(f,'utf8'))}catch(e){console.error('INVALID JSON:',f,e.message);fail=1}}process.exit(fail)\"",
     "lint:md": "markdownlint-cli2",
     "lint:yaml": "yamllint .",
+    "node-map:generate": "node scripts/generate-node-map.mjs",
+    "node-map:generate:check": "node scripts/generate-node-map.mjs --check",
     "openapi:generate": "node scripts/generate-openapi.mjs",
     "openapi:generate:check": "node scripts/generate-openapi.mjs --check",
+    "plus:dev": "wrangler dev --config mzizi-plus/wrangler.jsonc --local",
     "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
-    "prebuild": "node scripts/generate-skills.mjs && node scripts/generate-doctrine.mjs && node scripts/generate-registry-index.mjs && node scripts/generate-registry-source.mjs && node scripts/generate-openapi.mjs && node scripts/generate-api-routes.mjs",
+    "prebuild": "node scripts/generate-skills.mjs && node scripts/generate-doctrine.mjs && node scripts/generate-registry-index.mjs && node scripts/generate-registry-source.mjs && node scripts/generate-openapi.mjs && node scripts/generate-api-routes.mjs && node scripts/generate-node-map.mjs",
     "prepare": "husky",
     "props:extract": "tsx scripts/extract-props.ts",
     "props:verify": "tsx scripts/extract-props.ts --check",
@@ -60,7 +63,8 @@
     "tokens:sync": "tsx scripts/sync-tokens.ts",
     "tokens:verify": "tsx scripts/sync-tokens.ts --check",
     "typecheck": "tsc --noEmit",
-    "typecheck:packages": "pnpm --filter \"./packages/*\" typecheck"
+    "typecheck:packages": "pnpm --filter \"./packages/*\" typecheck",
+    "ui:dev": "wrangler dev --config mzizi-ui/wrangler.jsonc --local"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
