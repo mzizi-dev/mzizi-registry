@@ -101,7 +101,7 @@ jobs:
       - name: Verify the extracted component props are current
         run: pnpm props:verify
 
-      # The six build-time artifacts that replaced request-time filesystem
+      # The seven build-time artifacts that replaced request-time filesystem
       # reads. Each has a generator, a committed output and a `--check` that
       # fails when the two disagree.
       #
@@ -123,6 +123,7 @@ jobs:
           pnpm registry:source:check
           pnpm openapi:generate:check
           pnpm api:routes:check
+          pnpm node-map:generate:check
 
   rust:
     name: Rust

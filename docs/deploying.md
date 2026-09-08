@@ -10,24 +10,36 @@ nobody uses rots without anyone noticing until the day it is needed.
 
 ## The Workers
 
-| Worker      | Serves                           | Config                     | Owner                    |
-| ----------- | -------------------------------- | -------------------------- | ------------------------ |
-| `mzizi`     | `mzizi.dev` — the framework site | `wrangler.jsonc`           | Mzizi / Bundu Foundation |
-| `mzizi-api` | `api.mzizi.dev` — the public API | `mzizi-api/wrangler.jsonc` | Mzizi / Bundu Foundation |
+| Worker       | Serves                                   | Config                      | Owner                    |
+| ------------ | ---------------------------------------- | --------------------------- | ------------------------ |
+| `mzizi`      | `mzizi.dev` — the framework site         | `wrangler.jsonc`            | Mzizi / Bundu Foundation |
+| `mzizi-api`  | `api.mzizi.dev` — the public API         | `mzizi-api/wrangler.jsonc`  | Mzizi / Bundu Foundation |
+| `mzizi-ui`   | `ui.mzizi.dev` — the viewable primitives | `mzizi-ui/wrangler.jsonc`   | Mzizi / Bundu Foundation |
+| `mzizi-plus` | `plus.mzizi.dev` — the toolchain         | `mzizi-plus/wrangler.jsonc` | Mzizi / Bundu Foundation |
+
+`mzizi-ui` and `mzizi-plus` don't render anything of their own — they proxy to
+`mzizi.dev` per-request and gate which pages/items are allowed through by node
+(see `lib/domain-proxy.ts`). Neither needs the Supabase secrets `mzizi-api`
+does; they hold no state and reach no database.
 
 ## Connecting a Worker in the dashboard
 
 Workers &rarr; the Worker &rarr; Settings &rarr; Build. Point it at this repo and
 set:
 
-| Worker      | Build command                                                             | Deploy command                                          |
-| ----------- | ------------------------------------------------------------------------- | ------------------------------------------------------- |
-| `mzizi`     | `pnpm install --frozen-lockfile && pnpm exec opennextjs-cloudflare build` | `npx wrangler deploy`                                   |
-| `mzizi-api` | `pnpm install --frozen-lockfile`                                          | `npx wrangler deploy --config mzizi-api/wrangler.jsonc` |
+| Worker       | Build command                                                             | Deploy command                                           |
+| ------------ | ------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `mzizi`      | `pnpm install --frozen-lockfile && pnpm exec opennextjs-cloudflare build` | `npx wrangler deploy`                                    |
+| `mzizi-api`  | `pnpm install --frozen-lockfile`                                          | `npx wrangler deploy --config mzizi-api/wrangler.jsonc`  |
+| `mzizi-ui`   | `pnpm install --frozen-lockfile`                                          | `npx wrangler deploy --config mzizi-ui/wrangler.jsonc`   |
+| `mzizi-plus` | `pnpm install --frozen-lockfile`                                          | `npx wrangler deploy --config mzizi-plus/wrangler.jsonc` |
 
-`mzizi-api` has no build step of its own — wrangler bundles it from source. The
-install is still needed, because the Worker imports the app's own route handlers
-and those import real dependencies.
+None of `mzizi-api`, `mzizi-ui`, or `mzizi-plus` has a build step of its own —
+wrangler bundles each from source. The install is still needed: `mzizi-api`
+imports the app's own route handlers, and `mzizi-ui`/`mzizi-plus` import
+`lib/domain-proxy.ts` and its generated node map, so all three need the real
+dependency tree present even though none of them compiles anything ahead of
+time.
 
 ## The one setting that is easy to get wrong
 
@@ -67,9 +79,18 @@ The dashboard reports the build, not the result. Check what is actually served:
 curl -s -o /dev/null -w '%{http_code}\n' https://mzizi.dev/
 curl -s -o /dev/null -w '%{http_code}\n' https://api.mzizi.dev/v1/skills
 curl -s -o /dev/null -w '%{http_code}\n' https://api.mzizi.dev/v1/brand
+curl -s -o /dev/null -w '%{http_code}\n' https://ui.mzizi.dev/components/button
+curl -s -o /dev/null -w '%{http_code}\n' https://plus.mzizi.dev/components/accessibility-audit
+curl -s -o /dev/null -w '%{http_code}\n' -L https://ui.mzizi.dev/components/accessibility-audit
 ```
 
 `/v1/brand` is the one worth keeping in that list. It is database-backed, so it
 is the only one of the three that can prove the credentials are actually set —
 `/v1/skills` reads the inlined bundle and answers 200 on a Worker that can reach
 nothing.
+
+The last three prove `mzizi-ui`/`mzizi-plus` are gating rather than just
+proxying everything: `button` is n2, so it should answer 200 through
+`ui.mzizi.dev` directly; `accessibility-audit` is n8, so it should answer 200
+through `plus.mzizi.dev` but redirect (302, hence `-L` to follow it and confirm
+the final page loads) when requested from `ui.mzizi.dev`.
