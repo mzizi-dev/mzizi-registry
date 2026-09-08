@@ -81,7 +81,9 @@ export default function CliPage() {
               Plans the work against the live corpus and returns the steps. The planner runs
               read-only — it can read files, list directories, and fetch skills and components, but
               writing and shelling out are blocked at this stage. A plan is inert until applied, so
-              read it first.
+              read it first. Without <code className="font-mono text-xs">ANTHROPIC_API_KEY</code>,
+              this prints project context and relevant Mzizi skills instead — for whatever coding
+              agent is running the command to plan from with its own model access.
             </p>
             <CopyCommand command='npx fundi plan "wire up Mzizi tokens and install the theme provider"' />
           </div>
@@ -124,12 +126,13 @@ export default function CliPage() {
             <tbody className="text-muted-foreground">
               <tr className="border-b border-border/50">
                 <td className="py-2 pr-4 font-mono text-xs">ANTHROPIC_API_KEY</td>
-                <td className="py-2 pr-4 text-xs">
-                  for <code className="font-mono">plan</code> /{" "}
-                  <code className="font-mono">chat</code>
-                </td>
+                <td className="py-2 pr-4 text-xs">no</td>
                 <td className="py-2 text-xs">
-                  Model access. <code className="font-mono">explore</code> runs without it.
+                  Like <code className="font-mono">tsc</code>, fundi assumes a coding agent is
+                  usually the one running it. Unset, <code className="font-mono">plan</code> gathers
+                  project context and relevant Mzizi skills for that agent to plan from instead of
+                  calling a model itself, and <code className="font-mono">chat</code> points you at
+                  the agent already running it. Set it for fundi to plan/chat on its own.
                 </td>
               </tr>
               <tr className="border-b border-border/50">
