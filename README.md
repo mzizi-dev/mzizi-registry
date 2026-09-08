@@ -200,12 +200,11 @@ If `pnpm check` is green, CI will be too.
 
 ## CI workflows
 
-| Workflow                                                   | Trigger                             | Required checks                                                                                          |
-| ---------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [`ci.yml`](.github/workflows/ci.yml)                       | push to `main`, PR to `main`        | `Lint`, `Type Check`, `Test`, `Build`, `Security Audit`, `Registry Snapshot`                             |
-| [`lint.yml`](.github/workflows/lint.yml)                   | push to `main`, PR to `main`        | `lint / actionlint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`, `lint / yamllint` |
-| [`claude-review.yml`](.github/workflows/claude-review.yml) | PR open/sync, PR comment, PR review | AI code review on every human comment (advisory, not a merge gate)                                       |
-| [`release.yml`](.github/workflows/release.yml)             | tag push (`v*`)                     | Validates `package.json` version matches the tag, then creates a GitHub release                          |
+| Workflow                                       | Trigger                      | Required checks                                                                                          |
+| ---------------------------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [`ci.yml`](.github/workflows/ci.yml)           | push to `main`, PR to `main` | `Lint`, `Type Check`, `Test`, `Build`, `Security Audit`, `Registry Snapshot`                             |
+| [`lint.yml`](.github/workflows/lint.yml)       | push to `main`, PR to `main` | `lint / actionlint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`, `lint / yamllint` |
+| [`release.yml`](.github/workflows/release.yml) | tag push (`v*`)              | Validates `package.json` version matches the tag, then creates a GitHub release                          |
 
 ---
 
