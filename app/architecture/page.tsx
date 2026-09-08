@@ -14,14 +14,14 @@ export const metadata = {
 }
 
 const STRAND_BADGE: Record<string, string> = {
-  "core-guarantee": "bg-[var(--color-cobalt)]/10 text-[var(--color-cobalt)]",
-  shipped: "bg-[var(--color-tanzanite)]/10 text-[var(--color-tanzanite)]",
-  swappable: "bg-[var(--color-malachite)]/10 text-[var(--color-malachite)]",
-  spine: "bg-[var(--color-copper)]/10 text-[var(--color-copper)]",
-  "genetic-code": "bg-[var(--color-terracotta)]/10 text-[var(--color-terracotta)]",
-  transcription: "bg-[var(--color-sodalite)]/10 text-[var(--color-sodalite)]",
+  "core-guarantee": "bg-[var(--color-cobalt-container)] text-[var(--color-cobalt-on-container)]",
+  shipped: "bg-[var(--color-tanzanite-container)] text-[var(--color-tanzanite-on-container)]",
+  swappable: "bg-[var(--color-malachite-container)] text-[var(--color-malachite-on-container)]",
+  spine: "bg-[var(--color-copper-container)] text-[var(--color-copper-on-container)]",
+  "genetic-code": "bg-[var(--color-terracotta-container)] text-[var(--color-terracotta-on-container)]",
+  transcription: "bg-[var(--color-sodalite-container)] text-[var(--color-sodalite-on-container)]",
 }
-const RUNG_BADGE = "bg-[var(--color-gold)]/10 text-[var(--color-gold)]"
+const RUNG_BADGE = "bg-[var(--color-gold-container)] text-[var(--color-gold-on-container)]"
 
 function strandBadge(strand: string): string {
   return STRAND_BADGE[strand] ?? "bg-muted text-muted-foreground"
@@ -57,48 +57,48 @@ const LAYERS = [
     posture: "Novel — the research",
     detail:
       "The part Mzizi actually builds: a language and compiler feedback loop designed for machine authorship, measured against the four goals.",
-    accent: "text-[var(--color-gold)]",
+    accent: "text-[var(--color-gold-on-container)]",
   },
   {
     layer: "Rendering",
     posture: "Interop — Dioxus",
     detail:
       "Mzizi does not build a renderer. Components compile to Dioxus for rendering; no native renderer in Phase 0/1.",
-    accent: "text-[var(--color-cobalt)]",
+    accent: "text-[var(--color-cobalt-on-container)]",
   },
   {
     layer: "Machine learning",
     posture: "Interop — Candle",
     detail:
       "ML workloads go through Candle. Building a competing tensor runtime is an explicit non-goal.",
-    accent: "text-[var(--color-tanzanite)]",
+    accent: "text-[var(--color-tanzanite-on-container)]",
   },
   {
     layer: "Runtime",
     posture: "Edge-first — Cloudflare Workers / workers-rs",
     detail:
       "The default deployment target is the edge; the runtime story is workers-rs, not a bespoke server.",
-    accent: "text-[var(--color-malachite)]",
+    accent: "text-[var(--color-malachite-on-container)]",
   },
   {
     layer: "Artifact",
     posture: "WASM (+ native desktop)",
     detail:
       "The compiled artifact is WASM, standalone and embeddable, with native desktop as the second target.",
-    accent: "text-[var(--color-copper)]",
+    accent: "text-[var(--color-copper-on-container)]",
   },
   {
     layer: "Host frameworks",
     posture: "Thin optional adapters",
     detail:
       "Astro and other frameworks get adapters that embed the artifact. Adapters stay thin and optional — the artifact is the product of compilation, not a plugin.",
-    accent: "text-[var(--color-sodalite)]",
+    accent: "text-[var(--color-sodalite-on-container)]",
   },
   {
     layer: "Cryptography",
     posture: "Deferred",
     detail: "Post-quantum crypto is acknowledged and explicitly deferred. Not a Phase 0–4 concern.",
-    accent: "text-[var(--color-terracotta)]",
+    accent: "text-[var(--color-terracotta-on-container)]",
   },
 ] as const
 
@@ -410,7 +410,7 @@ export default async function ArchitecturePage() {
               key={goal.label}
               className="flex flex-col gap-2 rounded-xl border border-border bg-background p-5"
             >
-              <p className="font-mono text-[10px] tracking-widest text-[var(--color-gold)] uppercase">
+              <p className="font-mono text-[10px] tracking-widest text-[var(--color-gold-on-container)] uppercase">
                 {goal.label}
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground">{goal.body}</p>
@@ -485,7 +485,7 @@ export default async function ArchitecturePage() {
                 <span
                   className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-medium tracking-widest uppercase ${
                     p.status === "now"
-                      ? "bg-[var(--color-gold)]/10 text-[var(--color-gold)]"
+                      ? "bg-[var(--color-gold-container)] text-[var(--color-gold-on-container)]"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -529,7 +529,7 @@ export default async function ArchitecturePage() {
         </header>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2 rounded-xl border border-border bg-background p-5">
-            <p className="font-mono text-[10px] tracking-widest text-[var(--color-gold)] uppercase">
+            <p className="font-mono text-[10px] tracking-widest text-[var(--color-gold-on-container)] uppercase">
               What it wires today
             </p>
             <p className="text-sm leading-relaxed text-muted-foreground">
@@ -549,7 +549,7 @@ export default async function ArchitecturePage() {
             </p>
           </div>
           <div className="flex flex-col gap-2 rounded-xl border border-border bg-background p-5">
-            <p className="font-mono text-[10px] tracking-widest text-[var(--color-gold)] uppercase">
+            <p className="font-mono text-[10px] tracking-widest text-[var(--color-gold-on-container)] uppercase">
               Why N8 and N9 depend on it
             </p>
             <p className="text-sm leading-relaxed text-muted-foreground">
