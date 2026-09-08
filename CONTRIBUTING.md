@@ -351,7 +351,7 @@ Detailed in [`README.md`](README.md#ci-workflows). Required for merge:
 - **`lint.yml`** — `lint / actionlint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`, `lint / yamllint`
 - **`CodeQL`** — `Analyze (actions)`, `Analyze (javascript-typescript)`
 
-`Claude Code Review` runs on every PR comment but is advisory, not a merge gate. The dependency tree inside `ci.yml` is:
+The dependency tree inside `ci.yml` is:
 
 ```text
 Tier 1 parallel:  Audit, Lint, Type Check, Registry Snapshot
