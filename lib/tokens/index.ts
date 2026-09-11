@@ -416,7 +416,7 @@ export const listingThemes: Record<
   // Heritage
   indigo: {
     name: "Indigo",
-    accent: "#8C9EFF",
+    accent: "#7986CB",
     bg: "#0D1040",
     surface: "#141866",
     gradient: "linear-gradient(145deg, #050820 0%, #0D1040 50%, #141866 100%)",
@@ -425,7 +425,7 @@ export const listingThemes: Record<
   },
   savanna: {
     name: "Savanna",
-    accent: "#FFCC80",
+    accent: "#E5C158",
     bg: "#1A1408",
     surface: "#2A2010",
     gradient: "linear-gradient(145deg, #0D0A03 0%, #1A1408 50%, #2A2010 100%)",
@@ -434,7 +434,7 @@ export const listingThemes: Record<
   },
   baobab: {
     name: "Baobab",
-    accent: "#A5D6A7",
+    accent: "#A1887F",
     bg: "#0F1A0F",
     surface: "#1A2A1A",
     gradient: "linear-gradient(145deg, #060D06 0%, #0F1A0F 50%, #1A2A1A 100%)",
@@ -443,7 +443,7 @@ export const listingThemes: Record<
   },
   sunset: {
     name: "Sunset",
-    accent: "#FF8A80",
+    accent: "#FF7043",
     bg: "#2A0A02",
     surface: "#3D1005",
     gradient: "linear-gradient(145deg, #1A0500 0%, #2A0A02 50%, #3D1005 100%)",
