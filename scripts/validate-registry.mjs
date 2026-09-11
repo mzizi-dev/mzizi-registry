@@ -380,14 +380,31 @@ function main() {
           `registryDependencies "${dep}" is scope-prefixed. The shadcn CLI resolves a ` +
             `dependency as a bare name or an absolute URL — never a package scope — so ` +
             `this makes the component uninstallable. Use ` +
-            `https://mzizi.dev/api/v1/ui/${dep.replace(/^@[^/]+\//, "")}`
+            `https://api.mzizi.dev/v1/ui/${dep.replace(/^@[^/]+\//, "")}`
         )
         continue
       }
       if (/^https?:\/\//.test(dep)) {
-        const m = dep.match(/\/api\/v1\/ui\/([^/?#]+)$/)
+        // Both published forms end `/v1/ui/<name>`: the canonical
+        // `https://api.mzizi.dev/v1/ui/x` and the older
+        // `https://mzizi.dev/api/v1/ui/x`, which the gateway still proxies. One
+        // pattern covers both BY MATCHING THE SHORTER SUFFIX — the earlier
+        // `/api/v1/ui/` pattern would simply not match the canonical form, and
+        // a non-match falls through to `continue`, so this check would have
+        // gone quietly dead exactly as the addresses moved.
+        const m = dep.match(/\/v1\/ui\/([^/?#]+)$/)
         if (m && !names.has(m[1])) {
           err(n, `registryDependencies "${dep}" points at "${m[1]}", which is not in the registry`)
+        }
+        // `api.mzizi.dev` absorbs the `/api` segment into the hostname. Writing
+        // both is not a harmless alias: the deployed gateway 404s it.
+        if (/^https?:\/\/api\.mzizi\.dev\/api\//.test(dep)) {
+          err(
+            n,
+            `registryDependencies "${dep}" doubles the API prefix. On api.mzizi.dev the ` +
+              `\`/api\` segment IS the hostname — this 404s. Drop it: ` +
+              dep.replace("/api/v1/", "/v1/")
+          )
         }
         continue
       }
@@ -409,7 +426,7 @@ function main() {
           n,
           `registryDependencies "${dep}" is a bare name and "${dep}" is an item in THIS ` +
             `registry — the CLI resolves bare names against ui.shadcn.com, so a consumer ` +
-            `gets shadcn's ${dep}, not ours. Use https://mzizi.dev/api/v1/ui/${dep} (or ` +
+            `gets shadcn's ${dep}, not ours. Use https://api.mzizi.dev/v1/ui/${dep} (or ` +
             `"@mzizi/${dep}" once consumers carry the registries mapping).`
         )
       } else {
