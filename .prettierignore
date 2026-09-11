@@ -48,7 +48,7 @@ content/doctrine/
 # Author-time skills for working on the portal itself. The old entry here also
 # listed `packages/design-agent-skills/skills/` and described the Supabase
 # `skills` table as canonical — both wrong now: that directory no longer exists
-# and skills are files in `nyuchi/mzizi-tools` (CLAUDE.md §15.23).
+# and skills are files in `mzizi-dev/agent-tools` (CLAUDE.md §15.23).
 .claude/skills/*.md
 !.claude/skills/README.md
 

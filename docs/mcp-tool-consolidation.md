@@ -52,7 +52,7 @@ retirement as its last step, not a registry edit.
 
 ## Sequencing
 
-1. Implement the 10 in `mzizi-mcp` (`nyuchi/mzizi-tools`), each covering its full
+1. Implement the 10 in `mzizi-mcp` (`mzizi-dev/agent-tools`), each covering its full
    replaces-list.
 2. Prove coverage: every one of the 62 current tools answered by one of the 10, with
    no capability silently dropped.

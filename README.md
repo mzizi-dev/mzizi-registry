@@ -2,9 +2,9 @@
 
 > An open-architecture project of the Bundu Foundation — the canonical component registry, brand system, DNA-helix frontend architecture, and AI-native developer portal for the bundu ecosystem. Operated and developed by Nyuchi.
 
-[![CI](https://github.com/nyuchi/mzizi/actions/workflows/ci.yml/badge.svg)](https://github.com/nyuchi/mzizi/actions/workflows/ci.yml)
-[![Release](https://github.com/nyuchi/mzizi/actions/workflows/release.yml/badge.svg)](https://github.com/nyuchi/mzizi/actions/workflows/release.yml)
-[![CodeQL](https://github.com/nyuchi/mzizi/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nyuchi/mzizi/security/code-scanning)
+[![CI](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml)
+[![Release](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml)
+[![CodeQL](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/security/code-scanning)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 **Version:** 1.0.0 | **Live:** [mzizi.dev](https://mzizi.dev) | **Product docs:** [docs.bundu.org](https://docs.bundu.org) | **Engineering docs:** [docs.nyuchi.com](https://docs.nyuchi.com) | **Observability:** [mzizi.dev/observability](https://mzizi.dev/observability)
@@ -40,7 +40,7 @@ Every install carries the canonical typography (Noto Sans / Noto Serif / JetBrai
 
 ## AI-Native: MCP server
 
-There is **one** Mzizi MCP server: `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport, the `mzizi-mcp` Worker in [`nyuchi/mzizi-tools`](https://github.com/nyuchi/mzizi-tools)). Each tool returns a whole self-contained JSON document per component — one fetch, no joins. Access is gated by a **free WorkOS AuthKit signup**; `mzizi.dev/api/v1` remains open and unauthenticated for anything that needs no account.
+There is **one** Mzizi MCP server: `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport, the `mzizi-mcp` Worker in `mzizi-dev/agent-tools`, a private repo). Each tool returns a whole self-contained JSON document per component — one fetch, no joins. Access is gated by a **free WorkOS AuthKit signup**; `mzizi.dev/api/v1` remains open and unauthenticated for anything that needs no account.
 
 The portal used to serve a second, smaller MCP in-process at `mzizi.dev/mcp`. That route is now a **308** to the one above — method and body preserved, so an in-flight JSON-RPC `POST` survives the hop and existing clients keep working. Configure new clients against the real endpoint:
 
@@ -67,7 +67,7 @@ Tools:
 - `list_collections` — counts + ownership across all 11 nodes/rungs
 - `get_database_status` — connection health
 
-The standalone Cloudflare Worker variant (for consumers that don't want to go through `mzizi.dev`), the Fundi self-healing agent, the TypeScript SDK, the published `mzizi-skills` bundle, and the `mzizi-console-app` (Svelte mini-app that surfaces Mzizi inside the Nyuchi Console at `platform.nyuchi.com`) all live in **[`nyuchi/mzizi-tools`](https://github.com/nyuchi/mzizi-tools)** — not in this repo.
+The standalone Cloudflare Worker variant (for consumers that don't want to go through `mzizi.dev`), the Fundi self-healing agent, the TypeScript SDK, the published `mzizi-skills` bundle, and the `mzizi-console-app` (Svelte mini-app that surfaces Mzizi inside the Nyuchi Console at `platform.nyuchi.com`) all live in **`mzizi-dev/agent-tools`** — a private repo, not this one.
 
 ---
 
@@ -211,8 +211,8 @@ If `pnpm check` is green, CI will be too.
 ## Local Development
 
 ```bash
-git clone https://github.com/nyuchi/mzizi.git
-cd mzizi
+git clone https://github.com/mzizi-dev/mzizi-registry.git
+cd mzizi-registry
 pnpm install
 
 cp .env.example .env.local
@@ -226,20 +226,23 @@ pnpm dev
 
 ## Ecosystem
 
-| Repository                                                              | URL                                                | Role                                                                                                        |
-| ----------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **[mzizi](https://github.com/nyuchi/mzizi)** (this repo)                | [mzizi.dev](https://mzizi.dev)                     | Mzizi portal — registry, brand, DNA-helix architecture, document-route MCP                                  |
-| **[nyuchi/mzizi-tools](https://github.com/nyuchi/mzizi-tools)**         | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
-| **[nyuchi/mukoko-platform](https://github.com/nyuchi/mukoko-platform)** | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform (will be renamed `nyuchi-console`)                                            |
-| **[nyuchi/bundu-docs](https://github.com/nyuchi/bundu-docs)**           | [docs.bundu.org](https://docs.bundu.org)           | Outward-facing product documentation (Astro Starlight)                                                      |
-| **[nyuchi/nyuchi-docs](https://github.com/nyuchi/nyuchi-docs)**         | [docs.nyuchi.com](https://docs.nyuchi.com)         | Engineering / how-things-are-done docs (Astro Starlight)                                                    |
-| mukoko                                                                  | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
-| mukoko weather                                                          | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
-| mukoko news                                                             | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
-| nhimbe                                                                  | [nhimbe.com](https://nhimbe.com)                   | Events and cultural gatherings                                                                              |
-| shamwari                                                                | [shamwari.ai](https://shamwari.ai)                 | Sovereign AI companion                                                                                      |
-| nyuchi                                                                  | [nyuchi.com](https://nyuchi.com)                   | Enterprise layer                                                                                            |
-| bundu                                                                   | [bundu.family](https://bundu.family)               | The ecosystem                                                                                               |
+| Repository                                                                              | URL                                                | Role                                                                                                        |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **[mzizi-dev/mzizi-registry](https://github.com/mzizi-dev/mzizi-registry)** (this repo) | [mzizi.dev](https://mzizi.dev)                     | Mzizi portal — component registry, brand, DNA-helix architecture, document-route MCP                        |
+| **[mzizi-dev/mzizi](https://github.com/mzizi-dev/mzizi)**                               | —                                                  | Mzizi **the language** — the Rust compiler and runtime for the agentic web. Not the registry                |
+| **[mzizi-dev/mzizi-console](https://github.com/mzizi-dev/mzizi-console)**               | `app.mzizi.dev` (not yet resolving)                | The Mzizi console                                                                                           |
+| **[mzizi-dev/mzizi-api-gateway](https://github.com/mzizi-dev/mzizi-api-gateway)**       | `api.mzizi.dev` (not yet resolving)                | The registry API as a pure-Rust Cloudflare Worker                                                           |
+| **mzizi-dev/agent-tools** (private)                                                     | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
+| **[nyuchi/mukoko-platform](https://github.com/nyuchi/mukoko-platform)**                 | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform (will be renamed `nyuchi-console`)                                            |
+| **[nyuchi/bundu-docs](https://github.com/nyuchi/bundu-docs)**                           | [docs.bundu.org](https://docs.bundu.org)           | Outward-facing product documentation (Astro Starlight)                                                      |
+| **[nyuchi/nyuchi-docs](https://github.com/nyuchi/nyuchi-docs)**                         | [docs.nyuchi.com](https://docs.nyuchi.com)         | Engineering / how-things-are-done docs (Astro Starlight)                                                    |
+| mukoko                                                                                  | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
+| mukoko weather                                                                          | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
+| mukoko news                                                                             | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
+| nhimbe                                                                                  | [nhimbe.com](https://nhimbe.com)                   | Events and cultural gatherings                                                                              |
+| shamwari                                                                                | [shamwari.ai](https://shamwari.ai)                 | Sovereign AI companion                                                                                      |
+| nyuchi                                                                                  | [nyuchi.com](https://nyuchi.com)                   | Enterprise layer                                                                                            |
+| bundu                                                                                   | [bundu.family](https://bundu.family)               | The ecosystem                                                                                               |
 
 ---
 
@@ -253,7 +256,7 @@ The version-bump propagation surfaces are listed in [`CLAUDE.md`](CLAUDE.md) §1
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and the PR process. For questions and ideas, use [GitHub Discussions](https://github.com/nyuchi/mzizi/discussions).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and the PR process. For questions and ideas, use [GitHub Discussions](https://github.com/mzizi-dev/mzizi-registry/discussions).
 
 ## Code of Conduct
 
@@ -261,7 +264,7 @@ See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Built on Ubuntu: _umuntu ngumuntu 
 
 ## Security
 
-See [SECURITY.md](SECURITY.md) or report privately via [GitHub Security Advisories](https://github.com/nyuchi/mzizi/security/advisories/new).
+See [SECURITY.md](SECURITY.md) or report privately via [GitHub Security Advisories](https://github.com/mzizi-dev/mzizi-registry/security/advisories/new).
 
 ## Governance & License
 

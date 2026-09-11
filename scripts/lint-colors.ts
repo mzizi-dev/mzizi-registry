@@ -127,7 +127,7 @@ const ALLOW: { prefix: string; why: string }[] = [
  *
  * The gate is not weakened. A hex hardcoded in a generated file means a hex
  * hardcoded in its SOURCE, and that is where it has to be caught — for skills,
- * in `nyuchi/mzizi-tools`, where the SKILL.md is authored.
+ * in `mzizi-dev/agent-tools`, where the SKILL.md is authored.
  */
 const GENERATED = /\.generated\.(ts|tsx|json)$/
 

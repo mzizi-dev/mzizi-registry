@@ -3,8 +3,8 @@
  * vulnerability responsibly.
  *
  * It shipped for months advertising three URLs that did not resolve: a `Contact` pointing at
- * `nyuchi/design-portal` (403 — the repo was renamed to `nyuchi/mzizi` and this reference was
- * not), a `Policy` at `mzizi.dev/security` (404) and an `Acknowledgments` at
+ * `nyuchi/design-portal` (403 — the repo had been renamed and this reference was not), a `Policy`
+ * at `mzizi.dev/security` (404) and an `Acknowledgments` at
  * `mzizi.dev/security/acknowledgments` (404). Every other gate was green the whole time,
  * because nothing had ever opened the file.
  *
@@ -56,12 +56,18 @@ describe("/.well-known/security.txt", () => {
     expect(expires.getTime()).toBeGreaterThan(Date.now())
   })
 
-  it("names this repository, never the pre-rename one", async () => {
+  it("names this repository, never a pre-rename one", async () => {
     // github.com/nyuchi/design-portal answers 403. A reporter following it cannot file.
+    //
+    // `nyuchi/mzizi` is the subtler trap: it still 301s here, so it *works* — until someone
+    // claims that name, and it is also one character away from `mzizi-dev/mzizi`, which is the
+    // Mzizi LANGUAGE repo and has no security advisory surface for this site. The canonical
+    // slug for the registry is `mzizi-dev/mzizi-registry`, suffix included.
     const text = await body()
     expect(text).not.toContain("design-portal")
+    expect(text).not.toContain("nyuchi/mzizi")
     for (const url of text.matchAll(/https:\/\/github\.com\/([\w-]+\/[\w-]+)/g)) {
-      expect(url[1]).toBe("nyuchi/mzizi")
+      expect(url[1]).toBe("mzizi-dev/mzizi-registry")
     }
   })
 

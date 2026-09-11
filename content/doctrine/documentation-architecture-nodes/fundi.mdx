@@ -2,7 +2,7 @@
 _schemaVersion: "v1"
 covenant: "Failure is a learning event, not a user-facing incident."
 currentVersion: 2
-description: "The self-healing rung — a cross-cutting base pair that bridges both backbones. A Cloudflare Worker at fundi.nyuchi.dev, TypeScript today (fundi-tester in nyuchi/mzizi-tools: a FundiAgent durable object, a */5 cron and the fundi-signals queue); a workers-rs Rust/WASM Worker is the target. NOT a Supabase Edge Function — fundi runs independently of the database vendor on Cloudflare's global edge. Triggered by Cron Triggers and Cloudflare Queues pushed by N8 signals. Reads observability_events and fundi_issues from Supabase via REST API, classifies failure severity, deduplicates against open GitHub issues, and creates structured issues with fundi:node/{n} labels for human review. Never auto-merges fixes. Logs every healing action append-only."
+description: "The self-healing rung — a cross-cutting base pair that bridges both backbones. A Cloudflare Worker at fundi.nyuchi.dev, TypeScript today (fundi-tester in mzizi-dev/agent-tools: a FundiAgent durable object, a */5 cron and the fundi-signals queue); a workers-rs Rust/WASM Worker is the target. NOT a Supabase Edge Function — fundi runs independently of the database vendor on Cloudflare's global edge. Triggered by Cron Triggers and Cloudflare Queues pushed by N8 signals. Reads observability_events and fundi_issues from Supabase via REST API, classifies failure severity, deduplicates against open GitHub issues, and creates structured issues with fundi:node/{n} labels for human review. Never auto-merges fixes. Logs every healing action append-only."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
 helix_model: "double-helix"
@@ -21,7 +21,7 @@ rust:
   kind: "edge-worker"
   note: "A Rust IMPLEMENTATION, and the one where the language genuinely does not change the contract. Whatever it is written in, fundi reads signals over REST, classifies, deduplicates, files a labelled issue for human review, and NEVER auto-merges. If a port ever makes auto-merge look convenient, the port is wrong, not the covenant."
   state: "target"
-  today: "No Rust ships. The deployed worker is fundi-tester in nyuchi/mzizi-tools — TypeScript on Cloudflare (hono, agents, jose, mongodb; a FundiAgent durable object, a */5 cron, the fundi-signals queue). There is no Cargo.toml in that repo and workers-rs is not in use."
+  today: "No Rust ships. The deployed worker is fundi-tester in mzizi-dev/agent-tools — TypeScript on Cloudflare (hono, agents, jose, mongodb; a FundiAgent durable object, a */5 cron, the fundi-signals queue). There is no Cargo.toml in that repo and workers-rs is not in use."
   target: "A workers-rs Worker following the cloudflare-worker-rust house pattern that mzizi-tools already documents as a skill but this worker has not yet adopted. Rust buys cold-start and memory at the edge; it buys no new powers."
   position: "implementation"
   descriptors: []

@@ -14,7 +14,7 @@
 //! what a consumer app installs so its own failures reach a tracker.
 //!
 //! The **healing loop itself** — the cron pass, the webhook ingest, the GitHub
-//! automation — is the `fundi-tester` Worker in `nyuchi/mzizi-tools`, and it is
+//! automation — is the `fundi-tester` Worker in `mzizi-dev/agent-tools`, and it is
 //! still TypeScript. Converting these registry components does not move it, and
 //! saying so matters because `CLAUDE.md` §17 diagrams a loop ending in a draft
 //! pull request while `heal.ts` files issues and `github.ts` has no

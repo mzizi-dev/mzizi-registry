@@ -19,7 +19,7 @@ import path from "node:path"
  * re-reads, so it drifts silently and is believed anyway.
  *
  * WHAT CHANGED. That four-tool server is gone. There is one Mzizi MCP —
- * `mcp.mzizi.dev/mcp`, the `mzizi-mcp` Worker in nyuchi/mzizi-tools — and
+ * `mcp.mzizi.dev/mcp`, the `mzizi-mcp` Worker in mzizi-dev/agent-tools — and
  * `mzizi.dev/mcp` is a 308 to it. So the capability check can no longer read
  * the tool list off disk: the source of truth is in another repository.
  *

@@ -39,7 +39,7 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
 license = "Apache-2.0"
-repository = "https://github.com/nyuchi/mzizi"
+repository = "https://github.com/mzizi-dev/mzizi-registry"
 homepage = "https://mzizi.dev"
 
 [workspace.lints.rust]

@@ -9,7 +9,7 @@ import { CopyCommand } from "@/components/landing/copy-command"
 //
 // Renders one skill's full body. The body is stored in the Supabase `skills`
 // collection and authored in git (`mzizi-skills/skills/<name>/SKILL.md` in
-// nyuchi/mzizi-tools), so what renders here is what an assistant loads.
+// mzizi-dev/agent-tools), so what renders here is what an assistant loads.
 //
 // The body is plain Markdown/MDX text. It is rendered in a <pre> rather than
 // compiled: these bodies are agent instructions, frequently containing SQL and
@@ -47,8 +47,6 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ na
 
   if (!skill) notFound()
 
-  const sourceUrl = `https://github.com/nyuchi/mzizi-tools/blob/main/mzizi-skills/skills/${skill.name}/SKILL.md`
-
   return (
     <article className="mx-auto w-full max-w-3xl space-y-8 py-8">
       <header className="space-y-3">
@@ -75,7 +73,7 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ na
         Astro. Stale metadata on a public page is worse than none, because a
         reader has no way to tell. What replaces them is what the bundle actually
         knows: which release this deployment serves, and where the skill is
-        authored. (nyuchi/mzizi-tools#87 decides whether `applies_to` comes back
+        authored. (mzizi-dev/agent-tools#87 decides whether `applies_to` comes back
         as git-owned frontmatter.)
       */}
       <dl className="grid grid-cols-1 gap-3 rounded-xl border border-border bg-card p-4 text-xs sm:grid-cols-3">
@@ -98,10 +96,9 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ na
         <CopyCommand command={`curl -s https://mzizi.dev/api/v1/skills/${skill.name}`} />
         <p className="text-sm leading-relaxed text-muted-foreground">
           Source of truth:{" "}
-          <a className="underline hover:text-foreground" href={sourceUrl}>
-            {skill.name}/SKILL.md
-          </a>{" "}
-          in nyuchi/mzizi-tools. Edit it there — not here, and not the registry row.
+          <code className="font-mono text-xs">mzizi-skills/skills/{skill.name}/SKILL.md</code> in{" "}
+          <code className="font-mono text-xs">mzizi-dev/agent-tools</code>. That repo is private, so
+          there is no public link to follow. Edit it there — not here, and not the registry row.
         </p>
       </section>
 

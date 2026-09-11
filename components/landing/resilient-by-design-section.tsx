@@ -140,7 +140,7 @@ export async function ResilientBySection() {
           </Link>{" "}
           for the full charter and{" "}
           <a
-            href="https://github.com/nyuchi/mzizi/blob/main/SECURITY.md"
+            href="https://github.com/mzizi-dev/mzizi-registry/blob/main/SECURITY.md"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:no-underline"
