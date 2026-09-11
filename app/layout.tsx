@@ -111,7 +111,7 @@ const jsonLd = {
       name: "Bundu Foundation",
       description:
         "The Bundu Foundation owns and governs Mzizi, a Rust framework for the agentic web. The Fundi console and active testing are operated by Nyuchi.",
-      sameAs: ["https://github.com/nyuchi/mzizi"],
+      sameAs: ["https://github.com/mzizi-dev"],
     },
     {
       "@type": "SoftwareApplication",
@@ -129,6 +129,7 @@ const jsonLd = {
       creator: { "@id": `${SITE_URL}/#organization` },
       softwareVersion: "1.0.0",
       downloadUrl: "https://mzizi.dev/api/v1/ui",
+      codeRepository: "https://github.com/mzizi-dev/mzizi-registry",
     },
   ],
 }

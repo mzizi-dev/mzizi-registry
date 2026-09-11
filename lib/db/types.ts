@@ -531,7 +531,7 @@ export interface AiInstructionInsert {
 // `status`. Nothing wrote them after the row was created, so they froze —
 // `ecosystem-app-setup` advertised `applies_to: ["next.js"]` while its body
 // bootstrapped Astro. They are deliberately NOT reproduced in the new shape.
-// nyuchi/mzizi-tools#87 decides whether `applies_to` returns as git-owned
+// mzizi-dev/agent-tools#87 decides whether `applies_to` returns as git-owned
 // frontmatter, which is the only way it can stay true.
 
 // ── Changelog table types ───────────────────────────────────────────
@@ -978,7 +978,7 @@ export interface UbuntuPrincipleInsert {
 //
 // The /observability dashboard reads from four public tables (and the
 // `get_system_counts()` RPC). All rows are public-read via RLS — see
-// nyuchi/mzizi#82.
+// mzizi-dev/mzizi-registry#82.
 
 export interface FundiIssueRow {
   id: number
