@@ -1,7 +1,7 @@
 # mzizi-fundi
 
 The client-side self-healing rung from the [Mzizi](https://mzizi.dev) component registry —
-**node N9, fundi**, whose claim is that failure is a learning event rather than a
+**rung N9, fundi** — the rung whose claim is that failure is a learning event rather than a
 user-facing incident.
 
 Three modules: `nyuchi_fundi` decides whether a failure is worth filing, `nyuchi_fundi_reporter`
@@ -11,6 +11,10 @@ shapes the issue, and `nyuchi_fundi_learning` tracks which fixes have worked bef
 [dependencies]
 mzizi-fundi = "0.1"
 ```
+
+> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
+> mzizi-registry#328 but none has been released, so this line does not resolve
+> today — depend on it by path or git until the first release.
 
 ## What this crate is not
 
@@ -33,7 +37,7 @@ editing it directly is overwritten on the next run. The copy exists because
 
 ## Links
 
-- Registry: <https://mzizi.dev/r/> — browse at <https://mzizi.dev/components>
+- Registry index: <https://api.mzizi.dev/api/v1/ui>
 - Source: <https://github.com/mzizi-dev/mzizi-registry>
 
 Apache-2.0. Mzizi is an open-architecture project of the Bundu Foundation, operated and

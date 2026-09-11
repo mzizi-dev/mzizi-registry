@@ -1,7 +1,7 @@
 # mzizi-tokens
 
-The [Mzizi](https://mzizi.dev) design palette as Rust consts — **node N1, tokens**, the
-first rung of the DNA-helix architecture.
+The [Mzizi](https://mzizi.dev) design palette as Rust consts — **node N1, tokens** — the
+first node of the DNA-helix architecture.
 
 All 21 families, each in both themes: seven African minerals (cobalt, tanzanite,
 malachite, gold, terracotta, sodalite, copper), seven heritage tones (indigo, savanna,
@@ -12,6 +12,10 @@ fern, lagoon, storm, dusk, protea). Plus the spacing, radius and type scales.
 [dependencies]
 mzizi-tokens = "0.1"
 ```
+
+> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
+> mzizi-registry#328 but none has been released, so this line does not resolve
+> today — depend on it by path or git until the first release.
 
 ```rust
 use mzizi_tokens::{Palette, COBALT_DARK, Radius};
@@ -46,8 +50,8 @@ consts.
 
 ## Links
 
-- Palette: <https://mzizi.dev/tokens>
-- Registry: <https://mzizi.dev/r/> — browse at <https://mzizi.dev/components>
+- Palette: <https://api.mzizi.dev/api/v1/brand>
+- Registry index: <https://api.mzizi.dev/api/v1/ui>
 - Source: <https://github.com/mzizi-dev/mzizi-registry>
 
 Apache-2.0. Mzizi is an open-architecture project of the Bundu Foundation, operated and
