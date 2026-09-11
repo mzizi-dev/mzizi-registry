@@ -954,9 +954,9 @@ export async function getComponentVersion(
 // Repointing it at the file would have been the wrong fix twice over: nothing
 // wants it, and the token pipeline already runs the other way. `pnpm
 // tokens:sync` GENERATES `lib/tokens/palette.generated.ts` and the
-// `tokens:generated` block of `app/globals.css` from the Supabase
-// `styling-minerals` / `styling-heritage-colors` collections, with
-// `pnpm tokens:verify` as the drift gate (§8.4.1). A second reader that parsed
+// `tokens:generated` block of `app/globals.css` from
+// `lib/tokens/palette.source.ts` — the canonical palette in this repo, not the
+// database — with `pnpm tokens:verify` as the drift gate (§8.4.1). A second reader that parsed
 // a component's source back into a token object would be a third copy of the
 // palette that nothing keeps in step.
 //

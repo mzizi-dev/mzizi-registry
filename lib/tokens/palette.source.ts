@@ -1,0 +1,362 @@
+/**
+ * SEVEN MINERALS + SEVEN HERITAGE + SEVEN EXPERIMENTAL — the canonical colour
+ * palette. THIS FILE IS THE SOURCE OF TRUTH. Edit the palette here.
+ *
+ * It is hand-maintained and lives in the repo on purpose. Until 2026-09 these
+ * values were read out of Supabase (`component_documents`, collections
+ * `styling-minerals` / `styling-heritage-colors` / `styling-experimental`) by
+ * `scripts/sync-tokens.ts`. That arrangement is retired: per
+ * `docs/db-contents-rule.md` the database holds no brand or primitive token
+ * data, so a generator that reaches for Supabase to learn what colour cobalt is
+ * was wrong by definition. The direction is now repo -> artifacts, one way.
+ *
+ * Everything downstream is GENERATED from this file by `pnpm tokens:sync`:
+ *   - lib/tokens/palette.generated.ts   typed snapshot consumers import
+ *   - app/globals.css                   the marked palette regions only
+ *   - components/registry/n1-tokens/nyuchi-tokens-<platform>.<ext>
+ *                                       swift, kotlin, arkts, react-native,
+ *                                       python, rust
+ *
+ *   pnpm tokens:sync     regenerate every artifact from this file
+ *   pnpm tokens:verify   CI gate — fails if any artifact has drifted from it
+ *
+ * Neither command needs the network or a credential any more, which is why the
+ * gate can run on every CI job rather than only where secrets are present.
+ *
+ * Adding an eighth family is an edit HERE plus `pnpm tokens:sync`. Do not add a
+ * colour to an artifact; `tokens:verify` will reject it, and
+ * `__tests__/tokens-surface-parity.test.ts` will name the surface that drifted.
+ *
+ * Two mineral families: `deep-earth` (cobalt, tanzanite, malachite, sodalite)
+ * and `hand` (gold, terracotta, copper). Heritage tones are atmospheric anchors
+ * with no family/role.
+ *
+ * The experimental seven are a computed heptagon — hues offset 17 degrees,
+ * prime saturations, foregrounds solved to P7 — carrying a `heptagonIndex`
+ * (0–6) that fixes each tone's position on the wheel.
+ */
+
+export interface MineralToken {
+  name: string
+  role: string
+  family: "deep-earth" | "hand"
+  cssVar: string
+  darkHex: string
+  lightHex: string
+  containerDark: string
+  containerLight: string
+  onContainerDark: string
+  onContainerLight: string
+  sortOrder: number
+  origin: string
+  symbolism: string
+  usage: string
+}
+
+export interface HeritageToken {
+  name: string
+  cssVar: string
+  darkHex: string
+  lightHex: string
+  sortOrder: number
+  origin: string
+  symbolism: string
+  usage: string
+}
+
+export const minerals: MineralToken[] = [
+  {
+    name: "cobalt",
+    role: "Knowledge",
+    family: "deep-earth",
+    cssVar: "--color-cobalt",
+    darkHex: "#00B0FF",
+    lightHex: "#0047AB",
+    containerDark: "#001F3F",
+    containerLight: "#E3F2FD",
+    onContainerDark: "#B3E5FC",
+    onContainerLight: "#002966",
+    sortOrder: 0,
+    origin: "Katanga (DRC) and Zambian Copperbelt",
+    symbolism: "Digital future, trust, knowledge",
+    usage: "Primary blue, links, CTAs",
+  },
+  {
+    name: "tanzanite",
+    role: "Identity",
+    family: "deep-earth",
+    cssVar: "--color-tanzanite",
+    darkHex: "#B388FF",
+    lightHex: "#4B0082",
+    containerDark: "#1A0033",
+    containerLight: "#F3E5F5",
+    onContainerDark: "#E1BEE7",
+    onContainerLight: "#2E004D",
+    sortOrder: 1,
+    origin: "Merelani Hills, Tanzania",
+    symbolism: "Premium, creativity, connection",
+    usage: "Purple accent, brand/logo, social features",
+  },
+  {
+    name: "malachite",
+    role: "Growth",
+    family: "deep-earth",
+    cssVar: "--color-malachite",
+    darkHex: "#64FFDA",
+    lightHex: "#004D40",
+    containerDark: "#00251A",
+    containerLight: "#E0F2F1",
+    onContainerDark: "#A7FFEB",
+    onContainerLight: "#00332B",
+    sortOrder: 2,
+    origin: "Congo Copper Belt",
+    symbolism: "Growth, nature, success",
+    usage: "Success states, positive actions",
+  },
+  {
+    name: "gold",
+    role: "Value",
+    family: "hand",
+    cssVar: "--color-gold",
+    darkHex: "#FFD740",
+    lightHex: "#5D4037",
+    containerDark: "#332200",
+    containerLight: "#FFF8E1",
+    onContainerDark: "#FFECB3",
+    onContainerLight: "#3E2723",
+    sortOrder: 3,
+    origin: "Ghana, South Africa, Mali",
+    symbolism: "Honey, rewards, warmth",
+    usage: "Achievements, rewards, highlights",
+  },
+  {
+    name: "terracotta",
+    role: "Community",
+    family: "hand",
+    cssVar: "--color-terracotta",
+    darkHex: "#E1B07E",
+    lightHex: "#A0522D",
+    containerDark: "#3E2817",
+    containerLight: "#F5E6D3",
+    onContainerDark: "#F5E6D3",
+    onContainerLight: "#5D2906",
+    sortOrder: 4,
+    origin: "Pan-African Sahel",
+    symbolism: "Earth, community, grounding",
+    usage: "Community features, warmth",
+  },
+  {
+    name: "sodalite",
+    role: "Intelligence",
+    family: "deep-earth",
+    cssVar: "--color-sodalite",
+    darkHex: "#3D5AFE",
+    lightHex: "#283593",
+    containerDark: "#0D1442",
+    containerLight: "#E8EAF6",
+    onContainerDark: "#C5CAE9",
+    onContainerLight: "#141A5C",
+    sortOrder: 5,
+    origin: "Kunene River, Namibia & South Africa",
+    symbolism: "Intelligence, depth, reasoning",
+    usage: "AI/Shamwari surfaces, deep-reasoning states",
+  },
+  {
+    name: "copper",
+    role: "Stewardship",
+    family: "hand",
+    cssVar: "--color-copper",
+    darkHex: "#FF8A65",
+    lightHex: "#BF5A36",
+    containerDark: "#3A1A0E",
+    containerLight: "#FBE4DA",
+    onContainerDark: "#FFD3C2",
+    onContainerLight: "#5C2410",
+    sortOrder: 6,
+    origin: "Central African Copperbelt, Zambia & DRC",
+    symbolism: "Connection, foundation, stewardship",
+    usage: "Bundu ecosystem identity, the commons",
+  },
+]
+
+export const heritageColors: HeritageToken[] = [
+  {
+    name: "indigo",
+    cssVar: "--color-indigo",
+    darkHex: "#7986CB",
+    lightHex: "#4527A0",
+    sortOrder: 0,
+    origin: "Indigofera, West Africa textile tradition",
+    symbolism: "Dusk, depth, the dyer's craft",
+    usage: "Twilight surfaces, deep atmosphere, mini-app moods",
+  },
+  {
+    name: "savanna",
+    cssVar: "--color-savanna",
+    darkHex: "#E5C158",
+    lightHex: "#8D6E1A",
+    sortOrder: 1,
+    origin: "Sub-Saharan grasslands",
+    symbolism: "Sun-dried grass, open land, the dry season",
+    usage: "Warm grassland surfaces, daylight atmosphere",
+  },
+  {
+    name: "baobab",
+    cssVar: "--color-baobab",
+    darkHex: "#A1887F",
+    lightHex: "#4E342E",
+    sortOrder: 2,
+    origin: "Adansonia, across the African continent",
+    symbolism: "The tree of life, age, shelter",
+    usage: "Earthy surfaces, grounded atmosphere, bark tones",
+  },
+  {
+    name: "sunset",
+    cssVar: "--color-sunset",
+    darkHex: "#FF7043",
+    lightHex: "#D84315",
+    sortOrder: 3,
+    origin: "The African horizon at dusk",
+    symbolism: "Day's end, warmth, the gathering hour",
+    usage: "Warm accent surfaces, golden-hour atmosphere",
+  },
+  {
+    name: "river",
+    cssVar: "--color-river",
+    darkHex: "#4DD0E1",
+    lightHex: "#006064",
+    sortOrder: 4,
+    origin: "The great African rivers — Zambezi, Nile, Congo",
+    symbolism: "Flow, life, the journey",
+    usage: "Cool surfaces, flowing atmosphere, water tones",
+  },
+  {
+    name: "hematite",
+    cssVar: "--color-hematite",
+    darkHex: "#90A4AE",
+    lightHex: "#546E7A",
+    sortOrder: 5,
+    origin: "Sishen & Thabazimbi, South Africa",
+    symbolism: "Foundation, endurance, the substrate",
+    usage: "Neutral anchor, mini-app surfaces, atmosphere",
+  },
+  {
+    name: "kalahari",
+    cssVar: "--color-kalahari",
+    darkHex: "#E8D9B5",
+    lightHex: "#C9B589",
+    sortOrder: 6,
+    origin: "Kalahari & Namib, Southern Africa",
+    symbolism: "Openness, space, the light pole",
+    usage: "Light anchor, warm backgrounds, mini-app surfaces",
+  },
+]
+
+export interface ExperimentalToken {
+  name: string
+  lightHex: string
+  darkHex: string
+  containerLight: string
+  containerDark: string
+  onContainerLight: string
+  onContainerDark: string
+  uiLight: string
+  uiDark: string
+  /** Position on the seven-point hue wheel, 0-6. */
+  heptagonIndex: number
+  sortOrder: number
+}
+
+export const experimentalColors: ExperimentalToken[] = [
+  {
+    name: "ember",
+    lightHex: "#843D20",
+    darkHex: "#DA8766",
+    containerLight: "#EBDFDB",
+    containerDark: "#352721",
+    onContainerLight: "#7A3115",
+    onContainerDark: "#EBA68A",
+    uiLight: "#CD5F33",
+    uiDark: "#BB562D",
+    heptagonIndex: 0,
+    sortOrder: 0,
+  },
+  {
+    name: "acacia",
+    lightHex: "#4D5615",
+    darkHex: "#93A528",
+    containerLight: "#E9EBDB",
+    containerDark: "#333521",
+    onContainerLight: "#48510E",
+    onContainerDark: "#B6CE23",
+    uiLight: "#7E8C22",
+    uiDark: "#768420",
+    heptagonIndex: 1,
+    sortOrder: 1,
+  },
+  {
+    name: "fern",
+    lightHex: "#175E17",
+    darkHex: "#2CB42B",
+    containerLight: "#DBEBDB",
+    containerDark: "#213521",
+    onContainerLight: "#0F570F",
+    onContainerDark: "#28DB28",
+    uiLight: "#259725",
+    uiDark: "#228D22",
+    heptagonIndex: 2,
+    sortOrder: 2,
+  },
+  {
+    name: "lagoon",
+    lightHex: "#165B51",
+    darkHex: "#2AAE9B",
+    containerLight: "#DBEBE9",
+    containerDark: "#213532",
+    onContainerLight: "#0E554B",
+    onContainerDark: "#24D6BC",
+    uiLight: "#249383",
+    uiDark: "#218A7A",
+    heptagonIndex: 3,
+    sortOrder: 3,
+  },
+  {
+    name: "storm",
+    lightHex: "#284CA6",
+    darkHex: "#7E9BE0",
+    containerLight: "#DBE0EB",
+    containerDark: "#212735",
+    onContainerLight: "#1A409B",
+    onContainerDark: "#99B2EE",
+    uiLight: "#577BD6",
+    uiDark: "#426CD1",
+    heptagonIndex: 4,
+    sortOrder: 4,
+  },
+  {
+    name: "dusk",
+    lightHex: "#742AAD",
+    darkHex: "#BA87E2",
+    containerLight: "#E4DBEB",
+    containerDark: "#2D2135",
+    onContainerLight: "#661B9E",
+    onContainerDark: "#CC9FEF",
+    uiLight: "#A35DD8",
+    uiDark: "#9749D3",
+    heptagonIndex: 5,
+    sortOrder: 5,
+  },
+  {
+    name: "protea",
+    lightHex: "#932464",
+    darkHex: "#DF7BB4",
+    containerLight: "#EBDBE4",
+    containerDark: "#35212D",
+    onContainerLight: "#841656",
+    onContainerDark: "#ED98C9",
+    uiLight: "#D34998",
+    uiDark: "#CA3188",
+    heptagonIndex: 6,
+    sortOrder: 6,
+  },
+]
