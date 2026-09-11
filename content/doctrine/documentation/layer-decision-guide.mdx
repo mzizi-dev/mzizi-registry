@@ -54,23 +54,23 @@ This guide answered "which node does this component belong in" by walking a deci
 
 ## The new decision space
 
-Pick a collection by what the artifact *is*, not what number node it sits in:
+Pick a collection by what the artifact _is_, not what number node it sits in:
 
-| If the artifact is… | Collection |
-| -- | -- |
+| If the artifact is…                                   | Collection                                            |
+| ----------------------------------------------------- | ----------------------------------------------------- |
 | A CSS value, color, token, spacing, layout breakpoint | `styling-*` (one of the styling-prefixed collections) |
-| A generic UI element with no brand assumptions | `primitives` |
-| A brand-styled UI element | `brand` |
-| A safety guarantee (input bounds, type guards) | `safety` |
-| A resilience pattern (retry, circuit-break, fallback) | `resilience` |
-| An accessibility helper (a11y or locale) | `accessibility` |
-| A data-fetch helper | `data` |
-| An observability domain or event-stream definition | `observability` / `observability-domains` |
-| A self-healing recipe | `fundi` |
-| A page composition | `pages` |
-| An app shell | `shell` |
-| Doctrine, principles, architecture docs | `documentation*` |
-| Ubuntu pillar/principle, bundu convention | `genetic-code-*` |
+| A generic UI element with no brand assumptions        | `primitives`                                          |
+| A brand-styled UI element                             | `brand`                                               |
+| A safety guarantee (input bounds, type guards)        | `safety`                                              |
+| A resilience pattern (retry, circuit-break, fallback) | `resilience`                                          |
+| An accessibility helper (a11y or locale)              | `accessibility`                                       |
+| A data-fetch helper                                   | `data`                                                |
+| An observability domain or event-stream definition    | `observability` / `observability-domains`             |
+| A self-healing recipe                                 | `fundi`                                               |
+| A page composition                                    | `pages`                                               |
+| An app shell                                          | `shell`                                               |
+| Doctrine, principles, architecture docs               | `documentation*`                                      |
+| Ubuntu pillar/principle, bundu convention             | `genetic-code-*`                                      |
 
 ## DNA-role classification (per-doc)
 

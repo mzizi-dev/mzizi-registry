@@ -481,6 +481,7 @@ export const REGISTRY_FILES: readonly string[] = [
   "n3-brand/nyuchi-user-card.tsx",
   "n3-brand/nyuchi-user-menu.tsx",
   "n3-brand/nyuchi-verified-badge.tsx",
+  "n3-brand/nyuchi-washed-theme.tsx",
   "n4-safety/ai-safety.tsx",
   "n4-safety/mzizi-chain-gate.tsx",
   "n4-safety/mzizi-content-gate.tsx",
@@ -622,4 +623,4 @@ export const REGISTRY_FILES: readonly string[] = [
   "n9-fundi/nyuchi-fundi-reporter.ts",
   "n9-fundi/nyuchi-fundi.rs",
   "n9-fundi/nyuchi-fundi.tsx",
-]
+];

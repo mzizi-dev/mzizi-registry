@@ -25,31 +25,31 @@
  */
 
 export interface MineralToken {
-  name: string
-  role: string
-  family: "deep-earth" | "hand"
-  cssVar: string
-  darkHex: string
-  lightHex: string
-  containerDark: string
-  containerLight: string
-  onContainerDark: string
-  onContainerLight: string
-  sortOrder: number
-  origin: string
-  symbolism: string
-  usage: string
+  name: string;
+  role: string;
+  family: "deep-earth" | "hand";
+  cssVar: string;
+  darkHex: string;
+  lightHex: string;
+  containerDark: string;
+  containerLight: string;
+  onContainerDark: string;
+  onContainerLight: string;
+  sortOrder: number;
+  origin: string;
+  symbolism: string;
+  usage: string;
 }
 
 export interface HeritageToken {
-  name: string
-  cssVar: string
-  darkHex: string
-  lightHex: string
-  sortOrder: number
-  origin: string
-  symbolism: string
-  usage: string
+  name: string;
+  cssVar: string;
+  darkHex: string;
+  lightHex: string;
+  sortOrder: number;
+  origin: string;
+  symbolism: string;
+  usage: string;
 }
 
 export const minerals: MineralToken[] = [
@@ -165,7 +165,7 @@ export const minerals: MineralToken[] = [
     symbolism: "Connection, foundation, stewardship",
     usage: "Bundu ecosystem identity, the commons",
   },
-]
+];
 
 export const heritageColors: HeritageToken[] = [
   {
@@ -238,21 +238,21 @@ export const heritageColors: HeritageToken[] = [
     symbolism: "Openness, space, the light pole",
     usage: "Light anchor, warm backgrounds, mini-app surfaces",
   },
-]
+];
 
 export interface ExperimentalToken {
-  name: string
-  lightHex: string
-  darkHex: string
-  containerLight: string
-  containerDark: string
-  onContainerLight: string
-  onContainerDark: string
-  uiLight: string
-  uiDark: string
+  name: string;
+  lightHex: string;
+  darkHex: string;
+  containerLight: string;
+  containerDark: string;
+  onContainerLight: string;
+  onContainerDark: string;
+  uiLight: string;
+  uiDark: string;
   /** Position on the seven-point hue wheel, 0-6. */
-  heptagonIndex: number
-  sortOrder: number
+  heptagonIndex: number;
+  sortOrder: number;
 }
 
 export const experimentalColors: ExperimentalToken[] = [
@@ -347,4 +347,4 @@ export const experimentalColors: ExperimentalToken[] = [
     heptagonIndex: 6,
     sortOrder: 6,
   },
-]
+];

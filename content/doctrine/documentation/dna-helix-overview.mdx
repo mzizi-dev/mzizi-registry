@@ -31,14 +31,14 @@ Eleven ecosystem nodes carry **non-sequential identifiers N1–N11** — labels,
 
 Six functional strands, grouped onto the two backbones (`documentation-architecture-strands/*`):
 
-| Strand | Backbone | What it is | Owner |
-| -- | -- | -- | -- |
+| Strand           | Backbone    | What it is                                                                              | Owner  |
+| ---------------- | ----------- | --------------------------------------------------------------------------------------- | ------ |
 | `core-guarantee` | engineering | The fixed contract — accessibility, data, resilience, observability, safety, primitives | nyuchi |
-| `shipped` | engineering | Nyuchi-authored, in the box — brand, pages, shell | nyuchi |
-| `swappable` | engineering | The fork seams — styling/tokens, icon library, framework | nyuchi |
-| `spine` | engineering | The harness — the pre-wiring backbone that binds components to their conventions | nyuchi |
-| `genetic-code` | meaning | Ubuntu principles + Bundu conventions — the sequence everything is read from | bundu |
-| `transcription` | meaning | Doctrine stored as queryable documents in `component_documents`, served by the MCP | nyuchi |
+| `shipped`        | engineering | Nyuchi-authored, in the box — brand, pages, shell                                       | nyuchi |
+| `swappable`      | engineering | The fork seams — styling/tokens, icon library, framework                                | nyuchi |
+| `spine`          | engineering | The harness — the pre-wiring backbone that binds components to their conventions        | nyuchi |
+| `genetic-code`   | meaning     | Ubuntu principles + Bundu conventions — the sequence everything is read from            | bundu  |
+| `transcription`  | meaning     | Doctrine stored as queryable documents in `component_documents`, served by the MCP      | nyuchi |
 
 ## The rungs
 
@@ -54,7 +54,7 @@ A flat stack re-answers "which layer?" for every capability and implies a consum
 
 ## Where the helix is stored
 
-There is no separate "architecture" table. The helix *is* the `component_documents` store: each row's `node`, `collection`, `type`, and `strand` place it on both readings. `public.components` is a read-only projection into the older flat shape; author against `component_documents` directly (see the `scaffold-component` skill).
+There is no separate "architecture" table. The helix _is_ the `component_documents` store: each row's `node`, `collection`, `type`, and `strand` place it on both readings. `public.components` is a read-only projection into the older flat shape; author against `component_documents` directly (see the `scaffold-component` skill).
 
 ## Related
 

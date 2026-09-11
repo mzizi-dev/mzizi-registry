@@ -25,7 +25,12 @@
     }
   },
   "permissions": {
-    "network": ["mzizi.dev", "api.mzizi.dev", "mcp.mzizi.dev", "assets.nyuchi.com"]
+    "network": [
+      "mzizi.dev",
+      "api.mzizi.dev",
+      "mcp.mzizi.dev",
+      "assets.nyuchi.com"
+    ]
   },
   "keywords": [
     "design-system",

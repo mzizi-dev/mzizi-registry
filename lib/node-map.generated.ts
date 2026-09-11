@@ -434,6 +434,7 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "nyuchi-user-card": "n3",
   "nyuchi-user-menu": "n3",
   "nyuchi-verified-badge": "n3",
+  "nyuchi-washed-theme": "n3",
   observability: "n2",
   "offline-banner": "n5",
   "onboarding-flow": "n6",
@@ -586,4 +587,4 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "wallet-connect-button": "n2",
   "wallet-page": "n6",
   "webhook-card": "n2",
-} as const
+} as const;

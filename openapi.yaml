@@ -15,7 +15,9 @@ info:
 
     **Base URL:** `https://api.mzizi.dev/v1`
 
-    **Registry:** the stable registry across the nodes and rungs of the Mzizi DNA double helix — served from the Supabase `components` table (live count via `GET /v1/stats` → `stable`; counts are never hardcoded in this spec so it cannot drift from the database)
+    **Registry:** the stable registry across the nodes and rungs of the Mzizi DNA double helix — served from
+    the Supabase `components` table (live count via `GET /v1/stats` → `stable`; counts are never hardcoded in
+    this spec so it cannot drift from the database)
 
     **MCP Server:** `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport; `mzizi.dev/mcp` 308-redirects here)
   contact:
@@ -359,20 +361,20 @@ paths:
                     properties:
                       nodes:
                         type: array
-                        items: { type: object }
+                        items: {type: object}
                       rungs:
                         type: array
-                        items: { type: object }
+                        items: {type: object}
                       strands:
                         type: array
-                        items: { type: object }
+                        items: {type: object}
                   meta:
                     type: object
                     properties:
-                      model: { type: string, example: mzizi-dna-helix }
-                      node_count: { type: integer }
-                      rung_count: { type: integer }
-                      strand_count: { type: integer }
+                      model: {type: string, example: mzizi-dna-helix}
+                      node_count: {type: integer}
+                      rung_count: {type: integer}
+                      strand_count: {type: integer}
                       empty:
                         type: boolean
                         description: >-
@@ -380,8 +382,8 @@ paths:
                           response is still 200 with empty arrays — an empty
                           model is reported honestly rather than filled with a
                           fallback.
-                      source: { type: string }
-                      version: { type: string }
+                      source: {type: string}
+                      version: {type: string}
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
@@ -394,7 +396,8 @@ paths:
         backbone, held together by cross-cutting rungs. There are no axes, no
         outliers, no 3D and no X/Y/Z.
 
-        Wrapped `get_axes_summary()`, which returned four rows — horizontal / vertical / depth / outlier — with every count zeroed after the helix migration.
+        Wrapped `get_axes_summary()`, which returned four rows — horizontal / vertical / depth / outlier —
+        with every count zeroed after the helix migration.
 
         Retired rather than remapped — emitting strand data through an
         axis-shaped field would look correct and teach the wrong model to every
@@ -468,12 +471,12 @@ paths:
               schema:
                 type: object
                 properties:
-                  data: { type: object }
+                  data: {type: object}
                   meta:
                     type: object
                     properties:
-                      model: { type: string, example: mzizi-dna-helix }
-                      version: { type: string }
+                      model: {type: string, example: mzizi-dna-helix}
+                      version: {type: string}
         "400":
           description: "`n` is not a positive integer."
         "404":
@@ -706,11 +709,11 @@ paths:
               schema:
                 type: object
                 properties:
-                  error: { type: string, example: "Gone" }
-                  message: { type: string }
+                  error: {type: string, example: "Gone"}
+                  message: {type: string}
                   migrated_to:
                     type: object
-                    additionalProperties: { type: string, format: uri }
+                    additionalProperties: {type: string, format: uri}
 
   /docs/{slug}:
     get:
@@ -725,7 +728,7 @@ paths:
         - name: slug
           in: path
           required: true
-          schema: { type: string }
+          schema: {type: string}
       responses:
         "410":
           description: Gone — see /docs for the migration map.
@@ -734,9 +737,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  error: { type: string, example: "Gone" }
-                  message: { type: string }
-                  slug: { type: string }
+                  error: {type: string, example: "Gone"}
+                  message: {type: string}
+                  slug: {type: string}
 
   /changelog:
     get:
@@ -765,7 +768,7 @@ paths:
                   meta:
                     type: object
                     properties:
-                      total: { type: integer }
+                      total: {type: integer}
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
@@ -786,7 +789,7 @@ paths:
         - name: version
           in: path
           required: true
-          schema: { type: string, example: "4.0.31" }
+          schema: {type: string, example: "4.0.31"}
       responses:
         "200":
           description: Every entry published under this version
@@ -804,8 +807,8 @@ paths:
                       meta:
                         type: object
                         properties:
-                          version: { type: string }
-                          entries: { type: integer }
+                          version: {type: string}
+                          entries: {type: integer}
         "404":
           $ref: "#/components/responses/NotFound"
         "503":
@@ -842,22 +845,22 @@ paths:
                     items:
                       type: object
                       properties:
-                        name: { type: string }
-                        description: { type: string }
+                        name: {type: string}
+                        description: {type: string}
                         agents:
                           type: array
-                          items: { type: string }
+                          items: {type: string}
                         applies_to:
                           type: array
-                          items: { type: string }
-                        requires_mcp: { type: boolean }
-                        version: { type: string }
-                        status: { type: string, nullable: true }
-                        updated_at: { type: string, format: date-time }
+                          items: {type: string}
+                        requires_mcp: {type: boolean}
+                        version: {type: string}
+                        status: {type: string, nullable: true}
+                        updated_at: {type: string, format: date-time}
                   meta:
                     type: object
                     properties:
-                      count: { type: integer }
+                      count: {type: integer}
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
@@ -887,11 +890,11 @@ paths:
                 properties:
                   data:
                     type: array
-                    items: { type: object }
+                    items: {type: object}
                   meta:
                     type: object
                     properties:
-                      count: { type: integer }
+                      count: {type: integer}
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
@@ -933,21 +936,21 @@ paths:
                   data:
                     type: object
                     properties:
-                      id: { type: integer }
-                      name: { type: string }
-                      description: { type: string }
-                      body_mdx: { type: string }
+                      id: {type: integer}
+                      name: {type: string}
+                      description: {type: string}
+                      body_mdx: {type: string}
                       agents:
                         type: array
-                        items: { type: string }
+                        items: {type: string}
                       applies_to:
                         type: array
-                        items: { type: string }
-                      requires_mcp: { type: boolean }
-                      version: { type: string }
-                      status: { type: string, nullable: true }
-                      created_at: { type: string, format: date-time }
-                      updated_at: { type: string, format: date-time }
+                        items: {type: string}
+                      requires_mcp: {type: boolean}
+                      version: {type: string}
+                      status: {type: string, nullable: true}
+                      created_at: {type: string, format: date-time}
+                      updated_at: {type: string, format: date-time}
         "400":
           description: Invalid skill name pattern.
         "404":
@@ -974,9 +977,9 @@ paths:
                     items:
                       type: object
                       properties:
-                        target: { type: string }
-                        name: { type: string }
-                        description: { type: string }
+                        target: {type: string}
+                        name: {type: string}
+                        description: {type: string}
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
@@ -989,7 +992,7 @@ paths:
         - name: name
           in: path
           required: true
-          schema: { type: string, example: "claude" }
+          schema: {type: string, example: "claude"}
       responses:
         "200":
           description: Instruction set
@@ -998,9 +1001,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  target: { type: string }
-                  name: { type: string }
-                  content: { type: string, description: "Full instruction text" }
+                  target: {type: string}
+                  name: {type: string}
+                  content: {type: string, description: "Full instruction text"}
         "404":
           $ref: "#/components/responses/NotFound"
         "503":
@@ -1016,7 +1019,7 @@ paths:
         - name: q
           in: query
           required: true
-          schema: { type: string }
+          schema: {type: string}
       responses:
         "200":
           description: Search results
@@ -1025,10 +1028,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  query: { type: string }
-                  components: { type: array, items: { type: object } }
-                  docs: { type: array, items: { type: object } }
-                  changelog: { type: array, items: { type: object } }
+                  query: {type: string}
+                  components: {type: array, items: {type: object}}
+                  docs: {type: array, items: {type: object}}
+                  changelog: {type: array, items: {type: object}}
 
   /stats:
     get:
@@ -1067,16 +1070,16 @@ paths:
               schema:
                 type: object
                 properties:
-                  "@context": { type: string, const: "https://schema.org" }
-                  "@type": { type: string, const: "Dataset" }
-                  name: { type: string }
-                  description: { type: string }
-                  license: { type: string, format: uri }
-                  total_api_calls: { type: integer }
-                  total_mcp_calls: { type: integer }
+                  "@context": {type: string, const: "https://schema.org"}
+                  "@type": {type: string, const: "Dataset"}
+                  name: {type: string}
+                  description: {type: string}
+                  license: {type: string, format: uri}
+                  total_api_calls: {type: integer}
+                  total_mcp_calls: {type: integer}
                   layers:
                     type: object
-                    additionalProperties: { type: integer }
+                    additionalProperties: {type: integer}
         "500":
           $ref: "#/components/responses/InternalError"
 
@@ -1089,7 +1092,7 @@ paths:
         - name: name
           in: path
           required: true
-          schema: { type: string }
+          schema: {type: string}
       responses:
         "200":
           description: Component documentation (use cases, variants, accessibility)
@@ -1098,9 +1101,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  useCases: { type: array, items: { type: string } }
-                  variants: { type: array, items: { type: object } }
-                  accessibility: { type: array, items: { type: string } }
+                  useCases: {type: array, items: {type: string}}
+                  variants: {type: array, items: {type: object}}
+                  accessibility: {type: array, items: {type: string}}
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -1113,7 +1116,7 @@ paths:
         - name: name
           in: path
           required: true
-          schema: { type: string }
+          schema: {type: string}
       responses:
         "200":
           description: Version history
@@ -1127,11 +1130,11 @@ paths:
                     items:
                       type: object
                       properties:
-                        version: { type: string }
-                        change_type: { type: string }
-                        comment: { type: string }
-                        changed_by: { type: string }
-                        created_at: { type: string, format: date-time }
+                        version: {type: string}
+                        change_type: {type: string}
+                        comment: {type: string}
+                        changed_by: {type: string}
+                        created_at: {type: string, format: date-time}
 
   /mcp:
     post:
@@ -1954,23 +1957,23 @@ components:
       type: object
       required: [name, shona, title, description, sphere, platformSurface, source]
       properties:
-        name: { type: string }
-        shona: { type: string, description: "Shona-language name" }
-        title: { type: string }
-        description: { type: string }
-        sphere: { type: string, description: "Region of life the pillar covers" }
-        platformSurface: { type: string, description: "Software surface the pillar maps to" }
-        source: { type: string, description: "Origin citation for the pillar" }
-        sortOrder: { type: integer }
+        name: {type: string}
+        shona: {type: string, description: "Shona-language name"}
+        title: {type: string}
+        description: {type: string}
+        sphere: {type: string, description: "Region of life the pillar covers"}
+        platformSurface: {type: string, description: "Software surface the pillar maps to"}
+        source: {type: string, description: "Origin citation for the pillar"}
+        sortOrder: {type: integer}
 
     UbuntuPillarsResponse:
       type: object
       required: ["@context", "@type", name, itemListElement]
       properties:
-        "@context": { type: string }
-        "@type": { type: string, example: "ItemList" }
-        name: { type: string }
-        description: { type: string }
+        "@context": {type: string}
+        "@type": {type: string, example: "ItemList"}
+        name: {type: string}
+        description: {type: string}
         itemListElement:
           type: array
           items:
@@ -1980,22 +1983,22 @@ components:
       type: object
       required: [name, shona, title, description, expression, source]
       properties:
-        name: { type: string }
-        shona: { type: string }
-        title: { type: string }
-        description: { type: string }
-        expression: { type: string, description: "How the principle shows up in software" }
-        source: { type: string }
-        sortOrder: { type: integer }
+        name: {type: string}
+        shona: {type: string}
+        title: {type: string}
+        description: {type: string}
+        expression: {type: string, description: "How the principle shows up in software"}
+        source: {type: string}
+        sortOrder: {type: integer}
 
     UbuntuPrinciplesResponse:
       type: object
       required: ["@context", "@type", name, itemListElement]
       properties:
-        "@context": { type: string }
-        "@type": { type: string, example: "ItemList" }
-        name: { type: string }
-        description: { type: string }
+        "@context": {type: string}
+        "@type": {type: string, example: "ItemList"}
+        name: {type: string}
+        description: {type: string}
         itemListElement:
           type: array
           items:
@@ -2007,26 +2010,26 @@ components:
       type: object
       required: [slug, title]
       properties:
-        slug: { type: string }
-        title: { type: string }
-        summary: { type: string }
-        layer: { type: integer, nullable: true }
-        updatedAt: { type: string, format: date-time }
+        slug: {type: string}
+        title: {type: string}
+        summary: {type: string}
+        layer: {type: integer, nullable: true}
+        updatedAt: {type: string, format: date-time}
 
     DocPage:
       allOf:
         - $ref: "#/components/schemas/DocPageSummary"
         - type: object
           properties:
-            body: { type: string, description: "Long-form markdown/MDX content" }
+            body: {type: string, description: "Long-form markdown/MDX content"}
 
     ChangelogEntry:
       type: object
       required: [version, title, description, changed_by, created_at, released_at]
       properties:
-        version: { type: string, example: "4.0.40" }
-        title: { type: string }
-        description: { type: string }
+        version: {type: string, example: "4.0.40"}
+        title: {type: string}
+        description: {type: string}
         line:
           type: string
           enum: [public, "pre-1.0"]
@@ -2038,16 +2041,16 @@ components:
         line_rank:
           type: integer
           description: "Sort weight for `line` — public outranks pre-1.0."
-        major: { type: integer, nullable: true }
-        minor: { type: integer, nullable: true }
-        patch: { type: integer, nullable: true }
+        major: {type: integer, nullable: true}
+        minor: {type: integer, nullable: true}
+        patch: {type: integer, nullable: true}
         release_kind:
           type: string
           enum: [initial, major, minor, patch]
           description: >-
             Compared to the predecessor within the SAME line — a patch bump in
             4.1.x is not a major bump merely because 1.0.0 exists.
-        breaking: { type: boolean, nullable: true }
+        breaking: {type: boolean, nullable: true}
         components_touched:
           type: integer
           description: "components_added + modified + deprecated + removed."
@@ -2057,42 +2060,42 @@ components:
             Nodes and rungs of the DNA double helix touched by this release.
             No upper bound: node numbers are labels, not a sequence, and the
             set is never capped.
-          items: { type: integer, minimum: 1 }
+          items: {type: integer, minimum: 1}
         components_added:
           type: array
-          items: { type: string }
+          items: {type: string}
         components_modified:
           type: array
-          items: { type: string }
+          items: {type: string}
         components_deprecated:
           type: array
-          items: { type: string }
+          items: {type: string}
         components_removed:
           type: array
-          items: { type: string }
+          items: {type: string}
         tools_added:
           type: array
           description: "Mzizi tools — MCP tools, SDK helpers — added in this release."
-          items: { type: string }
+          items: {type: string}
         tools_modified:
           type: array
-          items: { type: string }
+          items: {type: string}
         tools_deprecated:
           type: array
-          items: { type: string }
+          items: {type: string}
         tools_removed:
           type: array
-          items: { type: string }
+          items: {type: string}
         linked_issues:
           type: array
           description: "GitHub issue / PR numbers referenced by this release."
-          items: { type: integer }
-        total_stable: { type: integer, nullable: true }
-        total_deprecated: { type: integer, nullable: true }
-        total_alpha: { type: integer, nullable: true }
-        changed_by: { type: string }
-        created_at: { type: string, format: date-time }
-        released_at: { type: string, format: date-time }
+          items: {type: integer}
+        total_stable: {type: integer, nullable: true}
+        total_deprecated: {type: integer, nullable: true}
+        total_alpha: {type: integer, nullable: true}
+        changed_by: {type: string}
+        created_at: {type: string, format: date-time}
+        released_at: {type: string, format: date-time}
 
   responses:
     InternalError:
