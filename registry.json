@@ -20091,6 +20091,59 @@
     {
       "author": "Bundu Foundation, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": [
+        "brand"
+      ],
+      "dependencies": [],
+      "description": "The one washed-theme mechanism — surface tinted by accent — that four independent implementations of the same idea collapse to. From a named palette family (the seven heritage tones or the seven minerals) or an explicit accent, it emits the full washed contract as inline custom properties every descendant inherits: --washed-accent, --wash, --washed-on-wash and --washed-gradient, plus the --event-primary / --event-on-wash / --event-gradient aliases existing call sites already read. Colours are var(--color-<family>, #canon) references, so the accent follows light/dark from the token layer for free and no hex is ever pasted bare; nothing is fetched at build or runtime. The wash is mixed surface-first in oklab, the same form and space as the repo's own --wash, with mix strengths read from --wash-surface / --wash-on-* so an app tunes dark mode in one rule. Exports resolveWashedTheme() for call sites that need the solved values rather than a wrapper element — a theme picker, an OG route, a stored event theme.",
+      "docs": "Use it for: Event or detail page that tints its whole ground from one accent (nhimbe), Seasonal or campaign theming from a colour the palette does not name (bushtrade), Seeding the wash context nyuchi-cover-wash-header and its descendants read, Theme picker previewing a family's solved light and dark values, Any surface that needs an accent-tinted container with a legible foreground.\nVariants: heritage, mineral, custom-accent.\nIncludes: One mechanism for the four washed-theme implementations — nhimbe's .event-themed-page, bushtrade's .season-* blocks, this repo's --wash, and the retired styling-washed-themes records, Seven heritage tones + seven minerals, as var(--color-<family>, #canon) token references, Emits --washed-accent / --wash / --washed-on-wash / --washed-gradient plus the --event-* aliases, Wash mixed surface-first in oklab, matching app/globals.css, Mode-dependent strengths via --wash-surface / --wash-on-strength / --wash-on-mix, resolveWashedTheme() solves a theme without rendering, accent prop themes by a value the palette does not name (seasons, per-event colours).\nAccessibility: Foreground on the wash is a solved on-container where canon ships one (the minerals), derived toward black/white where it does not (heritage), Mix strengths are variables, so an app can raise contrast without forking the component, Emits custom properties only — adds no roles, no focus traps and no tab stops, Renders a plain element via `as`, so the surrounding document keeps its semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/nyuchi-washed-theme",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/nyuchi-washed-theme.tsx",
+          "target": "components/ui/nyuchi-washed-theme.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Foreground on the wash is a solved on-container where canon ships one (the minerals), derived toward black/white where it does not (heritage)",
+          "Mix strengths are variables, so an app can raise contrast without forking the component",
+          "Emits custom properties only — adds no roles, no focus traps and no tab stops",
+          "Renders a plain element via `as`, so the surrounding document keeps its semantics"
+        ],
+        "collection": "brand",
+        "features": [
+          "One mechanism for the four washed-theme implementations — nhimbe's .event-themed-page, bushtrade's .season-* blocks, this repo's --wash, and the retired styling-washed-themes records",
+          "Seven heritage tones + seven minerals, as var(--color-<family>, #canon) token references",
+          "Emits --washed-accent / --wash / --washed-on-wash / --washed-gradient plus the --event-* aliases",
+          "Wash mixed surface-first in oklab, matching app/globals.css",
+          "Mode-dependent strengths via --wash-surface / --wash-on-strength / --wash-on-mix",
+          "resolveWashedTheme() solves a theme without rendering",
+          "accent prop themes by a value the palette does not name (seasons, per-event colours)"
+        ],
+        "owner": "nyuchi",
+        "useCases": [
+          "Event or detail page that tints its whole ground from one accent (nhimbe)",
+          "Seasonal or campaign theming from a colour the palette does not name (bushtrade)",
+          "Seeding the wash context nyuchi-cover-wash-header and its descendants read",
+          "Theme picker previewing a family's solved light and dark values",
+          "Any surface that needs an accent-tinted container with a legible foreground"
+        ],
+        "variants": [
+          "heritage",
+          "mineral",
+          "custom-accent"
+        ]
+      },
+      "name": "nyuchi-washed-theme",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/nyuchi-harness"
+      ],
+      "title": "nyuchi Washed Theme",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Bundu Foundation, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": [
         "primitives"
       ],
       "dependencies": [],
