@@ -2,9 +2,14 @@
 //!
 //! # Where the components are
 //!
-//! Not in this crate's `src/`. Each is a file under `components/registry/n7-shell/<name>.rs`,
-//! beside the `.tsx` implementing the same contract for a JavaScript host, and this module
-//! `#[path]`-includes it.
+//! Not authored in this crate. Each is a file under `components/registry/n7-shell/<name>.rs`,
+//! beside the `.tsx` implementing the same contract for a JavaScript host.
+//!
+//! `src/generated/` holds a COMMITTED copy of each, written by `pnpm rust:generate`
+//! and checked by `pnpm rust:generate:check`. The copy is what makes this crate
+//! publishable: `cargo package` collects only files under the package root, so a
+//! `#[path]` reaching up into the registry ships a tarball that cannot build. Edit
+//! the registry file; the copy is overwritten.
 //!
 //! # 12 of 16, node closed except for the N2-blocked three
 //!
@@ -17,38 +22,38 @@
 //! that compiles. Those four are the only ones left, and none are portable work this crate can
 //! do on its own — they wait on N2.
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-connectivity-bar.rs"]
+#[path = "generated/nyuchi-connectivity-bar.rs"]
 pub mod nyuchi_connectivity_bar;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-update-prompt.rs"]
+#[path = "generated/nyuchi-update-prompt.rs"]
 pub mod nyuchi_update_prompt;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-deep-link-handler.rs"]
+#[path = "generated/nyuchi-deep-link-handler.rs"]
 pub mod nyuchi_deep_link_handler;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-bottom-nav.rs"]
+#[path = "generated/nyuchi-bottom-nav.rs"]
 pub mod nyuchi_bottom_nav;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-command-palette.rs"]
+#[path = "generated/nyuchi-command-palette.rs"]
 pub mod nyuchi_command_palette;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-footer.rs"]
+#[path = "generated/nyuchi-footer.rs"]
 pub mod nyuchi_footer;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-mini-app-runtime.rs"]
+#[path = "generated/nyuchi-mini-app-runtime.rs"]
 pub mod nyuchi_mini_app_runtime;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-notification-center.rs"]
+#[path = "generated/nyuchi-notification-center.rs"]
 pub mod nyuchi_notification_center;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-persistent-player.rs"]
+#[path = "generated/nyuchi-persistent-player.rs"]
 pub mod nyuchi_persistent_player;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-route-guard.rs"]
+#[path = "generated/nyuchi-route-guard.rs"]
 pub mod nyuchi_route_guard;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-theme-provider.rs"]
+#[path = "generated/nyuchi-theme-provider.rs"]
 pub mod nyuchi_theme_provider;
 
-#[path = "../../../../components/registry/n7-shell/nyuchi-toast-provider.rs"]
+#[path = "generated/nyuchi-toast-provider.rs"]
 pub mod nyuchi_toast_provider;

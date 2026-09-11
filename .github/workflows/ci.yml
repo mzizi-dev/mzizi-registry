@@ -101,9 +101,15 @@ jobs:
       - name: Verify the extracted component props are current
         run: pnpm props:verify
 
-      # The seven build-time artifacts that replaced request-time filesystem
-      # reads. Each has a generator, a committed output and a `--check` that
-      # fails when the two disagree.
+      # The build-time artifacts that replaced request-time filesystem reads,
+      # plus the Rust component copies. Each has a generator, a committed output
+      # and a `--check` that fails when the two disagree.
+      #
+      # `rust:generate:check` is the newest and the one with teeth of a different
+      # kind: `crates/*/src/generated/*.rs` is what `cargo package` ships, and if
+      # it drifts from `components/registry/`, the crates.io release stops being
+      # the component the registry serves. Two copies of a component that nothing
+      # compares is the exact failure this repo's doctrine warns about.
       #
       # These were gated only in the deploy workflow, which is too late: a
       # stale artifact could merge and sit on `main` until someone deployed.
@@ -124,6 +130,7 @@ jobs:
           pnpm openapi:generate:check
           pnpm api:routes:check
           pnpm node-map:generate:check
+          pnpm rust:generate:check
 
   rust:
     name: Rust
@@ -133,10 +140,11 @@ jobs:
     # The gate that makes the Rust half of the registry real.
     #
     # A `.rs` file under `components/registry/` with nothing compiling it is exactly what a
-    # `source_code` database column was: bytes that no toolchain verifies. `mzizi-rs`
-    # `#[path]`-includes those files, so `cargo check` here is a REGISTRY check, not just a
-    # crate's own business — and it lands with the first Rust component rather than after
-    # it, so there is never a window where Rust ships unchecked.
+    # `source_code` database column was: bytes that no toolchain verifies. `mzizi-rs` compiles
+    # those files — through the committed copies in `crates/*/src/generated/`, which the
+    # `registry` job proves are current — so `cargo check` here is a REGISTRY check, not just a
+    # crate's own business. It lands with the first Rust component rather than after it, so
+    # there is never a window where Rust ships unchecked.
     #
     # `cargo test` runs the contract suite, which reads each component's `.tsx` sibling and
     # asserts the two agree on variants, `data-slot` names and classes. `cargo check` alone
@@ -157,6 +165,21 @@ jobs:
         run: cargo clippy --manifest-path mzizi-rs/Cargo.toml --workspace --all-targets -- -D warnings
       - name: Contract tests against the TypeScript siblings
         run: cargo test --manifest-path mzizi-rs/Cargo.toml --workspace
+
+      # The publishability gate. `cargo package` collects only files under a package
+      # root, so it is the one command that proves the crates are shippable — and it
+      # is the one that used to fail, because every crate `#[path]`-included its
+      # components from four levels above itself and the tarball carried none of them.
+      # `crates/*/src/generated/` is the committed copy that fixed it; this step is
+      # what stops the next `#[path]` up and out of the crate from merging.
+      #
+      # `--workspace` rather than seven `-p` runs: `mzizi-ui` has a path dependency on
+      # `mzizi-tokens`, which is not on crates.io yet, so packaging it alone cannot
+      # resolve. `--workspace` packages the siblings together and verifies against them.
+      #
+      # NEVER add `--no-verify`. The verify build is the whole assertion.
+      - name: Package all seven crates
+        run: cargo package --manifest-path mzizi-rs/Cargo.toml --workspace
 
   lint:
     name: Lint
