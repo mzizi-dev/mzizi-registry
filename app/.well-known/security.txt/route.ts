@@ -22,6 +22,13 @@ import { NextResponse } from "next/server"
  * policy. `Acknowledgments` is REMOVED rather than repointed: there is no acknowledgments
  * page, and RFC 9116 makes the field optional. Absent is honest; a link to nothing is not.
  *
+ * THE ORG SLUG IS LOAD-BEARING. Both GitHub URLs name `mzizi-dev/mzizi-registry` in full.
+ * `nyuchi/mzizi` — what they said before — still 301s here, so it looked fine; a redirect that
+ * only holds while nobody reclaims the name is not what a disclosure contact should rest on.
+ * And the tempting shortening, `mzizi-dev/mzizi`, is a DIFFERENT repository: the Mzizi language
+ * (the Rust compiler). A report filed there would land in front of the wrong maintainers.
+ * The registry keeps its `-registry` suffix everywhere.
+ *
  * `__tests__/api/security-txt.test.ts` asserts the shape offline, and every URL was checked
  * by hand against production before this landed.
  */
@@ -31,10 +38,10 @@ export async function GET() {
   expires.setFullYear(expires.getFullYear() + 1)
 
   const body = `Contact: mailto:security@nyuchi.com
-Contact: https://github.com/nyuchi/mzizi/security/advisories/new
+Contact: https://github.com/mzizi-dev/mzizi-registry/security/advisories/new
 Expires: ${expires.toISOString()}
 Canonical: https://mzizi.dev/.well-known/security.txt
-Policy: https://github.com/nyuchi/mzizi/blob/main/SECURITY.md
+Policy: https://github.com/mzizi-dev/mzizi-registry/blob/main/SECURITY.md
 Preferred-Languages: en
 `
 

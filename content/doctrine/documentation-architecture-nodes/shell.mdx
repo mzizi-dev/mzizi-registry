@@ -21,7 +21,7 @@ rust:
   kind: "ui-framework"
   note: "N7 is where the two Rusts meet, and the one place they can be confused with consequences. Rust-as-UI replaces the shell; Rust-as-shared-core is what the shell loads. Initialise the core per component instead of per app and every component gets its own circuit breaker — which is not a circuit breaker. The shell surfaces core state; it never implements the rules the core holds."
   state: "target"
-  today: "No Rust ships. The shell is app/layout.tsx plus next-themes in nyuchi/mzizi — TypeScript — and nothing is initialised from WASM."
+  today: "No Rust ships. The shell is app/layout.tsx plus next-themes in mzizi-dev/mzizi-registry — TypeScript — and nothing is initialised from WASM."
   target: "As UI: Dioxus on the Rust path, Svelte optional, the native targets idiomatic. As mount point: the shell instantiates the shared Rust core once per app and hands its state down. Whatever the framework, the shell is the only place that initialisation happens."
   position: "alternative"
   dual_role: "shared-core mount point"

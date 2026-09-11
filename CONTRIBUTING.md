@@ -22,7 +22,7 @@ cd mzizi
 pnpm install
 ```
 
-The repo is a **pnpm workspace** — one `pnpm install` at the root installs everything. Today the workspace contains a single project: the Next.js portal app at the root. The published Mzizi tooling packages (the CLI, the `mzizi-skills` bundle, the standalone MCP worker, and the SDK) live in **[`nyuchi/mzizi-tools`](https://github.com/nyuchi/mzizi-tools)**, not here — see [CLAUDE.md §2](CLAUDE.md) for the split.
+The repo is a **pnpm workspace** — one `pnpm install` at the root installs everything. Today the workspace contains a single project: the Next.js portal app at the root. The published Mzizi tooling packages (the CLI, the `mzizi-skills` bundle, the standalone MCP worker, and the SDK) live in **`mzizi-dev/agent-tools` (private)**, not here — see [CLAUDE.md §2](CLAUDE.md) for the split.
 
 Useful root commands:
 
@@ -34,7 +34,7 @@ pnpm registry:normalize # canonicalise registry.json (it is authored, not genera
 pnpm registry:validate  # offline gate — every item resolves on disk and installs
 ```
 
-Skills are authored in `nyuchi/mzizi-tools` (`mzizi-skills/skills/<name>/SKILL.md`, published as `@nyuchi/mzizi-skills`) and are not in this repo or in the database. The `skills:sync` / `skills:verify` scripts documented here before are gone with the projection they maintained. See [CLAUDE.md §15.23](CLAUDE.md).
+Skills are authored in `mzizi-dev/agent-tools` (`mzizi-skills/skills/<name>/SKILL.md`, published as `@nyuchi/mzizi-skills`) and are not in this repo or in the database. The `skills:sync` / `skills:verify` scripts documented here before are gone with the projection they maintained. See [CLAUDE.md §15.23](CLAUDE.md).
 
 ### 3. Set up the database (optional for UI work)
 
