@@ -58,7 +58,7 @@ jobs:
           pnpm build
 
       # This repo publishes nothing to npm. The portal itself is deployed to
-      # Vercel, and every npm-distributed package moved to nyuchi/mzizi-tools,
+      # Vercel, and every npm-distributed package moved to mzizi-dev/agent-tools,
       # which publishes them from its own workflows:
       #
       #   @nyuchi/design-agent-skills  →  @nyuchi/mzizi-skills

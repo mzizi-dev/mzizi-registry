@@ -3,11 +3,11 @@
   "name": "mzizi",
   "displayName": "Mzizi",
   "version": "1.0.0",
-  "description": "Build with Mzizi — an open-architecture project of the Bundu Foundation. Seven African Minerals palette, the open DNA-helix frontend architecture, Ubuntu doctrine, shadcn-compatible registry. Operated and developed by Nyuchi. Live at mzizi.dev. For the agent skills and the fundi scaffolding agent, install the mzizi plugin from nyuchi/mzizi-tools.",
+  "description": "Build with Mzizi — an open-architecture project of the Bundu Foundation. Seven African Minerals palette, the open DNA-helix frontend architecture, Ubuntu doctrine, shadcn-compatible registry. Operated and developed by Nyuchi. Live at mzizi.dev. For the agent skills and the fundi scaffolding agent, install the mzizi plugin from mzizi-dev/agent-tools.",
   "homepage": "https://mzizi.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nyuchi/mzizi"
+    "url": "https://github.com/mzizi-dev/mzizi-registry"
   },
   "author": {
     "name": "Bundu Foundation"

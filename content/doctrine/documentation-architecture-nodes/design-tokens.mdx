@@ -21,7 +21,7 @@ rust:
   kind: "toolchain"
   note: "N1 has a genuine Rust IMPLEMENTATION, not a framework alternative, because generating tokens is a build-time job rather than UI. It is also the one node whose Rust position does not depend on which UI framework a consumer picks."
   state: "target"
-  today: "No Rust ships. The generator is scripts/sync-tokens.ts in nyuchi/mzizi, run as `pnpm tokens:sync` under tsx: it projects the Supabase styling-minerals and styling-heritage-colors collections into lib/tokens/palette.generated.ts and the tokens:generated block of app/globals.css. `pnpm tokens:verify` is the CI drift gate."
+  today: "No Rust ships. The generator is scripts/sync-tokens.ts in mzizi-dev/mzizi-registry, run as `pnpm tokens:sync` under tsx: it projects the Supabase styling-minerals and styling-heritage-colors collections into lib/tokens/palette.generated.ts and the tokens:generated block of app/globals.css. `pnpm tokens:verify` is the CI drift gate."
   target: "The generator becomes a Rust CLI binary emitting every target's token file from the one database source — CSS custom properties for the web, plus Swift, Kotlin and ArkTS token files. This is the node where Rust costs least and buys most: tokens are data, so the generator's language is an implementation detail no consumer ever sees, and a single binary drops the Node dependency out of every native target's build. The token contract itself does not change."
   position: "implementation"
   descriptors: []
