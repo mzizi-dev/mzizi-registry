@@ -148,6 +148,15 @@ describe("the retired palette name", () => {
   const EXEMPT = [
     // Historical by definition — it records that the name WAS used and is not.
     "CHANGELOG.md",
+    // The release record and its generated module, for the same reason: the
+    // v4.0.0 release note says what that release shipped, and what it shipped
+    // was called "Five African Minerals". These moved out of Supabase and into
+    // the repo, so a guard that walks the tracked tree started seeing release
+    // notes it had never seen before — the name did not reappear, the file did.
+    // Editing the note to satisfy the guard would falsify a historical record
+    // AND change what `/api/v1/changelog` serves.
+    "content/changelog/releases.json",
+    "lib/changelog.generated.ts",
     // Tests cite the retired name in order to forbid it.
     "__tests__/",
   ]
