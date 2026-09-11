@@ -1,7 +1,7 @@
 # mzizi-ui
 
 Dioxus primitives from the [Mzizi](https://mzizi.dev) component registry — **node N2,
-primitives**, the second rung of the DNA-helix architecture.
+primitives** — the second node of the DNA-helix architecture.
 
 Three primitives are ported so far: `Button`, `Badge` and `Card`. That is the whole of
 this crate; N2 has many more components, and the rest exist only as React today.
@@ -10,6 +10,10 @@ this crate; N2 has many more components, and the rest exist only as React today.
 [dependencies]
 mzizi-ui = "0.1"
 ```
+
+> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
+> mzizi-registry#328 but none has been released, so this line does not resolve
+> today — depend on it by path or git until the first release.
 
 ```rust
 use mzizi_ui::{Button, ButtonVariant, ButtonSize};
@@ -34,7 +38,7 @@ either: `lib/tokens/palette.source.ts` is the one place a Mzizi colour is writte
 
 ## Links
 
-- Registry: <https://mzizi.dev/r/> — browse at <https://mzizi.dev/components>
+- Registry index: <https://api.mzizi.dev/api/v1/ui>
 - Source: <https://github.com/mzizi-dev/mzizi-registry>
 
 Apache-2.0. Mzizi is an open-architecture project of the Bundu Foundation, operated and

@@ -1,7 +1,7 @@
 # mzizi-shell
 
 App-chrome components from the [Mzizi](https://mzizi.dev) component registry — **node N7,
-shell**, the rung that holds everything wrapping a screen.
+shell** — the node that holds everything wrapping a screen.
 
 Twelve of N7's sixteen components are ported: bottom nav, footer, command palette,
 connectivity bar, notification centre, toast provider, theme provider, update prompt,
@@ -16,6 +16,10 @@ which is the App Router's job rather than a portable component's — a Dioxus ap
 [dependencies]
 mzizi-shell = "0.1"
 ```
+
+> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
+> mzizi-registry#328 but none has been released, so this line does not resolve
+> today — depend on it by path or git until the first release.
 
 `regex` is the one dependency beyond Dioxus, and only for deep-link route matching: the
 TypeScript sibling uses native `RegExp` with named capture groups and anchoring, so its
@@ -36,7 +40,7 @@ that carries those values as Rust consts is [`mzizi-tokens`](https://crates.io/c
 
 ## Links
 
-- Registry: <https://mzizi.dev/r/> — browse at <https://mzizi.dev/components>
+- Registry index: <https://api.mzizi.dev/api/v1/ui>
 - Source: <https://github.com/mzizi-dev/mzizi-registry>
 
 Apache-2.0. Mzizi is an open-architecture project of the Bundu Foundation, operated and

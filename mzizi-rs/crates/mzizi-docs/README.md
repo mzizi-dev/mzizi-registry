@@ -1,7 +1,7 @@
 # mzizi-docs
 
 Self-describing documentation components from the [Mzizi](https://mzizi.dev) component
-registry — **node N10, documentation**, the rung where the system explains itself.
+registry — **rung N10, documentation** — the rung where the system explains itself.
 
 Four modules: `nyuchi_ai_context` and `nyuchi_docs_api` are string assembly and routing;
 `nyuchi_changelog_renderer` and `nyuchi_docs_engine` render, and pull in Dioxus for it.
@@ -10,6 +10,10 @@ Four modules: `nyuchi_ai_context` and `nyuchi_docs_api` are string assembly and 
 [dependencies]
 mzizi-docs = "0.1"
 ```
+
+> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
+> mzizi-registry#328 but none has been released, so this line does not resolve
+> today — depend on it by path or git until the first release.
 
 Dioxus is pinned to the same version `mzizi-ui` uses, so composing an N10 portal out of N2
 primitives links one Dioxus rather than two.
@@ -32,7 +36,7 @@ exists because `cargo package` collects only files under the package root.
 
 ## Links
 
-- Registry: <https://mzizi.dev/r/> — browse at <https://mzizi.dev/components>
+- Registry index: <https://api.mzizi.dev/api/v1/ui>
 - Source: <https://github.com/mzizi-dev/mzizi-registry>
 
 Apache-2.0. Mzizi is an open-architecture project of the Bundu Foundation, operated and
