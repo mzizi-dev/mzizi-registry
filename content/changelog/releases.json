@@ -606,7 +606,11 @@
       "mzizi://nodes",
       "list_collections"
     ],
-    "tools_modified": ["list_components", "get_component", "get_database_status"],
+    "tools_modified": [
+      "list_components",
+      "get_component",
+      "get_database_status"
+    ],
     "tools_deprecated": [],
     "tools_removed": [
       "get_component_docs",
@@ -1815,7 +1819,11 @@
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
     "nodes_affected": [2, 6],
-    "components_added": ["token-row", "quick-action-grid", "service-health-card"],
+    "components_added": [
+      "token-row",
+      "quick-action-grid",
+      "service-health-card"
+    ],
     "components_modified": [],
     "components_deprecated": [],
     "components_removed": [],
@@ -2113,7 +2121,11 @@
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
     "nodes_affected": [1, 2, 3, 4, 5, 8, 9],
-    "components_added": ["nyuchi-chaos", "nyuchi-platform-health", "nyuchi-fundi"],
+    "components_added": [
+      "nyuchi-chaos",
+      "nyuchi-platform-health",
+      "nyuchi-fundi"
+    ],
     "components_modified": [
       "nyuchi-tokens",
       "severity-badge",

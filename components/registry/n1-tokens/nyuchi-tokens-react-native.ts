@@ -56,7 +56,7 @@ export const NyuchiColors = {
   duskLight: "#742AAD",
   proteaDark: "#DF7BB4",
   proteaLight: "#932464",
-} as const
+} as const;
 
 export const NyuchiSpacing = {
   xs: 4,
@@ -65,7 +65,7 @@ export const NyuchiSpacing = {
   base: 16,
   lg: 24,
   xl: 32,
-} as const
+} as const;
 
 export const NyuchiRadius = {
   sm: 7,
@@ -73,10 +73,10 @@ export const NyuchiRadius = {
   lg: 14,
   xl: 17,
   full: 9999,
-} as const
+} as const;
 
 export const NyuchiFonts = {
   sans: "Noto Sans",
   serif: "Noto Serif",
   mono: "JetBrains Mono",
-} as const
+} as const;

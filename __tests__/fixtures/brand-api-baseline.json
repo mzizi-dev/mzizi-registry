@@ -86,7 +86,14 @@
       "name": "button",
       "note": "Buttons are ALWAYS pill-shaped (rounded-full). Brand identity decision.",
       "padding": "px-4 (sm), px-5 (default), px-6 (lg)",
-      "variants": ["default", "destructive", "outline", "secondary", "ghost", "link"]
+      "variants": [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link"
+      ]
     },
     {
       "borderRadius": 9999,

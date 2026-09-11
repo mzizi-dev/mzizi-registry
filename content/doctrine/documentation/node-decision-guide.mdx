@@ -16,7 +16,7 @@ title: "Node Decision Guide — Where Does a Component Belong?"
 
 # Node Decision Guide — Where Does a Component Belong?
 
-Every artifact belongs to exactly **one** place on the Mzizi DNA helix. Choose by what the artifact *is*, not by what it talks to. If a component would straddle two places, it is two components. There are **no axes and no outliers** — the model is nodes on strands, plus cross-cutting rungs.
+Every artifact belongs to exactly **one** place on the Mzizi DNA helix. Choose by what the artifact _is_, not by what it talks to. If a component would straddle two places, it is two components. There are **no axes and no outliers** — the model is nodes on strands, plus cross-cutting rungs.
 
 This guide is the current, authoritative decision tree. (It replaces the older `layer-decision-guide`, retained only as a superseded redirect.)
 
@@ -28,38 +28,38 @@ This guide is the current, authoritative decision tree. (It replaces the older `
 
 ## Nodes and their strands
 
-| Backbone | Strand | Nodes |
-| -- | -- | -- |
-| **Engineering** | `swappable` | N1 tokens |
+| Backbone        | Strand           | Nodes                                                    |
+| --------------- | ---------------- | -------------------------------------------------------- |
+| **Engineering** | `swappable`      | N1 tokens                                                |
 | **Engineering** | `core-guarantee` | N2 primitives · N4 safety · N5 resilience · N8 assurance |
-| **Engineering** | `shipped` | N3 brand · N6 pages · N7 shell |
-| **Engineering** | `spine` | the harness (no numbered node) |
-| **Meaning** | `genetic-code` | Ubuntu + Bundu conventions (no numbered node) |
-| **Meaning** | `transcription` | doctrine documents (no numbered node) |
+| **Engineering** | `shipped`        | N3 brand · N6 pages · N7 shell                           |
+| **Engineering** | `spine`          | the harness (no numbered node)                           |
+| **Meaning**     | `genetic-code`   | Ubuntu + Bundu conventions (no numbered node)            |
+| **Meaning**     | `transcription`  | doctrine documents (no numbered node)                    |
 
 ## The rungs (cross-cutting base pairs)
 
-| Rung | What it is | Collection |
-| -- | -- | -- |
-| **N9 fundi** | Automated self-healing responding to N8 detections | `fundi` |
-| **N10 documentation** | Documentation, AI instructions, docs infrastructure | `documentation*` |
-| **N11 discovery** | SEO/AIO — preview images, structured data, llms.txt, agent-readiness | cross-cutting (a genetic-code convention + base-paired components) |
+| Rung                  | What it is                                                           | Collection                                                         |
+| --------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| **N9 fundi**          | Automated self-healing responding to N8 detections                   | `fundi`                                                            |
+| **N10 documentation** | Documentation, AI instructions, docs infrastructure                  | `documentation*`                                                   |
+| **N11 discovery**     | SEO/AIO — preview images, structured data, llms.txt, agent-readiness | cross-cutting (a genetic-code convention + base-paired components) |
 
 ## Decision table
 
-| If the artifact is… | Place | strand | `component_documents` collection |
-| -- | -- | -- | -- |
-| A CSS value, colour, spacing, motion, radius, breakpoint | **N1** node | swappable | one of the `styling-*` collections |
-| A generic UI element with no brand assumptions (button, card, input, dialog) | **N2** node | core-guarantee | `primitives` |
-| A Nyuchi-branded composition using the minerals + harness | **N3** node | shipped | `brand` |
-| A conditional-rendering guard (permission, geo, rate limit) | **N4** node | core-guarantee | `safety` |
-| A failure-case handler (error boundary, skeleton, offline banner, fallback) | **N5** node | core-guarantee | `resilience` |
-| A full-screen page composition | **N6** node | shipped | `pages` |
-| The app container (navigation, routing, lifecycle, theme) | **N7** node | shipped | `shell` |
-| Instrumentation (monitoring, chaos, probes, a11y audit, RTL conformity) | **N8** node | core-guarantee | `observability` / `observability-domains` |
-| Automated self-healing responding to N8 detections | **N9** rung | — | `fundi` |
-| Documentation, AI instructions, docs infrastructure | **N10** rung | — | `documentation*` |
-| Making a surface machine-discoverable (OG/preview images, JSON-LD, llms.txt) | **N11** rung | — | cross-cutting |
+| If the artifact is…                                                          | Place        | strand         | `component_documents` collection          |
+| ---------------------------------------------------------------------------- | ------------ | -------------- | ----------------------------------------- |
+| A CSS value, colour, spacing, motion, radius, breakpoint                     | **N1** node  | swappable      | one of the `styling-*` collections        |
+| A generic UI element with no brand assumptions (button, card, input, dialog) | **N2** node  | core-guarantee | `primitives`                              |
+| A Nyuchi-branded composition using the minerals + harness                    | **N3** node  | shipped        | `brand`                                   |
+| A conditional-rendering guard (permission, geo, rate limit)                  | **N4** node  | core-guarantee | `safety`                                  |
+| A failure-case handler (error boundary, skeleton, offline banner, fallback)  | **N5** node  | core-guarantee | `resilience`                              |
+| A full-screen page composition                                               | **N6** node  | shipped        | `pages`                                   |
+| The app container (navigation, routing, lifecycle, theme)                    | **N7** node  | shipped        | `shell`                                   |
+| Instrumentation (monitoring, chaos, probes, a11y audit, RTL conformity)      | **N8** node  | core-guarantee | `observability` / `observability-domains` |
+| Automated self-healing responding to N8 detections                           | **N9** rung  | —              | `fundi`                                   |
+| Documentation, AI instructions, docs infrastructure                          | **N10** rung | —              | `documentation*`                          |
+| Making a surface machine-discoverable (OG/preview images, JSON-LD, llms.txt) | **N11** rung | —              | cross-cutting                             |
 
 Doctrine, Ubuntu pillars/principles, and Bundu conventions are not component nodes — they live in the `genetic-code-*` collections (the genetic-code strand).
 

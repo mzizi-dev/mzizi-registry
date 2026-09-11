@@ -9387,6 +9387,33 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "nyuchi-washed-theme": [
+    {
+      "name": "theme",
+      "type": "WashedThemeName",
+      "required": false
+    },
+    {
+      "name": "accent",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mode",
+      "type": "\"light\" | \"dark\"",
+      "required": false
+    },
+    {
+      "name": "paint",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "\"div\" | \"section\" | \"main\" | \"article\"",
+      "required": false
+    }
+  ],
   "offline-banner": [
     {
       "name": "status",

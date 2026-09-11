@@ -21,13 +21,13 @@ title: "Tri-mode — Musha · Basa · Nhaka"
 
 ## The three modes
 
-| Mode | Shona meaning | Audience | What it serves |
-| -- | -- | -- | -- |
-| **Musha** | home | the individual user | the foreground experience — what the user sees and does |
-| **Basa** | work | other apps and services | the background capability — data and behaviour other apps consume silently |
-| **Nhaka** | heritage | the continental knowledge commons | the anonymised contribution — data flowing into the open data tier |
+| Mode      | Shona meaning | Audience                          | What it serves                                                             |
+| --------- | ------------- | --------------------------------- | -------------------------------------------------------------------------- |
+| **Musha** | home          | the individual user               | the foreground experience — what the user sees and does                    |
+| **Basa**  | work          | other apps and services           | the background capability — data and behaviour other apps consume silently |
+| **Nhaka** | heritage      | the continental knowledge commons | the anonymised contribution — data flowing into the open data tier         |
 
-The Shona names encode the Ubuntu principle structurally: the individual experience (Musha), the community service (Basa), and the civilisational gift (Nhaka). Tri-mode is how Ubuntu — *I am because we are* — becomes architecture, not a slogan.
+The Shona names encode the Ubuntu principle structurally: the individual experience (Musha), the community service (Basa), and the civilisational gift (Nhaka). Tri-mode is how Ubuntu — _I am because we are_ — becomes architecture, not a slogan.
 
 ## Where tri-mode applies
 
@@ -51,17 +51,17 @@ If any of the three cannot be answered substantively, the piece does not belong 
 
 Tri-mode and the four-category data ownership model interlock:
 
-| Tri-mode | Data ownership category | Where it lives |
-| -- | -- | -- |
-| Musha (individual) | `personal` (pre-verification) → `personal-sovereign` (post-verification, Honeycomb Pod) | per-user pod or operational store |
-| Basa (services) | `community` | MongoDB operational primary |
-| Nhaka (commons) | `platform-open` | Apache Doris, fed via Apache Flink PII strip |
+| Tri-mode           | Data ownership category                                                                 | Where it lives                               |
+| ------------------ | --------------------------------------------------------------------------------------- | -------------------------------------------- |
+| Musha (individual) | `personal` (pre-verification) → `personal-sovereign` (post-verification, Honeycomb Pod) | per-user pod or operational store            |
+| Basa (services)    | `community`                                                                             | MongoDB operational primary                  |
+| Nhaka (commons)    | `platform-open`                                                                         | Apache Doris, fed via Apache Flink PII strip |
 
 The Nhaka extraction is automated and continuous: events flow Mongo → Redpanda → Flink (privacy filter) → Doris. The `observability_events.metadata` CHECK constraint enforces the no-PII rule at the schema level so Nhaka data is structurally safe to publish.
 
 ## Why it matters
 
-Tri-mode is what makes the architecture *sovereign and contributive at the same time*. Sovereign because each user keeps Musha (their personal data) in their own pod. Contributive because every interaction simultaneously feeds Basa (services other people use) and Nhaka (the commons). Other platforms have users and services; this architecture has users, services, and a civilisational contribution — by design, by default, at every layer.
+Tri-mode is what makes the architecture _sovereign and contributive at the same time_. Sovereign because each user keeps Musha (their personal data) in their own pod. Contributive because every interaction simultaneously feeds Basa (services other people use) and Nhaka (the commons). Other platforms have users and services; this architecture has users, services, and a civilisational contribution — by design, by default, at every layer.
 
 ## Related
 

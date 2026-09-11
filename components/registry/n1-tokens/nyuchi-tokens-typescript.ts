@@ -83,30 +83,54 @@ const paletteColors = {
   // ─── SEVEN AFRICAN MINERALS (geological, from underground) ───────────────────
   // Dark-theme value first, then the light-theme counterpart as
   // `<name>Light` — the convention generateCSSVariables() relies on.
-  cobalt: { value: "#00B0FF", description: "Primary blue, links, CTAs", family: "mineral" },
+  cobalt: {
+    value: "#00B0FF",
+    description: "Primary blue, links, CTAs",
+    family: "mineral",
+  },
   cobaltLight: { value: "#0047AB", description: "Cobalt on light backgrounds" },
   tanzanite: {
     value: "#B388FF",
     description: "Purple accent, brand/logo, social features",
     family: "mineral",
   },
-  tanzaniteLight: { value: "#4B0082", description: "Tanzanite on light backgrounds" },
+  tanzaniteLight: {
+    value: "#4B0082",
+    description: "Tanzanite on light backgrounds",
+  },
   malachite: {
     value: "#64FFDA",
     description: "Success states, positive actions",
     family: "mineral",
   },
-  malachiteLight: { value: "#004D40", description: "Malachite on light backgrounds" },
-  gold: { value: "#FFD740", description: "Achievements, rewards, highlights", family: "mineral" },
+  malachiteLight: {
+    value: "#004D40",
+    description: "Malachite on light backgrounds",
+  },
+  gold: {
+    value: "#FFD740",
+    description: "Achievements, rewards, highlights",
+    family: "mineral",
+  },
   goldLight: { value: "#5D4037", description: "Gold on light backgrounds" },
-  terracotta: { value: "#E1B07E", description: "Community features, warmth", family: "mineral" },
-  terracottaLight: { value: "#A0522D", description: "Terracotta on light backgrounds" },
+  terracotta: {
+    value: "#E1B07E",
+    description: "Community features, warmth",
+    family: "mineral",
+  },
+  terracottaLight: {
+    value: "#A0522D",
+    description: "Terracotta on light backgrounds",
+  },
   sodalite: {
     value: "#3D5AFE",
     description: "AI/Shamwari surfaces, deep-reasoning states",
     family: "mineral",
   },
-  sodaliteLight: { value: "#283593", description: "Sodalite on light backgrounds" },
+  sodaliteLight: {
+    value: "#283593",
+    description: "Sodalite on light backgrounds",
+  },
   copper: {
     value: "#FF8A65",
     description: "Bundu ecosystem identity, the commons",
@@ -117,39 +141,120 @@ const paletteColors = {
   // ─── MINERAL CONTAINER COLORS ────────────────────────────────────────────────
   // Subtle background surfaces when a mineral is an area fill —
   // cards, banners, alerts, category-tinted sections.
-  cobaltContainer: { value: "#E3F2FD", description: "Cobalt-tinted surface (light)" },
-  cobaltContainerDark: { value: "#001F3F", description: "Cobalt-tinted surface (dark)" },
-  tanzaniteContainer: { value: "#F3E5F5", description: "Tanzanite-tinted surface (light)" },
-  tanzaniteContainerDark: { value: "#1A0033", description: "Tanzanite-tinted surface (dark)" },
-  malachiteContainer: { value: "#E0F2F1", description: "Malachite-tinted surface (light)" },
-  malachiteContainerDark: { value: "#00251A", description: "Malachite-tinted surface (dark)" },
-  goldContainer: { value: "#FFF8E1", description: "Gold-tinted surface (light)" },
-  goldContainerDark: { value: "#332200", description: "Gold-tinted surface (dark)" },
-  terracottaContainer: { value: "#F5E6D3", description: "Terracotta-tinted surface (light)" },
-  terracottaContainerDark: { value: "#3E2817", description: "Terracotta-tinted surface (dark)" },
-  sodaliteContainer: { value: "#E8EAF6", description: "Sodalite-tinted surface (light)" },
-  sodaliteContainerDark: { value: "#0D1442", description: "Sodalite-tinted surface (dark)" },
-  copperContainer: { value: "#FBE4DA", description: "Copper-tinted surface (light)" },
-  copperContainerDark: { value: "#3A1A0E", description: "Copper-tinted surface (dark)" },
+  cobaltContainer: {
+    value: "#E3F2FD",
+    description: "Cobalt-tinted surface (light)",
+  },
+  cobaltContainerDark: {
+    value: "#001F3F",
+    description: "Cobalt-tinted surface (dark)",
+  },
+  tanzaniteContainer: {
+    value: "#F3E5F5",
+    description: "Tanzanite-tinted surface (light)",
+  },
+  tanzaniteContainerDark: {
+    value: "#1A0033",
+    description: "Tanzanite-tinted surface (dark)",
+  },
+  malachiteContainer: {
+    value: "#E0F2F1",
+    description: "Malachite-tinted surface (light)",
+  },
+  malachiteContainerDark: {
+    value: "#00251A",
+    description: "Malachite-tinted surface (dark)",
+  },
+  goldContainer: {
+    value: "#FFF8E1",
+    description: "Gold-tinted surface (light)",
+  },
+  goldContainerDark: {
+    value: "#332200",
+    description: "Gold-tinted surface (dark)",
+  },
+  terracottaContainer: {
+    value: "#F5E6D3",
+    description: "Terracotta-tinted surface (light)",
+  },
+  terracottaContainerDark: {
+    value: "#3E2817",
+    description: "Terracotta-tinted surface (dark)",
+  },
+  sodaliteContainer: {
+    value: "#E8EAF6",
+    description: "Sodalite-tinted surface (light)",
+  },
+  sodaliteContainerDark: {
+    value: "#0D1442",
+    description: "Sodalite-tinted surface (dark)",
+  },
+  copperContainer: {
+    value: "#FBE4DA",
+    description: "Copper-tinted surface (light)",
+  },
+  copperContainerDark: {
+    value: "#3A1A0E",
+    description: "Copper-tinted surface (dark)",
+  },
 
   // ─── ON-CONTAINER COLORS (text/icons on container surfaces) ──────────────────
-  cobaltOnContainer: { value: "#002966", description: "Text on cobalt container (light)" },
-  cobaltOnContainerDark: { value: "#B3E5FC", description: "Text on cobalt container (dark)" },
-  tanzaniteOnContainer: { value: "#2E004D", description: "Text on tanzanite container (light)" },
-  tanzaniteOnContainerDark: { value: "#E1BEE7", description: "Text on tanzanite container (dark)" },
-  malachiteOnContainer: { value: "#00332B", description: "Text on malachite container (light)" },
-  malachiteOnContainerDark: { value: "#A7FFEB", description: "Text on malachite container (dark)" },
-  goldOnContainer: { value: "#3E2723", description: "Text on gold container (light)" },
-  goldOnContainerDark: { value: "#FFECB3", description: "Text on gold container (dark)" },
-  terracottaOnContainer: { value: "#5D2906", description: "Text on terracotta container (light)" },
+  cobaltOnContainer: {
+    value: "#002966",
+    description: "Text on cobalt container (light)",
+  },
+  cobaltOnContainerDark: {
+    value: "#B3E5FC",
+    description: "Text on cobalt container (dark)",
+  },
+  tanzaniteOnContainer: {
+    value: "#2E004D",
+    description: "Text on tanzanite container (light)",
+  },
+  tanzaniteOnContainerDark: {
+    value: "#E1BEE7",
+    description: "Text on tanzanite container (dark)",
+  },
+  malachiteOnContainer: {
+    value: "#00332B",
+    description: "Text on malachite container (light)",
+  },
+  malachiteOnContainerDark: {
+    value: "#A7FFEB",
+    description: "Text on malachite container (dark)",
+  },
+  goldOnContainer: {
+    value: "#3E2723",
+    description: "Text on gold container (light)",
+  },
+  goldOnContainerDark: {
+    value: "#FFECB3",
+    description: "Text on gold container (dark)",
+  },
+  terracottaOnContainer: {
+    value: "#5D2906",
+    description: "Text on terracotta container (light)",
+  },
   terracottaOnContainerDark: {
     value: "#F5E6D3",
     description: "Text on terracotta container (dark)",
   },
-  sodaliteOnContainer: { value: "#141A5C", description: "Text on sodalite container (light)" },
-  sodaliteOnContainerDark: { value: "#C5CAE9", description: "Text on sodalite container (dark)" },
-  copperOnContainer: { value: "#5C2410", description: "Text on copper container (light)" },
-  copperOnContainerDark: { value: "#FFD3C2", description: "Text on copper container (dark)" },
+  sodaliteOnContainer: {
+    value: "#141A5C",
+    description: "Text on sodalite container (light)",
+  },
+  sodaliteOnContainerDark: {
+    value: "#C5CAE9",
+    description: "Text on sodalite container (dark)",
+  },
+  copperOnContainer: {
+    value: "#5C2410",
+    description: "Text on copper container (light)",
+  },
+  copperOnContainerDark: {
+    value: "#FFD3C2",
+    description: "Text on copper container (dark)",
+  },
 
   // ─── SEVEN HERITAGE COLORS (atmospheric, from above ground) ──────────────────
   indigo: {
@@ -163,7 +268,10 @@ const paletteColors = {
     description: "Warm grassland surfaces, daylight atmosphere",
     family: "heritage",
   },
-  savannaLight: { value: "#8D6E1A", description: "Savanna on light backgrounds" },
+  savannaLight: {
+    value: "#8D6E1A",
+    description: "Savanna on light backgrounds",
+  },
   baobab: {
     value: "#A1887F",
     description: "Earthy surfaces, grounded atmosphere, bark tones",
@@ -187,34 +295,68 @@ const paletteColors = {
     description: "Neutral anchor, mini-app surfaces, atmosphere",
     family: "heritage",
   },
-  hematiteLight: { value: "#546E7A", description: "Hematite on light backgrounds" },
+  hematiteLight: {
+    value: "#546E7A",
+    description: "Hematite on light backgrounds",
+  },
   kalahari: {
     value: "#E8D9B5",
     description: "Light anchor, warm backgrounds, mini-app surfaces",
     family: "heritage",
   },
-  kalahariLight: { value: "#C9B589", description: "Kalahari on light backgrounds" },
+  kalahariLight: {
+    value: "#C9B589",
+    description: "Kalahari on light backgrounds",
+  },
 
   // ─── SEVEN EXPERIMENTAL TONES (the heptagon) ─────────────────────────────────
   // Hues offset 17 degrees apart, prime saturations, foregrounds
   // solved to P7. `--exp-*` in globals.css, `experimental` in
   // /v1/brand and the MCP.
-  ember: { value: "#DA8766", description: "Ember — heptagon position 0", family: "experimental" },
+  ember: {
+    value: "#DA8766",
+    description: "Ember — heptagon position 0",
+    family: "experimental",
+  },
   emberLight: { value: "#843D20", description: "Ember on light backgrounds" },
-  acacia: { value: "#93A528", description: "Acacia — heptagon position 1", family: "experimental" },
+  acacia: {
+    value: "#93A528",
+    description: "Acacia — heptagon position 1",
+    family: "experimental",
+  },
   acaciaLight: { value: "#4D5615", description: "Acacia on light backgrounds" },
-  fern: { value: "#2CB42B", description: "Fern — heptagon position 2", family: "experimental" },
+  fern: {
+    value: "#2CB42B",
+    description: "Fern — heptagon position 2",
+    family: "experimental",
+  },
   fernLight: { value: "#175E17", description: "Fern on light backgrounds" },
-  lagoon: { value: "#2AAE9B", description: "Lagoon — heptagon position 3", family: "experimental" },
+  lagoon: {
+    value: "#2AAE9B",
+    description: "Lagoon — heptagon position 3",
+    family: "experimental",
+  },
   lagoonLight: { value: "#165B51", description: "Lagoon on light backgrounds" },
-  storm: { value: "#7E9BE0", description: "Storm — heptagon position 4", family: "experimental" },
+  storm: {
+    value: "#7E9BE0",
+    description: "Storm — heptagon position 4",
+    family: "experimental",
+  },
   stormLight: { value: "#284CA6", description: "Storm on light backgrounds" },
-  dusk: { value: "#BA87E2", description: "Dusk — heptagon position 5", family: "experimental" },
+  dusk: {
+    value: "#BA87E2",
+    description: "Dusk — heptagon position 5",
+    family: "experimental",
+  },
   duskLight: { value: "#742AAD", description: "Dusk on light backgrounds" },
-  protea: { value: "#DF7BB4", description: "Protea — heptagon position 6", family: "experimental" },
+  protea: {
+    value: "#DF7BB4",
+    description: "Protea — heptagon position 6",
+    family: "experimental",
+  },
   proteaLight: { value: "#932464", description: "Protea on light backgrounds" },
   /* tokens:generated:ts-palette:end */
-} as const
+} as const;
 
 export const primitives = {
   color: {
@@ -223,14 +365,35 @@ export const primitives = {
     // Neutrals — warm stone palette (April 2026, AAA-optimised)
     // Named by role, not arbitrary grey percentage.
     white: { value: "#FAFAFA" },
-    cream: { value: "#FAF9F5", description: "Light mode muted fill / warm cream" },
-    warmGrey: { value: "#F3F3F1", description: "Light mode ambient background" },
-    stone68: { value: "#B2AFA8", description: "Dark mode muted-foreground (AAA on all surfaces)" },
-    stone27: { value: "#494840", description: "Light mode muted-foreground (AAA on all surfaces)" },
-    overlay: { value: "#252421", description: "Dark mode modal/sheet surface (L14%)" },
-    ambient: { value: "#0E0D0C", description: "Dark mode page background (L10%, warm stone)" },
+    cream: {
+      value: "#FAF9F5",
+      description: "Light mode muted fill / warm cream",
+    },
+    warmGrey: {
+      value: "#F3F3F1",
+      description: "Light mode ambient background",
+    },
+    stone68: {
+      value: "#B2AFA8",
+      description: "Dark mode muted-foreground (AAA on all surfaces)",
+    },
+    stone27: {
+      value: "#494840",
+      description: "Light mode muted-foreground (AAA on all surfaces)",
+    },
+    overlay: {
+      value: "#252421",
+      description: "Dark mode modal/sheet surface (L14%)",
+    },
+    ambient: {
+      value: "#0E0D0C",
+      description: "Dark mode page background (L10%, warm stone)",
+    },
     surface: { value: "#100F0E", description: "Dark mode card surface (L6%)" },
-    deep: { value: "#050504", description: "Dark mode deepest fill (L2%, max text contrast)" },
+    deep: {
+      value: "#050504",
+      description: "Dark mode deepest fill (L2%, max text contrast)",
+    },
     black: { value: "#000000" },
 
     // Semantic raw values
@@ -260,11 +423,20 @@ export const primitives = {
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
     none: { value: "0px" },
-    sm: { value: "7px", description: "Subtle rounding, checkboxes, small elements" },
+    sm: {
+      value: "7px",
+      description: "Subtle rounding, checkboxes, small elements",
+    },
     md: { value: "12px", description: "Cards, inputs, containers" },
     lg: { value: "14px", description: "Default radius, medium containers" },
-    xl: { value: "17px", description: "Large cards, dialogs, prominent surfaces" },
-    full: { value: "9999px", description: "Buttons, badges, pills, avatars — ALWAYS pill" },
+    xl: {
+      value: "17px",
+      description: "Large cards, dialogs, prominent surfaces",
+    },
+    full: {
+      value: "9999px",
+      description: "Buttons, badges, pills, avatars — ALWAYS pill",
+    },
     circle: { value: "50%", description: "Perfect circles" },
   },
 
@@ -288,16 +460,34 @@ export const primitives = {
 
   // Type scale (Nyuchi Design canonical)
   fontSize: {
-    caption: { value: "12px", description: "0.75rem — Labels, metadata, timestamps" },
-    bodySmall: { value: "14px", description: "0.875rem — Secondary text, descriptions" },
+    caption: {
+      value: "12px",
+      description: "0.75rem — Labels, metadata, timestamps",
+    },
+    bodySmall: {
+      value: "14px",
+      description: "0.875rem — Secondary text, descriptions",
+    },
     body: { value: "16px", description: "1rem — Default body text" },
     bodyLarge: { value: "18px", description: "1.125rem — Lead paragraphs" },
-    h5: { value: "20px", description: "1.25rem — Noto Sans 600 — Small headings" },
+    h5: {
+      value: "20px",
+      description: "1.25rem — Noto Sans 600 — Small headings",
+    },
     h4: { value: "24px", description: "1.5rem — Noto Sans 600 — Card titles" },
-    h3: { value: "30px", description: "1.875rem — Noto Serif 600 — Sub-sections" },
-    h2: { value: "36px", description: "2.25rem — Noto Serif 600 — Section headings" },
+    h3: {
+      value: "30px",
+      description: "1.875rem — Noto Serif 600 — Sub-sections",
+    },
+    h2: {
+      value: "36px",
+      description: "2.25rem — Noto Serif 600 — Section headings",
+    },
     h1: { value: "48px", description: "3rem — Noto Serif 700 — Page titles" },
-    display: { value: "72px", description: "4.5rem — Noto Serif 700 — Hero headlines" },
+    display: {
+      value: "72px",
+      description: "4.5rem — Noto Serif 700 — Hero headlines",
+    },
   },
 
   fontWeight: {
@@ -311,7 +501,10 @@ export const primitives = {
   // ─── TOUCH TARGETS (Nyuchi Design canonical) ──────────────
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
-    default: { value: "56px", description: "Default interactive element height" },
+    default: {
+      value: "56px",
+      description: "Default interactive element height",
+    },
     sm: { value: "48px", description: "Minimum — NEVER below this" },
   },
 
@@ -321,13 +514,28 @@ export const primitives = {
       quick: { value: "100ms", description: "Micro-interactions, toggles" },
       standard: { value: "200ms", description: "Default transitions" },
       emphasis: { value: "350ms", description: "Entry/exit animations" },
-      dramatic: { value: "500ms", description: "Page transitions, celebrations" },
+      dramatic: {
+        value: "500ms",
+        description: "Page transitions, celebrations",
+      },
     },
     easing: {
-      entrance: { value: "cubic-bezier(0.0, 0.0, 0.2, 1)", description: "Elements entering view" },
-      exit: { value: "cubic-bezier(0.4, 0.0, 1, 1)", description: "Elements leaving view" },
-      standard: { value: "cubic-bezier(0.4, 0.0, 0.2, 1)", description: "General movement" },
-      spring: { value: "cubic-bezier(0.175, 0.885, 0.32, 1.275)", description: "Bouncy, playful" },
+      entrance: {
+        value: "cubic-bezier(0.0, 0.0, 0.2, 1)",
+        description: "Elements entering view",
+      },
+      exit: {
+        value: "cubic-bezier(0.4, 0.0, 1, 1)",
+        description: "Elements leaving view",
+      },
+      standard: {
+        value: "cubic-bezier(0.4, 0.0, 0.2, 1)",
+        description: "General movement",
+      },
+      spring: {
+        value: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        description: "Bouncy, playful",
+      },
     },
     stagger: {
       delay: { value: "50ms", description: "Per-item delay in lists" },
@@ -344,7 +552,10 @@ export const primitives = {
     md: { value: "0 4px 12px rgba(0,0,0,0.2)" },
     lg: { value: "0 8px 24px rgba(0,0,0,0.25)" },
     xl: { value: "0 20px 60px rgba(0,0,0,0.4)" },
-    glow: { value: "0 4px 20px rgba(100,255,218,0.3)", description: "Malachite glow for FABs" },
+    glow: {
+      value: "0 4px 20px rgba(100,255,218,0.3)",
+      description: "Malachite glow for FABs",
+    },
   },
 
   // ─── Z-INDEX SCALE ────────────────────────────────────────
@@ -365,16 +576,19 @@ export const primitives = {
     desktop: { value: "1024px" },
     wide: { value: "1440px" },
   },
-} as const
+} as const;
 
 // ═══════════════════════════════════════════════════════════════
 // TIER 2 — SEMANTIC TOKENS
 // These change per theme. Values from Nyuchi Design canonical.
 // ═══════════════════════════════════════════════════════════════
 
-export type ThemeMode = "dark" | "light" | "high-contrast"
+export type ThemeMode = "dark" | "light" | "high-contrast";
 
-export const semanticTokens: Record<ThemeMode, Record<string, { value: string }>> = {
+export const semanticTokens: Record<
+  ThemeMode,
+  Record<string, { value: string }>
+> = {
   dark: {
     // Surfaces — SWAPPED arrangement, AAA-optimised (April 2026)
     // background is the AMBIENT page base (lighter, L10%)
@@ -443,7 +657,7 @@ export const semanticTokens: Record<ThemeMode, Record<string, { value: string }>
     input: { value: "#FFFFFF" },
     ring: { value: "#FFFFFF" },
   },
-}
+};
 
 // ═══════════════════════════════════════════════════════════════
 // LISTING THEMES — Ten Colors of Africa
@@ -462,18 +676,18 @@ export type ListingTheme =
   | "savanna"
   | "baobab"
   | "sunset"
-  | "river"
+  | "river";
 
 export const listingThemes: Record<
   ListingTheme,
   {
-    name: string
-    accent: string | null
-    bg: string
-    surface: string
-    gradient: string | null
-    family: "mineral" | "heritage" | "default"
-    origin: string
+    name: string;
+    accent: string | null;
+    bg: string;
+    surface: string;
+    gradient: string | null;
+    family: "mineral" | "heritage" | "default";
+    origin: string;
   }
 > = {
   default: {
@@ -577,7 +791,7 @@ export const listingThemes: Record<
     family: "heritage",
     origin: "Zambezi, Limpopo, Nile, Congo",
   },
-}
+};
 
 // ═══════════════════════════════════════════════════════════════
 // BRAND OVERRIDES — Per-app accent colors
@@ -601,7 +815,7 @@ export type BrandId =
   | "weather"
   | "health"
   | "jobs"
-  | "wallet"
+  | "wallet";
 
 /**
  * One mini-app accent, resolved from the mineral it is assigned.
@@ -619,13 +833,13 @@ export type BrandId =
  * in. `primaryMuted` is exactly `primary` at 12% and is computed.
  */
 function mutedFrom(hex: string, alpha = 0.12): string {
-  const n = parseInt(hex.replace("#", "").slice(0, 6), 16)
-  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`
+  const n = parseInt(hex.replace("#", "").slice(0, 6), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`;
 }
 
 function brandAccent(mineral: string, primaryHover: string) {
-  const palette = primitives.color as Record<string, { value: string }>
-  const primary = palette[mineral].value
+  const palette = primitives.color as Record<string, { value: string }>;
+  const primary = palette[mineral].value;
   return {
     primary,
     mineral,
@@ -633,18 +847,18 @@ function brandAccent(mineral: string, primaryHover: string) {
     primaryMuted: mutedFrom(primary),
     container: palette[`${mineral}Container`].value,
     onContainer: palette[`${mineral}OnContainer`].value,
-  }
+  };
 }
 
 export const brandOverrides: Record<
   BrandId,
   {
-    primary: string
-    mineral: string
-    primaryHover: string
-    primaryMuted: string
-    container: string
-    onContainer: string
+    primary: string;
+    mineral: string;
+    primaryHover: string;
+    primaryMuted: string;
+    container: string;
+    onContainer: string;
   }
 > = {
   // ─── Mini-App accents (canonical from brand_ecosystem table) ──
@@ -667,7 +881,7 @@ export const brandOverrides: Record<
   health: brandAccent("malachite", "#80FFE4"),
   jobs: brandAccent("gold", "#FFDF6B"),
   wallet: brandAccent("gold", "#FFDF6B"),
-}
+};
 
 // ═══════════════════════════════════════════════════════════════
 // BRAND INDUSTRY CATEGORIES — Mineral associations by sector
@@ -677,12 +891,15 @@ export const brandOverrides: Record<
 // ═══════════════════════════════════════════════════════════════
 
 export type IndustryCategory = {
-  mineral: string
-  label: string
-  products: string[]
-}
+  mineral: string;
+  label: string;
+  products: string[];
+};
 
-export const brandIndustryCategories: Record<string, Record<string, IndustryCategory>> = {
+export const brandIndustryCategories: Record<
+  string,
+  Record<string, IndustryCategory>
+> = {
   nyuchi: {
     services: {
       mineral: "gold",
@@ -706,7 +923,11 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
     },
   },
   mukoko: {
-    id: { mineral: "tanzanite", label: "Identity", products: ["Mukoko ID", "Digital Twin"] },
+    id: {
+      mineral: "tanzanite",
+      label: "Identity",
+      products: ["Mukoko ID", "Digital Twin"],
+    },
     news: { mineral: "cobalt", label: "News", products: ["Mukoko News"] },
     social: {
       mineral: "tanzanite",
@@ -714,8 +935,16 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
       products: ["Campfire", "Bytes", "Novels", "Circles"],
     },
     events: { mineral: "malachite", label: "Events", products: ["Nhimbe"] },
-    commerce: { mineral: "gold", label: "Commerce", products: ["BushTrade", "Wallet"] },
-    places: { mineral: "gold", label: "Places", products: ["Places", "Transport"] },
+    commerce: {
+      mineral: "gold",
+      label: "Commerce",
+      products: ["BushTrade", "Wallet"],
+    },
+    places: {
+      mineral: "gold",
+      label: "Places",
+      products: ["Places", "Transport"],
+    },
     productivity: {
       mineral: "cobalt",
       label: "Productivity",
@@ -725,9 +954,13 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
     language: { mineral: "cobalt", label: "Language", products: ["Lingo"] },
   },
   shamwari: {
-    ai: { mineral: "tanzanite", label: "AI Companion", products: ["Shamwari AI", "Digital Twin"] },
+    ai: {
+      mineral: "tanzanite",
+      label: "AI Companion",
+      products: ["Shamwari AI", "Digital Twin"],
+    },
   },
-}
+};
 
 // ═══════════════════════════════════════════════════════════════
 // TIER 3 — COMPONENT TOKENS
@@ -756,7 +989,7 @@ export const componentTokens = {
     aspectRatio: "1/1",
     description: "Always square — events, products, articles, places",
   },
-} as const
+} as const;
 
 // ═══════════════════════════════════════════════════════════════
 // CSS GENERATOR — Produces CSS custom properties for :root
@@ -778,12 +1011,14 @@ export const componentTokens = {
  */
 export function paletteFamilies(): [string, PaletteFamily][] {
   return Object.entries(primitives.color).flatMap(([name, token]) =>
-    "family" in token ? [[name, token.family as PaletteFamily] as [string, PaletteFamily]] : []
-  )
+    "family" in token
+      ? [[name, token.family as PaletteFamily] as [string, PaletteFamily]]
+      : [],
+  );
 }
 
 /** The three colour groups. Seven families each — the system is a heptagon three times over. */
-export type PaletteFamily = "mineral" | "heritage" | "experimental"
+export type PaletteFamily = "mineral" | "heritage" | "experimental";
 
 /**
  * A `var(--color-<name>)` reference with the palette hex as its fallback.
@@ -798,16 +1033,24 @@ export type PaletteFamily = "mineral" | "heritage" | "experimental"
  * generated — means the two halves of the expression cannot disagree.
  */
 export function paletteVar(name: string, theme: ThemeMode = "dark"): string {
-  const palette = primitives.color as Record<string, { value: string } | undefined>
-  const token = palette[theme === "light" ? `${name}Light` : name]
-  return token ? `var(--color-${name}, ${token.value})` : `var(--color-${name})`
+  const palette = primitives.color as Record<
+    string,
+    { value: string } | undefined
+  >;
+  const token = palette[theme === "light" ? `${name}Light` : name];
+  return token
+    ? `var(--color-${name}, ${token.value})`
+    : `var(--color-${name})`;
 }
 
-export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId = "mukoko"): string {
-  const semantic = semanticTokens[theme]
-  const brandColors = brandOverrides[brand]
+export function generateCSSVariables(
+  theme: ThemeMode = "dark",
+  brand: BrandId = "mukoko",
+): string {
+  const semantic = semanticTokens[theme];
+  const brandColors = brandOverrides[brand];
 
-  const lines: string[] = [":root {"]
+  const lines: string[] = [":root {"];
 
   // Palette colours, theme-resolved.
   //
@@ -830,57 +1073,57 @@ export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId =
   // appears here, in globals.css, and in `__tests__/tokens-surface-parity.test.ts`
   // without anyone editing this function.
   for (const [name] of paletteFamilies()) {
-    const key = theme === "light" ? `${name}Light` : name
-    const val = primitives.color[key as keyof typeof primitives.color]
-    lines.push(`  --color-${name}: ${val.value};`)
+    const key = theme === "light" ? `${name}Light` : name;
+    const val = primitives.color[key as keyof typeof primitives.color];
+    lines.push(`  --color-${name}: ${val.value};`);
   }
 
   // Radii
   for (const [key, val] of Object.entries(primitives.radius)) {
-    lines.push(`  --radius-${key}: ${val.value};`)
+    lines.push(`  --radius-${key}: ${val.value};`);
   }
 
   // Spacing
   for (const [key, val] of Object.entries(primitives.spacing)) {
-    lines.push(`  --space-${key}: ${val.value};`)
+    lines.push(`  --space-${key}: ${val.value};`);
   }
 
   // Shadows
   for (const [key, val] of Object.entries(primitives.shadow)) {
-    lines.push(`  --shadow-${key}: ${val.value};`)
+    lines.push(`  --shadow-${key}: ${val.value};`);
   }
 
   // Touch targets
-  lines.push(`  --touch-target: ${primitives.touchTarget.default.value};`)
-  lines.push(`  --touch-target-sm: ${primitives.touchTarget.sm.value};`)
+  lines.push(`  --touch-target: ${primitives.touchTarget.default.value};`);
+  lines.push(`  --touch-target-sm: ${primitives.touchTarget.sm.value};`);
 
   // Motion
   for (const [key, val] of Object.entries(primitives.motion.duration)) {
-    lines.push(`  --motion-${key}: ${val.value};`)
+    lines.push(`  --motion-${key}: ${val.value};`);
   }
   for (const [key, val] of Object.entries(primitives.motion.easing)) {
-    lines.push(`  --easing-${key}: ${val.value};`)
+    lines.push(`  --easing-${key}: ${val.value};`);
   }
 
   // Semantic tokens (theme-dependent)
   for (const [key, val] of Object.entries(semantic)) {
-    lines.push(`  --${key}: ${val.value};`)
+    lines.push(`  --${key}: ${val.value};`);
   }
 
   // Brand overrides
-  lines.push(`  --color-primary: ${brandColors.primary};`)
-  lines.push(`  --color-primary-hover: ${brandColors.primaryHover};`)
-  lines.push(`  --color-primary-muted: ${brandColors.primaryMuted};`)
+  lines.push(`  --color-primary: ${brandColors.primary};`);
+  lines.push(`  --color-primary-hover: ${brandColors.primaryHover};`);
+  lines.push(`  --color-primary-muted: ${brandColors.primaryMuted};`);
 
   // Component tokens
   for (const [comp, tokens] of Object.entries(componentTokens)) {
     for (const [key, val] of Object.entries(tokens)) {
-      lines.push(`  --${comp}-${key}: ${val};`)
+      lines.push(`  --${comp}-${key}: ${val};`);
     }
   }
 
-  lines.push("}")
-  return lines.join("\n")
+  lines.push("}");
+  return lines.join("\n");
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -902,17 +1145,23 @@ export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId =
 // covenant is "design decisions are data, not code".
 // ═══════════════════════════════════════════════════════════════
 
-export type PlatformFormat = "css" | "json"
+export type PlatformFormat = "css" | "json";
 
 export function generateTokens(format: PlatformFormat): string {
   if (format === "json") {
     return JSON.stringify(
-      { primitives, semanticTokens, brandOverrides, listingThemes, componentTokens },
+      {
+        primitives,
+        semanticTokens,
+        brandOverrides,
+        listingThemes,
+        componentTokens,
+      },
       null,
-      2
-    )
+      2,
+    );
   }
-  return generateCSSVariables()
+  return generateCSSVariables();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -945,7 +1194,7 @@ export const universalStatus = {
   error: "#EF4444", // Red-500 — universal "stop/danger/error/failed"
   info: "#3B82F6", // Blue-500 — universal "notice/information/help"
   neutral: "#6B7280", // Gray-500 — neutral/inactive/disabled/unknown
-} as const
+} as const;
 
 /**
  * Status tokens — the universal 5-state status system.
@@ -982,7 +1231,7 @@ export const statusTokens = {
     hex: "#6B7280",
     label: "Neutral",
   },
-} as const
+} as const;
 
 /**
  * Severity tokens — graduated urgency scale for alerts, weather, health.
@@ -1025,7 +1274,7 @@ export const severityTokens = {
     hex: "#3B82F6",
     label: "Cold",
   },
-} as const
+} as const;
 
 /**
  * Notification tokens — for toast, banner, and notification components.
@@ -1047,8 +1296,12 @@ export const notificationTokens = {
     css: "--notification-error",
     hex: "#EF4444",
   },
-  info: { value: "var(--notification-info, #3B82F6)", css: "--notification-info", hex: "#3B82F6" },
-} as const
+  info: {
+    value: "var(--notification-info, #3B82F6)",
+    css: "--notification-info",
+    hex: "#3B82F6",
+  },
+} as const;
 
 /**
  * Connection tokens — connectivity gradient for local-first architecture.
@@ -1079,7 +1332,7 @@ export const connectionTokens = {
     hex: "#EF4444",
     label: "Offline",
   },
-} as const
+} as const;
 
 /**
  * Verification tier tokens — these DO use minerals because they are BRAND identity.
@@ -1117,7 +1370,7 @@ export const verificationTokens = {
     mineral: "gold",
     label: "Licensed",
   },
-} as const
+} as const;
 
 /**
  * Crypto level tokens — universal color scale (green = safe, red = none).
@@ -1148,7 +1401,7 @@ export const cryptoTokens = {
     hex: "#EF4444",
     label: "None",
   },
-} as const
+} as const;
 
 /**
  * Moderation tokens — universal colors (green = approved, red = rejected).
@@ -1178,7 +1431,7 @@ export const moderationTokens = {
     hex: "#EF4444",
     label: "Rejected",
   },
-} as const
+} as const;
 
 /**
  * Service health tokens — universal colors (green = operational, red = outage).
@@ -1208,13 +1461,13 @@ export const serviceHealthTokens = {
     hex: "#3B82F6",
     label: "Maintenance",
   },
-} as const
+} as const;
 
 /**
  * Generate CSS custom property declarations for all semantic tokens.
  */
 export function generateStatusCSS(): string {
-  const lines = [":root {", "  /* Universal status colors — NOT minerals */"]
+  const lines = [":root {", "  /* Universal status colors — NOT minerals */"];
   const groups = [
     { name: "Status", tokens: statusTokens },
     { name: "Severity", tokens: severityTokens },
@@ -1223,21 +1476,24 @@ export function generateStatusCSS(): string {
     { name: "Crypto", tokens: cryptoTokens },
     { name: "Moderation", tokens: moderationTokens },
     { name: "Health", tokens: serviceHealthTokens },
-  ]
+  ];
   for (const group of groups) {
-    lines.push(`  /* ${group.name} */`)
+    lines.push(`  /* ${group.name} */`);
     for (const [, token] of Object.entries(group.tokens)) {
-      if ("css" in token && "hex" in token) lines.push(`  ${token.css}: ${token.hex};`)
+      if ("css" in token && "hex" in token)
+        lines.push(`  ${token.css}: ${token.hex};`);
     }
   }
-  lines.push("  /* Verification tiers — these use minerals (brand identity) */")
-  lines.push("  --tier-unverified: #6B7280;")
-  lines.push(`  --tier-community: ${paletteVar("malachite")};`)
-  lines.push(`  --tier-otp: ${paletteVar("cobalt")};`)
-  lines.push(`  --tier-government: ${paletteVar("tanzanite")};`)
-  lines.push(`  --tier-licensed: ${paletteVar("gold")};`)
-  lines.push("}")
-  return lines.join("\n")
+  lines.push(
+    "  /* Verification tiers — these use minerals (brand identity) */",
+  );
+  lines.push("  --tier-unverified: #6B7280;");
+  lines.push(`  --tier-community: ${paletteVar("malachite")};`);
+  lines.push(`  --tier-otp: ${paletteVar("cobalt")};`);
+  lines.push(`  --tier-government: ${paletteVar("tanzanite")};`);
+  lines.push(`  --tier-licensed: ${paletteVar("gold")};`);
+  lines.push("}");
+  return lines.join("\n");
 }
 
 // CHART COLOR SYSTEM
@@ -1278,15 +1534,15 @@ export const mineralChartConfig = {
       labels.map((label, i) => [
         label.toLowerCase().replace(/\\s/g, "_"),
         { label, color: mineralChartColors[i] },
-      ])
+      ]),
     ),
   /** Heritage colors for the later series */
   heritage: Object.fromEntries(
     paletteFamilies()
       .filter(([, family]) => family === "heritage")
-      .map(([name]) => [name, paletteVar(name)])
+      .map(([name]) => [name, paletteVar(name)]),
   ),
-} as const
+} as const;
 
 /**
  * Chart colour array for recharts — palette order, minerals then heritage.
@@ -1298,7 +1554,7 @@ export const mineralChartConfig = {
  */
 export const mineralChartColors: readonly string[] = paletteFamilies()
   .filter(([, family]) => family !== "experimental")
-  .map(([name]) => paletteVar(name))
+  .map(([name]) => paletteVar(name));
 
 // ═══════════════════════════════════════════════════════════════
 // COLOR RESOLUTION UTILITIES
@@ -1313,18 +1569,20 @@ export const mineralChartColors: readonly string[] = paletteFamilies()
  * Falls back to the raw string if resolution fails (SSR, DOM not ready).
  */
 export function resolveColor(color: string): string {
-  if (typeof window === "undefined") return color
-  if (!color.startsWith("var(")) return color
+  if (typeof window === "undefined") return color;
+  if (!color.startsWith("var(")) return color;
   const prop = color
     .replace(/^var\(/, "")
     .replace(/\)$/, "")
     .split(",")[0]
-    .trim()
+    .trim();
   try {
-    const resolved = getComputedStyle(document.documentElement).getPropertyValue(prop).trim()
-    return resolved || color
+    const resolved = getComputedStyle(document.documentElement)
+      .getPropertyValue(prop)
+      .trim();
+    return resolved || color;
   } catch {
-    return color
+    return color;
   }
 }
 
@@ -1334,32 +1592,35 @@ export function resolveColor(color: string): string {
  * Canvas 2D cannot use CSS opacity — must compute rgba directly.
  */
 export function hexWithAlpha(color: string, alpha: number): string {
-  const a = Math.max(0, Math.min(1, alpha))
-  if (!color || color.startsWith("var(")) return `rgba(0,0,0,${a})`
+  const a = Math.max(0, Math.min(1, alpha));
+  if (!color || color.startsWith("var(")) return `rgba(0,0,0,${a})`;
 
-  const rgbMatch = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/)
-  if (rgbMatch) return `rgba(${rgbMatch[1]},${rgbMatch[2]},${rgbMatch[3]},${a})`
+  const rgbMatch = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (rgbMatch)
+    return `rgba(${rgbMatch[1]},${rgbMatch[2]},${rgbMatch[3]},${a})`;
 
-  const hslMatch = color.match(/^hsla?\(\s*([\d.]+),\s*([\d.]+)%,\s*([\d.]+)%/)
-  if (hslMatch) return `hsla(${hslMatch[1]},${hslMatch[2]}%,${hslMatch[3]}%,${a})`
+  const hslMatch = color.match(/^hsla?\(\s*([\d.]+),\s*([\d.]+)%,\s*([\d.]+)%/);
+  if (hslMatch)
+    return `hsla(${hslMatch[1]},${hslMatch[2]}%,${hslMatch[3]}%,${a})`;
 
-  const oklchMatch = color.match(/^oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)/)
-  if (oklchMatch) return `oklch(${oklchMatch[1]} ${oklchMatch[2]} ${oklchMatch[3]} / ${a})`
+  const oklchMatch = color.match(/^oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)/);
+  if (oklchMatch)
+    return `oklch(${oklchMatch[1]} ${oklchMatch[2]} ${oklchMatch[3]} / ${a})`;
 
   if (color.startsWith("#")) {
-    const hex = color.replace("#", "")
+    const hex = color.replace("#", "");
     const base =
       hex.length === 3
         ? hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
         : hex.length >= 6
           ? hex.slice(0, 6)
-          : hex
+          : hex;
     return `#${base}${Math.round(a * 255)
       .toString(16)
-      .padStart(2, "0")}`
+      .padStart(2, "0")}`;
   }
 
-  return `rgba(0,0,0,${a})`
+  return `rgba(0,0,0,${a})`;
 }
 
 /**
@@ -1395,8 +1656,8 @@ export function generateTokensJSON(): string {
       serviceHealth: serviceHealthTokens,
     },
     null,
-    2
-  )
+    2,
+  );
 }
 
 /**

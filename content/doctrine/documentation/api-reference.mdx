@@ -47,38 +47,38 @@ https://api.nyuchi.dev/v1
 
 ### Components
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | /api/components | List all components |
-| GET | /api/v1/ui/{name} | Get component by name |
-| GET | /api/v1/ui/{name} | Get source code (lives in components.source_code in DB) |
-| GET | /api/v1/ui/{name}/docs | Get documentation |
-| GET | /api/health/{name} | Health check |
-| GET | /api/changelog/{name} | Version history |
+| Method | Endpoint               | Description                                             |
+| ------ | ---------------------- | ------------------------------------------------------- |
+| GET    | /api/components        | List all components                                     |
+| GET    | /api/v1/ui/{name}      | Get component by name                                   |
+| GET    | /api/v1/ui/{name}      | Get source code (lives in components.source_code in DB) |
+| GET    | /api/v1/ui/{name}/docs | Get documentation                                       |
+| GET    | /api/health/{name}     | Health check                                            |
+| GET    | /api/changelog/{name}  | Version history                                         |
 
 ### Search
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | /api/search?q={query} | Search components |
-| GET | /api/search?category={cat} | Filter by category |
-| GET | /api/search?node={n} | Filter by node |
-| GET | /api/search?status={status} | Filter by status (stable, alpha, deprecated) |
+| Method | Endpoint                    | Description                                  |
+| ------ | --------------------------- | -------------------------------------------- |
+| GET    | /api/search?q={query}       | Search components                            |
+| GET    | /api/search?category={cat}  | Filter by category                           |
+| GET    | /api/search?node={n}        | Filter by node                               |
+| GET    | /api/search?status={status} | Filter by status (stable, alpha, deprecated) |
 
 ### Documentation
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | /api/docs | List documentation pages |
-| GET | /api/docs/{slug} | Get page by slug |
+| Method | Endpoint         | Description              |
+| ------ | ---------------- | ------------------------ |
+| GET    | /api/docs        | List documentation pages |
+| GET    | /api/docs/{slug} | Get page by slug         |
 
 ### Fundi
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | /api/chaos/{name} | Inject chaos (N8) |
-| POST | /api/fundi/{name} | Trigger healing (N9) |
-| GET | /api/fundi/issues | List open healing issues |
+| Method | Endpoint          | Description              |
+| ------ | ----------------- | ------------------------ |
+| POST   | /api/chaos/{name} | Inject chaos (N8)        |
+| POST   | /api/fundi/{name} | Trigger healing (N9)     |
+| GET    | /api/fundi/issues | List open healing issues |
 
 ## MCP Server
 
@@ -92,35 +92,35 @@ Tools (live registry): list_components, get_component, get_node_documents, get_b
 
 The database exposes count functions that should be used instead of hardcoded numbers anywhere they appear:
 
-| Function | Returns |
-|---|---|
-| `get_node_counts()` | per-node component counts with axis and label |
-| `get_system_counts()` | system-wide totals in one row |
-| `get_token_counts()` | row counts for every token category (styling-* collections) |
-| `get_node_categories(N)` | category breakdown within node N |
-| `get_latest_release()` | most recent changelog entry |
-| `get_accessibility_summary()` | WCAG compliance and color-blindness validation summary |
+| Function                      | Returns                                                      |
+| ----------------------------- | ------------------------------------------------------------ |
+| `get_node_counts()`           | per-node component counts with axis and label                |
+| `get_system_counts()`         | system-wide totals in one row                                |
+| `get_token_counts()`          | row counts for every token category (styling-\* collections) |
+| `get_node_categories(N)`      | category breakdown within node N                             |
+| `get_latest_release()`        | most recent changelog entry                                  |
+| `get_accessibility_summary()` | WCAG compliance and color-blindness validation summary       |
 
 ## SQL Functions (Accessibility Validation)
 
 Three functions support contrast-ratio validation directly in the database:
 
-| Function | Returns |
-|---|---|
-| `hex_to_rgb(hex)` | (r, g, b) integer tuple |
-| `relative_luminance(hex)` | WCAG relative luminance numeric value |
+| Function                                   | Returns                                 |
+| ------------------------------------------ | --------------------------------------- |
+| `hex_to_rgb(hex)`                          | (r, g, b) integer tuple                 |
+| `relative_luminance(hex)`                  | WCAG relative luminance numeric value   |
 | `calculate_contrast_ratio(fg_hex, bg_hex)` | WCAG 2.1 contrast ratio (1.00 to 21.00) |
 
 ## SQL Functions (Component Lifecycle)
 
-| Function | Purpose |
-|---|---|
-| `log_version(name, type, comment, author)` | Track component changes |
+| Function                                                                                          | Purpose                                                                                                  |
+| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `log_version(name, type, comment, author)`                                                        | Track component changes                                                                                  |
 | `log_release_v2(version, title, desc, nodes, axes, added, modified, deprecated, removed, author)` | Log a release to the changelog (successor to log_release; accepts nodes_affected and components_removed) |
-| `get_component_links(name)` | Get all canonical URLs for a component |
-| `get_component_history(name, limit)` | Component version history |
-| `create_fundi_issue(component, severity, error_type, source, payload)` | Create healing issue |
-| `is_domain_allowed(domain, mode)` | Check observability allowlist |
+| `get_component_links(name)`                                                                       | Get all canonical URLs for a component                                                                   |
+| `get_component_history(name, limit)`                                                              | Component version history                                                                                |
+| `create_fundi_issue(component, severity, error_type, source, payload)`                            | Create healing issue                                                                                     |
+| `is_domain_allowed(domain, mode)`                                                                 | Check observability allowlist                                                                            |
 
 ## Direct Database Tables
 
