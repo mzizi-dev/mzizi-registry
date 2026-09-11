@@ -80,6 +80,20 @@ jobs:
       - name: Verify the theme tokens match app/globals.css
         run: pnpm tokens:registry:check
 
+      # And that globals.css — plus all seven emitters — match the palette they are
+      # generated from. `tokens:registry:check` above compares two ARTIFACTS; this
+      # compares every artifact against `lib/tokens/palette.source.ts`, the one file
+      # where a colour is authored.
+      #
+      # It was in `pnpm check` and nowhere in CI, so it ran only when someone ran it
+      # locally. That is how `nyuchi-tokens-typescript.ts` shipped six pre-Seven hexes:
+      # not only was the file outside the gate's reach (it is inside it now, its palette
+      # region being generated), the gate itself was outside CI's. It needs no network
+      # and no secret — the whole point of retiring the Supabase read — so there is no
+      # reason for it not to run on every push.
+      - name: Verify every token artifact matches lib/tokens/palette.source.ts
+        run: pnpm tokens:verify
+
       # title / categories / docs / author are derived from data already on each item.
       # Checked rather than hand-maintained so 574 items cannot fall out of step one at
       # a time.
