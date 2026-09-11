@@ -2,10 +2,15 @@
 //!
 //! # Where the components are
 //!
-//! Not in this crate's `src/`. Each is a file under
+//! Not authored in this crate. Each is a file under
 //! `components/registry/n11-discovery/<name>.rs`, beside the `.ts` implementing
-//! the same contract for a JavaScript host, and this module `#[path]`-includes
-//! it.
+//! the same contract for a JavaScript host.
+//!
+//! `src/generated/` holds a COMMITTED copy of each, written by `pnpm rust:generate`
+//! and checked by `pnpm rust:generate:check`. The copy is what makes this crate
+//! publishable: `cargo package` collects only files under the package root, so a
+//! `#[path]` reaching up into the registry ships a tarball that cannot build. Edit
+//! the registry file; the copy is overwritten.
 //!
 //! # What is here
 //!
@@ -15,5 +20,5 @@
 //! the `<head>` elements itself. Same division as N8, which builds an OTLP
 //! request and lets the host send it.
 
-#[path = "../../../../components/registry/n11-discovery/nyuchi-seo.rs"]
+#[path = "generated/nyuchi-seo.rs"]
 pub mod nyuchi_seo;
