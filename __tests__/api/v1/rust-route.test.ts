@@ -32,16 +32,53 @@ function rustComponents(): string[] {
   return out.sort()
 }
 
-/** Every `#[path = "…"]` include across the cargo workspace, normalised to `dir/file.rs`. */
+/** The leading `// …` comment block of a generated copy, where its source is named. */
+function generatedHeader(file: string): string {
+  const lines: string[] = []
+  for (const line of readFileSync(file, "utf8").split("\n")) {
+    if (line !== "//" && !line.startsWith("// ")) break
+    lines.push(line)
+  }
+  return lines.join("\n")
+}
+
+/**
+ * Every registry component a crate compiles, as `n<N>-<label>/<name>.rs`.
+ *
+ * THE CHAIN HAS A LINK IN IT NOW. A crate's `#[path]` points at a committed copy under
+ * `crates/<crate>/src/generated/`, not at `components/registry/` directly, because
+ * `cargo package` collects only files below the package root — an include reaching four
+ * levels up produced a tarball whose `src/lib.rs` pointed at nothing, and none of the
+ * seven crates could be published. The copy's header names the registry file it came
+ * from, so that is what this follows.
+ *
+ * Following the header rather than trusting the filename is the point: it asserts the
+ * crate reaches the REGISTRY COMPONENT, not merely that it reaches some file that
+ * happens to sit in a directory called `generated`. Whether the copy still MATCHES its
+ * source is `pnpm rust:generate:check`'s job, asserted below to be wired into CI.
+ */
 function includedByCrates(): Set<string> {
   const included = new Set<string>()
   for (const crate of readdirSync(CRATES, { withFileTypes: true })) {
     if (!crate.isDirectory()) continue
-    const lib = join(CRATES, crate.name, "src", "lib.rs")
+    const src = join(CRATES, crate.name, "src")
+    const lib = join(src, "lib.rs")
     if (!existsSync(lib)) continue
     for (const m of readFileSync(lib, "utf8").matchAll(/#\[path\s*=\s*"([^"]+)"\]/g)) {
-      const rel = m[1].replace(/^(\.\.\/)+/, "").replace(/^components\/registry\//, "")
-      included.add(rel)
+      const spec = m[1]
+      // A `#[path]` that still reaches into the registry itself. Unpublishable, and
+      // `cargo package --workspace` in CI rejects it — but resolve it here anyway so
+      // this test reports the orphan it was written to report rather than a miss.
+      if (spec.includes("components/registry/")) {
+        included.add(
+          spec.slice(spec.indexOf("components/registry/") + "components/registry/".length)
+        )
+        continue
+      }
+      const copy = join(src, spec)
+      if (!existsSync(copy)) continue
+      const source = /components\/registry\/(\S+\.rs)/.exec(generatedHeader(copy))
+      if (source) included.add(source[1])
     }
   }
   return included
@@ -92,6 +129,21 @@ describe("the Rust half of the registry", () => {
     for (const cmd of ["cargo fmt", "cargo check", "cargo clippy", "cargo test"]) {
       expect(ci, `CI does not run \`${cmd}\``).toContain(cmd)
     }
+    // The two gates that keep the crates publishable. `cargo package` is the only
+    // command that proves it — it collects the tarball and verify-builds it, which is
+    // what failed on all seven while the crates included their components from four
+    // levels up. `rust:generate:check` is what stops the committed copies drifting from
+    // the registry files they were copied from; without it the crates.io release would
+    // quietly stop being the component the registry serves.
+    expect(ci, "CI does not run `cargo package`").toContain("cargo package")
+    expect(ci, "CI does not verify the generated Rust copies").toContain("rust:generate:check")
+    // `--no-verify` skips the verify build, which is the entire assertion — it would
+    // turn the step into "the tarball was written", not "the tarball compiles". Matched
+    // on the command line rather than anywhere in the file, so the comment above the
+    // step is free to name the flag it is warning against.
+    expect(ci, "`cargo package --no-verify` defeats the point").not.toMatch(
+      /cargo (package|publish)[^\n]*--no-verify/
+    )
     // Without this the Rust job could go red while `Build` — the terminal gate — went green.
     expect(ci).toMatch(/needs: \[[^\]]*\brust\b[^\]]*\]/)
   })
