@@ -38,15 +38,27 @@ function fnBody(name: string): string {
 }
 
 describe("changelog ordering", () => {
-  it("getChangelogEntries reads the pre-sorted releases view", () => {
+  /**
+   * This asserted `.from("releases")`. The release history is not in Supabase
+   * any more — it is `content/changelog/releases.json`, inlined into
+   * `lib/changelog.generated.ts`. What the original assertion was really
+   * protecting survives unchanged and is asserted below: the committed order IS
+   * the view's order, and nothing may re-derive it.
+   */
+  it("getChangelogEntries reads the committed release record, not the database", () => {
     const body = fnBody("getChangelogEntries")
-    expect(body).toMatch(/\.from\((["'`])releases\1\)/)
+    expect(body).toMatch(/CHANGELOG_RELEASES/)
+    expect(body).not.toMatch(/\.from\(/)
+    expect(body).not.toMatch(/getPublicClient/)
   })
 
-  it("getChangelogEntries does not re-order by released_at", () => {
-    // The view is sorted by (line_rank, major, minor, patch). A `.order()` here
-    // would silently override that and restore the NULLS-FIRST bug.
-    expect(fnBody("getChangelogEntries")).not.toMatch(/\.order\(/)
+  it("getChangelogEntries does not re-order the record", () => {
+    // The seed is committed in the order the view served: (line_rank, major,
+    // minor, patch). A `.sort()` here would silently override it and restore
+    // the NULLS-FIRST bug the view was introduced to fix.
+    const body = fnBody("getChangelogEntries")
+    expect(body).not.toMatch(/\.order\(/)
+    expect(body).not.toMatch(/\.sort\(/)
   })
 
   it("getLatestVersion reads the releases view, not released_at", () => {

@@ -8,6 +8,9 @@
  *   Components  →  registry.json, one authored item per component (lib/registry.ts)
  *                  + source on disk under components/registry/ (lib/registry-source.ts)
  *   Doctrine    →  content/doctrine/<collection>/<slug>.mdx    (lib/doctrine.ts)
+ *   Brand       →  lib/tokens/palette.source.ts (21 colour families)
+ *                  + lib/tokens/brand.source.ts (everything else brand)
+ *   Releases    →  content/changelog/releases.json → lib/changelog.generated.ts
  *
  * This block said `content/registry/<collection>/<name>.json`. That directory
  * does not exist and never did — `content/` holds `doctrine/` only, and
@@ -18,13 +21,18 @@
  * What is still Supabase, and why — it is written by a machine, not a person:
  *
  *   component_versions / tool_versions  — version history
- *   changelog                           — release state
- *   brand_*                             — tokens (pnpm tokens:sync generates the
- *                                         repo artifacts; migration pending)
  *   fundi_issues / fundi_healing_log    — the issue log and the self-healing log
  *   observability_events / chaos_events / usage_events — telemetry
  *
- * See docs/db-contents-rule.md for the rule and the live audit.
+ * `changelog` / `releases` and the `brand_*` views are NOT on that list any
+ * more. They were, and `docs/db-contents-rule.md` allowed the first as "version
+ * history". The owner's later ruling supersedes it: the registry has no
+ * database going forwards, everything is from disk. Both moved into the repo,
+ * where a human's edit shows up in a diff — which was always the test that rule
+ * applied. `/api/v1/brand`, `/api/v1/changelog` and the architecture node
+ * routes now answer with every Supabase variable unset.
+ *
+ * See docs/db-contents-rule.md for the original rule and the live audit.
  *
  * Env vars (still needed for the above):
  *   NEXT_PUBLIC_SUPABASE_URL      — Supabase project URL
@@ -38,6 +46,7 @@
 
 import { doctrineRows, readDoctrineSorted, DOCTRINE } from "@/lib/doctrine"
 import { readComponent, readComponents, readNodeCounts, type RegistryItem } from "@/lib/registry"
+import { CHANGELOG_RELEASES } from "@/lib/changelog.generated"
 import { createClient } from "@supabase/supabase-js"
 import type {
   ComponentRow,
@@ -795,12 +804,21 @@ export async function getAllAiInstructions(): Promise<AiInstructionRow[]> {
  * it superseded), `release_kind` (initial / major / minor / patch, compared
  * within its own line), and `components_touched`. It is ordered in the view, so
  * no `.order()` here — adding one would silently override the two-era sort.
+ *
+ * Reads `lib/changelog.generated.ts`, not Supabase. The release history moved
+ * into the repo with everything else — see `scripts/generate-changelog.mjs` for
+ * why the seed is a record rather than something derived from `CHANGELOG.md`.
+ * The committed order IS the view's order, so this returns the array as-is.
  */
 export async function getChangelogEntries(): Promise<ChangelogRow[]> {
-  const { data, error } = await getPublicClient().from("releases").select("*")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ChangelogRow[]
+  // `entry_order` is repo bookkeeping, not a column the view ever had — it
+  // records the order entries sharing a version are served in, which Postgres
+  // answered from physical row order and a file cannot. It is stripped here so
+  // this payload stays exactly the 27 fields `releases` projected.
+  return CHANGELOG_RELEASES.map((entry) => {
+    const { entry_order: _entryOrder, ...row } = entry as ChangelogRow & { entry_order?: number }
+    return row as ChangelogRow
+  })
 }
 
 /**
@@ -818,16 +836,68 @@ export async function getChangelogEntries(): Promise<ChangelogRow[]> {
  * therefore turned "this version has three entries" into "this version does not
  * exist", and `/api/v1/changelog/4.0.31` answered 404 for a release that is in
  * the table three times. Eight of sixty-four releases were unreachable that way.
+ *
+ * Reads `lib/changelog.generated.ts`. It projects to the narrower `changelog`
+ * column set on purpose: the `releases` VIEW added `line`, `line_rank`,
+ * `major`, `minor`, `patch`, `release_kind` and `components_touched` on top of
+ * the `changelog` TABLE, and this endpoint served the table. Serving the seven
+ * extra fields here would be a payload change to a route that is not broken,
+ * so the projection is explicit rather than a spread.
  */
 export async function getChangelogByVersion(version: string): Promise<ChangelogRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("changelog")
-    .select("*")
-    .eq("version", version)
-    .order("created_at", { ascending: true, nullsFirst: false })
+  const orderOf = (row: ChangelogRow) =>
+    (
+      CHANGELOG_RELEASES.find(
+        (entry) => entry.version === row.version && entry.title === row.title
+      ) as (ChangelogRow & { entry_order?: number }) | undefined
+    )?.entry_order ?? 0
 
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ChangelogRow[]
+  return CHANGELOG_RELEASES.filter((entry) => entry.version === version)
+    .map(
+      (entry) =>
+        ({
+          version: entry.version,
+          title: entry.title,
+          description: entry.description,
+          released_at: entry.released_at,
+          created_at: entry.created_at,
+          breaking: entry.breaking,
+          nodes_affected: entry.nodes_affected,
+          components_added: entry.components_added,
+          components_modified: entry.components_modified,
+          components_deprecated: entry.components_deprecated,
+          components_removed: entry.components_removed,
+          tools_added: entry.tools_added,
+          tools_modified: entry.tools_modified,
+          tools_deprecated: entry.tools_deprecated,
+          tools_removed: entry.tools_removed,
+          linked_issues: entry.linked_issues,
+          total_stable: entry.total_stable,
+          total_deprecated: entry.total_deprecated,
+          total_alpha: entry.total_alpha,
+          changed_by: entry.changed_by,
+        }) as unknown as ChangelogRow
+    )
+    .sort((a, b) => {
+      // `created_at` ascending with NULLS LAST, matching the
+      // `.order("created_at", { ascending: true, nullsFirst: false })` this
+      // replaced. The null branch is not a detail: ten entries have no
+      // `created_at`, and treating null as the empty string sorts them FIRST,
+      // which silently reordered 4.1.0 — the one version where a dated and an
+      // undated entry share a number.
+      const aNull = a.created_at == null
+      const bNull = b.created_at == null
+      if (aNull !== bNull) return aNull ? 1 : -1
+      const byDate = aNull ? 0 : String(a.created_at).localeCompare(String(b.created_at))
+      if (byDate !== 0) return byDate
+      // Then `entry_order`. Eight versions carry two or three entries that share
+      // a `created_at` to the microsecond, so `created_at` alone leaves their
+      // order to whatever the sort happens to do — and Postgres broke those ties
+      // by physical row order, which no file can reproduce by rule. The order is
+      // therefore recorded as data in `content/changelog/releases.json` rather
+      // than guessed: it is real, and it is diffable.
+      return orderOf(a) - orderOf(b)
+    })
 }
 
 /**
@@ -1061,10 +1131,18 @@ export async function getNodeCounts(): Promise<Record<number, number>> {
 export async function getHelixModel(): Promise<HelixModel> {
   const empty: HelixModel = { nodes: [], rungs: [], strands: [] }
 
-  // The helix comes from content/doctrine, not Supabase. Node counts still do — a
-  // count is derived from whatever components exist, which is database-owned.
-  // Deliberately NOT gated on isSupabaseConfigured(): the helix is files now, so
-  // /api/v1/architecture must keep answering when the database is unreachable.
+  // The helix comes from content/doctrine, not Supabase, and so do the counts.
+  //
+  // `readNodeCounts()` has always counted the registry ON DISK — it is
+  // `readComponents().reduce(...)`, not a query. The `isSupabaseConfigured()`
+  // ternary that stood in front of it was therefore gating a disk read on a
+  // database credential, and on a deployment with none it substituted `{}`:
+  // every node and rung served `component_count: 0` while the rest of the
+  // payload was correct. `/api/v1/architecture` looked healthy at 200 and was
+  // quietly wrong, which is worse than the 503 its sibling returned.
+  //
+  // A count is derived, not stored. Deriving it from whatever is on disk is the
+  // whole reason it cannot go stale.
   const nodeRes = {
     error: null,
     data: readDoctrineSorted(DOCTRINE.nodes).map((d) => ({ document: d.data })),
@@ -1073,7 +1151,7 @@ export async function getHelixModel(): Promise<HelixModel> {
     error: null,
     data: readDoctrineSorted(DOCTRINE.strands).map((d) => ({ document: d.data })),
   }
-  const counts = isSupabaseConfigured() ? await getNodeCounts() : {}
+  const counts = await getNodeCounts()
 
   if (nodeRes.error || !Array.isArray(nodeRes.data) || nodeRes.data.length === 0) return empty
 

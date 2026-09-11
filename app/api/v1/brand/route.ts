@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { isSupabaseConfigured, getBrandSystem } from "@/lib/db"
-import { experimentalColors, heritageColors } from "@/lib/tokens/palette.generated"
+import { experimentalColors, heritageColors, minerals } from "@/lib/tokens/palette.generated"
+import {
+  backgroundColors,
+  brandMeta,
+  ecosystem,
+  mineralApiHex,
+  semanticColors,
+  spacing,
+  typography,
+} from "@/lib/tokens/brand.source"
 
 const logger = createLogger("brand")
 
@@ -10,29 +18,35 @@ const CORS_CACHE = {
   "Access-Control-Allow-Origin": "*",
 }
 
+/**
+ * GET /api/v1/brand
+ *
+ * The whole brand system, assembled from disk. No database, no network, no
+ * credential — this route answers with every Supabase variable unset, and it
+ * has to: the registry has no database going forwards.
+ *
+ * It used to open with `if (!isSupabaseConfigured()) return 503` and then
+ * `await getBrandSystem()`, which read seven collections over the wire. On a
+ * deployment with no database credentials that guard was the entire response:
+ * the one endpoint serving the corrected 7/7/7 palette answered 503 to
+ * everybody. The guard and the read are both gone.
+ *
+ * SOURCES, and why there are two of them:
+ *   - the 21 colour families  `lib/tokens/palette.generated.ts`
+ *   - everything else         `lib/tokens/brand.source.ts`
+ * The palette snapshot is generated from `palette.source.ts` by
+ * `pnpm tokens:sync` and gated by `pnpm tokens:verify`; the brand source is
+ * hand-authored. Minerals now come from the snapshot too — they were the last
+ * collection still read over the wire, which is why this route served seven of
+ * twenty-one families when the database was unreachable.
+ *
+ * `__tests__/api/brand-from-disk.test.ts` fails if a family or a field goes
+ * missing from this payload.
+ */
 export async function GET() {
   try {
-    if (!isSupabaseConfigured()) {
-      return NextResponse.json(
-        {
-          error: "Database not configured",
-          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-        },
-        { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
-      )
-    }
-
-    const dbBrand = await getBrandSystem()
-
-    if (!dbBrand || !dbBrand.meta) {
-      return NextResponse.json(
-        { error: "Brand data not found in database" },
-        { status: 404, headers: { "Access-Control-Allow-Origin": "*" } }
-      )
-    }
-
-    const fontEntries = dbBrand.typography.filter((t) => t.entry_type === "font")
-    const scaleEntries = dbBrand.typography.filter((t) => t.entry_type === "scale")
+    const fontEntries = typography.filter((t) => t.entryType === "font")
+    const scaleEntries = typography.filter((t) => t.entryType === "scale")
 
     const fonts: Record<string, { family: string; usage: string; reason: string }> = {}
     for (const f of fontEntries) {
@@ -48,23 +62,25 @@ export async function GET() {
       $schema: "https://mzizi.dev/schema/brand.json",
       "@context": "https://schema.org",
       "@type": "Brand",
-      version: dbBrand.meta.version,
-      name: dbBrand.meta.name,
-      lastUpdated: dbBrand.meta.last_updated,
-      homepage: dbBrand.meta.homepage,
-      minerals: dbBrand.minerals.map((m) => ({
+      version: brandMeta.version,
+      name: brandMeta.name,
+      lastUpdated: brandMeta.lastUpdated,
+      homepage: brandMeta.homepage,
+      minerals: minerals.map((m) => ({
         name: m.name,
-        hex: m.hex,
-        lightHex: m.light_hex,
-        darkHex: m.dark_hex,
-        containerLight: m.container_light,
-        containerDark: m.container_dark,
-        cssVar: m.css_var,
+        // The mineral's single "if you only get one" value. Not derivable from
+        // lightHex/darkHex — see `mineralApiHex` in lib/tokens/brand.source.ts.
+        hex: mineralApiHex[m.name] ?? m.darkHex,
+        lightHex: m.lightHex,
+        darkHex: m.darkHex,
+        containerLight: m.containerLight,
+        containerDark: m.containerDark,
+        cssVar: m.cssVar,
         origin: m.origin,
         symbolism: m.symbolism,
         usage: m.usage,
       })),
-      ecosystem: dbBrand.ecosystem.map((b) => ({
+      ecosystem: ecosystem.map((b) => ({
         name: b.name,
         meaning: b.meaning,
         language: b.language,
@@ -78,46 +94,33 @@ export async function GET() {
         fonts,
         scale: scaleEntries.map((t) => ({
           name: t.name,
-          sizePx: t.size_px ?? 0,
-          sizeRem: t.size_rem ?? "",
-          lineHeight: t.line_height ?? "",
+          sizePx: t.sizePx ?? 0,
+          sizeRem: t.sizeRem ?? "",
+          lineHeight: t.lineHeight ?? "",
           weight: t.weight ?? 400,
           font: (t.font ?? "sans") as "sans" | "serif" | "mono",
           usage: t.usage,
         })),
       },
-      spacing: dbBrand.spacing.map((s) => ({
+      spacing: spacing.map((s) => ({
         name: s.name,
         px: s.px,
         rem: s.rem,
         usage: s.usage,
       })),
-      radii: dbBrand.meta.radii,
-      semanticColors: dbBrand.semanticColors.map((c) => ({
+      radii: brandMeta.radii,
+      semanticColors: semanticColors.map((c) => ({
         name: c.name,
-        light: c.light_value,
-        dark: c.dark_value,
+        light: c.lightValue,
+        dark: c.darkValue,
         usage: c.usage,
       })),
-      backgrounds: dbBrand.backgrounds.map((c) => ({
+      backgrounds: backgroundColors.map((c) => ({
         name: c.name.replace("bg-", ""),
-        light: c.light_value,
-        dark: c.dark_value,
+        light: c.lightValue,
+        dark: c.darkValue,
         usage: c.usage,
       })),
-      // Heritage and experimental come from the committed palette snapshot, not
-      // from a DB read, because there is no `brand_heritage` or
-      // `brand_experimental` view to read — `getBrandSystem()` only ever fetched
-      // minerals. That is why /api/v1/brand served 7 of the 21 colour families
-      // and `mzizi_get_tokens(family: "heritage")` errored despite the MCP tool
-      // advertising `heritage` in its own schema.
-      //
-      // The snapshot is the right source rather than a stopgap: it is generated
-      // from the same Supabase collections by `scripts/sync-tokens.ts` and CI
-      // fails via `pnpm tokens:verify` if it drifts, so this is DB-derived data
-      // with a build-time guarantee and no request-time round trip. Minerals are
-      // deliberately left on their existing DB read — changing that would alter
-      // a payload 571 components and the MCP already depend on.
       heritage: heritageColors.map((h) => ({
         name: h.name,
         hex: h.darkHex,
@@ -142,10 +145,10 @@ export async function GET() {
         cssVar: `--color-${e.name}`,
         heptagonIndex: e.heptagonIndex,
       })),
-      componentSpecs: dbBrand.meta.component_specs,
-      accessibility: dbBrand.meta.accessibility,
-      voiceAndTone: dbBrand.meta.voice_and_tone,
-      philosophy: dbBrand.meta.philosophy,
+      componentSpecs: brandMeta.componentSpecs,
+      accessibility: brandMeta.accessibility,
+      voiceAndTone: brandMeta.voiceAndTone,
+      philosophy: brandMeta.philosophy,
     }
 
     logger.info("Brand system served", {
