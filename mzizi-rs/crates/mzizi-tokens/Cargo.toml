@@ -5,10 +5,10 @@ description = "Mzizi N1 design tokens: the 21-family Mzizi palette (seven minera
 # minerals, which stopped being the whole palette two expansions ago — the same
 # stale-count defect this crate's doc comment records.
 #
-# NOTE for whoever publishes: `readme` is still unset here and on the other six
-# crates, and no crate sets keywords/categories either. A crates.io page with no
-# README renders bare, and a published version is permanent. That wants its own
-# change across the workspace before anyone runs `cargo publish`.
+# `readme` was the last of the three still unset, here and on the other six
+# crates, and none of the seven had a README file at all — so every page would
+# have rendered bare, permanently: 0.1.0 can be yanked but never re-uploaded.
+readme = "README.md"
 keywords = ["design-tokens", "design-system", "color", "palette", "mzizi"]
 categories = ["gui", "development-tools"]
 version.workspace = true
