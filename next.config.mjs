@@ -157,6 +157,32 @@ const nextConfig = {
   // links and crawler history should land on it rather than dead-end.
   // The node itself may not exist; `/architecture/nodes/[n]` decides that
   // by asking the collection, never a capped range.
+  // ── The API's own hostname ───────────────────────────────────────────
+  //
+  // `api.mzizi.dev` is a custom domain on THIS Worker, and it serves the
+  // API at `/v1/*` — not `/api/v1/*`. That is the canonical address: 1,464
+  // references across this repo, the MCP, the console and every published
+  // install command were migrated to it, and the shadcn `registryDependencies`
+  // of 804 components resolve through it transitively.
+  //
+  // The `/api` segment was an artifact of the API sharing the apex with the
+  // site. It does not survive the split: `mzizi.dev` becomes the human site
+  // and the API gets its own hostname, so the prefix is absorbed by the
+  // hostname rather than repeated in the path.
+  //
+  // A rewrite, not a redirect, on purpose. `npx shadcn add` follows a chain
+  // of absolute dependency URLs, and a 308 on each hop is latency a consumer
+  // pays for our URL history. Both shapes answer, so nothing that already
+  // works stops working.
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: "/v1/:path*", destination: "/api/v1/:path*" },
+        { source: "/openapi", destination: "/api/openapi" },
+      ],
+    }
+  },
+
   async redirects() {
     return [
       { source: "/design", destination: "/tokens", permanent: true },
