@@ -24,9 +24,18 @@
  *
  * WHAT "NORMALISE" MEANS, AND WHAT IT DELIBERATELY DOES NOT CHECK.
  *
- * Only canonical FORM: keys sorted, items sorted by name, two-space indent, one
- * trailing newline. That makes a diff show what actually changed instead of a
- * reordering, and it is the whole job.
+ * Only canonical FORM: keys sorted, items sorted by name, then Prettier. That
+ * makes a diff show what actually changed instead of a reordering, and it is the
+ * whole job.
+ *
+ * Prettier is part of the definition of canonical, not a cosmetic afterthought.
+ * `registry.json` is inside the org-wide `lint / prettier` gate's glob (every
+ * md, mdx, json and jsonc file), and Prettier collapses a short array onto one
+ * line where `JSON.stringify(payload, null, 2)` never does. With the old
+ * hand-rolled serialisation, `pnpm registry:verify` and `lint / prettier`
+ * demanded two different files and could not both pass. Running the canonical
+ * form through Prettier with the repo's own `.prettierrc` makes one formatter of
+ * record for this file and removes the deadlock.
  *
  * It does NOT check that items resolve on disk, that dependencies are
  * installable, or that the shape satisfies the shadcn CLI. `pnpm
@@ -42,6 +51,7 @@
 import { readFile, writeFile } from "fs/promises"
 import { existsSync } from "fs"
 import { join } from "path"
+import prettier from "prettier"
 
 const REGISTRY_PATH = join(process.cwd(), "registry.json")
 
@@ -64,7 +74,7 @@ type Manifest = {
   items?: Array<{ name: string } & Record<string, unknown>>
 }
 
-function canonicalise(manifest: Manifest): string {
+async function canonicalise(manifest: Manifest): Promise<string> {
   const items = [...(manifest.items ?? [])].sort((a, b) => a.name.localeCompare(b.name))
   // The header keys stay where the shadcn schema expects them; only the body is
   // key-sorted, so `$schema` does not end up buried under `homepage`.
@@ -74,7 +84,9 @@ function canonicalise(manifest: Manifest): string {
     homepage: manifest.homepage ?? "https://mzizi.dev",
     items: items.map((item) => sortKeys(item)),
   }
-  return JSON.stringify(payload, null, 2) + "\n"
+  const json = JSON.stringify(payload, null, 2) + "\n"
+  const config = await prettier.resolveConfig(REGISTRY_PATH)
+  return prettier.format(json, { ...config, filepath: REGISTRY_PATH })
 }
 
 async function main() {
@@ -101,7 +113,7 @@ async function main() {
     process.exit(1)
   }
 
-  const canonical = canonicalise(manifest)
+  const canonical = await canonicalise(manifest)
 
   if (check) {
     if (raw !== canonical) {

@@ -43,29 +43,29 @@ version: "4.0.34"
 
 ## The four tables
 
-| Table | Purpose |
-|---|---|
-| `observability_domains` | Tenant registry. Each row is one domain consuming OaaS — internally, free, pro, or enterprise tier. |
-| `observability_events` | Structural event sink. Renders, errors, chaos injections, healing events, health checks. **Never stores PII** — enforced by a CHECK constraint that rejects metadata containing user, email, name, token, password, session, cookie, auth, ip, phone, address, or dob keys. |
-| `fundi_issues` | Failure reports surfaced from observability. Each issue carries a severity, error type, blast radius, diagnostic source, and healing plan. Status moves through `open → triaging → healing → awaiting_review → resolved` (or `wont_fix`). |
-| `fundi_healing_log` | Append-only audit trail of healing actions. Logged once, never updated, never deleted by authenticated clients. |
+| Table                   | Purpose                                                                                                                                                                                                                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `observability_domains` | Tenant registry. Each row is one domain consuming OaaS — internally, free, pro, or enterprise tier.                                                                                                                                                                         |
+| `observability_events`  | Structural event sink. Renders, errors, chaos injections, healing events, health checks. **Never stores PII** — enforced by a CHECK constraint that rejects metadata containing user, email, name, token, password, session, cookie, auth, ip, phone, address, or dob keys. |
+| `fundi_issues`          | Failure reports surfaced from observability. Each issue carries a severity, error type, blast radius, diagnostic source, and healing plan. Status moves through `open → triaging → healing → awaiting_review → resolved` (or `wont_fix`).                                   |
+| `fundi_healing_log`     | Append-only audit trail of healing actions. Logged once, never updated, never deleted by authenticated clients.                                                                                                                                                             |
 
 ## Tenancy tiers
 
 The `tier` column on `observability_domains` is a CHECK-constrained enum:
 
-| Tier | Meaning |
-|---|---|
-| `internal` | Nyuchi-owned domain consuming OaaS internally. No commercial commitment. |
-| `free` | External tenant on the free tier. Limited rate, no chaos injection. |
-| `pro` | External tenant on the pro tier. Higher rate, basic chaos and analytics. |
+| Tier         | Meaning                                                                                |
+| ------------ | -------------------------------------------------------------------------------------- |
+| `internal`   | Nyuchi-owned domain consuming OaaS internally. No commercial commitment.               |
+| `free`       | External tenant on the free tier. Limited rate, no chaos injection.                    |
+| `pro`        | External tenant on the pro tier. Higher rate, basic chaos and analytics.               |
 | `enterprise` | External tenant on the enterprise tier. Full chaos, full analytics, dedicated support. |
 
 Feature flags per tenant — `portal_links_enabled`, `chaos_enabled`, `fundi_enabled`, `analytics_enabled` — are stored on the same row. Rate is bounded by `max_chaos_injections_per_hour` and `health_check_interval_seconds`.
 
 ## Why OaaS sits on observability + fundi, not as its own node
 
-The **observability** node does the watching (assurance + the event streams). The **fundi** node does the healing. OaaS is the *commercial framing* of those two capabilities — the multi-tenancy registry, the tier gating, the rate limiting, the per-tenant configuration. It is not a new behaviour; it is a packaging of two existing behaviours.
+The **observability** node does the watching (assurance + the event streams). The **fundi** node does the healing. OaaS is the _commercial framing_ of those two capabilities — the multi-tenancy registry, the tier gating, the rate limiting, the per-tenant configuration. It is not a new behaviour; it is a packaging of two existing behaviours.
 
 If OaaS were its own node it would force a re-explanation of the DNA helix. The helix already classifies both observability and fundi as **mzizi core** (the fixed guarantee). OaaS commercialises that guarantee without changing it.
 

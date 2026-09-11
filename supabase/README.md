@@ -78,22 +78,22 @@ live REST API (`https://api.mzizi.dev/v1/*`) or, for dev-only
 fixtures, add a `supabase/fixtures.sql` alongside `schema.sql` (not
 present today).
 
-## 4. What's *not* in `schema.sql`
+## 4. What's _not_ in `schema.sql`
 
 `schema.sql` captures **only** the `public` schema. These are Supabase
 managed schemas created automatically on any new project, so they are
 deliberately excluded:
 
-| Schema                        | Managed by          |
-| ----------------------------- | ------------------- |
-| `auth`                        | Supabase Auth       |
-| `storage`                     | Supabase Storage    |
-| `realtime`                    | Supabase Realtime   |
-| `graphql`, `graphql_public`   | pg_graphql          |
-| `extensions`                  | Postgres extensions |
-| `vault`                       | Supabase Vault      |
-| `pgbouncer`                   | connection pooler   |
-| `supabase_migrations`         | Supabase internal   |
+| Schema                      | Managed by          |
+| --------------------------- | ------------------- |
+| `auth`                      | Supabase Auth       |
+| `storage`                   | Supabase Storage    |
+| `realtime`                  | Supabase Realtime   |
+| `graphql`, `graphql_public` | pg_graphql          |
+| `extensions`                | Postgres extensions |
+| `vault`                     | Supabase Vault      |
+| `pgbouncer`                 | connection pooler   |
+| `supabase_migrations`       | Supabase internal   |
 
 If you ever add custom RLS on `storage.objects` or `auth.users`, those
 policies live outside `public` and must be captured separately.

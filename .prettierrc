@@ -1,15 +1,16 @@
 {
-  "semi": false,
-  "singleQuote": false,
-  "quoteProps": "as-needed",
-  "trailingComma": "es5",
+  "printWidth": 80,
+  "proseWrap": "preserve",
   "tabWidth": 2,
   "useTabs": false,
-  "printWidth": 100,
-  "bracketSpacing": true,
-  "bracketSameLine": false,
-  "arrowParens": "always",
   "endOfLine": "lf",
-  "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindStylesheet": "./app/globals.css"
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": ["*.md", "*.mdx"],
+      "options": {
+        "embeddedLanguageFormatting": "off"
+      }
+    }
+  ]
 }

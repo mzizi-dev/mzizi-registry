@@ -58,20 +58,20 @@ A database changelog answers all three with SQL. The version, nodes affected, ax
 
 Each `changelog` row carries:
 
-| Column | Purpose |
-|---|---|
-| `version` | Semver string at the time of the change |
-| `title` | One-line summary |
-| `description` | The full prose entry |
-| `nodes_affected` | Array of integers 1–10 — which ecosystem nodes this change touched |
-| `axes_affected` | Array of axis names — `horizontal`, `vertical`, `depth`, `outlier`, or doctrinal axes like `philosophy` |
-| `components_added` | Array of component names introduced |
-| `components_modified` | Array of component names changed |
-| `components_deprecated` | Array of component names marked deprecated |
-| `components_removed` | Array of component names removed |
-| `total_stable` / `total_deprecated` / `total_alpha` | Snapshot counts at this version |
-| `changed_by` | Actor — `system`, `bryan`, or another author |
-| `created_at` | When the row was written |
+| Column                                              | Purpose                                                                                                 |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `version`                                           | Semver string at the time of the change                                                                 |
+| `title`                                             | One-line summary                                                                                        |
+| `description`                                       | The full prose entry                                                                                    |
+| `nodes_affected`                                    | Array of integers 1–10 — which ecosystem nodes this change touched                                      |
+| `axes_affected`                                     | Array of axis names — `horizontal`, `vertical`, `depth`, `outlier`, or doctrinal axes like `philosophy` |
+| `components_added`                                  | Array of component names introduced                                                                     |
+| `components_modified`                               | Array of component names changed                                                                        |
+| `components_deprecated`                             | Array of component names marked deprecated                                                              |
+| `components_removed`                                | Array of component names removed                                                                        |
+| `total_stable` / `total_deprecated` / `total_alpha` | Snapshot counts at this version                                                                         |
+| `changed_by`                                        | Actor — `system`, `bryan`, or another author                                                            |
+| `created_at`                                        | When the row was written                                                                                |
 
 ## Versioning policy
 

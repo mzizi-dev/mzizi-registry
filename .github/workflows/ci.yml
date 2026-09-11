@@ -209,8 +209,13 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-      - name: Format check
-        run: pnpm exec prettier --check "**/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}" --ignore-path .prettierignore
+      # No `prettier --check` step here. Prettier is owned by the one org
+      # gate, `.github/workflows/lint.yml`, which publishes `lint / prettier`.
+      # Two prettier invocations in one repo, with different globs and the
+      # same .prettierrc, is the divergent-dialect problem that gate exists
+      # to end: this step checked **/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}
+      # against a config the org gate also reads, so the two could never be
+      # satisfied at once. ESLint above still runs.
 
   typecheck:
     name: Type Check

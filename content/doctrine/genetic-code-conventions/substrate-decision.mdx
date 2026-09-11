@@ -47,12 +47,12 @@ Recorded 2026-05-21. Reconciles the in-conversation doctrine with the canonical
 
 ## Data ownership (four-category model)
 
-| Category | Database | Lifecycle |
-| -- | -- | -- |
-| personal | Postgres (FK roots) + Mongo (operational content) | pre-verification, platform-readable |
-| personal-sovereign | Honeycomb Pod | post-verification, user-private |
-| community | MongoDB (operational primary) | community-shared |
-| platform-open | Apache Doris (via Flink privacy filter) | public-open |
+| Category           | Database                                          | Lifecycle                           |
+| ------------------ | ------------------------------------------------- | ----------------------------------- |
+| personal           | Postgres (FK roots) + Mongo (operational content) | pre-verification, platform-readable |
+| personal-sovereign | Honeycomb Pod                                     | post-verification, user-private     |
+| community          | MongoDB (operational primary)                     | community-shared                    |
+| platform-open      | Apache Doris (via Flink privacy filter)           | public-open                         |
 
 personal and personal-sovereign are one category at two lifecycle points:
 personal data starts platform-readable and migrates to the sovereign Honeycomb

@@ -40,16 +40,16 @@ Every component in the design system has canonical URLs on mzizi.dev. These serv
 
 ## URL Structure
 
-| Endpoint | URL Pattern | Purpose |
-|---|---|---|
-| Portal | mzizi.dev/components/{name} | Documentation page |
-| API | mzizi.dev/api/v1/ui/{name} | JSON API |
-| Playground | mzizi.dev/playground/{name} | Live playground |
-| Health | mzizi.dev/api/health/{name} | Health check target |
-| Source | mzizi.dev/source/{name} | Source code view |
-| Changelog | mzizi.dev/changelog/{name} | Version history |
-| Chaos | mzizi.dev/api/chaos/{name} | N8 chaos injection |
-| Fundi | mzizi.dev/api/fundi/{name} | N9 healing trigger |
+| Endpoint   | URL Pattern                 | Purpose             |
+| ---------- | --------------------------- | ------------------- |
+| Portal     | mzizi.dev/components/{name} | Documentation page  |
+| API        | mzizi.dev/api/v1/ui/{name}  | JSON API            |
+| Playground | mzizi.dev/playground/{name} | Live playground     |
+| Health     | mzizi.dev/api/health/{name} | Health check target |
+| Source     | mzizi.dev/source/{name}     | Source code view    |
+| Changelog  | mzizi.dev/changelog/{name}  | Version history     |
+| Chaos      | mzizi.dev/api/chaos/{name}  | N8 chaos injection  |
+| Fundi      | mzizi.dev/api/fundi/{name}  | N9 healing trigger  |
 
 ## DOM Integration
 
@@ -60,6 +60,7 @@ Every rendered component includes a data-portal attribute:
 ```
 
 This allows:
+
 - N8 chaos testing to target specific components by URL
 - N9 Fundi to link healing actions to documentation
 - DevTools inspection to click through to docs
