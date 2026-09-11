@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { getChangelogByVersion, isSupabaseConfigured } from "@/lib/db"
+import { getChangelogByVersion } from "@/lib/db"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("api")
@@ -29,15 +29,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ ver
       return NextResponse.json({ error: "Invalid version" }, { status: 400, headers: CORS })
     }
 
-    if (!isSupabaseConfigured()) {
-      trackApiCall({
-        endpoint: `/api/v1/changelog/${version}`,
-        durationMs: Date.now() - start,
-        statusCode: 503,
-      })
-      return NextResponse.json({ error: "Database not configured" }, { status: 503, headers: CORS })
-    }
-
+    // No `isSupabaseConfigured()` guard, for the same reason `/api/v1/changelog`
+    // no longer has one: the release history is on disk. This route was not on
+    // the cutover's list of 503s because it was never probed — it had the same
+    // guard, over the same data, and would have failed the same way.
     const entries = await getChangelogByVersion(version)
 
     if (entries.length === 0) {

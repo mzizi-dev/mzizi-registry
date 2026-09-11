@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { getChangelogEntries, isSupabaseConfigured } from "@/lib/db"
+import { getChangelogEntries } from "@/lib/db"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("api")
@@ -18,15 +18,10 @@ const CORS = { "Access-Control-Allow-Origin": "*" }
 export async function GET() {
   const start = Date.now()
   try {
-    if (!isSupabaseConfigured()) {
-      trackApiCall({
-        endpoint: "/api/v1/changelog",
-        durationMs: Date.now() - start,
-        statusCode: 503,
-      })
-      return NextResponse.json({ error: "Database not configured" }, { status: 503, headers: CORS })
-    }
-
+    // No `isSupabaseConfigured()` guard: the release history is
+    // `lib/changelog.generated.ts` now, generated from
+    // `content/changelog/releases.json`. The guard used to be the whole
+    // response on a deployment without database credentials.
     const entries = await getChangelogEntries()
 
     trackApiCall({ endpoint: "/api/v1/changelog", durationMs: Date.now() - start, statusCode: 200 })

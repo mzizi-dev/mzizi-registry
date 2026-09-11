@@ -165,12 +165,50 @@ describe("GET /api/v1/architecture/nodes/[n]", () => {
     }
   })
 
-  it("returns 503 for a valid node when Supabase is not configured", async () => {
+  /**
+   * This asserted the opposite — a 503 when Supabase is unconfigured — and that
+   * is exactly what it was protecting. The helix is `content/doctrine/**` and
+   * the component count is `readComponents()` over the registry on disk, so
+   * nothing this route reads was ever in the database; the guard in front of it
+   * was gating a file read on a database credential. On the Cloudflare Worker,
+   * which correctly carries none, every node answered 503 while
+   * `/api/v1/architecture` listed those same nodes at 200.
+   */
+  it("serves a node with no database configured", async () => {
     const { GET } = await import("@/app/api/v1/architecture/nodes/[n]/route")
     const r = (await GET(new Request("https://x/api/v1/architecture/nodes/3"), {
       params: Promise.resolve({ n: "3" }),
     })) as unknown as Resp
-    expect(r.status).toBe(503)
-    expect(r.data.error).toBe("Database not configured")
+    expect(r.status).toBe(200)
+    const node = (r.data as unknown as { data: Record<string, unknown> }).data
+    expect(node.node_number).toBe(3)
+    expect(node.title).toBeTruthy()
+    expect(node.covenant).toBeTruthy()
+  })
+
+  /**
+   * The count is derived from the registry on disk, so it is never zero for a
+   * node that has components. It WAS zero everywhere on the Worker:
+   * `getHelixModel` read `isSupabaseConfigured() ? await getNodeCounts() : {}`,
+   * and `getNodeCounts()` is `readComponents().reduce(...)` — a disk read gated
+   * on a credential. `/api/v1/architecture` returned 200 with every
+   * `component_count` at 0, which is worse than the 503 its sibling returned
+   * because nothing looked wrong.
+   */
+  it("carries a real component count with no database configured", async () => {
+    const { GET } = await import("@/app/api/v1/architecture/nodes/[n]/route")
+    const r = (await GET(new Request("https://x/api/v1/architecture/nodes/3"), {
+      params: Promise.resolve({ n: "3" }),
+    })) as unknown as Resp
+    const node = (r.data as unknown as { data: { component_count: number } }).data
+    expect(node.component_count).toBeGreaterThan(0)
+  })
+
+  it("still 404s for a node number nothing carries", async () => {
+    const { GET } = await import("@/app/api/v1/architecture/nodes/[n]/route")
+    const r = (await GET(new Request("https://x/api/v1/architecture/nodes/9999"), {
+      params: Promise.resolve({ n: "9999" }),
+    })) as unknown as Resp
+    expect(r.status).toBe(404)
   })
 })
