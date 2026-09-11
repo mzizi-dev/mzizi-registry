@@ -830,8 +830,12 @@ export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId =
 //
 // The per-platform COLOUR files (Swift, Kotlin, ArkTS, React Native, Python,
 // Rust) are NOT generated here any more. They are written by
-// `scripts/sync-tokens.ts` from the Supabase collections `styling-minerals` and
-// `styling-heritage-colors`, and guarded by `pnpm tokens:verify`.
+// `scripts/sync-tokens.ts` from `lib/tokens/palette.source.ts` — the canonical
+// palette, in this repo — and guarded by `pnpm tokens:verify`.
+//
+// That source used to be the Supabase collections `styling-minerals` and
+// `styling-heritage-colors`. It is not: per `docs/db-contents-rule.md` the
+// database holds no brand or primitive token data.
 //
 // The generators that stood here read a hardcoded in-file colour map: they
 // emitted five minerals and five heritage tones against a seven-and-seven
