@@ -113,7 +113,7 @@ function docsFor(item) {
   section("Includes", m.features)
   section("Accessibility", m.a11y)
   if (!parts.length) return undefined
-  parts.push(`Install: npx shadcn@latest add https://mzizi.dev/api/v1/ui/${item.name}`)
+  parts.push(`Install: npx shadcn@latest add https://api.mzizi.dev/v1/ui/${item.name}`)
   return parts.join("\n")
 }
 
