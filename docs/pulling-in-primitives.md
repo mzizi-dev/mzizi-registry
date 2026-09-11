@@ -73,8 +73,8 @@ Consumed as a **crate**, not via a CLI:
 
 ```toml
 [dependencies]
-mzizi-ui     = { git = "https://github.com/nyuchi/mzizi", package = "mzizi-ui" }
-mzizi-tokens = { git = "https://github.com/nyuchi/mzizi", package = "mzizi-tokens" }
+mzizi-ui     = { git = "https://github.com/mzizi-dev/mzizi-registry", package = "mzizi-ui" }
+mzizi-tokens = { git = "https://github.com/mzizi-dev/mzizi-registry", package = "mzizi-tokens" }
 ```
 
 Check what actually exists before you plan around it:

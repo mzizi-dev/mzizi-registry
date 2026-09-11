@@ -20,7 +20,7 @@ The authoritative current version is served live at `GET /api/v1/changelog` (fir
 
 Use GitHub's private security advisory flow so we can investigate and ship a fix before disclosure:
 
-1. Go to <https://github.com/nyuchi/mzizi/security/advisories/new>
+1. Go to <https://github.com/mzizi-dev/mzizi-registry/security/advisories/new>
 2. Fill in: a clear title, a description, steps to reproduce, affected version / endpoint, impact (confidentiality / integrity / availability), and any suggested mitigation
 3. Submit — the maintainers are notified privately
 
@@ -58,7 +58,7 @@ This policy covers anything the portal itself owns:
 - The content API (`/api/v1/changelog`, `/api/v1/ai/instructions`) — `/api/v1/docs/*` is HTTP 410 (long-form docs moved to the bundu-docs / nyuchi-docs Starlight sites, see CLAUDE.md §15.18)
 - The fundi self-healing surface (`/api/v1/fundi`, `/api/v1/fundi/{id}`, `/api/v1/fundi/stats`)
 - The brand + architecture APIs (`/api/v1/brand`, `/api/v1/ecosystem`, `/api/v1/data-layer`, `/api/v1/pipeline`, `/api/v1/sovereignty`)
-- The `/mcp` route (a 308 to `mcp.mzizi.dev/mcp`, the one MCP server — report issues in that server itself to `nyuchi/mzizi-tools`)
+- The `/mcp` route (a 308 to `mcp.mzizi.dev/mcp`, the one MCP server — report issues in that server itself to `mzizi-dev/agent-tools`)
 - Component source code served via the registry — an XSS or RCE-by-scaffold is in scope
 - Supabase row-level security policies captured in `supabase/schema.sql`
 - GitHub Actions workflows in `.github/workflows/` — malicious-input, token-exfiltration, or privilege-escalation issues
@@ -111,11 +111,11 @@ This chains every CI gate — `format:check`, `lint`, `lint:colors`, `lint:md`, 
 
 CI workflows that gate merge to `main`:
 
-| Workflow                                                         | Security-relevant jobs                                                                                                             |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| [`ci.yml`](.github/workflows/ci.yml)                             | `Security Audit` (pnpm audit, fails on moderate+), `Lint`, `Type Check`, `Test`, `Build`                                           |
-| [`lint.yml`](.github/workflows/lint.yml)                         | `lint / actionlint` (workflow YAML lint), `lint / yamllint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`      |
-| [CodeQL](https://github.com/nyuchi/mzizi/security/code-scanning) | `Analyze (actions)` and `Analyze (javascript-typescript)` — autocatches `actions/missing-workflow-permissions`, common JS/TS sinks |
+| Workflow                                                                     | Security-relevant jobs                                                                                                             |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [`ci.yml`](.github/workflows/ci.yml)                                         | `Security Audit` (pnpm audit, fails on moderate+), `Lint`, `Type Check`, `Test`, `Build`                                           |
+| [`lint.yml`](.github/workflows/lint.yml)                                     | `lint / actionlint` (workflow YAML lint), `lint / yamllint`, `lint / JSON validity`, `lint / prettier`, `lint / markdownlint`      |
+| [CodeQL](https://github.com/mzizi-dev/mzizi-registry/security/code-scanning) | `Analyze (actions)` and `Analyze (javascript-typescript)` — autocatches `actions/missing-workflow-permissions`, common JS/TS sinks |
 
 Every job in every workflow declares an explicit `permissions:` block (`contents: read` by default) — required by the org-wide `actions/missing-workflow-permissions` CodeQL rule.
 
@@ -125,7 +125,7 @@ Per `CLAUDE.md` §15 rule 22, **security findings from any review/audit (`/secur
 
 ## Contact
 
-- Primary: GitHub security advisories — <https://github.com/nyuchi/mzizi/security/advisories/new>
+- Primary: GitHub security advisories — <https://github.com/mzizi-dev/mzizi-registry/security/advisories/new>
 - Fallback: `security@nyuchi.com`
 
 Thank you for helping keep the bundu ecosystem safe.

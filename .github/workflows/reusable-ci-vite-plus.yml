@@ -1,10 +1,11 @@
 # Reusable workflow: Vite+ CI (the org's standard build and check policy).
 #
-# THIS LIVES IN nyuchi/mzizi, NOT nyuchi/.github, ON PURPOSE. GitHub resolves a
-# reusable workflow from any repository the caller can read, and nyuchi/mzizi is
-# public — so every repo in the org can call it today. nyuchi/.github would be
-# the conventional home, but its name begins with a dot, which makes it
-# unattachable to an agent session and so unmaintainable by the tooling that
+# THIS LIVES IN mzizi-dev/mzizi-registry, NOT nyuchi/.github, ON PURPOSE. GitHub
+# resolves a reusable workflow from any repository the caller can read, and
+# mzizi-dev/mzizi-registry is public — so a caller in any org can use it today,
+# nyuchi and mzizi-dev alike. nyuchi/.github would be the conventional home for
+# the nyuchi side, but its name begins with a dot, which makes it unattachable
+# to an agent session and so unmaintainable by the tooling that
 # maintains everything else here. The Mzizi build rule living in the Mzizi
 # repository is a defensible second choice; a rule nobody can edit is not.
 #
@@ -22,7 +23,7 @@
 #       branches: [main]
 #   jobs:
 #     vite-plus:
-#       uses: nyuchi/mzizi/.github/workflows/reusable-ci-vite-plus.yml@main
+#       uses: mzizi-dev/mzizi-registry/.github/workflows/reusable-ci-vite-plus.yml@main
 #
 # The rendered check names are `vite-plus / check`, `vite-plus / test` and
 # `vite-plus / build` when the caller job is named `vite-plus`. Put those three

@@ -7,7 +7,7 @@ import { CopyCommand } from "@/components/landing/copy-command"
 //
 // The public instruction surface for @nyuchi/mzizi-cli — the fundi agent,
 // the Nyuchi-owned console over the Mzizi research program. The package
-// lives in nyuchi/mzizi-tools (`mzizi-cli/`); this page is its
+// lives in mzizi-dev/agent-tools (`mzizi-cli/`); this page is its
 // human-readable manual so consumers do not have to read the monorepo to get
 // started.
 //
@@ -196,13 +196,9 @@ export default function CliPage() {
             MCP server
           </Link>{" "}
           so it has live data. Source and issues live in{" "}
-          <a
-            className="underline hover:text-foreground"
-            href="https://github.com/nyuchi/mzizi-tools/tree/main/mzizi-cli"
-          >
-            nyuchi/mzizi-tools
-          </a>
-          ; the published package is{" "}
+          <code className="font-mono text-xs">mzizi-cli/</code> in{" "}
+          <code className="font-mono text-xs">mzizi-dev/agent-tools</code>, a private repo; the
+          published package is{" "}
           <a
             className="underline hover:text-foreground"
             href="https://www.npmjs.com/package/@nyuchi/mzizi-cli"
