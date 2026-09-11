@@ -2,10 +2,16 @@
 //!
 //! WHERE THE COMPONENTS ARE.
 //!
-//! Not in this crate's `src/`. Every primitive is a file under
+//! Not authored in this crate. Every primitive is a file under
 //! `components/registry/n2-primitives/<name>.rs`, beside the `.tsx` that implements the same
-//! contract for React, and this module `#[path]`-includes it. One component, one name, one
-//! place — the registry — with this crate as the thing that compiles it.
+//! contract for React. One component, one name, one place — the registry — with this crate as
+//! the thing that compiles it.
+//!
+//! `src/generated/` holds a COMMITTED copy of each, written by `pnpm rust:generate`
+//! and checked by `pnpm rust:generate:check`. The copy is what makes this crate
+//! publishable: `cargo package` collects only files under the package root, so a
+//! `#[path]` reaching up into the registry ships a tarball that cannot build. Edit
+//! the registry file; the copy is overwritten.
 //!
 //! That placement is what makes `/api/v1/rs/{name}` and `/api/v1/ui/{name}` two views of one
 //! component rather than two components, and it is why `cargo check` is a registry gate and
@@ -26,13 +32,13 @@
 //! `/api/v1/rs/{name}` serves the source to READ — for an agent, a reviewer, or someone
 //! porting — never as an install path.
 
-#[path = "../../../../components/registry/n2-primitives/button.rs"]
+#[path = "generated/button.rs"]
 pub mod button;
 
-#[path = "../../../../components/registry/n2-primitives/badge.rs"]
+#[path = "generated/badge.rs"]
 pub mod badge;
 
-#[path = "../../../../components/registry/n2-primitives/card.rs"]
+#[path = "generated/card.rs"]
 pub mod card;
 
 pub use badge::{Badge, BadgeProps, BadgeVariant, badge_variants};

@@ -17,10 +17,20 @@
 # `clippy -D warnings` and `fmt --check` are wired into CI in the same change that
 # adds the first component, so there is never a window where Rust ships unchecked.
 #
-# The components themselves are NOT in this directory. They are files under
-# `components/registry/n<N>-<label>/`, beside their `.tsx` siblings, and each crate
-# `#[path]`-includes them. One component, one name, one place — the registry —
-# with the crate as the thing that compiles it.
+# The components themselves are NOT AUTHORED in this directory. They are files under
+# `components/registry/n<N>-<label>/`, beside their `.tsx` siblings. One component,
+# one name, one place — the registry — with the crate as the thing that compiles it.
+#
+# WHAT `crates/*/src/generated/` IS.
+#
+# Each crate carries a COMMITTED copy of the registry files it compiles, written by
+# `pnpm rust:generate` and gated by `pnpm rust:generate:check` in CI. The crates used
+# to `#[path]`-include the registry directly, four levels up; that compiles and cannot
+# be PUBLISHED, because `cargo package` collects only files under the package root and
+# the tarball's `src/lib.rs` then points at nothing. The copy is build output in the
+# same sense `mzizi-tokens` already is — one more emitter, not a second source. The
+# registry file stays the one a human edits, and the check fails the build the moment
+# the two disagree.
 
 [workspace]
 resolver = "3"
