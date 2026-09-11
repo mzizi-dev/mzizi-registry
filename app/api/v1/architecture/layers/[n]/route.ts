@@ -42,8 +42,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ n: 
         "The layer model is retired. Mzizi serves the DNA double helix — nodes on strands, held by cross-cutting rungs. This route served an axis_name per row behind a 1-10 bound; node numbers are labels, not a sequence, and the set is never capped.",
       model: "mzizi-dna-helix",
       migrated_to: {
-        "node detail": `https://mzizi.dev/api/v1/architecture/nodes/${encodeURIComponent(n)}`,
-        architecture: "https://mzizi.dev/api/v1/architecture",
+        "node detail": `https://api.mzizi.dev/v1/architecture/nodes/${encodeURIComponent(n)}`,
+        architecture: "https://api.mzizi.dev/v1/architecture",
         "nodes + strands (MCP)": "get_node_documents",
       },
     },

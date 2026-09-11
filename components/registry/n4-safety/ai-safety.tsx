@@ -5,7 +5,7 @@
  * mukoko-weather's production Python guards. Every Nyuchi app that
  * integrates Claude or Shamwari AI must use these utilities.
  *
- * Install via: npx shadcn@latest add https://mzizi.dev/api/v1/ui/ai-safety
+ * Install via: npx shadcn@latest add https://api.mzizi.dev/v1/ui/ai-safety
  */
 
 import sanitizeHtml from "sanitize-html"

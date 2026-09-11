@@ -63,7 +63,7 @@ export default async function PlaygroundComponentPage({
   const sourceCode = readComponentSource(name) ?? "// Source not available"
   const firstFilePath = item.files?.[0]?.path ?? ""
   const registryType = item.type?.replace("registry:", "") ?? "component"
-  const installUrl = `https://mzizi.dev/api/v1/ui/${item.name}`
+  const installUrl = `https://api.mzizi.dev/v1/ui/${item.name}`
   // Every component has source on disk, so one without a hand-written demo can still
   // be rendered directly. `sourcePath` is repo-relative and comes from the file that
   // actually implements the item, so the preview cannot point at a file that moved.

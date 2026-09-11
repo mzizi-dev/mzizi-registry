@@ -15,7 +15,7 @@
  * WHAT THIS COSTS, SAID PLAINLY. Anonymous access to the Mzizi registry over
  * MCP ends here. `mcp.mzizi.dev/mcp` sits behind WorkOS AuthKit — a free
  * signup, not a paywall, but a signup where there was none. Anything that
- * needs an unauthenticated read still has `mzizi.dev/api/v1` (open, no key)
+ * needs an unauthenticated read still has `api.mzizi.dev/v1` (open, no key)
  * and `mcp.mzizi.dev/catalogue.json` for the tool list.
  *
  * Keep this route. Deleting it would 404 every client configured against the

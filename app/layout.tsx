@@ -128,7 +128,7 @@ const jsonLd = {
       description: SITE_DESCRIPTION,
       creator: { "@id": `${SITE_URL}/#organization` },
       softwareVersion: "1.0.0",
-      downloadUrl: "https://mzizi.dev/api/v1/ui",
+      downloadUrl: "https://api.mzizi.dev/v1/ui",
       codeRepository: "https://github.com/mzizi-dev/mzizi-registry",
     },
   ],

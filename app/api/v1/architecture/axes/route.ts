@@ -37,8 +37,8 @@ export async function GET() {
         "The axis model is retired. Mzizi serves the DNA double helix — nodes on an engineering and a meaning backbone, held by cross-cutting rungs. There are no axes and no outliers. This route previously returned four axis rows with every count zeroed.",
       model: "mzizi-dna-helix",
       migrated_to: {
-        architecture: "https://mzizi.dev/api/v1/architecture",
-        "node detail": "https://mzizi.dev/api/v1/architecture/layers/{n}",
+        architecture: "https://api.mzizi.dev/v1/architecture",
+        "node detail": "https://api.mzizi.dev/v1/architecture/layers/{n}",
         "nodes (MCP)": "get_node_documents",
         "per-node counts (MCP)": "get_node_counts",
       },
