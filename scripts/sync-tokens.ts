@@ -1,76 +1,80 @@
 #!/usr/bin/env -S tsx
 /**
- * Sync the seven-mineral + seven-heritage colour palette from the Supabase
- * document store into the committed token artifacts.
+ * Project the canonical colour palette into every committed token artifact.
  *
- * The DB is the single source of truth (collections `styling-minerals`,
- * `styling-heritage-colors` and `styling-experimental` in
- * `component_documents`). This script projects those rows into:
+ * THE SOURCE IS `lib/tokens/palette.source.ts`, IN THIS REPO. It is the only
+ * place a colour is authored. This script reads it and writes:
  *   - lib/tokens/palette.generated.ts   (typed snapshot consumed by lib/tokens)
  *   - app/globals.css                   (the marked palette regions only)
  *   - components/registry/n1-tokens/nyuchi-tokens-<platform>.<ext>
  *       for swift, kotlin, arkts, react-native, python and rust
  *
- * The platform outputs were previously hand-written files stamped
- * "auto-generated … do not edit manually" that nothing generated. They had
- * drifted badly: every one carried FIVE minerals and FIVE heritage tones
- * against a seven-and-seven system (no sodalite, copper, hematite or kalahari),
- * several hexes were stale — Kotlin's baobab was a green where the palette says
- * brown — and they emitted only the dark theme, so a light-theme consumer got
- * dark values. `nyuchi-tokens.ts` also carried its own `generateSwiftTokens` /
- * `generateKotlinTokens` / `generateRustTokens` / `generatePythonTokens`
- * functions reading a hardcoded in-file colour map, which made the token node —
- * whose covenant is "design decisions are data, not code" — the one place in
- * the repo with two competing sources for the same values. Those are deleted;
- * this script is the only generator, and `tokens:verify` now covers every file
- * it writes, so the banner is true for the first time.
+ * It used to read Supabase — `component_documents`, collections
+ * `styling-minerals`, `styling-heritage-colors` and `styling-experimental` —
+ * and that is why this header is worth reading twice. Per
+ * `docs/db-contents-rule.md` the database holds NO brand or primitive token
+ * data; it exists for version history, node counts, Fundi logging and the issue
+ * log. A generator that asked Postgres what colour cobalt is was not merely
+ * indirect, it was prohibited, and it made every token artifact in the repo
+ * unreproducible without a credential. The direction is now one-way and local:
+ * repo source -> artifacts.
  *
- * The EXPERIMENTAL SEVEN (`styling-experimental`: ember, acacia, fern, lagoon,
- * storm, dusk, protea — a heptagon of hues offset 17 degrees, prime
- * saturations, foregrounds solved to P7) are generated too, into
- * palette.generated.ts and into the `experimental-light` / `experimental-dark`
- * regions of globals.css.
+ * Two things fall out of that which are worth having. `pnpm tokens:verify` now
+ * runs with no network and no secret, so it can gate every CI job rather than
+ * only the ones that carry Supabase keys — the difference between a check that
+ * is claimed to run and one that does. And `pnpm tokens:sync` is deterministic:
+ * the same commit produces the same bytes forever, instead of depending on the
+ * state of a table nobody diffs.
  *
- * They arrived here in two steps, and the first one is worth recording. Their
- * `--exp-*` custom properties were hand-written in CSS while the same values
- * lived in the DB, with nothing checking the two agreed. The first step VERIFIED
- * the CSS against the DB instead of regenerating it, because the two had never
- * been compared and a generated colour differing by one digit from the shipped
- * one is a visual regression nobody reviewed. That closed the drift hole at zero
- * risk, and it established the fact that made this step safe: the values agree.
+ * The platform outputs were once hand-written files stamped "auto-generated …
+ * do not edit manually" that nothing generated. They had drifted badly: every
+ * one carried FIVE minerals and FIVE heritage tones against a seven-and-seven
+ * system (no sodalite, copper, hematite or kalahari), several hexes were stale
+ * — Kotlin's baobab was a green where the palette says brown — and they emitted
+ * only the dark theme, so a light-theme consumer got dark values.
  *
- * Generating them is the rest of the fix, because a verified copy is still a
- * copy. Editing globals.css by hand used to earn a CI failure telling you to
- * reconcile two files; now there is one file to edit, the DB, and an eighth tone
- * is an insert plus `pnpm tokens:sync` rather than an insert plus a hand edit
- * that CI then argues with. `checkExperimentalCss()` is gone with them —
- * verifying generated values against their own source is dead weight, and
- * `tokens:verify` still fails on a hand-edited `--exp-*` for the same reason it
- * fails on a hand-edited `--mineral-*`: the region no longer matches the DB.
+ * THE EXPERIMENTAL SEVEN (ember, acacia, fern, lagoon, storm, dusk, protea — a
+ * heptagon of hues offset 17 degrees, prime saturations, foregrounds solved to
+ * P7) go to every target. They did not used to: this script emitted them to
+ * `palette.generated.ts` and to the `experimental-light` / `experimental-dark`
+ * regions of globals.css, and deliberately withheld them from the six platform
+ * files, on the reasoning that "widening a published surface is a separate
+ * decision from ending a drift hole". That decision has since been taken — the
+ * three distribution surfaces (the MCP, the shadcn registry and the crates
+ * registry) are required to carry the same palette — so the withholding is now
+ * itself the drift. A Swift consumer and an `/v1/brand` consumer asking for the
+ * Mzizi palette must not get different answers about which families exist.
  *
- * Experimental tones are NOT emitted to the six platform targets. Those files
- * carry the stable mineral + heritage palette that native consumers compile
- * against; an experimental set can change, and widening a published surface is
- * a separate decision from ending a drift hole.
+ * `components/registry/n1-tokens/nyuchi-tokens-typescript.ts` is NOT generated
+ * here; it is hand-maintained and carries far more than colour. It is still
+ * held to the same family set by
+ * `__tests__/tokens-surface-parity.test.ts`, which compares all seven emitters
+ * against the source above and fails naming whichever one diverged.
  *
  * Every artifact prettier has a parser for is passed through prettier before it
  * is written or compared (see `prettified()`), so `pnpm tokens:sync` leaves the
  * tree formatted rather than needing a format pass afterwards.
  *
  * Modes:
- *   pnpm tokens:sync     regenerate the artifacts from the DB
+ *   pnpm tokens:sync     regenerate the artifacts from the source module
  *   pnpm tokens:verify   non-mutating CI gate; exits non-zero if an artifact
- *                        has drifted from the DB (compared value-wise, so
+ *                        has drifted from the source (compared value-wise, so
  *                        formatting differences never trip the gate)
- *
- * Requires NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY (same as
- * tokens:sync). The store is anon-readable via RLS.
  */
 
 import { readFile, writeFile } from "fs/promises"
 import { join } from "path"
-import { createClient } from "@supabase/supabase-js"
 import { format, getFileInfo, resolveConfig } from "prettier"
+import {
+  experimentalColors,
+  heritageColors,
+  minerals as sourceMinerals,
+} from "../lib/tokens/palette.source"
+import type {
+  ExperimentalToken as Experimental,
+  HeritageToken as Heritage,
+  MineralToken as Mineral,
+} from "../lib/tokens/palette.source"
 
 const CHECK = process.argv.includes("--check")
 
@@ -92,128 +96,48 @@ const SCALE = {
   fonts: { sans: "Noto Sans", serif: "Noto Serif", mono: "JetBrains Mono" },
 } as const
 
-interface Mineral {
-  name: string
-  role: string
-  family: string
-  cssVar: string
-  darkHex: string
-  lightHex: string
-  containerDark: string
-  containerLight: string
-  onContainerDark: string
-  onContainerLight: string
-  sortOrder: number
-  origin: string
-  symbolism: string
-  usage: string
-}
-interface Experimental {
-  name: string
-  lightHex: string
-  darkHex: string
-  containerLight: string
-  containerDark: string
-  onContainerLight: string
-  onContainerDark: string
-  uiLight: string
-  uiDark: string
-  heptagonIndex: number
-  sortOrder: number
-}
-interface Heritage {
-  name: string
-  cssVar: string
-  darkHex: string
-  lightHex: string
-  sortOrder: number
-  origin: string
-  symbolism: string
-  usage: string
-}
-
 function fail(msg: string): never {
   console.error(`✗ ${msg}`)
   process.exit(1)
 }
 
-async function fetchPalette(): Promise<{
+/**
+ * Read the palette from the repo and check its shape.
+ *
+ * Sorting here rather than trusting the module's array order is deliberate:
+ * `sortOrder` is the palette's own statement about sequence, and every artifact
+ * below renders in array order, so a row appended to the end of the source with
+ * `sortOrder: 3` must not land at the end of the Swift file.
+ *
+ * Seven is the system, not a coincidence — each group is a heptagon. A count
+ * that is not seven means a family was added or lost, and the point of this
+ * gate is that such a change cannot land silently. If you are genuinely adding
+ * an eighth, this is the line to come and change, on purpose, in the same
+ * commit.
+ */
+function readPalette(): {
   minerals: Mineral[]
   heritage: Heritage[]
   experimental: Experimental[]
-}> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!url || !key) fail("NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY are required")
+} {
+  const bySort = <T extends { sortOrder: number }>(rows: readonly T[]): T[] =>
+    [...rows].sort((a, b) => a.sortOrder - b.sortOrder)
 
-  const supabase = createClient(url, key)
-  const { data, error } = await supabase
-    .from("component_documents")
-    .select("collection, document")
-    .in("collection", ["styling-minerals", "styling-heritage-colors", "styling-experimental"])
-  if (error) fail(`Supabase read failed: ${error.message}`)
+  const minerals = bySort(sourceMinerals)
+  const heritage = bySort(heritageColors)
+  const experimental = bySort(experimentalColors)
 
-  const docs = (data ?? []).map((r) => r.document as Record<string, unknown>)
-  const str = (d: Record<string, unknown>, k: string) => String(d[k] ?? "")
-  const num = (d: Record<string, unknown>, k: string) => Number(d[k] ?? 0)
-
-  const minerals: Mineral[] = docs
-    .filter((d) => d.collection === "styling-minerals")
-    .map((d) => ({
-      name: str(d, "name"),
-      role: str(d, "role"),
-      family: str(d, "family"),
-      cssVar: str(d, "css_var"),
-      darkHex: str(d, "dark_hex"),
-      lightHex: str(d, "light_hex"),
-      containerDark: str(d, "container_dark"),
-      containerLight: str(d, "container_light"),
-      onContainerDark: str(d, "on_container_dark"),
-      onContainerLight: str(d, "on_container_light"),
-      sortOrder: num(d, "sort_order"),
-      origin: str(d, "origin"),
-      symbolism: str(d, "symbolism"),
-      usage: str(d, "usage"),
-    }))
-    .sort((a, b) => a.sortOrder - b.sortOrder)
-
-  const heritage: Heritage[] = docs
-    .filter((d) => d.collection === "styling-heritage-colors")
-    .map((d) => ({
-      name: str(d, "name"),
-      cssVar: str(d, "css_var"),
-      darkHex: str(d, "dark_hex"),
-      lightHex: str(d, "light_hex"),
-      sortOrder: num(d, "sort_order"),
-      origin: str(d, "origin"),
-      symbolism: str(d, "symbolism"),
-      usage: str(d, "usage"),
-    }))
-    .sort((a, b) => a.sortOrder - b.sortOrder)
-
-  const experimental: Experimental[] = docs
-    .filter((d) => d.collection === "styling-experimental")
-    .map((d) => ({
-      name: str(d, "name"),
-      lightHex: str(d, "light_hex"),
-      darkHex: str(d, "dark_hex"),
-      containerLight: str(d, "container_light"),
-      containerDark: str(d, "container_dark"),
-      onContainerLight: str(d, "on_container_light"),
-      onContainerDark: str(d, "on_container_dark"),
-      uiLight: str(d, "ui_light"),
-      uiDark: str(d, "ui_dark"),
-      heptagonIndex: num(d, "heptagon_index"),
-      sortOrder: num(d, "sort_order"),
-    }))
-    .sort((a, b) => a.sortOrder - b.sortOrder)
-
-  // Seven is the system, not a coincidence — the collections are a heptagon
-  // each. A count that is not seven means a row was added or lost, and the
-  // whole point of this gate is that such a change cannot land silently.
   if (minerals.length !== 7) fail(`expected 7 minerals, got ${minerals.length}`)
   if (heritage.length !== 7) fail(`expected 7 heritage tones, got ${heritage.length}`)
   if (experimental.length !== 7) fail(`expected 7 experimental tones, got ${experimental.length}`)
+
+  const dupes = (names: string[]) => names.filter((n, i) => names.indexOf(n) !== i)
+  const all = [...minerals, ...heritage, ...experimental].map((r) => r.name)
+  // Every emitter keys on the family name — CSS custom properties, Swift static
+  // lets, Rust consts. Two families sharing a name would silently overwrite one
+  // another in half the targets and collide in the other half.
+  if (dupes(all).length) fail(`duplicate family names in the palette: ${dupes(all).join(", ")}`)
+
   return { minerals, heritage, experimental }
 }
 
@@ -270,13 +194,16 @@ function renderPaletteModule(
  * SEVEN MINERALS + SEVEN HERITAGE + SEVEN EXPERIMENTAL — canonical colour
  * palette snapshot.
  *
- * AUTO-GENERATED by \`scripts/sync-tokens.ts\` from the Supabase document store
- * (collections \`styling-minerals\`, \`styling-heritage-colors\` and
- * \`styling-experimental\`). The database is the single source of truth — DO NOT
+ * AUTO-GENERATED by \`scripts/sync-tokens.ts\` from \`lib/tokens/palette.source.ts\`,
+ * which is the single source of truth and is where a colour is edited — DO NOT
  * EDIT THIS FILE BY HAND.
  *
+ * (It used to be generated from Supabase. It is not any more: per
+ * \`docs/db-contents-rule.md\` the database holds no brand or primitive token
+ * data. The palette lives in the repo, and this gate needs no credential.)
+ *
  *   pnpm tokens:sync     regenerate this file + the globals.css palette block
- *   pnpm tokens:verify   CI gate — fails if this snapshot drifts from the DB
+ *   pnpm tokens:verify   CI gate — fails if this snapshot drifts from the source
  *
  * Two mineral families: \`deep-earth\` (cobalt, tanzanite, malachite, sodalite)
  * and \`hand\` (gold, terracotta, copper). Heritage tones are atmospheric
@@ -285,8 +212,8 @@ function renderPaletteModule(
  * The experimental seven are a computed heptagon — hues offset 17 degrees,
  * prime saturations, foregrounds solved to P7 — carrying a \`heptagonIndex\`
  * (0–6) that fixes each tone's position on the wheel. They are exported here so
- * TypeScript can reach them, and their \`--exp-*\` custom properties in
- * globals.css are generated from the same rows.
+ * TypeScript can reach them, their \`--exp-*\` custom properties in globals.css
+ * are generated from the same rows, and every platform target carries them too.
  */
 
 export interface MineralToken {
@@ -429,14 +356,21 @@ const bare = (hex: string) => hex.replace("#", "").toUpperCase()
 const banner = (comment: string, platform: string) =>
   [
     `${comment} NYUCHI DESIGN TOKENS — N1`,
-    `${comment} ${platform} — generated by scripts/sync-tokens.ts from the Supabase`,
-    `${comment} document store (styling-minerals, styling-heritage-colors).`,
+    `${comment} ${platform} — generated by scripts/sync-tokens.ts from`,
+    `${comment} lib/tokens/palette.source.ts, the canonical palette in this repo.`,
+    `${comment}`,
+    `${comment} Carries all 21 families: seven minerals, seven heritage tones and`,
+    `${comment} the seven experimental — the same set /v1/brand and the MCP serve.`,
     `${comment}`,
     `${comment} DO NOT EDIT BY HAND. Run \`pnpm tokens:sync\`; \`pnpm tokens:verify\``,
-    `${comment} fails the build if this file drifts from the database.`,
+    `${comment} fails the build if this file drifts from the source.`,
   ].join("\n")
 
-function renderSwift(minerals: Mineral[], heritage: Heritage[]): string {
+function renderSwift(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[]
+): string {
   const pair = (name: string, dark: string, light: string) =>
     `    static let nyuchi${cap(name)}Dark  = Color(hex: "${dark}")\n` +
     `    static let nyuchi${cap(name)}Light = Color(hex: "${light}")`
@@ -450,6 +384,9 @@ ${minerals.map((m) => pair(m.name, m.darkHex, m.lightHex)).join("\n")}
 
     // Seven Heritage Colors
 ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
+
+    // Seven Experimental tones
+${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
 }
 
 public struct NyuchiSpacing {
@@ -472,7 +409,11 @@ ${Object.entries(SCALE.fonts)
 `
 }
 
-function renderKotlin(minerals: Mineral[], heritage: Heritage[]): string {
+function renderKotlin(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[]
+): string {
   const pair = (name: string, dark: string, light: string) =>
     `    val ${cap(name)}Dark  = Color(0xFF${bare(dark)})\n` +
     `    val ${cap(name)}Light = Color(0xFF${bare(light)})`
@@ -489,6 +430,9 @@ ${minerals.map((m) => pair(m.name, m.darkHex, m.lightHex)).join("\n")}
 
     // Seven Heritage Colors
 ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
+
+    // Seven Experimental tones
+${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
 }
 
 object NyuchiSpacing {
@@ -511,7 +455,11 @@ ${Object.entries(SCALE.fonts)
 `
 }
 
-function renderArkTs(minerals: Mineral[], heritage: Heritage[]): string {
+function renderArkTs(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[]
+): string {
   const pair = (name: string, dark: string, light: string) =>
     `    ${name}Dark: ${JSON.stringify(dark)},\n    ${name}Light: ${JSON.stringify(light)},`
   return `${banner("//", "ArkTS / ArkUI (HarmonyOS)")}
@@ -522,6 +470,9 @@ ${minerals.map((m) => pair(m.name, m.darkHex, m.lightHex)).join("\n")}
 
     // Seven Heritage Colors
 ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
+
+    // Seven Experimental tones
+${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
 } as const
 
 export const NyuchiSpacing = {
@@ -544,7 +495,11 @@ ${Object.entries(SCALE.fonts)
 `
 }
 
-function renderReactNative(minerals: Mineral[], heritage: Heritage[]): string {
+function renderReactNative(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[]
+): string {
   const pair = (name: string, dark: string, light: string) =>
     `    ${name}Dark: ${JSON.stringify(dark)},\n    ${name}Light: ${JSON.stringify(light)},`
   return `${banner("//", "React Native")}
@@ -555,6 +510,9 @@ ${minerals.map((m) => pair(m.name, m.darkHex, m.lightHex)).join("\n")}
 
     // Seven Heritage Colors
 ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
+
+    // Seven Experimental tones
+${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
 } as const
 
 export const NyuchiSpacing = {
@@ -577,7 +535,11 @@ ${Object.entries(SCALE.fonts)
 `
 }
 
-function renderPython(minerals: Mineral[], heritage: Heritage[]): string {
+function renderPython(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[]
+): string {
   const pair = (name: string, dark: string, light: string) =>
     `    ${upper(name)}_DARK: str = ${JSON.stringify(dark)}\n` +
     `    ${upper(name)}_LIGHT: str = ${JSON.stringify(light)}`
@@ -599,6 +561,12 @@ ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
 
 
 @dataclass(frozen=True)
+class NyuchiExperimental:
+    """Seven Experimental tones — the heptagon, dark and light themes."""
+${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
+
+
+@dataclass(frozen=True)
 class NyuchiSpacing:
     """Spacing scale, in pixels."""
 ${Object.entries(SCALE.spacing)
@@ -616,10 +584,15 @@ ${Object.entries(SCALE.radius)
 
 minerals = NyuchiMinerals()
 heritage = NyuchiHeritage()
+experimental = NyuchiExperimental()
 spacing = NyuchiSpacing()
 radius = NyuchiRadius()
 
 # Ordered chart series for matplotlib / plotly / altair — dark theme.
+# Minerals then heritage, deliberately: this is a series ordering for plots, not
+# a list of the families that exist. The experimental seven are exported above
+# as \`experimental\` and are left out of the default series on purpose — they
+# are a heptagon of neighbouring hues, which is a poor categorical scale.
 CHART_COLORS = [
 ${minerals.map((m) => `    minerals.${upper(m.name)}_DARK,`).join("\n")}
 ${heritage.map((h) => `    heritage.${upper(h.name)}_DARK,`).join("\n")}
@@ -627,7 +600,11 @@ ${heritage.map((h) => `    heritage.${upper(h.name)}_DARK,`).join("\n")}
 `
 }
 
-function renderRust(minerals: Mineral[], heritage: Heritage[]): string {
+function renderRust(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[]
+): string {
   // Every public item carries a doc comment. `mzizi-rs` sets `missing_docs = "warn"` at the
   // workspace level and CI runs clippy with `-D warnings`, so an undocumented `pub const`
   // here fails the Rust build — in a file nobody may hand-edit. Emitting the docs is
@@ -647,13 +624,13 @@ function renderRust(minerals: Mineral[], heritage: Heritage[]): string {
     `    /// ${cap(r.name)}, resolved for this theme.\n    pub ${r.name}: &'static str,`
   const darkInit = (r: { name: string }) => `            ${r.name}: ${upper(r.name)}_DARK,`
   const lightInit = (r: { name: string }) => `            ${r.name}: ${upper(r.name)}_LIGHT,`
-  const all = [...minerals, ...heritage]
+  const all = [...minerals, ...heritage, ...experimental]
 
   return `${banner("//", "Rust")}
 //
-// \`nyuchi-tokens.ts\` has declared a Rust target ("const values + config
-// structs") since the file was written, and nothing ever emitted one. This is
-// that file, and it is what the Dioxus half of the registry consumes.
+// This is what the Dioxus half of the registry consumes, and what
+// \`mzizi-rs/crates/mzizi-tokens\` includes by path so the crates registry
+// publishes the same palette the MCP and the shadcn registry do.
 
 #![allow(dead_code)]
 
@@ -662,6 +639,9 @@ ${consts(minerals)}
 
 // ─── Seven Heritage tones ───────────────────────────────────────────────────
 ${consts(heritage)}
+
+// ─── Seven Experimental tones ───────────────────────────────────────────────
+${consts(experimental)}
 
 /// Every palette colour for one theme. Construct with [\`Palette::dark\`] or
 /// [\`Palette::light\`] rather than by hand, so a new colour cannot be missed.
@@ -717,7 +697,7 @@ ${Object.entries(SCALE.fonts)
 
 interface PlatformTarget {
   file: string
-  render: (minerals: Mineral[], heritage: Heritage[]) => string
+  render: (minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]) => string
 }
 
 const PLATFORM_TARGETS: PlatformTarget[] = [
@@ -775,7 +755,7 @@ async function prettified(filePath: string, source: string): Promise<string> {
 const norm = (s: string) => s.replace(/\s+/g, "")
 
 async function main() {
-  const { minerals, heritage, experimental } = await fetchPalette()
+  const { minerals, heritage, experimental } = readPalette()
 
   const paletteModule = await prettified(
     PALETTE_TS,
@@ -797,7 +777,7 @@ async function main() {
       return {
         path,
         label: `components/registry/n1-tokens/${t.file}`,
-        body: await prettified(path, t.render(minerals, heritage)),
+        body: await prettified(path, t.render(minerals, heritage, experimental)),
       }
     })
   )
@@ -811,14 +791,24 @@ async function main() {
     for (const p of platforms) {
       // A missing platform file is drift, not a crash — that is exactly the
       // state `nyuchi-tokens-rust.rs` was in for the life of the repo.
+      //
+      // NOTE the limit of this loop, because it is why the defect that prompted
+      // `__tests__/tokens-surface-parity.test.ts` survived: it checks the files
+      // this script WRITES. `nyuchi-tokens-typescript.ts` is hand-maintained and
+      // therefore invisible here, and that was the one emitting ten families of
+      // twenty-one. A gate that cannot see a surface reports green for it.
       const onDisk = await readFile(p.path, "utf8").catch(() => null)
       if (onDisk === null || norm(onDisk) !== norm(p.body)) drift.push(p.label)
     }
     if (drift.length) {
-      fail(`token artifacts drifted from the DB: ${drift.join(", ")}. Run \`pnpm tokens:sync\`.`)
+      fail(
+        `token artifacts drifted from lib/tokens/palette.source.ts: ${drift.join(", ")}. ` +
+          `Run \`pnpm tokens:sync\`.`
+      )
     }
     console.log(
-      `✓ tokens in sync with the DB (7 minerals, 7 heritage, 7 experimental; ` +
+      `✓ tokens in sync with lib/tokens/palette.source.ts ` +
+        `(7 minerals, 7 heritage, 7 experimental; ` +
         `${platforms.length} platform targets)`
     )
     return

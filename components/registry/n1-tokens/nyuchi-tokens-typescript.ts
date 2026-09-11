@@ -10,18 +10,33 @@
  *   2. Semantic: Purpose-mapped aliases that adapt per theme (light/dark/high-contrast)
  *   3. Component: Scoped tokens for specific brand components
  *
- * MULTI-PLATFORM OUTPUT:
- *   This file is the source of truth. Platform generators read from it:
- *   - Next.js/React: CSS custom properties + Tailwind @theme
- *   - Swift/SwiftUI: Asset catalog + Color extensions
- *   - Kotlin/Compose: NyuchiTheme composable
- *   - ArkTS/ArkUI: Resource files
- *   - React Native: StyleSheet constants
- *   - Rust: const values + config structs
- *   - Python: Config dataclass
+ * WHERE THE COLOURS COME FROM:
+ *   `lib/tokens/palette.source.ts` in the mzizi-registry repo is the canonical
+ *   palette. `pnpm tokens:sync` projects it into globals.css and into the
+ *   Swift, Kotlin, ArkTS, React Native, Python and Rust token files. THIS file
+ *   is hand-maintained — it carries the semantic and component tiers, which are
+ *   not in the palette — and `__tests__/tokens-surface-parity.test.ts` holds it
+ *   to the same family set as every other surface.
  *
- * TEN LISTING THEMES:
- *   Seven African Minerals (geological) + Seven Heritage Colors (atmospheric)
+ *   This header used to read "This file is the source of truth. Platform
+ *   generators read from it." That has not been true since the generator was
+ *   written, and believing it is how the palette below drifted: the five-name
+ *   arrays in `generateCSSVariables()` outlived the five-and-five palette by two
+ *   whole expansions.
+ *
+ * TWENTY-ONE FAMILIES:
+ *   Seven African Minerals (geological) + Seven Heritage Colors (atmospheric) +
+ *   Seven Experimental tones (the heptagon). The same twenty-one that
+ *   `/v1/brand` and the Mzizi MCP serve.
+ *
+ * KNOWN DIVERGENCE — REPORTED, NOT SILENTLY "FIXED":
+ *   Six families below carry a hex this file has always carried and which does
+ *   NOT match the canonical palette: terracotta, indigo, savanna, baobab,
+ *   sunset and river. They are the pre-Seven values. Correcting them is a
+ *   visible colour change to a published surface and needs a deliberate
+ *   decision, so it is recorded here rather than slipped into a parity commit.
+ *   The parity test asserts which families are PRESENT, which is the defect
+ *   being closed; the hexes are a separate, open question.
  *
  * "Thou hast ordered all things in measure, and number, and weight."
  * — The Bundu Order, v4.0.2
@@ -39,19 +54,40 @@ export const primitives = {
   // Light mode values are used for light theme and text-on-light.
   color: {
     // Minerals
-    cobalt: { value: "#00B0FF", description: "Primary blue, links, CTAs" },
+    cobalt: { value: "#00B0FF", description: "Primary blue, links, CTAs", family: "mineral" },
     cobaltLight: { value: "#0047AB", description: "Cobalt on light backgrounds" },
-    tanzanite: { value: "#B388FF", description: "Purple accent, brand/logo, social" },
+    tanzanite: {
+      value: "#B388FF",
+      description: "Purple accent, brand/logo, social",
+      family: "mineral",
+    },
     tanzaniteLight: { value: "#4B0082", description: "Tanzanite on light backgrounds" },
     malachite: {
       value: "#64FFDA",
       description: "Success states, positive actions, Mukoko identity",
+      family: "mineral",
     },
     malachiteLight: { value: "#004D40", description: "Malachite on light backgrounds" },
-    gold: { value: "#FFD740", description: "Achievements, rewards, highlights" },
+    gold: { value: "#FFD740", description: "Achievements, rewards, highlights", family: "mineral" },
     goldLight: { value: "#5D4037", description: "Gold on light backgrounds" },
-    terracotta: { value: "#D4A574", description: "Community features, warmth, earth" },
+    terracotta: {
+      value: "#D4A574",
+      description: "Community features, warmth, earth",
+      family: "mineral",
+    },
     terracottaLight: { value: "#8B4513", description: "Terracotta on light backgrounds" },
+    sodalite: {
+      value: "#3D5AFE",
+      description: "AI/Shamwari surfaces, deep-reasoning states",
+      family: "mineral",
+    },
+    sodaliteLight: { value: "#283593", description: "Sodalite on light backgrounds" },
+    copper: {
+      value: "#FF8A65",
+      description: "Bundu ecosystem identity, the commons",
+      family: "mineral",
+    },
+    copperLight: { value: "#BF5A36", description: "Copper on light backgrounds" },
 
     // ─── MINERAL CONTAINER COLORS ─────────────────────────────
     // Subtle background surfaces when a mineral needs to be an area fill.
@@ -67,6 +103,10 @@ export const primitives = {
     goldContainerDark: { value: "#332200", description: "Gold-tinted surface (dark)" },
     terracottaContainer: { value: "#FBE9E7", description: "Terracotta-tinted surface (light)" },
     terracottaContainerDark: { value: "#3E1A00", description: "Terracotta-tinted surface (dark)" },
+    sodaliteContainer: { value: "#E8EAF6", description: "Sodalite-tinted surface (light)" },
+    sodaliteContainerDark: { value: "#0D1442", description: "Sodalite-tinted surface (dark)" },
+    copperContainer: { value: "#FBE4DA", description: "Copper-tinted surface (light)" },
+    copperContainerDark: { value: "#3A1A0E", description: "Copper-tinted surface (dark)" },
 
     // ─── ON-CONTAINER COLORS (text/icons on container surfaces) ──
     // High-contrast foreground colors for use on mineral container backgrounds.
@@ -93,31 +133,88 @@ export const primitives = {
       value: "#FFCCBC",
       description: "Text on terracotta container (dark)",
     },
+    sodaliteOnContainer: { value: "#141A5C", description: "Text on sodalite container (light)" },
+    sodaliteOnContainerDark: {
+      value: "#C5CAE9",
+      description: "Text on sodalite container (dark)",
+    },
+    copperOnContainer: { value: "#5C2410", description: "Text on copper container (light)" },
+    copperOnContainerDark: { value: "#FFD3C2", description: "Text on copper container (dark)" },
 
     // ─── SEVEN HERITAGE COLORS (atmospheric, from above ground) ──
     // African fashion, sunset, savanna, rivers, ancient and biblical.
     indigo: {
       value: "#8C9EFF",
       description: "Yoruba adire dye pits, Shweshwe cloth — longevity, resilience",
+      family: "heritage",
     },
     indigoLight: { value: "#1A237E", description: "Indigo on light backgrounds" },
     savanna: {
       value: "#FFCC80",
       description: "Golden grasslands, Sahel to Southern Africa — the journey",
+      family: "heritage",
     },
     savannaLight: { value: "#5D4037", description: "Savanna on light backgrounds" },
     baobab: {
       value: "#A5D6A7",
       description: "Tree of life, ancestral wisdom — endurance, community roots",
+      family: "heritage",
     },
     baobabLight: { value: "#2E4A2E", description: "Baobab on light backgrounds" },
     sunset: {
       value: "#FF8A80",
       description: "African dusk, rose-copper sky — endings that are beginnings",
+      family: "heritage",
     },
     sunsetLight: { value: "#8B2500", description: "Sunset on light backgrounds" },
-    river: { value: "#80DEEA", description: "Zambezi, Limpopo, Nile — life-giving waterways" },
+    river: {
+      value: "#80DEEA",
+      description: "Zambezi, Limpopo, Nile — life-giving waterways",
+      family: "heritage",
+    },
     riverLight: { value: "#00525A", description: "River on light backgrounds" },
+    hematite: {
+      value: "#90A4AE",
+      description: "Neutral anchor, mini-app surfaces, atmosphere",
+      family: "heritage",
+    },
+    hematiteLight: { value: "#546E7A", description: "Hematite on light backgrounds" },
+    kalahari: {
+      value: "#E8D9B5",
+      description: "Light anchor, warm backgrounds, mini-app surfaces",
+      family: "heritage",
+    },
+    kalahariLight: { value: "#C9B589", description: "Kalahari on light backgrounds" },
+
+    // ─── SEVEN EXPERIMENTAL TONES (the heptagon) ──────────────────
+    // Hues offset 17 degrees apart, prime saturations, foregrounds solved to
+    // P7. `--exp-*` in globals.css, `experimental` in /v1/brand and the MCP.
+    ember: { value: "#DA8766", description: "Ember — heptagon position 0", family: "experimental" },
+    emberLight: { value: "#843D20", description: "Ember on light backgrounds" },
+    acacia: {
+      value: "#93A528",
+      description: "Acacia — heptagon position 1",
+      family: "experimental",
+    },
+    acaciaLight: { value: "#4D5615", description: "Acacia on light backgrounds" },
+    fern: { value: "#2CB42B", description: "Fern — heptagon position 2", family: "experimental" },
+    fernLight: { value: "#175E17", description: "Fern on light backgrounds" },
+    lagoon: {
+      value: "#2AAE9B",
+      description: "Lagoon — heptagon position 3",
+      family: "experimental",
+    },
+    lagoonLight: { value: "#165B51", description: "Lagoon on light backgrounds" },
+    storm: { value: "#7E9BE0", description: "Storm — heptagon position 4", family: "experimental" },
+    stormLight: { value: "#284CA6", description: "Storm on light backgrounds" },
+    dusk: { value: "#BA87E2", description: "Dusk — heptagon position 5", family: "experimental" },
+    duskLight: { value: "#742AAD", description: "Dusk on light backgrounds" },
+    protea: {
+      value: "#DF7BB4",
+      description: "Protea — heptagon position 6",
+      family: "experimental",
+    },
+    proteaLight: { value: "#932464", description: "Protea on light backgrounds" },
 
     // Neutrals — warm stone palette (April 2026, AAA-optimised)
     // Named by role, not arbitrary grey percentage.
@@ -745,30 +842,59 @@ export const componentTokens = {
 // CSS GENERATOR — Produces CSS custom properties for :root
 // ═══════════════════════════════════════════════════════════════
 
+/**
+ * Every palette family in `primitives.color`, as `[name, family]` pairs, in
+ * declaration order.
+ *
+ * This is the one place that answers "which colour families exist?", and it
+ * answers it by reading the token data rather than by restating it. Anything
+ * that needs the list — `generateCSSVariables()` below, the cross-surface
+ * parity test, a downstream generator — asks here, so there is no second list
+ * to forget to update.
+ *
+ * Container, on-container, neutral and semantic entries are deliberately not
+ * families: they carry no `family` tag, and they are derived from or scoped to
+ * a family rather than being one.
+ */
+export function paletteFamilies(): [string, PaletteFamily][] {
+  return Object.entries(primitives.color).flatMap(([name, token]) =>
+    "family" in token ? [[name, token.family as PaletteFamily] as [string, PaletteFamily]] : []
+  )
+}
+
+/** The three colour groups. Seven families each — the system is a heptagon three times over. */
+export type PaletteFamily = "mineral" | "heritage" | "experimental"
+
 export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId = "mukoko"): string {
   const semantic = semanticTokens[theme]
   const brandColors = brandOverrides[brand]
 
   const lines: string[] = [":root {"]
 
-  // Mineral colors (constant across themes)
-  const mineralKeys = ["cobalt", "tanzanite", "malachite", "gold", "terracotta"] as const
-  for (const mineral of mineralKeys) {
-    const val =
-      theme === "light"
-        ? primitives.color[`${mineral}Light` as keyof typeof primitives.color]
-        : primitives.color[mineral]
-    lines.push(`  --color-${mineral}: ${val.value};`)
-  }
-
-  // Heritage colors (constant across themes)
-  const heritageKeys = ["indigo", "savanna", "baobab", "sunset", "river"] as const
-  for (const heritage of heritageKeys) {
-    const val =
-      theme === "light"
-        ? primitives.color[`${heritage}Light` as keyof typeof primitives.color]
-        : primitives.color[heritage]
-    lines.push(`  --color-${heritage}: ${val.value};`)
+  // Palette colours, theme-resolved.
+  //
+  // These keys are DERIVED from `primitives.color` — every entry carrying a
+  // `family` tag is a palette family, and its light counterpart is `<name>Light`
+  // by the convention the table above follows throughout.
+  //
+  // They used to be two hardcoded arrays, `["cobalt", "tanzanite", "malachite",
+  // "gold", "terracotta"]` and `["indigo", "savanna", "baobab", "sunset",
+  // "river"]`, written when the palette was five-and-five. The palette became
+  // seven-and-seven and then gained the experimental seven; the arrays did not,
+  // so this function emitted ten of twenty-one families and nothing failed.
+  // sodalite, copper, hematite, kalahari and the whole experimental heptagon
+  // were simply unreachable from generated CSS.
+  //
+  // Swapping five names for twenty-one would have fixed today and rebuilt the
+  // trap for tomorrow: the next family added is the next one silently missing.
+  // A literal list of what the data contains is the bug, not its length. So the
+  // list is gone — add a family to `primitives.color` with a `family` tag and it
+  // appears here, in globals.css, and in `__tests__/tokens-surface-parity.test.ts`
+  // without anyone editing this function.
+  for (const [name] of paletteFamilies()) {
+    const key = theme === "light" ? `${name}Light` : name
+    const val = primitives.color[key as keyof typeof primitives.color]
+    lines.push(`  --color-${name}: ${val.value};`)
   }
 
   // Radii
