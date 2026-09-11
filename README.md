@@ -15,23 +15,23 @@
 
 ## What is Mzizi?
 
-**Mzizi** (Swahili for _root_) is an independent open-architecture project of the **Bundu Foundation**, operated and developed by **Nyuchi**. It owns the open DNA-helix frontend architecture, the component registry served at `mzizi.dev/r/`, the Mzizi API at `mzizi.dev/api`, the Seven African Minerals design system, and the Model Context Protocol (MCP) server at `mcp.mzizi.dev/mcp`. It is **not** a Nyuchi product — it is a Bundu-governed standard the whole bundu ecosystem (Mukoko consumer mini-apps, Nyuchi enterprise products, sister brands) installs from. Backed by a DB-first architecture (Supabase) and served as a shadcn-compatible API, every component is installable into any project with one command.
+**Mzizi** (Swahili for _root_) is an independent open-architecture project of the **Bundu Foundation**, operated and developed by **Nyuchi**. It owns the open DNA-helix frontend architecture, the component registry served at `mzizi.dev/r/`, the Mzizi API at `api.mzizi.dev/v1`, the Seven African Minerals design system, and the Model Context Protocol (MCP) server at `mcp.mzizi.dev/mcp`. It is **not** a Nyuchi product — it is a Bundu-governed standard the whole bundu ecosystem (Mukoko consumer mini-apps, Nyuchi enterprise products, sister brands) installs from. Backed by a DB-first architecture (Supabase) and served as a shadcn-compatible API, every component is installable into any project with one command.
 
 ---
 
 ## Quick install
 
 ```bash
-npx shadcn@latest add https://mzizi.dev/api/v1/ui/button
+npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 ```
 
 Install several at once:
 
 ```bash
 npx shadcn@latest add \
-  https://mzizi.dev/api/v1/ui/card \
-  https://mzizi.dev/api/v1/ui/dialog \
-  https://mzizi.dev/api/v1/ui/data-table
+  https://api.mzizi.dev/v1/ui/card \
+  https://api.mzizi.dev/v1/ui/dialog \
+  https://api.mzizi.dev/v1/ui/data-table
 ```
 
 Every install carries the canonical typography (Noto Sans / Noto Serif / JetBrains Mono), the Seven African Minerals palette, the layered architecture, the pill-button identity, and the 56px touch-target floor.
@@ -40,7 +40,7 @@ Every install carries the canonical typography (Noto Sans / Noto Serif / JetBrai
 
 ## AI-Native: MCP server
 
-There is **one** Mzizi MCP server: `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport, the `mzizi-mcp` Worker in `mzizi-dev/agent-tools`, a private repo). Each tool returns a whole self-contained JSON document per component — one fetch, no joins. Access is gated by a **free WorkOS AuthKit signup**; `mzizi.dev/api/v1` remains open and unauthenticated for anything that needs no account.
+There is **one** Mzizi MCP server: `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport, the `mzizi-mcp` Worker in `mzizi-dev/agent-tools`, a private repo). Each tool returns a whole self-contained JSON document per component — one fetch, no joins. Access is gated by a **free WorkOS AuthKit signup**; `api.mzizi.dev/v1` remains open and unauthenticated for anything that needs no account.
 
 The portal used to serve a second, smaller MCP in-process at `mzizi.dev/mcp`. That route is now a **308** to the one above — method and body preserved, so an in-flight JSON-RPC `POST` survives the hop and existing clients keep working. Configure new clients against the real endpoint:
 
@@ -93,7 +93,7 @@ Alongside the minerals the palette carries **seven heritage tones** (indigo, sav
 
 ## Registry
 
-The registry is live at [mzizi.dev/components](https://mzizi.dev/components). Component counts are always live from the database — see [`/observability`](https://mzizi.dev/observability) for real-time totals and [`GET /api/v1/stats`](https://mzizi.dev/api/v1/stats) for the raw open-data feed (CC BY 4.0).
+The registry is live at [mzizi.dev/components](https://mzizi.dev/components). Component counts are always live from the database — see [`/observability`](https://mzizi.dev/observability) for real-time totals and [`GET /v1/stats`](https://api.mzizi.dev/v1/stats) for the raw open-data feed (CC BY 4.0).
 
 Browse categories at [mzizi.dev/components](https://mzizi.dev/components) — they are derived live from `components.category`, never hardcoded in this README.
 
@@ -139,7 +139,7 @@ All endpoints under `/api/v1/`. Full spec in [`openapi.yaml`](openapi.yaml) (als
 
 Usage metrics are public by design — aligned with the bundu open data philosophy. The [`/observability`](https://mzizi.dev/observability) dashboard shows API call volumes, error rates, p95 latency per endpoint, most-requested components, MCP tool usage breakdown, and 30-day traffic trends (live from `usage_events`, `fundi_issues`, `chaos_events`).
 
-Raw data: `GET https://mzizi.dev/api/v1/stats` — licensed CC BY 4.0.
+Raw data: `GET https://api.mzizi.dev/v1/stats` — licensed CC BY 4.0.
 
 ---
 
@@ -231,7 +231,7 @@ pnpm dev
 | **[mzizi-dev/mzizi-registry](https://github.com/mzizi-dev/mzizi-registry)** (this repo) | [mzizi.dev](https://mzizi.dev)                     | Mzizi portal — component registry, brand, DNA-helix architecture, document-route MCP                        |
 | **[mzizi-dev/mzizi](https://github.com/mzizi-dev/mzizi)**                               | —                                                  | Mzizi **the language** — the Rust compiler and runtime for the agentic web. Not the registry                |
 | **[mzizi-dev/mzizi-console](https://github.com/mzizi-dev/mzizi-console)**               | `app.mzizi.dev` (not yet resolving)                | The Mzizi console                                                                                           |
-| **[mzizi-dev/mzizi-api-gateway](https://github.com/mzizi-dev/mzizi-api-gateway)**       | `api.mzizi.dev` (not yet resolving)                | The registry API as a pure-Rust Cloudflare Worker                                                           |
+| **[mzizi-dev/mzizi-api-gateway](https://github.com/mzizi-dev/mzizi-api-gateway)**       | [api.mzizi.dev](https://api.mzizi.dev/v1/health)   | The registry API as a pure-Rust Cloudflare Worker                                                           |
 | **mzizi-dev/agent-tools** (private)                                                     | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
 | **[nyuchi/mukoko-platform](https://github.com/nyuchi/mukoko-platform)**                 | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform (will be renamed `nyuchi-console`)                                            |
 | **[nyuchi/bundu-docs](https://github.com/nyuchi/bundu-docs)**                           | [docs.bundu.org](https://docs.bundu.org)           | Outward-facing product documentation (Astro Starlight)                                                      |

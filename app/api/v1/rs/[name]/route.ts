@@ -81,7 +81,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
           error: `"${name}" has no Rust implementation`,
           message:
             "This component ships for React only. The contract, tokens and variants are on " +
-            `https://mzizi.dev/api/v1/ui/${encodeURIComponent(name)} — the Dioxus source is ` +
+            `https://api.mzizi.dev/v1/ui/${encodeURIComponent(name)} — the Dioxus source is ` +
             "yours to write against them.",
         },
         { status: 404, headers: { "Access-Control-Allow-Origin": "*" } }

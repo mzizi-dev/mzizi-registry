@@ -10,7 +10,7 @@
  * - Semaphore: limits max concurrent executions (default)
  * - Queue: limits max concurrent + max waiting in queue
  *
- * Install via: npx shadcn@latest add https://mzizi.dev/api/v1/ui/bulkhead
+ * Install via: npx shadcn@latest add https://api.mzizi.dev/v1/ui/bulkhead
  */
 
 import { createLogger } from "@/lib/observability"

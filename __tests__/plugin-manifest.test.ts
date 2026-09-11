@@ -62,7 +62,12 @@ describe("the plugin's MCP entry describes the server that exists", () => {
     const net: string[] = manifest().permissions.network
     expect(net).toContain("mcp.mzizi.dev")
     expect(net).toContain("mzizi.dev")
+    // `api.mzizi.dev` is the canonical API host the docs, `llms.txt` and the
+    // OpenAPI `servers` entry now advertise. Without it here an agent that
+    // installs this plugin and follows those addresses is blocked at the
+    // first fetch.
+    expect(net).toContain("api.mzizi.dev")
     // A manifest that quietly widens its network reach is worth failing on.
-    expect(net.sort()).toEqual(["assets.nyuchi.com", "mcp.mzizi.dev", "mzizi.dev"])
+    expect(net.sort()).toEqual(["api.mzizi.dev", "assets.nyuchi.com", "mcp.mzizi.dev", "mzizi.dev"])
   })
 })

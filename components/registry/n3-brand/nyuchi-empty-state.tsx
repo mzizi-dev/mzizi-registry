@@ -13,7 +13,7 @@ import { useNyuchiHarness } from "@/lib/harness"
    
    ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
    
-   npx shadcn@latest add https://mzizi.dev/api/v1/ui/nyuchi-empty-state
+   npx shadcn@latest add https://api.mzizi.dev/v1/ui/nyuchi-empty-state
    ═══════════════════════════════════════════════════════════════ */
 
 interface NyuchiEmptyStateProps {

@@ -3,21 +3,25 @@
 > The canonical design system and component registry for the bundu ecosystem — a shadcn-compatible registry of UI components, hooks, library utilities, and blocks organised across the **Mzizi DNA double helix**, built on the Seven African Minerals design system. mzizi is an open-architecture project governed by the Bundu Foundation and operated by nyuchi. Install directly into any project using the shadcn CLI.
 
 **Live:** <https://mzizi.dev>
-**API:** <https://mzizi.dev/api/v1>
+**API:** <https://api.mzizi.dev/v1>
 **MCP Server:** <https://mzizi.dev/mcp> (Streamable HTTP)
-**OpenAPI 3.1:** <https://mzizi.dev/api/openapi>
+**OpenAPI 3.1:** <https://api.mzizi.dev/openapi>
+
+Every `GET /v1/...` path below is relative to the API base above — `https://api.mzizi.dev`.
+That is the canonical address of this API. The older `https://mzizi.dev/api/v1/...` form is
+still served and returns identical bytes, so existing links keep working.
 
 Every count, version, and per-node breakdown in this document is **live data**. Do not rely on a hardcoded number here — always fetch the authoritative value from the URL listed next to it. Supabase is the single source of truth.
 
 ## Live counts & version (do NOT hardcode — always fetch)
 
-- **Total stable items:** `GET /api/v1/stats` → `stable`
-- **Per-node breakdown:** `GET /api/v1/architecture` → each node's `component_count`, or MCP `list_collections`
-- **Per-category breakdown:** `GET /api/v1/stats` → `byCategory[]`
-- **Current portal version:** `GET /api/v1/changelog` → first row's `version` field
-- **Per-type breakdown (UI / hook / lib / block):** `GET /api/v1/ui` → count where `type` matches
-- **MCP/API usage metrics (CC BY 4.0):** `GET /api/v1/stats?days=7|30|90`
-- **Database health:** `GET /api/v1/health`
+- **Total stable items:** `GET /v1/stats` → `stable`
+- **Per-node breakdown:** `GET /v1/architecture` → each node's `component_count`, or MCP `list_collections`
+- **Per-category breakdown:** `GET /v1/stats` → `byCategory[]`
+- **Current portal version:** `GET /v1/changelog` → first row's `version` field
+- **Per-type breakdown (UI / hook / lib / block):** `GET /v1/ui` → count where `type` matches
+- **MCP/API usage metrics (CC BY 4.0):** `GET /v1/stats?days=7|30|90`
+- **Database health:** `GET /v1/health`
 
 ## The architecture model: a DNA double helix, and nothing else
 
@@ -29,19 +33,19 @@ The frontend architecture is the **Mzizi DNA double helix**: two entwined backbo
 - A **meaning** backbone carries the doctrine. Its strands are `genetic-code` (the Ubuntu + Bundu sequence) and `transcription` (every convention stored as queryable data).
 - A **node** is a functional unit sitting on one strand. A **rung** is a base pair bridging both backbones, bound to no strand — fundi (self-healing), documentation, and discovery (SEO/AIO) are rungs.
 
-**There are no axes, no outliers, no 3D, and no X/Y/Z.** An earlier model described "ten layers across five axes" with an "Outside" axis. It is retired, not renamed: `/api/v1/architecture/axes`, `/api/v1/architecture/frontend/axes`, `/api/v1/architecture/frontend/layers`, and `/api/v1/architecture/layers/{n}` all return **HTTP 410 Gone** with a `migrated_to` map. If you are repeating axis vocabulary about mzizi, it came from a stale source.
+**There are no axes, no outliers, no 3D, and no X/Y/Z.** An earlier model described "ten layers across five axes" with an "Outside" axis. It is retired, not renamed: `/v1/architecture/axes`, `/v1/architecture/frontend/axes`, `/v1/architecture/frontend/layers`, and `/v1/architecture/layers/{n}` all return **HTTP 410 Gone** with a `migrated_to` map. If you are repeating axis vocabulary about mzizi, it came from a stale source.
 
-**Node numbers are labels, not a sequence, and the set is never capped.** Do not assume a highest node, do not enumerate a fixed range, and do not treat a gap as an error. `GET /api/v1/architecture` lists exactly the nodes and rungs that exist right now; more will be added. Any upper bound on a node argument is a bug — a cap of ten is what once made N11 unreachable.
+**Node numbers are labels, not a sequence, and the set is never capped.** Do not assume a highest node, do not enumerate a fixed range, and do not treat a gap as an error. `GET /v1/architecture` lists exactly the nodes and rungs that exist right now; more will be added. Any upper bound on a node argument is a bug — a cap of ten is what once made N11 unreachable.
 
-There is also a separate data architecture (Pod → Relational → Document → Orchestration → Edge → Device → Open Data) served at `/api/v1/data-layer` and `/api/v1/pipeline`. **Never conflate the two models** — the helix describes frontend composition, the data layers describe storage and streaming.
+There is also a separate data architecture (Pod → Relational → Document → Orchestration → Edge → Device → Open Data) served at `/v1/data-layer` and `/v1/pipeline`. **Never conflate the two models** — the helix describes frontend composition, the data layers describe storage and streaming.
 
 ## What this site is
 
-1. A **component registry** — installable via `npx shadcn@latest add https://mzizi.dev/api/v1/ui/<name>`. Call `GET /api/v1/ui` for the live index or `GET /api/v1/stats` for counts.
-2. A **design system reference** — the Seven African Minerals palette, seven heritage tones, status colours, typography, spacing, and radius tokens. Live values via `GET /api/v1/brand` or the `/tokens` page; the palette is generated from Supabase, so fetch it rather than copying hexes.
-3. A **brand documentation hub** — canonical brand specs for bundu, nyuchi, mukoko, shamwari, nhimbe. Fetch via `GET /api/v1/brand`.
-4. An **architecture documentation hub** — the DNA double helix (above), served at `GET /api/v1/architecture`, plus principles, data layer, pipeline, and sovereignty assessments.
-5. An **Ubuntu doctrine surface** — Five Pillars and Five Principles at `GET /api/v1/ubuntu/{pillars,principles}`, rendered at `/ubuntu`.
+1. A **component registry** — installable via `npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>`. Call `GET /v1/ui` for the live index or `GET /v1/stats` for counts.
+2. A **design system reference** — the Seven African Minerals palette, seven heritage tones, status colours, typography, spacing, and radius tokens. Live values via `GET /v1/brand` or the `/tokens` page; the palette is generated from Supabase, so fetch it rather than copying hexes.
+3. A **brand documentation hub** — canonical brand specs for bundu, nyuchi, mukoko, shamwari, nhimbe. Fetch via `GET /v1/brand`.
+4. An **architecture documentation hub** — the DNA double helix (above), served at `GET /v1/architecture`, plus principles, data layer, pipeline, and sovereignty assessments.
+5. An **Ubuntu doctrine surface** — Five Pillars and Five Principles at `GET /v1/ubuntu/{pillars,principles}`, rendered at `/ubuntu`.
 6. An **MCP server** — AI assistants connect at `https://mzizi.dev/mcp` for the document-route registry.
 
 ## Key pages
@@ -57,39 +61,39 @@ There is also a separate data architecture (Pod → Relational → Document → 
 - [Changelog](/changelog): release history
 - [Observability](/observability): live API + MCP usage metrics (CC BY 4.0)
 
-Long-form documentation is **not** on this site. Product docs live at <https://docs.bundu.org/mzizi>; engineering docs at <https://docs.nyuchi.com>. `GET /api/v1/docs` and `/api/v1/docs/{slug}` return HTTP 410 with a `migrated_to` map.
+Long-form documentation is **not** on this site. Product docs live at <https://docs.bundu.org/mzizi>; engineering docs at <https://docs.nyuchi.com>. `GET /v1/docs` and `/v1/docs/{slug}` return HTTP 410 with a `migrated_to` map.
 
 ## API endpoints (machine-readable)
 
 All endpoints return JSON with schema.org JSON-LD metadata where applicable and permissive CORS headers.
 
-- `GET /api/v1` — Discovery document
-- `GET /api/v1/brand` — Brand system (minerals, typography, spacing, ecosystem)
-- `GET /api/v1/ui` — Live component registry index
-- `GET /api/v1/ui/{name}` — Individual component with inline source code (shadcn format)
-- `GET /api/v1/ui/{name}/docs` — Component documentation (use cases, variants, a11y)
-- `GET /api/v1/ui/{name}/versions` — Component version history
-- `GET /api/v1/search?q=` — Cross-resource search
-- `GET /api/v1/architecture` — The DNA double helix: nodes, rungs, and strands with live counts
-- `GET /api/v1/architecture/nodes/{n}` — One node or rung: covenant, stakeholder, rules, count
-- `GET /api/v1/ecosystem` — Architecture principles
-- `GET /api/v1/data-layer` — Local-first + cloud layer specification
-- `GET /api/v1/pipeline` — Open data pipeline (Redpanda → Flink → Doris)
-- `GET /api/v1/sovereignty` — Technology sovereignty assessments
-- `GET /api/v1/ubuntu/pillars` — The Five Ubuntu Pillars
-- `GET /api/v1/ubuntu/principles` — The Five Ubuntu Principles
-- `GET /api/v1/changelog` — Release history
-- `GET /api/v1/changelog/{version}` — Single release
-- `GET /api/v1/ai/instructions` — AI assistant instruction sets
-- `GET /api/v1/ai/instructions/{target}` — Instructions by target (mcp-server, claude, copilot)
-- `GET /api/v1/skills` — Every published agent skill (summary, no body_mdx)
-- `GET /api/v1/skills/summary` — Same shape as `/skills`; reserved for the CLI `update` path
-- `GET /api/v1/skills/{name}` — Single skill with full `body_mdx`
-- `GET /api/v1/stats` — Public usage + registry counts (CC BY 4.0)
-- `GET /api/v1/health` — Service health
-- `GET /api/openapi` — OpenAPI 3.1 specification (YAML)
+- `GET /v1` — Discovery document
+- `GET /v1/brand` — Brand system (minerals, typography, spacing, ecosystem)
+- `GET /v1/ui` — Live component registry index
+- `GET /v1/ui/{name}` — Individual component with inline source code (shadcn format)
+- `GET /v1/ui/{name}/docs` — Component documentation (use cases, variants, a11y)
+- `GET /v1/ui/{name}/versions` — Component version history
+- `GET /v1/search?q=` — Cross-resource search
+- `GET /v1/architecture` — The DNA double helix: nodes, rungs, and strands with live counts
+- `GET /v1/architecture/nodes/{n}` — One node or rung: covenant, stakeholder, rules, count
+- `GET /v1/ecosystem` — Architecture principles
+- `GET /v1/data-layer` — Local-first + cloud layer specification
+- `GET /v1/pipeline` — Open data pipeline (Redpanda → Flink → Doris)
+- `GET /v1/sovereignty` — Technology sovereignty assessments
+- `GET /v1/ubuntu/pillars` — The Five Ubuntu Pillars
+- `GET /v1/ubuntu/principles` — The Five Ubuntu Principles
+- `GET /v1/changelog` — Release history
+- `GET /v1/changelog/{version}` — Single release
+- `GET /v1/ai/instructions` — AI assistant instruction sets
+- `GET /v1/ai/instructions/{target}` — Instructions by target (mcp-server, claude, copilot)
+- `GET /v1/skills` — Every published agent skill (summary, no body_mdx)
+- `GET /v1/skills/summary` — Same shape as `/skills`; reserved for the CLI `update` path
+- `GET /v1/skills/{name}` — Single skill with full `body_mdx`
+- `GET /v1/stats` — Public usage + registry counts (CC BY 4.0)
+- `GET /v1/health` — Service health
+- `GET /openapi` — OpenAPI 3.1 specification (YAML)
 
-Retired, returning **HTTP 410 Gone** with a `migrated_to` map: `/api/v1/docs`, `/api/v1/docs/{slug}`, `/api/v1/architecture/axes`, `/api/v1/architecture/layers/{n}`, `/api/v1/architecture/frontend/axes`, `/api/v1/architecture/frontend/layers`.
+Retired, returning **HTTP 410 Gone** with a `migrated_to` map: `/v1/docs`, `/v1/docs/{slug}`, `/v1/architecture/axes`, `/v1/architecture/layers/{n}`, `/v1/architecture/frontend/axes`, `/v1/architecture/frontend/layers`.
 
 ## MCP server for AI assistants
 
@@ -105,7 +109,7 @@ Tool and resource names are stable; the exact schema is discoverable via the sta
 
 **Seven African Minerals** — brand accents, each carrying a semantic role: **cobalt** (knowledge), **tanzanite** (identity), **malachite** (growth), **sodalite** (intelligence), **gold** (value), **terracotta** (community), **copper** (stewardship). Seven heritage tones (indigo, savanna, baobab, sunset, river, hematite, kalahari) anchor surfaces and moods.
 
-Values are theme-adaptive and generated from Supabase — **fetch them from `GET /api/v1/brand` or `/tokens` rather than copying hex codes**, which drift. Consume a brand's accent through the `--brand-accent` custom property, never a literal hex.
+Values are theme-adaptive and generated from Supabase — **fetch them from `GET /v1/brand` or `/tokens` rather than copying hex codes**, which drift. Consume a brand's accent through the `--brand-accent` custom property, never a literal hex.
 
 **Typography:** Noto Sans (body), Noto Serif (display), JetBrains Mono (code). Noto Sans chosen for African language support (diacritics, broad script coverage).
 
@@ -116,7 +120,7 @@ Values are theme-adaptive and generated from Supabase — **fetch them from `GET
 **Install any component:**
 
 ```
-npx shadcn@latest add https://mzizi.dev/api/v1/ui/button
+npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 ```
 
 ## Ecosystem brands
@@ -131,7 +135,7 @@ npx shadcn@latest add https://mzizi.dev/api/v1/ui/button
 
 ## Optional: full content
 
-- [OpenAPI spec](/api/openapi) — machine-readable API definition
+- [OpenAPI spec](https://api.mzizi.dev/openapi) — machine-readable API definition
 - [robots.txt](/robots.txt) — crawling policy (AI crawlers explicitly allowed)
 - [sitemap.xml](/sitemap.xml) — full page index
 - [Observability dashboard](/observability) — live metrics, CC BY 4.0

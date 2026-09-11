@@ -166,8 +166,24 @@ describe("Architecture API v1 Routes", () => {
 
     it("advertises the node route, not a layer route", () => {
       const text = content()
-      expect(text).toContain("/api/v1/architecture/nodes/{n}")
+      expect(text).toContain("/v1/architecture/nodes/{n}")
       expect(text).toContain("/architecture/nodes/")
+    })
+
+    // The endpoint list is written as bare `/v1/...` paths, which only resolve
+    // if the base they hang off is stated. It is the API's canonical address
+    // — `api.mzizi.dev` — not the apex, and an agent reading this file has
+    // nothing else to resolve against.
+    it("names the canonical API base the bare paths hang off", () => {
+      const text = content()
+      expect(text).toContain("https://api.mzizi.dev/v1")
+      expect(text).toMatch(/relative to the API base/i)
+      // No endpoint may still be written against the apex. The file mentions
+      // the old `mzizi.dev/api/v1/...` form once, in prose, to say it still
+      // works — so this asserts on the forms a reader would COPY, not on the
+      // mere appearance of the string.
+      expect(text).not.toMatch(/GET \/api\/v1/)
+      expect(text).not.toContain("add https://mzizi.dev/api/v1")
     })
   })
 })

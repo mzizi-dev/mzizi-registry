@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Check, Copy } from "lucide-react"
 
 export function CopyCommand({
-  command = "npx shadcn@latest add https://mzizi.dev/api/v1/ui/button",
+  command = "npx shadcn@latest add https://api.mzizi.dev/v1/ui/button",
 }: {
   command?: string
 } = {}) {
