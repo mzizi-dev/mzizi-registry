@@ -39,7 +39,7 @@ matters because a stored count is the oldest drift bug in this system — see th
 | ---------------------------------------- | ---- | ----------------------------------------------------------------------------------------- |
 | `nodes_store` + doctrine views           | 126  | `content/doctrine/` — **extracted 2026-08-04**                                            |
 | `instructions_store` / `ai_instructions` | 3    | `content/doctrine/ai-instructions/` — **extracted**                                       |
-| `skills` view, `_backup_skills_20260701` | 9    | `nyuchi/mzizi-tools` — already authoritative there                                        |
+| `skills` view, `_backup_skills_20260701` | 9    | `mzizi-dev/agent-tools` — already authoritative there                                     |
 | `components_store` + `components`        | 571  | Component metadata alongside the source on disk                                           |
 | `brand_store` + ~19 `brand_*` views      | 259  | Tokens; `pnpm tokens:sync` already generates the repo artifacts, so the direction inverts |
 | `mcp_tool_registry`                      | 66   | Tool definitions belong beside the server that serves them                                |
