@@ -112,7 +112,7 @@ describe("GET /api/v1/ui", () => {
       item("button", {
         type: "registry:ui",
         dependencies: ["class-variance-authority"],
-        registryDependencies: ["https://mzizi.dev/api/v1/ui/slot"],
+        registryDependencies: ["https://api.mzizi.dev/v1/ui/slot"],
       }),
     ])
 
@@ -125,7 +125,7 @@ describe("GET /api/v1/ui", () => {
     expect(Object.keys(first)).toContain("type")
     expect(Object.keys(first)).toContain("registryDependencies")
     expect(first.type).toBe("registry:ui")
-    expect(first.registryDependencies).toEqual(["https://mzizi.dev/api/v1/ui/slot"])
+    expect(first.registryDependencies).toEqual(["https://api.mzizi.dev/v1/ui/slot"])
     expect(first.dependencies).toEqual(["class-variance-authority"])
   })
 
