@@ -8,6 +8,8 @@
  *   - app/globals.css                   (the marked palette regions only)
  *   - components/registry/n1-tokens/nyuchi-tokens-<platform>.<ext>
  *       for swift, kotlin, arkts, react-native, python and rust
+ *   - components/registry/n1-tokens/nyuchi-tokens-typescript.ts
+ *       (the marked palette region only — see below)
  *
  * It used to read Supabase — `component_documents`, collections
  * `styling-minerals`, `styling-heritage-colors` and `styling-experimental` —
@@ -45,11 +47,23 @@
  * itself the drift. A Swift consumer and an `/v1/brand` consumer asking for the
  * Mzizi palette must not get different answers about which families exist.
  *
- * `components/registry/n1-tokens/nyuchi-tokens-typescript.ts` is NOT generated
- * here; it is hand-maintained and carries far more than colour. It is still
- * held to the same family set by
- * `__tests__/tokens-surface-parity.test.ts`, which compares all seven emitters
- * against the source above and fails naming whichever one diverged.
+ * `components/registry/n1-tokens/nyuchi-tokens-typescript.ts` carries far more
+ * than colour — the semantic tier, listing themes, brand overrides, component
+ * tokens — so it cannot be emitted whole. Its PALETTE REGION is, between
+ * `tokens:generated:ts-palette:start/end` markers, exactly as the palette
+ * regions of globals.css are. That file is a published registry item and it was
+ * hand-maintained until 2026-09, which is how six families (terracotta, indigo,
+ * savanna, baobab, sunset, river) sat on pre-Seven hexes while every generated
+ * artifact carried the canonical ones: this `--check` gate could not see the
+ * one surface that was wrong, because it only ever looked at the files it
+ * writes. The measured pattern across two audits was that every block inside
+ * these markers was in perfect sync and every hand-written block had drifted,
+ * so the fix is to move the block inside the markers rather than to retype it.
+ *
+ * All seven emitters are additionally held to the same family set AND to the
+ * same hexes by `__tests__/tokens-surface-parity.test.ts`, which reads each one
+ * as a consumer would and fails naming whichever surface diverged. That test
+ * runs in CI (`pnpm test`); `pnpm tokens:verify` now does too.
  *
  * Every artifact prettier has a parser for is passed through prettier before it
  * is written or compared (see `prettified()`), so `pnpm tokens:sync` leaves the
@@ -81,6 +95,7 @@ const CHECK = process.argv.includes("--check")
 const PALETTE_TS = join(process.cwd(), "lib/tokens/palette.generated.ts")
 const GLOBALS_CSS = join(process.cwd(), "app/globals.css")
 const N1 = join(process.cwd(), "components/registry/n1-tokens")
+const TOKENS_TS = join(N1, "nyuchi-tokens-typescript.ts")
 
 /**
  * Scale constants shared by every platform output.
@@ -695,6 +710,107 @@ ${Object.entries(SCALE.fonts)
 `
 }
 
+/**
+ * The palette region of `nyuchi-tokens-typescript.ts` — the `primitives.color`
+ * entries for all 21 families, both themes, plus the mineral container and
+ * on-container tiers.
+ *
+ * This is a REGION rather than a whole file because that emitter is not only a
+ * colour table: it carries the semantic tier, the listing themes, the brand
+ * overrides and the component tokens, none of which are in the palette. The
+ * seventh target therefore works the way `app/globals.css` does — markers round
+ * the generated block, everything else hand-written — instead of the way the
+ * six platform files do.
+ *
+ * The descriptions are emitted from the palette's own `usage` metadata rather
+ * than restated here, for the same reason the hexes are: a hand-kept second
+ * copy of a field the source already owns is a copy that drifts. Family tags
+ * (`mineral` / `heritage` / `experimental`) are load-bearing — `paletteFamilies()`
+ * in that file derives the family list by looking for them, so every emitted
+ * base entry carries one and no light/container/on-container entry does.
+ */
+function renderTsPalette(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[]
+): string {
+  const entry = (key: string, value: string, description: string, family?: string) => {
+    const fields = [
+      `value: ${JSON.stringify(value)}`,
+      `description: ${JSON.stringify(description)}`,
+    ]
+    if (family) fields.push(`family: ${JSON.stringify(family)}`)
+    return `  ${key}: { ${fields.join(", ")} },`
+  }
+  const onLight = (name: string) => `${cap(name)} on light backgrounds`
+  // Padded to a fixed width so the section rules line up however long the
+  // title is, the way the hand-written block's did.
+  const rule = (title: string) => {
+    const head = `  // ─── ${title} `
+    return head + "─".repeat(Math.max(3, 82 - head.length))
+  }
+
+  const lines: string[] = []
+
+  lines.push(rule("SEVEN AFRICAN MINERALS (geological, from underground)"))
+  lines.push(`  // Dark-theme value first, then the light-theme counterpart as`)
+  lines.push(`  // \`<name>Light\` — the convention generateCSSVariables() relies on.`)
+  for (const m of minerals) {
+    lines.push(entry(m.name, m.darkHex, m.usage, "mineral"))
+    lines.push(entry(`${m.name}Light`, m.lightHex, onLight(m.name)))
+  }
+
+  lines.push("")
+  lines.push(rule("MINERAL CONTAINER COLORS"))
+  lines.push(`  // Subtle background surfaces when a mineral is an area fill —`)
+  lines.push(`  // cards, banners, alerts, category-tinted sections.`)
+  for (const m of minerals) {
+    lines.push(
+      entry(`${m.name}Container`, m.containerLight, `${cap(m.name)}-tinted surface (light)`)
+    )
+    lines.push(
+      entry(`${m.name}ContainerDark`, m.containerDark, `${cap(m.name)}-tinted surface (dark)`)
+    )
+  }
+
+  lines.push("")
+  lines.push(rule("ON-CONTAINER COLORS (text/icons on container surfaces)"))
+  for (const m of minerals) {
+    lines.push(
+      entry(`${m.name}OnContainer`, m.onContainerLight, `Text on ${m.name} container (light)`)
+    )
+    lines.push(
+      entry(`${m.name}OnContainerDark`, m.onContainerDark, `Text on ${m.name} container (dark)`)
+    )
+  }
+
+  lines.push("")
+  lines.push(rule("SEVEN HERITAGE COLORS (atmospheric, from above ground)"))
+  for (const h of heritage) {
+    lines.push(entry(h.name, h.darkHex, h.usage, "heritage"))
+    lines.push(entry(`${h.name}Light`, h.lightHex, onLight(h.name)))
+  }
+
+  lines.push("")
+  lines.push(rule("SEVEN EXPERIMENTAL TONES (the heptagon)"))
+  lines.push(`  // Hues offset 17 degrees apart, prime saturations, foregrounds`)
+  lines.push(`  // solved to P7. \`--exp-*\` in globals.css, \`experimental\` in`)
+  lines.push(`  // /v1/brand and the MCP.`)
+  for (const e of experimental) {
+    lines.push(
+      entry(
+        e.name,
+        e.darkHex,
+        `${cap(e.name)} — heptagon position ${e.heptagonIndex}`,
+        "experimental"
+      )
+    )
+    lines.push(entry(`${e.name}Light`, e.lightHex, onLight(e.name)))
+  }
+
+  return lines.join("\n")
+}
+
 interface PlatformTarget {
   file: string
   render: (minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]) => string
@@ -709,13 +825,28 @@ const PLATFORM_TARGETS: PlatformTarget[] = [
   { file: "nyuchi-tokens-rust.rs", render: renderRust },
 ]
 
-function spliceRegion(css: string, region: string, body: string): string {
+/**
+ * Replace the body between a pair of `tokens:generated:<region>` markers.
+ *
+ * Block-comment markers, so the same mechanism works in CSS and in TypeScript —
+ * which is the point: `app/globals.css` and the palette region of
+ * `nyuchi-tokens-typescript.ts` are the same kind of file, a hand-written
+ * document with a generated block inside it, and they should not have two
+ * mechanisms. `label` and `indent` are all that differ.
+ */
+function spliceRegion(
+  text: string,
+  region: string,
+  body: string,
+  label = "app/globals.css",
+  indent = "  "
+): string {
   const start = `/* tokens:generated:${region}:start */`
   const end = `/* tokens:generated:${region}:end */`
-  const s = css.indexOf(start)
-  const e = css.indexOf(end)
-  if (s === -1 || e === -1) fail(`globals.css is missing the ${region} generated markers`)
-  return css.slice(0, s + start.length) + "\n" + body + "\n  " + css.slice(e)
+  const s = text.indexOf(start)
+  const e = text.indexOf(end)
+  if (s === -1 || e === -1) fail(`${label} is missing the ${region} generated markers`)
+  return text.slice(0, s + start.length) + "\n" + body + "\n" + indent + text.slice(e)
 }
 
 /**
@@ -769,6 +900,19 @@ async function main() {
   css = spliceRegion(css, "experimental-dark", renderExperimentalVars(experimental, "dark"))
   css = await prettified(GLOBALS_CSS, css)
 
+  // The seventh emitter. Region-spliced rather than rendered whole, because the
+  // file around the palette is hand-written and much larger than the palette.
+  const TOKENS_TS_LABEL = "components/registry/n1-tokens/nyuchi-tokens-typescript.ts"
+  let tokensTs = await readFile(TOKENS_TS, "utf8")
+  tokensTs = spliceRegion(
+    tokensTs,
+    "ts-palette",
+    renderTsPalette(minerals, heritage, experimental),
+    TOKENS_TS_LABEL,
+    ""
+  )
+  tokensTs = await prettified(TOKENS_TS, tokensTs)
+
   // Formatting happens here, on the way to BOTH branches, so `--check` measures
   // the bytes `tokens:sync` would actually write.
   const platforms = await Promise.all(
@@ -786,17 +930,18 @@ async function main() {
     const onDiskPalette = await readFile(PALETTE_TS, "utf8")
     const onDiskCss = await readFile(GLOBALS_CSS, "utf8")
     const drift: string[] = []
+    const onDiskTokensTs = await readFile(TOKENS_TS, "utf8")
     if (norm(onDiskPalette) !== norm(paletteModule)) drift.push("lib/tokens/palette.generated.ts")
     if (norm(onDiskCss) !== norm(css)) drift.push("app/globals.css")
+    // The seventh emitter is now inside this loop's reach. It used to be
+    // outside it — hand-maintained, so invisible to a gate that only checks the
+    // files it writes — and that is precisely how it came to carry ten families
+    // of twenty-one, and then six pre-Seven hexes after the family gap was
+    // closed. A gate that cannot see a surface reports green for it.
+    if (norm(onDiskTokensTs) !== norm(tokensTs)) drift.push(TOKENS_TS_LABEL)
     for (const p of platforms) {
       // A missing platform file is drift, not a crash — that is exactly the
       // state `nyuchi-tokens-rust.rs` was in for the life of the repo.
-      //
-      // NOTE the limit of this loop, because it is why the defect that prompted
-      // `__tests__/tokens-surface-parity.test.ts` survived: it checks the files
-      // this script WRITES. `nyuchi-tokens-typescript.ts` is hand-maintained and
-      // therefore invisible here, and that was the one emitting ten families of
-      // twenty-one. A gate that cannot see a surface reports green for it.
       const onDisk = await readFile(p.path, "utf8").catch(() => null)
       if (onDisk === null || norm(onDisk) !== norm(p.body)) drift.push(p.label)
     }
@@ -809,18 +954,19 @@ async function main() {
     console.log(
       `✓ tokens in sync with lib/tokens/palette.source.ts ` +
         `(7 minerals, 7 heritage, 7 experimental; ` +
-        `${platforms.length} platform targets)`
+        `${platforms.length + 1} platform targets)`
     )
     return
   }
 
   await writeFile(PALETTE_TS, paletteModule)
   await writeFile(GLOBALS_CSS, css)
+  await writeFile(TOKENS_TS, tokensTs)
   for (const p of platforms) await writeFile(p.path, p.body)
   console.log(
     `✓ synced ${minerals.length} minerals + ${heritage.length} heritage + ` +
       `${experimental.length} experimental → palette.generated.ts, globals.css, ` +
-      `${platforms.length} platform targets`
+      `${platforms.length + 1} platform targets`
   )
 }
 
