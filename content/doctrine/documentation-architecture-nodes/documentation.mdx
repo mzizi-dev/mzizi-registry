@@ -7,7 +7,9 @@ dnaRole: "documentation"
 doctrineVersion: "4.1.0"
 helix_model: "double-helix"
 implementation_rules:
-- "Long-form guides live in the Starlight repos: bundu-docs serves docs.bundu.org (product) and nyuchi-docs serves docs.nyuchi.com (engineering). /api/v1/docs* returns HTTP 410 with a migrated_to map."
+- "Mzizi documentation lives in mzizi-dev/mzizi-docs and publishes to docs.mzizi.dev (Mintlify). This supersedes the Starlight split, where bundu-docs (docs.bundu.org) and nyuchi-docs (docs.nyuchi.com) each held part of the Mzizi material — a split is exactly what this rung's covenant forbids, and it is how the same thing came to be documented twice with neither copy authoritative. Those two sites keep their own non-Mzizi content. /api/v1/docs* still returns HTTP 410 with a migrated_to map."
+- "Once docs.mzizi.dev resolves it exposes its own MCP endpoint, reachable THROUGH the main Mzizi MCP rather than as a second connection a consumer has to add. It does not resolve yet — do not document it as available until it does."
+- "Doctrine stays here, as .mdx in this repo, and that is not a contradiction of the rung above it. A doctrine page names components, nodes and rungs, so compiling it beside them is what makes a reference to something deleted fail the build. Long-form guides have no such coupling and belong in mzizi-docs. The test is whether the prose would still be checkable if it moved."
 - "Component source lives in git under components/registry/n<N>-<label>/; Supabase holds only the metadata around it, served over /api/v1/*."
 - "registry.json is a CI-verified snapshot of the registry, never hand-edited (pnpm registry:verify)."
 - "MCP tools and /api/v1/stats surface live counts from the DB; never quote a hardcoded count."
@@ -21,7 +23,7 @@ rust:
   kind: null
   note: "Stated deliberately. The guarantee this node provides is that a page referencing a component that no longer exists fails the build — and that comes from the page being compiled, not from the compiler's language. If the web target moves to Dioxus the docs toolchain follows the framework, but that is the framework's story, not a Rust implementation of N10. A node with no Rust role is a better answer than a fabricated one, and inventing one here would be doctrine drift of exactly the kind this node exists to prevent."
   state: "not-applicable"
-  today: "Long-form docs are .mdx files in mzizi-dev/mzizi-registry compiled by @next/mdx; structured data is served from Supabase over /api/v1/*."
+  today: "Doctrine and node/rung definitions are .mdx in mzizi-dev/mzizi-registry compiled by @next/mdx, which is what makes a page referencing a deleted component fail the build. Long-form documentation is Mintlify MDX in mzizi-dev/mzizi-docs. Structured data is served from Supabase over /api/v1/*."
   target: "None. N10 has no Rust implementation and no Rust alternative."
   position: "none"
   descriptors: []
