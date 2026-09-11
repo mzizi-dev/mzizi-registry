@@ -18,6 +18,17 @@
     "binding": "ASSETS"
   },
 
+  // The apex. A custom-domain route takes a BARE HOSTNAME — no `/*`, no
+  // `zone_name`. Workers Builds previews upload a version WITHOUT applying
+  // routes, so a malformed route here reads green on a PR and red on the
+  // production deploy; that form has already broken two Workers in this org.
+  //
+  // This REPLACES the Cloudflare-proxied A record that pointed mzizi.dev at
+  // Vercel. Rollback is to delete this block, redeploy, and restore that record.
+  "routes": [
+    { "pattern": "mzizi.dev", "custom_domain": true }
+  ],
+
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
