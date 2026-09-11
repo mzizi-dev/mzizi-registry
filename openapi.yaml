@@ -13,9 +13,9 @@ info:
     All data routes read from Supabase. If the database is not configured, endpoints return
     503 with setup instructions. There are no hardcoded fallbacks.
 
-    **Base URL:** `https://mzizi.dev/api/v1`
+    **Base URL:** `https://api.mzizi.dev/v1`
 
-    **Registry:** the stable registry across the nodes and rungs of the Mzizi DNA double helix — served from the Supabase `components` table (live count via `GET /api/v1/stats` → `stable`; counts are never hardcoded in this spec so it cannot drift from the database)
+    **Registry:** the stable registry across the nodes and rungs of the Mzizi DNA double helix — served from the Supabase `components` table (live count via `GET /v1/stats` → `stable`; counts are never hardcoded in this spec so it cannot drift from the database)
 
     **MCP Server:** `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport; `mzizi.dev/mcp` 308-redirects here)
   contact:
@@ -25,7 +25,7 @@ info:
     identifier: MIT
 
 servers:
-  - url: https://mzizi.dev/api/v1
+  - url: https://api.mzizi.dev/v1
     description: Production
   - url: http://localhost:3000/api/v1
     description: Development
@@ -102,7 +102,7 @@ paths:
       summary: Component Registry Index
       description: |
         Returns metadata for every stable registry item across the Mzizi DNA double helix
-        (live count from Supabase — query `GET /api/v1/stats` for the current total).
+        (live count from Supabase — query `GET /v1/stats` for the current total).
         Returns 503 if the database is not configured.
       operationId: getRegistryIndex
       tags: [Registry]
@@ -716,7 +716,7 @@ paths:
     get:
       summary: "GONE — see /docs for the migration map"
       description: |
-        Always returns HTTP 410 Gone. See `GET /api/v1/docs` for the
+        Always returns HTTP 410 Gone. See `GET /v1/docs` for the
         per-slug → URL migration map.
       operationId: getDoc
       deprecated: true

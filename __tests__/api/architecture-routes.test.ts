@@ -126,7 +126,9 @@ describe("GET /api/v1/architecture/layers/[n] (retired)", () => {
     expect(r.status).toBe(410)
     expect(r.data.error).toBe("Gone")
     expect(r.data.model).toBe("mzizi-dna-helix")
-    expect(r.data.migrated_to?.["node detail"]).toContain("/api/v1/architecture/nodes/3")
+    expect(r.data.migrated_to?.["node detail"]).toBe(
+      "https://api.mzizi.dev/v1/architecture/nodes/3"
+    )
   })
 
   it("is 410 even for a node the old 1-10 bound would have rejected", async () => {

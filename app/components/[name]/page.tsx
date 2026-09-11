@@ -43,7 +43,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
   const sourceCode = readComponentSource(name) ?? "// Source not available"
   const firstFilePath = item.files?.[0]?.path ?? ""
   const registryType = item.type?.replace("registry:", "") ?? "component"
-  const installUrl = `https://mzizi.dev/api/v1/ui/${item.name}`
+  const installUrl = `https://api.mzizi.dev/v1/ui/${item.name}`
   // Every component is a real file, so every one can be rendered. There is no
   // hand-written demo list any more -- that list gated the Preview tab off for 525
   // of 571 components, which is why this page only ever showed code.
