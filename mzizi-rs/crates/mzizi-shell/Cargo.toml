@@ -1,6 +1,19 @@
 [package]
 name = "mzizi-shell"
-description = "Mzizi N7 shell — the app-chrome rung: header, nav, connectivity, theme, lifecycle."
+description = "Mzizi N7 shell for Dioxus — app chrome: bottom nav, footer, command palette, connectivity, theme, toasts, deep links and lifecycle."
+# The description named the HEADER first, and this crate does not have one: `nyuchi-header`,
+# `nyuchi-sidebar`, `app-switcher` and `nyuchi-root-layout` are the four of sixteen not
+# ported. Same class of defect as `mzizi-tokens` describing five families of twenty-one —
+# a manifest line that stopped being true and that nothing compares against the crate.
+# crates.io renders `readme`, `keywords` and `categories` on the package page, and a
+# published version is permanent — 0.1.0 can be yanked but never re-uploaded. All three
+# were unset on this crate, so the page would have rendered bare.
+#
+# `categories` must be slugs from the crates.io list (https://crates.io/category_slugs);
+# an invented one is rejected at publish time, after `cargo package` has already passed.
+readme = "README.md"
+keywords = ["dioxus", "app-shell", "navigation", "ui", "mzizi"]
+categories = ["gui", "web-programming"]
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
