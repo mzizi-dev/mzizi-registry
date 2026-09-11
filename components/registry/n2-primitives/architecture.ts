@@ -4,7 +4,7 @@
  * The DATABASE is the source of truth for all architecture data.
  * This file exports types and re-exports async getters from lib/db.
  *
- * Install via: npx shadcn@latest add https://mzizi.dev/api/v1/ui/architecture
+ * Install via: npx shadcn@latest add https://api.mzizi.dev/v1/ui/architecture
  */
 
 // ─── Types ───────────────────────────────────────────────────────────────────

@@ -63,7 +63,7 @@ Suggested props, variants, and behavior:
 Install command:
 
 ```bash
-npx shadcn@latest add https://mzizi.dev/api/v1/ui/<component-name>
+npx shadcn@latest add https://api.mzizi.dev/v1/ui/<component-name>
 ```
 
 ## Design Reference

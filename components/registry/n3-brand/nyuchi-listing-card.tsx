@@ -18,7 +18,7 @@ import { useNyuchiHarness } from "@/lib/harness"
    ✅ TOKEN CHECK — Dev warning if MukokoThemeProvider is missing
    
    No manual configuration needed. Install and use:
-   npx shadcn@latest add https://mzizi.dev/api/v1/ui/nyuchi-listing-card
+   npx shadcn@latest add https://api.mzizi.dev/v1/ui/nyuchi-listing-card
    ═══════════════════════════════════════════════════════════════ */
 
 const mineralAccents = {

@@ -45,7 +45,7 @@ They point opposite ways today on purpose: **svelte is `production` + `optional`
 ### React — the shadcn CLI
 
 ```bash
-npx shadcn@latest add https://mzizi.dev/api/v1/ui/button
+npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 ```
 
 This is the only target with a CLI that resolves the registry directly. It reads
@@ -57,7 +57,7 @@ Two things that will bite you if the manifest is wrong, both now gate-checked by
 
 - A `registryDependencies` entry is a **bare name only** for components that exist
   upstream at ui.shadcn.com. Anything Mzizi-only needs the absolute
-  `https://mzizi.dev/api/v1/ui/<name>` form, because a bare name sends the CLI to
+  `https://api.mzizi.dev/v1/ui/<name>` form, because a bare name sends the CLI to
   the default registry, where it 404s.
 - Every npm package a component imports must be in its `dependencies`. A missing
   one installs a file that cannot resolve its own import.
@@ -80,8 +80,8 @@ mzizi-tokens = { git = "https://github.com/mzizi-dev/mzizi-registry", package = 
 Check what actually exists before you plan around it:
 
 ```bash
-curl https://mzizi.dev/api/v1/rs/button      # 200 — has a Dioxus implementation
-curl https://mzizi.dev/api/v1/rs/select      # 404 — TypeScript only, for now
+curl https://api.mzizi.dev/v1/rs/button      # 200 — has a Dioxus implementation
+curl https://api.mzizi.dev/v1/rs/select      # 404 — TypeScript only, for now
 ```
 
 A 404 there is a true answer, not an outage. Three primitives have Rust today
