@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { isSupabaseConfigured, getHelixNode } from "@/lib/db"
+import { getHelixNode } from "@/lib/db"
 import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("architecture-node-detail")
@@ -52,21 +52,13 @@ export async function GET(_request: Request, { params }: { params: Promise<{ n: 
   }
 
   try {
-    if (!isSupabaseConfigured()) {
-      trackApiCall({
-        endpoint: `/api/v1/architecture/nodes/${parsed}`,
-        durationMs: Date.now() - start,
-        statusCode: 503,
-      })
-      return NextResponse.json(
-        {
-          error: "Database not configured",
-          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
-        },
-        { status: 503, headers: CORS }
-      )
-    }
-
+    // The `isSupabaseConfigured()` guard that stood here is gone, matching
+    // `/api/v1/architecture` — the index dropped it when the helix moved to
+    // `content/doctrine`. This detail route kept it and so answered 503 for
+    // every node on a deployment with no database credentials, while the index
+    // listing those same nodes answered 200. Nothing below this line reads a
+    // database: `getHelixNode` reads the doctrine tree, and the component count
+    // it carries is `readComponents()` over the registry on disk.
     const element = await getHelixNode(parsed)
     if (!element) {
       trackApiCall({
