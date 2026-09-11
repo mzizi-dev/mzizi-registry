@@ -3,11 +3,16 @@
 //!
 //! # Where the components are
 //!
-//! Not in this crate's `src/`. Each one is a file under
+//! Not authored in this crate. Each one is a file under
 //! `components/registry/n8-assurance/<name>.rs`, beside the `.ts` that implements
-//! the same contract for a JavaScript host, and this module `#[path]`-includes
-//! it. One component, one name, one place — the registry — with this crate as the
-//! thing that compiles it.
+//! the same contract for a JavaScript host. One component, one name, one place —
+//! the registry — with this crate as the thing that compiles it.
+//!
+//! `src/generated/` holds a COMMITTED copy of each, written by `pnpm rust:generate`
+//! and checked by `pnpm rust:generate:check`. The copy is what makes this crate
+//! publishable: `cargo package` collects only files under the package root, so a
+//! `#[path]` reaching up into the registry ships a tarball that cannot build. Edit
+//! the registry file; the copy is overwritten.
 //!
 //! # N8 is a Rust node, and what that means precisely
 //!
@@ -27,41 +32,41 @@
 //! in a way that changes its caller's verdict, so a probe can never report
 //! "failed" merely because a collector was unreachable.
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-conformity-check.rs"]
+#[path = "generated/mzizi-conformity-check.rs"]
 pub mod mzizi_conformity_check;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-rum.rs"]
+#[path = "generated/mzizi-rum.rs"]
 pub mod mzizi_rum;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-api-probe.rs"]
+#[path = "generated/mzizi-api-probe.rs"]
 pub mod mzizi_api_probe;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-error-tracker.rs"]
+#[path = "generated/mzizi-error-tracker.rs"]
 pub mod mzizi_error_tracker;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-alert-engine.rs"]
+#[path = "generated/mzizi-alert-engine.rs"]
 pub mod mzizi_alert_engine;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-synthetic-probe.rs"]
+#[path = "generated/mzizi-synthetic-probe.rs"]
 pub mod mzizi_synthetic_probe;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-a11y-audit.rs"]
+#[path = "generated/mzizi-a11y-audit.rs"]
 pub mod mzizi_a11y_audit;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-chaos.rs"]
+#[path = "generated/mzizi-chaos.rs"]
 pub mod mzizi_chaos;
 
-#[path = "../../../../components/registry/n8-assurance/rtl-conformity-check.rs"]
+#[path = "generated/rtl-conformity-check.rs"]
 pub mod rtl_conformity_check;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-platform-health.rs"]
+#[path = "generated/mzizi-platform-health.rs"]
 pub mod mzizi_platform_health;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-perf-probe.rs"]
+#[path = "generated/mzizi-perf-probe.rs"]
 pub mod mzizi_perf_probe;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-incident-manager.rs"]
+#[path = "generated/mzizi-incident-manager.rs"]
 pub mod mzizi_incident_manager;
 
-#[path = "../../../../components/registry/n8-assurance/mzizi-otel.rs"]
+#[path = "generated/mzizi-otel.rs"]
 pub mod mzizi_otel;

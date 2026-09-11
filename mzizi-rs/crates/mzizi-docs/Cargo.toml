@@ -8,6 +8,17 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 
+# The contract suite does not ship. `cargo package` prints an "ignoring test
+# contract" warning for this line; that is the intended outcome, not a defect to fix.
+#
+# `tests/contract.rs` reads each component's `.tsx`/`.ts` sibling out of
+# `components/registry/` — three levels above this crate — and asserts the two agree.
+# Those siblings are TypeScript and can never be in the tarball, so a published copy
+# of this suite would panic on its first assertion for anyone who ran `cargo test` on
+# a downloaded crate. The tests are a REGISTRY gate; CI runs them in the repo, where
+# the files they read actually exist.
+exclude = ["tests/"]
+
 [lints]
 workspace = true
 
