@@ -19,7 +19,7 @@ export async function GET() {
   const types = Object.entries(sampleData).map(([type, records]) => ({
     type,
     count: records.length,
-    href: `https://mzizi.dev/api/v1/samples/${type}`,
+    href: `https://api.mzizi.dev/v1/samples/${type}`,
     mongodb: { database: "mzizi_samples", collection: type },
   }))
 

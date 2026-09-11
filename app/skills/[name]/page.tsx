@@ -93,7 +93,7 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ na
         <p className="text-sm leading-relaxed text-muted-foreground">
           That installs every skill. To fetch just this one at runtime:
         </p>
-        <CopyCommand command={`curl -s https://mzizi.dev/api/v1/skills/${skill.name}`} />
+        <CopyCommand command={`curl -s https://api.mzizi.dev/v1/skills/${skill.name}`} />
         <p className="text-sm leading-relaxed text-muted-foreground">
           Source of truth:{" "}
           <code className="font-mono text-xs">mzizi-skills/skills/{skill.name}/SKILL.md</code> in{" "}

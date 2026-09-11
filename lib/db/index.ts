@@ -1022,7 +1022,7 @@ export async function getComponentLinks(name: string): Promise<ComponentLink[]> 
   // Fallback: canonical URL pattern for the portal
   return [
     { url: `https://mzizi.dev/components/${name}`, kind: "portal" },
-    { url: `https://mzizi.dev/api/v1/ui/${name}`, kind: "api" },
+    { url: `https://api.mzizi.dev/v1/ui/${name}`, kind: "api" },
   ]
 }
 

@@ -23,7 +23,7 @@ export default function ComponentsPage() {
           it programmatically — and remains installable as a working component.
         </p>
         <pre className="overflow-x-auto rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs">
-          <code>npx shadcn@latest add https://mzizi.dev/api/v1/ui/&lt;component-name&gt;</code>
+          <code>npx shadcn@latest add https://api.mzizi.dev/v1/ui/&lt;component-name&gt;</code>
         </pre>
       </header>
 

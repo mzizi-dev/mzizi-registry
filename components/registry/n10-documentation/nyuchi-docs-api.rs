@@ -119,7 +119,7 @@ pub enum Route {
 impl Route {
     /// `/architecture/axes` describes the retired layer-and-axis model.
     ///
-    /// `mzizi.dev/api/v1/architecture/axes` answers `410 Gone` today. The route
+    /// `api.mzizi.dev/v1/architecture/axes` answers `410 Gone` today. The route
     /// is kept here so a host serving the `.ts`'s published surface can decide
     /// deliberately — answer it, or return 410 to match production — rather than
     /// discovering the discrepancy from a consumer.
