@@ -11,10 +11,15 @@
 //! the platform generators that once carried their own hardcoded five-mineral map are why the
 //! token node shipped a five-and-five palette against a seven-and-seven system.
 //!
-//! Included by path rather than copied for the same reason: one file, in the registry, beside
-//! every other target's token artifact.
+//! Authored in the registry rather than here for the same reason: one file, beside every other
+//! target's token artifact.
+//!
+//! `src/generated/` holds a COMMITTED copy of it, written by `pnpm rust:generate` and checked by
+//! `pnpm rust:generate:check`. The copy is what makes this crate publishable: `cargo package`
+//! collects only files under the package root, so a `#[path]` reaching up into the registry ships
+//! a tarball that cannot build. Edit the registry file; the copy is overwritten.
 
-#[path = "../../../../components/registry/n1-tokens/nyuchi-tokens-rust.rs"]
+#[path = "generated/nyuchi-tokens-rust.rs"]
 mod generated;
 
 pub use generated::*;
