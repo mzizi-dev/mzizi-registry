@@ -1,6 +1,18 @@
 [package]
 name = "mzizi-fundi"
-description = "Mzizi N9 fundi — the self-healing rung: turning assurance signals into filed defects."
+description = "Mzizi N9 fundi — the self-healing rung, client side: deciding what is worth filing, shaping the issue, and learning which fixes worked."
+# It does not FILE anything — it builds the issue and the host sends it, and the healing
+# loop itself is a separate TypeScript Worker. "turning signals into filed defects" read
+# as a capability this crate does not have.
+# crates.io renders `readme`, `keywords` and `categories` on the package page, and a
+# published version is permanent — 0.1.0 can be yanked but never re-uploaded. All three
+# were unset on this crate, so the page would have rendered bare.
+#
+# `categories` must be slugs from the crates.io list (https://crates.io/category_slugs);
+# an invented one is rejected at publish time, after `cargo package` has already passed.
+readme = "README.md"
+keywords = ["error-reporting", "diagnostics", "self-healing", "observability", "mzizi"]
+categories = ["development-tools::debugging", "development-tools"]
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
