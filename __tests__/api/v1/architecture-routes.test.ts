@@ -122,7 +122,7 @@ describe("Architecture API v1 Routes", () => {
     // worse than an HTTP one, because it rejects the filter before it reaches
     // the store — moved with the server it guarded. `lib/mcp-server.ts` was the
     // portal's own MCP; there is one Mzizi MCP now and it lives in
-    // nyuchi/mzizi-tools, where `test/list-components.test.ts` covers this as
+    // mzizi-dev/agent-tools, where `test/list-components.test.ts` covers this as
     // "passes an uncapped node through instead of rejecting it". Re-adding a
     // copy here would assert against a file this repo no longer has.
   })

@@ -51,7 +51,7 @@ function isSafeSegment(s: string): boolean {
  *   target  where the file GOES — the destination in the consumer's project
  *
  * They were conflated: `path` held the destination and `target` was absent, so
- * `shadcn registry validate` failed on every item and `npx shadcn add nyuchi/mzizi/button`
+ * `shadcn registry validate` failed on every item and `npx shadcn add mzizi-dev/mzizi-registry/button`
  * — the GitHub-registry route, which reads files straight out of the repo at `path` — could
  * not resolve a single file.
  */

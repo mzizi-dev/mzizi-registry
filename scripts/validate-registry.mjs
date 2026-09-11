@@ -296,7 +296,7 @@ function main() {
     // API hid it, because `/api/v1/ui/{name}` resolves the source by component NAME and
     // inlines the content — `path` was never read as a source, so a wrong one cost nothing
     // locally. It cost the GitHub-registry channel entirely: `shadcn registry validate
-    // nyuchi/mzizi` failed on all 574 items, because that path is resolved against the repo.
+    // mzizi-dev/mzizi-registry` failed on all 574 items, because that path is resolved against the repo.
     for (const file of item.files ?? []) {
       const p = file.path ?? ""
       if (!p.startsWith("components/registry/")) {

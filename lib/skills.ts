@@ -1,7 +1,7 @@
 /**
  * Skills, served from the generated bundle.
  *
- * Skills are authored as `SKILL.md` files in `nyuchi/mzizi-tools/mzizi-skills/`
+ * Skills are authored as `SKILL.md` files in `mzizi-dev/agent-tools/mzizi-skills/`
  * and published as `@nyuchi/mzizi-skills`. `scripts/generate-skills.mjs` inlines
  * that package into `lib/skills.generated.ts` at build time; this module reads
  * it. Nothing here touches Supabase.
