@@ -22,16 +22,16 @@ title: "Sovereignty Assessment"
 
 Before any database, message bus, runtime, framework, or service joins the canonical stack, an assessment must be written and stored in `documentation-architecture-sovereignty/{technology-name}` covering at minimum:
 
-| Field | Question it answers |
-| -- | -- |
-| `licence` | What licence governs use, redistribution, and modification? |
-| `governance` | Who controls the project? Foundation, single vendor, BDFL, or community? |
-| `forkable` | Can the project be forked and maintained independently if the upstream becomes hostile or abandoned? |
-| `self_hostable` | Can it run on infrastructure we control, without dependency on a vendor service? |
-| `sovereignty_risk` | `low` / `medium` / `high` — overall risk classification |
-| `rationale` | The reasoning for the risk classification, in prose |
+| Field              | Question it answers                                                                                  |
+| ------------------ | ---------------------------------------------------------------------------------------------------- |
+| `licence`          | What licence governs use, redistribution, and modification?                                          |
+| `governance`       | Who controls the project? Foundation, single vendor, BDFL, or community?                             |
+| `forkable`         | Can the project be forked and maintained independently if the upstream becomes hostile or abandoned? |
+| `self_hostable`    | Can it run on infrastructure we control, without dependency on a vendor service?                     |
+| `sovereignty_risk` | `low` / `medium` / `high` — overall risk classification                                              |
+| `rationale`        | The reasoning for the risk classification, in prose                                                  |
 
-A technology may be accepted with `medium` or even `high` risk *if* the rationale is documented and the trade-off is explicit. What is rejected is admitting a technology to the stack without any assessment.
+A technology may be accepted with `medium` or even `high` risk _if_ the rationale is documented and the trade-off is explicit. What is rejected is admitting a technology to the stack without any assessment.
 
 ## Why this rule exists
 

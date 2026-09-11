@@ -7,16 +7,16 @@
 // Regenerate with `pnpm api:routes`. CI runs `pnpm api:routes:check`, which
 // fails if a route was added to the app without appearing here.
 
-import type { RouteModule } from "./router"
+import type { RouteModule } from "./router";
 
 export type GeneratedRoute = {
   /** URL pattern, `:name` for a dynamic segment. */
-  readonly pattern: string
+  readonly pattern: string;
   /** HTTP methods the module exports. */
-  readonly methods: readonly string[]
+  readonly methods: readonly string[];
   /** Loads the route module. */
-  readonly load: () => Promise<RouteModule>
-}
+  readonly load: () => Promise<RouteModule>;
+};
 
 /** 36 routes, ordered so a literal segment is matched before a parameter. */
 export const ROUTES: readonly GeneratedRoute[] = [
@@ -200,4 +200,4 @@ export const ROUTES: readonly GeneratedRoute[] = [
     methods: ["GET"],
     load: () => import("../../app/api/v1/route"),
   },
-]
+];

@@ -12,7 +12,7 @@
  * `pnpm changelog:generate`; `pnpm changelog:generate:check` is the CI gate.
  */
 
-import type { ChangelogRow } from "@/lib/db/types"
+import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
@@ -79,7 +79,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.1.8",
-    title: "MCP full-registry reads + first-party auth foundation + design.nyuchi.com decommission",
+    title:
+      "MCP full-registry reads + first-party auth foundation + design.nyuchi.com decommission",
     description:
       "Document-route MCP now pages component_documents past PostgREST's 1000-row cap, so list_collections and list_components report the full registry (components 143, primitives 228, brand 57) instead of a 1000-row slice; read-RPC defaults raised (list_components 100->500, get_node_documents/read_documents 200->1000). Security foundation for first-party tenanting: first_party_clients allow-list (RLS service-role-only) with is_first_party_caller() + touch_first_party_client_last_used() SECURITY DEFINER helpers, and the brand-validation trigger function hardened so it is not callable as an anon/authenticated RPC. design.nyuchi.com decommissioned in the portal repo (308 redirects to mzizi.dev); stale pre-rename packages removed.",
     line: "pre-1.0",
@@ -203,7 +204,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.1.4",
-    title: "Version store consolidation — one document-format store, no duplicates",
+    title:
+      "Version store consolidation — one document-format store, no duplicates",
     description:
       "Removed the document_versions table I incorrectly introduced in 4.1.1. Migrated its 2137 entries into the versions collection in component_documents (the document-format version history that already existed for 556 components from a prior session). put_document now writes versions directly to the versions collection in the same atomic transaction; read_versions reads from it. One version store, document-format, beside the document it tracks. 4865 total version entries preserved (2728 pre-4.1.0 + 2137 post-4.1.0), zero loss. get_system_counts rewritten to read from the collection. The duplication problem is resolved.",
     line: "pre-1.0",
@@ -420,7 +422,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.0.45",
-    title: "Doctrine v3.5 substrate, Mzizi engineering-node rename, and design-portal split",
+    title:
+      "Doctrine v3.5 substrate, Mzizi engineering-node rename, and design-portal split",
     description:
       "Three related changes recorded together.\n\n1. Doctrine v3.5 substrate reconciliation. MongoDB is restored as the non-relational operational primary under a tiered sovereignty classification (SSPL classified medium risk with a documented justification, not a hard disqualifier). SiafuDB Graph Sync Protocol — a first-party Bundu Foundation project — is adopted as the canonical device-to-cloud sync protocol, with Mongo-native RxDB replication as the interim implementation; Apache CouchDB is removed. NATS is added alongside Redpanda as the edge-native service mesh. ScyllaDB is re-roled from operational primary to a future candidate for the Nhaka cold-storage tier. Recorded in the substrate-decision convention; doctrine-line version 3.5.\n\n2. Mzizi engineering-node component rename. The 33 components on the Mzizi-owned engineering nodes — N4 safety, N5 resilience, N8 assurance — were renamed from the nyuchi-* prefix to mzizi-*, aligning the registry identifiers with the ownership convention (Mzizi owns nodes 4/5/8).\n\n3. Design-portal split. mzizi.dev is the architecture, the Nyuchi Design System (mzizi.dev) is the implementation, and Nyuchi Design Fundi is the product.",
     line: "pre-1.0",
@@ -485,7 +488,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.0.44",
-    title: "Topology corrected — Nyuchi Design plugs into existing mukoko-edge gateway",
+    title:
+      "Topology corrected — Nyuchi Design plugs into existing mukoko-edge gateway",
     description:
       "The central API gateway already exists in mukoko-edge (Cloudflare Worker). Nyuchi Design is a plugin — new sub-routes (/v1/design/*, /v1/mcp/design) added to the existing Worker, wiring in Supabase grjsboqkaywpwatvrzmy as a new data source. No new Worker deployment, no Fly.io service for design. Fly.io remains for mukoko-platform FastAPI (auth, CouchDB, stateful transactions). The design API is read-heavy edge traffic — correct home is the existing Cloudflare gateway.",
     line: "pre-1.0",
@@ -578,7 +582,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.0.41",
-    title: "Infrastructure topology corrected — three-edge model (human / ai / machine)",
+    title:
+      "Infrastructure topology corrected — three-edge model (human / ai / machine)",
     description:
       "Corrected the infrastructure topology to reflect the three-edge model. Human edge (Vercel): design portal site + CLI — humans interact here, no Supabase credentials. AI edge (Cloudflare): mcp.nyuchi.dev (main ecosystem MCP, design is a sub-route) + api.nyuchi.dev (core API Worker) — AI agents and CLIs interact here. Machine edge (Cloudflare): fundi.nyuchi.dev — autonomous cron/queue-driven healing. Database (Supabase): background data layer. Key corrections: mcp.nyuchi.dev is ecosystem-wide not design-specific. api.nyuchi.dev moves from Vercel to Cloudflare — the portal calls the API Worker, never Supabase directly. CLI added as explicit human-edge service.",
     line: "pre-1.0",
@@ -672,7 +677,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.0.40",
-    title: "Infrastructure topology declaration — Cloudflare + WorkOS + domain routing",
+    title:
+      "Infrastructure topology declaration — Cloudflare + WorkOS + domain routing",
     description:
       "Declared canonical infrastructure topology as database doctrine via new infrastructure_topology table. Key decisions: Fundi (N9) is a Cloudflare Worker in Rust/WASM at fundi.nyuchi.dev — NOT a Supabase Edge Function. MCP server is a Cloudflare Worker at mcp.nyuchi.dev/design with sub-route pattern for future services (/data, /payments, /identity). Core API is a Cloudflare Worker at api.nyuchi.dev/v1. SvelteKit serves mzizi.dev on Cloudflare Pages. Auth is WorkOS (SSO, JWT, multi-tenancy). Supabase is data-only — no business logic in Edge Functions. Updated: N9 component descriptions, nyuchi-docs-api framework reclassified to rust-wasm, all documentation pages with correct domains, ai_instructions with correct service URLs, nyuchi-ai-context source code. Added skills: cloudflare-worker-rust and mcp-server-cloudflare.",
     line: "pre-1.0",
@@ -843,7 +849,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.0.37",
-    title: "Architecture Explorer Seeded — 3D Axes and Layers Are Now Queryable Doctrine",
+    title:
+      "Architecture Explorer Seeded — 3D Axes and Layers Are Now Queryable Doctrine",
     description:
       "The architecture_frontend_axes (5 rows) and architecture_frontend_layers (10 rows) tables are now populated from the doctrine. Every axis has a title, description, geometry, and metaphor; every layer has a role, description, covenant, stakeholder, and 4 implementation rules as jsonb. Axis-to-layer FK resolves cleanly for all 10 layers. get_layer_counts() rewritten to join against the layers table instead of a 10-branch CASE — the function is now table-driven, so relabeling a layer or moving it to a different axis requires an UPDATE, not a migration. Added get_architecture(), get_axes_summary(), and get_layer_detail(N) helpers for the explorer UI. Closes issue #46.",
     line: "pre-1.0",
@@ -905,7 +912,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.0.36",
-    title: "Native platform targets — Swift, Kotlin, ArkTS, Python, React Native token nodes",
+    title:
+      "Native platform targets — Swift, Kotlin, ArkTS, Python, React Native token nodes",
     description:
       "Expanded framework, runtime_lang, migration_target, and platforms check constraints to include all native platform targets the ecosystem serves. Added five N1 token export nodes: nyuchi-tokens-swift (iOS/macOS SwiftUI), nyuchi-tokens-kotlin (Android Jetpack Compose), nyuchi-tokens-arkts (HarmonyOS ArkUI), nyuchi-tokens-python (analytics/ML pipelines), nyuchi-tokens-react-native (iOS+Android RN). nyuchi-tokens already generated output for all these platforms via generateTokens() — the registry now formally tracks each as a first-class N1 vertical node. visionOS, watchOS, tvOS, macOS, flutter, and dart also added to the platform vocabulary for future coverage.",
     line: "pre-1.0",
@@ -942,7 +950,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.0.35",
-    title: "Accessibility Healing Loop — Fundi Now Owns Accessibility Compliance",
+    title:
+      "Accessibility Healing Loop — Fundi Now Owns Accessibility Compliance",
     description:
       'Extended Fundi\'s mandate from system stability to also cover accessibility compliance. The system now continuously validates WCAG and color-blindness safety, detects regressions, and files GitHub issues automatically.\n\nEXTENSIONS ENABLED\n\n1. pg_cron 1.6.4 — scheduled job runner\n2. pg_net 0.20.0 — async HTTP (available for future edge function calls)\n\nCOLOR-BLINDNESS SIMULATION IN SQL\n\n3. Created simulate_color_blindness(hex, cb_type) using Machado/Oliveira/Fernandes 2009 linear-RGB matrices. Same approach used by Stark and Sim Daltonism. Supports protanopia, deuteranopia, tritanopia, and achromatopsia. Pure SQL implementation — no edge function needed.\n\n4. Created srgb_to_linear(c) and linear_to_srgb(c) gamma conversion helpers for correct linear-light simulation.\n\n5. Verified simulation output against published references: red appears dark olive to protanopes, red and green converge to yellow for deuteranopes, blue shifts toward teal for tritanopes, and achromatopsia returns luminance-only.\n\nAUDIT FUNCTION\n\n6. Created run_accessibility_audit(p_file_fundi_issues, p_contrast_floor) that walks every non-exempt pair in brand_accessibility_checks, simulates all four conditions, computes post-simulation contrast, updates _safe flags, and files a Fundi issue via create_fundi_issue() for every NEW regression. Returns summary with total/audited/exempt/newly_failing/newly_passing/issues_filed/timestamp.\n\n7. Added audit_exempt and audit_exempt_reason columns to brand_accessibility_checks. Marked the four decorative-border pairs exempt with a WCAG 1.4.11 justification. The audit function skips exempt rows.\n\n8. Fundi issue vocabulary: error_type=accessibility_colorblind_regression, source=run_accessibility_audit, severity=high for foreground/error/success pairs and medium for others. Diagnostic payload includes the pair, theme, roles, hex values, all four current and previous safety flags, contrast floor, and a recommended fix.\n\nFIRST-RUN RESULTS\n\n9. Ran the audit once (without Fundi filing) to populate simulation data. 42 total pairs, 38 audited (4 decorative exempt), 21 newly passing (the NULL pairs from v4.0.32 got validated), 4 newly failing (which turned out to be the decorative borders now correctly marked exempt).\n\n10. Re-ran with exemption applied and Fundi enabled: 38 audited, 0 newly failing, 0 newly passing, 0 issues filed. Stable baseline.\n\n11. get_accessibility_summary() now reports: 42 total, 38 audited, 4 exempt, 38 passing WCAG AA normal, 33 passing AAA normal, 38 passing AA/AAA large, 38 safe under all four color-blindness conditions, 0 pending external validation, 0 colorblind failing. The 25 pairs previously pending external validation are all resolved.\n\nSCHEDULED DAILY AUDIT\n\n12. Scheduled pg_cron job nyuchi-accessibility-audit-daily at 02:00 UTC that runs run_accessibility_audit(true) daily. Any regression introduced by future token changes will be detected and filed to Fundi within 24 hours.\n\nACCESSIBILITY-AUDIT REGISTERED AS L8 COMPONENT\n\n13. Added the accessibility-audit component at Layer 8 (Assurance Z-axis, conformity category). Status stable, platform postgres (new platform value). Source_code in the components.source_code column contains the SQL-based audit description. Full component_docs and component_demos rows.\n\n14. Extended the components.platforms check constraint to allow postgres and edge-function values alongside the existing web/ios/android/harmonyos/react-native/rust/python. This lets us register SQL-based L8 components and edge-function-based ones properly.\n\nDOCUMENTATION UPDATES\n\n15. nyuchi-mcp-system-prompt → v2.2. Added "Accessibility Healing Loop" section describing the full loop, the SQL functions, and the scheduled job.\n\n16. nyuchi-claude-project-prompt → v2.2. Shorter version of the same.\n\n17. nyuchi-copilot-instructions → v1.3. Three new rules (26-28) covering the audit, simulate function, and run function.\n\n18. brand-guidelines doc page → v2.2. Added "Accessibility Healing Loop" section with SQL examples and exemption guidance.\n\nFINAL STATE\n\n- 19 brand_* tables (brand_accessibility_checks now has 12 columns including audit_exempt)\n- 556 components (up from 555 — accessibility-audit added)\n- Security advisor: zero warnings\n- Performance advisor: only INFO unused-index notes\n- get_accessibility_summary(): 0 colorblind failing, 0 pending external validation\n- pg_cron job active: nyuchi-accessibility-audit-daily runs at 02:00 UTC every day\n\nGAPS REMAINING\n\n19. component_docs.examples JSONB still empty across all 556 components — biggest remaining documentation opportunity\n20. Preview branch ci/claude-review-draft-guard still consuming resources as stale infrastructure — needs Supabase dashboard cleanup',
     line: "pre-1.0",
@@ -1043,7 +1052,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.0.33",
-    title: "Architecture Correction — Six Alpha Components Promoted to Stable with DB-Sourced Code",
+    title:
+      "Architecture Correction — Six Alpha Components Promoted to Stable with DB-Sourced Code",
     description:
       'Correction session. Previous 4.0.32 framing said the six alpha components needed "frontend repo work." That was wrong — the Nyuchi Design System architecture stores component source in components.source_code and the frontend repo pulls from the DB. Source code goes in the DB, not the repo.\n\nWROTE PRODUCTION SOURCE CODE FOR ALL SIX ALPHA COMPONENTS\n\n1. segmented-control (L2 forms, 4213 chars): cva-based pill-shaped connected group with controlled/uncontrolled value state, keyboard arrow-key navigation, role=radiogroup + role=radio semantics, 48px minimum touch targets, three size variants.\n\n2. toolbar (L2 layout, 3294 chars): radix-ui Toolbar primitive wrapper with Button, Link, Separator, ToggleGroup, and ToggleItem subcomponents. data-orientation aware for horizontal/vertical layouts. Pill-consistent radius and min-48px touch targets.\n\n3. bento-grid (L2 layout, 3777 chars): cva-based responsive grid with columns (2/3/4/6), density (compact/default/spacious), and tile-size variants (1x1 through 3x2). Semantic role=list/listitem. Includes BentoTile, BentoTileHeader, BentoTileTitle, BentoTileDescription, BentoTileContent composition.\n\n4. inline-edit (L2 forms, 5677 chars): click-to-edit pattern with display/edit mode switching, async onSave with rollback on error, Escape to cancel, Enter/Cmd-Enter to save, optional saveOnBlur, required field validation, custom validator hook, screen-reader announcements, focus return to display after save/cancel, supports text/textarea/number/email/url field types.\n\n5. notification-center-full (L2 feedback, 9224 chars): full notification management surface with tabs (all/unread/mentions/archived), search filtering, time-grouped lists (Today/Yesterday/This week/This month), bulk selection with mark-read/archive/delete actions, role=region/role=feed semantics, scroll-area integration, live unread count badge.\n\n6. rtl-conformity-check (L8 conformity, 8023 chars): five-rule validator — logical-properties (flags physical margin/padding/inset/border usage), bidi-text (flags bidi text without lang/dir), icon-mirroring (flags directional icons in RTL contexts without mirror hints, with configurable non-mirroring list for search/play/clock etc.), text-alignment (flags text-align: left/right instead of start/end), direction-attribute (flags missing html[dir]). Includes runRtlConformityCheck function and useRtlConformity React hook with 10-second continuous polling.\n\nAll six components flipped from status=alpha to status=stable and their component_demos rows set to has_demo=true. Demo types are interactive for the five UI primitives and code-example for the L8 validator.\n\nNEW TABLES AUDITED\n\n7. architecture_frontend_axes, architecture_frontend_layers, architecture_removed — RLS enabled, public-read SELECT policies. Clean.\n\n8. brand_density_breakpoint_map — RLS enabled, four policies (SELECT public read + INSERT/UPDATE/DELETE service-role only). Matches the pattern applied to brand_density in 4.0.32. Clean.\n\nPREVIEW BRANCH STATUS\n\n9. The ci/claude-review-draft-guard preview branch (project_ref rldssmbycdxdxirbsmzr) is empty — zero tables in public schema, zero migrations recorded. The branch was created with with_data=false and migrations did not replay. This is a branch infrastructure issue that cannot be resolved from SQL; it needs the Supabase branch rebase or reset flow. Flagged for investigation but does not affect main production state.\n\nFINAL STATE\n\nSecurity advisor: zero warnings. Performance advisor: only INFO unused-index notes. 555 total components, 551 stable, 0 alpha, 4 deprecated. Six components previously deferred as "needing frontend repo work" are now genuinely complete with DB-sourced production TypeScript.',
     line: "pre-1.0",
@@ -1081,7 +1091,8 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   },
   {
     version: "4.0.32",
-    title: "Security Hardening + Accessibility Infrastructure + Deferred Items Delivered",
+    title:
+      "Security Hardening + Accessibility Infrastructure + Deferred Items Delivered",
     description:
       'Comprehensive session addressing all security-related items immediately plus closing the deferred audit items from session 4.0.31.\n\nSECURITY HARDENING (priority — done first)\n\n1. Tightened four runtime-data INSERT policies from WITH CHECK (true) to timestamp validation. observability_events, fundi_issues, fundi_healing_log, and usage_events now require created_at or executed_at to be within a 5-minute window around now(). Prevents backdating and future-dating attacks at the database layer.\n\n2. Tightened fundi_issues UPDATE policy from USING (true) to USING (status IN open/investigating/in_progress/triaged). Rows already in resolved, closed, or wontfix states cannot be modified by authenticated users. WITH CHECK validates status transition is to a known value and that resolved_at if set is sane.\n\n3. Discovered and fixed two previously-unnoticed tables with dangerous policies: ubuntu_pillars and ubuntu_principles had the old "authenticated ALL USING true WITH CHECK true" pattern. Dropped those policies, verified public-read SELECT policies remain. Both tables now follow the "read-everywhere, write-only-via-service-role" model that matches every other design-system truth table.\n\n4. Fixed multiple-permissive-policies warning on brand_density and brand_density_breakpoint_map. Replaced "service_write ALL" with separate service_insert, service_update, service_delete policies so SELECT is only evaluated once per query (the public-read policy handles it alone).\n\n5. Added covering indexes for nine foreign keys on brand_density and brand_density_breakpoint_map that were flagged as unindexed.\n\n6. Final security advisor state: ZERO warnings. Performance advisor state: only INFO-level unused-index notes expected pre-launch.\n\nDENSITY TOKEN (confirmed already in place)\n\n7. Discovered brand_density table already exists with a richer schema than proposed. Three tiers populated: compact (desktop dashboards), comfortable (Nyuchi default for mobile/tablet), spacious (hero/landing surfaces). Each tier references other token tables by name (spacing_component, touch_target, icon_size, body_type, heading_type, radius_card) rather than hardcoding values. Also discovered a brand_density_breakpoint_map companion table. No changes needed beyond the policy cleanup above — the density work is already done.\n\nCOLOR BLINDNESS VALIDATION (new infrastructure)\n\n8. Created brand_accessibility_checks table. Stores every critical semantic-color pair in both light and dark modes: 42 pairs total. Each row has foreground_hex, background_hex, contrast_ratio, WCAG AA/AAA compliance booleans for normal and large text, and color-blindness safety flags for protanopia, deuteranopia, tritanopia, and achromatopsia.\n\n9. Created three SQL functions for contrast validation: hex_to_rgb() converts hex to RGB, relative_luminance() computes WCAG relative luminance, calculate_contrast_ratio() returns the WCAG 2.1 contrast ratio between two hex colors. All three pinned with SET search_path = public.\n\n10. Populated every pair with computed contrast ratios and WCAG compliance booleans. Light mode: 21 pairs, 19 passing AA normal, 15 passing AAA. Dark mode: 21 pairs, 19 passing AA normal, 18 passing AAA. The 4 "failing" border pairs corrected to NULL because borders fall under WCAG 1.4.11 (Non-Text Contrast 3:1) not the 4.5:1 text requirement — they are intentionally subtle when decorative.\n\n11. Populated color-blindness safety flags using luminance heuristic: 17 text-on-background pairs with >= 7:1 contrast marked universally safe because they rely on lightness not hue. 25 pairs left NULL pending external validator (Stark, Sim Daltonism, or an edge function). Marked each semantic-state pair (error/success/warning/info) with note that red/green colorblind users cannot rely on hue alone — icon or label required.\n\n12. Created get_accessibility_summary() helper function that returns the full compliance report in a single row.\n\nHIGH-CONTRAST HEX VALUES POPULATED\n\n13. Populated hc_light_value and hc_dark_value for 13 semantic colors: foreground, muted-foreground, error, success, warning, info, primary, ring, primary-foreground, accent, accent-foreground, border, input. All HC values verified to hit WCAG AAA (7:1) contrast against their intended backgrounds. error hc_dark was initially at 6.27 — brightened to #FF8787 to reach 7.51.\n\nTYPOGRAPHY ADDITIONS\n\n14. Added Weight 500 (medium) as a weight-type entry in brand_typography — for nav items, active states, and form labels that need emphasis without semibold.\n\n15. Added Display Small at 60px as a scale row — smoother transition between Display (72) and H1 (48) per audit recommendation. Positioned at sort_order 11, shifting H1-Code down by one. Letter-spacing -0.02em, fluid clamp 36-60.\n\nREGISTRY SCAFFOLDING FOR DEFERRED COMPONENTS\n\n16. Registered six alpha-status components representing the deferred implementation work: segmented-control (L2 forms), toolbar (L2 layout), bento-grid (L2 layout), inline-edit (L2 forms), notification-center-full (L2 feedback), rtl-conformity-check (L8 conformity). Each has full component_docs with use_cases/variants/features/a11y, component_demos manifest row marked code-example, portal/playground/source/changelog/health/api URLs. Status=alpha and added_in_version=4.0.32 flag them clearly as "registered but not implemented — awaiting frontend/edge-function work."\n\nCOUNT FUNCTION UPDATED\n\n17. Updated get_token_counts() to include brand_density and brand_accessibility_checks (14 token categories total, up from 12). Any prompt or doc referencing the function now sees the full set.\n\nDEFERRED TO POST-SQL WORK\n\n18. Documentation-from-DB generator pipeline: still requires frontend build-pipeline change, not SQL. Flagged for Next.js repo work.\n\n19. component_docs.examples field remains empty across all 555 components: this is the single largest remaining documentation opportunity and needs dedicated content-writing sessions per component family.\n\n20. The six alpha components need real source code written in the frontend repo. Their registry entries are complete — implementation is the missing half.\n\n21. External color-blindness validation for the 25 NULL pairs needs an external tool (Stark, Sim Daltonism) or a simulation edge function to write back to brand_accessibility_checks.\n\nFINAL STATE\n\nSecurity advisor: zero warnings. Performance advisor: zero actionable warnings (only informational unused-index notes expected pre-launch). 14 token tables. 555 components registered (549 stable + 6 alpha). 100% use_cases coverage. Accessibility infrastructure in place with 42 color pairs validated. High-contrast values populated for all 13 relevant semantic colors. Density token complete with three tiers. Changelog entry 4.0.32 durable.',
     line: "pre-1.0",
@@ -2192,7 +2203,11 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
     released_at: "2026-04-28T17:16:46.429458+00:00",
     created_at: "2026-04-28T17:16:46.429458+00:00",
     nodes_affected: [1, 2, 3, 4, 5, 8, 9],
-    components_added: ["nyuchi-chaos", "nyuchi-platform-health", "nyuchi-fundi"],
+    components_added: [
+      "nyuchi-chaos",
+      "nyuchi-platform-health",
+      "nyuchi-fundi",
+    ],
     components_modified: [
       "nyuchi-tokens",
       "severity-badge",
@@ -2367,4 +2382,4 @@ export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
     changed_by: "bryan-mushonga",
     entry_order: 0,
   },
-] as unknown as readonly ChangelogRow[]
+] as unknown as readonly ChangelogRow[];

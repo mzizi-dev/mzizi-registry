@@ -47,7 +47,7 @@ version: "4.0.34"
 
 # AI Agent Instructions — How AI Builds With This System
 
-The Nyuchi Design System is designed to be built *with* AI agents — Claude, Cursor, GitHub Copilot, Windsurf, and others — not just by humans alone. This page explains how AI agents are wired into the system, where their instructions live, and what guardrails are in place.
+The Nyuchi Design System is designed to be built _with_ AI agents — Claude, Cursor, GitHub Copilot, Windsurf, and others — not just by humans alone. This page explains how AI agents are wired into the system, where their instructions live, and what guardrails are in place.
 
 ## Where AI instructions live
 
@@ -74,7 +74,7 @@ Whatever agent is writing code against this system must know:
 Agents connected to `mcp.mzizi.dev/mcp` have direct access to live tools. The most important ones:
 
 - `get_component` — metadata for a named component (source is served via the registry/API)
-- `get_node_documents` — fetch documents for any node/collection (components, primitives, brand, pages, shell, styling-*, docs); the generic resolver
+- `get_node_documents` — fetch documents for any node/collection (components, primitives, brand, pages, shell, styling-\*, docs); the generic resolver
 - `list_components` — filter by node, status, platform, mini-app
 - `get_brand_tokens` / `list_brand_token_categories` — design tokens by category
 - `list_ecosystem_brands` — ecosystem brands with their primary mineral resolved against the palette

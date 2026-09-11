@@ -26,15 +26,15 @@ NO HARDCODED NUMBERS
 
 This prompt deliberately contains no counts. Component counts, node counts, and token counts drift as the system evolves. When you need a current number, query the database:
 
-- get_node_counts()           — per-node component counts
-- get_system_counts()          — system-wide totals
-- get_token_counts()           — token counts per category (every styling-* collection)
-- get_node_categories(N)      — category breakdown for node N
-- get_architecture()           — every node and rung with its strand, backbone, covenant, rules, and live counts
-- get_node_documents(...)      — raw documents for any node or collection
-- get_node_detail(N)           — single-node detail (covenant, stakeholder, rules, categories)
-- get_latest_release()         — current version
-- get_accessibility_summary()  — WCAG and color-blindness validation summary
+- get_node_counts() — per-node component counts
+- get_system_counts() — system-wide totals
+- get_token_counts() — token counts per category (every styling-\* collection)
+- get_node_categories(N) — category breakdown for node N
+- get_architecture() — every node and rung with its strand, backbone, covenant, rules, and live counts
+- get_node_documents(...) — raw documents for any node or collection
+- get_node_detail(N) — single-node detail (covenant, stakeholder, rules, categories)
+- get_latest_release() — current version
+- get_accessibility_summary() — WCAG and color-blindness validation summary
 
 ═══════════════════════════════════════════════
 THE DNA DOUBLE HELIX
@@ -45,23 +45,23 @@ labels, not a sequence, and the set is never capped — read get_architecture()
 for the live model rather than assuming a range.
 
 ENGINEERING BACKBONE — strands, and the nodes that sit on them:
-  core-guarantee   N2 Primitives · N4 Safety · N5 Resilience · N8 Assurance
-                   "The guarantees travel unchanged, always."
-  shipped          N3 Brand · N6 Pages · N7 Shell
-                   "In the box, but free to evolve."
-  swappable        N1 Tokens
-                   "Fork along the seams, not everywhere."
-  spine            the harness — "what makes the parts one body."
+core-guarantee N2 Primitives · N4 Safety · N5 Resilience · N8 Assurance
+"The guarantees travel unchanged, always."
+shipped N3 Brand · N6 Pages · N7 Shell
+"In the box, but free to evolve."
+swappable N1 Tokens
+"Fork along the seams, not everywhere."
+spine the harness — "what makes the parts one body."
 
 MEANING BACKBONE:
-  genetic-code     Ubuntu doctrine + bundu conventions —
-                   "the sequence everything is read from."
-  transcription    "Doctrine is data, not tribal knowledge."
+genetic-code Ubuntu doctrine + bundu conventions —
+"the sequence everything is read from."
+transcription "Doctrine is data, not tribal knowledge."
 
 RUNGS — cross-cutting, bridging both backbones, bound to no single strand:
-  N9  Fundi          "Failure is a learning event." (self-healing)
-  N10 Documentation  "The system documents itself."
-  N11 Discovery      "If the machine can't see it, it doesn't exist." (SEO/AIO)
+N9 Fundi "Failure is a learning event." (self-healing)
+N10 Documentation "The system documents itself."
+N11 Discovery "If the machine can't see it, it doesn't exist." (SEO/AIO)
 
 A node consumes from the strand below it on the same backbone — never
 sideways and never upward. Rungs bridge both backbones and are never
@@ -99,14 +99,14 @@ IMPLEMENTATION RULES
 15. Fundi creates GitHub issues for failures — humans stay in the loop.
 
 ═══════════════════════════════════════════════
-DESIGN TOKENS — STYLING-* COLLECTIONS
+DESIGN TOKENS — STYLING-\* COLLECTIONS
 ═══════════════════════════════════════════════
 
-N1 tokens are persisted in first-class styling-* collections with canonical CSS variable names:
+N1 tokens are persisted in first-class styling-\* collections with canonical CSS variable names:
 
 Visual: styling-minerals, styling-semantic-colors (incl. hc_light_value/hc_dark_value),
-        styling-spacing, styling-typography (incl. letter_spacing/fluid clamps/font_features),
-        styling-radius, styling-shadow, styling-motion, styling-breakpoints, styling-z-index.
+styling-spacing, styling-typography (incl. letter_spacing/fluid clamps/font_features),
+styling-radius, styling-shadow, styling-motion, styling-breakpoints, styling-z-index.
 
 Sizing & accessibility: styling-icon-sizes, styling-touch-targets, styling-component-specs.
 
@@ -122,10 +122,10 @@ Query tokens directly rather than assuming values. The DB is the source of truth
 ACCESSIBILITY VALIDATION FUNCTIONS
 ═══════════════════════════════════════════════
 
-- hex_to_rgb(hex)                  — hex → (r,g,b)
-- relative_luminance(hex)          — WCAG relative luminance
+- hex_to_rgb(hex) — hex → (r,g,b)
+- relative_luminance(hex) — WCAG relative luminance
 - calculate_contrast_ratio(fg, bg) — WCAG 2.1 contrast ratio between two hex colors
-- get_accessibility_summary()      — passing AA/AAA counts plus color-blindness validation status
+- get_accessibility_summary() — passing AA/AAA counts plus color-blindness validation status
 
 ═══════════════════════════════════════════════
 KEY FUNCTIONS
@@ -158,7 +158,7 @@ MCP: mcp.mzizi.dev/mcp
 ACCESSIBILITY HEALING LOOP
 ═══════════════════════════════════════════════
 
-An N8 component `accessibility-audit` runs daily via pg_cron and files Fundi issues for any color-blindness regressions. To validate manually: SELECT run_accessibility_audit(). To get current status: SELECT * FROM get_accessibility_summary(). To simulate a single color: simulate_color_blindness(hex, cb_type).
+An N8 component `accessibility-audit` runs daily via pg_cron and files Fundi issues for any color-blindness regressions. To validate manually: SELECT run_accessibility_audit(). To get current status: SELECT \* FROM get_accessibility_summary(). To simulate a single color: simulate_color_blindness(hex, cb_type).
 
 ═══════════════════════════════════════════════
 SKILLS — AI AGENT DOCTRINE DISTRIBUTION
@@ -167,20 +167,23 @@ SKILLS — AI AGENT DOCTRINE DISTRIBUTION
 The `skills` table stores multi-agent AI skills (Claude Code, Cursor, Copilot, Cline, Windsurf). Skills are the doctrine every AI agent working in a Nyuchi-ecosystem project should read.
 
 Surfaces:
-  - GET /api/v1/skills           — catalogue (no body)
-  - GET /api/v1/skills/{name}    — full skill with body_mdx (Accept: text/markdown for CLI)
-  - list_skills() SQL function   — same catalogue from the DB
-  - get_skill(name) SQL function — single skill with body
-  - MCP tool: list_skills
-  - MCP tool: get_skill
+
+- GET /api/v1/skills — catalogue (no body)
+- GET /api/v1/skills/{name} — full skill with body_mdx (Accept: text/markdown for CLI)
+- list_skills() SQL function — same catalogue from the DB
+- get_skill(name) SQL function — single skill with body
+- MCP tool: list_skills
+- MCP tool: get_skill
 
 Distribution:
-  - npx @nyuchi/design-cli init         — bootstraps a new app with skills pre-installed
-  - npx @nyuchi/design-agent-skills     — installs skills into ./.claude/skills/ in an existing project
-  - npx skills add nyuchi/agent-skills — via the community skills CLI
-  - /plugin install nyuchi@nyuchi-design-system — Claude Code plugin marketplace
+
+- npx @nyuchi/design-cli init — bootstraps a new app with skills pre-installed
+- npx @nyuchi/design-agent-skills — installs skills into ./.claude/skills/ in an existing project
+- npx skills add nyuchi/agent-skills — via the community skills CLI
+- /plugin install nyuchi@nyuchi-design-system — Claude Code plugin marketplace
 
 The three published skills:
-  - nyuchi-design-system  — core doctrine (the DNA double helix, minerals, DB-first)
-  - scaffold-component    — how to create a new component correctly
-  - ecosystem-app-setup   — bootstrap a new ecosystem app end-to-end
+
+- nyuchi-design-system — core doctrine (the DNA double helix, minerals, DB-first)
+- scaffold-component — how to create a new component correctly
+- ecosystem-app-setup — bootstrap a new ecosystem app end-to-end

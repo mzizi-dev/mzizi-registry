@@ -24,13 +24,13 @@
     "doctrine:generate": "node scripts/generate-doctrine.mjs",
     "doctrine:generate:check": "node scripts/generate-doctrine.mjs --check",
     "doctrine:verify": "tsx scripts/extract-doctrine.ts --check",
-    "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}\" --ignore-path .prettierignore",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}\" --ignore-path .prettierignore",
+    "format": "prettier --write --ignore-path .prettierignore \"**/*.{md,mdx,json,jsonc}\"",
+    "format:check": "prettier --check --ignore-path .prettierignore \"**/*.{md,mdx,json,jsonc}\"",
     "lint": "eslint .",
     "lint:colors": "tsx scripts/lint-colors.ts",
     "lint:fix": "eslint . --fix",
     "lint:json": "node -e \"const{execSync}=require('child_process');const fs=require('fs');const files=execSync(\\\"git ls-files '*.json' ':!pnpm-lock.yaml'\\\").toString().trim().split('\\n').filter(Boolean);let fail=0;for(const f of files){try{JSON.parse(fs.readFileSync(f,'utf8'))}catch(e){console.error('INVALID JSON:',f,e.message);fail=1}}process.exit(fail)\"",
-    "lint:md": "markdownlint-cli2",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"!**/node_modules/**\"",
     "lint:yaml": "yamllint .",
     "node-map:generate": "node scripts/generate-node-map.mjs",
     "node-map:generate:check": "node scripts/generate-node-map.mjs --check",
@@ -179,8 +179,8 @@
     "*.{ts,tsx,js,mjs}": [
       "eslint --max-warnings=0 --no-warn-ignored"
     ],
-    "*.{ts,tsx,js,mjs,json,md,css,yaml,yml}": [
-      "prettier --write"
+    "*.{md,mdx,json,jsonc}": [
+      "prettier --write --ignore-path .prettierignore"
     ]
   },
   "pnpm": {

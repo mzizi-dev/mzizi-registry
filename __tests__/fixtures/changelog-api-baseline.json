@@ -592,7 +592,11 @@
         "list_collections"
       ],
       "tools_deprecated": [],
-      "tools_modified": ["list_components", "get_component", "get_database_status"],
+      "tools_modified": [
+        "list_components",
+        "get_component",
+        "get_database_status"
+      ],
       "tools_removed": [
         "get_component_docs",
         "get_component_links",
@@ -1753,7 +1757,11 @@
     {
       "breaking": null,
       "changed_by": "bryan-mushonga",
-      "components_added": ["token-row", "quick-action-grid", "service-health-card"],
+      "components_added": [
+        "token-row",
+        "quick-action-grid",
+        "service-health-card"
+      ],
       "components_deprecated": [],
       "components_modified": [],
       "components_removed": [],
@@ -2043,7 +2051,11 @@
     {
       "breaking": null,
       "changed_by": "bryan-mushonga",
-      "components_added": ["nyuchi-chaos", "nyuchi-platform-health", "nyuchi-fundi"],
+      "components_added": [
+        "nyuchi-chaos",
+        "nyuchi-platform-health",
+        "nyuchi-fundi"
+      ],
       "components_deprecated": [],
       "components_modified": [
         "nyuchi-tokens",

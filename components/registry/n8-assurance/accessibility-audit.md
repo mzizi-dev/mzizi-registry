@@ -1,3 +1,4 @@
+```sql
 /* ═══════════════════════════════════════════════════════════════
 ACCESSIBILITY AUDIT — N8 Assurance (Z-axis)
 Validates WCAG compliance and color-blindness safety across all semantic-color pairs.
@@ -27,3 +28,4 @@ Exemptions: audit_exempt rows skipped (e.g. decorative borders per WCAG 1.4.11)
 -- severity = 'high' for foreground/error/success pairs, 'medium' otherwise
 -- diagnostic contains pair_name, theme_mode, roles, hex values, contrast,
 -- current + previous safety flags, contrast floor used, recommended_fix
+```
