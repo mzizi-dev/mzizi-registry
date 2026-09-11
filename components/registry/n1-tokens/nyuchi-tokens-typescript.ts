@@ -12,31 +12,39 @@
  *
  * WHERE THE COLOURS COME FROM:
  *   `lib/tokens/palette.source.ts` in the mzizi-registry repo is the canonical
- *   palette. `pnpm tokens:sync` projects it into globals.css and into the
- *   Swift, Kotlin, ArkTS, React Native, Python and Rust token files. THIS file
- *   is hand-maintained — it carries the semantic and component tiers, which are
- *   not in the palette — and `__tests__/tokens-surface-parity.test.ts` holds it
- *   to the same family set as every other surface.
+ *   palette, and the only place a colour is authored. `pnpm tokens:sync`
+ *   projects it into globals.css, into the Swift, Kotlin, ArkTS, React Native,
+ *   Python and Rust token files, and into THE PALETTE REGION OF THIS FILE —
+ *   everything between the `tokens:generated:ts-palette` markers in
+ *   `paletteColors` below. Do not
+ *   hand-edit a hex there; `pnpm tokens:verify` fails the build when it drifts,
+ *   and `__tests__/tokens-surface-parity.test.ts` checks the families AND the
+ *   hexes of all seven emitters against the source.
+ *
+ *   The rest of the file — the semantic tier, listing themes, brand overrides,
+ *   component tokens, the status/severity systems — is hand-written, because
+ *   none of it is in the palette. Where those tiers need a palette colour they
+ *   REFERENCE the palette (`paletteColors.cobalt.value`, or `paletteVar()` for
+ *   a `var(--color-…)` with the right fallback) rather than restating a hex.
  *
  *   This header used to read "This file is the source of truth. Platform
  *   generators read from it." That has not been true since the generator was
- *   written, and believing it is how the palette below drifted: the five-name
- *   arrays in `generateCSSVariables()` outlived the five-and-five palette by two
- *   whole expansions.
+ *   written, and believing it is how this file drifted twice. First the
+ *   five-name arrays in `generateCSSVariables()` outlived the five-and-five
+ *   palette by two whole expansions, so a consumer got ten families of
+ *   twenty-one. Then, with the families restored, six of them — terracotta,
+ *   indigo, savanna, baobab, sunset and river — were still carrying their
+ *   pre-Seven hexes: baobab was `#A5D6A7`, a green, where the palette says
+ *   `#A1887F`, a brown. Both defects had the same cause and the same shape. A
+ *   hand-maintained copy of generated data is invisible to the gate that
+ *   guards the generated data, so it drifts and reports green while it does.
+ *   Generating the region is the fix; retyping the six correct hexes would
+ *   have rebuilt the trap with fresher numbers in it.
  *
  * TWENTY-ONE FAMILIES:
  *   Seven African Minerals (geological) + Seven Heritage Colors (atmospheric) +
  *   Seven Experimental tones (the heptagon). The same twenty-one that
  *   `/v1/brand` and the Mzizi MCP serve.
- *
- * KNOWN DIVERGENCE — REPORTED, NOT SILENTLY "FIXED":
- *   Six families below carry a hex this file has always carried and which does
- *   NOT match the canonical palette: terracotta, indigo, savanna, baobab,
- *   sunset and river. They are the pre-Seven values. Correcting them is a
- *   visible colour change to a published surface and needs a deliberate
- *   decision, so it is recorded here rather than slipped into a parity commit.
- *   The parity test asserts which families are PRESENT, which is the defect
- *   being closed; the hexes are a separate, open question.
  *
  * "Thou hast ordered all things in measure, and number, and weight."
  * — The Bundu Order, v4.0.2
@@ -47,174 +55,170 @@
 // These are absolute values. They never change.
 // ═══════════════════════════════════════════════════════════════
 
+/**
+ * THE PALETTE — GENERATED, NOT AUTHORED.
+ *
+ * Everything between the markers is emitted by `scripts/sync-tokens.ts` from
+ * `lib/tokens/palette.source.ts`, the one file in the mzizi-registry repo where
+ * a colour is authored. Run `pnpm tokens:sync` to regenerate it;
+ * `pnpm tokens:verify` fails the build if it drifts, and
+ * `__tests__/tokens-surface-parity.test.ts` fails if any of the seven emitters
+ * disagrees with the palette on a family or a hex.
+ *
+ * DO NOT EDIT A HEX HERE. The edit is reverted by the next sync, and until then
+ * this published registry item disagrees with globals.css, /v1/brand, the MCP
+ * and the six other emitters — which is exactly the state terracotta, indigo,
+ * savanna, baobab, sunset and river were in while this block was hand-kept.
+ *
+ * It is a declaration of its own rather than an inline block inside
+ * `primitives` so that the rest of the token system can REFERENCE a palette
+ * value (`paletteColors.cobalt.value`) instead of restating the hex. All 21
+ * families: seven minerals (geological), seven heritage tones (atmospheric),
+ * seven experimental (the heptagon). Each carries a dark-theme value and a
+ * `<name>Light` counterpart; minerals additionally carry container and
+ * on-container tiers.
+ */
+const paletteColors = {
+  /* tokens:generated:ts-palette:start */
+  // ─── SEVEN AFRICAN MINERALS (geological, from underground) ───────────────────
+  // Dark-theme value first, then the light-theme counterpart as
+  // `<name>Light` — the convention generateCSSVariables() relies on.
+  cobalt: { value: "#00B0FF", description: "Primary blue, links, CTAs", family: "mineral" },
+  cobaltLight: { value: "#0047AB", description: "Cobalt on light backgrounds" },
+  tanzanite: {
+    value: "#B388FF",
+    description: "Purple accent, brand/logo, social features",
+    family: "mineral",
+  },
+  tanzaniteLight: { value: "#4B0082", description: "Tanzanite on light backgrounds" },
+  malachite: {
+    value: "#64FFDA",
+    description: "Success states, positive actions",
+    family: "mineral",
+  },
+  malachiteLight: { value: "#004D40", description: "Malachite on light backgrounds" },
+  gold: { value: "#FFD740", description: "Achievements, rewards, highlights", family: "mineral" },
+  goldLight: { value: "#5D4037", description: "Gold on light backgrounds" },
+  terracotta: { value: "#E1B07E", description: "Community features, warmth", family: "mineral" },
+  terracottaLight: { value: "#A0522D", description: "Terracotta on light backgrounds" },
+  sodalite: {
+    value: "#3D5AFE",
+    description: "AI/Shamwari surfaces, deep-reasoning states",
+    family: "mineral",
+  },
+  sodaliteLight: { value: "#283593", description: "Sodalite on light backgrounds" },
+  copper: {
+    value: "#FF8A65",
+    description: "Bundu ecosystem identity, the commons",
+    family: "mineral",
+  },
+  copperLight: { value: "#BF5A36", description: "Copper on light backgrounds" },
+
+  // ─── MINERAL CONTAINER COLORS ────────────────────────────────────────────────
+  // Subtle background surfaces when a mineral is an area fill —
+  // cards, banners, alerts, category-tinted sections.
+  cobaltContainer: { value: "#E3F2FD", description: "Cobalt-tinted surface (light)" },
+  cobaltContainerDark: { value: "#001F3F", description: "Cobalt-tinted surface (dark)" },
+  tanzaniteContainer: { value: "#F3E5F5", description: "Tanzanite-tinted surface (light)" },
+  tanzaniteContainerDark: { value: "#1A0033", description: "Tanzanite-tinted surface (dark)" },
+  malachiteContainer: { value: "#E0F2F1", description: "Malachite-tinted surface (light)" },
+  malachiteContainerDark: { value: "#00251A", description: "Malachite-tinted surface (dark)" },
+  goldContainer: { value: "#FFF8E1", description: "Gold-tinted surface (light)" },
+  goldContainerDark: { value: "#332200", description: "Gold-tinted surface (dark)" },
+  terracottaContainer: { value: "#F5E6D3", description: "Terracotta-tinted surface (light)" },
+  terracottaContainerDark: { value: "#3E2817", description: "Terracotta-tinted surface (dark)" },
+  sodaliteContainer: { value: "#E8EAF6", description: "Sodalite-tinted surface (light)" },
+  sodaliteContainerDark: { value: "#0D1442", description: "Sodalite-tinted surface (dark)" },
+  copperContainer: { value: "#FBE4DA", description: "Copper-tinted surface (light)" },
+  copperContainerDark: { value: "#3A1A0E", description: "Copper-tinted surface (dark)" },
+
+  // ─── ON-CONTAINER COLORS (text/icons on container surfaces) ──────────────────
+  cobaltOnContainer: { value: "#002966", description: "Text on cobalt container (light)" },
+  cobaltOnContainerDark: { value: "#B3E5FC", description: "Text on cobalt container (dark)" },
+  tanzaniteOnContainer: { value: "#2E004D", description: "Text on tanzanite container (light)" },
+  tanzaniteOnContainerDark: { value: "#E1BEE7", description: "Text on tanzanite container (dark)" },
+  malachiteOnContainer: { value: "#00332B", description: "Text on malachite container (light)" },
+  malachiteOnContainerDark: { value: "#A7FFEB", description: "Text on malachite container (dark)" },
+  goldOnContainer: { value: "#3E2723", description: "Text on gold container (light)" },
+  goldOnContainerDark: { value: "#FFECB3", description: "Text on gold container (dark)" },
+  terracottaOnContainer: { value: "#5D2906", description: "Text on terracotta container (light)" },
+  terracottaOnContainerDark: {
+    value: "#F5E6D3",
+    description: "Text on terracotta container (dark)",
+  },
+  sodaliteOnContainer: { value: "#141A5C", description: "Text on sodalite container (light)" },
+  sodaliteOnContainerDark: { value: "#C5CAE9", description: "Text on sodalite container (dark)" },
+  copperOnContainer: { value: "#5C2410", description: "Text on copper container (light)" },
+  copperOnContainerDark: { value: "#FFD3C2", description: "Text on copper container (dark)" },
+
+  // ─── SEVEN HERITAGE COLORS (atmospheric, from above ground) ──────────────────
+  indigo: {
+    value: "#7986CB",
+    description: "Twilight surfaces, deep atmosphere, mini-app moods",
+    family: "heritage",
+  },
+  indigoLight: { value: "#4527A0", description: "Indigo on light backgrounds" },
+  savanna: {
+    value: "#E5C158",
+    description: "Warm grassland surfaces, daylight atmosphere",
+    family: "heritage",
+  },
+  savannaLight: { value: "#8D6E1A", description: "Savanna on light backgrounds" },
+  baobab: {
+    value: "#A1887F",
+    description: "Earthy surfaces, grounded atmosphere, bark tones",
+    family: "heritage",
+  },
+  baobabLight: { value: "#4E342E", description: "Baobab on light backgrounds" },
+  sunset: {
+    value: "#FF7043",
+    description: "Warm accent surfaces, golden-hour atmosphere",
+    family: "heritage",
+  },
+  sunsetLight: { value: "#D84315", description: "Sunset on light backgrounds" },
+  river: {
+    value: "#4DD0E1",
+    description: "Cool surfaces, flowing atmosphere, water tones",
+    family: "heritage",
+  },
+  riverLight: { value: "#006064", description: "River on light backgrounds" },
+  hematite: {
+    value: "#90A4AE",
+    description: "Neutral anchor, mini-app surfaces, atmosphere",
+    family: "heritage",
+  },
+  hematiteLight: { value: "#546E7A", description: "Hematite on light backgrounds" },
+  kalahari: {
+    value: "#E8D9B5",
+    description: "Light anchor, warm backgrounds, mini-app surfaces",
+    family: "heritage",
+  },
+  kalahariLight: { value: "#C9B589", description: "Kalahari on light backgrounds" },
+
+  // ─── SEVEN EXPERIMENTAL TONES (the heptagon) ─────────────────────────────────
+  // Hues offset 17 degrees apart, prime saturations, foregrounds
+  // solved to P7. `--exp-*` in globals.css, `experimental` in
+  // /v1/brand and the MCP.
+  ember: { value: "#DA8766", description: "Ember — heptagon position 0", family: "experimental" },
+  emberLight: { value: "#843D20", description: "Ember on light backgrounds" },
+  acacia: { value: "#93A528", description: "Acacia — heptagon position 1", family: "experimental" },
+  acaciaLight: { value: "#4D5615", description: "Acacia on light backgrounds" },
+  fern: { value: "#2CB42B", description: "Fern — heptagon position 2", family: "experimental" },
+  fernLight: { value: "#175E17", description: "Fern on light backgrounds" },
+  lagoon: { value: "#2AAE9B", description: "Lagoon — heptagon position 3", family: "experimental" },
+  lagoonLight: { value: "#165B51", description: "Lagoon on light backgrounds" },
+  storm: { value: "#7E9BE0", description: "Storm — heptagon position 4", family: "experimental" },
+  stormLight: { value: "#284CA6", description: "Storm on light backgrounds" },
+  dusk: { value: "#BA87E2", description: "Dusk — heptagon position 5", family: "experimental" },
+  duskLight: { value: "#742AAD", description: "Dusk on light backgrounds" },
+  protea: { value: "#DF7BB4", description: "Protea — heptagon position 6", family: "experimental" },
+  proteaLight: { value: "#932464", description: "Protea on light backgrounds" },
+  /* tokens:generated:ts-palette:end */
+} as const
+
 export const primitives = {
-  // ─── SEVEN AFRICAN MINERALS (geological, from underground) ──
-  // Each mineral has a dark-mode and light-mode value.
-  // Dark mode values are used in the Nyuchi default dark theme.
-  // Light mode values are used for light theme and text-on-light.
   color: {
-    // Minerals
-    cobalt: { value: "#00B0FF", description: "Primary blue, links, CTAs", family: "mineral" },
-    cobaltLight: { value: "#0047AB", description: "Cobalt on light backgrounds" },
-    tanzanite: {
-      value: "#B388FF",
-      description: "Purple accent, brand/logo, social",
-      family: "mineral",
-    },
-    tanzaniteLight: { value: "#4B0082", description: "Tanzanite on light backgrounds" },
-    malachite: {
-      value: "#64FFDA",
-      description: "Success states, positive actions, Mukoko identity",
-      family: "mineral",
-    },
-    malachiteLight: { value: "#004D40", description: "Malachite on light backgrounds" },
-    gold: { value: "#FFD740", description: "Achievements, rewards, highlights", family: "mineral" },
-    goldLight: { value: "#5D4037", description: "Gold on light backgrounds" },
-    terracotta: {
-      value: "#D4A574",
-      description: "Community features, warmth, earth",
-      family: "mineral",
-    },
-    terracottaLight: { value: "#8B4513", description: "Terracotta on light backgrounds" },
-    sodalite: {
-      value: "#3D5AFE",
-      description: "AI/Shamwari surfaces, deep-reasoning states",
-      family: "mineral",
-    },
-    sodaliteLight: { value: "#283593", description: "Sodalite on light backgrounds" },
-    copper: {
-      value: "#FF8A65",
-      description: "Bundu ecosystem identity, the commons",
-      family: "mineral",
-    },
-    copperLight: { value: "#BF5A36", description: "Copper on light backgrounds" },
-
-    // ─── MINERAL CONTAINER COLORS ─────────────────────────────
-    // Subtle background surfaces when a mineral needs to be an area fill.
-    // Used for cards, banners, alerts, and category-tinted sections.
-    // Each mineral has a light container and dark container variant.
-    cobaltContainer: { value: "#E3F2FD", description: "Cobalt-tinted surface (light)" },
-    cobaltContainerDark: { value: "#001F3F", description: "Cobalt-tinted surface (dark)" },
-    tanzaniteContainer: { value: "#F3E5F5", description: "Tanzanite-tinted surface (light)" },
-    tanzaniteContainerDark: { value: "#1A0033", description: "Tanzanite-tinted surface (dark)" },
-    malachiteContainer: { value: "#E0F2F1", description: "Malachite-tinted surface (light)" },
-    malachiteContainerDark: { value: "#00251A", description: "Malachite-tinted surface (dark)" },
-    goldContainer: { value: "#FFF8E1", description: "Gold-tinted surface (light)" },
-    goldContainerDark: { value: "#332200", description: "Gold-tinted surface (dark)" },
-    terracottaContainer: { value: "#FBE9E7", description: "Terracotta-tinted surface (light)" },
-    terracottaContainerDark: { value: "#3E1A00", description: "Terracotta-tinted surface (dark)" },
-    sodaliteContainer: { value: "#E8EAF6", description: "Sodalite-tinted surface (light)" },
-    sodaliteContainerDark: { value: "#0D1442", description: "Sodalite-tinted surface (dark)" },
-    copperContainer: { value: "#FBE4DA", description: "Copper-tinted surface (light)" },
-    copperContainerDark: { value: "#3A1A0E", description: "Copper-tinted surface (dark)" },
-
-    // ─── ON-CONTAINER COLORS (text/icons on container surfaces) ──
-    // High-contrast foreground colors for use on mineral container backgrounds.
-    // These ensure WCAG AAA readability when text sits on a container surface.
-    cobaltOnContainer: { value: "#002966", description: "Text on cobalt container (light)" },
-    cobaltOnContainerDark: { value: "#B3E5FC", description: "Text on cobalt container (dark)" },
-    tanzaniteOnContainer: { value: "#2E004D", description: "Text on tanzanite container (light)" },
-    tanzaniteOnContainerDark: {
-      value: "#E1BEE7",
-      description: "Text on tanzanite container (dark)",
-    },
-    malachiteOnContainer: { value: "#00332B", description: "Text on malachite container (light)" },
-    malachiteOnContainerDark: {
-      value: "#A7FFEB",
-      description: "Text on malachite container (dark)",
-    },
-    goldOnContainer: { value: "#3E2723", description: "Text on gold container (light)" },
-    goldOnContainerDark: { value: "#FFECB3", description: "Text on gold container (dark)" },
-    terracottaOnContainer: {
-      value: "#5D2906",
-      description: "Text on terracotta container (light)",
-    },
-    terracottaOnContainerDark: {
-      value: "#FFCCBC",
-      description: "Text on terracotta container (dark)",
-    },
-    sodaliteOnContainer: { value: "#141A5C", description: "Text on sodalite container (light)" },
-    sodaliteOnContainerDark: {
-      value: "#C5CAE9",
-      description: "Text on sodalite container (dark)",
-    },
-    copperOnContainer: { value: "#5C2410", description: "Text on copper container (light)" },
-    copperOnContainerDark: { value: "#FFD3C2", description: "Text on copper container (dark)" },
-
-    // ─── SEVEN HERITAGE COLORS (atmospheric, from above ground) ──
-    // African fashion, sunset, savanna, rivers, ancient and biblical.
-    indigo: {
-      value: "#8C9EFF",
-      description: "Yoruba adire dye pits, Shweshwe cloth — longevity, resilience",
-      family: "heritage",
-    },
-    indigoLight: { value: "#1A237E", description: "Indigo on light backgrounds" },
-    savanna: {
-      value: "#FFCC80",
-      description: "Golden grasslands, Sahel to Southern Africa — the journey",
-      family: "heritage",
-    },
-    savannaLight: { value: "#5D4037", description: "Savanna on light backgrounds" },
-    baobab: {
-      value: "#A5D6A7",
-      description: "Tree of life, ancestral wisdom — endurance, community roots",
-      family: "heritage",
-    },
-    baobabLight: { value: "#2E4A2E", description: "Baobab on light backgrounds" },
-    sunset: {
-      value: "#FF8A80",
-      description: "African dusk, rose-copper sky — endings that are beginnings",
-      family: "heritage",
-    },
-    sunsetLight: { value: "#8B2500", description: "Sunset on light backgrounds" },
-    river: {
-      value: "#80DEEA",
-      description: "Zambezi, Limpopo, Nile — life-giving waterways",
-      family: "heritage",
-    },
-    riverLight: { value: "#00525A", description: "River on light backgrounds" },
-    hematite: {
-      value: "#90A4AE",
-      description: "Neutral anchor, mini-app surfaces, atmosphere",
-      family: "heritage",
-    },
-    hematiteLight: { value: "#546E7A", description: "Hematite on light backgrounds" },
-    kalahari: {
-      value: "#E8D9B5",
-      description: "Light anchor, warm backgrounds, mini-app surfaces",
-      family: "heritage",
-    },
-    kalahariLight: { value: "#C9B589", description: "Kalahari on light backgrounds" },
-
-    // ─── SEVEN EXPERIMENTAL TONES (the heptagon) ──────────────────
-    // Hues offset 17 degrees apart, prime saturations, foregrounds solved to
-    // P7. `--exp-*` in globals.css, `experimental` in /v1/brand and the MCP.
-    ember: { value: "#DA8766", description: "Ember — heptagon position 0", family: "experimental" },
-    emberLight: { value: "#843D20", description: "Ember on light backgrounds" },
-    acacia: {
-      value: "#93A528",
-      description: "Acacia — heptagon position 1",
-      family: "experimental",
-    },
-    acaciaLight: { value: "#4D5615", description: "Acacia on light backgrounds" },
-    fern: { value: "#2CB42B", description: "Fern — heptagon position 2", family: "experimental" },
-    fernLight: { value: "#175E17", description: "Fern on light backgrounds" },
-    lagoon: {
-      value: "#2AAE9B",
-      description: "Lagoon — heptagon position 3",
-      family: "experimental",
-    },
-    lagoonLight: { value: "#165B51", description: "Lagoon on light backgrounds" },
-    storm: { value: "#7E9BE0", description: "Storm — heptagon position 4", family: "experimental" },
-    stormLight: { value: "#284CA6", description: "Storm on light backgrounds" },
-    dusk: { value: "#BA87E2", description: "Dusk — heptagon position 5", family: "experimental" },
-    duskLight: { value: "#742AAD", description: "Dusk on light backgrounds" },
-    protea: {
-      value: "#DF7BB4",
-      description: "Protea — heptagon position 6",
-      family: "experimental",
-    },
-    proteaLight: { value: "#932464", description: "Protea on light backgrounds" },
+    ...paletteColors,
 
     // Neutrals — warm stone palette (April 2026, AAA-optimised)
     // Named by role, not arbitrary grey percentage.
@@ -233,7 +237,9 @@ export const primitives = {
     success: { value: "#4ADE80" },
     warning: { value: "#FBBF24" },
     error: { value: "#F87171" },
-    info: { value: "#00B0FF" },
+    // `info` IS cobalt — the informational state and the primary blue are one
+    // decision, not two that happen to agree. Read, not retyped.
+    info: { value: paletteColors.cobalt.value },
   },
 
   // ─── SPACING SCALE (Nyuchi Design canonical) ───────────────
@@ -482,7 +488,7 @@ export const listingThemes: Record<
   // Minerals
   cobalt: {
     name: "Cobalt",
-    accent: "#00B0FF",
+    accent: primitives.color.cobalt.value,
     bg: "#001833",
     surface: "#002244",
     gradient: "linear-gradient(145deg, #000D1A 0%, #001833 50%, #002244 100%)",
@@ -491,7 +497,7 @@ export const listingThemes: Record<
   },
   tanzanite: {
     name: "Tanzanite",
-    accent: "#B388FF",
+    accent: primitives.color.tanzanite.value,
     bg: "#1A0033",
     surface: "#2A0055",
     gradient: "linear-gradient(145deg, #0D001A 0%, #1A0033 50%, #2A0055 100%)",
@@ -500,7 +506,7 @@ export const listingThemes: Record<
   },
   malachite: {
     name: "Malachite",
-    accent: "#64FFDA",
+    accent: primitives.color.malachite.value,
     bg: "#002E25",
     surface: "#003D32",
     gradient: "linear-gradient(145deg, #001A14 0%, #002E25 50%, #003D32 100%)",
@@ -509,7 +515,7 @@ export const listingThemes: Record<
   },
   gold: {
     name: "Gold",
-    accent: "#FFD740",
+    accent: primitives.color.gold.value,
     bg: "#1A1400",
     surface: "#2A2200",
     gradient: "linear-gradient(145deg, #0D0A00 0%, #1A1400 50%, #2A2200 100%)",
@@ -518,7 +524,7 @@ export const listingThemes: Record<
   },
   terracotta: {
     name: "Terracotta",
-    accent: "#D4A574",
+    accent: primitives.color.terracotta.value,
     bg: "#1A0F05",
     surface: "#2A1A0A",
     gradient: "linear-gradient(145deg, #0D0800 0%, #1A0F05 50%, #2A1A0A 100%)",
@@ -528,7 +534,7 @@ export const listingThemes: Record<
   // Heritage
   indigo: {
     name: "Indigo",
-    accent: "#8C9EFF",
+    accent: primitives.color.indigo.value,
     bg: "#0D1040",
     surface: "#141866",
     gradient: "linear-gradient(145deg, #050820 0%, #0D1040 50%, #141866 100%)",
@@ -537,7 +543,7 @@ export const listingThemes: Record<
   },
   savanna: {
     name: "Savanna",
-    accent: "#FFCC80",
+    accent: primitives.color.savanna.value,
     bg: "#1A1408",
     surface: "#2A2010",
     gradient: "linear-gradient(145deg, #0D0A03 0%, #1A1408 50%, #2A2010 100%)",
@@ -546,7 +552,7 @@ export const listingThemes: Record<
   },
   baobab: {
     name: "Baobab",
-    accent: "#A5D6A7",
+    accent: primitives.color.baobab.value,
     bg: "#0F1A0F",
     surface: "#1A2A1A",
     gradient: "linear-gradient(145deg, #060D06 0%, #0F1A0F 50%, #1A2A1A 100%)",
@@ -555,7 +561,7 @@ export const listingThemes: Record<
   },
   sunset: {
     name: "Sunset",
-    accent: "#FF8A80",
+    accent: primitives.color.sunset.value,
     bg: "#2A0A02",
     surface: "#3D1005",
     gradient: "linear-gradient(145deg, #1A0500 0%, #2A0A02 50%, #3D1005 100%)",
@@ -564,7 +570,7 @@ export const listingThemes: Record<
   },
   river: {
     name: "River",
-    accent: "#80DEEA",
+    accent: primitives.color.river.value,
     bg: "#002025",
     surface: "#003035",
     gradient: "linear-gradient(145deg, #001418 0%, #002025 50%, #003035 100%)",
@@ -597,6 +603,39 @@ export type BrandId =
   | "jobs"
   | "wallet"
 
+/**
+ * One mini-app accent, resolved from the mineral it is assigned.
+ *
+ * `primary`, `container` and `onContainer` were literal hexes — seventeen
+ * copies of seven palette values, which is seventeen chances to miss a palette
+ * change. `circles` had already missed one: it carried terracotta's pre-Seven
+ * `#D4A574` long after the palette said `#E1B07E`. They are read out of
+ * `primitives.color` now, so a brand accent cannot disagree with the mineral it
+ * names.
+ *
+ * `primaryHover` is the one value that is NOT derivable: it is a hand-picked
+ * tint per mineral, not a formula (the seven existing tints lighten by
+ * different amounts on different channels), so it stays authored and is passed
+ * in. `primaryMuted` is exactly `primary` at 12% and is computed.
+ */
+function mutedFrom(hex: string, alpha = 0.12): string {
+  const n = parseInt(hex.replace("#", "").slice(0, 6), 16)
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`
+}
+
+function brandAccent(mineral: string, primaryHover: string) {
+  const palette = primitives.color as Record<string, { value: string }>
+  const primary = palette[mineral].value
+  return {
+    primary,
+    mineral,
+    primaryHover,
+    primaryMuted: mutedFrom(primary),
+    container: palette[`${mineral}Container`].value,
+    onContainer: palette[`${mineral}OnContainer`].value,
+  }
+}
+
 export const brandOverrides: Record<
   BrandId,
   {
@@ -611,142 +650,23 @@ export const brandOverrides: Record<
   // ─── Mini-App accents (canonical from brand_ecosystem table) ──
   // Mineral assignments: tanzanite=identity/social/premium, cobalt=info/education/productivity,
   // malachite=events/health/nature, gold=commerce/places/wallet, terracotta=community
-  mukoko: {
-    primary: "#B388FF",
-    mineral: "tanzanite",
-    primaryHover: "#CE9FFF",
-    primaryMuted: "rgba(179,136,255,0.12)",
-    container: "#F3E5F5",
-    onContainer: "#2E004D",
-  },
-  nhimbe: {
-    primary: "#64FFDA",
-    mineral: "malachite",
-    primaryHover: "#80FFE4",
-    primaryMuted: "rgba(100,255,218,0.12)",
-    container: "#E0F2F1",
-    onContainer: "#00332B",
-  },
-  bushtrade: {
-    primary: "#FFD740",
-    mineral: "gold",
-    primaryHover: "#FFDF6B",
-    primaryMuted: "rgba(255,215,64,0.12)",
-    container: "#FFF8E1",
-    onContainer: "#3E2723",
-  },
-  lingo: {
-    primary: "#00B0FF",
-    mineral: "cobalt",
-    primaryHover: "#40C4FF",
-    primaryMuted: "rgba(0,176,255,0.12)",
-    container: "#E3F2FD",
-    onContainer: "#002966",
-  },
-  shamwari: {
-    primary: "#B388FF",
-    mineral: "tanzanite",
-    primaryHover: "#CE9FFF",
-    primaryMuted: "rgba(179,136,255,0.12)",
-    container: "#F3E5F5",
-    onContainer: "#2E004D",
-  },
-  campfire: {
-    primary: "#64FFDA",
-    mineral: "malachite",
-    primaryHover: "#80FFE4",
-    primaryMuted: "rgba(100,255,218,0.12)",
-    container: "#E0F2F1",
-    onContainer: "#00332B",
-  },
-  bytes: {
-    primary: "#B388FF",
-    mineral: "tanzanite",
-    primaryHover: "#CE9FFF",
-    primaryMuted: "rgba(179,136,255,0.12)",
-    container: "#F3E5F5",
-    onContainer: "#2E004D",
-  },
-  novels: {
-    primary: "#64FFDA",
-    mineral: "malachite",
-    primaryHover: "#80FFE4",
-    primaryMuted: "rgba(100,255,218,0.12)",
-    container: "#E0F2F1",
-    onContainer: "#00332B",
-  },
-  news: {
-    primary: "#00B0FF",
-    mineral: "cobalt",
-    primaryHover: "#40C4FF",
-    primaryMuted: "rgba(0,176,255,0.12)",
-    container: "#E3F2FD",
-    onContainer: "#002966",
-  },
-  places: {
-    primary: "#FFD740",
-    mineral: "gold",
-    primaryHover: "#FFDF6B",
-    primaryMuted: "rgba(255,215,64,0.12)",
-    container: "#FFF8E1",
-    onContainer: "#3E2723",
-  },
-  circles: {
-    primary: "#D4A574",
-    mineral: "terracotta",
-    primaryHover: "#E0B88A",
-    primaryMuted: "rgba(212,165,116,0.12)",
-    container: "#FBE9E7",
-    onContainer: "#5D2906",
-  },
-  planner: {
-    primary: "#00B0FF",
-    mineral: "cobalt",
-    primaryHover: "#40C4FF",
-    primaryMuted: "rgba(0,176,255,0.12)",
-    container: "#E3F2FD",
-    onContainer: "#002966",
-  },
-  transport: {
-    primary: "#FFD740",
-    mineral: "gold",
-    primaryHover: "#FFDF6B",
-    primaryMuted: "rgba(255,215,64,0.12)",
-    container: "#FFF8E1",
-    onContainer: "#3E2723",
-  },
-  weather: {
-    primary: "#00B0FF",
-    mineral: "cobalt",
-    primaryHover: "#40C4FF",
-    primaryMuted: "rgba(0,176,255,0.12)",
-    container: "#E3F2FD",
-    onContainer: "#002966",
-  },
-  health: {
-    primary: "#64FFDA",
-    mineral: "malachite",
-    primaryHover: "#80FFE4",
-    primaryMuted: "rgba(100,255,218,0.12)",
-    container: "#E0F2F1",
-    onContainer: "#00332B",
-  },
-  jobs: {
-    primary: "#FFD740",
-    mineral: "gold",
-    primaryHover: "#FFDF6B",
-    primaryMuted: "rgba(255,215,64,0.12)",
-    container: "#FFF8E1",
-    onContainer: "#3E2723",
-  },
-  wallet: {
-    primary: "#FFD740",
-    mineral: "gold",
-    primaryHover: "#FFDF6B",
-    primaryMuted: "rgba(255,215,64,0.12)",
-    container: "#FFF8E1",
-    onContainer: "#3E2723",
-  },
+  mukoko: brandAccent("tanzanite", "#CE9FFF"),
+  nhimbe: brandAccent("malachite", "#80FFE4"),
+  bushtrade: brandAccent("gold", "#FFDF6B"),
+  lingo: brandAccent("cobalt", "#40C4FF"),
+  shamwari: brandAccent("tanzanite", "#CE9FFF"),
+  campfire: brandAccent("malachite", "#80FFE4"),
+  bytes: brandAccent("tanzanite", "#CE9FFF"),
+  novels: brandAccent("malachite", "#80FFE4"),
+  news: brandAccent("cobalt", "#40C4FF"),
+  places: brandAccent("gold", "#FFDF6B"),
+  circles: brandAccent("terracotta", "#E0B88A"),
+  planner: brandAccent("cobalt", "#40C4FF"),
+  transport: brandAccent("gold", "#FFDF6B"),
+  weather: brandAccent("cobalt", "#40C4FF"),
+  health: brandAccent("malachite", "#80FFE4"),
+  jobs: brandAccent("gold", "#FFDF6B"),
+  wallet: brandAccent("gold", "#FFDF6B"),
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -864,6 +784,24 @@ export function paletteFamilies(): [string, PaletteFamily][] {
 
 /** The three colour groups. Seven families each — the system is a heptagon three times over. */
 export type PaletteFamily = "mineral" | "heritage" | "experimental"
+
+/**
+ * A `var(--color-<name>)` reference with the palette hex as its fallback.
+ *
+ * The fallback exists for contexts where the custom property is not defined —
+ * an email, a canvas, a consumer who installed this item without globals.css —
+ * and it was written out by hand at every call site. That made every fallback a
+ * private copy of a palette value: `var(--color-terracotta, #D4A574)` still
+ * named terracotta's pre-Seven hex long after the palette said `#E1B07E`, so a
+ * chart rendered without the stylesheet drew the wrong brand colour and nothing
+ * could tell. Reading the fallback out of `primitives.color` — which is itself
+ * generated — means the two halves of the expression cannot disagree.
+ */
+export function paletteVar(name: string, theme: ThemeMode = "dark"): string {
+  const palette = primitives.color as Record<string, { value: string } | undefined>
+  const token = palette[theme === "light" ? `${name}Light` : name]
+  return token ? `var(--color-${name}, ${token.value})` : `var(--color-${name})`
+}
 
 export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId = "mukoko"): string {
   const semantic = semanticTokens[theme]
@@ -1156,25 +1094,25 @@ export const verificationTokens = {
     label: "Unverified",
   },
   community: {
-    value: "var(--tier-community, var(--color-malachite, #64FFDA))",
+    value: `var(--tier-community, ${paletteVar("malachite")})`,
     css: "--tier-community",
     mineral: "malachite",
     label: "Community",
   },
   otp: {
-    value: "var(--tier-otp, var(--color-cobalt, #00B0FF))",
+    value: `var(--tier-otp, ${paletteVar("cobalt")})`,
     css: "--tier-otp",
     mineral: "cobalt",
     label: "OTP Verified",
   },
   government: {
-    value: "var(--tier-government, var(--color-tanzanite, #B388FF))",
+    value: `var(--tier-government, ${paletteVar("tanzanite")})`,
     css: "--tier-government",
     mineral: "tanzanite",
     label: "Government ID",
   },
   licensed: {
-    value: "var(--tier-licensed, var(--color-gold, #FFD740))",
+    value: `var(--tier-licensed, ${paletteVar("gold")})`,
     css: "--tier-licensed",
     mineral: "gold",
     label: "Licensed",
@@ -1294,10 +1232,10 @@ export function generateStatusCSS(): string {
   }
   lines.push("  /* Verification tiers — these use minerals (brand identity) */")
   lines.push("  --tier-unverified: #6B7280;")
-  lines.push("  --tier-community: var(--color-malachite, #64FFDA);")
-  lines.push("  --tier-otp: var(--color-cobalt, #00B0FF);")
-  lines.push("  --tier-government: var(--color-tanzanite, #B388FF);")
-  lines.push("  --tier-licensed: var(--color-gold, #FFD740);")
+  lines.push(`  --tier-community: ${paletteVar("malachite")};`)
+  lines.push(`  --tier-otp: ${paletteVar("cobalt")};`)
+  lines.push(`  --tier-government: ${paletteVar("tanzanite")};`)
+  lines.push(`  --tier-licensed: ${paletteVar("gold")};`)
   lines.push("}")
   return lines.join("\n")
 }
@@ -1309,86 +1247,58 @@ export function generateStatusCSS(): string {
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * CSS custom property definitions for globals.css:
- *
- * :root (light mode):
- *   --chart-1: #0047AB;  (cobalt)
- *   --chart-2: #4B0082;  (tanzanite)
- *   --chart-3: #004D40;  (malachite)
- *   --chart-4: #5D4037;  (gold)
- *   --chart-5: #8B4513;  (terracotta)
- *
- * .dark:
- *   --chart-1: #00B0FF;  (cobalt)
- *   --chart-2: #B388FF;  (tanzanite)
- *   --chart-3: #64FFDA;  (malachite)
- *   --chart-4: #FFD740;  (gold)
- *   --chart-5: #D4A574;  (terracotta)
+ * The `--chart-N` custom properties in globals.css take the first five minerals
+ * in palette order, light theme in `:root` and dark in `.dark`. The hexes are
+ * deliberately NOT restated here: they are in the generated palette region
+ * above, and a comment that repeats a generated value is a copy that rots
+ * silently — this one did, and went on naming terracotta's pre-Seven
+ * `#D4A574` / `#8B4513` after the palette had moved.
  */
 
 /** Pre-built chart configs mapping data keys to mineral colors */
 export const mineralChartConfig = {
   /** Single-series chart — uses cobalt */
   single: (label: string) => ({
-    value: { label, color: "var(--color-cobalt, #00B0FF)" },
+    value: { label, color: paletteVar("cobalt") },
   }),
   /** Two-series chart — cobalt + malachite */
   dual: (label1: string, label2: string) => ({
     [label1.toLowerCase().replace(/\\s/g, "_")]: {
       label: label1,
-      color: "var(--color-cobalt, #00B0FF)",
+      color: paletteVar("cobalt"),
     },
     [label2.toLowerCase().replace(/\\s/g, "_")]: {
       label: label2,
-      color: "var(--color-malachite, #64FFDA)",
+      color: paletteVar("malachite"),
     },
   }),
-  /** Seven-series chart — all seven minerals */
-  fiveMinerals: (labels: [string, string, string, string, string]) => ({
-    [labels[0].toLowerCase().replace(/\\s/g, "_")]: {
-      label: labels[0],
-      color: "var(--color-cobalt, #00B0FF)",
-    },
-    [labels[1].toLowerCase().replace(/\\s/g, "_")]: {
-      label: labels[1],
-      color: "var(--color-tanzanite, #B388FF)",
-    },
-    [labels[2].toLowerCase().replace(/\\s/g, "_")]: {
-      label: labels[2],
-      color: "var(--color-malachite, #64FFDA)",
-    },
-    [labels[3].toLowerCase().replace(/\\s/g, "_")]: {
-      label: labels[3],
-      color: "var(--color-gold, #FFD740)",
-    },
-    [labels[4].toLowerCase().replace(/\\s/g, "_")]: {
-      label: labels[4],
-      color: "var(--color-terracotta, #D4A574)",
-    },
-  }),
-  /** Heritage colors for series 6-10 */
-  heritage: {
-    indigo: "var(--color-indigo, #8C9EFF)",
-    savanna: "var(--color-savanna, #FFCC80)",
-    baobab: "var(--color-baobab, #A5D6A7)",
-    sunset: "var(--color-sunset, #FF8A80)",
-    river: "var(--color-river, #80DEEA)",
-  },
+  /** Five-series chart — the first five minerals in palette order */
+  fiveMinerals: (labels: [string, string, string, string, string]) =>
+    Object.fromEntries(
+      labels.map((label, i) => [
+        label.toLowerCase().replace(/\\s/g, "_"),
+        { label, color: mineralChartColors[i] },
+      ])
+    ),
+  /** Heritage colors for the later series */
+  heritage: Object.fromEntries(
+    paletteFamilies()
+      .filter(([, family]) => family === "heritage")
+      .map(([name]) => [name, paletteVar(name)])
+  ),
 } as const
 
-/** Chart color array for recharts — mineral order */
-export const mineralChartColors = [
-  "var(--color-cobalt, #00B0FF)",
-  "var(--color-tanzanite, #B388FF)",
-  "var(--color-malachite, #64FFDA)",
-  "var(--color-gold, #FFD740)",
-  "var(--color-terracotta, #D4A574)",
-  "var(--color-indigo, #8C9EFF)",
-  "var(--color-savanna, #FFCC80)",
-  "var(--color-baobab, #A5D6A7)",
-  "var(--color-sunset, #FF8A80)",
-  "var(--color-river, #80DEEA)",
-] as const
+/**
+ * Chart colour array for recharts — palette order, minerals then heritage.
+ *
+ * Derived from `paletteFamilies()` rather than listed, for the reason spelled
+ * out on `generateCSSVariables()`: a literal list of what the palette contains
+ * is the bug, not its length. The previous list held ten entries, frozen at the
+ * five-and-five era, and five of those ten carried pre-Seven hexes.
+ */
+export const mineralChartColors: readonly string[] = paletteFamilies()
+  .filter(([, family]) => family !== "experimental")
+  .map(([name]) => paletteVar(name))
 
 // ═══════════════════════════════════════════════════════════════
 // COLOR RESOLUTION UTILITIES
