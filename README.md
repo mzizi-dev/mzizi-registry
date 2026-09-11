@@ -7,7 +7,7 @@
 [![CodeQL](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/security/code-scanning)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-**Version:** 1.0.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/api/v1) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Product docs:** [docs.bundu.org](https://docs.bundu.org) | **Engineering docs:** [docs.nyuchi.com](https://docs.nyuchi.com)
+**Version:** 1.0.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Product docs:** [docs.bundu.org](https://docs.bundu.org) | **Engineering docs:** [docs.nyuchi.com](https://docs.nyuchi.com)
 
 > **The `mzizi.dev` apex no longer serves this repo.** It is now served by the
 > `mzizi-site` Worker, which ships three pages (`/`, `/ecosystem`, `/language`).
@@ -83,7 +83,7 @@ The standalone Cloudflare Worker variant (for consumers that don't want to go th
 
 ## The palette — 21 colour families
 
-The palette is **21 colour families**: seven African minerals, seven heritage tones, and the experimental seven. The minerals each carry a semantic **role** and sit in two **families**. Values are generated from `lib/tokens/palette.source.ts` in this repo (`pnpm tokens:sync`) — **not** from a database; the live values are served at [`GET /api/v1/brand`](https://api.mzizi.dev/api/v1/brand).
+The palette is **21 colour families**: seven African minerals, seven heritage tones, and the experimental seven. The minerals each carry a semantic **role** and sit in two **families**. Values are generated from `lib/tokens/palette.source.ts` in this repo (`pnpm tokens:sync`) — **not** from a database; the live values are served at [`GET /v1/brand`](https://api.mzizi.dev/v1/brand).
 
 | Mineral    | Role         | Family     | CSS Variable         |
 | ---------- | ------------ | ---------- | -------------------- |
@@ -95,7 +95,7 @@ The palette is **21 colour families**: seven African minerals, seven heritage to
 | Terracotta | Community    | hand       | `--color-terracotta` |
 | Copper     | Stewardship  | hand       | `--color-copper`     |
 
-Alongside the minerals the palette carries **seven heritage tones** (indigo, savanna, baobab, sunset, river, hematite, kalahari), the **status** set (success/warning/info/error/neutral/offline/syncing), and the **experimental seven** (ember, acacia, fern, lagoon, storm, dusk, protea) — 21 families in all. See [`GET /api/v1/brand`](https://api.mzizi.dev/api/v1/brand) for the full, live palette.
+Alongside the minerals the palette carries **seven heritage tones** (indigo, savanna, baobab, sunset, river, hematite, kalahari), the **status** set (success/warning/info/error/neutral/offline/syncing), and the **experimental seven** (ember, acacia, fern, lagoon, storm, dusk, protea) — 21 families in all. See [`GET /v1/brand`](https://api.mzizi.dev/v1/brand) for the full, live palette.
 
 **Buttons are always pill-shaped (`rounded-full`).** This is a brand identity decision — not a radius scale value.
 
@@ -103,7 +103,7 @@ Alongside the minerals the palette carries **seven heritage tones** (indigo, sav
 
 ## Registry
 
-The registry index is served at [`GET /api/v1/ui`](https://api.mzizi.dev/api/v1/ui). **575 components** across the 8 nodes and 4 rungs, read from `registry.json` and the component files in this repo — there is no database behind them. [`GET /api/v1/stats`](https://api.mzizi.dev/api/v1/stats) is the raw open-data feed (CC BY 4.0).
+The registry index is served at [`GET /v1/ui`](https://api.mzizi.dev/v1/ui). **575 components** across the 8 nodes and 4 rungs, read from `registry.json` and the component files in this repo — there is no database behind them. [`GET /v1/stats`](https://api.mzizi.dev/v1/stats) is the raw open-data feed (CC BY 4.0).
 
 The human-facing browse pages are currently offline — see the apex notice above.
 
@@ -111,7 +111,9 @@ The human-facing browse pages are currently offline — see the apex notice abov
 
 ## API
 
-All endpoints under `/api/v1/`. Full spec in [`openapi.yaml`](openapi.yaml) (also served at `GET /api/openapi`).
+Resource paths serve under **both** `/v1/` (canonical) and `/api/v1/`. The one
+exception is the bare discovery index: `/api/v1` returns it, `/v1` still falls
+through to the origin's HTML 404. Full spec in [`openapi.yaml`](openapi.yaml) (also served at `GET /api/openapi`).
 
 | Endpoint                                       | Method   | Description                                                     |
 | ---------------------------------------------- | -------- | --------------------------------------------------------------- |
