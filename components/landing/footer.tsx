@@ -102,7 +102,7 @@ function XIcon({ className }: { className?: string }) {
 const socials = [
   {
     label: "GitHub — mzizi",
-    href: "https://github.com/nyuchi/mzizi",
+    href: "https://github.com/mzizi-dev/mzizi-registry",
     Icon: GithubIcon,
   },
   {

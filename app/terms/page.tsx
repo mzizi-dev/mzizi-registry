@@ -155,12 +155,12 @@ export default function TermsPage() {
             </a>{" "}
             or open an issue at{" "}
             <a
-              href="https://github.com/nyuchi/mzizi"
+              href="https://github.com/mzizi-dev/mzizi-registry"
               target="_blank"
               rel="noopener noreferrer"
               className="text-foreground underline underline-offset-2 hover:text-muted-foreground"
             >
-              github.com/nyuchi/mzizi
+              github.com/mzizi-dev/mzizi-registry
             </a>
             .
           </p>

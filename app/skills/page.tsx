@@ -9,7 +9,7 @@ import { CopyCommand } from "@/components/landing/copy-command"
 // The public instruction surface for the Mzizi agent skills. Skills are
 // stored in the Supabase `skills` collection and served from here and via
 // MCP `get_skill`; they are authored in git as
-// `mzizi-skills/skills/<name>/SKILL.md` in nyuchi/mzizi-tools and published
+// `mzizi-skills/skills/<name>/SKILL.md` in mzizi-dev/agent-tools and published
 // to npm as @nyuchi/mzizi-skills. All three surfaces carry the same body —
 // this page is the human-readable one.
 //
@@ -65,7 +65,7 @@ export default async function SkillsPage() {
               <code className="font-mono text-xs">fundi</code> agent, the registry MCP, and the{" "}
               <code className="font-mono text-xs">/mzizi:*</code> commands:
             </p>
-            <CopyCommand command="/plugin marketplace add nyuchi/mzizi-tools" />
+            <CopyCommand command="/plugin marketplace add mzizi-dev/agent-tools" />
             <CopyCommand command="/plugin install mzizi@mzizi-tools" />
           </div>
         </div>
@@ -85,14 +85,8 @@ export default async function SkillsPage() {
           <p className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
             The skills registry is unavailable right now. Install the bundle with{" "}
             <code className="font-mono text-xs">npx skills add {NPM_PACKAGE}</code>, or read the
-            source at{" "}
-            <a
-              className="underline hover:text-foreground"
-              href="https://github.com/nyuchi/mzizi-tools/tree/main/mzizi-skills/skills"
-            >
-              nyuchi/mzizi-tools
-            </a>
-            .
+            source in <code className="font-mono text-xs">mzizi-skills/skills/</code> in{" "}
+            <code className="font-mono text-xs">mzizi-dev/agent-tools</code> (a private repo).
           </p>
         ) : (
           <ul className="grid gap-3 sm:grid-cols-2">
@@ -150,15 +144,11 @@ export default async function SkillsPage() {
         </h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
           Skills are authored in git, in{" "}
-          <a
-            className="underline hover:text-foreground"
-            href="https://github.com/nyuchi/mzizi-tools/tree/main/mzizi-skills"
-          >
-            nyuchi/mzizi-tools
-          </a>{" "}
-          under <code className="font-mono text-xs">mzizi-skills/skills/&lt;name&gt;/SKILL.md</code>
-          , and projected into this registry from there. Open a PR against that repo — never edit a
-          published copy or a registry row directly, because the next sync overwrites it.
+          <code className="font-mono text-xs">mzizi-dev/agent-tools</code> under{" "}
+          <code className="font-mono text-xs">mzizi-skills/skills/&lt;name&gt;/SKILL.md</code>, and
+          projected into this registry from there. That repo is private, so there is no public link
+          to follow — ask for access, then open a PR against it. Never edit a published copy or a
+          registry row directly, because the next sync overwrites it.
         </p>
       </section>
     </article>
