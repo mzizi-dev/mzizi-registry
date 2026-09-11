@@ -1,6 +1,16 @@
 [package]
 name = "mzizi-tokens"
-description = "Mzizi N1 design tokens — the Seven African Minerals palette, generated."
+description = "Mzizi N1 design tokens: the 21-family Mzizi palette (seven minerals, seven heritage tones, seven experimental) as Rust consts, generated from one source."
+# crates.io renders these on the package page. The description named only the
+# minerals, which stopped being the whole palette two expansions ago — the same
+# stale-count defect this crate's doc comment records.
+#
+# NOTE for whoever publishes: `readme` is still unset here and on the other six
+# crates, and no crate sets keywords/categories either. A crates.io page with no
+# README renders bare, and a published version is permanent. That wants its own
+# change across the workspace before anyone runs `cargo publish`.
+keywords = ["design-tokens", "design-system", "color", "palette", "mzizi"]
+categories = ["gui", "development-tools"]
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
