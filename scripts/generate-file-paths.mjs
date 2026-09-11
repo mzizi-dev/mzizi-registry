@@ -23,8 +23,8 @@
  * `registry:ui` type plus that basename happens to be the same string. Right answer, wrong
  * mechanism, and it only holds while every item's type implies its folder.
  *
- * It is not cosmetic. `shadcn registry validate nyuchi/mzizi` fails on all 574 items, and
- * GitHub registries — `npx shadcn add nyuchi/mzizi/button`, which needs no API, no worker
+ * It is not cosmetic. `shadcn registry validate mzizi-dev/mzizi-registry` fails on all 574 items, and
+ * GitHub registries — `npx shadcn add mzizi-dev/mzizi-registry/button`, which needs no API, no worker
  * and no deploy — resolve files straight out of the repository at `path`. With the wrong
  * path, that entire distribution channel is closed.
  *

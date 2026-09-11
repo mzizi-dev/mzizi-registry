@@ -21,7 +21,7 @@ rust:
   kind: "shared-core"
   note: "N5 is a Rust IMPLEMENTATION alongside N4 — the two strongest Rust cases in the helix, because both hold logic rather than UI. A per-target reimplementation of a circuit breaker gives you several circuit breakers that disagree about whether the system is healthy, which is worse than having none."
   state: "target"
-  today: "No Rust ships. The primitives are TypeScript in nyuchi/mzizi's lib/ — circuit-breaker, retry, timeout, fallback-chain, bulkhead, rate-limiter, chaos — vendored in-repo and published as registry:lib items."
+  today: "No Rust ships. The primitives are TypeScript in mzizi-dev/mzizi-registry's lib/ — circuit-breaker, retry, timeout, fallback-chain, bulkhead, rate-limiter, chaos — vendored in-repo and published as registry:lib items."
   target: "The state machine compiles to WASM via wasm-bindgen. Every target shares one implementation of when a circuit opens and when it is allowed to close; each target renders its own fallback UI from that state."
   position: "implementation"
   descriptors: []

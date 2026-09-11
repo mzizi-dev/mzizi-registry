@@ -1172,7 +1172,7 @@ export function helixClassOf(element: HelixNode): HelixClass {
 // `list_skills()`, `get_skill()` and `get_skills_summary()` RPCs against the
 // Supabase `skills` collection. They are deleted, not deprecated.
 //
-// Skills are authored in nyuchi/mzizi-tools and published as
+// Skills are authored in mzizi-dev/agent-tools and published as
 // `@nyuchi/mzizi-skills`. `lib/skills.ts` reads that package; the routes and
 // pages read `lib/skills.ts`. The database copy was a second home for the same
 // content, kept in step by a script somebody had to remember to run — and it
