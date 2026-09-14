@@ -139,7 +139,7 @@
     "tailwind-merge": "^3.6.0",
     "three": "^0.185.1",
     "vaul": "^1.1.2",
-    "zod": "^4.5.4"
+    "zod": "^4.6.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
