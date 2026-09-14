@@ -24,6 +24,7 @@ export const REGISTRY_FILES: readonly string[] = [
   "n1-tokens/nyuchi-platform.tsx",
   "n1-tokens/nyuchi-resilience.tsx",
   "n1-tokens/nyuchi-tokens-arkts.ets",
+  "n1-tokens/nyuchi-tokens-globals.css",
   "n1-tokens/nyuchi-tokens-kotlin.kt",
   "n1-tokens/nyuchi-tokens-python.py",
   "n1-tokens/nyuchi-tokens-react-native.ts",
