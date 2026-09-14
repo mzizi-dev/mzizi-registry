@@ -89,6 +89,7 @@ import type {
   HeritageToken as Heritage,
   MineralToken as Mineral,
 } from "../lib/tokens/palette.source"
+import { renderGlobalsCss } from "./render-globals-css"
 
 const CHECK = process.argv.includes("--check")
 
@@ -823,6 +824,17 @@ const PLATFORM_TARGETS: PlatformTarget[] = [
   { file: "nyuchi-tokens-react-native.ts", render: renderReactNative },
   { file: "nyuchi-tokens-python.py", render: renderPython },
   { file: "nyuchi-tokens-rust.rs", render: renderRust },
+  // The combined, self-contained `globals.css` a repo copies in whole — it
+  // carries `@import "tailwindcss"`, its own `@theme`, `:root`, `.dark`, the
+  // per-brand blocks and every non-colour ladder, because a copy cannot follow
+  // an `@import` to a sibling that was not copied with it. Same source and the
+  // same gate as every target above, so it cannot drift from the palette.
+  //
+  // `renderGlobalsJson` is deliberately NOT a target: the registry resolves a
+  // component by basename, and one item may declare exactly one source file, so
+  // a JSON twin sharing this stem is unregisterable. It stays available in
+  // ./render-globals-css for a future item under its own stem.
+  { file: "nyuchi-tokens-globals.css", render: renderGlobalsCss },
 ]
 
 /**

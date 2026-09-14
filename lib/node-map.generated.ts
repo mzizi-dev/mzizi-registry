@@ -422,6 +422,7 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "nyuchi-timeline": "n3",
   "nyuchi-toast-provider": "n7",
   "nyuchi-tokens-arkts": "n1",
+  "nyuchi-tokens-globals": "n1",
   "nyuchi-tokens-kotlin": "n1",
   "nyuchi-tokens-python": "n1",
   "nyuchi-tokens-react-native": "n1",
