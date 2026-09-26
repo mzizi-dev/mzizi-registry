@@ -18,7 +18,11 @@
 use std::fs;
 use std::path::PathBuf;
 
-use mzizi_ui::{BadgeVariant, ButtonSize, ButtonVariant, badge_variants, button_variants};
+use mzizi_ui::{
+    AvatarSize, BadgeVariant, ButtonSize, ButtonVariant, SeparatorOrientation, avatar_variants,
+    badge_variants, button_variants, input_variants, label_variants, progress_variants,
+    separator_variants,
+};
 
 /// Read a registry component's TypeScript source.
 fn tsx(node_dir: &str, name: &str) -> String {
@@ -166,6 +170,26 @@ fn every_data_slot_the_rust_emits_exists_in_the_typescript() {
                 "card-footer",
             ][..],
         ),
+        ("n2-primitives", "separator", &["separator"][..]),
+        ("n2-primitives", "label", &["label"][..]),
+        ("n2-primitives", "input", &["input"][..]),
+        (
+            "n2-primitives",
+            "progress",
+            &["progress", "progress-indicator"][..],
+        ),
+        (
+            "n2-primitives",
+            "avatar",
+            &[
+                "avatar",
+                "avatar-image",
+                "avatar-fallback",
+                "avatar-badge",
+                "avatar-group",
+                "avatar-group-count",
+            ][..],
+        ),
     ] {
         let ts = tsx(node_dir, name);
         for slot in slots {
@@ -211,4 +235,109 @@ fn tokens_are_the_generated_ones() {
             "not a hex colour: {value}"
         );
     }
+}
+
+#[test]
+fn separator_orientations_match_the_typescript() {
+    let ts = tsx("n2-primitives", "separator");
+    for orientation in [
+        SeparatorOrientation::Horizontal,
+        SeparatorOrientation::Vertical,
+    ] {
+        assert_classes_present(
+            orientation.classes(),
+            &ts,
+            &format!("separator/{}", orientation.slug()),
+        );
+    }
+    assert!(
+        separator_variants(SeparatorOrientation::Horizontal, "").contains("bg-border"),
+        "separator base class missing"
+    );
+}
+
+#[test]
+fn label_classes_match_the_typescript() {
+    let ts = tsx("n2-primitives", "label");
+    assert_classes_present(&label_variants(""), &ts, "label");
+    // The two external-state selectors are the actual contract here — nothing else in
+    // this component varies.
+    assert!(ts.contains("group-data-[disabled=true]:opacity-50"));
+    assert!(ts.contains("peer-disabled:opacity-50"));
+}
+
+#[test]
+fn input_classes_match_the_typescript() {
+    let ts = tsx("n2-primitives", "input");
+    assert_classes_present(&input_variants(""), &ts, "input");
+    // The two token-compliance facts the module doc calls out.
+    assert!(
+        input_variants("")
+            .split_whitespace()
+            .any(|c| c == "rounded-full"),
+        "input is not pill-shaped"
+    );
+    assert!(
+        input_variants("").split_whitespace().any(|c| c == "h-12"),
+        "input is not at the 48px touch-target floor"
+    );
+}
+
+#[test]
+fn progress_classes_match_the_typescript() {
+    let ts = tsx("n2-primitives", "progress");
+    assert_classes_present(&progress_variants(""), &ts, "progress/track");
+    // The indicator's classes are on a separate constant in the .rs, so this compares them
+    // by hand rather than via `progress_variants`, which only composes the track.
+    for class in ["size-full", "flex-1", "bg-primary", "transition-all"] {
+        assert!(
+            ts.contains(class),
+            "progress/indicator: Rust emits `{class}`, which does not appear in the TypeScript"
+        );
+    }
+}
+
+#[test]
+fn avatar_sizes_match_the_typescript() {
+    let ts = tsx("n2-primitives", "avatar");
+    // `data-[size=lg]:size-10 data-[size=sm]:size-6` in the TypeScript — Default has no
+    // dedicated class (size-8 lives in the always-on base), so only Sm/Lg have something
+    // to assert against a `data-[size=…]` selector here.
+    for (size, needle) in [(AvatarSize::Sm, "size-6"), (AvatarSize::Lg, "size-10")] {
+        let classes = avatar_variants(size, "");
+        assert!(
+            classes.split_whitespace().any(|c| c == needle),
+            "avatar/{needle} missing from composed classes: {classes}"
+        );
+        assert!(
+            ts.contains(needle),
+            "avatar: Rust emits `{needle}`, which does not appear in the TypeScript"
+        );
+    }
+    assert!(
+        avatar_variants(AvatarSize::Default, "")
+            .split_whitespace()
+            .any(|c| c == "size-8"),
+        "avatar default size missing"
+    );
+}
+
+#[test]
+fn avatar_fallback_and_badge_classes_match_the_typescript() {
+    let ts = tsx("n2-primitives", "avatar");
+    for class in [
+        "flex",
+        "size-full",
+        "items-center",
+        "justify-center",
+        "rounded-full",
+        "bg-muted",
+    ] {
+        assert!(
+            ts.contains(class),
+            "avatar-fallback: `{class}` missing from the TypeScript sibling"
+        );
+    }
+    assert!(ts.contains("group-data-[size=sm]/avatar:size-2"));
+    assert!(ts.contains("group-has-data-[size=lg]/avatar-group:size-10"));
 }
