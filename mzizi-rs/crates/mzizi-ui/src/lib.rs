@@ -41,9 +41,33 @@ pub mod badge;
 #[path = "generated/card.rs"]
 pub mod card;
 
+#[path = "generated/avatar.rs"]
+pub mod avatar;
+
+#[path = "generated/input.rs"]
+pub mod input;
+
+#[path = "generated/label.rs"]
+pub mod label;
+
+#[path = "generated/progress.rs"]
+pub mod progress;
+
+#[path = "generated/separator.rs"]
+pub mod separator;
+
+pub use avatar::{
+    Avatar, AvatarBadge, AvatarBadgeProps, AvatarFallback, AvatarFallbackProps, AvatarGroup,
+    AvatarGroupCount, AvatarGroupCountProps, AvatarGroupProps, AvatarImage, AvatarImageProps,
+    AvatarProps, AvatarSize, avatar_variants,
+};
 pub use badge::{Badge, BadgeProps, BadgeVariant, badge_variants};
 pub use button::{Button, ButtonProps, ButtonSize, ButtonVariant, button_variants};
 pub use card::{Card, CardContent, CardFooter, CardHeader, CardTitle};
+pub use input::{Input, InputProps, input_variants};
+pub use label::{Label, LabelProps, label_variants};
+pub use progress::{Progress, ProgressProps, progress_variants};
+pub use separator::{Separator, SeparatorOrientation, SeparatorProps, separator_variants};
 
 /// The N1 token module, re-exported so a consumer takes one dependency.
 pub use mzizi_tokens as tokens;
