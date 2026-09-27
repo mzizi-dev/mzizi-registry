@@ -4,7 +4,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How mzizi.dev — the Mzizi design-system registry, API, and MCP server — handles data. An open-architecture project of the Bundu Foundation, operated by nyuchi.",
+    "How mzizi.dev — the Mzizi design-system registry, API, and MCP server — handles data. An independent open-architecture project, operated by nyuchi.",
   alternates: { canonical: "/privacy" },
 }
 
@@ -34,8 +34,8 @@ export default function PrivacyPage() {
         <Section title="Who we are">
           <p>
             mzizi (mzizi.dev) is the open component registry, brand system, and DNA-helix frontend
-            architecture of the Mzizi design system — an open-architecture project governed by the
-            Bundu Foundation and operated by nyuchi (Nyuchi Africa (Pvt) Ltd). This policy explains
+            architecture of the Mzizi design system — an open-architecture project governed by
+            Mzizi and operated by nyuchi (Nyuchi Africa (Pvt) Ltd). This policy explains
             what data mzizi.dev handles when you browse the site or use its public API and Model
             Context Protocol (MCP) server.
           </p>

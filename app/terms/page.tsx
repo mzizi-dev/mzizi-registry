@@ -4,7 +4,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "Terms governing use of mzizi.dev — the Mzizi design-system registry, API, and MCP server. An open-architecture project of the Bundu Foundation, operated by nyuchi.",
+    "Terms governing use of mzizi.dev — the Mzizi design-system registry, API, and MCP server. An independent open-architecture project, operated by nyuchi.",
   alternates: { canonical: "/terms" },
 }
 
@@ -37,8 +37,8 @@ export default function TermsPage() {
           <p>
             These terms govern your use of mzizi.dev — the Mzizi design-system registry, the public
             API under <code className="font-mono text-xs">/api/v1</code>, and the hosted Model
-            Context Protocol (MCP) server. mzizi is an open-architecture project governed by the
-            Bundu Foundation and operated by nyuchi (Nyuchi Africa (Pvt) Ltd). By accessing the site
+            Context Protocol (MCP) server. mzizi is an open-architecture project governed by
+            Mzizi and operated by nyuchi (Nyuchi Africa (Pvt) Ltd). By accessing the site
             or its APIs you agree to these terms. If you do not agree, please do not use the
             service.
           </p>
