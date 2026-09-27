@@ -28,7 +28,7 @@ here.
 
 ```bash
 export CLOUDFLARE_API_TOKEN=...        # Browser Rendering - Edit permission
-export CLOUDFLARE_ACCOUNT_ID=...       # optional; the script defaults to Nyuchi's
+export CLOUDFLARE_ACCOUNT_ID=...       # optional; the script defaults to Mzizi's
 
 pnpm browser:check                                 # the default route set
 pnpm browser:check --base http://localhost:11736   # against a dev server

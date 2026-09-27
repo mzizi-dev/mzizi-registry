@@ -42,7 +42,7 @@ export default async function SkillsPage() {
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
           Doctrine an AI assistant can load on demand — the Mzizi framework&rsquo;s architecture,
-          the Phase 0 benchmark corpus, and the engineering patterns behind the Bundu ecosystem.
+          the Phase 0 benchmark corpus, and the engineering patterns behind Mzizi.
           Install the bundle once and any assistant working in the repo has the research
           program&rsquo;s rules on hand instead of guessing at them.
         </p>

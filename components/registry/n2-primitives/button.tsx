@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 /* ═══════════════════════════════════════════════════════════════
    BUTTON — Layer 2 Primitive
    
-   Nyuchi Frontend Architecture: Layer 2 (Primitives)
+   Mzizi Frontend Architecture: Layer 2 (Primitives)
    
    Token compliance:
    ✅ Radius: rounded-full (9999px) — buttons are ALWAYS pill per brand

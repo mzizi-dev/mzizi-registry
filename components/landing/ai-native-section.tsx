@@ -143,7 +143,7 @@ export function AiNativeSection() {
             </div>
           </div>
           <p className="text-xs leading-relaxed text-muted-foreground">
-            Research telemetry is public — aligned with the Bundu open data philosophy. Corpus
+            Research telemetry is public — aligned with the Mzizi open data philosophy. Corpus
             usage, API latency, error rates, and MCP tool traffic are live today; Phase 0 benchmark
             results land here when they exist.
           </p>
