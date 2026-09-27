@@ -56,6 +56,9 @@ pub mod progress;
 #[path = "generated/separator.rs"]
 pub mod separator;
 
+#[path = "generated/chart.rs"]
+pub mod chart;
+
 pub use avatar::{
     Avatar, AvatarBadge, AvatarBadgeProps, AvatarFallback, AvatarFallbackProps, AvatarGroup,
     AvatarGroupCount, AvatarGroupCountProps, AvatarGroupProps, AvatarImage, AvatarImageProps,
@@ -64,6 +67,7 @@ pub use avatar::{
 pub use badge::{Badge, BadgeProps, BadgeVariant, badge_variants};
 pub use button::{Button, ButtonProps, ButtonSize, ButtonVariant, button_variants};
 pub use card::{Card, CardContent, CardFooter, CardHeader, CardTitle};
+pub use chart::{Chart, ChartProps, chart_loading_variants, chart_variants};
 pub use input::{Input, InputProps, input_variants};
 pub use label::{Label, LabelProps, label_variants};
 pub use progress::{Progress, ProgressProps, progress_variants};
