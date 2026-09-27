@@ -14,8 +14,8 @@ import {
 
 // Shared navigation structure for the Mzizi portal shell.
 // Curated (not auto-generated) — the portal hosts the functional
-// surfaces only; long-form guides live in the standalone Mintlify
-// docs site at docs.bundu.org/mzizi.
+// surfaces only; long-form guides live in the Mzizi docs site at
+// docs.mzizi.dev (mzizi-dev/mzizi-docs).
 //
 //   Framework     — the research architecture (charter layers, phases) and
 //                   the benchmark's measurement discipline
@@ -80,7 +80,7 @@ export const SIDEBAR_NAV: NavGroup[] = [
   {
     label: "Documentation",
     items: [
-      { label: "Docs", href: "https://docs.bundu.org/mzizi", icon: BookOpen, external: true },
+      { label: "Docs", href: "https://docs.mzizi.dev", icon: BookOpen, external: true },
     ],
   },
 ]
@@ -92,7 +92,7 @@ export const HEADER_NAV: NavItem[] = [
   { label: "Corpus", href: "/components" },
   { label: "Playground", href: "/playground" },
   { label: "CLI", href: "/cli" },
-  { label: "Docs", href: "https://docs.bundu.org/mzizi", external: true },
+  { label: "Docs", href: "https://docs.mzizi.dev", external: true },
 ]
 
 // Pretty labels for breadcrumbs — maps URL segments to display strings.

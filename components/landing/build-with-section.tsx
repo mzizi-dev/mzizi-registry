@@ -60,7 +60,7 @@ export function BuildWithSection() {
             in a browser deploys to the edge — the agentic web is served from where the agents are.
           </p>
           <Link
-            href="https://docs.bundu.org/mzizi"
+            href="https://docs.mzizi.dev"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-foreground hover:underline"
@@ -78,7 +78,7 @@ export function BuildWithSection() {
             someone else&apos;s well-solved problem.
           </p>
           <Link
-            href="https://docs.bundu.org/mzizi"
+            href="https://docs.mzizi.dev"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-foreground hover:underline"
@@ -96,7 +96,7 @@ export function BuildWithSection() {
             <code className="font-mono text-xs">@bundu</code> npm scope.
           </p>
           <Link
-            href="https://docs.bundu.org/mzizi"
+            href="https://docs.mzizi.dev"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-foreground hover:underline"

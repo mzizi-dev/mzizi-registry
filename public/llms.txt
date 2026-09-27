@@ -61,7 +61,7 @@ There is also a separate data architecture (Pod → Relational → Document → 
 - [Changelog](/changelog): release history
 - [Observability](/observability): live API + MCP usage metrics (CC BY 4.0)
 
-Long-form documentation is **not** on this site. Product docs live at <https://docs.bundu.org/mzizi>; engineering docs at <https://docs.nyuchi.com>. `GET /v1/docs` and `/v1/docs/{slug}` return HTTP 410 with a `migrated_to` map.
+Long-form documentation is **not** on this site. Mzizi's long-form docs live at <https://docs.mzizi.dev> (source: `mzizi-dev/mzizi-docs`). `GET /v1/docs` and `/v1/docs/{slug}` return HTTP 410 with a `migrated_to` map.
 
 ## API endpoints (machine-readable)
 
