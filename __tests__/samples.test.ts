@@ -122,7 +122,7 @@ describe("prop resolution", () => {
   it("defaults booleans to false so previews are not all skeletons", () => {
     // Nearly every boolean here is `loading`, `disabled` or `error`. Defaulting to true made
     // every component with a `loading` prop render grey bars instead of itself.
-    const { props } = resolvePropsFor("nyuchi-article-card")
+    const { props } = resolvePropsFor("mzizi-article-card")
     expect(props.loading).toBe(false)
   })
 

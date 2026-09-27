@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Project `app/globals.css` into the `nyuchi-tokens` registry item's `cssVars`.
+ * Project `app/globals.css` into the `mzizi-tokens` registry item's `cssVars`.
  *
  *   pnpm tokens:registry          rewrite registry.json
  *   pnpm tokens:registry --check  fail if it is out of date (CI)
@@ -8,13 +8,13 @@
  * WHY THIS EXISTS
  *
  * N1's covenant is that it is "the only node allowed to define CSS values" and that design
- * decisions are data, not code. The registry contradicted both: `nyuchi-tokens` shipped a
+ * decisions are data, not code. The registry contradicted both: `mzizi-tokens` shipped a
  * 50 KB TypeScript file containing ZERO CSS custom properties, and no registry item shipped
  * any CSS at all — not a `.css` file, not `css`, not `cssVars`.
  *
  * The consequence was not cosmetic. 431 of 573 components reference `var(--…)` — 137
  * distinct variables — and `app/globals.css` defines 214 of them. A consumer running
- * `npx shadcn add nyuchi-listing-card` received Tailwind classes like
+ * `npx shadcn add mzizi-listing-card` received Tailwind classes like
  * `bg-[var(--color-malachite)]` and no definition for `--color-malachite`, so every mineral
  * colour, radius, motion duration and touch target resolved to its fallback or to nothing.
  * The tokens existed; they were simply never delivered.
@@ -22,7 +22,7 @@
  * `cssVars` is shadcn's first-class answer (registry-item.json: theme / light / dark). The
  * CLI merges it into whatever stylesheet the consuming project uses, so it is genuinely
  * framework-agnostic — which a `.ts` file cannot be. The TypeScript constants are not lost:
- * they become `nyuchi-tokens-typescript`, the seventh platform variant alongside the arkts,
+ * they become `mzizi-tokens-typescript`, the seventh platform variant alongside the arkts,
  * kotlin, python, react-native, rust and swift ones that already existed.
  *
  * GENERATED, NEVER HAND-EDITED. `globals.css` is itself generated in part (`tokens:sync`
@@ -39,7 +39,7 @@ const CSS = join(ROOT, "app", "globals.css")
 const REGISTRY = join(ROOT, "registry.json")
 
 /** The item that carries the theme. */
-const THEME_ITEM = "nyuchi-tokens"
+const THEME_ITEM = "mzizi-tokens"
 
 /**
  * Extract the declarations of one top-level block.

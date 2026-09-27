@@ -1,7 +1,7 @@
 "use client"
 
 // ── INFRASTRUCTURE HARNESS (auto-wired) ──────────────────
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 import { cn } from "@/lib/utils"
 import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
@@ -12,7 +12,7 @@ import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
    ✅ L1 TOKENS — CSS custom properties throughout
    ✅ L2 MOTION — Fade-in on scroll into view
    ✅ L3 A11Y — Footer landmark, focus ring tokens, 48px targets
-   ✅ L4 OBSERVABILITY — useNyuchiHarness, scoped logging
+   ✅ L4 OBSERVABILITY — useMziziHarness, scoped logging
    ✅ L5 RESILIENCE — Graceful degradation for missing data
    ✅ L6 I18N — Year via Intl, no hardcoded strings
    ✅ L7 PLATFORM — data-slot for CSS targeting
@@ -29,7 +29,7 @@ interface FooterSection {
   links: FooterLink[]
 }
 
-interface NyuchiFooterProps {
+interface MziziFooterProps {
   sections?: FooterSection[]
   companyName?: string
   tagline?: string
@@ -68,23 +68,23 @@ const DEFAULT_SECTIONS: FooterSection[] = [
   },
 ]
 
-export function NyuchiFooter({
+export function MziziFooter({
   sections = DEFAULT_SECTIONS,
   companyName = "Nyuchi Africa",
   tagline = "I am because we are.",
   showMineralStrip = true,
   className,
-}: NyuchiFooterProps) {
+}: MziziFooterProps) {
   // ── L4: HARNESS — Observability + motion + a11y ──
-  useNyuchiHarness("footer")
+  useMziziHarness("footer")
 
   // ── L6: I18N — Dynamic year via Intl-safe method ──
   const year = new Date().getFullYear()
 
   return (
     <footer
-      data-slot="nyuchi-footer"
-      data-portal="https://mzizi.dev/components/nyuchi-footer"
+      data-slot="mzizi-footer"
+      data-portal="https://mzizi.dev/components/mzizi-footer"
       role="contentinfo"
       className={cn("border-t border-border bg-card", className)}
     >

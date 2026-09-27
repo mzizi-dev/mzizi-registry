@@ -6,6 +6,17 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed — `nyuchi-*` components are now `mzizi-*` (2026-09-27)
+
+- **All 123 `nyuchi-*` registry components are renamed `mzizi-*`.** Mzizi owns the registry, and Nyuchi operates it. The full old → new list is in `lib/component-renames.json`. Install them under the new name, for example `npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-footer` (previously `.../nyuchi-footer`).
+- **Exported names follow the rename:** `Nyuchi*` → `Mzizi*`, `useNyuchiHarness` / `useNyuchiQuery` → `useMziziHarness` / `useMziziQuery`, the `nyuchi*Dark` / `nyuchi*Light` token constants → `mzizi*`, and the Rust modules `nyuchi_*` → `mzizi_*`.
+  - `data-slot` and `data-portal` values change with them.
+  - The earlier `mzizi-*` safety, resilience and assurance components are covered too; they still exported `Nyuchi*` names with `nyuchi-*` slots.
+- **Old URLs keep working.** Every old URL form 308-redirects to the new slug on `mzizi.dev` and on the `api.mzizi.dev` Worker. That covers `/components`, `/source`, `/playground`, `/changelog`, `/api/v1/ui` (with `/docs` and `/versions`), `/api/v1/rs`, `/api/health`, `/api/chaos`, and the `/v1/*` API shape. Existing links and `shadcn add` commands still resolve.
+  - The MCP `get_component` tool also accepts an old name.
+- **Version history keeps its data.** `component_versions` is read under both the old and new names. A forward data migration, `supabase/data-migrations/20260927_rename_nyuchi_components_to_mzizi.sql`, moves the rows to the new names; it can be applied before or after deploy.
+- **Unchanged:** npm package names and scopes (`@nyuchi/*`, `@bundu/*`), the Kotlin package `com.nyuchi.design.tokens`, CSS animation and keyframe names (`nyuchi-fade-slide-up`, …), `NyuchiLogo`, the AI-instruction document slugs, database names, and telemetry rows recorded under the old names.
+
 ### Changed — skills move to `nyuchi/mzizi-tools`
 
 - **The `skills` Supabase collection is now read-only from this repo.** Skill content is authored in git as `mzizi-skills/skills/<name>/SKILL.md` in `nyuchi/mzizi-tools`, published as the public npm package `@nyuchi/mzizi-skills`, and projected into the collection by that repo's `pnpm skills:sync`. The portal continues to serve it at `/api/v1/skills*` and via MCP `get_skill` / `list_skills` — it just never writes it. Documented in `CLAUDE.md` §15.23 (which previously asserted the opposite), §6.1, §3, and the `SkillRow` doc comment in `lib/db/types.ts`.

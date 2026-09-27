@@ -6,9 +6,9 @@
  * place a colour is authored. This script reads it and writes:
  *   - lib/tokens/palette.generated.ts   (typed snapshot consumed by lib/tokens)
  *   - app/globals.css                   (the marked palette regions only)
- *   - components/registry/n1-tokens/nyuchi-tokens-<platform>.<ext>
+ *   - components/registry/n1-tokens/mzizi-tokens-<platform>.<ext>
  *       for swift, kotlin, arkts, react-native, python and rust
- *   - components/registry/n1-tokens/nyuchi-tokens-typescript.ts
+ *   - components/registry/n1-tokens/mzizi-tokens-typescript.ts
  *       (the marked palette region only — see below)
  *
  * It used to read Supabase — `component_documents`, collections
@@ -47,7 +47,7 @@
  * itself the drift. A Swift consumer and an `/v1/brand` consumer asking for the
  * Mzizi palette must not get different answers about which families exist.
  *
- * `components/registry/n1-tokens/nyuchi-tokens-typescript.ts` carries far more
+ * `components/registry/n1-tokens/mzizi-tokens-typescript.ts` carries far more
  * than colour — the semantic tier, listing themes, brand overrides, component
  * tokens — so it cannot be emitted whole. Its PALETTE REGION is, between
  * `tokens:generated:ts-palette:start/end` markers, exactly as the palette
@@ -96,7 +96,7 @@ const CHECK = process.argv.includes("--check")
 const PALETTE_TS = join(process.cwd(), "lib/tokens/palette.generated.ts")
 const GLOBALS_CSS = join(process.cwd(), "app/globals.css")
 const N1 = join(process.cwd(), "components/registry/n1-tokens")
-const TOKENS_TS = join(N1, "nyuchi-tokens-typescript.ts")
+const TOKENS_TS = join(N1, "mzizi-tokens-typescript.ts")
 
 /**
  * Scale constants shared by every platform output.
@@ -388,8 +388,8 @@ function renderSwift(
   experimental: Experimental[]
 ): string {
   const pair = (name: string, dark: string, light: string) =>
-    `    static let nyuchi${cap(name)}Dark  = Color(hex: "${dark}")\n` +
-    `    static let nyuchi${cap(name)}Light = Color(hex: "${light}")`
+    `    static let mzizi${cap(name)}Dark  = Color(hex: "${dark}")\n` +
+    `    static let mzizi${cap(name)}Light = Color(hex: "${light}")`
   return `${banner("//", "Swift / SwiftUI")}
 
 import SwiftUI
@@ -405,19 +405,19 @@ ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
 ${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
 }
 
-public struct NyuchiSpacing {
+public struct MziziSpacing {
 ${Object.entries(SCALE.spacing)
   .map(([k, v]) => `    public static let ${k}: CGFloat = ${v}`)
   .join("\n")}
 }
 
-public struct NyuchiRadius {
+public struct MziziRadius {
 ${Object.entries(SCALE.radius)
   .map(([k, v]) => `    public static let ${k}: CGFloat = ${v}`)
   .join("\n")}
 }
 
-public struct NyuchiFonts {
+public struct MziziFonts {
 ${Object.entries(SCALE.fonts)
   .map(([k, v]) => `    public static let ${k} = ${JSON.stringify(v)}`)
   .join("\n")}
@@ -440,7 +440,7 @@ package com.nyuchi.design.tokens
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-object NyuchiColors {
+object MziziColors {
     // Seven African Minerals
 ${minerals.map((m) => pair(m.name, m.darkHex, m.lightHex)).join("\n")}
 
@@ -451,19 +451,19 @@ ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
 ${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
 }
 
-object NyuchiSpacing {
+object MziziSpacing {
 ${Object.entries(SCALE.spacing)
   .map(([k, v]) => `    val ${k} = ${v}.dp`)
   .join("\n")}
 }
 
-object NyuchiRadius {
+object MziziRadius {
 ${Object.entries(SCALE.radius)
   .map(([k, v]) => `    val ${k} = ${v}.dp`)
   .join("\n")}
 }
 
-object NyuchiFonts {
+object MziziFonts {
 ${Object.entries(SCALE.fonts)
   .map(([k, v]) => `    const val ${k} = ${JSON.stringify(v)}`)
   .join("\n")}
@@ -480,7 +480,7 @@ function renderArkTs(
     `    ${name}Dark: ${JSON.stringify(dark)},\n    ${name}Light: ${JSON.stringify(light)},`
   return `${banner("//", "ArkTS / ArkUI (HarmonyOS)")}
 
-export const NyuchiColors = {
+export const MziziColors = {
     // Seven African Minerals
 ${minerals.map((m) => pair(m.name, m.darkHex, m.lightHex)).join("\n")}
 
@@ -491,19 +491,19 @@ ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
 ${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
 } as const
 
-export const NyuchiSpacing = {
+export const MziziSpacing = {
 ${Object.entries(SCALE.spacing)
   .map(([k, v]) => `    ${k}: ${v},`)
   .join("\n")}
 } as const
 
-export const NyuchiRadius = {
+export const MziziRadius = {
 ${Object.entries(SCALE.radius)
   .map(([k, v]) => `    ${k}: ${v},`)
   .join("\n")}
 } as const
 
-export const NyuchiFonts = {
+export const MziziFonts = {
 ${Object.entries(SCALE.fonts)
   .map(([k, v]) => `    ${k}: ${JSON.stringify(v)},`)
   .join("\n")}
@@ -520,7 +520,7 @@ function renderReactNative(
     `    ${name}Dark: ${JSON.stringify(dark)},\n    ${name}Light: ${JSON.stringify(light)},`
   return `${banner("//", "React Native")}
 
-export const NyuchiColors = {
+export const MziziColors = {
     // Seven African Minerals
 ${minerals.map((m) => pair(m.name, m.darkHex, m.lightHex)).join("\n")}
 
@@ -531,19 +531,19 @@ ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
 ${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
 } as const
 
-export const NyuchiSpacing = {
+export const MziziSpacing = {
 ${Object.entries(SCALE.spacing)
   .map(([k, v]) => `    ${k}: ${v},`)
   .join("\n")}
 } as const
 
-export const NyuchiRadius = {
+export const MziziRadius = {
 ${Object.entries(SCALE.radius)
   .map(([k, v]) => `    ${k}: ${v},`)
   .join("\n")}
 } as const
 
-export const NyuchiFonts = {
+export const MziziFonts = {
 ${Object.entries(SCALE.fonts)
   .map(([k, v]) => `    ${k}: ${JSON.stringify(v)},`)
   .join("\n")}
@@ -565,25 +565,25 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class NyuchiMinerals:
+class MziziMinerals:
     """Seven African Minerals — the brand accents, dark and light themes."""
 ${minerals.map((m) => pair(m.name, m.darkHex, m.lightHex)).join("\n")}
 
 
 @dataclass(frozen=True)
-class NyuchiHeritage:
+class MziziHeritage:
     """Seven Heritage tones — atmospheric anchors, dark and light themes."""
 ${heritage.map((h) => pair(h.name, h.darkHex, h.lightHex)).join("\n")}
 
 
 @dataclass(frozen=True)
-class NyuchiExperimental:
+class MziziExperimental:
     """Seven Experimental tones — the heptagon, dark and light themes."""
 ${experimental.map((e) => pair(e.name, e.darkHex, e.lightHex)).join("\n")}
 
 
 @dataclass(frozen=True)
-class NyuchiSpacing:
+class MziziSpacing:
     """Spacing scale, in pixels."""
 ${Object.entries(SCALE.spacing)
   .map(([k, v]) => `    ${upper(k)}: int = ${v}`)
@@ -591,18 +591,18 @@ ${Object.entries(SCALE.spacing)
 
 
 @dataclass(frozen=True)
-class NyuchiRadius:
+class MziziRadius:
     """Radius scale, in pixels. Derived from the 7px unit."""
 ${Object.entries(SCALE.radius)
   .map(([k, v]) => `    ${upper(k)}: int = ${v}`)
   .join("\n")}
 
 
-minerals = NyuchiMinerals()
-heritage = NyuchiHeritage()
-experimental = NyuchiExperimental()
-spacing = NyuchiSpacing()
-radius = NyuchiRadius()
+minerals = MziziMinerals()
+heritage = MziziHeritage()
+experimental = MziziExperimental()
+spacing = MziziSpacing()
+radius = MziziRadius()
 
 # Ordered chart series for matplotlib / plotly / altair — dark theme.
 # Minerals then heritage, deliberately: this is a series ordering for plots, not
@@ -712,7 +712,7 @@ ${Object.entries(SCALE.fonts)
 }
 
 /**
- * The palette region of `nyuchi-tokens-typescript.ts` — the `primitives.color`
+ * The palette region of `mzizi-tokens-typescript.ts` — the `primitives.color`
  * entries for all 21 families, both themes, plus the mineral container and
  * on-container tiers.
  *
@@ -818,12 +818,12 @@ interface PlatformTarget {
 }
 
 const PLATFORM_TARGETS: PlatformTarget[] = [
-  { file: "nyuchi-tokens-swift.swift", render: renderSwift },
-  { file: "nyuchi-tokens-kotlin.kt", render: renderKotlin },
-  { file: "nyuchi-tokens-arkts.ets", render: renderArkTs },
-  { file: "nyuchi-tokens-react-native.ts", render: renderReactNative },
-  { file: "nyuchi-tokens-python.py", render: renderPython },
-  { file: "nyuchi-tokens-rust.rs", render: renderRust },
+  { file: "mzizi-tokens-swift.swift", render: renderSwift },
+  { file: "mzizi-tokens-kotlin.kt", render: renderKotlin },
+  { file: "mzizi-tokens-arkts.ets", render: renderArkTs },
+  { file: "mzizi-tokens-react-native.ts", render: renderReactNative },
+  { file: "mzizi-tokens-python.py", render: renderPython },
+  { file: "mzizi-tokens-rust.rs", render: renderRust },
   // The combined, self-contained `globals.css` a repo copies in whole — it
   // carries `@import "tailwindcss"`, its own `@theme`, `:root`, `.dark`, the
   // per-brand blocks and every non-colour ladder, because a copy cannot follow
@@ -834,7 +834,7 @@ const PLATFORM_TARGETS: PlatformTarget[] = [
   // component by basename, and one item may declare exactly one source file, so
   // a JSON twin sharing this stem is unregisterable. It stays available in
   // ./render-globals-css for a future item under its own stem.
-  { file: "nyuchi-tokens-globals.css", render: renderGlobalsCss },
+  { file: "mzizi-tokens-globals.css", render: renderGlobalsCss },
 ]
 
 /**
@@ -842,7 +842,7 @@ const PLATFORM_TARGETS: PlatformTarget[] = [
  *
  * Block-comment markers, so the same mechanism works in CSS and in TypeScript —
  * which is the point: `app/globals.css` and the palette region of
- * `nyuchi-tokens-typescript.ts` are the same kind of file, a hand-written
+ * `mzizi-tokens-typescript.ts` are the same kind of file, a hand-written
  * document with a generated block inside it, and they should not have two
  * mechanisms. `label` and `indent` are all that differ.
  */
@@ -867,7 +867,7 @@ function spliceRegion(
  * The renderers above hand-indent their templates, which is a guess at what
  * prettier does — and it was wrong: they emitted four-space object bodies while
  * prettier's config says two, so every `tokens:sync` left
- * `nyuchi-tokens-react-native.ts` 88 lines dirty and `pnpm format:check`
+ * `mzizi-tokens-react-native.ts` 88 lines dirty and `pnpm format:check`
  * failing. `tokens:verify` could not see it, by design: it compares with
  * `norm()` so that a reformat never trips the value-drift gate. That gate is
  * right and stays; the defect was upstream, in a generator imitating a
@@ -914,7 +914,7 @@ async function main() {
 
   // The seventh emitter. Region-spliced rather than rendered whole, because the
   // file around the palette is hand-written and much larger than the palette.
-  const TOKENS_TS_LABEL = "components/registry/n1-tokens/nyuchi-tokens-typescript.ts"
+  const TOKENS_TS_LABEL = "components/registry/n1-tokens/mzizi-tokens-typescript.ts"
   let tokensTs = await readFile(TOKENS_TS, "utf8")
   tokensTs = spliceRegion(
     tokensTs,
@@ -953,7 +953,7 @@ async function main() {
     if (norm(onDiskTokensTs) !== norm(tokensTs)) drift.push(TOKENS_TS_LABEL)
     for (const p of platforms) {
       // A missing platform file is drift, not a crash — that is exactly the
-      // state `nyuchi-tokens-rust.rs` was in for the life of the repo.
+      // state `mzizi-tokens-rust.rs` was in for the life of the repo.
       const onDisk = await readFile(p.path, "utf8").catch(() => null)
       if (onDisk === null || norm(onDisk) !== norm(p.body)) drift.push(p.label)
     }

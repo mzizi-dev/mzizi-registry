@@ -1,12 +1,12 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type WalletStatus = "disconnected" | "connecting" | "connected" | "wrong-network"
 type TokenType = "MIT" | "MXT" | "NST" | "NHC"
 
-interface NyuchiWalletGateProps {
+interface MziziWalletGateProps {
   children: React.ReactNode
   walletStatus: WalletStatus
   requiredToken?: TokenType
@@ -41,7 +41,7 @@ const TOKEN_INFO: Record<TokenType, { label: string; color: string; desc: string
   },
 }
 
-export function NyuchiWalletGate({
+export function MziziWalletGate({
   children,
   walletStatus,
   requiredToken,
@@ -51,8 +51,8 @@ export function NyuchiWalletGate({
   fallback,
   loading = false,
   className,
-}: NyuchiWalletGateProps) {
-  const { log, motion } = useNyuchiHarness("wallet-gate")
+}: MziziWalletGateProps) {
+  const { log, motion } = useMziziHarness("wallet-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -70,8 +70,8 @@ export function NyuchiWalletGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-wallet-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-wallet-gate"
+        data-slot="mzizi-wallet-gate"
+        data-portal="https://mzizi.dev/components/mzizi-wallet-gate"
         data-loading
         role="status"
         className="h-36 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -87,7 +87,7 @@ export function NyuchiWalletGate({
 
   return (
     <div
-      data-slot="nyuchi-wallet-gate"
+      data-slot="mzizi-wallet-gate"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -156,4 +156,4 @@ export function NyuchiWalletGate({
     </div>
   )
 }
-export type { WalletStatus, TokenType, NyuchiWalletGateProps }
+export type { WalletStatus, TokenType, MziziWalletGateProps }

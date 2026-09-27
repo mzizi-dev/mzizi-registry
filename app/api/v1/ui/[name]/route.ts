@@ -133,7 +133,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     //
     // This used to be `content: i === 0 ? source : ""` — every file after the first was
     // hardcoded to an empty string. Five components declared more files than exist, so
-    // `npx shadcn add nyuchi-tokens` wrote lib/tokens/primitives.ts, semantic.ts and
+    // `npx shadcn add mzizi-tokens` wrote lib/tokens/primitives.ts, semantic.ts and
     // components.ts as EMPTY FILES over whatever the consumer had. The doc comment on this
     // route promised the opposite in as many words — "a component whose file is missing is
     // a 404 and never a 200 with an empty body" — while the code below it did exactly that.

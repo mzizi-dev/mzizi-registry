@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface InfraService {
   name: string
   status: "operational" | "degraded" | "outage" | "maintenance"
@@ -26,7 +26,7 @@ export function InfrastructurePage({
   loading = false,
   className,
 }: InfrastructurePageProps) {
-  const { motion } = useNyuchiHarness("infrastructure-page")
+  const { motion } = useMziziHarness("infrastructure-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

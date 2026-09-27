@@ -61,10 +61,10 @@ separate times in one working session:
 - edits reached production through blind `jsonb_set` string replacement;
 - an `aspect-media` change shipped a utility **nothing defines** for consumers, so every
   installed card would have silently lost its aspect ratio in someone else's app;
-- `nyuchi-cover-wash-header` was left unfixed _specifically_ because a structural JSX
+- `mzizi-cover-wash-header` was left unfixed _specifically_ because a structural JSX
   edit could not be compiled first.
 
-The N11 pilot proved the thesis on its first file. The moment `nyuchi-seo` hit disk `tsc`
+The N11 pilot proved the thesis on its first file. The moment `mzizi-seo` hit disk `tsc`
 failed it: a **stable**, consumer-installed component had been passing
 `ogType: "product"` into Next's `openGraph.type` — whose union does not include it — for
 as long as the source lived where no typechecker could reach.
@@ -85,11 +85,11 @@ changelog, docs. Only the bytes moved.
 components/registry/n<N>-<label>/<name>.tsx
 ```
 
-e.g. `components/registry/n11-discovery/nyuchi-seo.tsx`.
+e.g. `components/registry/n11-discovery/mzizi-seo.tsx`.
 
 The directory mirrors the DNA helix so a directory listing teaches the model. Note the
 distinction that trips people up: the registry's `files[].path` (e.g.
-`components/ui/nyuchi-seo.tsx`) is where the shadcn CLI places the file in a **consumer's**
+`components/ui/mzizi-seo.tsx`) is where the shadcn CLI places the file in a **consumer's**
 project. It is not where the file lives here, and the two are free to differ.
 
 ## The read path
@@ -172,7 +172,7 @@ is precisely the failure mode this migration existed to remove.
 The sequence, as executed:
 
 1. Merge and deploy the 571 files.
-2. Confirm one component per node serves real source from production. `nyuchi-tokens` went
+2. Confirm one component per node serves real source from production. `mzizi-tokens` went
    48382 → 46499 chars at this step, which is how we knew it had been serving the database
    copy and was now serving the file.
 3. Clear `document.source_code` across all 571 rows **and**
@@ -187,7 +187,7 @@ second copy this migration removed.
 
 ## Known follow-ups
 
-- **N1 `nyuchi-tokens` is not a component.** Its `source_code` holds a JSON token payload
+- **N1 `mzizi-tokens` is not a component.** Its `source_code` holds a JSON token payload
   that `getDesignTokens()` parses. It moves too, but as data — not as part of the `.tsx`
   fan-out above.
 - **N2 overlaps `components/ui/`.** The portal imports ~35 primitives from

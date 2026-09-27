@@ -176,7 +176,7 @@
   --color-wash: var(--wash);
 }
 
-/* Light mode — L1 tokens synced from nyuchi-tokens registry (April 2026).
+/* Light mode — L1 tokens synced from mzizi-tokens registry (April 2026).
  * Surfaces are SWAPPED and AAA-optimised:
  *   - background is the AMBIENT page base (warm grey, slightly tinted)
  *   - card is the CONTENT surface (pure white)
@@ -267,7 +267,7 @@
    * The `--status-*` aliases. These are NOT a second palette — they are the
    * names N1 declares.
    *
-   * `nyuchi-tokens.ts`'s `statusTokens` gives each status a `css` field naming
+   * `mzizi-tokens.ts`'s `statusTokens` gives each status a `css` field naming
    * `--status-success` / `--status-warning` / `--status-error` / `--status-info`
    * / `--status-neutral`, and 243 registry components reference those names.
    * This file implemented `--success` / `--warning` / `--destructive` instead
@@ -332,7 +332,7 @@
   --dot-color: rgba(10, 10, 10, 0.05);
 }
 
-/* Dark mode — L1 tokens synced from nyuchi-tokens registry (April 2026).
+/* Dark mode — L1 tokens synced from mzizi-tokens registry (April 2026).
  * Surfaces are SWAPPED and AAA-optimised:
  *   - background is the AMBIENT page base (warm near-black, L10%)
  *   - card is the CONTENT surface (darker, L6%)

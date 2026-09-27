@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    PROFILE PAGE — Layer 6 (Page Composition)
    
-   COMPOSITION: Should compose nyuchi-cover-header (L3) for the
+   COMPOSITION: Should compose mzizi-cover-header (L3) for the
    cover image + avatar section instead of rendering inline.
-   COMPOSITION: Should compose nyuchi-profile-block (L3) for the
+   COMPOSITION: Should compose mzizi-profile-block (L3) for the
    name + badge + stats section.
    
    Currently approved for use as-is. Refactor tracked.
@@ -11,9 +11,9 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
-// COMPOSITION: Uses NyuchiCoverHeader from @/components/brand/nyuchi-cover-header
-// import { NyuchiCoverHeader } from "@/components/brand/nyuchi-cover-header"
+import { useMziziHarness } from "@/lib/harness"
+// COMPOSITION: Uses MziziCoverHeader from @/components/brand/mzizi-cover-header
+// import { MziziCoverHeader } from "@/components/brand/mzizi-cover-header"
 
 interface ProfileUser {
   name: string
@@ -48,7 +48,7 @@ export function IndividualProfilePage({
   loading = false,
   className,
 }: IndividualProfilePageProps) {
-  const { motion } = useNyuchiHarness("individual-profile-page")
+  const { motion } = useMziziHarness("individual-profile-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

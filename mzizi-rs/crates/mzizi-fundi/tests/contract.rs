@@ -15,14 +15,14 @@
 use std::fs;
 use std::path::PathBuf;
 
-use mzizi_fundi::nyuchi_fundi_reporter::{
+use mzizi_fundi::mzizi_fundi_reporter::{
     CooldownLog, ErrorType, FundiReport, NotFiled, ReportSeverity, escape_code_span,
     escape_markdown_cell, issue_body, issue_title, labels_for,
 };
 
 fn ts_sibling() -> String {
     let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../components/registry/n9-fundi/nyuchi-fundi-reporter.ts");
+        .join("../../../components/registry/n9-fundi/mzizi-fundi-reporter.ts");
     fs::read_to_string(&path)
         .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
 }
@@ -282,7 +282,7 @@ fn the_body_keeps_the_typescript_section_headings() {
         assert!(body.contains(heading), "body lost {heading}");
         assert!(ts.contains(heading), "the TypeScript lost {heading}");
     }
-    assert!(body.contains("*Filed by nyuchi-fundi-reporter"));
+    assert!(body.contains("*Filed by mzizi-fundi-reporter"));
 }
 
 #[test]
@@ -299,7 +299,7 @@ fn the_typescript_still_files_against_the_renamed_repo() {
 
 // ── learning ───────────────────────────────────────────────────────────────
 
-use mzizi_fundi::nyuchi_fundi_learning::{
+use mzizi_fundi::mzizi_fundi_learning::{
     HealingOutcome, LearningLog, ResolvedBy, Severity as LearnSeverity,
 };
 
@@ -443,7 +443,7 @@ fn empty_stats_are_zero_not_nan() {
 fn learning_keeps_its_typescript_spellings_and_limits() {
     let ts = fs::read_to_string(
         PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../../../components/registry/n9-fundi/nyuchi-fundi-learning.ts"),
+            .join("../../../components/registry/n9-fundi/mzizi-fundi-learning.ts"),
     )
     .expect("the fundi-learning TypeScript sibling");
     for r in [ResolvedBy::Fundi, ResolvedBy::Human, ResolvedBy::Both] {
@@ -471,16 +471,16 @@ fn learning_keeps_its_typescript_spellings_and_limits() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// nyuchi-fundi — the approval that did not hold, and the auth rule that only
+// mzizi-fundi — the approval that did not hold, and the auth rule that only
 // applied to the narrowest case
 // ═══════════════════════════════════════════════════════════════════════════
 
-// `ErrorType` is aliased: nyuchi-fundi-reporter declares one too, with FOUR
+// `ErrorType` is aliased: mzizi-fundi-reporter declares one too, with FOUR
 // members the healing engine does not have (a11y, perf, conformity, slo). So
 // the reporter can file a defect the engine has no branch for — recorded in
 // `the_two_halves_of_the_rung_do_not_share_an_error_vocabulary` below rather
 // than papered over by renaming a published type.
-use mzizi_fundi::nyuchi_fundi::{
+use mzizi_fundi::mzizi_fundi::{
     ActionOutcome, Approval, BlastRadius, DiagnosticInput, ErrorType as HealErrorType,
     EscalationSeverity, ProbeStatus, ProbeSummary, REPEAT_ERROR_THRESHOLD, REPEAT_ERROR_WINDOW_MS,
     RemediationAction, action_tally, create_healing_plan, plan_outcome,
@@ -488,7 +488,7 @@ use mzizi_fundi::nyuchi_fundi::{
 
 fn fundi_ts() -> String {
     let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../components/registry/n9-fundi/nyuchi-fundi.tsx");
+        .join("../../../components/registry/n9-fundi/mzizi-fundi.tsx");
     std::fs::read_to_string(&path)
         .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
 }
@@ -862,7 +862,7 @@ fn the_action_types_and_enums_match_the_typescript() {
             to: String::new(),
         },
         RemediationAction::CacheClear {
-            scope: mzizi_fundi::nyuchi_fundi::CacheScope::Local,
+            scope: mzizi_fundi::mzizi_fundi::CacheScope::Local,
         },
         RemediationAction::Reroute {
             from_node: String::new(),
@@ -874,7 +874,7 @@ fn the_action_types_and_enums_match_the_typescript() {
         },
         RemediationAction::DegradeFeature {
             feature: String::new(),
-            level: mzizi_fundi::nyuchi_fundi::DegradeLevel::Partial,
+            level: mzizi_fundi::mzizi_fundi::DegradeLevel::Partial,
         },
         RemediationAction::ScaleRequest {
             up: true,
@@ -923,7 +923,7 @@ fn a_tally_summarises_a_plan_without_reading_its_prose() {
 
 #[test]
 fn the_two_halves_of_the_rung_do_not_share_an_error_vocabulary() {
-    // nyuchi-fundi-reporter declares eleven error types and the healing engine
+    // mzizi-fundi-reporter declares eleven error types and the healing engine
     // declares seven. The four the reporter has and the engine does not — a11y,
     // perf, conformity, slo — are precisely the ones N8 assurance produces:
     // mzizi-a11y-audit, mzizi-perf-probe, mzizi-conformity-check and the SLO

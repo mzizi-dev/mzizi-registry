@@ -1,11 +1,11 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type CryptoLevel = "quantum-safe" | "classical" | "weak" | "none" | "checking"
 
-interface NyuchiCryptoGateProps {
+interface MziziCryptoGateProps {
   children: React.ReactNode
   currentLevel: CryptoLevel
   requiredLevel?: CryptoLevel
@@ -51,7 +51,7 @@ const LEVEL_CONFIG: Record<CryptoLevel, { color: string; label: string; desc: st
   },
 }
 
-export function NyuchiCryptoGate({
+export function MziziCryptoGate({
   children,
   currentLevel,
   requiredLevel = "classical",
@@ -60,8 +60,8 @@ export function NyuchiCryptoGate({
   fallback,
   loading = false,
   className,
-}: NyuchiCryptoGateProps) {
-  const { motion } = useNyuchiHarness("crypto-gate")
+}: MziziCryptoGateProps) {
+  const { motion } = useMziziHarness("crypto-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -75,8 +75,8 @@ export function NyuchiCryptoGate({
   if (loading || currentLevel === "checking")
     return (
       <div
-        data-slot="nyuchi-crypto-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-crypto-gate"
+        data-slot="mzizi-crypto-gate"
+        data-portal="https://mzizi.dev/components/mzizi-crypto-gate"
         data-loading
         role="status"
         className="h-28 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -94,7 +94,7 @@ export function NyuchiCryptoGate({
   const required = LEVEL_CONFIG[requiredLevel]
   return (
     <div
-      data-slot="nyuchi-crypto-gate"
+      data-slot="mzizi-crypto-gate"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -153,4 +153,4 @@ export function NyuchiCryptoGate({
     </div>
   )
 }
-export type { CryptoLevel, NyuchiCryptoGateProps }
+export type { CryptoLevel, MziziCryptoGateProps }

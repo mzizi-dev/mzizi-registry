@@ -28,11 +28,11 @@
 //!
 //! So: N9's registry surface is Rust as of this crate. N9's worker is not.
 
-#[path = "generated/nyuchi-fundi.rs"]
-pub mod nyuchi_fundi;
+#[path = "generated/mzizi-fundi.rs"]
+pub mod mzizi_fundi;
 
-#[path = "generated/nyuchi-fundi-learning.rs"]
-pub mod nyuchi_fundi_learning;
+#[path = "generated/mzizi-fundi-learning.rs"]
+pub mod mzizi_fundi_learning;
 
-#[path = "generated/nyuchi-fundi-reporter.rs"]
-pub mod nyuchi_fundi_reporter;
+#[path = "generated/mzizi-fundi-reporter.rs"]
+pub mod mzizi_fundi_reporter;

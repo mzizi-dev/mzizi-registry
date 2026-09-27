@@ -1,6 +1,6 @@
 "use client"
 
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 import * as React from "react"
 import { X } from "@/lib/icons"
@@ -27,7 +27,7 @@ function OnboardingTour({
   onNext: () => void
   onSkip: () => void
 } & React.ComponentProps<"div">) {
-  const { motion } = useNyuchiHarness("onboarding-tour")
+  const { motion } = useMziziHarness("onboarding-tour")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

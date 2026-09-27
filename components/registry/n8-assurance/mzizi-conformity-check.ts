@@ -45,7 +45,7 @@ export interface ConformityCheckConfig {
 }
 
 // N9 fundi integration: Major conformity violations are reported to Fundi
-// import { getFundiReporter } from "@/lib/fundi/nyuchi-fundi-reporter"
+// import { getFundiReporter } from "@/lib/fundi/mzizi-fundi-reporter"
 // On error-severity violations: getFundiReporter().report({ component, errorType: "conformity", source: "conformity-check", ... })
 
 export function runConformityCheck(config: ConformityCheckConfig = {}): ConformityReport {

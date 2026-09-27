@@ -49,7 +49,7 @@ function rateMetric(name: string, value: number): WebVitalsMetric["rating"] {
   return "needs-improvement"
 }
 
-export interface NyuchiPerfProbeConfig {
+export interface MziziPerfProbeConfig {
   onMetric?: (metric: WebVitalsMetric) => void
   onReport?: (report: PerfReport) => void
   /** Track component-level rendering via data-portal attributes */
@@ -59,7 +59,7 @@ export interface NyuchiPerfProbeConfig {
 }
 
 /** Initialize Web Vitals collection */
-export function initPerfProbe(config: NyuchiPerfProbeConfig = {}) {
+export function initPerfProbe(config: MziziPerfProbeConfig = {}) {
   const { sampleRate = 0.1 } = config
   if (Math.random() > sampleRate) return // Sampling
 
@@ -182,7 +182,7 @@ export function initPerfProbe(config: NyuchiPerfProbeConfig = {}) {
 
 function guessNode(slot: string): number {
   if (slot.includes("page") || slot.includes("layout")) return 6
-  if (slot.startsWith("nyuchi-")) return 3
+  if (slot.startsWith("mzizi-") || slot.startsWith("nyuchi-")) return 3
   return 2
 }
 

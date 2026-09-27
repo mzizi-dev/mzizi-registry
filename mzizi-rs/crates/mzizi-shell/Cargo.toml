@@ -1,8 +1,8 @@
 [package]
 name = "mzizi-shell"
 description = "Mzizi N7 shell for Dioxus — app chrome: bottom nav, footer, command palette, connectivity, theme, toasts, deep links and lifecycle."
-# The description named the HEADER first, and this crate does not have one: `nyuchi-header`,
-# `nyuchi-sidebar`, `app-switcher` and `nyuchi-root-layout` are the four of sixteen not
+# The description named the HEADER first, and this crate does not have one: `mzizi-header`,
+# `mzizi-sidebar`, `app-switcher` and `mzizi-root-layout` are the four of sixteen not
 # ported. Same class of defect as `mzizi-tokens` describing five families of twenty-one —
 # a manifest line that stopped being true and that nothing compares against the crate.
 # crates.io renders `readme`, `keywords` and `categories` on the package page, and a

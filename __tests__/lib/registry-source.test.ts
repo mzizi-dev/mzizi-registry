@@ -24,7 +24,7 @@ const PRIMARY_EXTENSIONS = [".tsx", ".ts", ".jsx", ".js"]
  * This used to take the first `readdir` hit for the name, on the assumption that
  * a component has one file. That assumption died with the Rust build-out: a
  * component is one name with several target implementations (§8.9), so
- * `nyuchi-seo` is now `nyuchi-seo.ts` AND `nyuchi-seo.rs`, and `find` returned
+ * `mzizi-seo` is now `mzizi-seo.ts` AND `mzizi-seo.rs`, and `find` returned
  * whichever the filesystem happened to list first. The suite then compared the
  * `.rs` against the `.ts` the reader correctly served, and failed on the reader
  * being right.
@@ -55,14 +55,14 @@ beforeEach(() => resetRegistrySourceCache())
 
 describe("readComponentSource", () => {
   it("returns the file's real bytes, not a rendering of them", () => {
-    expect(readComponentSource("nyuchi-seo")).toBe(fileOnDisk("n11-discovery", "nyuchi-seo"))
+    expect(readComponentSource("mzizi-seo")).toBe(fileOnDisk("n11-discovery", "mzizi-seo"))
   })
 
   it("finds a component without being told its node", () => {
     // The caller has a name, not a node. If the resolver needed the node it
     // would need the node-label table too, and that table would then live in
     // two places.
-    expect(readComponentSource("nyuchi-seo")).toContain("generateMetadata")
+    expect(readComponentSource("mzizi-seo")).toContain("generateMetadata")
   })
 
   it("returns null — never an empty string — for a component with no file", () => {
@@ -86,7 +86,7 @@ describe("readComponentSource", () => {
 describe("componentsOnDisk", () => {
   it("lists migrated components and is sorted", () => {
     const names = componentsOnDisk()
-    expect(names).toContain("nyuchi-seo")
+    expect(names).toContain("mzizi-seo")
     expect(names).toEqual([...names].sort())
   })
 
@@ -112,10 +112,10 @@ describe("multi-language components", () => {
   it("reads the five non-TypeScript components an allow-list dropped", () => {
     for (const name of [
       "accessibility-audit", // .md    — N8 assurance
-      "nyuchi-tokens-kotlin", // .kt    — N1
-      "nyuchi-tokens-swift", // .swift — N1
-      "nyuchi-tokens-python", // .py    — N1
-      "nyuchi-tokens-arkts", // .ets   — N1
+      "mzizi-tokens-kotlin", // .kt    — N1
+      "mzizi-tokens-swift", // .swift — N1
+      "mzizi-tokens-python", // .py    — N1
+      "mzizi-tokens-arkts", // .ets   — N1
     ]) {
       const source = readComponentSource(name)
       expect(source, `${name} must resolve on disk, not via a database fallback`).not.toBeNull()

@@ -66,7 +66,7 @@ Doctrine, Ubuntu pillars/principles, and Mzizi conventions are not component nod
 ## The rules that follow from the node
 
 - **N1** is the only place raw CSS values live. Every other node consumes them via `var(--token-name)`.
-- **N2** never imports `useNyuchiHarness`; it uses `cn()` and carries `data-slot`.
+- **N2** never imports `useMziziHarness`; it uses `cn()` and carries `data-slot`.
 - **N3** always uses the `nyuchi-` prefix and destructures `{ log, motion, LiveRegion }` from the harness.
 - **N6** is pure composition — no inline buttons, cards, or SVGs; those come from N2/N3.
 - **N4/N5/N8** wrap components rather than render them.

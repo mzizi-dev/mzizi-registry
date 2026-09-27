@@ -10,7 +10,7 @@
  * carried two literal arrays, five minerals and five heritage tones, written
  * when the palette was five-and-five. The palette grew to seven-and-seven, then
  * gained the experimental seven. The arrays did not move. A consumer installing
- * `nyuchi-tokens-typescript` got ten of twenty-one families; a consumer reading
+ * `mzizi-tokens-typescript` got ten of twenty-one families; a consumer reading
  * `/v1/brand` got all twenty-one; and `sodalite` did not appear anywhere in the
  * TypeScript file at all. The six generated platform files had a narrower
  * version of the same hole — seven and seven, but no experimental.
@@ -19,7 +19,7 @@
  *
  *   - `pnpm tokens:verify` (scripts/sync-tokens.ts --check) is a real gate, and
  *     it does fail the build on drift — but only for the artifacts it writes.
- *     `nyuchi-tokens-typescript.ts` is not one of them. It compared six files
+ *     `mzizi-tokens-typescript.ts` is not one of them. It compared six files
  *     against the source and was silent about the seventh, which was the one
  *     that was wrong.
  *   - `__tests__/tokens-seven-fold.test.ts` asserts the counts, but against
@@ -35,7 +35,7 @@
  *
  * IT NOW ASSERTS THE HEXES, NOT ONLY THE FAMILY NAMES. When this file was
  * written it checked presence only, and recorded why: six families in
- * `nyuchi-tokens-typescript.ts` — terracotta, indigo, savanna, baobab, sunset
+ * `mzizi-tokens-typescript.ts` — terracotta, indigo, savanna, baobab, sunset
  * and river — carried pre-Seven values (baobab was `#A5D6A7`, a green, where
  * the palette says `#A1887F`, a brown), and correcting a published surface was
  * held to be a separate decision from closing a presence gap. That decision has
@@ -60,7 +60,7 @@ import { experimentalColors, heritageColors, minerals } from "@/lib/tokens/palet
 import {
   paletteFamilies,
   primitives,
-} from "@/components/registry/n1-tokens/nyuchi-tokens-typescript"
+} from "@/components/registry/n1-tokens/mzizi-tokens-typescript"
 
 const N1 = join(process.cwd(), "components/registry/n1-tokens")
 const read = (file: string) => readFileSync(join(N1, file), "utf8")
@@ -133,82 +133,82 @@ const EMITTERS: {
 }[] = [
   {
     name: "swift",
-    file: "nyuchi-tokens-swift.swift",
-    // static let nyuchiEmberDark  = Color(hex: "#DA8766")
+    file: "mzizi-tokens-swift.swift",
+    // static let mziziEmberDark  = Color(hex: "#DA8766")
     families: () =>
-      scan(read("nyuchi-tokens-swift.swift"), /static let nyuchi(\w+?)Dark\b/g, lowerFirst),
+      scan(read("mzizi-tokens-swift.swift"), /static let mzizi(\w+?)Dark\b/g, lowerFirst),
     hexes: () =>
       scanHexes(
-        read("nyuchi-tokens-swift.swift"),
-        /static let nyuchi(\w+?)(Dark|Light)\s*=\s*Color\(hex:\s*"(#[0-9A-Fa-f]{6})"\)/g,
+        read("mzizi-tokens-swift.swift"),
+        /static let mzizi(\w+?)(Dark|Light)\s*=\s*Color\(hex:\s*"(#[0-9A-Fa-f]{6})"\)/g,
         lowerFirst
       ),
   },
   {
     name: "kotlin",
-    file: "nyuchi-tokens-kotlin.kt",
+    file: "mzizi-tokens-kotlin.kt",
     // val EmberDark  = Color(0xFFDA8766)
     families: () =>
-      scan(read("nyuchi-tokens-kotlin.kt"), /val (\w+?)Dark\s*=\s*Color\(/g, lowerFirst),
+      scan(read("mzizi-tokens-kotlin.kt"), /val (\w+?)Dark\s*=\s*Color\(/g, lowerFirst),
     hexes: () =>
       scanHexes(
-        read("nyuchi-tokens-kotlin.kt"),
+        read("mzizi-tokens-kotlin.kt"),
         /val (\w+?)(Dark|Light)\s*=\s*Color\(0xFF([0-9A-Fa-f]{6})\)/g,
         lowerFirst
       ),
   },
   {
     name: "arkts",
-    file: "nyuchi-tokens-arkts.ets",
+    file: "mzizi-tokens-arkts.ets",
     // emberDark: "#DA8766",
-    families: () => scan(read("nyuchi-tokens-arkts.ets"), /(\w+?)Dark:\s*"#/g, (s) => s),
+    families: () => scan(read("mzizi-tokens-arkts.ets"), /(\w+?)Dark:\s*"#/g, (s) => s),
     hexes: () =>
       scanHexes(
-        read("nyuchi-tokens-arkts.ets"),
+        read("mzizi-tokens-arkts.ets"),
         /(\w+?)(Dark|Light):\s*"(#[0-9A-Fa-f]{6})"/g,
         (s) => s
       ),
   },
   {
     name: "react-native",
-    file: "nyuchi-tokens-react-native.ts",
-    families: () => scan(read("nyuchi-tokens-react-native.ts"), /(\w+?)Dark:\s*"#/g, (s) => s),
+    file: "mzizi-tokens-react-native.ts",
+    families: () => scan(read("mzizi-tokens-react-native.ts"), /(\w+?)Dark:\s*"#/g, (s) => s),
     hexes: () =>
       scanHexes(
-        read("nyuchi-tokens-react-native.ts"),
+        read("mzizi-tokens-react-native.ts"),
         /(\w+?)(Dark|Light):\s*"(#[0-9A-Fa-f]{6})"/g,
         (s) => s
       ),
   },
   {
     name: "python",
-    file: "nyuchi-tokens-python.py",
+    file: "mzizi-tokens-python.py",
     // EMBER_DARK: str = "#DA8766"
     families: () =>
-      scan(read("nyuchi-tokens-python.py"), /(\w+?)_DARK:\s*str\s*=/g, (s) => s.toLowerCase()),
+      scan(read("mzizi-tokens-python.py"), /(\w+?)_DARK:\s*str\s*=/g, (s) => s.toLowerCase()),
     hexes: () =>
       scanHexes(
-        read("nyuchi-tokens-python.py"),
+        read("mzizi-tokens-python.py"),
         /(\w+?)_(DARK|LIGHT):\s*str\s*=\s*"(#[0-9A-Fa-f]{6})"/g,
         (s) => s.toLowerCase()
       ),
   },
   {
     name: "rust",
-    file: "nyuchi-tokens-rust.rs",
+    file: "mzizi-tokens-rust.rs",
     // pub const EMBER_DARK: &str = "#DA8766";
     families: () =>
-      scan(read("nyuchi-tokens-rust.rs"), /pub const (\w+?)_DARK:\s*&str/g, (s) => s.toLowerCase()),
+      scan(read("mzizi-tokens-rust.rs"), /pub const (\w+?)_DARK:\s*&str/g, (s) => s.toLowerCase()),
     hexes: () =>
       scanHexes(
-        read("nyuchi-tokens-rust.rs"),
+        read("mzizi-tokens-rust.rs"),
         /pub const (\w+?)_(DARK|LIGHT):\s*&str\s*=\s*"(#[0-9A-Fa-f]{6})";/g,
         (s) => s.toLowerCase()
       ),
   },
   {
     name: "typescript",
-    file: "nyuchi-tokens-typescript.ts",
+    file: "mzizi-tokens-typescript.ts",
     // Asked through the module's own derivation, so a regression in
     // `paletteFamilies()` — the function `generateCSSVariables()` depends on —
     // fails here rather than passing on the strength of the raw table.
@@ -280,7 +280,7 @@ describe("every token emitter carries the canonical family set", () => {
 
       it("carries the canonical hex for the six that once did not", () => {
         // terracotta, indigo, savanna, baobab, sunset and river were pre-Seven
-        // in `nyuchi-tokens-typescript.ts` — baobab a green against a brown —
+        // in `mzizi-tokens-typescript.ts` — baobab a green against a brown —
         // and the assertion above would report that as one large diff. Naming
         // them makes a regression read as "baobab is #A5D6A7 again".
         const have = emitter.hexes()
@@ -323,7 +323,7 @@ describe("the derived family list", () => {
     // passes every assertion above on the day it is written and rots exactly as
     // the five-name arrays did. Deriving the keys is the fix; a longer literal
     // is the bug wearing a bigger coat.
-    const source = readFileSync(join(N1, "nyuchi-tokens-typescript.ts"), "utf8")
+    const source = readFileSync(join(N1, "mzizi-tokens-typescript.ts"), "utf8")
     const fn = source.match(/export function generateCSSVariables\(([\s\S]*?)\n\}/)
     expect(fn, "could not locate generateCSSVariables").not.toBeNull()
     // Comments are stripped first, and that distinction matters: the comment
@@ -355,7 +355,7 @@ describe("the derived family list", () => {
  * marker is gated by nothing.
  */
 describe("the generated palette region", () => {
-  const SOURCE = readFileSync(join(N1, "nyuchi-tokens-typescript.ts"), "utf8")
+  const SOURCE = readFileSync(join(N1, "mzizi-tokens-typescript.ts"), "utf8")
   const START = "/* tokens:generated:ts-palette:start */"
   const END = "/* tokens:generated:ts-palette:end */"
 

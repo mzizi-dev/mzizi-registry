@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 type CheckoutStep = "cart" | "shipping" | "payment" | "review" | "processing" | "confirmed"
 interface CheckoutPageProps {
   step?: CheckoutStep
@@ -18,7 +18,7 @@ export function CheckoutPage({
   loading = false,
   className,
 }: CheckoutPageProps) {
-  const { motion } = useNyuchiHarness("checkout-page")
+  const { motion } = useMziziHarness("checkout-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

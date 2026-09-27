@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type ChainId =
   "nyuchi-mainnet" | "nyuchi-testnet" | "polygon" | "polygon-amoy" | "ethereum" | "unknown"
@@ -15,7 +15,7 @@ const CHAIN_INFO: Record<ChainId, { label: string; color: string }> = {
   unknown: { label: "Unknown Network", color: "var(--color-muted-foreground)" },
 }
 
-interface NyuchiChainGateProps {
+interface MziziChainGateProps {
   children: React.ReactNode
   currentChain: ChainId
   requiredChains: ChainId[]
@@ -25,7 +25,7 @@ interface NyuchiChainGateProps {
   className?: string
 }
 
-export function NyuchiChainGate({
+export function MziziChainGate({
   children,
   currentChain,
   requiredChains,
@@ -33,8 +33,8 @@ export function NyuchiChainGate({
   fallback,
   loading = false,
   className,
-}: NyuchiChainGateProps) {
-  const { motion } = useNyuchiHarness("chain-gate")
+}: MziziChainGateProps) {
+  const { motion } = useMziziHarness("chain-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -48,8 +48,8 @@ export function NyuchiChainGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-chain-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-chain-gate"
+        data-slot="mzizi-chain-gate"
+        data-portal="https://mzizi.dev/components/mzizi-chain-gate"
         data-loading
         role="status"
         className="h-32 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -60,7 +60,7 @@ export function NyuchiChainGate({
 
   return (
     <div
-      data-slot="nyuchi-chain-gate"
+      data-slot="mzizi-chain-gate"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -114,4 +114,4 @@ export function NyuchiChainGate({
     </div>
   )
 }
-export type { ChainId, NyuchiChainGateProps }
+export type { ChainId, MziziChainGateProps }

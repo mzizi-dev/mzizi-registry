@@ -37,11 +37,11 @@ export async function runApiProbe(config: ApiProbeConfig = {}): Promise<Endpoint
   const checks: EndpointCheck[] = []
 
   const endpoints = config.endpoints || [
-    { url: `${baseUrl}/api/health/nyuchi-tokens`, componentName: "nyuchi-tokens", node: 1 },
-    { url: `${baseUrl}/api/health/nyuchi-section`, componentName: "nyuchi-section", node: 5 },
+    { url: `${baseUrl}/api/health/mzizi-tokens`, componentName: "mzizi-tokens", node: 1 },
+    { url: `${baseUrl}/api/health/mzizi-section`, componentName: "mzizi-section", node: 5 },
     {
-      url: `${baseUrl}/api/health/nyuchi-wallet-gate`,
-      componentName: "nyuchi-wallet-gate",
+      url: `${baseUrl}/api/health/mzizi-wallet-gate`,
+      componentName: "mzizi-wallet-gate",
       node: 4,
     },
     { url: `${baseUrl}/api/health/wallet-page`, componentName: "wallet-page", node: 6 },

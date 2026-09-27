@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface AdminNavItem {
   key: string
   label: string
@@ -28,7 +28,7 @@ export function AdminPage({
   loading = false,
   className,
 }: AdminPageProps) {
-  const { motion } = useNyuchiHarness("admin-page")
+  const { motion } = useMziziHarness("admin-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

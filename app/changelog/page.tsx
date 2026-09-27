@@ -9,7 +9,7 @@ import { NodeBadgeList } from "@/components/ui/node-badge"
 // `list_changelog()` RPC introduced by the `versioning_and_changelog_v2`
 // migration; renders each release with its version, title, release date,
 // description, and the ecosystem nodes touched. The node badges are
-// coloured by helix classification per the live `nyuchi-changelog-renderer`
+// coloured by helix classification per the live `mzizi-changelog-renderer`
 // (registry v2.0.0) — never by a fixed list of node numbers, so a release
 // naming a node newer than any in code still renders.
 

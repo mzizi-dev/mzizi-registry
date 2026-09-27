@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 /* ═══════════════════════════════════════════════════════════════
    NYUCHI SECTION — Layer 5 Resilience (Workhorse Wrapper)
@@ -11,7 +11,7 @@ import { useNyuchiHarness } from "@/lib/harness"
    ✅ HARNESS  ✅ TOKENS  ✅ ARIA  ✅ LOADING  ✅ MOTION
    ═══════════════════════════════════════════════════════════════ */
 
-interface NyuchiSectionProps {
+interface MziziSectionProps {
   name: string
   children: React.ReactNode
   /** Custom skeleton shown during loading */
@@ -63,8 +63,8 @@ class SectionBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <div
-          data-slot="nyuchi-section-error"
-          data-portal="https://mzizi.dev/components/nyuchi-section-error"
+          data-slot="mzizi-section-error"
+          data-portal="https://mzizi.dev/components/mzizi-section-error"
           role="alert"
           aria-live="assertive"
           className="rounded-[var(--radius-lg,14px)] border border-destructive/20 bg-destructive/5 p-4"
@@ -91,15 +91,15 @@ class SectionBoundary extends React.Component<
   }
 }
 
-export function NyuchiSection({
+export function MziziSection({
   name,
   children,
   skeleton = DEFAULT_SKELETON,
   loading = false,
   errorFallback,
   className,
-}: NyuchiSectionProps) {
-  const { log, motion } = useNyuchiHarness(name)
+}: MziziSectionProps) {
+  const { log, motion } = useMziziHarness(name)
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -120,7 +120,7 @@ export function NyuchiSection({
   if (loading) {
     return (
       <section
-        data-slot="nyuchi-section"
+        data-slot="mzizi-section"
         data-section={name}
         data-loading
         aria-label={name}
@@ -133,7 +133,7 @@ export function NyuchiSection({
 
   const content = (
     <section
-      data-slot="nyuchi-section"
+      data-slot="mzizi-section"
       data-section={name}
       aria-label={name}
       style={animStyle}
@@ -152,4 +152,4 @@ export function NyuchiSection({
   return content
 }
 
-export type { NyuchiSectionProps }
+export type { MziziSectionProps }

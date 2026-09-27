@@ -1,9 +1,9 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
-interface NyuchiRateGateProps {
+interface MziziRateGateProps {
   children: React.ReactNode
   isLimited: boolean
   cooldownSeconds?: number
@@ -14,7 +14,7 @@ interface NyuchiRateGateProps {
   className?: string
 }
 
-export function NyuchiRateGate({
+export function MziziRateGate({
   children,
   isLimited,
   cooldownSeconds = 60,
@@ -23,8 +23,8 @@ export function NyuchiRateGate({
   onCooldownEnd,
   loading = false,
   className,
-}: NyuchiRateGateProps) {
-  const { log, motion } = useNyuchiHarness("rate-gate")
+}: MziziRateGateProps) {
+  const { log, motion } = useMziziHarness("rate-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -59,8 +59,8 @@ export function NyuchiRateGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-rate-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-rate-gate"
+        data-slot="mzizi-rate-gate"
+        data-portal="https://mzizi.dev/components/mzizi-rate-gate"
         data-loading
         role="status"
         className="h-24 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -73,7 +73,7 @@ export function NyuchiRateGate({
 
   return (
     <div
-      data-slot="nyuchi-rate-gate"
+      data-slot="mzizi-rate-gate"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -119,4 +119,4 @@ export function NyuchiRateGate({
     </div>
   )
 }
-export type { NyuchiRateGateProps }
+export type { MziziRateGateProps }

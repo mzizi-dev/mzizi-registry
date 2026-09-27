@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface HealthDashboardPageProps {
   vitals?: React.ReactNode
   activity?: React.ReactNode
@@ -20,7 +20,7 @@ export function HealthDashboardPage({
   loading = false,
   className,
 }: HealthDashboardPageProps) {
-  const { motion } = useNyuchiHarness("health-dashboard-page")
+  const { motion } = useMziziHarness("health-dashboard-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

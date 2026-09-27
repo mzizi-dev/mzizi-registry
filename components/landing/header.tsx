@@ -1,11 +1,11 @@
 "use client"
 
-import { NyuchiHeader, type NavItem } from "@/components/mukoko/mukoko-header"
+import { MziziHeader, type NavItem } from "@/components/mukoko/mukoko-header"
 import { HeaderSearch } from "@/components/landing/header-search"
 import { HEADER_NAV } from "@/lib/nav"
 
 /**
- * Portal-specific composition of the registry's `NyuchiHeader` (N7 shell).
+ * Portal-specific composition of the registry's `MziziHeader` (N7 shell).
  *
  * No design or behaviour lives here — this file only adapts the single
  * source-of-truth `HEADER_NAV` (lib/nav.ts) to the header's `navItems`
@@ -25,7 +25,7 @@ const NAV_ITEMS: NavItem[] = HEADER_NAV.map(({ label, href, external }) => ({
 
 export function Header({ showLogo = true }: { showLogo?: boolean }) {
   return (
-    <NyuchiHeader
+    <MziziHeader
       appName="mzizi"
       navItems={NAV_ITEMS}
       actions={<HeaderSearch />}

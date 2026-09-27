@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface SocialFeedPageProps {
   stories?: React.ReactNode
@@ -20,7 +20,7 @@ export function SocialFeedPage({
   loading = false,
   className,
 }: SocialFeedPageProps) {
-  const { motion } = useNyuchiHarness("social-feed-page")
+  const { motion } = useMziziHarness("social-feed-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

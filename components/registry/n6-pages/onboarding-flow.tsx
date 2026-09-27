@@ -1,6 +1,6 @@
 "use client"
 
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 import * as React from "react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -27,7 +27,7 @@ const interests = [
 const steps = ["Welcome", "Profile", "Interests", "Complete"]
 
 function OnboardingFlow() {
-  const { motion } = useNyuchiHarness("onboarding-flow")
+  const { motion } = useMziziHarness("onboarding-flow")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

@@ -103,7 +103,7 @@ const LITERAL_COLOUR_DATA = new Set(["color-picker", "caption-editor"])
  *
  * The premise was wrong. A bare name does not mean "take the upstream one where an upstream
  * one exists" — the CLI resolves every bare name against ui.shadcn.com, full stop. So
- * installing `nyuchi-listing-card` from production pulled shadcn's badge (1776 B), card
+ * installing `mzizi-listing-card` from production pulled shadcn's badge (1776 B), card
  * (1987 B) and avatar (2916 B) instead of ours (1909 / 4306 / 3429): a brand component
  * standing on stock primitives, with no mineral tokens and no pill buttons, and nothing
  * anywhere reported a problem.
@@ -215,7 +215,7 @@ function main() {
      * A DATA item carries `cssVars` or `css` instead of a file, and that is not a
      * degenerate component — it is what a `registry:theme` IS.
      *
-     * `nyuchi-tokens` is the case: N1's covenant is that it is the only node allowed to
+     * `mzizi-tokens` is the case: N1's covenant is that it is the only node allowed to
      * define CSS values, and it discharges that by shipping the 214 custom properties
      * themselves, generated from `app/globals.css`. It has no source file on disk and
      * should not: a `.ts` file is React-only, and the whole point of moving the tokens
@@ -250,7 +250,7 @@ function main() {
     // directory, so an undeclared node is simply absent, and absent is not neutral: it drops
     // the item out of `/api/v1/ui?node=N` and out of `mzizi_list_components({ node: N })`.
     // That is exactly what happened — listing N1 returned the 17 libraries and omitted
-    // `nyuchi-tokens`, the item those libraries and 431 components depend on.
+    // `mzizi-tokens`, the item those libraries and 431 components depend on.
     if (isDataItem && !hasFiles) {
       if (typeof item.meta?.node !== "number" || item.meta.node < 1) {
         err(
@@ -267,7 +267,7 @@ function main() {
       err(
         n,
         "carries both cssVars/css and files[]. Keep the token DATA and the typed accessor " +
-          "as separate items (nyuchi-tokens vs nyuchi-tokens-typescript) so a non-React " +
+          "as separate items (mzizi-tokens vs mzizi-tokens-typescript) so a non-React " +
           "consumer can take the tokens without the TypeScript."
       )
     }
@@ -276,8 +276,8 @@ function main() {
     //
     // `readComponentSource(name)` resolves a component by NAME, not by install path, so
     // there has only ever been one file's worth of content to serve. Five items declared
-    // more (nyuchi-tokens declared four), and `/api/v1/ui/{name}` filled the extras with
-    // an empty string: `npx shadcn add nyuchi-tokens` wrote three EMPTY files over the
+    // more (mzizi-tokens declared four), and `/api/v1/ui/{name}` filled the extras with
+    // an empty string: `npx shadcn add mzizi-tokens` wrote three EMPTY files over the
     // consumer's own. Nothing caught it, because every item resolved on disk — the check
     // above passes on the component, and the defect was in the file list beside it.
     if (Array.isArray(item.files) && item.files.length > 1) {
@@ -314,8 +314,8 @@ function main() {
 
     // — a source containing JSX must install to a .tsx path —
     //
-    // `nyuchi-resilience` shipped 18 KB of JSX into `lib/resilience/health-monitor.ts`;
-    // `nyuchi-data`, `nyuchi-platform`, `nyuchi-layout` and `nyuchi-locale` each declared a
+    // `mzizi-resilience` shipped 18 KB of JSX into `lib/resilience/health-monitor.ts`;
+    // `mzizi-data`, `mzizi-platform`, `mzizi-layout` and `mzizi-locale` each declared a
     // JSX source as `index.ts`. TypeScript reads `<Foo>` in a .ts file as a type assertion,
     // so these fail with a wall of syntax errors in the CONSUMER's build, with nothing
     // pointing back here.
@@ -333,7 +333,7 @@ function main() {
       // would compare the source's extension against itself and never fire — the gate would
       // still print green while checking nothing.
       const declaredPath = item.files?.[0]?.target
-      // `rel` is relative to components/registry (e.g. `n1-tokens/nyuchi-tokens.ts`), and a
+      // `rel` is relative to components/registry (e.g. `n1-tokens/mzizi-tokens.ts`), and a
       // component's primary source is not always TypeScript — some are .md or .rs.
       const isTs = src && /\.tsx?$/.test(src.rel ?? "")
       if (src && isTs && declaredPath && !declaredPath.endsWith(".tsx")) {
@@ -413,7 +413,7 @@ function main() {
       // upstream primitives", and it is the rule that produced the defect below.
       //
       // 567 edges across 41 names were bare, and all 41 are items here. Measured against
-      // production: installing `nyuchi-listing-card` pulled shadcn's badge (1776 B), card
+      // production: installing `mzizi-listing-card` pulled shadcn's badge (1776 B), card
       // (1987 B) and avatar (2916 B) instead of ours (1909 / 4306 / 3429). The brand
       // component landed on stock primitives — no mineral tokens, no pill buttons — and
       // nothing errored, because a well-formed component from the wrong registry looks

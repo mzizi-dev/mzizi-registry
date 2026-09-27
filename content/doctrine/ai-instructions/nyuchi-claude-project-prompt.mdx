@@ -83,10 +83,10 @@ IMPLEMENTATION RULES
 ═══════════════════════════════════════════════
 
 1. CSS values live only in N1 tokens. Other nodes reference via var().
-2. Icons come from @/lib/icons (nyuchi-icons registry). Never import lucide-react directly.
-3. N2 primitives never import useNyuchiHarness. They use cn() for classNames and carry data-slot.
-4. N3 brand components always destructure { log, motion, LiveRegion } from useNyuchiHarness.
-5. N3 brand components always use the nyuchi- prefix in their name.
+2. Icons come from @/lib/icons (mzizi-icons registry). Never import lucide-react directly.
+3. N2 primitives never import useMziziHarness. They use cn() for classNames and carry data-slot.
+4. N3 brand components always destructure { log, motion, LiveRegion } from useMziziHarness.
+5. N3 brand components always use the mzizi- prefix in their name.
 6. N6 pages are pure composition — no inline buttons, cards, SVGs, or brand fonts.
 7. Every component has data-slot and data-portal attributes.
 8. All status colors use semantic tokens (--status-success, --status-error, etc).

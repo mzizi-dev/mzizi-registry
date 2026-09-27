@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type DIDStatus = "verified" | "locally-verified" | "expired" | "revoked" | "missing" | "checking"
 
@@ -13,7 +13,7 @@ interface VerifiableCredential {
   status: DIDStatus
 }
 
-interface NyuchiDIDGateProps {
+interface MziziDIDGateProps {
   children: React.ReactNode
   credential: VerifiableCredential | null
   requiredType?: string
@@ -56,7 +56,7 @@ const STATUS_CONFIG: Record<DIDStatus, { color: string; label: string; icon: str
   },
 }
 
-export function NyuchiDIDGate({
+export function MziziDIDGate({
   children,
   credential,
   requiredType,
@@ -64,8 +64,8 @@ export function NyuchiDIDGate({
   fallback,
   loading = false,
   className,
-}: NyuchiDIDGateProps) {
-  const { motion } = useNyuchiHarness("did-gate")
+}: MziziDIDGateProps) {
+  const { motion } = useMziziHarness("did-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -79,8 +79,8 @@ export function NyuchiDIDGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-did-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-did-gate"
+        data-slot="mzizi-did-gate"
+        data-portal="https://mzizi.dev/components/mzizi-did-gate"
         data-loading
         role="status"
         className="h-36 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -97,7 +97,7 @@ export function NyuchiDIDGate({
   const config = STATUS_CONFIG[status]
   return (
     <div
-      data-slot="nyuchi-did-gate"
+      data-slot="mzizi-did-gate"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -157,4 +157,4 @@ export function NyuchiDIDGate({
     </div>
   )
 }
-export type { DIDStatus, VerifiableCredential, NyuchiDIDGateProps }
+export type { DIDStatus, VerifiableCredential, MziziDIDGateProps }

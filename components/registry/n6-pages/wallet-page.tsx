@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface WalletPageProps {
   balance?: { amount: number; currency: string; change?: number }
@@ -20,7 +20,7 @@ export function WalletPage({
   loading = false,
   className,
 }: WalletPageProps) {
-  const { motion } = useNyuchiHarness("wallet-page")
+  const { motion } = useMziziHarness("wallet-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

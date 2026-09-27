@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface DegradationLevel<T> {
   key: string
@@ -9,20 +9,20 @@ interface DegradationLevel<T> {
   render: (data: T) => React.ReactNode
 }
 
-interface NyuchiDegradationChainProps<T> {
+interface MziziDegradationChainProps<T> {
   levels: DegradationLevel<T>[]
   staticFallback: React.ReactNode
   name?: string
   className?: string
 }
 
-export function NyuchiDegradationChain<T>({
+export function MziziDegradationChain<T>({
   levels,
   staticFallback,
   name = "content",
   className,
-}: NyuchiDegradationChainProps<T>) {
-  const { log } = useNyuchiHarness(`degradation-${name}`)
+}: MziziDegradationChainProps<T>) {
+  const { log } = useMziziHarness(`degradation-${name}`)
   const [state, setState] = React.useState<{
     level: number
     data: T | null
@@ -59,8 +59,8 @@ export function NyuchiDegradationChain<T>({
   if (state.loading)
     return (
       <div
-        data-slot="nyuchi-degradation-chain"
-        data-portal="https://mzizi.dev/components/nyuchi-degradation-chain"
+        data-slot="mzizi-degradation-chain"
+        data-portal="https://mzizi.dev/components/mzizi-degradation-chain"
         data-loading
         role="status"
         className="h-32 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -69,7 +69,7 @@ export function NyuchiDegradationChain<T>({
 
   return (
     <div
-      data-slot="nyuchi-degradation-chain"
+      data-slot="mzizi-degradation-chain"
       data-degraded={state.degraded || undefined}
       className={className}
     >
@@ -84,4 +84,4 @@ export function NyuchiDegradationChain<T>({
     </div>
   )
 }
-export type { DegradationLevel, NyuchiDegradationChainProps }
+export type { DegradationLevel, MziziDegradationChainProps }
