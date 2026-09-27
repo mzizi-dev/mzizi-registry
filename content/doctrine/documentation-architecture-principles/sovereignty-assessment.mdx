@@ -7,7 +7,7 @@ doctrineVersion: "4.1.6"
 kind: "principle"
 lastDoctrineChangeAt: "2026-05-28T22:10:26.021609+00:00"
 model: "mzizi-dna-helix"
-owner: "bundu"
+owner: "mzizi"
 slug: "sovereignty-assessment"
 status: "active"
 strand: "transcription"
@@ -35,7 +35,7 @@ A technology may be accepted with `medium` or even `high` risk _if_ the rational
 
 ## Why this rule exists
 
-The Bundu Foundation architecture is built for African digital sovereignty. That means the substrate cannot quietly accumulate dependencies on technologies whose governance, licensing, or vendor lock-in undermines that sovereignty. The point of the rule is not to ban any class of technology — it is to make every dependency a deliberate, examined choice with a written justification.
+The Mzizi architecture is built for African digital sovereignty. That means the substrate cannot quietly accumulate dependencies on technologies whose governance, licensing, or vendor lock-in undermines that sovereignty. The point of the rule is not to ban any class of technology — it is to make every dependency a deliberate, examined choice with a written justification.
 
 The MongoDB SSPL decision is the canonical example. SSPL is not an OSI-approved licence, and that is a real concern. But MongoDB source is available, Community Server is self-hostable, and the alternative (excluding the leading document database from the operational primary slot) had a worse sovereignty profile in practice (forcing a less mature substitute). The decision: accept MongoDB at `medium` risk, with the trade-off documented. See `genetic-code-conventions/substrate-decision` decision 1.
 
@@ -51,7 +51,7 @@ The legacy `architecture_sovereignty` table (now `legacy.architecture_sovereignt
 
 ## How to add a new technology to the stack
 
-1. Write the assessment document via `put_document('documentation-architecture-sovereignty', '<Technology Name>', 'bundu', { ... assessment fields ... })`.
+1. Write the assessment document via `put_document('documentation-architecture-sovereignty', '<Technology Name>', 'mzizi', { ... assessment fields ... })`.
 2. The doc is automatically versioned in the `versions` collection.
 3. Reference the assessment in any relevant substrate decision (`genetic-code-conventions/substrate-decision`) so the trade-off is visible from the decision record.
 4. If the assessment is part of a broader doctrine change, route through `record_doctrine_change(...)` instead so a changelog entry is generated.

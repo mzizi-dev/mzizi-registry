@@ -111,7 +111,7 @@ export interface MziziOgProps {
  */
 export async function renderMziziOg({
   title,
-  eyebrow = "open architecture · bundu foundation",
+  eyebrow = "open architecture · mzizi",
   description = "Seven African Minerals · shadcn-compatible registry · MCP server.",
   iconPath = "public/icons/nyuchi-icon-dark.png",
   domain = "mzizi.dev",

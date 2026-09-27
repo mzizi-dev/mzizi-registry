@@ -7,7 +7,7 @@ doctrineVersion: "4.1.7"
 kind: "overview"
 lastDoctrineChangeAt: "2026-05-28T22:12:29.65905+00:00"
 model: "mzizi-dna-helix"
-owner: "bundu"
+owner: "mzizi"
 slug: "architecture-overview"
 status: "active"
 strand: "transcription"
@@ -16,7 +16,7 @@ title: "Architecture Overview — Two Architectures, One Ecosystem"
 
 # Architecture Overview — Two Architectures, One Ecosystem
 
-The Bundu Foundation operates two distinct architectures, governed by different rules, joined at clearly defined seams. Conflating them is a category error.
+Mzizi defines two distinct architectures, governed by different rules, joined at clearly defined seams. Conflating them is a category error.
 
 ## The two architectures
 
@@ -35,10 +35,10 @@ The application architecture describes how user-facing software is structured. M
 | ---------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------- |
 | Core guarantee                           | `primitives` · `accessibility` · `data` · `resilience` · `observability` · `fundi` · `safety` | mzizi             |
 | Shipped (Nyuchi-authored, part of Mzizi) | `brand` · `pages` · `shell`                                                                   | nyuchi            |
-| Swappable                                | `styling` · `components`/framework · `icon library`                                           | bundu / framework |
+| Swappable                                | `styling` · `components`/framework · `icon library`                                           | mzizi / framework |
 | Spine                                    | `harness` (the pre-wiring backbone)                                                           | nyuchi            |
-| Genetic code                             | `ubuntu` · `conventions` (the readable sequence under the helix)                              | bundu             |
-| Documentation / transcription            | `documentation*` collections                                                                  | bundu             |
+| Genetic code                             | `ubuntu` · `conventions` (the readable sequence under the helix)                              | mzizi             |
+| Documentation / transcription            | `documentation*` collections                                                                  | mzizi             |
 
 The locked model lives in `changelog/4.1.0`. The full per-node detail is in `documentation-architecture-nodes/*`. The classification (`dnaRole`) is stamped on every document in the store.
 
@@ -67,7 +67,7 @@ The data architecture describes how the platform stores, owns, and moves data. I
 | Event streaming → analytics                  | **Redpanda**                                                                       | Kafka-compatible, feeds Flink                                |
 | Analytical engine + open data commons        | **Apache Doris**                                                                   | the Nhaka tier                                               |
 | Privacy filter / stream processing           | **Apache Flink**                                                                   | PII strip before Doris                                       |
-| Sync protocol                                | **SiafuDB Graph Sync** (canonical); RxDB replication (interim until SiafuDB ships) | first-party Bundu project                                    |
+| Sync protocol                                | **SiafuDB Graph Sync** (canonical); RxDB replication (interim until SiafuDB ships) | first-party Mzizi project                                    |
 | Device layer                                 | **RxDB · SQLite · IndexedDB / Dexie · PouchDB** (legacy)                           | local-first foundation                                       |
 | Future cold-storage tier                     | **ScyllaDB**                                                                       | re-roled for Nhaka cold tier; not currently active           |
 | **Removed from the stack**                   | Apache CouchDB, Cloudflare D1                                                      | see `documentation-architecture-removed/*`                   |

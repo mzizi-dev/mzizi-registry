@@ -10,12 +10,12 @@ nobody uses rots without anyone noticing until the day it is needed.
 
 ## The Workers
 
-| Worker       | Serves                                   | Config                      | Owner                    |
-| ------------ | ---------------------------------------- | --------------------------- | ------------------------ |
-| `mzizi`      | `mzizi.dev` — the framework site         | `wrangler.jsonc`            | Mzizi / Bundu Foundation |
-| `mzizi-api`  | `api.mzizi.dev` — the public API         | `mzizi-api/wrangler.jsonc`  | Mzizi / Bundu Foundation |
-| `mzizi-ui`   | `ui.mzizi.dev` — the viewable primitives | `mzizi-ui/wrangler.jsonc`   | Mzizi / Bundu Foundation |
-| `mzizi-plus` | `plus.mzizi.dev` — the toolchain         | `mzizi-plus/wrangler.jsonc` | Mzizi / Bundu Foundation |
+| Worker       | Serves                                   | Config                      | Owner |
+| ------------ | ---------------------------------------- | --------------------------- | ----- |
+| `mzizi`      | `mzizi.dev` — the framework site         | `wrangler.jsonc`            | Mzizi |
+| `mzizi-api`  | `api.mzizi.dev` — the public API         | `mzizi-api/wrangler.jsonc`  | Mzizi |
+| `mzizi-ui`   | `ui.mzizi.dev` — the viewable primitives | `mzizi-ui/wrangler.jsonc`   | Mzizi |
+| `mzizi-plus` | `plus.mzizi.dev` — the toolchain         | `mzizi-plus/wrangler.jsonc` | Mzizi |
 
 `mzizi-ui` and `mzizi-plus` don't render anything of their own — they proxy to
 `mzizi.dev` per-request and gate which pages/items are allowed through by node

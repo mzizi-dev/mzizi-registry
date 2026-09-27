@@ -294,7 +294,7 @@ export default async function ArchitecturePage() {
     <article data-mdx className="mx-auto max-w-5xl py-8">
       <header className="mb-8">
         <p className="mb-3 font-mono text-[11px] tracking-widest text-muted-foreground sm:text-xs">
-          RESEARCH ARCHITECTURE · BUNDU FOUNDATION
+          RESEARCH ARCHITECTURE · MZIZI
         </p>
         <h1 className="mb-4 font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
           A Rust framework designed for machine authorship.
@@ -304,8 +304,8 @@ export default async function ArchitecturePage() {
           primary author is{" "}
           <span className="text-foreground">an agent iterating against a compiler</span>, thousands
           of times, and the framework&apos;s syntax, type system, and compiler feedback loop are
-          designed for that reader. It is a{" "}
-          <span className="text-foreground">Bundu Foundation research project</span>, currently in{" "}
+          designed for that reader. It is an{" "}
+          <span className="text-foreground">independent research project</span>, currently in{" "}
           <span className="text-foreground">Phase 0</span>: the language is being designed now.
           Nothing on this page is shipped syntax or a measured result — it is the charter the
           research is held to.
@@ -508,7 +508,7 @@ export default async function ArchitecturePage() {
           </ul>
           <p className="mt-3">
             Ownership: the framework IP is held by the{" "}
-            <span className="text-foreground">Bundu Foundation</span> and published under{" "}
+            <span className="text-foreground">Mzizi</span> and published under{" "}
             <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">@bundu</code>;
             Nyuchi owns the Fundi console that operates around it.
           </p>
@@ -619,7 +619,7 @@ export default async function ArchitecturePage() {
           />
           <BackboneSection
             title="Meaning backbone"
-            blurb="The strands that carry the doctrine behind the corpus: the Ubuntu + Bundu genetic code the research is read from, and the transcription layer that stores every convention and decision as queryable data — not tribal knowledge."
+            blurb="The strands that carry the doctrine behind the corpus: the Ubuntu + Mzizi genetic code the research is read from, and the transcription layer that stores every convention and decision as queryable data — not tribal knowledge."
             strands={meaningStrands}
             nodesByStrand={nodesByStrand}
           />
