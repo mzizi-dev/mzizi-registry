@@ -7,7 +7,7 @@
 [![CodeQL](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/security/code-scanning)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-**Version:** 1.0.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Product docs:** [docs.bundu.org](https://docs.bundu.org) | **Engineering docs:** [docs.nyuchi.com](https://docs.nyuchi.com)
+**Version:** 1.0.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Docs:** [docs.mzizi.dev](https://docs.mzizi.dev)
 
 > **The `mzizi.dev` apex no longer serves this repo.** It's now served by the `mzizi-site`
 > Worker, which ships three pages (`/`, `/ecosystem`, `/language`). `/components`, `/tokens`,
@@ -142,7 +142,7 @@ Resource paths serve under both `/v1/` (canonical) and `/api/v1/`. Full spec in
 | `/api/v1/architecture/nodes/{n}`                                       | GET      | One node or rung of the helix (`n` is uncapped)                 |
 | `/api/v1/architecture/axes`, `/layers/{n}`, `/frontend/{axes\|layers}` | GET      | **410 Gone** — retired models                                   |
 | `/api/v1/ubuntu/pillars`, `/ubuntu/principles`                         | GET      | The Five Ubuntu Pillars / Principles                            |
-| `/api/v1/docs`, `/docs/{slug}`                                         | GET      | **410 Gone** — long-form docs moved to docs.bundu.org           |
+| `/api/v1/docs`, `/docs/{slug}`                                         | GET      | **410 Gone** — long-form docs moved to docs.mzizi.dev           |
 | `/api/v1/changelog`, `/changelog/{version}`                            | GET      | Release history                                                 |
 | `/api/v1/ai/instructions{,/{name}}`                                    | GET      | AI instruction sets (mcp-server / claude / copilot)             |
 | `/api/v1/skills{,/{name},/summary}`                                    | GET      | Published agent skills                                          |
@@ -195,10 +195,11 @@ agent working in this repo needs to know before pushing.
 | **[mzizi-dev/mzizi](https://github.com/mzizi-dev/mzizi)**                               | —                                                  | Mzizi **the language** — the Rust compiler research project. Not the registry                               |
 | **[mzizi-dev/mzizi-console](https://github.com/mzizi-dev/mzizi-console)**               | [app.mzizi.dev](https://app.mzizi.dev)             | The Mzizi console                                                                                           |
 | **[mzizi-dev/mzizi-api-gateway](https://github.com/mzizi-dev/mzizi-api-gateway)**       | [api.mzizi.dev](https://api.mzizi.dev/v1/health)   | The registry API as a pure-Rust Cloudflare Worker                                                           |
+| **[mzizi-dev/mzizi-docs](https://github.com/mzizi-dev/mzizi-docs)**                     | [docs.mzizi.dev](https://docs.mzizi.dev)           | Mzizi's documentation — the one home for Mzizi docs (Mintlify)                                              |
 | **mzizi-dev/agent-tools** (private)                                                     | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
 | **[nyuchi/mukoko-platform](https://github.com/nyuchi/mukoko-platform)** (private)       | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform                                                                               |
-| **[bundu-labs/bundu-docs](https://github.com/bundu-labs/bundu-docs)** (private)         | [docs.bundu.org](https://docs.bundu.org)           | Outward-facing product documentation                                                                        |
-| **[nyuchi/nyuchi-docs](https://github.com/nyuchi/nyuchi-docs)**                         | [docs.nyuchi.com](https://docs.nyuchi.com)         | Engineering documentation                                                                                   |
+| **[bundu-labs/bundu-docs](https://github.com/bundu-labs/bundu-docs)** (private)         | [docs.bundu.org](https://docs.bundu.org)           | Bundu's own product documentation (not Mzizi's docs)                                                        |
+| **[nyuchi/nyuchi-docs](https://github.com/nyuchi/nyuchi-docs)**                         | [docs.nyuchi.com](https://docs.nyuchi.com)         | Nyuchi engineering documentation (not Mzizi's docs)                                                         |
 | mukoko                                                                                  | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
 | mukoko weather                                                                          | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
 | mukoko news                                                                             | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
