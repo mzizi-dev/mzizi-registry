@@ -1,6 +1,6 @@
 # Mzizi
 
-> The canonical component registry, brand system, and DNA-helix frontend architecture for the bundu ecosystem — an open-architecture project of the Bundu Foundation, operated and developed by Nyuchi.
+> The canonical component registry, brand system, and DNA-helix frontend architecture for the bundu ecosystem — an independent open-architecture project owned by Mzizi, operated and developed by Nyuchi.
 
 [![CI](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml)
 [![Release](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml)
@@ -33,7 +33,7 @@ npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 **575 components** across 8 architectural nodes and 4 rungs, served from disk —
 `registry.json` and the component files in this repo are the source of truth, not a
 database. **21 colour families.** **One MCP server** any AI client can install against.
-Nothing here is a Nyuchi product: it's a Bundu-governed standard the whole bundu ecosystem
+Nothing here is a Nyuchi product: it's a Mzizi-governed standard the whole bundu ecosystem
 (Mukoko's consumer apps, Nyuchi's enterprise products, sister brands) installs from the same
 place.
 
@@ -234,11 +234,10 @@ See [`SECURITY.md`](SECURITY.md) or report privately via
 
 ## Governance & License
 
-Mzizi is an **independent open-architecture project of the [Bundu Foundation](https://bundu.family)**,
-operated and developed by [Nyuchi Africa (PVT) Ltd](https://nyuchi.com). It is **not** a
-Nyuchi product — Nyuchi is the operator, the Bundu Foundation is the governance body.
-Anyone in the bundu ecosystem can consume the registry; contribution and direction-setting
-flow through the Bundu Foundation.
+Mzizi is an **independent open-architecture project owned by Mzizi**, operated and
+developed by [Nyuchi Africa (PVT) Ltd](https://nyuchi.com). It is **not** a Nyuchi product —
+Nyuchi is the operator, Mzizi is the governance body. Anyone in the bundu ecosystem can
+consume the registry; contribution and direction-setting flow through Mzizi.
 
-Licensed under the [Apache License 2.0](LICENSE). © Bundu Foundation, operated by Nyuchi
-Africa (PVT) Ltd. See [NOTICE](NOTICE) for attribution.
+Licensed under the [Apache License 2.0](LICENSE). © Mzizi, operated by Nyuchi Africa (PVT)
+Ltd. See [NOTICE](NOTICE) for attribution.
