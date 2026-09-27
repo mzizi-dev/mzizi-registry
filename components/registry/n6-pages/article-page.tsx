@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface ArticlePageProps {
   title?: string
@@ -26,7 +26,7 @@ export function ArticlePage({
   loading = false,
   className,
 }: ArticlePageProps) {
-  const { motion } = useNyuchiHarness("article-page")
+  const { motion } = useMziziHarness("article-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

@@ -29,7 +29,7 @@ export interface A11yAuditResult {
   score: number // 0-100
 }
 
-export interface NyuchiA11yAuditConfig {
+export interface MziziA11yAuditConfig {
   /** Rules to check */
   rules?: string[]
   /** Minimum acceptable score */
@@ -41,7 +41,7 @@ export interface NyuchiA11yAuditConfig {
 }
 
 /** Run an accessibility audit on the current page */
-export function runA11yAudit(config: NyuchiA11yAuditConfig = {}): A11yAuditResult {
+export function runA11yAudit(config: MziziA11yAuditConfig = {}): A11yAuditResult {
   const violations: A11yViolation[] = []
   const elements = document.querySelectorAll("*")
   let passes = 0
@@ -150,13 +150,13 @@ function getAccessibleName(el: HTMLElement): string {
 }
 
 function getNodeFromSlot(slot: string): number | undefined {
-  if (slot.startsWith("nyuchi-") && !slot.includes("page")) return 3
+  if ((slot.startsWith("mzizi-") || slot.startsWith("nyuchi-")) && !slot.includes("page")) return 3
   if (slot.includes("page") || slot.includes("layout")) return 6
   return 2
 }
 
 /** React hook for continuous a11y monitoring in development */
-export function useA11yAudit(config: NyuchiA11yAuditConfig = {}) {
+export function useA11yAudit(config: MziziA11yAuditConfig = {}) {
   const [result, setResult] = React.useState<A11yAuditResult | null>(null)
   React.useEffect(() => {
     if (process.env.NODE_ENV !== "development" && !config.continuous) return

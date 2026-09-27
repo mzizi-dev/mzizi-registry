@@ -19,20 +19,20 @@ import { cn } from "@/lib/utils"
    
    TWO USAGE PATTERNS:
    
-   1. NyuchiHarness — declarative wrapper for page sections:
-      <NyuchiHarness name="events-feed" skeleton={<FeedSkeleton />}>
+   1. MziziHarness — declarative wrapper for page sections:
+      <MziziHarness name="events-feed" skeleton={<FeedSkeleton />}>
         <EventsFeed />
-      </NyuchiHarness>
+      </MziziHarness>
    
-   2. useNyuchiHarness — imperative hook for L3/L4/L5 components:
-      function NyuchiListingCard(props) {            // L3 Brand
-        const { log, motion, announce } = useNyuchiHarness("listing-card")
+   2. useMziziHarness — imperative hook for L3/L4/L5 components:
+      function MziziListingCard(props) {            // L3 Brand
+        const { log, motion, announce } = useMziziHarness("listing-card")
       }
-      function NyuchiPermissionGate(props) {          // L4 Safety
-        const { log, motion, announce } = useNyuchiHarness("permission-gate")
+      function MziziPermissionGate(props) {          // L4 Safety
+        const { log, motion, announce } = useMziziHarness("permission-gate")
       }
-      function NyuchiSection(props) {                 // L5 Resilience
-        const { log, motion, announce } = useNyuchiHarness("section")
+      function MziziSection(props) {                 // L5 Resilience
+        const { log, motion, announce } = useMziziHarness("section")
       }
    
    WHAT THE HARNESS PROVIDES:
@@ -53,7 +53,7 @@ import { cn } from "@/lib/utils"
       provider is mounted), warns in dev if tokens are missing
    
    6. HEALTH — Reports section status (healthy/degraded/error/loading)
-      to the global NyuchiHealthMonitor singleton
+      to the global MziziHealthMonitor singleton
    
    7. LOCALE — Provides text direction (RTL/LTR) and string token
       accessor via useLocale
@@ -81,7 +81,7 @@ function createScopedLogger(componentName: string): ScopedLogger {
   }
 }
 
-// ─── MOTION CONFIG (from nyuchi-motion) ────────────────────
+// ─── MOTION CONFIG (from mzizi-motion) ────────────────────
 // Provides the correct duration/easing for the current user preference.
 
 interface MotionConfig {
@@ -118,7 +118,7 @@ function getMotionConfig(): MotionConfig {
   }
 }
 
-// ─── ANNOUNCER (from nyuchi-a11y) ──────────────────────────
+// ─── ANNOUNCER (from mzizi-a11y) ──────────────────────────
 // Imperative screen reader announcements for dynamic content.
 
 interface Announcer {
@@ -219,7 +219,7 @@ interface HealthReporter {
 
 function useHealthReporter(componentName: string): HealthReporter {
   // In a full implementation, this writes to the HealthMonitor singleton
-  // from nyuchi-resilience. For now, it logs structured health events
+  // from mzizi-resilience. For now, it logs structured health events
   // that the monitor can pick up.
   const log = createScopedLogger(componentName)
 
@@ -261,13 +261,13 @@ function useTokenVerifier(componentName: string) {
     if (missing.length > 0) {
       console.warn(
         `[mzizi:${componentName}] Missing CSS tokens: ${missing.join(", ")}. ` +
-          `Wrap your app in <NyuchiThemeProvider> to inject design tokens.`
+          `Wrap your app in <MziziThemeProvider> to inject design tokens.`
       )
     }
   }, [componentName])
 }
 
-// ─── useNyuchiHarness HOOK ──────────────────────────────
+// ─── useMziziHarness HOOK ──────────────────────────────
 // The imperative API for leaf components.
 // Use this inside any brand component to get the full infrastructure.
 
@@ -309,7 +309,7 @@ function getObservabilityAttrs(componentName: string): Record<string, string> {
   return { "data-portal": `https://mzizi.dev/components/${componentName}` }
 }
 
-export function useNyuchiHarness(componentName: string): ComponentHarnessResult {
+export function useMziziHarness(componentName: string): ComponentHarnessResult {
   const log = React.useMemo(() => createScopedLogger(componentName), [componentName])
   const motion = React.useMemo(() => getMotionConfig(), [])
   const { announce, announceUrgent, LiveRegion } = useAnnouncer()
@@ -359,11 +359,11 @@ export function useNyuchiHarness(componentName: string): ComponentHarnessResult 
   }
 }
 
-// ─── NyuchiHarness COMPONENT ───────────────────────────────
+// ─── MziziHarness COMPONENT ───────────────────────────────
 // The declarative wrapper for page sections.
 // Provides error boundary + skeleton + observability + motion.
 
-interface NyuchiHarnessProps {
+interface MziziHarnessProps {
   /** Unique name for this section (used in logs and health reports) */
   name: string
   /** Content to render */
@@ -387,11 +387,11 @@ interface HarnessState {
   retryCount: number
 }
 
-class NyuchiHarnessBoundary extends React.Component<NyuchiHarnessProps, HarnessState> {
+class MziziHarnessBoundary extends React.Component<MziziHarnessProps, HarnessState> {
   private log: ScopedLogger
   private renderStart = 0
 
-  constructor(props: NyuchiHarnessProps) {
+  constructor(props: MziziHarnessProps) {
     super(props)
     this.state = { hasError: false, error: null, retryCount: 0 }
     this.log = createScopedLogger(props.name)
@@ -443,7 +443,7 @@ class NyuchiHarnessBoundary extends React.Component<NyuchiHarnessProps, HarnessS
     if (loading) {
       return (
         <div
-          data-slot="nyuchi-harness"
+          data-slot="mzizi-harness"
           data-section={name}
           data-status="loading"
           className={className}
@@ -467,7 +467,7 @@ class NyuchiHarnessBoundary extends React.Component<NyuchiHarnessProps, HarnessS
 
       return (
         <div
-          data-slot="nyuchi-harness"
+          data-slot="mzizi-harness"
           data-section={name}
           data-status="error"
           data-retry-count={this.state.retryCount}
@@ -502,7 +502,7 @@ class NyuchiHarnessBoundary extends React.Component<NyuchiHarnessProps, HarnessS
     // Healthy state — render with optional entry animation
     return (
       <div
-        data-slot="nyuchi-harness"
+        data-slot="mzizi-harness"
         data-section={name}
         data-status="healthy"
         className={cn(animate && "nyuchi-animate-in", className)}
@@ -513,8 +513,8 @@ class NyuchiHarnessBoundary extends React.Component<NyuchiHarnessProps, HarnessS
   }
 }
 
-export function NyuchiHarness(props: NyuchiHarnessProps) {
-  return <NyuchiHarnessBoundary {...props} />
+export function MziziHarness(props: MziziHarnessProps) {
+  return <MziziHarnessBoundary {...props} />
 }
 
-export type { NyuchiHarnessProps, ScopedLogger, MotionConfig, HealthReporter, HealthStatus }
+export type { MziziHarnessProps, ScopedLogger, MotionConfig, HealthReporter, HealthStatus }

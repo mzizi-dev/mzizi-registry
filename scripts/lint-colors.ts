@@ -56,7 +56,7 @@ const ALLOW: { prefix: string; why: string }[] = [
       '"N1 — the only node allowed to define CSS values". This is the same reason `lib/tokens/` ' +
       "is above; the boundary is the LAYER, not the file, so the directory is listed rather " +
       "than the three files that happen to trip today. Most of it is generated anyway: " +
-      "scripts/sync-tokens.ts writes nyuchi-tokens-{react-native,swift,kotlin,arkts,python,rust} " +
+      "scripts/sync-tokens.ts writes mzizi-tokens-{react-native,swift,kotlin,arkts,python,rust} " +
       "from the Supabase store and `pnpm tokens:verify` is their drift gate — so the hexes here " +
       "are already checked, by a stricter check than this one.",
   },

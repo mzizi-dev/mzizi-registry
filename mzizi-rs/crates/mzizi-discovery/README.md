@@ -3,7 +3,7 @@
 Machine visibility from the [Mzizi](https://mzizi.dev) component registry — **rung N11,
 discovery** — the rung whose claim is that if the machine cannot see it, it does not exist.
 
-One module today, `nyuchi_seo`: resolved page metadata and Schema.org JSON-LD.
+One module today, `mzizi_seo`: resolved page metadata and Schema.org JSON-LD.
 
 ```toml
 [dependencies]

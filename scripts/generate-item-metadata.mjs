@@ -38,7 +38,7 @@ const REGISTRY = join(ROOT, "registry.json")
 
 /**
  * Brand wordmarks stay lowercase (CLAUDE.md §11.1 — never "Mzizi-Tools", never "Nyuchi").
- * So `nyuchi-listing-card` titles as "nyuchi Listing Card", not "Nyuchi Listing Card".
+ * So `mzizi-listing-card` titles as "nyuchi Listing Card", not "Nyuchi Listing Card".
  */
 const WORDMARKS = new Set([
   "mzizi",

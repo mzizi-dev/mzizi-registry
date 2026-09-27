@@ -3,7 +3,7 @@
 // ── INFRASTRUCTURE HARNESS (auto-wired) ──
 // Every brand component participates in observability, motion, a11y,
 // and health monitoring via the harness. Zero manual config.
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -139,7 +139,7 @@ const badgeSizeVariants = cva(
 
 const iconSizeMap = { sm: 10, md: 12, lg: 16, xl: 20 } as const
 
-interface NyuchiVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants> {
+interface MziziVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants> {
   /** Verification tier code (system.verification_tier.tier_code) */
   tier: VerificationTier
   /** Platform status (identity.person.mit_status). Affects badge appearance. */
@@ -151,20 +151,20 @@ interface NyuchiVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants
   className?: string
 }
 
-function NyuchiVerifiedBadge({
+function MziziVerifiedBadge({
   tier,
   status = "living",
   size = "md",
   showTooltip = true,
   loading = false,
   className,
-}: NyuchiVerifiedBadgeProps) {
-  useNyuchiHarness("verified-badge") // harness pre-wires observability + motion + a11y
+}: MziziVerifiedBadgeProps) {
+  useMziziHarness("verified-badge") // harness pre-wires observability + motion + a11y
   if (loading)
     return (
       <span
-        data-slot="nyuchi-verified-badge"
-        data-portal="https://mzizi.dev/components/nyuchi-verified-badge"
+        data-slot="mzizi-verified-badge"
+        data-portal="https://mzizi.dev/components/mzizi-verified-badge"
         data-loading
         className="inline-flex size-4 animate-pulse rounded-full bg-muted"
       />
@@ -181,7 +181,7 @@ function NyuchiVerifiedBadge({
   if (statusConfig.overlay === "suspended") {
     return (
       <span
-        data-slot="nyuchi-verified-badge"
+        data-slot="mzizi-verified-badge"
         data-tier={tier}
         data-status="suspended"
         aria-label="Account Suspended"
@@ -198,7 +198,7 @@ function NyuchiVerifiedBadge({
   if (statusConfig.overlay === "ancestral") {
     return (
       <span
-        data-slot="nyuchi-verified-badge"
+        data-slot="mzizi-verified-badge"
         data-tier={tier}
         data-status={status}
         aria-label={`${config.label} — Memorial`}
@@ -215,7 +215,7 @@ function NyuchiVerifiedBadge({
   const Icon = config.icon
   return (
     <span
-      data-slot="nyuchi-verified-badge"
+      data-slot="mzizi-verified-badge"
       data-tier={tier}
       data-level={config.level}
       data-trust={config.cumulativeTrust}
@@ -240,5 +240,5 @@ function computeTrustScore(tier: VerificationTier, status: PlatformStatus): numb
   return TIER_CONFIG[tier].cumulativeTrust + statusConfig.modifier
 }
 
-export { NyuchiVerifiedBadge, computeTrustScore, TIER_CONFIG, STATUS_OVERLAY }
-export type { NyuchiVerifiedBadgeProps, VerificationTier, PlatformStatus }
+export { MziziVerifiedBadge, computeTrustScore, TIER_CONFIG, STATUS_OVERLAY }
+export type { MziziVerifiedBadgeProps, VerificationTier, PlatformStatus }

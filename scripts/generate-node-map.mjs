@@ -47,7 +47,7 @@ for (const item of registry.items) {
     if (match) nodes.add(match[1])
   }
   if (nodes.size === 0) {
-    // Root-level config items (`mzizi-base`, `nyuchi-tokens`) install files
+    // Root-level config items (`mzizi-base`, `mzizi-tokens`) install files
     // outside `components/registry/` and carry no single node — expected, not
     // an error. They are simply absent from the map, and a subdomain proxy
     // that gets asked for one falls through to its "unknown item" behaviour.

@@ -30,11 +30,11 @@ const ThemeContext = React.createContext<ThemeContextValue | null>(null)
 
 export function useTheme() {
   const ctx = React.useContext(ThemeContext)
-  if (!ctx) throw new Error("useTheme must be used within NyuchiThemeProvider")
+  if (!ctx) throw new Error("useTheme must be used within MziziThemeProvider")
   return ctx
 }
 
-interface NyuchiThemeProviderProps {
+interface MziziThemeProviderProps {
   children: React.ReactNode
   /** Default theme mode */
   defaultTheme?: ThemeMode
@@ -46,13 +46,13 @@ interface NyuchiThemeProviderProps {
   storageKey?: string
 }
 
-export function NyuchiThemeProvider({
+export function MziziThemeProvider({
   children,
   defaultTheme = "dark",
   brand: initialBrand = "mukoko",
   useSystemPreference = true,
   storageKey = "nyuchi-theme",
-}: NyuchiThemeProviderProps) {
+}: MziziThemeProviderProps) {
   /* Detect system preferences */
   const [systemPreference, setSystemPreference] = React.useState<ThemeMode>("dark")
   const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false)

@@ -81,7 +81,7 @@ function propsBody(src: string): string | null {
   // FORM 1 — a named declaration: `interface FooProps extends X { … }`.
   //
   // `extends VariantProps<typeof listingCardVariants>` sits between the name and the brace,
-  // and a pattern that does not allow for it silently matches nothing — `nyuchi-listing-card`
+  // and a pattern that does not allow for it silently matches nothing — `mzizi-listing-card`
   // and every other CVA-composed brand component extracted zero props, which reads
   // identically to "this component takes no props".
   const decl = /(?:type|interface)\s+\w*Props\w*\s*(?:extends\s+[^{]+?)?(?:=\s*)?\{/.exec(src)

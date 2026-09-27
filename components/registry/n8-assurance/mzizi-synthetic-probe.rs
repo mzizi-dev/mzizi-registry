@@ -317,7 +317,7 @@ pub fn auth_flow(mini_app: &str) -> SyntheticJourney {
             ),
             step(
                 ProbeStepType::Assert,
-                Some("[data-slot=nyuchi-header]"),
+                Some("[data-slot=mzizi-header]"),
                 None,
                 "Verify header renders",
             ),

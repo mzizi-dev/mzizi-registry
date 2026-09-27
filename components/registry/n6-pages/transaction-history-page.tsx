@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface TransactionHistoryPageProps {
   filters?: React.ReactNode
@@ -16,7 +16,7 @@ export function TransactionHistoryPage({
   loading = false,
   className,
 }: TransactionHistoryPageProps) {
-  const { motion } = useNyuchiHarness("transaction-history-page")
+  const { motion } = useMziziHarness("transaction-history-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

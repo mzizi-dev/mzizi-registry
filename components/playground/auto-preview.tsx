@@ -36,7 +36,7 @@ import { resolvePropsFor } from "@/lib/samples/resolve"
 /**
  * Only `.tsx`. The extension is appended to the dynamic import below so webpack builds
  * its context over `.tsx` files ALONE — a context matching every extension pulls in
- * `.ts` modules like `nyuchi-docs-api.ts`, which reach `lib/registry-source.ts` and
+ * `.ts` modules like `mzizi-docs-api.ts`, which reach `lib/registry-source.ts` and
  * therefore `fs`, and the client build fails on module-not-found. Narrowing the context
  * is the fix; filtering after the import is too late, because webpack has already
  * decided what to bundle.

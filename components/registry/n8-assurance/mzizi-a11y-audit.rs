@@ -345,7 +345,7 @@ pub fn guess_node_from_slot(slot: &str) -> Option<u32> {
     if slot.is_empty() {
         return None;
     }
-    if slot.starts_with("nyuchi-") && !slot.contains("page") {
+    if (slot.starts_with("mzizi-") || slot.starts_with("nyuchi-")) && !slot.contains("page") {
         return Some(3);
     }
     if slot.contains("page") || slot.contains("layout") {

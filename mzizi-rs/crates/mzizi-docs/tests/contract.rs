@@ -1,7 +1,7 @@
 //! Contract tests — N10's Rust renderers against their TypeScript siblings.
 //!
 //! Same purpose and same method as `mzizi-ui`'s suite: `cargo check` proves the `.rs`
-//! compiles, and cannot prove `nyuchi-docs-engine.rs` and `nyuchi-docs-engine.tsx` are the
+//! compiles, and cannot prove `mzizi-docs-engine.rs` and `mzizi-docs-engine.tsx` are the
 //! SAME component. Two files can each be valid and still disagree about a `data-slot`, a
 //! class or an `aria-label`, and the symptom is a Dioxus portal rendering markup the shared
 //! stylesheet does not style — which looks like a CSS bug in a repo where nothing is wrong.
@@ -18,8 +18,8 @@
 use std::fs;
 use std::path::PathBuf;
 
-use mzizi_docs::nyuchi_changelog_renderer::{NodeAccent, default_node_styles};
-use mzizi_docs::nyuchi_docs_engine::{category_label, default_node_labels, node_label};
+use mzizi_docs::mzizi_changelog_renderer::{NodeAccent, default_node_styles};
+use mzizi_docs::mzizi_docs_engine::{category_label, default_node_labels, node_label};
 
 /// Read a registry component's TypeScript source.
 fn tsx(name: &str) -> String {
@@ -41,11 +41,11 @@ fn assert_classes_present(rust_classes: &str, ts: &str, what: &str) {
     }
 }
 
-// ─── nyuchi-changelog-renderer ──────────────────────────────────────────────
+// ─── mzizi-changelog-renderer ──────────────────────────────────────────────
 
 #[test]
 fn changelog_accent_classes_match_the_typescript() {
-    let ts = tsx("nyuchi-changelog-renderer");
+    let ts = tsx("mzizi-changelog-renderer");
     for accent in [
         NodeAccent::Cobalt,
         NodeAccent::Tanzanite,
@@ -58,9 +58,9 @@ fn changelog_accent_classes_match_the_typescript() {
 
 #[test]
 fn changelog_keeps_the_data_slot_and_portal() {
-    let ts = tsx("nyuchi-changelog-renderer");
-    assert!(ts.contains("nyuchi-changelog-renderer"));
-    assert!(ts.contains("https://mzizi.dev/components/nyuchi-changelog-renderer"));
+    let ts = tsx("mzizi-changelog-renderer");
+    assert!(ts.contains("mzizi-changelog-renderer"));
+    assert!(ts.contains("https://mzizi.dev/components/mzizi-changelog-renderer"));
 }
 
 #[test]
@@ -68,7 +68,7 @@ fn changelog_node_colours_agree_with_the_typescript_axis_table() {
     // The `.tsx` maps node → axis → colour. The Rust names the colour directly, so this
     // asserts the mapping survived the rename: each N1–N10 node still lands on the class
     // string its axis selected.
-    let ts = tsx("nyuchi-changelog-renderer");
+    let ts = tsx("mzizi-changelog-renderer");
     let styles = default_node_styles();
     for (n, axis) in [
         (1u16, "vertical"),
@@ -103,18 +103,18 @@ fn changelog_node_colours_agree_with_the_typescript_axis_table() {
     }
 }
 
-// ─── nyuchi-docs-engine ─────────────────────────────────────────────────────
+// ─── mzizi-docs-engine ─────────────────────────────────────────────────────
 
 #[test]
 fn docs_engine_keeps_the_data_slot_and_portal() {
-    let ts = tsx("nyuchi-docs-engine");
-    assert!(ts.contains("nyuchi-docs-engine"));
-    assert!(ts.contains("https://mzizi.dev/components/nyuchi-docs-engine"));
+    let ts = tsx("mzizi-docs-engine");
+    assert!(ts.contains("mzizi-docs-engine"));
+    assert!(ts.contains("https://mzizi.dev/components/mzizi-docs-engine"));
 }
 
 #[test]
 fn docs_engine_structural_classes_match_the_typescript() {
-    let ts = tsx("nyuchi-docs-engine");
+    let ts = tsx("mzizi-docs-engine");
     for (what, classes) in [
         ("root", "flex h-screen overflow-hidden bg-background"),
         (
@@ -135,7 +135,7 @@ fn docs_engine_structural_classes_match_the_typescript() {
 
 #[test]
 fn docs_engine_labels_match_the_typescript() {
-    let ts = tsx("nyuchi-docs-engine");
+    let ts = tsx("mzizi-docs-engine");
     for aria in [
         "Documentation navigation",
         "Search documentation",
@@ -153,7 +153,7 @@ fn docs_engine_labels_match_the_typescript() {
 
 #[test]
 fn docs_engine_node_labels_match_the_typescript_for_n1_to_n10() {
-    let ts = tsx("nyuchi-docs-engine");
+    let ts = tsx("mzizi-docs-engine");
     let labels = default_node_labels();
     for n in 1..=10u16 {
         let label = node_label(&labels, n);
@@ -167,7 +167,7 @@ fn docs_engine_node_labels_match_the_typescript_for_n1_to_n10() {
 #[test]
 fn docs_engine_category_label_matches_the_typescript_transform() {
     // The `.tsx` does `cat.replace(/-/g, " ")`.
-    let ts = tsx("nyuchi-docs-engine");
+    let ts = tsx("mzizi-docs-engine");
     assert!(ts.contains(r#"replace(/-/g, " ")"#));
     assert_eq!(category_label("a-b-c"), "a b c");
 }
@@ -177,10 +177,10 @@ fn docs_engine_category_label_matches_the_typescript_transform() {
 #[test]
 fn the_touch_target_is_raised_above_the_typescript() {
     // Divergence 1. The .tsx ships min-h-[44px] on the sidebar entries; this system
-    // publishes a 48px minimum (see nyuchi-ai-context's rule 8). Asserted from BOTH sides so
+    // publishes a 48px minimum (see mzizi-ai-context's rule 8). Asserted from BOTH sides so
     // the day someone fixes the .tsx, this test tells them to delete it rather than
     // silently passing on a stale premise.
-    let ts = tsx("nyuchi-docs-engine");
+    let ts = tsx("mzizi-docs-engine");
     assert!(
         ts.contains("min-h-[44px]"),
         "the .tsx no longer ships min-h-[44px] — the divergence is resolved, so remove this \
@@ -196,7 +196,7 @@ fn the_invalid_list_roles_are_not_reproduced() {
     // Divergence 2. The .tsx puts role="list" on a <nav> and role="listitem" on each
     // <button>, which replaces the implicit button role — assistive technology stops
     // announcing them as buttons. The Rust uses a real <ul>/<li> with plain <button>s.
-    let ts = tsx("nyuchi-docs-engine");
+    let ts = tsx("mzizi-docs-engine");
     assert!(
         ts.contains(r#"role="list""#) && ts.contains(r#"role="listitem""#),
         "the .tsx no longer carries the role clash — remove this test"
@@ -208,7 +208,7 @@ fn the_locale_dependent_date_is_not_reproduced() {
     // Divergence 3. The .tsx formats with toLocaleDateString(), which depends on the
     // runtime's locale and timezone — a server/client hydration mismatch, and a date that
     // depends on where the process runs. DocPage::updated_at is pre-formatted by the host.
-    let ts = tsx("nyuchi-docs-engine");
+    let ts = tsx("mzizi-docs-engine");
     assert!(
         ts.contains("toLocaleDateString"),
         "the .tsx no longer formats dates itself — remove this test"

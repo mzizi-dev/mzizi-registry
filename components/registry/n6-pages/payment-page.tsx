@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type PaymentStep = "amount" | "recipient" | "method" | "confirm" | "processing" | "complete"
 
@@ -26,7 +26,7 @@ export function PaymentPage({
   loading = false,
   className,
 }: PaymentPageProps) {
-  const { motion } = useNyuchiHarness("payment-page")
+  const { motion } = useMziziHarness("payment-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

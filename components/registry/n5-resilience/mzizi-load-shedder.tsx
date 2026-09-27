@@ -40,27 +40,27 @@ export function useLoadShed(priority: RequestPriority): {
   return { shouldShed, systemLoad }
 }
 
-interface NyuchiLoadShedderProps {
+interface MziziLoadShedderProps {
   children: React.ReactNode
   priority: RequestPriority
   fallback?: React.ReactNode
   silent?: boolean
 }
 
-export function NyuchiLoadShedder({
+export function MziziLoadShedder({
   children,
   priority,
   fallback,
   silent = false,
-}: NyuchiLoadShedderProps) {
+}: MziziLoadShedderProps) {
   const { shouldShed, systemLoad } = useLoadShed(priority)
   if (!shouldShed) return <>{children}</>
   if (silent) return null
   if (fallback) return <>{fallback}</>
   return (
     <div
-      data-slot="nyuchi-load-shedder"
-      data-portal="https://mzizi.dev/components/nyuchi-load-shedder"
+      data-slot="mzizi-load-shedder"
+      data-portal="https://mzizi.dev/components/mzizi-load-shedder"
       role="status"
       className="rounded-[var(--radius-lg,14px)] bg-muted/50 p-3 text-center text-xs text-muted-foreground"
     >

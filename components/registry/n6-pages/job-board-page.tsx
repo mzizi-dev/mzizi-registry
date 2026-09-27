@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface JobBoardPageProps {
   search?: React.ReactNode
   filters?: React.ReactNode
@@ -18,7 +18,7 @@ export function JobBoardPage({
   loading = false,
   className,
 }: JobBoardPageProps) {
-  const { motion } = useNyuchiHarness("job-board-page")
+  const { motion } = useMziziHarness("job-board-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

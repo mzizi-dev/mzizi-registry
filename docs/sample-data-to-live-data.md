@@ -38,11 +38,11 @@ yours.
 ```ts
 // Preview (this repo, no database):
 import { sampleData } from "@/lib/samples/data"
-<NyuchiPlaceCard {...sampleData.places[0]} />
+<MziziPlaceCard {...sampleData.places[0]} />
 
 // Your app (real driver, same shape):
 const place = await db.collection("places").findOne({ _id: id })
-<NyuchiPlaceCard {...place} />
+<MziziPlaceCard {...place} />
 ```
 
 There is no adapter in between, and that is the deliverable. If you find yourself

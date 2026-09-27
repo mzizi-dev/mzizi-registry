@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface ConsoleProject {
   name: string
   status: "active" | "deploying" | "error" | "paused"
@@ -26,7 +26,7 @@ export function ConsoleDashboardPage({
   loading = false,
   className,
 }: ConsoleDashboardPageProps) {
-  const { motion } = useNyuchiHarness("console-dashboard-page")
+  const { motion } = useMziziHarness("console-dashboard-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

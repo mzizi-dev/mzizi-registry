@@ -262,7 +262,7 @@ function PermissionGate({
 
   return (
     <div
-      data-slot="nyuchi-permission-gate"
+      data-slot="mzizi-permission-gate"
       className={cn(
         "flex flex-col items-center rounded-[var(--radius-card,14px)] bg-card px-6 py-8 text-center ring-1 ring-foreground/10",
         className

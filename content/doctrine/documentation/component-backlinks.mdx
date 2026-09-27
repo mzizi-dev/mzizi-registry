@@ -56,7 +56,7 @@ Every component in the design system has canonical URLs on mzizi.dev. These serv
 Every rendered component includes a data-portal attribute:
 
 ```html
-<div data-slot="nyuchi-section" data-portal="https://mzizi.dev/components/nyuchi-section">
+<div data-slot="mzizi-section" data-portal="https://mzizi.dev/components/mzizi-section">
 ```
 
 This allows:
@@ -70,7 +70,7 @@ This allows:
 
 ```sql
 -- Get all links for a component
-SELECT * FROM get_component_links('nyuchi-section');
+SELECT * FROM get_component_links('mzizi-section');
 
 -- Query all components with backlinks
 SELECT * FROM component_backlinks;

@@ -131,7 +131,7 @@ describe("GET /api/v1/ui", () => {
 
   it("projects node, nodeLabel, owner and collection so the index can be filtered", async () => {
     mockGetAllComponents.mockResolvedValue([
-      item("nyuchi-header", {
+      item("mzizi-header", {
         node: 3,
         nodeLabel: "brand",
         meta: { owner: "nyuchi", collection: "brand" },
@@ -179,7 +179,7 @@ describe("GET /api/v1/ui", () => {
   describe("filters", () => {
     const corpus = [
       item("button", { node: 2, meta: { owner: "mzizi", collection: "primitives" } }),
-      item("nyuchi-header", { node: 3, meta: { owner: "nyuchi", collection: "brand" } }),
+      item("mzizi-header", { node: 3, meta: { owner: "nyuchi", collection: "brand" } }),
       item("retry", {
         node: 5,
         type: "registry:lib",
@@ -191,7 +191,7 @@ describe("GET /api/v1/ui", () => {
 
     it("narrows by node", async () => {
       const res = (await GET(req("?node=3"))) as unknown as Res
-      expect(res.data.items.map((i) => i.name)).toEqual(["nyuchi-header"])
+      expect(res.data.items.map((i) => i.name)).toEqual(["mzizi-header"])
       expect(res.data.meta.total).toBe(1)
       expect(res.data.meta.registryTotal).toBe(3)
     })
@@ -199,7 +199,7 @@ describe("GET /api/v1/ui", () => {
     it("narrows by owner, collection and type", async () => {
       expect(
         ((await GET(req("?owner=nyuchi"))) as unknown as Res).data.items.map((i) => i.name)
-      ).toEqual(["nyuchi-header"])
+      ).toEqual(["mzizi-header"])
       expect(
         ((await GET(req("?collection=resilience"))) as unknown as Res).data.items.map((i) => i.name)
       ).toEqual(["retry"])

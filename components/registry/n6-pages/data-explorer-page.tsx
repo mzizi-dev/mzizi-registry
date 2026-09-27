@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface DataExplorerPageProps {
   datasetName?: string
   description?: string
@@ -26,7 +26,7 @@ export function DataExplorerPage({
   loading = false,
   className,
 }: DataExplorerPageProps) {
-  const { motion } = useNyuchiHarness("data-explorer-page")
+  const { motion } = useMziziHarness("data-explorer-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

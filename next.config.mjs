@@ -1,5 +1,50 @@
 import createMDX from "@next/mdx"
 
+// Renamed registry items (old → new). The same list `lib/component-renames.ts`
+// serves to the API Worker and the registry lookup; see that file for why.
+import COMPONENT_RENAMES from "./lib/component-renames.json" with { type: "json" }
+
+// Path prefixes whose next segment is a registry item name. Kept in step with
+// `COMPONENT_PATH_PREFIXES` in `lib/component-renames.ts`.
+const COMPONENT_PATH_PREFIXES = [
+  "/components",
+  "/source",
+  "/playground",
+  "/changelog",
+  "/api/v1/ui",
+  "/api/v1/rs",
+  "/api/health",
+  "/api/chaos",
+  "/v1/ui",
+  "/v1/rs",
+]
+
+/**
+ * One permanent redirect per URL prefix, not one per component: the old names
+ * all share the `nyuchi-` prefix, so the renamed part is captured by a param
+ * constrained to exactly the renamed set and re-emitted under `mzizi-`.
+ * `/:rest*` carries sub-paths (`/v1/ui/{name}/docs`, `/versions`).
+ */
+function componentRenameRedirects() {
+  const suffixes = Object.keys(COMPONENT_RENAMES).map((old) => {
+    const next = COMPONENT_RENAMES[old]
+    if (!old.startsWith("nyuchi-") || next !== "mzizi-" + old.slice("nyuchi-".length)) {
+      throw new Error(`component-renames.json: ${old} → ${next} is not a nyuchi-* → mzizi-* rename`)
+    }
+    return old.slice("nyuchi-".length)
+  })
+  // Longest first, so `tokens-globals` is tried before `tokens`.
+  const alternation = suffixes
+    .sort((a, b) => b.length - a.length)
+    .map((s) => s.replace(/[-]/g, "\\-"))
+    .join("|")
+  return COMPONENT_PATH_PREFIXES.map((prefix) => ({
+    source: `${prefix}/nyuchi-:slug(${alternation})/:rest*`,
+    destination: `${prefix}/mzizi-:slug/:rest*`,
+    permanent: true,
+  }))
+}
+
 // MDX compilation (replaces Nextra). All `.mdx` files under `app/` are
 // compiled by @next/mdx and routed through Next.js's file-based router.
 // Rehype plugins are referenced by NAME (string tuples) rather than
@@ -193,6 +238,9 @@ const nextConfig = {
         destination: "/architecture/nodes/:n",
         permanent: true,
       },
+      // `nyuchi-*` → `mzizi-*` (2026-09-27). Old component URLs and install
+      // endpoints keep resolving; see `lib/component-renames.ts`.
+      ...componentRenameRedirects(),
     ]
   },
 }

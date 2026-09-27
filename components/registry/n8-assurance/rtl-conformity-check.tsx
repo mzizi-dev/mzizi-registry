@@ -248,7 +248,7 @@ function cssSelector(el: Element): string {
 }
 
 function getNodeFromSlot(slot: string): number | undefined {
-  if (slot.startsWith("nyuchi-") && !slot.includes("page")) return 3
+  if ((slot.startsWith("mzizi-") || slot.startsWith("nyuchi-")) && !slot.includes("page")) return 3
   if (slot.includes("page") || slot.includes("layout")) return 6
   return 2
 }
