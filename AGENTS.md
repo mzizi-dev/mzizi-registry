@@ -97,8 +97,8 @@ against the live API rather than trusting a prior write-up:
 
 - **The component count moves.** Cite `GET /v1/ui` or `GET /v1/stats` and date the snapshot
   rather than repeating a number from memory.
-- **21 colour families, not "the Five African Minerals."** Seven minerals, seven heritage
-  tones, seven experimental — three groups of seven, and the "five minerals" phrasing is
+- **21 colour families, not a five-mineral count.** Seven minerals, seven heritage
+  tones, seven experimental — three groups of seven; the older five-mineral phrasing is
   retired.
 - **The DNA helix — 8 nodes, 4 rungs, 6 strands — not "axes" or "layers."**
   `/api/v1/architecture/axes` and `/layers/{n}` answer **410 Gone**, deliberately: those are
