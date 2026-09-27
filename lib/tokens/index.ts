@@ -3,7 +3,7 @@
  *
  * Canonical source: mzizi.dev
  * W3C Design Tokens Specification (2025.10) compliant
- * Nyuchi Frontend Architecture Layer 1 of 7
+ * Mzizi Frontend Architecture Layer 1 of 7
  *
  * THREE-TIER TOKEN ARCHITECTURE:
  *   1. Primitive: Raw values — never change regardless of theme or brand
@@ -1184,7 +1184,7 @@ export function generateStatusCSS(): string {
 
 // CHART COLOR SYSTEM
 // Maps chart indices to Seven African Minerals + Heritage colors.
-// Replaces shadcn default --chart-1..5 with Nyuchi mineral palette.
+// Replaces shadcn default --chart-1..5 with Mzizi mineral palette.
 // Import mineralChartConfig in any chart block for instant brand compliance.
 // ═══════════════════════════════════════════════════════════════
 

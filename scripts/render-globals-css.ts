@@ -422,7 +422,7 @@ export function textRamp() {
  * category map is a product taxonomy — and `shamwari-ai/docs` ships sodalite.
  */
 export const BRANDS = [
-  ["mzizi", "gold", "app/globals.css:256 — \"Per-brand accent — nyuchi = gold\"; mzizi.dev is a nyuchi-operated portal. No `mzizi` ecosystem record in /v1/brand."],
+  ["mzizi", "gold", "app/globals.css:256 — \"Per-brand accent — nyuchi = gold\"; mzizi.dev carries the gold accent. No `mzizi` ecosystem record in /v1/brand."],
   ["mukoko", "tanzanite", "/v1/brand ecosystem[name=mukoko].mineral"],
   ["nyuchi", "gold", "/v1/brand ecosystem[name=nyuchi].mineral"],
   ["bundu", "copper", "/v1/brand ecosystem[name=bundu].mineral"],

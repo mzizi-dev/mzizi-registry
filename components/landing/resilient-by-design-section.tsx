@@ -130,8 +130,8 @@ export async function ResilientBySection() {
 
       <div className="mt-10 rounded-2xl border border-foreground/10 bg-foreground/5 px-6 py-5 sm:px-8 sm:py-6">
         <p className="text-sm leading-relaxed text-muted-foreground">
-          <span className="font-medium text-foreground">Where this stands.</span> Mzizi is a Bundu
-          Foundation research charter in Phase 0 — the language and compiler are being designed now.
+          <span className="font-medium text-foreground">Where this stands.</span> Mzizi is a research
+          charter in Phase 0 — the language and compiler are being designed now.
           There are no benchmark numbers yet and no toolchain to install, and this page won&apos;t
           pretend otherwise. What is real today: the corpus, the MCP server, and the telemetry on
           this site. See{" "}

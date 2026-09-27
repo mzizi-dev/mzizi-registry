@@ -4,7 +4,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "Terms governing use of mzizi.dev — the Mzizi design-system registry, API, and MCP server. An open-architecture project of the Bundu Foundation, operated by nyuchi.",
+    "Terms governing use of mzizi.dev — the Mzizi design-system registry, API, and MCP server. Mzizi is an open-architecture project.",
   alternates: { canonical: "/terms" },
 }
 

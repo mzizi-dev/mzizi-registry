@@ -134,7 +134,7 @@
   /* tokens:generated:theme:end */
 
   /* Per-brand accent (DB brand_semantic_colors.brand-accent). Defaults to the
-     nyuchi brand mineral — GOLD — on this nyuchi-operated portal. mukoko maps
+     nyuchi brand mineral — GOLD — on this Mzizi portal. mukoko maps
      it to tanzanite, bundu to its own; consumer apps override --brand-accent. */
   --color-brand-accent: var(--brand-accent);
   --color-brand-accent-foreground: var(--brand-accent-foreground);

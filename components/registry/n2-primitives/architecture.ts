@@ -1,5 +1,5 @@
 /**
- * Nyuchi Architecture System — Types and database accessors.
+ * Mzizi Architecture System — Types and database accessors.
  *
  * The DATABASE is the source of truth for all architecture data.
  * This file exports types and re-exports async getters from lib/db.
