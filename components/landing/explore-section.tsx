@@ -44,7 +44,7 @@ export async function ExploreSection() {
     {
       title: "Documentation",
       description: "The charter in long form — goals, phasing, and integration posture.",
-      href: "https://docs.bundu.org/mzizi",
+      href: "https://docs.mzizi.dev",
       icon: BookOpen,
       mineral: "bg-[var(--color-gold)]",
       external: true,
