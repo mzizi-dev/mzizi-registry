@@ -106,8 +106,8 @@ export default async function ToolsPage() {
           The agent-facing surface of the Mzizi research program — MCP server, SDK, skills bundle,
           and CLI. This is how agents (and people) read the Phase 0 benchmark corpus, the
           architecture, and the doctrine today, and where the compiler toolchain lands as Phase 0
-          ships. Each tool is installable via npm or npx and lives in the Mzizi GitHub org
-          (mzizi-dev).
+          ships. Each tool is installable via npm or npx and lives in the Bundu ecosystem GitHub
+          org.
         </p>
       </header>
 

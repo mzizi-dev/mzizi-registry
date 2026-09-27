@@ -36,7 +36,7 @@ export const a11yTokens = {
     css: "outline: 2px solid var(--color-primary, #64FFDA); outline-offset: 2px;",
   },
 
-  /** Minimum touch target size — Mzizi exceeds WCAG 2.2 (44px) for the African mobile market */
+  /** Minimum touch target size — Nyuchi exceeds WCAG 2.2 (44px) for the African mobile market */
   minTouchTarget: {
     width: "48px",
     height: "48px",

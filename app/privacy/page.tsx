@@ -4,7 +4,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How mzizi.dev — the Mzizi design-system registry, API, and MCP server — handles data. Mzizi is an open-architecture project.",
+    "How mzizi.dev — the Mzizi design-system registry, API, and MCP server — handles data. An open-architecture project of the Bundu Foundation, operated by nyuchi.",
   alternates: { canonical: "/privacy" },
 }
 
@@ -120,7 +120,7 @@ export default function PrivacyPage() {
 
         <Section title="Data sovereignty">
           <p>
-            Data sovereignty is a core value of Mzizi. We collect the minimum data
+            Data sovereignty is a core value of the Bundu ecosystem. We collect the minimum data
             required to run an open, public registry, keep telemetry anonymous and aggregate, and
             publish it as open data so the community can audit how the service is used.
           </p>

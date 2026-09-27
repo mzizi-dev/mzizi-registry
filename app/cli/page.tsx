@@ -6,7 +6,7 @@ import { CopyCommand } from "@/components/landing/copy-command"
 // CLI INSTRUCTIONS — mzizi.dev/cli
 //
 // The public instruction surface for @nyuchi/mzizi-cli — the fundi agent,
-// the Mzizi-owned console over the Mzizi research program. The package
+// the Nyuchi-owned console over the Mzizi research program. The package
 // lives in mzizi-dev/agent-tools (`mzizi-cli/`); this page is its
 // human-readable manual so consumers do not have to read the monorepo to get
 // started.

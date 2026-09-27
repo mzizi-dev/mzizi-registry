@@ -114,7 +114,7 @@ export function deprecationWarning(
 ): void {
   if (process.env.NODE_ENV === "development") {
     console.warn(
-      `[Mzizi Design] ⚠️ <${componentName}> is deprecated. Use <${replacement}> instead.` +
+      `[Nyuchi Design] ⚠️ <${componentName}> is deprecated. Use <${replacement}> instead.` +
         (deadline ? ` Will be removed after ${deadline}.` : "") +
         ` See: https://mzizi.dev/components/${replacement}`
     )
