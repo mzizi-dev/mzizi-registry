@@ -7,7 +7,7 @@
 
 The canonical Mzizi component registry, brand system, and DNA-helix frontend
 architecture — a Next.js app whose `registry.json` and component files on disk are the
-source of truth (no database). It is a **Bundu Foundation** governed standard; Nyuchi
+source of truth (no database). It is a **Mzizi**-governed standard; Nyuchi
 operates it. It is **not** Mzizi-the-language (`mzizi-dev/mzizi`) — that's a different
 research project that happens to share the org and a name fragment.
 
@@ -117,9 +117,9 @@ add it as its own section rather than re-creating a dead link.
 
 ## Naming and ownership
 
-- Mzizi is **Bundu Foundation** governed IP; **Nyuchi** operates and develops it. It is not
+- Mzizi is owned and governed by **Mzizi**; **Nyuchi** operates and develops it. It is not
   a Nyuchi product — anyone in the bundu ecosystem consumes it, direction-setting flows
-  through the Foundation.
+  through Mzizi.
 - Brand wordmarks are lowercase in prose: `mzizi`, `bundu`, `nyuchi`, `fundi`, `mukoko`.
 - `mzizi-dev/agent-tools` is **private** — do not link it in anything public-facing; name
   it in prose instead.
