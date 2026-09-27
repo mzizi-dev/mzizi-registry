@@ -16,7 +16,7 @@ const fontMono = JetBrains_Mono({
 const SITE_URL = "https://mzizi.dev"
 const SITE_NAME = "Mzizi"
 const SITE_DESCRIPTION =
-  "Mzizi — a Rust framework for the agentic web, a Mzizi research project. A syntax, type system, and compiler feedback loop designed for machine authorship: low ambiguity, dense compiler errors, fast incremental builds, token-efficient code. Rendering via Dioxus, ML via Candle, edge-first on Cloudflare Workers — proven against Mzizi's own component corpus."
+  "Mzizi — a Rust framework for the agentic web, a Bundu Foundation research project. A syntax, type system, and compiler feedback loop designed for machine authorship: low ambiguity, dense compiler errors, fast incremental builds, token-efficient code. Rendering via Dioxus, ML via Candle, edge-first on Cloudflare Workers — proven against Mzizi's own component corpus."
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  authors: [{ name: "Mzizi", url: "https://mzizi.dev" }],
+  authors: [{ name: "Bundu Foundation" }, { name: "Nyuchi", url: "https://nyuchi.com" }],
   keywords: [
     "Rust framework",
     "agentic web",
@@ -41,10 +41,11 @@ export const metadata: Metadata = {
     "Africa",
     "mzizi",
     "bundu",
+    "Bundu Foundation",
     "benchmark corpus",
   ],
-  creator: "Mzizi",
-  publisher: "Mzizi",
+  creator: "Bundu Foundation",
+  publisher: "Bundu Foundation",
   robots: {
     index: true,
     follow: true,
@@ -107,9 +108,9 @@ const jsonLd = {
     {
       "@type": "Organization",
       "@id": `${SITE_URL}/#organization`,
-      name: "Mzizi",
+      name: "Bundu Foundation",
       description:
-        "Mzizi owns, governs and operates Mzizi, a Rust framework for the agentic web — including the Fundi console and active testing.",
+        "The Bundu Foundation owns and governs Mzizi, a Rust framework for the agentic web. The Fundi console and active testing are operated by Nyuchi.",
       sameAs: ["https://github.com/mzizi-dev"],
     },
     {

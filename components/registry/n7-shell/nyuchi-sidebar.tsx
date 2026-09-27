@@ -34,7 +34,7 @@ import {
 /* ═══════════════════════════════════════════════════════════════
    NYUCHI SIDEBAR — Brand Shell Component (Enterprise)
    
-   FULLY WIRED into the Mzizi 7-layer architecture:
+   FULLY WIRED into the Nyuchi 7-layer architecture:
    
    ✅ L1 TOKENS — CSS custom properties (--color-*, --radius-*)
    ✅ L2 MOTION — Stagger animation for nav items on mount

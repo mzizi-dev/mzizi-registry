@@ -10,7 +10,7 @@ import { XIcon } from "@/lib/icons"
 /* ═══════════════════════════════════════════════════════════════
    DIALOG — Layer 2 Primitive
    
-   Mzizi Frontend Architecture: Layer 2 (Primitives)
+   Nyuchi Frontend Architecture: Layer 2 (Primitives)
    
    Token compliance:
    ✅ Radius: rounded-[var(--radius-xl,17px)] — large surfaces use xl

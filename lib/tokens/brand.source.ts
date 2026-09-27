@@ -1,5 +1,5 @@
 /**
- * THE MZIZI BRAND SYSTEM — everything `/api/v1/brand` serves that is not a
+ * THE BUNDU BRAND SYSTEM — everything `/api/v1/brand` serves that is not a
  * colour family. THIS FILE IS THE SOURCE OF TRUTH. Edit the brand here.
  *
  * Until 2026-09 these six collections were read out of Supabase at request
@@ -991,7 +991,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
 /** Brand identity, philosophy, voice, accessibility posture and component specs. */
 export const brandMeta: BrandMeta = {
   version: "4.0.31",
-  name: "The Mzizi Brand System",
+  name: "The Bundu Brand System",
   lastUpdated: "2026-07-13",
   homepage: "https://mzizi.dev/brand",
   radii: {

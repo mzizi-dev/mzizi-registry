@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils"
 /* ═══════════════════════════════════════════════════════════════
    CARD — Layer 2 Primitive
    
-   Mzizi Frontend Architecture: Layer 2 (Primitives)
+   Nyuchi Frontend Architecture: Layer 2 (Primitives)
    
    Token compliance:
-   ✅ Radius: rounded-[var(--radius-lg,14px)] — THE Mzizi card radius
+   ✅ Radius: rounded-[var(--radius-lg,14px)] — THE Nyuchi card radius
    ✅ Inner radius: rounded-[var(--radius-md,12px)] for header/footer corners
    ✅ Colors: uses semantic tokens (card, card-foreground, foreground)
    ✅ Border: ring-1 ring-foreground/10 — consistent across themes
