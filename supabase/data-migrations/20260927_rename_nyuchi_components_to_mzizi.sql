@@ -24,9 +24,18 @@
 -- row under BOTH the old and new name, the migration stops with an error naming
 -- it rather than guess which row wins.
 --
+-- FOREIGN KEYS. `schema.sql` does not yet show whether the version store
+-- references the component store. The parent (`components_store`) is renamed
+-- first, so a child FK declared ON UPDATE CASCADE follows it; DEFERRABLE
+-- constraints are deferred to COMMIT. A plain non-deferrable FK without
+-- CASCADE makes the first UPDATE fail — the transaction rolls back and nothing
+-- changes; in that case make the FK deferrable (or cascade) first.
+--
 -- Apply with: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f <this file>
 
 BEGIN;
+
+SET CONSTRAINTS ALL DEFERRED;
 
 CREATE TEMP TABLE component_renames (old_name text PRIMARY KEY, new_name text NOT NULL UNIQUE)
   ON COMMIT DROP;
@@ -175,6 +184,8 @@ BEGIN
         ('component_docs', 'component_name'),
         ('component_demos', 'component_name')
       )
+    -- Parent first, so ON UPDATE CASCADE children follow it.
+    ORDER BY (c.table_name = 'components_store') DESC, c.table_name
   LOOP
     -- Version history holds many rows per component, so only single-row-per-name
     -- tables can clash.
