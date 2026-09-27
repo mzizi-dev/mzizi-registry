@@ -117,7 +117,7 @@ function docsFor(item) {
   return parts.join("\n")
 }
 
-/** From README.md — Apache-2.0, © Mzizi, operated by Nyuchi Africa (Pvt) Ltd. */
+/** Author attribution (not the copyright holder — that is Bundu Foundation, see NOTICE). */
 const AUTHOR = "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev"
 
 /**
