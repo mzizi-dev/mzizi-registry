@@ -37,16 +37,16 @@ const columns: FooterColumn[] = [
   {
     title: "Documentation",
     links: [
-      { label: "Docs home", href: "https://docs.bundu.org/mzizi", external: true },
-      { label: "Installation", href: "https://docs.bundu.org/mzizi/installation", external: true },
-      { label: "CLI", href: "https://docs.bundu.org/mzizi/cli", external: true },
-      { label: "Theming", href: "https://docs.bundu.org/mzizi/theming", external: true },
+      { label: "Docs home", href: "https://docs.mzizi.dev", external: true },
+      { label: "Installation", href: "https://docs.mzizi.dev/registry/consuming", external: true },
+      { label: "CLI", href: "https://docs.mzizi.dev/tooling", external: true },
+      { label: "Theming", href: "https://docs.mzizi.dev/foundations/tokens", external: true },
       {
         label: "API reference",
-        href: "https://docs.bundu.org/mzizi/api-reference",
+        href: "https://docs.mzizi.dev/registry/overview",
         external: true,
       },
-      { label: "Contributing", href: "https://docs.bundu.org/mzizi/contributing", external: true },
+      { label: "Contributing", href: "https://docs.mzizi.dev/registry/contributing", external: true },
     ],
   },
   {

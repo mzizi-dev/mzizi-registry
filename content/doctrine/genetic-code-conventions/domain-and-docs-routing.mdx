@@ -30,21 +30,21 @@ Every Bundu Foundation project has three surfaces, on three homes:
 2. **Information** -> a **Bundu subdomain**, `<project>.bundu.org` (ASF-style —
    like `<project>.apache.org`). The project mini-site / explainer. Example:
    `mzizi.bundu.org`.
-3. **Documentation** -> `docs.bundu.org`, under a **top-level path per project**:
-   `docs.bundu.org/<project>`. Example: `docs.bundu.org/mzizi`.
+3. **Documentation** -> the project's own **docs repo and docs domain**.
+   Example: Mzizi's documentation lives in `mzizi-dev/mzizi-docs` and publishes
+   to `docs.mzizi.dev` (Mintlify).
 
 ## Documentation
 
-- **`docs.bundu.org`** — one Starlight site, one repo (`bundu-docs`), holding
-  the docs for every Bundu Foundation project and initiative. Each project is a
-  top-level content folder (`mzizi/`, `siafudb/`, ...). One build, one deploy,
-  unified search and navigation.
+- **`docs.mzizi.dev`** — Mzizi's documentation, one repo (`mzizi-dev/mzizi-docs`),
+  one site. It supersedes the earlier convention of a per-project path under
+  `docs.bundu.org/<project>`, whose Mzizi path now returns 404. Doctrine
+  stays in `mzizi-registry` as `.mdx` (see the N10 documentation rung).
+- **`docs.bundu.org`** — Bundu's own product docs (`bundu-docs`). It keeps its
+  non-Mzizi content; it is not the home of Mzizi's documentation.
 - **`docs.nyuchi.com`** — Nyuchi's own docs, separate repo (`nyuchi-docs`).
   Nyuchi and Bundu are legally separate entities — Bundu is research and
   governance, Nyuchi is commercial — so they do not share a docs surface.
-- Project docs live in the `bundu-docs` repo, NOT the project's code repo. A
-  project keeps its own code/tooling repo; its documentation is a
-  Foundation-owned artifact consolidated in `bundu-docs`.
 
 ## Research
 

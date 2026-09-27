@@ -248,11 +248,11 @@ observability (`/observability`). Each is a standard Next.js App Router
 `page.tsx`.
 
 Long-form documentation (installation, CLI, theming, contributing, brand,
-foundations, patterns, registry internals) lives in the standalone Astro
-Starlight docs sites — product docs at <https://docs.bundu.org> and engineering
-docs at <https://docs.nyuchi.com> — not in this repo. To edit a guide,
-contribute to those docs repos instead. (The previous Mintlify docs site is
-retired.)
+foundations, patterns, registry internals) lives in the Mzizi docs site at
+<https://docs.mzizi.dev>, built from
+[`mzizi-dev/mzizi-docs`](https://github.com/mzizi-dev/mzizi-docs) — not in this
+repo. To edit a guide, contribute to that repo instead. Doctrine
+(`content/doctrine/`) stays here.
 
 To add a new functional page to the portal:
 

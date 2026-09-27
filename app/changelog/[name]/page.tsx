@@ -112,7 +112,7 @@ export default async function ComponentChangelogPage({
             release notes for the whole registry live in the{" "}
             <a
               className="font-medium text-foreground hover:underline"
-              href="https://docs.bundu.org/mzizi/changelog"
+              href="https://github.com/mzizi-dev/mzizi-registry/blob/main/CHANGELOG.md"
               target="_blank"
               rel="noopener noreferrer"
             >
