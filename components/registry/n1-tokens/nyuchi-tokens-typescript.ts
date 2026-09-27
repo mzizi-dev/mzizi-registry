@@ -3,7 +3,7 @@
  *
  * Canonical source: mzizi.dev
  * W3C Design Tokens Specification (2025.10) compliant
- * Nyuchi Frontend Architecture — Vertical Node N1
+ * Mzizi Frontend Architecture — Vertical Node N1
  *
  * THREE-TIER TOKEN ARCHITECTURE:
  *   1. Primitive: Raw values — never change regardless of theme or brand
@@ -405,7 +405,7 @@ export const primitives = {
     info: { value: paletteColors.cobalt.value },
   },
 
-  // ─── SPACING SCALE (Nyuchi Design canonical) ───────────────
+  // ─── SPACING SCALE (Mzizi Design canonical) ───────────────
   spacing: {
     "0": { value: "0px" },
     xs: { value: "4px", description: "Tight gaps, icon padding" },
@@ -418,7 +418,7 @@ export const primitives = {
     "3xl": { value: "64px", description: "Page section spacing" },
   },
 
-  // ─── BORDER RADIUS (Nyuchi Design canonical) ──────────────
+  // ─── BORDER RADIUS (Mzizi Design canonical) ──────────────
   // Base unit: 7px (--radius-unit). Ecosystem numbers: 7, 12, 14, 17.
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
@@ -440,7 +440,7 @@ export const primitives = {
     circle: { value: "50%", description: "Perfect circles" },
   },
 
-  // ─── TYPOGRAPHY (Nyuchi Design canonical) ─────────────────
+  // ─── TYPOGRAPHY (Mzizi Design canonical) ─────────────────
   // Noto Sans/Serif chosen for cross-language compatibility
   // (800+ languages including African languages and diacritics)
   fontFamily: {
@@ -458,7 +458,7 @@ export const primitives = {
     },
   },
 
-  // Type scale (Nyuchi Design canonical)
+  // Type scale (Mzizi Design canonical)
   fontSize: {
     caption: {
       value: "12px",
@@ -498,7 +498,7 @@ export const primitives = {
     bold: { value: "700" },
   },
 
-  // ─── TOUCH TARGETS (Nyuchi Design canonical) ──────────────
+  // ─── TOUCH TARGETS (Mzizi Design canonical) ──────────────
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
     default: {
@@ -508,7 +508,7 @@ export const primitives = {
     sm: { value: "48px", description: "Minimum — NEVER below this" },
   },
 
-  // ─── MOTION (Nyuchi Design canonical) ─────────────────────
+  // ─── MOTION (Mzizi Design canonical) ─────────────────────
   motion: {
     duration: {
       quick: { value: "100ms", description: "Micro-interactions, toggles" },
@@ -580,7 +580,7 @@ export const primitives = {
 
 // ═══════════════════════════════════════════════════════════════
 // TIER 2 — SEMANTIC TOKENS
-// These change per theme. Values from Nyuchi Design canonical.
+// These change per theme. Values from Mzizi Design canonical.
 // ═══════════════════════════════════════════════════════════════
 
 export type ThemeMode = "dark" | "light" | "high-contrast";
@@ -1498,7 +1498,7 @@ export function generateStatusCSS(): string {
 
 // CHART COLOR SYSTEM
 // Maps chart indices to Seven African Minerals + Heritage colors.
-// Replaces shadcn default --chart-1..5 with Nyuchi mineral palette.
+// Replaces shadcn default --chart-1..5 with Mzizi mineral palette.
 // Import mineralChartConfig in any chart block for instant brand compliance.
 // ═══════════════════════════════════════════════════════════════
 

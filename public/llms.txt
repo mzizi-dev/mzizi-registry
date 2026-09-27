@@ -1,6 +1,6 @@
 # mzizi
 
-> The canonical design system and component registry for the bundu ecosystem — a shadcn-compatible registry of UI components, hooks, library utilities, and blocks organised across the **Mzizi DNA double helix**, built on the Seven African Minerals design system. mzizi is an open-architecture project governed by the Bundu Foundation and operated by nyuchi. Install directly into any project using the shadcn CLI.
+> The canonical design system and component registry for the bundu ecosystem — a shadcn-compatible registry of UI components, hooks, library utilities, and blocks organised across the **Mzizi DNA double helix**, built on the Seven African Minerals design system. mzizi is an open-architecture project, governed and operated by mzizi. Install directly into any project using the shadcn CLI.
 
 **Live:** <https://mzizi.dev>
 **API:** <https://api.mzizi.dev/v1>
@@ -30,7 +30,7 @@ This matters for anything that reads mzizi and repeats what it says.
 The frontend architecture is the **Mzizi DNA double helix**: two entwined backbones held together by cross-cutting rungs.
 
 - An **engineering** backbone builds the product. Its strands are `core-guarantee` (the fixed contract), `shipped` (in the box, but evolves), `swappable` (the only defined fork seams), and `spine` (the harness that pre-wires everything).
-- A **meaning** backbone carries the doctrine. Its strands are `genetic-code` (the Ubuntu + Bundu sequence) and `transcription` (every convention stored as queryable data).
+- A **meaning** backbone carries the doctrine. Its strands are `genetic-code` (the Ubuntu + Mzizi sequence) and `transcription` (every convention stored as queryable data).
 - A **node** is a functional unit sitting on one strand. A **rung** is a base pair bridging both backbones, bound to no strand — fundi (self-healing), documentation, and discovery (SEO/AIO) are rungs.
 
 **There are no axes, no outliers, no 3D, and no X/Y/Z.** An earlier model described "ten layers across five axes" with an "Outside" axis. It is retired, not renamed: `/v1/architecture/axes`, `/v1/architecture/frontend/axes`, `/v1/architecture/frontend/layers`, and `/v1/architecture/layers/{n}` all return **HTTP 410 Gone** with a `migrated_to` map. If you are repeating axis vocabulary about mzizi, it came from a stale source.
