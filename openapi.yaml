@@ -4,8 +4,8 @@ info:
   version: "1.0.0"
   description: |
     The Mzizi API — components, brand, architecture, Ubuntu doctrine, the open DNA-helix frontend
-    model, and design system. Mzizi is an open-architecture project, developed and operated
-    by Mzizi.
+    model, and design system. Mzizi is an open-architecture project of the Bundu Foundation,
+    operated and developed by Nyuchi.
 
     The Mzizi API follows resource-oriented design principles. All resources
     are served as JSON with schema.org JSON-LD metadata, CORS headers, and CDN-friendly caching.
@@ -21,7 +21,7 @@ info:
 
     **MCP Server:** `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport; `mzizi.dev/mcp` 308-redirects here)
   contact:
-    name: Mzizi
+    name: Bundu Foundation
   license:
     name: MIT
     identifier: MIT
@@ -74,7 +74,7 @@ paths:
     get:
       summary: Brand System
       description: |
-        Returns the complete Mzizi brand system — Seven African Minerals palette,
+        Returns the complete Nyuchi brand system — Seven African Minerals palette,
         typography, spacing, ecosystem brands, accessibility standards, and voice & tone.
 
         Reads from Supabase. Returns 503 if database is not configured.
@@ -271,7 +271,7 @@ paths:
     get:
       summary: Technology Sovereignty
       description: |
-        Returns sovereignty assessments for every technology in the Mzizi stack,
+        Returns sovereignty assessments for every technology in the Nyuchi stack,
         including removed technologies and migration notes.
 
         Reads from Supabase. Returns 503 if database is not configured.
@@ -1267,7 +1267,7 @@ components:
           const: "WebAPI"
         name:
           type: string
-          example: "Mzizi Architecture API"
+          example: "Nyuchi Architecture API"
         version:
           type: string
           example: "1.0.0"
@@ -1308,7 +1308,7 @@ components:
           example: "4.0.40"
         name:
           type: string
-          example: "Mzizi Brand System"
+          example: "Nyuchi Brand System"
         lastUpdated:
           type: string
           format: date
@@ -1673,7 +1673,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Mzizi Ecosystem Architecture"
+          example: "Nyuchi Ecosystem Architecture"
         principles:
           type: array
           minItems: 5
@@ -1750,7 +1750,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Mzizi Data Layer Architecture"
+          example: "Nyuchi Data Layer Architecture"
         localDataLayer:
           type: array
           items:
@@ -1837,7 +1837,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Mzizi Open Data Pipeline"
+          example: "Nyuchi Open Data Pipeline"
         stages:
           type: array
           items:
@@ -1868,7 +1868,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Mzizi Technology Sovereignty"
+          example: "Nyuchi Technology Sovereignty"
         assessments:
           type: array
           items:

@@ -29,7 +29,7 @@ export async function GET() {
         name: "Mzizi API",
         version: "1.0.0",
         description:
-          "The Mzizi API — components, brand, architecture, and design system. Mzizi is an open-architecture project, developed and operated by Mzizi.",
+          "The Mzizi API — components, brand, architecture, and design system. Mzizi is an open-architecture project of the Bundu Foundation, operated and developed by Nyuchi.",
         homepage: "https://mzizi.dev",
         database: {
           status: dbStatus,

@@ -18,7 +18,7 @@ export const revalidate = 3600
 export const metadata = {
   title: "Ubuntu",
   description:
-    "The research ethos of Mzizi: Five Pillars (where Ubuntu is situated), Five Principles (how Ubuntu is embodied), and the Five Questions (the decision filter for the Mzizi research program). African scholarship, sovereign derivation.",
+    "The research ethos of the Bundu Foundation: Five Pillars (where Ubuntu is situated), Five Principles (how Ubuntu is embodied), and the Five Questions (the decision filter for the Mzizi research program). African scholarship, sovereign derivation.",
 }
 
 function PillarCard({ pillar }: { pillar: UbuntuPillarRow }) {
@@ -136,7 +136,7 @@ export default async function UbuntuPage() {
       {/* ── 1. Ubuntu intro ─────────────────────────────────────────── */}
       <header className="mb-12">
         <p className="mb-3 font-mono text-[11px] tracking-widest text-muted-foreground sm:text-xs">
-          RESEARCH ETHOS · MZIZI
+          RESEARCH ETHOS · BUNDU FOUNDATION
         </p>
         <h1 className="mb-4 font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
           Ubuntu
@@ -153,8 +153,8 @@ export default async function UbuntuPage() {
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
           Ubuntu is why Mzizi is structured the way it is. A framework for the agentic web could be
           a company&apos;s proprietary moat; instead it is{" "}
-          <strong className="text-foreground">Mzizi research</strong> — the framework IP
-          held by Mzizi, published under{" "}
+          <strong className="text-foreground">Bundu Foundation research</strong> — the framework IP
+          held by the Foundation, published under{" "}
           <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">@bundu</code>, its
           benchmark corpus open as community ground truth, its results published rather than
           claimed. &ldquo;I am because we are&rdquo; is the working method: research that only means

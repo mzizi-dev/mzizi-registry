@@ -1,6 +1,6 @@
 # Mzizi
 
-> An open-architecture project — the canonical component registry, brand system, DNA-helix frontend architecture, and AI-native developer portal for the bundu ecosystem. Developed and operated by Mzizi.
+> An open-architecture project of the Bundu Foundation — the canonical component registry, brand system, DNA-helix frontend architecture, and AI-native developer portal for the bundu ecosystem. Operated and developed by Nyuchi.
 
 [![CI](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml)
 [![Release](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml)
@@ -26,7 +26,7 @@
 
 ## What is Mzizi?
 
-**Mzizi** (Swahili for _root_) is an independent open-architecture project, owned, developed and operated by **Mzizi**. It owns the open DNA-helix frontend architecture, the component registry, the Mzizi API at `api.mzizi.dev/v1`, the 21-family design system, and the Model Context Protocol (MCP) server at `mcp.mzizi.dev/mcp`. It is **not** a Nyuchi product — it is a Mzizi-governed standard the whole bundu ecosystem (Mukoko consumer mini-apps, Nyuchi enterprise products, sister brands) installs from. The registry is **served from disk** — `registry.json` and the component files in this repo are the source of truth, not a database. Served as a shadcn-compatible API, every component is installable into any project with one command.
+**Mzizi** (Swahili for _root_) is an independent open-architecture project of the **Bundu Foundation**, operated and developed by **Nyuchi**. It owns the open DNA-helix frontend architecture, the component registry, the Mzizi API at `api.mzizi.dev/v1`, the 21-family design system, and the Model Context Protocol (MCP) server at `mcp.mzizi.dev/mcp`. It is **not** a Nyuchi product — it is a Bundu-governed standard the whole bundu ecosystem (Mukoko consumer mini-apps, Nyuchi enterprise products, sister brands) installs from. The registry is **served from disk** — `registry.json` and the component files in this repo are the source of truth, not a database. Served as a shadcn-compatible API, every component is installable into any project with one command.
 
 ---
 
@@ -276,6 +276,6 @@ See [SECURITY.md](SECURITY.md) or report privately via [GitHub Security Advisori
 
 ## Governance & License
 
-Mzizi is an **independent open-architecture project**, owned, governed, developed and operated by **Mzizi**. It is **not** a Nyuchi product. Anyone in the bundu ecosystem can consume the registry; contribution and direction-setting flow through Mzizi.
+Mzizi is an **independent open-architecture project of the [Bundu Foundation](https://bundu.family)**, operated and developed by [Nyuchi Africa (PVT) Ltd](https://nyuchi.com). It is **not** a Nyuchi product — Nyuchi is the operator, the Bundu Foundation is the governance body. Anyone in the bundu ecosystem can consume the registry; contribution and direction-setting flow through the Bundu Foundation.
 
-Licensed under the [Apache License 2.0](LICENSE). © Mzizi. See [NOTICE](NOTICE) for attribution.
+Licensed under the [Apache License 2.0](LICENSE). © Bundu Foundation, operated by Nyuchi Africa (PVT) Ltd. See [NOTICE](NOTICE) for attribution.

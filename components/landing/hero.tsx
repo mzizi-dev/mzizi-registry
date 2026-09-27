@@ -53,7 +53,7 @@ export async function Hero() {
             ))}
           </span>
           <span className="truncate text-muted-foreground sm:whitespace-normal">
-            A Mzizi research project · Phase 0
+            A Bundu Foundation research project · Phase 0
           </span>
         </Badge>
 

@@ -325,8 +325,8 @@ export function Icon({ name, size = "md", sizeOverride, className, ...props }: I
   return <IconComponent width={px} height={px} className={className} {...props} />
 }
 
-// ── Custom Mzizi Icons (brand-specific) ────────────────────────
-// These don't exist in Lucide — they're Mzizi originals.
+// ── Custom Nyuchi Icons (brand-specific) ────────────────────────
+// These don't exist in Lucide — they're Nyuchi originals.
 
 export function MukokoLogo({
   size = 24,

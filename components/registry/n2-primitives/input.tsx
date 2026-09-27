@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 /* ═══════════════════════════════════════════════════════════════
    INPUT — Layer 2 Primitive
    
-   Mzizi Frontend Architecture: Layer 2 (Primitives)
+   Nyuchi Frontend Architecture: Layer 2 (Primitives)
    
    Token compliance:
    ✅ Radius: rounded-full (9999px) — inputs use pill radius per brand
