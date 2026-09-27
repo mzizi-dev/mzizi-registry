@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 type HTTPMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 interface APIEndpoint {
   method: HTTPMethod
@@ -35,7 +35,7 @@ export function APIExplorerPage({
   loading = false,
   className,
 }: APIExplorerPageProps) {
-  const { motion } = useNyuchiHarness("api-explorer-page")
+  const { motion } = useMziziHarness("api-explorer-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type ConnectivityRequirement = "none" | "cached" | "edge" | "cloud"
 type ConnectivityState = "online" | "edge-only" | "cached-only" | "offline"
@@ -26,7 +26,7 @@ const STATE_CONFIG: Record<ConnectivityState, { color: string; label: string }> 
   offline: { color: "var(--connection-offline, #EF4444)", label: "Offline" },
 }
 
-interface NyuchiOfflineGateProps {
+interface MziziOfflineGateProps {
   children: React.ReactNode
   requires: ConnectivityRequirement
   currentState: ConnectivityState
@@ -36,7 +36,7 @@ interface NyuchiOfflineGateProps {
   className?: string
 }
 
-export function NyuchiOfflineGate({
+export function MziziOfflineGate({
   children,
   requires,
   currentState,
@@ -44,8 +44,8 @@ export function NyuchiOfflineGate({
   offlineAlternative,
   loading = false,
   className,
-}: NyuchiOfflineGateProps) {
-  const { motion } = useNyuchiHarness("offline-gate")
+}: MziziOfflineGateProps) {
+  const { motion } = useMziziHarness("offline-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -59,8 +59,8 @@ export function NyuchiOfflineGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-offline-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-offline-gate"
+        data-slot="mzizi-offline-gate"
+        data-portal="https://mzizi.dev/components/mzizi-offline-gate"
         data-loading
         role="status"
         className="h-24 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -74,7 +74,7 @@ export function NyuchiOfflineGate({
   const stateConfig = STATE_CONFIG[currentState]
   return (
     <div
-      data-slot="nyuchi-offline-gate"
+      data-slot="mzizi-offline-gate"
       role="status"
       aria-live="polite"
       style={animStyle}
@@ -115,4 +115,4 @@ export function NyuchiOfflineGate({
     </div>
   )
 }
-export type { ConnectivityRequirement, ConnectivityState, NyuchiOfflineGateProps }
+export type { ConnectivityRequirement, ConnectivityState, MziziOfflineGateProps }

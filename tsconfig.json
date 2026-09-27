@@ -40,6 +40,6 @@
   "exclude": [
     "node_modules",
     "supabase/functions",
-    "components/registry/n10-documentation/nyuchi-docs-api.ts"
+    "components/registry/n10-documentation/mzizi-docs-api.ts"
   ]
 }

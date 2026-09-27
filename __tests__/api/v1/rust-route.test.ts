@@ -116,9 +116,9 @@ describe("the Rust half of the registry", () => {
     for (const file of rustComponents()) {
       const name = file.split("/")[1].replace(/\.rs$/, "")
       // The N1 token targets are genuinely separate artifacts, one per platform, and each
-      // legitimately has its own entry — `nyuchi-tokens-rust` is a file, not a second
-      // implementation of `nyuchi-tokens`.
-      if (name.startsWith("nyuchi-tokens-")) continue
+      // legitimately has its own entry — `mzizi-tokens-rust` is a file, not a second
+      // implementation of `mzizi-tokens`.
+      if (name.startsWith("mzizi-tokens-")) continue
       expect(names.has(`${name}-rust`), `${name}-rust should not be a separate item`).toBe(false)
       expect(names.has(name), `${name} has Rust source but no registry entry`).toBe(true)
     }

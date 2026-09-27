@@ -25,8 +25,8 @@ than inferred:
   without setting an endpoint was posting into a void that looked exactly like
   working RUM. Fixed here: there is no default, and no endpoint means no POST.
 - `mzizi-error-tracker`'s one instruction for getting a critical error out was a
-  commented-out import of `@/lib/fundi/nyuchi-fundi-reporter` — one directory off
-  from where the shadcn CLI installs it (`lib/nyuchi-fundi-reporter.ts`). I first
+  commented-out import of `@/lib/fundi/mzizi-fundi-reporter` — one directory off
+  from where the shadcn CLI installs it (`lib/mzizi-fundi-reporter.ts`). I first
   read that as "the file does not exist" and deleted the pointer; it does exist,
   as an N9 registry component, so the fix was the path. Both exits are documented
   now: **N9 files an issue** (healing) and **N8 emits a span** (observation), and
@@ -172,10 +172,10 @@ attached it can tell the two apart without re-running anything.
 A signal leaving a component has two destinations, and wiring only one is a
 failure mode in both directions:
 
-| Exit            | Component                    | What it is for                                                                                                                     |
-| --------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **Healing**     | `nyuchi-fundi-reporter` (N9) | Files a GitHub issue against `nyuchi/mzizi`, deduplicated by a per-component cooldown. A named defect a human can merge a fix for. |
-| **Observation** | `mzizi-otel` (N8)            | Emits an OTLP span. Every event, not just the critical ones, readable by any agent or service rather than by fundi alone.          |
+| Exit            | Component                   | What it is for                                                                                                                     |
+| --------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Healing**     | `mzizi-fundi-reporter` (N9) | Files a GitHub issue against `nyuchi/mzizi`, deduplicated by a per-component cooldown. A named defect a human can merge a fix for. |
+| **Observation** | `mzizi-otel` (N8)           | Emits an OTLP span. Every event, not just the critical ones, readable by any agent or service rather than by fundi alone.          |
 
 Route `onCritical` to N9 and `onError` to OTLP. Sending every error to N9 opens
 an issue per render failure; emitting only to OTLP means nothing gets fixed

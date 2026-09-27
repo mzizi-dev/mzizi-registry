@@ -38,15 +38,15 @@ export interface ErrorTrackerConfig {
 
 // A critical error has TWO exits, and they are not alternatives.
 //
-// The import path here used to read `@/lib/fundi/nyuchi-fundi-reporter`, one
-// directory off: `nyuchi-fundi-reporter` (N9) is a real registry component and
-// the shadcn CLI installs it to `lib/nyuchi-fundi-reporter.ts`. Wrong path, real
+// The import path here used to read `@/lib/fundi/mzizi-fundi-reporter`, one
+// directory off: `mzizi-fundi-reporter` (N9) is a real registry component and
+// the shadcn CLI installs it to `lib/mzizi-fundi-reporter.ts`. Wrong path, real
 // file — so the fix is the path, not the pointer.
 //
 //   1. N9 fundi — files a GitHub issue, deduplicated by a per-component cooldown.
 //      This is the healing path: a named defect a human can merge a fix for.
 //
-//        import { getFundiReporter } from "@/lib/nyuchi-fundi-reporter"
+//        import { getFundiReporter } from "@/lib/mzizi-fundi-reporter"
 //
 //        createErrorTracker({
 //          onCritical: (e) => getFundiReporter().report({

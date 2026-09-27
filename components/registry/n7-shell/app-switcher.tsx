@@ -1,7 +1,7 @@
 "use client"
 
 // ── INFRASTRUCTURE HARNESS (auto-wired) ──────────────────
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 import * as React from "react"
 import {
@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button"
    ✅ L1 TOKENS — Active state uses brand accent tokens
    ✅ L2 MOTION — Grid items stagger on popover open
    ✅ L3 A11Y — Focus ring tokens, ARIA labels, 48px targets
-   ✅ L4 OBSERVABILITY — useNyuchiHarness, scoped logging
+   ✅ L4 OBSERVABILITY — useMziziHarness, scoped logging
    ✅ L5 RESILIENCE — Guards against empty app list
    ✅ L7 PLATFORM — data-slot for CSS targeting
    ═══════════════════════════════════════════════════════════════ */
@@ -55,7 +55,7 @@ const DEFAULT_APPS: AppItem[] = [
 
 function AppSwitcher({ apps = DEFAULT_APPS, currentApp, className }: AppSwitcherProps) {
   // ── L4: HARNESS — Observability + motion + a11y ──
-  const { motion, LiveRegion } = useNyuchiHarness("app-switcher")
+  const { motion, LiveRegion } = useMziziHarness("app-switcher")
 
   return (
     <Popover>

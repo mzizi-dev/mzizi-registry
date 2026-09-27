@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 type BookingStep = "select" | "schedule" | "provider" | "confirm" | "booked"
 interface BookingPageProps {
   step?: BookingStep
@@ -17,7 +17,7 @@ export function BookingPage({
   loading = false,
   className,
 }: BookingPageProps) {
-  const { motion } = useNyuchiHarness("booking-page")
+  const { motion } = useMziziHarness("booking-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

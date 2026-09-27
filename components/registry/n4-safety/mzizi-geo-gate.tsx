@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface GeoRestriction {
   allowed: boolean
@@ -11,7 +11,7 @@ interface GeoRestriction {
   reason?: string
 }
 
-interface NyuchiGeoGateProps {
+interface MziziGeoGateProps {
   children: React.ReactNode
   restriction: GeoRestriction
   fallback?: React.ReactNode
@@ -20,15 +20,15 @@ interface NyuchiGeoGateProps {
   className?: string
 }
 
-export function NyuchiGeoGate({
+export function MziziGeoGate({
   children,
   restriction,
   fallback,
   onLearnMore,
   loading = false,
   className,
-}: NyuchiGeoGateProps) {
-  const { motion } = useNyuchiHarness("geo-gate")
+}: MziziGeoGateProps) {
+  const { motion } = useMziziHarness("geo-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -42,8 +42,8 @@ export function NyuchiGeoGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-geo-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-geo-gate"
+        data-slot="mzizi-geo-gate"
+        data-portal="https://mzizi.dev/components/mzizi-geo-gate"
         data-loading
         role="status"
         className="h-28 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -54,7 +54,7 @@ export function NyuchiGeoGate({
 
   return (
     <div
-      data-slot="nyuchi-geo-gate"
+      data-slot="mzizi-geo-gate"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -108,4 +108,4 @@ export function NyuchiGeoGate({
     </div>
   )
 }
-export type { GeoRestriction, NyuchiGeoGateProps }
+export type { GeoRestriction, MziziGeoGateProps }

@@ -3,7 +3,7 @@
 // ── INFRASTRUCTURE HARNESS (auto-wired) ──
 // Every brand component participates in observability, motion, a11y,
 // and health monitoring via the harness. Zero manual config.
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
@@ -41,7 +41,7 @@ export interface PillAction {
   href?: string
 }
 
-interface NyuchiHeaderProps {
+interface MziziHeaderProps {
   /** App name displayed after the ecosystem logo */
   appName?: string
   /** Desktop navigation items */
@@ -73,7 +73,7 @@ const DEFAULT_NAV_ITEMS: NavItem[] = [
   { label: "API", href: "/api-docs" },
 ]
 
-export function NyuchiHeader({
+export function MziziHeader({
   appName,
   navItems = DEFAULT_NAV_ITEMS,
   actions,
@@ -84,13 +84,13 @@ export function NyuchiHeader({
   onBack,
   showLogo = true,
   className,
-}: NyuchiHeaderProps) {
-  useNyuchiHarness("header") // harness pre-wires observability + motion + a11y
+}: MziziHeaderProps) {
+  useMziziHarness("header") // harness pre-wires observability + motion + a11y
 
   return (
     <header
-      data-slot="nyuchi-header"
-      data-portal="https://mzizi.dev/components/nyuchi-header"
+      data-slot="mzizi-header"
+      data-portal="https://mzizi.dev/components/mzizi-header"
       className={cn(
         "sticky top-0 z-50 flex h-14 items-center gap-2 px-5 transition-all duration-300",
         scrolled ? "border-b border-border/50 bg-background/80 backdrop-blur-xl" : "bg-transparent",

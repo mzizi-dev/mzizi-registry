@@ -13,7 +13,7 @@ interface SyncInfo {
   error?: string
 }
 
-interface NyuchiSyncStatusProps {
+interface MziziSyncStatusProps {
   sync: SyncInfo
   compact?: boolean
   onResolveConflicts?: () => void
@@ -50,20 +50,20 @@ const STATE_CONFIG: Record<SyncState, { color: string; label: string; icon: stri
   },
 }
 
-export function NyuchiSyncStatus({
+export function MziziSyncStatus({
   sync,
   compact = false,
   onResolveConflicts,
   onRetry,
   className,
-}: NyuchiSyncStatusProps) {
+}: MziziSyncStatusProps) {
   const config = STATE_CONFIG[sync.state]
 
   if (compact) {
     return (
       <div
-        data-slot="nyuchi-sync-status"
-        data-portal="https://mzizi.dev/components/nyuchi-sync-status"
+        data-slot="mzizi-sync-status"
+        data-portal="https://mzizi.dev/components/mzizi-sync-status"
         role="status"
         aria-label={config.label}
         className={cn("flex items-center gap-1.5", className)}
@@ -79,7 +79,7 @@ export function NyuchiSyncStatus({
 
   return (
     <div
-      data-slot="nyuchi-sync-status"
+      data-slot="mzizi-sync-status"
       role="status"
       aria-live="polite"
       className={cn(
@@ -143,4 +143,4 @@ export function NyuchiSyncStatus({
     </div>
   )
 }
-export type { SyncState, SyncInfo, NyuchiSyncStatusProps }
+export type { SyncState, SyncInfo, MziziSyncStatusProps }

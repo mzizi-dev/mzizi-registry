@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface ChatPageProps {
   variant?: "list" | "conversation"
@@ -26,7 +26,7 @@ export function ChatPage({
   loading = false,
   className,
 }: ChatPageProps) {
-  const { motion } = useNyuchiHarness("chat-page")
+  const { motion } = useMziziHarness("chat-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

@@ -5,7 +5,7 @@
  * could not be reproduced with a fixture, because the fixture would have to invent the one
  * thing that was missing: `readComponents()` derives a component's node from the directory
  * its file lives in, and a data item — `cssVars`/`css`, no file — has no directory. Its node
- * was therefore `undefined`, and `undefined` is not neutral. It dropped `nyuchi-tokens` out
+ * was therefore `undefined`, and `undefined` is not neutral. It dropped `mzizi-tokens` out
  * of `/api/v1/ui?node=1` and out of `mzizi_list_components({ node: 1 })`, so an agent asking
  * the registry for node 1 got the 17 N1 libraries and not the tokens those libraries and 431
  * components are built on — the one item every consumer is told to install first.
@@ -32,8 +32,8 @@ describe("data items in the registry", () => {
     }
   })
 
-  it("places nyuchi-tokens in N1 as a theme", () => {
-    const tokens = items.find((i) => i.name === "nyuchi-tokens")
+  it("places mzizi-tokens in N1 as a theme", () => {
+    const tokens = items.find((i) => i.name === "mzizi-tokens")
     expect(tokens).toBeDefined()
     expect(tokens?.type).toBe("registry:theme")
     expect(tokens?.node).toBe(1)
@@ -48,6 +48,6 @@ describe("data items in the registry", () => {
     const counts = readNodeCounts()
     const n1 = items.filter((i) => i.node === 1)
     expect(counts[1]).toBe(n1.length)
-    expect(n1.map((i) => i.name)).toContain("nyuchi-tokens")
+    expect(n1.map((i) => i.name)).toContain("mzizi-tokens")
   })
 })

@@ -37,7 +37,7 @@ export interface ProbeResult {
   steps: { description: string; status: "pass" | "fail"; durationMs: number; error?: string }[]
 }
 
-export interface NyuchiSyntheticProbeConfig {
+export interface MziziSyntheticProbeConfig {
   journeys: SyntheticJourney[]
   baseUrl: string
   defaultTimeout?: number
@@ -48,7 +48,7 @@ export interface NyuchiSyntheticProbeConfig {
 /** Run a synthetic journey and return result */
 export async function executeSyntheticJourney(
   journey: SyntheticJourney,
-  config: NyuchiSyntheticProbeConfig
+  config: MziziSyntheticProbeConfig
 ): Promise<ProbeResult> {
   const start = performance.now()
   const stepResults: ProbeResult["steps"] = []
@@ -119,7 +119,7 @@ export const journeyTemplates = {
         description: "Enter password",
       },
       { type: "click", target: "[type=submit]", description: "Submit login" },
-      { type: "assert", target: "[data-slot=nyuchi-header]", description: "Verify header renders" },
+      { type: "assert", target: "[data-slot=mzizi-header]", description: "Verify header renders" },
     ],
     alertOnFailure: true,
   }),
@@ -145,4 +145,4 @@ export const journeyTemplates = {
   }),
 }
 
-export type { NyuchiSyntheticProbeConfig as SyntheticProbeConfig }
+export type { MziziSyntheticProbeConfig as SyntheticProbeConfig }

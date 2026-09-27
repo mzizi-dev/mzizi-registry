@@ -23,6 +23,7 @@
 
 import manifestJson from "../registry.json"
 import { REGISTRY_FILES } from "./registry.generated"
+import { renamedComponent } from "./component-renames"
 import { extname, basename } from "path"
 
 // `REGISTRY_SOURCE_ROOT` and `MANIFEST_PATH` are gone with the filesystem reads.
@@ -83,7 +84,7 @@ export type RegistryMeta = {
    * stops the node disagreeing with where the code actually is. A data item has no
    * directory, so there is nothing to derive from and the manifest is the only source.
    *
-   * Declaring it is not cosmetic. Without it `nyuchi-tokens` carried no `node`, so
+   * Declaring it is not cosmetic. Without it `mzizi-tokens` carried no `node`, so
    * `/api/v1/ui?node=1` — and `mzizi_list_components({ node: 1 })` on top of it — returned
    * the 17 N1 libraries and silently omitted the tokens themselves: the one item that IS
    * N1, and the one every consumer is told to install first.
@@ -163,12 +164,12 @@ type Manifest = { items?: RegistryItem[] }
  *
  * Two kinds, and the distinction is not "has cssVars":
  *
- *   registry:theme   the tokens themselves (nyuchi-tokens) — payload is `cssVars`/`css`
+ *   registry:theme   the tokens themselves (mzizi-tokens) — payload is `cssVars`/`css`
  *   registry:base    a project foundation (mzizi-base)     — payload is the CONFIG
  *                    (style / iconLibrary / baseColor / tailwind) plus dependencies
  *
  * A base legitimately carries no `cssVars` at all: `mzizi-base` pulls N1 through
- * `registryDependencies: ["nyuchi-tokens"]` rather than duplicating 324 values, because N1
+ * `registryDependencies: ["mzizi-tokens"]` rather than duplicating 324 values, because N1
  * is the only node allowed to define CSS values. Testing for `cssVars` alone would drop it
  * here and answer 404 for the one item a new project installs first.
  */
@@ -292,11 +293,11 @@ export function readComponents(): RegistryItem[] {
     if (!item?.name) continue
 
     // A DATA item's payload is `cssVars`/`css`, not a file — that is what a `registry:theme`
-    // is. `nyuchi-tokens` carries the 214 design tokens themselves, generated from
+    // is. `mzizi-tokens` carries the 214 design tokens themselves, generated from
     // app/globals.css, and has no source on disk BY DESIGN: a `.ts` file is React-only, and
     // the point of moving N1 into cssVars is that the shadcn CLI merges it into any project.
     //
-    // Without this branch the item is dropped here and `/api/v1/ui/nyuchi-tokens` answers
+    // Without this branch the item is dropped here and `/api/v1/ui/mzizi-tokens` answers
     // 404 — the tokens would be correct in the manifest and invisible to every consumer.
     if (!item.files?.length && isDataItem(item)) {
       // The node comes from the manifest here and ONLY here, because there is no directory
@@ -331,7 +332,13 @@ export function readComponents(): RegistryItem[] {
 
 /** One component by name, or null. */
 export function readComponent(name: string): RegistryItem | null {
-  return readComponents().find((c) => c.name === name) ?? null
+  const all = readComponents()
+  const found = all.find((c) => c.name === name)
+  if (found) return found
+  // A renamed item (`nyuchi-footer` → `mzizi-footer`) still answers by its old name, so
+  // lookups that never pass through an HTTP redirect — the MCP tools — keep working.
+  const current = renamedComponent(name)
+  return current ? (all.find((c) => c.name === current) ?? null) : null
 }
 
 /**

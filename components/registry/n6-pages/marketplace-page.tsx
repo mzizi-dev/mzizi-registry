@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface MarketplacePageProps {
   search?: React.ReactNode
   categories?: React.ReactNode
@@ -18,7 +18,7 @@ export function MarketplacePage({
   loading = false,
   className,
 }: MarketplacePageProps) {
-  const { motion } = useNyuchiHarness("marketplace-page")
+  const { motion } = useMziziHarness("marketplace-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

@@ -123,8 +123,8 @@ SELECT * FROM (VALUES
     'A brand component is a primitive with Ubuntu in it.',
     'Brand system steward',
     ARRAY[
-      'Always destructure ``{ log, motion, LiveRegion }`` from ``useNyuchiHarness``.',
-      'L2 primitives never import ``useNyuchiHarness`` directly.',
+      'Always destructure ``{ log, motion, LiveRegion }`` from ``useMziziHarness``.',
+      'L2 primitives never import ``useMziziHarness`` directly.',
       'Every brand component carries a ``data-slot`` attribute for stable targeting.',
       'Use mineral palette tokens, not raw colour values.'
     ]::text[],

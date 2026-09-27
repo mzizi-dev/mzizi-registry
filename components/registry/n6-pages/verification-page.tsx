@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type VerificationStep =
   "phone" | "otp" | "id-upload" | "selfie" | "biometric" | "review" | "complete"
@@ -28,7 +28,7 @@ export function VerificationPage({
   loading = false,
   className,
 }: VerificationPageProps) {
-  const { motion } = useNyuchiHarness("verification-page")
+  const { motion } = useMziziHarness("verification-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

@@ -12,7 +12,7 @@
  *   SampleArticle → news.articles          (schema.org NewsArticle)
  *
  * That correspondence is the entire point, and it is what makes this more than
- * lorem ipsum. A consumer wiring `nyuchi-place-card` to their own
+ * lorem ipsum. A consumer wiring `mzizi-place-card` to their own
  * `places.places` collection has the mapping already done, because the component
  * was built against a document of exactly that shape. Getting a preview working
  * and getting a consumer's integration working stop being two jobs.

@@ -3,7 +3,7 @@
    
    COMPOSITION PATTERN:
    This block should compose L2 primitives (Button, Input, Card, Label)
-   and L3 brand components (nyuchi-auth-layout) rather than rendering
+   and L3 brand components (mzizi-auth-layout) rather than rendering
    inline UI. The current implementation pre-dates the 3D architecture.
    
    APPROVED FOR USE: Yes, as-is. Refactor is tracked for a future pass.
@@ -14,7 +14,7 @@
 
 import * as React from "react"
 
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label"
 import { Mail } from "@/lib/icons"
 
 function Login04() {
-  const { motion } = useNyuchiHarness("login-04")
+  const { motion } = useMziziHarness("login-04")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

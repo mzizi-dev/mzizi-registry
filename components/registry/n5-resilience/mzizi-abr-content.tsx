@@ -116,8 +116,8 @@ export function ABRImage({
   if (quality === "text-only")
     return (
       <span
-        data-slot="nyuchi-abr-image"
-        data-portal="https://mzizi.dev/components/nyuchi-abr-image"
+        data-slot="mzizi-abr-image"
+        data-portal="https://mzizi.dev/components/mzizi-abr-image"
         role="img"
         aria-label={alt}
         className="text-xs text-muted-foreground"
@@ -128,7 +128,7 @@ export function ABRImage({
   const effectiveSrc = (quality === "low" || quality === "minimal") && lowSrc ? lowSrc : src
   const loading = quality === "full" ? "eager" : "lazy"
   return (
-    <img data-slot="nyuchi-abr-image" src={effectiveSrc} alt={alt} loading={loading} {...props} />
+    <img data-slot="mzizi-abr-image" src={effectiveSrc} alt={alt} loading={loading} {...props} />
   )
 }
 

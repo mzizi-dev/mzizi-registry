@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface SubscriptionGateProps extends React.ComponentProps<"div"> {
   title?: string
@@ -27,7 +27,7 @@ function SubscriptionGate({
   className,
   ...props
 }: SubscriptionGateProps) {
-  const { motion } = useNyuchiHarness("subscription-gate")
+  const { motion } = useMziziHarness("subscription-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

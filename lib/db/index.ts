@@ -46,6 +46,7 @@
 
 import { doctrineRows, readDoctrineSorted, DOCTRINE } from "@/lib/doctrine"
 import { readComponent, readComponents, readNodeCounts, type RegistryItem } from "@/lib/registry"
+import { componentNameHistory } from "@/lib/component-renames"
 import { CHANGELOG_RELEASES } from "@/lib/changelog.generated"
 import { createClient } from "@supabase/supabase-js"
 import type {
@@ -977,7 +978,8 @@ export async function getComponentVersions(componentName: string): Promise<Compo
   const { data, error } = await getPublicClient()
     .from("component_versions")
     .select(VERSION_COLUMNS)
-    .eq("component_name", componentName)
+    // Every name the component has had — see `componentNameHistory`.
+    .in("component_name", componentNameHistory(componentName))
     // `component_versions` has no `released_at` — it is a VIEW whose timestamp
     // column is `created_at`. Ordering by a column that does not exist made
     // PostgREST error, `getComponentVersions` throw, and
@@ -1000,9 +1002,11 @@ export async function getComponentVersion(
   const { data, error } = await getPublicClient()
     .from("component_versions")
     .select(VERSION_COLUMNS)
-    .eq("component_name", componentName)
+    .in("component_name", componentNameHistory(componentName))
     .eq("version", version)
-    .single()
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle()
 
   if (error) {
     if (error.code === "PGRST116") return null
@@ -1016,7 +1020,7 @@ export async function getComponentVersion(
 // `getDesignTokens()` is DELETED, not repointed.
 //
 // It selected `source_code` from the `components` view where
-// `name = 'nyuchi-tokens'` and JSON.parse'd the result. That column has been
+// `name = 'mzizi-tokens'` and JSON.parse'd the result. That column has been
 // null on every row since component source moved to disk (§8.3), so the
 // function could only ever return null — and it had no callers anywhere in
 // `app/`, `lib/`, `components/` or `scripts/`.

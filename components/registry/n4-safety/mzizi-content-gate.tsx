@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 /* ═══════════════════════════════════════════════════════════════
    NYUCHI CONTENT GATE — Layer 4 Safety & Trust
@@ -23,7 +23,7 @@ interface GateCheck {
   level?: "mild" | "moderate" | "mature" | "restricted"
 }
 
-interface NyuchiContentGateProps {
+interface MziziContentGateProps {
   children: React.ReactNode
   checks: GateCheck[]
   fallback?: React.ReactNode
@@ -50,7 +50,7 @@ const GATE_LABELS: Record<GateType, string> = {
   custom: "Access Restricted",
 }
 
-export function NyuchiContentGate({
+export function MziziContentGate({
   children,
   checks,
   fallback,
@@ -58,8 +58,8 @@ export function NyuchiContentGate({
   onAction,
   loading = false,
   className,
-}: NyuchiContentGateProps) {
-  const { log, motion } = useNyuchiHarness("content-gate")
+}: MziziContentGateProps) {
+  const { log, motion } = useMziziHarness("content-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -80,8 +80,8 @@ export function NyuchiContentGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-content-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-content-gate"
+        data-slot="mzizi-content-gate"
+        data-portal="https://mzizi.dev/components/mzizi-content-gate"
         data-loading
         role="status"
         className="h-32 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -96,7 +96,7 @@ export function NyuchiContentGate({
 
   return (
     <div
-      data-slot="nyuchi-content-gate"
+      data-slot="mzizi-content-gate"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -152,4 +152,4 @@ export function NyuchiContentGate({
   )
 }
 
-export type { GateType, GateCheck, NyuchiContentGateProps }
+export type { GateType, GateCheck, MziziContentGateProps }

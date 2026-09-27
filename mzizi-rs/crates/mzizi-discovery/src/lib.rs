@@ -20,5 +20,5 @@
 //! the `<head>` elements itself. Same division as N8, which builds an OTLP
 //! request and lets the host send it.
 
-#[path = "generated/nyuchi-seo.rs"]
-pub mod nyuchi_seo;
+#[path = "generated/mzizi-seo.rs"]
+pub mod mzizi_seo;

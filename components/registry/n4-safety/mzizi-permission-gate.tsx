@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 /* ═══════════════════════════════════════════════════════════════
    NYUCHI PERMISSION GATE — Layer 4 Safety & Trust
@@ -38,7 +38,7 @@ const TIER_MINERALS: Record<VerificationTier, string> = {
   licensed: "var(--tier-licensed, var(--color-tanzanite, #B388FF))",
 }
 
-interface NyuchiPermissionGateProps {
+interface MziziPermissionGateProps {
   children: React.ReactNode
   /** The minimum tier required to see the content */
   requiredTier: VerificationTier
@@ -54,7 +54,7 @@ interface NyuchiPermissionGateProps {
   className?: string
 }
 
-export function NyuchiPermissionGate({
+export function MziziPermissionGate({
   children,
   requiredTier,
   userTier,
@@ -63,8 +63,8 @@ export function NyuchiPermissionGate({
   onUpgrade,
   loading = false,
   className,
-}: NyuchiPermissionGateProps) {
-  const { log, motion } = useNyuchiHarness("permission-gate")
+}: MziziPermissionGateProps) {
+  const { log, motion } = useMziziHarness("permission-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -84,8 +84,8 @@ export function NyuchiPermissionGate({
   if (loading) {
     return (
       <div
-        data-slot="nyuchi-permission-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-permission-gate"
+        data-slot="mzizi-permission-gate"
+        data-portal="https://mzizi.dev/components/mzizi-permission-gate"
         data-loading
         role="status"
         className="h-32 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -101,7 +101,7 @@ export function NyuchiPermissionGate({
 
   return (
     <div
-      data-slot="nyuchi-permission-gate"
+      data-slot="mzizi-permission-gate"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -153,4 +153,4 @@ export function NyuchiPermissionGate({
   )
 }
 
-export type { VerificationTier, NyuchiPermissionGateProps }
+export type { VerificationTier, MziziPermissionGateProps }

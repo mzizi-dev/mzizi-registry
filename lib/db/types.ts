@@ -571,7 +571,7 @@ export interface ChangelogRow {
   /**
    * Ecosystem nodes touched by this release. Rendered as pill badges
    * coloured by helix classification (strand class for a node, gold for
-   * a rung) via the nyuchi-changelog-renderer. The node set is never
+   * a rung) via the mzizi-changelog-renderer. The node set is never
    * capped — a release may name a node newer than any listed in code.
    */
   nodes_affected: number[] | null
@@ -739,7 +739,7 @@ export interface ComponentVersionInsert {
   changed_by?: string | null
 }
 
-// ── Design token types (from nyuchi-tokens component source_code) ──
+// ── Design token types (from mzizi-tokens component source_code) ──
 
 export interface DesignTokens {
   minerals?: Record<string, unknown>

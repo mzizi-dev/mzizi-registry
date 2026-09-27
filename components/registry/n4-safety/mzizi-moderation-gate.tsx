@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type ModerationStatus = "approved" | "pending" | "reviewing" | "flagged" | "rejected"
 
@@ -32,7 +32,7 @@ const STATUS_CONFIG: Record<
   },
 }
 
-interface NyuchiModerationGateProps {
+interface MziziModerationGateProps {
   children: React.ReactNode
   status: ModerationStatus
   moderationSource?: "device" | "edge" | "cloud"
@@ -43,7 +43,7 @@ interface NyuchiModerationGateProps {
   className?: string
 }
 
-export function NyuchiModerationGate({
+export function MziziModerationGate({
   children,
   status,
   moderationSource,
@@ -52,8 +52,8 @@ export function NyuchiModerationGate({
   onAppeal,
   loading = false,
   className,
-}: NyuchiModerationGateProps) {
-  const { motion } = useNyuchiHarness("moderation-gate")
+}: MziziModerationGateProps) {
+  const { motion } = useMziziHarness("moderation-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -67,8 +67,8 @@ export function NyuchiModerationGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-moderation-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-moderation-gate"
+        data-slot="mzizi-moderation-gate"
+        data-portal="https://mzizi.dev/components/mzizi-moderation-gate"
         data-loading
         role="status"
         className="h-28 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -80,7 +80,7 @@ export function NyuchiModerationGate({
 
   return (
     <div
-      data-slot="nyuchi-moderation-gate"
+      data-slot="mzizi-moderation-gate"
       role="status"
       aria-live="polite"
       style={animStyle}
@@ -152,4 +152,4 @@ export function NyuchiModerationGate({
     </div>
   )
 }
-export type { ModerationStatus, NyuchiModerationGateProps }
+export type { ModerationStatus, MziziModerationGateProps }
