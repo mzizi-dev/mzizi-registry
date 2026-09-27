@@ -4,7 +4,7 @@ info:
   version: "1.0.0"
   description: |
     The Mzizi API — components, brand, architecture, Ubuntu doctrine, the open DNA-helix frontend
-    model, and design system. Mzizi is an open-architecture project of the Bundu Foundation,
+    model, and design system. Mzizi is an independent open-architecture project,
     operated and developed by Nyuchi.
 
     The Mzizi API follows resource-oriented design principles. All resources
@@ -21,7 +21,7 @@ info:
 
     **MCP Server:** `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport; `mzizi.dev/mcp` 308-redirects here)
   contact:
-    name: Bundu Foundation
+    name: Mzizi
   license:
     name: MIT
     identifier: MIT

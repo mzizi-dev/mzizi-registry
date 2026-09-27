@@ -117,8 +117,8 @@ function docsFor(item) {
   return parts.join("\n")
 }
 
-/** From README.md — Apache-2.0, © Bundu Foundation, operated by Nyuchi Africa (Pvt) Ltd. */
-const AUTHOR = "Bundu Foundation, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev"
+/** From README.md — Apache-2.0, © Mzizi, operated by Nyuchi Africa (Pvt) Ltd. */
+const AUTHOR = "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev"
 
 /**
  * The node label, read from the directory the source sits in — `n2-primitives` → primitives.

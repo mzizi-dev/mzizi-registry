@@ -71,7 +71,7 @@ export type RegistryMeta = {
   sizes?: string[]
   features?: string[]
   a11y?: string[]
-  /** `mzizi` | `nyuchi` | `bundu` | `framework`. */
+  /** `mzizi` | `nyuchi` | `framework`. */
   owner?: string
   /** The authored collection, e.g. `primitives`, `brand`, `pages`. */
   collection?: string

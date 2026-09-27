@@ -16,7 +16,7 @@ const fontMono = JetBrains_Mono({
 const SITE_URL = "https://mzizi.dev"
 const SITE_NAME = "Mzizi"
 const SITE_DESCRIPTION =
-  "Mzizi — a Rust framework for the agentic web, a Bundu Foundation research project. A syntax, type system, and compiler feedback loop designed for machine authorship: low ambiguity, dense compiler errors, fast incremental builds, token-efficient code. Rendering via Dioxus, ML via Candle, edge-first on Cloudflare Workers — proven against Mzizi's own component corpus."
+  "Mzizi — a Rust framework for the agentic web, an independent research project. A syntax, type system, and compiler feedback loop designed for machine authorship: low ambiguity, dense compiler errors, fast incremental builds, token-efficient code. Rendering via Dioxus, ML via Candle, edge-first on Cloudflare Workers — proven against Mzizi's own component corpus."
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  authors: [{ name: "Bundu Foundation" }, { name: "Nyuchi", url: "https://nyuchi.com" }],
+  authors: [{ name: "Mzizi", url: SITE_URL }, { name: "Nyuchi", url: "https://nyuchi.com" }],
   keywords: [
     "Rust framework",
     "agentic web",
@@ -41,11 +41,10 @@ export const metadata: Metadata = {
     "Africa",
     "mzizi",
     "bundu",
-    "Bundu Foundation",
     "benchmark corpus",
   ],
-  creator: "Bundu Foundation",
-  publisher: "Bundu Foundation",
+  creator: "Mzizi",
+  publisher: "Mzizi",
   robots: {
     index: true,
     follow: true,
@@ -108,9 +107,9 @@ const jsonLd = {
     {
       "@type": "Organization",
       "@id": `${SITE_URL}/#organization`,
-      name: "Bundu Foundation",
+      name: "Mzizi",
       description:
-        "The Bundu Foundation owns and governs Mzizi, a Rust framework for the agentic web. The Fundi console and active testing are operated by Nyuchi.",
+        "Mzizi is an independent research project that owns and governs the Mzizi Rust framework for the agentic web. The Fundi console and active testing are operated by Nyuchi.",
       sameAs: ["https://github.com/mzizi-dev"],
     },
     {

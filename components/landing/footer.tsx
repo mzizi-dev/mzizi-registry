@@ -156,8 +156,8 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <NyuchiLogo size={28} showWordmark suffix="mzizi" />
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Mzizi — a Rust framework for the agentic web. A research project of the Bundu
-              Foundation (the framework is Foundation IP); the Fundi console is owned and operated
+              Mzizi — a Rust framework for the agentic web. An independent research
+              project (the framework is Mzizi IP); the Fundi console is owned and operated
               by Nyuchi. Built on the Seven African Minerals palette.
             </p>
             <div className="flex items-center gap-2 pt-1" aria-label="Seven African Minerals">
