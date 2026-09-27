@@ -1,6 +1,6 @@
 // NYUCHI AI CONTEXT — N10: Documentation Outlier
 //
-// Generates context windows for AI assistants working on the Nyuchi
+// Generates context windows for AI assistants working on the Mzizi
 // Design System. This lib is framework-agnostic — it exports pure
 // TypeScript functions that produce strings. No React, no Svelte.
 //
@@ -29,7 +29,7 @@ export interface AIContextOptions {
 
 // The full ecosystem model — never hardcoded axis names or L-refs
 const ECOSYSTEM_MODEL = `
-## Nyuchi Design System — 3D Ecosystem Model
+## Mzizi Design System — 3D Ecosystem Model
 
 The ecosystem uses a 3D node model, not a flat stack. Every component
 belongs to exactly one node. Nodes are organised on four axes:
@@ -79,7 +79,7 @@ export function generateAIContext(options: AIContextOptions = {}): string {
   const parts: string[] = []
 
   if (includeArchitecture) {
-    parts.push("# Nyuchi Design System")
+    parts.push("# Mzizi Design System")
     parts.push("")
 
     if (counts) {

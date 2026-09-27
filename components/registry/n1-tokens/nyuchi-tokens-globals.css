@@ -787,7 +787,7 @@
  * ════════════════════════════════════════════════════════════════════════════ */
 
 /* mzizi — gold.
- * app/globals.css:256 — "Per-brand accent — nyuchi = gold"; mzizi.dev is a nyuchi-operated portal. No `mzizi` ecosystem record in /v1/brand. */
+ * app/globals.css:256 — "Per-brand accent — nyuchi = gold"; mzizi.dev carries the gold accent. No `mzizi` ecosystem record in /v1/brand. */
 [data-brand="mzizi"] {
   --primary: var(--mineral-gold-aa);
   --ring: var(--mineral-cobalt-aa);
