@@ -54,4 +54,5 @@ consts.
 - Registry index: <https://api.mzizi.dev/api/v1/ui>
 - Source: <https://github.com/mzizi-dev/mzizi-registry>
 
-Apache-2.0. Mzizi is an open-architecture project, developed and operated by Mzizi.
+Apache-2.0. Mzizi is an open-architecture project of the Bundu Foundation, operated and
+developed by Nyuchi.

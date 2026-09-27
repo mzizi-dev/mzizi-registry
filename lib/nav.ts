@@ -22,7 +22,7 @@ import {
 //   Corpus        — the benchmark corpus: the fixed component set the
 //                   framework is measured against, its tokens, its playground
 //   Agent tooling — the agent-facing surface: tools, skills, the CLI
-//   Doctrine      — Ubuntu, the Mzizi research ethos
+//   Doctrine      — Ubuntu, the Bundu Foundation research ethos
 //   Releases      — the node-aware corpus changelog
 //   Documentation — external link to the Mintlify docs site
 //

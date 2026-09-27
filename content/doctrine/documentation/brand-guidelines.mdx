@@ -5,7 +5,7 @@ author: "nyuchi-team"
 category: "brand"
 createdAt: "2026-04-14T04:34:29.591833+00:00"
 currentVersion: 2
-description: "Mzizi brand guidelines — the seven African minerals (role + family), typography, radius, touch targets, motion."
+description: "Nyuchi brand guidelines — the seven African minerals (role + family), typography, radius, touch targets, motion."
 dnaRole: "documentation"
 doctrineVersion: "4.1.7"
 keywords:
@@ -36,7 +36,7 @@ updatedAt: "2026-07-07T21:58:24.72058+00:00"
 version: "2.2"
 ---
 
-# Mzizi Brand Guidelines
+# Nyuchi Brand Guidelines
 
 ## Philosophy
 
@@ -102,7 +102,7 @@ All visual design values live in dedicated database tables under the `brand_*` p
 
 ### Density tokens
 
-- `styling-density` — three tiers (compact for desktop dashboards, comfortable as the Mzizi default for mobile/tablet, spacious for hero and landing surfaces). Each tier references other token tables by name (spacing_component, touch_target, icon_size, body_type, heading_type, radius_card) rather than hardcoding numeric values
+- `styling-density` — three tiers (compact for desktop dashboards, comfortable as the Nyuchi default for mobile/tablet, spacious for hero and landing surfaces). Each tier references other token tables by name (spacing_component, touch_target, icon_size, body_type, heading_type, radius_card) rather than hardcoding numeric values
 - `styling-density-breakpoints` — viewport-to-default-density mapping that determines which tier loads at which screen size
 
 ### Accessibility validation
@@ -133,14 +133,14 @@ Lowercase wordmarks (mukoko, nyuchi, shamwari, bundu, nhimbe) are reserved for s
 
 ## Touch Targets
 
-Minimum 44px is the WCAG 2.5.5 absolute floor. 48px is the Material Design and Android default. The Mzizi default is the **comfortable** tier in `styling-touch-targets` — 48px minimum with 56px on primary CTAs. The **generous** tier (56-64px) is used for hero surfaces and major mobile actions. Never go below the **minimum** tier (44px).
+Minimum 44px is the WCAG 2.5.5 absolute floor. 48px is the Material Design and Android default. The Nyuchi default is the **comfortable** tier in `styling-touch-targets` — 48px minimum with 56px on primary CTAs. The **generous** tier (56-64px) is used for hero surfaces and major mobile actions. Never go below the **minimum** tier (44px).
 
 ## Density
 
 Three tiers in `styling-density`:
 
 - **Compact** — desktop dashboards, admin tables, power-user tools
-- **Comfortable** (Mzizi default) — phones, tablets, general consumer surfaces
+- **Comfortable** (Nyuchi default) — phones, tablets, general consumer surfaces
 - **Spacious** — landing pages, marketing surfaces, onboarding, long-form reading
 
 Each tier composes other tokens by reference rather than duplicating values. The `styling-density-breakpoints` table maps viewport sizes to default density tiers so the right tier loads automatically.
