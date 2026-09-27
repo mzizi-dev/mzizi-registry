@@ -239,5 +239,5 @@ developed by [Nyuchi Africa (PVT) Ltd](https://nyuchi.com). It is **not** a Nyuc
 Nyuchi is the operator, Mzizi is the governance body. Anyone in the bundu ecosystem can
 consume the registry; contribution and direction-setting flow through Mzizi.
 
-Licensed under the [Apache License 2.0](LICENSE). © Mzizi, operated by Nyuchi Africa (PVT)
-Ltd. See [NOTICE](NOTICE) for attribution.
+Licensed under the [Apache License 2.0](LICENSE). © Bundu Foundation. Mzizi is operated by
+Nyuchi Africa (PVT) Ltd. See [NOTICE](NOTICE) for attribution.
