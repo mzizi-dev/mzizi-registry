@@ -20,8 +20,8 @@ use std::path::PathBuf;
 
 use mzizi_ui::{
     AvatarSize, BadgeVariant, ButtonSize, ButtonVariant, SeparatorOrientation, avatar_variants,
-    badge_variants, button_variants, input_variants, label_variants, progress_variants,
-    separator_variants,
+    badge_variants, button_variants, chart_loading_variants, chart_variants, input_variants,
+    label_variants, progress_variants, separator_variants,
 };
 
 /// Read a registry component's TypeScript source.
@@ -190,6 +190,7 @@ fn every_data_slot_the_rust_emits_exists_in_the_typescript() {
                 "avatar-group-count",
             ][..],
         ),
+        ("n2-primitives", "chart", &["chart"][..]),
     ] {
         let ts = tsx(node_dir, name);
         for slot in slots {
@@ -340,4 +341,15 @@ fn avatar_fallback_and_badge_classes_match_the_typescript() {
     }
     assert!(ts.contains("group-data-[size=sm]/avatar:size-2"));
     assert!(ts.contains("group-has-data-[size=lg]/avatar-group:size-10"));
+}
+
+#[test]
+fn chart_classes_match_the_typescript() {
+    let ts = tsx("n2-primitives", "chart");
+    assert_classes_present(&chart_variants(""), &ts, "chart/container");
+    assert_classes_present(&chart_loading_variants(""), &ts, "chart/loading");
+    // The `data-portal` attribute is on the loading branch only in the TypeScript — an
+    // asymmetry already present there, not something to reconcile quietly (rule 1: match
+    // the contract, not a guess at what it "should" be).
+    assert!(ts.contains("data-portal=\"https://mzizi.dev/components/chart\""));
 }
