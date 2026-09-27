@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 /* ═══════════════════════════════════════════════════════════════
    NYUCHI TRUST GATE — Layer 4 Safety & Trust
@@ -35,7 +35,7 @@ const IMPROVEMENT_ACTIONS: TrustAction[] = [
   },
 ]
 
-interface NyuchiTrustGateProps {
+interface MziziTrustGateProps {
   children: React.ReactNode
   requiredScore: number
   userScore: number
@@ -46,7 +46,7 @@ interface NyuchiTrustGateProps {
   className?: string
 }
 
-export function NyuchiTrustGate({
+export function MziziTrustGate({
   children,
   requiredScore,
   userScore,
@@ -55,8 +55,8 @@ export function NyuchiTrustGate({
   onImprove,
   loading = false,
   className,
-}: NyuchiTrustGateProps) {
-  const { log, motion } = useNyuchiHarness("trust-gate")
+}: MziziTrustGateProps) {
+  const { log, motion } = useMziziHarness("trust-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -77,8 +77,8 @@ export function NyuchiTrustGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-trust-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-trust-gate"
+        data-slot="mzizi-trust-gate"
+        data-portal="https://mzizi.dev/components/mzizi-trust-gate"
         data-loading
         role="status"
         className="h-40 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -90,7 +90,7 @@ export function NyuchiTrustGate({
 
   return (
     <div
-      data-slot="nyuchi-trust-gate"
+      data-slot="mzizi-trust-gate"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -176,4 +176,4 @@ export function NyuchiTrustGate({
   )
 }
 
-export type { NyuchiTrustGateProps }
+export type { MziziTrustGateProps }

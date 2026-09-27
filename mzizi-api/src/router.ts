@@ -14,6 +14,7 @@
  */
 
 import { ROUTES } from "./routes.generated"
+import { renamedComponentPath } from "@/lib/component-renames"
 
 /**
  * A Next route module, seen from the router: HTTP-method exports plus whatever
@@ -124,6 +125,19 @@ const JSON_HEADERS = {
  */
 export async function handle(request: Request): Promise<Response> {
   const url = new URL(request.url)
+
+  // A renamed component (`nyuchi-*` → `mzizi-*`) answers its old URL with a permanent
+  // redirect to the new one, in the same path shape the caller used (`/v1/...` or
+  // `/api/v1/...`), so existing links and `npx shadcn add` commands keep resolving.
+  const renamed = renamedComponentPath(url.pathname)
+  if (renamed) {
+    const location = new URL(renamed + url.search, url)
+    return new Response(null, {
+      status: 308,
+      headers: { location: location.toString(), "access-control-allow-origin": "*" },
+    })
+  }
+
   const path = normalisePath(url.pathname)
   const found = match(path)
 

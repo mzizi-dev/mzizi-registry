@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type ServiceStatus = "operational" | "degraded" | "outage" | "maintenance" | "unknown"
 interface ServiceHealth {
@@ -19,7 +19,7 @@ const STATUS_CONFIG: Record<ServiceStatus, { color: string; label: string }> = {
   unknown: { color: "var(--color-muted-foreground)", label: "Unknown" },
 }
 
-interface NyuchiPlatformHealthProps {
+interface MziziPlatformHealthProps {
   services: ServiceHealth[]
   title?: string
   compact?: boolean
@@ -27,14 +27,14 @@ interface NyuchiPlatformHealthProps {
   className?: string
 }
 
-export function NyuchiPlatformHealth({
+export function MziziPlatformHealth({
   services,
   title = "Platform Status",
   compact = false,
   loading = false,
   className,
-}: NyuchiPlatformHealthProps) {
-  const { motion } = useNyuchiHarness("platform-health")
+}: MziziPlatformHealthProps) {
+  const { motion } = useMziziHarness("platform-health")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -47,8 +47,8 @@ export function NyuchiPlatformHealth({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-platform-health"
-        data-portal="https://mzizi.dev/components/nyuchi-platform-health"
+        data-slot="mzizi-platform-health"
+        data-portal="https://mzizi.dev/components/mzizi-platform-health"
         data-loading
         role="status"
         className="h-40 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -64,7 +64,7 @@ export function NyuchiPlatformHealth({
 
   return (
     <div
-      data-slot="nyuchi-platform-health"
+      data-slot="mzizi-platform-health"
       role="region"
       aria-label={title}
       style={animStyle}
@@ -114,4 +114,4 @@ export function NyuchiPlatformHealth({
     </div>
   )
 }
-export type { ServiceStatus, ServiceHealth, NyuchiPlatformHealthProps }
+export type { ServiceStatus, ServiceHealth, MziziPlatformHealthProps }

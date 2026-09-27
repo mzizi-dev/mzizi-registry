@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface PrefetchConfig {
   url?: string
@@ -8,7 +8,7 @@ interface PrefetchConfig {
   priority?: "high" | "low"
 }
 
-interface NyuchiPrefetchBoundaryProps {
+interface MziziPrefetchBoundaryProps {
   children: React.ReactNode
   prefetches: PrefetchConfig[]
   rootMargin?: string
@@ -29,14 +29,14 @@ interface NavigatorWithConnection extends Navigator {
   }
 }
 
-export function NyuchiPrefetchBoundary({
+export function MziziPrefetchBoundary({
   children,
   prefetches,
   rootMargin = "500px",
   respectDataSaver = true,
   name = "prefetch",
-}: NyuchiPrefetchBoundaryProps) {
-  const { log } = useNyuchiHarness(`prefetch-${name}`)
+}: MziziPrefetchBoundaryProps) {
+  const { log } = useMziziHarness(`prefetch-${name}`)
   const sentinelRef = React.useRef<HTMLDivElement>(null)
   const triggered = React.useRef(false)
 
@@ -82,12 +82,12 @@ export function NyuchiPrefetchBoundary({
       {children}
       <div
         ref={sentinelRef}
-        data-slot="nyuchi-prefetch-boundary"
-        data-portal="https://mzizi.dev/components/nyuchi-prefetch-boundary"
+        data-slot="mzizi-prefetch-boundary"
+        data-portal="https://mzizi.dev/components/mzizi-prefetch-boundary"
         aria-hidden="true"
         className="h-0 w-0 overflow-hidden"
       />
     </>
   )
 }
-export type { PrefetchConfig, NyuchiPrefetchBoundaryProps }
+export type { PrefetchConfig, MziziPrefetchBoundaryProps }

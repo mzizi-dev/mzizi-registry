@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface KPICard {
   label: string
@@ -30,7 +30,7 @@ export function AnalyticsDashboardPage({
   loading = false,
   className,
 }: AnalyticsDashboardPageProps) {
-  const { motion } = useNyuchiHarness("analytics-dashboard-page")
+  const { motion } = useMziziHarness("analytics-dashboard-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

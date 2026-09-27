@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface LearningPageProps {
   courseName?: string
   progress?: number
@@ -20,7 +20,7 @@ export function LearningPage({
   loading = false,
   className,
 }: LearningPageProps) {
-  const { motion } = useNyuchiHarness("learning-page")
+  const { motion } = useMziziHarness("learning-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

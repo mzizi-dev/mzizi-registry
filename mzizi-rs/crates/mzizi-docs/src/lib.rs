@@ -16,18 +16,18 @@
 //!
 //! N10's components describe the ecosystem, so a stale literal here does not
 //! merely go out of date — it becomes what the system TELLS people about itself.
-//! `nyuchi-ai-context` is the sharp case: it opens by forbidding hardcoded counts
+//! `mzizi-ai-context` is the sharp case: it opens by forbidding hardcoded counts
 //! and then hardcodes the entire node list, which duly went stale at N10 while
 //! the node set ran on to N12. Each port turns those literals into parameters.
 
-#[path = "generated/nyuchi-ai-context.rs"]
-pub mod nyuchi_ai_context;
+#[path = "generated/mzizi-ai-context.rs"]
+pub mod mzizi_ai_context;
 
-#[path = "generated/nyuchi-docs-api.rs"]
-pub mod nyuchi_docs_api;
+#[path = "generated/mzizi-docs-api.rs"]
+pub mod mzizi_docs_api;
 
-#[path = "generated/nyuchi-changelog-renderer.rs"]
-pub mod nyuchi_changelog_renderer;
+#[path = "generated/mzizi-changelog-renderer.rs"]
+pub mod mzizi_changelog_renderer;
 
-#[path = "generated/nyuchi-docs-engine.rs"]
-pub mod nyuchi_docs_engine;
+#[path = "generated/mzizi-docs-engine.rs"]
+pub mod mzizi_docs_engine;

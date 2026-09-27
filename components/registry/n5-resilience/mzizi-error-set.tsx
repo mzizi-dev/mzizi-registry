@@ -62,8 +62,8 @@ function ErrorCard({
 
   return (
     <div
-      data-slot="nyuchi-error-card"
-      data-portal="https://mzizi.dev/components/nyuchi-error-card"
+      data-slot="mzizi-error-card"
+      data-portal="https://mzizi.dev/components/mzizi-error-card"
       role="alert"
       className={cn(
         "flex items-center gap-3 rounded-[var(--radius-card,14px)] border-l-4 bg-card px-4 py-3 ring-1 ring-foreground/10",
@@ -111,7 +111,7 @@ function NotFound({
 }: NotFoundProps) {
   return (
     <div
-      data-slot="nyuchi-not-found"
+      data-slot="mzizi-not-found"
       className={cn(
         "flex min-h-[60vh] flex-col items-center justify-center px-6 text-center",
         className
@@ -188,7 +188,7 @@ function OfflineBanner({
 
   return (
     <div
-      data-slot="nyuchi-offline-banner"
+      data-slot="mzizi-offline-banner"
       className={cn(
         "flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium",
         isOnline
@@ -260,7 +260,7 @@ function PermissionGate({
 
   return (
     <div
-      data-slot="nyuchi-permission-gate"
+      data-slot="mzizi-permission-gate"
       className={cn(
         "flex flex-col items-center rounded-[var(--radius-card,14px)] bg-card px-6 py-8 text-center ring-1 ring-foreground/10",
         className
@@ -313,7 +313,7 @@ function SectionFallback({
 }: SectionFallbackProps) {
   return (
     <div
-      data-slot="nyuchi-section-fallback"
+      data-slot="mzizi-section-fallback"
       className={cn(
         "flex flex-col items-center rounded-[var(--radius-card,14px)] bg-card px-6 py-6 text-center ring-1 ring-foreground/10",
         className

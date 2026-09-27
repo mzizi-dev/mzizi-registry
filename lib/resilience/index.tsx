@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
    breaks, the system degrades gracefully, logs the failure,
    tracks the pattern, and self-heals when the issue resolves.
    
-   EVERY brand component renders inside a NyuchiSection. This is
+   EVERY brand component renders inside a MziziSection. This is
    non-negotiable. The section boundary provides:
    
    1. ERROR ISOLATION — React error boundary catches render crashes.
@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils"
       trace, recovery attempts — all captured automatically.
    
    4. HEALTH TRACKING — Each section reports its health status
-      (healthy/degraded/error) to the NyuchiHealthMonitor singleton.
+      (healthy/degraded/error) to the MziziHealthMonitor singleton.
       The monitor aggregates across all sections and can report to
       system.service_health in nyuchi_platform_db.
    
@@ -61,7 +61,7 @@ export interface SectionHealthReport {
 }
 
 // ─── HEALTH MONITOR SINGLETON ──────────────────────────────
-// Aggregates health from all NyuchiSections on the page.
+// Aggregates health from all MziziSections on the page.
 // This is the central nervous system of the UI.
 
 class HealthMonitor {
@@ -190,7 +190,7 @@ export function useHealthMonitor() {
 // The mandatory wrapper for every brand component section.
 // Provides error isolation, loading state, and health reporting.
 
-interface NyuchiSectionProps {
+interface MziziSectionProps {
   /** Unique section name for logging and health tracking */
   name: string
   /** Section content */
@@ -216,10 +216,10 @@ interface SectionState {
   retryCount: number
 }
 
-class NyuchiSectionBoundary extends React.Component<NyuchiSectionProps, SectionState> {
+class MziziSectionBoundary extends React.Component<MziziSectionProps, SectionState> {
   private renderStart = 0
 
-  constructor(props: NyuchiSectionProps) {
+  constructor(props: MziziSectionProps) {
     super(props)
     this.state = { hasError: false, error: null, retryCount: 0 }
   }
@@ -273,8 +273,8 @@ class NyuchiSectionBoundary extends React.Component<NyuchiSectionProps, SectionS
       healthMonitor.report(name, { status: "loading" })
       return (
         <div
-          data-slot="nyuchi-section"
-          data-portal="https://mzizi.dev/components/nyuchi-section"
+          data-slot="mzizi-section"
+          data-portal="https://mzizi.dev/components/mzizi-section"
           data-section={name}
           data-status="loading"
           className={className}
@@ -298,7 +298,7 @@ class NyuchiSectionBoundary extends React.Component<NyuchiSectionProps, SectionS
 
       return (
         <div
-          data-slot="nyuchi-section"
+          data-slot="mzizi-section"
           data-section={name}
           data-status="error"
           data-retry-count={this.state.retryCount}
@@ -330,7 +330,7 @@ class NyuchiSectionBoundary extends React.Component<NyuchiSectionProps, SectionS
     // Healthy state — render children with tracking
     return (
       <div
-        data-slot="nyuchi-section"
+        data-slot="mzizi-section"
         data-section={name}
         data-status="healthy"
         className={className}
@@ -341,9 +341,9 @@ class NyuchiSectionBoundary extends React.Component<NyuchiSectionProps, SectionS
   }
 }
 
-// ─── Functional wrapper for NyuchiSection ──────────────────
-export function NyuchiSection(props: NyuchiSectionProps) {
-  return <NyuchiSectionBoundary {...props} />
+// ─── Functional wrapper for MziziSection ──────────────────
+export function MziziSection(props: MziziSectionProps) {
+  return <MziziSectionBoundary {...props} />
 }
 
 // ─── RESILIENT FETCH ───────────────────────────────────────
@@ -440,11 +440,11 @@ export async function resilientFetch<T>({
 // ─── HEALTH STATUS PANEL (for admin/debug views) ───────────
 // Shows the health of all sections on the page.
 
-interface NyuchiHealthPanelProps {
+interface MziziHealthPanelProps {
   className?: string
 }
 
-export function NyuchiHealthPanel({ className }: NyuchiHealthPanelProps) {
+export function MziziHealthPanel({ className }: MziziHealthPanelProps) {
   const { reports, systemHealth } = useHealthMonitor()
   const entries = Array.from(reports.entries())
 
@@ -461,7 +461,7 @@ export function NyuchiHealthPanel({ className }: NyuchiHealthPanelProps) {
 
   return (
     <div
-      data-slot="nyuchi-health-panel"
+      data-slot="mzizi-health-panel"
       className={cn(
         "rounded-[var(--radius-card,14px)] bg-card p-4 ring-1 ring-foreground/10",
         className
@@ -526,8 +526,8 @@ export function NyuchiHealthPanel({ className }: NyuchiHealthPanelProps) {
 }
 
 export type {
-  NyuchiSectionProps,
+  MziziSectionProps,
   ResilientFetchOptions,
   ResilientFetchResult,
-  NyuchiHealthPanelProps,
+  MziziHealthPanelProps,
 }

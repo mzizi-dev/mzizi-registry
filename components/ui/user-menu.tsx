@@ -1,6 +1,6 @@
 "use client"
 
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 import * as React from "react"
 import { LogOut, Settings, User, ChevronsUpDown } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -59,7 +59,7 @@ function UserMenu({
   // Harness pre-wires observability + motion + a11y; user-menu's current
   // render path doesn't consume those surfaces yet, but keeping the hook
   // call registers the component with the global health monitor.
-  useNyuchiHarness("user-menu")
+  useMziziHarness("user-menu")
   const defaultItems: UserMenuItem[] = [
     { label: "Profile", icon: User, href: "/profile" },
     { label: "Settings", icon: Settings, href: "/settings" },

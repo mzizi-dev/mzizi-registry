@@ -4,8 +4,8 @@ The client-side self-healing rung from the [Mzizi](https://mzizi.dev) component 
 **rung N9, fundi** — the rung whose claim is that failure is a learning event rather than a
 user-facing incident.
 
-Three modules: `nyuchi_fundi` decides whether a failure is worth filing, `nyuchi_fundi_reporter`
-shapes the issue, and `nyuchi_fundi_learning` tracks which fixes have worked before.
+Three modules: `mzizi_fundi` decides whether a failure is worth filing, `mzizi_fundi_reporter`
+shapes the issue, and `mzizi_fundi_learning` tracks which fixes have worked before.
 
 ```toml
 [dependencies]

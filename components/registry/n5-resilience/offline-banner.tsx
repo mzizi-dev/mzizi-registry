@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 /* ═══════════════════════════════════════════════════════════════
    OFFLINE BANNER — Layer 5 Resilience
@@ -51,7 +51,7 @@ export function OfflineBanner({
   alwaysShow = false,
   className,
 }: OfflineBannerProps) {
-  const { log, motion } = useNyuchiHarness("offline-banner")
+  const { log, motion } = useMziziHarness("offline-banner")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

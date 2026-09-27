@@ -4499,10 +4499,399 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-a11y": [
+    {
+      "name": "active",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "restoreFocus",
+      "type": "boolean",
+      "required": false
+    }
+  ],
   "mzizi-abr-content": [
     {
       "name": "override",
       "type": "ContentQuality",
+      "required": false
+    }
+  ],
+  "mzizi-action-sheet": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ActionItem[]",
+      "required": true
+    }
+  ],
+  "mzizi-alert-banner": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "severity",
+      "type": "\"watch\" | \"moderate\" | \"severe\"",
+      "required": true
+    },
+    {
+      "name": "headline",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "areas",
+      "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "validFrom",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "validUntil",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "instructions",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onDismiss",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onDetails",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-application-tracker": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "jobTitle",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "company",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "stages",
+      "type": "ApplicationStage[]",
+      "required": true
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-article-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "excerpt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "sourceName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "sourceVerified",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "authorName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "publishedAt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "readTime",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "factCheckStatus",
+      "type": "FactCheckStatus",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"row\" | \"compact\" | \"hero\"",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-auth-card": [
+    {
+      "name": "mode",
+      "type": "AuthMode",
+      "required": false
+    },
+    {
+      "name": "surface",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "providers",
+      "type": "AuthProvider[]",
+      "required": false
+    },
+    {
+      "name": "onSubmit",
+      "type": "(input: { mode: AuthMode; email: string; name?: string }) => Promise<void>",
+      "required": true
+    },
+    {
+      "name": "onProvider",
+      "type": "(providerId: string) => void",
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "string | null",
+      "required": false
+    }
+  ],
+  "mzizi-auth-layout": [
+    {
+      "name": "variant",
+      "type": "\"login\" | \"signup\" | \"onboarding\" | \"reset\" | \"verify\"",
+      "required": false
+    },
+    {
+      "name": "showBackground",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "showLogo",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "showLanguage",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "showLegal",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "languages",
+      "type": "{ code: string; label: string }[]",
+      "required": false
+    },
+    {
+      "name": "onLanguageChange",
+      "type": "(code: string) => void",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-avatar-stack": [
+    {
+      "name": "people",
+      "type": "AvatarPerson[]",
+      "required": true
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "total",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\"",
+      "required": false
+    }
+  ],
+  "mzizi-badge-display": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "badges",
+      "type": "BadgeItem[]",
+      "required": true
+    },
+    {
+      "name": "layout",
+      "type": "\"grid\" | \"strip\"",
+      "required": false
+    },
+    {
+      "name": "maxVisible",
+      "type": "number",
+      "required": false
+    }
+  ],
+  "mzizi-balance-display": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "balance",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "fiatEquivalent",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSend",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onReceive",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onSwap",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-bottom-nav": [
+    {
+      "name": "items",
+      "type": "BottomNavItem[]",
+      "required": true
+    },
+    {
+      "name": "activeId",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "mzizi-calendar": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "events",
+      "type": "CalendarEvent[]",
+      "required": false
+    },
+    {
+      "name": "selectedDate",
+      "type": "Date",
+      "required": false
+    },
+    {
+      "name": "onDateSelect",
+      "type": "(date: Date) => void",
+      "required": false
+    },
+    {
+      "name": "onMonthChange",
+      "type": "(month: Date) => void",
+      "required": false
+    },
+    {
+      "name": "renderAgenda",
+      "type": "(date: Date, events: CalendarEvent[]) => React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "defaultMonth",
+      "type": "Date",
       "required": false
     }
   ],
@@ -4565,10 +4954,185 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-changelog-renderer": [
+    {
+      "name": "entries",
+      "type": "ChangelogEntry[]",
+      "required": true
+    }
+  ],
   "mzizi-chaos": [
     {
       "name": "config",
       "type": "Partial<ChaosConfig>",
+      "required": false
+    }
+  ],
+  "mzizi-command-palette": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "required": true
+    },
+    {
+      "name": "items",
+      "type": "CommandItem[]",
+      "required": false
+    },
+    {
+      "name": "recentItems",
+      "type": "CommandItem[]",
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSearch",
+      "type": "(query: string) => void",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-commute-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "origin",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "destination",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "mode",
+      "type": "\"bus\" | \"kombi\" | \"taxi\" | \"walk\" | \"mixed\"",
+      "required": false
+    },
+    {
+      "name": "estimatedDuration",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "nextDeparture",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "frequency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onStart",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-connectivity-bar": [
+    {
+      "name": "state",
+      "type": "ConnectionState",
+      "required": false
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "autoHideOnline",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "autoHideDelay",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-content-composer": [
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "avatarUrl",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "userName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "submitLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSubmit",
+      "type": "(content: string) => void",
+      "required": false
+    },
+    {
+      "name": "onAttachMedia",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onMention",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "submitting",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "showToolbar",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "compact",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -4596,6 +5160,278 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "loading",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-conversation-row": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "avatar",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "lastMessage",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "lastMessageTime",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "unreadCount",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "isOnline",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-cover-header": [
+    {
+      "name": "coverImage",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "avatar",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "avatarShape",
+      "type": "\"circle\" | \"rounded\"",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "badge",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "coverHeight",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "required": false
+    }
+  ],
+  "mzizi-cover-wash-header": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "kicker",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "coverImage",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "coverGradient",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "accent",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mineral",
+      "type": "Mineral",
+      "required": false
+    },
+    {
+      "name": "inheritWash",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "date",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "location",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "host",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-create-listing": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "selected",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "gradients",
+      "type": "[string, string][]",
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "(index: number) => void",
+      "required": true
+    },
+    {
+      "name": "onImageTap",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "coverImage",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "mzizi-create-page": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onSubmit",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "submitLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "submitting",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "currentStep",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "totalSteps",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "coverSlot",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-credential-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "issuingBody",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "credentialType",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "CredentialStatus",
+      "required": false
+    },
+    {
+      "name": "issuedDate",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "expiryDate",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "licenseNumber",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "verifiedByPlatform",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
       "required": false
     }
   ],
@@ -4653,6 +5489,194 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-dashboard-layout": [
+    {
+      "name": "appName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "sidebarSections",
+      "type": "SidebarSection[]",
+      "required": true
+    },
+    {
+      "name": "navItems",
+      "type": "NavItem[]",
+      "required": false
+    },
+    {
+      "name": "headerActions",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "bottomNav",
+      "type": "BottomNavItem[]",
+      "required": false
+    }
+  ],
+  "mzizi-deep-link-handler": [
+    {
+      "name": "routes",
+      "type": "DeepLinkRoute[]",
+      "required": true
+    },
+    {
+      "name": "onUnmatched",
+      "type": "(url: string) => void",
+      "required": false
+    }
+  ],
+  "mzizi-detail-layout": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "metadata",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "aside",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "heroImage",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "heroGradient",
+      "type": "[string, string]",
+      "required": false
+    },
+    {
+      "name": "heroMinHeight",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "showHeroActions",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onBack",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onLike",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onShare",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "liked",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "bottomCta",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "backHref",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "backLabel",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "mzizi-detail-page": [
+    {
+      "name": "coverUrl",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "coverGradient",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onBack",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onShare",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onSave",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "saved",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "ctaLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "ctaAction",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "secondaryLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "secondaryAction",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "relatedTitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "relatedItems",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
   "mzizi-did-gate": [
     {
       "name": "credential",
@@ -4680,6 +5704,139 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-docs-engine": [
+    {
+      "name": "pages",
+      "type": "DocPage[]",
+      "required": true
+    },
+    {
+      "name": "currentSlug",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onNavigate",
+      "type": "(slug: string) => void",
+      "required": false
+    },
+    {
+      "name": "search",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSearch",
+      "type": "(query: string) => void",
+      "required": false
+    },
+    {
+      "name": "renderContent",
+      "type": "(content: string, page: DocPage) => React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-empty-screen": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "{ label: string; onClick: () => void }",
+      "required": false
+    }
+  ],
+  "mzizi-empty-state": [
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "actionLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onAction",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "secondaryLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSecondary",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "compact",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-error-screen": [
+    {
+      "name": "code",
+      "type": "404 | 500 | 503 | number",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "showRetry",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "showHome",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onHome",
+      "type": "() => void",
+      "required": false
+    }
+  ],
   "mzizi-error-set": [
     {
       "name": "title",
@@ -4699,6 +5856,55 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "mineral",
       "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
+      "required": false
+    }
+  ],
+  "mzizi-escalation-card": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "options",
+      "type": "EscalationOption[]",
+      "required": true
+    },
+    {
+      "name": "onChoose",
+      "type": "(id: string) => Promise<void> | void",
+      "required": true
+    }
+  ],
+  "mzizi-event-card": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "time",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "location",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mineral",
+      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\"",
       "required": false
     }
   ],
@@ -4729,6 +5935,191 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-featured-card": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "badge",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "mzizi-footer": [
+    {
+      "name": "sections",
+      "type": "FooterSection[]",
+      "required": false
+    },
+    {
+      "name": "companyName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "tagline",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "showMineralStrip",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-forecast-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "location",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "temperature",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "unit",
+      "type": "\"C\" | \"F\"",
+      "required": false
+    },
+    {
+      "name": "condition",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "humidity",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "windSpeed",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "feelsLike",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "forecast",
+      "type": "DayForecast[]",
+      "required": false
+    },
+    {
+      "name": "farmingAdvice",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "lastUpdated",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-fundi": [
+    {
+      "name": "executors",
+      "type": "RemediationExecutors",
+      "required": true
+    },
+    {
+      "name": "autoHeal",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onPlanCreated",
+      "type": "(plan: HealingPlan) => void",
+      "required": false
+    },
+    {
+      "name": "onHealComplete",
+      "type": "(result: HealingResult) => void",
+      "required": false
+    }
+  ],
+  "mzizi-gauge-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "percent",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "context",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "contextColor",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "strokeColor",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mineral",
+      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\"",
+      "required": false
+    }
+  ],
   "mzizi-geo-gate": [
     {
       "name": "restriction",
@@ -4751,6 +6142,567 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-grid": [
+    {
+      "name": "cols",
+      "type": "{ mobile?: number; tablet?: number; desktop?: number; wide?: number }",
+      "required": false
+    },
+    {
+      "name": "gap",
+      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\"",
+      "required": false
+    },
+    {
+      "name": "maxWidth",
+      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | \"full\"",
+      "required": false
+    }
+  ],
+  "mzizi-group-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "memberCount",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "members",
+      "type": "CircleMember[]",
+      "required": false
+    },
+    {
+      "name": "topics",
+      "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "joined",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "activity",
+      "type": "\"quiet\" | \"active\" | \"buzzing\"",
+      "required": false
+    },
+    {
+      "name": "privacy",
+      "type": "\"open\" | \"closed\" | \"secret\"",
+      "required": false
+    },
+    {
+      "name": "coverUrl",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onJoin",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-harness": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "skeleton",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "fallback",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-harness-prewire": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "skeleton",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "fallback",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "critical",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "animate",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-header": [
+    {
+      "name": "appName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "navItems",
+      "type": "NavItem[]",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "pillActions",
+      "type": "PillAction[]",
+      "required": false
+    },
+    {
+      "name": "scrolled",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "scrollTitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "showBack",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onBack",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-health-dashboard": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "vitals",
+      "type": "Vital[]",
+      "required": false
+    },
+    {
+      "name": "appointments",
+      "type": "Appointment[]",
+      "required": false
+    },
+    {
+      "name": "medications",
+      "type": "Medication[]",
+      "required": false
+    },
+    {
+      "name": "lastSync",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onViewAll",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-hero-stat": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "unit",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "condition",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "secondaryStats",
+      "type": "SecondaryStat[]",
+      "required": false
+    },
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "onShare",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-icons": [
+    {
+      "name": "name",
+      "type": "SemanticIconName",
+      "required": true
+    },
+    {
+      "name": "size",
+      "type": "IconSize",
+      "required": false
+    },
+    {
+      "name": "sizeOverride",
+      "type": "number",
+      "required": false
+    }
+  ],
+  "mzizi-job-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "company",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "companyLogo",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "companyVerified",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "location",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "remote",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "salary",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "\"full-time\" | \"part-time\" | \"contract\" | \"gig\" | \"internship\"",
+      "required": false
+    },
+    {
+      "name": "skills",
+      "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "postedAt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "matchScore",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "onApply",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onSave",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-layout": [
+    {
+      "name": "columns",
+      "type": "1 | 2 | 3 | 4",
+      "required": false
+    },
+    {
+      "name": "gap",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "required": false
+    },
+    {
+      "name": "maxWidth",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "mzizi-leaderboard-row": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "position",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "avatar",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "score",
+      "type": "number | string",
+      "required": true
+    },
+    {
+      "name": "trend",
+      "type": "\"up\" | \"down\" | \"same\"",
+      "required": false
+    },
+    {
+      "name": "trendPositions",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "isCurrentUser",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "verifiedBadge",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-lesson-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "language",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "targetLanguage",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "progress",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "totalLessons",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "completedLessons",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "streak",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "difficulty",
+      "type": "\"beginner\" | \"intermediate\" | \"advanced\"",
+      "required": false
+    },
+    {
+      "name": "estimatedMinutes",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "locked",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onStart",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-listing-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mineral",
+      "type": "Mineral",
+      "required": false
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "meta",
+      "type": "MukokoListingMeta[]",
+      "required": false
+    },
+    {
+      "name": "price",
+      "type": "string | number",
+      "required": false
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "trailing",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "heroGradient",
+      "type": "[string, string]",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "index",
+      "type": "number",
+      "required": false
+    }
+  ],
   "mzizi-load-shedder": [
     {
       "name": "priority",
@@ -4765,6 +6717,203 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "silent",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-locale": [
+    {
+      "name": "defaultLocale",
+      "type": "LocaleCode",
+      "required": false
+    },
+    {
+      "name": "storageKey",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "mzizi-media": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "images",
+      "type": "GalleryImage[]",
+      "required": true
+    },
+    {
+      "name": "maxVisible",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "onImageTap",
+      "type": "(index: number) => void",
+      "required": false
+    }
+  ],
+  "mzizi-message-bubble": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "variant",
+      "type": "BubbleVariant",
+      "required": false
+    },
+    {
+      "name": "timestamp",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "deliveryStatus",
+      "type": "DeliveryStatus",
+      "required": false
+    },
+    {
+      "name": "senderName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "senderAvatar",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "reactions",
+      "type": "{ emoji: string; count: number }[]",
+      "required": false
+    },
+    {
+      "name": "isFirstInGroup",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-meta-tile": [
+    {
+      "name": "icon",
+      "type": "React.ComponentType<{ className?: string; strokeWidth?: number }>",
+      "required": false
+    },
+    {
+      "name": "date",
+      "type": "{ month: string; day: string | number }",
+      "required": false
+    },
+    {
+      "name": "caption",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "primary",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "secondary",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "tint",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "trailing",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-mini-app-runtime": [
+    {
+      "name": "config",
+      "type": "MiniAppConfig",
+      "required": true
+    },
+    {
+      "name": "state",
+      "type": "MiniAppState",
+      "required": false
+    },
+    {
+      "name": "onStateChange",
+      "type": "(state: MiniAppState) => void",
+      "required": false
+    },
+    {
+      "name": "fallback",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-mission-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "pointsReward",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "badgeName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "difficulty",
+      "type": "MissionDifficulty",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "MissionStatus",
+      "required": false
+    },
+    {
+      "name": "progress",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "totalSteps",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "completedSteps",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
       "required": false
     }
   ],
@@ -4800,6 +6949,152 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-notification-center": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "required": true
+    },
+    {
+      "name": "notifications",
+      "type": "Notification[]",
+      "required": false
+    },
+    {
+      "name": "onMarkAllRead",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onDismiss",
+      "type": "(id: string) => void",
+      "required": false
+    },
+    {
+      "name": "emptyMessage",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "mzizi-notification-item": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "NotificationType",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "timestamp",
+      "type": "string | Date",
+      "required": true
+    },
+    {
+      "name": "read",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "actorName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "actorAvatar",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-offer-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "price",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "originalPrice",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "sellerName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "sellerVerified",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "condition",
+      "type": "\"new\" | \"used\" | \"refurbished\"",
+      "required": false
+    },
+    {
+      "name": "mineral",
+      "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
+      "required": false
+    },
+    {
+      "name": "onInquire",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
   "mzizi-offline-gate": [
     {
       "name": "requires",
@@ -4823,6 +7118,199 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-onboarding-step": [
+    {
+      "name": "illustration",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "currentStep",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "totalSteps",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "nextLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "skipLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onNext",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onSkip",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-page": [
+    {
+      "name": "layout",
+      "type": "PageLayout",
+      "required": false
+    },
+    {
+      "name": "seo",
+      "type": "SEOMetadata",
+      "required": false
+    },
+    {
+      "name": "breadcrumbs",
+      "type": "{ label: string; href?: string }[]",
+      "required": false
+    },
+    {
+      "name": "heading",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "subheading",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "showBack",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onBack",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-payment-mandate-card": [
+    {
+      "name": "summary",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "amount",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "intentMandateId",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "cartMandateId",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "handlers",
+      "type": "PaymentHandlerOption[]",
+      "required": true
+    },
+    {
+      "name": "onAuthorize",
+      "type": "(handlerId: string) => Promise<void>",
+      "required": true
+    },
+    {
+      "name": "error",
+      "type": "string | null",
+      "required": false
+    }
+  ],
+  "mzizi-payment-summary": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "items",
+      "type": "LineItem[]",
+      "required": true
+    },
+    {
+      "name": "total",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "paymentMethod",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "escrow",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "confirmLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onConfirm",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "processing",
       "type": "boolean",
       "required": false
     }
@@ -4856,6 +7344,194 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "loading",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-persistent-player": [
+    {
+      "name": "track",
+      "type": "MediaTrack | null",
+      "required": false
+    },
+    {
+      "name": "isPlaying",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "progress",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "onPlay",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onPause",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onExpand",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-phrase-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "phrase",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "translation",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "language",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "targetLanguage",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "pronunciation",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "example",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "exampleTranslation",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mastered",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onPlayAudio",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onPractice",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-place-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "address",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "distance",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "rating",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "reviewCount",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "openNow",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "verificationTier",
+      "type": "PlaceVerification",
+      "required": false
+    },
+    {
+      "name": "mineral",
+      "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"row\" | \"compact\"",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-platform": [
+    {
+      "name": "appName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onDismiss",
+      "type": "() => void",
       "required": false
     }
   ],
@@ -4903,6 +7579,364 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-product-card": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "price",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "originalPrice",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "badge",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "mzizi-product-results": [
+    {
+      "name": "heading",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "results",
+      "type": "ProductResult[]",
+      "required": true
+    },
+    {
+      "name": "onSelect",
+      "type": "(id: string) => void",
+      "required": true
+    }
+  ],
+  "mzizi-profile-block": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "avatar",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "avatarSize",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "accentColor",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "verificationTier",
+      "type": "VerificationTier",
+      "required": false
+    },
+    {
+      "name": "platformStatus",
+      "type": "PlatformStatus",
+      "required": false
+    },
+    {
+      "name": "trustScore",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "ubuntuPoints",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "stats",
+      "type": "ProfileStat[]",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "verifiedBadge",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-profile-header": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "bio",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "avatar",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "coverImage",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "stats",
+      "type": "ProfileStat[]",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-profile-page": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-profile-page-layout": [
+    {
+      "name": "coverUrl",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "avatarUrl",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "verified",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "verificationTier",
+      "type": "0 | 1 | 2 | 3 | 4",
+      "required": false
+    },
+    {
+      "name": "stats",
+      "type": "ProfileStat[]",
+      "required": false
+    },
+    {
+      "name": "tabs",
+      "type": "ProfileTab[]",
+      "required": true
+    },
+    {
+      "name": "activeTab",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onTabChange",
+      "type": "(id: string) => void",
+      "required": false
+    },
+    {
+      "name": "primaryAction",
+      "type": "{ label: string; onClick: () => void }",
+      "required": false
+    },
+    {
+      "name": "secondaryAction",
+      "type": "{ label: string; onClick: () => void }",
+      "required": false
+    },
+    {
+      "name": "onBack",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-profile-settings": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-programme-item": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "time",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "speaker",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "speakerRole",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "duration",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mineral",
+      "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
+      "required": false
+    },
+    {
+      "name": "isActive",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "isLast",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-provider-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "specialty",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "avatarUrl",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "verified",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "verificationTier",
+      "type": "0 | 1 | 2 | 3 | 4",
+      "required": false
+    },
+    {
+      "name": "rating",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "reviewCount",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "telemedicine",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "available",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "nextSlot",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "location",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onBook",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
   "mzizi-rate-gate": [
     {
       "name": "isLimited",
@@ -4935,6 +7969,392 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-registration-card": [
+    {
+      "name": "tiers",
+      "type": "RegistrationTier[]",
+      "required": true
+    },
+    {
+      "name": "selectedTierId",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSelectTier",
+      "type": "(id: string) => void",
+      "required": false
+    },
+    {
+      "name": "quantity",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "min",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "onQuantityChange",
+      "type": "(quantity: number) => void",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "helper",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "ctaLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSubmit",
+      "type": "(payload: { tierId: string | null; quantity: number }) => void",
+      "required": false
+    },
+    {
+      "name": "accent",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-resilience": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "skeleton",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "fallback",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "critical",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onError",
+      "type": "(error: Error) => void",
+      "required": false
+    },
+    {
+      "name": "onRecovery",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-review-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "reviewer",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "avatarUrl",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "verificationTier",
+      "type": "0 | 1 | 2 | 3 | 4",
+      "required": false
+    },
+    {
+      "name": "rating",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "date",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "helpfulCount",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "markedHelpful",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onHelpful",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onReport",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-root-layout": [
+    {
+      "name": "fontClasses",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "defaultLocale",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "enableServiceWorker",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-route-guard": [
+    {
+      "name": "config",
+      "type": "RouteGuardConfig",
+      "required": true
+    },
+    {
+      "name": "isAuthenticated",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "userRole",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "userTier",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "userVerification",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "loadingFallback",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "unauthorizedFallback",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "onRedirect",
+      "type": "(path: string) => void",
+      "required": false
+    }
+  ],
+  "mzizi-route-planner": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "origin",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "destination",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "stops",
+      "type": "RouteStop[]",
+      "required": false
+    },
+    {
+      "name": "mode",
+      "type": "\"bus\" | \"kombi\" | \"taxi\" | \"walk\" | \"mixed\"",
+      "required": false
+    },
+    {
+      "name": "duration",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "distance",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "fare",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "departureTime",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "arrivalTime",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onBook",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onSave",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-rsvp-button": [
+    {
+      "name": "status",
+      "type": "RSVPStatus",
+      "required": false
+    },
+    {
+      "name": "price",
+      "type": "string | number",
+      "required": false
+    },
+    {
+      "name": "spotsRemaining",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onRSVP",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "full",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-search-view": [
+    {
+      "name": "query",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSearch",
+      "type": "(query: string) => void",
+      "required": false
+    },
+    {
+      "name": "activeCategory",
+      "type": "ResultCategory",
+      "required": false
+    },
+    {
+      "name": "onCategoryChange",
+      "type": "(cat: ResultCategory) => void",
+      "required": false
+    },
+    {
+      "name": "results",
+      "type": "SearchResult[]",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onResultClick",
+      "type": "(result: SearchResult) => void",
+      "required": false
+    },
+    {
+      "name": "recentSearches",
+      "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "trending",
+      "type": "string[]",
+      "required": false
+    }
+  ],
   "mzizi-section": [
     {
       "name": "name",
@@ -4957,10 +8377,268 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-settings-page": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "sections",
+      "type": "SettingSection[]",
+      "required": true
+    },
+    {
+      "name": "activeSection",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSectionChange",
+      "type": "(id: string) => void",
+      "required": false
+    }
+  ],
+  "mzizi-share-card": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "imageUrl",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "sourceApp",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": true
+    },
+    {
+      "name": "onCopyLink",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onShareToCampfire",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onNativeShare",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "targets",
+      "type": "ShareTarget[]",
+      "required": false
+    },
+    {
+      "name": "copied",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-sidebar": [
+    {
+      "name": "sections",
+      "type": "SidebarSection[]",
+      "required": true
+    },
+    {
+      "name": "appName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "header",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "collapsible",
+      "type": "\"offcanvas\" | \"icon\" | \"none\"",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"sidebar\" | \"floating\" | \"inset\"",
+      "required": false
+    }
+  ],
+  "mzizi-sidebar-nav": [
+    {
+      "name": "items",
+      "type": "NavItem[]",
+      "required": true
+    },
+    {
+      "name": "activeKey",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "(key: string) => void",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "string",
+      "required": false
+    }
+  ],
   "mzizi-skeleton-set": [
     {
       "name": "variant",
       "type": "\"row\" | \"compact\" | \"hero\"",
+      "required": false
+    }
+  ],
+  "mzizi-source-badge": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "sourceName",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "credibility",
+      "type": "SourceCredibility",
+      "required": false
+    },
+    {
+      "name": "showLabel",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-splash-screen": [
+    {
+      "name": "progress",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "showLogo",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-stats-row": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "stats",
+      "type": "StatItem[]",
+      "required": true
+    },
+    {
+      "name": "columns",
+      "type": "2 | 3 | 4",
+      "required": false
+    }
+  ],
+  "mzizi-success-screen": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "detail",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "primaryAction",
+      "type": "{ label: string; onClick: () => void }",
+      "required": false
+    },
+    {
+      "name": "secondaryAction",
+      "type": "{ label: string; onClick: () => void }",
+      "required": false
+    },
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-suitability-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "level",
+      "type": "SuitabilityLevel",
+      "required": true
+    },
+    {
+      "name": "score",
+      "type": "number",
       "required": false
     }
   ],
@@ -4982,6 +8660,166 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "onRetry",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-theme-provider": [
+    {
+      "name": "defaultTheme",
+      "type": "ThemeMode",
+      "required": false
+    },
+    {
+      "name": "brand",
+      "type": "BrandId",
+      "required": false
+    },
+    {
+      "name": "useSystemPreference",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "storageKey",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "mzizi-ticket-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "eventTitle",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "eventDate",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "eventVenue",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "tierName",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "tierPrice",
+      "type": "string | number",
+      "required": false
+    },
+    {
+      "name": "ticketCode",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "TicketStatus",
+      "required": false
+    },
+    {
+      "name": "qrValue",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mineral",
+      "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
+      "required": false
+    },
+    {
+      "name": "onTap",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-timeline": [
+    {
+      "name": "items",
+      "type": "TimelineItem[]",
+      "required": true
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "emptyState",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-toast-provider": [
+    {
+      "name": "position",
+      "type": "\"top-right\" | \"top-center\" | \"bottom-right\" | \"bottom-center\"",
+      "required": false
+    },
+    {
+      "name": "maxVisible",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "defaultDuration",
+      "type": "number",
+      "required": false
+    }
+  ],
+  "mzizi-transaction-row": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "TransactionType",
+      "required": true
+    },
+    {
+      "name": "amount",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "counterparty",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "TransactionStatus",
+      "required": false
+    },
+    {
+      "name": "timestamp",
+      "type": "string | Date",
+      "required": true
+    },
+    {
+      "name": "onClick",
       "type": "() => void",
       "required": false
     }
@@ -5010,6 +8848,161 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onImprove",
       "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-trust-meter": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "trustScore",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "verificationScore",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "statusScore",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "ubuntuScore",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "ubuntuPoints",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "tierLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "statusLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "compact",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-update-prompt": [
+    {
+      "name": "visible",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "isCritical",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onUpdate",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "onDismiss",
+      "type": "() => void",
+      "required": false
+    }
+  ],
+  "mzizi-user-card": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "avatar",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "role",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
+  "mzizi-user-menu": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "avatarUrl",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onSignOut",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "menuItems",
+      "type": "UserMenuItem[]",
+      "required": false
+    }
+  ],
+  "mzizi-verified-badge": [
+    {
+      "name": "tier",
+      "type": "VerificationTier",
+      "required": true
+    },
+    {
+      "name": "status",
+      "type": "PlatformStatus",
+      "required": false
+    },
+    {
+      "name": "showTooltip",
+      "type": "boolean",
       "required": false
     },
     {
@@ -5052,6 +9045,33 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "loading",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "mzizi-washed-theme": [
+    {
+      "name": "theme",
+      "type": "WashedThemeName",
+      "required": false
+    },
+    {
+      "name": "accent",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mode",
+      "type": "\"light\" | \"dark\"",
+      "required": false
+    },
+    {
+      "name": "paint",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "\"div\" | \"section\" | \"main\" | \"article\"",
       "required": false
     }
   ],
@@ -5391,4026 +9411,6 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "disabled",
       "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-a11y": [
-    {
-      "name": "active",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "restoreFocus",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-action-sheet": [
-    {
-      "name": "open",
-      "type": "boolean",
-      "required": true
-    },
-    {
-      "name": "onClose",
-      "type": "() => void",
-      "required": true
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "actions",
-      "type": "ActionItem[]",
-      "required": true
-    }
-  ],
-  "nyuchi-alert-banner": [
-    {
-      "name": "type",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "severity",
-      "type": "\"watch\" | \"moderate\" | \"severe\"",
-      "required": true
-    },
-    {
-      "name": "headline",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "areas",
-      "type": "string[]",
-      "required": false
-    },
-    {
-      "name": "validFrom",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "validUntil",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "instructions",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onDismiss",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onDetails",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-application-tracker": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "jobTitle",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "company",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "stages",
-      "type": "ApplicationStage[]",
-      "required": true
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-article-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "excerpt",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "image",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "sourceName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "sourceVerified",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "authorName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "publishedAt",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "readTime",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "category",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "factCheckStatus",
-      "type": "FactCheckStatus",
-      "required": false
-    },
-    {
-      "name": "variant",
-      "type": "\"row\" | \"compact\" | \"hero\"",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-auth-card": [
-    {
-      "name": "mode",
-      "type": "AuthMode",
-      "required": false
-    },
-    {
-      "name": "surface",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "providers",
-      "type": "AuthProvider[]",
-      "required": false
-    },
-    {
-      "name": "onSubmit",
-      "type": "(input: { mode: AuthMode; email: string; name?: string }) => Promise<void>",
-      "required": true
-    },
-    {
-      "name": "onProvider",
-      "type": "(providerId: string) => void",
-      "required": false
-    },
-    {
-      "name": "error",
-      "type": "string | null",
-      "required": false
-    }
-  ],
-  "nyuchi-auth-layout": [
-    {
-      "name": "variant",
-      "type": "\"login\" | \"signup\" | \"onboarding\" | \"reset\" | \"verify\"",
-      "required": false
-    },
-    {
-      "name": "showBackground",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "showLogo",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "showLanguage",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "showLegal",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "languages",
-      "type": "{ code: string; label: string }[]",
-      "required": false
-    },
-    {
-      "name": "onLanguageChange",
-      "type": "(code: string) => void",
-      "required": false
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-avatar-stack": [
-    {
-      "name": "people",
-      "type": "AvatarPerson[]",
-      "required": true
-    },
-    {
-      "name": "max",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "total",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "label",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "size",
-      "type": "\"sm\" | \"md\"",
-      "required": false
-    }
-  ],
-  "nyuchi-badge-display": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "badges",
-      "type": "BadgeItem[]",
-      "required": true
-    },
-    {
-      "name": "layout",
-      "type": "\"grid\" | \"strip\"",
-      "required": false
-    },
-    {
-      "name": "maxVisible",
-      "type": "number",
-      "required": false
-    }
-  ],
-  "nyuchi-balance-display": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "balance",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "fiatEquivalent",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSend",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onReceive",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onSwap",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-bottom-nav": [
-    {
-      "name": "items",
-      "type": "BottomNavItem[]",
-      "required": true
-    },
-    {
-      "name": "activeId",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-calendar": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "events",
-      "type": "CalendarEvent[]",
-      "required": false
-    },
-    {
-      "name": "selectedDate",
-      "type": "Date",
-      "required": false
-    },
-    {
-      "name": "onDateSelect",
-      "type": "(date: Date) => void",
-      "required": false
-    },
-    {
-      "name": "onMonthChange",
-      "type": "(month: Date) => void",
-      "required": false
-    },
-    {
-      "name": "renderAgenda",
-      "type": "(date: Date, events: CalendarEvent[]) => React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "defaultMonth",
-      "type": "Date",
-      "required": false
-    }
-  ],
-  "nyuchi-changelog-renderer": [
-    {
-      "name": "entries",
-      "type": "ChangelogEntry[]",
-      "required": true
-    }
-  ],
-  "nyuchi-command-palette": [
-    {
-      "name": "open",
-      "type": "boolean",
-      "required": true
-    },
-    {
-      "name": "onOpenChange",
-      "type": "(open: boolean) => void",
-      "required": true
-    },
-    {
-      "name": "items",
-      "type": "CommandItem[]",
-      "required": false
-    },
-    {
-      "name": "recentItems",
-      "type": "CommandItem[]",
-      "required": false
-    },
-    {
-      "name": "placeholder",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSearch",
-      "type": "(query: string) => void",
-      "required": false
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-commute-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "label",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "origin",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "destination",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "mode",
-      "type": "\"bus\" | \"kombi\" | \"taxi\" | \"walk\" | \"mixed\"",
-      "required": false
-    },
-    {
-      "name": "estimatedDuration",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "nextDeparture",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "frequency",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onStart",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-connectivity-bar": [
-    {
-      "name": "state",
-      "type": "ConnectionState",
-      "required": false
-    },
-    {
-      "name": "message",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "autoHideOnline",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "autoHideDelay",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "onRetry",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-content-composer": [
-    {
-      "name": "placeholder",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "avatarUrl",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "userName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "submitLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSubmit",
-      "type": "(content: string) => void",
-      "required": false
-    },
-    {
-      "name": "onAttachMedia",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onMention",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "submitting",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "showToolbar",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "compact",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-conversation-row": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "avatar",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "lastMessage",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "lastMessageTime",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "unreadCount",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "isOnline",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-cover-header": [
-    {
-      "name": "coverImage",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "avatar",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "avatarShape",
-      "type": "\"circle\" | \"rounded\"",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "subtitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "badge",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "action",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "coverHeight",
-      "type": "\"sm\" | \"md\" | \"lg\"",
-      "required": false
-    }
-  ],
-  "nyuchi-cover-wash-header": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "subtitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "kicker",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "coverImage",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "coverGradient",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "accent",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "mineral",
-      "type": "Mineral",
-      "required": false
-    },
-    {
-      "name": "inheritWash",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "date",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "location",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "host",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-create-listing": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "selected",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "gradients",
-      "type": "[string, string][]",
-      "required": false
-    },
-    {
-      "name": "onSelect",
-      "type": "(index: number) => void",
-      "required": true
-    },
-    {
-      "name": "onImageTap",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "coverImage",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-create-page": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "onCancel",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onSubmit",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "submitLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "submitting",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "currentStep",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "totalSteps",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "coverSlot",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-credential-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "issuingBody",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "credentialType",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "status",
-      "type": "CredentialStatus",
-      "required": false
-    },
-    {
-      "name": "issuedDate",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "expiryDate",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "licenseNumber",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "verifiedByPlatform",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-dashboard-layout": [
-    {
-      "name": "appName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "sidebarSections",
-      "type": "SidebarSection[]",
-      "required": true
-    },
-    {
-      "name": "navItems",
-      "type": "NavItem[]",
-      "required": false
-    },
-    {
-      "name": "headerActions",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "bottomNav",
-      "type": "BottomNavItem[]",
-      "required": false
-    }
-  ],
-  "nyuchi-deep-link-handler": [
-    {
-      "name": "routes",
-      "type": "DeepLinkRoute[]",
-      "required": true
-    },
-    {
-      "name": "onUnmatched",
-      "type": "(url: string) => void",
-      "required": false
-    }
-  ],
-  "nyuchi-detail-layout": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "subtitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "category",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "metadata",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "aside",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "heroImage",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "heroGradient",
-      "type": "[string, string]",
-      "required": false
-    },
-    {
-      "name": "heroMinHeight",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "showHeroActions",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onBack",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onLike",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onShare",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "liked",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "actions",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "bottomCta",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "backHref",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "backLabel",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-detail-page": [
-    {
-      "name": "coverUrl",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "coverGradient",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onBack",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onShare",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onSave",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "saved",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "ctaLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "ctaAction",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "secondaryLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "secondaryAction",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "relatedTitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "relatedItems",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-docs-engine": [
-    {
-      "name": "pages",
-      "type": "DocPage[]",
-      "required": true
-    },
-    {
-      "name": "currentSlug",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onNavigate",
-      "type": "(slug: string) => void",
-      "required": false
-    },
-    {
-      "name": "search",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSearch",
-      "type": "(query: string) => void",
-      "required": false
-    },
-    {
-      "name": "renderContent",
-      "type": "(content: string, page: DocPage) => React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-empty-screen": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "icon",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "action",
-      "type": "{ label: string; onClick: () => void }",
-      "required": false
-    }
-  ],
-  "nyuchi-empty-state": [
-    {
-      "name": "icon",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "actionLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onAction",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "secondaryLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSecondary",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "compact",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-error-screen": [
-    {
-      "name": "code",
-      "type": "404 | 500 | 503 | number",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "showRetry",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "showHome",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onRetry",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onHome",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-escalation-card": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "prompt",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "options",
-      "type": "EscalationOption[]",
-      "required": true
-    },
-    {
-      "name": "onChoose",
-      "type": "(id: string) => Promise<void> | void",
-      "required": true
-    }
-  ],
-  "nyuchi-event-card": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "time",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "location",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "category",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "mineral",
-      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\"",
-      "required": false
-    }
-  ],
-  "nyuchi-featured-card": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "image",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "badge",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "href",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-footer": [
-    {
-      "name": "sections",
-      "type": "FooterSection[]",
-      "required": false
-    },
-    {
-      "name": "companyName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "tagline",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "showMineralStrip",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-forecast-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "location",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "temperature",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "unit",
-      "type": "\"C\" | \"F\"",
-      "required": false
-    },
-    {
-      "name": "condition",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "icon",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "humidity",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "windSpeed",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "feelsLike",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "forecast",
-      "type": "DayForecast[]",
-      "required": false
-    },
-    {
-      "name": "farmingAdvice",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "lastUpdated",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-fundi": [
-    {
-      "name": "executors",
-      "type": "RemediationExecutors",
-      "required": true
-    },
-    {
-      "name": "autoHeal",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onPlanCreated",
-      "type": "(plan: HealingPlan) => void",
-      "required": false
-    },
-    {
-      "name": "onHealComplete",
-      "type": "(result: HealingResult) => void",
-      "required": false
-    }
-  ],
-  "nyuchi-gauge-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "icon",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "label",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "value",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "percent",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "context",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "contextColor",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "strokeColor",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "mineral",
-      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\"",
-      "required": false
-    }
-  ],
-  "nyuchi-grid": [
-    {
-      "name": "cols",
-      "type": "{ mobile?: number; tablet?: number; desktop?: number; wide?: number }",
-      "required": false
-    },
-    {
-      "name": "gap",
-      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\"",
-      "required": false
-    },
-    {
-      "name": "maxWidth",
-      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | \"full\"",
-      "required": false
-    }
-  ],
-  "nyuchi-group-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "memberCount",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "members",
-      "type": "CircleMember[]",
-      "required": false
-    },
-    {
-      "name": "topics",
-      "type": "string[]",
-      "required": false
-    },
-    {
-      "name": "joined",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "activity",
-      "type": "\"quiet\" | \"active\" | \"buzzing\"",
-      "required": false
-    },
-    {
-      "name": "privacy",
-      "type": "\"open\" | \"closed\" | \"secret\"",
-      "required": false
-    },
-    {
-      "name": "coverUrl",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onJoin",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-harness": [
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "skeleton",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "fallback",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-harness-prewire": [
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "skeleton",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "fallback",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "critical",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "animate",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-header": [
-    {
-      "name": "appName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "navItems",
-      "type": "NavItem[]",
-      "required": false
-    },
-    {
-      "name": "actions",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "pillActions",
-      "type": "PillAction[]",
-      "required": false
-    },
-    {
-      "name": "scrolled",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "scrollTitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "showBack",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onBack",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-health-dashboard": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "vitals",
-      "type": "Vital[]",
-      "required": false
-    },
-    {
-      "name": "appointments",
-      "type": "Appointment[]",
-      "required": false
-    },
-    {
-      "name": "medications",
-      "type": "Medication[]",
-      "required": false
-    },
-    {
-      "name": "lastSync",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onViewAll",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-hero-stat": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "value",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "unit",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "condition",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "subtitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "secondaryStats",
-      "type": "SecondaryStat[]",
-      "required": false
-    },
-    {
-      "name": "icon",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "onShare",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-icons": [
-    {
-      "name": "name",
-      "type": "SemanticIconName",
-      "required": true
-    },
-    {
-      "name": "size",
-      "type": "IconSize",
-      "required": false
-    },
-    {
-      "name": "sizeOverride",
-      "type": "number",
-      "required": false
-    }
-  ],
-  "nyuchi-job-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "company",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "companyLogo",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "companyVerified",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "location",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "remote",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "salary",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "type",
-      "type": "\"full-time\" | \"part-time\" | \"contract\" | \"gig\" | \"internship\"",
-      "required": false
-    },
-    {
-      "name": "skills",
-      "type": "string[]",
-      "required": false
-    },
-    {
-      "name": "postedAt",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "matchScore",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "onApply",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onSave",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-layout": [
-    {
-      "name": "columns",
-      "type": "1 | 2 | 3 | 4",
-      "required": false
-    },
-    {
-      "name": "gap",
-      "type": "\"sm\" | \"md\" | \"lg\"",
-      "required": false
-    },
-    {
-      "name": "maxWidth",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-leaderboard-row": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "position",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "avatar",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "score",
-      "type": "number | string",
-      "required": true
-    },
-    {
-      "name": "trend",
-      "type": "\"up\" | \"down\" | \"same\"",
-      "required": false
-    },
-    {
-      "name": "trendPositions",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "isCurrentUser",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "verifiedBadge",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-lesson-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "language",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "targetLanguage",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "progress",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "totalLessons",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "completedLessons",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "streak",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "difficulty",
-      "type": "\"beginner\" | \"intermediate\" | \"advanced\"",
-      "required": false
-    },
-    {
-      "name": "estimatedMinutes",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "locked",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onStart",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-listing-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "category",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "mineral",
-      "type": "Mineral",
-      "required": false
-    },
-    {
-      "name": "image",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "meta",
-      "type": "MukokoListingMeta[]",
-      "required": false
-    },
-    {
-      "name": "price",
-      "type": "string | number",
-      "required": false
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "trailing",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "href",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "heroGradient",
-      "type": "[string, string]",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "index",
-      "type": "number",
-      "required": false
-    }
-  ],
-  "nyuchi-locale": [
-    {
-      "name": "defaultLocale",
-      "type": "LocaleCode",
-      "required": false
-    },
-    {
-      "name": "storageKey",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-media": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "images",
-      "type": "GalleryImage[]",
-      "required": true
-    },
-    {
-      "name": "maxVisible",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "onImageTap",
-      "type": "(index: number) => void",
-      "required": false
-    }
-  ],
-  "nyuchi-message-bubble": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "content",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "variant",
-      "type": "BubbleVariant",
-      "required": false
-    },
-    {
-      "name": "timestamp",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "deliveryStatus",
-      "type": "DeliveryStatus",
-      "required": false
-    },
-    {
-      "name": "senderName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "senderAvatar",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "reactions",
-      "type": "{ emoji: string; count: number }[]",
-      "required": false
-    },
-    {
-      "name": "isFirstInGroup",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-meta-tile": [
-    {
-      "name": "icon",
-      "type": "React.ComponentType<{ className?: string; strokeWidth?: number }>",
-      "required": false
-    },
-    {
-      "name": "date",
-      "type": "{ month: string; day: string | number }",
-      "required": false
-    },
-    {
-      "name": "caption",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "primary",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "secondary",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "tint",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "trailing",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-mini-app-runtime": [
-    {
-      "name": "config",
-      "type": "MiniAppConfig",
-      "required": true
-    },
-    {
-      "name": "state",
-      "type": "MiniAppState",
-      "required": false
-    },
-    {
-      "name": "onStateChange",
-      "type": "(state: MiniAppState) => void",
-      "required": false
-    },
-    {
-      "name": "fallback",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-mission-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "pointsReward",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "badgeName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "difficulty",
-      "type": "MissionDifficulty",
-      "required": false
-    },
-    {
-      "name": "status",
-      "type": "MissionStatus",
-      "required": false
-    },
-    {
-      "name": "progress",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "totalSteps",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "completedSteps",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-notification-center": [
-    {
-      "name": "open",
-      "type": "boolean",
-      "required": true
-    },
-    {
-      "name": "onOpenChange",
-      "type": "(open: boolean) => void",
-      "required": true
-    },
-    {
-      "name": "notifications",
-      "type": "Notification[]",
-      "required": false
-    },
-    {
-      "name": "onMarkAllRead",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onDismiss",
-      "type": "(id: string) => void",
-      "required": false
-    },
-    {
-      "name": "emptyMessage",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-notification-item": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "type",
-      "type": "NotificationType",
-      "required": true
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "message",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "timestamp",
-      "type": "string | Date",
-      "required": true
-    },
-    {
-      "name": "read",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "actorName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "actorAvatar",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-offer-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "image",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "price",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "originalPrice",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "sellerName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "sellerVerified",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "category",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "condition",
-      "type": "\"new\" | \"used\" | \"refurbished\"",
-      "required": false
-    },
-    {
-      "name": "mineral",
-      "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
-      "required": false
-    },
-    {
-      "name": "onInquire",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-onboarding-step": [
-    {
-      "name": "illustration",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "currentStep",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "totalSteps",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "nextLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "skipLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onNext",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onSkip",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-page": [
-    {
-      "name": "layout",
-      "type": "PageLayout",
-      "required": false
-    },
-    {
-      "name": "seo",
-      "type": "SEOMetadata",
-      "required": false
-    },
-    {
-      "name": "breadcrumbs",
-      "type": "{ label: string; href?: string }[]",
-      "required": false
-    },
-    {
-      "name": "heading",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "subheading",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "showBack",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onBack",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-payment-mandate-card": [
-    {
-      "name": "summary",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "amount",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "intentMandateId",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "cartMandateId",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "handlers",
-      "type": "PaymentHandlerOption[]",
-      "required": true
-    },
-    {
-      "name": "onAuthorize",
-      "type": "(handlerId: string) => Promise<void>",
-      "required": true
-    },
-    {
-      "name": "error",
-      "type": "string | null",
-      "required": false
-    }
-  ],
-  "nyuchi-payment-summary": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "subtitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "items",
-      "type": "LineItem[]",
-      "required": true
-    },
-    {
-      "name": "total",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "paymentMethod",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "escrow",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "confirmLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onConfirm",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onCancel",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "processing",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-persistent-player": [
-    {
-      "name": "track",
-      "type": "MediaTrack | null",
-      "required": false
-    },
-    {
-      "name": "isPlaying",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "progress",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "onPlay",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onPause",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onExpand",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onClose",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-phrase-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "phrase",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "translation",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "language",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "targetLanguage",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "pronunciation",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "example",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "exampleTranslation",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "category",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "mastered",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onPlayAudio",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onPractice",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-place-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "category",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "address",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "distance",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "rating",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "reviewCount",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "image",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "openNow",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "verificationTier",
-      "type": "PlaceVerification",
-      "required": false
-    },
-    {
-      "name": "mineral",
-      "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
-      "required": false
-    },
-    {
-      "name": "variant",
-      "type": "\"row\" | \"compact\"",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-platform": [
-    {
-      "name": "appName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onDismiss",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-product-card": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "image",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "price",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "originalPrice",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "badge",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-product-results": [
-    {
-      "name": "heading",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "results",
-      "type": "ProductResult[]",
-      "required": true
-    },
-    {
-      "name": "onSelect",
-      "type": "(id: string) => void",
-      "required": true
-    }
-  ],
-  "nyuchi-profile-block": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "subtitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "avatar",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "avatarSize",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "accentColor",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "verificationTier",
-      "type": "VerificationTier",
-      "required": false
-    },
-    {
-      "name": "platformStatus",
-      "type": "PlatformStatus",
-      "required": false
-    },
-    {
-      "name": "trustScore",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "ubuntuPoints",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "stats",
-      "type": "ProfileStat[]",
-      "required": false
-    },
-    {
-      "name": "actions",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "verifiedBadge",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-profile-header": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "bio",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "avatar",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "coverImage",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "stats",
-      "type": "ProfileStat[]",
-      "required": false
-    },
-    {
-      "name": "actions",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-profile-page": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-profile-page-layout": [
-    {
-      "name": "coverUrl",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "avatarUrl",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "subtitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "verified",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "verificationTier",
-      "type": "0 | 1 | 2 | 3 | 4",
-      "required": false
-    },
-    {
-      "name": "stats",
-      "type": "ProfileStat[]",
-      "required": false
-    },
-    {
-      "name": "tabs",
-      "type": "ProfileTab[]",
-      "required": true
-    },
-    {
-      "name": "activeTab",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onTabChange",
-      "type": "(id: string) => void",
-      "required": false
-    },
-    {
-      "name": "primaryAction",
-      "type": "{ label: string; onClick: () => void }",
-      "required": false
-    },
-    {
-      "name": "secondaryAction",
-      "type": "{ label: string; onClick: () => void }",
-      "required": false
-    },
-    {
-      "name": "onBack",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-profile-settings": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-programme-item": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "time",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "speaker",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "speakerRole",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "duration",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "mineral",
-      "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
-      "required": false
-    },
-    {
-      "name": "isActive",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "isLast",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-provider-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "specialty",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "avatarUrl",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "verified",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "verificationTier",
-      "type": "0 | 1 | 2 | 3 | 4",
-      "required": false
-    },
-    {
-      "name": "rating",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "reviewCount",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "telemedicine",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "available",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "nextSlot",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "location",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onBook",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-registration-card": [
-    {
-      "name": "tiers",
-      "type": "RegistrationTier[]",
-      "required": true
-    },
-    {
-      "name": "selectedTierId",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSelectTier",
-      "type": "(id: string) => void",
-      "required": false
-    },
-    {
-      "name": "quantity",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "min",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "max",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "onQuantityChange",
-      "type": "(quantity: number) => void",
-      "required": false
-    },
-    {
-      "name": "label",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "helper",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "ctaLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSubmit",
-      "type": "(payload: { tierId: string | null; quantity: number }) => void",
-      "required": false
-    },
-    {
-      "name": "accent",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "disabled",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-resilience": [
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "skeleton",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "fallback",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "critical",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onError",
-      "type": "(error: Error) => void",
-      "required": false
-    },
-    {
-      "name": "onRecovery",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-review-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "reviewer",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "avatarUrl",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "verificationTier",
-      "type": "0 | 1 | 2 | 3 | 4",
-      "required": false
-    },
-    {
-      "name": "rating",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "text",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "date",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "helpfulCount",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "markedHelpful",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onHelpful",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onReport",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-root-layout": [
-    {
-      "name": "fontClasses",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "defaultLocale",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "enableServiceWorker",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-route-guard": [
-    {
-      "name": "config",
-      "type": "RouteGuardConfig",
-      "required": true
-    },
-    {
-      "name": "isAuthenticated",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "userRole",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "userTier",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "userVerification",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "loadingFallback",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "unauthorizedFallback",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "onRedirect",
-      "type": "(path: string) => void",
-      "required": false
-    }
-  ],
-  "nyuchi-route-planner": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "origin",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "destination",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "stops",
-      "type": "RouteStop[]",
-      "required": false
-    },
-    {
-      "name": "mode",
-      "type": "\"bus\" | \"kombi\" | \"taxi\" | \"walk\" | \"mixed\"",
-      "required": false
-    },
-    {
-      "name": "duration",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "distance",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "fare",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "departureTime",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "arrivalTime",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onBook",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onSave",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-rsvp-button": [
-    {
-      "name": "status",
-      "type": "RSVPStatus",
-      "required": false
-    },
-    {
-      "name": "price",
-      "type": "string | number",
-      "required": false
-    },
-    {
-      "name": "spotsRemaining",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "disabled",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onRSVP",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onCancel",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "full",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-search-view": [
-    {
-      "name": "query",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSearch",
-      "type": "(query: string) => void",
-      "required": false
-    },
-    {
-      "name": "activeCategory",
-      "type": "ResultCategory",
-      "required": false
-    },
-    {
-      "name": "onCategoryChange",
-      "type": "(cat: ResultCategory) => void",
-      "required": false
-    },
-    {
-      "name": "results",
-      "type": "SearchResult[]",
-      "required": false
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onResultClick",
-      "type": "(result: SearchResult) => void",
-      "required": false
-    },
-    {
-      "name": "recentSearches",
-      "type": "string[]",
-      "required": false
-    },
-    {
-      "name": "trending",
-      "type": "string[]",
-      "required": false
-    }
-  ],
-  "nyuchi-settings-page": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "sections",
-      "type": "SettingSection[]",
-      "required": true
-    },
-    {
-      "name": "activeSection",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSectionChange",
-      "type": "(id: string) => void",
-      "required": false
-    }
-  ],
-  "nyuchi-share-card": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "subtitle",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "imageUrl",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "sourceApp",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "open",
-      "type": "boolean",
-      "required": true
-    },
-    {
-      "name": "onClose",
-      "type": "() => void",
-      "required": true
-    },
-    {
-      "name": "onCopyLink",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onShareToCampfire",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onNativeShare",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "targets",
-      "type": "ShareTarget[]",
-      "required": false
-    },
-    {
-      "name": "copied",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-sidebar": [
-    {
-      "name": "sections",
-      "type": "SidebarSection[]",
-      "required": true
-    },
-    {
-      "name": "appName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "header",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "footer",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "collapsible",
-      "type": "\"offcanvas\" | \"icon\" | \"none\"",
-      "required": false
-    },
-    {
-      "name": "variant",
-      "type": "\"sidebar\" | \"floating\" | \"inset\"",
-      "required": false
-    }
-  ],
-  "nyuchi-sidebar-nav": [
-    {
-      "name": "items",
-      "type": "NavItem[]",
-      "required": true
-    },
-    {
-      "name": "activeKey",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSelect",
-      "type": "(key: string) => void",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "width",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-source-badge": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "sourceName",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "credibility",
-      "type": "SourceCredibility",
-      "required": false
-    },
-    {
-      "name": "showLabel",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-splash-screen": [
-    {
-      "name": "progress",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "message",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "showLogo",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-stats-row": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "stats",
-      "type": "StatItem[]",
-      "required": true
-    },
-    {
-      "name": "columns",
-      "type": "2 | 3 | 4",
-      "required": false
-    }
-  ],
-  "nyuchi-success-screen": [
-    {
-      "name": "title",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "message",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "detail",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "primaryAction",
-      "type": "{ label: string; onClick: () => void }",
-      "required": false
-    },
-    {
-      "name": "secondaryAction",
-      "type": "{ label: string; onClick: () => void }",
-      "required": false
-    },
-    {
-      "name": "icon",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-suitability-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "icon",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "title",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "level",
-      "type": "SuitabilityLevel",
-      "required": true
-    },
-    {
-      "name": "score",
-      "type": "number",
-      "required": false
-    }
-  ],
-  "nyuchi-theme-provider": [
-    {
-      "name": "defaultTheme",
-      "type": "ThemeMode",
-      "required": false
-    },
-    {
-      "name": "brand",
-      "type": "BrandId",
-      "required": false
-    },
-    {
-      "name": "useSystemPreference",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "storageKey",
-      "type": "string",
-      "required": false
-    }
-  ],
-  "nyuchi-ticket-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "eventTitle",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "eventDate",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "eventVenue",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "tierName",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "tierPrice",
-      "type": "string | number",
-      "required": false
-    },
-    {
-      "name": "ticketCode",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "status",
-      "type": "TicketStatus",
-      "required": false
-    },
-    {
-      "name": "qrValue",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "mineral",
-      "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
-      "required": false
-    },
-    {
-      "name": "onTap",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-timeline": [
-    {
-      "name": "items",
-      "type": "TimelineItem[]",
-      "required": true
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "emptyState",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-toast-provider": [
-    {
-      "name": "position",
-      "type": "\"top-right\" | \"top-center\" | \"bottom-right\" | \"bottom-center\"",
-      "required": false
-    },
-    {
-      "name": "maxVisible",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "defaultDuration",
-      "type": "number",
-      "required": false
-    }
-  ],
-  "nyuchi-transaction-row": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "type",
-      "type": "TransactionType",
-      "required": true
-    },
-    {
-      "name": "amount",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "counterparty",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "status",
-      "type": "TransactionStatus",
-      "required": false
-    },
-    {
-      "name": "timestamp",
-      "type": "string | Date",
-      "required": true
-    },
-    {
-      "name": "onClick",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-trust-meter": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "trustScore",
-      "type": "number",
-      "required": true
-    },
-    {
-      "name": "verificationScore",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "statusScore",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "ubuntuScore",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "ubuntuPoints",
-      "type": "number",
-      "required": false
-    },
-    {
-      "name": "tierLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "statusLabel",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "compact",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-update-prompt": [
-    {
-      "name": "visible",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "version",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "isCritical",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onUpdate",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "onDismiss",
-      "type": "() => void",
-      "required": false
-    }
-  ],
-  "nyuchi-user-card": [
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "email",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "avatar",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "role",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "actions",
-      "type": "React.ReactNode",
-      "required": false
-    }
-  ],
-  "nyuchi-user-menu": [
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "email",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "avatarUrl",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onSignOut",
-      "type": "() => void",
-      "required": false
-    },
-    {
-      "name": "menuItems",
-      "type": "UserMenuItem[]",
-      "required": false
-    }
-  ],
-  "nyuchi-verified-badge": [
-    {
-      "name": "tier",
-      "type": "VerificationTier",
-      "required": true
-    },
-    {
-      "name": "status",
-      "type": "PlatformStatus",
-      "required": false
-    },
-    {
-      "name": "showTooltip",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    }
-  ],
-  "nyuchi-washed-theme": [
-    {
-      "name": "theme",
-      "type": "WashedThemeName",
-      "required": false
-    },
-    {
-      "name": "accent",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "mode",
-      "type": "\"light\" | \"dark\"",
-      "required": false
-    },
-    {
-      "name": "paint",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "as",
-      "type": "\"div\" | \"section\" | \"main\" | \"article\"",
       "required": false
     }
   ],

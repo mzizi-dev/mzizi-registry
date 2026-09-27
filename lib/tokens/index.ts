@@ -14,7 +14,7 @@
  *   This file is the source of truth. Platform generators read from it:
  *   - Next.js/React: CSS custom properties + Tailwind @theme
  *   - Swift/SwiftUI: Asset catalog + Color extensions
- *   - Kotlin/Compose: NyuchiTheme composable
+ *   - Kotlin/Compose: MziziTheme composable
  *   - ArkTS/ArkUI: Resource files
  *   - React Native: StyleSheet constants
  *   - Rust: const values + config structs
@@ -1363,4 +1363,4 @@ export function generateTokensJSON(): string {
  */
 // `generateArkTS` was removed with the other platform generators above —
 // same hardcoded five-and-five colour map. ArkTS now comes from
-// `scripts/sync-tokens.ts` as nyuchi-tokens-arkts.ets.
+// `scripts/sync-tokens.ts` as mzizi-tokens-arkts.ets.

@@ -1,12 +1,12 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type ChainStatus =
   "connected" | "reconnecting" | "rpc-error" | "chain-reorg" | "wallet-disconnected"
 
-interface NyuchiChainResilienceProps {
+interface MziziChainResilienceProps {
   children: React.ReactNode
   status: ChainStatus
   retryCount?: number
@@ -41,7 +41,7 @@ const STATUS_CONFIG: Record<ChainStatus, { color: string; label: string; desc: s
   },
 }
 
-export function NyuchiChainResilience({
+export function MziziChainResilience({
   children,
   status,
   retryCount = 0,
@@ -50,8 +50,8 @@ export function NyuchiChainResilience({
   onReconnectWallet,
   fallback,
   className,
-}: NyuchiChainResilienceProps) {
-  const { motion } = useNyuchiHarness("chain-resilience")
+}: MziziChainResilienceProps) {
+  const { motion } = useMziziHarness("chain-resilience")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -68,8 +68,8 @@ export function NyuchiChainResilience({
   const config = STATUS_CONFIG[status]
   return (
     <div
-      data-slot="nyuchi-chain-resilience"
-      data-portal="https://mzizi.dev/components/nyuchi-chain-resilience"
+      data-slot="mzizi-chain-resilience"
+      data-portal="https://mzizi.dev/components/mzizi-chain-resilience"
       role="alert"
       aria-live="polite"
       style={animStyle}
@@ -136,4 +136,4 @@ export function NyuchiChainResilience({
     </div>
   )
 }
-export type { ChainStatus, NyuchiChainResilienceProps }
+export type { ChainStatus, MziziChainResilienceProps }

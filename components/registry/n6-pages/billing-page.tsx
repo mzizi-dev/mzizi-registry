@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface BillingPlan {
   name: string
   price: string
@@ -31,7 +31,7 @@ export function BillingPage({
   loading = false,
   className,
 }: BillingPageProps) {
-  const { motion } = useNyuchiHarness("billing-page")
+  const { motion } = useMziziHarness("billing-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

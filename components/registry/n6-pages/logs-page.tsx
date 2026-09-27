@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 type LogLevel = "debug" | "info" | "warn" | "error" | "fatal"
 interface LogsPageProps {
   title?: string
@@ -36,7 +36,7 @@ export function LogsPage({
   loading = false,
   className,
 }: LogsPageProps) {
-  const { motion } = useNyuchiHarness("logs-page")
+  const { motion } = useMziziHarness("logs-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

@@ -93,7 +93,7 @@ A 404 there is a true answer, not an outage. Three primitives have Rust today
 
 - the component's contract from `/api/v1/ui/{name}/docs` (use cases, variants,
   sizes, features, a11y notes),
-- the tokens from `components/registry/n1-tokens/nyuchi-tokens-<platform>.<ext>`,
+- the tokens from `components/registry/n1-tokens/mzizi-tokens-<platform>.<ext>`,
   which are **generated** for every target from one source,
 - the rules below.
 

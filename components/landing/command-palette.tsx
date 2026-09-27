@@ -4,13 +4,13 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 import { Box } from "@/lib/icons"
 import {
-  NyuchiCommandPalette,
+  MziziCommandPalette,
   type CommandItem,
-} from "@/components/registry/n7-shell/nyuchi-command-palette"
+} from "@/components/registry/n7-shell/mzizi-command-palette"
 import { SIDEBAR_NAV } from "@/lib/nav"
 
 /**
- * Portal wiring for the registry command palette (`nyuchi-command-palette`,
+ * Portal wiring for the registry command palette (`mzizi-command-palette`,
  * node 7 / shell). This file is portal composition only — it owns open state
  * and data; the visual + keyboard behaviour lives in the registry component.
  *
@@ -148,7 +148,7 @@ export function CommandPalette() {
   }))
 
   return (
-    <NyuchiCommandPalette
+    <MziziCommandPalette
       open={open}
       onOpenChange={setOpen}
       items={[...navItems, ...componentItems]}

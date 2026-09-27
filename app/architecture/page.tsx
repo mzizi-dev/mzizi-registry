@@ -543,7 +543,7 @@ export default async function ArchitecturePage() {
               never import it; N1 tokens are pure data. It is TypeScript today,{" "}
               <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">lib/harness</code> in
               this repo, currently named{" "}
-              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">nyuchi-harness</code>{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">mzizi-harness</code>{" "}
               in the registry — on the same target this whole page states for everything else: one
               shared Rust/WASM core behind the same interface, implemented once instead of once per
               framework.

@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 interface FeatureFlag {
   key: string
@@ -11,7 +11,7 @@ interface FeatureFlag {
   rolloutPercent?: number
 }
 
-interface NyuchiFeatureGateProps {
+interface MziziFeatureGateProps {
   children: React.ReactNode
   flag: FeatureFlag
   /** Show nothing when disabled (default: false shows a fallback) */
@@ -23,7 +23,7 @@ interface NyuchiFeatureGateProps {
   className?: string
 }
 
-export function NyuchiFeatureGate({
+export function MziziFeatureGate({
   children,
   flag,
   silent = false,
@@ -31,8 +31,8 @@ export function NyuchiFeatureGate({
   showComingSoon = false,
   loading = false,
   className,
-}: NyuchiFeatureGateProps) {
-  const { log, motion } = useNyuchiHarness("feature-gate")
+}: MziziFeatureGateProps) {
+  const { log, motion } = useMziziHarness("feature-gate")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -50,8 +50,8 @@ export function NyuchiFeatureGate({
   if (loading)
     return (
       <div
-        data-slot="nyuchi-feature-gate"
-        data-portal="https://mzizi.dev/components/nyuchi-feature-gate"
+        data-slot="mzizi-feature-gate"
+        data-portal="https://mzizi.dev/components/mzizi-feature-gate"
         data-loading
         role="status"
         className="h-16 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
@@ -64,7 +64,7 @@ export function NyuchiFeatureGate({
 
   return (
     <div
-      data-slot="nyuchi-feature-gate"
+      data-slot="mzizi-feature-gate"
       role="status"
       style={animStyle}
       className={cn(
@@ -96,4 +96,4 @@ export function NyuchiFeatureGate({
     </div>
   )
 }
-export type { FeatureFlag, NyuchiFeatureGateProps }
+export type { FeatureFlag, MziziFeatureGateProps }

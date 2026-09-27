@@ -143,12 +143,12 @@ Is it a pure value (colour, number, duration, font name) with no runtime behavio
 
 Is it a generic UI element any product could use (button, card, input, dialog, segmented-control, toolbar, bento-grid, inline-edit)?
 → Node 2 (Primitives)
-Rules: no useNyuchiHarness, use cn() for classNames, data-slot attribute,
+Rules: no useMziziHarness, use cn() for classNames, data-slot attribute,
 no raw mineral colours — only semantic tokens.
 
 Is it a Nyuchi-branded composed component using minerals and harness integration?
 → Node 3 (Brand)
-Rules: must use nyuchi- prefix, import useNyuchiHarness,
+Rules: must use mzizi- prefix, import useMziziHarness,
 destructure { log, motion, LiveRegion }, include animStyle with prefersReduced,
 ARIA attributes, data-slot + data-portal, focus-visible ring, min 48px touch target.
 
@@ -180,7 +180,7 @@ IMPLEMENTATION RULES
 ═══════════════════════════════════════════════
 
 1. CSS values live only in N1 tokens. Other nodes consume via var() references.
-2. Icons come from @/lib/icons (nyuchi-icons registry). Never import lucide-react directly.
+2. Icons come from @/lib/icons (mzizi-icons registry). Never import lucide-react directly.
 3. Every rendered component has data-slot and data-portal attributes for observability.
 4. All status colors use semantic tokens (--status-success, --status-error, etc.), not raw minerals.
 5. Third-party brand colors (Ethereum, Google, EcoCash) are the only hex exceptions.

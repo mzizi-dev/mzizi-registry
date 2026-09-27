@@ -191,9 +191,9 @@ pub fn check(
 pub fn default_endpoints(base_url: &str) -> Vec<Endpoint> {
     let base = base_url.trim_end_matches('/');
     [
-        ("nyuchi-tokens", 1),
-        ("nyuchi-section", 5),
-        ("nyuchi-wallet-gate", 4),
+        ("mzizi-tokens", 1),
+        ("mzizi-section", 5),
+        ("mzizi-wallet-gate", 4),
         ("wallet-page", 6),
     ]
     .into_iter()

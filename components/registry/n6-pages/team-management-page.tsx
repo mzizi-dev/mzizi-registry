@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 interface TeamMember {
   name: string
   email: string
@@ -31,7 +31,7 @@ export function TeamManagementPage({
   loading = false,
   className,
 }: TeamManagementPageProps) {
-  const { motion } = useNyuchiHarness("team-management-page")
+  const { motion } = useMziziHarness("team-management-page")
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced

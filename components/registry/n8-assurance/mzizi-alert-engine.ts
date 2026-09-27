@@ -53,7 +53,7 @@ export interface AlertEngineConfig {
 }
 
 // N9 fundi integration: SLO breaches are reported to Fundi via GitHub issues
-// import { getFundiReporter } from "@/lib/fundi/nyuchi-fundi-reporter"
+// import { getFundiReporter } from "@/lib/fundi/mzizi-fundi-reporter"
 // On SLO breach: getFundiReporter().report({ component: slo.name, severity, errorType: "slo", source: "alert-engine", ... })
 
 class AlertEngineCore {
@@ -74,7 +74,7 @@ class AlertEngineCore {
   }
 
   private evaluate() {
-    // In production this would query metrics from nyuchi-perf-probe, nyuchi-rum, nyuchi-api-probe
+    // In production this would query metrics from mzizi-perf-probe, mzizi-rum, mzizi-api-probe
     // and compare against SLO burn rates. Here we define the contract.
     for (const slo of this.config.slos) {
       // Placeholder: real implementation reads from metrics store

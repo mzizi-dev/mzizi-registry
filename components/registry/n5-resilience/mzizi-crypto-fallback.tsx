@@ -1,10 +1,10 @@
 "use client"
 import * as React from "react"
-import { useNyuchiHarness } from "@/lib/harness"
+import { useMziziHarness } from "@/lib/harness"
 
 type CryptoFallbackState = "pqc-active" | "pqc-loading" | "classical-fallback" | "no-crypto"
 
-interface NyuchiCryptoFallbackProps {
+interface MziziCryptoFallbackProps {
   children: React.ReactNode
   state: CryptoFallbackState
   pqcAlgorithm?: string
@@ -36,15 +36,15 @@ const STATE_CONFIG: Record<CryptoFallbackState, { color: string; label: string; 
   },
 }
 
-export function NyuchiCryptoFallback({
+export function MziziCryptoFallback({
   children,
   state,
   pqcAlgorithm = "CRYSTALS-Dilithium",
   classicalAlgorithm = "ECDSA",
   showIndicator = true,
   className,
-}: NyuchiCryptoFallbackProps) {
-  const { log } = useNyuchiHarness("crypto-fallback")
+}: MziziCryptoFallbackProps) {
+  const { log } = useMziziHarness("crypto-fallback")
 
   React.useEffect(() => {
     if (state === "classical-fallback")
@@ -55,8 +55,8 @@ export function NyuchiCryptoFallback({
 
   return (
     <div
-      data-slot="nyuchi-crypto-fallback"
-      data-portal="https://mzizi.dev/components/nyuchi-crypto-fallback"
+      data-slot="mzizi-crypto-fallback"
+      data-portal="https://mzizi.dev/components/mzizi-crypto-fallback"
       className={className}
     >
       {children}
@@ -89,4 +89,4 @@ export function NyuchiCryptoFallback({
     </div>
   )
 }
-export type { CryptoFallbackState, NyuchiCryptoFallbackProps }
+export type { CryptoFallbackState, MziziCryptoFallbackProps }
