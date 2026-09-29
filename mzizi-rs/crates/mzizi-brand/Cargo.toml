@@ -1,0 +1,31 @@
+[package]
+name = "mzizi-brand"
+description = "Mzizi N3 brand components for Dioxus: the first Mzizi Roots batch of branded cards, stats, alerts and states, each with a checkable contract."
+readme = "README.md"
+keywords = ["dioxus", "ui", "components", "design-system", "mzizi"]
+categories = ["gui", "web-programming"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+# The contract suite does not ship, for the same reason as in `mzizi-ui` and `mzizi-shell`:
+# `tests/contract.rs` reads each component's `.tsx` sibling out of `components/registry/`,
+# three levels above this crate, and those files can never be in the tarball. `cargo package`
+# prints an "ignoring test contract" warning for this line; that is the intended outcome.
+exclude = ["tests/"]
+
+[lints]
+workspace = true
+
+[dependencies]
+# A component LIBRARY: no renderer, no `launch`. The app that mounts these picks the target
+# (web, desktop, mobile, or server-side rendering), as with `mzizi-ui`.
+dioxus = { version = "0.7", default-features = false, features = ["macro", "signals", "hooks", "html"] }
+
+[dev-dependencies]
+# The contract suite renders each component to HTML and evaluates its `CONTRACT` clauses
+# against the markup, so a clause is checked against what the component actually emits.
+dioxus-ssr = "0.7"

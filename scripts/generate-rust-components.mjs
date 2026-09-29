@@ -49,16 +49,14 @@ const CRATES = join(ROOT, "mzizi-rs", "crates")
  * Explicit rather than inferred: a new node with Rust in it should fail this script
  * loudly and make someone decide which crate compiles it, not land silently in a
  * directory nothing includes.
+ *
+ * The map lives in `mzizi-rs/crate-for-node.json` rather than here because the
+ * `/v1/rs/{name}` route reads it too: the crate a Rust component ships in is part of
+ * what the route tells a consumer, and two copies of the map would drift.
  */
-const CRATE_FOR_NODE = {
-  "n1-tokens": "mzizi-tokens",
-  "n2-primitives": "mzizi-ui",
-  "n7-shell": "mzizi-shell",
-  "n8-assurance": "mzizi-assurance",
-  "n9-fundi": "mzizi-fundi",
-  "n10-documentation": "mzizi-docs",
-  "n11-discovery": "mzizi-discovery",
-}
+const CRATE_FOR_NODE = JSON.parse(
+  readFileSync(join(ROOT, "mzizi-rs", "crate-for-node.json"), "utf8")
+)
 
 /** The header prepended to every copy. `source` is repo-relative, forward-slashed. */
 function header(source) {
@@ -85,7 +83,7 @@ function discover() {
     if (!crate) {
       throw new Error(
         `components/registry/${node.name}/ contains Rust (${files.sort().join(", ")}) but no ` +
-          `crate claims it. Add an entry to CRATE_FOR_NODE in scripts/generate-rust-components.mjs ` +
+          `crate claims it. Add an entry to mzizi-rs/crate-for-node.json ` +
           `and a \`mod\` line in that crate's src/lib.rs.`
       )
     }
