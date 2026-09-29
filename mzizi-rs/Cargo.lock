@@ -533,6 +533,26 @@ name = "mzizi-fundi"
 version = "0.1.0"
 
 [[package]]
+name = "mzizi-roots"
+version = "0.1.0"
+dependencies = [
+ "mzizi-brand",
+ "mzizi-shell",
+ "mzizi-tokens",
+ "mzizi-ui",
+]
+
+[[package]]
+name = "mzizi-roots-server"
+version = "0.1.0"
+dependencies = [
+ "mzizi-assurance",
+ "mzizi-discovery",
+ "mzizi-docs",
+ "mzizi-fundi",
+]
+
+[[package]]
 name = "mzizi-shell"
 version = "0.1.0"
 dependencies = [

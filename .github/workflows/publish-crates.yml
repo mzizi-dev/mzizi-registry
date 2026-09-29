@@ -83,8 +83,13 @@ jobs:
           manifest=mzizi-rs/Cargo.toml
           agent="mzizi-registry publish-crates workflow (https://github.com/mzizi-dev/mzizi-registry)"
 
-          # Dependencies first. mzizi-ui depends on mzizi-tokens; the rest stand alone.
-          order=(mzizi-tokens mzizi-ui mzizi-brand mzizi-shell mzizi-assurance mzizi-fundi mzizi-docs mzizi-discovery)
+          # Dependencies first. mzizi-ui depends on mzizi-tokens; the other node crates stand
+          # alone. The two umbrellas re-export node crates, so they go last.
+          order=(
+            mzizi-tokens mzizi-ui mzizi-brand mzizi-shell
+            mzizi-assurance mzizi-fundi mzizi-docs mzizi-discovery
+            mzizi-roots mzizi-roots-server
+          )
 
           metadata=$(cargo metadata --manifest-path "$manifest" --no-deps --format-version 1)
 
@@ -134,7 +139,7 @@ jobs:
             fi
 
             # crates.io limits how fast NEW crates can be created, so the first release
-            # of all eight can hit 429. Wait and retry; a version that did land is found
+            # of all ten can hit 429. Wait and retry; a version that did land is found
             # by the lookup above on any re-run.
             for attempt in 1 2 3 4 5 6; do
               if out=$(cargo publish --manifest-path "$manifest" -p "$crate" --locked 2>&1); then

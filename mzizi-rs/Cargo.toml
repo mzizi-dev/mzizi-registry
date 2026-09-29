@@ -43,6 +43,8 @@ members = [
   "crates/mzizi-discovery",
   "crates/mzizi-docs",
   "crates/mzizi-shell",
+  "crates/mzizi-roots",
+  "crates/mzizi-roots-server",
 ]
 
 [workspace.package]

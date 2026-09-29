@@ -1,0 +1,37 @@
+[package]
+name = "mzizi-roots-server"
+description = "Mzizi Roots, the server side: one dependency for Mzizi's host-agnostic server components (mzizi-assurance, mzizi-fundi, mzizi-docs, mzizi-discovery), each behind a feature."
+readme = "README.md"
+keywords = ["server", "cloudflare-workers", "observability", "wasm", "mzizi"]
+categories = ["web-programming", "wasm"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+# An umbrella: no code of its own, only re-exports. The server components are sans-IO cores
+# (typed request in, typed response out, I/O behind traits), so they build for native hosts
+# and for `wasm32-unknown-unknown` Workers alike.
+[dependencies]
+mzizi-assurance = { path = "../mzizi-assurance", version = "0.1.0", optional = true }
+mzizi-fundi = { path = "../mzizi-fundi", version = "0.1.0", optional = true }
+mzizi-docs = { path = "../mzizi-docs", version = "0.1.0", optional = true }
+mzizi-discovery = { path = "../mzizi-discovery", version = "0.1.0", optional = true }
+
+[features]
+# All four by default. `assurance`, `fundi` and `discovery` have no dependencies at all;
+# `docs` brings `dioxus` in, because `mzizi-docs` also carries the two docs renderers.
+default = ["assurance", "fundi", "docs", "discovery"]
+# N8 probes, telemetry and the OTLP exporter.
+assurance = ["dep:mzizi-assurance"]
+# N9 Fundi reporter and learning loop.
+fundi = ["dep:mzizi-fundi"]
+# N10 docs API, AI context and the docs renderers.
+docs = ["dep:mzizi-docs"]
+# N11 page metadata and Schema.org JSON-LD.
+discovery = ["dep:mzizi-discovery"]

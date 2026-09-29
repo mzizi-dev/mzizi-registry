@@ -43,6 +43,13 @@ committed copy, written by `pnpm rust:generate` and gated in CI by
 `pnpm rust:generate:check`; editing it directly is overwritten on the next run. The copy
 exists because `cargo package` collects only files under the package root.
 
+## Part of Mzizi Roots
+
+This crate is also re-exported as `mzizi_roots_server::assurance` by the
+[`mzizi-roots-server`](https://crates.io/crates/mzizi-roots-server) umbrella crate (the
+`assurance` feature, on by default). Depend on this crate directly to take only this node,
+or on `mzizi-roots-server` for the whole server side in one line.
+
 ## Links
 
 - Registry index: <https://api.mzizi.dev/api/v1/ui>
