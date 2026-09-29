@@ -7,8 +7,8 @@ import { CopyCommand } from "@/components/landing/copy-command"
 
 // SKILL DETAIL — mzizi.dev/skills/[name]
 //
-// Renders one skill's full body. The body is stored in the Supabase `skills`
-// collection and authored in git (`mzizi-skills/skills/<name>/SKILL.md` in
+// Renders one skill's full body. The body comes from the published
+// `@nyuchi/mzizi-skills` bundle (`lib/skills.ts`) and is authored in git (`mzizi-skills/skills/<name>/SKILL.md` in
 // mzizi-dev/agent-tools), so what renders here is what an assistant loads.
 //
 // The body is plain Markdown/MDX text. It is rendered in a <pre> rather than

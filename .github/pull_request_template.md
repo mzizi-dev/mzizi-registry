@@ -39,7 +39,7 @@ Brief description of what this PR does and why.
 
 ## Registry / Design System (if applicable)
 
-- [ ] Supabase `components` row upserted (and `component_docs` / `component_versions` as needed)
+- [ ] No database touched — the registry holds none (component data is `registry.json` + files on disk)
 - [ ] `registry.json` updated by hand (it is authored) and `pnpm registry:normalize` run; CI verifies via `pnpm registry:verify` + `pnpm registry:validate`
 - [ ] API verified: `curl http://localhost:11736/api/v1/ui/<name>` returns source code
 - [ ] MCP tool verified: `get_component({ name })` returns source code
@@ -49,7 +49,7 @@ Brief description of what this PR does and why.
 - [ ] `CLAUDE.md` updated if architecture/commands/conventions changed
 - [ ] `CHANGELOG.md` updated
 - [ ] `openapi.yaml` updated if API surface changed
-- [ ] Version bumped in `package.json`, `lib/mcp-server.ts`, and `components/landing/footer.tsx`, and a new row inserted into the Supabase `changelog` table, if releasing
+- [ ] Version bumped in `package.json`, `lib/mcp-server.ts`, and `components/landing/footer.tsx`, and a new entry added to `content/changelog/releases.json` (then `pnpm changelog:generate`), if releasing
 
 ## Screenshots
 

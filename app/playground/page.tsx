@@ -9,8 +9,8 @@ import { ComponentGallery } from "@/components/playground/component-gallery"
  * share `ComponentGallery`; the `basePath="/playground"` prop rewrites
  * the per-card links so the gallery stays on its own route.
  *
- * ISR: revalidate every 5 minutes so new components in the Supabase
- * registry surface without redeploying. See CLAUDE.md §15.
+ * ISR: revalidate every 5 minutes. The registry is files in the deployed
+ * bundle, so new components arrive with a deploy; the interval is kept as served.
  */
 
 export const metadata: Metadata = {

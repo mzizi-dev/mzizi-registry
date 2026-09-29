@@ -1,23 +1,18 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
-import { isSupabaseConfigured, getDatabaseInfo } from "@/lib/db"
 
 const logger = createLogger("api")
 
 export async function GET() {
   try {
-    let dbStatus = "not_configured"
-    let componentCount = 0
-
-    if (isSupabaseConfigured()) {
-      const info = await getDatabaseInfo().catch(() => null)
-      if (info?.status === "connected") {
-        dbStatus = "connected"
-        componentCount = info.components
-      } else {
-        dbStatus = "error"
-      }
-    }
+    // The discovery document has always reported `database.status:
+    // "not_configured"` and zero components in production: the block was gated
+    // on Supabase credentials the registry Worker never had. The registry now
+    // holds no database, and the values are kept exactly as served — changing
+    // what a public document says about itself is a follow-up, not part of the
+    // Supabase removal. `/api/v1/ui` and `/api/v1/stats` carry the real counts.
+    const dbStatus = "not_configured"
+    const componentCount = 0
 
     logger.info("API discovery served")
 

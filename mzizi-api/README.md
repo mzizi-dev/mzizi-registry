@@ -55,21 +55,16 @@ pnpm api:routes:check    # CI gate
 ## Running it locally
 
 ```bash
-cp .dev.vars.example .dev.vars   # then fill in the Supabase values
 pnpm api:dev
 curl -s localhost:8787/v1/skills | head
 ```
 
-`.dev.vars` is gitignored. Unlike the Next app — which inlines `NEXT_PUBLIC_*` at
-build time — this Worker reads them from the environment at request time, so
-rotating a key does not need a rebuild.
+It needs no environment variables and no secrets: the registry holds no database,
+so every route the Worker imports reads files bundled with it.
 
 ## Deploying
 
 Through the **Cloudflare GitHub app**, configured in the Cloudflare dashboard —
 not from CI. See [`docs/deploying.md`](../docs/deploying.md) for the build and
-deploy commands and, more importantly, for the one setting that is easy to get
-backwards: this Worker needs the Supabase values as **Worker secrets**, because
-it reads them at request time. The portal needs the same two as **build
-variables**, because Next inlines them at compile time. Each is silently useless
-in the other's place.
+deploy commands. Neither this Worker nor the portal takes a secret or a build
+variable.

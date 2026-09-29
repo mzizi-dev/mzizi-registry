@@ -1,9 +1,9 @@
 /**
  * Client-side registry cache with localStorage persistence.
  *
- * Fetches from /api/v1/ui (backed by Supabase) and caches in
+ * Fetches from /api/v1/ui (the registry on disk) and caches in
  * localStorage for 1 hour. Server components should use
- * "@/lib/db" directly for Supabase queries.
+ * "@/lib/db" directly — it reads files, not a database.
  *
  * Usage:
  *   import { useRegistryCache } from "@/lib/db/client"

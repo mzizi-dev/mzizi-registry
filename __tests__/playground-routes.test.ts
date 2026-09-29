@@ -38,10 +38,13 @@ describe("Playground routes (issue #60)", () => {
     expect(src).toMatch(/notFound\(\)/)
   })
 
-  it("dynamic page generates static params from the registry (known slugs)", () => {
+  it("dynamic page prerenders nothing and renders every slug on demand", () => {
+    // It listed the registry only when Supabase was configured at build time,
+    // which it never was in production, so production always built an empty set.
+    // The registry holds no database now; the empty set is kept as served.
     const src = fs.readFileSync(dynamicRoute, "utf-8")
-    expect(src).toMatch(/generateStaticParams/)
-    expect(src).toMatch(/getAllComponents/)
+    expect(src).toMatch(/export async function generateStaticParams\(\) \{\n\s*return \[\]\n\}/)
+    expect(src).not.toMatch(/isSupabaseConfigured/)
   })
 
   it("index page renders the live component gallery", () => {

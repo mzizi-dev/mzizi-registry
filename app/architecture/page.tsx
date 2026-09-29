@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import Link from "next/link"
-import { getHelixModel, isSupabaseConfigured } from "@/lib/db"
+import { getHelixModel } from "@/lib/db"
+import { RENDER_FILE_BACKED_PAGES } from "@/lib/file-backed-pages"
 import type { HelixNode, HelixStrand } from "@/lib/db/types"
 import { Skeleton } from "@/components/registry/n2-primitives/skeleton"
 import { ArchitectureExplorer } from "@/components/landing/architecture-explorer"
@@ -259,7 +260,7 @@ function BackboneSection({
 }
 
 export default async function ArchitecturePage() {
-  if (!isSupabaseConfigured()) {
+  if (!RENDER_FILE_BACKED_PAGES) {
     return (
       <article className="mx-auto max-w-3xl py-12">
         <h1 className="font-serif text-3xl font-bold">Architecture</h1>
@@ -655,10 +656,10 @@ export default async function ArchitecturePage() {
         <p>
           Mzizi is in Phase 0. The syntax is being designed; no benchmark has been run; nothing
           above is a shipped feature or a measured number. The corpus taxonomy — node covenants,
-          strand groupings, rung classifications — is live data in Supabase: relabel a document with
-          an <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">UPDATE</code> and
-          every consumer (this page, the MCP server, AI assistants) sees the new shape on the next
-          read.
+          strand groupings, rung classifications — is doctrine on disk under{" "}
+          <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">content/doctrine</code>:
+          relabel a document in a pull request and every consumer (this page, the API, the MCP
+          server, AI assistants) sees the new shape on the next deploy.
         </p>
       </footer>
     </article>

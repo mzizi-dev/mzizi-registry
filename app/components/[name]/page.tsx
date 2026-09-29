@@ -5,22 +5,18 @@ import { AutoPreview } from "@/components/playground/auto-preview"
 import { ComponentDocSection } from "@/components/playground/component-doc-section"
 import { SafeSection } from "@/components/error-boundary"
 import { Badge } from "@/components/registry/n2-primitives/badge"
-import { getAllComponents, getComponent, isSupabaseConfigured } from "@/lib/db"
+import { getComponent } from "@/lib/db"
 import { readComponentSource } from "@/lib/registry-source"
 
 /**
- * Static params: generate a page per component by listing the DB registry.
- * If Supabase is unreachable at build time we emit an empty set and let the
- * page render on demand — avoiding a build failure in preview environments.
+ * Static params: none — every page renders on demand. This listed the
+ * registry only when Supabase was configured at build time, which it never
+ * was in production, so the set has always been empty there. Prerendering
+ * every component instead would change how each page is built and cached, so
+ * that is left to its own change rather than slipped into the Supabase removal.
  */
 export async function generateStaticParams() {
-  if (!isSupabaseConfigured()) return []
-  try {
-    const components = await getAllComponents()
-    return components.map((c) => ({ name: c.name }))
-  } catch {
-    return []
-  }
+  return []
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ name: string }> }) {

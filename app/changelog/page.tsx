@@ -1,14 +1,15 @@
 import type { Metadata } from "next"
 
-import { listChangelog, isSupabaseConfigured } from "@/lib/db"
+import { getChangelogEntries } from "@/lib/db"
+import { RENDER_FILE_BACKED_PAGES } from "@/lib/file-backed-pages"
 import { NodeBadgeList } from "@/components/ui/node-badge"
 
 // CHANGELOG — issue #85
 //
-// Server-rendered timeline of releases. Reads from the node-aware
-// `list_changelog()` RPC introduced by the `versioning_and_changelog_v2`
-// migration; renders each release with its version, title, release date,
-// description, and the ecosystem nodes touched. The node badges are
+// Server-rendered timeline of releases. Reads the committed release record
+// (`content/changelog/releases.json`, via `getChangelogEntries()`) — it read
+// the `list_changelog()` RPC while the changelog was in Supabase. Renders each
+// release with its version, title, release date, description, and the ecosystem nodes touched. The node badges are
 // coloured by helix classification per the live `mzizi-changelog-renderer`
 // (registry v2.0.0) — never by a fixed list of node numbers, so a release
 // naming a node newer than any in code still renders.
@@ -31,7 +32,7 @@ function formatDate(iso: string | null | undefined): string {
 }
 
 export default async function ChangelogPage() {
-  if (!isSupabaseConfigured()) {
+  if (!RENDER_FILE_BACKED_PAGES) {
     return (
       <article className="mx-auto w-full max-w-3xl space-y-6 py-8">
         <header className="space-y-3">
@@ -53,7 +54,7 @@ export default async function ChangelogPage() {
     )
   }
 
-  const entries = await listChangelog(100, 0).catch(() => [])
+  const entries = (await getChangelogEntries()).slice(0, 100)
 
   return (
     <article className="mx-auto w-full max-w-3xl space-y-8 py-8">

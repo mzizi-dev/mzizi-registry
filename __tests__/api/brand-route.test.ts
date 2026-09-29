@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import { describe, it, expect, vi, beforeEach } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
@@ -17,7 +17,7 @@ vi.mock("next/server", () => ({
 }))
 
 /**
- * EVERY SPEC HERE RUNS WITH SUPABASE UNSET, ON PURPOSE.
+ * EVERY SPEC HERE RUNS WITH NO DATABASE, BECAUSE THERE IS NONE.
  *
  * `/api/v1/brand` opened with `if (!isSupabaseConfigured()) return 503` and
  * then read seven collections over the wire. The suite that stood here asserted
@@ -26,22 +26,12 @@ vi.mock("next/server", () => ({
  * serving the corrected 7/7/7 palette answered 503 to every caller, and the
  * green test said it should.
  *
- * So the stubs below are not scaffolding for one "unconfigured" case any more.
- * They are the contract: this route must serve the complete brand system with
- * every Supabase variable empty, the way `pnpm tokens:verify` is proven to run
- * with no credential. Stubbed empty rather than left to the ambient
- * environment, because a developer machine with `.env.local` would otherwise
- * pass for the wrong reason.
+ * The contract: this route serves the complete brand system from files, the way
+ * `pnpm tokens:verify` runs with no credential. The Supabase env stubs that
+ * stood below are gone with Supabase — the registry reads no database at all.
  */
 beforeEach(() => {
-  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "")
-  vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "")
-  vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "")
   vi.resetModules()
-})
-
-afterEach(() => {
-  vi.unstubAllEnvs()
 })
 
 type Served = {

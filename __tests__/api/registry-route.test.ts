@@ -28,7 +28,6 @@ vi.mock("next/server", () => ({
 const mockGetAllComponents = vi.fn()
 
 vi.mock("@/lib/db", () => ({
-  isSupabaseConfigured: () => true,
   getAllComponents: () => mockGetAllComponents(),
 }))
 

@@ -1,5 +1,11 @@
 # What the database is allowed to hold
 
+> **Superseded, 2026-09-29.** The owner's final decision: nothing touches Supabase except
+> the Mzizi console (`mzizi-dev/mzizi-console`). The registry holds no database, no client
+> and no credential. The machine-written data this rule allowed — version history, the
+> fundi issue and self-healing logs, telemetry — belongs to the console. What follows is
+> kept as the record of the rule this replaced.
+
 Decided by the repo owner, 2026-08-04. This supersedes every earlier statement that
 Supabase is the default home for Mzizi data.
 

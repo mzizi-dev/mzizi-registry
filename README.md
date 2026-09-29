@@ -130,30 +130,36 @@ radius scale value.
 Resource paths serve under both `/v1/` (canonical) and `/api/v1/`. Full spec in
 [`openapi.yaml`](openapi.yaml), also served at `GET /api/openapi`.
 
-| Endpoint                                                               | Method   | Description                                                     |
-| ---------------------------------------------------------------------- | -------- | --------------------------------------------------------------- |
-| `/api/v1`                                                              | GET      | Discovery document                                              |
-| `/api/v1/ui`                                                           | GET      | Component registry index                                        |
-| `/api/v1/ui/{name}`                                                    | GET      | Component source + metadata (shadcn format)                     |
-| `/api/v1/ui/{name}/docs`                                               | GET      | Structured docs (use cases, variants, a11y)                     |
-| `/api/v1/ui/{name}/versions`                                           | GET      | Component version history                                       |
-| `/api/v1/brand`                                                        | GET      | Brand system (minerals, typography, spacing)                    |
-| `/api/v1/architecture`                                                 | GET      | Full architecture snapshot                                      |
-| `/api/v1/architecture/nodes/{n}`                                       | GET      | One node or rung of the helix (`n` is uncapped)                 |
-| `/api/v1/architecture/axes`, `/layers/{n}`, `/frontend/{axes\|layers}` | GET      | **410 Gone** — retired models                                   |
-| `/api/v1/ubuntu/pillars`, `/ubuntu/principles`                         | GET      | The Five Ubuntu Pillars / Principles                            |
-| `/api/v1/docs`, `/docs/{slug}`                                         | GET      | **410 Gone** — long-form docs moved to docs.mzizi.dev           |
-| `/api/v1/changelog`, `/changelog/{version}`                            | GET      | Release history                                                 |
-| `/api/v1/ai/instructions{,/{name}}`                                    | GET      | AI instruction sets (mcp-server / claude / copilot)             |
-| `/api/v1/skills{,/{name},/summary}`                                    | GET      | Published agent skills                                          |
-| `/api/v1/search?q=`                                                    | GET      | Cross-resource search — **503 today**, the last DB-backed route |
-| `/api/v1/ecosystem`                                                    | GET      | Architecture principles + framework decision                    |
-| `/api/v1/data-layer`                                                   | GET      | Local-first + cloud layer specification                         |
-| `/api/v1/pipeline`                                                     | GET      | Open data pipeline (Redpanda, Flink, Doris)                     |
-| `/api/v1/sovereignty`                                                  | GET      | Technology sovereignty assessments                              |
-| `/api/v1/stats?days=`                                                  | GET      | Open-data usage metrics (CC BY 4.0, `?days=7\|30\|90`)          |
-| `/api/v1/health`                                                       | GET      | Service health check                                            |
-| `/mcp`                                                                 | POST/GET | **308** → `mcp.mzizi.dev/mcp` (the one MCP server)              |
+The registry holds no database — every route reads files that ship with the app. The
+routes marked **503** answer `{"error":"Database not configured"}`: they were gated on
+Supabase credentials the Worker never had, and they keep that exact response so removing
+Supabase changed nothing a consumer can see. `openapi.yaml` still describes the Supabase
+era in places; it is served verbatim, so correcting it is a change to a public response.
+
+| Endpoint                                                               | Method   | Description                                                                                   |
+| ---------------------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------- |
+| `/api/v1`                                                              | GET      | Discovery document                                                                            |
+| `/api/v1/ui`                                                           | GET      | Component registry index                                                                      |
+| `/api/v1/ui/{name}`                                                    | GET      | Component source + metadata (shadcn format)                                                   |
+| `/api/v1/ui/{name}/docs`                                               | GET      | Structured docs — **503 today**; the data is file-backed, serving it is a follow-up           |
+| `/api/v1/ui/{name}/versions`                                           | GET      | Component version history — **503**; the history is console data, not the registry's          |
+| `/api/v1/brand`                                                        | GET      | Brand system (minerals, typography, spacing)                                                  |
+| `/api/v1/architecture`                                                 | GET      | Full architecture snapshot                                                                    |
+| `/api/v1/architecture/nodes/{n}`                                       | GET      | One node or rung of the helix (`n` is uncapped)                                               |
+| `/api/v1/architecture/axes`, `/layers/{n}`, `/frontend/{axes\|layers}` | GET      | **410 Gone** — retired models                                                                 |
+| `/api/v1/ubuntu/pillars`, `/ubuntu/principles`                         | GET      | The Five Ubuntu Pillars / Principles                                                          |
+| `/api/v1/docs`, `/docs/{slug}`                                         | GET      | **410 Gone** — long-form docs moved to docs.mzizi.dev                                         |
+| `/api/v1/changelog`, `/changelog/{version}`                            | GET      | Release history                                                                               |
+| `/api/v1/ai/instructions{,/{name}}`                                    | GET      | AI instruction sets; the single-item form answers **503 today** (file-backed follow-up)       |
+| `/api/v1/skills{,/{name},/summary}`                                    | GET      | Published agent skills                                                                        |
+| `/api/v1/search?q=`                                                    | GET      | Cross-resource search — **503 today**; needs no database, enabling it is a follow-up          |
+| `/api/v1/ecosystem`                                                    | GET      | Architecture principles + framework decision                                                  |
+| `/api/v1/data-layer`                                                   | GET      | Local-first + cloud layer specification                                                       |
+| `/api/v1/pipeline`                                                     | GET      | Open data pipeline (Redpanda, Flink, Doris)                                                   |
+| `/api/v1/sovereignty`                                                  | GET      | Technology sovereignty assessments                                                            |
+| `/api/v1/stats?days=`                                                  | GET      | Usage metrics shape (CC BY 4.0, `?days=7\|30\|90`) — always zeroed; telemetry is console data |
+| `/api/v1/health`                                                       | GET      | Service health check                                                                          |
+| `/mcp`                                                                 | POST/GET | **308** → `mcp.mzizi.dev/mcp` (the one MCP server)                                            |
 
 ---
 

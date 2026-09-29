@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getHelixNode } from "@/lib/db"
-import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("architecture-node-detail")
 
@@ -35,16 +34,10 @@ export const revalidate = 3600
  * Returns 400 only for input that is not a positive integer at all.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ n: string }> }) {
-  const start = Date.now()
   const { n } = await params
   const parsed = Number.parseInt(n, 10)
 
   if (!Number.isInteger(parsed) || parsed < 1 || String(parsed) !== n.trim()) {
-    trackApiCall({
-      endpoint: "/api/v1/architecture/nodes/[n]",
-      durationMs: Date.now() - start,
-      statusCode: 400,
-    })
     return NextResponse.json(
       { error: "node must be a positive integer", received: n },
       { status: 400, headers: CORS }
@@ -61,11 +54,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ n: 
     // it carries is `readComponents()` over the registry on disk.
     const element = await getHelixNode(parsed)
     if (!element) {
-      trackApiCall({
-        endpoint: `/api/v1/architecture/nodes/${parsed}`,
-        durationMs: Date.now() - start,
-        statusCode: 404,
-      })
       return NextResponse.json(
         {
           error: `No node or rung numbered ${parsed}`,
@@ -76,11 +64,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ n: 
       )
     }
 
-    trackApiCall({
-      endpoint: `/api/v1/architecture/nodes/${parsed}`,
-      durationMs: Date.now() - start,
-      statusCode: 200,
-    })
     return NextResponse.json(
       { data: element, meta: { model: "mzizi-dna-helix", version: "v1" } },
       { headers: CORS_CACHE }
@@ -88,11 +71,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ n: 
   } catch (error) {
     logger.error("Node detail error", {
       error: error instanceof Error ? error : new Error(String(error)),
-    })
-    trackApiCall({
-      endpoint: `/api/v1/architecture/nodes/${parsed}`,
-      durationMs: Date.now() - start,
-      statusCode: 500,
     })
     return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: CORS })
   }

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getSkill, listSkillNames, skillsVersion } from "@/lib/skills"
-import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("skill-by-name")
 
@@ -32,15 +31,9 @@ const SKILL_NAME_PATTERN = /^[a-z][a-z0-9-]*$/
  * strictly safer than it was against a live table.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ name: string }> }) {
-  const start = Date.now()
   const { name } = await params
 
   if (!SKILL_NAME_PATTERN.test(name)) {
-    trackApiCall({
-      endpoint: "/api/v1/skills/[name]",
-      durationMs: Date.now() - start,
-      statusCode: 400,
-    })
     return NextResponse.json(
       { error: "Invalid skill name", received: name },
       { status: 400, headers: CORS }
@@ -50,11 +43,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
   try {
     const skill = getSkill(name)
     if (!skill) {
-      trackApiCall({
-        endpoint: "/api/v1/skills/[name]",
-        durationMs: Date.now() - start,
-        statusCode: 404,
-      })
       // Name the alternatives: the set is small, fixed at build time, and a
       // caller who mistyped is one line from the right answer.
       return NextResponse.json(
@@ -63,11 +51,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       )
     }
 
-    trackApiCall({
-      endpoint: "/api/v1/skills/[name]",
-      durationMs: Date.now() - start,
-      statusCode: 200,
-    })
     return NextResponse.json(
       { data: skill, meta: { version: skillsVersion() } },
       { headers: CORS_CACHE }
@@ -75,11 +58,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
   } catch (error) {
     logger.error("Skill fetch error", {
       error: error instanceof Error ? error : new Error(String(error)),
-    })
-    trackApiCall({
-      endpoint: "/api/v1/skills/[name]",
-      durationMs: Date.now() - start,
-      statusCode: 500,
     })
     return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: CORS })
   }
