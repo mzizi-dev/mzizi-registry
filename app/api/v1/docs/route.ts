@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-import { trackApiCall } from "@/lib/metrics"
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -17,7 +16,6 @@ const CORS = {
  * the live docs site instead of relying on the API.
  */
 export async function GET() {
-  trackApiCall({ endpoint: "/api/v1/docs", durationMs: 0, statusCode: 410 })
   return NextResponse.json(
     {
       error: "Gone",

@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getComponent } from "@/lib/db"
 import { readComponentSource } from "@/lib/registry-source"
-import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("registry")
 
@@ -14,23 +13,17 @@ const CORS_CACHE = {
 /**
  * GET /api/v1/ui/[name] — Individual component with inline source
  *
- * Metadata comes from Supabase; the SOURCE comes from disk
+ * Metadata comes from `registry.json`; the SOURCE comes from disk
  * (`components/registry/**`, via `@/lib/registry-source`). See
  * `docs/component-source-migration.md` — the database no longer holds a copy,
  * so a component whose file is missing is a 404 and never a 200 with an empty
  * body.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ name: string }> }) {
-  const start = Date.now()
   try {
     const { name } = await params
 
     if (!name || typeof name !== "string") {
-      trackApiCall({
-        endpoint: "/api/v1/ui/[name]",
-        durationMs: Date.now() - start,
-        statusCode: 400,
-      })
       return NextResponse.json(
         { error: "Invalid component name" },
         { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }
@@ -46,12 +39,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
 
     if (!component) {
       logger.warn("Component not found", { data: { name } })
-      trackApiCall({
-        endpoint: `/api/v1/ui/${name}`,
-        durationMs: Date.now() - start,
-        statusCode: 404,
-        componentName: name,
-      })
       return NextResponse.json(
         { error: `Component "${name}" not found in registry` },
         { status: 404, headers: { "Access-Control-Allow-Origin": "*" } }
@@ -74,12 +61,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     if (isDataItem && !component.files?.length) {
       logger.info("Theme item served", {
         data: { name, cssVarGroups: Object.keys(component.cssVars ?? {}) },
-      })
-      trackApiCall({
-        endpoint: `/api/v1/ui/${name}`,
-        durationMs: Date.now() - start,
-        statusCode: 200,
-        componentName: name,
       })
       return NextResponse.json(
         {
@@ -111,12 +92,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
 
     if (source === null) {
       logger.warn("Component has no source on disk or in the registry", { data: { name } })
-      trackApiCall({
-        endpoint: `/api/v1/ui/${name}`,
-        durationMs: Date.now() - start,
-        statusCode: 404,
-        componentName: name,
-      })
       return NextResponse.json(
         { error: `No source code available for "${name}"` },
         { status: 404, headers: { "Access-Control-Allow-Origin": "*" } }
@@ -143,12 +118,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     if (declared.length > 1) {
       logger.error("Registry item declares more files than it has sources", {
         data: { name, declared: declared.map((f) => f.path) },
-      })
-      trackApiCall({
-        endpoint: `/api/v1/ui/${name}`,
-        durationMs: Date.now() - start,
-        statusCode: 500,
-        componentName: name,
       })
       return NextResponse.json(
         {
@@ -178,13 +147,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       data: { name, fileCount: files.length },
     })
 
-    trackApiCall({
-      endpoint: `/api/v1/ui/${name}`,
-      durationMs: Date.now() - start,
-      statusCode: 200,
-      componentName: name,
-    })
-
     return NextResponse.json(
       {
         $schema: "https://ui.shadcn.com/schema/registry-item.json",
@@ -209,7 +171,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     logger.error("Registry item error", {
       error: error instanceof Error ? error : new Error(String(error)),
     })
-    trackApiCall({ endpoint: "/api/v1/ui/[name]", durationMs: Date.now() - start, statusCode: 500 })
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }

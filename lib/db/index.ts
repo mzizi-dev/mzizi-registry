@@ -18,26 +18,18 @@
  * header is the first thing someone greps for, so a plausible-but-absent one
  * costs more than no path at all.
  *
- * What is still Supabase, and why — it is written by a machine, not a person:
+ * Nothing here is Supabase any more. The registry holds no database: every
+ * function in this module reads files that ship with the app. The machine-
+ * written data that used to be read from Supabase — component version history,
+ * usage telemetry, the fundi and observability logs, health and chaos events,
+ * the MCP tool registry — belongs to the Mzizi console (mzizi-dev/mzizi-console),
+ * the only thing in the estate that talks to Supabase. The routes and pages that
+ * served it answer what production answered with no database configured.
  *
- *   component_versions / tool_versions  — version history
- *   fundi_issues / fundi_healing_log    — the issue log and the self-healing log
- *   observability_events / chaos_events / usage_events — telemetry
- *
- * `changelog` / `releases` and the `brand_*` views are NOT on that list any
- * more. They were, and `docs/db-contents-rule.md` allowed the first as "version
- * history". The owner's later ruling supersedes it: the registry has no
- * database going forwards, everything is from disk. Both moved into the repo,
- * where a human's edit shows up in a diff — which was always the test that rule
- * applied. `/api/v1/brand`, `/api/v1/changelog` and the architecture node
- * routes now answer with every Supabase variable unset.
+ * `supabase/` (schema.sql, seeds, data-migrations) stays in the repo as history;
+ * nothing here reads it.
  *
  * See docs/db-contents-rule.md for the original rule and the live audit.
- *
- * Env vars (still needed for the above):
- *   NEXT_PUBLIC_SUPABASE_URL      — Supabase project URL
- *   NEXT_PUBLIC_SUPABASE_ANON_KEY — Public anon key (read-only via RLS)
- *   SUPABASE_SERVICE_ROLE_KEY     — Service role key (write access, server only)
  *
  * Usage:
  *   import { getComponent, getAllComponents } from "@/lib/db"
@@ -46,30 +38,13 @@
 
 import { doctrineRows, readDoctrineSorted, DOCTRINE } from "@/lib/doctrine"
 import { readComponent, readComponents, readNodeCounts, type RegistryItem } from "@/lib/registry"
-import { componentNameHistory } from "@/lib/component-renames"
 import { CHANGELOG_RELEASES } from "@/lib/changelog.generated"
-import { createClient } from "@supabase/supabase-js"
 import type {
   ComponentRow,
   ComponentDocRow,
   ComponentDemoRow,
   ComponentWithDocs,
-  ComponentInsert,
-  ComponentDocInsert,
-  ComponentDemoInsert,
   DatabaseInfo,
-  BrandMineralRow,
-  BrandMineralInsert,
-  BrandSemanticColorRow,
-  BrandSemanticColorInsert,
-  BrandTypographyRow,
-  BrandTypographyInsert,
-  BrandSpacingRow,
-  BrandSpacingInsert,
-  BrandEcosystemRow,
-  BrandEcosystemInsert,
-  BrandMetaRow,
-  BrandMetaInsert,
   ArchitecturePrincipleRow,
   ArchitectureFrameworkRow,
   ArchitectureDataLayerRow,
@@ -80,71 +55,13 @@ import type {
   ArchitectureRemovedRow,
   AiInstructionRow,
   ChangelogRow,
-  ChangelogInsert,
-  ChangelogListRow,
-  ComponentVersionRow,
-  McpToolRegistryRow,
   HelixClass,
   HelixModel,
   HelixNode,
   HelixStrand,
   UbuntuPillarRow,
   UbuntuPrincipleRow,
-  FundiIssueRow,
-  ObservabilityEventRow,
-  ChaosEventRow,
-  SystemCountsRow,
 } from "./types"
-
-// ── Supabase clients ────────────────────────────────────────────────
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ""
-
-type SupabaseClient = ReturnType<typeof createClient>
-
-/**
- * Public client (uses anon key, respects RLS).
- * Safe for client-side and server-side reads.
- */
-let _publicClient: SupabaseClient | null = null
-
-export function getPublicClient(): SupabaseClient {
-  if (!_publicClient) {
-    _publicClient = createClient(supabaseUrl, supabaseAnonKey)
-  }
-  return _publicClient
-}
-
-/**
- * Admin client (uses service_role key, bypasses RLS).
- * Server-only — for seed scripts and write operations.
- */
-let _adminClient: SupabaseClient | null = null
-
-export function getAdminClient(): SupabaseClient {
-  if (!_adminClient) {
-    _adminClient = createClient(supabaseUrl, supabaseServiceKey)
-  }
-  return _adminClient
-}
-
-/**
- * Check if Supabase is configured (URL + anon key — enough for public reads).
- */
-export function isSupabaseConfigured(): boolean {
-  return Boolean(supabaseUrl && supabaseAnonKey)
-}
-
-/**
- * Check if the service-role (admin) client is configured. Admin/write paths
- * must guard on this so they no-op cleanly when the secret is absent (e.g. in
- * preview/CI) instead of constructing a client with an empty key.
- */
-export function isAdminConfigured(): boolean {
-  return Boolean(supabaseUrl && supabaseServiceKey)
-}
 
 // ── Component docs, from the manifest ───────────────────────────────
 //
@@ -352,62 +269,6 @@ export async function getAllComponentsWithDocs(): Promise<ComponentWithDocs[]> {
   }))
 }
 
-// ── Write operations (server-only, uses service_role) ───────────────
-
-/**
- * Upsert a component (insert or update on conflict).
- */
-export async function upsertComponent(component: ComponentInsert): Promise<ComponentRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("components")
-    .upsert(component, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ComponentRow
-}
-
-/**
- * Upsert component documentation.
- */
-export async function upsertComponentDoc(doc: ComponentDocInsert): Promise<ComponentDocRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("component_docs")
-    .upsert(doc, { onConflict: "component_name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ComponentDocRow
-}
-
-/**
- * Upsert a component demo.
- */
-export async function upsertComponentDemo(demo: ComponentDemoInsert): Promise<ComponentDemoRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("component_demos")
-    .upsert(demo, { onConflict: "component_name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ComponentDemoRow
-}
-
-/**
- * Delete a component and its docs/demos (cascade).
- */
-export async function deleteComponent(name: string): Promise<void> {
-  const { error } = await getAdminClient().from("components").delete().eq("name", name)
-
-  if (error) throw new Error(error.message)
-}
-
 // ── Registry count queries ──────────────────────────────────────────
 
 export interface RegistryCounts {
@@ -459,146 +320,6 @@ export async function getDatabaseInfo(): Promise<DatabaseInfo> {
     demos: items.filter((c) => Boolean((c as unknown as { meta?: RegistryMeta }).meta?.hasDemo))
       .length,
     status: "connected",
-  }
-}
-
-// ── Brand queries ──────────────────────────────────────────────────
-
-/**
- * Get all brand minerals, sorted by sort_order.
- */
-export async function getMinerals(): Promise<BrandMineralRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("brand_minerals")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as BrandMineralRow[]
-}
-
-/**
- * Get all semantic colors.
- */
-export async function getSemanticColors(): Promise<BrandSemanticColorRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("brand_semantic_colors")
-    .select("*")
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as BrandSemanticColorRow[]
-}
-
-/**
- * Get semantic colors filtered by type (e.g. 'semantic' or 'background').
- */
-export async function getSemanticColorsByType(colorType: string): Promise<BrandSemanticColorRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("brand_semantic_colors")
-    .select("*")
-    .eq("color_type", colorType)
-    .order("name")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as BrandSemanticColorRow[]
-}
-
-/**
- * Get all typography entries, sorted by sort_order.
- */
-export async function getTypography(): Promise<BrandTypographyRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("brand_typography")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as BrandTypographyRow[]
-}
-
-/**
- * Get typography entries by type ('font' or 'scale').
- */
-export async function getTypographyByType(entryType: string): Promise<BrandTypographyRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("brand_typography")
-    .select("*")
-    .eq("entry_type", entryType)
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as BrandTypographyRow[]
-}
-
-/**
- * Get all spacing tokens, sorted by sort_order.
- */
-export async function getSpacing(): Promise<BrandSpacingRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("brand_spacing")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as BrandSpacingRow[]
-}
-
-/**
- * Get all ecosystem brands, sorted by sort_order.
- */
-export async function getEcosystemBrands(): Promise<BrandEcosystemRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("brand_ecosystem")
-    .select("*")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as BrandEcosystemRow[]
-}
-
-/**
- * Get brand metadata (single row).
- */
-export async function getBrandMeta(): Promise<BrandMetaRow | null> {
-  const { data, error } = await getPublicClient().from("brand_meta").select("*").limit(1).single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as BrandMetaRow
-}
-
-/**
- * Get the full brand system from DB, assembled into the same shape as BRAND_SYSTEM.
- */
-export async function getBrandSystem(): Promise<{
-  minerals: BrandMineralRow[]
-  semanticColors: BrandSemanticColorRow[]
-  backgrounds: BrandSemanticColorRow[]
-  typography: BrandTypographyRow[]
-  spacing: BrandSpacingRow[]
-  ecosystem: BrandEcosystemRow[]
-  meta: BrandMetaRow | null
-} | null> {
-  try {
-    const [minerals, semanticColors, backgrounds, typography, spacing, ecosystem, meta] =
-      await Promise.all([
-        getMinerals(),
-        getSemanticColorsByType("semantic"),
-        getSemanticColorsByType("background"),
-        getTypography(),
-        getSpacing(),
-        getEcosystemBrands(),
-        getBrandMeta(),
-      ])
-
-    if (minerals.length === 0 && !meta) return null
-
-    return { minerals, semanticColors, backgrounds, typography, spacing, ecosystem, meta }
-  } catch {
-    return null
   }
 }
 
@@ -660,107 +381,6 @@ export async function getSovereignty(): Promise<ArchitectureSovereigntyRow[]> {
 export async function getRemovedTechnologies(): Promise<ArchitectureRemovedRow[]> {
   return doctrineRows<ArchitectureRemovedRow>(DOCTRINE.removed)
 }
-
-// ── Brand write operations (server-only) ───────────────────────────
-
-/**
- * Upsert a brand mineral.
- */
-export async function upsertBrandMineral(mineral: BrandMineralInsert): Promise<BrandMineralRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("brand_minerals")
-    .upsert(mineral, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as BrandMineralRow
-}
-
-/**
- * Upsert a semantic color.
- */
-export async function upsertBrandSemanticColor(
-  color: BrandSemanticColorInsert
-): Promise<BrandSemanticColorRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("brand_semantic_colors")
-    .upsert(color, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as BrandSemanticColorRow
-}
-
-/**
- * Upsert a typography entry.
- */
-export async function upsertBrandTypography(
-  entry: BrandTypographyInsert
-): Promise<BrandTypographyRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("brand_typography")
-    .upsert(entry, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as BrandTypographyRow
-}
-
-/**
- * Upsert a spacing token.
- */
-export async function upsertBrandSpacing(spacing: BrandSpacingInsert): Promise<BrandSpacingRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("brand_spacing")
-    .upsert(spacing, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as BrandSpacingRow
-}
-
-/**
- * Upsert an ecosystem brand.
- */
-export async function upsertBrandEcosystem(
-  brand: BrandEcosystemInsert
-): Promise<BrandEcosystemRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("brand_ecosystem")
-    .upsert(brand, { onConflict: "name" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as BrandEcosystemRow
-}
-
-/**
- * Upsert brand metadata (single row — deletes existing then inserts).
- */
-export async function upsertBrandMeta(meta: BrandMetaInsert): Promise<BrandMetaRow> {
-  const admin = getAdminClient()
-
-  // Delete existing rows (single row table)
-  await admin.from("brand_meta").delete().neq("id", 0)
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (admin as any).from("brand_meta").insert(meta).select().single()
-
-  if (error) throw new Error(error.message)
-  return data as BrandMetaRow
-}
-
-// ── Architecture write operations (server-only) ────────────────────
 
 // ── AI instruction queries ─────────────────────────────────────────
 
@@ -901,120 +521,6 @@ export async function getChangelogByVersion(version: string): Promise<ChangelogR
     })
 }
 
-/**
- * The current release version.
- *
- * Reads the `releases` view, which orders across both version eras. Ordering
- * `changelog` by `released_at DESC` — what this did — is wrong twice: ten rows
- * have no `released_at`, and Postgres sorts NULLS FIRST on DESC, so this
- * returned **4.1.8**. That is not the current version and not even the newest
- * of the undated rows; it was whichever null landed first.
- *
- * Sorting by semver instead would return 4.2.0, also wrong: the version line
- * was deliberately reset and 1.0.0 supersedes the whole 4.x line (§14). The
- * view carries that as `line` / `line_rank` and is already sorted, so the first
- * row is the answer.
- */
-export async function getLatestVersion(): Promise<string | null> {
-  const { data, error } = await getPublicClient().from("releases").select("version").limit(1)
-
-  if (error) throw new Error(error.message)
-  return (data as unknown as Array<{ version: string }>)?.[0]?.version ?? null
-}
-
-/**
- * Upsert a changelog entry (admin only).
- */
-export async function upsertChangelog(entry: ChangelogInsert): Promise<ChangelogRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("changelog")
-    .upsert(entry, { onConflict: "version" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as ChangelogRow
-}
-
-// ── Component version queries ───────────────────────────────────────
-
-/**
- * Get version history for a component, most recent first.
- */
-/**
- * The columns `/api/v1/ui/{name}/versions` serves.
- *
- * Named explicitly rather than `*` because the `component_versions` view also
- * projects `source_code` out of each archived version's `sourceCode` key, and
- * `*` served it: a public, and by then STALE, second copy of component source
- * that lives on disk in git (§8.3). Component source has exactly one home and
- * this route is not it. A new column added to the view is now invisible here
- * until someone adds it deliberately, which is the point.
- */
-const VERSION_COLUMNS = [
-  "component_name",
-  "entity_name",
-  "entity_kind",
-  "version",
-  "version_number",
-  "change_type",
-  "change_kind",
-  "release",
-  "release_marker",
-  "release_breaking",
-  "comment",
-  "description",
-  "status",
-  "ecosystem_node",
-  "category",
-  "subcategory",
-  "tags",
-  "changed_by",
-  "created_at",
-].join(", ")
-
-export async function getComponentVersions(componentName: string): Promise<ComponentVersionRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("component_versions")
-    .select(VERSION_COLUMNS)
-    // Every name the component has had — see `componentNameHistory`.
-    .in("component_name", componentNameHistory(componentName))
-    // `component_versions` has no `released_at` — it is a VIEW whose timestamp
-    // column is `created_at`. Ordering by a column that does not exist made
-    // PostgREST error, `getComponentVersions` throw, and
-    // `/api/v1/ui/{name}/versions` answer 500 for every component in the
-    // registry. `changelog` does have `released_at`, which is why the two other
-    // call sites in this file are correct and only this one was wrong.
-    .order("created_at", { ascending: false })
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as ComponentVersionRow[]
-}
-
-/**
- * Get a specific component version.
- */
-export async function getComponentVersion(
-  componentName: string,
-  version: string
-): Promise<ComponentVersionRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("component_versions")
-    .select(VERSION_COLUMNS)
-    .in("component_name", componentNameHistory(componentName))
-    .eq("version", version)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as ComponentVersionRow
-}
-
 // ── Design token queries ────────────────────────────────────────────
 //
 // `getDesignTokens()` is DELETED, not repointed.
@@ -1071,35 +577,6 @@ export async function getLayerSummary(layer: string): Promise<LayerSummary> {
   }
 }
 
-// ── Component links (RPC wrapper) ───────────────────────────────────
-
-export interface ComponentLink {
-  url: string
-  kind: string
-  title?: string
-}
-
-/**
- * Get portal URLs for a component via the Supabase RPC `get_component_links`.
- * Falls back to canonical portal URLs if the RPC is not available.
- */
-export async function getComponentLinks(name: string): Promise<ComponentLink[]> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("get_component_links", {
-    component_name: name,
-  })
-
-  if (!error && Array.isArray(data)) {
-    return data as ComponentLink[]
-  }
-
-  // Fallback: canonical URL pattern for the portal
-  return [
-    { url: `https://mzizi.dev/components/${name}`, kind: "portal" },
-    { url: `https://api.mzizi.dev/v1/ui/${name}`, kind: "api" },
-  ]
-}
-
 // ── Architecture — the Mzizi DNA double helix ────────────────────────
 //
 // `component_documents` / `documentation-architecture-{nodes,strands}` is
@@ -1117,7 +594,7 @@ export async function getComponentLinks(name: string): Promise<ComponentLink[]> 
 
 /**
  * Live per-node component counts via the `get_node_counts()` RPC, keyed
- * by node number. Empty object if Supabase isn't configured.
+ * by node number, counted from the registry on disk.
  */
 export async function getNodeCounts(): Promise<Record<number, number>> {
   return readNodeCounts()
@@ -1128,8 +605,8 @@ export async function getNodeCounts(): Promise<Record<number, number>> {
  * (cross-cutting base pairs) + the six strands, read live from
  * `component_documents` (`documentation-architecture-{nodes,strands}`),
  * the single source of truth the MCP serves. Per-node component counts
- * come from `get_node_counts()`. Returns empty arrays if Supabase isn't
- * configured or the collections are empty — callers render an empty
+ * are counted from the registry on disk. Returns empty arrays if the
+ * collections are empty — callers render an empty
  * state. There are no axes and no outliers.
  */
 export async function getHelixModel(): Promise<HelixModel> {
@@ -1220,7 +697,7 @@ export async function getHelixModel(): Promise<HelixModel> {
  * Deliberately takes no upper bound. Node numbers are labels, not a
  * sequence, and the set is never capped — whether `n` exists is a
  * question for the collection, not for a constant in this file. Returns
- * null when Supabase isn't configured or no element carries that number.
+ * null when no element carries that number.
  */
 export async function getHelixNode(nodeNumber: number): Promise<HelixNode | null> {
   if (!Number.isInteger(nodeNumber) || nodeNumber < 1) return null
@@ -1271,162 +748,15 @@ export function helixClassOf(element: HelixNode): HelixClass {
 // Callers must tolerate an empty array and render an empty state.
 
 /**
- * Live fetch from `ubuntu_pillars`. Returns an empty array if Supabase
- * isn't configured or the table is empty.
+ * The Ubuntu pillars, from content/doctrine. Empty array if the collection is empty.
  */
 export async function getUbuntuPillars(): Promise<UbuntuPillarRow[]> {
   return doctrineRows<UbuntuPillarRow>(DOCTRINE.ubuntuPillars)
 }
 
 /**
- * Live fetch from `ubuntu_principles`. Returns an empty array if Supabase
- * isn't configured or the table is empty.
+ * The Ubuntu principles, from content/doctrine. Empty array if the collection is empty.
  */
 export async function getUbuntuPrinciples(): Promise<UbuntuPrincipleRow[]> {
   return doctrineRows<UbuntuPrincipleRow>(DOCTRINE.ubuntuPrinciples)
-}
-
-// ── Observability open-data — issue #84 ─────────────────────────────
-//
-// Thin read wrappers over `fundi_issues`, `observability_events`,
-// `chaos_events`, and the `get_system_counts()` RPC. All four surfaces
-// are public-read via RLS — the dashboard renders them without auth.
-//
-// Doctrine: node language. Components are indexed on `ecosystem_node`
-// (1..10) not on `architecture_layer`. The system-counts RPC returns
-// `total_nodes`, replacing the legacy `get_layer_counts()` helper.
-
-/**
- * Recent rows from `fundi_issues`, newest first. Returns an empty array
- * when Supabase isn't configured or the table is empty.
- */
-export async function getFundiIssues(limit = 10): Promise<FundiIssueRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("fundi_issues")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(limit)
-
-  if (error || !Array.isArray(data)) return []
-  return data as FundiIssueRow[]
-}
-
-/**
- * Recent rows from `observability_events`, newest first.
- */
-export async function getObservabilityEvents(limit = 20): Promise<ObservabilityEventRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("observability_events")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(limit)
-
-  if (error || !Array.isArray(data)) return []
-  return data as ObservabilityEventRow[]
-}
-
-/**
- * Recent rows from `chaos_events`, newest first.
- */
-export async function getChaosEvents(limit = 20): Promise<ChaosEventRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("chaos_events")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(limit)
-
-  if (error || !Array.isArray(data)) return []
-  return data as ChaosEventRow[]
-}
-
-/**
- * Live system-wide counts via the `get_system_counts()` RPC. Replaces
- * the deprecated `get_layer_counts()` — returns `total_nodes` rather
- * than `total_layers`. Returns null when Supabase isn't configured or
- * the RPC errors.
- */
-export async function getSystemCounts(): Promise<SystemCountsRow | null> {
-  if (!isSupabaseConfigured()) return null
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("get_system_counts")
-  if (error || !Array.isArray(data) || data.length === 0) return null
-  return data[0] as SystemCountsRow
-}
-
-// The observability dashboard's component-distribution panel used to read
-// a `getNodeDistribution()` helper that joined component counts to
-// `architecture_frontend_layers.ecosystem_axis` — a retired table and an
-// axis-shaped column. It is deleted, not rewired: `getHelixModel()`
-// already returns every node and rung with its live `component_count`
-// from `get_node_counts()`, off the collection the MCP serves, so the
-// panel reads the helix directly and colours by `helixClassOf()`.
-
-// ── Changelog v2 — issue #85 (`versioning_and_changelog_v2`) ────────
-//
-// The node-aware changelog lives behind the `list_changelog(limit, offset)`
-// SQL helper. Each row carries `nodes_affected integer[]` and
-// component / tool deltas. `/changelog` reads via this RPC; the older
-// `getChangelogEntries()` helper is kept for backwards compatibility
-// with `components/docs/db-changelog.tsx`.
-
-/**
- * Live fetch of changelog entries via the `list_changelog()` RPC. Most
- * recent first. Returns an empty array if Supabase isn't configured or
- * the RPC errors. Bounded by `limit` (default 50) for the page render.
- */
-export async function listChangelog(limit = 50, offset = 0): Promise<ChangelogListRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any).rpc("list_changelog", {
-    p_limit: limit,
-    p_offset: offset,
-  })
-  if (error || !Array.isArray(data)) return []
-  return data as ChangelogListRow[]
-}
-
-// ── MCP tool registry — issue #85 / #83 (`mcp_tool_registry` table) ──
-//
-// The published Mzizi tools (mzizi-mcp, mzizi-sdk, mzizi-skills,
-// mzizi-cli) live in `mcp_tool_registry`. Thin read helpers backing
-// `/tools/[name]`. The full registry-driven endpoints land with #83.
-
-/**
- * List all enabled rows from `mcp_tool_registry`. Empty array on
- * configuration / query failure.
- */
-export async function listMcpToolRegistry(): Promise<McpToolRegistryRow[]> {
-  if (!isSupabaseConfigured()) return []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("mcp_tool_registry")
-    .select("*")
-    .eq("enabled", true)
-    .order("tool_name", { ascending: true })
-
-  if (error || !Array.isArray(data)) return []
-  return data as McpToolRegistryRow[]
-}
-
-/**
- * Fetch a single tool row by `tool_name`. Returns null when missing or
- * when Supabase isn't configured.
- */
-export async function getMcpTool(toolName: string): Promise<McpToolRegistryRow | null> {
-  if (!isSupabaseConfigured()) return null
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getPublicClient() as any)
-    .from("mcp_tool_registry")
-    .select("*")
-    .eq("tool_name", toolName)
-    .maybeSingle()
-
-  if (error || !data) return null
-  return data as McpToolRegistryRow
 }

@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-import { trackApiCall } from "@/lib/metrics"
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -14,7 +13,6 @@ const CORS = {
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  trackApiCall({ endpoint: `/api/v1/docs/${slug}`, durationMs: 0, statusCode: 410 })
   return NextResponse.json(
     {
       error: "Gone",

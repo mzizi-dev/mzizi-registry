@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getAllAiInstructions } from "@/lib/db"
-import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("api")
 
@@ -16,7 +15,6 @@ const CORS = { "Access-Control-Allow-Origin": "*" }
  * GET /api/v1/ai/instructions — List all AI instructions.
  */
 export async function GET() {
-  const start = Date.now()
   try {
     // The `isSupabaseConfigured()` guard that stood here is gone with the store it guarded.
     // Doctrine is MDX under `content/doctrine/` read through `lib/doctrine.ts` (CLAUDE.md
@@ -35,12 +33,6 @@ export async function GET() {
       updated_at: i.updated_at,
     }))
 
-    trackApiCall({
-      endpoint: "/api/v1/ai/instructions",
-      durationMs: Date.now() - start,
-      statusCode: 200,
-    })
-
     return NextResponse.json(
       { data: items, meta: { total: items.length } },
       { headers: CORS_CACHE }
@@ -48,11 +40,6 @@ export async function GET() {
   } catch (error) {
     logger.error("AI instructions error", {
       error: error instanceof Error ? error : new Error(String(error)),
-    })
-    trackApiCall({
-      endpoint: "/api/v1/ai/instructions",
-      durationMs: Date.now() - start,
-      statusCode: 500,
     })
     return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: CORS })
   }

@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import { Activity, BarChart2, Boxes, Clock, Code, FlaskConical, Zap } from "lucide-react"
 import { getUsageStats } from "@/lib/metrics"
-import { getHelixModel, helixClassOf, isSupabaseConfigured } from "@/lib/db"
+import { getHelixModel, helixClassOf } from "@/lib/db"
+import { RENDER_FILE_BACKED_PAGES } from "@/lib/file-backed-pages"
 import { NodeDistributionChart, HELIX_CLASS_COLOR } from "./charts"
 
 export const metadata: Metadata = {
@@ -41,9 +42,10 @@ const BENCHMARK_METRICS = [
 ] as const
 
 export default async function ObservabilityPage() {
-  // Short-circuit to a graceful empty-state shell when Supabase env vars
-  // are missing — the live panels below depend on the public-read tables.
-  if (!isSupabaseConfigured()) {
+  // The empty-state shell is what production has always served — see
+  // `RENDER_FILE_BACKED_PAGES`. Usage stats are the zeroed dataset (the registry
+  // records no telemetry); the corpus composition below reads the helix on disk.
+  if (!RENDER_FILE_BACKED_PAGES) {
     return <UnconfiguredState />
   }
 

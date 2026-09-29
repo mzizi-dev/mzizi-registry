@@ -1,16 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
-import { listMcpToolRegistry, isSupabaseConfigured } from "@/lib/db"
 import { StatusBadge, type StatusBadgeStatus } from "@/components/ui/status-badge"
 
 // TOOLS INDEX — issue #85
 //
-// Server-rendered index of the published Mzizi tools. Hydrated from the
-// Supabase `mcp_tool_registry` table when available, falling back to the
-// known set (mzizi-mcp, mzizi-sdk, mzizi-skills, mzizi-cli) when the
-// registry doesn't yet include them. The full registry-driven endpoints
-// are tracked in #83.
+// Server-rendered index of the published Mzizi tools: the known set
+// (mzizi-mcp, mzizi-sdk, mzizi-skills, mzizi-cli). It used to be merged with
+// Supabase's `mcp_tool_registry` when that was configured, which it never was
+// in production; the registry holds no database, so the known set is the page.
 
 export const revalidate = 3600
 
@@ -61,37 +59,8 @@ const KNOWN_TOOLS: ToolCardData[] = [
   },
 ]
 
-function statusFromStability(stability: string | null | undefined): StatusBadgeStatus {
-  switch (stability) {
-    case "stable":
-    case "frozen":
-      return "stable"
-    case "deprecated":
-      return "deprecated"
-    default:
-      return "alpha"
-  }
-}
-
 export default async function ToolsPage() {
-  let tools: ToolCardData[] = KNOWN_TOOLS
-
-  if (isSupabaseConfigured()) {
-    const rows = await listMcpToolRegistry().catch(() => [])
-    const fromDb: ToolCardData[] = rows
-      .filter((r) => r.tool_name.startsWith("mzizi-"))
-      .map((r) => ({
-        name: r.tool_name,
-        description: r.description ?? "",
-        category: r.category ?? "tool",
-        status: statusFromStability(r.stability),
-        version: r.current_version,
-      }))
-    // Merge: prefer DB rows, fall back to known set for missing names.
-    const byName = new Map<string, ToolCardData>(KNOWN_TOOLS.map((t) => [t.name, t]))
-    for (const t of fromDb) byName.set(t.name, t)
-    tools = Array.from(byName.values()).sort((a, b) => a.name.localeCompare(b.name))
-  }
+  const tools = KNOWN_TOOLS
 
   return (
     <article className="mx-auto w-full max-w-3xl space-y-8 py-8">

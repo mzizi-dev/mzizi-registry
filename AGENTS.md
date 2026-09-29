@@ -103,10 +103,16 @@ against the live API rather than trusting a prior write-up:
 - **The DNA helix — 8 nodes, 4 rungs, 6 strands — not "axes" or "layers."**
   `/api/v1/architecture/axes` and `/layers/{n}` answer **410 Gone**, deliberately: those are
   retired models, not undocumented ones.
-- **File-based, not database-backed.** `registry.json` plus files on disk. Do not describe
-  a write path through Supabase/a database for anything under `components/registry/` — the
-  one remaining DB-backed route is `/api/v1/search`, itself marked `503` in the API table,
-  and that is a known gap, not a pattern to extend.
+- **File-based, no database at all.** `registry.json` plus files on disk. The registry holds
+  no Supabase client, credential or query — the Mzizi console (`mzizi-dev/mzizi-console`) is
+  the only thing in the estate that talks to Supabase, and `__tests__/db/no-source-in-database.test.ts`
+  fails the build if an `@supabase/*` import or a `SUPABASE_*` read comes back. Six routes
+  still answer `503` with `"Database not configured"` — `/api/v1/search`,
+  `/api/v1/ui/{name}/docs`, `/api/v1/ui/{name}/versions`, `/api/v1/ai/instructions/{name}`,
+  `/api/health/{name}` and `GET /api/chaos/{name}` — because that is what production served
+  before the removal. Do not "fix" one by adding a database. The file-backed ones are
+  follow-ups, and so are the six pages behind `RENDER_FILE_BACKED_PAGES` in
+  `lib/file-backed-pages.ts`.
 
 ## A link this file replaces
 

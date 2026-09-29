@@ -31,7 +31,6 @@ export default tseslint.config(
       "mzizi-mcp/dist/**",
       "public/**",
       "scripts/**",
-      "supabase/**",
       "*.config.*",
       "vitest.setup.ts",
     ],

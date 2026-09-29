@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { sampleData } from "@/lib/samples/data"
 import type { SampleType } from "@/lib/samples/types"
-import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("samples")
 
@@ -35,14 +34,11 @@ const CORS_CACHE = {
  * is why previewing against it was never an option.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ type: string }> }) {
-  const start = Date.now()
-  const endpoint = "/api/v1/samples/[type]"
   try {
     const { type } = await params
     const known = Object.keys(sampleData) as SampleType[]
 
     if (!type || !known.includes(type as SampleType)) {
-      trackApiCall({ endpoint, durationMs: Date.now() - start, statusCode: 404 })
       return NextResponse.json(
         {
           error: `Unknown sample type "${type}"`,
@@ -54,11 +50,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ typ
 
     const records = sampleData[type as SampleType]
     logger.info("Sample records served", { data: { type, count: records.length } })
-    trackApiCall({
-      endpoint: `/api/v1/samples/${type}`,
-      durationMs: Date.now() - start,
-      statusCode: 200,
-    })
 
     return NextResponse.json(
       {
@@ -80,7 +71,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ typ
     logger.error("Sample route error", {
       error: error instanceof Error ? error : new Error(String(error)),
     })
-    trackApiCall({ endpoint, durationMs: Date.now() - start, statusCode: 500 })
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }

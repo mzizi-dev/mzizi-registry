@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, Copy } from "lucide-react"
-import { getComponent, isSupabaseConfigured } from "@/lib/db"
+import { getComponent } from "@/lib/db"
+import { RENDER_FILE_BACKED_PAGES } from "@/lib/file-backed-pages"
 import { readComponentSource } from "@/lib/registry-source"
 
 export const revalidate = 3600
@@ -22,8 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<{ name: str
 /**
  * Per-component source-code page. Documented in the component-backlinks
  * doctrine table at /architecture/component-backlinks. Metadata comes from
- * Supabase; the source itself is read from disk (`components/registry/**`, via
- * `@/lib/registry-source`).
+ * `registry.json`; the source itself is read from disk (`components/registry/**`,
+ * via `@/lib/registry-source`).
  *
  * For the JSON shape with metadata, dependencies, and shadcn-format
  * registry response, use `/api/v1/ui/{name}` instead.
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ name: str
 export default async function SourcePage({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
   if (!COMPONENT_NAME_PATTERN.test(name)) notFound()
-  if (!isSupabaseConfigured()) {
+  if (!RENDER_FILE_BACKED_PAGES) {
     return (
       <article className="mx-auto max-w-4xl py-12">
         <h1 className="font-serif text-3xl font-bold">Source: {name}</h1>

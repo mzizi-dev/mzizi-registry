@@ -30,7 +30,6 @@ What actually happens.
 - **OS:** (e.g., macOS 14)
 - **Registry version:** (e.g., 4.0.39)
 - **Component:** (if applicable, e.g., button, card)
-- **Database configured?** (yes/no — is Supabase set up?)
 - **API endpoint:** (if applicable, e.g., `/api/v1/ui/button`, `/mcp`)
 
 ## Screenshots

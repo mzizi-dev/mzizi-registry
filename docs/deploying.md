@@ -19,8 +19,8 @@ nobody uses rots without anyone noticing until the day it is needed.
 
 `mzizi-ui` and `mzizi-plus` don't render anything of their own — they proxy to
 `mzizi.dev` per-request and gate which pages/items are allowed through by node
-(see `lib/domain-proxy.ts`). Neither needs the Supabase secrets `mzizi-api`
-does; they hold no state and reach no database.
+(see `lib/domain-proxy.ts`). They hold no state and reach no database — and
+neither does any other Worker here.
 
 ## Connecting a Worker in the dashboard
 
@@ -41,35 +41,20 @@ imports the app's own route handlers, and `mzizi-ui`/`mzizi-plus` import
 dependency tree present even though none of them compiles anything ahead of
 time.
 
-## The one setting that is easy to get wrong
+## No secrets, no build variables
 
-**`mzizi` needs the Supabase values as BUILD variables. `mzizi-api` needs them as
-Worker SECRETS.** They are not interchangeable, and each is silently useless in
-the other's place.
+None of these Workers takes a secret or a build variable. The registry holds no
+database: `registry.json` and the files on disk are the whole data layer, and
+the Mzizi console (`mzizi-dev/mzizi-console`) is the only thing in the estate
+that talks to Supabase.
 
-|           | `mzizi`                            | `mzizi-api`           |
-| --------- | ---------------------------------- | --------------------- |
-| where     | Build &rarr; Variables and Secrets | `wrangler secret put` |
-| when read | at compile time                    | at request time       |
-
-Next inlines every `NEXT_PUBLIC_*` variable into the bundle when it compiles, so
-for the portal they must be present **when the build runs**. Setting them as
-Worker secrets instead does nothing: the built code carries empty strings and
-every database-backed route answers `503 Database not configured`.
-
-`mzizi-api` is the reverse. It reads `process.env` at request time under
-`nodejs_compat`, so the values go in once:
-
-```bash
-wrangler secret put NEXT_PUBLIC_SUPABASE_URL --config mzizi-api/wrangler.jsonc
-wrangler secret put NEXT_PUBLIC_SUPABASE_ANON_KEY --config mzizi-api/wrangler.jsonc
-```
-
-They persist across deploys, and rotating a key does not need a rebuild.
-
-The `NEXT_PUBLIC_` prefix on the API Worker's names is inherited from `lib/db`,
-which is shared with the Next app. It does not mean anything there, and renaming
-it would fork a module both surfaces import.
+This section used to explain that the portal needed the Supabase values as
+build variables and `mzizi-api` needed them as Worker secrets. Neither was ever
+set on the registry Worker, which is why the routes that were gated on them
+answer `503 Database not configured` — and still do, deliberately, so removing
+Supabase changed no response. If a `NEXT_PUBLIC_SUPABASE_*` variable or
+`SUPABASE_SERVICE_ROLE_KEY` secret is still configured on any of these Workers
+in the Cloudflare dashboard, it is unused and can be deleted.
 
 ## Verifying a deploy
 
@@ -83,11 +68,6 @@ curl -s -o /dev/null -w '%{http_code}\n' https://ui.mzizi.dev/components/button
 curl -s -o /dev/null -w '%{http_code}\n' https://plus.mzizi.dev/components/accessibility-audit
 curl -s -o /dev/null -w '%{http_code}\n' -L https://ui.mzizi.dev/components/accessibility-audit
 ```
-
-`/v1/brand` is the one worth keeping in that list. It is database-backed, so it
-is the only one of the three that can prove the credentials are actually set —
-`/v1/skills` reads the inlined bundle and answers 200 on a Worker that can reach
-nothing.
 
 The last three prove `mzizi-ui`/`mzizi-plus` are gating rather than just
 proxying everything: `button` is n2, so it should answer 200 through

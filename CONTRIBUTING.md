@@ -36,20 +36,11 @@ pnpm registry:validate  # offline gate — every item resolves on disk and insta
 
 Skills are authored in `mzizi-dev/agent-tools` (`mzizi-skills/skills/<name>/SKILL.md`, published as `@nyuchi/mzizi-skills`) and are not in this repo or in the database. The `skills:sync` / `skills:verify` scripts documented here before are gone with the projection they maintained. See [CLAUDE.md §15.23](CLAUDE.md).
 
-### 3. Set up the database (optional for UI work)
+### 3. No database to set up
 
-The registry uses a DB-first architecture with Supabase. For component development and documentation work, you can run the portal without a database connection — but API routes will not function.
+The registry holds no database and needs no credentials. `registry.json` plus the files on disk (`components/registry/`, `content/doctrine/`, `content/changelog/releases.json`, `lib/tokens/`) are the whole data layer, so a fresh clone serves every page and API route the deployed Worker does. `.env.example` lists the one optional override (`PORT`).
 
-For full functionality:
-
-```bash
-# Copy the environment template
-cp .env.example .env.local
-
-# Add your Supabase credentials
-# NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-# NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-```
+Machine-written data — component version history, usage telemetry, the fundi and observability logs — lives in Supabase and belongs to the Mzizi console (`mzizi-dev/mzizi-console`), the only thing in the estate that talks to Supabase. Nothing in this repo reads or writes it.
 
 ### 4. Start the development server
 
@@ -75,7 +66,7 @@ git checkout -b feature/your-feature
 1. **Understand the [Seven African Minerals design system](https://mzizi.dev/tokens)** — all colors come from the mineral-named tokens (seven minerals + seven heritage tones + status + the Experimental Seven)
 1. **Browse existing components** in `components/ui/` to understand the CVA + Radix + cn() pattern
 1. **Check `registry.json`** before modifying components to understand the dependency graph
-1. **Understand the DB-first architecture** — API routes read from Supabase, not hardcoded objects
+1. **Understand the file-based architecture** — API routes read `registry.json` and files on disk; there is no database
 
 ### Key Principles
 
@@ -109,12 +100,12 @@ git checkout -b feature/your-feature
 - **`data-slot` attribute** on every component for CSS selection and identification
 - **`"use client"` only when necessary** — components are React Server Components by default; add the directive only when using hooks, event handlers, or browser APIs
 
-### DB-First Architecture
+### File-Based Architecture
 
-- All API routes read from Supabase — never return hardcoded fallback data
-- Database operations go through `lib/db/index.ts`
-- Types are defined in `lib/db/types.ts`
-- Seeding uses upsert (ON CONFLICT) for idempotency
+- The registry holds no database. Every API route and page reads files that ship with the app — never add a Supabase (or any database) client, query, or credential
+- Data access goes through `lib/db/index.ts`, whose functions read `registry.json`, `content/`, and `lib/tokens/` (the name is historical)
+- Payload types are defined in `lib/db/types.ts`
+- Change data with a pull request against the file it lives in, so every edit shows up in a diff
 
 ---
 
@@ -315,7 +306,7 @@ pnpm typecheck       # tsc --noEmit
 pnpm test            # vitest single run
 pnpm audit:check     # pnpm audit --audit-level=moderate
 pnpm registry:verify # CI fails if registry.json is not canonical
-pnpm tokens:verify   # CI fails if the design tokens drift from Supabase
+pnpm tokens:verify   # CI fails if the generated tokens drift from lib/tokens/palette.source.ts
 pnpm build           # next build (terminal gate)
 ```
 
@@ -385,12 +376,12 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 
 ## Versioning
 
-This project uses semantic versioning; the current version is **1.0.0**. A version bump must be propagated to every surface listed in [CLAUDE.md §14](CLAUDE.md) — `package.json`, `lib/mcp-server.ts` (`VERSION`), the Supabase `changelog` row, `components/landing/footer.tsx`, `components/landing/dashboard-sidebar.tsx`, `app/layout.tsx` (`softwareVersion`), `README.md`, and CLAUDE.md §1 — which must all stay in sync.
+This project uses semantic versioning; the current version is **1.0.0**. A version bump must be propagated to every surface listed in [CLAUDE.md §14](CLAUDE.md) — `package.json`, `lib/mcp-server.ts` (`VERSION`), the release entry in `content/changelog/releases.json`, `components/landing/footer.tsx`, `components/landing/dashboard-sidebar.tsx`, `app/layout.tsx` (`softwareVersion`), `README.md`, and CLAUDE.md §1 — which must all stay in sync.
 
 Only maintainers create version tags and releases. The release process:
 
 1. Update the version across every surface listed in CLAUDE.md §14.
-1. Insert a row into the Supabase `changelog` table for the new version.
+1. Add an entry for the new version to `content/changelog/releases.json` and run `pnpm changelog:generate`.
 1. Commit and open a PR; merge with `merge_method=merge` (never squash).
 1. Tag `vX.Y.Z` and push the tag.
 1. GitHub Actions validates the tag against `package.json` and creates the release automatically.
