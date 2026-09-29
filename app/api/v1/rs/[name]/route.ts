@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { readComponent } from "@/lib/registry"
 import { readComponentSourceFor } from "@/lib/registry-source"
+import { CRATE_GIT, crateFor } from "@/lib/rust-crates"
 
 const logger = createLogger("registry")
 
@@ -35,9 +36,13 @@ const CORS_CACHE = {
  * THIS IS A READ SURFACE, NOT AN INSTALL PATH.
  *
  * `npx shadcn add` copies a file into a consumer's project. Rust has no equivalent and does
- * not need one — a Dioxus consumer depends on the `mzizi-ui` crate (CLAUDE.md §8.9). This
+ * not need one — a Dioxus consumer depends on the crate that compiles the component, named in
+ * the payload's `crate` (CLAUDE.md §8.9). This
  * route is for reading: an agent answering a question, a reviewer, someone porting a
  * component. The shadcn-shaped envelope is kept anyway so one client can parse both routes.
+ *
+ * THE CRATE IS THE ONE THAT COMPILES THIS COMPONENT — see `lib/rust-crates.ts`. It said
+ * `mzizi-ui` for every component, which was wrong for 34 of the 43 it served then.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ name: string }> }) {
   try {
@@ -72,6 +77,18 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
       )
     }
 
+    const rsPath = component.sources?.rs ?? `${name}.rs`
+    const crate = crateFor(rsPath)
+    if (crate === null) {
+      // Unreachable while `pnpm rust:generate:check` passes: the generator refuses a node
+      // directory with Rust in it that the map does not name. Answer 500 rather than guess.
+      logger.error("Rust component has no crate", { data: { name, rsPath } })
+      return NextResponse.json(
+        { error: `"${name}" has Rust source but no crate compiles it` },
+        { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }
+      )
+    }
+
     logger.info("Rust component served", { data: { name } })
 
     return NextResponse.json(
@@ -83,10 +100,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
         description: component.description,
         // The crate, not a file copy — see the header. Stated in the payload so a client
         // does not have to infer the distribution model from the route name.
-        crate: { name: "mzizi-ui", registry: "crates.io" },
+        crate: { name: crate, registry: "crates.io", git: CRATE_GIT },
         files: [
           {
-            path: component.sources?.rs ?? `${name}.rs`,
+            path: rsPath,
             type: "registry:rust",
             content: source,
           },
