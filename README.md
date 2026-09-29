@@ -1,6 +1,6 @@
 # Mzizi
 
-> The canonical component registry, brand system, and DNA-helix frontend architecture for the bundu ecosystem — an independent open-architecture project owned by Mzizi, operated and developed by Nyuchi.
+> The canonical component registry, brand system, and DNA-helix frontend architecture for the bundu ecosystem — an open-architecture project of the Bundu Foundation, owned and operated by Mzizi.
 
 [![CI](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml)
 [![Release](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml)
@@ -240,10 +240,11 @@ See [`SECURITY.md`](SECURITY.md) or report privately via
 
 ## Governance & License
 
-Mzizi is an **independent open-architecture project owned by Mzizi**, operated and
-developed by [Nyuchi Africa (PVT) Ltd](https://nyuchi.com). It is **not** a Nyuchi product —
-Nyuchi is the operator, Mzizi is the governance body. Anyone in the bundu ecosystem can
-consume the registry; contribution and direction-setting flow through Mzizi.
+Mzizi is an **open-architecture project of the Bundu Foundation**. Mzizi owns and operates
+the registry, the design system and the API. It is **not** a Nyuchi product: Nyuchi
+operates only the [Mzizi console](https://app.mzizi.dev) and the revenue products. Anyone in
+the bundu ecosystem can consume the registry; contribution and direction-setting flow
+through Mzizi.
 
-Licensed under the [Apache License 2.0](LICENSE). © Bundu Foundation. Mzizi is operated by
-Nyuchi Africa (PVT) Ltd. See [NOTICE](NOTICE) for attribution.
+Licensed under the [Apache License 2.0](LICENSE). © Bundu Foundation, the copyright holder.
+See [NOTICE](NOTICE) for attribution.
