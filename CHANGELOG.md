@@ -6,6 +6,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed — Mzizi is named as the registry's operator (2026-09-29)
+
+- **README, `NOTICE` and the Claude Code plugin manifest no longer say Nyuchi operates or develops Mzizi.** Mzizi owns and operates the registry, the design system and the API; the Bundu Foundation is the copyright holder; Nyuchi operates only the Mzizi console and the revenue products. The `NOTICE` copyright line is unchanged.
+
 ### Changed — search reads the fields items have; file-backed routes serve their files (2026-09-29)
 
 - **`/api/v1/search` filters on `node` and `categories`, and returns `type`.** It used to filter on `layer` and `category` and project `registry_type` — the retired database row's field names, which no registry item carries — so those filters matched nothing and every hit was a bare name and description. Hits now carry `name`, `type`, `title`, `description`, `categories`, `node` and `nodeLabel`, and `meta` reports `node` instead of `layer`. Parameters combine (AND).
