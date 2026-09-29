@@ -130,18 +130,18 @@ radius scale value.
 Resource paths serve under both `/v1/` (canonical) and `/api/v1/`. Full spec in
 [`openapi.yaml`](openapi.yaml), also served at `GET /api/openapi`.
 
-The registry holds no database — every route reads files that ship with the app. The
-routes marked **503** answer `{"error":"Database not configured"}`: they were gated on
-Supabase credentials the Worker never had, and they keep that exact response so removing
-Supabase changed nothing a consumer can see. `openapi.yaml` still describes the Supabase
-era in places; it is served verbatim, so correcting it is a change to a public response.
+The registry holds no database — every route reads files that ship with the app, and
+`openapi.yaml` describes each route as its handler answers. `api.mzizi.dev` itself is
+served by [`mzizi-dev/mzizi-api-gateway`](https://github.com/mzizi-dev/mzizi-api-gateway),
+which ports these handlers and bundles these files at a pinned commit. The one route marked
+**503** is data this API does not hold.
 
 | Endpoint                                                               | Method   | Description                                                                                   |
 | ---------------------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------- |
 | `/api/v1`                                                              | GET      | Discovery document                                                                            |
 | `/api/v1/ui`                                                           | GET      | Component registry index                                                                      |
 | `/api/v1/ui/{name}`                                                    | GET      | Component source + metadata (shadcn format)                                                   |
-| `/api/v1/ui/{name}/docs`                                               | GET      | Structured docs — **503 today**; the data is file-backed, serving it is a follow-up           |
+| `/api/v1/ui/{name}/docs`                                               | GET      | Structured docs from the item's `meta` block in `registry.json`                               |
 | `/api/v1/ui/{name}/versions`                                           | GET      | Component version history — **503**; the history is console data, not the registry's          |
 | `/api/v1/brand`                                                        | GET      | Brand system (minerals, typography, spacing)                                                  |
 | `/api/v1/architecture`                                                 | GET      | Full architecture snapshot                                                                    |
@@ -150,9 +150,9 @@ era in places; it is served verbatim, so correcting it is a change to a public r
 | `/api/v1/ubuntu/pillars`, `/ubuntu/principles`                         | GET      | The Five Ubuntu Pillars / Principles                                                          |
 | `/api/v1/docs`, `/docs/{slug}`                                         | GET      | **410 Gone** — long-form docs moved to docs.mzizi.dev                                         |
 | `/api/v1/changelog`, `/changelog/{version}`                            | GET      | Release history                                                                               |
-| `/api/v1/ai/instructions{,/{name}}`                                    | GET      | AI instruction sets; the single-item form answers **503 today** (file-backed follow-up)       |
+| `/api/v1/ai/instructions{,/{name}}`                                    | GET      | AI instruction sets; `{name}` matches a set's name, then its target                           |
 | `/api/v1/skills{,/{name},/summary}`                                    | GET      | Published agent skills                                                                        |
-| `/api/v1/search?q=`                                                    | GET      | Cross-resource search — **503 today**; needs no database, enabling it is a follow-up          |
+| `/api/v1/search?q=&node=&category=`                                    | GET      | Component search; `?layer=` is a deprecated alias of `?node=`                                 |
 | `/api/v1/ecosystem`                                                    | GET      | Architecture principles + framework decision                                                  |
 | `/api/v1/data-layer`                                                   | GET      | Local-first + cloud layer specification                                                       |
 | `/api/v1/pipeline`                                                     | GET      | Open data pipeline (Redpanda, Flink, Doris)                                                   |

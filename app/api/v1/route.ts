@@ -1,18 +1,17 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
+import { getAllComponents } from "@/lib/db"
 
 const logger = createLogger("api")
 
 export async function GET() {
   try {
-    // The discovery document has always reported `database.status:
-    // "not_configured"` and zero components in production: the block was gated
-    // on Supabase credentials the registry Worker never had. The registry now
-    // holds no database, and the values are kept exactly as served — changing
-    // what a public document says about itself is a follow-up, not part of the
-    // Supabase removal. `/api/v1/ui` and `/api/v1/stats` carry the real counts.
-    const dbStatus = "not_configured"
-    const componentCount = 0
+    // This document used to carry `database: { status: "not_configured", components: 0 }`
+    // and describe the index as "served from database". Both were false: the block was
+    // gated on Supabase credentials the registry Worker never had, and the registry holds
+    // no database at all. The files are the data layer, so the block now says that, with
+    // the real count from the same reader `/api/v1/ui` uses.
+    const componentCount = (await getAllComponents()).length
 
     logger.info("API discovery served")
 
@@ -24,10 +23,11 @@ export async function GET() {
         name: "Mzizi API",
         version: "1.0.0",
         description:
-          "The Mzizi API — components, brand, architecture, and design system. Mzizi is an independent open-architecture project, operated and developed by Nyuchi.",
+          "The Mzizi API — components, brand, architecture, and design system, served from the files in the Mzizi registry. Mzizi owns and operates the registry and this API; it is an open-architecture project of the Bundu Foundation.",
         homepage: "https://mzizi.dev",
-        database: {
-          status: dbStatus,
+        data: {
+          source: "files",
+          repository: "https://github.com/mzizi-dev/mzizi-registry",
           components: componentCount,
         },
         resources: {
@@ -38,7 +38,7 @@ export async function GET() {
           },
           ui: {
             href: "/api/v1/ui",
-            description: `Component registry — ${componentCount} items served from database.`,
+            description: `Component registry — ${componentCount} items, served from the registry's files.`,
           },
           ecosystem: {
             href: "/api/v1/ecosystem",
@@ -72,7 +72,7 @@ export async function GET() {
           },
           health: {
             href: "/api/v1/health",
-            description: "Service health check — database and registry status.",
+            description: "Service health check.",
           },
           ubuntuPillars: {
             href: "/api/v1/ubuntu/pillars",
@@ -88,7 +88,8 @@ export async function GET() {
           },
           search: {
             href: "/api/v1/search",
-            description: "Search components by name/description; filter by layer and category.",
+            description:
+              "Search components by name or description; filter by node and category (`layer` is a deprecated alias of `node`).",
           },
           componentDocs: {
             href: "/api/v1/ui/{name}/docs",
