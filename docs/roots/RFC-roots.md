@@ -5,8 +5,8 @@
 converted to Rust as UI components and server components for the agentic web.
 **Snapshot:** registry `main` at `f19bb0b`. Every count below is computed from
 `registry.json` and `components/registry/` at that commit.
-**Companion:** the first batch of twelve components ships in a separate pull request on
-branch `claude/mzizi-roots-batch-1` (§6).
+**Companion:** the first batch of twelve components ships in
+[mzizi-registry#372](https://github.com/mzizi-dev/mzizi-registry/pull/372) (§6).
 
 ## Summary
 
