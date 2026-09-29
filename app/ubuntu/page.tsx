@@ -1,4 +1,6 @@
-import { getUbuntuPillars, getUbuntuPrinciples, getBrandMeta, isSupabaseConfigured } from "@/lib/db"
+import { getUbuntuPillars, getUbuntuPrinciples } from "@/lib/db"
+import { RENDER_FILE_BACKED_PAGES } from "@/lib/file-backed-pages"
+import { brandMeta } from "@/lib/tokens/brand.source"
 import {
   Card,
   CardContent,
@@ -8,10 +10,11 @@ import {
 } from "@/components/registry/n2-primitives/card"
 import type { UbuntuPillarRow, UbuntuPrincipleRow } from "@/lib/db/types"
 
-// Render at request time, not at build time. The page reads live from
-// Supabase; preview branches don't carry the public schema, so build-time
-// prerender would fail with "Could not find the table 'public.brand_meta'".
-// Runtime SSR + ISR-style revalidation keeps the doctrine fresh.
+// Render at request time, not at build time. This was for Supabase — preview
+// branches didn't carry the public schema, so build-time prerender failed with
+// "Could not find the table 'public.brand_meta'". Everything now reads files,
+// but switching to static rendering would change the page's caching headers,
+// so it stays as served.
 export const dynamic = "force-dynamic"
 export const revalidate = 3600
 
@@ -98,7 +101,7 @@ function PrincipleCard({ principle }: { principle: UbuntuPrincipleRow }) {
 }
 
 export default async function UbuntuPage() {
-  if (!isSupabaseConfigured()) {
+  if (!RENDER_FILE_BACKED_PAGES) {
     return (
       <article className="mx-auto max-w-3xl py-12">
         <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground">Ubuntu</h1>
@@ -117,16 +120,13 @@ export default async function UbuntuPage() {
     )
   }
 
-  const [pillars, principles, meta] = await Promise.all([
-    getUbuntuPillars(),
-    getUbuntuPrinciples(),
-    getBrandMeta(),
-  ])
+  const [pillars, principles] = await Promise.all([getUbuntuPillars(), getUbuntuPrinciples()])
 
-  // The five Ubuntu Questions live in brand_meta.philosophy.ubuntuQuestions
-  // (see issue #45 task 5.4). Read defensively — empty array if the JSONB
-  // shape ever drifts.
-  const philosophy = (meta?.philosophy as { ubuntuQuestions?: unknown } | undefined) ?? undefined
+  // The five Ubuntu Questions live in the brand record's
+  // philosophy.ubuntuQuestions (lib/tokens/brand.source.ts — it was the
+  // `brand_meta` row, see issue #45 task 5.4). Read defensively — empty array
+  // if the shape ever drifts.
+  const philosophy = (brandMeta.philosophy as { ubuntuQuestions?: unknown } | undefined) ?? undefined
   const ubuntuQuestions = Array.isArray(philosophy?.ubuntuQuestions)
     ? (philosophy.ubuntuQuestions as string[])
     : []
@@ -184,13 +184,9 @@ export default async function UbuntuPage() {
         </header>
         {pillars.length === 0 ? (
           <p className="rounded-xl border border-border bg-muted/20 p-6 text-sm text-muted-foreground">
-            No pillars in the database yet. Seed{" "}
+            No pillars found. They are read from{" "}
             <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-              ubuntu_pillars
-            </code>{" "}
-            from{" "}
-            <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-              lib/db/seed-data/ubuntu.ts
+              content/doctrine/genetic-code-ubuntu-pillars
             </code>
             .
           </p>
@@ -225,13 +221,9 @@ export default async function UbuntuPage() {
         </header>
         {principles.length === 0 ? (
           <p className="rounded-xl border border-border bg-muted/20 p-6 text-sm text-muted-foreground">
-            No principles in the database yet. Seed{" "}
+            No principles found. They are read from{" "}
             <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-              ubuntu_principles
-            </code>{" "}
-            from{" "}
-            <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-              lib/db/seed-data/ubuntu.ts
+              content/doctrine/genetic-code-ubuntu-principles
             </code>
             .
           </p>
@@ -354,14 +346,13 @@ export default async function UbuntuPage() {
           Source of truth
         </p>
         <p>
-          The doctrine is the data. Pillars, Principles, and Questions live in Supabase — update a
-          row with an{" "}
-          <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">UPDATE</code> and
-          every consumer (this page, the API at{" "}
+          The doctrine is the data. Pillars, Principles, and Questions live in the repository, under{" "}
+          <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">content/doctrine</code>{" "}
+          — change one in a pull request and every consumer (this page, the API at{" "}
           <code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
             /api/v1/ubuntu
           </code>
-          , the MCP server, AI assistants) sees the new shape on the next read. No migration. No
+          , the MCP server, AI assistants) sees the new shape on the next deploy. No migration. No
           drift.
         </p>
       </footer>

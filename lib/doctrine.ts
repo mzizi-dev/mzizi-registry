@@ -15,8 +15,10 @@
  * noticing, which is the whole argument for the move.
  *
  * Frontmatter is parsed with a deliberately small reader rather than a dependency:
- * `pnpm doctrine:extract` is the only writer, it emits one predictable shape, and
- * `pnpm doctrine:verify` fails if a file drifts from that shape.
+ * every file was written by one extractor (`scripts/extract-doctrine.ts`, the
+ * one-time move out of Supabase, since deleted with the database), so the shape is
+ * predictable. New doctrine is authored by hand in that same shape;
+ * `pnpm doctrine:generate:check` catches a file the generated module no longer matches.
  */
 
 import { DOCTRINE_SOURCES } from "./doctrine.generated"
@@ -50,7 +52,7 @@ function isSafeSegment(s: string): boolean {
 // lesson to draw from removing the filesystem.
 
 export type DoctrineDocument = {
-  /** Frontmatter fields, as written by `doctrine:extract`. */
+  /** Frontmatter fields, in the shape the one-time extraction wrote. */
   data: Record<string, unknown>
   /** The prose body below the frontmatter block; empty string when there is none. */
   body: string
@@ -261,7 +263,7 @@ export function readDoctrineSorted(collection: string): DoctrineDocument[] {
  * Flatten a document back into the row shape callers expect, putting the body back
  * into the field it came from.
  *
- * `doctrine:extract` moves one prose field into the MDX body and records its name as
+ * The extraction moved one prose field into the MDX body and recorded its name as
  * `_bodyField`. Without putting it back, a consumer casting frontmatter to a row type
  * gets an object silently missing its main prose — `rationale` on a sovereignty
  * assessment, `instruction_text` on an AI instruction set. That is the kind of loss

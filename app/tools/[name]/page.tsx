@@ -3,19 +3,17 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, ExternalLink, Package } from "lucide-react"
 
-import { getMcpTool, isSupabaseConfigured } from "@/lib/db"
 import { StatusBadge, type StatusBadgeStatus } from "@/components/ui/status-badge"
 
 // TOOL DETAIL — issue #85
 //
 // Server-rendered detail page for a single published Mzizi tool. For
 // known slugs (mzizi-mcp, mzizi-sdk, mzizi-skills, mzizi-cli) we render
-// the install command, npm + GitHub links, and the latest version
-// (pulled from `mcp_tool_registry` when available, otherwise from the
-// hardcoded fallback set). Unknown slugs return a 404.
-//
-// TODO(#83): when the registry-driven endpoints land, drop the hardcoded
-// fallback and surface every row in `mcp_tool_registry` via this page.
+// the install command and npm + GitHub links from the known set below.
+// Unknown slugs return a 404. The live version and "Registry metadata"
+// block used to come from Supabase's `mcp_tool_registry`; the registry holds
+// no database, and those were never rendered in production (Supabase was
+// never configured on the Worker), so they are gone rather than faked.
 
 export const revalidate = 3600
 
@@ -74,21 +72,6 @@ const KNOWN_TOOLS: Record<string, KnownTool> = {
   },
 }
 
-function statusFromStability(stability: string | null | undefined): StatusBadgeStatus | null {
-  switch (stability) {
-    case "stable":
-    case "frozen":
-      return "stable"
-    case "deprecated":
-      return "deprecated"
-    case "experimental":
-    case "evolving":
-      return "alpha"
-    default:
-      return null
-  }
-}
-
 export async function generateMetadata({
   params,
 }: {
@@ -112,12 +95,6 @@ export default async function ToolDetailPage({ params }: { params: Promise<{ nam
   const known = KNOWN_TOOLS[name]
   if (!known) notFound()
 
-  // Pull live version + DB-derived status when the registry has the row.
-  const registryRow = isSupabaseConfigured() ? await getMcpTool(name).catch(() => null) : null
-  const status: StatusBadgeStatus =
-    statusFromStability(registryRow?.stability) ?? known.defaultStatus
-  const version = registryRow?.current_version ?? null
-
   return (
     <article className="mx-auto w-full max-w-3xl space-y-8 py-8">
       <Link
@@ -135,10 +112,7 @@ export default async function ToolDetailPage({ params }: { params: Promise<{ nam
           <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             {known.name}
           </h1>
-          <StatusBadge status={status} />
-          {version ? (
-            <span className="font-mono text-xs text-muted-foreground">v{version}</span>
-          ) : null}
+          <StatusBadge status={known.defaultStatus} />
         </div>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
           {known.description}
@@ -187,38 +161,6 @@ export default async function ToolDetailPage({ params }: { params: Promise<{ nam
           </li>
         </ul>
       </section>
-
-      {registryRow ? (
-        <section className="space-y-3" aria-label="Registry metadata">
-          <h2 className="font-serif text-lg font-semibold text-foreground">Registry metadata</h2>
-          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
-            {registryRow.category ? (
-              <>
-                <dt className="font-mono text-muted-foreground uppercase">Category</dt>
-                <dd className="font-mono text-foreground">{registryRow.category}</dd>
-              </>
-            ) : null}
-            {registryRow.tool_kind ? (
-              <>
-                <dt className="font-mono text-muted-foreground uppercase">Kind</dt>
-                <dd className="font-mono text-foreground">{registryRow.tool_kind}</dd>
-              </>
-            ) : null}
-            {registryRow.added_in_version ? (
-              <>
-                <dt className="font-mono text-muted-foreground uppercase">Added in</dt>
-                <dd className="font-mono text-foreground">v{registryRow.added_in_version}</dd>
-              </>
-            ) : null}
-            {registryRow.version_count !== null && registryRow.version_count !== undefined ? (
-              <>
-                <dt className="font-mono text-muted-foreground uppercase">Versions</dt>
-                <dd className="font-mono text-foreground">{registryRow.version_count}</dd>
-              </>
-            ) : null}
-          </dl>
-        </section>
-      ) : null}
     </article>
   )
 }

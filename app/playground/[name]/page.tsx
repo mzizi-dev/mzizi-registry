@@ -6,7 +6,7 @@ import { AutoPreview } from "@/components/playground/auto-preview"
 import { ComponentDocSection } from "@/components/playground/component-doc-section"
 import { SafeSection } from "@/components/error-boundary"
 import { Badge } from "@/components/registry/n2-primitives/badge"
-import { getAllComponents, getComponent, isSupabaseConfigured } from "@/lib/db"
+import { getComponent } from "@/lib/db"
 import { readComponentSource } from "@/lib/registry-source"
 
 /**
@@ -17,22 +17,19 @@ import { readComponentSource } from "@/lib/registry-source"
  * top-billed, the breadcrumb points back to `/playground`, and the
  * heading frames each item as something to *play with* not read about.
  *
- * Static params are generated from the Supabase registry. Unknown slugs
- * fall through to `notFound()` so we serve a real 404 instead of a stub.
+ * Pages render on demand (see `generateStaticParams`). Unknown slugs fall
+ * through to `notFound()` so we serve a real 404 instead of a stub.
  *
  * ISR: revalidate every 5 minutes — matches the index page (CLAUDE.md §15).
  */
 
 export const revalidate = 300
 
+// No static params — every page renders on demand. This listed the registry
+// only when Supabase was configured at build time, which it never was in
+// production, so the set has always been empty there.
 export async function generateStaticParams() {
-  if (!isSupabaseConfigured()) return []
-  try {
-    const components = await getAllComponents()
-    return components.map((c) => ({ name: c.name }))
-  } catch {
-    return []
-  }
+  return []
 }
 
 export async function generateMetadata({

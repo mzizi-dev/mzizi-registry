@@ -6,8 +6,8 @@ import { CopyCommand } from "@/components/landing/copy-command"
 
 // SKILLS INDEX — mzizi.dev/skills
 //
-// The public instruction surface for the Mzizi agent skills. Skills are
-// stored in the Supabase `skills` collection and served from here and via
+// The public instruction surface for the Mzizi agent skills. Skills come
+// from the published `@nyuchi/mzizi-skills` bundle and are served from here and via
 // MCP `get_skill`; they are authored in git as
 // `mzizi-skills/skills/<name>/SKILL.md` in mzizi-dev/agent-tools and published
 // to npm as @nyuchi/mzizi-skills. All three surfaces carry the same body —

@@ -11,10 +11,6 @@ vi.mock("next/server", () => ({
   },
 }))
 
-vi.mock("@/lib/metrics", () => ({
-  trackApiCall: vi.fn(),
-}))
-
 const EXPECTED_MIGRATED_SLUGS = [
   "3d-architecture",
   "fundi-guide",
@@ -76,19 +72,6 @@ describe("GET /api/v1/docs (soft-410)", () => {
     expect(response.headers["Cache-Control"]).toBe("public, max-age=3600, s-maxage=86400")
   })
 
-  it("calls trackApiCall once with statusCode 410", async () => {
-    const { trackApiCall } = await import("@/lib/metrics")
-    const mocked = vi.mocked(trackApiCall)
-    mocked.mockClear()
-
-    const { GET } = await import("@/app/api/v1/docs/route")
-    await GET()
-
-    expect(mocked).toHaveBeenCalledTimes(1)
-    expect(mocked).toHaveBeenCalledWith(
-      expect.objectContaining({ endpoint: "/api/v1/docs", statusCode: 410 })
-    )
-  })
 })
 
 describe("GET /api/v1/docs/[slug] (soft-410)", () => {
@@ -132,22 +115,6 @@ describe("GET /api/v1/docs/[slug] (soft-410)", () => {
 
     expect(response.headers["Access-Control-Allow-Origin"]).toBe("*")
     expect(response.headers["Cache-Control"]).toBe("public, max-age=3600, s-maxage=86400")
-  })
-
-  it("calls trackApiCall once with the per-slug endpoint and statusCode 410", async () => {
-    const { trackApiCall } = await import("@/lib/metrics")
-    const mocked = vi.mocked(trackApiCall)
-    mocked.mockClear()
-
-    const { GET } = await import("@/app/api/v1/docs/[slug]/route")
-    await GET(new Request("https://mzizi.dev/api/v1/docs/3d-architecture"), {
-      params: Promise.resolve({ slug: "3d-architecture" }),
-    })
-
-    expect(mocked).toHaveBeenCalledTimes(1)
-    expect(mocked).toHaveBeenCalledWith(
-      expect.objectContaining({ endpoint: "/api/v1/docs/3d-architecture", statusCode: 410 })
-    )
   })
 
   it("handles URL-encoded slugs without throwing", async () => {

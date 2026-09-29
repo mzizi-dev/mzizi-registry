@@ -1,16 +1,10 @@
-# Supabase project configuration
+# Supabase project configuration — history only.
 #
-# Declares which edge functions the Supabase GitHub App should auto-deploy
-# to preview branches (and which to skip JWT verification on).
-#
-# Auth model — the function handles authorization in application code:
-#
-#   analytics
-#     POST /analytics      intentionally anon-callable (MCP clients + browser
-#                          callsites); per-IP rate limit in the handler
-#
-# If this is later changed to require Supabase Auth JWTs, flip the
-# corresponding `verify_jwt` to true.
+# The registry holds no database. The Mzizi console (mzizi-dev/mzizi-console) is
+# the only thing that talks to Supabase. This file stays so the SQL history in
+# this directory keeps naming the project it was dumped from; it declares no
+# edge functions (the `analytics` function that lived in supabase/functions/ was
+# removed with the rest of the registry's Supabase code).
 
 project_id = "grjsboqkaywpwatvrzmy"
 
@@ -21,6 +15,3 @@ major_version = 15
 # We use a single-file schema dump at supabase/schema.sql instead of the
 # versioned-migrations model. See supabase/README.md for the workflow.
 enabled = false
-
-[functions.analytics]
-verify_jwt = false

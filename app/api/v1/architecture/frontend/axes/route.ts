@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-import { trackApiCall } from "@/lib/metrics"
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -18,11 +17,6 @@ const CORS = {
  * reasoning on why this is retired rather than remapped.
  */
 export async function GET() {
-  trackApiCall({
-    endpoint: "/api/v1/architecture/frontend/axes",
-    durationMs: 0,
-    statusCode: 410,
-  })
   return NextResponse.json(
     {
       error: "Gone",
