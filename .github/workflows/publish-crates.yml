@@ -1,0 +1,154 @@
+name: Publish crates
+
+# Publishes the mzizi-rs crates (Mzizi Roots) to crates.io.
+#
+# Runs on every merge to main that touches the Rust, and on manual dispatch. A run
+# that finds nothing new is a no-op: each crate's version is looked up on crates.io
+# first, and a version that is already there is skipped. So a release is a version
+# bump in mzizi-rs/Cargo.toml (`[workspace.package] version`, plus the `version =`
+# on any path dependency between the crates), merged to main.
+#
+# A published version is permanent: it can be yanked but never re-uploaded. That is
+# why this job runs the whole Rust gate again, on the exact commit it publishes,
+# rather than trusting that CI passed on the pull request.
+#
+# The one secret it needs is CARGO_REGISTRY_TOKEN, a crates.io API token with the
+# publish-new and publish-update scopes. A run that has something to publish and
+# no token fails loudly; a run with nothing to publish does not need one.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "mzizi-rs/**"
+      - "components/registry/**/*.rs"
+      - ".github/workflows/publish-crates.yml"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Package and verify every crate, but upload nothing"
+        type: boolean
+        default: true
+
+concurrency:
+  group: publish-crates
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to crates.io
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: 22
+
+      # The crates compile committed copies of the registry's .rs files. A copy that
+      # has drifted from its source would publish a component the registry does not
+      # serve. The generator has no npm dependencies, so no install is needed.
+      - name: Verify the generated copies match the registry
+        run: node scripts/generate-rust-components.mjs --check
+
+      - name: Install the Rust toolchain
+        run: rustup toolchain install stable --profile minimal --component clippy,rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: mzizi-rs
+
+      - name: Format
+        run: cargo fmt --manifest-path mzizi-rs/Cargo.toml --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --manifest-path mzizi-rs/Cargo.toml --workspace --all-targets -- -D warnings
+
+      - name: Contract tests
+        run: cargo test --manifest-path mzizi-rs/Cargo.toml --workspace
+
+      - name: Package every crate
+        run: cargo package --manifest-path mzizi-rs/Cargo.toml --workspace
+
+      - name: Publish new versions in dependency order
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          manifest=mzizi-rs/Cargo.toml
+          agent="mzizi-registry publish-crates workflow (https://github.com/mzizi-dev/mzizi-registry)"
+
+          # Dependencies first. mzizi-ui depends on mzizi-tokens; the rest stand alone.
+          order=(mzizi-tokens mzizi-ui mzizi-brand mzizi-shell mzizi-assurance mzizi-fundi mzizi-docs mzizi-discovery)
+
+          metadata=$(cargo metadata --manifest-path "$manifest" --no-deps --format-version 1)
+
+          # The list must name every workspace member exactly once, so a new crate
+          # cannot be merged and silently never published.
+          members=$(jq -r '.packages[].name' <<<"$metadata" | sort)
+          listed=$(printf '%s\n' "${order[@]}" | sort)
+          if [ "$members" != "$listed" ]; then
+            echo "::error::The publish order does not match the workspace members."
+            echo "Workspace: $(tr '\n' ' ' <<<"$members")"
+            echo "Order:     $(tr '\n' ' ' <<<"$listed")"
+            exit 1
+          fi
+
+          # And it must put every crate after the workspace crates it depends on.
+          position() { printf '%s\n' "${order[@]}" | grep -nx "$1" | cut -d: -f1; }
+          for crate in "${order[@]}"; do
+            for dep in $(jq -r --arg n "$crate" \
+              '.packages[] | select(.name == $n) | .dependencies[] | select(.path != null) | .name' <<<"$metadata"); do
+              if [ "$(position "$dep")" -ge "$(position "$crate")" ]; then
+                echo "::error::$crate depends on $dep, which the publish order puts after it."
+                exit 1
+              fi
+            done
+          done
+
+          for crate in "${order[@]}"; do
+            version=$(jq -r --arg n "$crate" '.packages[] | select(.name == $n) | .version' <<<"$metadata")
+            status=$(curl -sS -o /dev/null -w '%{http_code}' -A "$agent" \
+              "https://crates.io/api/v1/crates/$crate/$version")
+            if [ "$status" = "200" ]; then
+              echo "$crate@$version is already on crates.io, skipping."
+              continue
+            fi
+            if [ "$status" != "404" ]; then
+              echo "::error::crates.io answered $status for $crate@$version; not publishing blind."
+              exit 1
+            fi
+
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "Dry run: $crate@$version would be published."
+              continue
+            fi
+            if [ -z "${CARGO_REGISTRY_TOKEN:-}" ]; then
+              echo "::error::$crate@$version needs publishing and the CARGO_REGISTRY_TOKEN secret is not set."
+              exit 1
+            fi
+
+            # crates.io limits how fast NEW crates can be created, so the first release
+            # of all eight can hit 429. Wait and retry; a version that did land is found
+            # by the lookup above on any re-run.
+            for attempt in 1 2 3 4 5 6; do
+              if out=$(cargo publish --manifest-path "$manifest" -p "$crate" --locked 2>&1); then
+                echo "$out"
+                echo "Published $crate@$version."
+                break
+              fi
+              echo "$out"
+              if grep -q "429" <<<"$out" && [ "$attempt" -lt 6 ]; then
+                echo "Rate limited publishing $crate; waiting 11 minutes (attempt $attempt of 6)."
+                sleep 660
+                continue
+              fi
+              echo "::error::Publishing $crate@$version failed."
+              exit 1
+            done
+          done

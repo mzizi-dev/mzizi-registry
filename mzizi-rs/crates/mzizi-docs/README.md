@@ -11,9 +11,13 @@ Four modules: `mzizi_ai_context` and `mzizi_docs_api` are string assembly and ro
 mzizi-docs = "0.1"
 ```
 
-> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
-> mzizi-registry#328 but none has been released, so this line does not resolve
-> today — depend on it by path or git until the first release.
+The registry's `publish-crates` workflow releases each new version to crates.io. Before
+the first release, or to follow `main`, depend on it from git:
+
+```toml
+[dependencies]
+mzizi-docs = { git = "https://github.com/mzizi-dev/mzizi-registry" }
+```
 
 Dioxus is pinned to the same version `mzizi-ui` uses, so composing an N10 portal out of N2
 primitives links one Dioxus rather than two.

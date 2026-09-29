@@ -10,9 +10,13 @@ One module today, `mzizi_seo`: resolved page metadata and Schema.org JSON-LD.
 mzizi-discovery = "0.1"
 ```
 
-> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
-> mzizi-registry#328 but none has been released, so this line does not resolve
-> today — depend on it by path or git until the first release.
+The registry's `publish-crates` workflow releases each new version to crates.io. Before
+the first release, or to follow `main`, depend on it from git:
+
+```toml
+[dependencies]
+mzizi-discovery = { git = "https://github.com/mzizi-dev/mzizi-registry" }
+```
 
 The TypeScript sibling returns a Next.js `Metadata` object. There is no Next.js here, so
 the Rust side returns a plain resolved struct and can render the `<head>` elements itself
