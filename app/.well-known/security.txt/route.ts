@@ -37,7 +37,7 @@ export async function GET() {
   const expires = new Date()
   expires.setFullYear(expires.getFullYear() + 1)
 
-  const body = `Contact: mailto:security@nyuchi.com
+  const body = `Contact: mailto:security@bundu.org
 Contact: https://github.com/mzizi-dev/mzizi-registry/security/advisories/new
 Expires: ${expires.toISOString()}
 Canonical: https://mzizi.dev/.well-known/security.txt

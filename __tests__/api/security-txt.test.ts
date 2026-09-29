@@ -50,6 +50,14 @@ describe("/.well-known/security.txt", () => {
     expect(f.get("Expires")?.length).toBe(1)
   })
 
+  it("gives security@bundu.org as the email contact", async () => {
+    // Owner decision 2026-09-28: security reports for Mzizi go to Bundu; only the console
+    // (a separate repo) keeps security@nyuchi.com.
+    const f = fields(await body())
+    expect(f.get("Contact")).toContain("mailto:security@bundu.org")
+    expect(await body()).not.toContain("security@nyuchi.com")
+  })
+
   it("expires in the future", async () => {
     const f = fields(await body())
     const expires = new Date(f.get("Expires")![0])
