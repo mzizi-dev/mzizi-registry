@@ -291,25 +291,29 @@ Today there are seven crates, one per node that has Rust: `mzizi-tokens` (N1), `
 (`mzizi-rs/crate-for-node.json` from batch 1), and `pnpm rust:generate` refuses a node with
 Rust in it that no crate claims.
 
-| Option                                    | Layout                                                                                                                                                               | For                                                                                                                                                              | Against                                                                                |
-| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| **A. Keep per-node crates** (recommended) | Keep the seven names. Add `mzizi-brand` for N3 now, and `mzizi-safety` (N4), `mzizi-resilience` (N5) and `mzizi-pages` (N6) when their batches land.                 | Matches the registry's structure and the crates already in the workspace. The charter names `mzizi-ui` as the UI layer. A consumer takes only the nodes it uses. | A full app takes several dependencies.                                                 |
-| **B. A and umbrella crates**              | A, plus `mzizi-roots`, which re-exports the UI crates behind features (`ui`, `brand`, `shell`, …), and `mzizi-roots-server` for the server crates and host adapters. | One line in `Cargo.toml` for the common case. The umbrella is where "Roots" appears as a name.                                                                   | Two more crates to publish, and a version to keep in step.                             |
-| **C. Rename to `mzizi-roots-*`**          | `mzizi-roots-ui`, `mzizi-roots-brand`, …                                                                                                                             | Every crate carries the programme name.                                                                                                                          | Churns names the charter and the benchmark harness already use, for no technical gain. |
+| Option                                 | Layout                                                                                                                                                               | For                                                                                                                                                              | Against                                                                                |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| **A. Keep per-node crates**            | Keep the seven names. Add `mzizi-brand` for N3 now, and `mzizi-safety` (N4), `mzizi-resilience` (N5) and `mzizi-pages` (N6) when their batches land.                 | Matches the registry's structure and the crates already in the workspace. The charter names `mzizi-ui` as the UI layer. A consumer takes only the nodes it uses. | A full app takes several dependencies.                                                 |
+| **B. A and umbrella crates** (decided) | A, plus `mzizi-roots`, which re-exports the UI crates behind features (`ui`, `brand`, `shell`, …), and `mzizi-roots-server` for the server crates and host adapters. | One line in `Cargo.toml` for the common case. The umbrella is where "Roots" appears as a name.                                                                   | Two more crates to publish, and a version to keep in step.                             |
+| **C. Rename to `mzizi-roots-*`**       | `mzizi-roots-ui`, `mzizi-roots-brand`, …                                                                                                                             | Every crate carries the programme name.                                                                                                                          | Churns names the charter and the benchmark harness already use, for no technical gain. |
 
-**Recommendation: A now, B when a second consumer asks for it.** "Mzizi Roots" is the
-programme and the brand, and the crates stay named for what they contain. The host adapter
-for Workers would be `mzizi-worker`.
+**Decided: option B** (owner, 2026-09-29). The node crates keep their names and stay the
+crates that compile each component, so `/v1/rs/{name}` names a node crate. Two umbrella
+crates, which have no code of their own, sit on top:
 
-All of these names are free on crates.io today (checked 2026-09-29). A published name is
-permanent, so the names must be settled before the first release.
+| Umbrella             | Re-exports                                                                                                       | Features                                                                   |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `mzizi-roots`        | `tokens` (`mzizi-tokens`), `ui` (`mzizi-ui`), `brand` (`mzizi-brand`), `shell` (`mzizi-shell`)                   | `ui`, `brand` and `shell`, all on by default. `mzizi-tokens` is always in. |
+| `mzizi-roots-server` | `assurance` (`mzizi-assurance`), `fundi` (`mzizi-fundi`), `docs` (`mzizi-docs`), `discovery` (`mzizi-discovery`) | All four, on by default.                                                   |
 
-QUESTION: Keep the per-node crate names (`mzizi-tokens`, `mzizi-ui`, `mzizi-shell`,
-`mzizi-assurance`, `mzizi-fundi`, `mzizi-docs`, `mzizi-discovery`) and add `mzizi-brand` for
-N3 (option A)? Or also publish umbrella crates `mzizi-roots` and `mzizi-roots-server` (option
-B), or rename to `mzizi-roots-*` (option C)? Recommendation: option A. This needs an answer
-before the batch 1 pull request merges, because its publish workflow releases every workspace
-crate on merge.
+The split follows §1.2 at crate level. `mzizi-docs` goes on the server side: its docs API and
+AI context are server components, and its two documentation renderers come with it, which is
+why the `docs` feature brings in `dioxus`. When N4, N5 and N6 get crates (`mzizi-safety`,
+`mzizi-resilience`, `mzizi-pages`), they join `mzizi-roots` as features. When the Workers
+adapter (`mzizi-worker`) lands, it joins `mzizi-roots-server`.
+
+All of these names were free on crates.io when checked on 2026-09-29. A published name is
+permanent.
 
 ### 3.2 Installing
 
@@ -317,7 +321,8 @@ crate on merge.
 repository's workspace, so no path is needed:
 
 ```sh
-cargo add mzizi-brand --git https://github.com/mzizi-dev/mzizi-registry
+cargo add mzizi-roots --git https://github.com/mzizi-dev/mzizi-registry   # the UI side
+cargo add mzizi-brand --git https://github.com/mzizi-dev/mzizi-registry   # or one node crate
 ```
 
 ```toml
@@ -332,7 +337,7 @@ crates.io.
 **From crates.io, after the first release.**
 
 ```sh
-cargo add mzizi-brand
+cargo add mzizi-roots          # or mzizi-roots-server, or a single node crate
 ```
 
 The owner approved publishing to crates.io on 2026-09-29. Batch 1 adds

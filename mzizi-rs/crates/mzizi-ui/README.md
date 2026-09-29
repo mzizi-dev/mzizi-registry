@@ -41,6 +41,13 @@ Mzizi's CSS custom properties. The values behind those properties are not author
 either: `lib/tokens/palette.source.ts` is the one place a Mzizi colour is written, and
 `mzizi-tokens` (re-exported above) is one of the surfaces generated from it.
 
+## Part of Mzizi Roots
+
+This crate is also re-exported as `mzizi_roots::ui` by the
+[`mzizi-roots`](https://crates.io/crates/mzizi-roots) umbrella crate (the `ui` feature, on
+by default). Depend on this crate directly to take only this node, or on `mzizi-roots` for
+the whole UI side in one line.
+
 ## Links
 
 - Registry index: <https://api.mzizi.dev/api/v1/ui>

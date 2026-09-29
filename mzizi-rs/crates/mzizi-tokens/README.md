@@ -52,6 +52,13 @@ copy is overwritten.
 No dependencies, and no network or filesystem access at build or run time — the palette is
 consts.
 
+## Part of Mzizi Roots
+
+This crate is also re-exported as `mzizi_roots::tokens` by the
+[`mzizi-roots`](https://crates.io/crates/mzizi-roots) umbrella crate (always included).
+Depend on this crate directly to take only this node, or on `mzizi-roots` for the whole UI
+side in one line.
+
 ## Links
 
 - Palette: <https://api.mzizi.dev/api/v1/brand>
