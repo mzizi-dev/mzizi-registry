@@ -1,63 +1,82 @@
 import { describe, it, expect } from "vitest"
-import { readFileSync } from "node:fs"
-import { resolve } from "node:path"
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs"
+import { join, resolve, relative } from "node:path"
 
 /**
- * Component source lives on disk in git (§8.3) and NOWHERE in Supabase.
+ * The registry holds no database. Nothing in the app may reach Supabase.
  *
- * It took five separate removals to get there, because each one only cleared
- * the shape someone happened to look at:
+ * Component source lives on disk in git (§8.3), and it took five separate
+ * removals to get it out of Supabase, because each only cleared the shape
+ * someone happened to look at (`components.source_code`, the
+ * `component_versions` view's projection of it, and three nested archive keys).
+ * The owner's final ruling closes the class rather than the instance: the Mzizi
+ * console (mzizi-dev/mzizi-console) is the only thing in the estate that talks
+ * to Supabase, and this repo holds no client, no credentials and no query.
  *
- *   1. `components.source_code`               — the original column
- *   2. `component_versions.source_code`       — the view projected it, and
- *                                               `select("*")` served ~10 MB of
- *                                               stale source publicly
- *   3. `versions[].sourceCode`                — 2,728 archive entries
- *   4. `versions[].snapshot.source_code`      —   576 entries
- *   5. `versions[].snapshot.versions[].sourceCode` — 556, one level deeper and
- *                                               invisible to a structural check
- *                                               that only read top-level keys
- *
- * Plus two orphaned snapshot TABLES (`components_store`,
- * `component_versions_store`) that nothing read and anon could SELECT.
- *
- * These assertions are source-level rather than live queries, deliberately: a
- * test that needs credentials is skipped in CI, which is exactly where the
- * regression would land. What can be checked offline is that no query in
- * `lib/db` asks for a source column and that no `select("*")` reaches a
- * component-bearing relation — those are the two mechanisms that produced
- * every leak above.
+ * These are source-level assertions on purpose — a test that needs credentials
+ * is skipped in CI, which is exactly where a regression would land.
  */
 
 const root = resolve(__dirname, "../..")
 const db = readFileSync(resolve(root, "lib/db/index.ts"), "utf8")
 
-/** Relations that carry component metadata, where `*` would be dangerous. */
-const COMPONENT_RELATIONS = ["components", "component_versions", "component_documents"]
+/** The app's own code — everything that ships in the Next bundle or a Worker. */
+const APP_DIRS = ["app", "lib", "hooks", "components", "mzizi-api", "mzizi-ui", "mzizi-plus"]
 
-describe("no component source is read from the database", () => {
-  it("lib/db never selects a source column", () => {
-    // Comments explaining the removal are expected and fine; a `.select()`
-    // naming it is not.
-    const selects = [...db.matchAll(/\.select\((["'`])([\s\S]*?)\1\)/g)].map((m) => m[2])
-    for (const columns of selects) {
-      expect(columns, `select("${columns}") must not request source`).not.toMatch(
-        /\bsource_code\b|\bsourceCode\b/
-      )
-    }
+/**
+ * Registry items are distributed content, not app code: `mzizi-docs-api.ts` is a
+ * published N10 item that runs as a consumer's own Supabase edge function, and
+ * serving it unchanged is part of the file-backed registry.
+ */
+const DISTRIBUTED = [join("components", "registry")]
+
+function sourceFiles(dir: string): string[] {
+  const abs = join(root, dir)
+  if (!existsSync(abs)) return []
+  const out: string[] = []
+  for (const entry of readdirSync(abs)) {
+    if (entry === "node_modules" || entry.startsWith(".")) continue
+    const full = join(abs, entry)
+    const rel = relative(root, full)
+    if (DISTRIBUTED.some((d) => rel === d || rel.startsWith(d + "/"))) continue
+    if (statSync(full).isDirectory()) out.push(...sourceFiles(rel))
+    else if (/\.(ts|tsx|mts|mjs|js)$/.test(entry) && !/\.generated\./.test(entry)) out.push(rel)
+  }
+  return out
+}
+
+describe("no Supabase in the registry", () => {
+  const files = APP_DIRS.flatMap(sourceFiles)
+
+  it("finds the app's source files (guards against a vacuous pass)", () => {
+    expect(files.length).toBeGreaterThan(100)
+    expect(files).toContain(join("lib", "db", "index.ts"))
   })
 
-  it("no select(*) against a component-bearing relation", () => {
-    // `select("*")` is how the versions leak happened: the view gained a
-    // source_code column and the query silently started serving it.
-    for (const relation of COMPONENT_RELATIONS) {
-      const pattern = new RegExp(
-        `\\.from\\((["'\`])${relation}\\1\\)[\\s\\S]{0,200}?\\.select\\((["'\`])\\*\\2\\)`,
-        "g"
-      )
-      const hits = [...db.matchAll(pattern)]
-      expect(hits.length, `.from("${relation}") must not be followed by .select("*")`).toBe(0)
-    }
+  it("no app file imports a Supabase client", () => {
+    const offenders = files.filter((f) =>
+      /from\s+["'](?:jsr:|npm:)?@supabase\//.test(readFileSync(join(root, f), "utf8"))
+    )
+    expect(offenders).toEqual([])
+  })
+
+  it("no app file reads a Supabase environment variable", () => {
+    const offenders = files.filter((f) =>
+      /process\.env\.(?:NEXT_PUBLIC_)?SUPABASE_/.test(readFileSync(join(root, f), "utf8"))
+    )
+    expect(offenders).toEqual([])
+  })
+
+  it("package.json depends on no @supabase package", () => {
+    const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"))
+    const deps = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies })
+    expect(deps.filter((d) => d.startsWith("@supabase/"))).toEqual([])
+  })
+
+  it("lib/db runs no query at all", () => {
+    expect(db).not.toMatch(/\.from\((["'`])[a-z_]+\1\)/)
+    expect(db).not.toMatch(/\.rpc\(/)
+    expect(db).not.toMatch(/\bcreateClient\b/)
   })
 
   it("getDesignTokens is gone rather than repointed", () => {

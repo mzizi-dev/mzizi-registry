@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import { describe, it, expect, vi, beforeEach } from "vitest"
 
 vi.mock("next/server", () => ({
   NextResponse: {
@@ -10,15 +10,8 @@ vi.mock("next/server", () => ({
   },
 }))
 
-vi.mock("@/lib/metrics", () => ({
-  trackApiCall: vi.fn(),
-}))
-
-// Smoke coverage for the architecture routes. Live routes return 503 with a
-// clear "not configured" message when Supabase env vars are absent — same
-// pattern as the existing brand-route test. Retired routes return 410
-// regardless, because the answer no longer depends on the database.
-// Real DB-backed assertions live in the live deploy smoke checks.
+// Smoke coverage for the architecture routes. Live routes serve the helix from
+// doctrine on disk — the registry holds no database. Retired routes return 410.
 
 type Resp = {
   data: {
@@ -32,20 +25,11 @@ type Resp = {
   headers: Record<string, string>
 }
 
-// These specs assert the "database not configured" branch, which `lib/db` decides
-// from `process.env` read at MODULE scope. They used to rely on those vars simply
-// being absent from the ambient environment: true in CI, false on any developer
-// machine with the usual `.env.local`, where the suite failed with 200-instead-of-503.
-// Stub the vars empty and reset the module registry so the branch under test is the
-// one that actually runs, whatever the environment holds.
+// Each spec imports its route fresh. These used to stub the Supabase env vars empty
+// as well; the registry reads no environment for data any more, so there is
+// nothing left to stub.
 beforeEach(() => {
-  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "")
-  vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "")
   vi.resetModules()
-})
-
-afterEach(() => {
-  vi.unstubAllEnvs()
 })
 
 describe("GET /api/v1/architecture (no Supabase)", () => {
@@ -55,8 +39,7 @@ describe("GET /api/v1/architecture (no Supabase)", () => {
     // through `lib/doctrine.ts` (CLAUDE.md §15.17), so the route answered 503 for content in
     // the deployed bundle — and pointed whoever hit it at a credential that would not help.
     //
-    // The env vars are still stubbed empty by the `beforeEach` above, which is the point:
-    // the route must serve WITHOUT them.
+    // There is no database to configure now, which is the point: the route serves from disk.
     const { GET } = await import("@/app/api/v1/architecture/route")
     const r = (await GET()) as unknown as Resp
     expect(r.status).toBe(200)

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import { describe, it, expect, vi, beforeEach } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
@@ -19,18 +19,11 @@ vi.mock("next/server", () => ({
  * the Supabase `releases` view. The release history is now
  * `content/changelog/releases.json`, inlined by `pnpm changelog:generate`.
  *
- * Every spec runs with Supabase stubbed empty, because that is the deployment
- * this has to work on — not as an edge case but as the only case.
+ * There is no database to stub: the registry holds none, so reading from disk
+ * is not an edge case but the only case.
  */
 beforeEach(() => {
-  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "")
-  vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "")
-  vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "")
   vi.resetModules()
-})
-
-afterEach(() => {
-  vi.unstubAllEnvs()
 })
 
 type Served = { data: Record<string, unknown>; status: number }

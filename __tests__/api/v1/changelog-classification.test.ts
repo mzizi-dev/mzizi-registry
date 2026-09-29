@@ -12,7 +12,8 @@ import { parse } from "yaml"
  *      64 rows have no `released_at`, Postgres sorts NULLS FIRST on DESC, so
  *      the changelog opened with 4.1.8 / 4.1.1 / 4.1.2 / 4.1.0 in arbitrary
  *      order and the current release, 1.0.0, sat at position eleven.
- *   2. `getLatestVersion` used the same ordering and returned **4.1.8**.
+ *   2. `getLatestVersion` used the same ordering and returned **4.1.8**. (It has
+ *      since been deleted with the database it read.)
  *   3. `getChangelogByVersion` used `.single()`. PostgREST answers PGRST116 for
  *      "more than one row" as well as "no rows", and eight versions carry two
  *      or three entries, so `/api/v1/changelog/4.0.31` answered 404 for a
@@ -61,10 +62,11 @@ describe("changelog ordering", () => {
     expect(body).not.toMatch(/\.sort\(/)
   })
 
-  it("getLatestVersion reads the releases view, not released_at", () => {
-    const body = fnBody("getLatestVersion")
-    expect(body).toMatch(/\.from\((["'`])releases\1\)/)
-    expect(body).not.toMatch(/released_at/)
+  it("getLatestVersion is gone rather than left reading the releases view", () => {
+    // It read Supabase's `releases` view, had no callers, and went with the
+    // database. The committed record's first entry is the current release — see
+    // the ordering specs above — so nothing needs a second way to ask.
+    expect(db).not.toMatch(/export\s+async\s+function\s+getLatestVersion\b/)
   })
 })
 

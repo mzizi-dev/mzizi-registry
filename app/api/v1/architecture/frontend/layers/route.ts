@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-import { trackApiCall } from "@/lib/metrics"
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -20,11 +19,6 @@ const CORS = {
  * segment "for URL stability" left the retired vocabulary in the contract.
  */
 export async function GET() {
-  trackApiCall({
-    endpoint: "/api/v1/architecture/frontend/layers",
-    durationMs: 0,
-    statusCode: 410,
-  })
   return NextResponse.json(
     {
       error: "Gone",

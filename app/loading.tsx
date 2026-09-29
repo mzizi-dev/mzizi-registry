@@ -2,8 +2,8 @@ import { Skeleton } from "@/components/registry/n2-primitives/skeleton"
 
 /**
  * Root-level loading state. Renders while any server component on the
- * landing page is still streaming — most commonly the DB-driven sections
- * (ResilientBySection / ExploreSection) that query Supabase.
+ * landing page is still streaming — most commonly the data-driven sections
+ * (ResilientBySection / ExploreSection), which read the registry on disk.
  *
  * Shape mirrors Hero + InstallSteps to minimise layout shift.
  */

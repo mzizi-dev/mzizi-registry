@@ -1,14 +1,15 @@
 /**
- * Database types for the Mzizi Supabase document store.
+ * Payload shapes for the Mzizi data layer.
  *
- * These types mirror the Supabase tables defined in supabase/schema.sql.
- * Components, docs, and demos are stored as rows in Postgres — queryable,
- * indexable, and protected by RLS.
+ * The names are historical: these started as mirrors of the Supabase tables in
+ * supabase/schema.sql. The registry holds no database now — every value of these
+ * types is built from files on disk — but the shapes are what `/api/v1/*` serves,
+ * so they are kept as the contract rather than renamed out from under consumers.
  */
 
 import type { RegistryItem } from "@/lib/registry"
 
-// ── Row types (what comes back from Supabase) ───────────────────────
+// ── Row types ─────────────────────────────────────────────────────
 
 export interface ComponentRow {
   id: number
@@ -50,7 +51,7 @@ export interface ComponentDemoRow {
   updated_at: string
 }
 
-// ── Insert types (what we send to Supabase) ─────────────────────────
+// ── Insert types (historical write shapes) ─────────────────────────
 
 export interface ComponentInsert {
   name: string
@@ -137,12 +138,10 @@ export interface ComponentWithDocs extends Omit<RegistryItem, "docs"> {
 
 export interface DatabaseInfo {
   /**
-   * Where the component registry is actually read from. `registry` = the repo
-   * (registry.json + the files on disk); `supabase` remains in the union only
-   * for the surfaces that still read a table, so a consumer can tell which
-   * answered.
+   * Where the component registry is read from: the repo (registry.json + the
+   * files on disk). There is no other provider.
    */
-  provider: "registry" | "supabase"
+  provider: "registry"
   components: number
   docs: number
   demos: number
@@ -748,115 +747,6 @@ export interface DesignTokens {
   spacing?: Record<string, unknown>
   radii?: Record<string, unknown>
   [key: string]: unknown
-}
-
-// ── Supabase database type helper ───────────────────────────────────
-
-export interface Database {
-  public: {
-    Tables: {
-      components: {
-        Row: ComponentRow
-        Insert: ComponentInsert
-        Update: Partial<ComponentInsert>
-      }
-      component_docs: {
-        Row: ComponentDocRow
-        Insert: ComponentDocInsert
-        Update: Partial<ComponentDocInsert>
-      }
-      component_demos: {
-        Row: ComponentDemoRow
-        Insert: ComponentDemoInsert
-        Update: Partial<ComponentDemoInsert>
-      }
-      brand_minerals: {
-        Row: BrandMineralRow
-        Insert: BrandMineralInsert
-        Update: Partial<BrandMineralInsert>
-      }
-      brand_semantic_colors: {
-        Row: BrandSemanticColorRow
-        Insert: BrandSemanticColorInsert
-        Update: Partial<BrandSemanticColorInsert>
-      }
-      brand_typography: {
-        Row: BrandTypographyRow
-        Insert: BrandTypographyInsert
-        Update: Partial<BrandTypographyInsert>
-      }
-      brand_spacing: {
-        Row: BrandSpacingRow
-        Insert: BrandSpacingInsert
-        Update: Partial<BrandSpacingInsert>
-      }
-      brand_ecosystem: {
-        Row: BrandEcosystemRow
-        Insert: BrandEcosystemInsert
-        Update: Partial<BrandEcosystemInsert>
-      }
-      brand_meta: {
-        Row: BrandMetaRow
-        Insert: BrandMetaInsert
-        Update: Partial<BrandMetaInsert>
-      }
-      architecture_principles: {
-        Row: ArchitecturePrincipleRow
-        Insert: ArchitecturePrincipleInsert
-        Update: Partial<ArchitecturePrincipleInsert>
-      }
-      architecture_framework: {
-        Row: ArchitectureFrameworkRow
-        Insert: ArchitectureFrameworkInsert
-        Update: Partial<ArchitectureFrameworkInsert>
-      }
-      architecture_data_layer: {
-        Row: ArchitectureDataLayerRow
-        Insert: ArchitectureDataLayerInsert
-        Update: Partial<ArchitectureDataLayerInsert>
-      }
-      architecture_cloud_layer: {
-        Row: ArchitectureCloudLayerRow
-        Insert: ArchitectureCloudLayerInsert
-        Update: Partial<ArchitectureCloudLayerInsert>
-      }
-      architecture_pipeline: {
-        Row: ArchitecturePipelineRow
-        Insert: ArchitecturePipelineInsert
-        Update: Partial<ArchitecturePipelineInsert>
-      }
-      architecture_data_ownership: {
-        Row: ArchitectureDataOwnershipRow
-        Insert: ArchitectureDataOwnershipInsert
-        Update: Partial<ArchitectureDataOwnershipInsert>
-      }
-      architecture_sovereignty: {
-        Row: ArchitectureSovereigntyRow
-        Insert: ArchitectureSovereigntyInsert
-        Update: Partial<ArchitectureSovereigntyInsert>
-      }
-      architecture_removed: {
-        Row: ArchitectureRemovedRow
-        Insert: ArchitectureRemovedInsert
-        Update: Partial<ArchitectureRemovedInsert>
-      }
-      ai_instructions: {
-        Row: AiInstructionRow
-        Insert: AiInstructionInsert
-        Update: Partial<AiInstructionInsert>
-      }
-      changelog: {
-        Row: ChangelogRow
-        Insert: ChangelogInsert
-        Update: Partial<ChangelogInsert>
-      }
-      component_versions: {
-        Row: ComponentVersionRow
-        Insert: ComponentVersionInsert
-        Update: Partial<ComponentVersionInsert>
-      }
-    }
-  }
 }
 
 // ── Architecture (Mzizi DNA double helix) — nodes on strands + rungs ──

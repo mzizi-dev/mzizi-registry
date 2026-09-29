@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { getHelixModel } from "@/lib/db"
-import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("architecture-snapshot")
 
@@ -39,7 +38,6 @@ export const revalidate = 3600
  * "the collection is empty" from "the request failed".
  */
 export async function GET() {
-  const start = Date.now()
   try {
     // The `isSupabaseConfigured()` guard that stood here is gone with the store it guarded.
     // Doctrine is MDX under `content/doctrine/` read through `lib/doctrine.ts` (CLAUDE.md
@@ -48,11 +46,6 @@ export async function GET() {
     // that would not have helped. A precondition that no longer holds does not fail safe.
 
     const model = await getHelixModel()
-    trackApiCall({
-      endpoint: "/api/v1/architecture",
-      durationMs: Date.now() - start,
-      statusCode: 200,
-    })
 
     const empty = model.nodes.length === 0 && model.rungs.length === 0 && model.strands.length === 0
 
@@ -74,11 +67,6 @@ export async function GET() {
   } catch (error) {
     logger.error("Architecture snapshot error", {
       error: error instanceof Error ? error : new Error(String(error)),
-    })
-    trackApiCall({
-      endpoint: "/api/v1/architecture",
-      durationMs: Date.now() - start,
-      statusCode: 500,
     })
     return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: CORS })
   }

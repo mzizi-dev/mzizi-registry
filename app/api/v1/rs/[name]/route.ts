@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import { createLogger } from "@/lib/observability"
 import { readComponent } from "@/lib/registry"
 import { readComponentSourceFor } from "@/lib/registry-source"
-import { trackApiCall } from "@/lib/metrics"
 
 const logger = createLogger("registry")
 
@@ -41,13 +40,10 @@ const CORS_CACHE = {
  * component. The shadcn-shaped envelope is kept anyway so one client can parse both routes.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ name: string }> }) {
-  const start = Date.now()
-  const endpoint = "/api/v1/rs/[name]"
   try {
     const { name } = await params
 
     if (!name || typeof name !== "string") {
-      trackApiCall({ endpoint, durationMs: Date.now() - start, statusCode: 400 })
       return NextResponse.json(
         { error: "Invalid component name" },
         { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }
@@ -56,12 +52,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
 
     const component = readComponent(name)
     if (!component) {
-      trackApiCall({
-        endpoint: `/api/v1/rs/${name}`,
-        durationMs: Date.now() - start,
-        statusCode: 404,
-        componentName: name,
-      })
       return NextResponse.json(
         { error: `Component "${name}" not found in registry` },
         { status: 404, headers: { "Access-Control-Allow-Origin": "*" } }
@@ -70,12 +60,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
 
     const source = readComponentSourceFor(name, "rs")
     if (source === null) {
-      trackApiCall({
-        endpoint: `/api/v1/rs/${name}`,
-        durationMs: Date.now() - start,
-        statusCode: 404,
-        componentName: name,
-      })
       return NextResponse.json(
         {
           error: `"${name}" has no Rust implementation`,
@@ -89,12 +73,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     }
 
     logger.info("Rust component served", { data: { name } })
-    trackApiCall({
-      endpoint: `/api/v1/rs/${name}`,
-      durationMs: Date.now() - start,
-      statusCode: 200,
-      componentName: name,
-    })
 
     return NextResponse.json(
       {
@@ -120,7 +98,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
     logger.error("Rust registry item error", {
       error: error instanceof Error ? error : new Error(String(error)),
     })
-    trackApiCall({ endpoint, durationMs: Date.now() - start, statusCode: 500 })
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500, headers: { "Access-Control-Allow-Origin": "*" } }

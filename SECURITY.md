@@ -60,7 +60,7 @@ This policy covers anything the portal itself owns:
 - The brand + architecture APIs (`/api/v1/brand`, `/api/v1/ecosystem`, `/api/v1/data-layer`, `/api/v1/pipeline`, `/api/v1/sovereignty`)
 - The `/mcp` route (a 308 to `mcp.mzizi.dev/mcp`, the one MCP server — report issues in that server itself to `mzizi-dev/agent-tools`)
 - Component source code served via the registry — an XSS or RCE-by-scaffold is in scope
-- Supabase row-level security policies captured in `supabase/schema.sql`
+- The absence of a database: any path by which the registry reaches Supabase or another store at runtime (it holds no client or credential by design — the Mzizi console is the only Supabase consumer)
 - GitHub Actions workflows in `.github/workflows/` — malicious-input, token-exfiltration, or privilege-escalation issues
 - The shadcn CLI `install` surface: any way the registry can serve a response that runs unexpected code on a developer's machine
 

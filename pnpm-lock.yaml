@@ -15,7 +15,7 @@ overrides:
   fast-uri: ^3.1.6
   flatted: ^3.4.2
   hono: ^4.13.5
-  ip-address: ^10.1.1
+  ip-address: ^10.5.1
   js-yaml: ^4.3.2
   linkify-it: ^5.0.2
   lodash-es: ^4.18.1
@@ -30,7 +30,7 @@ overrides:
   sharp: ^0.35.4
   smol-toml: ^1.7.1
   tinyglobby>picomatch: ^4.0.4
-  undici: ^7.28.0
+  undici: ^7.29.1
   uuid: ^14.0.0
   vite: ^8.0.13
   ws: ^8.20.1
@@ -148,12 +148,6 @@ importers:
       '@react-three/fiber':
         specifier: ^9.7.0
         version: 9.7.0(@types/react@19.2.18)(immer@11.1.15)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(three@0.185.1)
-      '@supabase/server':
-        specifier: ^1.6.0
-        version: 1.6.0(@supabase/supabase-js@2.115.0)(hono@4.13.7)(typescript@6.0.3)
-      '@supabase/supabase-js':
-        specifier: ^2.115.0
-        version: 2.115.0
       '@tanstack/react-table':
         specifier: ^9.2.4
         version: 9.2.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -2869,69 +2863,6 @@ packages:
   '@standard-schema/utils@0.3.0':
     resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
 
-  '@supabase/auth-js@2.115.0':
-    resolution: {integrity: sha512-YNQlQWm1H0gsXHSY8Jd/xepBhjO0Zhwx04iW17A83/joQ5kFiUin6iPj9s9kZZvupnwLjXVP/diTFiLz2jUbwQ==}
-    engines: {node: '>=22.0.0'}
-
-  '@supabase/functions-js@2.115.0':
-    resolution: {integrity: sha512-p97V6/YFcdp+zblFDVJaE8f9rGKTNz0PRzyJ2d1w/EYIU5lwidKuc3l/wM+u27ACmAC62albvoGiUGzLPSg7Aw==}
-    engines: {node: '>=22.0.0'}
-
-  '@supabase/middleware@0.5.0':
-    resolution: {integrity: sha512-OjukUo+5p14zxTuylf2zVg1hZCHWKLO6VrZhtVeQQw09yrVo3GAduvFJPiFDhTAz/Du1ZfEzAR+s6aRAWD5wzQ==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      typescript: '>=5.4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@supabase/phoenix@0.4.5':
-    resolution: {integrity: sha512-aAn9H9ovVyeApKy11OWOrrOGq8DV68yWeH4ud2lN9fzn4aO8Zb5GLL9m1pUg9nLqIcT+ZDfAcsZe0E/nqdv2lw==}
-
-  '@supabase/postgrest-js@2.115.0':
-    resolution: {integrity: sha512-DdERcurLh5t84pgSywDg2LjLR5le7XAzl52/iQhC7FdboWDqGfDPMfaWJV3MHvhyxSlSNzbpSQG+RiQOBSn/4w==}
-    engines: {node: '>=22.0.0'}
-
-  '@supabase/realtime-js@2.115.0':
-    resolution: {integrity: sha512-5HyBkvlA/IUV2v8jX3uLTdy15jmTPRVXwXKoxvH2SKw5jZMNURxCxt+VpCEukscXQlY7pUpH8Cy4NH6io4iaRw==}
-    engines: {node: '>=22.0.0'}
-
-  '@supabase/server@1.6.0':
-    resolution: {integrity: sha512-LtUkzUqUGip6I2+kvSmA04u3s+npwLseer2yomBnUdQ1zyJPtlgjAqbwsNuGC1DT/FHi1BvvJluI7dZVV2XdTw==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      '@nestjs/common': ^10.0.0 || ^11.0.0
-      '@supabase/supabase-js': ^2.0.0
-      elysia: ^1.4.0
-      h3: ^2.0.0
-      hono: ^4.13.5
-      pg: ^8.0.0
-    peerDependenciesMeta:
-      '@nestjs/common':
-        optional: true
-      elysia:
-        optional: true
-      h3:
-        optional: true
-      hono:
-        optional: true
-      pg:
-        optional: true
-
-  '@supabase/storage-js@2.115.0':
-    resolution: {integrity: sha512-dLyIxzbO+MCcKHhcce8rVUCQX1iyqXqQ8ytgkOVYJ7D+Zp0qKylPtQH3hamgxrGSxtDjaw47Urpzw2iK9PsKdA==}
-    engines: {node: '>=22.0.0'}
-
-  '@supabase/supabase-js@2.115.0':
-    resolution: {integrity: sha512-PYJSxtCo37R7tTZW6pAqsxUeSx/dlhA7zn8RzKEUSCqyTxCUhG+iHrDTb04UyVBYbttaUbhwkNTvb8h5HW+uZA==}
-    engines: {node: '>=22.0.0'}
-    peerDependencies:
-      '@opentelemetry/api': '>=1.0.0'
-    peerDependenciesMeta:
-      '@opentelemetry/api':
-        optional: true
-
   '@swc/helpers@0.5.23':
     resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
 
@@ -4431,10 +4362,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  iceberg-js@0.8.1:
-    resolution: {integrity: sha512-1dhVQZXhcHje7798IVM+xoo/1ZdVfzOMIc8/rgVSijRK38EDqOJoGula9N/8ZI5RD8QTxNQtK/Gozpr+qUqRRA==}
-    engines: {node: '>=20.0.0'}
-
   iconv-lite@0.7.3:
     resolution: {integrity: sha512-IKXpvIzjnC9XTAUbVBcMfGS0EPaIXtW6v+zr+RRp+hqULEpo0owZax6wyRwPOJbWbzjYspQwusTsfVr0ifh4uQ==}
     engines: {node: '>=0.10.0'}
@@ -4487,10 +4414,6 @@ packages:
   internmap@2.0.3:
     resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
     engines: {node: '>=12'}
-
-  ip-address@10.3.1:
-    resolution: {integrity: sha512-1e9d3kb97NHJTIJDZW9rKqW2h6+dFa50Dy0fpPSMQp2ADje5gvKsXmdiK6dwY5t76TaTt5+P5N1Y/LoToIxP6g==}
-    engines: {node: '>= 12'}
 
   ip-address@10.7.0:
     resolution: {integrity: sha512-BGFsyJd5mpXp3rK6jIdADLNgpJUK1jnjzvYF8lK+VyDab9JAmqN0YOKDdP17HlgKb2+ehPgDc8EtnRLbGCAMhA==}
@@ -4633,9 +4556,6 @@ packages:
   jiti@2.7.0:
     resolution: {integrity: sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==}
     hasBin: true
-
-  jose@6.2.12:
-    resolution: {integrity: sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==}
 
   jose@6.2.4:
     resolution: {integrity: sha512-N8acGzVsQy6M/fjFcxtysNc4Q379TcM5dM/qKkNtsHFji88yANnXTr7BLeP75iPnFwBfQzM/jg2BZ9+HZrHCZA==}
@@ -6236,10 +6156,6 @@ packages:
 
   undici-types@8.9.0:
     resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
-
-  undici@7.29.0:
-    resolution: {integrity: sha512-IDxfleLmmbSskfWSUATiN1nfn2rDuvnMOqb5CWR92iIfojA0Ud+ulOAAEQ57LPr9rWmsreUyf5lwyao+7GNNVw==}
-    engines: {node: '>=20.18.1'}
 
   undici@7.29.1:
     resolution: {integrity: sha512-RYONW2MeafgYlkVOKYKkA/Ag7BmXqgIWCa8t1m0JcxrQg9pI9lEqRhAOruOBCbAohOa/gkCF+iPi9hrgvTzu6Q==}
@@ -9386,54 +9302,6 @@ snapshots:
 
   '@standard-schema/utils@0.3.0': {}
 
-  '@supabase/auth-js@2.115.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@supabase/functions-js@2.115.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@supabase/middleware@0.5.0(typescript@6.0.3)':
-    dependencies:
-      std-env: 4.2.0
-    optionalDependencies:
-      typescript: 6.0.3
-
-  '@supabase/phoenix@0.4.5': {}
-
-  '@supabase/postgrest-js@2.115.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@supabase/realtime-js@2.115.0':
-    dependencies:
-      '@supabase/phoenix': 0.4.5
-      tslib: 2.8.1
-
-  '@supabase/server@1.6.0(@supabase/supabase-js@2.115.0)(hono@4.13.7)(typescript@6.0.3)':
-    dependencies:
-      '@supabase/middleware': 0.5.0(typescript@6.0.3)
-      '@supabase/supabase-js': 2.115.0
-      jose: 6.2.12
-    optionalDependencies:
-      hono: 4.13.7
-    transitivePeerDependencies:
-      - typescript
-
-  '@supabase/storage-js@2.115.0':
-    dependencies:
-      iceberg-js: 0.8.1
-      tslib: 2.8.1
-
-  '@supabase/supabase-js@2.115.0':
-    dependencies:
-      '@supabase/auth-js': 2.115.0
-      '@supabase/functions-js': 2.115.0
-      '@supabase/postgrest-js': 2.115.0
-      '@supabase/realtime-js': 2.115.0
-      '@supabase/storage-js': 2.115.0
-
   '@swc/helpers@0.5.23':
     dependencies:
       tslib: 2.8.1
@@ -10672,7 +10540,7 @@ snapshots:
     dependencies:
       debug: 4.4.3
       express: 5.2.1
-      ip-address: 10.3.1
+      ip-address: 10.7.0
     transitivePeerDependencies:
       - supports-color
 
@@ -11086,8 +10954,6 @@ snapshots:
 
   husky@9.1.7: {}
 
-  iceberg-js@0.8.1: {}
-
   iconv-lite@0.7.3:
     dependencies:
       safer-buffer: 2.1.2
@@ -11123,8 +10989,6 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
 
   internmap@2.0.3: {}
-
-  ip-address@10.3.1: {}
 
   ip-address@10.7.0: {}
 
@@ -11220,8 +11084,6 @@ snapshots:
 
   jiti@2.7.0: {}
 
-  jose@6.2.12: {}
-
   jose@6.2.4: {}
 
   js-tokens@4.0.0: {}
@@ -11247,7 +11109,7 @@ snapshots:
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 6.0.2
-      undici: 7.29.0
+      undici: 7.29.1
       w3c-xmlserializer: 5.0.0
       webidl-conversions: 8.0.1
       whatwg-mimetype: 5.0.0
@@ -13091,8 +12953,6 @@ snapshots:
   undici-types@5.26.5: {}
 
   undici-types@8.9.0: {}
-
-  undici@7.29.0: {}
 
   undici@7.29.1: {}
 

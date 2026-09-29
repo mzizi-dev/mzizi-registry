@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
-import { getHelixModel, getHelixNode, helixClassOf, isSupabaseConfigured } from "@/lib/db"
+import { getHelixModel, getHelixNode, helixClassOf } from "@/lib/db"
+import { RENDER_FILE_BACKED_PAGES } from "@/lib/file-backed-pages"
 import type { HelixNode } from "@/lib/db/types"
 
 export const revalidate = 3600
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ n: string
   const { n } = await params
   const parsed = parseNode(n)
   if (parsed === null) return { title: "Node not found" }
-  if (!isSupabaseConfigured()) return { title: `N${parsed}` }
+  if (!RENDER_FILE_BACKED_PAGES) return { title: `N${parsed}` }
 
   const element = await getHelixNode(parsed).catch(() => null)
   if (!element) return { title: `N${parsed}` }
@@ -72,7 +73,7 @@ export default async function NodeDetailPage({ params }: { params: Promise<{ n: 
   const parsed = parseNode(n)
   if (parsed === null) notFound()
 
-  if (!isSupabaseConfigured()) {
+  if (!RENDER_FILE_BACKED_PAGES) {
     return (
       <article className="mx-auto max-w-3xl py-12">
         <h1 className="font-serif text-3xl font-bold">N{parsed}</h1>
