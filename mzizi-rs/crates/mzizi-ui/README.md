@@ -3,17 +3,22 @@
 Dioxus primitives from the [Mzizi](https://mzizi.dev) component registry — **node N2,
 primitives** — the second node of the DNA-helix architecture.
 
-Three primitives are ported so far: `Button`, `Badge` and `Card`. That is the whole of
-this crate; N2 has many more components, and the rest exist only as React today.
+Nine primitives are ported so far: `Avatar`, `Badge`, `Button`, `Card`, `Chart`, `Input`,
+`Label`, `Progress` and `Separator`. That is the whole of this crate; N2 has many more
+components, and the rest exist only as React today.
 
 ```toml
 [dependencies]
 mzizi-ui = "0.1"
 ```
 
-> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
-> mzizi-registry#328 but none has been released, so this line does not resolve
-> today — depend on it by path or git until the first release.
+The registry's `publish-crates` workflow releases each new version to crates.io. Before
+the first release, or to follow `main`, depend on it from git:
+
+```toml
+[dependencies]
+mzizi-ui = { git = "https://github.com/mzizi-dev/mzizi-registry" }
+```
 
 ```rust
 use mzizi_ui::{Button, ButtonVariant, ButtonSize};

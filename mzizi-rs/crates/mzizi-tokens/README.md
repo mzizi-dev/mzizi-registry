@@ -13,9 +13,13 @@ fern, lagoon, storm, dusk, protea). Plus the spacing, radius and type scales.
 mzizi-tokens = "0.1"
 ```
 
-> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
-> mzizi-registry#328 but none has been released, so this line does not resolve
-> today — depend on it by path or git until the first release.
+The registry's `publish-crates` workflow releases each new version to crates.io. Before
+the first release, or to follow `main`, depend on it from git:
+
+```toml
+[dependencies]
+mzizi-tokens = { git = "https://github.com/mzizi-dev/mzizi-registry" }
+```
 
 ```rust
 use mzizi_tokens::{Palette, COBALT_DARK, Radius};
