@@ -142,12 +142,20 @@ export async function getAllComponents(): Promise<RegistryItem[]> {
 }
 
 /**
- * Get components by category.
+ * Get components listing `category` in their `categories`.
+ *
+ * This compared a `category` field, the retired Supabase row's name, which no registry
+ * item has, so it matched nothing for every input. Items carry `categories`, an array.
  */
-export async function getComponentsByCategory(category: string): Promise<ComponentRow[]> {
-  return readComponents().filter(
-    (c) => (c as unknown as { category?: string }).category === category
-  ) as unknown as ComponentRow[]
+export async function getComponentsByCategory(category: string): Promise<RegistryItem[]> {
+  return readComponents().filter((c) => (c.categories ?? []).includes(category))
+}
+
+/**
+ * Get components on a node of the helix, by node number as written (`"2"`, not `"02"`).
+ */
+export async function getComponentsByNode(node: string): Promise<RegistryItem[]> {
+  return readComponents().filter((c) => typeof c.node === "number" && String(c.node) === node)
 }
 
 /**
@@ -162,7 +170,7 @@ export async function getComponentsByLayer(layer: string): Promise<ComponentRow[
 /**
  * Search components by name or description (case-insensitive).
  */
-export async function searchComponents(query: string): Promise<ComponentRow[]> {
+export async function searchComponents(query: string): Promise<RegistryItem[]> {
   // Plain substring match over the files. The old implementation had to strip
   // PostgREST-significant characters to avoid filter-structure injection; reading
   // files removes that attack surface entirely rather than sanitising for it.
@@ -172,7 +180,7 @@ export async function searchComponents(query: string): Promise<ComponentRow[]> {
     const name = String(c.name ?? "").toLowerCase()
     const desc = String(c.description ?? "").toLowerCase()
     return name.includes(q) || desc.includes(q)
-  }) as unknown as ComponentRow[]
+  })
 }
 
 // ── Component documentation queries ─────────────────────────────────

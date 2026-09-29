@@ -4,20 +4,23 @@ info:
   version: "1.0.0"
   description: |
     The Mzizi API — components, brand, architecture, Ubuntu doctrine, the open DNA-helix frontend
-    model, and design system. Mzizi is an independent open-architecture project,
-    operated and developed by Nyuchi.
+    model, and design system. Mzizi owns and operates the registry and this API. It is an
+    open-architecture project of the Bundu Foundation.
 
     The Mzizi API follows resource-oriented design principles. All resources
     are served as JSON with schema.org JSON-LD metadata, CORS headers, and CDN-friendly caching.
 
-    All data routes read from Supabase. If the database is not configured, endpoints return
-    503 with setup instructions. There are no hardcoded fallbacks.
+    **Files are the data layer.** Every route answers from the files in
+    [mzizi-dev/mzizi-registry](https://github.com/mzizi-dev/mzizi-registry): `registry.json`,
+    the component sources on disk, `content/doctrine/**` and the generated `lib/*` modules. There
+    is no database behind this API. Data that is not in those files, such as component version
+    history, is not served here.
 
     **Base URL:** `https://api.mzizi.dev/v1`
 
-    **Registry:** the stable registry across the nodes and rungs of the Mzizi DNA double helix — served from
-    the Supabase `components` table (live count via `GET /v1/stats` → `stable`; counts are never hardcoded in
-    this spec so it cannot drift from the database)
+    **Registry:** every item across the nodes and rungs of the Mzizi DNA double helix, read from
+    `registry.json` and the files on disk. The live count is `meta.registryTotal` on `GET /v1/ui`;
+    counts are never hardcoded in this spec, so it cannot drift from the registry.
 
     **MCP Server:** `https://mcp.mzizi.dev/mcp` (Streamable HTTP transport; `mzizi.dev/mcp` 308-redirects here)
   contact:
@@ -74,10 +77,8 @@ paths:
     get:
       summary: Brand System
       description: |
-        Returns the complete Nyuchi brand system — Seven African Minerals palette,
+        Returns the complete Mzizi brand system — Seven African Minerals palette,
         typography, spacing, ecosystem brands, accessibility standards, and voice & tone.
-
-        Reads from Supabase. Returns 503 if database is not configured.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: Brand`).
       operationId: getBrandSystem
@@ -96,16 +97,13 @@ paths:
                 $ref: "#/components/schemas/BrandSystem"
         "500":
           $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /ui:
     get:
       summary: Component Registry Index
       description: |
-        Returns metadata for every stable registry item across the Mzizi DNA double helix
-        (live count from Supabase — query `GET /v1/stats` for the current total).
-        Returns 503 if the database is not configured.
+        Returns metadata for every registry item across the Mzizi DNA double helix, from
+        `registry.json` and the files on disk. `meta.registryTotal` is the live count.
       operationId: getRegistryIndex
       tags: [Registry]
       responses:
@@ -122,15 +120,13 @@ paths:
                 $ref: "#/components/schemas/RegistryIndex"
         "500":
           $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /ui/{name}:
     get:
       summary: Individual Component
       description: |
-        Returns a single component with inline source code.
-        Reads from Supabase. Returns 503 if database is not configured.
+        Returns a single component with inline source code, read from `registry.json` and the
+        component's file on disk.
       operationId: getComponent
       tags: [Registry]
       parameters:
@@ -177,8 +173,6 @@ paths:
                 $ref: "#/components/schemas/Error"
         "500":
           $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /ecosystem:
     get:
@@ -186,8 +180,6 @@ paths:
       description: |
         Returns architecture principles (Ubuntu, local-first, mobile-first,
         open-source/sovereign, open-data) and the framework decision (Next.js + Capacitor).
-
-        Reads from Supabase. Returns 503 if database is not configured.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
       operationId: getEcosystem
@@ -206,8 +198,6 @@ paths:
                 $ref: "#/components/schemas/EcosystemArchitecture"
         "500":
           $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /data-layer:
     get:
@@ -215,8 +205,6 @@ paths:
       description: |
         Returns the local-first data layer (RxDB, SQLite, IndexedDB),
         cloud services (Supabase, CouchDB), and data ownership rules.
-
-        Reads from Supabase. Returns 503 if database is not configured.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
       operationId: getDataLayer
@@ -235,8 +223,6 @@ paths:
                 $ref: "#/components/schemas/DataLayerArchitecture"
         "500":
           $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /pipeline:
     get:
@@ -244,8 +230,6 @@ paths:
       description: |
         Returns the open data pipeline stages — Redpanda event streaming,
         Apache Flink PII stripping, and Apache Doris analytics.
-
-        Reads from Supabase. Returns 503 if database is not configured.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
       operationId: getPipeline
@@ -264,17 +248,13 @@ paths:
                 $ref: "#/components/schemas/PipelineArchitecture"
         "500":
           $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /sovereignty:
     get:
       summary: Technology Sovereignty
       description: |
-        Returns sovereignty assessments for every technology in the Nyuchi stack,
+        Returns sovereignty assessments for every technology in the stack,
         including removed technologies and migration notes.
-
-        Reads from Supabase. Returns 503 if database is not configured.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: TechArticle`).
       operationId: getSovereignty
@@ -293,8 +273,6 @@ paths:
                 $ref: "#/components/schemas/SovereigntyReport"
         "500":
           $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /health:
     get:
@@ -334,8 +312,8 @@ paths:
         covenant, stakeholder, implementation rules and live component count, plus the
         strands that group them by backbone. There are no axes and no outliers.
 
-        Reads `component_documents` / `documentation-architecture-{nodes,strands}` — the
-        same source of truth the MCP serves — with counts from `get_node_counts()`.
+        Reads the helix doctrine under `content/doctrine/` in the registry, with each node's
+        component count derived from where the component files live on disk.
 
         `data` is an object with `nodes`, `rungs`, and `strands` arrays. An empty model
         returns 200 with empty arrays and `meta.empty: true`, so a consumer can
@@ -384,8 +362,6 @@ paths:
                           fallback.
                       source: {type: string}
                       version: {type: string}
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /architecture/axes:
     get:
@@ -481,8 +457,6 @@ paths:
           description: "`n` is not a positive integer."
         "404":
           $ref: "#/components/responses/NotFound"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /architecture/layers/{n}:
     get:
@@ -655,8 +629,6 @@ paths:
                 $ref: "#/components/schemas/UbuntuPillarsResponse"
         "500":
           $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /ubuntu/principles:
     get:
@@ -680,8 +652,6 @@ paths:
                 $ref: "#/components/schemas/UbuntuPrinciplesResponse"
         "500":
           $ref: "#/components/responses/InternalError"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /docs:
     get:
@@ -769,8 +739,6 @@ paths:
                     type: object
                     properties:
                       total: {type: integer}
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /changelog/{version}:
     get:
@@ -811,15 +779,13 @@ paths:
                           entries: {type: integer}
         "404":
           $ref: "#/components/responses/NotFound"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /skills:
     get:
       summary: List published skills
       description: |
-        Returns every skill (agent-skill MDX bodies) from the Supabase
-        `skills` table in the lightweight summary shape (no `body_mdx`).
+        Returns every skill (agent-skill MDX bodies) from the registry's
+        published skills bundle, in the lightweight summary shape (no `body_mdx`).
         Use `GET /skills/{name}` to fetch a single skill's full body.
 
         Skills are reusable workflows AI assistants invoke on specific
@@ -861,15 +827,12 @@ paths:
                     type: object
                     properties:
                       count: {type: integer}
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /skills/summary:
     get:
       summary: Lightweight skill index for the CLI update path
       description: |
-        Same shape as `GET /skills` but served via the
-        `get_skills_summary()` SQL helper. Reserved for the CLI's
+        The same document as `GET /skills`. Reserved for the CLI's
         `nyuchi-design skills update` subcommand to detect version
         drift cheaply; gives `/skills` headroom to add filtering or
         pagination later without breaking the CLI contract.
@@ -895,8 +858,6 @@ paths:
                     type: object
                     properties:
                       count: {type: integer}
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /skills/{name}:
     get:
@@ -908,8 +869,8 @@ paths:
         direct `curl` against the API.
 
         Validates `name` against `^[a-z][a-z0-9-]*$`. Returns 400 on
-        invalid pattern, 404 when name well-formed but no row, 503
-        when Supabase is unconfigured.
+        invalid pattern, and 404 when the name is well-formed but no
+        skill has it.
       operationId: getSkill
       tags: [Content]
       parameters:
@@ -955,94 +916,209 @@ paths:
           description: Invalid skill name pattern.
         "404":
           $ref: "#/components/responses/NotFound"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
 
   /ai/instructions:
     get:
       summary: List AI instruction sets
-      description: Returns the list of AI instruction targets (e.g. claude, copilot, mcp-server).
+      description: |
+        Lists the AI instruction sets (system prompts for Claude projects, GitHub Copilot and the
+        MCP server), read from `content/doctrine/ai-instructions` in the registry. Use
+        `GET /ai/instructions/{name}` for one set's full text.
       operationId: listAiInstructions
       tags: [Content]
       responses:
         "200":
           description: Instruction set index
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=300, s-maxage=3600"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
           content:
             application/json:
               schema:
                 type: object
+                required: [data, meta]
                 properties:
-                  instructions:
+                  data:
                     type: array
                     items:
                       type: object
+                      required: [name, target]
                       properties:
-                        target: {type: string}
-                        name: {type: string}
+                        name: {type: string, example: "nyuchi-mcp-system-prompt"}
+                        target: {type: string, example: "mcp-server"}
+                        title: {type: string, description: "Present only when the doctrine row has one."}
                         description: {type: string}
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
+                        version: {type: string, example: "2.4"}
+                        updated_at: {type: string, description: "Present only when the doctrine row has one."}
+                  meta:
+                    type: object
+                    properties:
+                      total: {type: integer}
+        "500":
+          $ref: "#/components/responses/InternalError"
 
   /ai/instructions/{name}:
     get:
-      summary: Get AI instruction set by target
+      summary: Get an AI instruction set by name or target
+      description: |
+        Returns one instruction set's doctrine row in full, including `instruction_text`.
+        `name` is matched against the set's name first (e.g. `nyuchi-mcp-system-prompt`), then
+        against its target (e.g. `mcp-server`, `github-copilot`, `claude-system-prompt`).
       operationId: getAiInstruction
       tags: [Content]
       parameters:
         - name: name
           in: path
           required: true
-          schema: {type: string, example: "claude"}
+          description: An instruction set's name or its target.
+          schema: {type: string, example: "mcp-server"}
       responses:
         "200":
-          description: Instruction set
+          description: Instruction set (the doctrine row, as authored)
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=300, s-maxage=3600"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
           content:
             application/json:
               schema:
                 type: object
+                required: [name, target, instruction_text]
+                additionalProperties: true
                 properties:
-                  target: {type: string}
-                  name: {type: string}
-                  content: {type: string, description: "Full instruction text"}
+                  name: {type: string, example: "nyuchi-mcp-system-prompt"}
+                  target: {type: string, example: "mcp-server"}
+                  description: {type: string}
+                  version: {type: string, example: "2.4"}
+                  currentVersion: {type: integer}
+                  doctrineVersion: {type: string}
+                  kind: {type: string, example: "ai_instruction"}
+                  status: {type: string, example: "active"}
+                  owner: {type: string}
+                  model: {type: string, example: "mzizi-dna-helix"}
+                  node: {type: integer}
+                  strand: {type: string}
+                  dnaRole: {type: string}
+                  applies_to_categories:
+                    type: array
+                    items: {type: string}
+                  instruction_text: {type: string, description: "Full instruction text"}
         "404":
-          $ref: "#/components/responses/NotFound"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
+          description: No instruction set has this name or target
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example: {error: 'AI instruction "claude" not found'}
+        "500":
+          $ref: "#/components/responses/InternalError"
 
   /search:
     get:
-      summary: Cross-resource search
-      description: Full-text search across components, documentation pages, and changelog entries.
+      summary: Search components
+      description: |
+        Searches the registry on disk. `q` is a case-insensitive substring of a component's
+        name or description, `node` is its node on the helix, and `category` is one of its
+        `categories`. Parameters combine (AND), and at least one is required.
       operationId: search
       tags: [Discovery]
       parameters:
         - name: q
           in: query
-          required: true
+          required: false
+          description: Case-insensitive substring of the name or description.
+          schema: {type: string, example: "button"}
+        - name: node
+          in: query
+          required: false
+          description: Node number on the helix, as written (e.g. `2`).
+          schema: {type: string, example: "2"}
+        - name: category
+          in: query
+          required: false
+          description: One of the component's `categories`.
+          schema: {type: string}
+        - name: layer
+          in: query
+          required: false
+          deprecated: true
+          description: |
+            Deprecated alias of `node`, kept so older clients keep their results. When it is
+            used (and `node` is not), the response carries `meta.deprecation` and a
+            `Deprecation: true` header. `node` wins when both are given. It will be removed.
           schema: {type: string}
       responses:
         "200":
-          description: Search results
+          description: Matching components, in registry order
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=300, s-maxage=3600"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+            Deprecation:
+              description: "`true` when the request filtered with the deprecated `layer` parameter."
+              schema: {type: string, example: "true"}
           content:
             application/json:
               schema:
                 type: object
+                required: [data, meta]
                 properties:
-                  query: {type: string}
-                  components: {type: array, items: {type: object}}
-                  docs: {type: array, items: {type: object}}
-                  changelog: {type: array, items: {type: object}}
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [name]
+                      properties:
+                        name: {type: string}
+                        type: {type: string, example: "registry:ui"}
+                        title: {type: string}
+                        description: {type: string}
+                        categories:
+                          type: array
+                          items: {type: string}
+                        node: {type: integer}
+                        nodeLabel: {type: string}
+                  meta:
+                    type: object
+                    required: [total, query, node, category]
+                    properties:
+                      total: {type: integer}
+                      query: {type: [string, "null"]}
+                      node: {type: [string, "null"]}
+                      category: {type: [string, "null"]}
+                      deprecation:
+                        type: string
+                        description: Present only when the deprecated `layer` parameter was used.
+        "400":
+          description: None of q, node (or layer) and category was given
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example: {error: "At least one of q, node, or category is required"}
+        "500":
+          $ref: "#/components/responses/InternalError"
 
   /stats:
     get:
       summary: Public usage statistics (open data — CC BY 4.0)
       description: |
-        Live API + MCP usage metrics for the public observability dashboard
-        (`/observability`) — aligned with the bundu open data philosophy.
-        Returns aggregate counts (calls, errors, p95 latency, top components,
-        top tools) over the lookback window plus a `layers` breakdown sourced
-        live from the `components` table. Carries schema.org `Dataset` JSON-LD
-        + CC BY 4.0 license. Never hardcoded.
+        The public usage dataset — aligned with the bundu open data philosophy.
+        Usage telemetry is not part of the registry's files, so the aggregate
+        counts (calls, errors, latency, top components, top tools) are zero.
+        `layers` holds the real per-node component counts, derived from the
+        registry on disk. Carries schema.org `Dataset` JSON-LD + CC BY 4.0
+        license. Never hardcoded.
       operationId: getStats
       tags: [Discovery]
       parameters:
@@ -1086,30 +1162,88 @@ paths:
   /ui/{name}/docs:
     get:
       summary: Get component documentation
+      description: |
+        A component's documentation, built from the `meta` block of its item in
+        `registry.json`: use cases, variants, sizes, features, accessibility notes and
+        examples, plus whether it ships a hand-written demo.
       operationId: getComponentDocs
       tags: [Registry]
       parameters:
         - name: name
           in: path
           required: true
-          schema: {type: string}
+          schema: {type: string, example: "button"}
       responses:
         "200":
-          description: Component documentation (use cases, variants, accessibility)
+          description: Component documentation
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
           content:
             application/json:
               schema:
                 type: object
+                required: [name, docs, demo]
                 properties:
-                  useCases: {type: array, items: {type: string}}
-                  variants: {type: array, items: {type: object}}
-                  accessibility: {type: array, items: {type: string}}
+                  name: {type: string}
+                  description: {type: string}
+                  node: {type: integer}
+                  nodeLabel: {type: string}
+                  owner: {type: string}
+                  collection: {type: string}
+                  docs:
+                    type: [object, "null"]
+                    properties:
+                      id: {type: integer, description: "Always 0: the docs come from a file, not a row."}
+                      component_name: {type: string}
+                      use_cases:
+                        type: array
+                        items: {type: string}
+                      variants:
+                        type: array
+                        items: {type: string}
+                      sizes:
+                        type: array
+                        items: {type: string}
+                      features:
+                        type: array
+                        items: {type: string}
+                      a11y:
+                        type: array
+                        items: {type: string}
+                      examples:
+                        type: array
+                        items: {type: object}
+                      created_at: {type: string, description: "Always empty: the manifest's history is git's."}
+                      updated_at: {type: string, description: "Always empty: the manifest's history is git's."}
+                  demo:
+                    type: [object, "null"]
+                    description: Present when the component ships a hand-written demo.
+                    properties:
+                      id: {type: integer}
+                      component_name: {type: string}
+                      has_demo: {type: boolean}
+                      demo_type: {type: [string, "null"]}
+                      created_at: {type: string}
+                      updated_at: {type: string}
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: Component not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalError"
 
   /ui/{name}/versions:
     get:
-      summary: Get component version history
+      summary: Component version history (not served)
+      description: |
+        Always 503. Component version history is machine-written data owned by the Mzizi
+        console, not part of the registry's files, and this API has no database. Release
+        history is at `GET /v1/changelog`.
       operationId: getComponentVersions
       tags: [Registry]
       parameters:
@@ -1118,23 +1252,8 @@ paths:
           required: true
           schema: {type: string}
       responses:
-        "200":
-          description: Version history
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  versions:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        version: {type: string}
-                        change_type: {type: string}
-                        comment: {type: string}
-                        changed_by: {type: string}
-                        created_at: {type: string, format: date-time}
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
   /mcp:
     post:
@@ -1240,15 +1359,14 @@ components:
 
     ServiceUnavailableError:
       type: object
-      required: [error, setup]
+      required: [error]
       properties:
         error:
           type: string
-          example: "Database not configured"
-        setup:
+          example: "Version history is not served by this API"
+        message:
           type: string
-          description: Instructions for configuring Supabase
-          example: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables"
+          description: Why the data is not served, and where to look instead.
 
     # ── Discovery ──────────────────────────────────────────────────
 
@@ -1267,7 +1385,7 @@ components:
           const: "WebAPI"
         name:
           type: string
-          example: "Nyuchi Architecture API"
+          example: "Mzizi API"
         version:
           type: string
           example: "1.0.0"
@@ -1277,6 +1395,13 @@ components:
           type: string
           format: uri
           example: "https://mzizi.dev"
+        data:
+          type: object
+          description: Where the data comes from. There is no database; the files are the data layer.
+          properties:
+            source: {type: string, const: "files"}
+            repository: {type: string, format: uri, example: "https://github.com/mzizi-dev/mzizi-registry"}
+            components: {type: integer, description: "Live registry count."}
         resources:
           type: object
           additionalProperties:
@@ -1308,7 +1433,7 @@ components:
           example: "4.0.40"
         name:
           type: string
-          example: "Nyuchi Brand System"
+          example: "The Mzizi Brand System"
         lastUpdated:
           type: string
           format: date
@@ -1673,7 +1798,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Nyuchi Ecosystem Architecture"
+          example: "Mukoko Ecosystem Architecture"
         principles:
           type: array
           minItems: 5
@@ -1750,7 +1875,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Nyuchi Data Layer Architecture"
+          example: "Mukoko Data Layer Architecture"
         localDataLayer:
           type: array
           items:
@@ -1837,7 +1962,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Nyuchi Open Data Pipeline"
+          example: "Mukoko Open Data Pipeline"
         stages:
           type: array
           items:
@@ -1868,7 +1993,7 @@ components:
           const: "TechArticle"
         name:
           type: string
-          example: "Nyuchi Technology Sovereignty"
+          example: "Mukoko Technology Sovereignty"
         assessments:
           type: array
           items:
@@ -2111,7 +2236,7 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
     ServiceUnavailable:
-      description: Supabase not configured — returns setup instructions
+      description: Data this API does not serve, because it is not part of the registry's files
       content:
         application/json:
           schema:

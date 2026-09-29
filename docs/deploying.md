@@ -51,8 +51,9 @@ that talks to Supabase.
 This section used to explain that the portal needed the Supabase values as
 build variables and `mzizi-api` needed them as Worker secrets. Neither was ever
 set on the registry Worker, which is why the routes that were gated on them
-answer `503 Database not configured` — and still do, deliberately, so removing
-Supabase changed no response. If a `NEXT_PUBLIC_SUPABASE_*` variable or
+answered `503 Database not configured`. The file-backed ones (search, component
+docs, single AI instruction sets) now serve their files; version history answers
+`503` naming the console as its owner. If a `NEXT_PUBLIC_SUPABASE_*` variable or
 `SUPABASE_SERVICE_ROLE_KEY` secret is still configured on any of these Workers
 in the Cloudflare dashboard, it is unused and can be deleted.
 
