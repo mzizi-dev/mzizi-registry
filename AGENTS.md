@@ -106,13 +106,16 @@ against the live API rather than trusting a prior write-up:
 - **File-based, no database at all.** `registry.json` plus files on disk. The registry holds
   no Supabase client, credential or query — the Mzizi console (`mzizi-dev/mzizi-console`) is
   the only thing in the estate that talks to Supabase, and `__tests__/db/no-source-in-database.test.ts`
-  fails the build if an `@supabase/*` import or a `SUPABASE_*` read comes back. Six routes
-  still answer `503` with `"Database not configured"` — `/api/v1/search`,
-  `/api/v1/ui/{name}/docs`, `/api/v1/ui/{name}/versions`, `/api/v1/ai/instructions/{name}`,
-  `/api/health/{name}` and `GET /api/chaos/{name}` — because that is what production served
-  before the removal. Do not "fix" one by adding a database. The file-backed ones are
-  follow-ups, and so are the six pages behind `RENDER_FILE_BACKED_PAGES` in
-  `lib/file-backed-pages.ts`.
+  fails the build if an `@supabase/*` import or a `SUPABASE_*` read comes back.
+  `/api/v1/search`, `/api/v1/ui/{name}/docs` and `/api/v1/ai/instructions/{name}` serve
+  from files. `/api/v1/ui/{name}/versions` answers `503` naming the console as the owner
+  of version history, and `/api/health/{name}` and `GET /api/chaos/{name}` still answer
+  `503` with `"Database not configured"`, as production served before the removal. Do not
+  "fix" one by adding a database. The six pages behind `RENDER_FILE_BACKED_PAGES` in
+  `lib/file-backed-pages.ts` are follow-ups.
+- **`/api/v1/search` filters on `node`, not `layer`.** `?layer=` survives only as a
+  deprecated alias of `?node=` (it adds `meta.deprecation` and a `Deprecation: true`
+  header). Don't document it as anything else, and don't add another `layer` anywhere.
 
 ## A link this file replaces
 

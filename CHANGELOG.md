@@ -6,6 +6,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed — search reads the fields items have; file-backed routes serve their files (2026-09-29)
+
+- **`/api/v1/search` filters on `node` and `categories`, and returns `type`.** It used to filter on `layer` and `category` and project `registry_type` — the retired database row's field names, which no registry item carries — so those filters matched nothing and every hit was a bare name and description. Hits now carry `name`, `type`, `title`, `description`, `categories`, `node` and `nodeLabel`, and `meta` reports `node` instead of `layer`. Parameters combine (AND).
+- **`?layer=` is deprecated.** It still works, as an alias of `?node=`, so older clients keep their results; a response to it carries `meta.deprecation` and a `Deprecation: true` header. It will be removed.
+- **`/api/v1/ui/{name}/docs` and `/api/v1/ai/instructions/{name}` serve their files** instead of `503 Database not configured`, with the shapes they had before the Supabase removal. This is what `api.mzizi.dev` (mzizi-dev/mzizi-api-gateway) already serves.
+- **`/api/v1/ui/{name}/versions`** still answers `503`, and now says why: version history is console-owned data, and this API has no database.
+- **The discovery document and `openapi.yaml` stop describing a database.** `database: { status: "not_configured", components: 0 }` is replaced by `data: { source: "files", repository, components }` with the live count; the "operated and developed by Nyuchi" and "All data routes read from Supabase" lines are gone; Mzizi is named as the operator and the Bundu Foundation as the project's home. The schemas for docs, search and AI instructions now match their handlers, and no file-backed route lists a `503` any more.
+
 ### Changed — `nyuchi-*` components are now `mzizi-*` (2026-09-27)
 
 - **All 123 `nyuchi-*` registry components are renamed `mzizi-*`.** Mzizi owns the registry, and Nyuchi operates it. The full old → new list is in `lib/component-renames.json`. Install them under the new name, for example `npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-footer` (previously `.../nyuchi-footer`).
