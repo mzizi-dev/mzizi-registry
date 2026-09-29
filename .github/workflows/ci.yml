@@ -187,12 +187,13 @@ jobs:
       # `crates/*/src/generated/` is the committed copy that fixed it; this step is
       # what stops the next `#[path]` up and out of the crate from merging.
       #
-      # `--workspace` rather than seven `-p` runs: `mzizi-ui` has a path dependency on
-      # `mzizi-tokens`, which is not on crates.io yet, so packaging it alone cannot
-      # resolve. `--workspace` packages the siblings together and verifies against them.
+      # `--workspace` rather than one `-p` run per crate: `mzizi-ui` has a path dependency
+      # on `mzizi-tokens`, and until a release of it is on crates.io, packaging `mzizi-ui`
+      # alone cannot resolve. `--workspace` packages the siblings together and verifies
+      # against them. `publish-crates.yml` re-runs this gate before it uploads anything.
       #
       # NEVER add `--no-verify`. The verify build is the whole assertion.
-      - name: Package all seven crates
+      - name: Package every crate
         run: cargo package --manifest-path mzizi-rs/Cargo.toml --workspace
 
   lint:

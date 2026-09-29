@@ -12,9 +12,13 @@ shapes the issue, and `mzizi_fundi_learning` tracks which fixes have worked befo
 mzizi-fundi = "0.1"
 ```
 
-> Not on crates.io yet. The seven `mzizi-rs` crates were made publishable in
-> mzizi-registry#328 but none has been released, so this line does not resolve
-> today — depend on it by path or git until the first release.
+The registry's `publish-crates` workflow releases each new version to crates.io. Before
+the first release, or to follow `main`, depend on it from git:
+
+```toml
+[dependencies]
+mzizi-fundi = { git = "https://github.com/mzizi-dev/mzizi-registry" }
+```
 
 ## What this crate is not
 
