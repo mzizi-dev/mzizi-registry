@@ -6,6 +6,19 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — the public Claude Code plugin loads, and ships only what it should (2026-09-30)
+
+- **The plugin manifest failed validation, so the plugin could not load.** `claude plugin validate` rejected `repository` (an object; it must be a string) and the MCP entry's `"type": "url"` (not a transport). The MCP entry is now `{ "type": "http", "url": "https://mcp.mzizi.dev/mcp" }`, and the fields Claude Code ignores (`icons`, `permissions`, `$schema`) are gone.
+- **The plugin moves from the repo root to `plugin/`.** Claude Code always loads `.mcp.json` at a plugin's root and the manifest cannot exclude it, so a root-level plugin would have configured this repo's developer `shadcn` MCP for every user. The manifest is now `plugin/.claude-plugin/plugin.json` (version 1.2.0), the skills are `plugin/skills/`, and `.claude-plugin/marketplace.json` points at `./plugin`. The install lines do not change: `/plugin marketplace add mzizi-dev/mzizi-registry`, then `/plugin install mzizi@mzizi`. Installed from the branch, the plugin registers five skills and one MCP server (`mzizi`), with no hooks or agents.
+- **Breaking** for anything that read `.claude-plugin/plugin.json` or `skills/` at the repo root: they are now under `plugin/`.
+
+### Changed — agent skills 0.8.1 (2026-09-30)
+
+- **`@nyuchi/mzizi-skills` `^0.8.1`** (lockfile 0.8.1). `lib/skills.generated.ts` and `plugin/skills/` are regenerated. 0.8.1 changes only `mzizi-roots`'s plugin install lines.
+- **Each skill's `source` is `mzizi-dev/agent-tools/mzizi-skills/…`**, not `mzizi-tools/mzizi-skills/…` (the repository's old name). `/v1/skills` and `/v1/skills/{name}` return the new value.
+- **`openapi.yaml`:** the `/skills` routes no longer describe a `nyuchi-design skills` CLI subcommand, which does not exist, and the example skill name is `mzizi-design`.
+- **The N12 skills rung** (`/v1/architecture`) now describes what is true: no database copy, the generators and their `--check` gates, `mzizi_get_skills`, the working install lines and the public plugin. It used to describe a Supabase `skills` collection, `get_skill` / `list_skills`, `pnpm skills:sync` and `npx skills add`.
+
 ### Changed — Mzizi is named as the registry's operator (2026-09-29)
 
 - **README, `NOTICE` and the Claude Code plugin manifest no longer say Nyuchi operates or develops Mzizi.** Mzizi owns and operates the registry, the design system and the API; the Bundu Foundation is the copyright holder; Nyuchi operates only the Mzizi console and the revenue products. The `NOTICE` copyright line is unchanged.
