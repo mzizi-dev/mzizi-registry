@@ -46,6 +46,27 @@ describe("mzizi-tokens-globals.css brand blocks", () => {
     }
   })
 
+  /**
+   * The `mzizi-tokens` crate is NOT a copy of this stylesheet. Its
+   * `src/generated/mzizi-tokens-rust.rs` is `pnpm rust:generate`'s copy of
+   * `components/registry/n1-tokens/mzizi-tokens-rust.rs`, which
+   * `scripts/sync-tokens.ts` `renderRust()` writes from the palette alone
+   * (minerals, heritage, experimental), and `generate-rust-components.mjs`
+   * copies only `.rs` files. So it has no brand default for this change to
+   * move. If one is ever added, this fails and it must follow the brand
+   * record like the CSS does.
+   */
+  it("leaves no brand default in the mzizi-tokens Rust crate to drift", () => {
+    for (const file of [
+      "components/registry/n1-tokens/mzizi-tokens-rust.rs",
+      "mzizi-rs/crates/mzizi-tokens/src/generated/mzizi-tokens-rust.rs",
+    ]) {
+      const rust = readFileSync(join(process.cwd(), file), "utf8")
+      expect(rust, file).not.toMatch(/\bprimary\b|DEFAULT_BRAND|data-brand/i)
+      expect(rust, file).toMatch(/pub const HEMATITE_LIGHT: &str = "#[0-9A-F]{6}";/)
+    }
+  })
+
   it("resolves the default --primary through the default brand's family", () => {
     expect(DEFAULT_BRAND).toBe("mzizi")
     const root = CSS.slice(CSS.indexOf(":root {"), CSS.indexOf("/* ════ DARK"))
