@@ -1,6 +1,6 @@
 ---
 name: mzizi-backend
-description: Use this skill when building or changing a Mzizi backend service on Cloudflare Workers — a Rust Worker with workers-rs or an MCP server in TypeScript. Covers where the backend stands today (every live Mzizi Worker is TypeScript; the language has no handlers yet), the live endpoint map (api.mzizi.dev, mcp.mzizi.dev, docs.mzizi.dev/mcp), the sans-IO core plus thin host that Mzizi Roots server components use, wrangler config, cron and queues, storage through Workers bindings (no database client), MCP transport, one-factory/many-entrypoints, a code-defined tool catalogue over data bundled at a pinned commit, federation, tool naming and annotations, the free-except-Fundi access rule, logging, publishing to npm and the MCP Registry, and deploy.
+description: Use this skill when building or changing a Mzizi backend service on Cloudflare Workers — a Rust Worker with workers-rs or an MCP server in TypeScript. Covers where the backend stands today (every live Mzizi Worker is TypeScript; the Mzizi language has a backend `service` slice, RFC-0011, that `mz contract` runs in process and `mz build` lowers to a local Rust + axum package, with no Workers target and nothing deployed), the live endpoint map (api.mzizi.dev, mcp.mzizi.dev, docs.mzizi.dev/mcp), the sans-IO core plus thin host that Mzizi Roots server components use, wrangler config, cron and queues, storage through Workers bindings (no database client), MCP transport, one-factory/many-entrypoints, a code-defined tool catalogue over data bundled at a pinned commit, federation, tool naming and annotations, the free-except-Fundi access rule, logging, publishing to npm and the MCP Registry, and deploy.
 user-invocable: true
 ---
 
@@ -14,8 +14,8 @@ are stated once, at the end.
 
 **Direction: Rust first, TypeScript second** (`mzizi-registry` →
 `content/doctrine/documentation-architecture-framework/`), and Mzizi's backend is meant, in
-the end, to be built in the Mzizi language itself (CHARTER v0.3). Neither is the state today,
-and a skill that implied otherwise would mislead you:
+the end, to be built in the Mzizi language itself (`CHARTER.md` v0.4, §1). Neither is the
+state today, and a skill that implied otherwise would mislead you:
 
 - **Every Worker Mzizi runs is TypeScript.** `api.mzizi.dev` is `mzizi-dev/mzizi-api-gateway`,
   a Hono Worker. `mzizi-dev/agent-tools` holds `mzizi-mcp` (mcp.mzizi.dev), `mzizi-fundi` and
@@ -24,12 +24,20 @@ and a skill that implied otherwise would mislead you:
   crate: `mzizi-assurance`, `mzizi-fundi`, `mzizi-docs`, `mzizi-discovery`) are sans-IO cores
   meant to be mounted in a Worker. The `workers-rs` adapter crate (`mzizi-worker`) is planned
   and has not landed, so today the Worker writes its own few lines of adapter.
-- **The Mzizi language has no handlers yet.** RFC-0011 (handlers) is a draft; nothing lowers to
-  Rust. See the `mzizi-language` skill.
+- **The Mzizi language has one backend slice, and it serves nothing live.** A `service` with
+  HTTP routes and handlers (`when`, `header`, `respond`) exists on the language's `main`
+  (RFC-0011; `mzizi-dev/mzizi` at `62a0f32`). `mz check` checks it, `mz contract` runs it in
+  process against its `example` and `ensure` clauses, and `mz build` lowers it to a local
+  Rust + axum Cargo package that serves `127.0.0.1:$PORT`. That is all: no Workers,
+  WebAssembly or Containers target, no deployment, no Workers bindings or storage, no request bodies,
+  no state, and no expressions, functions, loops or modules in a handler. No component lowers.
+  Its first job is the Phase 0 backend measurement (task B1, the `mzizi-be` arm), and no
+  backend episode has run. Check `LANGUAGE-TRACKER.md` in the language repo before claiming
+  any capability. "A Mzizi service" below shows the slice.
 
-So: write a new service's logic in Rust as a sans-IO core. Use TypeScript where the work leans
-on the MCP SDK or `agents` (see "An MCP server" below). Port nothing that works
-without a reason; when a service is ported, its existing tests and parity script are the
+So: write a new production service's logic in Rust as a sans-IO core. Use TypeScript where
+the work leans on the MCP SDK or `agents` (see "An MCP server" below). Port nothing that
+works without a reason; when a service is ported, its existing tests and parity script are the
 contract the port must meet.
 
 ## The live endpoint map
@@ -157,8 +165,9 @@ async fn scheduled(_event: ScheduledEvent, _env: Env, _ctx: ScheduleContext) {
 ```
 
 Test the core natively with an in-memory `Store`, and assert status codes, headers and bodies
-per route there. That is the contract a server component carries until the language's handler
-contracts (RFC-0010, RFC-0011) are implemented.
+per route there. That is the contract a Rust server component carries. A Mzizi `service`
+states the same facts as `example` and `ensure` clauses (below), but nothing lowers a Mzizi
+service to a Worker, so a Rust Worker keeps its contract in its tests.
 
 ### Project setup
 
@@ -216,6 +225,71 @@ pub async fn queue(batch: MessageBatch<String>, _env: Env, _ctx: Context) -> Res
     Ok(())
 }
 ```
+
+## A Mzizi service (the language's backend slice)
+
+Write one when the task is the language itself: a backend benchmark task, an example, or an
+experiment with the slice. Do not use it for a live Mzizi service; nothing deploys it. The
+full grammar, the runtime-owned behaviour and every `MZ08xx` code are in the `mzizi-language`
+skill ("Services"). A minimal service, which passes `mz check` and `mz contract`:
+
+```mz
+## Health and one item, with a JSON 404.
+service items
+
+  header "x-service" "items"
+
+  record health
+    field status: text
+  end
+
+  record problem
+    field error: text
+  end
+
+  route health_check
+    get "/v1/health"
+    respond 200 json health status "ok"
+  end
+
+  route item
+    get "/v1/items/{name}"
+    when name in "badge" "button"
+      respond 200 text "{name}"
+    end
+    respond 404 json problem error "Not found"
+  end
+
+  fallback
+    respond 404 json problem error "Not found"
+  end
+
+  contract
+    example get "/v1/health" body.status is "ok"
+    example get "/v1/items/card" status is 404
+    example options "/v1/items/badge" header "allow" is "GET, HEAD, OPTIONS"
+    ensure header "x-service" is "items"
+  end
+
+end service items
+```
+
+The runtime answers `HEAD`, `OPTIONS`, `405` and the trailing-slash `308` itself, so a
+service never writes them. The loop, with `mz` built from source (there is no release; see
+"Getting `mz`" in the `mzizi-language` skill):
+
+```bash
+mz check --agent items.mz           # NDJSON; MZ08xx for routes and handlers
+mz fix items.mz                     # every exact fix
+mz contract --agent items.mz        # runs the service in process; the summary adds contract_tested
+mz build items.mz --out ../target/mz-build/items
+cargo test --manifest-path ../target/mz-build/items/Cargo.toml          # one test per example
+PORT=8787 cargo run --release --manifest-path ../target/mz-build/items/Cargo.toml
+```
+
+The generated package depends on `axum` and `tokio` (pinned exactly), is its own workspace
+root, and is never committed. Its runtime is one Rust function, the same routing algorithm
+`mz contract` evaluates.
 
 ## An MCP server
 
