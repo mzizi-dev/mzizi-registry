@@ -832,10 +832,10 @@ paths:
     get:
       summary: Lightweight skill index for the CLI update path
       description: |
-        The same document as `GET /skills`. Reserved for the CLI's
-        `nyuchi-design skills update` subcommand to detect version
-        drift cheaply; gives `/skills` headroom to add filtering or
-        pagination later without breaking the CLI contract.
+        The same document as `GET /skills`. Reserved for clients that
+        detect version drift cheaply (`meta.version`); gives `/skills`
+        headroom to add filtering or pagination later without breaking
+        that contract.
       operationId: getSkillsSummary
       tags: [Content]
       responses:
@@ -864,9 +864,8 @@ paths:
       summary: Get a single skill (with full body_mdx)
       description: |
         Returns the full skill row including `body_mdx`. Used by
-        consumers that need to write the skill to disk (the CLI's
-        `nyuchi-design skills install` subcommand) or pipelines doing
-        direct `curl` against the API.
+        consumers that need to write the skill to disk or pipelines
+        doing direct `curl` against the API.
 
         Validates `name` against `^[a-z][a-z0-9-]*$`. Returns 400 on
         invalid pattern, and 404 when the name is well-formed but no
@@ -877,7 +876,7 @@ paths:
         - name: name
           in: path
           required: true
-          description: Kebab-case skill name (e.g. `nyuchi-design-system`)
+          description: Kebab-case skill name (e.g. `mzizi-design`)
           schema:
             type: string
             pattern: "^[a-z][a-z0-9-]*$"
