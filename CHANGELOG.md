@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
-### Added — a `-text` token for every colour family: the value to use as text on `--base` (2026-09-30, #PR)
+### Added — a `-text` token for every colour family: the value to use as text on `--base` (2026-09-30, #385)
 
 - **`mzizi-tokens-globals.css` gains `--mineral-*-text`, `--heritage-*-text` and `--exp-*-text` for all 21 families, in both themes, with `--color-*-text` in `@theme`** (Tailwind: `text-hematite-text`). Each one clears APCA Lc 75 as text on `--base` (`#F3F3F1` light, `#0E0D0C` dark), the same bar `--text-secondary` is walked to. Use it for links, accents and headings in a brand colour on the page background.
 - **Why:** in light mode `-aa` is measured as a fill under white text, not as text on the page. Light hematite `#546E7A` passes that (5.40:1 under white) but measures APCA Lc 69.7 as text on `#F3F3F1`. docs.mzizi.dev worked around it with a hand-derived `#4A616B` (mzizi-docs #20); that value is now canon: `--heritage-hematite-text` is `#4a616b` light (Lc 75.1) and `#c9d2d7` dark (Lc -78.1).
