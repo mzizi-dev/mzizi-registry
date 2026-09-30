@@ -140,6 +140,25 @@ repo.** In the owner's words: "if the skills are outdated, AI and LLMs fail imme
   and which pages, sections or skills it affects. If nothing user-visible changed, write
   "None".
 
+## Changelog (hard rule)
+
+Owner's rule, 2026-09-30: "changelogs are super important".
+
+- **Every PR that changes behaviour, shipped content, an API response, a published package
+  or crate, a default, a dependency or a documented fact adds an entry under
+  `## [Unreleased]` in `CHANGELOG.md`**, in the same PR. Use a
+  `### <Kind> — <what changed> (<date>, #<PR>)` heading, where Kind is a Keep a Changelog
+  heading (Added, Changed, Deprecated, Removed, Fixed, Security), mark breaking changes
+  **Breaking**, and say what changed for a consumer of the registry or the API, not the
+  commit text.
+- The `changelog / entry required` check (`.github/workflows/changelog.yml`) fails a PR
+  without one. PRs that touch only `.github/`, lockfiles or lint config pass, and pure CI,
+  lint or typo PRs can carry the `no-changelog` label instead.
+- The logic is `scripts/changelog-gate.sh`, tested by `scripts/changelog-gate.test.sh`.
+  Keep both identical to the copies in the other Mzizi repositories.
+- `CHANGELOG.md` is the human narrative. A release also adds its machine-readable record to
+  `content/changelog/releases.json`, which `/api/v1/changelog` serves.
+
 ## A link this file replaces
 
 `README.md` used to point to `CLAUDE.md §14` for "the version-bump propagation surfaces" —
@@ -160,5 +179,7 @@ add it as its own section rather than re-creating a dead link.
 
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — PR process, code standards.
 - [`SECURITY.md`](./SECURITY.md) — vulnerability reporting.
-- [`CHANGELOG.md`](./CHANGELOG.md) — release history (auto-generated on version bump, see
-  [`.github/workflows/release.yml`](./.github/workflows/release.yml)).
+- [`CHANGELOG.md`](./CHANGELOG.md) — the change history, written by hand in every PR (see
+  "Changelog" above). [`.github/workflows/release.yml`](./.github/workflows/release.yml)
+  tags a GitHub release when `package.json`'s version is new; it does not write the
+  changelog.
