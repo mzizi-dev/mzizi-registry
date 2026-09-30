@@ -37,6 +37,7 @@
  */
 
 import type { ExperimentalToken, HeritageToken, MineralToken } from "../lib/tokens/palette.source"
+import { ecosystem } from "../lib/tokens/brand.source"
 
 type Mineral = MineralToken
 type Heritage = HeritageToken
@@ -413,24 +414,53 @@ export function textRamp() {
 }
 
 /**
- * Brand → mineral. Every row is sourced, none is guessed.
- *
- * `mzizi` and `news` have no `ecosystem` record in `/v1/brand`, so their rows
- * name the on-disk statement they come from instead. `shamwari` is the one row
- * where the two disagree: `/v1/brand` says sodalite, `lib/tokens/index.ts` has
- * it under a tanzanite category. `/v1/brand` wins — it is the brand record, the
- * category map is a product taxonomy — and `shamwari-ai/docs` ships sodalite.
+ * The mineral canon's `ecosystem` table (`lib/tokens/brand.source.ts`, served
+ * as `/v1/brand` → `ecosystem`) gives a brand. Read, never retyped, so this
+ * file cannot disagree with the brand record.
  */
-export const BRANDS = [
-  ["mzizi", "gold", "app/globals.css:256 — \"Per-brand accent — nyuchi = gold\"; mzizi.dev is a nyuchi-operated portal. No `mzizi` ecosystem record in /v1/brand."],
-  ["mukoko", "tanzanite", "/v1/brand ecosystem[name=mukoko].mineral"],
-  ["nyuchi", "gold", "/v1/brand ecosystem[name=nyuchi].mineral"],
-  ["bundu", "copper", "/v1/brand ecosystem[name=bundu].mineral"],
-  ["shamwari", "sodalite", "/v1/brand ecosystem[name=shamwari].mineral"],
+function ecosystemMineral(brand: string): string {
+  const row = ecosystem.find((b) => b.name === brand)
+  if (!row) throw new Error(`brand.source.ts ecosystem has no row for "${brand}"`)
+  return row.mineral
+}
+
+/**
+ * Brand → palette family. Every row is sourced, none is guessed.
+ *
+ * Rows with an `ecosystem` record read their mineral from it. `news` has no
+ * record in `/v1/brand`, so its row names the on-disk statement it comes from
+ * instead. `shamwari` is the one row where two on-disk sources disagree:
+ * `/v1/brand` says sodalite, `lib/tokens/index.ts` has it under a tanzanite
+ * category. `/v1/brand` wins — it is the brand record, the category map is a
+ * product taxonomy — and `shamwari-ai/docs` ships sodalite.
+ *
+ * `mzizi` is hematite, a heritage tone, by owner decision (2026-09-30). Until
+ * then this row said gold, borrowed from nyuchi because the table had no mzizi
+ * record. `mzizi` is also this stylesheet's default brand (see `disputed()`).
+ */
+export const BRANDS: ReadonlyArray<readonly [string, string, string]> = [
+  ["mzizi", ecosystemMineral("mzizi"), "/v1/brand ecosystem[name=mzizi].mineral (owner decision, 2026-09-30)"],
+  ["mukoko", ecosystemMineral("mukoko"), "/v1/brand ecosystem[name=mukoko].mineral"],
+  ["nyuchi", ecosystemMineral("nyuchi"), "/v1/brand ecosystem[name=nyuchi].mineral"],
+  ["bundu", ecosystemMineral("bundu"), "/v1/brand ecosystem[name=bundu].mineral"],
+  ["shamwari", ecosystemMineral("shamwari"), "/v1/brand ecosystem[name=shamwari].mineral"],
   ["news", "cobalt", "lib/tokens/index.ts:696 — mukoko.news. No `news` ecosystem record in /v1/brand."],
-  ["nhimbe", "malachite", "/v1/brand ecosystem[name=nhimbe].mineral (agrees with lib/tokens/index.ts mukoko.events)"],
-  ["bushtrade", "gold", "/v1/brand ecosystem[name=bushtrade].mineral (agrees with lib/tokens/index.ts mukoko.commerce)"],
-] as const
+  ["nhimbe", ecosystemMineral("nhimbe"), "/v1/brand ecosystem[name=nhimbe].mineral (agrees with lib/tokens/index.ts mukoko.events)"],
+  ["bushtrade", ecosystemMineral("bushtrade"), "/v1/brand ecosystem[name=bushtrade].mineral (agrees with lib/tokens/index.ts mukoko.commerce)"],
+]
+
+/** This stylesheet's default brand — the one `:root` resolves without `data-brand`. */
+export const DEFAULT_BRAND = "mzizi"
+
+/**
+ * The `-aa` custom property for a family, by the prefix its group is emitted
+ * under: `--mineral-*`, `--heritage-*` or `--exp-*`.
+ */
+function aaVar(family: string, heritage: ReadonlyArray<{ name: string }>, experimental: ReadonlyArray<{ name: string }>): string {
+  if (heritage.some((h) => h.name === family)) return `--heritage-${family}-aa`
+  if (experimental.some((e) => e.name === family)) return `--exp-${family}-aa`
+  return `--mineral-${family}-aa`
+}
 
 // ════════════════════════════════════════════════════════════════════════════
 // THE RENDERER
@@ -442,12 +472,12 @@ const box = (title: string) =>
 const lo = (hex: string) => (hex.startsWith("#") ? hex.toLowerCase() : hex)
 
 /** `--primary`/`--ring` are set per brand; everything else derives from them. */
-function brandBlocks(): string {
+function brandBlocks(heritage: ReadonlyArray<{ name: string }>, experimental: ReadonlyArray<{ name: string }>): string {
   return BRANDS.map(
     ([brand, mineral, source]) => `/* ${brand} — ${mineral}.
  * ${source} */
 [data-brand="${brand}"] {
-  --primary: var(--mineral-${mineral}-aa);
+  --primary: var(${aaVar(mineral, heritage, experimental)});
   --ring: var(--mineral-cobalt-aa);
 }`
   ).join("\n\n")
@@ -576,7 +606,15 @@ export function renderGlobalsCss(
     return out.join("\n")
   }
 
-  return [header(), themeBlock(minerals, heritage, experimental), rootBlock(vars("light")), darkBlock(vars("dark")), brandSection()].join("\n\n")
+  const defaultMineral = BRANDS.find(([b]) => b === DEFAULT_BRAND)![1]
+  const defaultPrimary = aaVar(defaultMineral, heritage, experimental)
+  return [
+    header(),
+    themeBlock(minerals, heritage, experimental),
+    rootBlock(vars("light"), defaultPrimary),
+    darkBlock(vars("dark"), defaultPrimary),
+    brandSection(heritage, experimental),
+  ].join("\n\n")
 }
 
 function header(): string {
@@ -741,7 +779,7 @@ function invariants(): string {
  * block so no brand's value is baked in, and the rest name both readings and
  * what would reverse them.
  */
-function disputed(mode: "light" | "dark"): string {
+function disputed(mode: "light" | "dark", defaultPrimary: string): string {
   const pick = <T,>(l: T, d: T) => (mode === "light" ? l : d)
   const out: string[] = []
   out.push("")
@@ -751,10 +789,12 @@ function disputed(mode: "light" | "dark"): string {
      Genuinely per-brand — bundu is copper, shamwari sodalite, nyuchi gold — so
      it is NOT defined as a value here. It resolves through the [data-brand]
      block at the foot of this file. \`mzizi\` is the default because this is the
-     mzizi default stylesheet; set data-brand on <html> to change it.
+     mzizi default stylesheet, and mzizi is hematite by owner decision
+     (2026-09-30), read from /v1/brand ecosystem[name=mzizi]. Until then this
+     default was gold. Set data-brand on <html> to change it.
      TO REVERSE: if the owner rules for ink, that is a new neutral family in
      palette.source.ts and a [data-brand] row, not an edit here. */`)
-    out.push(`  --primary: var(--mineral-gold-aa);`)
+    out.push(`  --primary: var(${defaultPrimary});`)
     out.push(`  /* --ring  registry: ink #141413 | /v1/brand: cobalt #0047AB
      /v1/brand ties the focus ring to cobalt for every brand and the
      accessibility record says "2px ring with ring-offset-2, using --ring".
@@ -790,16 +830,16 @@ function disputed(mode: "light" | "dark"): string {
   return out.join("\n")
 }
 
-function rootBlock(body: string): string {
+function rootBlock(body: string, defaultPrimary: string): string {
   return `/* ════ LIGHT — the default theme ════ */
 :root {
 ${body}
-${disputed("light")}
+${disputed("light", defaultPrimary)}
 ${invariants()}
 }`
 }
 
-function darkBlock(body: string): string {
+function darkBlock(body: string, defaultPrimary: string): string {
   return `/* ════ DARK ════
  * Both selectors, because the estate uses both: next-themes writes \`.dark\`,
  * and several apps drive the theme from \`data-theme\`. A file that carried only
@@ -808,11 +848,11 @@ function darkBlock(body: string): string {
 .dark,
 [data-theme="dark"] {
 ${body}
-${disputed("dark")}
+${disputed("dark", defaultPrimary)}
 }`
 }
 
-function brandSection(): string {
+function brandSection(heritage: ReadonlyArray<{ name: string }>, experimental: ReadonlyArray<{ name: string }>): string {
   return `/* ════════════════════════════════════════════════════════════════════════════
  * BRAND BLOCKS
  *
@@ -823,15 +863,16 @@ function brandSection(): string {
  * wants none is unaffected.
  *
  * Each block moves \`--primary\` and \`--ring\` ONLY — the pattern
- * \`bundu-labs/marketing\` proved — and assigns \`var(--mineral-*)\`, never a hex.
+ * \`bundu-labs/marketing\` proved — and assigns a palette variable
+ * (\`var(--mineral-*)\`, or \`var(--heritage-*)\` for mzizi's hematite), never a hex.
  * \`--accent\` and \`--brand-accent\` follow \`--primary\` automatically. Each block
  * references the \`-aa\` variant, so a brand whose mineral fails contrast gets
  * the measured-safe value rather than each team rediscovering the problem.
  *
- * Every mineral below is sourced, none guessed — the comment names where.
+ * Every family below is sourced, none guessed — the comment names where.
  * ════════════════════════════════════════════════════════════════════════════ */
 
-${brandBlocks()}
+${brandBlocks(heritage, experimental)}
 
 /* ════════════════════════════════════════════════════════════════════════════
  * LOCAL OVERRIDES — the only block a consuming repo edits.
@@ -951,7 +992,8 @@ export function renderGlobalsJson(
     },
     brands: Object.fromEntries(
       BRANDS.map(([brand, mineral, source]) => {
-        const m = minerals.find((x) => x.name === mineral)!
+        const m = [...minerals, ...heritage, ...experimental].find((x) => x.name === mineral)
+        if (!m) throw new Error(`brand ${brand} names unknown palette family "${mineral}"`)
         return [brand, {
           mineral, source,
           primary: aaOf(mineral, m.lightHex, m.darkHex),
