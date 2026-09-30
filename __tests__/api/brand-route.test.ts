@@ -220,3 +220,30 @@ describe("GET /api/v1/brand collection fields", () => {
     expect(Array.isArray(res.data.componentSpecs)).toBe(true)
   })
 })
+
+/**
+ * The brand -> mineral table is what downstream overlays are generated from
+ * (`@bundu/ui`'s `styles/brand-*.css`). Before 2026-09-30 it had no `mzizi`
+ * row, so the overlay had to guess. The owner decided hematite; this pins it,
+ * and pins that every row names a family the palette actually has.
+ */
+describe("GET /api/v1/brand ecosystem", () => {
+  it("maps mzizi to hematite (owner decision, 2026-09-30)", async () => {
+    const res = await serve()
+    const eco = res.data.ecosystem as Array<{ name: string; mineral: string }>
+    expect(eco.filter((b) => b.name === "mzizi")).toEqual([
+      expect.objectContaining({ name: "mzizi", mineral: "hematite" }),
+    ])
+  })
+
+  it("points every brand at a family the palette serves", async () => {
+    const res = await serve()
+    const data = res.data as Record<string, Array<{ name: string; mineral?: string }>>
+    const families = new Set(
+      [...data.minerals, ...data.heritage, ...data.experimental].map((f) => f.name)
+    )
+    for (const brand of data.ecosystem) {
+      expect(families.has(String(brand.mineral)), `${brand.name} -> ${brand.mineral}`).toBe(true)
+    }
+  })
+})

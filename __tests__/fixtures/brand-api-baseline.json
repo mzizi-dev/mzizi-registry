@@ -356,6 +356,16 @@
       "role": "Community messaging",
       "url": "https://circles.mukoko.com",
       "voice": "Inclusive, moderated, community-driven"
+    },
+    {
+      "description": "The Mzizi language, component registry and design system — owned and governed by Mzizi, operated by Nyuchi. The language is a research-stage prototype designed for machine authorship, where everything built carries a contract.",
+      "language": "Swahili",
+      "meaning": "Root",
+      "mineral": "hematite",
+      "name": "mzizi",
+      "role": "Language, registry and design system",
+      "url": "https://mzizi.dev",
+      "voice": "Precise, honest, grounded"
     }
   ],
   "experimental": [
