@@ -6,10 +6,41 @@ user-invocable: true
 
 # Writing and checking Mzizi
 
-Mzizi is a language whose syntax, type system and compiler feedback loop are designed for
-machine authorship. The language lives in [`mzizi-dev/mzizi`](https://github.com/mzizi-dev/mzizi)
-(public). It is **not** the component registry (`mzizi-dev/mzizi-registry`); that is the
-companion `mzizi-roots` skill.
+**Mzizi is a general-purpose programming language, built to make Rust better, the way
+TypeScript makes JavaScript better.** How: no borrows, lifetimes or ownership in the
+language you write (RFC-0001 §1.8), with the harness at the core, the layer an agent reads.
+"Makes Rust better" is the goal Phase 0 measures, not a result, and nothing lowers yet.
+
+Rust is its platform, the way JavaScript is TypeScript's: Mzizi is designed to lower to Rust (RFC-0001 §5), and Mzizi
+Roots is its component model, the way React is JavaScript's. Its goal is to be the language
+people choose instead of TypeScript, Python and C++: write Mzizi, get Rust underneath. That
+is a goal, not a result. Phase 0 has one goal: to build Mzizi as a programming language,
+measured against the best existing language for each kind of task (RFC-0009). Nothing has
+been measured against that yet.
+Its syntax, type system and diagnostics are designed for machine authorship.
+
+The language lives in [`mzizi-dev/mzizi`](https://github.com/mzizi-dev/mzizi) (public). Say
+which thing is which when you describe it:
+
+- **The language:** its syntax, type system, semantics, and contracts as a language
+  feature.
+- **The harness, the core of Mzizi:** the layer an agent reads and works through. It covers
+  the language as an agent sees it (grammar, types, contracts, canonical form), the agent
+  protocol (`mz check --agent`, its diagnostics and fixes; RFC-0001 §4), and the plugin
+  host that the toolchain, the CLI, the MCP server and plugins attach to natively. Part of
+  it exists today, in the toolchain: the `mz check --agent` output this skill teaches. The
+  harness as a whole is designed, not built, and its RFC is being written, so never say it
+  works. It lives in `mzizi-dev/mzizi`, the language repository, and the `agent-tools`
+  packages (`@nyuchi/mzizi-cli`, `mzizi-mcp`, `fundi`) are its clients. It is not
+  `benchmarks/harness/`, which is the Phase 0 benchmark scorer.
+- **The toolchain, which implements and supports the language:** `mz` (the compiler, its
+  IR and its NDJSON diagnostics, `mz fix`, `mz contract`), `@nyuchi/mzizi-cli`, the MCP
+  server at `mcp.mzizi.dev`, these skills, and the Phase 0 benchmark harness. They are
+  meant to attach to the harness. Never call the compiler "the language".
+- **The components, which support the language:** Mzizi Roots and the registry
+  (`mzizi-dev/mzizi-registry`), the language's UI layer. That is the companion
+  `mzizi-roots` skill. Supplying the benchmark's UI tasks is one of their jobs, not what
+  they are.
 
 This skill describes `main` at `e9e9233` (2026-09-29). Where this skill and the code
 disagree, **the code is the fact** (RFC-0003 §7.1). Every example below is copied from a file
@@ -17,7 +48,7 @@ in the repository that passes `mz check` and `mz contract` there.
 
 ## What exists, and what does not
 
-**Built and tested:** the lexer, the recovering parser, the name and type resolver, the agent
+**Built and tested, in the toolchain:** the lexer, the recovering parser, the name and type resolver, the agent
 diagnostic protocol (`mz check --agent`), `mz fix`, the content-addressed IR, `mz outline`,
 contract evaluation (`mz contract`), nine primitives written in Mzizi (`primitives/*.mz`), two
 examples (`examples/*.mz`) and the Phase 0 benchmark harness and runner. All of it is gated in
@@ -25,7 +56,8 @@ CI.
 
 **Not built:** lowering to Rust, code generation, a runtime, rendering, a release and a
 published binary. A `.mz` file today is checked and its contract evaluated; **nothing runs
-it.** Do not tell anyone Mzizi "compiles to Rust" or is "production ready".
+it.** Do not tell anyone Mzizi "compiles to Rust" or is "production ready"; say it is
+designed to lower to Rust.
 
 **In progress, as design only:**
 
@@ -45,7 +77,9 @@ it.** Do not tell anyone Mzizi "compiles to Rust" or is "production ready".
 advantage for Mzizi. On the frontier model the Mzizi and Dioxus arms tied, with Mzizi about 8%
 fewer transcript tokens. On the ~7B open-weight model, the design target, Mzizi did worse on
 all three metrics. Neither pilot is the kill-criterion run (RFC-0009 §6), and that run has not
-happened. "Designed for agents" is accurate; "faster" or "better" is not.
+happened. The pilots were tests inside Phase 0 on a few registry UI components against
+Dioxus, not its goal. "Designed for agents" and "aims to replace TypeScript, Python and C++"
+are accurate; "faster" or "better" is not.
 
 ## Getting `mz`
 
@@ -361,5 +395,5 @@ Two real outputs, from pilot-2 candidates written by the 7B model and re-checked
   (contracts), `RFC-0008` (types, collections, records), `RFC-0009` (the comparison benchmark
   and the kill criterion), `RFC-0010` (contracts everywhere, draft) and
   `benchmarks/READINESS.md`.
-- The `mzizi-roots` skill: the Rust components the language is benchmarked against, and where a
-  lowering would target.
+- The `mzizi-roots` skill: the Rust components built to support the language, its component
+  model and where a lowering would target.

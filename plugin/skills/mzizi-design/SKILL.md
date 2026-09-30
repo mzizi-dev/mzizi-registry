@@ -27,8 +27,9 @@ All generated from `palette.canonical.json` at the package root by
 
 ## The ecosystem
 
-**Mzizi** is the parent identity at the ecosystem level — the framework, the design language, the
-component registry and the open doctrine every brand builds on. Everything revenue-generating (the
+**Mzizi** is the parent identity at the ecosystem level — the Mzizi programming language, its
+toolchain, the design language, the component registry and the open doctrine every brand builds
+on. Everything revenue-generating (the
 Mzizi console, fundi, paid plans, billing) is Nyuchi's. Three pillars: **mukoko** (consumer super app), **nyuchi** (infrastructure &
 enterprise), and the **sister brands** (specialist verticals) — one identity, one design system, one
 open data commons.
@@ -220,7 +221,7 @@ whether it belongs in the ecosystem.
 
 ### What is and isn't an ecosystem app
 
-The ecosystem has two layers. **Mzizi** owns and operates the framework, the language, the
+The ecosystem has two layers. **Mzizi** owns and operates the language, its toolchain, the
 registry, the design system, the docs and the API, and sits under every app. **Nyuchi Africa**
 operates the Mzizi console and everything revenue-generating. Inside Nyuchi Africa
 sit three pillars and the platform:
