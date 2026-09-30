@@ -56,6 +56,8 @@
     "samples:push": "tsx scripts/push-samples.ts",
     "skills:generate": "node scripts/generate-skills.mjs",
     "skills:generate:check": "node scripts/generate-skills.mjs --check",
+    "plugin:skills": "node scripts/generate-plugin-skills.mjs",
+    "plugin:skills:check": "node scripts/generate-plugin-skills.mjs --check",
     "start": "next start --port ${PORT:-11736}",
     "test": "vitest run",
     "test:packages": "pnpm --filter \"./packages/*\" test",
