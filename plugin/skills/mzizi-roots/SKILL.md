@@ -198,7 +198,8 @@ utilities generate. In Rust the same palette is the `mzizi-tokens` crate, always
 are in the `mzizi-design` skill.
 
 Pick the app's accent through `--brand-accent` rather than hardcoding a mineral hex: nyuchi =
-gold, mukoko = tanzanite.
+gold, mukoko = tanzanite, and a Mzizi surface = hematite (a Heritage tone, not a mineral; see the
+constellation in `mzizi-design`).
 
 ### 3. Add the Roots components
 
