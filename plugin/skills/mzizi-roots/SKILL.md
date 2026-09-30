@@ -230,10 +230,12 @@ as a GitHub repository and fails to clone it. `experimental_sync` is the CLI's r
 that ship in `node_modules`, and it is marked experimental. The same skills are served with no
 install at all by the MCP's `mzizi_get_skills`.
 
-The Claude Code plugin (`/plugin marketplace add mzizi-dev/agent-tools`, then
-`/plugin install mzizi@mzizi-tools`) installs these skills, the `fundi` agent, the MCP and the
-`/mzizi:*` commands in one step, but only for someone with read access to
-`mzizi-dev/agent-tools`, which is a private repository.
+The public Claude Code plugin installs these skills and the MCP in one step:
+
+```
+/plugin marketplace add mzizi-dev/mzizi-registry
+/plugin install mzizi@mzizi
+```
 
 To wire the MCP directly instead, add it to `.mcp.json` or your client config. It is free with
 no account; only the Fundi tools need sign-in:
