@@ -6,6 +6,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Security — raise five dependency override floors past new advisories (2026-09-30)
+
+- `pnpm audit --audit-level=moderate` (the pre-commit hook and the required Security Audit check) failed on advisories published after the last green run: `brace-expansion` (uncontrolled recursion and quadratic expansion; reached through `@opennextjs/cloudflare`), `fast-uri` (inconsistent host case; through `shadcn`) and `ip-address` (subnet comparison and parse diagnostics; through `mongodb`). The `pnpm.overrides` floors move to the patched versions: `brace-expansion` `^5.0.12` (and `minimatch>brace-expansion`), `minimatch@8>brace-expansion` `^2.1.7`, `fast-uri` `^3.1.8` and `ip-address` `^10.7.1`. The lockfile is regenerated. No direct dependency changes.
+
 ### Fixed — the public Claude Code plugin loads, and ships only what it should (2026-09-30)
 
 - **The plugin manifest failed validation, so the plugin could not load.** `claude plugin validate` rejected `repository` (an object; it must be a string) and the MCP entry's `"type": "url"` (not a transport). The MCP entry is now `{ "type": "http", "url": "https://mcp.mzizi.dev/mcp" }`, and the fields Claude Code ignores (`icons`, `permissions`, `$schema`) are gone.
