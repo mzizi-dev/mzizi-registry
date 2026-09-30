@@ -7,7 +7,9 @@ user-invocable: true
 # Mzizi Roots — the Rust build of Mzizi's components
 
 **Mzizi Roots** is Mzizi's own components in Rust: UI components in Dioxus 0.7, and server
-components as host-agnostic Rust. They live in
+components as host-agnostic Rust. They are built to support the Mzizi language (the
+`mzizi-language` skill) as its component model, the way React is JavaScript's; they are not
+the language. They live in
 [`mzizi-dev/mzizi-registry`](https://github.com/mzizi-dev/mzizi-registry) and are compiled by
 the crates in its `mzizi-rs/` workspace. The plan is `docs/roots/RFC-roots.md` there.
 

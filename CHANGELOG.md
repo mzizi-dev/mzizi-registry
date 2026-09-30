@@ -8,6 +8,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — agent skills 0.8.4: Mzizi is a programming language, built to make Rust better (2026-09-30, #386)
+
+- **The lockfile resolves `@nyuchi/mzizi-skills` 0.8.4** (the range stays `^0.8.1`, which allows it). `lib/skills.generated.ts` and `plugin/skills/` are regenerated from the package, so `/v1/skills`, `/v1/skills/{name}` and the public plugin now serve 0.8.4. These are the wording changes from agent-tools#157 (0.8.3) and agent-tools#159 (0.8.4), which position Mzizi as a programming language.
+- **`mzizi-language`:** it opens by saying Mzizi is a general-purpose programming language built to make Rust better, the way TypeScript makes JavaScript better: no borrows, lifetimes or ownership in the language you write, with the harness at the core. Rust is its platform (designed to lower to Rust, with Mzizi Roots as its component model). Replacing TypeScript, Python and C++ and "makes Rust better" are stated as goals, not results. It separates the language, the harness (the layer an agent reads: the language as an agent sees it, the `mz check --agent` protocol and the plugin host; designed, not built, apart from the agent output) and the toolchain that implements the language and attaches to the harness (`mz`, the CLI, the MCP server, the skills, the benchmark harness). It also separates the components that support the language. It says Mzizi is "designed to lower to Rust", not that it "compiles to Rust", and places the Phase 0 pilots as tests inside Phase 0.
+- **`mzizi-roots`:** Mzizi Roots is built to support the language as its component model; it is not the language.
+- **`mzizi-design`:** Mzizi's ecosystem identity names the programming language and its toolchain first, instead of "the framework".
+- **The public Claude Code plugin is 1.2.2** (`plugin/.claude-plugin/plugin.json`), and its description and the marketplace entry name skills 0.8.4. `mzizi-backend` and `discoverability` are unchanged.
+
 ### Added — a `-text` token for every colour family: the value to use as text on `--base` (2026-09-30, #385)
 
 - **`mzizi-tokens-globals.css` gains `--mineral-*-text`, `--heritage-*-text` and `--exp-*-text` for all 21 families, in both themes, with `--color-*-text` in `@theme`** (Tailwind: `text-hematite-text`). Each one clears APCA Lc 75 as text on `--base` (`#F3F3F1` light, `#0E0D0C` dark), the same bar `--text-secondary` is walked to. Use it for links, accents and headings in a brand colour on the page background.
