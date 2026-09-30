@@ -8,6 +8,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — agent skills 0.8.5: the language at `62a0f32` (the tracker, the service slice, `mz build`, RFC-0012) (2026-09-30, #387)
+
+- **The lockfile resolves `@nyuchi/mzizi-skills` 0.8.5** (the range stays `^0.8.1`, which allows it). `lib/skills.generated.ts` and `plugin/skills/` are regenerated from the package, so `/v1/skills`, `/v1/skills/{name}` and the public plugin now serve 0.8.5 (agent-tools#166). The skills now follow language main `62a0f32`.
+- **`mzizi-language`:** it points agents at `LANGUAGE-TRACKER.md` in `mzizi-dev/mzizi` before any capability claim, and summarises its gaps. It teaches the backend `service` (routes, handlers with `when`, `header` and `respond`, and `example` and `ensure` contracts; RFC-0011), `mz contract` running a service in process, and `mz build`, which lowers a service to a local Rust + axum package. It adds the MZ08xx codes and MZ0606 and MZ0611–MZ0613. It cites the harness's design as RFC-0012 (a draft) and the charter as v0.4. What is not built is listed exactly: expressions, bindings, callable functions, loops, error handling, modules, a standard library, component lowering and a release. Its description changes to match.
+- **`mzizi-backend`:** the language now has one backend slice. It runs in process under `mz contract` and lowers with `mz build` to a local axum package. It has no Workers target and serves nothing live. A new "A Mzizi service" section shows the slice. The skill cites charter v0.4, and its description changes to match.
+- **`mzizi-roots`:** only a Mzizi `service` lowers, not a component, so `mz contract` does not read a Roots `CONTRACT`. The contracts-everywhere RFC is named as RFC-0010.
+- **The public Claude Code plugin is 1.2.3** (`plugin/.claude-plugin/plugin.json`), and its description and the marketplace entry name skills 0.8.5. `mzizi-design` and `discoverability` are unchanged.
+
 ### Changed — agent skills 0.8.4: Mzizi is a programming language, built to make Rust better (2026-09-30, #386)
 
 - **The lockfile resolves `@nyuchi/mzizi-skills` 0.8.4** (the range stays `^0.8.1`, which allows it). `lib/skills.generated.ts` and `plugin/skills/` are regenerated from the package, so `/v1/skills`, `/v1/skills/{name}` and the public plugin now serve 0.8.4. These are the wording changes from agent-tools#157 (0.8.3) and agent-tools#159 (0.8.4), which position Mzizi as a programming language.
