@@ -1,22 +1,22 @@
 ---
 _schemaVersion: "v1"
 covenant: "What the system knows how to do is teachable, not tribal."
-currentVersion: 2
-description: "The skills rung. Agent skills are authored in git (mzizi-tools/mzizi-skills, published as @nyuchi/mzizi-skills) and projected into the `skills` collection, which the registry serves at /api/v1/skills* and the MCP serves as get_skill / list_skills. A rung rather than a node: skills bridge both backbones — engineering practice and meaning at once — and no node imports them."
+currentVersion: 3
+description: "The skills rung. Agent skills are authored in git (mzizi-dev/agent-tools, mzizi-skills/) and published as @nyuchi/mzizi-skills. The registry inlines the package at build time and serves it at /v1/skills*; the MCP bundles the same files and serves them as mzizi_get_skills; the public mzizi Claude Code plugin carries a generated copy. There is no database copy. A rung rather than a node: skills bridge both backbones — engineering practice and meaning at once — and no node imports them."
 dnaRole: "skills"
 doctrineVersion: "4.1.0"
 helix_model: "double-helix"
 implementation_rules:
 - "Skills are authored in git as mzizi-skills/skills/<name>/SKILL.md in mzizi-dev/agent-tools and published as the public npm package @nyuchi/mzizi-skills."
 - "pnpm skills:validate is the offline pre-publish gate: index.json and package.json version lockstep, frontmatter name matching the index, no unlisted skill directory."
-- "pnpm skills:sync projects the committed bundle into this collection through RLS (disk to DB). The DB rows are a read-only projection; git is the source of truth."
-- "mzizi.dev serves skills at /api/v1/skills* and over MCP; consumers install with npx skills add @nyuchi/mzizi-skills."
+- "There is no database projection. The registry generates lib/skills.generated.ts and plugin/skills/ from the npm package (pnpm skills:generate, pnpm plugin:skills), each with a --check gate in CI; mcp.mzizi.dev bundles the same files at build time. A skills release reaches the API when the registry's dependency is bumped and the gateway re-pinned."
+- "api.mzizi.dev serves skills at /v1/skills* and mcp.mzizi.dev as mzizi_get_skills; consumers install with npm i -D @nyuchi/mzizi-skills and npx skills experimental_sync, or the public plugin (/plugin marketplace add mzizi-dev/mzizi-registry, /plugin install mzizi@mzizi)."
 kind: "architecture"
 model: "mzizi-dna-helix"
 node: 12
 node_number: 12
 owner: "nyuchi"
-role: "N12 — the skills rung: what the system knows how to do, authored in git and projected to the registry"
+role: "N12 — the skills rung: what the system knows how to do, authored in git and served from the published package"
 rust:
   kind: null
   note: "Stated deliberately, and for a different reason than N10. A skill is a document an agent reads at inference time; there is no runtime to compile and therefore nothing for Rust to implement. Inventing a Rust story here would be exactly the doctrine drift this rung teaches agents to avoid."

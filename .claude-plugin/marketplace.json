@@ -11,8 +11,8 @@
   "plugins": [
     {
       "name": "mzizi",
-      "source": "./",
-      "description": "The five Mzizi agent skills (@nyuchi/mzizi-skills 0.8.0) and the Mzizi MCP at mcp.mzizi.dev, free with no account."
+      "source": "./plugin",
+      "description": "The five Mzizi agent skills (@nyuchi/mzizi-skills 0.8.1) and the Mzizi MCP at mcp.mzizi.dev, free with no account."
     }
   ]
 }
