@@ -1,0 +1,45 @@
+name: Changelog
+
+# Owner rule, 2026-09-30: "changelogs are super important". Every pull request
+# that changes behaviour, shipped content, an API response, a published
+# package, a default, a dependency or a documented fact adds an entry under
+# `## [Unreleased]` in CHANGELOG.md.
+#
+# The job reports as the check `changelog / entry required`. The logic is
+# scripts/changelog-gate.sh, tested by scripts/changelog-gate.test.sh; both
+# are identical in every Mzizi repository that carries this workflow.
+#
+# Exempt, and so green without an entry:
+#   - a PR labelled `no-changelog` (pure CI, lint or typo changes);
+#   - a PR that touches only .github/, lockfiles or lint config.
+#
+# labeled/unlabeled re-run the check when `no-changelog` is added or removed.
+# The job always runs and decides in the script, rather than skipping on an
+# `if:`, so the check always reports a real result.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  entry:
+    name: changelog / entry required
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # actions/checkout v7.0.1, pinned by commit.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Test the gate
+        run: bash scripts/changelog-gate.test.sh
+
+      - name: Require a CHANGELOG.md entry
+        env:
+          CHANGELOG_BASE: origin/${{ github.base_ref }}
+          NO_CHANGELOG_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'no-changelog') }}
+        run: bash scripts/changelog-gate.sh
