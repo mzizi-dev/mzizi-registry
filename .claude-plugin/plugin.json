@@ -2,15 +2,17 @@
   "$schema": "https://docs.claude.com/schemas/claude-code/plugin.json",
   "name": "mzizi",
   "displayName": "Mzizi",
-  "version": "1.0.0",
-  "description": "Build with Mzizi — an open-architecture project of the Bundu Foundation, owned and operated by Mzizi. Seven African Minerals palette, the open DNA-helix frontend architecture, Ubuntu doctrine, shadcn-compatible registry. Live at mzizi.dev. For the agent skills and the fundi scaffolding agent, install the mzizi plugin from mzizi-dev/agent-tools.",
+  "version": "1.1.0",
+  "description": "Build with Mzizi: the five Mzizi agent skills (@nyuchi/mzizi-skills 0.8.0: mzizi-language, mzizi-roots, mzizi-design, mzizi-backend, discoverability) and the Mzizi MCP at mcp.mzizi.dev (free, no account; sign-in only for the Fundi tools). The 21-family palette, Mzizi Roots components in Rust first, the Mzizi language, and the Ubuntu doctrine. Owned and operated by Mzizi; live at mzizi.dev.",
   "homepage": "https://mzizi.dev",
   "repository": {
     "type": "git",
     "url": "https://github.com/mzizi-dev/mzizi-registry"
   },
   "author": {
-    "name": "Mzizi"
+    "name": "Mzizi",
+    "email": "support@bundu.org",
+    "url": "https://mzizi.dev"
   },
   "license": "Apache-2.0",
   "icons": {
@@ -21,7 +23,7 @@
     "mzizi": {
       "type": "url",
       "url": "https://mcp.mzizi.dev/mcp",
-      "description": "Mzizi MCP — the component registry: list and read components, browse collections by node, and check registry status. Streamable HTTP transport."
+      "description": "Mzizi MCP — components (Rust first: Mzizi Roots, then the React build), design tokens, the DNA-helix architecture, doctrine, the agent skills and the docs.mzizi.dev docs. Free, no account; sign-in only for the Fundi tools. Streamable HTTP transport."
     }
   },
   "permissions": {
@@ -33,16 +35,16 @@
     ]
   },
   "keywords": [
-    "design-system",
-    "open-architecture",
     "mzizi",
-    "bundu",
-    "shadcn",
+    "design-system",
+    "skills",
+    "mcp",
+    "rust",
+    "dioxus",
+    "mzizi-roots",
+    "mzizi-language",
     "registry",
-    "africa",
-    "seven-african-minerals",
     "ubuntu",
-    "claude-code",
-    "mcp"
+    "claude-code"
   ]
 }

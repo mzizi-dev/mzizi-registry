@@ -1,0 +1,18 @@
+{
+  "name": "mzizi",
+  "owner": {
+    "name": "Mzizi",
+    "email": "support@bundu.org",
+    "url": "https://mzizi.dev"
+  },
+  "metadata": {
+    "description": "The public Mzizi Claude Code marketplace: one plugin, `mzizi`, carrying the Mzizi agent skills and the Mzizi MCP."
+  },
+  "plugins": [
+    {
+      "name": "mzizi",
+      "source": "./",
+      "description": "The five Mzizi agent skills (@nyuchi/mzizi-skills 0.8.0) and the Mzizi MCP at mcp.mzizi.dev, free with no account."
+    }
+  ]
+}
