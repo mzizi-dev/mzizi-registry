@@ -79,6 +79,7 @@ export interface BrandEcosystemEntry {
   meaning: string
   language: string
   role: string
+  /** A palette family name. Usually one of the seven minerals; mzizi's is the heritage tone `hematite`. */
   mineral: string
   url: string
   description: string
@@ -984,6 +985,23 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "English",
     sortOrder: 16,
     description: "Community channels — WhatsApp groups, Discord servers for Africa.",
+    adopterType: "ecosystem_brand",
+  },
+  // Owner decision, 2026-09-30: mzizi's brand mineral is hematite (a heritage
+  // tone: "Foundation, endurance, the substrate"; usage "Neutral anchor").
+  // Before this row the table had no mzizi entry, so every consumer guessed.
+  // @bundu/ui's brand-mzizi.css overlay is generated from this row.
+  {
+    url: "https://mzizi.dev",
+    name: "mzizi",
+    role: "Language, registry and design system",
+    voice: "Precise, honest, grounded",
+    meaning: "Root",
+    mineral: "hematite",
+    language: "Swahili",
+    sortOrder: 17,
+    description:
+      "The Mzizi language, component registry and design system — owned and governed by Mzizi, operated by Nyuchi. The language is a research-stage prototype designed for machine authorship, where everything built carries a contract.",
     adopterType: "ecosystem_brand",
   },
 ]
