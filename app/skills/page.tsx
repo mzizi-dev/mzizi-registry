@@ -121,7 +121,7 @@ export default async function SkillsPage() {
         </p>
         <div className="space-y-2">
           <CopyCommand command="curl -s https://api.mzizi.dev/v1/skills" />
-          <CopyCommand command="curl -s https://api.mzizi.dev/v1/skills/nyuchi-design" />
+          <CopyCommand command="curl -s https://api.mzizi.dev/v1/skills/mzizi-design" />
         </div>
         <p className="text-sm leading-relaxed text-muted-foreground">
           Over MCP, connect <code className="font-mono text-xs">https://mcp.mzizi.dev/mcp</code> and

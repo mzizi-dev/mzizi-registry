@@ -50,7 +50,7 @@ export function skillsVersion(): string {
 /**
  * Every skill, without bodies.
  *
- * The list is for choosing, not reading — nine full bodies is ~60 kB, and a
+ * The list is for choosing, not reading — the full bodies are tens of kB, and a
  * client asking what exists does not want them.
  */
 export function listSkills(): SkillSummary[] {
