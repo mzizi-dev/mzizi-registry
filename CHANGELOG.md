@@ -8,6 +8,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added — a `-text` token for every colour family: the value to use as text on `--base` (2026-09-30, #PR)
+
+- **`mzizi-tokens-globals.css` gains `--mineral-*-text`, `--heritage-*-text` and `--exp-*-text` for all 21 families, in both themes, with `--color-*-text` in `@theme`** (Tailwind: `text-hematite-text`). Each one clears APCA Lc 75 as text on `--base` (`#F3F3F1` light, `#0E0D0C` dark), the same bar `--text-secondary` is walked to. Use it for links, accents and headings in a brand colour on the page background.
+- **Why:** in light mode `-aa` is measured as a fill under white text, not as text on the page. Light hematite `#546E7A` passes that (5.40:1 under white) but measures APCA Lc 69.7 as text on `#F3F3F1`. docs.mzizi.dev worked around it with a hand-derived `#4A616B` (mzizi-docs #20); that value is now canon: `--heritage-hematite-text` is `#4a616b` light (Lc 75.1) and `#c9d2d7` dark (Lc -78.1).
+- **How the values are made:** `scripts/render-globals-css.ts` `textOnBaseTier()` walks each family's light canonical hex toward black in 1% steps with the existing `walk()` and keeps the first step that passes. In dark, `-text` is the dark `-aa` value, which is already measured as text on base-dark (APCA Silver, Lc 78), so dark adds no new colour. Six families change in light: terracotta `#8e4928`, copper `#93452a`, savanna `#725915`, sunset `#a43310`, hematite `#4a616b`, kalahari `#675c46`. The other 15 keep their canonical hex.
+- **Unchanged:** every existing token keeps its value, including every `-aa` and the brand blocks' `--primary`. `/v1/brand` does not serve the accessibility tier, so its response is unchanged. The Rust, Swift, Kotlin, ArkTS, React Native, Python and TypeScript token files carry the palette only and are unchanged.
+
 ### Changed — agent skills 0.8.2: Mzizi's own colour is hematite (2026-09-30, #384)
 
 - **The lockfile resolves `@nyuchi/mzizi-skills` 0.8.2** (the range stays `^0.8.1`, which allows it). `lib/skills.generated.ts` and `plugin/skills/` are regenerated from the package, so `/v1/skills`, `/v1/skills/{name}` and the public plugin now serve 0.8.2.
