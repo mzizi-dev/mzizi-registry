@@ -8,6 +8,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — agent skills 0.8.2: Mzizi's own colour is hematite (2026-09-30, #384)
+
+- **The lockfile resolves `@nyuchi/mzizi-skills` 0.8.2** (the range stays `^0.8.1`, which allows it). `lib/skills.generated.ts` and `plugin/skills/` are regenerated from the package, so `/v1/skills`, `/v1/skills/{name}` and the public plugin now serve 0.8.2.
+- **`mzizi-design`:** the brand constellation gains a `Mzizi` row (the root: language, registry, design system; hematite; Root; precise, honest, grounded), with a note that hematite is a Heritage tone rather than one of the seven minerals, how `/v1/brand` serves it, and which stylesheets set it. Copper stays the ecosystem layer, not Mzizi's own surfaces. The skill's description says the same.
+- **`mzizi-roots`:** the `--brand-accent` examples add a Mzizi surface = hematite.
+- **`discoverability`:** the OG image guidance names the brand's colour (for mzizi.dev, hematite) instead of "the brand mineral".
+- **The public Claude Code plugin is 1.2.1** (`plugin/.claude-plugin/plugin.json`), and its description and the marketplace entry name skills 0.8.2. `mzizi-language` and `mzizi-backend` are unchanged.
+
 ### Security — raise five dependency override floors past new advisories (2026-09-30, #383)
 
 - `pnpm audit --audit-level=moderate` (the pre-commit hook and the required Security Audit check) failed on advisories published after the last green run: `brace-expansion` (uncontrolled recursion and quadratic expansion; reached through `@opennextjs/cloudflare`), `fast-uri` (inconsistent host case; through `shadcn`) and `ip-address` (subnet comparison and parse diagnostics; through `mongodb`). The `pnpm.overrides` floors move to the patched versions: `brace-expansion` `^5.0.12` (and `minimatch>brace-expansion`), `minimatch@8>brace-expansion` `^2.1.7`, `fast-uri` `^3.1.8` and `ip-address` `^10.7.1`. The lockfile is regenerated. No direct dependency changes.
