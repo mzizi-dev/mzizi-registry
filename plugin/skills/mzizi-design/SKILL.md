@@ -1,6 +1,6 @@
 ---
 name: mzizi-design
-description: Use this skill for the Mzizi design system and brand — generating well-branded interfaces (production or prototype), design tokens, and ecosystem-level work. Contains the canonical 21-family Mzizi palette (seven African Minerals + seven Heritage tones + the Experimental Seven) with generated stylesheets (tokens/palette.css, tokens-update.css), the radius scale, Noto Sans/Serif + JetBrains Mono type, pill buttons and the 48px touch floor, status and surface tokens, the verified brand constellation (every brand's mineral, voice, meaning, URL), the ecosystem identity (copper), the five Ubuntu pillars + five principles, what is and isn't an ecosystem app, and the wordmarks.
+description: Use this skill for the Mzizi design system and brand — generating well-branded interfaces (production or prototype), design tokens, and ecosystem-level work. Contains the canonical 21-family Mzizi palette (seven African Minerals + seven Heritage tones + the Experimental Seven) with generated stylesheets (tokens/palette.css, tokens-update.css), the radius scale, Noto Sans/Serif + JetBrains Mono type, pill buttons and the 48px touch floor, status and surface tokens, the verified brand constellation (every brand's mineral, voice, meaning, URL; Mzizi's own is hematite, a Heritage tone), the ecosystem identity (copper), the five Ubuntu pillars + five principles, what is and isn't an ecosystem app, and the wordmarks.
 user-invocable: true
 ---
 
@@ -57,34 +57,51 @@ Do not "fix" them to seven to match the colour families.
 - **No standalone ecosystem-level logo mark is registered in the registry yet** — that's an open identity
   item. Until one exists, ecosystem-level materials use the wordmark in copper, optionally with
   Mukoko's Swarm mark (a Nyuchi asset, not in this package) when the subject is the product family. Don't invent an ecosystem mark ad hoc.
+- **Copper is the ecosystem layer, not Mzizi's own surfaces.** mzizi.dev, docs.mzizi.dev, the
+  registry and the language are the `mzizi` row of the constellation below: theme them in
+  **hematite** (owner decision, 2026-09-30). Keep copper for material where the ecosystem as a
+  whole speaks: governance, the commons, the manifesto register.
 
 ### The brand constellation (verified, v4.1.0)
 
 Every brand owns a mineral and a voice. Theme each brand's surfaces and copy in **its own** mineral
 and register — never default everything to tanzanite.
 
-| Brand        | Role                        | Mineral    | Meaning    | Voice                                  |
-| ------------ | --------------------------- | ---------- | ---------- | -------------------------------------- |
-| **bundu**    | The ecosystem               | copper     | Wilderness | visionary, grounded, inclusive         |
-| **nyuchi**   | Infrastructure & enterprise | gold       | Bee        | technical, reliable, industrious       |
-| **mukoko**   | Africa's super app          | tanzanite  | Beehive    | welcoming, structured, protective      |
-| **shamwari** | Sovereign AI companion      | sodalite   | Friend     | helpful, warm, intelligent             |
-| nhimbe       | Events & gatherings         | malachite  | Gathering  | celebratory, communal, vibrant         |
-| bushtrade    | Marketplace                 | gold       | Bush trade | practical, trustworthy, local          |
-| lingo        | Language learning           | cobalt     | Language   | encouraging, cultural, playful         |
-| campfire     | Platform messaging anchor   | malachite  | Campfire   | direct, warm, always present           |
-| bytes        | Short-form creator video    | tanzanite  | Bytes      | energetic, creative, youthful          |
-| novels       | Publishing platform         | malachite  | Novels     | literary, thoughtful, immersive        |
-| places       | Geographic knowledge graph  | gold       | Places     | authoritative, helpful, discoverable   |
-| transport    | Public transit & booking    | gold       | Transport  | efficient, reliable, practical         |
-| planner      | Productivity hub            | cobalt     | Planner    | organised, clear, supportive           |
-| wallet       | Payments & tokens           | gold       | Wallet     | trustworthy, precise, secure           |
-| pulse        | Feed & Mukoko Home          | tanzanite  | Pulse      | personal, adaptive, ambient            |
-| health       | Wellness & telemedicine     | malachite  | Health     | caring, accurate, private              |
-| circles      | Community messaging         | terracotta | Circles    | inclusive, moderated, community-driven |
+| Brand        | Role                                        | Mineral    | Meaning    | Voice                                  |
+| ------------ | ------------------------------------------- | ---------- | ---------- | -------------------------------------- |
+| **bundu**    | The ecosystem                               | copper     | Wilderness | visionary, grounded, inclusive         |
+| **nyuchi**   | Infrastructure & enterprise                 | gold       | Bee        | technical, reliable, industrious       |
+| **mukoko**   | Africa's super app                          | tanzanite  | Beehive    | welcoming, structured, protective      |
+| **shamwari** | Sovereign AI companion                      | sodalite   | Friend     | helpful, warm, intelligent             |
+| **Mzizi**    | The root: language, registry, design system | hematite ¹ | Root       | precise, honest, grounded              |
+| nhimbe       | Events & gatherings                         | malachite  | Gathering  | celebratory, communal, vibrant         |
+| bushtrade    | Marketplace                                 | gold       | Bush trade | practical, trustworthy, local          |
+| lingo        | Language learning                           | cobalt     | Language   | encouraging, cultural, playful         |
+| campfire     | Platform messaging anchor                   | malachite  | Campfire   | direct, warm, always present           |
+| bytes        | Short-form creator video                    | tanzanite  | Bytes      | energetic, creative, youthful          |
+| novels       | Publishing platform                         | malachite  | Novels     | literary, thoughtful, immersive        |
+| places       | Geographic knowledge graph                  | gold       | Places     | authoritative, helpful, discoverable   |
+| transport    | Public transit & booking                    | gold       | Transport  | efficient, reliable, practical         |
+| planner      | Productivity hub                            | cobalt     | Planner    | organised, clear, supportive           |
+| wallet       | Payments & tokens                           | gold       | Wallet     | trustworthy, precise, secure           |
+| pulse        | Feed & Mukoko Home                          | tanzanite  | Pulse      | personal, adaptive, ambient            |
+| health       | Wellness & telemedicine                     | malachite  | Health     | caring, accurate, private              |
+| circles      | Community messaging                         | terracotta | Circles    | inclusive, moderated, community-driven |
 
 The `bundu` row is the ecosystem layer as `/v1/brand` serves it today; the table mirrors the
 registry, so it changes when mzizi-registry renames the entry.
+
+¹ **Mzizi's brand colour is hematite, and hematite is a Heritage tone, not one of the seven
+minerals** (owner decision, 2026-09-30). `/v1/brand` serves it in `.ecosystem` as
+`{"name": "mzizi", "meaning": "Root", "language": "Swahili", "mineral": "hematite"}` and lists
+hematite under `.heritage`, not `.minerals`: the field is called `mineral`, but it names a
+palette family, usually a mineral. Mzizi owns and operates the language, the registry, the design
+system, the docs and the API; `/v1/brand` gives its role as "Language, registry and design
+system", and its voice as "Precise, honest, grounded". A Mzizi surface takes its primary from
+hematite, as the shipped stylesheets do: `@bundu/ui`'s `brand-mzizi.css` (which mzizi.dev uses)
+sets `--primary` to `var(--color-hematite)`, and the registry's `mzizi-tokens-globals.css`
+defaults `--primary` to `var(--heritage-hematite-aa)`. Not gold (nyuchi's), not tanzanite (mukoko's), not copper (the
+ecosystem layer's). Take the values from `palette.canonical.json` (`hematite`, Heritage).
 
 The narrative spine: **nyuchi is the bee, mukoko is the hive, Mzizi is the root everything
 grows from.** Use this when explaining the ecosystem — it is the one-sentence architecture.
@@ -123,7 +140,7 @@ when the feature or message genuinely embodies it.
   below. Mukoko's logo and assets are Nyuchi's and are not in this package.
 - **Every brand owns a mineral, but the palette is not only minerals.** A cross-brand piece has 21
   families to draw on — seven minerals, seven Heritage tones, the Experimental Seven. Use the
-  minerals to say _who is speaking_; use Heritage for atmosphere and surface, and the Experimental
+  minerals to say _who is speaking_ (and hematite when Mzizi is); use Heritage for atmosphere and surface, and the Experimental
   Seven for categorical sets that would otherwise stretch a mineral past its meaning.
 
 ## The design system
@@ -156,9 +173,9 @@ when the feature or message genuinely embodies it.
   - `terracotta` — community features · earth, grounding
   - `sodalite` — **AI / Shamwari surfaces, deep-reasoning states** · intelligence, depth _(added v4.1.0)_
   - `copper` — **Bundu ecosystem identity, the commons** · connection, stewardship _(added v4.1.0)_
-- **Seven Heritage tones** (atmospheric anchors — mini-app surfaces, backgrounds, moods; no family or role): `indigo` (dusk, the dyer's craft) · `savanna` (sun-dried grass, the dry season) · `baobab` (the tree of life, bark, shelter) · `sunset` (day's end, the gathering hour) · `river` (flow, the journey) · `hematite` (the neutral anchor, the substrate) · `kalahari` (the light anchor, openness). Reach for them via `--color-<name>` (aliasing `--heritage-<name>`); values are in `palette.canonical.json`. _(Two earlier framings are withdrawn: the ten-colour one from before the palette settled, and the two-anchor one that survived into v0.5.1 of this bundle. **There are seven.** A skill that named two produced two-tone output in projects that had never seen each other.)_
+- **Seven Heritage tones** (atmospheric anchors — mini-app surfaces, backgrounds, moods; no family or role, with one exception: `hematite` is Mzizi's brand colour): `indigo` (dusk, the dyer's craft) · `savanna` (sun-dried grass, the dry season) · `baobab` (the tree of life, bark, shelter) · `sunset` (day's end, the gathering hour) · `river` (flow, the journey) · `hematite` (the neutral anchor, the substrate) · `kalahari` (the light anchor, openness). Reach for them via `--color-<name>` (aliasing `--heritage-<name>`); values are in `palette.canonical.json`. _(Two earlier framings are withdrawn: the ten-colour one from before the palette settled, and the two-anchor one that survived into v0.5.1 of this bundle. **There are seven.** A skill that named two produced two-tone output in projects that had never seen each other.)_
 - **The Experimental Seven** — a computed heptagon (hues offset 17°, prime saturations, foregrounds solved to P7), each tone carrying a `heptagonIndex` 0–6 that fixes its place on the wheel: `ember` · `acacia` · `fern` · `lagoon` · `storm` · `dusk` · `protea`. Four tiers each: `--exp-<name>`, `--exp-<name>-container`, `--exp-<name>-on`, `--exp-<name>-ui`. Use them for generated/wheel-derived surfaces and categorical sets where the minerals would have to be stretched past their meanings.
-- **Each brand owns a mineral** (the ecosystem map, verified v4.1.0 and served at `/v1/brand` as `.ecosystem`): bundu→**copper**, nyuchi→**gold**, mukoko→**tanzanite**, shamwari→**sodalite**, nhimbe/campfire/novels/health→malachite, lingo/planner→cobalt, bushtrade/places/transport/wallet→gold, bytes/pulse→tanzanite, circles→terracotta. Theme a surface in its brand's mineral — never default everything to tanzanite.
+- **Each brand owns a mineral** (the ecosystem map, verified v4.1.0 and served at `/v1/brand` as `.ecosystem`): bundu→**copper**, nyuchi→**gold**, mukoko→**tanzanite**, shamwari→**sodalite**, Mzizi→**hematite** (a Heritage tone, not a mineral: the one brand whose colour comes from the Heritage set), nhimbe/campfire/novels/health→malachite, lingo/planner→cobalt, bushtrade/places/transport/wallet→gold, bytes/pulse→tanzanite, circles→terracotta. Theme a surface in its brand's colour — never default everything to tanzanite, and never give a Mzizi surface gold, tanzanite or copper as its primary.
 - **Buttons are ALWAYS pill** (`rounded-full` → `--radius-full`, 9999px). Inputs match buttons visually.
 - **Nothing tappable goes below 48px.** Buttons are `h-14` (56px) default and large, `h-12` (48px) small; icon buttons `size-14` / `size-12`. Inputs are 56px default, 48px small. That is what `button.tsx`, the Roots `button.rs` and the language's `primitives/button.mz` all ship, and what `/v1/brand` `.componentSpecs` serves (`minTouchTarget: 48`). (0.7.0 of this skill said controls were dense, 32/36/40px, with 56px only for hero CTAs. The shipped primitives do not do that, so that rule described a system that does not exist.) Badges are 20px tall and are not touch targets; a small element that becomes one gets `min-h-[48px]`.
 - **Radius scale** (px), every step from a 7px unit: `sm` 7 · `md` 12 · `lg` 14 (**DEFAULT** cards/panels) · `xl` 17 · `2xl` 17 · `full` 9999 (pills). That is `mzizi-registry/app/globals.css`, the Rust `mzizi-tokens` `Radius`, and `/v1/brand` `.radii` ("ecosystem numbers: 7, 12, 14, 17"). Checkboxes use `sm`, inputs and small cards `md`, cards and panels `lg`, modals, sheets, dialogs and tabs `xl`. Reference via `--radius-<name>`. (Until 0.8.0 this skill also listed `none` 0, `xs` 4 and `2xl` 24; none of those is defined upstream.)

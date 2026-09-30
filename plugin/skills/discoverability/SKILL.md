@@ -81,7 +81,8 @@ site generates its OG images **at build time**:
    `<meta property="og:image" content={new URL(`/og/${slug}.png`, Astro.site)} />` per page,
    plus `twitter:card` = `summary_large_image`. Set `site` in `astro.config.mjs` so every URL is
    absolute.
-3. Use the hive design: honeycomb, the site's icon, and the brand mineral.
+3. Use the hive design: honeycomb, the site's icon, and the brand's colour (for mzizi.dev,
+   hematite, a Heritage tone; see the constellation in `mzizi-design`).
 
 Keep the site's runtime dependency-light; satori and sharp are build-only. If the site renders
 Mzizi Roots components, they arrive as static HTML from `dioxus-ssr` and change nothing here.
