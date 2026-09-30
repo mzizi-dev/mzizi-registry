@@ -416,10 +416,12 @@
      Genuinely per-brand — bundu is copper, shamwari sodalite, nyuchi gold — so
      it is NOT defined as a value here. It resolves through the [data-brand]
      block at the foot of this file. `mzizi` is the default because this is the
-     mzizi default stylesheet; set data-brand on <html> to change it.
+     mzizi default stylesheet, and mzizi is hematite by owner decision
+     (2026-09-30), read from /v1/brand ecosystem[name=mzizi]. Until then this
+     default was gold. Set data-brand on <html> to change it.
      TO REVERSE: if the owner rules for ink, that is a new neutral family in
      palette.source.ts and a [data-brand] row, not an edit here. */
-  --primary: var(--mineral-gold-aa);
+  --primary: var(--heritage-hematite-aa);
   /* --ring  registry: ink #141413 | /v1/brand: cobalt #0047AB
      /v1/brand ties the focus ring to cobalt for every brand and the
      accessibility record says "2px ring with ring-offset-2, using --ring".
@@ -778,18 +780,19 @@
  * wants none is unaffected.
  *
  * Each block moves `--primary` and `--ring` ONLY — the pattern
- * `bundu-labs/marketing` proved — and assigns `var(--mineral-*)`, never a hex.
+ * `bundu-labs/marketing` proved — and assigns a palette variable
+ * (`var(--mineral-*)`, or `var(--heritage-*)` for mzizi's hematite), never a hex.
  * `--accent` and `--brand-accent` follow `--primary` automatically. Each block
  * references the `-aa` variant, so a brand whose mineral fails contrast gets
  * the measured-safe value rather than each team rediscovering the problem.
  *
- * Every mineral below is sourced, none guessed — the comment names where.
+ * Every family below is sourced, none guessed — the comment names where.
  * ════════════════════════════════════════════════════════════════════════════ */
 
-/* mzizi — gold.
- * app/globals.css:256 — "Per-brand accent — nyuchi = gold"; mzizi.dev is a nyuchi-operated portal. No `mzizi` ecosystem record in /v1/brand. */
+/* mzizi — hematite.
+ * /v1/brand ecosystem[name=mzizi].mineral (owner decision, 2026-09-30) */
 [data-brand="mzizi"] {
-  --primary: var(--mineral-gold-aa);
+  --primary: var(--heritage-hematite-aa);
   --ring: var(--mineral-cobalt-aa);
 }
 
