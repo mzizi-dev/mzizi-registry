@@ -1,0 +1,33 @@
+{
+  "name": "mzizi",
+  "displayName": "Mzizi",
+  "version": "1.2.0",
+  "description": "Build with Mzizi: the five Mzizi agent skills (@nyuchi/mzizi-skills 0.8.1: mzizi-language, mzizi-roots, mzizi-design, mzizi-backend, discoverability) and the Mzizi MCP at mcp.mzizi.dev (free, no account; sign-in only for the Fundi tools). The 21-family palette, Mzizi Roots components in Rust first, the Mzizi language, and the Ubuntu doctrine. Owned and operated by Mzizi; live at mzizi.dev.",
+  "homepage": "https://mzizi.dev",
+  "repository": "https://github.com/mzizi-dev/mzizi-registry",
+  "author": {
+    "name": "Mzizi",
+    "email": "support@bundu.org",
+    "url": "https://mzizi.dev"
+  },
+  "license": "Apache-2.0",
+  "mcpServers": {
+    "mzizi": {
+      "type": "http",
+      "url": "https://mcp.mzizi.dev/mcp"
+    }
+  },
+  "keywords": [
+    "mzizi",
+    "design-system",
+    "skills",
+    "mcp",
+    "rust",
+    "dioxus",
+    "mzizi-roots",
+    "mzizi-language",
+    "registry",
+    "ubuntu",
+    "claude-code"
+  ]
+}

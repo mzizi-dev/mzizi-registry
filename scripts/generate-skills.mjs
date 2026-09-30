@@ -82,7 +82,7 @@ const skills = bundle.skills.map((entry) => {
     name: fields.name || entry.name,
     description,
     body_mdx: body,
-    source: `mzizi-tools/mzizi-skills/${entry.file.replace(/\/SKILL\.md$/, "")}`,
+    source: `mzizi-dev/agent-tools/mzizi-skills/${entry.file.replace(/\/SKILL\.md$/, "")}`,
   }
 })
 
