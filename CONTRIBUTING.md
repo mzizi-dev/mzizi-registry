@@ -362,7 +362,7 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 - [ ] Brand wordmarks are lowercase (`mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`)
 - [ ] Buttons are pill-shaped (`rounded-full`)
 - [ ] Any security finding from `/security-review` is fixed in this PR (per CLAUDE.md §15 rule 22 — never deferred)
-- [ ] The PR body has a `Site/docs impact` section. mzizi.dev and docs.mzizi.dev must never lag this repo, so any user-visible change to components, the Mzizi Roots crates, the API data, or the npm packages and MCP tools is named there for the site and docs freshness agents (see [`AGENTS.md`](AGENTS.md#site-and-docs-freshness-hard-rule)). Write "None" if nothing user-visible changed.
+- [ ] The PR body has a `Site/docs/skills impact` section. mzizi.dev, docs.mzizi.dev and the agent skills (`@nyuchi/mzizi-skills`) must never lag this repo, so any user-visible change to components, the Mzizi Roots crates, the API data, or the npm packages and MCP tools is named there for the site, docs and skills freshness agents (see [`AGENTS.md`](AGENTS.md#site-docs-and-skills-freshness-hard-rule)). Write "None" if nothing user-visible changed.
 
 ### Review Process
 

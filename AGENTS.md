@@ -117,20 +117,26 @@ against the live API rather than trusting a prior write-up:
   deprecated alias of `?node=` (it adds `meta.deprecation` and a `Deprecation: true`
   header). Don't document it as anything else, and don't add another `layer` anywhere.
 
-## Site and docs freshness (hard rule)
+## Site, docs and skills freshness (hard rule)
 
-Owner's rule, 2026-09-30: **mzizi.dev (`mzizi-dev/mzizi-site`) and docs.mzizi.dev
-(`mzizi-dev/mzizi-docs`) must never lag this repo.**
+Owner's rule, 2026-09-30: **mzizi.dev (`mzizi-dev/mzizi-site`), docs.mzizi.dev
+(`mzizi-dev/mzizi-docs`) and the agent skills (`@nyuchi/mzizi-skills`) must never lag this
+repo.** In the owner's words: "if the skills are outdated, AI and LLMs fail immediately."
 
 - Any change to the components, the Mzizi Roots crates (`mzizi-rs/crates/`), the API data
   (`registry.json`, the files behind `app/api/`, `openapi.yaml`), or the npm packages and
-  MCP tools that read this registry changes what the site and docs must say.
-- Two standing freshness agents, one for the site and one for the docs, check upstream state
-  against what those two sites say, and open PRs on `mzizi-site` and `mzizi-docs` whenever
-  anything drifts.
+  MCP tools that read this registry changes what the site, the docs and the skills must say.
+- `@nyuchi/mzizi-skills` (in agent-tools, `mzizi-skills/`) tracks every language and
+  component change as closely as the site and docs do. All three copies serve the same
+  current version: npm, `mzizi_get_skills` on mcp.mzizi.dev, and `/v1/skills` on
+  api.mzizi.dev, which reads the skills through this repo's `@nyuchi/mzizi-skills`
+  dependency and the gateway's registry pin.
+- Three standing freshness agents, one each for the site, the docs and the skills, check
+  upstream state against what those surfaces say, and open PRs whenever anything drifts.
 - **A PR here that changes something user-visible must say so in its body, under a
-  `Site/docs impact` heading**, so the freshness agents pick it up. Name what changed and
-  which pages or sections it affects. If nothing user-visible changed, write "None".
+  `Site/docs/skills impact` heading**, so the freshness agents pick it up. Name what changed
+  and which pages, sections or skills it affects. If nothing user-visible changed, write
+  "None".
 
 ## A link this file replaces
 

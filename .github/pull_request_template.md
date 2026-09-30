@@ -51,12 +51,13 @@ Brief description of what this PR does and why.
 - [ ] `openapi.yaml` updated if API surface changed
 - [ ] Version bumped in `package.json`, `lib/mcp-server.ts`, and `components/landing/footer.tsx`, and a new entry added to `content/changelog/releases.json` (then `pnpm changelog:generate`), if releasing
 
-## Site/docs impact
+## Site/docs/skills impact
 
-mzizi.dev (`mzizi-site`) and docs.mzizi.dev (`mzizi-docs`) must never lag this repo. Name
-any user-visible change to components, the Mzizi Roots crates, the API data, or the npm
-packages and MCP tools, and the site or docs pages it affects, so the freshness agents pick
-it up. Write "None" if nothing user-visible changed.
+mzizi.dev (`mzizi-site`), docs.mzizi.dev (`mzizi-docs`) and the agent skills
+(`@nyuchi/mzizi-skills`) must never lag this repo. Name any user-visible change to
+components, the Mzizi Roots crates, the API data, or the npm packages and MCP tools, and the
+site pages, docs pages or skills it affects, so the freshness agents pick it up. Write
+"None" if nothing user-visible changed.
 
 - None
 
