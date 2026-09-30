@@ -334,9 +334,11 @@ Every Roots component carries a contract, in two parts:
 Today the twelve `mzizi-brand` components export `CONTRACT`. The other crates check the
 registry contract against the `.tsx`, and their `CONTRACT` clauses arrive batch by batch.
 Server-component clauses (status per route, CORS and cache headers, no credential in the core)
-wait on the language's contracts-everywhere RFC. Until then their tests assert those properties
-against an in-memory implementation of the traits. When the language lowers to Rust, `mz
-contract` reads the same text; it does not yet.
+wait on the language's contracts-everywhere RFC (RFC-0010). Until then their tests assert those
+properties against an in-memory implementation of the traits. The language's own `service`
+contracts (`example` and `ensure`, RFC-0011) apply to a Mzizi `service`, not to these Rust
+crates. No component lowers to Rust yet (only a Mzizi `service` does, to a local axum
+package), so `mz contract` does not read a Roots `CONTRACT`.
 
 ## Reuse before build
 
