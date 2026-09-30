@@ -138,6 +138,7 @@ jobs:
         run: |
           set -euo pipefail
           pnpm skills:generate:check
+          pnpm plugin:skills:check
           pnpm doctrine:generate:check
           pnpm registry:index:check
           pnpm registry:source:check

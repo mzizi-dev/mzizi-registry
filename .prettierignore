@@ -28,3 +28,8 @@ profile/governance/
 *-lock.yaml
 package-lock.json
 pnpm-lock.yaml
+
+# The public plugin's skills: a byte-for-byte copy of @nyuchi/mzizi-skills,
+# written by scripts/generate-plugin-skills.mjs and gated by its --check.
+# Formatting them here would make them differ from the published package.
+skills/

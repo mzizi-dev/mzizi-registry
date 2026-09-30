@@ -75,6 +75,8 @@ pnpm tokens:sync          # regenerate globals.css + palette.generated.ts from l
 pnpm tokens:verify         # non-mutating token-drift check
 pnpm rust:generate         # regenerate mzizi-rs's crates/*/src/generated/ Rust component copies
 pnpm rust:generate:check   # non-mutating check
+pnpm plugin:skills          # copy @nyuchi/mzizi-skills into skills/ for the public Claude Code plugin
+pnpm plugin:skills:check    # non-mutating check
 ```
 
 If you touch a source file that one of these reads, run its generator (or its `--check`,

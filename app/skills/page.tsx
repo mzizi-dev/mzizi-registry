@@ -21,7 +21,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: "Skills",
   description:
-    "Mzizi agent skills for AI assistants — the doctrine of the Mzizi research program, loadable on demand. Install the @nyuchi/mzizi-skills bundle, the mzizi Claude Code plugin, or read any skill over HTTP and MCP.",
+    "Mzizi agent skills for AI assistants — the doctrine of the Mzizi research program, loadable on demand. Install the @nyuchi/mzizi-skills bundle or the public mzizi Claude Code plugin, or read any skill over HTTP and MCP.",
 }
 
 const NPM_PACKAGE = "@nyuchi/mzizi-skills"
@@ -54,19 +54,19 @@ export default async function SkillsPage() {
         <div className="space-y-3">
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">
-              Every skill, as files in <code className="font-mono text-xs">.claude/skills/</code>:
+              Every skill, as files in <code className="font-mono text-xs">.agents/skills/</code>:
             </p>
-            <CopyCommand command={`npx skills add ${NPM_PACKAGE}`} />
+            <CopyCommand command={`npm install -D ${NPM_PACKAGE}`} />
+            <CopyCommand command="npx skills experimental_sync" />
           </div>
 
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">
-              Or the whole toolchain as a Claude Code plugin — the skills, the{" "}
-              <code className="font-mono text-xs">fundi</code> agent, the registry MCP, and the{" "}
-              <code className="font-mono text-xs">/mzizi:*</code> commands:
+              Or as the public Claude Code plugin, from mzizi-dev/mzizi-registry — the skills and the Mzizi MCP in
+              one install:
             </p>
-            <CopyCommand command="/plugin marketplace add mzizi-dev/agent-tools" />
-            <CopyCommand command="/plugin install mzizi@mzizi-tools" />
+            <CopyCommand command="/plugin marketplace add mzizi-dev/mzizi-registry" />
+            <CopyCommand command="/plugin install mzizi@mzizi" />
           </div>
         </div>
       </section>
@@ -84,7 +84,7 @@ export default async function SkillsPage() {
         {skills.length === 0 ? (
           <p className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
             The skills registry is unavailable right now. Install the bundle with{" "}
-            <code className="font-mono text-xs">npx skills add {NPM_PACKAGE}</code>, or read the
+            <code className="font-mono text-xs">npm install -D {NPM_PACKAGE}</code>, or read the
             source in <code className="font-mono text-xs">mzizi-skills/skills/</code> in{" "}
             <code className="font-mono text-xs">mzizi-dev/agent-tools</code> (a private repo).
           </p>
