@@ -311,7 +311,8 @@ export interface A11yVariant {
  * Two roles are measured, because those are the two the three reports were
  * about: a light-theme fill carrying white text (WCAG AA 4.5:1), and dark-theme
  * text on the base-dark surface (APCA Silver Lc 78). A family that passes both
- * gets no variant.
+ * gets no variant. Light-theme text on `--base` is a third role, measured by
+ * `textOnBaseTier()` below and emitted as `-text`.
  *
  * Deriving this rather than listing it means an eighth family added to
  * `palette.source.ts` is measured on the next `pnpm tokens:sync` instead of
@@ -354,6 +355,68 @@ export function a11yTier(
       }
     }
     if (entry.light || entry.dark) out.set(f.name, entry)
+  }
+  return out
+}
+
+/** APCA Lc 75, the body-text bar. `textRamp()` walks `--text-secondary` to the same bar. */
+const BODY_TEXT = 75
+
+export interface TextVariant {
+  hex: string
+  canon: string
+  canonMeasure: number
+  measure: number
+  origin: string
+}
+
+/**
+ * The text-on-base tier: a `-text` value for every family, measured as TEXT on
+ * `--base`, the page background.
+ *
+ * `-aa` answers a different question in each theme. In dark it is text on
+ * base-dark, but in light it is a FILL under white text, so a light `-aa` can
+ * pass and still fail as a link or accent on the page. Hematite is the case that
+ * found it: `#546E7A` is 5.40:1 under white and passes, but as text on `#F3F3F1`
+ * it is APCA Lc 69.7, under the body-text bar. `mzizi-docs` derived `#4A616B` by
+ * hand with this file's `walk()` and cited it as a local value; this makes it
+ * canon.
+ *
+ * Light: the canonical `lightHex`, walked toward black until it clears Lc 75 on
+ * `BASE_LIGHT`. Dark: the dark `-aa` value, which is already text on
+ * `BASE_DARK` at APCA Silver (Lc 78, above this bar), so dark adds no third
+ * value. A family that already clears the bar keeps its canonical hex, so the
+ * `-text` alias always resolves, as `-aa` does. No `-aa` value changes.
+ */
+export function textOnBaseTier(
+  families: { name: string; lightHex: string; darkHex: string }[],
+  tier = a11yTier(families)
+): Map<string, { light: TextVariant; dark: TextVariant }> {
+  const out = new Map<string, { light: TextVariant; dark: TextVariant }>()
+  for (const f of families) {
+    const light = walk(f.lightHex, "#000000", (c) => Math.abs(apca(c, BASE_LIGHT)) >= BODY_TEXT)
+    const darkStart = tier.get(f.name)?.dark?.hex ?? f.darkHex
+    const dark = walk(darkStart, WHITE, (c) => Math.abs(apca(c, BASE_DARK)) >= BODY_TEXT)
+    out.set(f.name, {
+      light: {
+        hex: light.toUpperCase(),
+        canon: f.lightHex.toUpperCase(),
+        canonMeasure: +apca(f.lightHex, BASE_LIGHT).toFixed(1),
+        measure: +apca(light, BASE_LIGHT).toFixed(1),
+        origin: light.toUpperCase() === f.lightHex.toUpperCase()
+          ? "canonical value already clears the bar"
+          : "derived — canon lightHex toward #000000",
+      },
+      dark: {
+        hex: dark.toUpperCase(),
+        canon: f.darkHex.toUpperCase(),
+        canonMeasure: +apca(f.darkHex, BASE_DARK).toFixed(1),
+        measure: +apca(dark, BASE_DARK).toFixed(1),
+        origin: dark.toUpperCase() === f.darkHex.toUpperCase()
+          ? "canonical value already clears the bar"
+          : "the dark -aa value, already text on base-dark",
+      },
+    })
   }
   return out
 }
@@ -494,7 +557,20 @@ export function renderGlobalsCss(
     ...experimental.map((e) => ({ name: e.name, lightHex: e.lightHex, darkHex: e.darkHex })),
   ]
   const tier = a11yTier(families)
+  const textTier = textOnBaseTier(families, tier)
   const text = textRamp()
+
+  /** The `-text` value, and the measurement behind it, for one family in one theme. */
+  const tx = (name: string, mode: "light" | "dark") => {
+    const v = textTier.get(name)![mode]
+    const bg = mode === "light" ? BASE_LIGHT : BASE_DARK
+    return {
+      hex: v.hex,
+      note: v.hex === v.canon
+        ? `APCA Lc ${v.measure} on --base — ${v.origin}`
+        : `APCA Lc ${v.measure} on --base. ${v.canon} measures ${v.canonMeasure} as text on ${bg}; ${v.origin}`,
+    }
+  }
 
   /** The `-aa` alias ALWAYS resolves — canonical value where no variant is needed. */
   const aa = (name: string, canon: string, mode: "light" | "dark") => {
@@ -518,6 +594,7 @@ export function renderGlobalsCss(
       out.push(`  --mineral-${m.name}-container: ${lo(c)};`)
       out.push(`  --mineral-${m.name}-on-container: ${lo(oc)}; /* APCA Lc ${pick(measured.light, measured.dark)} on the container */`)
       out.push(`  --mineral-${m.name}-aa: ${lo(a.hex)}; /* ${a.note} */`)
+      out.push(`  --mineral-${m.name}-text: ${lo(tx(m.name, mode).hex)}; /* ${tx(m.name, mode).note} */`)
     }
 
     out.push("")
@@ -527,6 +604,7 @@ export function renderGlobalsCss(
       const a = aa(h.name, v, mode)
       out.push(`  --heritage-${h.name}: ${lo(v)}; /* ${h.symbolism} */`)
       out.push(`  --heritage-${h.name}-aa: ${lo(a.hex)}; /* ${a.note} */`)
+      out.push(`  --heritage-${h.name}-text: ${lo(tx(h.name, mode).hex)}; /* ${tx(h.name, mode).note} */`)
     }
 
     out.push("")
@@ -540,6 +618,7 @@ export function renderGlobalsCss(
       out.push(`  --exp-${e.name}-on-container: ${lo(pick(e.onContainerLight, e.onContainerDark))};`)
       out.push(`  --exp-${e.name}-ui: ${lo(pick(e.uiLight, e.uiDark))};`)
       out.push(`  --exp-${e.name}-aa: ${lo(a.hex)}; /* ${a.note} */`)
+      out.push(`  --exp-${e.name}-text: ${lo(tx(e.name, mode).hex)}; /* ${tx(e.name, mode).note} */`)
     }
 
     out.push("")
@@ -635,6 +714,9 @@ function header(): string {
  *   21 brand families    7 minerals, 7 heritage tones, 7 experimental
  *   accessibility tier   an AA/APCA-safe \`-aa\` variant beside every canonical
  *                        hex — added, never substituted
+ *   text-on-base tier    a \`-text\` variant beside every family, APCA Lc 75
+ *                        as text on \`--base\` in both themes (for links,
+ *                        accents and headings in the brand colour)
  *   surface ladder       9 steps, pitch → wash, plus \`muted\`
  *   text ramp            3 tiers, measured on \`--base\`, plus \`--hero-text\`
  *   status / chart / sidebar / the shadcn semantic set
@@ -677,10 +759,12 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
     out.push(`  --color-${m.name}-container: var(--mineral-${m.name}-container);`)
     out.push(`  --color-${m.name}-on-container: var(--mineral-${m.name}-on-container);`)
     out.push(`  --color-${m.name}-aa: var(--mineral-${m.name}-aa);`)
+    out.push(`  --color-${m.name}-text: var(--mineral-${m.name}-text);`)
   }
   for (const h of heritage) {
     out.push(`  --color-${h.name}: var(--heritage-${h.name});`)
     out.push(`  --color-${h.name}-aa: var(--heritage-${h.name}-aa);`)
+    out.push(`  --color-${h.name}-text: var(--heritage-${h.name}-text);`)
   }
   for (const e of experimental) {
     out.push(`  --color-${e.name}: var(--exp-${e.name});`)
@@ -688,6 +772,7 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
     out.push(`  --color-${e.name}-on-container: var(--exp-${e.name}-on-container);`)
     out.push(`  --color-${e.name}-ui: var(--exp-${e.name}-ui);`)
     out.push(`  --color-${e.name}-aa: var(--exp-${e.name}-aa);`)
+    out.push(`  --color-${e.name}-text: var(--exp-${e.name}-text);`)
   }
   out.push("")
   out.push(box("SURFACES, TEXT, STATUS, SEMANTICS"))
@@ -914,7 +999,12 @@ export function renderGlobalsJson(
     ...experimental.map((e) => ({ name: e.name, lightHex: e.lightHex, darkHex: e.darkHex })),
   ]
   const tier = a11yTier(families)
+  const textTier = textOnBaseTier(families, tier)
   const text = textRamp()
+  const textOf = (name: string) => {
+    const v = textTier.get(name)!
+    return { light: v.light.hex, dark: v.dark.hex, apca: { light: v.light.measure, dark: v.dark.measure }, metric: "APCA Lc 75 as text on surfaces.base" }
+  }
   const aaOf = (name: string, canonL: string, canonD: string) => ({
     light: tier.get(name)?.light?.hex ?? canonL.toUpperCase(),
     dark: tier.get(name)?.dark?.hex ?? canonD.toUpperCase(),
@@ -946,6 +1036,7 @@ export function renderGlobalsJson(
             containerLight: m.containerLight.toUpperCase(), containerDark: m.containerDark.toUpperCase(),
             onContainerLight: m.onContainerLight.toUpperCase(), onContainerDark: m.onContainerDark.toUpperCase(),
             aa: aaOf(m.name, m.lightHex, m.darkHex),
+            text: textOf(m.name),
             accessibility: variant(m.name),
           },
         ])
@@ -957,6 +1048,7 @@ export function renderGlobalsJson(
             origin: h.origin, symbolism: h.symbolism, usage: h.usage,
             light: h.lightHex.toUpperCase(), dark: h.darkHex.toUpperCase(),
             aa: aaOf(h.name, h.lightHex, h.darkHex),
+            text: textOf(h.name),
             accessibility: variant(h.name),
           },
         ])
@@ -971,6 +1063,7 @@ export function renderGlobalsJson(
             onContainerLight: e.onContainerLight.toUpperCase(), onContainerDark: e.onContainerDark.toUpperCase(),
             uiLight: e.uiLight.toUpperCase(), uiDark: e.uiDark.toUpperCase(),
             aa: aaOf(e.name, e.lightHex, e.darkHex),
+            text: textOf(e.name),
             accessibility: variant(e.name),
           },
         ])
