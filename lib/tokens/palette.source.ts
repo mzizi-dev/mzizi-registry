@@ -12,7 +12,7 @@
  *
  * Everything downstream is GENERATED from this file by `pnpm tokens:sync`:
  *   - lib/tokens/palette.generated.ts   typed snapshot consumers import
- *   - app/globals.css                   the marked palette regions only
+ *   - styles/globals.css                   the marked palette regions only
  *   - components/registry/n1-tokens/mzizi-tokens-<platform>.<ext>
  *                                       swift, kotlin, arkts, react-native,
  *                                       python, rust

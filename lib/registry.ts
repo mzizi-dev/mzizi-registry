@@ -294,7 +294,7 @@ export function readComponents(): RegistryItem[] {
 
     // A DATA item's payload is `cssVars`/`css`, not a file — that is what a `registry:theme`
     // is. `mzizi-tokens` carries the 214 design tokens themselves, generated from
-    // app/globals.css, and has no source on disk BY DESIGN: a `.ts` file is React-only, and
+    // styles/globals.css, and has no source on disk BY DESIGN: a `.ts` file is React-only, and
     // the point of moving N1 into cssVars is that the shadcn CLI merges it into any project.
     //
     // Without this branch the item is dropped here and `/api/v1/ui/mzizi-tokens` answers

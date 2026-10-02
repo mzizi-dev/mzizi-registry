@@ -6,8 +6,14 @@
 ## What this repo is
 
 The canonical Mzizi component registry, brand system, and DNA-helix frontend
-architecture — a Next.js app whose `registry.json` and component files on disk are the
-source of truth (no database). It is a **Mzizi**-governed standard; Nyuchi
+architecture. `registry.json` and the component files on disk are the source of truth (no
+database). This repo serves no website and no API: the Next.js app that used to live here
+was removed, and every public host is served by its own repo (`mzizi.dev` →
+`mzizi-dev/mzizi-site`, `app.mzizi.dev` → `mzizi-dev/mzizi-console`, `api.mzizi.dev` →
+`mzizi-dev/mzizi-api-gateway`, `mcp.mzizi.dev` → `mzizi-mcp` in `mzizi-dev/agent-tools`).
+What it ships is the registry, the token pipeline, the Rust crates (`mzizi-rs/`), the
+generators and their checks, the public plugin (`plugin/`), and the `lib/` readers the
+gateway bundles at a pinned commit. It is a **Mzizi**-governed standard; Nyuchi
 operates it. It is **not** Mzizi-the-language (`mzizi-dev/mzizi`) — that's a different
 research project that happens to share the org and a name fragment.
 
@@ -17,38 +23,50 @@ research project that happens to share the org and a name fragment.
 to the wrong file:
 
 - `mzizi-ui/` at the repo root — a small Cloudflare Worker (`src/index.ts`) that proxies
-  `ui.mzizi.dev`, one of four domain-proxy Workers alongside `mzizi-api/`, `mzizi-plus/`,
-  and the console (in `mzizi-console`, a separate repo).
+  `ui.mzizi.dev`, one of two domain-proxy Workers in this repo alongside `mzizi-plus/`.
 - `mzizi-rs/crates/mzizi-ui` — the **Rust/Dioxus component crate** (N2 on the helix), a
   genuinely different codebase that happens to share the name because both serve node N2's
   viewable surface, one in TypeScript/React and one in Rust/Dioxus.
 
 If an instruction says "mzizi-ui" without a path, ask which one before touching either.
 
-## The four domain-proxy Workers
+## The two domain-proxy Workers
 
-`lib/domain-proxy.ts` implements a shared proxy handler; each Worker below configures it
-for a different subdomain and a different subset of the DNA-helix's 8 nodes / 4 rungs:
+`lib/domain-proxy.ts` implements a shared proxy handler in front of `https://mzizi.dev`;
+each Worker below configures it for a different subdomain and a different subset of the
+DNA-helix's 8 nodes / 4 rungs:
 
-| Worker                   | Subdomain        | Nodes served                                                                                                                       |
-| ------------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `mzizi-ui/`              | `ui.mzizi.dev`   | N1 tokens, N2 primitives, N3 brand, N6 pages, N7 shell — the viewable strand                                                       |
-| `mzizi-api/`             | `api.mzizi.dev`  | The 36 JSON endpoints under `app/api/` — the exact same route handlers the Next app serves, imported unmodified, not reimplemented |
-| `mzizi-plus/`            | `plus.mzizi.dev` | N4 safety, N5 resilience, N8 assurance, N9 fundi, N10 documentation, N11 discovery — the toolchain                                 |
-| (console, separate repo) | `app.mzizi.dev`  | `mzizi-dev/mzizi-console`                                                                                                          |
+| Worker        | Subdomain        | Nodes served                                                                                       |
+| ------------- | ---------------- | -------------------------------------------------------------------------------------------------- |
+| `mzizi-ui/`   | `ui.mzizi.dev`   | N1 tokens, N2 primitives, N3 brand, N6 pages, N7 shell — the viewable strand                       |
+| `mzizi-plus/` | `plus.mzizi.dev` | N4 safety, N5 resilience, N8 assurance, N9 fundi, N10 documentation, N11 discovery — the toolchain |
+
+`api.mzizi.dev` is not one of them: the `mzizi-api/` Worker that was generated from the
+removed `app/api/` routes was replaced by `mzizi-dev/mzizi-api-gateway` on 2026-09-29.
 
 **`mzizi-plus` is slated to move to its own repository, outside this one — make sure any
-change to it stays self-contained (no imports reaching back into this repo's `app/` or
-`lib/` beyond `lib/domain-proxy.ts`, which the eventual split needs to either vendor or
-depend on explicitly) so that move is a clean extraction, not an untangling exercise.**
+change to it stays self-contained (no imports reaching back into this repo's `lib/` beyond
+`lib/domain-proxy.ts`, which the eventual split needs to either vendor or depend on
+explicitly) so that move is a clean extraction, not an untangling exercise.**
+
+## What `mzizi-api-gateway` reads from here
+
+The gateway's `scripts/extract.ts` bundles these modules at its pinned registry commit:
+`lib/registry`, `lib/registry-source`, `lib/db`, `lib/skills`, `lib/samples/data`,
+`lib/tokens/palette.generated`, `lib/tokens/brand.source`, `lib/openapi.generated`,
+`lib/component-renames` and `lib/rust-crates`, plus `registry.json` and the files those
+read. They are a public contract with that repo: renaming or removing one breaks the
+gateway's next pin bump.
 
 ## Build, test, run
 
 ```bash
 git clone https://github.com/mzizi-dev/mzizi-registry.git && cd mzizi-registry
 pnpm install
-pnpm dev              # port 11736
 ```
+
+There is no dev server: nothing here renders a page. `pnpm build` runs every generator in
+write mode; CI's `Build` job then fails if that changed a committed file.
 
 **`pnpm check` runs every gate CI runs, in order** — run it before every push:
 
@@ -109,12 +127,9 @@ against the live API rather than trusting a prior write-up:
   no Supabase client, credential or query — the Mzizi console (`mzizi-dev/mzizi-console`) is
   the only thing in the estate that talks to Supabase, and `__tests__/db/no-source-in-database.test.ts`
   fails the build if an `@supabase/*` import or a `SUPABASE_*` read comes back.
-  `/api/v1/search`, `/api/v1/ui/{name}/docs` and `/api/v1/ai/instructions/{name}` serve
-  from files. `/api/v1/ui/{name}/versions` answers `503` naming the console as the owner
-  of version history, and `/api/health/{name}` and `GET /api/chaos/{name}` still answer
-  `503` with `"Database not configured"`, as production served before the removal. Do not
-  "fix" one by adding a database. The six pages behind `RENDER_FILE_BACKED_PAGES` in
-  `lib/file-backed-pages.ts` are follow-ups.
+  The API (served by `mzizi-dev/mzizi-api-gateway`) answers from these files; its
+  `/v1/ui/{name}/versions` answers `503` naming the console as the owner of version
+  history. Do not "fix" that by adding a database.
 - **`/api/v1/search` filters on `node`, not `layer`.** `?layer=` survives only as a
   deprecated alias of `?node=` (it adds `meta.deprecation` and a `Deprecation: true`
   header). Don't document it as anything else, and don't add another `layer` anywhere.
@@ -126,7 +141,7 @@ Owner's rule, 2026-09-30: **mzizi.dev (`mzizi-dev/mzizi-site`), docs.mzizi.dev
 repo.** In the owner's words: "if the skills are outdated, AI and LLMs fail immediately."
 
 - Any change to the components, the Mzizi Roots crates (`mzizi-rs/crates/`), the API data
-  (`registry.json`, the files behind `app/api/`, `openapi.yaml`), or the npm packages and
+  (`registry.json`, the `lib/` readers `mzizi-api-gateway` bundles, `openapi.yaml`), or the npm packages and
   MCP tools that read this registry changes what the site, the docs and the skills must say.
 - `@nyuchi/mzizi-skills` (in agent-tools, `mzizi-skills/`) tracks every language and
   component change as closely as the site and docs do. All three copies serve the same
@@ -157,7 +172,8 @@ Owner's rule, 2026-09-30: "changelogs are super important".
 - The logic is `scripts/changelog-gate.sh`, tested by `scripts/changelog-gate.test.sh`.
   Keep both identical to the copies in the other Mzizi repositories.
 - `CHANGELOG.md` is the human narrative. A release also adds its machine-readable record to
-  `content/changelog/releases.json`, which `/api/v1/changelog` serves.
+  `content/changelog/releases.json`, which `/v1/changelog` on api.mzizi.dev serves (through
+  the gateway's registry pin).
 
 ## A link this file replaces
 

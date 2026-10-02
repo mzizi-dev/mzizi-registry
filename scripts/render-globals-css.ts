@@ -124,7 +124,7 @@ function walk(start: string, end: string, ok: (hex: string) => boolean): string 
 /**
  * The nine-step surface ladder, `/v1/brand` `backgrounds`.
  *
- * NOTE `base`. `/v1/brand` calls this step `base`; `app/globals.css` lost that
+ * NOTE `base`. `/v1/brand` calls this step `base`; `styles/globals.css` lost that
  * name and calls it `--background`, which is also a shadcn semantic role. Both
  * names ship here — `--base` is the ladder step, `--background` an alias of it
  * — so a consumer reading either vocabulary resolves, and the step keeps the
@@ -446,7 +446,7 @@ export function onContainerMeasure(m: Mineral) {
  * The three-tier text ramp.
  *
  * `/v1/brand` publishes no foreground colour at all, which is why every app
- * invents one — `app/globals.css` uses ink `#141413`, `bushtrade` runs its own
+ * invents one — `styles/globals.css` uses ink `#141413`, `bushtrade` runs its own
  * `--text-primary/secondary/tertiary`, and they do not agree.
  *
  * Rather than pick one, this interpolates the system's OWN base pair
@@ -857,7 +857,7 @@ function invariants(): string {
 /**
  * THE UNRESOLVED SEVEN.
  *
- * `app/globals.css` and `/v1/brand` agree EXACTLY on all 21 families — 42
+ * `styles/globals.css` and `/v1/brand` agree EXACTLY on all 21 families — 42
  * mineral values, 14 heritage, every experimental. They disagree on seven
  * semantic tokens, and the owner has not ruled. Nothing below is a ruling
  * either: the three that are genuinely per-brand are DERIVED from the brand
@@ -1098,7 +1098,7 @@ export function renderGlobalsJson(
     ),
     unresolved: {
       $comment:
-        "The registry's app/globals.css and /v1/brand disagree on these and the owner has not ruled. " +
+        "The registry's styles/globals.css and /v1/brand disagree on these and the owner has not ruled. " +
         "Listed so a consumer knows they are provisional. See the UNRESOLVED block in the CSS.",
       tokens: {
         primary: { registry: "#141413", brandApi: "#4B0082", resolution: "per-brand; see brands" },

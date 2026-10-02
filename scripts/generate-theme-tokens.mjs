@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Project `app/globals.css` into the `mzizi-tokens` registry item's `cssVars`.
+ * Project `styles/globals.css` into the `mzizi-tokens` registry item's `cssVars`.
  *
  *   pnpm tokens:registry          rewrite registry.json
  *   pnpm tokens:registry --check  fail if it is out of date (CI)
@@ -13,7 +13,7 @@
  * any CSS at all — not a `.css` file, not `css`, not `cssVars`.
  *
  * The consequence was not cosmetic. 431 of 573 components reference `var(--…)` — 137
- * distinct variables — and `app/globals.css` defines 214 of them. A consumer running
+ * distinct variables — and `styles/globals.css` defines 214 of them. A consumer running
  * `npx shadcn add mzizi-listing-card` received Tailwind classes like
  * `bg-[var(--color-malachite)]` and no definition for `--color-malachite`, so every mineral
  * colour, radius, motion duration and touch target resolved to its fallback or to nothing.
@@ -35,7 +35,7 @@ import { readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
 const ROOT = process.cwd()
-const CSS = join(ROOT, "app", "globals.css")
+const CSS = join(ROOT, "styles", "globals.css")
 const REGISTRY = join(ROOT, "registry.json")
 
 /** The item that carries the theme. */
@@ -119,7 +119,7 @@ function main() {
 
   if (Object.keys(cssVars).length === 0) {
     console.error(
-      "✖ no custom properties found in app/globals.css — refusing to write an empty theme."
+      "✖ no custom properties found in styles/globals.css — refusing to write an empty theme."
     )
     process.exit(1)
   }
@@ -137,18 +137,18 @@ function main() {
   if (check) {
     if (current !== next) {
       console.error(
-        `✖ ${THEME_ITEM}.cssVars is out of date with app/globals.css.\n` +
+        `✖ ${THEME_ITEM}.cssVars is out of date with styles/globals.css.\n` +
           "  Run `pnpm tokens:registry` and commit the result."
       )
       process.exit(1)
     }
-    console.log(`✓ ${THEME_ITEM}.cssVars matches app/globals.css (${JSON.stringify(counts)}).`)
+    console.log(`✓ ${THEME_ITEM}.cssVars matches styles/globals.css (${JSON.stringify(counts)}).`)
     return
   }
 
   item.cssVars = cssVars
   writeFileSync(REGISTRY, JSON.stringify(manifest, null, 2) + "\n")
-  console.log(`✓ ${THEME_ITEM}.cssVars generated from app/globals.css (${JSON.stringify(counts)}).`)
+  console.log(`✓ ${THEME_ITEM}.cssVars generated from styles/globals.css (${JSON.stringify(counts)}).`)
 }
 
 main()

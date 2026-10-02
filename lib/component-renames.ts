@@ -5,14 +5,13 @@
  * (Mzizi owns the registry; Nyuchi is the operator). The old names are baked
  * into links, docs, `components.json` files and `npx shadcn add` commands that
  * this repo does not control, so they must keep resolving. The map lives in
- * `component-renames.json` so `next.config.mjs` (plain ESM, no TS loader) can
- * read the same data the TypeScript surfaces do — one list, no drift.
+ * `component-renames.json` so plain-JSON readers get the same data the
+ * TypeScript surfaces do — one list, no drift.
  *
- * Three consumers:
- *   - `next.config.mjs` 308-redirects every old public URL form (pages, API v1
- *     item routes, on both `/api/v1/*` and the `/v1/*` shape `api.mzizi.dev`
- *     serves) to the new slug.
- *   - `mzizi-api/src/router.ts` does the same for the standalone API Worker.
+ * Consumers:
+ *   - mzizi-dev/mzizi-api-gateway 308-redirects every old API URL form (on both
+ *     `/api/v1/*` and the `/v1/*` shape `api.mzizi.dev` serves) to the new slug,
+ *     from this map as extracted at its pinned registry commit.
  *   - `lib/registry.ts` `readComponent` resolves an old name to the renamed item,
  *     so non-HTTP lookups (the MCP `get_component` tool) keep answering.
  *
@@ -44,8 +43,7 @@ export function componentNameHistory(name: string): string[] {
 }
 
 /**
- * Path prefixes whose next segment is a registry item name. Kept in step with
- * `COMPONENT_PATH_PREFIXES` in `next.config.mjs`.
+ * Path prefixes whose next segment is a registry item name.
  */
 export const COMPONENT_PATH_PREFIXES = [
   "/components",

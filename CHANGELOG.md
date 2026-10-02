@@ -8,6 +8,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Removed — the Next.js app: this repo is the registry and nothing else (2026-10-02)
+
+- **Breaking (for anyone running this repo's app locally):** removed `app/` (every page, the `/api/*` route handlers and `/mcp`), `next.config.mjs`, `mdx-components.tsx`, `postcss.config.mjs`, `public/`, and the `dev`, `start`, `prebuild` and `postbuild` (pagefind) scripts. Nothing served them: `mzizi.dev` is mzizi-site, `app.mzizi.dev` mzizi-console, `api.mzizi.dev` mzizi-api-gateway and `mcp.mzizi.dev` mzizi-mcp in agent-tools. No public URL changes.
+- **Removed the `mzizi-api/` Worker** generated from `app/api/**`, with `scripts/generate-api-routes.mjs`, `api:routes`, `api:routes:check`, `api:dev` and their tests. mzizi-api-gateway replaced it on 2026-09-29.
+- **Removed the app-only components, hooks and `lib/` modules** that nothing else imports (`components/landing`, `playground`, `patterns`, `mukoko`, `docs`, `mdx`, the portal's own `components/ui` overrides, `lib/nav`, `lib/metrics`, `lib/file-backed-pages`, `lib/db/client`, and the installed copies of `lib/a11y`, `lib/motion` and `lib/resilience`), and the dependencies only they used (MDX, rehype, shiki, three/react-three, `@modelcontextprotocol/sdk`, pagefind, PostCSS). `next` stays, as a devDependency, because registry items import it.
+- **The token source moved from `app/globals.css` to `styles/globals.css`.** `tokens:sync`, `tokens:verify`, `tokens:registry` and `lint:colors` read the new path. Install targets are unchanged: `mzizi-tokens-globals` still installs to `app/globals.css` in a consumer's project, and `mzizi-tokens` is still `cssVars`.
+- **Kept:** `registry.json` and `components/registry/**`, the token pipeline, `mzizi-rs/`, `plugin/`, doctrine, `openapi.yaml`, every generator and its `--check`, every `lib/` module mzizi-api-gateway bundles, and the `mzizi-ui` and `mzizi-plus` proxy Workers.
+- **`pnpm build` now runs every generator in write mode**, and CI's `Build` job fails if that changes a committed file. It used to be `next build`.
+
 ### Security — the old portal is no longer deployable, and `next/og` is gone (2026-10-02)
 
 - **Removed the `next/og` routes** (`app/opengraph-image.tsx`, `app/components/[name]/opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx`) and `lib/og/`. The component route put the URL slug into a Node `ImageResponse`, which is the exposure in GHSA-vcvr-r3jv-pc5j (critical RCE, `next` >= 16.2.0 < 16.3.6).
