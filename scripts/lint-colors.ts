@@ -22,7 +22,7 @@ import { join, relative } from "path"
 import { minerals, heritageColors } from "../lib/tokens/palette.generated"
 
 const ROOT = process.cwd()
-const SCAN_DIRS = ["app", "components", "lib", "hooks"]
+const SCAN_DIRS = ["components", "lib", "hooks"]
 
 /**
  * Paths whose raw palette hexes are correct, each with the reason it is correct.
@@ -38,7 +38,7 @@ const ALLOW: { prefix: string; why: string }[] = [
     why: "The generated palette itself — the vocabulary this lint is checked against.",
   },
   {
-    prefix: "app/globals.css",
+    prefix: "styles/globals.css",
     why: "The canonical `:root` / `.dark` declarations. N1's web emitter output.",
   },
   {
@@ -59,14 +59,6 @@ const ALLOW: { prefix: string; why: string }[] = [
       "scripts/sync-tokens.ts writes mzizi-tokens-{react-native,swift,kotlin,arkts,python,rust} " +
       "from the Supabase store and `pnpm tokens:verify` is their drift gate — so the hexes here " +
       "are already checked, by a stricter check than this one.",
-  },
-  {
-    prefix: "app/manifest.ts",
-    why:
-      "A web app manifest is JSON served to the browser. It cannot resolve a CSS custom " +
-      "property, so `theme_color` / `background_color` have nowhere to reference a token " +
-      "from — the same reason `next/og` routes are exempt (§7.4). The file already says so " +
-      "in its docblock; this is the lint agreeing with it.",
   },
   /**
    * `color-picker` and `caption-editor` present colours for a user to CHOOSE.
@@ -119,7 +111,7 @@ const ALLOW: { prefix: string; why: string }[] = [
  *
  *     --color-terracotta: #a0522d; \/* Community *\/
  *
- * That is the same content as `app/globals.css`, which is on the allow-list
+ * That is the same content as `styles/globals.css`, which is on the allow-list
  * above, arriving by a different route — so the linter reported nine
  * violations for documentation doing exactly what the rule wants. `pnpm
  * lint:colors` has been red on `main` ever since, and nothing noticed because

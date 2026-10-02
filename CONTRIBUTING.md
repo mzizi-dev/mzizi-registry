@@ -22,13 +22,12 @@ cd mzizi
 pnpm install
 ```
 
-The repo is a **pnpm workspace** — one `pnpm install` at the root installs everything. Today the workspace contains a single project: the Next.js portal app at the root. The published Mzizi tooling packages (the CLI, the `mzizi-skills` bundle, the standalone MCP worker, and the SDK) live in **`mzizi-dev/agent-tools` (private)**, not here — see [CLAUDE.md §2](CLAUDE.md) for the split.
+The repo is a **pnpm workspace** — one `pnpm install` at the root installs everything. Today the workspace contains a single project: the registry at the root. There is no app here — the Next.js portal was removed; `mzizi.dev` is `mzizi-dev/mzizi-site` and `api.mzizi.dev` is `mzizi-dev/mzizi-api-gateway`. The published Mzizi tooling packages (the CLI, the `mzizi-skills` bundle, the standalone MCP worker, and the SDK) live in **`mzizi-dev/agent-tools` (private)**, not here — see [CLAUDE.md §2](CLAUDE.md) for the split.
 
 Useful root commands:
 
 ```bash
-pnpm dev             # Next.js dev server
-pnpm typecheck       # typecheck the portal app
+pnpm typecheck       # typecheck the registry sources, scripts and Workers
 pnpm test            # run the Vitest suite
 pnpm registry:normalize # canonicalise registry.json (it is authored, not generated)
 pnpm registry:validate  # offline gate — every item resolves on disk and installs
@@ -38,19 +37,11 @@ Skills are authored in `mzizi-dev/agent-tools` (`mzizi-skills/skills/<name>/SKIL
 
 ### 3. No database to set up
 
-The registry holds no database and needs no credentials. `registry.json` plus the files on disk (`components/registry/`, `content/doctrine/`, `content/changelog/releases.json`, `lib/tokens/`) are the whole data layer, so a fresh clone serves every page and API route the deployed Worker does. `.env.example` lists the one optional override (`PORT`).
+The registry holds no database and needs no credentials. `registry.json` plus the files on disk (`components/registry/`, `content/doctrine/`, `content/changelog/releases.json`, `lib/tokens/`) are the whole data layer, so a fresh clone has everything `mzizi-api-gateway` bundles from it.
 
 Machine-written data — component version history, usage telemetry, the fundi and observability logs — lives in Supabase and belongs to the Mzizi console (`mzizi-dev/mzizi-console`), the only thing in the estate that talks to Supabase. Nothing in this repo reads or writes it.
 
-### 4. Start the development server
-
-```bash
-pnpm dev
-```
-
-The portal runs at [http://localhost:11736](http://localhost:11736).
-
-### 5. Create a branch
+### 4. Create a branch
 
 ```bash
 git checkout -b feature/your-feature
@@ -231,27 +222,15 @@ Blocks are complete page compositions (dashboards, login pages, settings panels,
 
 ---
 
-## Adding a Portal Page
+## Pages and documentation
 
-The portal hosts the **functional** surfaces only — the component gallery
-(`/components`), the DNA-helix architecture explorer (`/architecture`), and
-observability (`/observability`). Each is a standard Next.js App Router
-`page.tsx`.
+This repo has no pages. The functional surfaces that used to be Next.js routes here
+(the component gallery, the architecture explorer, observability) left with the app;
+`mzizi.dev` is built from [`mzizi-dev/mzizi-site`](https://github.com/mzizi-dev/mzizi-site).
 
-Long-form documentation (installation, CLI, theming, contributing, brand,
-foundations, patterns, registry internals) lives in the Mzizi docs site at
-<https://docs.mzizi.dev>, built from
-[`mzizi-dev/mzizi-docs`](https://github.com/mzizi-dev/mzizi-docs) — not in this
-repo. To edit a guide, contribute to that repo instead. Doctrine
+Long-form documentation lives in the Mzizi docs site at <https://docs.mzizi.dev>, built
+from [`mzizi-dev/mzizi-docs`](https://github.com/mzizi-dev/mzizi-docs). Doctrine
 (`content/doctrine/`) stays here.
-
-To add a new functional page to the portal:
-
-1. **Create the page** at `app/<section>/page.tsx` as a server component.
-2. **Export `metadata`** (title + description) for SEO.
-3. **Add the route to `lib/nav.ts`** so it appears in the dashboard sidebar
-   and header. Nav is curated (not auto-generated) so the order and grouping
-   are intentional.
 
 ---
 
@@ -267,7 +246,6 @@ pnpm test:watch       # Watch mode for development
 ### What to Test
 
 - **New components** — rendering, variant application, accessibility attributes
-- **New API routes** — response format, status codes, headers
 - **Brand data changes** — integrity checks (minerals match globals.css hex values)
 - **Architecture data changes** — data integrity validation
 - **Registry changes** — all referenced files exist on disk, schema validation
@@ -276,10 +254,10 @@ pnpm test:watch       # Watch mode for development
 
 ```
 __tests__/
-├── api/              API route tests
-├── brand/            Brand data integrity tests
-├── architecture/     Architecture data integrity tests
-└── components/       Component rendering tests
+├── db/               The no-database guarantee
+├── lib/              The readers mzizi-api-gateway bundles, and the generators' outputs
+├── registry/         Registry item checks
+└── tokens-*.test.ts  Token pipeline integrity
 ```
 
 ---
@@ -307,7 +285,7 @@ pnpm test            # vitest single run
 pnpm audit:check     # pnpm audit --audit-level=moderate
 pnpm registry:verify # CI fails if registry.json is not canonical
 pnpm tokens:verify   # CI fails if the generated tokens drift from lib/tokens/palette.source.ts
-pnpm build           # next build (terminal gate)
+pnpm build           # run every generator in write mode (terminal gate; CI fails on any diff)
 ```
 
 If any step fails, `pnpm check` exits non-zero on the first failure. Fix forwards and re-run.

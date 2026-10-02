@@ -16,29 +16,25 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   {
     ignores: [
-      ".next/**",
-      // OpenNext build output, and wrangler's local state. Both are
-      // generated (and gitignored) — same reasoning as `.next/**` above.
-      "**/.open-next/**",
+      // wrangler's local state and `build:workers` output (gitignored).
       // Anchored with `**/` because a flat-config glob is relative to this
-      // file: a bare `.wrangler/**` matches only the repo root and misses
-      // `mzizi-api/.wrangler/`, which is where the API Worker's dev build lands.
+      // file: a bare `.wrangler/**` matches only the repo root and misses a
+      // Worker directory's own `.wrangler/`.
       "**/.wrangler/**",
       "node_modules/**",
       "packages/*/node_modules/**",
       "packages/*/dist/**",
       "mzizi-mcp/node_modules/**",
       "mzizi-mcp/dist/**",
-      "public/**",
       "scripts/**",
       "*.config.*",
       "vitest.setup.ts",
     ],
   },
   {
-    // The portal IS a Next app, and registry component source carries
-    // `eslint-disable @next/next/no-img-element` directives that are correct for
-    // consumers — a registry component must not hard-depend on `next/image`.
+    // Registry component source carries `eslint-disable @next/next/no-img-element`
+    // directives that are correct for consumers — a registry component must not
+    // hard-depend on `next/image`.
     // Without the plugin registered, ESLint errors on the directive itself
     // ("Definition for rule ... was not found") rather than honouring it.
     plugins: { "@next/next": next },

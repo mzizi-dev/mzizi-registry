@@ -49,7 +49,7 @@ Brief description of what this PR does and why.
 - [ ] `CLAUDE.md` updated if architecture/commands/conventions changed
 - [ ] `CHANGELOG.md` updated
 - [ ] `openapi.yaml` updated if API surface changed
-- [ ] Version bumped in `package.json`, `lib/mcp-server.ts`, and `components/landing/footer.tsx`, and a new entry added to `content/changelog/releases.json` (then `pnpm changelog:generate`), if releasing
+- [ ] Version bumped in `package.json`, and a new entry added to `content/changelog/releases.json` (then `pnpm changelog:generate`), if releasing
 
 ## Site/docs/skills impact
 

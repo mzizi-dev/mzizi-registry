@@ -5,7 +5,7 @@
  * THE SOURCE IS `lib/tokens/palette.source.ts`, IN THIS REPO. It is the only
  * place a colour is authored. This script reads it and writes:
  *   - lib/tokens/palette.generated.ts   (typed snapshot consumed by lib/tokens)
- *   - app/globals.css                   (the marked palette regions only)
+ *   - styles/globals.css                   (the marked palette regions only)
  *   - components/registry/n1-tokens/mzizi-tokens-<platform>.<ext>
  *       for swift, kotlin, arkts, react-native, python and rust
  *   - components/registry/n1-tokens/mzizi-tokens-typescript.ts
@@ -94,7 +94,7 @@ import { renderGlobalsCss } from "./render-globals-css"
 const CHECK = process.argv.includes("--check")
 
 const PALETTE_TS = join(process.cwd(), "lib/tokens/palette.generated.ts")
-const GLOBALS_CSS = join(process.cwd(), "app/globals.css")
+const GLOBALS_CSS = join(process.cwd(), "styles/globals.css")
 const N1 = join(process.cwd(), "components/registry/n1-tokens")
 const TOKENS_TS = join(N1, "mzizi-tokens-typescript.ts")
 
@@ -719,7 +719,7 @@ ${Object.entries(SCALE.fonts)
  * This is a REGION rather than a whole file because that emitter is not only a
  * colour table: it carries the semantic tier, the listing themes, the brand
  * overrides and the component tokens, none of which are in the palette. The
- * seventh target therefore works the way `app/globals.css` does — markers round
+ * seventh target therefore works the way `styles/globals.css` does — markers round
  * the generated block, everything else hand-written — instead of the way the
  * six platform files do.
  *
@@ -841,7 +841,7 @@ const PLATFORM_TARGETS: PlatformTarget[] = [
  * Replace the body between a pair of `tokens:generated:<region>` markers.
  *
  * Block-comment markers, so the same mechanism works in CSS and in TypeScript —
- * which is the point: `app/globals.css` and the palette region of
+ * which is the point: `styles/globals.css` and the palette region of
  * `mzizi-tokens-typescript.ts` are the same kind of file, a hand-written
  * document with a generated block inside it, and they should not have two
  * mechanisms. `label` and `indent` are all that differ.
@@ -850,7 +850,7 @@ function spliceRegion(
   text: string,
   region: string,
   body: string,
-  label = "app/globals.css",
+  label = "styles/globals.css",
   indent = "  "
 ): string {
   const start = `/* tokens:generated:${region}:start */`
@@ -944,7 +944,7 @@ async function main() {
     const drift: string[] = []
     const onDiskTokensTs = await readFile(TOKENS_TS, "utf8")
     if (norm(onDiskPalette) !== norm(paletteModule)) drift.push("lib/tokens/palette.generated.ts")
-    if (norm(onDiskCss) !== norm(css)) drift.push("app/globals.css")
+    if (norm(onDiskCss) !== norm(css)) drift.push("styles/globals.css")
     // The seventh emitter is now inside this loop's reach. It used to be
     // outside it — hand-maintained, so invisible to a gate that only checks the
     // files it writes — and that is precisely how it came to carry ten families
