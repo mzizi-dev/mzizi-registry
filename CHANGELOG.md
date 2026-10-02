@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Security — the old portal is no longer deployable, and `next/og` is gone (2026-10-02)
+
+- **Removed the `next/og` routes** (`app/opengraph-image.tsx`, `app/components/[name]/opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx`) and `lib/og/`. The component route put the URL slug into a Node `ImageResponse`, which is the exposure in GHSA-vcvr-r3jv-pc5j (critical RCE, `next` >= 16.2.0 < 16.3.6).
+- **`next` is 16.3.8** (patched), with `@next/eslint-plugin-next` and `@next/mdx` to match. It stays a dependency because registry items such as `mzizi-sidebar`, `mzizi-bottom-nav` and `mzizi-seo` import Next.js for the apps that install them.
+- **Removed the OpenNext deployment** (`wrangler.jsonc`, `open-next.config.ts`, `@opennextjs/cloudflare`, the `cf:*` scripts). The live surfaces moved on: `mzizi.dev` is mzizi-site, `app.mzizi.dev` mzizi-console, `api.mzizi.dev` mzizi-api-gateway and `mcp.mzizi.dev` mzizi-mcp. The orphaned `mzizi-registry` Worker is being deleted. Removing the rest of the Next.js app follows separately.
+
 ### Changed — agent skills 0.8.5: the language at `62a0f32` (the tracker, the service slice, `mz build`, RFC-0012) (2026-09-30, #387)
 
 - **The lockfile resolves `@nyuchi/mzizi-skills` 0.8.5** (the range stays `^0.8.1`, which allows it). `lib/skills.generated.ts` and `plugin/skills/` are regenerated from the package, so `/v1/skills`, `/v1/skills/{name}` and the public plugin now serve 0.8.5 (agent-tools#166). The skills now follow language main `62a0f32`.
