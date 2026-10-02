@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — lint runs once, from the org-required workflow (2026-10-03)
+
+- **Removed `.github/workflows/lint.yml`.** The `mzizi-dev` org ruleset now runs the shared lint on every pull request through `mzizi-dev/.github`'s `org-lint.yml`, publishing the same five `lint / …` checks, so the repo's own caller only ran lint a second time.
+
 ### Changed — stop tracking `.DS_Store` (2026-10-02, #388)
 
 - **The repo root's macOS `.DS_Store` is no longer tracked**, and `.gitignore` now ignores it. Local copies stay on disk.
