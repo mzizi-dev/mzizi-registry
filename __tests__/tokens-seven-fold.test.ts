@@ -21,7 +21,7 @@ import { join } from "node:path"
 import { experimentalColors, heritageColors, minerals } from "@/lib/tokens/palette.generated"
 import { listingThemes } from "@/lib/tokens"
 
-const CSS = readFileSync(join(process.cwd(), "app/globals.css"), "utf8")
+const CSS = readFileSync(join(process.cwd(), "styles/globals.css"), "utf8")
 
 /** Custom properties declared with a literal value, by prefix. */
 function declared(prefix: string): string[] {

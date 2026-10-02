@@ -8,14 +8,12 @@ import {
   renamedComponentPath,
 } from "@/lib/component-renames"
 import { readComponent } from "@/lib/registry"
-import { handle } from "@/mzizi-api/src/router"
-import nextConfig from "@/next.config.mjs"
 
 /**
  * The `nyuchi-*` → `mzizi-*` rename (2026-09-27) must not break a single
- * published link. These tests pin the three surfaces that keep old names
- * resolving: the Next redirects, the API Worker's 308, and the name lookup the
- * MCP tools go through.
+ * published link. These tests pin the map and the name lookup the MCP tools go
+ * through. The HTTP 308s are served by mzizi-dev/mzizi-api-gateway
+ * (src/redirects.ts), which reads this same map, and are tested there.
  */
 
 const itemNames = new Set((manifest as { items: { name: string }[] }).items.map((i) => i.name))
@@ -67,42 +65,5 @@ describe("old names still resolve", () => {
     expect(componentNameHistory("nyuchi-footer")).toEqual(["mzizi-footer", "nyuchi-footer"])
     expect(componentNameHistory("button")).toEqual(["button"])
     expect(renamedComponent("hasOwnProperty")).toBeUndefined()
-  })
-
-  it("the API Worker 308s an old item URL to the new one, keeping shape and query", async () => {
-    for (const [from, to] of [
-      ["https://api.mzizi.dev/v1/ui/nyuchi-footer", "https://api.mzizi.dev/v1/ui/mzizi-footer"],
-      [
-        "https://api.mzizi.dev/api/v1/ui/nyuchi-footer/docs?x=1",
-        "https://api.mzizi.dev/api/v1/ui/mzizi-footer/docs?x=1",
-      ],
-    ] as const) {
-      const res = await handle(new Request(from))
-      expect(res.status).toBe(308)
-      expect(res.headers.get("location")).toBe(to)
-    }
-  })
-
-  it("next.config.mjs redirects every component URL prefix permanently", async () => {
-    const redirects = await nextConfig.redirects!()
-    const renames = redirects.filter((r) => r.source.includes("/nyuchi-:slug("))
-    expect(renames.map((r) => r.source.split("/nyuchi-")[0]).sort()).toEqual(
-      [
-        "/api/chaos",
-        "/api/health",
-        "/api/v1/rs",
-        "/api/v1/ui",
-        "/changelog",
-        "/components",
-        "/playground",
-        "/source",
-        "/v1/rs",
-        "/v1/ui",
-      ].sort()
-    )
-    for (const r of renames) {
-      expect(r.permanent).toBe(true)
-      expect(r.destination).toMatch(/\/mzizi-:slug\/:rest\*$/)
-    }
   })
 })
