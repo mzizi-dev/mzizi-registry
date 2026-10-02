@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — `vite-plus / check` gates on ESLint + tsc for now; the old Vite+ workflow moved (2026-10-03, #395)
+
+- **`ci:check` = `pnpm lint && pnpm typecheck`.** The org-required `vite-plus / check` job runs it in place of `vp check` until this repo's TypeScript has been through the formatter. `.github/workflows/reusable-ci-vite-plus.yml` is now a pointer to `nyuchi/.github`'s `reusable-vite-plus.yml`.
+
 ### Changed — lint runs once, from the org-required workflow (2026-10-03)
 
 - **Removed `.github/workflows/lint.yml`.** The `mzizi-dev` org ruleset now runs the shared lint on every pull request through `mzizi-dev/.github`'s `org-lint.yml`, publishing the same five `lint / …` checks, so the repo's own caller only ran lint a second time.

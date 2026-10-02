@@ -13,6 +13,7 @@
     "changelog:generate": "node scripts/generate-changelog.mjs",
     "changelog:generate:check": "node scripts/generate-changelog.mjs --check",
     "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm changelog:generate:check && pnpm node-map:generate:check && pnpm rust:generate:check && pnpm build",
+    "ci:check": "pnpm lint && pnpm typecheck",
     "doctrine:generate": "node scripts/generate-doctrine.mjs",
     "doctrine:generate:check": "node scripts/generate-doctrine.mjs --check",
     "format": "prettier --write --ignore-path .prettierignore \"**/*.{md,mdx,json,jsonc}\"",
