@@ -66,21 +66,15 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: "Mzizi",
     description: SITE_DESCRIPTION,
-    // No explicit `images` here on purpose: the `app/opengraph-image.tsx` file
-    // convention supplies the og:image with an absolute, cache-busted URL. An
-    // explicit array would *override* it — and the previous "/og-image.png"
-    // pointed at a file that never existed, so every social/messaging scraper
-    // got a 404 and rendered no preview. Add a route-level opengraph-image.tsx
-    // to override per-page instead of hardcoding here.
+    // No og:image: the next/og routes were removed (GHSA-vcvr-r3jv-pc5j) and
+    // this app is no longer deployed; mzizi.dev is served by mzizi-site.
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     site: "@nyuchiafrica",
     creator: "@nyuchiafrica",
     title: "Mzizi",
     description: SITE_DESCRIPTION,
-    // Likewise no `images`: with no `app/twitter-image.tsx`, the Twitter card
-    // falls back to the generated opengraph-image automatically.
   },
 }
 
