@@ -12,34 +12,41 @@ nobody uses rots without anyone noticing until the day it is needed.
 
 | Worker       | Serves                                   | Config                      | Owner |
 | ------------ | ---------------------------------------- | --------------------------- | ----- |
-| `mzizi`      | `mzizi.dev` — the framework site         | `wrangler.jsonc`            | Mzizi |
-| `mzizi-api`  | `api.mzizi.dev` — the public API         | `mzizi-api/wrangler.jsonc`  | Mzizi |
 | `mzizi-ui`   | `ui.mzizi.dev` — the viewable primitives | `mzizi-ui/wrangler.jsonc`   | Mzizi |
 | `mzizi-plus` | `plus.mzizi.dev` — the toolchain         | `mzizi-plus/wrangler.jsonc` | Mzizi |
 
 `mzizi-ui` and `mzizi-plus` don't render anything of their own — they proxy to
 `mzizi.dev` per-request and gate which pages/items are allowed through by node
-(see `lib/domain-proxy.ts`). They hold no state and reach no database — and
-neither does any other Worker here.
+(see `lib/domain-proxy.ts`). They hold no state and reach no database.
+
+They are the only Workers deployed from this repo. The `mzizi` Worker (the
+Next.js portal, built with OpenNext) and the `mzizi-api` Worker (generated from
+the portal's `app/api/` routes) were removed with the app itself:
+
+| Host            | Served by now                                               |
+| --------------- | ----------------------------------------------------------- |
+| `mzizi.dev`     | `mzizi-dev/mzizi-site`                                      |
+| `app.mzizi.dev` | `mzizi-dev/mzizi-console`                                   |
+| `api.mzizi.dev` | `mzizi-dev/mzizi-api-gateway`                               |
+| `mcp.mzizi.dev` | the `mzizi-mcp` Worker in `mzizi-dev/agent-tools` (private) |
+
+If the Cloudflare dashboard still has a Workers Build connected to this repo
+for the `mzizi` or `mzizi-api` Worker, disconnect it: it has nothing to build.
 
 ## Connecting a Worker in the dashboard
 
 Workers &rarr; the Worker &rarr; Settings &rarr; Build. Point it at this repo and
 set:
 
-| Worker       | Build command                                                             | Deploy command                                           |
-| ------------ | ------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `mzizi`      | `pnpm install --frozen-lockfile && pnpm exec opennextjs-cloudflare build` | `npx wrangler deploy`                                    |
-| `mzizi-api`  | `pnpm install --frozen-lockfile`                                          | `npx wrangler deploy --config mzizi-api/wrangler.jsonc`  |
-| `mzizi-ui`   | `pnpm install --frozen-lockfile`                                          | `npx wrangler deploy --config mzizi-ui/wrangler.jsonc`   |
-| `mzizi-plus` | `pnpm install --frozen-lockfile`                                          | `npx wrangler deploy --config mzizi-plus/wrangler.jsonc` |
+| Worker       | Build command                    | Deploy command                                           |
+| ------------ | -------------------------------- | -------------------------------------------------------- |
+| `mzizi-ui`   | `pnpm install --frozen-lockfile` | `npx wrangler deploy --config mzizi-ui/wrangler.jsonc`   |
+| `mzizi-plus` | `pnpm install --frozen-lockfile` | `npx wrangler deploy --config mzizi-plus/wrangler.jsonc` |
 
-None of `mzizi-api`, `mzizi-ui`, or `mzizi-plus` has a build step of its own —
-wrangler bundles each from source. The install is still needed: `mzizi-api`
-imports the app's own route handlers, and `mzizi-ui`/`mzizi-plus` import
-`lib/domain-proxy.ts` and its generated node map, so all three need the real
-dependency tree present even though none of them compiles anything ahead of
-time.
+Neither `mzizi-ui` nor `mzizi-plus` has a build step of its own — wrangler
+bundles each from source. The install is still needed: both import
+`lib/domain-proxy.ts` and its generated node map, so they need the real
+dependency tree present even though neither compiles anything ahead of time.
 
 ## No secrets, no build variables
 
@@ -48,23 +55,15 @@ database: `registry.json` and the files on disk are the whole data layer, and
 the Mzizi console (`mzizi-dev/mzizi-console`) is the only thing in the estate
 that talks to Supabase.
 
-This section used to explain that the portal needed the Supabase values as
-build variables and `mzizi-api` needed them as Worker secrets. Neither was ever
-set on the registry Worker, which is why the routes that were gated on them
-answered `503 Database not configured`. The file-backed ones (search, component
-docs, single AI instruction sets) now serve their files; version history answers
-`503` naming the console as its owner. If a `NEXT_PUBLIC_SUPABASE_*` variable or
-`SUPABASE_SERVICE_ROLE_KEY` secret is still configured on any of these Workers
-in the Cloudflare dashboard, it is unused and can be deleted.
+If a `NEXT_PUBLIC_SUPABASE_*` variable or `SUPABASE_SERVICE_ROLE_KEY` secret is
+still configured on either Worker in the Cloudflare dashboard, it is unused and
+can be deleted.
 
 ## Verifying a deploy
 
 The dashboard reports the build, not the result. Check what is actually served:
 
 ```bash
-curl -s -o /dev/null -w '%{http_code}\n' https://mzizi.dev/
-curl -s -o /dev/null -w '%{http_code}\n' https://api.mzizi.dev/v1/skills
-curl -s -o /dev/null -w '%{http_code}\n' https://api.mzizi.dev/v1/brand
 curl -s -o /dev/null -w '%{http_code}\n' https://ui.mzizi.dev/components/button
 curl -s -o /dev/null -w '%{http_code}\n' https://plus.mzizi.dev/components/accessibility-audit
 curl -s -o /dev/null -w '%{http_code}\n' -L https://ui.mzizi.dev/components/accessibility-audit

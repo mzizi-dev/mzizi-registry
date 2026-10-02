@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
- * Inline `openapi.yaml` into a module `GET /api/openapi` can import.
+ * Inline `openapi.yaml` into a module the API can import. `mzizi-api-gateway`
+ * bundles it at its registry pin and serves it at `GET /openapi`; the Next.js
+ * route described below was removed with the app.
  *
  * The route used to do this:
  *

@@ -85,7 +85,7 @@ SELECT * FROM (VALUES
     'Design tokens',
     'Y-axis',
     'L1 — the only layer allowed to define CSS values',
-    'Design decisions expressed as CSS custom properties in ``app/globals.css``. Every other layer reads these via ``var()`` — no layer above ever declares its own colour, radius, spacing, or motion duration.',
+    'Design decisions expressed as CSS custom properties in ``styles/globals.css``. Every other layer reads these via ``var()`` — no layer above ever declares its own colour, radius, spacing, or motion duration.',
     'Design decisions are data, not code.',
     'Design system maintainer',
     ARRAY[

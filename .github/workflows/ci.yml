@@ -75,9 +75,9 @@ jobs:
 
       # N1's tokens are the one thing 431 of 573 components depend on, and they reach a
       # consumer only as `cssVars` on the mzizi-tokens item. That is generated from
-      # app/globals.css, so this asserts the two have not drifted — a stale copy would
+      # styles/globals.css, so this asserts the two have not drifted — a stale copy would
       # ship the wrong palette while every other gate stayed green.
-      - name: Verify the theme tokens match app/globals.css
+      - name: Verify the theme tokens match styles/globals.css
         run: pnpm tokens:registry:check
 
       # And that globals.css — plus all seven emitters — match the palette they are
@@ -127,10 +127,9 @@ jobs:
       #
       # These were gated only in the deploy workflow, which is too late: a
       # stale artifact could merge and sit on `main` until someone deployed.
-      # They cannot be checked in the `Build` job either — `prebuild` runs the
-      # generators, so `pnpm build` silently regenerates what it was supposed
-      # to be verifying, and passes. Here is the only place the committed file
-      # is compared against its source before anything overwrites it.
+      # Here each committed file is compared against its source before anything
+      # overwrites it; the `Build` job then regenerates them all and asserts
+      # the tree is unchanged.
       #
       # `Build` needs this job, so a failure here blocks the merge even though
       # `Registry Snapshot` is not itself in the required set (see #267).
@@ -143,7 +142,6 @@ jobs:
           pnpm registry:index:check
           pnpm registry:source:check
           pnpm openapi:generate:check
-          pnpm api:routes:check
           pnpm node-map:generate:check
           pnpm rust:generate:check
 
@@ -256,10 +254,15 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     # Build is the terminal gate — runs only when every other CI job
-    # has finished successfully. Order in `needs:` is: structural
-    # (lint, typecheck) → behavioural (test) → integrity (audit,
-    # registry). Adding a job above? Add it here too so build still
-    # gates everything.
+    # has finished successfully. There is no app to build: the Next.js site
+    # and API left this repo (mzizi.dev is mzizi-dev/mzizi-site, the API is
+    # mzizi-dev/mzizi-api-gateway). What this repo builds is the registry's
+    # derived artifacts, so `pnpm build` runs every generator in write mode
+    # and the job fails if that changes a single committed file.
+    #
+    # Order in `needs:` is: structural (lint, typecheck) → behavioural
+    # (test) → integrity (audit, registry, rust). Adding a job above? Add it
+    # here too so build still gates everything.
     needs: [audit, lint, typecheck, test, registry, rust]
     permissions:
       contents: read
@@ -272,3 +275,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - name: The committed artifacts are exactly what the build produces
+        run: |
+          git status --porcelain
+          git diff --exit-code
+          test -z "$(git status --porcelain)"
