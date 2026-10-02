@@ -1,0 +1,12 @@
+# Throwaway probe for nyuchi/.github#70. Do not merge.
+name: Vite+ probe
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  vite-plus:
+    uses: nyuchi/.github/.github/workflows/reusable-vite-plus.yml@claude/vite-plus-reusable
