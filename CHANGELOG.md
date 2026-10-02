@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — stop tracking `.DS_Store` (2026-10-02, #388)
+
+- **The repo root's macOS `.DS_Store` is no longer tracked**, and `.gitignore` now ignores it. Local copies stay on disk.
+
 ### Removed — the Next.js app: this repo is the registry and nothing else (2026-10-02)
 
 - **Breaking (for anyone running this repo's app locally):** removed `app/` (every page, the `/api/*` route handlers and `/mcp`), `next.config.mjs`, `mdx-components.tsx`, `postcss.config.mjs`, `public/`, and the `dev`, `start`, `prebuild` and `postbuild` (pagefind) scripts. Nothing served them: `mzizi.dev` is mzizi-site, `app.mzizi.dev` mzizi-console, `api.mzizi.dev` mzizi-api-gateway and `mcp.mzizi.dev` mzizi-mcp in agent-tools. No public URL changes.
