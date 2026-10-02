@@ -52,3 +52,6 @@ CLAUDE.md
 .wrangler/
 .env.production.local
 .dev.vars
+
+# macOS Finder metadata
+.DS_Store
