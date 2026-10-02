@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Security — security reports go to `security@nyuchi.com` (2026-10-03, #396)
+
+- **`SECURITY.md` names `security@nyuchi.com` as the email fallback** behind GitHub private advisories, in place of `security@bundu.org` (owner decision, 2026-10-03: one security contact for every repository). GitHub advisories stay the first channel.
+
 ### Changed — `vite-plus / check` gates on ESLint + tsc for now; the old Vite+ workflow moved (2026-10-03, #395)
 
 - **`ci:check` = `pnpm lint && pnpm typecheck`.** The org-required `vite-plus / check` job runs it in place of `vp check` until this repo's TypeScript has been through the formatter. `.github/workflows/reusable-ci-vite-plus.yml` is now a pointer to `nyuchi/.github`'s `reusable-vite-plus.yml`.
