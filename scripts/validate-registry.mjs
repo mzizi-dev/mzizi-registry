@@ -217,7 +217,7 @@ function main() {
      *
      * `mzizi-tokens` is the case: N1's covenant is that it is the only node allowed to
      * define CSS values, and it discharges that by shipping the 214 custom properties
-     * themselves, generated from `app/globals.css`. It has no source file on disk and
+     * themselves, generated from `styles/globals.css`. It has no source file on disk and
      * should not: a `.ts` file is React-only, and the whole point of moving the tokens
      * into `cssVars` is that the shadcn CLI merges them into ANY consuming project.
      *

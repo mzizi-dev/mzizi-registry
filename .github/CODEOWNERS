@@ -10,17 +10,13 @@
 *                               @nyuchi/core
 
 # Design system — Seven African Minerals tokens, globals.css
-app/globals.css                 @nyuchi/core
+styles/globals.css              @nyuchi/core
 
 # Data access layer — file-backed readers + payload types. The registry
 # holds no database; the name `lib/db` is historical.
 lib/db/                         @nyuchi/core
 
-# MCP server — every AI assistant in the ecosystem reads through here
-lib/mcp-server.ts               @nyuchi/core
-
 # Security-sensitive files
-lib/metrics.ts                  @nyuchi/core
 SECURITY.md                     @nyuchi/core
 
 # CI/CD and release infrastructure

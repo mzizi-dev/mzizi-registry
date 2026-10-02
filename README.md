@@ -9,11 +9,10 @@
 
 **Version:** 1.0.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Docs:** [docs.mzizi.dev](https://docs.mzizi.dev)
 
-> **The `mzizi.dev` apex no longer serves this repo.** It's now served by the `mzizi-site`
-> Worker, which ships three pages (`/`, `/ecosystem`, `/language`). `/components`, `/tokens`,
-> `/brand`, `/r/`, `/observability`, `/api/v1` and `/mcp` all return 404 on the apex — the
-> API and MCP surfaces are unaffected at `api.mzizi.dev` and `mcp.mzizi.dev`. Porting the
-> portal routes is [mzizi-site#5](https://github.com/mzizi-dev/mzizi-site/pull/5).
+> **This repo serves no website and no API.** It is the registry's source: `registry.json`, the
+> component files, the token pipeline, the Rust crates and the generators that check them. The
+> public hosts are served by other repos, which read this one — see
+> [Where each host is served from](#where-each-host-is-served-from).
 
 ---
 
@@ -32,7 +31,8 @@ npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 
 **575 components** across 8 architectural nodes and 4 rungs, served from disk —
 `registry.json` and the component files in this repo are the source of truth, not a
-database. **21 colour families.** **One MCP server** any AI client can install against.
+database. **21 colour families.** **One MCP server** (served from `mzizi-dev/agent-tools`) any AI
+client can install against.
 Nothing here is a Nyuchi product: it's a Mzizi-governed standard the whole bundu ecosystem
 (Mukoko's consumer apps, Nyuchi's enterprise products, sister brands) installs from the same
 place.
@@ -52,18 +52,21 @@ touch-target floor.
 
 ---
 
-## Architecture: four domains, one registry
+## Where each host is served from
 
-This repo doesn't just serve one surface — it's the source for four independently deployed
-Cloudflare Workers, each a thin proxy over a different slice of the same underlying
-registry:
+The Next.js app that used to live here (the `mzizi.dev` portal, the `/api/v1` routes and the
+`mzizi-api` Worker generated from them) has been removed. Every public host is now served by
+its own repo:
 
-| Domain                                         | What it serves                                                                                                       |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| [`ui.mzizi.dev`](https://ui.mzizi.dev)         | The viewable strand — tokens, primitives, brand, pages, shell                                                        |
-| [`api.mzizi.dev`](https://api.mzizi.dev/v1/ui) | The 36 JSON endpoints, imported unmodified from the same route handlers the Next app serves — not a reimplementation |
-| `plus.mzizi.dev`                               | The toolchain: safety, resilience, assurance, fundi, documentation, discovery                                        |
-| [`app.mzizi.dev`](https://app.mzizi.dev)       | The console (`mzizi-dev/mzizi-console`, a separate repo)                                                             |
+| Host                                           | Served by                                                                                                                                                                         |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`mzizi.dev`](https://mzizi.dev)               | [`mzizi-dev/mzizi-site`](https://github.com/mzizi-dev/mzizi-site) (Astro)                                                                                                         |
+| [`app.mzizi.dev`](https://app.mzizi.dev)       | [`mzizi-dev/mzizi-console`](https://github.com/mzizi-dev/mzizi-console) (Astro)                                                                                                   |
+| [`api.mzizi.dev`](https://api.mzizi.dev/v1/ui) | [`mzizi-dev/mzizi-api-gateway`](https://github.com/mzizi-dev/mzizi-api-gateway) (Cloudflare Worker), built from this repo's `registry.json` and `lib/` readers at a pinned commit |
+| `mcp.mzizi.dev`                                | The `mzizi-mcp` Worker in `mzizi-dev/agent-tools` (private)                                                                                                                       |
+| [`docs.mzizi.dev`](https://docs.mzizi.dev)     | [`mzizi-dev/mzizi-docs`](https://github.com/mzizi-dev/mzizi-docs) (Mintlify)                                                                                                      |
+| [`ui.mzizi.dev`](https://ui.mzizi.dev)         | `mzizi-ui/` in this repo — a domain-proxy Worker in front of `mzizi.dev` for the viewable strand (tokens, primitives, brand, pages, shell)                                        |
+| `plus.mzizi.dev`                               | `mzizi-plus/` in this repo — the same proxy for the toolchain nodes (safety, resilience, assurance, fundi, documentation, discovery)                                              |
 
 `mzizi-rs/` is the Rust half of the bet above: a Cargo workspace whose `mzizi-ui` crate
 (Dioxus primitives) and `mzizi-tokens` crate (generated from the same palette source as the
@@ -127,14 +130,16 @@ radius scale value.
 
 ## API
 
-Resource paths serve under both `/v1/` (canonical) and `/api/v1/`. Full spec in
-[`openapi.yaml`](openapi.yaml), also served at `GET /api/openapi`.
+`api.mzizi.dev` is served by
+[`mzizi-dev/mzizi-api-gateway`](https://github.com/mzizi-dev/mzizi-api-gateway), not by
+this repo. The gateway bundles this repo's files — `registry.json`, the component sources
+and the `lib/` readers (`lib/registry`, `lib/db`, `lib/skills`, `lib/tokens`, …) — at a
+pinned commit. The spec stays here in [`openapi.yaml`](openapi.yaml) (inlined into
+`lib/openapi.generated.ts`, which the gateway serves at `GET /openapi`).
 
-The registry holds no database — every route reads files that ship with the app, and
-`openapi.yaml` describes each route as its handler answers. `api.mzizi.dev` itself is
-served by [`mzizi-dev/mzizi-api-gateway`](https://github.com/mzizi-dev/mzizi-api-gateway),
-which ports these handlers and bundles these files at a pinned commit. The one route marked
-**503** is data this API does not hold.
+Resource paths serve under both `/v1/` (canonical) and `/api/v1/`. The registry holds no
+database: every route answers from those files. The one route marked **503** is data this
+API does not hold.
 
 | Endpoint                                                               | Method   | Description                                                                                   |
 | ---------------------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------- |
@@ -165,8 +170,8 @@ which ports these handlers and bundles these files at a pinned commit. The one r
 
 ## Open Data & Observability
 
-Usage metrics are public by design. The `/observability` dashboard is currently offline
-with the rest of the apex portal (see the notice above). Raw data:
+Usage metrics are public by design. The `/observability` dashboard left with the Next.js
+portal. Raw data:
 `GET https://api.mzizi.dev/v1/stats` — licensed CC BY 4.0.
 
 ---
@@ -175,7 +180,6 @@ with the rest of the apex portal (see the notice above). Raw data:
 
 | Layer                | Technology                                                              | Version        |
 | -------------------- | ----------------------------------------------------------------------- | -------------- |
-| Framework            | Next.js (App Router)                                                    | 16.2.4         |
 | Language             | TypeScript (strict mode)                                                | 6.0.3          |
 | Styling              | Tailwind CSS 4 + CSS custom properties                                  | 4.2.4          |
 | Component Primitives | Radix UI + Base UI                                                      | radix-ui 1.4.3 |
@@ -183,10 +187,9 @@ with the rest of the apex portal (see the notice above). Raw data:
 | Charts               | Recharts                                                                | 3.8.1          |
 | Forms                | react-hook-form + zod                                                   | 7.73.1 / 4.3.6 |
 | Registry storage     | `registry.json` + component files on disk — no database                 | —              |
-| MCP SDK              | @modelcontextprotocol/sdk                                               | 1.29.0         |
 | Rust                 | `mzizi-rs/` workspace — `mzizi-ui` (Dioxus), `mzizi-tokens` (generated) | —              |
-| Testing              | Vitest + Testing Library, `cargo test` for the Rust half                | 4.1.5          |
-| CI/CD                | GitHub Actions; deploys to Vercel — moving to Cloudflare Workers        | —              |
+| Testing              | Vitest, `cargo test` for the Rust half                                  | 5.0.2          |
+| CI/CD                | GitHub Actions — this repo deploys no app                               | —              |
 
 See [`AGENTS.md`](./AGENTS.md) for the full command reference, the CI gate list, and what an
 agent working in this repo needs to know before pushing.
@@ -197,7 +200,7 @@ agent working in this repo needs to know before pushing.
 
 | Repository                                                                              | URL                                                | Role                                                                                                        |
 | --------------------------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **[mzizi-dev/mzizi-registry](https://github.com/mzizi-dev/mzizi-registry)** (this repo) | [mzizi.dev](https://mzizi.dev)                     | Component registry, brand, DNA-helix architecture, document-route MCP                                       |
+| **[mzizi-dev/mzizi-registry](https://github.com/mzizi-dev/mzizi-registry)** (this repo) | —                                                  | Component registry source, tokens, Rust crates, DNA-helix doctrine                                          |
 | **[mzizi-dev/mzizi](https://github.com/mzizi-dev/mzizi)**                               | —                                                  | Mzizi **the language** — the Rust compiler research project. Not the registry                               |
 | **[mzizi-dev/mzizi-console](https://github.com/mzizi-dev/mzizi-console)**               | [app.mzizi.dev](https://app.mzizi.dev)             | The Mzizi console                                                                                           |
 | **[mzizi-dev/mzizi-api-gateway](https://github.com/mzizi-dev/mzizi-api-gateway)**       | [api.mzizi.dev](https://api.mzizi.dev/v1/health)   | The registry API as a pure-Rust Cloudflare Worker                                                           |

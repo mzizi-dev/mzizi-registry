@@ -20,8 +20,11 @@ import { join, resolve, relative } from "node:path"
 const root = resolve(__dirname, "../..")
 const db = readFileSync(resolve(root, "lib/db/index.ts"), "utf8")
 
-/** The app's own code — everything that ships in the Next bundle or a Worker. */
-const APP_DIRS = ["app", "lib", "hooks", "components", "mzizi-api", "mzizi-ui", "mzizi-plus"]
+/**
+ * This repo's own code — the readers mzizi-api-gateway bundles, the scripts that
+ * generate and check the registry, and the two Workers deployed from here.
+ */
+const APP_DIRS = ["lib", "hooks", "components", "scripts", "mzizi-ui", "mzizi-plus"]
 
 /**
  * Registry items are distributed content, not app code: `mzizi-docs-api.ts` is a
@@ -49,7 +52,7 @@ describe("no Supabase in the registry", () => {
   const files = APP_DIRS.flatMap(sourceFiles)
 
   it("finds the app's source files (guards against a vacuous pass)", () => {
-    expect(files.length).toBeGreaterThan(100)
+    expect(files.length).toBeGreaterThan(50)
     expect(files).toContain(join("lib", "db", "index.ts"))
   })
 
