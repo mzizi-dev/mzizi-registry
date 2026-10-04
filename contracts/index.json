@@ -5,7 +5,7 @@
     {
       "name": "app/app-shell",
       "title": "AppShell",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "app/app-shell.contract.json",
       "tsx": null,
       "rs": null
@@ -125,7 +125,7 @@
     {
       "name": "app/filter-bar",
       "title": "FilterBar",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "app/filter-bar.contract.json",
       "tsx": null,
       "rs": null
@@ -189,7 +189,7 @@
     {
       "name": "app/bar-chart",
       "title": "BarChart",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "file": "app/bar-chart.contract.json",
       "tsx": null,
       "rs": null
@@ -248,6 +248,94 @@
       "version": "1.0.0",
       "file": "app/skeleton.contract.json",
       "tsx": "skeleton",
+      "rs": null
+    },
+    {
+      "name": "discover/discover-shell",
+      "title": "DiscoverShell",
+      "version": "1.0.0",
+      "file": "discover/discover-shell.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/discover-meta",
+      "title": "DiscoverMeta",
+      "version": "1.0.0",
+      "file": "discover/discover-meta.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/discover-hero",
+      "title": "DiscoverHero",
+      "version": "1.0.0",
+      "file": "discover/discover-hero.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/discover-search",
+      "title": "DiscoverSearch",
+      "version": "1.0.0",
+      "file": "discover/discover-search.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/category-chips",
+      "title": "CategoryChips",
+      "version": "1.0.0",
+      "file": "discover/category-chips.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/category-chip",
+      "title": "CategoryChip",
+      "version": "1.0.0",
+      "file": "discover/category-chip.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/discover-section",
+      "title": "DiscoverSection",
+      "version": "1.0.0",
+      "file": "discover/discover-section.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/result-grid",
+      "title": "ResultGrid",
+      "version": "1.0.0",
+      "file": "discover/result-grid.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/discover-card",
+      "title": "DiscoverCard",
+      "version": "1.0.0",
+      "file": "discover/discover-card.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/load-more",
+      "title": "LoadMore",
+      "version": "1.0.0",
+      "file": "discover/load-more.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "discover/open-in-app",
+      "title": "OpenInApp",
+      "version": "1.0.0",
+      "file": "discover/open-in-app.contract.json",
+      "tsx": null,
       "rs": null
     }
   ]

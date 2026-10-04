@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/bar-chart",
   "title": "BarChart",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "node": 6,
   "kind": "pattern",
   "summary": "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens.",
@@ -77,7 +77,7 @@
     "The bars are aria-hidden; the figures table (with a total) is the accessible version.",
     "No data or all zero: \"Nothing to chart in this range.\"",
     "At most ~8 axis labels, always the first and last.",
-    "Bar sizes are inline styles: a CSP needs style-src 'unsafe-inline' or a hash."
+    "Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'."
   ],
   "states": {
     "default": {

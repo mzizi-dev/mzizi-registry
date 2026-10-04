@@ -1,0 +1,202 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/result-grid",
+  "title": "ResultGrid",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The results of a Discover page: a polite status line, the cards, the empty state and \"load more\". Both the results and the empty state are in the markup; `state` picks one with CSS, so a server-filled shell needs no template logic.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/ResultGrid.astro",
+      "since": "0.5.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "The list's accessible name, e.g. \"Circles\"."
+    },
+    {
+      "name": "layout",
+      "type": "\"grid\" | \"list\" | \"rail\"",
+      "required": false,
+      "default": "grid",
+      "values": ["grid", "list", "rail"],
+      "description": "`rail` is one row that scrolls inside itself (a featured strip)."
+    },
+    {
+      "name": "columns",
+      "type": "2 | 3 | 4",
+      "required": false,
+      "default": 3,
+      "values": [2, 3, 4],
+      "description": "Grid columns from 64rem."
+    },
+    {
+      "name": "state",
+      "type": "string",
+      "required": false,
+      "default": "ok",
+      "description": "\"ok\" or \"empty\"; a server-filled shell may pass a placeholder."
+    },
+    {
+      "name": "summary",
+      "type": "string",
+      "required": false,
+      "description": "The status line, e.g. \"24 circles\"; empty text hides itself."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "DiscoverCard",
+      "description": "The cards (each renders its own <li>)."
+    },
+    {
+      "name": "empty",
+      "expects": "EmptyState (app/empty-state) or StateMessage kind=\"empty\"",
+      "description": "Shown when `state` is \"empty\"."
+    },
+    {
+      "name": "more",
+      "expects": "LoadMore",
+      "description": "Cursor pagination, shown with the results."
+    }
+  ],
+  "behaviour": [
+    "The summary is a role=\"status\" live region, so a new page of results is announced.",
+    "`data-state` on the root; the results and \"more\" hide when it is \"empty\", the empty block shows.",
+    "`rail` is keyboard-focusable (tabindex=\"0\") so it can be scrolled without a pointer; the page itself never scrolls sideways."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "label": "Circles",
+        "summary": "24 circles"
+      },
+      "slots": {
+        "default": "<li data-slot='discover-card'>A</li><li data-slot='discover-card'>B</li>",
+        "empty": "<div data-slot='empty-state'><h2>No circles here yet.</h2></div>",
+        "more": "<nav data-slot='load-more'><a href='/circles?cursor=x' rel='next'>More circles</a></nav>"
+      }
+    },
+    "empty": {
+      "props": {
+        "label": "Circles",
+        "state": "empty",
+        "summary": "No circles"
+      },
+      "slots": {
+        "default": "",
+        "empty": "<div data-slot='empty-state'><h2>No circles here yet.</h2></div>",
+        "more": "<nav data-slot='load-more'><a href='/circles?cursor=x' rel='next'>More circles</a></nav>"
+      }
+    },
+    "rail": {
+      "props": {
+        "label": "Featured circles",
+        "layout": "rail"
+      },
+      "slots": {
+        "default": "<li data-slot='discover-card'>A</li><li data-slot='discover-card'>B</li>"
+      }
+    },
+    "template": {
+      "props": {
+        "label": "Circles",
+        "state": "{{results_state}}",
+        "summary": "{{results}}"
+      },
+      "slots": {
+        "default": "{{{cards}}}"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["list", "status"],
+    "keyboard": [
+      "Tab through the cards' links; a rail takes focus and scrolls with the arrow keys."
+    ],
+    "focus": ["A focused rail shows the `--ring` outline."],
+    "aria": ["The list is named by `label`; the summary is a polite status."],
+    "wcag": ["1.3.1", "4.1.3", "2.1.1", "1.4.10"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--foreground", "--muted-foreground", "--ring"],
+    "brandOverlay": "None of its own.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Grid: one column on phones, two from 40rem, then `columns` from 64rem.",
+    "Rail: 18rem cards in one row that scrolls inside itself with snap points."
+  ],
+  "contract": "contract\n  slot is \"result-grid\"\n  uses discover-card\n  when default shows a \"More circles\"\n  when empty shows h2 \"No circles here yet.\"\n  when template slot is \"result-grid\"\nend",
+  "checks": [
+    {
+      "say": "The list is named.",
+      "select": "ul[aria-label=\"Circles\"]",
+      "count": 1
+    },
+    {
+      "say": "The summary is a status.",
+      "select": "[role=\"status\"]",
+      "count": 1,
+      "text": "24 circles"
+    },
+    {
+      "say": "State ok by default.",
+      "select": "[data-slot=\"result-grid\"]",
+      "attr": {
+        "data-state": "ok"
+      }
+    },
+    {
+      "say": "The empty block is hidden while there are results.",
+      "select": "[data-when=\"empty\"].hidden",
+      "count": 1
+    },
+    {
+      "say": "Empty state is exposed for CSS.",
+      "state": "empty",
+      "select": "[data-slot=\"result-grid\"]",
+      "attr": {
+        "data-state": "empty"
+      }
+    },
+    {
+      "say": "A rail is focusable.",
+      "state": "rail",
+      "select": "ul[tabindex=\"0\"]",
+      "count": 1
+    },
+    {
+      "say": "A grid is not.",
+      "select": "ul[tabindex]",
+      "absent": true
+    },
+    {
+      "say": "No empty slot, no empty block.",
+      "state": "rail",
+      "select": "[data-when=\"empty\"]",
+      "absent": true
+    },
+    {
+      "say": "A server sets the state.",
+      "state": "template",
+      "select": "[data-state=\"{{results_state}}\"]",
+      "count": 1
+    }
+  ]
+}

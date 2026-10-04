@@ -1,0 +1,195 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/discover-search",
+  "title": "DiscoverSearch",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The one search box of a Discover page: a GET form, so every search is a URL that works with no JavaScript. 48px on every pointer.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/DiscoverSearch.astro",
+      "since": "0.5.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["app/filter-bar"]
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "The field's and the search landmark's accessible name, e.g. \"Search circles\"."
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": false,
+      "default": "/search",
+      "description": "Where the form submits."
+    },
+    {
+      "name": "q",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "The current query."
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "An example query; never the only label."
+    },
+    {
+      "name": "submitLabel",
+      "type": "string",
+      "required": false,
+      "default": "Search",
+      "description": "The button's text."
+    },
+    {
+      "name": "keep",
+      "type": "Record<string, string>",
+      "required": false,
+      "default": {},
+      "description": "Parameters to carry through as hidden fields."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "default": "discover-q",
+      "description": "The field's id; unique per page."
+    },
+    {
+      "name": "showLabel",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Show the label above the field on phones instead of only to assistive technology."
+    },
+    {
+      "name": "maxlength",
+      "type": "number",
+      "required": false,
+      "default": 100,
+      "description": "The longest query."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A role=\"search\" GET form named by `label`, with a labelled `q` field and a submit button.",
+    "Submitting goes to `action?q=…`; there is no client-side filtering and no `cursor` field, so a new search starts at the first page."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "label": "Search circles",
+        "q": "running",
+        "placeholder": "Search circles: running, Shona, design…",
+        "keep": {
+          "category": "sport"
+        }
+      }
+    },
+    "idle": {
+      "props": {
+        "label": "Search",
+        "action": "/news/search"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["search"],
+    "keyboard": ["Enter submits."],
+    "focus": ["The field and button show the `--ring` focus ring."],
+    "aria": [
+      "The field has a <label> (visually hidden unless `showLabel`); the form is a search landmark named by `label`."
+    ],
+    "wcag": ["1.3.1", "2.4.6", "3.2.2", "3.3.2", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "field",
+      "select": "input[type=\"search\"]",
+      "fine": 48,
+      "coarse": 48
+    },
+    {
+      "part": "submit",
+      "select": "button[type=\"submit\"]",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--input",
+      "--border",
+      "--foreground",
+      "--background",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "Only the focus ring (`--ring`). The button is the neutral secondary, so search looks the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Full width up to 36rem; the button sits beside the field and wraps under it only when the field would be narrower than 14rem."
+  ],
+  "contract": "contract\n  slot is \"discover-search\"\n  role is \"search\"\n  label is \"Search circles\"\n  button \"Search\" min_height 48\n  when default shows label \"Search circles\"\n  when idle label is \"Search\"\nend",
+  "checks": [
+    {
+      "say": "A GET form to /search.",
+      "select": "form[method=\"get\"][action=\"/search\"]",
+      "count": 1
+    },
+    {
+      "say": "The action is configurable.",
+      "state": "idle",
+      "select": "form[action=\"/news/search\"]",
+      "count": 1
+    },
+    {
+      "say": "The query is kept.",
+      "select": "input[type=\"search\"][name=\"q\"]",
+      "attr": {
+        "value": "running",
+        "maxlength": "100",
+        "autocomplete": "off"
+      }
+    },
+    {
+      "say": "The field is labelled.",
+      "state": "*",
+      "select": "label[for=\"discover-q\"]",
+      "count": 1
+    },
+    {
+      "say": "Carried parameters are hidden fields.",
+      "select": "input[type=\"hidden\"][name=\"category\"]",
+      "attr": {
+        "value": "sport"
+      }
+    },
+    {
+      "say": "Nothing to carry, no hidden fields.",
+      "state": "idle",
+      "select": "input[type=\"hidden\"]",
+      "absent": true
+    },
+    {
+      "say": "No cursor field: a new search starts at page one.",
+      "state": "*",
+      "select": "input[name=\"cursor\"]",
+      "absent": true
+    }
+  ]
+}

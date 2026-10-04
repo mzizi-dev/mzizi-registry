@@ -1,0 +1,143 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/category-chip",
+  "title": "CategoryChip",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/CategoryChip.astro",
+      "since": "0.5.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": true,
+      "description": "The category's page."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "The category's name."
+    },
+    {
+      "name": "count",
+      "type": "string | number",
+      "required": false,
+      "description": "How many items; empty text hides itself."
+    },
+    {
+      "name": "current",
+      "type": "boolean | string",
+      "required": false,
+      "description": "true (or \"page\") sets aria-current=\"page\"; a server-filled shell may pass \"page\" or \"false\"."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Renders its own <li>, so it can be repeated as a fragment.",
+    "The current chip is filled (foreground on background) and has aria-current."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "href": "/categories/running",
+        "label": "Running",
+        "count": "12"
+      }
+    },
+    "current": {
+      "props": {
+        "href": "/categories/running",
+        "label": "Running",
+        "count": 12,
+        "current": true
+      }
+    },
+    "template": {
+      "props": {
+        "href": "{{href}}",
+        "label": "{{name}}",
+        "count": "{{count}}",
+        "current": "{{current}}"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["listitem", "link"],
+    "keyboard": ["Tab to the link; Enter follows it."],
+    "focus": ["The `--ring` focus outline."],
+    "aria": [
+      "aria-current=\"page\" on the current category; the state is never colour alone."
+    ],
+    "wcag": ["1.4.1", "2.4.4", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "chip",
+      "select": "a",
+      "fine": 44,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--border",
+      "--foreground",
+      "--background",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "None: chips are neutral in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Chips never shrink their text; the row wraps (CategoryChips)."
+  ],
+  "contract": "contract\n  slot is \"category-chip\"\n  a \"Running\" min_height 44\n  when template shows a \"{{name}}\"\n  when current shows span \"12\"\nend",
+  "checks": [
+    {
+      "say": "One link in the item.",
+      "state": "*",
+      "select": "li > a",
+      "count": 1
+    },
+    {
+      "say": "Not current, no aria-current.",
+      "select": "a[aria-current]",
+      "absent": true
+    },
+    {
+      "say": "Current is marked.",
+      "state": "current",
+      "select": "a[aria-current=\"page\"]",
+      "count": 1
+    },
+    {
+      "say": "A server can set current.",
+      "state": "template",
+      "select": "a[aria-current=\"{{current}}\"]",
+      "count": 1
+    },
+    {
+      "say": "The count is in the link.",
+      "select": "a[href=\"/categories/running\"] span",
+      "count": 1,
+      "text": "12"
+    }
+  ]
+}
