@@ -1,0 +1,138 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/brand-mark",
+  "title": "BrandMark",
+  "version": "1.0.0",
+  "node": 3,
+  "kind": "primitive",
+  "summary": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/BrandMark.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["mzizi-logo"]
+  },
+  "props": [
+    {
+      "name": "brand",
+      "type": "BrandName",
+      "required": false,
+      "default": "nyuchi",
+      "values": ["nyuchi"],
+      "description": "Which brand. The set grows by adding the registry's icon pair."
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "default": 28,
+      "description": "Rendered size of the mark in CSS pixels."
+    },
+    {
+      "name": "wordmark",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Show the brand name beside the mark."
+    },
+    {
+      "name": "suffix",
+      "type": "string",
+      "required": false,
+      "description": "A muted word after the wordmark (\"console\")."
+    },
+    {
+      "name": "decorative",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Empty alt text, when neighbouring text names the brand."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The marks are the registry's canonical icon pair, never redrawn.",
+    "Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script.",
+    "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "brand": "nyuchi"
+      }
+    },
+    "lockup": {
+      "props": {
+        "wordmark": true,
+        "suffix": "console"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["img"],
+    "keyboard": ["None."],
+    "focus": ["None."],
+    "aria": ["alt is the brand name, or empty when text names it."],
+    "wcag": ["1.1.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--muted-foreground"],
+    "brandOverlay": "This is the one component that varies by brand, and only in which mark it shows (the `brand` prop). Size and spacing are the same for every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["The wordmark truncates; the mark never shrinks."],
+  "contract": "contract\n  slot is \"brand-mark\"\n  when lockup shows span \"nyuchi\"\nend",
+  "checks": [
+    {
+      "say": "Two marks, light and dark.",
+      "state": "*",
+      "select": "img",
+      "count": 2
+    },
+    {
+      "say": "The mark alone is named.",
+      "select": "img",
+      "count": 2,
+      "attr": {
+        "alt": "nyuchi",
+        "width": "28",
+        "height": "28"
+      }
+    },
+    {
+      "say": "With the wordmark the images are decorative.",
+      "state": "lockup",
+      "select": "img",
+      "count": 2,
+      "attr": {
+        "alt": ""
+      }
+    },
+    {
+      "say": "The root names its brand.",
+      "select": "[data-slot=\"brand-mark\"]",
+      "count": 1,
+      "attr": {
+        "data-brand": "nyuchi"
+      }
+    }
+  ],
+  "gaps": [
+    "Only the Nyuchi mark ships. Mukoko, Bundu, Mzizi and the sub-brands need their registry icon pairs added before their dashboards can adopt the standard."
+  ]
+}

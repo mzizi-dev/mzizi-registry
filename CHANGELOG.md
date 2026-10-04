@@ -8,6 +8,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Fixed — shamwari's mini-app accent is sodalite, not tanzanite (2026-10-04)
+
+- **`brandOverrides.shamwari` and `brandIndustryCategories.shamwari.ai` now say sodalite**, in `lib/tokens/index.ts` and in the `mzizi-tokens-typescript` registry item. Canon (`lib/tokens/brand.source.ts` ecosystem, `/v1/brand`) and the `mzizi-design` skill have shamwari on sodalite; these two tables still had Mukoko's tanzanite. Values: primary `#3D5AFE`, container `#E8EAF6`, on-container `#141A5C` (canon's sodalite), muted computed as before. Canon authors no sodalite hover tint, so `primaryHover` is `#6E83FE`, cobalt's rule (25% toward white) applied to `#3D5AFE`, until canon authors one.
+
+### Security — the audit sets one advisory aside, by ID, until 2026-11-04 (2026-10-04)
+
+- **`pnpm audit` ignores GHSA-vfj7-8cjw-p6xm and nothing else** (`pnpm.auditConfig.ignoreGhsas` in `package.json`). It is `braces` <=3.0.3 (ReDoS on deeply nested patterns), which has **no patched release**, reached only through `@next/eslint-plugin-next > fast-glob > micromatch`: lint tooling run on this repository's own files, never shipped in a registry item or served by the API. It failed `audit:check` (and so `pnpm check` and the pre-commit hook) on every branch, `main` included. The level stays `moderate`, so any other advisory still fails. **Recheck by 2026-11-04**: remove the entry once `braces` publishes a fix or the plugin drops it.
+
+### Added — component contracts, and the Mzizi Dashboard Standard (2026-10-04, #404)
+
+- **`contracts/`: a machine-readable, versioned contract for every `@bundu/ui` app component** (31: the shell, page and data patterns and the seven primitives under them). Owner decision, 2026-10-04: the Nyuchi console shell is the standard dashboard design for the whole Bundu ecosystem, with each brand's mineral as an overlay, and every component carries a contract, as in the language. `contracts/schema/component-contract.schema.json` is the format: props and slots with types, behaviour, named states, accessibility, density for fine and coarse pointers, theming (brand overlay tokens only; layout never varies by brand), the no-JS fallback, responsive rules, a `contract … end` block in the language's clause grammar (RFC-0006 / RFC-0010), and selector checks. An unevaluable clause fails (FM-12). `contracts/index.json` lists them; `contracts/README.md` has the coverage table and the gaps.
+- **`__tests__/contracts/contracts.test.tsx`** validates every contract against the schema and the clause grammar, keeps the index and the README's coverage table honest, renders each declared React sibling (`badge`, `button`, `card`, `alert`, `input`, `label`, `skeleton`) and checks it carries the contract's identity, and checks each declared Rust sibling (`badge`, `button`, `card`, `input`, `label`) emits the same `data-slot`, variants and role. The Astro builds are evaluated in full in `mzizi-dev/packages-npm`.
+- **24 of the 31 have no React or Rust implementation of their contract yet** (every shell and page pattern). They are #397 and #401 work; `contracts/README.md` lists them.
+
 ### Security — security reports go to `security@nyuchi.com` (2026-10-03, #396)
 
 - **`SECURITY.md` names `security@nyuchi.com` as the email fallback** behind GitHub private advisories, in place of `security@bundu.org` (owner decision, 2026-10-03: one security contact for every repository). GitHub advisories stay the first channel.

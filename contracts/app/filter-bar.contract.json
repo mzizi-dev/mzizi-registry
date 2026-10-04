@@ -1,0 +1,164 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/filter-bar",
+  "title": "FilterBar",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "Search and select filters as a GET form, so the filtered view is a URL: linkable and working without JavaScript. Changing a filter goes back to page 1.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/FilterBar.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["filter-bar"]
+  },
+  "props": [
+    {
+      "name": "searchLabel",
+      "type": "string",
+      "required": true,
+      "description": "Visible label of the search field."
+    },
+    {
+      "name": "q",
+      "type": "string",
+      "required": true,
+      "description": "The current query."
+    },
+    {
+      "name": "selects",
+      "type": "{ name: string; label: string; options: { value: string; label: string }[]; allLabel?: string }[]",
+      "required": false,
+      "default": [],
+      "description": "Select filters; the first option is \"All\" (or `allLabel`)."
+    },
+    {
+      "name": "values",
+      "type": "Record<string, string>",
+      "required": false,
+      "default": {},
+      "description": "Selected values by name."
+    },
+    {
+      "name": "keep",
+      "type": "Record<string, string>",
+      "required": false,
+      "default": {},
+      "description": "Parameters to carry through."
+    },
+    {
+      "name": "clearHref",
+      "type": "string",
+      "required": true,
+      "description": "Where \"Clear\" goes: the page with no filters."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A role=\"search\" GET form with visible labels.",
+    "\"Apply\" submits; \"Clear\" appears only when a filter is active.",
+    "Has no `page` field, so applying returns to page 1."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "searchLabel": "Search by name or email",
+        "q": "rudo",
+        "selects": [
+          {
+            "name": "role",
+            "label": "Role",
+            "allLabel": "Any role",
+            "options": [
+              {
+                "value": "admin",
+                "label": "Admin"
+              }
+            ]
+          }
+        ],
+        "values": {
+          "role": "admin"
+        },
+        "clearHref": "/users"
+      }
+    },
+    "idle": {
+      "props": {
+        "searchLabel": "Search",
+        "q": "",
+        "clearHref": "/users"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["search"],
+    "keyboard": ["Enter submits; Tab through the fields and buttons."],
+    "focus": ["Fields and buttons show the `--ring` focus ring."],
+    "aria": ["Every field has a visible <label>."],
+    "wcag": ["1.3.1", "2.4.6", "3.2.2", "3.3.2"]
+  },
+  "density": [
+    {
+      "part": "field",
+      "select": "input[type=\"search\"]",
+      "fine": 36,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground",
+      "--primary"
+    ],
+    "brandOverlay": "\"Apply\" is the primary Button and follows `--primary`.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Fields wrap: search grows from 18rem, selects from 12rem; the buttons wrap last."
+  ],
+  "contract": "contract\n  slot is \"filter-bar\"\n  role is \"search\"\n  when default shows button \"Apply\"\n  when default shows a \"Clear\"\n  uses button\nend",
+  "checks": [
+    {
+      "say": "A GET form.",
+      "state": "*",
+      "select": "form[method=\"get\"]",
+      "count": 1
+    },
+    {
+      "say": "Search is labelled.",
+      "select": "label[for=\"filter-q\"]",
+      "count": 1,
+      "text": "Search by name or email"
+    },
+    {
+      "say": "The selected value is selected.",
+      "select": "option[value=\"admin\"]",
+      "count": 1,
+      "attr": {
+        "selected": true
+      }
+    },
+    {
+      "say": "No active filter, no Clear.",
+      "state": "idle",
+      "select": "a",
+      "absent": true
+    }
+  ]
+}

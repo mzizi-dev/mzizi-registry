@@ -1,0 +1,163 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/state-message",
+  "title": "StateMessage",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The empty, error, not-configured, unavailable and loading states every section needs, so no page invents its own wording or colours.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/StateMessage.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": [
+      "mzizi-error-screen",
+      "mzizi-empty-screen",
+      "mzizi-skeleton-set"
+    ]
+  },
+  "props": [
+    {
+      "name": "kind",
+      "type": "\"empty\" | \"error\" | \"unconfigured\" | \"unavailable\" | \"loading\"",
+      "required": true,
+      "values": ["empty", "error", "unconfigured", "unavailable", "loading"],
+      "description": "Which state."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "Overrides the kind's default title."
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "required": false,
+      "description": "What happened and what to do next."
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "default": 4,
+      "description": "Skeleton rows for `loading`."
+    },
+    {
+      "name": "level",
+      "type": "2 | 3 | 4",
+      "required": false,
+      "default": 2,
+      "values": [2, 3, 4],
+      "description": "Heading level of the empty state."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "Actions (empty) or extra content (alerts)."
+    }
+  ],
+  "behaviour": [
+    "empty → an EmptyState card (\"Nothing here yet\").",
+    "error → a destructive Alert (\"Something went wrong\").",
+    "unconfigured → a warning Alert (\"Not configured\"), for an API 503.",
+    "unavailable → a warning Alert (\"Temporarily unavailable\").",
+    "loading → a polite status region with skeleton rows and a visually hidden \"Loading\"."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "kind": "empty"
+      }
+    },
+    "error": {
+      "props": {
+        "kind": "error",
+        "message": "Try again."
+      }
+    },
+    "unconfigured": {
+      "props": {
+        "kind": "unconfigured"
+      }
+    },
+    "unavailable": {
+      "props": {
+        "kind": "unavailable"
+      }
+    },
+    "loading": {
+      "props": {
+        "kind": "loading",
+        "rows": 2
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["alert (error, unconfigured, unavailable)", "status (loading)"],
+    "keyboard": ["None of its own."],
+    "focus": ["None."],
+    "aria": ["Loading is announced politely; skeletons are aria-hidden."],
+    "wcag": ["4.1.3"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground",
+      "--destructive"
+    ],
+    "brandOverlay": "None. Warnings are gold containers as a status colour, the same in every brand.",
+    "statusColours": ["gold"]
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Fills its container."],
+  "contract": "contract\n  slot is \"state-empty\"\n  when error role is \"alert\"\n  when error slot is \"alert\"\n  when unconfigured role is \"alert\"\n  when unavailable role is \"alert\"\n  when loading role is \"status\"\n  when loading slot is \"state-loading\"\n  uses empty-state\nend",
+  "checks": [
+    {
+      "say": "Default titles.",
+      "select": "h2",
+      "count": 1,
+      "text": "Nothing here yet"
+    },
+    {
+      "say": "Error says so.",
+      "state": "error",
+      "select": "[data-slot=\"alert-title\"]",
+      "count": 1,
+      "text": "Something went wrong"
+    },
+    {
+      "say": "The alert names its state.",
+      "state": "unconfigured",
+      "select": "[role=\"alert\"]",
+      "count": 1,
+      "attr": {
+        "data-state": "unconfigured"
+      }
+    },
+    {
+      "say": "Loading rows are skeletons.",
+      "state": "loading",
+      "select": "[data-slot=\"skeleton\"]",
+      "count": 2,
+      "attr": {
+        "aria-hidden": "true"
+      }
+    }
+  ]
+}
