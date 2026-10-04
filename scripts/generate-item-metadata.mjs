@@ -46,7 +46,6 @@ const WORDMARKS = new Set([
   "mukoko",
   "bundu",
   "shamwari",
-  "nhimbe",
   "fundi",
   "kweli",
   "bushtrade",

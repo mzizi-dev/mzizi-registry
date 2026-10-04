@@ -32,7 +32,7 @@ Brief description of what this PR does and why.
 - [ ] New tests added for new functionality
 - [ ] All packages at latest (run `pnpm outdated` — zero results allowed)
 - [ ] No hardcoded colors — using CSS custom properties from `globals.css`
-- [ ] Brand wordmarks are lowercase: `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`
+- [ ] Brand wordmarks are lowercase: `mukoko`, `nyuchi`, `shamwari`, `bundu`
 - [ ] Accessibility: APCA Lc 90+ body text, Lc 75+ large text, 56px default / 48px minimum touch targets
 - [ ] Ubuntu design checklist: shared devices, 3G performant, localisable strings
 - [ ] AI output runs through `fullSafetyCheck()` + `validateCulturalContext()` (if AI features touched)

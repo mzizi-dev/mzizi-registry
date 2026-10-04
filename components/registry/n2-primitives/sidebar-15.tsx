@@ -7,7 +7,7 @@ import { Home, BarChart3, Users, FileText, Settings, ChevronsUpDown, Check } fro
 
 const workspaces = [
   { id: "mukoko", label: "mukoko", color: "bg-cobalt" },
-  { id: "nhimbe", label: "nhimbe", color: "bg-tanzanite" },
+  { id: "events", label: "Mukoko Events", color: "bg-malachite" },
   { id: "bundu", label: "bundu", color: "bg-malachite" },
 ]
 

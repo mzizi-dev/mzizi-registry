@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button"
    APP SWITCHER — Brand Shell Component (Enterprise)
    
    The ecosystem navigation hub. Lets users switch between
-   ecosystem products (nhimbe, Bush Trade, Shamwari, etc.)
+   ecosystem products (Mukoko Events, Bush Trade, Shamwari, etc.)
    
    ✅ L1 TOKENS — Active state uses brand accent tokens
    ✅ L2 MOTION — Grid items stagger on popover open
@@ -49,7 +49,7 @@ const DEFAULT_APPS: AppItem[] = [
   { name: "mukoko", icon: LayoutGridIcon, href: "https://mukoko.com", mineral: "malachite" },
   { name: "weather", icon: CloudSunIcon, href: "https://weather.mukoko.com", mineral: "cobalt" },
   { name: "news", icon: NewspaperIcon, href: "https://news.mukoko.com", mineral: "tanzanite" },
-  { name: "nhimbe", icon: CalendarIcon, href: "https://events.mukoko.com", mineral: "malachite" },
+  { name: "events", icon: CalendarIcon, href: "https://events.mukoko.com", mineral: "malachite" },
   { name: "registry", icon: GlobeIcon, href: "https://mzizi.dev", mineral: "gold" },
 ]
 

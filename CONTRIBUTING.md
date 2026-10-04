@@ -87,7 +87,7 @@ git checkout -b feature/your-feature
 
 - **kebab-case** for file names: `button-group.tsx`, `date-range-picker.tsx`
 - **PascalCase** for component names: `ButtonGroup`, `DateRangePicker`
-- **All brand wordmarks lowercase** — mzizi, mukoko, nyuchi, shamwari, bundu, nhimbe
+- **All brand wordmarks lowercase** — mzizi, mukoko, nyuchi, shamwari, bundu
 - **`data-slot` attribute** on every component for CSS selection and identification
 - **`"use client"` only when necessary** — components are React Server Components by default; add the directive only when using hooks, event handlers, or browser APIs
 
@@ -338,7 +338,7 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 - [ ] New components are files under `components/registry/`, with their item + `meta` added to `registry.json` and `pnpm registry:normalize` run
 - [ ] Tests added for new functionality
 - [ ] Accessibility reviewed (APCA contrast, 56px default / 48px minimum touch targets, keyboard nav)
-- [ ] Brand wordmarks are lowercase (`mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`)
+- [ ] Brand wordmarks are lowercase (`mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`)
 - [ ] Buttons are pill-shaped (`rounded-full`)
 - [ ] Any security finding from `/security-review` is fixed in this PR (per CLAUDE.md §15 rule 22 — never deferred)
 - [ ] The PR body has a `Site/docs/skills impact` section. mzizi.dev, docs.mzizi.dev and the agent skills (`@nyuchi/mzizi-skills`) must never lag this repo, so any user-visible change to components, the Mzizi Roots crates, the API data, or the npm packages and MCP tools is named there for the site, docs and skills freshness agents (see [`AGENTS.md`](AGENTS.md#site-docs-and-skills-freshness-hard-rule)). Write "None" if nothing user-visible changed.
