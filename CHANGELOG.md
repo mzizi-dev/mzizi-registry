@@ -51,6 +51,10 @@ The copper crosshair disc that used to ship as `public/icons/mzizi-icon.*` was n
   - the mzizi mark is drawn in anything but hematite;
   - a component rendition names a source file that no longer exists.
 
+### Changed — every contract's `since` is `@bundu/ui` 0.3.0 (2026-10-04)
+
+Owner decision, 2026-10-04: versions bumped but never published are reset to the org versioning policy, so the next `@bundu/ui` release is 0.3.0, one minor above 0.2.0 on npm, and it carries everything the unpublished 0.3.0, 0.4.x and 0.5.0 entries described. The `implementations.astro.since` of the ten `app/` contracts that said 0.4.0 and the eleven `discover/` contracts that said 0.5.0 now say 0.3.0. Contract versions are unchanged.
+
 ### Added — the Mzizi Discover Standard: a contract for each of the 11 Discover components (2026-10-04, #415)
 
 Owner decision, 2026-10-04: the discover pages of news, events, circles and weather must be identical, so they move into the Mukoko super-app on the web unchanged. Tracking: #413.
