@@ -1,0 +1,110 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/info-tip",
+  "title": "InfoTip",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "A small info button that explains the thing beside it; the explanation is a tooltip on hover and focus, and the button's accessible description.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/InfoTip.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["tooltip"]
+  },
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "The explanation."
+    },
+    {
+      "name": "about",
+      "type": "string",
+      "required": true,
+      "description": "What it explains; the button is named \"About <about>\"."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "description": "The tooltip's id; unique per page."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A focusable button with role=\"tooltip\" text shown on hover and focus-visible.",
+    "Escape hides it (AppShell's script, WCAG 1.4.13)."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "text": "People with a member record.",
+        "about": "Members",
+        "id": "members-info"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["button", "tooltip"],
+    "keyboard": [
+      "Tab focuses it, which shows the tip.",
+      "Escape hides it (AppShell)."
+    ],
+    "focus": ["`--ring` focus ring."],
+    "aria": ["aria-describedby to the tooltip."],
+    "wcag": ["1.4.13", "2.1.1", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "button",
+      "select": "button",
+      "fine": 20,
+      "coarse": 32
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["The tip is centred above the button, at most 16rem wide."],
+  "contract": "contract\n  slot is \"info-tip\"\n  button \"About Members\" min_height 20\nend",
+  "checks": [
+    {
+      "say": "The button is named and described.",
+      "select": "button",
+      "count": 1,
+      "attr": {
+        "type": "button",
+        "aria-label": "About Members",
+        "aria-describedby": "members-info"
+      }
+    },
+    {
+      "say": "The tip is a tooltip.",
+      "select": "[role=\"tooltip\"]#members-info",
+      "count": 1,
+      "text": "People with a member record."
+    }
+  ],
+  "gaps": [
+    "32px on touch: meets WCAG 2.5.8 (24px), below the 44px the other app controls keep."
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/skeleton",
+  "title": "Skeleton",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A loading placeholder, sized by class, hidden from screen readers.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Skeleton.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "skeleton",
+      "identity": "slot",
+      "divergences": [
+        "The registry skeleton.tsx is not aria-hidden; the app Skeleton is (the announcement is StateMessage's job)."
+      ]
+    },
+    "rs": null
+  },
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Size it."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Pulses on the `--muted` token; prefers-reduced-motion is the stylesheet's job."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "class": "h-10 w-full"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["none (aria-hidden)"],
+    "keyboard": ["None."],
+    "focus": ["None."],
+    "aria": ["aria-hidden=\"true\"."],
+    "wcag": ["1.3.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--muted"],
+    "brandOverlay": "None.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Sized by the caller."],
+  "contract": "contract\n  slot is \"skeleton\"\n  class contains \"animate-pulse\"\nend",
+  "checks": [
+    {
+      "say": "Hidden from screen readers.",
+      "select": "div",
+      "count": 1,
+      "attr": {
+        "aria-hidden": "true"
+      }
+    }
+  ]
+}

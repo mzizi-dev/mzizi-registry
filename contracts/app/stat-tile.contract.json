@@ -1,0 +1,182 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/stat-tile",
+  "title": "StatTile",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "One headline figure: a label, the value, an optional trend in words and a note. A missing value reads \"Not available\", never 0.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/StatTile.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["stats-card", "mzizi-hero-stat", "mzizi-meta-tile"]
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "What the figure is."
+    },
+    {
+      "name": "value",
+      "type": "string | number | null | undefined",
+      "required": true,
+      "description": "The figure; numbers are formatted for `locale`. Null, undefined or \"\" reads \"Not available\"."
+    },
+    {
+      "name": "trend",
+      "type": "number | null",
+      "required": false,
+      "description": "Change against the previous period: per cent, or points with `points`."
+    },
+    {
+      "name": "points",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "The trend is in percentage points."
+    },
+    {
+      "name": "upIsGood",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Whether a rise is good news; only the tone changes."
+    },
+    {
+      "name": "versus",
+      "type": "string",
+      "required": false,
+      "description": "What the trend is compared with (\"the previous 30 days\")."
+    },
+    {
+      "name": "note",
+      "type": "string",
+      "required": false,
+      "description": "One line under the value."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "Makes the label a link."
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false,
+      "default": "en-GB",
+      "description": "BCP 47 locale for numbers."
+    },
+    {
+      "name": "info",
+      "type": "string",
+      "required": false,
+      "description": "What the figure counts, as an InfoTip after the label."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A <div> holding <dt> (label) and <dd> (value, trend, note), so it sits in a <dl>.",
+    "The trend is said once, in words, to screen readers (\"Up 12.5% on the previous 30 days\", \"No change\"); the visible badge is short and never wraps (\"+12.5%\"), with \"vs …\" after it. Never colour or an arrow alone.",
+    "Good news is malachite, bad news terracotta, and both are status colours that never follow the brand."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "label": "Community members",
+        "value": 1240,
+        "trend": 12.5,
+        "versus": "the previous 30 days",
+        "note": "86 joined",
+        "info": "People with a member record."
+      }
+    },
+    "missing": {
+      "props": {
+        "label": "Places",
+        "value": null
+      }
+    },
+    "down": {
+      "props": {
+        "label": "Errors",
+        "value": 3,
+        "trend": -50,
+        "upIsGood": false
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["term and definition (<dt>/<dd>)"],
+    "keyboard": ["The InfoTip button, when `info` is set."],
+    "focus": ["Through InfoTip."],
+    "aria": ["Trend text carries the meaning; colour is redundant."],
+    "wcag": ["1.3.1", "1.4.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground"
+    ],
+    "brandOverlay": "None. Trend tones are status colours (malachite good, terracotta bad) and are the same in every brand.",
+    "statusColours": ["malachite", "terracotta"]
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Fills its grid cell; the value never wraps mid-number (tabular figures)."
+  ],
+  "contract": "contract\n  slot is \"stat-tile\"\n  when default shows dd \"1,240\"\n  when default shows dd \"Up 12.5% on the previous 30 days\"\n  when missing shows dd \"Not available\"\n  uses info-tip\nend",
+  "checks": [
+    {
+      "say": "The label is a dt.",
+      "state": "*",
+      "select": "dt",
+      "count": 1
+    },
+    {
+      "say": "Missing is never zero.",
+      "state": "missing",
+      "select": "dd",
+      "count": 1,
+      "text": "Not available"
+    },
+    {
+      "say": "A fall that is good news is green, and still said as a fall.",
+      "state": "down",
+      "select": "[data-slot=\"stat-trend\"] .bg-malachite-container",
+      "count": 1,
+      "text": "−50%"
+    },
+    {
+      "say": "Screen readers hear the trend once, in words.",
+      "select": "[data-slot=\"stat-trend\"] .sr-only",
+      "count": 1,
+      "text": "Up 12.5% on the previous 30 days"
+    },
+    {
+      "say": "The short badge is visual only and never wraps.",
+      "select": "[data-slot=\"stat-trend\"] .whitespace-nowrap",
+      "count": 1,
+      "attr": {
+        "aria-hidden": "true"
+      }
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/alert",
+  "title": "Alert",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A message with role=\"alert\": an optional title line and a description.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Alert.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "alert",
+      "identity": "slot+role",
+      "divergences": [
+        "Variants: the registry alert has default and destructive; the app Alert adds info, success and warning as status-container colours."
+      ]
+    },
+    "rs": null
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "\"default\" | \"info\" | \"success\" | \"warning\" | \"destructive\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "info", "success", "warning", "destructive"],
+      "description": "info cobalt, success malachite, warning gold: status colours."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "The heading line."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes."
+    },
+    {
+      "name": "state",
+      "type": "string",
+      "required": false,
+      "description": "data-state, e.g. which StateMessage kind it shows."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The description."
+    }
+  ],
+  "behaviour": ["Always role=\"alert\"."],
+  "states": {
+    "default": {
+      "props": {
+        "title": "Heads up"
+      },
+      "slots": {
+        "default": "Body"
+      }
+    },
+    "warning": {
+      "props": {
+        "variant": "warning",
+        "title": "Careful"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["alert"],
+    "keyboard": ["None."],
+    "focus": ["None."],
+    "aria": ["role=\"alert\" announces it."],
+    "wcag": ["4.1.3"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--card", "--card-foreground", "--border", "--destructive"],
+    "brandOverlay": "None. Status variants use status colours, the same in every brand.",
+    "statusColours": ["cobalt", "malachite", "gold"]
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Fills its container."],
+  "contract": "contract\n  slot is \"alert\"\n  role is \"alert\"\n  when default shows p \"Heads up\"\n  when warning class contains \"bg-gold-container\"\nend",
+  "checks": [
+    {
+      "say": "No body, no description.",
+      "state": "warning",
+      "select": "[data-slot=\"alert-description\"]",
+      "absent": true
+    }
+  ]
+}

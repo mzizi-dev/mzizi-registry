@@ -1,0 +1,84 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/label",
+  "title": "Label",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A native <label>.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Label.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "label",
+      "identity": "slot"
+    },
+    "rs": {
+      "registry": "label",
+      "identity": "slot"
+    }
+  },
+  "props": [
+    {
+      "name": "for",
+      "type": "string",
+      "required": true,
+      "description": "The control's id."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The text."
+    }
+  ],
+  "behaviour": ["Always visible; never replaced by a placeholder."],
+  "states": {
+    "default": {
+      "props": {
+        "for": "x"
+      },
+      "slots": {
+        "default": "Name"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["label"],
+    "keyboard": ["Clicking focuses the control."],
+    "focus": ["None."],
+    "aria": ["for → the control."],
+    "wcag": ["1.3.1", "3.3.2"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--foreground"],
+    "brandOverlay": "None.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Inline."],
+  "contract": "contract\n  slot is \"label\"\n  when default shows label \"Name\"\nend",
+  "checks": [
+    {
+      "say": "Points at its control.",
+      "select": "label",
+      "count": 1,
+      "attr": {
+        "for": "x"
+      }
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "$comment": "Every component contract in this directory. contracts.test.ts fails if a file is missing from this list or a version disagrees.",
+  "schema": "schema/component-contract.schema.json",
+  "contracts": [
+    {
+      "name": "app/app-shell",
+      "title": "AppShell",
+      "version": "1.0.0",
+      "file": "app/app-shell.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/side-nav",
+      "title": "SideNav",
+      "version": "1.0.0",
+      "file": "app/side-nav.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/workspace-switcher",
+      "title": "WorkspaceSwitcher",
+      "version": "1.0.0",
+      "file": "app/workspace-switcher.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/quick-search",
+      "title": "QuickSearch",
+      "version": "1.0.0",
+      "file": "app/quick-search.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/command-palette",
+      "title": "CommandPalette",
+      "version": "1.0.0",
+      "file": "app/command-palette.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/top-bar-action",
+      "title": "TopBarAction",
+      "version": "1.0.0",
+      "file": "app/top-bar-action.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/page-header",
+      "title": "PageHeader",
+      "version": "1.0.0",
+      "file": "app/page-header.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/toolbar",
+      "title": "Toolbar",
+      "version": "1.0.0",
+      "file": "app/toolbar.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/toolbar-menu",
+      "title": "ToolbarMenu",
+      "version": "1.0.0",
+      "file": "app/toolbar-menu.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/stat-tiles",
+      "title": "StatTiles",
+      "version": "1.0.0",
+      "file": "app/stat-tiles.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/stat-tile",
+      "title": "StatTile",
+      "version": "1.0.0",
+      "file": "app/stat-tile.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/info-tip",
+      "title": "InfoTip",
+      "version": "1.0.0",
+      "file": "app/info-tip.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/empty-state",
+      "title": "EmptyState",
+      "version": "1.0.0",
+      "file": "app/empty-state.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/brand-mark",
+      "title": "BrandMark",
+      "version": "1.0.0",
+      "file": "app/brand-mark.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/data-table",
+      "title": "DataTable",
+      "version": "1.0.0",
+      "file": "app/data-table.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/filter-bar",
+      "title": "FilterBar",
+      "version": "1.0.0",
+      "file": "app/filter-bar.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/pagination",
+      "title": "Pagination",
+      "version": "1.0.0",
+      "file": "app/pagination.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/detail-panel",
+      "title": "DetailPanel",
+      "version": "1.0.0",
+      "file": "app/detail-panel.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/form-layout",
+      "title": "FormLayout",
+      "version": "1.0.0",
+      "file": "app/form-layout.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/form-field",
+      "title": "FormField",
+      "version": "1.0.0",
+      "file": "app/form-field.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/state-message",
+      "title": "StateMessage",
+      "version": "1.0.0",
+      "file": "app/state-message.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/toast",
+      "title": "Toast",
+      "version": "1.0.0",
+      "file": "app/toast.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/account-menu",
+      "title": "AccountMenu",
+      "version": "1.0.0",
+      "file": "app/account-menu.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/bar-chart",
+      "title": "BarChart",
+      "version": "1.0.0",
+      "file": "app/bar-chart.contract.json",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "app/button",
+      "title": "Button",
+      "version": "1.0.0",
+      "file": "app/button.contract.json",
+      "tsx": "button",
+      "rs": "button"
+    },
+    {
+      "name": "app/badge",
+      "title": "Badge",
+      "version": "1.0.0",
+      "file": "app/badge.contract.json",
+      "tsx": "badge",
+      "rs": "badge"
+    },
+    {
+      "name": "app/card",
+      "title": "Card",
+      "version": "1.0.0",
+      "file": "app/card.contract.json",
+      "tsx": "card",
+      "rs": "card"
+    },
+    {
+      "name": "app/alert",
+      "title": "Alert",
+      "version": "1.0.0",
+      "file": "app/alert.contract.json",
+      "tsx": "alert",
+      "rs": null
+    },
+    {
+      "name": "app/input",
+      "title": "Input",
+      "version": "1.0.0",
+      "file": "app/input.contract.json",
+      "tsx": "input",
+      "rs": "input"
+    },
+    {
+      "name": "app/label",
+      "title": "Label",
+      "version": "1.0.0",
+      "file": "app/label.contract.json",
+      "tsx": "label",
+      "rs": "label"
+    },
+    {
+      "name": "app/skeleton",
+      "title": "Skeleton",
+      "version": "1.0.0",
+      "file": "app/skeleton.contract.json",
+      "tsx": "skeleton",
+      "rs": null
+    }
+  ]
+}
