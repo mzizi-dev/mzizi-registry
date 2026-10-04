@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
-### Changed — Kweli is malachite, Nyuchi Learning is gold, and news and weather join canon (2026-10-04)
+### Changed — Kweli is malachite, Nyuchi Learning is gold, and news and weather join canon (2026-10-04, #409)
 
 Owner decisions, 2026-10-04 (#404):
 
