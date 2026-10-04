@@ -9,6 +9,11 @@ on:
 # Developers control the release cadence by bumping the version in their PR.
 # If the version is already tagged (e.g. a doc-only fix on an existing version),
 # the job exits cleanly — no duplicate release is created.
+#
+# The tag and release are made with RELEASE_BUMP_TOKEN (mzizi-dev org secret),
+# not GITHUB_TOKEN: GitHub starts no workflow from a tag or release that
+# GITHUB_TOKEN made, so anything that listens for `push: tags` or
+# `release: published` would never run.
 
 jobs:
   release:
@@ -20,6 +25,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
+          token: ${{ secrets.RELEASE_BUMP_TOKEN }}
 
       - name: Read version from package.json
         id: version
@@ -83,7 +89,7 @@ jobs:
       - name: Create GitHub release
         if: steps.tag_check.outputs.exists == 'false'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_BUMP_TOKEN }}
         run: |
           gh release create "${{ steps.version.outputs.tag }}" \
             --title "${{ steps.version.outputs.tag }}" \

@@ -206,7 +206,9 @@ add it as its own section rather than re-creating a dead link.
 - [`CHANGELOG.md`](./CHANGELOG.md) — the change history, written by hand in every PR (see
   "Changelog" above). [`.github/workflows/release.yml`](./.github/workflows/release.yml)
   tags a GitHub release when `package.json`'s version is new; it does not write the
-  changelog.
+  changelog. [`.github/workflows/publish-crates.yml`](./.github/workflows/publish-crates.yml)
+  publishes any crate version not yet on crates.io and tags it `mzizi-rs-vX.Y.Z`. Both run
+  on merge to `main` with `RELEASE_BUMP_TOKEN`; nobody pushes a tag by hand.
 
 ## Track big work in GitHub issues
 
