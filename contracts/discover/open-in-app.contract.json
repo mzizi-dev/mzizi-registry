@@ -1,0 +1,154 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/open-in-app",
+  "title": "OpenInApp",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The \"Open in Mukoko\" action: an https link to the item in the Mukoko super-app (a universal link or a server redirect), with one line saying what happens. Never a bare custom scheme.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/OpenInApp.astro",
+      "since": "0.5.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": true,
+      "description": "An https URL that opens the app where it is installed and the web otherwise."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Open in Mukoko",
+      "description": "The action."
+    },
+    {
+      "name": "hint",
+      "type": "string",
+      "required": false,
+      "default": "Opens in the Mukoko app, or on the web if you don't have it.",
+      "description": "What happens; \"\" for none."
+    },
+    {
+      "name": "variant",
+      "type": "\"primary\" | \"outline\"",
+      "required": false,
+      "default": "primary",
+      "values": ["primary", "outline"],
+      "description": "Primary on an item's own page; outline beside another primary action."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "Links styled as buttons",
+      "description": "Other actions, beside the button and above the hint (e.g. \"Start your own circle\")."
+    }
+  ],
+  "behaviour": [
+    "One link styled as a button, then the hint.",
+    "The link is https: a `mukoko://` link does nothing for someone without the app, so it is never the href.",
+    "Other actions (the default slot) sit in the button's row; the hint is under the whole row."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "href": "https://circles.mukoko.com/c/harare-runners/join",
+        "label": "Join in Mukoko"
+      }
+    },
+    "outline": {
+      "props": {
+        "href": "https://news.mukoko.com/open/article/123",
+        "variant": "outline",
+        "hint": ""
+      }
+    },
+    "actions": {
+      "description": "A second action beside the button.",
+      "props": {
+        "href": "/c/harare-runners/join",
+        "label": "Join in Mukoko"
+      },
+      "slots": {
+        "default": "<a href='/create'>Start your own circle</a>"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["link"],
+    "keyboard": ["Enter follows the link."],
+    "focus": ["The `--ring` focus ring."],
+    "aria": ["The label says the action; the hint is plain text after it."],
+    "wcag": ["2.4.4", "3.2.5", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "link",
+      "select": "a",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--primary",
+      "--primary-foreground",
+      "--foreground",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "The primary variant fills with `--primary`, so it is the brand's mineral.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["The hint wraps under the button."],
+  "contract": "contract\n  slot is \"open-in-app\"\n  a \"Join in Mukoko\" min_height 48\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when outline shows a \"Open in Mukoko\"\n  when actions shows a \"Start your own circle\"\nend",
+  "checks": [
+    {
+      "say": "An https link.",
+      "select": "a",
+      "attr": {
+        "href": "https://circles.mukoko.com/c/harare-runners/join",
+        "data-variant": "primary"
+      }
+    },
+    {
+      "say": "Never a bare custom scheme.",
+      "state": "*",
+      "select": "a[href^=\"mukoko:\"]",
+      "absent": true
+    },
+    {
+      "say": "The outline variant.",
+      "state": "outline",
+      "select": "a",
+      "attr": {
+        "data-variant": "outline"
+      }
+    },
+    {
+      "say": "An empty hint is left out.",
+      "state": "outline",
+      "select": "p",
+      "absent": true
+    },
+    {
+      "say": "The second action shares the button's row.",
+      "state": "actions",
+      "select": "[data-slot=\"open-in-app\"] > div > a",
+      "count": 2
+    }
+  ]
+}

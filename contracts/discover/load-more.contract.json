@@ -1,0 +1,152 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/load-more",
+  "title": "LoadMore",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "Cursor pagination for a Discover page: one rel=\"next\" link to `?cursor=…`, so it works with no JavaScript and every page is a URL. At the end it shows `endLabel`, or nothing.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/LoadMore.astro",
+      "since": "0.5.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["app/pagination"]
+  },
+  "props": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "The next page's URL."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "Say what loads, e.g. \"More circles\"."
+    },
+    {
+      "name": "state",
+      "type": "string",
+      "required": false,
+      "description": "\"more\" or \"end\" (default: \"more\" when `href` is set); a server-filled shell may pass a placeholder."
+    },
+    {
+      "name": "endLabel",
+      "type": "string",
+      "required": false,
+      "description": "Shown at the end, e.g. \"That's every circle.\""
+    },
+    {
+      "name": "navLabel",
+      "type": "string",
+      "required": false,
+      "default": "More results",
+      "description": "The landmark's name."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A named <nav> with one link; `data-state` lets CSS show the link or the end line.",
+    "Pages past the first are `noindex` (DiscoverMeta): the cursor is opaque and short-lived."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "href": "/circles?cursor=abc",
+        "label": "More circles",
+        "endLabel": "That's every circle."
+      }
+    },
+    "end": {
+      "props": {
+        "label": "More circles",
+        "endLabel": "That's every circle."
+      }
+    },
+    "template": {
+      "props": {
+        "href": "{{next_href}}",
+        "state": "{{more_state}}",
+        "label": "More circles"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["navigation", "link"],
+    "keyboard": ["Enter follows the link."],
+    "focus": ["The `--ring` focus ring."],
+    "aria": ["The nav is named; the link says what loads."],
+    "wcag": ["2.4.4", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "link",
+      "select": "a",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": ["--foreground", "--border", "--muted-foreground", "--ring"],
+    "brandOverlay": "None: an outline button.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Left-aligned under the results."],
+  "contract": "contract\n  slot is \"load-more\"\n  label is \"More results\"\n  a \"More circles\" min_height 48\n  when end shows p \"That's every circle.\"\n  when template slot is \"load-more\"\nend",
+  "checks": [
+    {
+      "say": "A next link.",
+      "select": "a[rel=\"next\"]",
+      "attr": {
+        "href": "/circles?cursor=abc"
+      }
+    },
+    {
+      "say": "More by default with an href.",
+      "select": "[data-slot=\"load-more\"]",
+      "attr": {
+        "data-state": "more"
+      }
+    },
+    {
+      "say": "The end line is hidden while there is more.",
+      "select": "p.hidden",
+      "count": 1
+    },
+    {
+      "say": "At the end, no link.",
+      "state": "end",
+      "select": "a",
+      "absent": true
+    },
+    {
+      "say": "End without an href.",
+      "state": "end",
+      "select": "[data-slot=\"load-more\"]",
+      "attr": {
+        "data-state": "end"
+      }
+    },
+    {
+      "say": "A server sets the link and the state.",
+      "state": "template",
+      "select": "[data-state=\"{{more_state}}\"] a[rel=\"next\"][href=\"{{next_href}}\"]",
+      "count": 1
+    },
+    {
+      "say": "No end label, no end line.",
+      "state": "template",
+      "select": "p",
+      "absent": true
+    }
+  ]
+}

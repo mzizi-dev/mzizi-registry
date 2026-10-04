@@ -1,0 +1,426 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/discover-card",
+  "title": "DiscoverCard",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "ONE card for every Discover page, with typed variants (article, event, circle, place) that share one anatomy: media, eyebrow, title (the primary link, covering the card), time, badge, figure, summary, meta, and actions (\"Open in Mukoko\").",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/DiscoverCard.astro",
+      "since": "0.5.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["card", "nyuchi-article-card", "nyuchi-timeline"]
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "\"article\" | \"event\" | \"circle\" | \"place\"",
+      "required": true,
+      "values": ["article", "event", "circle", "place"],
+      "description": "What the card shows; changes emphasis, never structure."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": true,
+      "description": "The item's page: the title link, which covers the card."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The item's name."
+    },
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false,
+      "description": "Source, category or region."
+    },
+    {
+      "name": "summary",
+      "type": "string",
+      "required": false,
+      "description": "Up to three lines."
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false,
+      "description": "An image URL; decorative by default (the title names the item). On top for article and event, a 48px round for circle and place."
+    },
+    {
+      "name": "imageAlt",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "Alt text when the image says something the title does not."
+    },
+    {
+      "name": "initial",
+      "type": "string",
+      "required": false,
+      "description": "A monogram when there is no image (circle, place)."
+    },
+    {
+      "name": "datetime",
+      "type": "string",
+      "required": false,
+      "description": "ISO 8601 for <time datetime>."
+    },
+    {
+      "name": "dateLabel",
+      "type": "string",
+      "required": false,
+      "description": "The time as read: published (article) or starts (event, in bold)."
+    },
+    {
+      "name": "place",
+      "type": "string",
+      "required": false,
+      "description": "Venue, town or region; the first meta item."
+    },
+    {
+      "name": "figure",
+      "type": "string",
+      "required": false,
+      "description": "A large figure on the right, e.g. \"24°\"."
+    },
+    {
+      "name": "figureLabel",
+      "type": "string",
+      "required": false,
+      "description": "Under the figure, e.g. \"Partly cloudy\"."
+    },
+    {
+      "name": "meta",
+      "type": "string[]",
+      "required": false,
+      "default": [],
+      "description": "More facts, in order."
+    },
+    {
+      "name": "badge",
+      "type": "string",
+      "required": false,
+      "description": "One short label, e.g. \"Public\", \"Free\"."
+    },
+    {
+      "name": "badgeTone",
+      "type": "string",
+      "required": false,
+      "default": "neutral",
+      "description": "neutral | brand | info | success | warning | danger (a server-filled shell may pass a placeholder)."
+    },
+    {
+      "name": "appHref",
+      "type": "string",
+      "required": false,
+      "description": "An \"Open in Mukoko\" link (https: a universal link or a server redirect)."
+    },
+    {
+      "name": "appLabel",
+      "type": "string",
+      "required": false,
+      "default": "Open in Mukoko",
+      "description": "The app link's text."
+    },
+    {
+      "name": "external",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "The title link leaves the site (a news source): rel=\"external noopener\"."
+    },
+    {
+      "name": "level",
+      "type": "2 | 3 | 4",
+      "required": false,
+      "default": 3,
+      "values": [2, 3, 4],
+      "description": "The title's heading level."
+    }
+  ],
+  "slots": [
+    {
+      "name": "media",
+      "expects": "An <img>, <svg> or <picture>",
+      "description": "Replaces `image` and `initial`, e.g. a weather icon."
+    },
+    {
+      "name": "actions",
+      "expects": "Links styled as buttons",
+      "description": "More actions after \"Open in Mukoko\"."
+    }
+  ],
+  "behaviour": [
+    "Renders its own <li>, to sit in a ResultGrid.",
+    "The title is a heading containing the one primary link, stretched over the card (`after:inset-0`); other actions sit above it (`z-10`) and stay separately focusable.",
+    "The app link's accessible name includes the title (\"Open in Mukoko: Harare Runners\").",
+    "Badge tones are a `data-tone` attribute styled by classes; status tones use the status minerals, `brand` uses `--primary`.",
+    "Server-filled shells: every text prop is a plain string, and text that fills to \"\" hides itself (`empty:hidden`), so the component can be built once with `{{placeholders}}` and filled by a server (circles.mukoko.com's Rust Worker)."
+  ],
+  "states": {
+    "default": {
+      "description": "A circle.",
+      "props": {
+        "variant": "circle",
+        "href": "/c/harare-runners",
+        "title": "Harare Runners",
+        "initial": "H",
+        "badge": "Public",
+        "badgeTone": "brand",
+        "summary": "Saturday long runs from the Borrowdale track.",
+        "meta": ["1,204 members", "Running · Sport"],
+        "appHref": "/c/harare-runners/join",
+        "appLabel": "Join in Mukoko"
+      }
+    },
+    "article": {
+      "props": {
+        "variant": "article",
+        "href": "https://example.org/story",
+        "external": true,
+        "title": "Rains arrive early in Mashonaland",
+        "eyebrow": "The Herald",
+        "image": "https://images.example/rain.jpg",
+        "datetime": "2026-10-04T08:00:00Z",
+        "dateLabel": "2 hours ago",
+        "summary": "Farmers welcome the first rains."
+      }
+    },
+    "event": {
+      "props": {
+        "variant": "event",
+        "href": "/events/jacaranda",
+        "title": "Jacaranda Music Festival",
+        "image": "https://images.example/jacaranda.jpg",
+        "datetime": "2026-10-24T18:00:00+02:00",
+        "dateLabel": "Sat 24 Oct, 18:00",
+        "place": "Harare Gardens, Harare",
+        "meta": ["312 going"],
+        "badge": "Free",
+        "badgeTone": "success"
+      }
+    },
+    "place": {
+      "props": {
+        "variant": "place",
+        "href": "/harare",
+        "title": "Harare",
+        "eyebrow": "Harare Province",
+        "figure": "24°",
+        "figureLabel": "Partly cloudy",
+        "meta": ["1,490 m"]
+      }
+    },
+    "template": {
+      "description": "A server-filled fragment.",
+      "props": {
+        "variant": "circle",
+        "href": "{{href}}",
+        "title": "{{name}}",
+        "initial": "{{initial}}",
+        "badge": "{{type_label}}",
+        "badgeTone": "{{type_tone}}",
+        "summary": "{{summary}}",
+        "meta": ["{{members}}", "{{categories}}"]
+      }
+    },
+    "media": {
+      "description": "Custom media and actions.",
+      "props": {
+        "variant": "place",
+        "href": "/bulawayo",
+        "title": "Bulawayo"
+      },
+      "slots": {
+        "media": "<svg aria-hidden='true' viewBox='0 0 1 1'></svg>",
+        "actions": "<a href='/bulawayo/forecast'>7-day forecast</a>"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["listitem", "article", "heading", "link"],
+    "keyboard": ["Tab reaches the title link, then each action."],
+    "focus": [
+      "The card shows the `--ring` ring while its title link has keyboard focus; actions show their own."
+    ],
+    "aria": [
+      "Media and the monogram are decorative (alt=\"\", aria-hidden) unless `imageAlt` says more; meaning is never colour alone (badges carry text)."
+    ],
+    "wcag": ["1.1.1", "1.3.1", "1.4.1", "2.4.4", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "app link",
+      "select": "[data-slot=\"discover-card-app\"]",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--card-foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--foreground",
+      "--primary",
+      "--ring"
+    ],
+    "brandOverlay": "The monogram and the `brand` badge tone tint with `--primary`; nothing else follows the brand.",
+    "statusColours": ["cobalt", "malachite", "gold", "terracotta"]
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Fills its grid cell; images keep 16:9; text wraps and the summary clamps at three lines."
+  ],
+  "contract": "contract\n  slot is \"discover-card\"\n  uses discover-card-badge\n  uses discover-card-meta\n  a \"Join in Mukoko\" min_height 48\n  when default shows a \"Harare Runners\"\n  when article shows h3 \"Rains arrive early in Mashonaland\"\n  when event shows time \"Sat 24 Oct, 18:00\"\n  when place shows span \"24°\"\n  when template shows a \"{{name}}\"\n  when media shows a \"7-day forecast\"\nend",
+  "checks": [
+    {
+      "say": "One primary link, in a heading.",
+      "state": "*",
+      "select": "h3 > a[data-card-link]",
+      "count": 1
+    },
+    {
+      "say": "The circle variant.",
+      "select": "li[data-variant=\"circle\"]",
+      "count": 1
+    },
+    {
+      "say": "The article variant.",
+      "state": "article",
+      "select": "li[data-variant=\"article\"]",
+      "count": 1
+    },
+    {
+      "say": "The event variant.",
+      "state": "event",
+      "select": "li[data-variant=\"event\"]",
+      "count": 1
+    },
+    {
+      "say": "The place variant.",
+      "state": "place",
+      "select": "li[data-variant=\"place\"]",
+      "count": 1
+    },
+    {
+      "say": "The monogram is decorative.",
+      "select": "[data-slot=\"discover-card-initial\"][aria-hidden=\"true\"]",
+      "count": 1
+    },
+    {
+      "say": "The app link names the item.",
+      "select": "[data-slot=\"discover-card-app\"]",
+      "attr": {
+        "href": "/c/harare-runners/join"
+      },
+      "text": "Join in Mukoko: Harare Runners"
+    },
+    {
+      "say": "The brand badge tone.",
+      "select": "[data-slot=\"discover-card-badge\"]",
+      "attr": {
+        "data-tone": "brand"
+      },
+      "text": "Public"
+    },
+    {
+      "say": "An internal link has no rel.",
+      "select": "a[data-card-link][rel]",
+      "absent": true
+    },
+    {
+      "say": "The article image is decorative, lazy and sized.",
+      "state": "article",
+      "select": "img[data-slot=\"discover-card-media\"]",
+      "attr": {
+        "alt": "",
+        "loading": "lazy",
+        "width": "640",
+        "height": "360"
+      }
+    },
+    {
+      "say": "A source link is marked external.",
+      "state": "article",
+      "select": "a[data-card-link]",
+      "attr": {
+        "rel": "external noopener"
+      }
+    },
+    {
+      "say": "The event's start is machine-readable.",
+      "state": "event",
+      "select": "time",
+      "attr": {
+        "datetime": "2026-10-24T18:00:00+02:00"
+      }
+    },
+    {
+      "say": "The place comes first in meta.",
+      "state": "event",
+      "select": "[data-slot=\"discover-card-meta\"] li",
+      "count": 2
+    },
+    {
+      "say": "A status tone.",
+      "state": "event",
+      "select": "[data-slot=\"discover-card-badge\"]",
+      "attr": {
+        "data-tone": "success"
+      }
+    },
+    {
+      "say": "The figure.",
+      "state": "place",
+      "select": "[data-slot=\"discover-card-figure\"]",
+      "count": 1,
+      "text": "Partly cloudy"
+    },
+    {
+      "say": "No image, no initial: no media.",
+      "state": "place",
+      "select": "img, [data-slot=\"discover-card-initial\"]",
+      "absent": true
+    },
+    {
+      "say": "A server sets the tone.",
+      "state": "template",
+      "select": "[data-slot=\"discover-card-badge\"]",
+      "attr": {
+        "data-tone": "{{type_tone}}"
+      }
+    },
+    {
+      "say": "Every meta placeholder renders.",
+      "state": "template",
+      "select": "[data-slot=\"discover-card-meta\"] li",
+      "count": 2
+    },
+    {
+      "say": "The media slot replaces the image.",
+      "state": "media",
+      "select": "[data-slot=\"discover-card-media\"] svg",
+      "count": 1
+    },
+    {
+      "say": "Actions sit above the stretched link.",
+      "state": "media",
+      "select": "[data-slot=\"discover-card-actions\"].z-10 a",
+      "count": 1
+    }
+  ]
+}
