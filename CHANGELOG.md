@@ -17,6 +17,13 @@ The "Verify" step for a new component ran `curl http://localhost:11736/api/v1/ui
 - **`CONTRIBUTING.md`**: the step now runs `pnpm registry:validate && pnpm registry:verify`, then `pnpm build && git status --porcelain` (every generator in write mode; commit what it writes). Once the change is on `main` and mzizi-api-gateway's registry pin reaches it, `https://api.mzizi.dev/v1/ui/my-component` serves it.
 - **`.github/pull_request_template.md`**: the "API verified" checkbox that curled the same local URL is replaced by the same `pnpm build` check.
 
+### Added — a push to `main` tells the registry pin bots at once (2026-10-04, #425)
+
+The registry pin bots (`registry-pin-bump.yml` in mzizi-api-gateway and agent-tools) only ran on their hourly schedule, and GitHub delays and drops scheduled runs: on 2026-10-04 they ran 2–3 hours apart, so api.mzizi.dev and mcp.mzizi.dev served a registry hours behind `main`.
+
+- **`.github/workflows/notify-pin-bots.yml`**: on every push to `main` (and by hand), it sends a `repository_dispatch` of type `registry-main-moved` to mzizi-dev/mzizi-api-gateway and agent-tools with `RELEASE_BUMP_TOKEN`, carrying the pushed SHA. It checks out and runs no code. A send that fails, or a missing token, only warns: the hourly run stays the backstop.
+- It does nothing until each bot also triggers on `repository_dispatch`, which lands in those repositories separately.
+
 ### Fixed — `wallet-card` and `mzizi-create-listing` take their colours from N1, and CI runs `lint:colors` (2026-10-04)
 
 `pnpm lint:colors` failed on `main` for nine raw palette hexes, and no CI job ran it (#423).

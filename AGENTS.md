@@ -225,6 +225,10 @@ add it as its own section rather than re-creating a dead link.
   changelog. [`.github/workflows/publish-crates.yml`](./.github/workflows/publish-crates.yml)
   publishes any crate version not yet on crates.io and tags it `mzizi-rs-vX.Y.Z`. Both run
   on merge to `main` with `RELEASE_BUMP_TOKEN`; nobody pushes a tag by hand.
+  [`.github/workflows/notify-pin-bots.yml`](./.github/workflows/notify-pin-bots.yml) also
+  runs on every push to `main`: it sends `registry-main-moved` to the registry pin bots in
+  mzizi-api-gateway and agent-tools, so api.mzizi.dev and mcp.mzizi.dev follow `main`
+  without waiting for the bots' hourly run.
 
 ## Track big work in GitHub issues
 
