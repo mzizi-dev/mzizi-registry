@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — releases follow the org versioning policy (2026-10-04)
+### Changed — releases follow the org versioning policy (2026-10-04, #412)
 
 `release.yml` and `publish-crates.yml` check the version with the shared `next-version` action (nyuchi/.github, pinned) before tagging or uploading. A release to `main` must be the next minor above the highest tag (the registry: 4.2.0, above v4.1.8; the crates: 0.2.0, above mzizi-rs-v0.1.0). A major is only released by hand, with `bump: major` on a manual run. The new `staging-version.yml` tags each merge into `staging` as the next patch. CONTRIBUTING.md § Versioning describes the policy.
 
