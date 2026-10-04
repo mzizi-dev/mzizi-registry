@@ -46,10 +46,17 @@
       "description": "Primary on an item's own page; outline beside another primary action."
     }
   ],
-  "slots": [],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "Links styled as buttons",
+      "description": "Other actions, beside the button and above the hint (e.g. \"Start your own circle\")."
+    }
+  ],
   "behaviour": [
     "One link styled as a button, then the hint.",
-    "The link is https: a `mukoko://` link does nothing for someone without the app, so it is never the href."
+    "The link is https: a `mukoko://` link does nothing for someone without the app, so it is never the href.",
+    "Other actions (the default slot) sit in the button's row; the hint is under the whole row."
   ],
   "states": {
     "default": {
@@ -63,6 +70,16 @@
         "href": "https://news.mukoko.com/open/article/123",
         "variant": "outline",
         "hint": ""
+      }
+    },
+    "actions": {
+      "description": "A second action beside the button.",
+      "props": {
+        "href": "/c/harare-runners/join",
+        "label": "Join in Mukoko"
+      },
+      "slots": {
+        "default": "<a href='/create'>Start your own circle</a>"
       }
     }
   },
@@ -97,7 +114,7 @@
     "without": "Everything: the component is server-rendered HTML with no script."
   },
   "responsive": ["The hint wraps under the button."],
-  "contract": "contract\n  slot is \"open-in-app\"\n  a \"Join in Mukoko\" min_height 48\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when outline shows a \"Open in Mukoko\"\nend",
+  "contract": "contract\n  slot is \"open-in-app\"\n  a \"Join in Mukoko\" min_height 48\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when outline shows a \"Open in Mukoko\"\n  when actions shows a \"Start your own circle\"\nend",
   "checks": [
     {
       "say": "An https link.",
@@ -126,6 +143,12 @@
       "state": "outline",
       "select": "p",
       "absent": true
+    },
+    {
+      "say": "The second action shares the button's row.",
+      "state": "actions",
+      "select": "[data-slot=\"open-in-app\"] > div > a",
+      "count": 2
     }
   ]
 }

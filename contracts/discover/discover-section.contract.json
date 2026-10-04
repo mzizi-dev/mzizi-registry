@@ -77,6 +77,13 @@
       "type": "string",
       "required": true,
       "description": "The section's id; its heading is `<id>-title`. Unique per page."
+    },
+    {
+      "name": "state",
+      "type": "string",
+      "required": false,
+      "default": "ok",
+      "description": "\"ok\" or \"empty\": empty hides the whole band, heading included. A server-filled shell may pass a placeholder."
     }
   ],
   "slots": [
@@ -88,7 +95,8 @@
   ],
   "behaviour": [
     "A <section> labelled by its heading, so it is a named region.",
-    "\"See all\" is a link styled as an outline button."
+    "\"See all\" is a link styled as an outline button.",
+    "`state=\"empty\"` hides the band (`data-state` and a class), so a section whose data came back empty disappears without template logic."
   ],
   "states": {
     "default": {
@@ -111,6 +119,14 @@
         "tone": "muted",
         "space": "tight",
         "level": 3
+      }
+    },
+    "empty": {
+      "description": "A section whose data came back empty.",
+      "props": {
+        "id": "latest",
+        "title": "More circles to explore",
+        "state": "empty"
       }
     }
   },
@@ -148,7 +164,7 @@
   "responsive": [
     "The heading block and \"See all\" share a row and wrap below it when narrow; padding grows from 48rem."
   ],
-  "contract": "contract\n  slot is \"discover-section\"\n  when default shows h2 \"Circles worth joining\"\n  when default shows a \"See every circle\"\n  when muted shows h3 \"Find circles by what you love\"\n  when muted class contains \"bg-secondary\"\n  a \"See every circle\" min_height 48\nend",
+  "contract": "contract\n  slot is \"discover-section\"\n  when default shows h2 \"Circles worth joining\"\n  when default shows a \"See every circle\"\n  when muted shows h3 \"Find circles by what you love\"\n  when muted class contains \"bg-secondary\"\n  a \"See every circle\" min_height 48\n  when empty class contains \"data-[state=empty]:hidden\"\nend",
   "checks": [
     {
       "say": "Labelled by its heading.",
@@ -172,6 +188,21 @@
       "select": "[data-slot=\"discover-section\"]",
       "attr": {
         "data-tone": "muted"
+      }
+    },
+    {
+      "say": "Empty hides the band.",
+      "state": "empty",
+      "select": "[data-slot=\"discover-section\"]",
+      "attr": {
+        "data-state": "empty"
+      }
+    },
+    {
+      "say": "State ok by default.",
+      "select": "[data-slot=\"discover-section\"]",
+      "attr": {
+        "data-state": "ok"
       }
     }
   ]
