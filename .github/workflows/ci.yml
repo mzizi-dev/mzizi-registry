@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
   pull_request:
-    branches: [main]
+    branches: [main, staging]
   # Manual trigger. Added because on 2026-08-26 neither this workflow nor its
   # sibling produced ANY run for PR #265 — zero runs created, both workflows
   # `active`, valid, correctly triggered on `pull_request: [main]`, while the
