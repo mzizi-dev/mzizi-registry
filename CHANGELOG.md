@@ -6,7 +6,27 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 **The rule (owner, 2026-09-30):** every pull request that changes behaviour, shipped content, an API response, a published package or crate, a default, a dependency or a documented fact adds its entry here, under `## [Unreleased]`, in the same pull request. The `changelog / entry required` check fails a pull request that doesn't. Pull requests that touch only `.github/`, lockfiles or lint config pass without one, and pure CI, lint or typo pull requests can carry the `no-changelog` label instead.
 
+From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): staging merges are patches, a release to `main` is the next minor above the highest tag, and a major is only released by hand. Versions released before then are not renumbered.
+
 ## [Unreleased]
+
+### Changed — every contract's `since` is `@bundu/ui` 0.3.0 (2026-10-04)
+
+Owner decision, 2026-10-04: versions bumped but never published are reset to the org versioning policy, so the next `@bundu/ui` release is 0.3.0, one minor above 0.2.0 on npm, and it carries everything the unpublished 0.3.0, 0.4.x and 0.5.0 entries described. The `implementations.astro.since` of the ten `app/` contracts that said 0.4.0 and the eleven `discover/` contracts that said 0.5.0 now say 0.3.0. Contract versions are unchanged.
+
+### Added — the Mzizi Discover Standard: a contract for each of the 11 Discover components (2026-10-04, #415)
+
+Owner decision, 2026-10-04: the discover pages of news, events, circles and weather must be identical, so they move into the Mukoko super-app on the web unchanged. Tracking: #413.
+
+- **`contracts/discover/`, a second contract family**: DiscoverShell, DiscoverMeta, DiscoverHero, DiscoverSearch, CategoryChips, CategoryChip, DiscoverSection, ResultGrid, DiscoverCard (one contract, variants `article`, `event`, `circle`, `place`), LoadMore and OpenInApp. Each is built in `@bundu/ui` (`src/discover/*.astro`, mzizi-dev/packages-npm) and evaluated there in every state. Where a server fills a prebuilt shell (circles.mukoko.com's Rust Worker), each contract has a `template` state with `{{placeholders}}`.
+- **`app/filter-bar` 1.1.0**: a `search` prop (`false` renders only the selects), `searchLabel` and `q` become optional, and a select whose value is `""` is no longer an active filter.
+- **`app/app-shell` 1.1.0**: the accent is `data-accent` plus the shell's stylesheet, not an inline `style`. **`app/bar-chart` 1.0.1**: bars are SVG geometry, not inline styles. The Astro runner now fails any inline `style` attribute, so a CSP needs no `style-src-attr 'unsafe-inline'`.
+- **`__tests__/contracts`** reads every family (`FAMILIES`) and fails on a directory under `contracts/` it does not read.
+- **CONTRIBUTING.md and AGENTS.md: upstream first.** A new or altered component goes upstream to Mzizi immediately; a local copy lives only as `TODO(mzizi)` with an open upstream PR.
+
+### Changed — releases follow the org versioning policy (2026-10-04, #412)
+
+`release.yml` and `publish-crates.yml` check the version with the shared `next-version` action (nyuchi/.github, pinned) before tagging or uploading. A release to `main` must be the next minor above the highest tag (the registry: 4.2.0, above v4.1.8; the crates: 0.2.0, above mzizi-rs-v0.1.0). A major is only released by hand, with `bump: major` on a manual run. The new `staging-version.yml` tags each merge into `staging` as the next patch. CONTRIBUTING.md § Versioning describes the policy.
 
 ### Changed — the nhimbe brand is retired: canon's events row is Mukoko Events, at events.mukoko.com (2026-10-04, #411)
 

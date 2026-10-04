@@ -1,0 +1,187 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/discover-hero",
+  "title": "DiscoverHero",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The top of every Discover page: breadcrumbs, an eyebrow, the page's one <h1>, a lead, the search box and the actions. Larger on the home page.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/DiscoverHero.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The page's <h1>."
+    },
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false,
+      "description": "A short label above the title (the service, or \"Category\")."
+    },
+    {
+      "name": "lead",
+      "type": "string",
+      "required": false,
+      "description": "One or two sentences."
+    },
+    {
+      "name": "count",
+      "type": "string",
+      "required": false,
+      "description": "A short count beside the actions, e.g. \"1,204 circles on Mukoko\"."
+    },
+    {
+      "name": "crumbs",
+      "type": "{ label: string; href?: string }[]",
+      "required": false,
+      "default": [],
+      "description": "Breadcrumbs; the last one, with no href, is the current page."
+    },
+    {
+      "name": "size",
+      "type": "\"home\" | \"page\"",
+      "required": false,
+      "default": "page",
+      "values": ["home", "page"],
+      "description": "`home` is larger (display title on wide screens)."
+    }
+  ],
+  "slots": [
+    {
+      "name": "search",
+      "expects": "DiscoverSearch",
+      "description": "The search box."
+    },
+    {
+      "name": "actions",
+      "expects": "Links styled as buttons, or OpenInApp",
+      "description": "The hero's actions, e.g. \"Create a circle\"."
+    }
+  ],
+  "behaviour": [
+    "The title is the page's only <h1>.",
+    "Breadcrumbs are a named <nav> and an ordered list; the current page is plain text with aria-current=\"page\".",
+    "The background is the brand wash (`gradient-showcase`).",
+    "Server-filled shells: every text prop is a plain string, and text that fills to \"\" hides itself (`empty:hidden`), so the component can be built once with `{{placeholders}}` and filled by a server (circles.mukoko.com's Rust Worker)."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "size": "home",
+        "eyebrow": "Mukoko Circles",
+        "title": "Find your people. Keep them close.",
+        "lead": "Circles are communities on Mukoko.",
+        "count": "1,204 circles on Mukoko"
+      },
+      "slots": {
+        "search": "<form role='search' action='/search'></form>",
+        "actions": "<a href='/create'>Create a circle</a>"
+      }
+    },
+    "page": {
+      "description": "A category page with breadcrumbs.",
+      "props": {
+        "eyebrow": "Category",
+        "title": "Running",
+        "crumbs": [
+          {
+            "label": "Circles",
+            "href": "/"
+          },
+          {
+            "label": "Running"
+          }
+        ]
+      }
+    },
+    "template": {
+      "description": "A server-filled shell.",
+      "props": {
+        "eyebrow": "{{eyebrow}}",
+        "title": "{{heading}}",
+        "lead": "{{lead}}",
+        "count": "{{total}}"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["heading", "navigation"],
+    "keyboard": ["Through the breadcrumb links, then the slots."],
+    "focus": ["Links show the `--ring` focus outline."],
+    "aria": [
+      "Breadcrumb nav is labelled \"Breadcrumb\"; the current crumb has aria-current=\"page\"; the separators are aria-hidden."
+    ],
+    "wcag": ["1.3.1", "2.4.6", "2.4.8"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--primary",
+      "--muted-foreground"
+    ],
+    "brandOverlay": "The wash (`gradient-showcase`) mixes `--primary` into the background, so it follows the brand overlay. Nothing else is brand-coloured.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Text is capped at the prose measure; the title balances its lines.",
+    "Padding grows from 48rem; on the home page the title steps up to the display size."
+  ],
+  "contract": "contract\n  slot is \"discover-hero\"\n  when default shows h1 \"Find your people. Keep them close.\"\n  when default shows p \"1,204 circles on Mukoko\"\n  when page shows a \"Circles\"\n  when template shows h1 \"{{heading}}\"\n  when template shows p \"{{eyebrow}}\"\nend",
+  "checks": [
+    {
+      "say": "One h1.",
+      "state": "*",
+      "select": "h1",
+      "count": 1
+    },
+    {
+      "say": "The home size.",
+      "select": "[data-slot=\"discover-hero\"]",
+      "attr": {
+        "data-size": "home"
+      }
+    },
+    {
+      "say": "No crumbs, no breadcrumb nav.",
+      "select": "nav[aria-label=\"Breadcrumb\"]",
+      "absent": true
+    },
+    {
+      "say": "Breadcrumbs are a named nav.",
+      "state": "page",
+      "select": "nav[aria-label=\"Breadcrumb\"] ol li",
+      "count": 2
+    },
+    {
+      "say": "The current crumb is marked.",
+      "state": "page",
+      "select": "[aria-current=\"page\"]",
+      "count": 1,
+      "text": "Running"
+    },
+    {
+      "say": "Empty text hides itself.",
+      "state": "template",
+      "select": "p.empty\\:hidden",
+      "min": 3
+    }
+  ]
+}
