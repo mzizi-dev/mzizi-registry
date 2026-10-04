@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added — `safe-area-frame`, `preview-canvas`, `preset-picker` and `mzizi-email-preview` (2026-10-04, #398)
+
+- **Four components from nyuchi-tools** (`nyuchi/workspace-tools`), contributed because the registry had no equivalent. `safe-area-frame` (N2) draws a canvas shape at thumbnail size with its platform-UI bands shaded, in React and as a Mzizi Roots component in `mzizi-ui` (`SafeAreaFrame`, `safe_area_bands`) — one geometry, held together by the contract suite. `preview-canvas` (N2) is a single-image stage with Fit or scaled zoom and a busy state; `preset-picker` (N2) picks output sizes on `safe-area-frame`, keeping "active" and "included" apart; `mzizi-email-preview` (N3) shows email HTML in a sandboxed frame on an always-light body. Tests in `__tests__/components/` and `mzizi-rs/crates/mzizi-ui/tests/contract.rs`.
+
 ### Security — security reports go to `security@nyuchi.com` (2026-10-03, #396)
 
 - **`SECURITY.md` names `security@nyuchi.com` as the email fallback** behind GitHub private advisories, in place of `security@bundu.org` (owner decision, 2026-10-03: one security contact for every repository). GitHub advisories stay the first channel.
