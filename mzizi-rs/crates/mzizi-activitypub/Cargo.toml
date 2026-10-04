@@ -1,0 +1,24 @@
+[package]
+name = "mzizi-activitypub"
+description = "Mzizi ActivityPub: the sans-IO documents a read-only ActivityPub host serves (actors' context, content negotiation, WebFinger, host-meta, NodeInfo, outbox collections), shared by Mukoko's circles and Kweli Workers."
+readme = "README.md"
+keywords = ["activitypub", "fediverse", "webfinger", "nodeinfo", "mzizi"]
+categories = ["web-programming", "wasm", "encoding"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+# `serde_json` is the one dependency, and unlike N8 and N11 it is not declined: every
+# document here is JSON-LD that the host also builds and edits as `serde_json::Value`
+# (an actor carries host-specific terms on top of what this crate gives it), so a
+# private JSON type would only make every caller convert. `url` percent-encodes
+# cursors in collection ids. Both are already in every Worker that uses this crate.
+[dependencies]
+serde_json = "1"
+url = "2"

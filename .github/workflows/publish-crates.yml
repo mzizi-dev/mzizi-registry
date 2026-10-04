@@ -125,7 +125,7 @@ jobs:
           order=(
             mzizi-tokens mzizi-ui mzizi-brand mzizi-shell
             mzizi-assurance mzizi-fundi mzizi-docs mzizi-discovery
-            mzizi-roots mzizi-roots-server
+            mzizi-activitypub mzizi-roots mzizi-roots-server
           )
 
           metadata=$(cargo metadata --manifest-path "$manifest" --no-deps --format-version 1)
