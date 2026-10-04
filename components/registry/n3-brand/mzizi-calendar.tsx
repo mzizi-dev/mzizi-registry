@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils"
    3. Month navigation with brand typography
    4. Integrated agenda slot for selected-day content
 
-   This is used by nhimbe (events), planner (tasks), and any
+   This is used by Mukoko Events, planner (tasks), and any
    app that needs a date-anchored content view.
 
    Design identity markers (4.2.0 density refresh):

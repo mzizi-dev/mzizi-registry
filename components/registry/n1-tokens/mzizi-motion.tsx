@@ -3,7 +3,7 @@
  *
  * Motion is not decoration — it is feedback, hierarchy, and spatial orientation.
  * Every animation in the Nyuchi ecosystem follows these tokens so that every brand app
- * (Mukoko, Bundu, Shamwari, Nhimbe, and every future app) FEELS the same even when they look different.
+ * (Mukoko, Bundu, Shamwari, Mukoko Events, and every future app) FEELS the same even when they look different.
  *
  * FOUR DURATION TIERS:
  *   quick:     100ms — micro-interactions (button press, toggle)

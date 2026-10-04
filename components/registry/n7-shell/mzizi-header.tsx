@@ -21,7 +21,7 @@ import { ExternalLink } from "@/lib/icons"
    The pill action group is a capsule-shaped container (9999px
    radius) in the brand accent color with 2-3 circular icon
    buttons inside. This is the brand identity — recognizable
-   across nhimbe, bushtrade, shamwari, and all ecosystem apps.
+   across Mukoko Events, bushtrade, shamwari, and all ecosystem apps.
    ═══════════════════════════════════════════════════════════════ */
 
 export interface NavItem {

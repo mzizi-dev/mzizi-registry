@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils"
    right thumbnail. Harness-wired for reduced-motion entry +
    observability. Quiet rows, full 1px borders, 13px muted metadata —
    the 4.2.0 density. Used for event/agenda discovery across the
-   ecosystem (nhimbe events, planner, any date-anchored feed).
+   ecosystem (Mukoko Events, planner, any date-anchored feed).
    ═══════════════════════════════════════════════════════════════ */
 
 type Mineral = "cobalt" | "tanzanite" | "malachite" | "gold" | "terracotta"

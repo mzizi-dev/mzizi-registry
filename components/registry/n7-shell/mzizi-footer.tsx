@@ -44,7 +44,7 @@ const DEFAULT_SECTIONS: FooterSection[] = [
   {
     title: "Platform",
     links: [
-      { label: "nhimbe", href: "/nhimbe" },
+      { label: "Mukoko Events", href: "/events" },
       { label: "Bush Trade", href: "/bushtrade" },
       { label: "Shamwari", href: "/shamwari" },
       { label: "Campfire", href: "/campfire" },

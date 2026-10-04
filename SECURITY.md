@@ -1,6 +1,6 @@
 # Security Policy
 
-Mzizi is the public registry and design system for the bundu ecosystem. It handles no end-user PII, but because it serves source code and AI instructions into downstream production apps (mukoko, nyuchi, nhimbe, shamwari, etc.), a supply-chain issue here can ripple out. Please report issues responsibly.
+Mzizi is the public registry and design system for the bundu ecosystem. It handles no end-user PII, but because it serves source code and AI instructions into downstream production apps (mukoko, nyuchi, Mukoko Events, shamwari, etc.), a supply-chain issue here can ripple out. Please report issues responsibly.
 
 ## Supported Versions
 
@@ -64,7 +64,7 @@ This policy covers anything this repository owns. It serves no website and no AP
 ## Out of Scope
 
 - Third-party npm dependencies — report those to their respective maintainers. We'll track and patch via `pnpm.overrides` once fixes ship; see `package.json`.
-- Applications that _consume_ the registry (`mukoko`, `nyuchi`, `nhimbe`, `shamwari`, etc.) — report those to their own repositories.
+- Applications that _consume_ the registry (`mukoko`, `nyuchi`, `mukoko-events`, `shamwari`, etc.) — report those to their own repositories.
 - Vulnerabilities that require a compromised maintainer account as a precondition.
 - Social engineering or physical attacks against maintainers.
 - Denial-of-service through volumetric means against Cloudflare / Supabase — those platforms own their edge.

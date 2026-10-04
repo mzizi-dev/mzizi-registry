@@ -27,7 +27,7 @@ import {
 
 const workspaces = [
   { id: "mukoko", label: "mukoko", color: "bg-cobalt" },
-  { id: "nhimbe", label: "nhimbe", color: "bg-tanzanite" },
+  { id: "events", label: "Mukoko Events", color: "bg-malachite" },
 ]
 
 const navGroups = [

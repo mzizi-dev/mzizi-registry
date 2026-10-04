@@ -27,7 +27,7 @@
  * palette data, these are doctrine. `scripts/check-tokens-upstream.mjs` checks
  * them against `/v1/brand` in CI — never at build or runtime.
  *
- * Structure is lifted from `nyuchi/nhimbe/src/app/globals.css`, which two
+ * Structure is lifted from the Mukoko Events app's `src/app/globals.css` (then `nyuchi/nhimbe`), which two
  * independent audits called the best-organised token file in the estate:
  * box-drawn section headers, a comment on every divergence naming what would
  * reverse it, provenance stamps, consistent ordering.
@@ -37,7 +37,7 @@
  */
 
 import type { ExperimentalToken, HeritageToken, MineralToken } from "../lib/tokens/palette.source"
-import { ecosystem } from "../lib/tokens/brand.source"
+import { ecosystem, ecosystemAliases } from "../lib/tokens/brand.source"
 
 type Mineral = MineralToken
 type Heritage = HeritageToken
@@ -239,7 +239,7 @@ export const STAGGER = [["tight", "30ms"], ["base", "50ms"], ["loose", "80ms"]] 
  * Touch targets and control heights — `/v1/brand` `accessibility` and
  * `componentSpecs`: minimum 48px, default 56px, buttons always pill.
  *
- * `nhimbe` runs a compact 36/32 scale and says so in a comment naming the
+ * Mukoko Events (formerly nhimbe) runs a compact 36/32 scale and says so in a comment naming the
  * doctrine values and the single knob that would adopt them. That is a
  * consumer's deliberate divergence; the default file ships the doctrine.
  */
@@ -510,12 +510,29 @@ export const BRANDS: ReadonlyArray<readonly [string, string, string]> = [
   ["bundu", ecosystemMineral("bundu"), "/v1/brand ecosystem[name=bundu].mineral"],
   ["shamwari", ecosystemMineral("shamwari"), "/v1/brand ecosystem[name=shamwari].mineral"],
   ["news", ecosystemMineral("news"), "/v1/brand ecosystem[name=news].mineral (owner decision, 2026-10-04)"],
-  ["nhimbe", ecosystemMineral("nhimbe"), "/v1/brand ecosystem[name=nhimbe].mineral (agrees with lib/tokens/index.ts mukoko.events)"],
+  ["events", ecosystemMineral("events"), "/v1/brand ecosystem[name=events].mineral, Mukoko Events (owner decision, 2026-10-04; agrees with lib/tokens/index.ts mukoko.events)"],
   ["bushtrade", ecosystemMineral("bushtrade"), "/v1/brand ecosystem[name=bushtrade].mineral (agrees with lib/tokens/index.ts mukoko.commerce)"],
   ["weather", ecosystemMineral("weather"), "/v1/brand ecosystem[name=weather].mineral (owner decision, 2026-10-04)"],
   ["kweli", ecosystemMineral("kweli"), "/v1/brand ecosystem[name=kweli].mineral (owner decision, 2026-10-04)"],
   ["learning", ecosystemMineral("learning"), "/v1/brand ecosystem[name=learning].mineral (owner decision, 2026-10-04: every Nyuchi brand is gold)"],
 ]
+
+/**
+ * Deprecated `data-brand` values, each mapped to the brand it now means. A
+ * block's selector list carries its aliases, so `data-brand="nhimbe"` keeps
+ * resolving after the rename to `events` (owner decision, 2026-10-04: the
+ * nhimbe brand is retired; the events platform is Mukoko Events). Read from
+ * canon's `aliases`, never retyped.
+ */
+export const BRAND_ALIASES: Readonly<Record<string, string>> = Object.fromEntries(
+  Object.entries(ecosystemAliases).filter(([, brand]) => BRANDS.some(([b]) => b === brand))
+)
+
+/** A brand's selector list: itself, then each deprecated alias. */
+function brandSelectors(brand: string): string {
+  const aliases = Object.keys(BRAND_ALIASES).filter((a) => BRAND_ALIASES[a] === brand)
+  return [brand, ...aliases].map((b) => `[data-brand="${b}"]`).join(",\n")
+}
 
 /** This stylesheet's default brand — the one `:root` resolves without `data-brand`. */
 export const DEFAULT_BRAND = "mzizi"
@@ -542,12 +559,18 @@ const lo = (hex: string) => (hex.startsWith("#") ? hex.toLowerCase() : hex)
 /** `--primary`/`--ring` are set per brand; everything else derives from them. */
 function brandBlocks(heritage: ReadonlyArray<{ name: string }>, experimental: ReadonlyArray<{ name: string }>): string {
   return BRANDS.map(
-    ([brand, mineral, source]) => `/* ${brand} — ${mineral}.
- * ${source} */
-[data-brand="${brand}"] {
+    ([brand, mineral, source]) => {
+      const aliases = Object.keys(BRAND_ALIASES).filter((a) => BRAND_ALIASES[a] === brand)
+      const aliasNote = aliases.length
+        ? `\n * Deprecated alias${aliases.length > 1 ? "es" : ""}, still honoured: ${aliases.join(", ")}.`
+        : ""
+      return `/* ${brand} — ${mineral}.
+ * ${source}${aliasNote} */
+${brandSelectors(brand)} {
   --primary: var(${aaVar(mineral, heritage, experimental)});
   --ring: var(--mineral-cobalt-aa);
 }`
+    }
   ).join("\n\n")
 }
 
@@ -968,7 +991,7 @@ ${brandBlocks(heritage, experimental)}
  * LOCAL OVERRIDES — the only block a consuming repo edits.
  *
  * Put divergence here, with a comment saying why and what would reverse it, the
- * way nhimbe's control-height block does. Everything above is generated and a
+ * way Mukoko Events' control-height block does. Everything above is generated and a
  * re-copy overwrites it; this block is where your copy stays yours.
  * ════════════════════════════════════════════════════════════════════════════ */`
 }
