@@ -190,7 +190,9 @@ jobs:
           {
             echo "The Mzizi Roots crates at $version on crates.io:"
             echo
-            for crate in $(cargo metadata --manifest-path mzizi-rs/Cargo.toml --no-deps --format-version 1 | jq -r '.packages[].name' | sort); do
+            crates=$(cargo metadata --manifest-path mzizi-rs/Cargo.toml --no-deps --format-version 1 \
+              | jq -r '.packages[].name' | sort)
+            for crate in $crates; do
               echo "- [\`$crate\` $version](https://crates.io/crates/$crate/$version)"
             done
             echo
