@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Security — the audit sets one advisory aside, by ID, until 2026-11-04 (2026-10-04)
+
+- **`pnpm audit` ignores GHSA-vfj7-8cjw-p6xm and nothing else** (`pnpm.auditConfig.ignoreGhsas` in `package.json`). It is `braces` <=3.0.3 (ReDoS on deeply nested patterns), which has **no patched release**, reached only through `@next/eslint-plugin-next > fast-glob > micromatch`: lint tooling run on this repository's own files, never shipped in a registry item or served by the API. It failed `audit:check` (and so `pnpm check` and the pre-commit hook) on every branch, `main` included. The level stays `moderate`, so any other advisory still fails. **Recheck by 2026-11-04**: remove the entry once `braces` publishes a fix or the plugin drops it.
+
 ### Security — security reports go to `security@nyuchi.com` (2026-10-03, #396)
 
 - **`SECURITY.md` names `security@nyuchi.com` as the email fallback** behind GitHub private advisories, in place of `security@bundu.org` (owner decision, 2026-10-03: one security contact for every repository). GitHub advisories stay the first channel.
