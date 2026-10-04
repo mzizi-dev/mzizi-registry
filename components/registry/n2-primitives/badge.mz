@@ -1,0 +1,33 @@
+## A small status label. Not interactive, so no touch floor applies.
+## Corpus reference: n2-primitives/badge.tsx.
+component badge
+
+  enum badge_variant
+    default      class "bg-primary text-primary-foreground"
+    secondary    class "bg-secondary text-secondary-foreground"
+    destructive  class "bg-destructive/10 text-destructive dark:bg-destructive/20"
+    outline      class "border-border text-foreground bg-input/30"
+    ghost        class "hover:bg-muted hover:text-muted-foreground"
+    link         class "text-primary underline-offset-4 hover:underline"
+  end
+
+  prop variant: badge_variant = default
+  prop label: text
+
+  view
+    mark
+      slot = "badge"
+      portal = "https://mzizi.dev/components/badge"
+      variant = variant
+      class = "inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-md border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all {variant.class}"
+      text = label
+    end
+  end
+
+  contract
+    every badge_variant class not_empty
+    badge_variant.default class contains "bg-primary"
+    slot is "badge"
+  end
+
+end component badge

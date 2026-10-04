@@ -1,0 +1,45 @@
+## A pill-shaped lifecycle label: stable, beta, alpha or deprecated, each tinted with one of
+## the Seven Minerals at 10% behind the mineral itself. The word is always shown, so the
+## status never depends on colour alone. Not interactive, so no touch floor applies.
+## Siblings: status-badge.tsx (React) and status-badge.rs (Mzizi Roots). One contract.
+component status_badge
+
+  enum status_badge_status
+    stable      class "bg-malachite/10 text-malachite"                 mineral "malachite"
+    beta        class "bg-cobalt/10 text-cobalt"                       mineral "cobalt"
+    alpha       class "bg-gold/10 text-gold"                           mineral "gold"
+    deprecated  class "bg-terracotta/10 text-terracotta line-through"  mineral "terracotta"
+  end
+
+  prop status: status_badge_status = stable
+  prop label: option(text)
+
+  view
+    mark
+      slot = "status-badge"
+      portal = "https://mzizi.dev/components/status-badge"
+      variant = "outline"
+      class = "inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent bg-input/30 px-2 py-0.5 font-mono text-[10px] font-medium tracking-wide whitespace-nowrap uppercase transition-all {status.class}"
+      when label is none
+        words
+          slot = "status-badge-label"
+          text = "{status}"
+        end
+      else
+        words
+          slot = "status-badge-label"
+          text = label
+        end
+      end
+    end
+  end
+
+  contract
+    slot is "status-badge"
+    every status_badge_status class not_empty
+    every status_badge_status mineral not_empty
+    status_badge_status.stable class contains "malachite"
+    status_badge_status.deprecated class contains "line-through"
+  end
+
+end component status_badge

@@ -126,9 +126,14 @@ const warn = (item, msg) => warnings.push(`${item}: ${msg}`)
 
 /** Extensions that serve the React/shadcn surface, in preference order. */
 const PRIMARY_EXTENSIONS = [".tsx", ".ts", ".jsx", ".js"]
+// A raster brand asset ranks below its vector sibling, as in generate-file-paths.mjs.
+const RASTER_EXTENSIONS = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif"]
 const primaryRank = (ext) => {
   const i = PRIMARY_EXTENSIONS.indexOf(ext.toLowerCase())
-  return i === -1 ? PRIMARY_EXTENSIONS.length : i
+  if (i !== -1) return i
+  return RASTER_EXTENSIONS.includes(ext.toLowerCase())
+    ? PRIMARY_EXTENSIONS.length + 1
+    : PRIMARY_EXTENSIONS.length
 }
 
 /**

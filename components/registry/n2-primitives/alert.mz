@@ -1,0 +1,45 @@
+## A status message. `role` follows severity: an error alert announces assertively.
+## Corpus reference: n2-primitives/alert.tsx.
+component alert
+
+  ## The `announce` column is why this is a table and not a class map: the a11y role and
+  ## the colour are one decision per severity, so they cannot drift apart.
+  enum alert_variant
+    default      class "bg-card text-card-foreground"                    announce "status"
+    destructive  class "bg-card text-destructive"                        announce "alert"
+    warning      class "bg-card text-[var(--status-warning,#FFD740)]"     announce "alert"
+    info         class "bg-card text-[var(--status-info,#00B0FF)]"        announce "status"
+  end
+
+  prop variant: alert_variant = default
+  prop title: text
+  prop message: text
+
+  view
+    notice
+      slot = "alert"
+      portal = "https://mzizi.dev/components/alert"
+      variant = variant
+      role = variant.announce
+      class = "relative flex w-full gap-3 rounded-[var(--radius-lg,14px)] border border-border p-4 text-sm ring-1 ring-foreground/10 {variant.class}"
+      row
+        slot = "alert-title"
+        class = "font-medium"
+        text = title
+      end
+      row
+        slot = "alert-description"
+        class = "text-muted-foreground"
+        text = message
+      end
+    end
+  end
+
+  contract
+    every alert_variant announce in "status" "alert"
+    alert_variant.destructive announce is "alert"
+    alert_variant.default announce is "status"
+    slot is "alert"
+  end
+
+end component alert

@@ -11644,6 +11644,78 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The mzizi mark for dark grounds: seven nodes, a hub and six roots, joined into one network, drawn in hematite (mzizi's mineral, #90a4ae) with the edges at 55%. A vector SVG master; installs into public/brand/. Never recolour or redraw it.",
+      "docs": "Use it for: The mzizi logo on dark grounds, App icons and favicons, Headers, footers and docs pages.\nIncludes: Vector SVG master, Hematite, mzizi's ecosystem mineral, role=\"img\" with a <title>.\nAccessibility: role=\"img\" and aria-label=\"mzizi\", Nodes clear 4.5:1 on their dark ground.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-mark-dark",
+      "files": [
+        {
+          "path": "components/registry/assets/mzizi-mark-dark.svg",
+          "target": "public/brand/mzizi-mark-dark.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"img\" and aria-label=\"mzizi\"",
+          "Nodes clear 4.5:1 on their dark ground"
+        ],
+        "collection": "assets",
+        "features": [
+          "Vector SVG master",
+          "Hematite, mzizi's ecosystem mineral",
+          "role=\"img\" with a <title>"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The mzizi logo on dark grounds",
+          "App icons and favicons",
+          "Headers, footers and docs pages"
+        ]
+      },
+      "name": "mzizi-mark-dark",
+      "registryDependencies": [],
+      "title": "mzizi Mark Dark",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The mzizi mark for light grounds (background, card): seven nodes, a hub and six roots, joined into one network, drawn in hematite (mzizi's mineral, #546e7a) with the edges at 55%. A vector SVG master; installs into public/brand/. Never recolour or redraw it.",
+      "docs": "Use it for: The mzizi logo on light grounds (background, card), App icons and favicons, Headers, footers and docs pages.\nIncludes: Vector SVG master, Hematite, mzizi's ecosystem mineral, role=\"img\" with a <title>.\nAccessibility: role=\"img\" and aria-label=\"mzizi\", Nodes clear 4.5:1 on their light ground.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-mark-light",
+      "files": [
+        {
+          "path": "components/registry/assets/mzizi-mark-light.svg",
+          "target": "public/brand/mzizi-mark-light.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"img\" and aria-label=\"mzizi\"",
+          "Nodes clear 4.5:1 on their light ground"
+        ],
+        "collection": "assets",
+        "features": [
+          "Vector SVG master",
+          "Hematite, mzizi's ecosystem mineral",
+          "role=\"img\" with a <title>"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The mzizi logo on light grounds (background, card)",
+          "App icons and favicons",
+          "Headers, footers and docs pages"
+        ]
+      },
+      "name": "mzizi-mark-light",
+      "registryDependencies": [],
+      "title": "mzizi Mark Light",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": ["dompurify"],
       "description": "Brand media components for the Nyuchi ecosystem. Exports MukokoMediaViewer (full-screen image/video viewer with swipe navigation, pinch-to-zoom, share), MukokoImageGallery (multi-image grid with lightbox expansion and count badge), MukokoReaderMode (long-form content reader with adjustable font size, line height, theme, and estimated reading time for articles and novel chapters), MukokoMediaMessage (standardized format for image/video/audio/document/location messages in Campfire chat), and MukokoStoryRing (ephemeral content avatar ring with gradient border and unseen indicator). Maps to bytes.video_object, novels.chapter, news.news_article, campfire.message, and content.creative_work.",
@@ -18822,6 +18894,44 @@
       "name": "stats-card",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/card"],
       "title": "Stats Card",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "A pill-shaped lifecycle label — stable, beta, alpha or deprecated — each tinted with one of the Seven Minerals at 10% behind the mineral itself (malachite, cobalt, gold, terracotta). Built on Badge. Ships in three builds that share one contract: React (.tsx), Mzizi Roots (.rs, mzizi-ui) and the Mzizi language (.mz).",
+      "docs": "Use it for: Component and API lifecycle labels in docs and registries, Feature maturity next to a setting or a nav item, Release notes and changelogs.\nVariants: stable, beta, alpha, deprecated.\nIncludes: cn() for className composition, data-slot attribute, Mineral tints from the Seven Minerals, Rust (mzizi-ui) and Mzizi (.mz) siblings with one contract.\nAccessibility: The status is always written out, never colour alone, Text clears 4.5:1 on its tint in both themes.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/status-badge",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/status-badge.tsx",
+          "target": "components/ui/status-badge.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The status is always written out, never colour alone",
+          "Text clears 4.5:1 on its tint in both themes"
+        ],
+        "collection": "primitives",
+        "features": [
+          "cn() for className composition",
+          "data-slot attribute",
+          "Mineral tints from the Seven Minerals",
+          "Rust (mzizi-ui) and Mzizi (.mz) siblings with one contract"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "Component and API lifecycle labels in docs and registries",
+          "Feature maturity next to a setting or a nav item",
+          "Release notes and changelogs"
+        ],
+        "variants": ["stable", "beta", "alpha", "deprecated"]
+      },
+      "name": "status-badge",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/badge"],
+      "title": "Status Badge",
       "type": "registry:ui"
     },
     {

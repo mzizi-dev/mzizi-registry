@@ -1,0 +1,54 @@
+## The pill button. Always rounded-full per brand; never below the 48px touch floor.
+## Corpus reference: n2-primitives/button.tsx (variant + size via cva).
+component button
+
+  enum button_variant
+    default      class "bg-primary text-primary-foreground hover:bg-primary/80"
+    outline      class "border-border bg-input/30 hover:bg-input/50 hover:text-foreground"
+    secondary    class "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+    ghost        class "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50"
+    destructive  class "bg-destructive/10 hover:bg-destructive/20 text-destructive"
+    link         class "text-primary underline-offset-4 hover:underline"
+  end
+
+  ## Sizes carry their own touch height as data, so the contract below can check every
+  ## one of them. In the .tsx these heights live in Tailwind class strings only, which is
+  ## how the same rule got violated five separate times across the corpus.
+  enum button_size
+    default   class "h-14 gap-2 px-5"     height 56
+    sm        class "h-12 gap-1.5 px-4"   height 48
+    lg        class "h-14 gap-2 px-6"     height 56
+    icon      class "size-14"             height 56
+    icon_sm   class "size-12"             height 48
+  end
+
+  prop variant: button_variant = default
+  prop size: button_size = default
+  prop label: text
+  prop disabled: bool = false
+  prop on_tap: event(none)
+
+  view
+    control
+      slot = "button"
+      portal = "https://mzizi.dev/components/button"
+      role = "button"
+      variant = variant
+      size = size
+      disabled = disabled
+      class = "inline-flex items-center justify-center whitespace-nowrap rounded-full border border-transparent text-sm font-medium transition-all outline-none select-none shrink-0 disabled:pointer-events-none disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] {variant.class} {size.class}"
+      text = label
+      tap = on_tap
+    end
+  end
+
+  ## The rule the corpus kept breaking, as one line the compiler can hold us to.
+  contract
+    every button_size height at_least 48
+    button_size.default height is 56
+    button_size.sm height is 48
+    button_variant.default class contains "bg-primary"
+    slot is "button"
+  end
+
+end component button
