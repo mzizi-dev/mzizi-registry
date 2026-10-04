@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — CONTRIBUTING no longer says to curl a local server (2026-10-04, #426)
+
+The "Verify" step for a new component ran `curl http://localhost:11736/api/v1/ui/my-component`, but the app and its `/api/*` handlers were removed on 2026-10-02 and nothing listens there.
+
+- **`CONTRIBUTING.md`**: the step now runs `pnpm registry:validate && pnpm registry:verify`, then `pnpm build && git status --porcelain` (every generator in write mode; commit what it writes). Once the change is on `main` and mzizi-api-gateway's registry pin reaches it, `https://api.mzizi.dev/v1/ui/my-component` serves it.
+- **`.github/pull_request_template.md`**: the "API verified" checkbox that curled the same local URL is replaced by the same `pnpm build` check.
+
 ### Added — a push to `main` tells the registry pin bots at once (2026-10-04, #425)
 
 The registry pin bots (`registry-pin-bump.yml` in mzizi-api-gateway and agent-tools) only ran on their hourly schedule, and GitHub delays and drops scheduled runs: on 2026-10-04 they ran 2–3 hours apart, so api.mzizi.dev and mcp.mzizi.dev served a registry hours behind `main`.
