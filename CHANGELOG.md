@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — the Mzizi Discover Standard: a contract for each of the 11 Discover components (2026-10-04, #414)
+### Added — the Mzizi Discover Standard: a contract for each of the 11 Discover components (2026-10-04, #415)
 
 Owner decision, 2026-10-04: the discover pages of news, events, circles and weather must be identical, so they move into the Mukoko super-app on the web unchanged. Tracking: #413.
 
