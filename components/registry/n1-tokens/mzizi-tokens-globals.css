@@ -897,8 +897,10 @@
   --ring: var(--mineral-cobalt-aa);
 }
 
-/* nhimbe — malachite.
- * /v1/brand ecosystem[name=nhimbe].mineral (agrees with lib/tokens/index.ts mukoko.events) */
+/* events — malachite.
+ * /v1/brand ecosystem[name=events].mineral, Mukoko Events (owner decision, 2026-10-04; agrees with lib/tokens/index.ts mukoko.events)
+ * Deprecated alias, still honoured: nhimbe. */
+[data-brand="events"],
 [data-brand="nhimbe"] {
   --primary: var(--mineral-malachite-aa);
   --ring: var(--mineral-cobalt-aa);
@@ -936,6 +938,6 @@
  * LOCAL OVERRIDES — the only block a consuming repo edits.
  *
  * Put divergence here, with a comment saying why and what would reverse it, the
- * way nhimbe's control-height block does. Everything above is generated and a
+ * way Mukoko Events' control-height block does. Everything above is generated and a
  * re-copy overwrites it; this block is where your copy stays yours.
  * ════════════════════════════════════════════════════════════════════════════ */
