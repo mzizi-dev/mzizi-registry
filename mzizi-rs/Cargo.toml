@@ -41,6 +41,7 @@ members = [
   "crates/mzizi-assurance",
   "crates/mzizi-fundi",
   "crates/mzizi-discovery",
+  "crates/mzizi-activitypub",
   "crates/mzizi-docs",
   "crates/mzizi-shell",
   "crates/mzizi-roots",
