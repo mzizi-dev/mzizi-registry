@@ -863,12 +863,16 @@ export const brandOverrides: Record<
 > = {
   // ─── Mini-App accents (canonical from brand_ecosystem table) ──
   // Mineral assignments: tanzanite=identity/social/premium, cobalt=info/education/productivity,
-  // malachite=events/health/nature, gold=commerce/places/wallet, terracotta=community
+  // malachite=events/health/nature, gold=commerce/places/wallet, terracotta=community,
+  // sodalite=AI (shamwari)
   mukoko: brandAccent("tanzanite", "#CE9FFF"),
   nhimbe: brandAccent("malachite", "#80FFE4"),
   bushtrade: brandAccent("gold", "#FFDF6B"),
   lingo: brandAccent("cobalt", "#40C4FF"),
-  shamwari: brandAccent("tanzanite", "#CE9FFF"),
+  // Sodalite, canon's mineral for shamwari (`/v1/brand` ecosystem). Canon
+  // authors no sodalite hover tint, so this one is cobalt's rule (25% toward
+  // white: #00B0FF -> #40C4FF) applied to #3D5AFE, until canon authors one.
+  shamwari: brandAccent("sodalite", "#6E83FE"),
   campfire: brandAccent("malachite", "#80FFE4"),
   bytes: brandAccent("tanzanite", "#CE9FFF"),
   novels: brandAccent("malachite", "#80FFE4"),
@@ -955,7 +959,7 @@ export const brandIndustryCategories: Record<
   },
   shamwari: {
     ai: {
-      mineral: "tanzanite",
+      mineral: "sodalite",
       label: "AI Companion",
       products: ["Shamwari AI", "Digital Twin"],
     },
