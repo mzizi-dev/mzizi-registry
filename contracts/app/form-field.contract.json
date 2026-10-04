@@ -1,0 +1,178 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/form-field",
+  "title": "FormField",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "Label, input, hint and error wired together: the label is always visible, the hint and error are the input's description, and an error sets aria-invalid.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/FormField.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["form"]
+  },
+  "props": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "The field name; the id is `field-<name>`."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "Visible label."
+    },
+    {
+      "name": "value",
+      "type": "string | null",
+      "required": false,
+      "description": "The current value."
+    },
+    {
+      "name": "type",
+      "type": "\"text\" | \"email\" | \"tel\" | \"url\" | \"search\"",
+      "required": false,
+      "default": "text",
+      "values": ["text", "email", "tel", "url", "search"],
+      "description": "Input type."
+    },
+    {
+      "name": "hint",
+      "type": "string",
+      "required": false,
+      "description": "Help under the field."
+    },
+    {
+      "name": "error",
+      "type": "string | null",
+      "required": false,
+      "description": "The error under the field."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Marks the label \"(required)\" and the input required."
+    },
+    {
+      "name": "readonly",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Read-only, on a muted fill."
+    },
+    {
+      "name": "autocomplete",
+      "type": "string",
+      "required": false,
+      "description": "Autocomplete token."
+    },
+    {
+      "name": "maxlength",
+      "type": "number",
+      "required": false,
+      "description": "Maximum length."
+    },
+    {
+      "name": "inputmode",
+      "type": "\"text\" | \"tel\" | \"email\" | \"url\"",
+      "required": false,
+      "values": ["text", "tel", "email", "url"],
+      "description": "Virtual keyboard hint."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "\"(required)\" is written in the label, not shown by an asterisk alone.",
+    "aria-describedby lists the hint and then the error.",
+    "aria-invalid=\"true\" only with an error."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "name": "email",
+        "label": "Email",
+        "type": "email",
+        "hint": "We never share it.",
+        "error": "Enter an email address.",
+        "required": true
+      }
+    },
+    "clean": {
+      "props": {
+        "name": "name",
+        "label": "Name"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["textbox"],
+    "keyboard": ["Native input."],
+    "focus": ["`--ring` focus ring."],
+    "aria": [
+      "aria-describedby to hint and error.",
+      "aria-invalid with an error."
+    ],
+    "wcag": ["1.3.1", "3.3.1", "3.3.2", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "input",
+      "select": "input",
+      "fine": 36,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground",
+      "--destructive"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Fills its column; 16px text on touch so iOS never zooms."],
+  "contract": "contract\n  slot is \"form-field\"\n  uses label\n  uses input\n  when default shows label \"(required)\"\nend",
+  "checks": [
+    {
+      "say": "The input is described by hint and error.",
+      "select": "input#field-email",
+      "count": 1,
+      "attr": {
+        "aria-describedby": "field-email-hint field-email-error",
+        "aria-invalid": "true",
+        "required": true
+      }
+    },
+    {
+      "say": "The label points at the input.",
+      "select": "label[for=\"field-email\"]",
+      "count": 1
+    },
+    {
+      "say": "No error, no aria-invalid.",
+      "state": "clean",
+      "select": "input[aria-invalid]",
+      "absent": true
+    }
+  ]
+}

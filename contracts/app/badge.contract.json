@@ -1,0 +1,126 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/badge",
+  "title": "Badge",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A small status or category label, to the registry's `badge` contract: the same six variants, data-slot and data-variant, and classes as badge.tsx and badge.rs.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Badge.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "badge",
+      "identity": "slot+variants"
+    },
+    "rs": {
+      "registry": "badge",
+      "identity": "slot+variants"
+    }
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "BadgeVariant",
+      "required": false,
+      "default": "default",
+      "values": [
+        "default",
+        "secondary",
+        "destructive",
+        "outline",
+        "ghost",
+        "link"
+      ],
+      "description": "The registry badge variants."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The text."
+    }
+  ],
+  "behaviour": [
+    "data-variant always names the variant, the default included.",
+    "Text never wraps (whitespace-nowrap)."
+  ],
+  "states": {
+    "default": {
+      "props": {},
+      "slots": {
+        "default": "New"
+      }
+    },
+    "destructive": {
+      "props": {
+        "variant": "destructive"
+      },
+      "slots": {
+        "default": "Revoked"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["none (text)"],
+    "keyboard": ["None."],
+    "focus": ["None."],
+    "aria": ["Meaning is in the text, never colour alone."],
+    "wcag": ["1.4.1"]
+  },
+  "density": [
+    {
+      "part": "badge",
+      "select": "span",
+      "fine": 20,
+      "coarse": 20
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--primary",
+      "--primary-foreground",
+      "--secondary",
+      "--secondary-foreground",
+      "--destructive",
+      "--border",
+      "--muted"
+    ],
+    "brandOverlay": "The default variant is `--primary`, so it wears the brand mineral.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Inline; never wraps."],
+  "contract": "contract\n  slot is \"badge\"\n  class contains \"bg-primary\"\n  when destructive class contains \"text-destructive\"\nend",
+  "checks": [
+    {
+      "say": "data-variant names the default.",
+      "select": "[data-slot=\"badge\"]",
+      "count": 1,
+      "attr": {
+        "data-variant": "default"
+      }
+    },
+    {
+      "say": "data-variant names the variant.",
+      "state": "destructive",
+      "select": "[data-slot=\"badge\"]",
+      "count": 1,
+      "attr": {
+        "data-variant": "destructive"
+      }
+    }
+  ]
+}

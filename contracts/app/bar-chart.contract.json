@@ -1,0 +1,185 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/bar-chart",
+  "title": "BarChart",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/BarChart.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["chart"]
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The chart's heading (<h3>)."
+    },
+    {
+      "name": "caption",
+      "type": "string",
+      "required": true,
+      "description": "One sentence: what is counted, over what range."
+    },
+    {
+      "name": "data",
+      "type": "{ label: string; value: number; long?: string }[]",
+      "required": true,
+      "description": "The points; `long` is the table's label."
+    },
+    {
+      "name": "layout",
+      "type": "\"columns\" | \"rows\"",
+      "required": false,
+      "default": "columns",
+      "values": ["columns", "rows"],
+      "description": "Columns along the bottom, or one labelled bar per row."
+    },
+    {
+      "name": "valueLabel",
+      "type": "string",
+      "required": false,
+      "default": "Count",
+      "description": "The figures table's value header."
+    },
+    {
+      "name": "labelHeading",
+      "type": "string",
+      "required": false,
+      "default": "Label",
+      "description": "The figures table's label header."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "default": "chart",
+      "description": "Prefix for the title id."
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false,
+      "default": "en-GB",
+      "description": "BCP 47 locale for numbers."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The bars are aria-hidden; the figures table (with a total) is the accessible version.",
+    "No data or all zero: \"Nothing to chart in this range.\"",
+    "At most ~8 axis labels, always the first and last.",
+    "Bar sizes are inline styles: a CSP needs style-src 'unsafe-inline' or a hash."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "title": "Sign-ups",
+        "caption": "Per day, last 3 days",
+        "data": [
+          {
+            "label": "Mon",
+            "value": 3
+          },
+          {
+            "label": "Tue",
+            "value": 0
+          },
+          {
+            "label": "Wed",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "rows": {
+      "props": {
+        "title": "By role",
+        "caption": "Now",
+        "layout": "rows",
+        "data": [
+          {
+            "label": "Admin",
+            "value": 2
+          }
+        ]
+      }
+    },
+    "empty": {
+      "props": {
+        "title": "Sign-ups",
+        "caption": "None",
+        "data": []
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["figure (aria-labelledby the title)", "table (figures)"],
+    "keyboard": ["Enter/Space on \"Show the figures\"."],
+    "focus": ["Default."],
+    "aria": ["Bars aria-hidden; the table has a caption."],
+    "wcag": ["1.1.1", "1.3.1", "1.4.1", "1.4.10"]
+  },
+  "density": [
+    {
+      "part": "figures disclosure",
+      "select": "summary",
+      "fine": 44,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground",
+      "--primary"
+    ],
+    "brandOverlay": "Bars are `--primary`, so they wear the brand mineral; the layout is identical.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Scales from 320px to 1920px without distorting text; the plot is 12rem tall, 14rem from sm."
+  ],
+  "contract": "contract\n  slot is \"bar-chart\"\n  summary \"Show the figures\" min_height 44\n  when default shows h3 \"Sign-ups\"\n  when empty shows p \"Nothing to chart in this range.\"\n  when rows shows th \"Admin\"\nend",
+  "checks": [
+    {
+      "say": "Labelled figure.",
+      "select": "figure[aria-labelledby=\"chart-title\"]",
+      "count": 1
+    },
+    {
+      "say": "Bars are hidden from screen readers.",
+      "select": "figure > [aria-hidden=\"true\"]",
+      "count": 1
+    },
+    {
+      "say": "Every value is in the table, with a total.",
+      "select": "tbody tr",
+      "count": 3
+    },
+    {
+      "say": "Total row.",
+      "select": "tfoot th",
+      "count": 1,
+      "text": "Total"
+    }
+  ]
+}

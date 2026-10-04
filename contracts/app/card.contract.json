@@ -1,0 +1,95 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/card",
+  "title": "Card",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "The `.card` surface, with padding none, sm, md or lg.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Card.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "card",
+      "identity": "slot",
+      "divergences": [
+        "The registry card has header, title, description, action, content and footer parts; the app Card is the surface only."
+      ]
+    },
+    "rs": {
+      "registry": "card",
+      "identity": "slot",
+      "divergences": ["As for the .tsx."]
+    }
+  },
+  "props": [
+    {
+      "name": "padding",
+      "type": "\"none\" | \"sm\" | \"md\" | \"lg\"",
+      "required": false,
+      "default": "md",
+      "values": ["none", "sm", "md", "lg"],
+      "description": "0 / 16 / 24 / 32px."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The content."
+    }
+  ],
+  "behaviour": [
+    "A <div class=\"card\">: surface, border and radius come from the `.card` rule in the stylesheet."
+  ],
+  "states": {
+    "default": {
+      "props": {},
+      "slots": {
+        "default": "Body"
+      }
+    },
+    "flush": {
+      "props": {
+        "padding": "none"
+      },
+      "slots": {
+        "default": "Body"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["none"],
+    "keyboard": ["None."],
+    "focus": ["None."],
+    "aria": ["None."],
+    "wcag": []
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--card", "--card-foreground", "--border", "--radius-lg"],
+    "brandOverlay": "None.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Fills its container."],
+  "contract": "contract\n  slot is \"card\"\n  class contains \"card\"\n  when flush slot is \"card\"\nend",
+  "checks": [
+    {
+      "say": "Default padding is md.",
+      "select": "[data-slot=\"card\"].p-6",
+      "count": 1
+    }
+  ]
+}

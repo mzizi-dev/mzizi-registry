@@ -1,0 +1,100 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/stat-tiles",
+  "title": "StatTiles",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "One bordered row of equal StatTiles with hairline dividers, as a description list.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/StatTiles.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["mzizi-stats-row"]
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "Accessible name of the row (\"Activity this week\")."
+    },
+    {
+      "name": "columns",
+      "type": "2 | 3 | 4 | 5 | 6",
+      "required": false,
+      "default": 4,
+      "values": [2, 3, 4, 5, 6],
+      "description": "Columns from lg."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "StatTile",
+      "description": "The tiles."
+    }
+  ],
+  "behaviour": [
+    "One <dl>; each StatTile is a <div> group of <dt>/<dd>.",
+    "Tiles lose their own border and radius and share hairline dividers."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "label": "Activity",
+        "columns": 3
+      },
+      "slots": {
+        "default": "<div><dt>Members</dt><dd>1,240</dd></div>"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["description list (named by `label`)"],
+    "keyboard": ["None of its own."],
+    "focus": ["None of its own."],
+    "aria": ["aria-label on the <dl>."],
+    "wcag": ["1.3.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground"
+    ],
+    "brandOverlay": "None.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["One column on phones, two from sm, `columns` from lg."],
+  "contract": "contract\n  slot is \"stat-tiles\"\n  when default shows dt \"Members\"\nend",
+  "checks": [
+    {
+      "say": "A named description list.",
+      "select": "dl",
+      "count": 1,
+      "attr": {
+        "aria-label": "Activity"
+      }
+    },
+    {
+      "say": "`columns` applies from lg.",
+      "select": "dl[class*=\"lg:grid-cols-3\"]",
+      "count": 1
+    }
+  ]
+}

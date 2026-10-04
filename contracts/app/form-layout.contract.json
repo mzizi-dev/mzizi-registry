@@ -1,0 +1,133 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/form-layout",
+  "title": "FormLayout",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "A titled form card: fields in two columns from the container's xl and one below, actions at the foot, a form-level error as an alert. Posts to itself (Post/Redirect/Get).",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/FormLayout.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["form", "mzizi-settings-page"]
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The form's <h2>."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "One line under the title."
+    },
+    {
+      "name": "error",
+      "type": "string | null",
+      "required": false,
+      "description": "A form-level error, shown as a destructive Alert titled \"Not saved\"."
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": false,
+      "description": "Form action; the page itself when omitted."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "default": "form",
+      "description": "Prefix for the heading id."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "FormField",
+      "description": "The fields."
+    },
+    {
+      "name": "actions",
+      "expects": "Button",
+      "description": "Submit and cancel."
+    }
+  ],
+  "behaviour": [
+    "method=\"post\", novalidate: the server validates and re-renders with errors.",
+    "A form-level error is role=\"alert\"."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "title": "Profile",
+        "error": "Check the email address."
+      },
+      "slots": {
+        "default": "<div>field</div>",
+        "actions": "<button type='submit'>Save</button>"
+      }
+    },
+    "clean": {
+      "props": {
+        "title": "Profile"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["region (section, aria-labelledby)", "form", "alert (error)"],
+    "keyboard": ["Enter submits from a field."],
+    "focus": ["Through fields and actions."],
+    "aria": ["The error is announced as an alert."],
+    "wcag": ["3.3.1", "3.3.3", "4.1.3"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground"
+    ],
+    "brandOverlay": "None of its own.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["One column; two from the container's @xl."],
+  "contract": "contract\n  slot is \"form-layout\"\n  when default shows h2 \"Profile\"\n  uses alert\n  when clean shows h2 \"Profile\"\nend",
+  "checks": [
+    {
+      "say": "Posts.",
+      "state": "*",
+      "select": "form[method=\"post\"][novalidate]",
+      "count": 1
+    },
+    {
+      "say": "The error is an alert.",
+      "select": "[role=\"alert\"]",
+      "count": 1,
+      "text": "Check the email address."
+    },
+    {
+      "say": "No error, no alert.",
+      "state": "clean",
+      "select": "[role=\"alert\"]",
+      "absent": true
+    }
+  ]
+}

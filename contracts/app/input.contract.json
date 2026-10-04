@@ -1,0 +1,95 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/input",
+  "title": "Input",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A native <input> at app density (36px, 48px and 16px text on touch). Every attribute except class passes through.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Input.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "input",
+      "identity": "slot",
+      "divergences": [
+        "Height: the registry input is 48px everywhere; the app Input is 36px with a fine pointer."
+      ]
+    },
+    "rs": {
+      "registry": "input",
+      "identity": "slot",
+      "divergences": ["As for the .tsx."]
+    }
+  },
+  "props": [
+    {
+      "name": "...attributes",
+      "type": "HTMLAttributes<\"input\">",
+      "required": false,
+      "description": "Passed through: name, type, value, required, autocomplete, aria-*."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Renders exactly the attributes given, plus data-slot and the classes."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "name": "email",
+        "type": "email",
+        "aria-label": "Email"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["textbox"],
+    "keyboard": ["Native."],
+    "focus": ["`--ring` focus ring and border."],
+    "aria": ["The caller labels it (Label or aria-label)."],
+    "wcag": ["1.3.5", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "input",
+      "select": "input",
+      "fine": 36,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Fills its container."],
+  "contract": "contract\n  slot is \"input\"\n  label is \"Email\"\nend",
+  "checks": [
+    {
+      "say": "Attributes pass through.",
+      "select": "input",
+      "count": 1,
+      "attr": {
+        "name": "email",
+        "type": "email"
+      }
+    }
+  ]
+}

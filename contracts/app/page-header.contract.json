@@ -1,0 +1,167 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/page-header",
+  "title": "PageHeader",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "A page's title with optional breadcrumbs, a \"View docs\" pill, one line of description and actions. Compact: a 20px title, no rule. The one <h1> on an app page.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/PageHeader.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["page-header"]
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The page's <h1>."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "One line, capped at the prose measure."
+    },
+    {
+      "name": "crumbs",
+      "type": "{ label: string; href?: string }[]",
+      "required": false,
+      "default": [],
+      "description": "Breadcrumbs; the last (no href) is the current page."
+    },
+    {
+      "name": "docsHref",
+      "type": "string",
+      "required": false,
+      "description": "Link to the page's documentation, as a pill beside the title."
+    },
+    {
+      "name": "docsLabel",
+      "type": "string",
+      "required": false,
+      "default": "View docs",
+      "description": "The pill's text."
+    }
+  ],
+  "slots": [
+    {
+      "name": "actions",
+      "expects": "Button",
+      "description": "Page actions, right-aligned from sm."
+    }
+  ],
+  "behaviour": [
+    "Renders exactly one <h1>.",
+    "Breadcrumbs render only when given, as a named <nav> with an ordered list; the crumb without href is aria-current=\"page\".",
+    "The docs pill's accessible name includes the page title (\"View docs for People\")."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "title": "People",
+        "description": "Everyone in your family.",
+        "crumbs": [
+          {
+            "label": "Dashboard",
+            "href": "/dashboard"
+          },
+          {
+            "label": "People"
+          }
+        ],
+        "docsHref": "/docs/people"
+      },
+      "slots": {
+        "actions": "<a href='/new'>Add</a>"
+      }
+    },
+    "plain": {
+      "props": {
+        "title": "People"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [
+      "banner-less <header> (inside <main>, so not a landmark)",
+      "navigation \"Breadcrumb\""
+    ],
+    "keyboard": ["Tab: crumbs, docs pill, actions."],
+    "focus": ["The docs pill shows the `--ring` focus ring."],
+    "aria": [
+      "aria-current=\"page\" on the current crumb.",
+      "Separators are aria-hidden."
+    ],
+    "wcag": ["1.3.1", "2.4.2", "2.4.6", "2.4.8"]
+  },
+  "density": [
+    {
+      "part": "docs pill",
+      "select": "[data-slot=\"docs-pill\"]",
+      "fine": 24,
+      "coarse": 24
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Stacks below sm; from sm the actions sit right of the title.",
+    "Crumbs and the title row wrap."
+  ],
+  "contract": "contract\n  slot is \"page-header\"\n  when default shows h1 \"People\"\n  when default shows a \"Dashboard\"\n  when plain shows h1 \"People\"\nend",
+  "checks": [
+    {
+      "say": "One h1.",
+      "state": "*",
+      "select": "h1",
+      "count": 1
+    },
+    {
+      "say": "Breadcrumbs are a named nav.",
+      "select": "nav[aria-label=\"Breadcrumb\"] ol li",
+      "count": 2
+    },
+    {
+      "say": "The current crumb is marked.",
+      "select": "span[aria-current=\"page\"]",
+      "count": 1,
+      "text": "People"
+    },
+    {
+      "say": "No crumbs, no breadcrumb nav.",
+      "state": "plain",
+      "select": "nav",
+      "absent": true
+    },
+    {
+      "say": "The docs pill names its page.",
+      "select": "a[data-slot=\"docs-pill\"]",
+      "count": 1,
+      "text": "for People"
+    }
+  ],
+  "gaps": [
+    "The docs pill is 24px on touch: it meets WCAG 2.5.8 (24px) but not the 44px the other app controls keep."
+  ]
+}

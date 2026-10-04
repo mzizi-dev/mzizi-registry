@@ -1,0 +1,176 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/toolbar",
+  "title": "Toolbar",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The row above a list: a full-width search box (a GET form) joined to a button group of filters or menus.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Toolbar.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["filter-bar"]
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "Accessible name of the search box (\"Search agents\")."
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "Hint in the empty box; defaults to `label`."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "default": "q",
+      "description": "The query parameter."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "The current query."
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": false,
+      "description": "Form action; the current page when omitted."
+    },
+    {
+      "name": "keep",
+      "type": "Record<string, string>",
+      "required": false,
+      "default": {},
+      "description": "Other parameters carried through as hidden inputs (a range, a sort)."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "default": "toolbar",
+      "description": "Prefix for the input id; unique per page."
+    }
+  ],
+  "slots": [
+    {
+      "name": "filters",
+      "expects": "ToolbarMenu, Button",
+      "description": "The button group on the right."
+    }
+  ],
+  "behaviour": [
+    "Search is a role=\"search\" GET form: Enter submits, the result is a URL.",
+    "`keep` parameters survive a search.",
+    "A visually hidden submit button appears on focus for keyboard users."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "label": "Search agents",
+        "value": "kariba",
+        "keep": {
+          "range": "7d"
+        }
+      },
+      "slots": {
+        "filters": "<button type='button'>Last 7 days</button>"
+      }
+    },
+    "bare": {
+      "props": {
+        "label": "Search"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["search (the form)"],
+    "keyboard": [
+      "Enter in the box submits.",
+      "Tab reaches a submit button that becomes visible on focus."
+    ],
+    "focus": ["The box shows the focus ring through its row."],
+    "aria": ["The box has a visually hidden <label>."],
+    "wcag": ["1.3.1", "2.1.1", "3.3.2"]
+  },
+  "density": [
+    {
+      "part": "search box",
+      "select": "input[type=\"search\"]",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Below sm the button group wraps under the box; from sm they are one bordered row with a hairline between."
+  ],
+  "contract": "contract\n  slot is \"toolbar\"\n  when default shows button \"Last 7 days\"\n  when bare slot is \"toolbar\"\nend",
+  "checks": [
+    {
+      "say": "A GET search form.",
+      "state": "*",
+      "select": "form[role=\"search\"][method=\"get\"]",
+      "count": 1
+    },
+    {
+      "say": "The box is labelled.",
+      "select": "label[for=\"toolbar-q\"]",
+      "count": 1,
+      "text": "Search agents"
+    },
+    {
+      "say": "The value is kept.",
+      "select": "input[type=\"search\"]",
+      "count": 1,
+      "attr": {
+        "name": "q",
+        "value": "kariba"
+      }
+    },
+    {
+      "say": "`keep` rides along.",
+      "select": "input[type=\"hidden\"]",
+      "count": 1,
+      "attr": {
+        "name": "range",
+        "value": "7d"
+      }
+    },
+    {
+      "say": "No filters slot, no button group.",
+      "state": "bare",
+      "select": "[data-slot=\"toolbar-filters\"]",
+      "absent": true
+    }
+  ]
+}
