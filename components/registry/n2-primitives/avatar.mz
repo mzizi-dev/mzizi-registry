@@ -1,0 +1,45 @@
+## A person or entity image, with initials as the fallback when no image loads.
+## Corpus reference: n2-primitives/avatar.tsx.
+component avatar
+
+  enum avatar_size
+    default  class "size-10"  text_class "text-sm"
+    sm       class "size-8"   text_class "text-xs"
+    lg       class "size-14"  text_class "text-base"
+  end
+
+  prop size: avatar_size = default
+  prop image: option(text)
+  prop initials: text
+  prop alt: text
+
+  view
+    figure
+      slot = "avatar"
+      portal = "https://mzizi.dev/components/avatar"
+      size = size
+      class = "group/avatar relative flex shrink-0 overflow-hidden rounded-full bg-muted {size.class}"
+      when image is none
+        row
+          slot = "avatar-fallback"
+          class = "flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground {size.text_class}"
+          text = initials
+        end
+      else
+        picture
+          slot = "avatar-image"
+          source = image
+          alt = alt
+          class = "aspect-square size-full rounded-full object-cover"
+        end
+      end
+    end
+  end
+
+  contract
+    every avatar_size text_class not_empty
+    avatar_size.default class contains "size-10"
+    slot is "avatar"
+  end
+
+end component avatar

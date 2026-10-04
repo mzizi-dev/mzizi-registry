@@ -1,0 +1,29 @@
+## A rule between things. Decorative by default, so it is hidden from assistive tech.
+## Corpus reference: n2-primitives/separator.tsx.
+component separator
+
+  enum separator_axis
+    horizontal  class "h-px w-full"
+    vertical    class "w-px self-stretch"
+  end
+
+  prop axis: separator_axis = horizontal
+  prop decorative: bool = true
+
+  view
+    rule
+      slot = "separator"
+      portal = "https://mzizi.dev/components/separator"
+      axis = axis
+      decorative = decorative
+      class = "shrink-0 bg-border {axis.class}"
+    end
+  end
+
+  contract
+    separator_axis.horizontal class contains "w-full"
+    separator_axis.vertical class contains "self-stretch"
+    slot is "separator"
+  end
+
+end component separator

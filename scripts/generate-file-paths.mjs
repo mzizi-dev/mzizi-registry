@@ -49,9 +49,14 @@ const REGISTRY = join(ROOT, "registry.json")
  */
 const PRIMARY = ["tsx", "ts", "jsx", "js"]
 
+// A raster asset (`mzizi-mark-light.png`) ranks below its vector sibling
+// (`mzizi-mark-light.svg`), so an asset item's source path is the text file the API can serve.
+const RASTER = ["png", "jpg", "jpeg", "gif", "webp", "avif"]
+
 const rank = (e) => {
   const i = PRIMARY.indexOf(e)
-  return i === -1 ? PRIMARY.length : i
+  if (i !== -1) return i
+  return RASTER.includes(e) ? PRIMARY.length + 1 : PRIMARY.length
 }
 
 /** Repo-relative primary source path for every component name on disk. */
@@ -60,7 +65,8 @@ function readSourceIndex() {
   if (!existsSync(SOURCE_ROOT)) return index
   for (const dir of readdirSync(SOURCE_ROOT)) {
     const dirPath = join(SOURCE_ROOT, dir)
-    if (!/^n\d+-/.test(dir) || !statSync(dirPath).isDirectory()) continue
+    // Node directories, plus `assets/`: the registry's brand assets, filed like components.
+    if (!(/^n\d+-/.test(dir) || dir === "assets") || !statSync(dirPath).isDirectory()) continue
     for (const file of readdirSync(dirPath)) {
       if (!statSync(join(dirPath, file)).isFile()) continue
       const name = basename(file, extname(file))

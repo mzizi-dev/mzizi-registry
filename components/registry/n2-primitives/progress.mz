@@ -1,0 +1,28 @@
+## A determinate progress bar: a pill track on muted with a primary indicator.
+## The indicator's offset (translateX of 100 minus the value, in percent) needs arithmetic,
+## which the language does not have yet (LANGUAGE-TRACKER C1); progress.tsx and progress.rs
+## compute it. This file holds the structure, slots and classes.
+## Siblings: progress.tsx (React) and progress.rs (Mzizi Roots). One contract.
+component progress
+
+  prop value: int = 0
+
+  view
+    row
+      slot = "progress"
+      portal = "https://mzizi.dev/components/progress"
+      role = "progressbar"
+      class = "relative flex h-3 w-full items-center overflow-x-hidden rounded-full bg-muted"
+      row
+        slot = "progress-indicator"
+        class = "size-full flex-1 bg-primary transition-all"
+      end
+    end
+  end
+
+  contract
+    slot is "progress"
+    value at_least 0
+  end
+
+end component progress

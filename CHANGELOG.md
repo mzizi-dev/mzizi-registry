@@ -10,6 +10,55 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `wallet-card` and `mzizi-create-listing` take their colours from N1, and CI runs `lint:colors` (2026-10-04)
+
+`pnpm lint:colors` failed on `main` for nine raw palette hexes, and no CI job ran it (#423).
+
+- **`wallet-card`**: each token type's card is its mineral (MIT tanzanite, MXT malachite, NST cobalt, NHC gold), filled from `var(--color-<mineral>)` to `var(--color-<mineral>-on-container)` with `text-<mineral>-container` text, in place of four fixed hex gradients under `text-white`. The card now follows the theme: a deep fill with pale text in light mode and a bright fill with deep text in dark mode, where white text on the old bright end (`#FFD740`, `#64FFDA`) was barely legible.
+- **`mzizi-create-listing`**: the terracotta cover theme ends on `var(--color-terracotta)` instead of a raw `#A0522D`, and the gold and terracotta swatch comments, which were swapped, name the right mineral.
+- **CI**: the `Lint` job runs `pnpm lint:colors` after ESLint, so a hardcoded palette hex fails a pull request instead of waiting for someone to run `pnpm check`.
+
+### Added — `status-badge` in three builds (React, Mzizi Roots, the Mzizi language), and a CI gate for `.mz` components (2026-10-04, #418)
+
+Owner decision, 2026-10-04: StatusBadge comes back as a registry component, built in Rust and in the Mzizi language. Components gain Rust and `.mz` builds beside their TypeScript, and the TypeScript stays for now.
+
+- **`status-badge`** (N2): a pill-shaped lifecycle label, tinted with one of the Seven Minerals at 10% behind the mineral itself. `stable` is malachite, `beta` is cobalt, `alpha` is gold, and `deprecated` is terracotta, struck through. It ships in three builds that share one contract:
+  - `status-badge.tsx` (React, built on `Badge`; `npx shadcn@latest add https://api.mzizi.dev/v1/ui/status-badge`);
+  - `status-badge.rs` (Mzizi Roots, exported from `mzizi-ui` as `StatusBadge` with a `CONTRACT`);
+  - `status-badge.mz` (the Mzizi language).
+    `beta` is new; the removed app-only component had three statuses.
+- **`.mz` files sit beside `.tsx` and `.rs`** in the registry. There are twelve. Eight are the N2 primitives already written and verified in mzizi-dev/mzizi `primitives/`: `button`, `badge`, `card`, `avatar`, `input`, `separator`, `spinner` and `alert`. They are copied beside their siblings unchanged. The other four, `status-badge`, `label`, `progress` and `chart`, are written here. `lib/registry.generated.ts` and `lib/registry-source.generated.json` list every one. **`pnpm mz:check`** (`scripts/check-mz.mjs`) runs `mz check` and `mz contract` on every one. A new **Mzizi components** CI job builds `mz` from mzizi-dev/mzizi at the commit in `scripts/mz-pin`. Any error or warning fails the job.
+- **`mzizi-ui` now evaluates `CONTRACT` clauses** against `dioxus-ssr` markup, as `mzizi-brand` does, and exports `CONTRACTS`. The evaluator moved out of `mzizi-brand`'s test file into `mzizi-rs/contract-eval/contract_eval.rs`, shared by both suites, so there is no second copy.
+
+### Added — the mzizi design system in `design-system/`, and a registry `assets/` directory with the official marks (2026-10-04, #418)
+
+Owner decisions, 2026-10-04:
+
+- The official marks are the mzizi seven-node network, the bundu ring, the nyuchi bee and the mukoko seven-mineral honeycomb, each in a light and a dark version.
+- **mzizi is not gold.** Its mark is drawn in hematite, mzizi's ecosystem mineral. The first supplied version used nyuchi's gold.
+- The repo is the source of the design system. The Design System artifact is published from `design-system/`.
+
+The copper crosshair disc that used to ship as `public/icons/mzizi-icon.*` was not mzizi's mark. Tracking: #417.
+
+- **`components/registry/assets/`**: a brand-asset directory beside the node directories, holding the marks for mzizi, bundu, nyuchi and mukoko. Its items list under N3 (brand) in `lib/registry.ts` and the node map, so `ui.mzizi.dev` serves them.
+  - **`mzizi-mark-light` and `mzizi-mark-dark` are new installable items**: vector SVG masters in hematite (`#546e7a` light, `#90a4ae` dark), redrawn from the supplied geometry, with PNG renders beside them. Install one with `npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-mark-light`.
+  - The bundu, nyuchi and mukoko marks are raster PNGs. They are listed but not installable until vector masters exist, and `registry:validate` says so.
+  - `generate-registry-source` skips binary files, and `generate-file-paths`, `validate-registry` and `lib/registry.ts` rank a vector asset above its raster sibling.
+- **`design-system/`**: the design system, mirroring the artifact's files one to one.
+  - `design-system.json` is the artifact's index.
+  - `README.md` is the brand book: voice and casing, surfaces, ink and accent, the ecosystem minerals (Mukoko Events, kweli, Nyuchi Learning, news and weather included), the 21 colour families, type, shape, spacing, states, accessibility and iconography.
+  - `assets/<Group>/README.md` holds the mark notes.
+  - `components/` holds static renditions of the Button, Input, Badge, Card, Switch, Checkbox and Tabs primitives, plus the cover.
+  - `PUBLISHING.md` says how it stays current and how it is published.
+- **`design-system/tokens.json`**: 104 colour tokens with light and dark values, plus type, spacing, radius, size and aspect tokens. It is generated by `pnpm design-system:generate` from `styles/globals.css`, `lib/tokens/palette.source.ts` and `lib/tokens/brand.source.ts`. `pnpm design-system:generate:check` gates it in CI and in `pnpm check`.
+- **`__tests__/design-system.test.ts`** fails if any of these happens:
+  - the flagged low-contrast colours (copper, sunset and kalahari in light; sodalite in dark) stop matching the palette;
+  - an on-container pair drops below 7:1;
+  - a colour alias dangles;
+  - a mark is missing;
+  - the mzizi mark is drawn in anything but hematite;
+  - a component rendition names a source file that no longer exists.
+
 ### Added — `safe-area-frame`, `preview-canvas`, `preset-picker` and `mzizi-email-preview` (2026-10-04, #398)
 
 - **Four components from nyuchi-tools** (`nyuchi/workspace-tools`), contributed because the registry had no equivalent. `safe-area-frame` (N2) draws a canvas shape at thumbnail size with its platform-UI bands shaded, in React and as a Mzizi Roots component in `mzizi-ui` (`SafeAreaFrame`, `safe_area_bands`) — one geometry, held together by the contract suite. `preview-canvas` (N2) is a single-image stage with Fit or scaled zoom and a busy state; `preset-picker` (N2) picks output sizes on `safe-area-frame`, keeping "active" and "included" apart; `mzizi-email-preview` (N3) shows email HTML in a sandboxed frame on an always-light body. Tests in `__tests__/components/` and `mzizi-rs/crates/mzizi-ui/tests/contract.rs`.
