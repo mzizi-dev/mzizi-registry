@@ -62,6 +62,30 @@ pub mod chart;
 #[path = "generated/status-badge.rs"]
 pub mod status_badge;
 
+// ── wave 1 · batch A · modules ──
+// ── end wave 1 · batch A · modules ──
+
+// ── wave 1 · batch B · modules ──
+// ── end wave 1 · batch B · modules ──
+
+// ── wave 1 · batch C · modules ──
+// ── end wave 1 · batch C · modules ──
+
+// ── wave 1 · batch D · modules ──
+// ── end wave 1 · batch D · modules ──
+
+// ── wave 1 · batch E · modules ──
+// ── end wave 1 · batch E · modules ──
+
+// ── wave 1 · batch F · modules ──
+// ── end wave 1 · batch F · modules ──
+
+// ── wave 1 · batch G · modules ──
+// ── end wave 1 · batch G · modules ──
+
+// ── wave 1 · batch H · modules ──
+// ── end wave 1 · batch H · modules ──
+
 pub use avatar::{
     Avatar, AvatarBadge, AvatarBadgeProps, AvatarFallback, AvatarFallbackProps, AvatarGroup,
     AvatarGroupCount, AvatarGroupCountProps, AvatarGroupProps, AvatarImage, AvatarImageProps,
@@ -79,8 +103,50 @@ pub use status_badge::{
     STATUS_BADGE_STATUSES, StatusBadge, StatusBadgeProps, StatusBadgeStatus, status_badge_variants,
 };
 
+// ── wave 1 · batch A · exports ──
+// ── end wave 1 · batch A · exports ──
+
+// ── wave 1 · batch B · exports ──
+// ── end wave 1 · batch B · exports ──
+
+// ── wave 1 · batch C · exports ──
+// ── end wave 1 · batch C · exports ──
+
+// ── wave 1 · batch D · exports ──
+// ── end wave 1 · batch D · exports ──
+
+// ── wave 1 · batch E · exports ──
+// ── end wave 1 · batch E · exports ──
+
+// ── wave 1 · batch F · exports ──
+// ── end wave 1 · batch F · exports ──
+
+// ── wave 1 · batch G · exports ──
+// ── end wave 1 · batch G · exports ──
+
+// ── wave 1 · batch H · exports ──
+// ── end wave 1 · batch H · exports ──
+
 /// Every N2 primitive that exports a `CONTRACT`, with its registry name.
-pub const CONTRACTS: &[(&str, &str)] = &[("status-badge", status_badge::CONTRACT)];
+pub const CONTRACTS: &[(&str, &str)] = &[
+    ("status-badge", status_badge::CONTRACT),
+    // ── wave 1 · batch A · contracts ──
+    // ── end wave 1 · batch A · contracts ──
+    // ── wave 1 · batch B · contracts ──
+    // ── end wave 1 · batch B · contracts ──
+    // ── wave 1 · batch C · contracts ──
+    // ── end wave 1 · batch C · contracts ──
+    // ── wave 1 · batch D · contracts ──
+    // ── end wave 1 · batch D · contracts ──
+    // ── wave 1 · batch E · contracts ──
+    // ── end wave 1 · batch E · contracts ──
+    // ── wave 1 · batch F · contracts ──
+    // ── end wave 1 · batch F · contracts ──
+    // ── wave 1 · batch G · contracts ──
+    // ── end wave 1 · batch G · contracts ──
+    // ── wave 1 · batch H · contracts ──
+    // ── end wave 1 · batch H · contracts ──
+];
 
 /// The N1 token module, re-exported so a consumer takes one dependency.
 pub use mzizi_tokens as tokens;

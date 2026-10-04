@@ -82,7 +82,13 @@ impl StatusBadgeStatus {
 /// Compose the full class string for a status badge.
 pub fn status_badge_variants(status: StatusBadgeStatus, extra: &str) -> String {
     let mut out = String::with_capacity(BADGE_BASE.len() + 256);
-    for part in [BADGE_BASE, BADGE_OUTLINE, STATUS_BASE, status.classes(), extra] {
+    for part in [
+        BADGE_BASE,
+        BADGE_OUTLINE,
+        STATUS_BASE,
+        status.classes(),
+        extra,
+    ] {
         if !part.is_empty() {
             if !out.is_empty() {
                 out.push(' ');
