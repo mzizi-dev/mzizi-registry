@@ -891,14 +891,16 @@
 }
 
 /* news — cobalt.
- * lib/tokens/index.ts:696 — mukoko.news. No `news` ecosystem record in /v1/brand. */
+ * /v1/brand ecosystem[name=news].mineral (owner decision, 2026-10-04) */
 [data-brand="news"] {
   --primary: var(--mineral-cobalt-aa);
   --ring: var(--mineral-cobalt-aa);
 }
 
-/* nhimbe — malachite.
- * /v1/brand ecosystem[name=nhimbe].mineral (agrees with lib/tokens/index.ts mukoko.events) */
+/* events — malachite.
+ * /v1/brand ecosystem[name=events].mineral, Mukoko Events (owner decision, 2026-10-04; agrees with lib/tokens/index.ts mukoko.events)
+ * Deprecated alias, still honoured: nhimbe. */
+[data-brand="events"],
 [data-brand="nhimbe"] {
   --primary: var(--mineral-malachite-aa);
   --ring: var(--mineral-cobalt-aa);
@@ -911,10 +913,31 @@
   --ring: var(--mineral-cobalt-aa);
 }
 
+/* weather — cobalt.
+ * /v1/brand ecosystem[name=weather].mineral (owner decision, 2026-10-04) */
+[data-brand="weather"] {
+  --primary: var(--mineral-cobalt-aa);
+  --ring: var(--mineral-cobalt-aa);
+}
+
+/* kweli — malachite.
+ * /v1/brand ecosystem[name=kweli].mineral (owner decision, 2026-10-04) */
+[data-brand="kweli"] {
+  --primary: var(--mineral-malachite-aa);
+  --ring: var(--mineral-cobalt-aa);
+}
+
+/* learning — gold.
+ * /v1/brand ecosystem[name=learning].mineral (owner decision, 2026-10-04: every Nyuchi brand is gold) */
+[data-brand="learning"] {
+  --primary: var(--mineral-gold-aa);
+  --ring: var(--mineral-cobalt-aa);
+}
+
 /* ════════════════════════════════════════════════════════════════════════════
  * LOCAL OVERRIDES — the only block a consuming repo edits.
  *
  * Put divergence here, with a comment saying why and what would reverse it, the
- * way nhimbe's control-height block does. Everything above is generated and a
+ * way Mukoko Events' control-height block does. Everything above is generated and a
  * re-copy overwrites it; this block is where your copy stays yours.
  * ════════════════════════════════════════════════════════════════════════════ */

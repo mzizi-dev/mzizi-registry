@@ -800,6 +800,8 @@ export const listingThemes: Record<
 
 export type BrandId =
   | "mukoko"
+  | "events"
+  /** @deprecated Retired brand name (owner decision, 2026-10-04): use `events`, Mukoko Events. */
   | "nhimbe"
   | "bushtrade"
   | "lingo"
@@ -815,7 +817,9 @@ export type BrandId =
   | "weather"
   | "health"
   | "jobs"
-  | "wallet";
+  | "wallet"
+  | "kweli"
+  | "learning";
 
 /**
  * One mini-app accent, resolved from the mineral it is assigned.
@@ -862,10 +866,15 @@ export const brandOverrides: Record<
   }
 > = {
   // ─── Mini-App accents (canonical from brand_ecosystem table) ──
-  // Mineral assignments: tanzanite=identity/social/premium, cobalt=info/education/productivity,
-  // malachite=events/health/nature, gold=commerce/places/wallet, terracotta=community,
-  // sodalite=AI (shamwari)
+  // Mineral assignments: tanzanite=identity/social/premium, cobalt=info/news/productivity,
+  // malachite=events/health/nature/trust (kweli), gold=commerce/places/wallet and every
+  // Nyuchi brand (education included), terracotta=community, sodalite=AI (shamwari)
   mukoko: brandAccent("tanzanite", "#CE9FFF"),
+  // Mukoko Events (events.mukoko.com). Owner decision, 2026-10-04: the "nhimbe"
+  // brand is retired; the mineral stays malachite. `nhimbe` is a deprecated
+  // alias with the same accent so existing reads keep working.
+  events: brandAccent("malachite", "#80FFE4"),
+  /** @deprecated Alias of `events` (Mukoko Events). */
   nhimbe: brandAccent("malachite", "#80FFE4"),
   bushtrade: brandAccent("gold", "#FFDF6B"),
   lingo: brandAccent("cobalt", "#40C4FF"),
@@ -885,6 +894,11 @@ export const brandOverrides: Record<
   health: brandAccent("malachite", "#80FFE4"),
   jobs: brandAccent("gold", "#FFDF6B"),
   wallet: brandAccent("gold", "#FFDF6B"),
+  // Owner decisions, 2026-10-04 (mzizi-registry#404), from canon's ecosystem
+  // rows: kweli is malachite (it used to borrow Mukoko's tanzanite), and
+  // learning, a Nyuchi brand, is gold.
+  kweli: brandAccent("malachite", "#80FFE4"),
+  learning: brandAccent("gold", "#FFDF6B"),
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -915,8 +929,10 @@ export const brandIndustryCategories: Record<
       label: "Travel",
       products: ["Zimbabwe Travel Information", "Iconic Expeditions"],
     },
+    // Gold, by owner decision (2026-10-04, mzizi-registry#404): every Nyuchi
+    // brand is gold, and canon's `learning` row says so.
     education: {
-      mineral: "cobalt",
+      mineral: "gold",
       label: "Education",
       products: ["Nyuchi Learning", "Nyuchi Lingo"],
     },
@@ -938,7 +954,11 @@ export const brandIndustryCategories: Record<
       label: "Social",
       products: ["Campfire", "Bytes", "Novels", "Circles"],
     },
-    events: { mineral: "malachite", label: "Events", products: ["Nhimbe"] },
+    events: {
+      mineral: "malachite",
+      label: "Events",
+      products: ["Mukoko Events"],
+    },
     commerce: {
       mineral: "gold",
       label: "Commerce",
@@ -955,6 +975,7 @@ export const brandIndustryCategories: Record<
       products: ["Planner", "Weather", "Jobs"],
     },
     wellness: { mineral: "malachite", label: "Wellness", products: ["Health"] },
+    trust: { mineral: "malachite", label: "Trust", products: ["Kweli"] },
     language: { mineral: "cobalt", label: "Language", products: ["Lingo"] },
   },
   shamwari: {

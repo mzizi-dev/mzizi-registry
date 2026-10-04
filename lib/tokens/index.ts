@@ -486,6 +486,8 @@ export const listingThemes: Record<
 
 export type BrandId =
   | "mukoko"
+  | "events"
+  /** @deprecated Retired brand name (owner decision, 2026-10-04): use `events`, Mukoko Events. */
   | "nhimbe"
   | "bushtrade"
   | "lingo"
@@ -502,6 +504,8 @@ export type BrandId =
   | "health"
   | "jobs"
   | "wallet"
+  | "kweli"
+  | "learning"
 
 export const brandOverrides: Record<
   BrandId,
@@ -515,9 +519,9 @@ export const brandOverrides: Record<
   }
 > = {
   // ─── Mini-App accents (canonical from brand_ecosystem table) ──
-  // Mineral assignments: tanzanite=identity/social/premium, cobalt=info/education/productivity,
-  // malachite=events/health/nature, gold=commerce/places/wallet, terracotta=community,
-  // sodalite=AI (shamwari)
+  // Mineral assignments: tanzanite=identity/social/premium, cobalt=info/news/productivity,
+  // malachite=events/health/nature/trust (kweli), gold=commerce/places/wallet and every
+  // Nyuchi brand (education included), terracotta=community, sodalite=AI (shamwari)
   mukoko: {
     primary: "#B388FF",
     mineral: "tanzanite",
@@ -526,6 +530,19 @@ export const brandOverrides: Record<
     container: "#F3E5F5",
     onContainer: "#2E004D",
   },
+  // Mukoko Events (events.mukoko.com). Owner decision, 2026-10-04: the
+  // "nhimbe" brand is retired and the events platform is Mukoko Events; the
+  // mineral stays malachite. `nhimbe` stays below as a deprecated alias with
+  // the same accent, so existing `brandOverrides.nhimbe` reads keep working.
+  events: {
+    primary: "#64FFDA",
+    mineral: "malachite",
+    primaryHover: "#80FFE4",
+    primaryMuted: "rgba(100,255,218,0.12)",
+    container: "#E0F2F1",
+    onContainer: "#00332B",
+  },
+  /** @deprecated Alias of `events` (Mukoko Events). Kept so nothing breaks; do not use in new code. */
   nhimbe: {
     primary: "#64FFDA",
     mineral: "malachite",
@@ -657,6 +674,25 @@ export const brandOverrides: Record<
     container: "#FFF8E1",
     onContainer: "#3E2723",
   },
+  // Owner decisions, 2026-10-04 (mzizi-registry#404), from canon's ecosystem
+  // rows: kweli is malachite (it used to borrow Mukoko's tanzanite), and
+  // learning, a Nyuchi brand, is gold.
+  kweli: {
+    primary: "#64FFDA",
+    mineral: "malachite",
+    primaryHover: "#80FFE4",
+    primaryMuted: "rgba(100,255,218,0.12)",
+    container: "#E0F2F1",
+    onContainer: "#00332B",
+  },
+  learning: {
+    primary: "#FFD740",
+    mineral: "gold",
+    primaryHover: "#FFDF6B",
+    primaryMuted: "rgba(255,215,64,0.12)",
+    container: "#FFF8E1",
+    onContainer: "#3E2723",
+  },
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -684,8 +720,10 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
       label: "Travel",
       products: ["Zimbabwe Travel Information", "Iconic Expeditions"],
     },
+    // Gold, by owner decision (2026-10-04, mzizi-registry#404): every Nyuchi
+    // brand is gold, and canon's `learning` row says so.
     education: {
-      mineral: "cobalt",
+      mineral: "gold",
       label: "Education",
       products: ["Nyuchi Learning", "Nyuchi Lingo"],
     },
@@ -703,7 +741,7 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
       label: "Social",
       products: ["Campfire", "Bytes", "Novels", "Circles"],
     },
-    events: { mineral: "malachite", label: "Events", products: ["Nhimbe"] },
+    events: { mineral: "malachite", label: "Events", products: ["Mukoko Events"] },
     commerce: { mineral: "gold", label: "Commerce", products: ["BushTrade", "Wallet"] },
     places: { mineral: "gold", label: "Places", products: ["Places", "Transport"] },
     productivity: {
@@ -712,6 +750,7 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
       products: ["Planner", "Weather", "Jobs"],
     },
     wellness: { mineral: "malachite", label: "Wellness", products: ["Health"] },
+    trust: { mineral: "malachite", label: "Trust", products: ["Kweli"] },
     language: { mineral: "cobalt", label: "Language", products: ["Lingo"] },
   },
   shamwari: {

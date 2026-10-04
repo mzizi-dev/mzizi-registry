@@ -57,7 +57,7 @@ pub fn default_sections() -> Vec<FooterSection> {
         FooterSection {
             title: "Platform".into(),
             links: vec![
-                link("nhimbe", "/nhimbe", false),
+                link("Mukoko Events", "/events", false),
                 link("Bush Trade", "/bushtrade", false),
                 link("Shamwari", "/shamwari", false),
                 link("Campfire", "/campfire", false),

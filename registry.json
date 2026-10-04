@@ -160,7 +160,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Admin/back-office page. Tabbed admin interface with sidebar navigation, content area, and action bar. For Mukoko Console admin, B2B partner dashboards, org management.",
-      "docs": "Use it for: nhimbe, console, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/admin-page",
+      "docs": "Use it for: events, console, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/admin-page",
       "files": [
         {
           "path": "components/registry/n6-pages/admin-page.tsx",
@@ -184,7 +184,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "console", "bushtrade"],
+        "useCases": ["events", "console", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "admin-page",
@@ -464,7 +464,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Analytics dashboard page. KPI cards, time-series charts, data tables, date range picker, export controls. Used by Mukoko Console, Nyuchi Web Services, and B2B partners. Open data compatible — sections can be made public. Competitors: Grafana, Google Analytics, Metabase.",
-      "docs": "Use it for: nhimbe, news, console, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/analytics-dashboard-page",
+      "docs": "Use it for: events, news, console, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/analytics-dashboard-page",
       "files": [
         {
           "path": "components/registry/n6-pages/analytics-dashboard-page.tsx",
@@ -488,7 +488,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "news", "console", "wallet", "bushtrade"],
+        "useCases": ["events", "news", "console", "wallet", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "analytics-dashboard-page",
@@ -665,7 +665,7 @@
       "categories": ["shell"],
       "dependencies": ["radix-ui"],
       "description": "Ecosystem app selector popover with grid of Nyuchi app icons.",
-      "docs": "Use it for: Ecosystem app navigation (Bundu/Mukoko/Nyuchi/Shamwari/Nhimbe), Cross-app launcher in shared header, Quick app-switching in multi-product suites, Mini-app grid in unified platform shell, Nyuchi super-app navigation surface.\nVariants: default.\nIncludes: App shell infrastructure, Cross-layer wiring (L7→L8→L9), data-slot + data-portal DOM attributes, Harness integration.\nAccessibility: Focus-visible ring on interactive elements, ARIA role, ARIA attributes.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-switcher",
+      "docs": "Use it for: Ecosystem app navigation (Bundu/Mukoko/Nyuchi/Shamwari/Mukoko Events), Cross-app launcher in shared header, Quick app-switching in multi-product suites, Mini-app grid in unified platform shell, Nyuchi super-app navigation surface.\nVariants: default.\nIncludes: App shell infrastructure, Cross-layer wiring (L7→L8→L9), data-slot + data-portal DOM attributes, Harness integration.\nAccessibility: Focus-visible ring on interactive elements, ARIA role, ARIA attributes.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-switcher",
       "files": [
         {
           "path": "components/registry/n7-shell/app-switcher.tsx",
@@ -689,7 +689,7 @@
         "hasDemo": true,
         "owner": "nyuchi",
         "useCases": [
-          "Ecosystem app navigation (Bundu/Mukoko/Nyuchi/Shamwari/Nhimbe)",
+          "Ecosystem app navigation (Bundu/Mukoko/Nyuchi/Shamwari/Mukoko Events)",
           "Cross-app launcher in shared header",
           "Quick app-switching in multi-product suites",
           "Mini-app grid in unified platform shell",
@@ -1248,7 +1248,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Billing & subscription management page. Current plan, usage meters, invoices, payment methods, upgrade CTA. Used by Nyuchi Web Services, B2B partners, and Mukoko premium subscribers.",
-      "docs": "Use it for: nhimbe, console, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/billing-page",
+      "docs": "Use it for: events, console, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/billing-page",
       "files": [
         {
           "path": "components/registry/n6-pages/billing-page.tsx",
@@ -1272,7 +1272,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "console", "wallet", "bushtrade"],
+        "useCases": ["events", "console", "wallet", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "billing-page",
@@ -1284,8 +1284,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "Date/time availability grid for bookings. Shows available, partially available, and unavailable slots with mineral color coding. Used for vehicle booking (Transport), venue booking (Nhimbe), and appointment scheduling (Health).",
-      "docs": "Use it for: nhimbe, transport, health.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/booking-calendar",
+      "description": "Date/time availability grid for bookings. Shows available, partially available, and unavailable slots with mineral color coding. Used for vehicle booking (Transport), venue booking (Mukoko Events), and appointment scheduling (Health).",
+      "docs": "Use it for: events, transport, health.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/booking-calendar",
       "files": [
         {
           "path": "components/registry/n2-primitives/booking-calendar.tsx",
@@ -1299,7 +1299,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "transport", "health"],
+        "useCases": ["events", "transport", "health"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "booking-calendar",
@@ -1314,8 +1314,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "Booking success card with full details, QR code, calendar-add button, and share action. The standard post-booking confirmation pattern across Nhimbe events, Transport bookings, and Health appointments. Maps to planner.reservation table.",
-      "docs": "Use it for: nhimbe, planner, transport.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/booking-confirmation",
+      "description": "Booking success card with full details, QR code, calendar-add button, and share action. The standard post-booking confirmation pattern across Mukoko Events listings, Transport bookings, and Health appointments. Maps to planner.reservation table.",
+      "docs": "Use it for: events, planner, transport.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/booking-confirmation",
       "files": [
         {
           "path": "components/registry/n2-primitives/booking-confirmation.tsx",
@@ -1329,7 +1329,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "planner", "transport"],
+        "useCases": ["events", "planner", "transport"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "booking-confirmation",
@@ -1647,7 +1647,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Full month calendar grid with event dots, today indicator, and day cell click handler. Complements calendar-day-view and calendar-week-view to complete the three standard calendar views. The month grid is the most common calendar entry point across all apps.",
-      "docs": "Use it for: planner, nhimbe, health.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/calendar-month-view",
+      "docs": "Use it for: planner, events, health.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/calendar-month-view",
       "files": [
         {
           "path": "components/registry/n2-primitives/calendar-month-view.tsx",
@@ -1661,7 +1661,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["planner", "nhimbe", "health"],
+        "useCases": ["planner", "events", "health"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "calendar-month-view",
@@ -1734,7 +1734,7 @@
       "categories": ["primitives"],
       "dependencies": ["chart.js", "react-chartjs-2"],
       "description": "Chart.js Canvas-based chart renderer for data-heavy dashboards. Use INSTEAD of the Recharts chart when you have 100+ data points per chart or multiple charts per page. Canvas renders everything to a single DOM element regardless of data volume, while SVG (Recharts) creates a DOM node per data point. Includes CSS variable resolution for Canvas 2D context (which cannot read var() natively), theme-aware color fallbacks, mobile performance optimisation (reduced DPR, disabled animations), and automatic Chart.js instance cleanup on unmount to prevent canvas memory leaks. Production-proven in mukoko-weather with 7 charts × 365 data points.",
-      "docs": "Use it for: nhimbe, planner, news.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/canvas-chart",
+      "docs": "Use it for: events, planner, news.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/canvas-chart",
       "files": [
         {
           "path": "components/registry/n2-primitives/canvas-chart.tsx",
@@ -1748,7 +1748,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "planner", "news"],
+        "useCases": ["events", "planner", "news"],
         "variants": ["default"]
       },
       "name": "canvas-chart",
@@ -4640,7 +4640,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Checkout/order page. Cart summary, shipping, payment method selection, order confirmation. Multi-step with progress indicator.",
-      "docs": "Use it for: nhimbe, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/checkout-page",
+      "docs": "Use it for: events, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/checkout-page",
       "files": [
         {
           "path": "components/registry/n6-pages/checkout-page.tsx",
@@ -4664,7 +4664,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "bushtrade"],
+        "useCases": ["events", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "checkout-page",
@@ -6119,7 +6119,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Time-ranged event block for rendering inside calendar day/week grids. Shows title, time span, and color category. Supports overlapping events with column stacking. The visual unit that populates calendar-day-view and calendar-week-view slots.",
-      "docs": "Use it for: nhimbe, planner.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/event-block",
+      "docs": "Use it for: events, planner.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/event-block",
       "files": [
         {
           "path": "components/registry/n2-primitives/event-block.tsx",
@@ -6133,7 +6133,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "planner"],
+        "useCases": ["events", "planner"],
         "variants": ["default"]
       },
       "name": "event-block",
@@ -6145,8 +6145,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "In-chat event RSVP card shared in Campfire conversations. Compact event preview with date, venue, and quick RSVP buttons (Going/Maybe/Decline). Maps to events.rsvp_action. Bridges Nhimbe events into the Campfire messaging flow.",
-      "docs": "Use it for: campfire, nhimbe.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/event-rsvp-inline",
+      "description": "In-chat event RSVP card shared in Campfire conversations. Compact event preview with date, venue, and quick RSVP buttons (Going/Maybe/Decline). Maps to events.rsvp_action. Bridges Mukoko Events listings into the Campfire messaging flow.",
+      "docs": "Use it for: campfire, events.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/event-rsvp-inline",
       "files": [
         {
           "path": "components/registry/n2-primitives/event-rsvp-inline.tsx",
@@ -6160,7 +6160,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["campfire", "nhimbe"],
+        "useCases": ["campfire", "events"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "event-rsvp-inline",
@@ -6775,7 +6775,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Simple label + value display row with optional icon. Used on detail pages for key-value information: \"Temperature: 28°C\", \"Location: Harare\", \"Status: Active\". Compact single-line layout with icon left, label middle, value right-aligned. Production-proven in mukoko-weather for atmospheric details.",
-      "docs": "Use it for: nhimbe, wallet, places.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/info-row",
+      "docs": "Use it for: events, wallet, places.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/info-row",
       "files": [
         {
           "path": "components/registry/n2-primitives/info-row.tsx",
@@ -6789,7 +6789,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "wallet", "places"],
+        "useCases": ["events", "wallet", "places"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "info-row",
@@ -6987,8 +6987,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "Shareable invite card with QR code, copyable link, expiry countdown, and usage count. Used for Circle invitations, event invites (Nhimbe), and referral links. Mineral-colored QR code.",
-      "docs": "Use it for: circles, nhimbe.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/invite-link",
+      "description": "Shareable invite card with QR code, copyable link, expiry countdown, and usage count. Used for Circle invitations, event invites (Mukoko Events), and referral links. Mineral-colored QR code.",
+      "docs": "Use it for: circles, events.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/invite-link",
       "files": [
         {
           "path": "components/registry/n2-primitives/invite-link.tsx",
@@ -7002,7 +7002,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["circles", "nhimbe"],
+        "useCases": ["circles", "events"],
         "variants": ["default"]
       },
       "name": "invite-link",
@@ -7255,7 +7255,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Key Performance Indicator card. Displays a metric label, large value, optional change percentage with trend direction. Extracted from analytics-dashboard-page, console-dashboard-page, and wallet-page where the same pattern was repeated inline. Brand-agnostic — uses semantic CSS vars only.",
-      "docs": "Use it for: nhimbe, news, console.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kpi-card",
+      "docs": "Use it for: events, news, console.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kpi-card",
       "files": [
         {
           "path": "components/registry/n2-primitives/kpi-card.tsx",
@@ -7269,7 +7269,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "news", "console"],
+        "useCases": ["events", "news", "console"],
         "variants": ["default"]
       },
       "name": "kpi-card",
@@ -7454,8 +7454,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "Interactive map-based location selection form control. User taps/clicks map to set coordinates, with search input for address lookup. Returns lat/lng and formatted address. Used in event creation (Nhimbe), business listing (BushTrade/Places), and any form that needs a geographic input.",
-      "docs": "Use it for: nhimbe, places, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/location-picker",
+      "description": "Interactive map-based location selection form control. User taps/clicks map to set coordinates, with search input for address lookup. Returns lat/lng and formatted address. Used in event creation (Mukoko Events), business listing (BushTrade/Places), and any form that needs a geographic input.",
+      "docs": "Use it for: events, places, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/location-picker",
       "files": [
         {
           "path": "components/registry/n2-primitives/location-picker.tsx",
@@ -7469,7 +7469,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "places", "bushtrade"],
+        "useCases": ["events", "places", "bushtrade"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "location-picker",
@@ -7803,7 +7803,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Floating preview card that appears on map marker interaction. Shows a compact listing-card inside the map context with image, title, category, and action. Bridges the map view to the listing detail flow.",
-      "docs": "Use it for: nhimbe, places, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/map-card",
+      "docs": "Use it for: events, places, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/map-card",
       "files": [
         {
           "path": "components/registry/n2-primitives/map-card.tsx",
@@ -7817,7 +7817,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "places", "bushtrade"],
+        "useCases": ["events", "places", "bushtrade"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "map-card",
@@ -7833,7 +7833,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Grouped marker display for high-density map areas. Shows count badge with mineral accent and expands on interaction. Used when multiple listings/places overlap at the current zoom level.",
-      "docs": "Use it for: nhimbe, places, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/map-cluster",
+      "docs": "Use it for: events, places, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/map-cluster",
       "files": [
         {
           "path": "components/registry/n2-primitives/map-cluster.tsx",
@@ -7847,7 +7847,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "places", "bushtrade"],
+        "useCases": ["events", "places", "bushtrade"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "map-cluster",
@@ -7953,8 +7953,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": ["mapbox-gl"],
-      "description": "Embeddable map container with design system tokens, mineral-colored controls, and branded attribution. Wraps Mapbox GL JS with Nyuchi theme integration. Supports tile layers, zoom controls, geolocation, and fullscreen toggle. The foundational map primitive for Places, Transport, BushTrade, Nhimbe, and any app that shows a geographic context.",
-      "docs": "Use it for: nhimbe, places, transport.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/map-view",
+      "description": "Embeddable map container with design system tokens, mineral-colored controls, and branded attribution. Wraps Mapbox GL JS with Nyuchi theme integration. Supports tile layers, zoom controls, geolocation, and fullscreen toggle. The foundational map primitive for Places, Transport, BushTrade, Mukoko Events, and any app that shows a geographic context.",
+      "docs": "Use it for: events, places, transport.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/map-view",
       "files": [
         {
           "path": "components/registry/n2-primitives/map-view.tsx",
@@ -7968,7 +7968,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "places", "transport"],
+        "useCases": ["events", "places", "transport"],
         "variants": ["default", "outline", "ghost", "destructive"]
       },
       "name": "map-view",
@@ -8014,7 +8014,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Marketplace/storefront browsing page. Search, category filters, grid/list toggle, product cards. Competitors: Jumia, Amazon, Alibaba, Facebook Marketplace.",
-      "docs": "Use it for: nhimbe, places, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/marketplace-page",
+      "docs": "Use it for: events, places, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/marketplace-page",
       "files": [
         {
           "path": "components/registry/n6-pages/marketplace-page.tsx",
@@ -8038,7 +8038,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "places", "bushtrade"],
+        "useCases": ["events", "places", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "marketplace-page",
@@ -8216,7 +8216,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Scrollable member directory with role badges (admin/moderator/member), online status dots, join date, and search filtering. Used in Circle member management and event attendee lists. Maps to circles.circle_membership table.",
-      "docs": "Use it for: circles, nhimbe.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/member-list",
+      "docs": "Use it for: circles, events.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/member-list",
       "files": [
         {
           "path": "components/registry/n2-primitives/member-list.tsx",
@@ -8230,7 +8230,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["circles", "nhimbe"],
+        "useCases": ["circles", "events"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "member-list",
@@ -8248,7 +8248,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "User/member display row with avatar, name, email/subtitle, role badge, and status indicator. Extracted from team-management-page and chat-page. Brand-agnostic primitive.",
-      "docs": "Use it for: campfire, circles, nhimbe.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/member-row",
+      "docs": "Use it for: campfire, circles, events.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/member-row",
       "files": [
         {
           "path": "components/registry/n2-primitives/member-row.tsx",
@@ -8262,7 +8262,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["campfire", "circles", "nhimbe"],
+        "useCases": ["campfire", "circles", "events"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "member-row",
@@ -8411,7 +8411,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Payment method picker for African mobile money services — EcoCash, MTN MoMo, Airtel Money, M-Pesa, and Innbucks. Shows provider logo, phone number input, and USSD code reference. This is HOW Africa pays — the primary payment primitive for the continent.",
-      "docs": "Use it for: nhimbe, wallet, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mobile-money-selector",
+      "docs": "Use it for: events, wallet, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mobile-money-selector",
       "files": [
         {
           "path": "components/registry/n2-primitives/mobile-money-selector.tsx",
@@ -8425,7 +8425,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "wallet", "bushtrade"],
+        "useCases": ["events", "wallet", "bushtrade"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "mobile-money-selector",
@@ -8954,7 +8954,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Overlapping +N social-proof avatar stack — the going/attendee cue. Ring-separated avatars overlap with negative margin, each an image or an initials fallback, showing up to `max` before a +N overflow bubble, with an optional trailing <total> <label> in 13px muted. Purely presentational and server-safe (no harness, no client directive) so it renders inside React Server Components. The group carries an accessible summary label (e.g. \"128 going\") while the decorative avatars are aria-hidden. sm / md sizes.",
-      "docs": "Use it for: +N going social proof on event cards (nhimbe), Attendee stack on listings, Member preview on circles / calendars.\nVariants: sm, md.\nIncludes: Overlapping ring-separated avatar stack (-space-x-2), Image or initials fallback per person, +N overflow bubble past max, Optional trailing total + label (13px muted), Server-safe presentational atom — no harness, no client directive, sm / md size scale.\nAccessibility: Decorative avatars marked aria-hidden, Group carries an accessible summary label (e.g. 128 going), Initials fallback when no image, Trailing count label mirrors the aria summary.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-avatar-stack",
+      "docs": "Use it for: +N going social proof on event cards (Mukoko Events), Attendee stack on listings, Member preview on circles / calendars.\nVariants: sm, md.\nIncludes: Overlapping ring-separated avatar stack (-space-x-2), Image or initials fallback per person, +N overflow bubble past max, Optional trailing total + label (13px muted), Server-safe presentational atom — no harness, no client directive, sm / md size scale.\nAccessibility: Decorative avatars marked aria-hidden, Group carries an accessible summary label (e.g. 128 going), Initials fallback when no image, Trailing count label mirrors the aria summary.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-avatar-stack",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-avatar-stack.tsx",
@@ -8980,7 +8980,7 @@
         ],
         "owner": "nyuchi",
         "useCases": [
-          "+N going social proof on event cards (nhimbe)",
+          "+N going social proof on event cards (Mukoko Events)",
           "Attendee stack on listings",
           "Member preview on circles / calendars"
         ],
@@ -9174,8 +9174,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": ["react-day-picker", "date-fns"],
-      "description": "Brand calendar component wrapping react-day-picker with Mukoko event dot indicators, mineral-colored day highlights, and integrated agenda view for the selected day. Used by nhimbe (events), planner, and any Mukoko app that shows date-anchored content. The event dots are the key differentiator — small mineral-colored circles beneath dates that have associated content.",
-      "docs": "Use it for: nhimbe, planner, jobs, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-calendar",
+      "description": "Brand calendar component wrapping react-day-picker with Mukoko event dot indicators, mineral-colored day highlights, and integrated agenda view for the selected day. Used by Mukoko Events, planner, and any Mukoko app that shows date-anchored content. The event dots are the key differentiator — small mineral-colored circles beneath dates that have associated content.",
+      "docs": "Use it for: events, planner, jobs, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-calendar",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-calendar.tsx",
@@ -9199,7 +9199,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "planner", "jobs", "health"],
+        "useCases": ["events", "planner", "jobs", "health"],
         "variants": ["default"]
       },
       "name": "mzizi-calendar",
@@ -9664,7 +9664,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Event/detail header composite that derives the whole page tint and CTA colour from its cover — the 4.2.0 cover-wash signature. A full-bleed image or gradient cover with a legibility scrim carries an overlaid title, optional kicker/subtitle, a small inline meta row (date · location · host) and a CTA slot (children). From an accent (or mineral) prop it emits --event-primary and --wash as inline custom properties on the root, seeding the wash context that every descendant — and the rest of the detail page — inherits. Accent defaults to --brand-accent so each app swaps its own mineral; harness-wired for reduced-motion entry and observability.",
-      "docs": "Use it for: Event detail page header (nhimbe), Any detail page that tints itself from a cover mineral, Campaign / landing hero that seeds a wash context.\nVariants: image, gradient.\nIncludes: 4.2.0 cover-wash signature — seeds --event-primary + --wash on the root, Full-bleed image or gradient cover with legibility scrim, Accent from prop or mineral, --brand-accent neutral default, Inline meta row (date / location / host) + CTA slot via children, Harness-wired reduced-motion entry + observability.\nAccessibility: Decorative cover image + scrim marked aria-hidden, CTA slot keeps its own focus semantics, Reduced-motion respected via harness, Serif title over a legibility scrim for contrast.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-cover-wash-header",
+      "docs": "Use it for: Event detail page header (Mukoko Events), Any detail page that tints itself from a cover mineral, Campaign / landing hero that seeds a wash context.\nVariants: image, gradient.\nIncludes: 4.2.0 cover-wash signature — seeds --event-primary + --wash on the root, Full-bleed image or gradient cover with legibility scrim, Accent from prop or mineral, --brand-accent neutral default, Inline meta row (date / location / host) + CTA slot via children, Harness-wired reduced-motion entry + observability.\nAccessibility: Decorative cover image + scrim marked aria-hidden, CTA slot keeps its own focus semantics, Reduced-motion respected via harness, Serif title over a legibility scrim for contrast.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-cover-wash-header",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-cover-wash-header.tsx",
@@ -9689,7 +9689,7 @@
         ],
         "owner": "nyuchi",
         "useCases": [
-          "Event detail page header (nhimbe)",
+          "Event detail page header (Mukoko Events)",
           "Any detail page that tints itself from a cover mineral",
           "Campaign / landing hero that seeds a wash context"
         ],
@@ -9705,7 +9705,7 @@
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
       "description": "Universal create/edit form layout for all Mukoko content types — events, products, news, bush trade listings, directories. Provides the standardized brand creation flow: cover theme picker, grouped form sections in cards, toggle/dropdown rows, description editor, and sticky publish CTA. Every \"Create\" or \"Edit\" screen across the super app uses this composition.",
-      "docs": "Use it for: Event creation in Nhimbe, Product creation in Bush Trade, News article authoring in Mukoko News, Place submission in Mukoko Places, Any create/edit flow across the super app.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-create-listing",
+      "docs": "Use it for: Event creation in Mukoko Events, Product creation in Bush Trade, News article authoring in Mukoko News, Place submission in Mukoko Places, Any create/edit flow across the super app.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-create-listing",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-create-listing.tsx",
@@ -9729,7 +9729,7 @@
         "hasDemo": true,
         "owner": "nyuchi",
         "useCases": [
-          "Event creation in Nhimbe",
+          "Event creation in Mukoko Events",
           "Product creation in Bush Trade",
           "News article authoring in Mukoko News",
           "Place submission in Mukoko Places",
@@ -9757,7 +9757,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Standard creation flow page orchestrator. Header with cancel/title/submit, stepped or single-form layout, cover theme picker slot, section cards, and sticky submit CTA. Every creation screen uses this: create event, create listing, create post, write chapter, post video caption. The developer provides form sections as children and handles submission.",
-      "docs": "Use it for: campfire, bytes, circles, novels, nhimbe.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-create-page",
+      "docs": "Use it for: campfire, bytes, circles, novels, events.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-create-page",
       "files": [
         {
           "path": "components/registry/n6-pages/mzizi-create-page.tsx",
@@ -9781,7 +9781,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["campfire", "bytes", "circles", "novels", "nhimbe"],
+        "useCases": ["campfire", "bytes", "circles", "novels", "events"],
         "variants": ["default", "loading"]
       },
       "name": "mzizi-create-page",
@@ -10069,7 +10069,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Shared detail page layout for all content types across the Nyuchi ecosystem — events, articles, products, bush trade listings, places. Supports a hero gradient variant with floating back/like/share action buttons, mineral-colored category badges, and verified badge display for the host/author. The detail-layout is the brand-standard way to present any single piece of content at full depth.",
-      "docs": "Use it for: Event detail pages in Nhimbe, Article detail pages in Mukoko News, Product detail pages in Bush Trade, Place detail pages in Mukoko Places, Universal detail page composition across verticals.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-detail-layout",
+      "docs": "Use it for: Event detail pages in Mukoko Events, Article detail pages in Mukoko News, Product detail pages in Bush Trade, Place detail pages in Mukoko Places, Universal detail page composition across verticals.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-detail-layout",
       "files": [
         {
           "path": "components/registry/n6-pages/mzizi-detail-layout.tsx",
@@ -10094,7 +10094,7 @@
         "hasDemo": true,
         "owner": "nyuchi",
         "useCases": [
-          "Event detail pages in Nhimbe",
+          "Event detail pages in Mukoko Events",
           "Article detail pages in Mukoko News",
           "Product detail pages in Bush Trade",
           "Place detail pages in Mukoko Places",
@@ -10118,7 +10118,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Standard detail page orchestrator. Hero section with cover image, back/share/like actions, content body, related items section, and sticky bottom CTA. Every content detail screen uses this: event detail, article detail, product detail, place detail, job detail, profile detail, novel detail. The developer provides the hero content, body sections, and action handlers.",
-      "docs": "Use it for: pulse, bytes, circles, novels, nhimbe.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-detail-page",
+      "docs": "Use it for: pulse, bytes, circles, novels, events.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-detail-page",
       "files": [
         {
           "path": "components/registry/n6-pages/mzizi-detail-page.tsx",
@@ -10142,7 +10142,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["pulse", "bytes", "circles", "novels", "nhimbe"],
+        "useCases": ["pulse", "bytes", "circles", "novels", "events"],
         "variants": ["default", "loading"]
       },
       "name": "mzizi-detail-page",
@@ -10574,7 +10574,7 @@
       "categories": ["brand"],
       "dependencies": ["lucide-react"],
       "description": "DEPRECATED: Use mzizi-ticket-card instead. This was an early pre-brand event card without harness, motion, or ARIA integration.",
-      "docs": "Use it for: Event listings in Nhimbe (meetups, gatherings, ceremonies), Upcoming shows and performances, Calendar agenda items with location, RSVP-driven community events, Ticketed events with date and price.\nVariants: default, compact, hero, agenda-row.\nIncludes: Date and time display with locale formatting, Location with map link, RSVP button slot, Mineral accent per event category, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced.\nAccessibility: role=article, aria-label with event title and date, Focus-visible ring, 48px minimum touch target, Screen reader announces title, date, location, RSVP count, Time elements use datetime attribute for assistive tech.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-event-card",
+      "docs": "Use it for: Event listings in Mukoko Events (meetups, gatherings, ceremonies), Upcoming shows and performances, Calendar agenda items with location, RSVP-driven community events, Ticketed events with date and price.\nVariants: default, compact, hero, agenda-row.\nIncludes: Date and time display with locale formatting, Location with map link, RSVP button slot, Mineral accent per event category, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced.\nAccessibility: role=article, aria-label with event title and date, Focus-visible ring, 48px minimum touch target, Screen reader announces title, date, location, RSVP count, Time elements use datetime attribute for assistive tech.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-event-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-event-card.tsx",
@@ -10603,7 +10603,7 @@
         "hasDemo": true,
         "owner": "nyuchi",
         "useCases": [
-          "Event listings in Nhimbe (meetups, gatherings, ceremonies)",
+          "Event listings in Mukoko Events (meetups, gatherings, ceremonies)",
           "Upcoming shows and performances",
           "Calendar agenda items with location",
           "RSVP-driven community events",
@@ -10701,8 +10701,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["pages"],
       "dependencies": [],
-      "description": "Standard feed page orchestrator composing header, search/filter bar, MziziListView infinite scroll feed, pull-to-refresh, empty state, and FAB create button into a complete screen. Every feed screen across every mini-app uses this layout — Pulse home, News feed, Circles timeline, BushTrade listings, Jobs board, Nhimbe events, Places directory. The developer provides the data source, card renderer, and filter configuration. The orchestrator handles layout, loading, errors, and responsive behaviour.",
-      "docs": "Use it for: pulse, bytes, circles, novels, nhimbe.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-feed-page",
+      "description": "Standard feed page orchestrator composing header, search/filter bar, MziziListView infinite scroll feed, pull-to-refresh, empty state, and FAB create button into a complete screen. Every feed screen across every mini-app uses this layout — Pulse home, News feed, Circles timeline, BushTrade listings, Jobs board, Mukoko Events listings, Places directory. The developer provides the data source, card renderer, and filter configuration. The orchestrator handles layout, loading, errors, and responsive behaviour.",
+      "docs": "Use it for: pulse, bytes, circles, novels, events.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-feed-page",
       "files": [
         {
           "path": "components/registry/n6-pages/mzizi-feed-page.tsx",
@@ -10726,7 +10726,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["pulse", "bytes", "circles", "novels", "nhimbe"],
+        "useCases": ["pulse", "bytes", "circles", "novels", "events"],
         "variants": ["default", "loading"]
       },
       "name": "mzizi-feed-page",
@@ -10791,7 +10791,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Branded weather forecast display with cobalt mineral accent. Shows current conditions, temperature, humidity, 5-day outlook, and farming/agriculture advisory for African rural contexts. Mineral-coded severity levels for weather alerts. Used in Weather home and as an embedded widget in Nhimbe event pages and BushTrade logistics.",
+      "description": "Branded weather forecast display with cobalt mineral accent. Shows current conditions, temperature, humidity, 5-day outlook, and farming/agriculture advisory for African rural contexts. Mineral-coded severity levels for weather alerts. Used in Weather home and as an embedded widget in Mukoko Events event pages and BushTrade logistics.",
       "docs": "Use it for: weather.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-forecast-card",
       "files": [
         {
@@ -11050,8 +11050,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Universal branded group/community card with dynamic mineral accent based on the parent app. Shows group name, member count, avatar strip, activity indicator, privacy level, topic tags, and join CTA. Used across Circles (communities), Campfire (group chats), BushTrade (seller groups), Nhimbe (event communities), and any app with group-based features.",
-      "docs": "Use it for: campfire, circles, nhimbe, lingo, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-group-card",
+      "description": "Universal branded group/community card with dynamic mineral accent based on the parent app. Shows group name, member count, avatar strip, activity indicator, privacy level, topic tags, and join CTA. Used across Circles (communities), Campfire (group chats), BushTrade (seller groups), Mukoko Events (event communities), and any app with group-based features.",
+      "docs": "Use it for: campfire, circles, events, lingo, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-group-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-group-card.tsx",
@@ -11074,7 +11074,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["campfire", "circles", "nhimbe", "lingo", "bushtrade"],
+        "useCases": ["campfire", "circles", "events", "lingo", "bushtrade"],
         "variants": ["default"]
       },
       "name": "mzizi-group-card",
@@ -11528,7 +11528,7 @@
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
       "description": "Universal content card for all Mukoko listing types — events, products, news, bush trade, directories. Supports row, compact, and hero variants with mineral-colored category accents. The foundational brand component: every listing across the super app uses this pattern.",
-      "docs": "Use it for: Event listings (Nhimbe), Product listings (BushTrade), News articles (News), Place listings (Places), Job listings (Jobs).\nVariants: row, compact, hero.\nIncludes: Mineral-colored category accent, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced, Verified badge slot, Mini-app aware mineral accent.\nAccessibility: role=article, aria-label with title, Focus-visible ring, 48px minimum touch target, Screen reader announces category and title.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-listing-card",
+      "docs": "Use it for: Event listings (Mukoko Events), Product listings (BushTrade), News articles (News), Place listings (Places), Job listings (Jobs).\nVariants: row, compact, hero.\nIncludes: Mineral-colored category accent, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced, Verified badge slot, Mini-app aware mineral accent.\nAccessibility: role=article, aria-label with title, Focus-visible ring, 48px minimum touch target, Screen reader announces category and title.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-listing-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-listing-card.tsx",
@@ -11555,7 +11555,7 @@
         "hasDemo": true,
         "owner": "nyuchi",
         "useCases": [
-          "Event listings (Nhimbe)",
+          "Event listings (Mukoko Events)",
           "Product listings (BushTrade)",
           "News articles (News)",
           "Place listings (Places)",
@@ -11729,7 +11729,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal date/location signature tile — the 4.2.0 When/Where unit. A rounded-square chip (an icon tile OR a month-over-day date chip) paired with a bold 16px primary line and a 13px muted secondary line, with an optional caption and trailing action. Purely presentational and server-safe (no client directive, no harness) so it renders inside React Server Components. The chip tint defaults to the brand accent (--brand-accent) so each app swaps its own mineral. Used on event detail When/Where rows, place cards, and any listing that anchors a date or a location.",
-      "docs": "Use it for: Event detail When / Where rows (nhimbe), Place card location line (Places), Listing date anchor across the super app.\nVariants: icon, date.\nIncludes: 4.2.0 date/location signature pattern, Server-safe — no client directive, renders in RSC, 13px muted metadata / 16px bold primary, Brand-accent chip tint (--brand-accent), color-mix surface, Icon-chip or month-over-day date-chip modes.\nAccessibility: Decorative chip marked aria-hidden, Truncating single-line primary/secondary, Semantic top-to-bottom reading order.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-meta-tile",
+      "docs": "Use it for: Event detail When / Where rows (Mukoko Events), Place card location line (Places), Listing date anchor across the super app.\nVariants: icon, date.\nIncludes: 4.2.0 date/location signature pattern, Server-safe — no client directive, renders in RSC, 13px muted metadata / 16px bold primary, Brand-accent chip tint (--brand-accent), color-mix surface, Icon-chip or month-over-day date-chip modes.\nAccessibility: Decorative chip marked aria-hidden, Truncating single-line primary/secondary, Semantic top-to-bottom reading order.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-meta-tile",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-meta-tile.tsx",
@@ -11753,7 +11753,7 @@
         ],
         "owner": "nyuchi",
         "useCases": [
-          "Event detail When / Where rows (nhimbe)",
+          "Event detail When / Where rows (Mukoko Events)",
           "Place card location line (Places)",
           "Listing date anchor across the super app"
         ],
@@ -11958,7 +11958,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Brand notification item for the Mukoko notification center. Displays a notification with action type icon, actor avatar, message, timestamp, and read/unread state. Mineral-colored icon backgrounds map to notification categories. Used across all Mukoko apps via the shared system.notifications schema.",
-      "docs": "Use it for: pulse, campfire, circles, nhimbe, wallet.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-notification-item",
+      "docs": "Use it for: pulse, campfire, circles, events, wallet.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-notification-item",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-notification-item.tsx",
@@ -11981,7 +11981,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["pulse", "campfire", "circles", "nhimbe", "wallet"],
+        "useCases": ["pulse", "campfire", "circles", "events", "wallet"],
         "variants": ["default"]
       },
       "name": "mzizi-notification-item",
@@ -12081,7 +12081,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded onboarding step card used across all ecosystem app first-use experiences. Shows an illustration area, title, description, progress dots, and next/skip actions. Dynamic mineral accent. The individual step within any onboarding flow — composable with swiper or stepper primitives for multi-step sequences.",
-      "docs": "Use it for: pulse, campfire, circles, nhimbe, wallet.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-onboarding-step",
+      "docs": "Use it for: pulse, campfire, circles, events, wallet.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-onboarding-step",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-onboarding-step.tsx",
@@ -12105,7 +12105,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["pulse", "campfire", "circles", "nhimbe", "wallet"],
+        "useCases": ["pulse", "campfire", "circles", "events", "wallet"],
         "variants": ["default"]
       },
       "name": "mzizi-onboarding-step",
@@ -12241,8 +12241,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Universal branded payment summary and confirmation card. Shows what is being purchased, price breakdown, payment method, and confirm CTA. Used across all domains with financial transactions: BushTrade (product purchase), Nhimbe (ticket purchase), Transport (ride booking), Wallet (token transfer), Health (consultation fee), Novels (chapter unlock). Supports multi-currency (ZWL, USD, ZAR, KES) and MIT token payments.",
-      "docs": "Use it for: novels, nhimbe, wallet, transport, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-payment-summary",
+      "description": "Universal branded payment summary and confirmation card. Shows what is being purchased, price breakdown, payment method, and confirm CTA. Used across all domains with financial transactions: BushTrade (product purchase), Mukoko Events (ticket purchase), Transport (ride booking), Wallet (token transfer), Health (consultation fee), Novels (chapter unlock). Supports multi-currency (ZWL, USD, ZAR, KES) and MIT token payments.",
+      "docs": "Use it for: novels, events, wallet, transport, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-payment-summary",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-payment-summary.tsx",
@@ -12267,7 +12267,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["novels", "nhimbe", "wallet", "transport", "bushtrade"],
+        "useCases": ["novels", "events", "wallet", "transport", "bushtrade"],
         "variants": ["default"]
       },
       "name": "mzizi-payment-summary",
@@ -13033,7 +13033,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Ticket registration panel — a labelled header, a selectable ticket-tier list, a clamped quantity stepper, and one saturated accent CTA. Tiers render as radios (role=radio / aria-checked) showing name + USD-formatted price (Free for 0) and disable with a Sold out label; the Minus/Plus stepper uses 48px pill targets and clamps to [min, max]. The accent CTA (pill, --brand-accent) shows the running total and a loading spinner. Harness-wired: tier and quantity changes are announced through the live region. Accent defaults to --brand-accent so each app swaps its own mineral.",
-      "docs": "Use it for: Event registration / ticketing panel (nhimbe), Paid RSVP tier selection, Any quantity + tier purchase sidebar.\nVariants: default.\nIncludes: Selectable ticket-tier list with radio semantics, USD Intl.NumberFormat price formatting, Free for 0, Clamped quantity stepper (Minus/Plus, 48px pills), One saturated accent CTA with running total + loading spinner, Harness live-region announcements, --brand-accent neutral default.\nAccessibility: Tier rows are radios (role=radio, aria-checked) in a radiogroup, Quantity steppers are 48px targets with aria-labels, Live region announces tier + quantity changes, Sold-out tiers disabled and labelled Sold out, Visible focus-visible ring on every control.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-registration-card",
+      "docs": "Use it for: Event registration / ticketing panel (Mukoko Events), Paid RSVP tier selection, Any quantity + tier purchase sidebar.\nVariants: default.\nIncludes: Selectable ticket-tier list with radio semantics, USD Intl.NumberFormat price formatting, Free for 0, Clamped quantity stepper (Minus/Plus, 48px pills), One saturated accent CTA with running total + loading spinner, Harness live-region announcements, --brand-accent neutral default.\nAccessibility: Tier rows are radios (role=radio, aria-checked) in a radiogroup, Quantity steppers are 48px targets with aria-labels, Live region announces tier + quantity changes, Sold-out tiers disabled and labelled Sold out, Visible focus-visible ring on every control.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-registration-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-registration-card.tsx",
@@ -13059,7 +13059,7 @@
         ],
         "owner": "nyuchi",
         "useCases": [
-          "Event registration / ticketing panel (nhimbe)",
+          "Event registration / ticketing panel (Mukoko Events)",
           "Paid RSVP tier selection",
           "Any quantity + tier purchase sidebar"
         ],
@@ -13121,8 +13121,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Universal branded review card with trust-verified reviewer badge, star rating, review text, and helpful vote. Used across all domains where user reviews exist: Places (business reviews), BushTrade (seller reviews), Novels (book reviews), Health (provider reviews), Nhimbe (event reviews). The reviewer verification tier is always visible — Ubuntu principle: trust is earned and displayed.",
-      "docs": "Use it for: novels, nhimbe, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-review-card",
+      "description": "Universal branded review card with trust-verified reviewer badge, star rating, review text, and helpful vote. Used across all domains where user reviews exist: Places (business reviews), BushTrade (seller reviews), Novels (book reviews), Health (provider reviews), Mukoko Events (event reviews). The reviewer verification tier is always visible — Ubuntu principle: trust is earned and displayed.",
+      "docs": "Use it for: novels, events, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-review-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-review-card.tsx",
@@ -13145,7 +13145,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["novels", "nhimbe", "places", "bushtrade", "health"],
+        "useCases": ["novels", "events", "places", "bushtrade", "health"],
         "variants": ["default"]
       },
       "name": "mzizi-review-card",
@@ -13284,8 +13284,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Stateful RSVP button with confirmation status variants: pending, confirmed, waitlisted, declined. Pill-shaped with mineral accent, loading state, and capacity indicator. Maps to events.rsvp_action table. The standardized way to handle event registration across nhimbe.",
-      "docs": "Use it for: circles, nhimbe, planner.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-rsvp-button",
+      "description": "Stateful RSVP button with confirmation status variants: pending, confirmed, waitlisted, declined. Pill-shaped with mineral accent, loading state, and capacity indicator. Maps to events.rsvp_action table. The standardized way to handle event registration across Mukoko Events.",
+      "docs": "Use it for: circles, events, planner.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-rsvp-button",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-rsvp-button.tsx",
@@ -13309,7 +13309,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["circles", "nhimbe", "planner"],
+        "useCases": ["circles", "events", "planner"],
         "variants": ["default"]
       },
       "name": "mzizi-rsvp-button",
@@ -13356,7 +13356,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded search results view composing search-bar, filter-bar, and search-results primitives with mineral-accented category filters. Shows unified cross-app results: people, places, events, products, articles, groups. Each result type renders using its corresponding brand card (mzizi-listing-card, mzizi-place-card, user-card, mzizi-group-card). The standard search experience across the entire ecosystem.",
-      "docs": "Use it for: pulse, campfire, circles, novels, nhimbe.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-search-view",
+      "docs": "Use it for: pulse, campfire, circles, novels, events.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-search-view",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-search-view.tsx",
@@ -13379,7 +13379,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["pulse", "campfire", "circles", "novels", "nhimbe"],
+        "useCases": ["pulse", "campfire", "circles", "novels", "events"],
         "variants": ["default"]
       },
       "name": "mzizi-search-view",
@@ -13482,7 +13482,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Standard settings page orchestrator with sidebar navigation on desktop and accordion sections on mobile. Groups settings into titled sections with consistent row patterns (toggle, select, link, destructive). Every app and the global platform settings use this layout.",
-      "docs": "Use it for: pulse, campfire, nhimbe, planner, wallet.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-settings-page",
+      "docs": "Use it for: pulse, campfire, events, planner, wallet.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-settings-page",
       "files": [
         {
           "path": "components/registry/n6-pages/mzizi-settings-page.tsx",
@@ -13506,7 +13506,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["pulse", "campfire", "nhimbe", "planner", "wallet"],
+        "useCases": ["pulse", "campfire", "events", "planner", "wallet"],
         "variants": ["default", "loading"]
       },
       "name": "mzizi-settings-page",
@@ -13613,7 +13613,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded sidebar navigation with nav items, badges, and section headers. Extracted from admin-page, api-explorer-page, and logs-page. Uses mineral accents for active state.",
-      "docs": "Use it for: nhimbe, console, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-sidebar-nav",
+      "docs": "Use it for: events, console, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-sidebar-nav",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-sidebar-nav.tsx",
@@ -13637,7 +13637,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "console", "bushtrade"],
+        "useCases": ["events", "console", "bushtrade"],
         "variants": ["default"]
       },
       "name": "mzizi-sidebar-nav",
@@ -13786,7 +13786,7 @@
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
       "description": "Horizontal compact stats bar for dashboards, home screens, and admin views. Displays 2–4 metric blocks inline with icon, label, value, and optional trend indicator. Uses mineral-colored icon backgrounds. The brand-standard way to show key metrics at a glance across all Mukoko apps.",
-      "docs": "Use it for: pulse, nhimbe, planner, wallet, bushtrade.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-stats-row",
+      "docs": "Use it for: pulse, events, planner, wallet, bushtrade.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-stats-row",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-stats-row.tsx",
@@ -13810,7 +13810,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["pulse", "nhimbe", "planner", "wallet", "bushtrade"],
+        "useCases": ["pulse", "events", "planner", "wallet", "bushtrade"],
         "variants": ["default", "compact", "hero"]
       },
       "name": "mzizi-stats-row",
@@ -13826,7 +13826,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded success/confirmation screen with mineral-colored checkmark, title, message, and optional actions. Extracted from payment-page, checkout-page, and booking-page where the same checkmark + title pattern was repeated. Uses the Seven African Minerals for the success indicator.",
-      "docs": "Use it for: events, wallet, transport, bushtrade, nhimbe.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-success-screen",
+      "docs": "Use it for: events, wallet, transport, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-success-screen",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-success-screen.tsx",
@@ -13849,7 +13849,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["events", "wallet", "transport", "bushtrade", "nhimbe"],
+        "useCases": ["events", "wallet", "transport", "bushtrade"],
         "variants": ["default"]
       },
       "name": "mzizi-success-screen",
@@ -14052,8 +14052,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Universal date-railed discovery list — the 4.2.0 signature timeline. Groups items by day: each day is a left rail (weekday, big day numeral, month) beside a stack of tight horizontal rows. Each row reads time, title, host, location with an overlapping avatar stack and a right-edge thumbnail. Harness-wired for reduced-motion staggered entry and observability. Quiet rows, full 1px borders, 13px muted metadata — the 4.2.0 density. Used for event/agenda discovery across the ecosystem (nhimbe events, planner schedules, any date-anchored feed).",
-      "docs": "Use it for: Scoped discover timelines (nhimbe /events, /search), Circle Events tab, Signed-in home Your events, Planner day-grouped schedule.\nVariants: default.\nIncludes: 4.2.0 date-rail signature pattern, Day-grouped with weekday/day/month rail, Harness integration — reduced-motion staggered entry + observability, Full 1px borders, 13px muted metadata, 16px title (4.2.0 density), Avatar stack + right thumbnail per row, Mineral event dot per row.\nAccessibility: Decorative dots/avatars marked aria-hidden, Rows are focusable links with visible focus ring, Reduced-motion respected via harness, Truncating single-line title/host/location.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-timeline",
+      "description": "Universal date-railed discovery list — the 4.2.0 signature timeline. Groups items by day: each day is a left rail (weekday, big day numeral, month) beside a stack of tight horizontal rows. Each row reads time, title, host, location with an overlapping avatar stack and a right-edge thumbnail. Harness-wired for reduced-motion staggered entry and observability. Quiet rows, full 1px borders, 13px muted metadata — the 4.2.0 density. Used for event/agenda discovery across the ecosystem (Mukoko Events listings, planner schedules, any date-anchored feed).",
+      "docs": "Use it for: Scoped discover timelines (Mukoko Events /events, /search), Circle Events tab, Signed-in home Your events, Planner day-grouped schedule.\nVariants: default.\nIncludes: 4.2.0 date-rail signature pattern, Day-grouped with weekday/day/month rail, Harness integration — reduced-motion staggered entry + observability, Full 1px borders, 13px muted metadata, 16px title (4.2.0 density), Avatar stack + right thumbnail per row, Mineral event dot per row.\nAccessibility: Decorative dots/avatars marked aria-hidden, Rows are focusable links with visible focus ring, Reduced-motion respected via harness, Truncating single-line title/host/location.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-timeline",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-timeline.tsx",
@@ -14079,7 +14079,7 @@
         ],
         "owner": "nyuchi",
         "useCases": [
-          "Scoped discover timelines (nhimbe /events, /search)",
+          "Scoped discover timelines (Mukoko Events /events, /search)",
           "Circle Events tab",
           "Signed-in home Your events",
           "Planner day-grouped schedule"
@@ -14693,7 +14693,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Transaction history row for the Mukoko wallet. Displays transaction type (send/receive/purchase/reward), amount with MIT currency formatting, counterparty, status, and timestamp. Maps to wallet.transaction table. Used in wallet history, payment confirmations, and financial reporting.",
-      "docs": "Use it for: nhimbe, wallet, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-transaction-row",
+      "docs": "Use it for: events, wallet, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-transaction-row",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-transaction-row.tsx",
@@ -14716,7 +14716,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "wallet", "bushtrade"],
+        "useCases": ["events", "wallet", "bushtrade"],
         "variants": ["default"]
       },
       "name": "mzizi-transaction-row",
@@ -15031,7 +15031,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "The one washed-theme mechanism — surface tinted by accent — that four independent implementations of the same idea collapse to. From a named palette family (the seven heritage tones or the seven minerals) or an explicit accent, it emits the full washed contract as inline custom properties every descendant inherits: --washed-accent, --wash, --washed-on-wash and --washed-gradient, plus the --event-primary / --event-on-wash / --event-gradient aliases existing call sites already read. Colours are var(--color-<family>, #canon) references, so the accent follows light/dark from the token layer for free and no hex is ever pasted bare; nothing is fetched at build or runtime. The wash is mixed surface-first in oklab, the same form and space as the repo's own --wash, with mix strengths read from --wash-surface / --wash-on-* so an app tunes dark mode in one rule. Exports resolveWashedTheme() for call sites that need the solved values rather than a wrapper element — a theme picker, an OG route, a stored event theme.",
-      "docs": "Use it for: Event or detail page that tints its whole ground from one accent (nhimbe), Seasonal or campaign theming from a colour the palette does not name (bushtrade), Seeding the wash context mzizi-cover-wash-header and its descendants read, Theme picker previewing a family's solved light and dark values, Any surface that needs an accent-tinted container with a legible foreground.\nVariants: heritage, mineral, custom-accent.\nIncludes: One mechanism for the four washed-theme implementations — nhimbe's .event-themed-page, bushtrade's .season-* blocks, this repo's --wash, and the retired styling-washed-themes records, Seven heritage tones + seven minerals, as var(--color-<family>, #canon) token references, Emits --washed-accent / --wash / --washed-on-wash / --washed-gradient plus the --event-* aliases, Wash mixed surface-first in oklab, matching app/globals.css, Mode-dependent strengths via --wash-surface / --wash-on-strength / --wash-on-mix, resolveWashedTheme() solves a theme without rendering, accent prop themes by a value the palette does not name (seasons, per-event colours).\nAccessibility: Foreground on the wash is a solved on-container where canon ships one (the minerals), derived toward black/white where it does not (heritage), Mix strengths are variables, so an app can raise contrast without forking the component, Emits custom properties only — adds no roles, no focus traps and no tab stops, Renders a plain element via `as`, so the surrounding document keeps its semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-washed-theme",
+      "docs": "Use it for: Event or detail page that tints its whole ground from one accent (Mukoko Events), Seasonal or campaign theming from a colour the palette does not name (bushtrade), Seeding the wash context mzizi-cover-wash-header and its descendants read, Theme picker previewing a family's solved light and dark values, Any surface that needs an accent-tinted container with a legible foreground.\nVariants: heritage, mineral, custom-accent.\nIncludes: One mechanism for the four washed-theme implementations — Mukoko Events' .event-themed-page, bushtrade's .season-* blocks, this repo's --wash, and the retired styling-washed-themes records, Seven heritage tones + seven minerals, as var(--color-<family>, #canon) token references, Emits --washed-accent / --wash / --washed-on-wash / --washed-gradient plus the --event-* aliases, Wash mixed surface-first in oklab, matching app/globals.css, Mode-dependent strengths via --wash-surface / --wash-on-strength / --wash-on-mix, resolveWashedTheme() solves a theme without rendering, accent prop themes by a value the palette does not name (seasons, per-event colours).\nAccessibility: Foreground on the wash is a solved on-container where canon ships one (the minerals), derived toward black/white where it does not (heritage), Mix strengths are variables, so an app can raise contrast without forking the component, Emits custom properties only — adds no roles, no focus traps and no tab stops, Renders a plain element via `as`, so the surrounding document keeps its semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-washed-theme",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-washed-theme.tsx",
@@ -15048,7 +15048,7 @@
         ],
         "collection": "brand",
         "features": [
-          "One mechanism for the four washed-theme implementations — nhimbe's .event-themed-page, bushtrade's .season-* blocks, this repo's --wash, and the retired styling-washed-themes records",
+          "One mechanism for the four washed-theme implementations — Mukoko Events' .event-themed-page, bushtrade's .season-* blocks, this repo's --wash, and the retired styling-washed-themes records",
           "Seven heritage tones + seven minerals, as var(--color-<family>, #canon) token references",
           "Emits --washed-accent / --wash / --washed-on-wash / --washed-gradient plus the --event-* aliases",
           "Wash mixed surface-first in oklab, matching app/globals.css",
@@ -15058,7 +15058,7 @@
         ],
         "owner": "nyuchi",
         "useCases": [
-          "Event or detail page that tints its whole ground from one accent (nhimbe)",
+          "Event or detail page that tints its whole ground from one accent (Mukoko Events)",
           "Seasonal or campaign theming from a colour the palette does not name (bushtrade)",
           "Seeding the wash context mzizi-cover-wash-header and its descendants read",
           "Theme picker previewing a family's solved light and dark values",
@@ -15145,8 +15145,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "Proximity-sorted results list designed to pair with a map view. Shows distance, direction indicator, and listing preview. Standard split-view pattern for BushTrade browse, Places discovery, Nhimbe nearby events, and Transport nearby stops.",
-      "docs": "Use it for: nhimbe, places, transport.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/nearby-list",
+      "description": "Proximity-sorted results list designed to pair with a map view. Shows distance, direction indicator, and listing preview. Standard split-view pattern for BushTrade browse, Places discovery, Mukoko Events nearby events, and Transport nearby stops.",
+      "docs": "Use it for: events, places, transport.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/nearby-list",
       "files": [
         {
           "path": "components/registry/n2-primitives/nearby-list.tsx",
@@ -15160,7 +15160,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "places", "transport"],
+        "useCases": ["events", "places", "transport"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "nearby-list",
@@ -15175,8 +15175,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["components", "primitives"],
       "dependencies": [],
-      "description": "NFT display card showing media (image/video), title, collection, owner, and marketplace actions. Used for Nhimbe ERC-1155 tickets, Novels chapter NFTs, Ubuntu badge NFTs, and creator content NFTs. Maps to wallet.nft_holdings.",
-      "docs": "Use it for: novels, nhimbe, wallet.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/nft-card",
+      "description": "NFT display card showing media (image/video), title, collection, owner, and marketplace actions. Used for Mukoko Events ERC-1155 tickets, Novels chapter NFTs, Ubuntu badge NFTs, and creator content NFTs. Maps to wallet.nft_holdings.",
+      "docs": "Use it for: novels, events, wallet.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/nft-card",
       "files": [
         {
           "path": "components/registry/n2-primitives/nft-card.tsx",
@@ -15190,7 +15190,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "framework",
-        "useCases": ["novels", "nhimbe", "wallet"],
+        "useCases": ["novels", "events", "wallet"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "nft-card",
@@ -15720,7 +15720,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Organization/business profile page. Logo, description, verification status, team members, location, hours, products/services tabs. For businesses, NGOs, government entities on the platform.",
-      "docs": "Use it for: nhimbe, events, places, jobs, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/org-profile-page",
+      "docs": "Use it for: events, places, jobs, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/org-profile-page",
       "files": [
         {
           "path": "components/registry/n6-pages/org-profile-page.tsx",
@@ -15744,7 +15744,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "events", "places", "jobs", "bushtrade"],
+        "useCases": ["events", "places", "jobs", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "org-profile-page",
@@ -15888,8 +15888,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["pages"],
       "dependencies": [],
-      "description": "Payment page composition. Amount input, recipient selection, payment method, confirmation. Supports fiat (EcoCash, bank), crypto (MXT, NHC), and cross-border via Nhimbe. Competitors: M-Pesa, Revolut.",
-      "docs": "Use it for: nhimbe, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/payment-page",
+      "description": "Payment page composition. Amount input, recipient selection, payment method, confirmation. Supports fiat (EcoCash, bank), crypto (MXT, NHC), and cross-border via Mukoko Events. Competitors: M-Pesa, Revolut.",
+      "docs": "Use it for: events, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/payment-page",
       "files": [
         {
           "path": "components/registry/n6-pages/payment-page.tsx",
@@ -15913,7 +15913,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "wallet", "bushtrade"],
+        "useCases": ["events", "wallet", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "payment-page",
@@ -16468,7 +16468,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Grid of quick action buttons with icon and label. Extracted from wallet-page and console-dashboard-page.",
-      "docs": "Use it for: nhimbe, console, wallet.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/quick-action-grid",
+      "docs": "Use it for: events, console, wallet.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/quick-action-grid",
       "files": [
         {
           "path": "components/registry/n2-primitives/quick-action-grid.tsx",
@@ -16482,7 +16482,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "console", "wallet"],
+        "useCases": ["events", "console", "wallet"],
         "variants": ["default"]
       },
       "name": "quick-action-grid",
@@ -16715,7 +16715,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Recurrence pattern selector for scheduling — daily, weekly, monthly, yearly with day-of-week/month selectors and end-date or occurrence-count options. Used for recurring tasks, events, medication schedules, and any repeating item across the platform.",
-      "docs": "Use it for: nhimbe, planner, health.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/recurrence-picker",
+      "docs": "Use it for: events, planner, health.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/recurrence-picker",
       "files": [
         {
           "path": "components/registry/n2-primitives/recurrence-picker.tsx",
@@ -16729,7 +16729,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "planner", "health"],
+        "useCases": ["events", "planner", "health"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "recurrence-picker",
@@ -18889,7 +18889,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Horizontal step progress indicator for multi-step flows. Shows current progress as filled/unfilled segments. Extracted from payment-page, checkout-page, booking-page, and verification-page. Brand-agnostic.",
-      "docs": "Use it for: nhimbe, events, wallet.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/step-progress",
+      "docs": "Use it for: events, wallet.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/step-progress",
       "files": [
         {
           "path": "components/registry/n2-primitives/step-progress.tsx",
@@ -18903,7 +18903,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
-        "useCases": ["nhimbe", "events", "wallet"],
+        "useCases": ["events", "wallet"],
         "variants": ["default"]
       },
       "name": "step-progress",
@@ -19385,7 +19385,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Team/organization management page. Member list, role assignment, invitations, permissions, activity log. For Mukoko orgs, Nyuchi Web Services teams, B2B partners.",
-      "docs": "Use it for: nhimbe, console, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/team-management-page",
+      "docs": "Use it for: events, console, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/team-management-page",
       "files": [
         {
           "path": "components/registry/n6-pages/team-management-page.tsx",
@@ -19409,7 +19409,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "console", "bushtrade"],
+        "useCases": ["events", "console", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "team-management-page",
@@ -19916,7 +19916,7 @@
       "categories": ["components", "primitives"],
       "dependencies": [],
       "description": "Crypto token display row with symbol, balance, and optional fiat value. Extracted from wallet-page.",
-      "docs": "Use it for: nhimbe, wallet, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/token-row",
+      "docs": "Use it for: events, wallet, bushtrade.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/token-row",
       "files": [
         {
           "path": "components/registry/n2-primitives/token-row.tsx",
@@ -19930,7 +19930,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "framework",
-        "useCases": ["nhimbe", "wallet", "bushtrade"],
+        "useCases": ["events", "wallet", "bushtrade"],
         "variants": ["default", "sm", "lg"]
       },
       "name": "token-row",
@@ -20025,7 +20025,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Transaction history page. Filterable list of all transactions with date grouping, search, and export. Shows transaction type, status, amount, and counterparty.",
-      "docs": "Use it for: nhimbe, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/transaction-history-page",
+      "docs": "Use it for: events, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/transaction-history-page",
       "files": [
         {
           "path": "components/registry/n6-pages/transaction-history-page.tsx",
@@ -20049,7 +20049,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "wallet", "bushtrade"],
+        "useCases": ["events", "wallet", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "transaction-history-page",
@@ -20061,8 +20061,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["components", "primitives"],
       "dependencies": [],
-      "description": "Full payment receipt with QR code, transaction ID, amount, parties, timestamp, and shareable format. Maps to wallet.transaction table. Used after successful payments, transfers, and purchases across Wallet, BushTrade, and Nhimbe.",
-      "docs": "Use it for: nhimbe, wallet, bushtrade.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/transaction-receipt",
+      "description": "Full payment receipt with QR code, transaction ID, amount, parties, timestamp, and shareable format. Maps to wallet.transaction table. Used after successful payments, transfers, and purchases across Wallet, BushTrade, and Mukoko Events.",
+      "docs": "Use it for: events, wallet, bushtrade.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/transaction-receipt",
       "files": [
         {
           "path": "components/registry/n2-primitives/transaction-receipt.tsx",
@@ -20076,7 +20076,7 @@
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "framework",
-        "useCases": ["nhimbe", "wallet", "bushtrade"],
+        "useCases": ["events", "wallet", "bushtrade"],
         "variants": ["default"]
       },
       "name": "transaction-receipt",
@@ -20452,7 +20452,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Identity verification page. Multi-step verification flow: phone/OTP, government ID upload, selfie, biometric. Shows current tier and what unlocks at each level.",
-      "docs": "Use it for: nhimbe, jobs, wallet, bushtrade, health.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/verification-page",
+      "docs": "Use it for: events, jobs, wallet, bushtrade, health.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/verification-page",
       "files": [
         {
           "path": "components/registry/n6-pages/verification-page.tsx",
@@ -20476,7 +20476,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "jobs", "wallet", "bushtrade", "health"],
+        "useCases": ["events", "jobs", "wallet", "bushtrade", "health"],
         "variants": ["default", "loading"]
       },
       "name": "verification-page",
@@ -20764,7 +20764,7 @@
       "categories": ["pages"],
       "dependencies": [],
       "description": "Wallet page composition. Balance display, quick actions (send/receive/scan), recent transactions, and token portfolio. Competitors: M-Pesa, Revolut, Cash App. Supports MXT, MIT, NST, NHC tokens alongside fiat currencies.",
-      "docs": "Use it for: nhimbe, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/wallet-page",
+      "docs": "Use it for: events, wallet, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/wallet-page",
       "files": [
         {
           "path": "components/registry/n6-pages/wallet-page.tsx",
@@ -20788,7 +20788,7 @@
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": ["nhimbe", "wallet", "bushtrade"],
+        "useCases": ["events", "wallet", "bushtrade"],
         "variants": ["default", "loading"]
       },
       "name": "wallet-page",

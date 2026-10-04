@@ -6,11 +6,76 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 **The rule (owner, 2026-09-30):** every pull request that changes behaviour, shipped content, an API response, a published package or crate, a default, a dependency or a documented fact adds its entry here, under `## [Unreleased]`, in the same pull request. The `changelog / entry required` check fails a pull request that doesn't. Pull requests that touch only `.github/`, lockfiles or lint config pass without one, and pure CI, lint or typo pull requests can carry the `no-changelog` label instead.
 
+From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): staging merges are patches, a release to `main` is the next minor above the highest tag, and a major is only released by hand. Versions released before then are not renumbered.
+
 ## [Unreleased]
 
 ### Added — `safe-area-frame`, `preview-canvas`, `preset-picker` and `mzizi-email-preview` (2026-10-04, #398)
 
 - **Four components from nyuchi-tools** (`nyuchi/workspace-tools`), contributed because the registry had no equivalent. `safe-area-frame` (N2) draws a canvas shape at thumbnail size with its platform-UI bands shaded, in React and as a Mzizi Roots component in `mzizi-ui` (`SafeAreaFrame`, `safe_area_bands`) — one geometry, held together by the contract suite. `preview-canvas` (N2) is a single-image stage with Fit or scaled zoom and a busy state; `preset-picker` (N2) picks output sizes on `safe-area-frame`, keeping "active" and "included" apart; `mzizi-email-preview` (N3) shows email HTML in a sandboxed frame on an always-light body. Tests in `__tests__/components/` and `mzizi-rs/crates/mzizi-ui/tests/contract.rs`.
+
+### Added — `mzizi-activitypub`, the shared ActivityPub crate (2026-10-04)
+
+Owner decision Q5, 2026-10-04 (mukoko-dev/kweli#171; nyuchi/api-gateway `docs/architecture/activitypub.md`): the ActivityPub code circles.mukoko.com and kweli.mukoko.com each carried is one Mzizi server crate, used by both Workers.
+
+- **New crate `mzizi-activitypub`** (`mzizi-rs/crates/mzizi-activitypub`), N11 discovery on the fediverse. Sans-IO functions returning `serde_json::Value`: the `@context` (`context`, `with_context`, `without_context`), content negotiation (`wants_activity_json`), `escape_html`, `text_to_html`, `encode`, `property_value`, WebFinger (`webfinger_user`, `jrd`, `self_link`, `profile_page_link`), `host_meta`, `nodeinfo_links`, `nodeinfo(&NodeInfo)`, and outboxes (`ordered_collection`, `ordered_collection_page`, `page_id`, `public_activity`). Builds for `wasm32-unknown-unknown`. Extracted from mukoko-dev/mukoko-circles `worker/src/ap.rs`; actors stay the host's.
+- **Authored in the crate**, not under `components/registry/`: it has no TypeScript sibling and no UI, like the umbrella crates.
+- **`mzizi-roots-server` gains an opt-in `activitypub` feature** re-exporting it as `mzizi_roots_server::activitypub`. Not a default feature, because it brings `serde_json` and `url`.
+- `publish-crates.yml` publishes it, before the umbrellas. Its first crates.io release is 0.1.0 at the workspace version.
+- Phase 2 of the design (HTTP signatures, the inbox, delivery) is built here next.
+
+### Changed — every contract's `since` is `@bundu/ui` 0.3.0 (2026-10-04)
+
+Owner decision, 2026-10-04: versions bumped but never published are reset to the org versioning policy, so the next `@bundu/ui` release is 0.3.0, one minor above 0.2.0 on npm, and it carries everything the unpublished 0.3.0, 0.4.x and 0.5.0 entries described. The `implementations.astro.since` of the ten `app/` contracts that said 0.4.0 and the eleven `discover/` contracts that said 0.5.0 now say 0.3.0. Contract versions are unchanged.
+
+### Added — the Mzizi Discover Standard: a contract for each of the 11 Discover components (2026-10-04, #415)
+
+Owner decision, 2026-10-04: the discover pages of news, events, circles and weather must be identical, so they move into the Mukoko super-app on the web unchanged. Tracking: #413.
+
+- **`contracts/discover/`, a second contract family**: DiscoverShell, DiscoverMeta, DiscoverHero, DiscoverSearch, CategoryChips, CategoryChip, DiscoverSection, ResultGrid, DiscoverCard (one contract, variants `article`, `event`, `circle`, `place`), LoadMore and OpenInApp. Each is built in `@bundu/ui` (`src/discover/*.astro`, mzizi-dev/packages-npm) and evaluated there in every state. Where a server fills a prebuilt shell (circles.mukoko.com's Rust Worker), each contract has a `template` state with `{{placeholders}}`.
+- **`app/filter-bar` 1.1.0**: a `search` prop (`false` renders only the selects), `searchLabel` and `q` become optional, and a select whose value is `""` is no longer an active filter.
+- **`app/app-shell` 1.1.0**: the accent is `data-accent` plus the shell's stylesheet, not an inline `style`. **`app/bar-chart` 1.0.1**: bars are SVG geometry, not inline styles. The Astro runner now fails any inline `style` attribute, so a CSP needs no `style-src-attr 'unsafe-inline'`.
+- **`__tests__/contracts`** reads every family (`FAMILIES`) and fails on a directory under `contracts/` it does not read.
+- **CONTRIBUTING.md and AGENTS.md: upstream first.** A new or altered component goes upstream to Mzizi immediately; a local copy lives only as `TODO(mzizi)` with an open upstream PR.
+
+### Changed — releases follow the org versioning policy (2026-10-04, #412)
+
+`release.yml` and `publish-crates.yml` check the version with the shared `next-version` action (nyuchi/.github, pinned) before tagging or uploading. A release to `main` must be the next minor above the highest tag (the registry: 4.2.0, above v4.1.8; the crates: 0.2.0, above mzizi-rs-v0.1.0). A major is only released by hand, with `bump: major` on a manual run. The new `staging-version.yml` tags each merge into `staging` as the next patch. CONTRIBUTING.md § Versioning describes the policy.
+
+### Changed — the nhimbe brand is retired: canon's events row is Mukoko Events, at events.mukoko.com (2026-10-04, #411)
+
+Owner decisions, 2026-10-04 ([mukoko-dev/nhimbe#155](https://github.com/mukoko-dev/nhimbe/issues/155)): the events platform is **Mukoko Events**, at `https://events.mukoko.com`. The name "nhimbe" is retired as a brand, and the mineral stays **malachite**.
+
+- **Canon's `ecosystem` table (`lib/tokens/brand.source.ts`, served as `/v1/brand` → `.ecosystem`) replaces the `nhimbe` row with `events`.** The new row has display name "Mukoko Events", role "Events & gatherings", mineral malachite and url events.mukoko.com, in the same `sortOrder` slot. `BrandEcosystemEntry` gains two optional fields. `displayName` is the product name where it differs from the wordmark. `aliases` lists deprecated names that still resolve to the row. The `events` row carries `aliases: ["nhimbe"]`. A new export, `ecosystemAliases`, maps each alias to its row, and `resolveEcosystemName()` resolves a name through it. No other row changes.
+- **`nhimbe` is a documented deprecated alias, so nothing breaks.** `brandOverrides` (in `lib/tokens/index.ts` and the `mzizi-tokens-typescript` registry item) gains `events` and keeps `nhimbe` with the same malachite accent, marked `@deprecated`, and `BrandId` gains `"events"`. `mzizi-tokens-globals.css`'s brand block is now `[data-brand="events"], [data-brand="nhimbe"]`: the selector list is built from canon's `aliases` by `BRAND_ALIASES` in `scripts/render-globals-css.ts`, so `data-brand="nhimbe"` keeps resolving. `brandIndustryCategories.mukoko.events.products` now reads `["Mukoko Events"]`.
+- **Copy:** the `app-switcher` entry is now `events`. The `mzizi-footer` (React and Dioxus) Platform link is "Mukoko Events" at `/events`. `sidebar-15` and `sidebar-16` show a "Mukoko Events" workspace in malachite; they said tanzanite, which was never this brand's mineral. Item `useCases` say `events` instead of `nhimbe`, and descriptions say "Mukoko Events". The README ecosystem table now lists events.mukoko.com. The wordmark lists in CONTRIBUTING, the PR template and the brand guidelines drop nhimbe. Doctrine reads "Mukoko Events gatherings".
+- **Not changed:** the word _nhimbe_ where it names the Shona practice of communal work, as in sample data ("a working nhimbe") and history. `plugin/skills/` is copied from `@nyuchi/mzizi-skills`, so its ecosystem table follows when that package is bumped.
+- **New tests** in `__tests__/tokens-brand-blocks.test.ts` pin the `events` row, the alias, and the `nhimbe` brand block and accent that still resolve. They also check that no alias shadows a live canon row.
+
+### Changed — releases tag themselves with RELEASE_BUMP_TOKEN, and the crates get a tag and release (2026-10-04)
+
+- `release.yml` creates the `v<package.json version>` tag and release with the `RELEASE_BUMP_TOKEN` org secret instead of `GITHUB_TOKEN`, so a workflow listening for the tag or the release can start (GitHub starts none from `GITHUB_TOKEN`).
+- `publish-crates.yml` now tags each crates version it publishes as `mzizi-rs-vX.Y.Z` and creates a GitHub release linking every crate on crates.io, once all of them are there. If the tag already exists, the step does nothing; a dry run skips it. Tracking: mzizi-dev/packages-npm#25.
+
+### Changed — Kweli is malachite, Nyuchi Learning is gold, and news and weather join canon (2026-10-04, #409)
+
+Owner decisions, 2026-10-04 (#404):
+
+- **Canon's `ecosystem` table (`lib/tokens/brand.source.ts`, served as `/v1/brand` → `.ecosystem`) gains four rows:** `kweli` (malachite; kweli.mukoko.com, trust and verification, "Truth" in Swahili), `learning` (gold; Nyuchi Learning, learning.nyuchi.com), `news` (cobalt) and `weather` (cobalt). Kweli had no canon row and borrowed Mukoko's tanzanite. News and weather were cobalt only in the mini-app accent table, so `@bundu/ui` overlays had to read that table; they now come from canon.
+- **Nyuchi Learning / education is gold, not cobalt.** `brandIndustryCategories.nyuchi.education` said cobalt, which contradicted the rule that every Nyuchi brand is gold. The Nyuchi rule wins. Mukoko's `lingo` mini-app stays cobalt, as its own canon row says.
+- **`brandOverrides` (the mini-app accent table, in `lib/tokens/index.ts` and the `mzizi-tokens-typescript` registry item)** gains `kweli` (malachite) and `learning` (gold), and `BrandId` gains both. `brandIndustryCategories.mukoko` gains `trust` (malachite, Kweli).
+- **`mzizi-tokens-globals.css`** gains `[data-brand="weather"]`, `[data-brand="kweli"]` and `[data-brand="learning"]` blocks, and the `news` block now reads its mineral from canon instead of naming `lib/tokens/index.ts`.
+- **New tests** in `__tests__/tokens-brand-blocks.test.ts` pin the four decisions, keep the education category gold, and fail if any `brandOverrides` entry disagrees with canon's mineral for a brand canon has.
+
+### Changed — README, AGENTS and CONTRIBUTING name `contracts/` (2026-10-04, #408)
+
+- **`README.md` and `AGENTS.md` now say what `contracts/` holds** (added in #406): a versioned, machine-readable contract for each `@bundu/ui` app component of the Mzizi Dashboard Standard, 31 in `contracts/app/`, in the format `contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`, with the coverage table in `contracts/README.md`. Both link [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts). `CONTRIBUTING.md`'s test layout lists `__tests__/contracts/`.
+
+### Added — `AGENTS.md`: track big work in GitHub issues (2026-10-04, #402)
+
+- **A new "Track big work in GitHub issues" section in `AGENTS.md`.** Any substantial build, migration, investigation or multi-step task gets a GitHub issue in the repo that owns it, before or as work starts, so another session, agent or person can pick it up. The issue holds the goal, the owner's decisions (verbatim where given), the plan, acceptance criteria, owner-only steps and links.
+- **Every PR references its issue** (`Refs #n`; `Fixes #n` only when the merge completes it). Progress, decisions and a hand-off note (what's done, what's left, branch names) go in issue comments, at each merge and before a session or agent finishes. Work spanning repos gets a tracking issue that links the per-repo issues.
+- **No secrets, credential status or exploitable detail in issues on public repos.**
 
 ### Fixed — shamwari's mini-app accent is sodalite, not tanzanite (2026-10-04)
 

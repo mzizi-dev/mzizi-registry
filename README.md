@@ -72,6 +72,12 @@ its own repo:
 (Dioxus primitives) and `mzizi-tokens` crate (generated from the same palette source as the
 CSS custom properties) are compiled and contract-tested in CI, not just committed as text.
 
+`contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
+component of the Mzizi Dashboard Standard: 31 in `contracts/app/`, in the format
+`contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`.
+[`contracts/README.md`](./contracts/README.md) has the coverage table; see
+[docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts).
+
 ---
 
 ## AI-Native: MCP server
@@ -212,7 +218,7 @@ agent working in this repo needs to know before pushing.
 | mukoko                                                                                  | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
 | mukoko weather                                                                          | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
 | mukoko news                                                                             | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
-| nhimbe                                                                                  | [nhimbe.com](https://nhimbe.com)                   | Events and cultural gatherings                                                                              |
+| mukoko events                                                                           | [events.mukoko.com](https://events.mukoko.com)     | Events and cultural gatherings                                                                              |
 | shamwari                                                                                | [shamwari.ai](https://shamwari.ai)                 | Sovereign AI companion                                                                                      |
 | nyuchi                                                                                  | [nyuchi.com](https://nyuchi.com)                   | Enterprise layer                                                                                            |
 | bundu                                                                                   | [bundu.family](https://bundu.family)               | The ecosystem                                                                                               |

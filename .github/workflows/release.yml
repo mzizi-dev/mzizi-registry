@@ -3,23 +3,48 @@ name: Release
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Override the release bump (major is manual only).
+        type: choice
+        options: [minor, patch, major]
+        default: minor
 
 # Runs after every merge to main.
 # Creates a GitHub release when package.json version hasn't been tagged yet.
 # Developers control the release cadence by bumping the version in their PR.
 # If the version is already tagged (e.g. a doc-only fix on an existing version),
 # the job exits cleanly — no duplicate release is created.
+#
+# The tag and release are made with RELEASE_BUMP_TOKEN (mzizi-dev org secret),
+# not GITHUB_TOKEN: GitHub starts no workflow from a tag or release that
+# GITHUB_TOKEN made, so anything that listens for `push: tags` or
+# `release: published` would never run.
+#
+# The version follows the org versioning policy (nyuchi/.github#80): a release
+# to main is the next MINOR above the highest `v` tag (x.y.z -> x.y+1.0);
+# merges into staging are patches (staging-version.yml); a MAJOR is only
+# released by hand (run this with bump: major). The shared next-version action
+# refuses any other version before anything is tagged.
+
+permissions:
+  contents: read
 
 jobs:
   release:
     name: Auto-release on version bump
     runs-on: ubuntu-latest
+    # The tag and release are written with RELEASE_BUMP_TOKEN, which reaches only
+    # the two steps that write; GITHUB_TOKEN stays read-only, and the checkout
+    # keeps no credential for `pnpm install` and the build to find.
     permissions:
-      contents: write
+      contents: read
     steps:
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Read version from package.json
         id: version
@@ -40,10 +65,19 @@ jobs:
             echo "Tag v${{ steps.version.outputs.version }} is new — creating release."
           fi
 
-      - uses: pnpm/action-setup@v6
+      - name: Check the version against the versioning policy
+        if: steps.tag_check.outputs.exists == 'false'
+        uses: nyuchi/.github/.github/actions/next-version@de909ab7468d998ba2cf87416ac2042616eba75d  # main, 2026-10-04
+        with:
+          channel: main
+          bump: ${{ inputs.bump || '' }}
+          manual: ${{ github.event_name == 'workflow_dispatch' }}
+          proposed: ${{ steps.version.outputs.version }}
+
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
         if: steps.tag_check.outputs.exists == 'false'
 
-      - uses: actions/setup-node@v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         if: steps.tag_check.outputs.exists == 'false'
         with:
           node-version: 22
@@ -74,16 +108,19 @@ jobs:
 
       - name: Create tag
         if: steps.tag_check.outputs.exists == 'false'
+        env:
+          RELEASE_BUMP_TOKEN: ${{ secrets.RELEASE_BUMP_TOKEN }}
+          TAG: ${{ steps.version.outputs.tag }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "${{ steps.version.outputs.tag }}" -m "Release ${{ steps.version.outputs.tag }}"
-          git push origin "${{ steps.version.outputs.tag }}"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push "https://x-access-token:${RELEASE_BUMP_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$TAG"
 
       - name: Create GitHub release
         if: steps.tag_check.outputs.exists == 'false'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_BUMP_TOKEN }}
         run: |
           gh release create "${{ steps.version.outputs.tag }}" \
             --title "${{ steps.version.outputs.tag }}" \

@@ -22,6 +22,7 @@ mzizi-assurance = { path = "../mzizi-assurance", version = "0.1.0", optional = t
 mzizi-fundi = { path = "../mzizi-fundi", version = "0.1.0", optional = true }
 mzizi-docs = { path = "../mzizi-docs", version = "0.1.0", optional = true }
 mzizi-discovery = { path = "../mzizi-discovery", version = "0.1.0", optional = true }
+mzizi-activitypub = { path = "../mzizi-activitypub", version = "0.1.0", optional = true }
 
 [features]
 # All four by default. `assurance`, `fundi` and `discovery` have no dependencies at all;
@@ -35,3 +36,6 @@ fundi = ["dep:mzizi-fundi"]
 docs = ["dep:mzizi-docs"]
 # N11 page metadata and Schema.org JSON-LD.
 discovery = ["dep:mzizi-discovery"]
+# N11 on the fediverse: ActivityPub, WebFinger and NodeInfo documents. Not default: it
+# brings `serde_json` and `url`, which the other server components decline.
+activitypub = ["dep:mzizi-activitypub"]

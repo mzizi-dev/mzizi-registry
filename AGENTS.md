@@ -17,6 +17,14 @@ gateway bundles at a pinned commit. It is a **Mzizi**-governed standard; Nyuchi
 operates it. It is **not** Mzizi-the-language (`mzizi-dev/mzizi`) — that's a different
 research project that happens to share the org and a name fragment.
 
+`contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
+component of the Mzizi Dashboard Standard: 31 in `contracts/app/`, in the format
+`contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`,
+with the coverage table in [`contracts/README.md`](./contracts/README.md) and the reference
+at [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts). Change a
+contract here, never the copy in `mzizi-dev/packages-npm`; `__tests__/contracts/contracts.test.tsx`
+keeps the index and the coverage table honest.
+
 ### A naming collision worth knowing before you grep
 
 **`mzizi-ui` names two different things in this repo**, and confusing them will send you
@@ -175,6 +183,22 @@ Owner's rule, 2026-09-30: "changelogs are super important".
   `content/changelog/releases.json`, which `/v1/changelog` on api.mzizi.dev serves (through
   the gateway's registry pin).
 
+## Upstream first (hard rule)
+
+Owner's rule, 2026-10-04: "anything new that is not in Mzizi, or altered from the Mzizi
+ones, we need to adjust Mzizi so the design is always updating so we maintain consistency."
+
+- **A component an app needs that Mzizi does not have, or a change to one Mzizi has (a
+  prop, a variant, a state, a fix), goes upstream to Mzizi immediately**: its contract in
+  this registry (`contracts/`), its build in `@bundu/ui` (`mzizi-dev/packages-npm`), and
+  its page on docs.mzizi.dev, in the same piece of work.
+- **An app keeps a local copy only while that upstream PR is open**, marked at the top of
+  the file with `TODO(mzizi): <upstream PR URL>`, and deletes it when the release that
+  carries the change is installed. A local fork, restyle or wrapper with no open upstream
+  PR is a bug, whoever wrote it.
+- The standards this protects: the Dashboard Standard (`contracts/app/`, #404) and the
+  Discover Standard (`contracts/discover/`, #413). Both say "do not fork; fix upstream".
+
 ## A link this file replaces
 
 `README.md` used to point to `CLAUDE.md §14` for "the version-bump propagation surfaces" —
@@ -198,4 +222,16 @@ add it as its own section rather than re-creating a dead link.
 - [`CHANGELOG.md`](./CHANGELOG.md) — the change history, written by hand in every PR (see
   "Changelog" above). [`.github/workflows/release.yml`](./.github/workflows/release.yml)
   tags a GitHub release when `package.json`'s version is new; it does not write the
-  changelog.
+  changelog. [`.github/workflows/publish-crates.yml`](./.github/workflows/publish-crates.yml)
+  publishes any crate version not yet on crates.io and tags it `mzizi-rs-vX.Y.Z`. Both run
+  on merge to `main` with `RELEASE_BUMP_TOKEN`; nobody pushes a tag by hand.
+
+## Track big work in GitHub issues
+
+Any substantial build, migration, investigation or multi-step task gets a GitHub issue in the repo that owns it — before or as work starts — so another session, agent or person can pick it up.
+
+- The issue holds the goal, the owner's decisions (verbatim where given), the plan, acceptance criteria, owner-only steps and links.
+- Every PR references its issue (`Refs #n`; `Fixes #n` only when the merge completes it).
+- Post progress, decisions and a hand-off note (what's done, what's left, branch names) as issue comments — at each merge and before a session or agent finishes.
+- Work spanning repos gets a tracking issue that links the per-repo issues.
+- Never put secrets, credential status or exploitable detail in issues on public repos.

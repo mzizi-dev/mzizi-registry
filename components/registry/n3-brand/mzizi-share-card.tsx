@@ -32,7 +32,7 @@ interface MziziShareCardProps {
   subtitle?: string
   /** Preview image URL */
   imageUrl?: string
-  /** Source app name (e.g., "Nhimbe", "BushTrade") */
+  /** Source app name (e.g., "Mukoko Events", "BushTrade") */
   sourceApp?: string
   /** Whether the sheet is open */
   open: boolean
