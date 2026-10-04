@@ -17,6 +17,14 @@ gateway bundles at a pinned commit. It is a **Mzizi**-governed standard; Nyuchi
 operates it. It is **not** Mzizi-the-language (`mzizi-dev/mzizi`) — that's a different
 research project that happens to share the org and a name fragment.
 
+`contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
+component of the Mzizi Dashboard Standard: 31 in `contracts/app/`, in the format
+`contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`,
+with the coverage table in [`contracts/README.md`](./contracts/README.md) and the reference
+at [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts). Change a
+contract here, never the copy in `mzizi-dev/packages-npm`; `__tests__/contracts/contracts.test.tsx`
+keeps the index and the coverage table honest.
+
 ### A naming collision worth knowing before you grep
 
 **`mzizi-ui` names two different things in this repo**, and confusing them will send you

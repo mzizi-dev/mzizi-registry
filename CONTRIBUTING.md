@@ -254,6 +254,7 @@ pnpm test:watch       # Watch mode for development
 
 ```
 __tests__/
+├── contracts/        Every contract in contracts/ against the schema, the index and the README
 ├── db/               The no-database guarantee
 ├── lib/              The readers mzizi-api-gateway bundles, and the generators' outputs
 ├── registry/         Registry item checks
