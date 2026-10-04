@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — CONTRIBUTING no longer says to curl a local server (2026-10-04)
+### Fixed — CONTRIBUTING no longer says to curl a local server (2026-10-04, #426)
 
 The "Verify" step for a new component ran `curl http://localhost:11736/api/v1/ui/my-component`, but the app and its `/api/*` handlers were removed on 2026-10-02 and nothing listens there.
 
