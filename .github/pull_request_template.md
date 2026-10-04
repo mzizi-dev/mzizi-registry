@@ -41,7 +41,7 @@ Brief description of what this PR does and why.
 
 - [ ] No database touched — the registry holds none (component data is `registry.json` + files on disk)
 - [ ] `registry.json` updated by hand (it is authored) and `pnpm registry:normalize` run; CI verifies via `pnpm registry:verify` + `pnpm registry:validate`
-- [ ] API verified: `curl http://localhost:11736/api/v1/ui/<name>` returns source code
+- [ ] `pnpm build` leaves `git status --porcelain` empty. There is no local server; once on `main` and the gateway pin reaches it, `https://api.mzizi.dev/v1/ui/<name>` serves the item
 - [ ] MCP tool verified: `get_component({ name })` returns source code
 
 ## Architecture / Docs (if applicable)
