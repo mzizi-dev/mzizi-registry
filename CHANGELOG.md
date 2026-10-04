@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
-### Changed — the nhimbe brand is retired: canon's events row is Mukoko Events, at events.mukoko.com (2026-10-04)
+### Changed — the nhimbe brand is retired: canon's events row is Mukoko Events, at events.mukoko.com (2026-10-04, #411)
 
 Owner decisions, 2026-10-04 ([mukoko-dev/nhimbe#155](https://github.com/mukoko-dev/nhimbe/issues/155)): the events platform is **Mukoko Events**, at `https://events.mukoko.com`. The name "nhimbe" is retired as a brand, and the mineral stays **malachite**.
 
