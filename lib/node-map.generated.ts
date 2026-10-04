@@ -345,6 +345,8 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "mzizi-listing-card": "n3",
   "mzizi-load-shedder": "n5",
   "mzizi-locale": "n1",
+  "mzizi-mark-dark": "n3",
+  "mzizi-mark-light": "n3",
   "mzizi-media": "n3",
   "mzizi-message-bubble": "n3",
   "mzizi-meta-tile": "n3",

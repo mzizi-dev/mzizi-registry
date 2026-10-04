@@ -195,7 +195,7 @@ export function buildTokens(css: string) {
       generator: "scripts/generate-design-system.ts",
       paths: {
         tokens: ["styles/globals.css", "lib/tokens/palette.source.ts", "lib/tokens/brand.source.ts"],
-        assets: ["design-system/marks/"],
+        assets: ["components/registry/assets/"],
         docs: ["design-system/README.md"],
       },
     },

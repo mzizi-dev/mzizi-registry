@@ -28,6 +28,8 @@ describe("registry source is served from the generated artifact", () => {
       const dirPath = join(ROOT, dir)
       if (!statSync(dirPath).isDirectory()) continue
       for (const f of readdirSync(dirPath)) {
+        // Raster brand assets are deliberately not inlined (generate-registry-source.mjs).
+        if (/\.(png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|pdf)$/i.test(f)) continue
         if (statSync(join(dirPath, f)).isFile()) onDisk.push(`${dir}/${f}`)
       }
     }

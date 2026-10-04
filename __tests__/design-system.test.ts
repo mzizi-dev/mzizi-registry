@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "fs"
+import { existsSync, readdirSync, readFileSync } from "fs"
 import { join } from "path"
 import { describe, expect, it } from "vitest"
 import { CONTRAST_FLAGS, buildTokens } from "../scripts/generate-design-system"
@@ -50,11 +50,38 @@ describe("design-system/tokens.json", () => {
     }
   })
 
-  it("ships a light and a dark version of every brand mark", () => {
+  it("ships a light and a dark version of every brand mark in components/registry/assets/", () => {
     for (const mark of ["mzizi-mark", "bundu-mark", "nyuchi-bee", "mukoko-mark"]) {
       for (const theme of ["light", "dark"]) {
-        expect(existsSync(join(ROOT, `design-system/marks/${mark}-${theme}.png`)), `${mark}-${theme}`).toBe(true)
+        const path = join(ROOT, `components/registry/assets/${mark}-${theme}.png`)
+        expect(existsSync(path), `${mark}-${theme}`).toBe(true)
       }
     }
+  })
+
+  it("draws the mzizi mark in hematite, mzizi's ecosystem mineral, never gold", () => {
+    for (const theme of ["light", "dark"] as const) {
+      const svg = readFileSync(join(ROOT, `components/registry/assets/mzizi-mark-${theme}.svg`), "utf8")
+      expect(svg).toContain(byName.get("hematite")![theme])
+      expect(svg).not.toContain(byName.get("gold")![theme])
+    }
+  })
+
+  it("ties every component rendition to a registry source file that exists", () => {
+    const dir = join(ROOT, "design-system/components")
+    for (const comp of readdirSync(dir, { withFileTypes: true })) {
+      if (!comp.isDirectory() || comp.name === "Cover") continue
+      const readme = readFileSync(join(dir, comp.name, "README.md"), "utf8")
+      const source = /Hand-written from `(components\/registry\/[^`]+)`/.exec(readme)?.[1]
+      expect(source, `${comp.name}/README.md names no source`).toBeDefined()
+      expect(existsSync(join(ROOT, source!)), `${comp.name} -> ${source}`).toBe(true)
+    }
+  })
+
+  it("keeps the design-system index's title and mzizi mark records", () => {
+    const index = JSON.parse(readFileSync(join(ROOT, "design-system/design-system.json"), "utf8"))
+    expect(index.title).toBe("mzizi")
+    expect(index.createdOnFiles ?? index.convertedFrom).toBeDefined()
+    expect(Object.keys(index.assetGroups.Logos.files)).toContain("mzizi-mark-light.svg")
   })
 })
