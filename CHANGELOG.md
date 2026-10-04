@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `wallet-card` and `mzizi-create-listing` take their colours from N1, and CI runs `lint:colors` (2026-10-04)
+
+`pnpm lint:colors` failed on `main` for nine raw palette hexes, and no CI job ran it (#423).
+
+- **`wallet-card`**: each token type's card is its mineral (MIT tanzanite, MXT malachite, NST cobalt, NHC gold), filled from `var(--color-<mineral>)` to `var(--color-<mineral>-on-container)` with `text-<mineral>-container` text, in place of four fixed hex gradients under `text-white`. The card now follows the theme: a deep fill with pale text in light mode and a bright fill with deep text in dark mode, where white text on the old bright end (`#FFD740`, `#64FFDA`) was barely legible.
+- **`mzizi-create-listing`**: the terracotta cover theme ends on `var(--color-terracotta)` instead of a raw `#A0522D`, and the gold and terracotta swatch comments, which were swapped, name the right mineral.
+- **CI**: the `Lint` job runs `pnpm lint:colors` after ESLint, so a hardcoded palette hex fails a pull request instead of waiting for someone to run `pnpm check`.
+
 ### Added — `status-badge` in three builds (React, Mzizi Roots, the Mzizi language), and a CI gate for `.mz` components (2026-10-04, #418)
 
 Owner decision, 2026-10-04: StatusBadge comes back as a registry component, built in Rust and in the Mzizi language. Components gain Rust and `.mz` builds beside their TypeScript, and the TypeScript stays for now.

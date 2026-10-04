@@ -239,6 +239,11 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+      # The palette-hex gate (scripts/lint-colors.ts): a raw hex equal to a mineral
+      # or heritage value is a hardcoded brand colour that should reference its N1
+      # token. It ran only via `pnpm check`, so main went red for nine literals and
+      # nothing reported it (#423). It needs no network and no secret.
+      - run: pnpm lint:colors
       # No `prettier --check` step here. Prettier is owned by the one org
       # gate, `.github/workflows/lint.yml`, which publishes `lint / prettier`.
       # Two prettier invocations in one repo, with different globs and the

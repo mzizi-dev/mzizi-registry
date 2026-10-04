@@ -32,8 +32,8 @@ import { cn } from "@/lib/utils"
 const MINERAL_GRADIENTS: [string, string][] = [
   ["var(--color-malachite-light,#004D40)", "#00695C"], // Malachite
   ["var(--color-tanzanite-light,#4B0082)", "#6A1B9A"], // Tanzanite
-  ["var(--color-gold-light,#5D4037)", "#795548"], // Terracotta
-  ["var(--color-terracotta-light,#8B4513)", "#A0522D"], // Gold (earth)
+  ["var(--color-gold-light,#5D4037)", "#795548"], // Gold (earth)
+  ["var(--color-terracotta-light,#8B4513)", "var(--color-terracotta)"], // Terracotta
   ["var(--color-cobalt-light,#0047AB)", "#1565C0"], // Cobalt
 ]
 
