@@ -1,0 +1,220 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/discover-meta",
+  "title": "DiscoverMeta",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The <head> tags of every Discover page: title, description, robots, canonical, Open Graph, the X card and JSON-LD, so search engines and link previews read every Mukoko service the same way.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/DiscoverMeta.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The whole <title>: \"<page> · <Service>\"; the home page \"<Service>: <promise>\"."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "description": "One or two sentences."
+    },
+    {
+      "name": "canonical",
+      "type": "string",
+      "required": true,
+      "description": "The absolute canonical URL (also og:url)."
+    },
+    {
+      "name": "siteName",
+      "type": "string",
+      "required": true,
+      "description": "og:site_name, e.g. \"Mukoko Circles\"."
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false,
+      "description": "An absolute 1200×630 image URL. With it the X card is summary_large_image."
+    },
+    {
+      "name": "imageAlt",
+      "type": "string",
+      "required": false,
+      "description": "og:image:alt."
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "required": false,
+      "default": "website",
+      "description": "og:type."
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false,
+      "default": "en_GB",
+      "description": "og:locale."
+    },
+    {
+      "name": "robots",
+      "type": "string",
+      "required": false,
+      "description": "The robots value; overrides `noindex`."
+    },
+    {
+      "name": "noindex",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "\"noindex, follow\": search results and any page past the first (a `cursor`)."
+    },
+    {
+      "name": "jsonLd",
+      "type": "string | Record<string, unknown>",
+      "required": false,
+      "description": "JSON-LD: an object (serialised, `<` escaped) or a JSON string written verbatim (a server-filled `{{{json_ld}}}`)."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Renders only head elements: <title>, <meta>, <link rel=\"canonical\">, and one <script type=\"application/ld+json\"> when `jsonLd` is given.",
+    "JSON-LD conventions: `WebSite` with a `SearchAction` on the home page; `CollectionPage` → `ItemList` of the results and a `BreadcrumbList` on list, category and search pages.",
+    "`<` in JSON-LD is written \\u003c, so a value can never close the element.",
+    "Server-filled shells: every text prop is a plain string, and text that fills to \"\" hides itself (`empty:hidden`), so the component can be built once with `{{placeholders}}` and filled by a server (circles.mukoko.com's Rust Worker)."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "title": "Running · Mukoko Circles",
+        "description": "Running circles on Mukoko.",
+        "canonical": "https://circles.mukoko.com/categories/running",
+        "siteName": "Mukoko Circles",
+        "image": "https://circles.mukoko.com/og/home.png",
+        "jsonLd": {
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Running </script>"
+        }
+      }
+    },
+    "noindex": {
+      "description": "Search results: noindex, no image.",
+      "props": {
+        "title": "Search · Mukoko Circles",
+        "description": "Search results.",
+        "canonical": "https://circles.mukoko.com/search",
+        "siteName": "Mukoko Circles",
+        "noindex": true
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [],
+    "keyboard": ["None: head metadata."],
+    "focus": ["None."],
+    "aria": ["The <title> names the page (WCAG 2.4.2)."],
+    "wcag": ["2.4.2"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [],
+    "brandOverlay": "None: head metadata has no colour.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything. The JSON-LD element is data (type application/ld+json), not script: a CSP of script-src 'none' does not block it, and nothing runs."
+  },
+  "responsive": ["Not visual."],
+  "contract": "contract\n  slot is \"discover-meta\"\n  when default shows title \"Running · Mukoko Circles\"\n  when noindex shows title \"Search · Mukoko Circles\"\nend",
+  "checks": [
+    {
+      "say": "One canonical link.",
+      "state": "*",
+      "select": "link[rel=\"canonical\"]",
+      "count": 1
+    },
+    {
+      "say": "og:url is the canonical URL.",
+      "select": "meta[property=\"og:url\"]",
+      "attr": {
+        "content": "https://circles.mukoko.com/categories/running"
+      }
+    },
+    {
+      "say": "en_GB by default.",
+      "state": "*",
+      "select": "meta[property=\"og:locale\"]",
+      "attr": {
+        "content": "en_GB"
+      }
+    },
+    {
+      "say": "An image makes a large card.",
+      "select": "meta[name=\"twitter:card\"]",
+      "attr": {
+        "content": "summary_large_image"
+      }
+    },
+    {
+      "say": "The image is 1200×630.",
+      "select": "meta[property=\"og:image:width\"]",
+      "attr": {
+        "content": "1200"
+      }
+    },
+    {
+      "say": "Indexable by default.",
+      "select": "meta[name=\"robots\"]",
+      "attr": {
+        "content": "index, follow"
+      }
+    },
+    {
+      "say": "JSON-LD is written once, with < escaped.",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "Running \\u003c/script>"
+    },
+    {
+      "say": "noindex for search.",
+      "state": "noindex",
+      "select": "meta[name=\"robots\"]",
+      "attr": {
+        "content": "noindex, follow"
+      }
+    },
+    {
+      "say": "No image, a small card.",
+      "state": "noindex",
+      "select": "meta[name=\"twitter:card\"]",
+      "attr": {
+        "content": "summary"
+      }
+    },
+    {
+      "say": "No image, no og:image.",
+      "state": "noindex",
+      "select": "meta[property=\"og:image\"]",
+      "absent": true
+    },
+    {
+      "say": "No JSON-LD given, none written.",
+      "state": "noindex",
+      "select": "script",
+      "absent": true
+    }
+  ]
+}

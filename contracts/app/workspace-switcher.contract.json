@@ -10,7 +10,7 @@
     "astro": {
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/WorkspaceSwitcher.astro",
-      "since": "0.4.0"
+      "since": "0.3.0"
     },
     "tsx": null,
     "rs": null,

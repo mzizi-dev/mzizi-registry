@@ -29,7 +29,7 @@
   "properties": {
     "$schema": { "type": "string" },
     "name": {
-      "description": "The contract's id: `<family>/<kebab-name>`. The `app/` family is the Dashboard Standard.",
+      "description": "The contract's id: `<family>/<kebab-name>`. The `app/` family is the Dashboard Standard; `discover/` is the Discover Standard.",
       "type": "string",
       "pattern": "^[a-z]+/[a-z0-9]+(-[a-z0-9]+)*$"
     },
