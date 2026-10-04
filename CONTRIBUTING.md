@@ -202,11 +202,14 @@ describe("MyComponent", () => {
 })
 ```
 
-1. **Verify** the component serves correctly:
+1. **Verify** the item resolves and the build is clean. There is no local server (the app and its `/api/*` handlers were removed on 2026-10-02):
 
 ```bash
-curl http://localhost:11736/api/v1/ui/my-component
+pnpm registry:validate && pnpm registry:verify
+pnpm build && git status --porcelain   # every generator in write mode; commit what it writes
 ```
+
+Once the change is on `main` and mzizi-api-gateway's pin reaches it, `curl https://api.mzizi.dev/v1/ui/my-component` serves it.
 
 ---
 
