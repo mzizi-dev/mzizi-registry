@@ -490,12 +490,14 @@ function ecosystemMineral(brand: string): string {
 /**
  * Brand → palette family. Every row is sourced, none is guessed.
  *
- * Rows with an `ecosystem` record read their mineral from it. `news` has no
- * record in `/v1/brand`, so its row names the on-disk statement it comes from
- * instead. `shamwari` is the one row where two on-disk sources disagree:
- * `/v1/brand` says sodalite, `lib/tokens/index.ts` has it under a tanzanite
- * category. `/v1/brand` wins — it is the brand record, the category map is a
- * product taxonomy — and `shamwari-ai/docs` ships sodalite.
+ * Every row reads its mineral from its `ecosystem` record. `news` used to have
+ * no record and named `lib/tokens/index.ts` instead; canon gained `news`,
+ * `weather`, `kweli` and `learning` rows on 2026-10-04 (owner decisions:
+ * kweli malachite, learning gold, news and weather cobalt). `shamwari` was
+ * the one row where two on-disk sources disagreed: `/v1/brand` says
+ * sodalite, `lib/tokens/index.ts` had it under a tanzanite category.
+ * `/v1/brand` wins — it is the brand record, the category map is a product
+ * taxonomy — and `shamwari-ai/docs` ships sodalite.
  *
  * `mzizi` is hematite, a heritage tone, by owner decision (2026-09-30). Until
  * then this row said gold, borrowed from nyuchi because the table had no mzizi
@@ -507,9 +509,12 @@ export const BRANDS: ReadonlyArray<readonly [string, string, string]> = [
   ["nyuchi", ecosystemMineral("nyuchi"), "/v1/brand ecosystem[name=nyuchi].mineral"],
   ["bundu", ecosystemMineral("bundu"), "/v1/brand ecosystem[name=bundu].mineral"],
   ["shamwari", ecosystemMineral("shamwari"), "/v1/brand ecosystem[name=shamwari].mineral"],
-  ["news", "cobalt", "lib/tokens/index.ts:696 — mukoko.news. No `news` ecosystem record in /v1/brand."],
+  ["news", ecosystemMineral("news"), "/v1/brand ecosystem[name=news].mineral (owner decision, 2026-10-04)"],
   ["nhimbe", ecosystemMineral("nhimbe"), "/v1/brand ecosystem[name=nhimbe].mineral (agrees with lib/tokens/index.ts mukoko.events)"],
   ["bushtrade", ecosystemMineral("bushtrade"), "/v1/brand ecosystem[name=bushtrade].mineral (agrees with lib/tokens/index.ts mukoko.commerce)"],
+  ["weather", ecosystemMineral("weather"), "/v1/brand ecosystem[name=weather].mineral (owner decision, 2026-10-04)"],
+  ["kweli", ecosystemMineral("kweli"), "/v1/brand ecosystem[name=kweli].mineral (owner decision, 2026-10-04)"],
+  ["learning", ecosystemMineral("learning"), "/v1/brand ecosystem[name=learning].mineral (owner decision, 2026-10-04: every Nyuchi brand is gold)"],
 ]
 
 /** This stylesheet's default brand — the one `:root` resolves without `data-brand`. */
