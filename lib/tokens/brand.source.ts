@@ -1004,6 +1004,69 @@ export const ecosystem: BrandEcosystemEntry[] = [
       "The Mzizi language, component registry and design system — owned and governed by Mzizi, operated by Nyuchi. The language is a research-stage prototype designed for machine authorship, where everything built carries a contract.",
     adopterType: "ecosystem_brand",
   },
+  // Owner decision, 2026-10-04 (mzizi-registry#404): Kweli's mineral is
+  // malachite. Before this row Kweli had no canon entry and borrowed Mukoko's
+  // tanzanite. @bundu/ui's brand-kweli.css overlay is generated from this row.
+  {
+    url: "https://kweli.mukoko.com",
+    name: "kweli",
+    role: "Trust and verification",
+    voice: "Honest, rigorous, reassuring",
+    meaning: "Truth",
+    mineral: "malachite",
+    language: "Swahili",
+    sortOrder: 18,
+    description:
+      "The Africa Trust Platform: place, organisation and person verification for the whole Mukoko ecosystem, and the public face of the geographic knowledge graph. Every place gets one canonical page, and the kweli verification badge travels with the entity across every Mukoko app.",
+    adopterType: "ecosystem_brand",
+  },
+  // Owner decision, 2026-10-04 (mzizi-registry#404): Nyuchi Learning, the
+  // education category, is gold, because every Nyuchi brand is gold. Until
+  // this row the category map said cobalt; the Nyuchi rule wins.
+  // @bundu/ui's brand-learning.css overlay is generated from this row.
+  {
+    url: "https://learning.nyuchi.com",
+    name: "learning",
+    role: "Education",
+    voice: "Patient, practical, encouraging",
+    meaning: "Learning",
+    mineral: "gold",
+    language: "English",
+    sortOrder: 19,
+    description:
+      "Nyuchi Learning: the Nyuchi education surface, and the home of the classroom tools Nyuchi Web Services builds for schools. A Nyuchi brand, so it wears Nyuchi gold.",
+    adopterType: "ecosystem_brand",
+  },
+  // news and weather (owner decision, 2026-10-04, mzizi-registry#404): canon
+  // rows so the @bundu/ui overlays come from here, not from the mini-app
+  // accent table. Cobalt, as `brandOverrides` in lib/tokens/index.ts has
+  // always said.
+  {
+    url: "https://news.mukoko.com",
+    name: "news",
+    role: "News and journalism",
+    voice: "Clear, credible, balanced",
+    meaning: "News",
+    mineral: "cobalt",
+    language: "English",
+    sortOrder: 20,
+    description:
+      "Mukoko News: cross-source African news with journalist attribution and source credibility, feeding Pulse.",
+    adopterType: "ecosystem_brand",
+  },
+  {
+    url: "https://weather.mukoko.com",
+    name: "weather",
+    role: "Weather and alerts",
+    voice: "Calm, precise, timely",
+    meaning: "Weather",
+    mineral: "cobalt",
+    language: "English",
+    sortOrder: 21,
+    description:
+      "Mukoko Weather: forecasts and severity-graded weather alerts for African places.",
+    adopterType: "ecosystem_brand",
+  },
 ]
 
 /** Brand identity, philosophy, voice, accessibility posture and component specs. */

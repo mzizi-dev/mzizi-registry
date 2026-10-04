@@ -8,6 +8,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — Kweli is malachite, Nyuchi Learning is gold, and news and weather join canon (2026-10-04, #409)
+
+Owner decisions, 2026-10-04 (#404):
+
+- **Canon's `ecosystem` table (`lib/tokens/brand.source.ts`, served as `/v1/brand` → `.ecosystem`) gains four rows:** `kweli` (malachite; kweli.mukoko.com, trust and verification, "Truth" in Swahili), `learning` (gold; Nyuchi Learning, learning.nyuchi.com), `news` (cobalt) and `weather` (cobalt). Kweli had no canon row and borrowed Mukoko's tanzanite. News and weather were cobalt only in the mini-app accent table, so `@bundu/ui` overlays had to read that table; they now come from canon.
+- **Nyuchi Learning / education is gold, not cobalt.** `brandIndustryCategories.nyuchi.education` said cobalt, which contradicted the rule that every Nyuchi brand is gold. The Nyuchi rule wins. Mukoko's `lingo` mini-app stays cobalt, as its own canon row says.
+- **`brandOverrides` (the mini-app accent table, in `lib/tokens/index.ts` and the `mzizi-tokens-typescript` registry item)** gains `kweli` (malachite) and `learning` (gold), and `BrandId` gains both. `brandIndustryCategories.mukoko` gains `trust` (malachite, Kweli).
+- **`mzizi-tokens-globals.css`** gains `[data-brand="weather"]`, `[data-brand="kweli"]` and `[data-brand="learning"]` blocks, and the `news` block now reads its mineral from canon instead of naming `lib/tokens/index.ts`.
+- **New tests** in `__tests__/tokens-brand-blocks.test.ts` pin the four decisions, keep the education category gold, and fail if any `brandOverrides` entry disagrees with canon's mineral for a brand canon has.
+
 ### Changed — README, AGENTS and CONTRIBUTING name `contracts/` (2026-10-04, #408)
 
 - **`README.md` and `AGENTS.md` now say what `contracts/` holds** (added in #406): a versioned, machine-readable contract for each `@bundu/ui` app component of the Mzizi Dashboard Standard, 31 in `contracts/app/`, in the format `contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`, with the coverage table in `contracts/README.md`. Both link [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts). `CONTRIBUTING.md`'s test layout lists `__tests__/contracts/`.

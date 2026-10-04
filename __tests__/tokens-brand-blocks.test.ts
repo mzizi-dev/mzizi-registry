@@ -13,6 +13,7 @@ import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { ecosystem } from "@/lib/tokens/brand.source"
+import { brandOverrides, brandIndustryCategories } from "@/lib/tokens"
 import { heritageColors, experimentalColors } from "@/lib/tokens/palette.generated"
 import { BRANDS, DEFAULT_BRAND } from "../scripts/render-globals-css"
 
@@ -72,5 +73,29 @@ describe("mzizi-tokens-globals.css brand blocks", () => {
     const root = CSS.slice(CSS.indexOf(":root {"), CSS.indexOf("/* ════ DARK"))
     const primaries = [...root.matchAll(/^\s*--primary:\s*var\((--[a-z-]+)\);/gm)].map((m) => m[1])
     expect(primaries).toEqual([aaVar("hematite")])
+  })
+
+  // Owner decisions, 2026-10-04 (mzizi-registry#404).
+  it("records the 2026-10-04 brand mineral decisions in canon", () => {
+    const mineralOf = (brand: string) => ecosystem.find((b) => b.name === brand)?.mineral
+    expect(mineralOf("kweli")).toBe("malachite")
+    expect(mineralOf("learning")).toBe("gold")
+    expect(mineralOf("news")).toBe("cobalt")
+    expect(mineralOf("weather")).toBe("cobalt")
+    expect(blockPrimary("kweli")).toBe("--mineral-malachite-aa")
+    expect(blockPrimary("learning")).toBe("--mineral-gold-aa")
+    expect(blockPrimary("weather")).toBe("--mineral-cobalt-aa")
+  })
+
+  it("keeps every Nyuchi category gold, education included", () => {
+    expect(brandIndustryCategories.nyuchi.education.mineral).toBe("gold")
+  })
+
+  it("keeps the mini-app accent table on canon's mineral for every brand canon has", () => {
+    for (const [brand, accent] of Object.entries(brandOverrides)) {
+      const row = ecosystem.find((b) => b.name === brand)
+      if (!row) continue
+      expect(accent.mineral, brand).toBe(row.mineral)
+    }
   })
 })
