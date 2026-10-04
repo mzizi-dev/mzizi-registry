@@ -8,6 +8,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — releases tag themselves with RELEASE_BUMP_TOKEN, and the crates get a tag and release (2026-10-04)
+
+- `release.yml` creates the `v<package.json version>` tag and release with the `RELEASE_BUMP_TOKEN` org secret instead of `GITHUB_TOKEN`, so a workflow listening for the tag or the release can start (GitHub starts none from `GITHUB_TOKEN`).
+- `publish-crates.yml` now tags each crates version it publishes as `mzizi-rs-vX.Y.Z` and creates a GitHub release linking every crate on crates.io, once all of them are there. If the tag already exists, the step does nothing; a dry run skips it. Tracking: mzizi-dev/packages-npm#25.
+
 ### Changed — Kweli is malachite, Nyuchi Learning is gold, and news and weather join canon (2026-10-04, #409)
 
 Owner decisions, 2026-10-04 (#404):
