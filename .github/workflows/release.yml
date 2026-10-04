@@ -1,19 +1,48 @@
 name: Release
 
-on:
-  push:
-    branches: [main]
-
-# Runs after every merge to main.
-# Creates a GitHub release when package.json version hasn't been tagged yet.
-# Developers control the release cadence by bumping the version in their PR.
-# If the version is already tagged (e.g. a doc-only fix on an existing version),
-# the job exits cleanly — no duplicate release is created.
+# Releasing is a version bump merged to main; nobody pushes a tag by hand.
+# When CI passes on main, this reads package.json's version and, if
+# `v<version>` is not tagged yet, pushes that tag and creates a GitHub
+# release. A merge that does not change the version finds its tag already
+# there and does nothing, so a doc-only fix on an existing version is fine.
 #
-# The tag and release are made with RELEASE_BUMP_TOKEN (mzizi-dev org secret),
-# not GITHUB_TOKEN: GitHub starts no workflow from a tag or release that
-# GITHUB_TOKEN made, so anything that listens for `push: tags` or
+# Versioning policy (nyuchi/.github#80): a release to main is the next MINOR
+# above the highest tag, and package.json must say so (the run fails and
+# names the right version otherwise); merges into staging are tagged as
+# patches by staging-version.yml; a MAJOR only by hand, from the Actions tab
+# with bump: major. Each segment holds 0..999.
+#
+# The tag and release are made with RELEASE_BUMP_TOKEN (mzizi-dev org
+# secret), not GITHUB_TOKEN: GitHub starts no workflow from a tag or release
+# that GITHUB_TOKEN made, so anything that listens for `push: tags` or
 # `release: published` would never run.
+#
+# This repo publishes nothing to npm and deploys no app (the portal was
+# removed; mzizi.dev is mzizi-dev/mzizi-site), and every npm-distributed
+# package moved to mzizi-dev/agent-tools, which publishes them from its own
+# workflows (@nyuchi/mzizi-skills, @nyuchi/mzizi-cli). Do not re-add a
+# publish step here: it would make two publishers for one package. Crates
+# are published by publish-crates.yml.
+#
+# The lint, type check, tests and build that used to run inside this job
+# are CI's jobs on the same commit; the tag waits for CI to pass.
+#
+# The logic is nyuchi/.github's reusable-auto-tag.yml.
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: >-
+          Versioning policy override. main releases the next minor; a major
+          is only ever made by hand, here.
+        type: choice
+        options: [minor, patch, major]
+        default: minor
 
 permissions:
   contents: read
@@ -21,86 +50,16 @@ permissions:
 jobs:
   release:
     name: Auto-release on version bump
-    runs-on: ubuntu-latest
-    # The tag and release are written with RELEASE_BUMP_TOKEN, which reaches only
-    # the two steps that write; GITHUB_TOKEN stays read-only, and the checkout
-    # keeps no credential for `pnpm install` and the build to find.
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Read version from package.json
-        id: version
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Check if tag already exists
-        id: tag_check
-        run: |
-          tag="v${{ steps.version.outputs.version }}"
-          if git ls-remote --tags origin "refs/tags/$tag" | grep -q "$tag"; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "Tag v${{ steps.version.outputs.version }} already exists — skipping release."
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-            echo "Tag v${{ steps.version.outputs.version }} is new — creating release."
-          fi
-
-      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
-        if: steps.tag_check.outputs.exists == 'false'
-
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        if: steps.tag_check.outputs.exists == 'false'
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - name: Install and validate
-        if: steps.tag_check.outputs.exists == 'false'
-        run: |
-          pnpm install --frozen-lockfile
-          pnpm lint
-          pnpm typecheck
-          pnpm test
-          pnpm build
-
-      # This repo publishes nothing to npm and deploys no app (the portal was
-      # removed; mzizi.dev is mzizi-dev/mzizi-site), and every npm-distributed package moved to mzizi-dev/agent-tools,
-      # which publishes them from its own workflows:
-      #
-      #   @nyuchi/design-agent-skills  →  @nyuchi/mzizi-skills
-      #   @nyuchi/design-cli           →  @nyuchi/mzizi-cli
-      #
-      # The publish step that used to live here filtered on those two legacy
-      # names against a `packages/` directory that left this repo with them, so
-      # it silently matched nothing ("No projects matched the filters") on every
-      # tag. Worse, had it ever matched it would have republished names that
-      # mzizi-tools deliberately deprecates in favour of the @nyuchi/mzizi-*
-      # packages — two publishers for one package. Do not re-add it.
-
-      - name: Create tag
-        if: steps.tag_check.outputs.exists == 'false'
-        env:
-          RELEASE_BUMP_TOKEN: ${{ secrets.RELEASE_BUMP_TOKEN }}
-          TAG: ${{ steps.version.outputs.tag }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "$TAG" -m "Release $TAG"
-          git push "https://x-access-token:${RELEASE_BUMP_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$TAG"
-
-      - name: Create GitHub release
-        if: steps.tag_check.outputs.exists == 'false'
-        env:
-          GH_TOKEN: ${{ secrets.RELEASE_BUMP_TOKEN }}
-        run: |
-          gh release create "${{ steps.version.outputs.tag }}" \
-            --title "${{ steps.version.outputs.tag }}" \
-            --generate-notes \
-            --latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push')
+    uses: nyuchi/.github/.github/workflows/reusable-auto-tag.yml@924e5b4d0983d31379aedbec02b990793f29c792 # main, 2026-10-04
+    with:
+      version-command: node -p "require('./package.json').version"
+      channel: main
+      bump: ${{ inputs.bump || '' }}
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      create-release: true
+    secrets:
+      token: ${{ secrets.RELEASE_BUMP_TOKEN }}
