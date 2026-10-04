@@ -356,15 +356,21 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 
 ## Versioning
 
-This project uses semantic versioning; the current version is **1.0.0**. A version bump must be propagated to every surface listed in [CLAUDE.md §14](CLAUDE.md) — `package.json`, `lib/mcp-server.ts` (`VERSION`), the release entry in `content/changelog/releases.json`, `components/landing/footer.tsx`, `components/landing/dashboard-sidebar.tsx`, `app/layout.tsx` (`softwareVersion`), `README.md`, and CLAUDE.md §1 — which must all stay in sync.
+Releases follow the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)), from 2026-10-04:
+
+- A merge into `staging` is a **patch** (x.y.z → x.y.z+1), tagged automatically by `staging-version.yml`.
+- A release to `main` is a **minor** (x.y.z → x.y+1.0) **above the highest existing tag**. The highest `v` tag is v4.1.8, so the next registry release is **4.2.0**, even though `package.json` still reads 1.0.0. The Mzizi Roots crates follow the same rule against their own `mzizi-rs-v` tags (next: 0.2.0).
+- A **major** is only released by hand: run the Release (or Publish crates) workflow with `bump: major`. Each segment holds 0–999.
+- `release.yml` and `publish-crates.yml` check the version with the shared `next-version` action before tagging or uploading, and name the version they expect. Released versions are never renumbered.
+
+A version bump must be propagated to every surface listed in [CLAUDE.md §14](CLAUDE.md) — `package.json`, `lib/mcp-server.ts` (`VERSION`), the release entry in `content/changelog/releases.json`, `components/landing/footer.tsx`, `components/landing/dashboard-sidebar.tsx`, `app/layout.tsx` (`softwareVersion`), `README.md`, and CLAUDE.md §1 — which must all stay in sync.
 
 Only maintainers create version tags and releases. The release process:
 
 1. Update the version across every surface listed in CLAUDE.md §14.
 1. Add an entry for the new version to `content/changelog/releases.json` and run `pnpm changelog:generate`.
-1. Commit and open a PR; merge with `merge_method=merge` (never squash).
-1. Tag `vX.Y.Z` and push the tag.
-1. GitHub Actions validates the tag against `package.json` and creates the release automatically.
+1. Commit and open a PR, and merge it to `main`.
+1. `release.yml` checks the version against the policy, then tags `vX.Y.Z` and creates the release. Nobody pushes a tag by hand.
 
 ---
 
