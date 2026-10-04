@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — a push to `main` tells the registry pin bots at once (2026-10-04)
+### Added — a push to `main` tells the registry pin bots at once (2026-10-04, #425)
 
 The registry pin bots (`registry-pin-bump.yml` in mzizi-api-gateway and agent-tools) only ran on their hourly schedule, and GitHub delays and drops scheduled runs: on 2026-10-04 they ran 2–3 hours apart, so api.mzizi.dev and mcp.mzizi.dev served a registry hours behind `main`.
 
