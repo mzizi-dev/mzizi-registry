@@ -891,7 +891,7 @@
 }
 
 /* news — cobalt.
- * lib/tokens/index.ts:696 — mukoko.news. No `news` ecosystem record in /v1/brand. */
+ * /v1/brand ecosystem[name=news].mineral (owner decision, 2026-10-04) */
 [data-brand="news"] {
   --primary: var(--mineral-cobalt-aa);
   --ring: var(--mineral-cobalt-aa);
@@ -907,6 +907,27 @@
 /* bushtrade — gold.
  * /v1/brand ecosystem[name=bushtrade].mineral (agrees with lib/tokens/index.ts mukoko.commerce) */
 [data-brand="bushtrade"] {
+  --primary: var(--mineral-gold-aa);
+  --ring: var(--mineral-cobalt-aa);
+}
+
+/* weather — cobalt.
+ * /v1/brand ecosystem[name=weather].mineral (owner decision, 2026-10-04) */
+[data-brand="weather"] {
+  --primary: var(--mineral-cobalt-aa);
+  --ring: var(--mineral-cobalt-aa);
+}
+
+/* kweli — malachite.
+ * /v1/brand ecosystem[name=kweli].mineral (owner decision, 2026-10-04) */
+[data-brand="kweli"] {
+  --primary: var(--mineral-malachite-aa);
+  --ring: var(--mineral-cobalt-aa);
+}
+
+/* learning — gold.
+ * /v1/brand ecosystem[name=learning].mineral (owner decision, 2026-10-04: every Nyuchi brand is gold) */
+[data-brand="learning"] {
   --primary: var(--mineral-gold-aa);
   --ring: var(--mineral-cobalt-aa);
 }
