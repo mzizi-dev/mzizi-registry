@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — README, AGENTS and CONTRIBUTING name `contracts/` (2026-10-04, #408)
+
+- **`README.md` and `AGENTS.md` now say what `contracts/` holds** (added in #406): a versioned, machine-readable contract for each `@bundu/ui` app component of the Mzizi Dashboard Standard, 31 in `contracts/app/`, in the format `contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`, with the coverage table in `contracts/README.md`. Both link [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts). `CONTRIBUTING.md`'s test layout lists `__tests__/contracts/`.
+
 ### Added — `AGENTS.md`: track big work in GitHub issues (2026-10-04, #402)
 
 - **A new "Track big work in GitHub issues" section in `AGENTS.md`.** Any substantial build, migration, investigation or multi-step task gets a GitHub issue in the repo that owns it, before or as work starts, so another session, agent or person can pick it up. The issue holds the goal, the owner's decisions (verbatim where given), the plan, acceptance criteria, owner-only steps and links.

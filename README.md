@@ -72,6 +72,12 @@ its own repo:
 (Dioxus primitives) and `mzizi-tokens` crate (generated from the same palette source as the
 CSS custom properties) are compiled and contract-tested in CI, not just committed as text.
 
+`contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
+component of the Mzizi Dashboard Standard: 31 in `contracts/app/`, in the format
+`contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`.
+[`contracts/README.md`](./contracts/README.md) has the coverage table; see
+[docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts).
+
 ---
 
 ## AI-Native: MCP server
