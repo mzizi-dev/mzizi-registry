@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Fixed — shamwari's mini-app accent is sodalite, not tanzanite (2026-10-04)
+
+- **`brandOverrides.shamwari` and `brandIndustryCategories.shamwari.ai` now say sodalite**, in `lib/tokens/index.ts` and in the `mzizi-tokens-typescript` registry item. Canon (`lib/tokens/brand.source.ts` ecosystem, `/v1/brand`) and the `mzizi-design` skill have shamwari on sodalite; these two tables still had Mukoko's tanzanite. Values: primary `#3D5AFE`, container `#E8EAF6`, on-container `#141A5C` (canon's sodalite), muted computed as before. Canon authors no sodalite hover tint, so `primaryHover` is `#6E83FE`, cobalt's rule (25% toward white) applied to `#3D5AFE`, until canon authors one.
+
 ### Security — the audit sets one advisory aside, by ID, until 2026-11-04 (2026-10-04)
 
 - **`pnpm audit` ignores GHSA-vfj7-8cjw-p6xm and nothing else** (`pnpm.auditConfig.ignoreGhsas` in `package.json`). It is `braces` <=3.0.3 (ReDoS on deeply nested patterns), which has **no patched release**, reached only through `@next/eslint-plugin-next > fast-glob > micromatch`: lint tooling run on this repository's own files, never shipped in a registry item or served by the API. It failed `audit:check` (and so `pnpm check` and the pre-commit hook) on every branch, `main` included. The level stays `moderate`, so any other advisory still fails. **Recheck by 2026-11-04**: remove the entry once `braces` publishes a fix or the plugin drops it.
