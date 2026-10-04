@@ -2,11 +2,11 @@
 
 Owner decision, 2026-10-04: "the components should also be updated, same as the mzizi language — every component should have a contract." This directory holds those contracts, one machine-readable file per component. Tracking: [#404](https://github.com/mzizi-dev/mzizi-registry/issues/404).
 
-The first family is `app/`: the 31 server-rendered app components of `@bundu/ui` (`mzizi-dev/packages-npm`, `packages/bundu-ui/src/app/*.astro`). Together they are the **Mzizi Dashboard Standard**, the one dashboard design for every product in the Bundu ecosystem, with each brand's mineral as an overlay. The standard is published at [docs.mzizi.dev/patterns/dashboard-standard](https://docs.mzizi.dev/patterns/dashboard-standard).
+Two families. The first is `app/`: the 31 server-rendered app components of `@bundu/ui` (`mzizi-dev/packages-npm`, `packages/bundu-ui/src/app/*.astro`). Together they are the **Mzizi Dashboard Standard**, the one dashboard design for every product in the Bundu ecosystem, with each brand's mineral as an overlay. The standard is published at [docs.mzizi.dev/patterns/dashboard-standard](https://docs.mzizi.dev/patterns/dashboard-standard). The second is `discover/`, the **Mzizi Discover Standard** ([below](#the-discover-standard-discover)).
 
 ## What a contract is
 
-`schema/component-contract.schema.json` is the format. Each `app/<name>.contract.json` is versioned on its own (`version`, semver: major when a clause, prop, slot or state is removed or narrowed; minor when one is added; patch for prose) and states:
+`schema/component-contract.schema.json` is the format. Each `<family>/<name>.contract.json` is versioned on its own (`version`, semver: major when a clause, prop, slot or state is removed or narrowed; minor when one is added; patch for prose) and states:
 
 | Field             | What it holds                                                                                                                                                                                                 |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -37,7 +37,7 @@ The clause subset: subjects `slot`, `role`, `label`, `class` and `portal` (the r
 
 | Contract                 | Component         | Node | Version | React `.tsx`            | Rust `.rs`              |
 | ------------------------ | ----------------- | ---- | ------- | ----------------------- | ----------------------- |
-| `app/app-shell`          | AppShell          | N7   | 1.0.0   | —                       | —                       |
+| `app/app-shell`          | AppShell          | N7   | 1.1.0   | —                       | —                       |
 | `app/side-nav`           | SideNav           | N7   | 1.0.0   | —                       | —                       |
 | `app/workspace-switcher` | WorkspaceSwitcher | N7   | 1.0.0   | —                       | —                       |
 | `app/quick-search`       | QuickSearch       | N7   | 1.0.0   | —                       | —                       |
@@ -52,7 +52,7 @@ The clause subset: subjects `slot`, `role`, `label`, `class` and `portal` (the r
 | `app/empty-state`        | EmptyState        | N6   | 1.0.0   | —                       | —                       |
 | `app/brand-mark`         | BrandMark         | N3   | 1.0.0   | —                       | —                       |
 | `app/data-table`         | DataTable         | N6   | 1.0.0   | —                       | —                       |
-| `app/filter-bar`         | FilterBar         | N6   | 1.0.0   | —                       | —                       |
+| `app/filter-bar`         | FilterBar         | N6   | 1.1.0   | —                       | —                       |
 | `app/pagination`         | Pagination        | N6   | 1.0.0   | —                       | —                       |
 | `app/detail-panel`       | DetailPanel       | N6   | 1.0.0   | —                       | —                       |
 | `app/form-layout`        | FormLayout        | N6   | 1.0.0   | —                       | —                       |
@@ -60,7 +60,7 @@ The clause subset: subjects `slot`, `role`, `label`, `class` and `portal` (the r
 | `app/state-message`      | StateMessage      | N6   | 1.0.0   | —                       | —                       |
 | `app/toast`              | Toast             | N6   | 1.0.0   | —                       | —                       |
 | `app/account-menu`       | AccountMenu       | N7   | 1.0.0   | —                       | —                       |
-| `app/bar-chart`          | BarChart          | N6   | 1.0.0   | —                       | —                       |
+| `app/bar-chart`          | BarChart          | N6   | 1.0.1   | —                       | —                       |
 | `app/button`             | Button            | N2   | 1.0.0   | `button` (slot)         | `button` (slot)         |
 | `app/badge`              | Badge             | N2   | 1.0.0   | `badge` (slot+variants) | `badge` (slot+variants) |
 | `app/card`               | Card              | N2   | 1.0.0   | `card` (slot)           | `card` (slot)           |
@@ -69,7 +69,32 @@ The clause subset: subjects `slot`, `role`, `label`, `class` and `portal` (the r
 | `app/label`              | Label             | N2   | 1.0.0   | `label` (slot)          | `label` (slot)          |
 | `app/skeleton`           | Skeleton          | N2   | 1.0.0   | `skeleton` (slot)       | —                       |
 
+### The Discover Standard (`discover/`)
+
+The second family: the 11 Discover components of `@bundu/ui` (`packages/bundu-ui/src/discover/*.astro`), one design for every public discover and browse page in the Mukoko family (circles, news, events, weather, and the super-app on the web). Tracking: [#413](https://github.com/mzizi-dev/mzizi-registry/issues/413). Published at [docs.mzizi.dev/patterns/discover-standard](https://docs.mzizi.dev/patterns/discover-standard).
+
+| Contract                    | Component       | Node | Version | React `.tsx` | Rust `.rs` |
+| --------------------------- | --------------- | ---- | ------- | ------------ | ---------- |
+| `discover/discover-shell`   | DiscoverShell   | N7   | 1.0.0   | —            | —          |
+| `discover/discover-meta`    | DiscoverMeta    | N6   | 1.0.0   | —            | —          |
+| `discover/discover-hero`    | DiscoverHero    | N6   | 1.0.0   | —            | —          |
+| `discover/discover-search`  | DiscoverSearch  | N6   | 1.0.0   | —            | —          |
+| `discover/category-chips`   | CategoryChips   | N6   | 1.0.0   | —            | —          |
+| `discover/category-chip`    | CategoryChip    | N6   | 1.0.0   | —            | —          |
+| `discover/discover-section` | DiscoverSection | N6   | 1.0.0   | —            | —          |
+| `discover/result-grid`      | ResultGrid      | N6   | 1.0.0   | —            | —          |
+| `discover/discover-card`    | DiscoverCard    | N6   | 1.0.0   | —            | —          |
+| `discover/load-more`        | LoadMore        | N6   | 1.0.0   | —            | —          |
+| `discover/open-in-app`      | OpenInApp       | N6   | 1.0.0   | —            | —          |
+
+Every Discover component also works in a server-filled shell (an Astro page built once with `{{placeholders}}` and filled by a server, as circles.mukoko.com's Rust Worker does): text props are plain strings, empty text hides itself, and state switches are attributes styled by classes. Each contract has a `template` state where that matters.
+
 **Follow-ups (not built here).** 24 of the 31 have no `.tsx` and no `.rs`: every shell and page pattern. Of the seven primitives, `badge` matches in both languages (slot and all six variants) and `label` has nothing beyond its slot to share; `alert` and `skeleton` have no `.rs`; and `button`, `card` and `input` share only the slot, because their `.tsx` and `.rs` keep the registry's own variants, parts or height (each divergence is listed in the contract). The plan is [#397](https://github.com/mzizi-dev/mzizi-registry/issues/397) (an Astro target, so these `.astro` files move here) and [#401](https://github.com/mzizi-dev/mzizi-registry/issues/401) (Rust ports of the console patterns). Each port is done when it passes the contract above.
+
+## Rules every contract's tests enforce
+
+- **No inline `style` attributes.** The Astro runner fails any rendered element with a `style` attribute, so a page's Content-Security-Policy can keep `style-src 'self'` with no `style-src-attr 'unsafe-inline'`. Custom properties go through classes or data attributes (AppShell's `data-accent`), sizes through classes or SVG geometry (BarChart).
+- **No colour values, minerals only as declared status colours** (the brand-overlay rule), and **no script beyond the one the contract allows** (JSON-LD, `type="application/ld+json"`, is data and does not count).
 
 ## Gaps the contracts record
 
@@ -80,6 +105,6 @@ The clause subset: subjects `slot`, `role`, `label`, `class` and `portal` (the r
 
 ## Adding or changing a contract
 
-1. Edit or add `app/<name>.contract.json`; bump its `version`.
+1. Edit or add `<family>/<name>.contract.json`; bump its `version`. A new family also needs its directory in `FAMILIES` in `__tests__/contracts/contracts.test.tsx` and in `mzizi-dev/packages-npm`'s `scripts/contract-paths.mjs`.
 2. Update `index.json` (the test fails if a file or version is missing from it) and the coverage table above (the test fails if a row disagrees).
 3. `pnpm test` here, then in `mzizi-dev/packages-npm` run `pnpm contracts:fetch <this branch>` and `pnpm test`: the Astro build must pass the new contract before either side merges.

@@ -1,0 +1,229 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/discover-shell",
+  "title": "DiscoverShell",
+  "version": "1.0.0",
+  "node": 7,
+  "kind": "shell",
+  "summary": "The frame of every public Discover site in the Mukoko family: skip link, mineral strip, a header (brand, main navigation, one action), the page in <main id=\"main\">, and a footer. Only the brand changes between services.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/DiscoverShell.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["mineral-strip"]
+  },
+  "props": [
+    {
+      "name": "homeLabel",
+      "type": "string",
+      "required": true,
+      "description": "The home link's accessible name, e.g. \"mukoko circles, home\"."
+    },
+    {
+      "name": "homeHref",
+      "type": "string",
+      "required": false,
+      "default": "/",
+      "description": "Where the brand links."
+    },
+    {
+      "name": "nav",
+      "type": "{ label: string; href: string; current?: boolean | string }[]",
+      "required": false,
+      "default": [],
+      "description": "The main navigation. `current` true (or \"page\") marks the current section."
+    },
+    {
+      "name": "footerLinks",
+      "type": "{ label: string; href: string; current?: boolean | string }[]",
+      "required": false,
+      "default": [],
+      "description": "Footer navigation."
+    },
+    {
+      "name": "footerNote",
+      "type": "string",
+      "required": false,
+      "description": "One quiet line at the foot."
+    },
+    {
+      "name": "strip",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "The seven-mineral strip on the left edge."
+    },
+    {
+      "name": "skipLabel",
+      "type": "string",
+      "required": false,
+      "default": "Skip to content",
+      "description": "The skip link's text."
+    }
+  ],
+  "slots": [
+    {
+      "name": "brand",
+      "expects": "The service's mark and wordmark",
+      "description": "Inside the home link."
+    },
+    {
+      "name": "action",
+      "expects": "One primary action (a link styled as a button)",
+      "description": "The header's call to action, e.g. \"Create a circle\"."
+    },
+    {
+      "name": "default",
+      "description": "The page: DiscoverHero, then DiscoverSections."
+    },
+    {
+      "name": "footer",
+      "description": "Extra footer content, e.g. app-store badges."
+    }
+  ],
+  "behaviour": [
+    "The skip link is first and targets <main id=\"main\" tabindex=\"-1\">.",
+    "The header holds the brand (a link home with an accessible name), the \"Main\" navigation and one action; on phones the navigation wraps onto its own row.",
+    "`aria-current=\"page\"` on the current section.",
+    "It goes inside <body>; the app owns <head> (use DiscoverMeta) and its stylesheets."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "homeLabel": "mukoko circles, home",
+        "nav": [
+          {
+            "label": "All circles",
+            "href": "/circles",
+            "current": true
+          },
+          {
+            "label": "About",
+            "href": "/about"
+          }
+        ],
+        "footerLinks": [
+          {
+            "label": "About Circles",
+            "href": "/about"
+          }
+        ],
+        "footerNote": "Part of the Bundu ecosystem, built by Nyuchi Africa."
+      },
+      "slots": {
+        "brand": "<span>mukoko circles</span>",
+        "action": "<a href='/create'>Create a circle</a>",
+        "default": "<h1>Circles</h1>",
+        "footer": "<p>Get the app</p>"
+      }
+    },
+    "bare": {
+      "description": "No navigation, no strip.",
+      "props": {
+        "homeLabel": "Home",
+        "strip": false
+      },
+      "slots": {
+        "default": "<h1>Page</h1>"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["banner", "navigation", "main", "contentinfo"],
+    "keyboard": [
+      "Tab reaches the skip link first; Enter moves focus to <main>."
+    ],
+    "focus": [
+      "The skip link appears on focus; every link shows the `--ring` focus outline."
+    ],
+    "aria": [
+      "The home link is named by `homeLabel`; the navigations are \"Main\" and \"Footer\"; the current section has aria-current=\"page\"; the mineral strip is aria-hidden."
+    ],
+    "wcag": ["1.3.1", "2.4.1", "2.4.4", "2.4.7", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "nav link",
+      "select": "nav[aria-label=\"Main\"] a",
+      "fine": 44,
+      "coarse": 44
+    },
+    {
+      "part": "home link",
+      "select": "[data-slot=\"discover-home\"]",
+      "fine": 44,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--secondary",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "The `brand` slot (the service's own mark) and whatever primary action the `action` slot holds. The frame, header, navigation and footer are identical in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "From 320px: the brand and the action share the first row; the navigation wraps onto a full-width row below 40rem.",
+    "The footer is one column, then three from 48rem."
+  ],
+  "contract": "contract\n  slot is \"discover-shell\"\n  uses mineral-strip\n  a \"All circles\" min_height 44\n  when default shows a \"Create a circle\"\n  when default shows a \"Skip to content\"\n  when bare shows h1 \"Page\"\nend",
+  "checks": [
+    {
+      "say": "One main, the skip link's target.",
+      "state": "*",
+      "select": "main#main[tabindex=\"-1\"]",
+      "count": 1
+    },
+    {
+      "say": "The skip link comes first and targets main.",
+      "state": "*",
+      "select": "a[href=\"#main\"]",
+      "count": 1
+    },
+    {
+      "say": "One header and one footer.",
+      "state": "*",
+      "select": "header, footer",
+      "count": 2
+    },
+    {
+      "say": "The current section is marked.",
+      "select": "a[aria-current=\"page\"]",
+      "count": 1,
+      "text": "All circles"
+    },
+    {
+      "say": "The home link is named.",
+      "state": "*",
+      "select": "[data-slot=\"discover-home\"]",
+      "attr": {
+        "aria-label": true
+      }
+    },
+    {
+      "say": "No navigation given, no navigation landmark.",
+      "state": "bare",
+      "select": "nav[aria-label=\"Main\"]",
+      "absent": true
+    },
+    {
+      "say": "strip={false} leaves the strip out.",
+      "state": "bare",
+      "select": "[data-slot=\"mineral-strip\"]",
+      "absent": true
+    }
+  ]
+}
