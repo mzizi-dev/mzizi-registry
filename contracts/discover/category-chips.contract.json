@@ -1,0 +1,148 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/category-chips",
+  "title": "CategoryChips",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The row of category links on a Discover page, as a named navigation landmark. Chips wrap; the page never scrolls sideways.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/CategoryChips.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["filter-bar"]
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "The landmark's name, e.g. \"Categories\"."
+    },
+    {
+      "name": "items",
+      "type": "{ href: string; label: string; count?: string | number; current?: boolean | string }[]",
+      "required": false,
+      "default": [],
+      "description": "The chips."
+    },
+    {
+      "name": "allHref",
+      "type": "string",
+      "required": false,
+      "description": "An \"All\" chip first, linking here."
+    },
+    {
+      "name": "allLabel",
+      "type": "string",
+      "required": false,
+      "default": "All",
+      "description": "The \"All\" chip's text."
+    },
+    {
+      "name": "allCurrent",
+      "type": "boolean | string",
+      "required": false,
+      "description": "Whether \"All\" is the current view."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "CategoryChip",
+      "description": "Chips as fragments, for server-filled shells; after `items`."
+    }
+  ],
+  "behaviour": [
+    "A <nav> named by `label`, holding one <ul> of CategoryChip.",
+    "Filtering by category is navigation to that category's URL; it never filters in the browser."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "label": "Categories",
+        "items": [
+          {
+            "href": "/categories/running",
+            "label": "Running",
+            "count": 12
+          },
+          {
+            "href": "/categories/music",
+            "label": "Music",
+            "count": "1,204",
+            "current": true
+          }
+        ],
+        "allHref": "/circles",
+        "allLabel": "All circles"
+      }
+    },
+    "slotted": {
+      "props": {
+        "label": "Categories"
+      },
+      "slots": {
+        "default": "<li data-slot='category-chip'><a href='/categories/x'>Fragment</a></li>"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["navigation", "list"],
+    "keyboard": ["Tab through the chips."],
+    "focus": ["Each chip shows the `--ring` focus outline."],
+    "aria": ["The nav is named; the current chip has aria-current=\"page\"."],
+    "wcag": ["1.3.1", "2.4.4", "1.4.10"]
+  },
+  "density": [
+    {
+      "part": "chip",
+      "select": "a",
+      "fine": 44,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--border",
+      "--foreground",
+      "--background",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "None.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Wraps at every width (WCAG 1.4.10: no horizontal scrolling at 320px)."
+  ],
+  "contract": "contract\n  slot is \"category-chips\"\n  label is \"Categories\"\n  uses category-chip\n  when default shows a \"All circles\"\n  when slotted shows a \"Fragment\"\nend",
+  "checks": [
+    {
+      "say": "All, then the items.",
+      "select": "ul > li",
+      "count": 3
+    },
+    {
+      "say": "The current chip is marked.",
+      "select": "a[aria-current=\"page\"]",
+      "count": 1,
+      "text": "Music"
+    },
+    {
+      "say": "Fragments go in the list.",
+      "state": "slotted",
+      "select": "ul > li",
+      "count": 1
+    }
+  ]
+}

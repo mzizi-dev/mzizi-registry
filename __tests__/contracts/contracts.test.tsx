@@ -1,6 +1,9 @@
 /**
  * Component contracts (contracts/, #404).
  *
+ * Two families: `app/` (the Dashboard Standard, #404) and `discover/` (the
+ * Discover Standard, #413).
+ *
  * 1. Every contract is well formed: it validates against
  *    contracts/schema/component-contract.schema.json (read here, not
  *    restated), every line of its `contract … end` block is a clause form
@@ -56,10 +59,20 @@ const index = JSON.parse(read("index.json")) as {
   schema: string
   contracts: { name: string; title: string; version: string; file: string; tsx: string | null; rs: string | null }[]
 }
-const files = readdirSync(path.join(DIR, "app"))
-  .filter((f) => f.endsWith(".contract.json"))
+/**
+ * The contract families, one directory each: `app/` is the Dashboard
+ * Standard (#404), `discover/` the Discover Standard (#413).
+ */
+const FAMILIES = { app: 31, discover: 11 } as const
+// Keys are `<family>/<file>`, the path under contracts/.
+const files = Object.keys(FAMILIES)
+  .flatMap((family) =>
+    readdirSync(path.join(DIR, family))
+      .filter((f) => f.endsWith(".contract.json"))
+      .map((f) => `${family}/${f}`),
+  )
   .sort()
-const raw = Object.fromEntries(files.map((f) => [f, JSON.parse(read(`app/${f}`)) as Json]))
+const raw = Object.fromEntries(files.map((f) => [f, JSON.parse(read(f)) as Json]))
 const contracts = Object.fromEntries(Object.entries(raw).map(([f, j]) => [f, j as unknown as Contract]))
 
 // ─── A JSON Schema reader for the subset the contract schema uses ─────────
@@ -136,15 +149,23 @@ function slotOf(c: Contract): string | undefined {
 // ─── Tests ────────────────────────────────────────────────────────────────
 
 describe("contracts are well formed", () => {
-  test("there is one per @bundu/ui app component (31)", () => {
-    expect(files).toHaveLength(31)
+  test.each(Object.entries(FAMILIES))("%s/ has one per @bundu/ui component (%i)", (family, n) => {
+    expect(files.filter((f) => f.startsWith(`${family}/`))).toHaveLength(n)
+  })
+
+  test("no directory under contracts/ is a family the tests do not read", () => {
+    const dirs = readdirSync(DIR, { withFileTypes: true })
+      .filter((d) => d.isDirectory() && d.name !== "schema")
+      .map((d) => d.name)
+      .sort()
+    expect(dirs).toEqual(Object.keys(FAMILIES).sort())
   })
 
   test.each(files)("%s validates against the schema", (f) => {
     const out: string[] = []
     validate(raw[f] as Json, schema, f, out)
     expect(out).toEqual([])
-    expect(`${contracts[f].name.split("/")[1]}.contract.json`).toBe(f)
+    expect(`${contracts[f].name}.contract.json`).toBe(f)
   })
 
   test.each(files)("%s: every clause is a form the runners evaluate", (f) => {
@@ -162,9 +183,9 @@ describe("contracts are well formed", () => {
 
 describe("index.json and the README agree with the files", () => {
   test("the index lists every contract, at its version", () => {
-    expect(index.contracts.map((e) => e.file).sort()).toEqual(files.map((f) => `app/${f}`))
+    expect(index.contracts.map((e) => e.file).sort()).toEqual(files)
     for (const e of index.contracts) {
-      const c = contracts[e.file.replace("app/", "")]
+      const c = contracts[e.file]
       expect([e.name, e.title, e.version, e.tsx, e.rs]).toEqual([
         c.name,
         c.title,
