@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — CONTRIBUTING no longer says to curl a local server (2026-10-04)
+
+The "Verify" step for a new component ran `curl http://localhost:11736/api/v1/ui/my-component`, but the app and its `/api/*` handlers were removed on 2026-10-02 and nothing listens there.
+
+- **`CONTRIBUTING.md`**: the step now runs `pnpm registry:validate && pnpm registry:verify`, then `pnpm build && git status --porcelain` (every generator in write mode; commit what it writes). Once the change is on `main` and mzizi-api-gateway's registry pin reaches it, `https://api.mzizi.dev/v1/ui/my-component` serves it.
+- **`.github/pull_request_template.md`**: the "API verified" checkbox that curled the same local URL is replaced by the same `pnpm build` check.
+
 ### Fixed — `wallet-card` and `mzizi-create-listing` take their colours from N1, and CI runs `lint:colors` (2026-10-04)
 
 `pnpm lint:colors` failed on `main` for nine raw palette hexes, and no CI job ran it (#423).
