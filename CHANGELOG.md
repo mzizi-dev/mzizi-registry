@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added — `AGENTS.md`: track big work in GitHub issues (2026-10-04, #402)
+
+- **A new "Track big work in GitHub issues" section in `AGENTS.md`.** Any substantial build, migration, investigation or multi-step task gets a GitHub issue in the repo that owns it, before or as work starts, so another session, agent or person can pick it up. The issue holds the goal, the owner's decisions (verbatim where given), the plan, acceptance criteria, owner-only steps and links.
+- **Every PR references its issue** (`Refs #n`; `Fixes #n` only when the merge completes it). Progress, decisions and a hand-off note (what's done, what's left, branch names) go in issue comments, at each merge and before a session or agent finishes. Work spanning repos gets a tracking issue that links the per-repo issues.
+- **No secrets, credential status or exploitable detail in issues on public repos.**
+
 ### Fixed — shamwari's mini-app accent is sodalite, not tanzanite (2026-10-04)
 
 - **`brandOverrides.shamwari` and `brandIndustryCategories.shamwari.ai` now say sodalite**, in `lib/tokens/index.ts` and in the `mzizi-tokens-typescript` registry item. Canon (`lib/tokens/brand.source.ts` ecosystem, `/v1/brand`) and the `mzizi-design` skill have shamwari on sodalite; these two tables still had Mukoko's tanzanite. Values: primary `#3D5AFE`, container `#E8EAF6`, on-container `#141A5C` (canon's sodalite), muted computed as before. Canon authors no sodalite hover tint, so `primaryHover` is `#6E83FE`, cobalt's rule (25% toward white) applied to `#3D5AFE`, until canon authors one.
