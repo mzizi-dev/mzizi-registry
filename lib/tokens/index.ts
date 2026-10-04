@@ -516,7 +516,8 @@ export const brandOverrides: Record<
 > = {
   // ─── Mini-App accents (canonical from brand_ecosystem table) ──
   // Mineral assignments: tanzanite=identity/social/premium, cobalt=info/education/productivity,
-  // malachite=events/health/nature, gold=commerce/places/wallet, terracotta=community
+  // malachite=events/health/nature, gold=commerce/places/wallet, terracotta=community,
+  // sodalite=AI (shamwari)
   mukoko: {
     primary: "#B388FF",
     mineral: "tanzanite",
@@ -549,13 +550,16 @@ export const brandOverrides: Record<
     container: "#E3F2FD",
     onContainer: "#002966",
   },
+  // Sodalite, canon's mineral for shamwari (brand.source.ts ecosystem). The
+  // hover tint is cobalt's rule (25% toward white) applied to #3D5AFE, until
+  // canon authors a sodalite tint.
   shamwari: {
-    primary: "#B388FF",
-    mineral: "tanzanite",
-    primaryHover: "#CE9FFF",
-    primaryMuted: "rgba(179,136,255,0.12)",
-    container: "#F3E5F5",
-    onContainer: "#2E004D",
+    primary: "#3D5AFE",
+    mineral: "sodalite",
+    primaryHover: "#6E83FE",
+    primaryMuted: "rgba(61,90,254,0.12)",
+    container: "#E8EAF6",
+    onContainer: "#141A5C",
   },
   campfire: {
     primary: "#64FFDA",
@@ -711,7 +715,7 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
     language: { mineral: "cobalt", label: "Language", products: ["Lingo"] },
   },
   shamwari: {
-    ai: { mineral: "tanzanite", label: "AI Companion", products: ["Shamwari AI", "Digital Twin"] },
+    ai: { mineral: "sodalite", label: "AI Companion", products: ["Shamwari AI", "Digital Twin"] },
   },
 }
 
