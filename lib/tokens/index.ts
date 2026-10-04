@@ -502,6 +502,8 @@ export type BrandId =
   | "health"
   | "jobs"
   | "wallet"
+  | "kweli"
+  | "learning"
 
 export const brandOverrides: Record<
   BrandId,
@@ -515,9 +517,9 @@ export const brandOverrides: Record<
   }
 > = {
   // ─── Mini-App accents (canonical from brand_ecosystem table) ──
-  // Mineral assignments: tanzanite=identity/social/premium, cobalt=info/education/productivity,
-  // malachite=events/health/nature, gold=commerce/places/wallet, terracotta=community,
-  // sodalite=AI (shamwari)
+  // Mineral assignments: tanzanite=identity/social/premium, cobalt=info/news/productivity,
+  // malachite=events/health/nature/trust (kweli), gold=commerce/places/wallet and every
+  // Nyuchi brand (education included), terracotta=community, sodalite=AI (shamwari)
   mukoko: {
     primary: "#B388FF",
     mineral: "tanzanite",
@@ -657,6 +659,25 @@ export const brandOverrides: Record<
     container: "#FFF8E1",
     onContainer: "#3E2723",
   },
+  // Owner decisions, 2026-10-04 (mzizi-registry#404), from canon's ecosystem
+  // rows: kweli is malachite (it used to borrow Mukoko's tanzanite), and
+  // learning, a Nyuchi brand, is gold.
+  kweli: {
+    primary: "#64FFDA",
+    mineral: "malachite",
+    primaryHover: "#80FFE4",
+    primaryMuted: "rgba(100,255,218,0.12)",
+    container: "#E0F2F1",
+    onContainer: "#00332B",
+  },
+  learning: {
+    primary: "#FFD740",
+    mineral: "gold",
+    primaryHover: "#FFDF6B",
+    primaryMuted: "rgba(255,215,64,0.12)",
+    container: "#FFF8E1",
+    onContainer: "#3E2723",
+  },
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -684,8 +705,10 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
       label: "Travel",
       products: ["Zimbabwe Travel Information", "Iconic Expeditions"],
     },
+    // Gold, by owner decision (2026-10-04, mzizi-registry#404): every Nyuchi
+    // brand is gold, and canon's `learning` row says so.
     education: {
-      mineral: "cobalt",
+      mineral: "gold",
       label: "Education",
       products: ["Nyuchi Learning", "Nyuchi Lingo"],
     },
@@ -712,6 +735,7 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
       products: ["Planner", "Weather", "Jobs"],
     },
     wellness: { mineral: "malachite", label: "Wellness", products: ["Health"] },
+    trust: { mineral: "malachite", label: "Trust", products: ["Kweli"] },
     language: { mineral: "cobalt", label: "Language", products: ["Lingo"] },
   },
   shamwari: {
