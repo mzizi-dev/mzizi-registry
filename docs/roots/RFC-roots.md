@@ -301,10 +301,10 @@ Rust in it that no crate claims.
 crates that compile each component, so `/v1/rs/{name}` names a node crate. Two umbrella
 crates, which have no code of their own, sit on top:
 
-| Umbrella             | Re-exports                                                                                                       | Features                                                                   |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `mzizi-roots`        | `tokens` (`mzizi-tokens`), `ui` (`mzizi-ui`), `brand` (`mzizi-brand`), `shell` (`mzizi-shell`)                   | `ui`, `brand` and `shell`, all on by default. `mzizi-tokens` is always in. |
-| `mzizi-roots-server` | `assurance` (`mzizi-assurance`), `fundi` (`mzizi-fundi`), `docs` (`mzizi-docs`), `discovery` (`mzizi-discovery`) | All four, on by default.                                                   |
+| Umbrella             | Re-exports                                                                                                                                            | Features                                                                   |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `mzizi-roots`        | `tokens` (`mzizi-tokens`), `ui` (`mzizi-ui`), `brand` (`mzizi-brand`), `shell` (`mzizi-shell`)                                                        | `ui`, `brand` and `shell`, all on by default. `mzizi-tokens` is always in. |
+| `mzizi-roots-server` | `assurance` (`mzizi-assurance`), `fundi` (`mzizi-fundi`), `docs` (`mzizi-docs`), `discovery` (`mzizi-discovery`), `activitypub` (`mzizi-activitypub`) | The first four on by default; `activitypub` opt-in (2026-10-04).           |
 
 The split follows §1.2 at crate level. `mzizi-docs` goes on the server side: its docs API and
 AI context are server components, and its two documentation renderers come with it, which is
