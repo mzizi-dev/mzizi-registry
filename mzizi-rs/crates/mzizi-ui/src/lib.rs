@@ -59,6 +59,9 @@ pub mod separator;
 #[path = "generated/chart.rs"]
 pub mod chart;
 
+#[path = "generated/safe-area-frame.rs"]
+pub mod safe_area_frame;
+
 pub use avatar::{
     Avatar, AvatarBadge, AvatarBadgeProps, AvatarFallback, AvatarFallbackProps, AvatarGroup,
     AvatarGroupCount, AvatarGroupCountProps, AvatarGroupProps, AvatarImage, AvatarImageProps,
@@ -71,6 +74,7 @@ pub use chart::{Chart, ChartProps, chart_loading_variants, chart_variants};
 pub use input::{Input, InputProps, input_variants};
 pub use label::{Label, LabelProps, label_variants};
 pub use progress::{Progress, ProgressProps, progress_variants};
+pub use safe_area_frame::{SafeAreaBands, SafeAreaFrame, SafeAreaFrameProps, safe_area_bands};
 pub use separator::{Separator, SeparatorOrientation, SeparatorProps, separator_variants};
 
 /// The N1 token module, re-exported so a consumer takes one dependency.
