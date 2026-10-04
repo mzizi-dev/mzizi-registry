@@ -1,0 +1,160 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/top-bar-action",
+  "title": "TopBarAction",
+  "version": "1.0.0",
+  "node": 7,
+  "kind": "shell",
+  "summary": "One item in AppShell's top bar (\"Ask Nyuchi AI\", \"Support\"): an icon and a short label; a link with `href`, a button otherwise.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/TopBarAction.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "Visible from sm; the accessible name always."
+    },
+    {
+      "name": "icon",
+      "type": "IconName",
+      "required": false,
+      "description": "Icon before the label."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "Makes it a link."
+    },
+    {
+      "name": "external",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Opens in a new tab: rel=\"noopener\" and \"(opens in a new tab)\" for screen readers."
+    },
+    {
+      "name": "popovertarget",
+      "type": "string",
+      "required": false,
+      "description": "For a button that opens a popover."
+    },
+    {
+      "name": "current",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "The link is the current page (aria-current)."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A link with `href`, otherwise a type=\"button\" button.",
+    "With an icon, the label is visually hidden below sm and stays the accessible name."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "label": "Support",
+        "icon": "help",
+        "href": "/support"
+      }
+    },
+    "external": {
+      "props": {
+        "label": "Docs",
+        "href": "https://docs.example",
+        "external": true
+      }
+    },
+    "button": {
+      "props": {
+        "label": "Ask AI",
+        "icon": "sparkles",
+        "popovertarget": "ai"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["link or button"],
+    "keyboard": ["Enter (link) or Enter/Space (button)."],
+    "focus": ["`--ring` focus ring."],
+    "aria": [
+      "aria-current=\"page\" when `current`.",
+      "An external link says so to screen readers."
+    ],
+    "wcag": ["2.4.4", "2.5.8", "3.2.5"]
+  },
+  "density": [
+    {
+      "part": "action",
+      "select": "[data-slot=\"topbar-action\"]",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Below sm only the icon shows; the label is the accessible name."
+  ],
+  "contract": "contract\n  slot is \"topbar-action\"\n  a \"Support\" min_height 32\n  when button shows button \"Ask AI\"\n  when external shows a \"Docs\"\nend",
+  "checks": [
+    {
+      "say": "With href it is a link.",
+      "select": "a[data-slot=\"topbar-action\"]",
+      "count": 1,
+      "attr": {
+        "href": "/support"
+      }
+    },
+    {
+      "say": "External links open safely and say so.",
+      "state": "external",
+      "select": "a[target=\"_blank\"]",
+      "count": 1,
+      "attr": {
+        "rel": "noopener"
+      }
+    },
+    {
+      "say": "External links say so.",
+      "state": "external",
+      "select": "a .sr-only",
+      "count": 1,
+      "text": "opens in a new tab"
+    },
+    {
+      "say": "Without href it is a button that can open a popover.",
+      "state": "button",
+      "select": "button[data-slot=\"topbar-action\"]",
+      "count": 1,
+      "attr": {
+        "type": "button",
+        "popovertarget": "ai"
+      }
+    }
+  ]
+}
