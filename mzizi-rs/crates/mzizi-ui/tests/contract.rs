@@ -191,6 +191,11 @@ fn every_data_slot_the_rust_emits_exists_in_the_typescript() {
             ][..],
         ),
         ("n2-primitives", "chart", &["chart"][..]),
+        (
+            "n2-primitives",
+            "safe-area-frame",
+            &["safe-area-frame", "safe-area-frame-canvas"][..],
+        ),
     ] {
         let ts = tsx(node_dir, name);
         for slot in slots {
@@ -352,4 +357,27 @@ fn chart_classes_match_the_typescript() {
     // asymmetry already present there, not something to reconcile quietly (rule 1: match
     // the contract, not a guess at what it "should" be).
     assert!(ts.contains("data-portal=\"https://mzizi.dev/components/chart\""));
+}
+
+#[test]
+fn safe_area_frame_classes_and_geometry_match_the_typescript() {
+    use mzizi_ui::safe_area_frame::{BAND_X, BAND_Y, CANVAS, FRAME};
+    let ts = tsx("n2-primitives", "safe-area-frame");
+    for (what, classes) in [
+        ("frame", FRAME),
+        ("canvas", CANVAS),
+        ("band-y", BAND_Y),
+        ("band-x", BAND_X),
+    ] {
+        assert_classes_present(classes, &ts, &format!("safe-area-frame/{what}"));
+    }
+    // A 1080x1920 story with Meta's 250/340 bands in a 56px box: the TypeScript's
+    // safeAreaBands gives 32x56, top 13.02%, bottom 17.71%, sides 5.93%.
+    let b = mzizi_ui::safe_area_bands(1080, 1920, [250, 64, 340, 64], 56);
+    assert_eq!((b.width, b.height), (32, 56));
+    assert!((b.top - 13.02).abs() < 1e-9 && (b.bottom - 17.71).abs() < 1e-9);
+    assert!((b.left - 5.93).abs() < 1e-9 && (b.right - 5.93).abs() < 1e-9);
+    // A favicon never collapses below 6px a side.
+    let f = mzizi_ui::safe_area_bands(32, 4, [0, 0, 0, 0], 56);
+    assert_eq!((f.width, f.height), (56, 7));
 }
