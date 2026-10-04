@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mzizi.dev/schema/component-contract/v1.json",
+  "title": "Mzizi component contract",
+  "description": "One component's contract: what every implementation of it (Astro, React .tsx, Rust .rs) must render and do. The `contract` block is the evaluated part, in the Mzizi language's clause grammar (mzizi-dev/mzizi design/RFC-0006 and RFC-0010); `checks` and `density` are evaluated against rendered markup too. The prose fields are the specification a reader and an agent build from. A clause or check that a runner cannot evaluate fails (RFC-0006 FM-12).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "name",
+    "title",
+    "version",
+    "node",
+    "kind",
+    "summary",
+    "implementations",
+    "props",
+    "slots",
+    "behaviour",
+    "states",
+    "accessibility",
+    "density",
+    "theming",
+    "noJs",
+    "responsive",
+    "contract",
+    "checks"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": {
+      "description": "The contract's id: `<family>/<kebab-name>`. The `app/` family is the Dashboard Standard.",
+      "type": "string",
+      "pattern": "^[a-z]+/[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "title": {
+      "description": "The component's name in code (PascalCase).",
+      "type": "string",
+      "pattern": "^[A-Z][A-Za-z0-9]*$"
+    },
+    "version": {
+      "description": "Semantic version of the contract itself. Major: a clause, prop, slot or state is removed or narrowed. Minor: one is added. Patch: prose only.",
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "node": {
+      "description": "The DNA-helix node the component belongs to (2 primitives, 3 brand, 6 pages, 7 shell).",
+      "type": "integer",
+      "enum": [2, 3, 6, 7]
+    },
+    "kind": { "type": "string", "enum": ["primitive", "pattern", "shell"] },
+    "summary": { "type": "string" },
+    "implementations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["astro", "tsx", "rs"],
+      "properties": {
+        "astro": {
+          "description": "The Astro build. `null` only for a contract with no Astro build yet.",
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["package", "export", "since"],
+          "properties": {
+            "package": { "type": "string" },
+            "export": { "type": "string" },
+            "since": { "type": "string" }
+          }
+        },
+        "tsx": { "$ref": "#/$defs/sibling" },
+        "rs": { "$ref": "#/$defs/sibling" },
+        "related": {
+          "description": "Registry items with a similar purpose and a DIFFERENT contract. Not checked; listed so nobody mistakes them for implementations.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type", "required", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": {
+            "description": "TypeScript notation, the one every implementation's docs already read.",
+            "type": "string"
+          },
+          "required": { "type": "boolean" },
+          "default": {},
+          "values": {
+            "description": "The closed set of values, for an enum-like prop.",
+            "type": "array"
+          },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "description"],
+        "properties": {
+          "name": {
+            "description": "`default` for the unnamed slot (React: children; Dioxus: children).",
+            "type": "string"
+          },
+          "expects": {
+            "description": "The component(s) the slot is designed for.",
+            "type": "string"
+          },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "behaviour": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "states": {
+      "description": "Named states. Each is a fixture every runner renders: `props` (a value `{\"$url\": \"…\"}` is a URL object) and `slots` (HTML strings). `default` is required; unguarded clauses are evaluated in it.",
+      "type": "object",
+      "required": ["default"],
+      "additionalProperties": { "$ref": "#/$defs/state" }
+    },
+    "accessibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roles", "keyboard", "focus", "aria"],
+      "properties": {
+        "roles": { "type": "array", "items": { "type": "string" } },
+        "keyboard": { "type": "array", "items": { "type": "string" } },
+        "focus": { "type": "array", "items": { "type": "string" } },
+        "aria": { "type": "array", "items": { "type": "string" } },
+        "wcag": {
+          "description": "WCAG 2.2 success criteria the component is built to meet, by number.",
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[1-4]\\.[0-9]+\\.[0-9]+$" }
+        }
+      }
+    },
+    "density": {
+      "description": "Control and row heights in CSS pixels, read from the rendered classes by the spacing scale (`h-N`, `min-h-N`, `size-N` = N×4; `pointer-coarse:` for touch). `fine` is a mouse or trackpad; `coarse` is touch.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["part", "select", "fine", "coarse"],
+        "properties": {
+          "part": { "type": "string" },
+          "state": { "type": "string" },
+          "select": { "type": "string" },
+          "fine": { "type": "integer" },
+          "coarse": { "type": "integer" }
+        }
+      }
+    },
+    "theming": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tokens", "brandOverlay", "statusColours"],
+      "properties": {
+        "tokens": {
+          "description": "Semantic tokens the component reads. A brand overlay changes `--primary` and `--ring` (and the brand mark); nothing else.",
+          "type": "array",
+          "items": { "type": "string", "pattern": "^--[a-z0-9-]+$" }
+        },
+        "brandOverlay": {
+          "description": "What a brand overlay changes in this component. Layout never varies by brand.",
+          "type": "string"
+        },
+        "statusColours": {
+          "description": "Mineral families the component may name directly, for status meaning that must NOT follow the brand (success malachite, error terracotta, info cobalt, warning gold). Any other mineral class in the markup fails.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "cobalt",
+              "tanzanite",
+              "malachite",
+              "gold",
+              "terracotta",
+              "sodalite",
+              "copper"
+            ]
+          }
+        }
+      }
+    },
+    "noJs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["script", "without"],
+      "properties": {
+        "script": {
+          "description": "`none`: the component ships no script. `enhancement`: it ships one, and everything in `without` works when it does not run.",
+          "type": "string",
+          "enum": ["none", "enhancement"]
+        },
+        "without": { "type": "string" },
+        "with": { "type": "string" }
+      }
+    },
+    "responsive": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "contract": {
+      "description": "A `contract … end` block, one clause per line, in the clause grammar of RFC-0006. Subjects: `slot`, `role`, `label`, `class` (the root element's attribute), `<element> \"<text>\"` (min_height), `uses <slot>`, and `when <state> …`. Predicates: is, contains, not_empty, in, uses \"--token\", min_height, shows.",
+      "type": "string",
+      "pattern": "^contract\\n(  .+\\n)+end$"
+    },
+    "checks": {
+      "description": "Assertions on the rendered markup, by CSS selector. Each needs exactly one of count, min, absent, or attr.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["say", "select"],
+        "properties": {
+          "say": {
+            "description": "The rule, in a sentence. It is the failure message.",
+            "type": "string"
+          },
+          "state": {
+            "description": "The state to render; `default` when omitted. `*` is every state.",
+            "type": "string"
+          },
+          "select": { "type": "string" },
+          "count": { "type": "integer" },
+          "min": { "type": "integer" },
+          "absent": { "type": "boolean" },
+          "attr": {
+            "description": "Every matched element (at least one) has these attributes. A string is the exact value, `true` means present, `false` means absent.",
+            "type": "object",
+            "additionalProperties": { "type": ["string", "boolean"] }
+          },
+          "text": {
+            "description": "With count/min/attr: every matched element's text contains this.",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gaps": {
+      "description": "Where the current build falls short of the standard, recorded rather than hidden. Each is a follow-up.",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "sibling": {
+      "description": "A registry implementation in another language. `null` when there is none (a follow-up). `identity` names what the runner checks against it.",
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["registry", "identity"],
+      "properties": {
+        "registry": {
+          "description": "The registry item name (`components/registry/n<N>-*/<name>.tsx|.rs`).",
+          "type": "string"
+        },
+        "identity": {
+          "description": "What is shared with the Astro build: `slot` alone, or `slot+variants` (the same data-variant values).",
+          "type": "string",
+          "enum": ["slot", "slot+role", "slot+variants"]
+        },
+        "divergences": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "props": { "type": "object" },
+        "slots": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/side-nav",
+  "title": "SideNav",
+  "version": "1.0.0",
+  "node": 7,
+  "kind": "shell",
+  "summary": "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (44px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator. Descriptions are tooltips and accessible descriptions, never printed.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/SideNav.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["mzizi-sidebar", "sidebar"]
+  },
+  "props": [
+    {
+      "name": "groups",
+      "type": "NavGroup[]",
+      "required": false,
+      "description": "Grouped items (`@bundu/ui/app/nav`; `groupNav` builds them from flat registrations). Takes precedence over `items`."
+    },
+    {
+      "name": "items",
+      "type": "NavItem[]",
+      "required": false,
+      "description": "A flat list, as in 0.3; rendered as one unlabelled group."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Sections",
+      "description": "Accessible name of the <nav> landmark."
+    },
+    {
+      "name": "current",
+      "type": "string",
+      "required": false,
+      "description": "The current href. Omitted: the longest href the page path is at or below (`currentHref`)."
+    },
+    {
+      "name": "idPrefix",
+      "type": "string",
+      "required": false,
+      "default": "nav",
+      "description": "Prefix for tooltip and group-label ids; unique per page."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "The <nav>'s id."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Exactly one item, the current one, carries aria-current=\"page\" and the filled row with a 2px `--primary` indicator.",
+    "An item with children is a <details> disclosure, open when it contains the current page. A parent that is a page itself is listed first among its children (\"Overview\", or `overviewLabel`).",
+    "An item's `description` (0.3: `summary`) is a role=\"tooltip\" element and the link's aria-describedby; it is shown on hover and keyboard focus from 64rem, and never printed in the list.",
+    "In AppShell's collapsed rail each tooltip also shows the label, and a nested group is replaced by one rail link to its first item."
+  ],
+  "states": {
+    "default": {
+      "description": "Two groups, an icon, a badge, a description and a nested branch containing the current page.",
+      "props": {
+        "current": "/content/news",
+        "groups": [
+          {
+            "label": "Overview",
+            "items": [
+              {
+                "href": "/",
+                "label": "Home",
+                "icon": "home",
+                "description": "Your dashboard"
+              },
+              {
+                "href": "/analytics",
+                "label": "Analytics",
+                "badge": "New"
+              }
+            ]
+          },
+          {
+            "label": "Content",
+            "items": [
+              {
+                "href": "/content",
+                "label": "Content",
+                "children": [
+                  {
+                    "href": "/content/news",
+                    "label": "News"
+                  },
+                  {
+                    "href": "/content/events",
+                    "label": "Events"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "flat": {
+      "description": "0.3's flat items.",
+      "props": {
+        "current": "/b",
+        "items": [
+          {
+            "href": "/a",
+            "label": "A"
+          },
+          {
+            "href": "/b",
+            "label": "B"
+          }
+        ]
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [
+      "navigation (<nav>, named by `label`)",
+      "list (each group's <ul role=\"list\">, named by its group label)",
+      "tooltip (descriptions)"
+    ],
+    "keyboard": [
+      "Tab moves through every link and disclosure summary in order.",
+      "Enter or Space on a summary opens or closes its group.",
+      "Escape hides a visible tooltip (AppShell's script)."
+    ],
+    "focus": [
+      "Every row shows a 2px `--ring` focus ring (focus-visible).",
+      "A tooltip shows on keyboard focus as well as hover."
+    ],
+    "aria": [
+      "aria-current=\"page\" on exactly one link.",
+      "aria-describedby from a link to its description.",
+      "aria-labelledby from each group list to its label."
+    ],
+    "wcag": ["1.3.1", "1.4.13", "2.4.4", "2.4.8", "2.5.8", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "nav row",
+      "select": "a[data-nav-row]",
+      "fine": 32,
+      "coarse": 44
+    },
+    {
+      "part": "disclosure row",
+      "select": "summary[data-nav-row]",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--primary",
+      "--app-accent"
+    ],
+    "brandOverlay": "The current item's indicator is AppShell's `--app-accent` (the brand fill), else `--primary` (Nyuchi gold, Mukoko tanzanite, …) and the focus ring is `--ring`. Rows, spacing and type are identical in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Fills the sidebar's width; labels truncate rather than wrap.",
+    "Tooltips are drawn from 64rem only; on phones the description is still the accessible description."
+  ],
+  "contract": "contract\n  slot is \"side-nav\"\n  label is \"Sections\"\n  a \"Home\" min_height 32\n  when default shows a \"News\"\n  when default shows summary \"Content\"\n  when flat shows a \"B\"\nend",
+  "checks": [
+    {
+      "say": "Exactly one link is the current page.",
+      "state": "*",
+      "select": "a[aria-current=\"page\"]:not([data-slot=\"nav-rail-link\"])",
+      "count": 1
+    },
+    {
+      "say": "The current link is the nested News item.",
+      "select": "[data-slot=\"nav-children\"] a[aria-current=\"page\"]",
+      "count": 1,
+      "text": "News"
+    },
+    {
+      "say": "A branch holding the current page is open.",
+      "select": "details[data-slot=\"nav-branch\"][open]",
+      "count": 1
+    },
+    {
+      "say": "A description is a tooltip, wired by aria-describedby.",
+      "select": "a[aria-describedby]",
+      "count": 1,
+      "text": "Home"
+    },
+    {
+      "say": "Descriptions live only in tooltips.",
+      "select": "[role=\"tooltip\"]",
+      "min": 1
+    },
+    {
+      "say": "Group lists are named by their labels.",
+      "select": "ul[aria-labelledby]",
+      "count": 2
+    },
+    {
+      "say": "A badge is text beside the label.",
+      "select": "a[href=\"/analytics\"] span[data-nav-text]",
+      "count": 2
+    }
+  ]
+}

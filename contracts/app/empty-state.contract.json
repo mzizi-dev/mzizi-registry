@@ -1,0 +1,114 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/empty-state",
+  "title": "EmptyState",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "A calm, centred card for \"nothing here yet\": a heading, one or two lines of help, and the next steps.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/EmptyState.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["empty-state", "mzizi-empty-state"]
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The heading."
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "required": false,
+      "description": "One or two lines of help."
+    },
+    {
+      "name": "icon",
+      "type": "IconName",
+      "required": false,
+      "description": "A small icon well above the title."
+    },
+    {
+      "name": "level",
+      "type": "2 | 3 | 4",
+      "required": false,
+      "default": 2,
+      "values": [2, 3, 4],
+      "description": "Heading level, so it sits in the page outline."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "Button",
+      "description": "The next steps: a secondary and a primary action."
+    }
+  ],
+  "behaviour": [
+    "The title is a real heading at `level`.",
+    "No illustration; actions render only when given."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "title": "No agents yet",
+        "message": "Create one to start.",
+        "icon": "plus"
+      },
+      "slots": {
+        "default": "<a href='/new'>Create</a>"
+      }
+    },
+    "h3": {
+      "props": {
+        "title": "Nothing",
+        "level": 3
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["heading"],
+    "keyboard": ["The actions."],
+    "focus": ["Through the actions."],
+    "aria": ["The icon is decorative."],
+    "wcag": ["1.3.1", "2.4.6"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground"
+    ],
+    "brandOverlay": "None of its own; a primary action Button follows `--primary`.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Text is capped at the prose measure; actions wrap and centre."
+  ],
+  "contract": "contract\n  slot is \"empty-state\"\n  when default shows h2 \"No agents yet\"\n  when h3 shows h3 \"Nothing\"\nend",
+  "checks": [
+    {
+      "say": "No actions slot, no action row.",
+      "state": "h3",
+      "select": "a, button",
+      "absent": true
+    }
+  ]
+}
