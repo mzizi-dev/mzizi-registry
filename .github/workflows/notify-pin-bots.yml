@@ -1,0 +1,52 @@
+name: Notify pin bots
+
+# Tells the registry pin bots (registry-pin-bump.yml in mzizi-dev/mzizi-api-gateway
+# and mzizi-dev/agent-tools) that registry `main` moved, so each opens or
+# rebuilds its bump pull request now rather than on its next hourly run. GitHub
+# delays and drops scheduled runs under load: on 2026-10-04 the hourly bots ran
+# 2-3 hours apart, and api.mzizi.dev and mcp.mzizi.dev fell hours behind
+# registry `main`.
+#
+# It sends a `repository_dispatch` (event type registry-main-moved) with the
+# RELEASE_BUMP_TOKEN org secret, the token the bots themselves push and merge
+# with, which can already write to both repositories. The bots read registry
+# `main` themselves (`git ls-remote`), so the event carries nothing they act
+# on, and nothing here checks out or runs code. A send that fails only warns:
+# the hourly run stays the backstop.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+# A newer push makes an older notification redundant.
+concurrency:
+  group: notify-pin-bots
+  cancel-in-progress: true
+
+jobs:
+  notify:
+    name: Dispatch registry-main-moved
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch registry-main-moved to the pin bots
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_BUMP_TOKEN }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -uo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::warning::RELEASE_BUMP_TOKEN is not visible to this repository; the pin bots wait for their hourly run."
+            exit 0
+          fi
+          for repo in mzizi-dev/mzizi-api-gateway mzizi-dev/agent-tools; do
+            if gh api --method POST "repos/$repo/dispatches" \
+                -f event_type=registry-main-moved \
+                -f "client_payload[sha]=$SHA" >/dev/null; then
+              echo "Sent registry-main-moved ($SHA) to $repo"
+            else
+              echo "::warning::Could not dispatch registry-main-moved to $repo; its pin bot waits for its hourly run."
+            fi
+          done
