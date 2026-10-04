@@ -529,6 +529,7 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "split-bill": "n2",
   "split-view": "n2",
   "stats-card": "n2",
+  "status-badge": "n2",
   "status-dot": "n2",
   "status-indicator": "n2",
   "step-progress": "n2",

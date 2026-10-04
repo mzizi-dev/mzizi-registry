@@ -10,6 +10,18 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `status-badge` in three builds (React, Mzizi Roots, the Mzizi language), and a CI gate for `.mz` components (2026-10-04, #418)
+
+Owner decision, 2026-10-04: StatusBadge comes back as a registry component, built in Rust and in the Mzizi language. Components gain Rust and `.mz` builds beside their TypeScript, and the TypeScript stays for now.
+
+- **`status-badge`** (N2): a pill-shaped lifecycle label, tinted with one of the Seven Minerals at 10% behind the mineral itself. `stable` is malachite, `beta` is cobalt, `alpha` is gold, and `deprecated` is terracotta, struck through. It ships in three builds that share one contract:
+  - `status-badge.tsx` (React, built on `Badge`; `npx shadcn@latest add https://api.mzizi.dev/v1/ui/status-badge`);
+  - `status-badge.rs` (Mzizi Roots, exported from `mzizi-ui` as `StatusBadge` with a `CONTRACT`);
+  - `status-badge.mz` (the Mzizi language).
+    `beta` is new; the removed app-only component had three statuses.
+- **`.mz` files sit beside `.tsx` and `.rs`** in the registry. **`pnpm mz:check`** (`scripts/check-mz.mjs`) runs `mz check` and `mz contract` on every one. A new **Mzizi components** CI job builds `mz` from mzizi-dev/mzizi at the commit in `scripts/mz-pin`. Any error or warning fails the job.
+- **`mzizi-ui` now evaluates `CONTRACT` clauses** against `dioxus-ssr` markup, as `mzizi-brand` does, and exports `CONTRACTS`. The evaluator moved out of `mzizi-brand`'s test file into `mzizi-rs/contract-eval/contract_eval.rs`, shared by both suites, so there is no second copy.
+
 ### Added — the mzizi design system in `design-system/`, and a registry `assets/` directory with the official marks (2026-10-04, #418)
 
 Owner decisions, 2026-10-04:

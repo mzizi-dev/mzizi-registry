@@ -81,3 +81,10 @@ body { margin: 0; font-family: var(--font-sans, "Noto Sans", system-ui, sans-ser
 .mz-tabs-list.line { background: transparent; border-radius: 0; gap: 4px; }
 .mz-tabs-list.line .mz-tab { position: relative; background: transparent; border-color: transparent; }
 .mz-tabs-list.line .mz-tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 2px; background: var(--foreground); }
+
+/* StatusBadge — pill, mono 10px uppercase, mineral at 10% (status-badge.tsx) */
+.mz-status { display: inline-flex; align-items: center; height: 20px; box-sizing: border-box; padding: 2px 8px; border-radius: 9999px; border: 1px solid transparent; font: 500 10px/1 var(--font-mono, "JetBrains Mono", monospace); letter-spacing: .025em; text-transform: uppercase; white-space: nowrap; }
+.mz-status.stable { background: color-mix(in oklab, var(--malachite) 10%, transparent); color: var(--malachite); }
+.mz-status.beta { background: color-mix(in oklab, var(--cobalt) 10%, transparent); color: var(--cobalt); }
+.mz-status.alpha { background: color-mix(in oklab, var(--gold) 10%, transparent); color: var(--gold); }
+.mz-status.deprecated { background: color-mix(in oklab, var(--terracotta) 10%, transparent); color: var(--terracotta); text-decoration: line-through; }

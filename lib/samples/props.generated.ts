@@ -10849,6 +10849,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "status-badge": [
+    {
+      "name": "status",
+      "type": "StatusBadgeStatus",
+      "required": true
+    }
+  ],
   "status-dot": [
     {
       "name": "variant",

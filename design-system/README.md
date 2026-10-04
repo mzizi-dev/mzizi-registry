@@ -94,4 +94,4 @@ There are three groups of seven, and each colour works in both themes.
 
 ## Components
 
-The previews render the N2 primitives Button, Input, Badge, Card, Switch, Checkbox and Tabs as static HTML, styled by `components/bundle.css` (classes `.mz-*`). The production React components live in the registry and install with `npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>`, and use the same token names as CSS custom properties.
+The previews render the N2 primitives Button, Input, Badge, StatusBadge, Card, Switch, Checkbox and Tabs as static HTML, styled by `components/bundle.css` (classes `.mz-*`). The production React components live in the registry and install with `npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>`, and use the same token names as CSS custom properties.

@@ -10,6 +10,9 @@ export interface BadgeProps extends React.ComponentProps<"span"> {
   variant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link"
   asChild?: boolean
 }
+export interface StatusBadgeProps extends React.ComponentProps<"span"> {
+  status: "stable" | "beta" | "alpha" | "deprecated"
+}
 export interface CardProps extends React.ComponentProps<"div"> {
   size?: "default" | "sm"
   loading?: boolean

@@ -18743,6 +18743,44 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
+      "description": "A pill-shaped lifecycle label — stable, beta, alpha or deprecated — each tinted with one of the Seven Minerals at 10% behind the mineral itself (malachite, cobalt, gold, terracotta). Built on Badge. Ships in three builds that share one contract: React (.tsx), Mzizi Roots (.rs, mzizi-ui) and the Mzizi language (.mz).",
+      "docs": "Use it for: Component and API lifecycle labels in docs and registries, Feature maturity next to a setting or a nav item, Release notes and changelogs.\nVariants: stable, beta, alpha, deprecated.\nIncludes: cn() for className composition, data-slot attribute, Mineral tints from the Seven Minerals, Rust (mzizi-ui) and Mzizi (.mz) siblings with one contract.\nAccessibility: The status is always written out, never colour alone, Text clears 4.5:1 on its tint in both themes.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/status-badge",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/status-badge.tsx",
+          "target": "components/ui/status-badge.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The status is always written out, never colour alone",
+          "Text clears 4.5:1 on its tint in both themes"
+        ],
+        "collection": "primitives",
+        "features": [
+          "cn() for className composition",
+          "data-slot attribute",
+          "Mineral tints from the Seven Minerals",
+          "Rust (mzizi-ui) and Mzizi (.mz) siblings with one contract"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "Component and API lifecycle labels in docs and registries",
+          "Feature maturity next to a setting or a nav item",
+          "Release notes and changelogs"
+        ],
+        "variants": ["stable", "beta", "alpha", "deprecated"]
+      },
+      "name": "status-badge",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/badge"],
+      "title": "Status Badge",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
       "description": "Colored status dot with optional label. Uses semantic status tokens. Extracted from console-dashboard-page, infrastructure-page, and logs-page where colored dots indicated service health inline.",
       "docs": "Use it for: pulse, shamwari, campfire.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/status-dot",
       "files": [

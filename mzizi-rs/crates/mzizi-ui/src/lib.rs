@@ -59,6 +59,9 @@ pub mod separator;
 #[path = "generated/chart.rs"]
 pub mod chart;
 
+#[path = "generated/status-badge.rs"]
+pub mod status_badge;
+
 pub use avatar::{
     Avatar, AvatarBadge, AvatarBadgeProps, AvatarFallback, AvatarFallbackProps, AvatarGroup,
     AvatarGroupCount, AvatarGroupCountProps, AvatarGroupProps, AvatarImage, AvatarImageProps,
@@ -72,6 +75,12 @@ pub use input::{Input, InputProps, input_variants};
 pub use label::{Label, LabelProps, label_variants};
 pub use progress::{Progress, ProgressProps, progress_variants};
 pub use separator::{Separator, SeparatorOrientation, SeparatorProps, separator_variants};
+pub use status_badge::{
+    STATUS_BADGE_STATUSES, StatusBadge, StatusBadgeProps, StatusBadgeStatus, status_badge_variants,
+};
+
+/// Every N2 primitive that exports a `CONTRACT`, with its registry name.
+pub const CONTRACTS: &[(&str, &str)] = &[("status-badge", status_badge::CONTRACT)];
 
 /// The N1 token module, re-exported so a consumer takes one dependency.
 pub use mzizi_tokens as tokens;
