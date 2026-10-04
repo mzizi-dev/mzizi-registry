@@ -15,6 +15,7 @@
 //! | `fundi`     | `mzizi-fundi`     | N9 fundi           | `fundi` (default)       |
 //! | `docs`      | `mzizi-docs`      | N10 documentation  | `docs` (default)        |
 //! | `discovery` | `mzizi-discovery` | N11 discovery      | `discovery` (default)   |
+//! | `activitypub` | `mzizi-activitypub` | N11 discovery (fediverse) | `activitypub`  |
 //!
 //! `assurance`, `fundi` and `discovery` have no dependencies. `docs` brings in `dioxus`,
 //! because `mzizi-docs` also carries the two documentation renderers. Leave it out with
@@ -47,3 +48,8 @@ pub use mzizi_docs as docs;
 /// N11 discovery: page metadata and Schema.org JSON-LD (`mzizi-discovery`).
 #[cfg(feature = "discovery")]
 pub use mzizi_discovery as discovery;
+
+/// N11 discovery on the fediverse: ActivityPub, WebFinger and NodeInfo documents for a
+/// read-only host (`mzizi-activitypub`). Not a default feature.
+#[cfg(feature = "activitypub")]
+pub use mzizi_activitypub as activitypub;
