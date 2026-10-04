@@ -51,6 +51,16 @@ The copper crosshair disc that used to ship as `public/icons/mzizi-icon.*` was n
   - the mzizi mark is drawn in anything but hematite;
   - a component rendition names a source file that no longer exists.
 
+### Added — `mzizi-activitypub`, the shared ActivityPub crate (2026-10-04)
+
+Owner decision Q5, 2026-10-04 (mukoko-dev/kweli#171; nyuchi/api-gateway `docs/architecture/activitypub.md`): the ActivityPub code circles.mukoko.com and kweli.mukoko.com each carried is one Mzizi server crate, used by both Workers.
+
+- **New crate `mzizi-activitypub`** (`mzizi-rs/crates/mzizi-activitypub`), N11 discovery on the fediverse. Sans-IO functions returning `serde_json::Value`: the `@context` (`context`, `with_context`, `without_context`), content negotiation (`wants_activity_json`), `escape_html`, `text_to_html`, `encode`, `property_value`, WebFinger (`webfinger_user`, `jrd`, `self_link`, `profile_page_link`), `host_meta`, `nodeinfo_links`, `nodeinfo(&NodeInfo)`, and outboxes (`ordered_collection`, `ordered_collection_page`, `page_id`, `public_activity`). Builds for `wasm32-unknown-unknown`. Extracted from mukoko-dev/mukoko-circles `worker/src/ap.rs`; actors stay the host's.
+- **Authored in the crate**, not under `components/registry/`: it has no TypeScript sibling and no UI, like the umbrella crates.
+- **`mzizi-roots-server` gains an opt-in `activitypub` feature** re-exporting it as `mzizi_roots_server::activitypub`. Not a default feature, because it brings `serde_json` and `url`.
+- `publish-crates.yml` publishes it, before the umbrellas. Its first crates.io release is 0.1.0 at the workspace version.
+- Phase 2 of the design (HTTP signatures, the inbox, delivery) is built here next.
+
 ### Changed — every contract's `since` is `@bundu/ui` 0.3.0 (2026-10-04)
 
 Owner decision, 2026-10-04: versions bumped but never published are reset to the org versioning policy, so the next `@bundu/ui` release is 0.3.0, one minor above 0.2.0 on npm, and it carries everything the unpublished 0.3.0, 0.4.x and 0.5.0 entries described. The `implementations.astro.since` of the ten `app/` contracts that said 0.4.0 and the eleven `discover/` contracts that said 0.5.0 now say 0.3.0. Contract versions are unchanged.
