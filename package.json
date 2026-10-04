@@ -155,6 +155,11 @@
     ]
   },
   "pnpm": {
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-vfj7-8cjw-p6xm"
+      ]
+    },
     "overrides": {
       "@babel/core": "^7.29.6",
       "@hono/node-server": "^2.0.5",
