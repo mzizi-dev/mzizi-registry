@@ -1,0 +1,236 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/command-palette",
+  "title": "CommandPalette",
+  "version": "1.0.0",
+  "node": 7,
+  "kind": "shell",
+  "summary": "\"Go to anything\": every navigation item, grouped, in a Popover API dialog opened by QuickSearch or ⌘K / Ctrl+K. Progressive enhancement: links and a GET form without script; live filtering and arrow keys with it.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/CommandPalette.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["mzizi-command-palette", "command"]
+  },
+  "props": [
+    {
+      "name": "groups",
+      "type": "NavGroup[]",
+      "required": true,
+      "description": "The same navigation data SideNav renders."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "default": "command-palette",
+      "description": "The popover's id (QuickSearch's `target`)."
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": false,
+      "description": "GET target for the search box when scripts do not run (the server answers `?q=`, e.g. with `searchNav`)."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Search",
+      "description": "Accessible name of the dialog and the search box."
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "default": "Search pages and settings",
+      "description": "Hint in the empty search box."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A popover with role=\"dialog\"; Escape and a click outside close it (light dismiss).",
+    "Lists every item of `groups`, flattened, under its group's name (\"Go to\" for an unlabelled group), each a plain link; nested items show their trail (\"Content › News\").",
+    "With `action` the search box is a role=\"search\" GET form, so search works without script.",
+    "With script: ⌘K / Ctrl+K toggles it, typing filters (diacritics folded) and announces \"N matches\" in a polite live region, Enter opens the first match, ↑/↓ move between results, and opening clears and focuses the box."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "groups": [
+          {
+            "label": "Overview",
+            "items": [
+              {
+                "href": "/",
+                "label": "Home",
+                "icon": "home"
+              }
+            ]
+          },
+          {
+            "label": "Content",
+            "items": [
+              {
+                "href": "/news",
+                "label": "News",
+                "description": "Articles and feeds"
+              },
+              {
+                "href": "/events",
+                "label": "Events"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "form": {
+      "description": "With a server search fallback.",
+      "props": {
+        "groups": [
+          {
+            "label": "Overview",
+            "items": [
+              {
+                "href": "/",
+                "label": "Home",
+                "icon": "home"
+              }
+            ]
+          },
+          {
+            "label": "Content",
+            "items": [
+              {
+                "href": "/news",
+                "label": "News",
+                "description": "Articles and feeds"
+              },
+              {
+                "href": "/events",
+                "label": "Events"
+              }
+            ]
+          }
+        ],
+        "action": "/search",
+        "id": "cp"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [
+      "dialog (named by `label`)",
+      "search (the form, with `action`)",
+      "status (polite live region for the match count)"
+    ],
+    "keyboard": [
+      "⌘K / Ctrl+K opens and closes (script).",
+      "Escape closes.",
+      "↑ / ↓ move between results; ↑ from the first returns to the box (script).",
+      "Enter opens the first match (script) or submits the GET form."
+    ],
+    "focus": [
+      "Opening moves focus to the search box.",
+      "Every result shows the `--ring` focus ring and a muted fill."
+    ],
+    "aria": [
+      "The search box has a visually hidden <label>.",
+      "The match count is announced by aria-live=\"polite\".",
+      "Group names are aria-hidden text; each <section> carries the name as aria-label."
+    ],
+    "wcag": ["1.3.1", "2.1.1", "2.4.3", "4.1.2", "4.1.3"]
+  },
+  "density": [
+    {
+      "part": "result row",
+      "select": "[data-cmdk-item] a",
+      "fine": 36,
+      "coarse": 44
+    },
+    {
+      "part": "search box",
+      "select": "input[type=\"search\"]",
+      "fine": 44,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--popover",
+      "--popover-foreground",
+      "--radius-md"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "enhancement",
+    "without": "QuickSearch opens it, Escape closes it, every result is a link, and with `action` the box submits to the server.",
+    "with": "⌘K / Ctrl+K, live filtering with an announced count, Enter for the first match, arrow keys."
+  },
+  "responsive": [
+    "min(40rem, 100vw − 2rem) wide at 12vh from the top; the results scroll within min(60vh, 28rem).",
+    "Item descriptions and the key legend show from sm."
+  ],
+  "contract": "contract\n  slot is \"command-palette\"\n  role is \"dialog\"\n  label is \"Search\"\n  a \"News\" min_height 36\n  when default shows a \"Home\"\n  when form shows a \"Events\"\nend",
+  "checks": [
+    {
+      "say": "A popover.",
+      "select": "[data-slot=\"command-palette\"][popover]",
+      "count": 1,
+      "attr": {
+        "id": "command-palette"
+      }
+    },
+    {
+      "say": "Every nav item is a link.",
+      "select": "[data-cmdk-item] a",
+      "count": 3
+    },
+    {
+      "say": "Groups are named sections.",
+      "select": "section[data-cmdk-group][aria-label]",
+      "count": 2
+    },
+    {
+      "say": "The box has a label.",
+      "select": "label[for=\"command-palette-q\"]",
+      "count": 1
+    },
+    {
+      "say": "The count is announced politely.",
+      "select": "[data-cmdk-status]",
+      "count": 1,
+      "attr": {
+        "aria-live": "polite"
+      }
+    },
+    {
+      "say": "With `action`, a GET search form.",
+      "state": "form",
+      "select": "form[role=\"search\"]",
+      "count": 1,
+      "attr": {
+        "method": "get",
+        "action": "/search"
+      }
+    },
+    {
+      "say": "Without `action`, no form.",
+      "select": "form",
+      "absent": true
+    }
+  ]
+}

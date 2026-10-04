@@ -1,0 +1,138 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/account-menu",
+  "title": "AccountMenu",
+  "version": "1.0.0",
+  "node": 7,
+  "kind": "shell",
+  "summary": "Who is signed in, the app's account actions, and sign-out as a POST form, in a <details> disclosure at the end of the top bar.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/AccountMenu.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["mzizi-user-card", "dropdown-menu"]
+  },
+  "props": [
+    {
+      "name": "name",
+      "type": "string | null",
+      "required": false,
+      "default": null,
+      "description": "The person's name."
+    },
+    {
+      "name": "email",
+      "type": "string | null",
+      "required": false,
+      "default": null,
+      "description": "Their email."
+    },
+    {
+      "name": "signOutAction",
+      "type": "string",
+      "required": false,
+      "description": "Where the sign-out form posts; omit to leave sign-out to the slot."
+    },
+    {
+      "name": "signOutLabel",
+      "type": "string",
+      "required": false,
+      "default": "Sign out",
+      "description": "The sign-out button's text."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "Account actions: an appearance form, links."
+    }
+  ],
+  "behaviour": [
+    "Initials in a 24px avatar; the name shows from xl and is the accessible name below it.",
+    "Sign-out is a POST form, so no other page can trigger it with a link."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "name": "Tendai Moyo",
+        "email": "t@example.com",
+        "signOutAction": "/auth/sign-out"
+      },
+      "slots": {
+        "default": "<a href='/settings'>Settings</a>"
+      }
+    },
+    "anonymous": {
+      "props": {}
+    }
+  },
+  "accessibility": {
+    "roles": ["group (<details>)", "form (sign-out)"],
+    "keyboard": ["Enter/Space opens; Tab through the panel."],
+    "focus": ["`--ring` focus ring."],
+    "aria": [
+      "\"Account menu for <name>\" below xl.",
+      "The avatar is aria-hidden."
+    ],
+    "wcag": ["2.1.1", "2.5.8", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "trigger",
+      "select": "summary",
+      "fine": 32,
+      "coarse": 44
+    },
+    {
+      "part": "sign out",
+      "select": "form button",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--popover",
+      "--popover-foreground"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "The name shows from xl; the panel is min(18rem, 100vw − 1rem) wide, right-aligned."
+  ],
+  "contract": "contract\n  slot is \"account-menu\"\n  summary \"Tendai Moyo\" min_height 32\n  when default shows button \"Sign out\"\n  when anonymous shows summary \"Your account\"\nend",
+  "checks": [
+    {
+      "say": "Sign-out posts.",
+      "select": "form[method=\"post\"][action=\"/auth/sign-out\"] button[type=\"submit\"]",
+      "count": 1
+    },
+    {
+      "say": "The avatar is decorative.",
+      "state": "*",
+      "select": "summary > span[aria-hidden=\"true\"]",
+      "count": 1
+    },
+    {
+      "say": "No action, no sign-out form.",
+      "state": "anonymous",
+      "select": "form",
+      "absent": true
+    }
+  ]
+}

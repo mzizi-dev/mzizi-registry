@@ -1,0 +1,123 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/quick-search",
+  "title": "QuickSearch",
+  "version": "1.0.0",
+  "node": 7,
+  "kind": "shell",
+  "summary": "The sidebar's search button with its ⌘K hint. It opens a CommandPalette through the Popover API, so it works with no script.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/QuickSearch.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["mzizi-command-palette", "command"]
+  },
+  "props": [
+    {
+      "name": "target",
+      "type": "string",
+      "required": false,
+      "default": "command-palette",
+      "description": "The CommandPalette's id."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Quick search",
+      "description": "Accessible name and visible text (\"Quick search…\")."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A <button popovertarget> that opens the palette with no script.",
+    "Advertises the ⌘K / Ctrl+K shortcut with aria-keyshortcuts; the visible hint is decorative (aria-hidden) and shows from lg.",
+    "The palette's script swaps the hint to \"Ctrl K\" off Apple platforms."
+  ],
+  "states": {
+    "default": {
+      "props": {}
+    },
+    "custom": {
+      "props": {
+        "target": "cmdk",
+        "label": "Search"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["button"],
+    "keyboard": [
+      "Enter or Space opens the palette.",
+      "⌘K / Ctrl+K anywhere opens it (with the palette's script)."
+    ],
+    "focus": ["`--ring` focus ring."],
+    "aria": [
+      "aria-keyshortcuts=\"Meta+K Control+K\".",
+      "The <kbd> hint is aria-hidden."
+    ],
+    "wcag": ["2.1.1", "2.5.8", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "button",
+      "select": "button",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "The button opens the palette through the Popover API.",
+    "with": "The shortcut lives in CommandPalette's script."
+  },
+  "responsive": [
+    "Fills the sidebar's width; the ⌘K hint shows from lg; in the collapsed rail only the icon shows."
+  ],
+  "contract": "contract\n  slot is \"quick-search\"\n  label is \"Quick search\"\n  button \"Quick search\" min_height 32\n  when custom label is \"Search\"\nend",
+  "checks": [
+    {
+      "say": "Opens the palette by popovertarget.",
+      "select": "button[data-slot=\"quick-search\"]",
+      "count": 1,
+      "attr": {
+        "popovertarget": "command-palette",
+        "aria-keyshortcuts": "Meta+K Control+K",
+        "type": "button"
+      }
+    },
+    {
+      "say": "The kbd hint is decorative.",
+      "select": "kbd",
+      "count": 1,
+      "attr": {
+        "aria-hidden": "true"
+      }
+    },
+    {
+      "say": "`target` is the palette id.",
+      "state": "custom",
+      "select": "button",
+      "count": 1,
+      "attr": {
+        "popovertarget": "cmdk"
+      }
+    }
+  ]
+}

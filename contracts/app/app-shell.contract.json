@@ -1,0 +1,382 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/app-shell",
+  "title": "AppShell",
+  "version": "1.0.0",
+  "node": 7,
+  "kind": "shell",
+  "summary": "The signed-in frame of an app or console, laid out as a full-width product dashboard: a fixed left sidebar (workspace switcher, quick search, grouped navigation, collapse toggle) and a main column (top bar, the page in <main>, a quiet footer). No centred page container.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/AppShell.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["mzizi-sidebar", "mzizi-dashboard-layout", "sidebar"]
+  },
+  "props": [
+    {
+      "name": "navLabel",
+      "type": "string",
+      "required": false,
+      "default": "Navigation",
+      "description": "Noun for the drawer buttons and the collapse toggle (\"Open navigation\", \"Collapse navigation\")."
+    },
+    {
+      "name": "collapsed",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Render with the sidebar collapsed to the icon rail, from the app's preference cookie."
+    },
+    {
+      "name": "persist",
+      "type": "string",
+      "required": false,
+      "description": "Cookie the enhancement script writes the collapse choice to (\"collapsed\" or \"expanded\"). Must match ^[\\w-]+$."
+    },
+    {
+      "name": "footerLinks",
+      "type": "{ label: string; href: string }[]",
+      "required": false,
+      "default": [],
+      "description": "Links in the quiet footer."
+    },
+    {
+      "name": "sidebarLabel",
+      "type": "string",
+      "required": false,
+      "default": "Sidebar",
+      "description": "Accessible name of the sidebar landmark."
+    },
+    {
+      "name": "accent",
+      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\" | \"sodalite\" | \"copper\"",
+      "required": false,
+      "values": [
+        "cobalt",
+        "tanzanite",
+        "malachite",
+        "gold",
+        "terracotta",
+        "sodalite",
+        "copper"
+      ],
+      "description": "The brand's mineral. Its brand fill (`--color-<mineral>-brand`, text `-on-brand`) colours primary actions and the current nav indicator inside the shell, through `--app-accent` / `--app-accent-foreground`. Text links and the focus ring keep the contrast-safe `--primary` / `--ring`."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "default": "app",
+      "description": "Prefix for the shell's ids (`<id>-sidebar`, `<id>-collapse`); unique per page."
+    }
+  ],
+  "slots": [
+    {
+      "name": "workspace",
+      "expects": "WorkspaceSwitcher",
+      "description": "Top of the sidebar: the product mark and the current workspace."
+    },
+    {
+      "name": "search",
+      "expects": "QuickSearch",
+      "description": "Under the workspace: the button that opens the command palette."
+    },
+    {
+      "name": "nav",
+      "expects": "SideNav",
+      "description": "The navigation. Rendered once, in the sidebar."
+    },
+    {
+      "name": "sidebar-footer",
+      "description": "Beside the collapse toggle at the foot of the sidebar."
+    },
+    {
+      "name": "brand",
+      "expects": "BrandMark",
+      "description": "The mark in the top bar below 64rem, where the sidebar is a drawer."
+    },
+    {
+      "name": "actions",
+      "expects": "TopBarAction",
+      "description": "Right-aligned top-bar actions."
+    },
+    {
+      "name": "account",
+      "expects": "AccountMenu",
+      "description": "The last item in the top bar."
+    },
+    {
+      "name": "default",
+      "description": "The page. Rendered inside <main id=\"main\">."
+    },
+    {
+      "name": "footer",
+      "description": "Extra footer content after `footerLinks`."
+    },
+    {
+      "name": "overlay",
+      "expects": "CommandPalette",
+      "description": "Popovers that sit outside the layout."
+    }
+  ],
+  "behaviour": [
+    "From 64rem the sidebar is a sticky 16.25rem column and the main column fills the rest of the viewport; nothing centres the page.",
+    "Below 64rem the same <aside> is a Popover API drawer, opened by the top bar's menu button and closed by its close button, Escape or a click outside (light dismiss). The nav is never rendered twice.",
+    "Collapse is a real checkbox. Checked, the sidebar becomes a 3.5rem icon rail: labels, group names, badges, the wordmark and the search text hide; tooltips show the label; a nested group becomes one link to its first item.",
+    "`collapsed` sets the checkbox from the server, so a persisted preference renders without a flash.",
+    "Headings inside the shell use the body sans; only the wordmark keeps the serif.",
+    "The footer renders only when there are `footerLinks` or a `footer` slot."
+  ],
+  "states": {
+    "default": {
+      "description": "Expanded, every slot filled, one footer link.",
+      "props": {
+        "navLabel": "Menu",
+        "id": "c",
+        "footerLinks": [
+          {
+            "label": "Status",
+            "href": "https://status.example"
+          }
+        ]
+      },
+      "slots": {
+        "brand": "<a href='/'>Brand</a>",
+        "workspace": "<a href='/'>Workspace</a>",
+        "search": "<button type='button'>Search</button>",
+        "nav": "<nav aria-label='Sections'><a href='/a'>A</a></nav>",
+        "actions": "<a href='/ai'>Ask AI</a>",
+        "account": "<span>account</span>",
+        "default": "<h1>Page</h1>",
+        "footer": "Footer text"
+      }
+    },
+    "collapsed": {
+      "description": "Rendered collapsed from the preference cookie.",
+      "props": {
+        "id": "c",
+        "collapsed": true,
+        "persist": "pref_sidebar"
+      },
+      "slots": {
+        "brand": "<a href='/'>Brand</a>",
+        "workspace": "<a href='/'>Workspace</a>",
+        "search": "<button type='button'>Search</button>",
+        "nav": "<nav aria-label='Sections'><a href='/a'>A</a></nav>",
+        "actions": "<a href='/ai'>Ask AI</a>",
+        "account": "<span>account</span>",
+        "default": "<h1>Page</h1>",
+        "footer": "Footer text"
+      }
+    },
+    "accent": {
+      "description": "Nyuchi's overlay: the gold brand fill.",
+      "props": {
+        "id": "c",
+        "accent": "gold"
+      },
+      "slots": {
+        "brand": "<a href='/'>Brand</a>",
+        "workspace": "<a href='/'>Workspace</a>",
+        "search": "<button type='button'>Search</button>",
+        "nav": "<nav aria-label='Sections'><a href='/a'>A</a></nav>",
+        "actions": "<a href='/ai'>Ask AI</a>",
+        "account": "<span>account</span>",
+        "default": "<h1>Page</h1>",
+        "footer": "Footer text"
+      }
+    },
+    "bare": {
+      "description": "Only a page: no footer.",
+      "props": {},
+      "slots": {
+        "default": "<h1>Page</h1>"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [
+      "complementary (<aside>, named by `sidebarLabel`)",
+      "banner (<header> top bar)",
+      "main (<main id=\"main\">, the skip-link target)",
+      "contentinfo (<footer>, when present)"
+    ],
+    "keyboard": [
+      "Tab reaches the menu button (below 64rem), the top-bar slots, then the page.",
+      "Escape closes the drawer (platform light dismiss).",
+      "Space toggles the collapse checkbox.",
+      "With the script: Escape hides any tooltip until the pointer or focus moves (WCAG 1.4.13)."
+    ],
+    "focus": [
+      "<main> has tabindex=\"-1\" so a skip link can move focus to it.",
+      "The collapse label shows the ring when its visually hidden checkbox has keyboard focus."
+    ],
+    "aria": [
+      "The menu and close buttons are named \"Open <navLabel>\" / \"Close <navLabel>\".",
+      "The collapse checkbox is named \"Collapse <navLabel>\" by a visually hidden span."
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.10",
+      "1.4.13",
+      "2.1.1",
+      "2.4.1",
+      "2.4.3",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "density": [
+    {
+      "part": "top bar",
+      "select": "header[data-slot=\"app-topbar\"]",
+      "fine": 48,
+      "coarse": 48
+    },
+    {
+      "part": "drawer menu button",
+      "select": "button[popovertarget=\"c-sidebar\"]:not([popovertargetaction])",
+      "fine": 44,
+      "coarse": 44
+    },
+    {
+      "part": "collapse toggle",
+      "select": "label[for=\"c-collapse\"]",
+      "fine": 32,
+      "coarse": 32
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--app-accent",
+      "--app-accent-foreground"
+    ],
+    "brandOverlay": "`accent` names the brand mineral and sets `--app-accent` / `--app-accent-foreground` on the shell, which primary Buttons and the SideNav indicator read; the theme's `--primary` and `--ring` come from the brand overlay stylesheet. Nothing else changes: the grid, the sidebar width, the top bar and every spacing are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "enhancement",
+    "without": "The drawer opens and closes (Popover API), collapse works (a checkbox and :has()), every link works.",
+    "with": "The collapse choice is written to the `persist` cookie, and Escape dismisses tooltips (WCAG 1.4.13)."
+  },
+  "responsive": [
+    "< 64rem: the sidebar is an off-canvas drawer, min(18rem, 86vw) wide, over a 30% foreground backdrop; the `brand` slot shows in the top bar.",
+    "≥ 64rem: grid of 16.25rem (3.5rem collapsed) and minmax(0, 1fr); the menu button and `brand` slot hide.",
+    "Main padding grows 16 → 24 → 32px at sm and lg; nothing scrolls sideways at 320px."
+  ],
+  "contract": "contract\n  slot is \"app-shell\"\n  uses app-sidebar\n  uses app-topbar\n  uses app-footer\n  when default shows button \"Open menu\"\n  when default shows button \"Close menu\"\n  when default shows label \"Collapse menu\"\n  when bare slot is \"app-shell\"\nend",
+  "checks": [
+    {
+      "say": "The sidebar is one <aside> popover, named by sidebarLabel.",
+      "select": "aside[popover][data-slot=\"app-sidebar\"]",
+      "count": 1,
+      "attr": {
+        "aria-label": "Sidebar",
+        "id": "c-sidebar"
+      }
+    },
+    {
+      "say": "The page is in exactly one <main id=\"main\" tabindex=\"-1\">.",
+      "state": "*",
+      "select": "main",
+      "count": 1,
+      "attr": {
+        "id": "main",
+        "tabindex": "-1"
+      }
+    },
+    {
+      "say": "The nav slot is rendered once.",
+      "select": "nav[aria-label=\"Sections\"]",
+      "count": 1
+    },
+    {
+      "say": "The menu button opens the drawer.",
+      "select": "button[popovertarget=\"c-sidebar\"][aria-label=\"Open menu\"]",
+      "count": 1
+    },
+    {
+      "say": "The close button hides the drawer.",
+      "select": "button[popovertarget=\"c-sidebar\"][popovertargetaction=\"hide\"]",
+      "count": 1,
+      "attr": {
+        "aria-label": "Close menu"
+      }
+    },
+    {
+      "say": "Collapse is a checkbox, unchecked by default.",
+      "select": "input[type=\"checkbox\"][data-shell-collapse]",
+      "count": 1,
+      "attr": {
+        "checked": false
+      }
+    },
+    {
+      "say": "`collapsed` checks it on the server.",
+      "state": "collapsed",
+      "select": "input[type=\"checkbox\"][data-shell-collapse]",
+      "count": 1,
+      "attr": {
+        "checked": true
+      }
+    },
+    {
+      "say": "`persist` names the cookie on the shell.",
+      "state": "collapsed",
+      "select": "[data-slot=\"app-shell\"]",
+      "count": 1,
+      "attr": {
+        "data-persist": "pref_sidebar"
+      }
+    },
+    {
+      "say": "`accent` sets the shell's accent tokens from the mineral's brand fill.",
+      "state": "accent",
+      "select": "[data-slot=\"app-shell\"]",
+      "count": 1,
+      "attr": {
+        "data-accent": "gold",
+        "style": "--app-accent: var(--color-gold-brand); --app-accent-foreground: var(--color-gold-on-brand);"
+      }
+    },
+    {
+      "say": "No accent, no inline accent.",
+      "select": "[data-slot=\"app-shell\"]",
+      "count": 1,
+      "attr": {
+        "data-accent": false,
+        "style": false
+      }
+    },
+    {
+      "say": "No centred page container.",
+      "state": "*",
+      "select": "[class*=\"mx-auto\"]",
+      "absent": true
+    },
+    {
+      "say": "No footer without footer content.",
+      "state": "bare",
+      "select": "footer",
+      "absent": true
+    },
+    {
+      "say": "Footer links are a list.",
+      "select": "footer ul[role=\"list\"] a[href=\"https://status.example\"]",
+      "count": 1
+    }
+  ],
+  "gaps": [
+    "The collapse toggle is 32px on every pointer; on a touch screen at 64rem or wider it is under the 44px target the rest of the shell keeps (WCAG 2.5.8 is met at 24px; 2.5.5 is not)."
+  ]
+}

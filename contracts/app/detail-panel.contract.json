@@ -1,0 +1,148 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/detail-panel",
+  "title": "DetailPanel",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "One record as a titled description list, with an optional read-only \"Full record\" disclosure and actions. Used beside a DataTable and for single-record sections.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/DetailPanel.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["mzizi-detail-layout"]
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The section's heading."
+    },
+    {
+      "name": "level",
+      "type": "2 | 3",
+      "required": false,
+      "default": 2,
+      "values": [2, 3],
+      "description": "Heading level."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "One line under the title."
+    },
+    {
+      "name": "items",
+      "type": "{ label: string; value: string | null | undefined; mono?: boolean }[]",
+      "required": true,
+      "description": "The fields; an empty value reads \"Not set\"."
+    },
+    {
+      "name": "record",
+      "type": "unknown",
+      "required": false,
+      "description": "Shown as formatted, escaped JSON under \"Full record\"."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "The section's id; also prefixes the heading id."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "Extra content under the list."
+    },
+    {
+      "name": "actions",
+      "expects": "Button",
+      "description": "Actions at the foot."
+    }
+  ],
+  "behaviour": [
+    "A <section> labelled by its heading.",
+    "Empty values read \"Not set\".",
+    "The record is text in a <pre>, never markup."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "title": "Tendai",
+        "id": "p1",
+        "items": [
+          {
+            "label": "Email",
+            "value": "t@example.com"
+          },
+          {
+            "label": "Phone",
+            "value": null
+          }
+        ],
+        "record": {
+          "id": 1
+        }
+      },
+      "slots": {
+        "actions": "<a href='/edit'>Edit</a>"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["region (section with aria-labelledby)", "description list"],
+    "keyboard": ["Enter/Space on \"Full record\"."],
+    "focus": ["Default."],
+    "aria": ["aria-labelledby to the heading."],
+    "wcag": ["1.3.1", "2.4.6"]
+  },
+  "density": [
+    {
+      "part": "record disclosure",
+      "select": "summary",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground"
+    ],
+    "brandOverlay": "None.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "A container query: label above value when narrow; an 11rem label column from @lg."
+  ],
+  "contract": "contract\n  slot is \"detail-panel\"\n  when default shows h2 \"Tendai\"\n  when default shows dd \"Not set\"\n  summary \"Full record\" min_height 32\n  uses card\nend",
+  "checks": [
+    {
+      "say": "Labelled by its heading.",
+      "select": "section[aria-labelledby=\"p1-title\"] #p1-title",
+      "count": 1
+    },
+    {
+      "say": "Each item is a dt/dd pair.",
+      "select": "dl dt",
+      "count": 2
+    }
+  ]
+}

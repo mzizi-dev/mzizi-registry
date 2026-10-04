@@ -1,0 +1,171 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/pagination",
+  "title": "Pagination",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "\"Showing 26–50 of 112\" with previous, next and page links. Links, not buttons: every page is a URL. The links are hidden when everything fits on one page.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Pagination.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["pagination"]
+  },
+  "props": [
+    {
+      "name": "url",
+      "type": "URL",
+      "required": true,
+      "description": "The current URL; page links keep its other parameters."
+    },
+    {
+      "name": "page",
+      "type": "number",
+      "required": true,
+      "description": "The current page (1-based)."
+    },
+    {
+      "name": "pageCount",
+      "type": "number",
+      "required": true,
+      "description": "Total pages."
+    },
+    {
+      "name": "total",
+      "type": "number",
+      "required": true,
+      "description": "Total results."
+    },
+    {
+      "name": "from",
+      "type": "number",
+      "required": true,
+      "description": "First result shown (1-based)."
+    },
+    {
+      "name": "to",
+      "type": "number",
+      "required": true,
+      "description": "Last result shown."
+    },
+    {
+      "name": "noun",
+      "type": "string",
+      "required": false,
+      "default": "results",
+      "description": "What is counted."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The summary is a polite live region.",
+    "Pages shown: the first, the last and the current ±1, with an ellipsis for gaps.",
+    "Previous and Next are links with rel=prev/next, or aria-disabled text at an end."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "url": {
+          "$url": "https://x.test/people?q=a&page=2"
+        },
+        "page": 2,
+        "pageCount": 5,
+        "total": 112,
+        "from": 26,
+        "to": 50
+      }
+    },
+    "single": {
+      "props": {
+        "url": {
+          "$url": "https://x.test/people"
+        },
+        "page": 1,
+        "pageCount": 1,
+        "total": 3,
+        "from": 1,
+        "to": 3,
+        "noun": "people"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["navigation \"Pagination\"", "status (live summary)"],
+    "keyboard": ["Tab through the links."],
+    "focus": ["Default link focus."],
+    "aria": [
+      "aria-current=\"page\" on the current page.",
+      "Each number is named \"Page N\".",
+      "aria-disabled on an unavailable Previous/Next."
+    ],
+    "wcag": ["2.4.4", "2.4.8", "4.1.3"]
+  },
+  "density": [
+    {
+      "part": "page link",
+      "select": "a[aria-current=\"page\"]",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "None: the current page is foreground-on-background in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Stacks below sm; from sm the summary sits left of the links; links wrap."
+  ],
+  "contract": "contract\n  slot is \"pagination\"\n  a \"Next\" min_height 32\n  when default shows a \"Previous\"\n  when single shows p \"Showing 1–3 of 3 people\"\nend",
+  "checks": [
+    {
+      "say": "A named nav.",
+      "select": "nav[aria-label=\"Pagination\"]",
+      "count": 1
+    },
+    {
+      "say": "The current page is marked.",
+      "select": "a[aria-current=\"page\"]",
+      "count": 1,
+      "attr": {
+        "aria-label": "Page 2"
+      }
+    },
+    {
+      "say": "Page links keep the query.",
+      "select": "a[rel=\"next\"]",
+      "count": 1,
+      "attr": {
+        "href": "/people?q=a&page=3"
+      }
+    },
+    {
+      "say": "The summary is live.",
+      "state": "*",
+      "select": "p[aria-live=\"polite\"]",
+      "count": 1
+    },
+    {
+      "say": "One page: no links.",
+      "state": "single",
+      "select": "nav",
+      "absent": true
+    }
+  ]
+}

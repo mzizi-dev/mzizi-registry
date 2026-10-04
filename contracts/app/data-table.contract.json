@@ -1,0 +1,207 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/data-table",
+  "title": "DataTable",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/DataTable.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["data-table", "table"]
+  },
+  "props": [
+    {
+      "name": "caption",
+      "type": "string",
+      "required": true,
+      "description": "The table's caption (visually hidden unless `showCaption`)."
+    },
+    {
+      "name": "showCaption",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Show the caption to sighted readers."
+    },
+    {
+      "name": "columns",
+      "type": "{ key: string; label: string; align?: \"start\" | \"end\"; primary?: boolean }[]",
+      "required": true,
+      "description": "Columns; the first column's cells are row headers."
+    },
+    {
+      "name": "rows",
+      "type": "Record<string, Cell>[]",
+      "required": true,
+      "description": "Cell = string | number | null | undefined | { text, href?, badge?, mono?, sub?, current? }."
+    },
+    {
+      "name": "rowKey",
+      "type": "string",
+      "required": false,
+      "description": "Key whose text becomes each row's data-row."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Cell text is escaped: a row cannot inject markup.",
+    "An empty cell shows a dash to the eye and \"none\" to a screen reader.",
+    "A cell with `current` marks its row aria-current=\"true\".",
+    "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "caption": "People, 2 in all",
+        "columns": [
+          {
+            "key": "name",
+            "label": "Name"
+          },
+          {
+            "key": "role",
+            "label": "Role"
+          },
+          {
+            "key": "count",
+            "label": "Members",
+            "align": "end"
+          }
+        ],
+        "rowKey": "name",
+        "rows": [
+          {
+            "name": {
+              "text": "Tendai",
+              "href": "/people/1",
+              "current": true
+            },
+            "role": {
+              "text": "Guardian",
+              "badge": "outline"
+            },
+            "count": 3
+          },
+          {
+            "name": "Rudo",
+            "role": null,
+            "count": 0
+          }
+        ]
+      }
+    },
+    "hostile": {
+      "props": {
+        "caption": "People",
+        "columns": [
+          {
+            "key": "name",
+            "label": "Name"
+          },
+          {
+            "key": "role",
+            "label": "Role"
+          },
+          {
+            "key": "count",
+            "label": "Members",
+            "align": "end"
+          }
+        ],
+        "rows": [
+          {
+            "name": "<img src=x onerror=alert(1)>",
+            "role": "x",
+            "count": 1
+          }
+        ]
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["table", "columnheader (scope=col)", "rowheader (scope=row)"],
+    "keyboard": ["Links in cells."],
+    "focus": ["Through cell links."],
+    "aria": [
+      "<caption> always present.",
+      "Phone card labels are aria-hidden duplicates of the headers.",
+      "aria-current=\"true\" on the current row."
+    ],
+    "wcag": ["1.3.1", "1.3.2", "1.4.10"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--card",
+      "--card-foreground",
+      "--surface-muted",
+      "--primary"
+    ],
+    "brandOverlay": "Cell links are `--primary`. Rows and spacing are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Below md each row is a card and each cell shows its column name; from md it is a table with a header row and ~40px rows."
+  ],
+  "contract": "contract\n  slot is \"data-table\"\n  when default shows a \"Tendai\"\n  uses badge\n  when hostile slot is \"data-table\"\nend",
+  "checks": [
+    {
+      "say": "A captioned table.",
+      "state": "*",
+      "select": "table > caption",
+      "count": 1
+    },
+    {
+      "say": "Column headers are scoped.",
+      "select": "th[scope=\"col\"]",
+      "count": 3
+    },
+    {
+      "say": "Row headers are scoped.",
+      "select": "tbody th[scope=\"row\"]",
+      "count": 2
+    },
+    {
+      "say": "An empty cell is spoken as none.",
+      "select": "td .sr-only",
+      "count": 1,
+      "text": "none"
+    },
+    {
+      "say": "The current row is marked.",
+      "select": "tr[aria-current=\"true\"]",
+      "count": 1,
+      "attr": {
+        "data-row": "Tendai"
+      }
+    },
+    {
+      "say": "Cells cannot inject markup.",
+      "state": "hostile",
+      "select": "img",
+      "absent": true
+    },
+    {
+      "say": "Phone labels are hidden from screen readers.",
+      "select": "td > span[aria-hidden=\"true\"]",
+      "min": 1
+    }
+  ]
+}

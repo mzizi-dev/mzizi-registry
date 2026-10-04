@@ -1,0 +1,132 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/toolbar-menu",
+  "title": "ToolbarMenu",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "A Toolbar button that opens a short list of choices, each a link (a date range: \"Last 24 hours\", \"Last 7 days\"). The current choice is the button's text.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/ToolbarMenu.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["dropdown-menu"]
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "What is being chosen (\"Date range\"); the list's name and a visually hidden prefix on the button."
+    },
+    {
+      "name": "choices",
+      "type": "{ label: string; href: string; current?: boolean }[]",
+      "required": true,
+      "description": "The choices; each is a URL."
+    },
+    {
+      "name": "icon",
+      "type": "IconName",
+      "required": false,
+      "description": "Icon before the current choice."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A <details> disclosure of links.",
+    "The button shows the current choice (the first when none is marked).",
+    "The current choice is aria-current=\"true\" with a check."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "label": "Date range",
+        "icon": "calendar",
+        "choices": [
+          {
+            "label": "Last 24 hours",
+            "href": "?range=1d"
+          },
+          {
+            "label": "Last 7 days",
+            "href": "?range=7d",
+            "current": true
+          }
+        ]
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["group (<details>)", "list (named by `label`)"],
+    "keyboard": [
+      "Enter or Space opens and closes.",
+      "Tab moves through the choices."
+    ],
+    "focus": ["`--ring` focus ring on the summary and every choice."],
+    "aria": [
+      "The summary reads \"<label>: <current>\".",
+      "aria-current=\"true\" on the current choice."
+    ],
+    "wcag": ["2.1.1", "2.5.8", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "button",
+      "select": "summary",
+      "fine": 32,
+      "coarse": 44
+    },
+    {
+      "part": "choice",
+      "select": "ul a",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--popover",
+      "--popover-foreground"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "The list opens right-aligned under the button, at least 11rem wide."
+  ],
+  "contract": "contract\n  slot is \"toolbar-menu\"\n  summary \"Last 7 days\" min_height 32\n  when default shows a \"Last 24 hours\"\nend",
+  "checks": [
+    {
+      "say": "The list is named.",
+      "select": "ul[aria-label=\"Date range\"] a",
+      "count": 2
+    },
+    {
+      "say": "The current choice is marked.",
+      "select": "a[aria-current=\"true\"]",
+      "count": 1,
+      "text": "Last 7 days"
+    },
+    {
+      "say": "The summary says what is chosen.",
+      "select": "summary .sr-only",
+      "count": 1,
+      "text": "Date range"
+    }
+  ]
+}

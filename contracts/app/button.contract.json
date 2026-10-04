@@ -1,0 +1,226 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/button",
+  "title": "Button",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "The app-density button: a link with `href`, a <button> otherwise. 36px with a fine pointer (32 sm, 40 lg), 44–48px on touch, small corners.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Button.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "button",
+      "identity": "slot",
+      "divergences": [
+        "Variants: the registry's button.tsx has default, outline, secondary, ghost, destructive and link; the app Button has primary, secondary, outline and ghost.",
+        "Shape: the registry button is a pill (rounded-full); the app button uses the small radius (rounded-sm)."
+      ]
+    },
+    "rs": {
+      "registry": "button",
+      "identity": "slot",
+      "divergences": [
+        "As for the .tsx: button.rs mirrors button.tsx's variants and pill shape."
+      ]
+    }
+  },
+  "props": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "Makes it a link."
+    },
+    {
+      "name": "type",
+      "type": "\"button\" | \"submit\" | \"reset\"",
+      "required": false,
+      "default": "button",
+      "values": ["button", "submit", "reset"],
+      "description": "Button type."
+    },
+    {
+      "name": "variant",
+      "type": "\"primary\" | \"secondary\" | \"outline\" | \"ghost\" | \"destructive\" | \"destructive-outline\"",
+      "required": false,
+      "default": "primary",
+      "values": [
+        "primary",
+        "secondary",
+        "outline",
+        "ghost",
+        "destructive",
+        "destructive-outline"
+      ],
+      "description": "primary wears the brand mineral. destructive (solid) is for the one irreversible action on a page; destructive-outline for secondary ones (revoke, remove). Danger is never a brand colour: both read only the destructive tokens."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "required": false,
+      "default": "md",
+      "values": ["sm", "md", "lg"],
+      "description": "32 / 36 / 40px fine; 44 / 48 / 48px coarse."
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "required": false,
+      "description": "Fills its container."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disabled (buttons only)."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "Form field name."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "description": "Form field value."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The label (and an optional icon)."
+    }
+  ],
+  "behaviour": [
+    "An <a> with `href`, otherwise a <button type> (\"button\" by default, so it never submits by accident).",
+    "States: default, hover (opacity or muted fill), focus-visible (the `--ring` ring, every variant), disabled (the native attribute, 50% opacity).",
+    "A destructive button's text says what is destroyed (\"Delete my account\", \"Revoke key\"); colour is never the only signal."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "type": "submit"
+      },
+      "slots": {
+        "default": "Save"
+      }
+    },
+    "link": {
+      "props": {
+        "href": "/x",
+        "variant": "ghost",
+        "size": "sm"
+      },
+      "slots": {
+        "default": "Go"
+      }
+    },
+    "destructive": {
+      "props": {
+        "variant": "destructive"
+      },
+      "slots": {
+        "default": "Delete my account"
+      }
+    },
+    "destructive-outline": {
+      "props": {
+        "variant": "destructive-outline",
+        "disabled": true
+      },
+      "slots": {
+        "default": "Revoke key"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["button or link"],
+    "keyboard": ["Native."],
+    "focus": ["2px `--ring` with an offset, on every variant."],
+    "aria": ["Disabled buttons use the native attribute."],
+    "wcag": ["1.4.1", "2.4.7", "2.5.8", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "md",
+      "select": "button",
+      "fine": 36,
+      "coarse": 48
+    },
+    {
+      "part": "sm",
+      "state": "link",
+      "select": "a",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--primary",
+      "--primary-foreground",
+      "--app-accent",
+      "--app-accent-foreground",
+      "--card",
+      "--destructive",
+      "--destructive-foreground"
+    ],
+    "brandOverlay": "primary is AppShell's `--app-accent` (the brand mineral's fill) with `--app-accent-foreground` text, else `--primary` / `--primary-foreground`. The focus ring is `--ring`. destructive and destructive-outline read only `--destructive` / `--destructive-foreground`, which no brand overlay changes. Size, radius and spacing never change by brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["No breakpoints; height follows the pointer."],
+  "contract": "contract\n  slot is \"button\"\n  class uses \"--app-accent\"\n  class uses \"--primary\"\n  button \"Save\" min_height 36\n  when link shows a \"Go\"\n  when destructive class contains \"bg-destructive\"\n  when destructive-outline class contains \"border-destructive\"\nend",
+  "checks": [
+    {
+      "say": "A submit button.",
+      "select": "button[type=\"submit\"]",
+      "count": 1
+    },
+    {
+      "say": "A link with href.",
+      "state": "link",
+      "select": "a[href=\"/x\"]",
+      "count": 1
+    },
+    {
+      "say": "A plain button never submits by accident.",
+      "state": "destructive",
+      "select": "button",
+      "count": 1,
+      "attr": {
+        "type": "button"
+      }
+    },
+    {
+      "say": "Disabled is the native attribute.",
+      "state": "destructive-outline",
+      "select": "button",
+      "count": 1,
+      "attr": {
+        "disabled": true
+      }
+    }
+  ]
+}

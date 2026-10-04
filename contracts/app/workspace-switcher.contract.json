@@ -1,0 +1,186 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/workspace-switcher",
+  "title": "WorkspaceSwitcher",
+  "version": "1.0.0",
+  "node": 7,
+  "kind": "shell",
+  "summary": "The top of the sidebar: the product mark and name over the current workspace or organisation, opening a list of other workspaces and account links. With nothing to switch to it is a plain link home.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/WorkspaceSwitcher.astro",
+      "since": "0.4.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["app-switcher"]
+  },
+  "props": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "The current workspace's name."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "default": "/",
+      "description": "Where the mark goes (the app's home)."
+    },
+    {
+      "name": "workspaces",
+      "type": "{ name: string; href: string; current?: boolean; note?: string }[]",
+      "required": false,
+      "default": [],
+      "description": "Workspaces to switch between; `note` is a second line (plan, region)."
+    },
+    {
+      "name": "links",
+      "type": "{ label: string; href: string }[]",
+      "required": false,
+      "default": [],
+      "description": "A few account links under the workspaces."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Switch workspace",
+      "description": "Accessible name prefix of the switcher (\"Switch organisation\")."
+    }
+  ],
+  "slots": [
+    {
+      "name": "mark",
+      "expects": "BrandMark (wordmark)",
+      "description": "The product's mark and wordmark."
+    }
+  ],
+  "behaviour": [
+    "With more than one workspace or any link, it is a <details> disclosure whose summary reads \"<label>: <name>\" and whose panel lists workspaces then links.",
+    "With one workspace and no links it renders as a plain link to `href`, with no chevrons: never a control that does nothing.",
+    "The current workspace is marked aria-current=\"true\" and shows a check."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "name": "Nyuchi Africa",
+        "workspaces": [
+          {
+            "name": "Nyuchi Africa",
+            "href": "/o/1",
+            "current": true,
+            "note": "Enterprise"
+          },
+          {
+            "name": "Mukoko",
+            "href": "/o/2"
+          }
+        ],
+        "links": [
+          {
+            "label": "Settings",
+            "href": "/settings"
+          }
+        ]
+      },
+      "slots": {
+        "mark": "<span>nyuchi console</span>"
+      }
+    },
+    "single": {
+      "description": "Nothing to switch to.",
+      "props": {
+        "name": "Nyuchi Africa",
+        "href": "/home"
+      },
+      "slots": {
+        "mark": "<span>nyuchi console</span>"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [
+      "group (<details>) with its <summary> as the button",
+      "list (workspaces, links)"
+    ],
+    "keyboard": [
+      "Enter or Space on the summary opens and closes the panel.",
+      "Tab moves through the workspace and account links."
+    ],
+    "focus": ["The summary and every menu link show the `--ring` focus ring."],
+    "aria": [
+      "The summary is named \"<label>: <name>\".",
+      "aria-current=\"true\" on the current workspace."
+    ],
+    "wcag": ["2.1.1", "2.4.4", "2.5.8", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "switcher row",
+      "select": "summary",
+      "fine": 56,
+      "coarse": 56
+    },
+    {
+      "part": "menu item",
+      "select": "[data-slot=\"workspace-menu\"] a",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground",
+      "--ring",
+      "--popover",
+      "--popover-foreground"
+    ],
+    "brandOverlay": "The mark comes from the `mark` slot (BrandMark), so each brand shows its own logo. Everything else, including the panel, is identical across brands.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Fills the sidebar's width; names truncate.",
+    "In AppShell's collapsed rail only the mark shows."
+  ],
+  "contract": "contract\n  slot is \"workspace-switcher\"\n  summary \"Switch workspace: Nyuchi Africa\" min_height 56\n  when default shows a \"Mukoko\"\n  when single slot is \"workspace-switcher\"\n  when single shows a \"Nyuchi Africa\"\nend",
+  "checks": [
+    {
+      "say": "Switchable: a disclosure.",
+      "select": "details[data-slot=\"workspace-switcher\"] > summary",
+      "count": 1
+    },
+    {
+      "say": "The current workspace is marked.",
+      "select": "a[aria-current=\"true\"]",
+      "count": 1,
+      "text": "Nyuchi Africa"
+    },
+    {
+      "say": "Single: a plain link home, no disclosure.",
+      "state": "single",
+      "select": "a[data-slot=\"workspace-switcher\"]",
+      "count": 1,
+      "attr": {
+        "href": "/home"
+      }
+    },
+    {
+      "say": "Single: no disclosure.",
+      "state": "single",
+      "select": "details",
+      "absent": true
+    }
+  ]
+}
