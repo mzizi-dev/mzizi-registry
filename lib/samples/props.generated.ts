@@ -5736,6 +5736,38 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-email-preview": [
+    {
+      "name": "html",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "to",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "subject",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "lead",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "frameHeight",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
   "mzizi-empty-screen": [
     {
       "name": "title",
@@ -9766,6 +9798,70 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "preset-picker": [
+    {
+      "name": "groups",
+      "type": "PresetGroup[]",
+      "required": true
+    },
+    {
+      "name": "active",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "onActiveChange",
+      "type": "(id: string) => void",
+      "required": true
+    },
+    {
+      "name": "included",
+      "type": "string[]",
+      "required": true
+    },
+    {
+      "name": "onIncludedChange",
+      "type": "(ids: string[]) => void",
+      "required": true
+    }
+  ],
+  "preview-canvas": [
+    {
+      "name": "src",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "zoom",
+      "type": "Zoom",
+      "required": false
+    },
+    {
+      "name": "fitHeight",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "busy",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "busyLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "React.ReactNode",
+      "required": false
+    }
+  ],
   "price-display": [
     {
       "name": "amount",
@@ -10355,6 +10451,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "frequency",
       "type": "string",
+      "required": false
+    }
+  ],
+  "safe-area-frame": [
+    {
+      "name": "width",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "safe",
+      "type": "SafeInsets",
+      "required": false
+    },
+    {
+      "name": "box",
+      "type": "number",
       "required": false
     }
   ],
