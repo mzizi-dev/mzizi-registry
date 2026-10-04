@@ -3,6 +3,13 @@ name: Release
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Override the release bump (major is manual only).
+        type: choice
+        options: [minor, patch, major]
+        default: minor
 
 # Runs after every merge to main.
 # Creates a GitHub release when package.json version hasn't been tagged yet.
@@ -14,6 +21,12 @@ on:
 # not GITHUB_TOKEN: GitHub starts no workflow from a tag or release that
 # GITHUB_TOKEN made, so anything that listens for `push: tags` or
 # `release: published` would never run.
+#
+# The version follows the org versioning policy (nyuchi/.github#80): a release
+# to main is the next MINOR above the highest `v` tag (x.y.z -> x.y+1.0);
+# merges into staging are patches (staging-version.yml); a MAJOR is only
+# released by hand (run this with bump: major). The shared next-version action
+# refuses any other version before anything is tagged.
 
 permissions:
   contents: read
@@ -51,6 +64,15 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
             echo "Tag v${{ steps.version.outputs.version }} is new — creating release."
           fi
+
+      - name: Check the version against the versioning policy
+        if: steps.tag_check.outputs.exists == 'false'
+        uses: nyuchi/.github/.github/actions/next-version@de909ab7468d998ba2cf87416ac2042616eba75d  # main, 2026-10-04
+        with:
+          channel: main
+          bump: ${{ inputs.bump || '' }}
+          manual: ${{ github.event_name == 'workflow_dispatch' }}
+          proposed: ${{ steps.version.outputs.version }}
 
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
         if: steps.tag_check.outputs.exists == 'false'

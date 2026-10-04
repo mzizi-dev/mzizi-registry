@@ -20,6 +20,13 @@ name: Publish crates
 # version `mzizi-rs-vX.Y.Z` and creates a GitHub release for it, unless the tag
 # already exists. That uses RELEASE_BUMP_TOKEN (mzizi-dev org secret), so the
 # tag and release can start other workflows; nobody pushes a tag by hand.
+#
+# The crates version follows the org versioning policy (nyuchi/.github#80): a
+# release is the next MINOR above the highest `mzizi-rs-v` tag
+# (x.y.z -> x.y+1.0), and a MAJOR is only released by hand (dispatch with
+# bump: major). Each segment holds 0..999. The shared next-version action
+# refuses any other version before anything is uploaded, because a crates.io
+# version can never be taken back.
 
 on:
   push:
@@ -34,6 +41,11 @@ on:
         description: "Package and verify every crate, but upload nothing"
         type: boolean
         default: true
+      bump:
+        description: "Override the release bump (major is manual only)"
+        type: choice
+        options: [minor, patch, major]
+        default: minor
 
 concurrency:
   group: publish-crates
@@ -63,6 +75,22 @@ jobs:
       # serve. The generator has no npm dependencies, so no install is needed.
       - name: Verify the generated copies match the registry
         run: node scripts/generate-rust-components.mjs --check
+
+      - name: Read the crates version
+        id: crates
+        run: |
+          set -euo pipefail
+          version=$(grep -A3 '^\[workspace.package\]' mzizi-rs/Cargo.toml | grep -m1 '^version' | cut -d'"' -f2)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Check the crates version against the versioning policy
+        uses: nyuchi/.github/.github/actions/next-version@de909ab7468d998ba2cf87416ac2042616eba75d  # main, 2026-10-04
+        with:
+          channel: main
+          bump: ${{ inputs.bump || '' }}
+          manual: ${{ github.event_name == 'workflow_dispatch' }}
+          proposed: ${{ steps.crates.outputs.version }}
+          tag-prefix: mzizi-rs-v
 
       - name: Install the Rust toolchain
         run: rustup toolchain install stable --profile minimal --component clippy,rustfmt
