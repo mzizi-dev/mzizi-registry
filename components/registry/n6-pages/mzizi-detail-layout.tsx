@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator"
    
    Two hero modes:
    - image: Standard hero with image + gradient overlay
-   - gradient: Full-bleed mineral gradient (from nhimbe mockup)
+   - gradient: Full-bleed mineral gradient (from the Mukoko Events mockup)
      with radial texture overlay and floating action buttons
    
    Design identity markers:

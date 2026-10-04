@@ -8,6 +8,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed — the nhimbe brand is retired: canon's events row is Mukoko Events, at events.mukoko.com (2026-10-04)
+
+Owner decisions, 2026-10-04 ([mukoko-dev/nhimbe#155](https://github.com/mukoko-dev/nhimbe/issues/155)): the events platform is **Mukoko Events**, at `https://events.mukoko.com`. The name "nhimbe" is retired as a brand, and the mineral stays **malachite**.
+
+- **Canon's `ecosystem` table (`lib/tokens/brand.source.ts`, served as `/v1/brand` → `.ecosystem`) replaces the `nhimbe` row with `events`.** The new row has display name "Mukoko Events", role "Events & gatherings", mineral malachite and url events.mukoko.com, in the same `sortOrder` slot. `BrandEcosystemEntry` gains two optional fields. `displayName` is the product name where it differs from the wordmark. `aliases` lists deprecated names that still resolve to the row. The `events` row carries `aliases: ["nhimbe"]`. A new export, `ecosystemAliases`, maps each alias to its row, and `resolveEcosystemName()` resolves a name through it. No other row changes.
+- **`nhimbe` is a documented deprecated alias, so nothing breaks.** `brandOverrides` (in `lib/tokens/index.ts` and the `mzizi-tokens-typescript` registry item) gains `events` and keeps `nhimbe` with the same malachite accent, marked `@deprecated`, and `BrandId` gains `"events"`. `mzizi-tokens-globals.css`'s brand block is now `[data-brand="events"], [data-brand="nhimbe"]`: the selector list is built from canon's `aliases` by `BRAND_ALIASES` in `scripts/render-globals-css.ts`, so `data-brand="nhimbe"` keeps resolving. `brandIndustryCategories.mukoko.events.products` now reads `["Mukoko Events"]`.
+- **Copy:** the `app-switcher` entry is now `events`. The `mzizi-footer` (React and Dioxus) Platform link is "Mukoko Events" at `/events`. `sidebar-15` and `sidebar-16` show a "Mukoko Events" workspace in malachite; they said tanzanite, which was never this brand's mineral. Item `useCases` say `events` instead of `nhimbe`, and descriptions say "Mukoko Events". The README ecosystem table now lists events.mukoko.com. The wordmark lists in CONTRIBUTING, the PR template and the brand guidelines drop nhimbe. Doctrine reads "Mukoko Events gatherings".
+- **Not changed:** the word _nhimbe_ where it names the Shona practice of communal work, as in sample data ("a working nhimbe") and history. `plugin/skills/` is copied from `@nyuchi/mzizi-skills`, so its ecosystem table follows when that package is bumped.
+- **New tests** in `__tests__/tokens-brand-blocks.test.ts` pin the `events` row, the alias, and the `nhimbe` brand block and accent that still resolve. They also check that no alias shadows a live canon row.
+
 ### Changed — releases tag themselves with RELEASE_BUMP_TOKEN, and the crates get a tag and release (2026-10-04)
 
 - `release.yml` creates the `v<package.json version>` tag and release with the `RELEASE_BUMP_TOKEN` org secret instead of `GITHUB_TOKEN`, so a workflow listening for the tag or the release can start (GitHub starts none from `GITHUB_TOKEN`).

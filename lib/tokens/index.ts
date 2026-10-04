@@ -486,6 +486,8 @@ export const listingThemes: Record<
 
 export type BrandId =
   | "mukoko"
+  | "events"
+  /** @deprecated Retired brand name (owner decision, 2026-10-04): use `events`, Mukoko Events. */
   | "nhimbe"
   | "bushtrade"
   | "lingo"
@@ -528,6 +530,19 @@ export const brandOverrides: Record<
     container: "#F3E5F5",
     onContainer: "#2E004D",
   },
+  // Mukoko Events (events.mukoko.com). Owner decision, 2026-10-04: the
+  // "nhimbe" brand is retired and the events platform is Mukoko Events; the
+  // mineral stays malachite. `nhimbe` stays below as a deprecated alias with
+  // the same accent, so existing `brandOverrides.nhimbe` reads keep working.
+  events: {
+    primary: "#64FFDA",
+    mineral: "malachite",
+    primaryHover: "#80FFE4",
+    primaryMuted: "rgba(100,255,218,0.12)",
+    container: "#E0F2F1",
+    onContainer: "#00332B",
+  },
+  /** @deprecated Alias of `events` (Mukoko Events). Kept so nothing breaks; do not use in new code. */
   nhimbe: {
     primary: "#64FFDA",
     mineral: "malachite",
@@ -726,7 +741,7 @@ export const brandIndustryCategories: Record<string, Record<string, IndustryCate
       label: "Social",
       products: ["Campfire", "Bytes", "Novels", "Circles"],
     },
-    events: { mineral: "malachite", label: "Events", products: ["Nhimbe"] },
+    events: { mineral: "malachite", label: "Events", products: ["Mukoko Events"] },
     commerce: { mineral: "gold", label: "Commerce", products: ["BushTrade", "Wallet"] },
     places: { mineral: "gold", label: "Places", products: ["Places", "Transport"] },
     productivity: {

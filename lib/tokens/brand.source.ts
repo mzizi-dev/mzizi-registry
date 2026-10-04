@@ -86,6 +86,17 @@ export interface BrandEcosystemEntry {
   voice: string
   adopterType: string
   sortOrder: number
+  /**
+   * The product name people read, where it is not the wordmark `name`, e.g.
+   * "Mukoko Events" for `events`. Optional: most rows are their own name.
+   */
+  displayName?: string
+  /**
+   * Deprecated names that still resolve to this row, kept so a consumer that
+   * keys on an old name does not break. Never use one in new code. See
+   * `ecosystemAliases` and `resolveEcosystemName`.
+   */
+  aliases?: string[]
 }
 
 export interface BrandMeta {
@@ -149,7 +160,7 @@ export const semanticColors: BrandColorToken[] = [
   {
     name: "brand-accent",
     usage:
-      "Per-app/per-context saturated brand mineral for accent fills and CTAs. Defaults to tanzanite — the Mukoko/Nyuchi brand mineral. Swappable per app or per-event/category (nhimbe). Distinct from the semantic --accent (a pale container for hover/selected states).",
+      "Per-app/per-context saturated brand mineral for accent fills and CTAs. Defaults to tanzanite — the Mukoko/Nyuchi brand mineral. Swappable per app or per-event/category (Mukoko Events). Distinct from the semantic --accent (a pale container for hover/selected states).",
     colorType: "semantic",
     darkValue: "#B388FF",
     lightValue: "#4B0082",
@@ -825,18 +836,26 @@ export const ecosystem: BrandEcosystemEntry[] = [
       "The Digital Twin's conversational interface. Three layers of intelligence — personal (your pod data), community (anonymised platform data), and platform (base mukoko knowledge). A friend that serves; a friend that does not control.",
     adopterType: "ecosystem_brand",
   },
+  // Owner decision, 2026-10-04 (mukoko-dev/nhimbe#155): the "nhimbe" brand is
+  // retired. The events platform is Mukoko Events, at events.mukoko.com, and
+  // its mineral stays malachite. This row replaces the `nhimbe` row; `nhimbe`
+  // survives only as a deprecated alias (`aliases`), so a consumer that keys on
+  // the old name keeps resolving to this row. The word nhimbe itself, the
+  // Shona communal work gathering the product grew out of, is not retired.
   {
-    url: "https://nhimbe.com",
-    name: "nhimbe",
+    url: "https://events.mukoko.com",
+    name: "events",
+    displayName: "Mukoko Events",
     role: "Events & gatherings",
     voice: "Celebratory, communal, vibrant",
     meaning: "Gathering",
     mineral: "malachite",
-    language: "Shona",
+    language: "English",
     sortOrder: 4,
     description:
-      "Community events and cultural gatherings. Standalone brand calling the same platform API. Edge-first check-in via geographic Durable Objects for sub-10ms ticket validation at venue doors.",
+      "Mukoko Events: community events and cultural gatherings across African cities, with RSVPs that never oversell a room, QR check-in at the door, and venues verified by Kweli. Formerly branded nhimbe, after the Shona communal work gathering.",
     adopterType: "ecosystem_brand",
+    aliases: ["nhimbe"],
   },
   {
     url: "https://bushtrade.co.zw",
@@ -1069,6 +1088,19 @@ export const ecosystem: BrandEcosystemEntry[] = [
   },
 ]
 
+/**
+ * Deprecated ecosystem names, each mapped to the canon row that replaced it.
+ * Built from the rows' `aliases`, so it cannot disagree with them.
+ */
+export const ecosystemAliases: Readonly<Record<string, string>> = Object.freeze(
+  Object.fromEntries(ecosystem.flatMap((row) => (row.aliases ?? []).map((alias) => [alias, row.name])))
+)
+
+/** The canon name for `name`: itself, or the row a deprecated alias points at. */
+export function resolveEcosystemName(name: string): string {
+  return ecosystemAliases[name] ?? name
+}
+
 /** Brand identity, philosophy, voice, accessibility posture and component specs. */
 export const brandMeta: BrandMeta = {
   version: "4.0.31",
@@ -1200,7 +1232,7 @@ export const brandMeta: BrandMeta = {
   },
   voiceAndTone: {
     doList: [
-      "Use lowercase for all brand wordmarks (mukoko, nyuchi, shamwari, bundu, nhimbe)",
+      "Use lowercase for all brand wordmarks (mukoko, nyuchi, shamwari, bundu)",
       "Reference African origins and meanings when contextually appropriate",
       "Write in a way that welcomes both technical and non-technical readers",
       "Use inclusive language that reflects Ubuntu philosophy",

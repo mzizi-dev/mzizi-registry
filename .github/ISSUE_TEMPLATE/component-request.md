@@ -45,7 +45,7 @@ Which Mukoko ecosystem apps would use this component?
 - [ ] mukoko-weather
 - [ ] mukoko-news
 - [ ] mukoko (super app)
-- [ ] nhimbe (events)
+- [ ] Mukoko Events
 - [ ] Other: \_\_\_
 
 ## Use Cases

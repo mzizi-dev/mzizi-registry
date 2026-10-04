@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils"
    (the WASH), and solve a foreground that stays legible on it.
 
    Four independent implementations of this one idea existed —
-   nhimbe's `.event-themed-page`, bushtrade's `.season-*` blocks,
+   Mukoko Events' `.event-themed-page`, bushtrade's `.season-*` blocks,
    this repo's own `--wash`, and a retired styling-washed-themes
    collection. They disagreed on the mix space (srgb vs oklab), the
    strength (7/8/12/14%), the argument order, and the variable
@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils"
      --washed-gradient the cover gradient
 
    plus the `--event-*` aliases (`--event-primary`, `--event-on-wash`,
-   `--event-gradient`) that mzizi-cover-wash-header and nhimbe's
+   `--event-gradient`) that mzizi-cover-wash-header and Mukoko Events'
    event pages already read, so existing call sites keep working.
 
    WHERE THE COLOURS COME FROM. Every value is a `var(--color-<family>,

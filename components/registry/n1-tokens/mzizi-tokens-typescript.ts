@@ -800,6 +800,8 @@ export const listingThemes: Record<
 
 export type BrandId =
   | "mukoko"
+  | "events"
+  /** @deprecated Retired brand name (owner decision, 2026-10-04): use `events`, Mukoko Events. */
   | "nhimbe"
   | "bushtrade"
   | "lingo"
@@ -868,6 +870,11 @@ export const brandOverrides: Record<
   // malachite=events/health/nature/trust (kweli), gold=commerce/places/wallet and every
   // Nyuchi brand (education included), terracotta=community, sodalite=AI (shamwari)
   mukoko: brandAccent("tanzanite", "#CE9FFF"),
+  // Mukoko Events (events.mukoko.com). Owner decision, 2026-10-04: the "nhimbe"
+  // brand is retired; the mineral stays malachite. `nhimbe` is a deprecated
+  // alias with the same accent so existing reads keep working.
+  events: brandAccent("malachite", "#80FFE4"),
+  /** @deprecated Alias of `events` (Mukoko Events). */
   nhimbe: brandAccent("malachite", "#80FFE4"),
   bushtrade: brandAccent("gold", "#FFDF6B"),
   lingo: brandAccent("cobalt", "#40C4FF"),
@@ -947,7 +954,11 @@ export const brandIndustryCategories: Record<
       label: "Social",
       products: ["Campfire", "Bytes", "Novels", "Circles"],
     },
-    events: { mineral: "malachite", label: "Events", products: ["Nhimbe"] },
+    events: {
+      mineral: "malachite",
+      label: "Events",
+      products: ["Mukoko Events"],
+    },
     commerce: {
       mineral: "gold",
       label: "Commerce",
