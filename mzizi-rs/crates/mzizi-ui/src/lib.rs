@@ -62,6 +62,9 @@ pub mod chart;
 #[path = "generated/status-badge.rs"]
 pub mod status_badge;
 
+#[path = "generated/safe-area-frame.rs"]
+pub mod safe_area_frame;
+
 // ── wave 1 · batch A · modules ──
 // ── end wave 1 · batch A · modules ──
 
@@ -98,6 +101,7 @@ pub use chart::{Chart, ChartProps, chart_loading_variants, chart_variants};
 pub use input::{Input, InputProps, input_variants};
 pub use label::{Label, LabelProps, label_variants};
 pub use progress::{Progress, ProgressProps, progress_variants};
+pub use safe_area_frame::{SafeAreaBands, SafeAreaFrame, SafeAreaFrameProps, safe_area_bands};
 pub use separator::{Separator, SeparatorOrientation, SeparatorProps, separator_variants};
 pub use status_badge::{
     STATUS_BADGE_STATUSES, StatusBadge, StatusBadgeProps, StatusBadgeStatus, status_badge_variants,

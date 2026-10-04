@@ -10302,6 +10302,45 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["brand"],
+      "dependencies": [],
+      "description": "An email message as a mail client shows it — header lines, a sample opening line, then the HTML under test (a signature, a newsletter block) in a sandboxed frame that can display it but never run it. The body is white in every theme, like the email it stands for. Server-safe. Built for nyuchi-tools' signature generator.",
+      "docs": "Use it for: Email signature preview, Newsletter or announcement block preview, Any HTML-email fragment review.\nVariants: empty, filled.\nSizes: frameHeight.\nIncludes: Sandboxed iframe (sandbox=\"\"), Always-light message body, Placeholder slot.\nAccessibility: Decorative header lines aria-hidden, Titled iframe, Placeholder text at AAA contrast on white.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-email-preview",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/mzizi-email-preview.tsx",
+          "target": "components/ui/mzizi-email-preview.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Decorative header lines aria-hidden",
+          "Titled iframe",
+          "Placeholder text at AAA contrast on white"
+        ],
+        "collection": "brand",
+        "features": [
+          "Sandboxed iframe (sandbox=\"\")",
+          "Always-light message body",
+          "Placeholder slot"
+        ],
+        "owner": "nyuchi",
+        "sizes": ["frameHeight"],
+        "useCases": [
+          "Email signature preview",
+          "Newsletter or announcement block preview",
+          "Any HTML-email fragment review"
+        ],
+        "variants": ["empty", "filled"]
+      },
+      "name": "mzizi-email-preview",
+      "registryDependencies": [],
+      "title": "mzizi Email Preview",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["pages"],
       "dependencies": [],
       "description": "Default empty state screen for pages with no content yet. Used across mini-apps when a feed, list, or section has zero items. Branded illustration placeholder, message, and optional CTA.",
@@ -16183,6 +16222,86 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
+      "description": "Choose output sizes from groups of presets, each a true-aspect SafeAreaFrame thumbnail. Two separate actions per size: select the card to make it the active size (aria-pressed, one at a time) and tick its checkbox to include it in a batch (any number). Built for nyuchi-tools' Studio.",
+      "docs": "Use it for: Pick the sizes for a campaign or launch set, Switch the size a live preview shows, Batch export selection.\nVariants: default.\nSizes: 2-4 columns, responsive.\nIncludes: Grouped by platform, Active vs included kept distinct, Safe-area thumbnails.\nAccessibility: aria-pressed on the active card, Labelled checkboxes (Include <size> in the set), 44px+ targets for both actions, Visible focus ring.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/preset-picker",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/preset-picker.tsx",
+          "target": "components/ui/preset-picker.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-pressed on the active card",
+          "Labelled checkboxes (Include <size> in the set)",
+          "44px+ targets for both actions",
+          "Visible focus ring"
+        ],
+        "collection": "primitives",
+        "features": [
+          "Grouped by platform",
+          "Active vs included kept distinct",
+          "Safe-area thumbnails"
+        ],
+        "owner": "mzizi",
+        "sizes": ["2-4 columns, responsive"],
+        "useCases": [
+          "Pick the sizes for a campaign or launch set",
+          "Switch the size a live preview shows",
+          "Batch export selection"
+        ],
+        "variants": ["default"]
+      },
+      "name": "preset-picker",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/safe-area-frame"],
+      "title": "Preset Picker",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "A stage for one rendered image: checkerboard surface so transparency reads as transparency, Fit or fixed-scale zoom (Fit keeps a 9:16 story or a wide tile whole, at its aspect ratio), an aria-busy flag with a visible rendering label, and an empty slot before the first render. Built for nyuchi-tools' Studio.",
+      "docs": "Use it for: Live preview of a generated social or store image, Zoomable review of a render at 50% / 100%, Any single-image preview with a loading state.\nVariants: fit, scaled.\nSizes: fitHeight.\nIncludes: Fit / numeric zoom, Checkerboard surface from tokens, Busy label and aria-busy, Empty-state slot.\nAccessibility: aria-live polite region, aria-busy while rendering, Alt text passed through to the image.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/preview-canvas",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/preview-canvas.tsx",
+          "target": "components/ui/preview-canvas.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-live polite region",
+          "aria-busy while rendering",
+          "Alt text passed through to the image"
+        ],
+        "collection": "primitives",
+        "features": [
+          "Fit / numeric zoom",
+          "Checkerboard surface from tokens",
+          "Busy label and aria-busy",
+          "Empty-state slot"
+        ],
+        "owner": "mzizi",
+        "sizes": ["fitHeight"],
+        "useCases": [
+          "Live preview of a generated social or store image",
+          "Zoomable review of a render at 50% / 100%",
+          "Any single-image preview with a loading state"
+        ],
+        "variants": ["fit", "scaled"]
+      },
+      "name": "preview-canvas",
+      "registryDependencies": [],
+      "title": "Preview Canvas",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
       "description": "Formatted price with currency, original price, and discount badge.",
       "docs": "Use it for: Product price in marketplace listings, Discount price with strikethrough original, Subscription tier pricing display, Multi-currency price with conversion, Promotional pricing with countdown.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/price-display",
       "files": [
@@ -17032,6 +17151,44 @@
       "name": "rtl-conformity-check",
       "registryDependencies": [],
       "title": "Rtl Conformity Check",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "A canvas shape at thumbnail size — true aspect ratio, with the bands a platform covers with its own interface shaded (a story's top and reply bars, a reel's action rail, a video's duration badge). Purely presentational and server-safe; a Mzizi Roots (Rust/Dioxus) sibling renders the same markup from the same geometry. Built for nyuchi-tools' image Studio.",
+      "docs": "Use it for: Image size pickers (story, feed, store, icon presets), Preset catalogues that show where text must not go, Any UI that previews an output shape before rendering.\nVariants: default.\nSizes: box (CSS px).\nIncludes: True aspect ratio in a fixed square, Safe-area bands from [top, right, bottom, left] insets, Pure safeAreaBands() geometry shared with the Rust sibling, Never collapses below 6px a side.\nAccessibility: Decorative: aria-hidden — the size's name and dimensions are text beside it.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/safe-area-frame",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/safe-area-frame.tsx",
+          "target": "components/ui/safe-area-frame.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Decorative: aria-hidden — the size's name and dimensions are text beside it"
+        ],
+        "collection": "primitives",
+        "features": [
+          "True aspect ratio in a fixed square",
+          "Safe-area bands from [top, right, bottom, left] insets",
+          "Pure safeAreaBands() geometry shared with the Rust sibling",
+          "Never collapses below 6px a side"
+        ],
+        "owner": "mzizi",
+        "sizes": ["box (CSS px)"],
+        "useCases": [
+          "Image size pickers (story, feed, store, icon presets)",
+          "Preset catalogues that show where text must not go",
+          "Any UI that previews an output shape before rendering"
+        ],
+        "variants": ["default"]
+      },
+      "name": "safe-area-frame",
+      "registryDependencies": [],
+      "title": "Safe Area Frame",
       "type": "registry:ui"
     },
     {

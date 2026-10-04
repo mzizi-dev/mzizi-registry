@@ -59,6 +59,10 @@ The copper crosshair disc that used to ship as `public/icons/mzizi-icon.*` was n
   - the mzizi mark is drawn in anything but hematite;
   - a component rendition names a source file that no longer exists.
 
+### Added — `safe-area-frame`, `preview-canvas`, `preset-picker` and `mzizi-email-preview` (2026-10-04, #398)
+
+- **Four components from nyuchi-tools** (`nyuchi/workspace-tools`), contributed because the registry had no equivalent. `safe-area-frame` (N2) draws a canvas shape at thumbnail size with its platform-UI bands shaded, in React and as a Mzizi Roots component in `mzizi-ui` (`SafeAreaFrame`, `safe_area_bands`) — one geometry, held together by the contract suite. `preview-canvas` (N2) is a single-image stage with Fit or scaled zoom and a busy state; `preset-picker` (N2) picks output sizes on `safe-area-frame`, keeping "active" and "included" apart; `mzizi-email-preview` (N3) shows email HTML in a sandboxed frame on an always-light body. Tests in `__tests__/components/` and `mzizi-rs/crates/mzizi-ui/tests/contract.rs`.
+
 ### Added — `mzizi-activitypub`, the shared ActivityPub crate (2026-10-04)
 
 Owner decision Q5, 2026-10-04 (mukoko-dev/kweli#171; nyuchi/api-gateway `docs/architecture/activitypub.md`): the ActivityPub code circles.mukoko.com and kweli.mukoko.com each carried is one Mzizi server crate, used by both Workers.
