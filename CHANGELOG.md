@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — a push to `main` tells the registry pin bots at once (2026-10-04)
+
+The registry pin bots (`registry-pin-bump.yml` in mzizi-api-gateway and agent-tools) only ran on their hourly schedule, and GitHub delays and drops scheduled runs: on 2026-10-04 they ran 2–3 hours apart, so api.mzizi.dev and mcp.mzizi.dev served a registry hours behind `main`.
+
+- **`.github/workflows/notify-pin-bots.yml`**: on every push to `main` (and by hand), it sends a `repository_dispatch` of type `registry-main-moved` to mzizi-dev/mzizi-api-gateway and agent-tools with `RELEASE_BUMP_TOKEN`, carrying the pushed SHA. It checks out and runs no code. A send that fails, or a missing token, only warns: the hourly run stays the backstop.
+- It does nothing until each bot also triggers on `repository_dispatch`, which lands in those repositories separately.
+
 ### Fixed — `wallet-card` and `mzizi-create-listing` take their colours from N1, and CI runs `lint:colors` (2026-10-04)
 
 `pnpm lint:colors` failed on `main` for nine raw palette hexes, and no CI job ran it (#423).
