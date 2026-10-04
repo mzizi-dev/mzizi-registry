@@ -1,0 +1,83 @@
+/* mzizi — static renditions of the N2 primitives, hand-written from
+   components/registry/n2-primitives/*.tsx (Tailwind classes translated 1:1). */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+body { margin: 0; font-family: var(--font-sans, "Noto Sans", system-ui, sans-serif); color: var(--foreground); background: var(--background); -webkit-font-smoothing: antialiased; }
+.mz-stage { padding: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.mz-stage.col { flex-direction: column; align-items: flex-start; }
+.mz-dots { background-image: radial-gradient(var(--dot-color) 1px, transparent 1.5px); background-size: 24px 24px; background-position: -1px -1px; }
+
+/* Button — pill always; h-14 default, h-12 sm */
+.mz-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 56px; padding: 0 20px; border-radius: 9999px; border: 1px solid transparent; background-clip: padding-box; font: 500 14px/1 inherit; font-family: inherit; white-space: nowrap; cursor: pointer; transition: all .15s; outline: none; background: var(--primary); color: var(--primary-foreground); }
+.mz-btn:hover { background: color-mix(in oklab, var(--primary) 80%, transparent); }
+.mz-btn:focus-visible { border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent); }
+.mz-btn[disabled] { opacity: .5; pointer-events: none; }
+.mz-btn svg { width: 16px; height: 16px; }
+.mz-btn.sm { height: 48px; padding: 0 16px; gap: 6px; }
+.mz-btn.lg { height: 56px; padding: 0 24px; }
+.mz-btn.icon { width: 56px; padding: 0; }
+.mz-btn.outline { border-color: var(--border); background: color-mix(in oklab, var(--input) 30%, transparent); color: var(--foreground); }
+.mz-btn.outline:hover { background: color-mix(in oklab, var(--input) 50%, transparent); }
+.mz-btn.secondary { background: var(--secondary); color: var(--secondary-foreground); }
+.mz-btn.ghost { background: transparent; color: var(--foreground); }
+.mz-btn.ghost:hover { background: var(--muted); }
+.mz-btn.destructive { background: color-mix(in oklab, var(--destructive) 10%, transparent); color: var(--destructive); }
+.mz-btn.destructive:hover { background: color-mix(in oklab, var(--destructive) 20%, transparent); }
+.mz-btn.link { background: transparent; color: var(--primary); text-underline-offset: 4px; }
+.mz-btn.link:hover { text-decoration: underline; }
+.mz-btn.brand { background: var(--brand-accent); color: var(--brand-accent-foreground); }
+
+/* Input — pill, h-12 */
+.mz-input { box-sizing: border-box; height: 48px; width: 100%; min-width: 0; border-radius: 9999px; border: 1px solid var(--input); background: color-mix(in oklab, var(--input) 30%, transparent); padding: 4px 16px; font: 400 14px/1.4 inherit; font-family: inherit; color: var(--foreground); outline: none; transition: color .15s, border-color .15s; }
+.mz-input::placeholder { color: var(--muted-foreground); }
+.mz-input:focus-visible, .mz-input.focus { border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent); }
+.mz-input[aria-invalid="true"] { border-color: var(--destructive); box-shadow: 0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent); }
+.mz-input[disabled] { opacity: .5; cursor: not-allowed; }
+.mz-label { font: 500 14px/1.5 inherit; font-family: inherit; color: var(--foreground); }
+.mz-field { display: grid; gap: 8px; width: 320px; }
+
+/* Badge — rounded-md (as the primitive ships), h-5, text-xs */
+.mz-badge { display: inline-flex; align-items: center; gap: 4px; height: 20px; box-sizing: border-box; padding: 2px 8px; border-radius: 12px; border: 1px solid transparent; font: 500 12px/1 inherit; font-family: inherit; white-space: nowrap; background: var(--primary); color: var(--primary-foreground); }
+.mz-badge.secondary { background: var(--secondary); color: var(--secondary-foreground); }
+.mz-badge.destructive { background: color-mix(in oklab, var(--destructive) 10%, transparent); color: var(--destructive); }
+.mz-badge.outline { border-color: var(--border); color: var(--foreground); background: color-mix(in oklab, var(--input) 30%, transparent); }
+.mz-badge.mineral { border-radius: 9999px; }
+
+
+/* Card — radius-lg 14px, 1px ring of foreground/10, py-6 px-6 */
+.mz-card { display: flex; flex-direction: column; gap: 24px; overflow: hidden; border-radius: 14px; background: var(--card); color: var(--card-foreground); padding: 24px 0; font-size: 14px; box-shadow: 0 0 0 1px color-mix(in oklab, var(--foreground) 10%, transparent); width: 340px; }
+.mz-card.sm { gap: 16px; padding: 16px 0; }
+.mz-card-header { display: grid; gap: 8px; padding: 0 24px; grid-template-columns: 1fr auto; }
+.mz-card.sm .mz-card-header, .mz-card.sm .mz-card-content, .mz-card.sm .mz-card-footer { padding: 0 16px; }
+.mz-card-title { font-size: 16px; font-weight: 500; }
+.mz-card-description { font-size: 14px; color: var(--muted-foreground); grid-column: 1; }
+.mz-card-action { grid-column: 2; grid-row: 1 / span 2; }
+.mz-card-content { padding: 0 24px; line-height: 1.5; }
+.mz-card-footer { display: flex; align-items: center; gap: 8px; padding: 0 24px; }
+
+/* Switch — 32×18.4, pill */
+.mz-switch { position: relative; display: inline-flex; align-items: center; width: 32px; height: 18.4px; box-sizing: border-box; border-radius: 9999px; border: 1px solid transparent; background: var(--input); cursor: pointer; transition: all .15s; }
+.mz-switch::before { content: ""; width: 16px; height: 16px; border-radius: 9999px; background: var(--background); transition: transform .15s; }
+[data-theme="dark"] .mz-switch:not(.on) { background: color-mix(in oklab, var(--input) 80%, transparent); box-shadow: inset 0 0 0 1px var(--border); }
+[data-theme="dark"] .mz-switch:not(.on)::before { background: var(--foreground); }
+.mz-switch.on { background: var(--primary); }
+.mz-switch.on::before { transform: translateX(calc(100% - 2px)); }
+[data-theme="dark"] .mz-switch.on::before { background: var(--primary-foreground); }
+.mz-switch[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+
+/* Checkbox — 16px, radius-sm 7px */
+.mz-check { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; box-sizing: border-box; border-radius: 7px; border: 1px solid var(--input); color: var(--primary-foreground); }
+[data-theme="dark"] .mz-check:not(.on) { background: color-mix(in oklab, var(--input) 30%, transparent); }
+.mz-check.on { border-color: var(--primary); background: var(--primary); }
+.mz-check svg { width: 14px; height: 14px; }
+.mz-row { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+
+/* Tabs — pill list h-14 on muted, active trigger on background */
+.mz-tabs-list { display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 4px; border-radius: 9999px; background: var(--muted); color: var(--muted-foreground); }
+.mz-tab { display: inline-flex; align-items: center; justify-content: center; height: calc(100% - 2px); padding: 8px 16px; border-radius: 9999px; border: 1px solid transparent; font: 500 14px/1 inherit; font-family: inherit; white-space: nowrap; color: color-mix(in oklab, var(--foreground) 60%, transparent); }
+[data-theme="dark"] .mz-tab { color: var(--muted-foreground); }
+.mz-tab.active { background: var(--background); color: var(--foreground); }
+[data-theme="dark"] .mz-tab.active { border-color: var(--input); background: color-mix(in oklab, var(--input) 30%, transparent); color: var(--foreground); }
+.mz-tabs-list.line { background: transparent; border-radius: 0; gap: 4px; }
+.mz-tabs-list.line .mz-tab { position: relative; background: transparent; border-color: transparent; }
+.mz-tabs-list.line .mz-tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 2px; background: var(--foreground); }

@@ -12,7 +12,7 @@
     "build:packages": "pnpm --filter \"./packages/*\" build",
     "changelog:generate": "node scripts/generate-changelog.mjs",
     "changelog:generate:check": "node scripts/generate-changelog.mjs --check",
-    "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm changelog:generate:check && pnpm node-map:generate:check && pnpm rust:generate:check && pnpm build",
+    "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm design-system:generate:check && pnpm changelog:generate:check && pnpm node-map:generate:check && pnpm rust:generate:check && pnpm build",
     "ci:check": "pnpm lint && pnpm typecheck",
     "doctrine:generate": "node scripts/generate-doctrine.mjs",
     "doctrine:generate:check": "node scripts/generate-doctrine.mjs --check",
@@ -57,10 +57,12 @@
     "tokens:registry:check": "node scripts/generate-theme-tokens.mjs --check",
     "tokens:sync": "tsx scripts/sync-tokens.ts",
     "tokens:verify": "tsx scripts/sync-tokens.ts --check",
+    "design-system:generate": "tsx scripts/generate-design-system.ts",
+    "design-system:generate:check": "tsx scripts/generate-design-system.ts --check",
     "typecheck": "tsc --noEmit",
     "typecheck:packages": "pnpm --filter \"./packages/*\" typecheck",
     "ui:dev": "wrangler dev --config mzizi-ui/wrangler.jsonc --local",
-    "generate": "pnpm skills:generate && pnpm plugin:skills && pnpm changelog:generate && pnpm doctrine:generate && pnpm tokens:sync && pnpm tokens:registry && pnpm registry:normalize && pnpm registry:metadata && pnpm registry:paths && pnpm registry:index && pnpm registry:source && pnpm props:extract && pnpm openapi:generate && pnpm node-map:generate && pnpm rust:generate && prettier --write --log-level warn registry.json"
+    "generate": "pnpm skills:generate && pnpm plugin:skills && pnpm changelog:generate && pnpm doctrine:generate && pnpm tokens:sync && pnpm design-system:generate && pnpm tokens:registry && pnpm registry:normalize && pnpm registry:metadata && pnpm registry:paths && pnpm registry:index && pnpm registry:source && pnpm props:extract && pnpm openapi:generate && pnpm node-map:generate && pnpm rust:generate && prettier --write --log-level warn registry.json"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

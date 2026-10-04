@@ -94,6 +94,12 @@ jobs:
       - name: Verify every token artifact matches lib/tokens/palette.source.ts
         run: pnpm tokens:verify
 
+      # design-system/tokens.json is the design system's tokens as data, generated
+      # from styles/globals.css and lib/tokens/. Checked here, not only in `pnpm
+      # check`, for the reason the step above gives.
+      - name: Verify design-system/tokens.json matches its sources
+        run: pnpm design-system:generate:check
+
       # title / categories / docs / author are derived from data already on each item.
       # Checked rather than hand-maintained so 574 items cannot fall out of step one at
       # a time.

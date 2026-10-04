@@ -1,0 +1,30 @@
+<!-- @dsCard height=300 -->
+<style>
+  html,body{margin:0;background:var(--background)}
+  .cover{position:relative;width:960px;height:300px;overflow:hidden;background:var(--background)}
+  svg{position:absolute;inset:0}
+  .gold{fill:var(--gold)} .tanzanite{fill:var(--tanzanite)} .copper{fill:var(--copper)}
+  .malachite{fill:var(--malachite)} .ink{fill:var(--primary)}
+  .node{fill:var(--gold)} .edge{stroke:var(--gold);stroke-width:3;stroke-opacity:.5}
+  .text{position:absolute;left:48px;bottom:36px;max-width:440px}
+  .name{font-family:"Noto Serif",Georgia,serif;font-weight:700;font-size:120px;line-height:.92;letter-spacing:-.025em;color:var(--foreground)}
+  .tag{margin-top:16px;font-family:"Noto Sans",system-ui,sans-serif;font-size:14px;color:var(--muted-foreground)}
+</style>
+<div class="cover">
+  <svg width="960" height="300" viewBox="0 0 960 300" aria-hidden="true">
+    <!-- blocks: gold (the mzizi mark's mineral) 112×260 pill, tanzanite 112×182 radius-lg, malachite 112 disc, copper 160×48 pill, primary ink 112×48 pill -->
+    <!-- arrangement: one tall gold slab bleeding off the top with satellites; tanzanite bleeds top-right; malachite, copper and ink bleed off the bottom -->
+    <!-- pattern: the mzizi mark's seven-node network (a hub and six roots joined by edges), redrawn as a motif in gold nodes on gold edges at 50%, as the mark draws it in both themes, because the mark itself is that network -->
+    <!-- scales: node radius 12 / hub 15 (radius-md, radius-lg); pill heights touch-min 48px; gap space-base 16px; radii radius-full, radius-lg 14px -->
+    <line class="edge" x1="515.5" y1="44.0" x2="639.5" y2="59.5"/><line class="edge" x1="515.5" y1="44.0" x2="577.5" y2="137.0"/><line class="edge" x1="515.5" y1="44.0" x2="500.0" y2="168.0"/><line class="edge" x1="639.5" y1="59.5" x2="577.5" y2="137.0"/><line class="edge" x1="639.5" y1="59.5" x2="670.5" y2="168.0"/><line class="edge" x1="577.5" y1="137.0" x2="500.0" y2="168.0"/><line class="edge" x1="577.5" y1="137.0" x2="670.5" y2="168.0"/><line class="edge" x1="577.5" y1="137.0" x2="562.0" y2="221.9"/><line class="edge" x1="577.5" y1="137.0" x2="608.5" y2="221.9"/><line class="edge" x1="500.0" y1="168.0" x2="562.0" y2="221.9"/><line class="edge" x1="670.5" y1="168.0" x2="608.5" y2="221.9"/><circle class="node" cx="515.5" cy="44.0" r="12"/><circle class="node" cx="639.5" cy="59.5" r="12"/><circle class="node" cx="577.5" cy="137.0" r="15"/><circle class="node" cx="500.0" cy="168.0" r="12"/><circle class="node" cx="670.5" cy="168.0" r="12"/><circle class="node" cx="562.0" cy="221.9" r="12"/><circle class="node" cx="608.5" cy="221.9" r="12"/>
+    <rect class="gold" x="720" y="-40" width="112" height="260" rx="56"/>
+    <rect class="tanzanite" x="848" y="-14" width="112" height="182" rx="14"/>
+    <circle class="malachite" cx="904" cy="248" r="56"/>
+    <rect class="copper" x="672" y="256" width="160" height="48" rx="24"/>
+    <rect class="ink" x="520" y="256" width="136" height="48" rx="24"/>
+  </svg>
+  <div class="text">
+    <div class="name">mzizi</div>
+    <div class="tag">Ndiri nekuti tiri. I am because we are.</div>
+  </div>
+</div>
