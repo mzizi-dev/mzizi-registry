@@ -33,6 +33,11 @@ import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from "
 import { join } from "node:path"
 
 const ROOT = join(process.cwd(), "components", "registry")
+
+// Binary files under `components/registry/assets/` (the raster brand marks) are not
+// source: inlining them as UTF-8 would corrupt them and bloat the bundle. They are
+// listed by path in `lib/registry.generated.ts` and never inlined.
+const BINARY = /\.(png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|pdf)$/i
 const OUT = join(process.cwd(), "lib", "registry-source.generated.json")
 const check = process.argv.includes("--check")
 
@@ -53,6 +58,7 @@ for (const dir of readdirSync(ROOT).sort()) {
   for (const file of readdirSync(dirPath).sort()) {
     const filePath = join(dirPath, file)
     if (!statSync(filePath).isFile()) continue
+    if (BINARY.test(file)) continue
     const text = readFileSync(filePath, "utf8")
     sources[`${dir}/${file}`] = text
     bytes += text.length

@@ -13,11 +13,35 @@ interface WalletCardProps extends React.ComponentProps<"div"> {
   address?: string
 }
 
-const tokenGradients: Record<TokenType, string> = {
-  MIT: "linear-gradient(135deg, #4B0082 0%, #B388FF 100%)",
-  MXT: "linear-gradient(135deg, #004D40 0%, #64FFDA 100%)",
-  NST: "linear-gradient(135deg, #0047AB 0%, #00B0FF 100%)",
-  NHC: "linear-gradient(135deg, #5D4037 0%, #FFD740 100%)",
+/**
+ * Each token type is identified by one mineral, and every colour comes from N1.
+ *
+ * The fill runs from the mineral to its `-on-container` tone and the text is the
+ * mineral's `-container` tone. Both pairs are theme-adaptive and swap together,
+ * so the card stays legible in light and dark mode — deep fill with pale text in
+ * light, bright fill with deep text in dark.
+ */
+const tokenStyles: Record<TokenType, { background: string; text: string }> = {
+  MIT: {
+    background:
+      "linear-gradient(135deg, var(--color-tanzanite) 0%, var(--color-tanzanite-on-container) 100%)",
+    text: "text-tanzanite-container",
+  },
+  MXT: {
+    background:
+      "linear-gradient(135deg, var(--color-malachite) 0%, var(--color-malachite-on-container) 100%)",
+    text: "text-malachite-container",
+  },
+  NST: {
+    background:
+      "linear-gradient(135deg, var(--color-cobalt) 0%, var(--color-cobalt-on-container) 100%)",
+    text: "text-cobalt-container",
+  },
+  NHC: {
+    background:
+      "linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-on-container) 100%)",
+    text: "text-gold-container",
+  },
 }
 
 const tokenNames: Record<TokenType, string> = {
@@ -41,8 +65,12 @@ function WalletCard({
       data-slot="wallet-card"
       data-portal="https://mzizi.dev/components/wallet-card"
       role="article"
-      className={cn("overflow-hidden rounded-[var(--radius-xl,17px)] p-5 text-white", className)}
-      style={{ background: tokenGradients[tokenType] }}
+      className={cn(
+        "overflow-hidden rounded-[var(--radius-xl,17px)] p-5",
+        tokenStyles[tokenType].text,
+        className
+      )}
+      style={{ background: tokenStyles[tokenType].background }}
       {...props}
     >
       <div className="flex items-center justify-between">

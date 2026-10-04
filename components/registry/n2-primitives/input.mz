@@ -1,0 +1,37 @@
+## A single-line text field. Interactive, so the 48px floor applies.
+## Corpus reference: n2-primitives/input.tsx.
+component input
+
+  enum input_size
+    default  class "h-14 px-4"    height 56
+    sm       class "h-12 px-3"    height 48
+  end
+
+  prop size: input_size = default
+  prop value: text
+  prop placeholder: text
+  prop disabled: bool = false
+  prop invalid: bool = false
+  prop on_change: event(text)
+
+  view
+    field
+      slot = "input"
+      portal = "https://mzizi.dev/components/input"
+      size = size
+      disabled = disabled
+      invalid = invalid
+      value = value
+      placeholder = placeholder
+      class = "w-full min-w-0 rounded-[var(--radius-lg,14px)] border border-border bg-input/30 text-sm outline-none transition-all placeholder:text-muted-foreground disabled:pointer-events-none disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:border-destructive aria-invalid:ring-destructive/20 {size.class}"
+      change = on_change
+    end
+  end
+
+  contract
+    every input_size height at_least 48
+    input_size.default height is 56
+    slot is "input"
+  end
+
+end component input

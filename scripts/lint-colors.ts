@@ -115,7 +115,7 @@ const ALLOW: { prefix: string; why: string }[] = [
  * above, arriving by a different route — so the linter reported nine
  * violations for documentation doing exactly what the rule wants. `pnpm
  * lint:colors` has been red on `main` ever since, and nothing noticed because
- * it runs only via `pnpm check`, never in CI.
+ * it ran only via `pnpm check`, never in CI. It runs in CI's Lint job now (#423).
  *
  * The gate is not weakened. A hex hardcoded in a generated file means a hex
  * hardcoded in its SOURCE, and that is where it has to be caught — for skills,

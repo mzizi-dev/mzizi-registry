@@ -38,3 +38,8 @@ mzizi-tokens = { path = "../mzizi-tokens", version = "0.1.0" }
 # consumer's target for them, and Dioxus's whole point is that one codebase serves
 # web, desktop, iOS and Android.
 dioxus = { version = "0.7", default-features = false, features = ["macro", "signals", "hooks", "html"] }
+
+[dev-dependencies]
+# The contract suite renders components to HTML and evaluates their `CONTRACT` clauses
+# against the markup (the shared evaluator in `mzizi-rs/contract-eval/`).
+dioxus-ssr = "0.7"

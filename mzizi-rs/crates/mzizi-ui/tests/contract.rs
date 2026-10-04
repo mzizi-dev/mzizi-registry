@@ -18,11 +18,17 @@
 use std::fs;
 use std::path::PathBuf;
 
+use dioxus::prelude::*;
 use mzizi_ui::{
     AvatarSize, BadgeVariant, ButtonSize, ButtonVariant, SeparatorOrientation, avatar_variants,
     badge_variants, button_variants, chart_loading_variants, chart_variants, input_variants,
     label_variants, progress_variants, separator_variants,
 };
+use mzizi_ui::{STATUS_BADGE_STATUSES, StatusBadge, StatusBadgeStatus, status_badge_variants};
+
+#[path = "../../../contract-eval/contract_eval.rs"]
+mod contract_eval;
+use contract_eval::{Case, render, rows};
 
 /// Read a registry component's TypeScript source.
 fn tsx(node_dir: &str, name: &str) -> String {
@@ -357,6 +363,68 @@ fn chart_classes_match_the_typescript() {
     // asymmetry already present there, not something to reconcile quietly (rule 1: match
     // the contract, not a guess at what it "should" be).
     assert!(ts.contains("data-portal=\"https://mzizi.dev/components/chart\""));
+}
+
+#[test]
+fn status_badge_matches_the_typescript() {
+    // The React build composes `Badge` (outline) with its own classes, so the Rust's classes
+    // are checked against the two files together.
+    let ts = tsx("n2-primitives", "status-badge") + &tsx("n2-primitives", "badge");
+    for status in STATUS_BADGE_STATUSES {
+        assert_classes_present(
+            &status_badge_variants(status, ""),
+            &ts,
+            &format!("status-badge/{}", status.slug()),
+        );
+        assert!(
+            ts.contains(&format!("{}:", status.slug())),
+            "status-badge: status `{}` is not declared in STATUS_STYLES",
+            status.slug()
+        );
+    }
+    let own = tsx("n2-primitives", "status-badge");
+    for attr in [
+        "data-slot=\"status-badge\"",
+        "data-portal=\"https://mzizi.dev/components/status-badge\"",
+    ] {
+        assert!(own.contains(attr), "status-badge.tsx does not carry {attr}");
+    }
+}
+
+#[test]
+fn status_badge_keeps_its_contract() {
+    fn default_state() -> Element {
+        rsx! { StatusBadge {} }
+    }
+    fn deprecated_state() -> Element {
+        rsx! { StatusBadge { status: StatusBadgeStatus::Deprecated } }
+    }
+    Case {
+        name: "status-badge",
+        contract: mzizi_ui::status_badge::CONTRACT,
+        states: vec![
+            ("default", render(default_state)),
+            ("deprecated", render(deprecated_state)),
+        ],
+        defaults: vec![("status", "stable".into())],
+        columns: vec![(
+            "status_badge_status",
+            "class",
+            rows(&STATUS_BADGE_STATUSES, StatusBadgeStatus::slug, |s| {
+                s.classes().to_owned()
+            }),
+        )],
+    }
+    .check();
+}
+
+#[test]
+fn every_exported_contract_is_listed() {
+    assert!(
+        mzizi_ui::CONTRACTS
+            .iter()
+            .any(|(name, c)| *name == "status-badge" && c.starts_with("contract"))
+    );
 }
 
 #[test]
