@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the Mzizi Discover Standard: a contract for each of the 11 Discover components (2026-10-04, #414)
+
+Owner decision, 2026-10-04: the discover pages of news, events, circles and weather must be identical, so they move into the Mukoko super-app on the web unchanged. Tracking: #413.
+
+- **`contracts/discover/`, a second contract family**: DiscoverShell, DiscoverMeta, DiscoverHero, DiscoverSearch, CategoryChips, CategoryChip, DiscoverSection, ResultGrid, DiscoverCard (one contract, variants `article`, `event`, `circle`, `place`), LoadMore and OpenInApp. Each is built in `@bundu/ui` (`src/discover/*.astro`, mzizi-dev/packages-npm) and evaluated there in every state. Where a server fills a prebuilt shell (circles.mukoko.com's Rust Worker), each contract has a `template` state with `{{placeholders}}`.
+- **`app/filter-bar` 1.1.0**: a `search` prop (`false` renders only the selects), `searchLabel` and `q` become optional, and a select whose value is `""` is no longer an active filter.
+- **`app/app-shell` 1.1.0**: the accent is `data-accent` plus the shell's stylesheet, not an inline `style`. **`app/bar-chart` 1.0.1**: bars are SVG geometry, not inline styles. The Astro runner now fails any inline `style` attribute, so a CSP needs no `style-src-attr 'unsafe-inline'`.
+- **`__tests__/contracts`** reads every family (`FAMILIES`) and fails on a directory under `contracts/` it does not read.
+- **CONTRIBUTING.md and AGENTS.md: upstream first.** A new or altered component goes upstream to Mzizi immediately; a local copy lives only as `TODO(mzizi)` with an open upstream PR.
+
 ### Changed — releases follow the org versioning policy (2026-10-04, #412)
 
 `release.yml` and `publish-crates.yml` check the version with the shared `next-version` action (nyuchi/.github, pinned) before tagging or uploading. A release to `main` must be the next minor above the highest tag (the registry: 4.2.0, above v4.1.8; the crates: 0.2.0, above mzizi-rs-v0.1.0). A major is only released by hand, with `bump: major` on a manual run. The new `staging-version.yml` tags each merge into `staging` as the next patch. CONTRIBUTING.md § Versioning describes the policy.

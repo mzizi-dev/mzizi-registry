@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/filter-bar",
   "title": "FilterBar",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
   "summary": "Search and select filters as a GET form, so the filtered view is a URL: linkable and working without JavaScript. Changing a filter goes back to page 1.",
@@ -20,14 +20,23 @@
     {
       "name": "searchLabel",
       "type": "string",
-      "required": true,
-      "description": "Visible label of the search field."
+      "required": false,
+      "description": "Visible label of the search field.",
+      "default": "Search"
     },
     {
       "name": "q",
       "type": "string",
-      "required": true,
-      "description": "The current query."
+      "required": false,
+      "description": "The current query.",
+      "default": ""
+    },
+    {
+      "name": "search",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Show the search field. `false` leaves only the selects, e.g. when the page already has a search box (a Discover page's DiscoverSearch)."
     },
     {
       "name": "selects",
@@ -61,7 +70,8 @@
   "behaviour": [
     "A role=\"search\" GET form with visible labels.",
     "\"Apply\" submits; \"Clear\" appears only when a filter is active.",
-    "Has no `page` field, so applying returns to page 1."
+    "Has no `page` field, so applying returns to page 1.",
+    "`search={false}` renders no search field; a select whose value is \"\" is not an active filter."
   ],
   "states": {
     "default": {
@@ -92,6 +102,28 @@
         "searchLabel": "Search",
         "q": "",
         "clearHref": "/users"
+      }
+    },
+    "selects": {
+      "description": "No search field: selects only.",
+      "props": {
+        "search": false,
+        "selects": [
+          {
+            "name": "type",
+            "label": "Type",
+            "options": [
+              {
+                "value": "public",
+                "label": "Public"
+              }
+            ]
+          }
+        ],
+        "values": {
+          "type": ""
+        },
+        "clearHref": "/circles"
       }
     }
   },
@@ -132,7 +164,7 @@
   "responsive": [
     "Fields wrap: search grows from 18rem, selects from 12rem; the buttons wrap last."
   ],
-  "contract": "contract\n  slot is \"filter-bar\"\n  role is \"search\"\n  when default shows button \"Apply\"\n  when default shows a \"Clear\"\n  uses button\nend",
+  "contract": "contract\n  slot is \"filter-bar\"\n  role is \"search\"\n  when default shows button \"Apply\"\n  when default shows a \"Clear\"\n  uses button\n  when selects shows label \"Type\"\nend",
   "checks": [
     {
       "say": "A GET form.",
@@ -157,6 +189,18 @@
     {
       "say": "No active filter, no Clear.",
       "state": "idle",
+      "select": "a",
+      "absent": true
+    },
+    {
+      "say": "search={false}: no search field.",
+      "state": "selects",
+      "select": "input[type=\"search\"]",
+      "absent": true
+    },
+    {
+      "say": "An empty select value is not an active filter: no Clear.",
+      "state": "selects",
       "select": "a",
       "absent": true
     }

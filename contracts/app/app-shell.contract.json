@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/app-shell",
   "title": "AppShell",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 7,
   "kind": "shell",
   "summary": "The signed-in frame of an app or console, laid out as a full-width product dashboard: a fixed left sidebar (workspace switcher, quick search, grouped navigation, collapse toggle) and a main column (top bar, the page in <main>, a quiet footer). No centred page container.",
@@ -261,7 +261,7 @@
       "--app-accent",
       "--app-accent-foreground"
     ],
-    "brandOverlay": "`accent` names the brand mineral and sets `--app-accent` / `--app-accent-foreground` on the shell, which primary Buttons and the SideNav indicator read; the theme's `--primary` and `--ring` come from the brand overlay stylesheet. Nothing else changes: the grid, the sidebar width, the top bar and every spacing are the same in every brand.",
+    "brandOverlay": "`accent` names the brand mineral and sets `data-accent` on the shell, and the shell's stylesheet sets `--app-accent` / `--app-accent-foreground` from it (never an inline style, so a CSP needs no style-src-attr 'unsafe-inline'), which primary Buttons and the SideNav indicator read; the theme's `--primary` and `--ring` come from the brand overlay stylesheet. Nothing else changes: the grid, the sidebar width, the top bar and every spacing are the same in every brand.",
     "statusColours": []
   },
   "noJs": {
@@ -340,17 +340,17 @@
       }
     },
     {
-      "say": "`accent` sets the shell's accent tokens from the mineral's brand fill.",
+      "say": "`accent` names the mineral on the shell; the shell's stylesheet sets `--app-accent` / `--app-accent-foreground` from its brand fill. No inline style.",
       "state": "accent",
       "select": "[data-slot=\"app-shell\"]",
       "count": 1,
       "attr": {
         "data-accent": "gold",
-        "style": "--app-accent: var(--color-gold-brand); --app-accent-foreground: var(--color-gold-on-brand);"
+        "style": false
       }
     },
     {
-      "say": "No accent, no inline accent.",
+      "say": "No accent, no data-accent and no inline style.",
       "select": "[data-slot=\"app-shell\"]",
       "count": 1,
       "attr": {

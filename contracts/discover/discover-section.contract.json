@@ -1,0 +1,178 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/discover-section",
+  "title": "DiscoverSection",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "One band of a Discover page: eyebrow, heading, description and a \"See all\" link over its content. A featured rail is a DiscoverSection holding a ResultGrid.",
+  "implementations": {
+    "astro": {
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/DiscoverSection.astro",
+      "since": "0.5.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["section", "section-header"]
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The section's heading."
+    },
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false,
+      "description": "A short label above the heading."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "One line under the heading."
+    },
+    {
+      "name": "seeAllHref",
+      "type": "string",
+      "required": false,
+      "description": "Where \"See all\" goes; no link without it."
+    },
+    {
+      "name": "seeAllLabel",
+      "type": "string",
+      "required": false,
+      "default": "See all",
+      "description": "Say what \"all\" is, e.g. \"See every circle\"."
+    },
+    {
+      "name": "tone",
+      "type": "\"default\" | \"muted\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "muted"],
+      "description": "`muted` is the secondary surface."
+    },
+    {
+      "name": "space",
+      "type": "\"default\" | \"tight\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "tight"],
+      "description": "Vertical padding."
+    },
+    {
+      "name": "level",
+      "type": "2 | 3",
+      "required": false,
+      "default": 2,
+      "values": [2, 3],
+      "description": "Heading level."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "description": "The section's id; its heading is `<id>-title`. Unique per page."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "ResultGrid, CategoryChips",
+      "description": "The section's content."
+    }
+  ],
+  "behaviour": [
+    "A <section> labelled by its heading, so it is a named region.",
+    "\"See all\" is a link styled as an outline button."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "id": "featured",
+        "eyebrow": "Featured",
+        "title": "Circles worth joining",
+        "description": "A few of the busiest open circles.",
+        "seeAllHref": "/circles",
+        "seeAllLabel": "See every circle"
+      },
+      "slots": {
+        "default": "<ul><li>Card</li></ul>"
+      }
+    },
+    "muted": {
+      "props": {
+        "id": "browse",
+        "title": "Find circles by what you love",
+        "tone": "muted",
+        "space": "tight",
+        "level": 3
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["region", "heading"],
+    "keyboard": ["The \"See all\" link, then the content."],
+    "focus": ["The `--ring` focus outline."],
+    "aria": ["aria-labelledby names the region by its heading."],
+    "wcag": ["1.3.1", "2.4.6", "2.4.4"]
+  },
+  "density": [
+    {
+      "part": "see all",
+      "select": "a",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--secondary",
+      "--foreground",
+      "--muted-foreground",
+      "--border",
+      "--ring"
+    ],
+    "brandOverlay": "None of its own.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "The heading block and \"See all\" share a row and wrap below it when narrow; padding grows from 48rem."
+  ],
+  "contract": "contract\n  slot is \"discover-section\"\n  when default shows h2 \"Circles worth joining\"\n  when default shows a \"See every circle\"\n  when muted shows h3 \"Find circles by what you love\"\n  when muted class contains \"bg-secondary\"\n  a \"See every circle\" min_height 48\nend",
+  "checks": [
+    {
+      "say": "Labelled by its heading.",
+      "select": "section[aria-labelledby=\"featured-title\"]",
+      "count": 1
+    },
+    {
+      "say": "The heading carries the id.",
+      "select": "h2#featured-title",
+      "count": 1
+    },
+    {
+      "say": "No href, no See all.",
+      "state": "muted",
+      "select": "a",
+      "absent": true
+    },
+    {
+      "say": "The tone is exposed.",
+      "state": "muted",
+      "select": "[data-slot=\"discover-section\"]",
+      "attr": {
+        "data-tone": "muted"
+      }
+    }
+  ]
+}
