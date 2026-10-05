@@ -9,9 +9,9 @@
  * - unavailable:  the backend or WorkOS is briefly unreachable; retry
  * - loading:      skeleton rows (for streamed or slow sections)
  */
-import Alert from "./alert.astro";
+import Alert from "./app-alert.astro";
 import EmptyState from "./app-empty-state.astro";
-import Skeleton from "./skeleton.astro";
+import Skeleton from "./app-skeleton.astro";
 
 interface Props {
   kind: "empty" | "error" | "unconfigured" | "unavailable" | "loading";

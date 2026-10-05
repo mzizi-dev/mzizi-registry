@@ -1,9 +1,11 @@
 ---
 /**
- * Skeleton — a loading placeholder, pure Astro. Size it with `class`.
+ * Skeleton — the registry primitive (`contracts/ui/skeleton`), pure Astro: a loading
+ * placeholder on the `muted` token with the 17px card-scale corner, sized by `class`.
+ * Its React and Rust twins are `skeleton.tsx`; the Dashboard Standard skeleton is
+ * `./app-skeleton.astro`.
  */
 import { cn } from "./ui-utils";
-import { skeletonClasses } from "./ui-variants";
 
 interface Props {
   class?: string;
@@ -11,4 +13,8 @@ interface Props {
 const { class: extra } = Astro.props;
 ---
 
-<div data-slot="skeleton" aria-hidden="true" class={cn(skeletonClasses, extra)}></div>
+<div
+  data-slot="skeleton"
+  data-portal="https://mzizi.dev/components/skeleton"
+  class={cn("animate-pulse rounded-[var(--radius-xl,17px)] bg-muted", extra)}
+></div>

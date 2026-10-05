@@ -1,0 +1,76 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/skeleton",
+  "title": "Skeleton",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "The registry skeleton: a loading placeholder on the muted token with the 17px card-scale corner, sized by class.",
+  "implementations": {
+    "astro": {
+      "registry": "skeleton",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Skeleton.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "skeleton",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": ["app-skeleton"]
+  },
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Size it."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Pulses on the `--muted` token; prefers-reduced-motion is the stylesheet's job.",
+    "Takes the radius-xl corner (17px), the card scale."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "class": "h-10 w-full"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["none"],
+    "keyboard": ["None."],
+    "focus": ["None."],
+    "aria": [
+      "Not aria-hidden: a consumer that shows a skeleton announces loading itself, or hides the skeleton."
+    ],
+    "wcag": ["1.3.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--muted", "--radius-xl"],
+    "brandOverlay": "None.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is markup with no script."
+  },
+  "responsive": ["Sized by the caller."],
+  "contract": "contract\n  slot is \"skeleton\"\n  portal is \"https://mzizi.dev/components/skeleton\"\n  class contains \"animate-pulse\"\n  class contains \"bg-muted\"\nend",
+  "checks": [
+    {
+      "say": "One placeholder.",
+      "select": "[data-slot=\"skeleton\"]",
+      "count": 1
+    },
+    {
+      "say": "Sized by the caller.",
+      "select": "[data-slot=\"skeleton\"].h-10",
+      "count": 1
+    }
+  ]
+}

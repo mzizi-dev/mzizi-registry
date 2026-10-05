@@ -8,23 +8,17 @@
   "summary": "The `.card` surface, with padding none, sm, md or lg.",
   "implementations": {
     "astro": {
-      "registry": "card",
+      "registry": "app-card",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Card.astro",
       "since": "0.3.0"
     },
     "tsx": {
-      "registry": "card",
-      "identity": "slot",
-      "divergences": [
-        "The registry card has header, title, description, action, content and footer parts; the app Card is the surface only."
-      ]
+      "registry": "app-card",
+      "identity": "contract"
     },
-    "rs": {
-      "registry": "card",
-      "identity": "slot",
-      "divergences": ["As for the .tsx."]
-    }
+    "rs": null,
+    "related": ["card"]
   },
   "props": [
     {

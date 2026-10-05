@@ -10,15 +10,45 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — registry primitives get their own `ui/` contracts; the Dashboard Standard builds become `app-*` (2026-10-05, #428)
+
+Owner request, 2026-10-05: "Give registry primitives their own ui/ contracts". Tracking: #427.
+
+- **Added: `ui/button`, `ui/card`, `ui/input`, `ui/label`, `ui/alert` and `ui/skeleton`.** Each registry primitive now has a contract of its own, held in full (`identity: "contract"`) by every build: a new pure-Astro `<name>.astro` with the registry classes (the pill button and input, 56px/48px targets, the 14px card), `<name>.tsx`, and `<name>.rs` for button, card, input and label (rendered by `mzizi-ui`'s `tests/contracts_json.rs`; their `CONTRACT` consts are written by `pnpm contracts:sync`, and `mzizi_ui::CONTRACTS` lists them). `label.astro` ships the one enhancement Radix's Label adds: a double-click does not select its text.
+- **Changed: the Dashboard Standard builds are `app-*`.** The `.astro` files that implemented `app/button`, `app/card`, `app/input`, `app/label`, `app/alert` and `app/skeleton` are renamed `app-<name>.astro` (the `app-*` patterns import them by the new names), and each gains a React build, `app-<name>.tsx`, that keeps the whole app contract; the old `slot`/`slot+role` link from those contracts to the registry `.tsx`/`.rs` becomes `related`. New registry items `app-button`, `app-card`, `app-input`, `app-label` and `app-alert` (`npx shadcn add https://api.mzizi.dev/v1/ui/app-<name>`) join `app-skeleton`. **Breaking** for anyone importing `components/registry/n2-primitives/{button,card,input,label,alert,skeleton}.astro` directly: those paths are now the registry primitives; the app builds are `app-<name>.astro`. `app/badge` is unchanged: its builds already follow the registry badge.
+- **Fixed: this file's intro.** The #428 entry below had been spliced into the format paragraph; it is back under Unreleased.
+
+### Changed — one contract per component, whatever the language; `ui/status-badge` in every format (2026-10-05, #428)
+
+Owner decision, 2026-10-05: "a contract should be added for components no matter the language, a single contract per component". Tracking: #427.
+
+- **`ui/status-badge`, a contract for StatusBadge.** Its four statuses are tinted with the Seven Minerals: stable is malachite, beta cobalt, alpha gold, and deprecated terracotta, struck through. It is held in full (`identity: "contract"`) by:
+  - a new `status-badge.astro` (`@bundu/ui/StatusBadge.astro`), rendered in every state by `__tests__/astro`;
+  - `status-badge.tsx`, by `__tests__/contracts/tsx-contracts.test.tsx`;
+  - `status-badge.rs`, by `mzizi-ui`'s new `tests/contracts_json.rs`.
+- **Rust builds are evaluated against the whole contract.** `tests/contracts_json.rs` renders every contract state of each `contract`-identity `.rs` with `dioxus-ssr` and evaluates every clause, check and density row, through the shared evaluator in `mzizi-rs/contract-eval/`. The evaluator gains `when <state> <attribute>`, `uses <slot>`, and a CSS-selector subset for checks and density.
+- **`pnpm contracts:sync` / `contracts:sync:check`:** a `contract`-identity `.rs`'s `pub const CONTRACT` is written from its contract file. It is a copy, never authored by hand, and a new CI step fails on drift.
+- **Fixed — `status-badge.tsx` defaults `status` to `stable`,** as the contract and the other builds do. Rendered with no props, it used to carry no `data-status` and no label.
+- **AGENTS.md, CONTRIBUTING and `contracts/README.md`:** "contract first" for every new component or format, and local checks with Vite+ (`vp run test`, `vp run ci:check`).
+
+## [4.3.0] - 2026-10-05
+
+Releases `staging` to `main` as the next minor above v4.2.1 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.3.0.
+
+### Fixed — the v4.2.0 release and the pre-1.0 Doctrine 4.2.0 no longer share a version, and CI fails on a duplicate (2026-10-05, #435)
+
+- **The pre-1.0 Doctrine 4.2.0 record is keyed `4.2.0+doctrine`** in `content/changelog/releases.json`. Its `major`, `minor`, `patch`, `line` and content are unchanged; the `+doctrine` build metadata only gives it its own key. `/api/v1/changelog/4.2.0` (and api.mzizi.dev's `/v1/changelog/4.2.0`) now answers the v4.2.0 release alone, and `/v1/changelog/4.2.0+doctrine` the doctrine record. v4.2.0 is the canonical holder of the number: it is the git tag and `package.json`'s version.
+- **`pnpm changelog:generate:check` fails when a version names more than one release**, unless every entry is in the closed pre-1.0 line (the eight historical versions with separate changesets, such as 4.0.31). The check now runs in CI with the other generated-artifact checks; until now it ran only under `pnpm check`.
+
+## [4.2.0] - 2026-10-05
+
+The first release of `staging` to `main` under the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): the next minor above the highest tag (v4.1.16). The code version moves from 1.0.0 to 4.2.0 in `package.json`, `README.md` and `content/changelog/releases.json`; the pre-1.0 doctrine record also numbered 4.2.0 is a different release, keyed `4.2.0+doctrine` since #435. Everything below, back to 1.0.0, ships in it.
+
 ### Changed — Open in Mukoko covers every Mukoko service, and its examples use the canonical link (2026-10-05, #432)
 
 - **`discover/open-in-app` 1.2.0 and `discover/detail-actions` 1.1.0:** `service` also takes `places` (Mukoko Kweli), `lingo` and `profile` (a handle, without the `@`), matching the resolver's link table in mukoko-dev/super-app-web (`crates/links`). `MUKOKO_SERVICES` in `discover-open-link.ts` gains the three.
 - **The `outline` example** is the canonical `https://mukoko.com/open/news/123`, not the retired `news.mukoko.com/open/article/123`.
 - **The behaviour text** says what the resolver does now: a desktop browser or a crawler is redirected to the item's public page; a phone gets "Open in the Mukoko app" or "Continue on the web".
-
-## [4.2.0] - 2026-10-05
-
-The first release of `staging` to `main` under the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): the next minor above the highest tag (v4.1.16). The code version moves from 1.0.0 to 4.2.0 in `package.json`, `README.md` and `content/changelog/releases.json`; the pre-1.0 doctrine record also numbered 4.2.0 is a different release. Everything below, back to 1.0.0, ships in it.
 
 ### Changed — the Roots RFC makes pure `.astro` a first-class implementation (2026-10-05, #431)
 
@@ -511,7 +541,7 @@ Owner decisions, 2026-10-04 (#404):
 
 The first public release of the Mzizi portal codebase (#183). The code version resets to 1.0.0: the portal is not published to npm, and the 4.x line was its internal pre-1.0 iteration. The design-system doctrine line stays at v5, separate from the code version.
 
-This file was not kept between 4.0.26 and 1.0.0, so this section summarises the period from the release record and the git history. The per-version records for 4.0.27 to 4.2.0, and for 1.0.0, are in `content/changelog/releases.json`, served at `/api/v1/changelog`. The full history is `git log v4.0.26..v1.0.0`.
+This file was not kept between 4.0.26 and 1.0.0, so this section summarises the period from the release record and the git history. The per-version records for 4.0.27 to 4.2.0 (keyed `4.2.0+doctrine`), and for 1.0.0, are in `content/changelog/releases.json`, served at `/api/v1/changelog`. The full history is `git log v4.0.26..v1.0.0`.
 
 ### Added
 
