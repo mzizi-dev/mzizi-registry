@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — Astro is the default web UI and every other build is the same component; `ui/toaster` in React (2026-10-05, #442)
+
+Owner, 2026-10-05: "Astro is our default web ui but other may not use Astro". Tracking: #427.
+
+- **The rule** is now in AGENTS.md, CONTRIBUTING and `contracts/README.md`. A component's Astro build is its default build. Where builds disagree, the Astro design is the contract unless the owner decides otherwise. React and Rust builds must be the same component, complete, for consumers that do not use Astro.
+- **`ui/toaster` 1.1.0: `toaster.tsx` now renders the Astro toaster's markup.** It is a polite `role="status"` live region (`#toaster`, `data-duration`). It exports `toast(message, kind?)`, which does what `toaster.astro`'s inline `window.toast` does, and it sets `window.toast` once mounted. The contract names it as a `contract`-identity build, and `__tests__/components/toaster.test.tsx` covers `toast()`.
+  - **Breaking** for React users of the old Radix toaster, which rendered the `useToast` queue. The `toaster` item no longer depends on `toast` and `use-toast`. Those primitives, and `sonner`, are unchanged for apps that want a hook-driven toast. For a message a reader must not miss, use `app-toast`, which has no timeout.
+
 ### Changed — `ui/native-select` and `ui/segmented-control` are one component in every build (2026-10-05, #441)
 
 Owner decision, 2026-10-05: per component, so that each primitive has one design. Tracking: #427.
