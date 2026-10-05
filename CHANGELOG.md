@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — four Dashboard Standard deltas from the Nyuchi console: form-field controls, multipart forms, thinned bar-chart labels, status pills (2026-10-05, #PRNUM)
+
+The Nyuchi console (nyuchi/nyuchi-platform `console/web`) carried these in local copies of `FormField`, `FormLayout`, `BarChart` and `DataTable`; they now live in the contracts and every build, so the console can use `@bundu/ui` as it is. Related: mzizi-dev/packages-npm#40.
+
+- **`app/form-field` 1.1.0.** The control can be a textarea (`as="textarea"`, `rows`, default 5) or a native select (`as="select"`, `options: { value, label }[]`, `emptyOption`), with the same id, name, required, aria-describedby and aria-invalid wiring and app density as the input. `type` adds `number`, `date` and `file`; `accept` and `multiple` (file; a file input never carries a value), `min` / `max` / `step` (number and date), `inputmode` adds `numeric` and `decimal`. `wide` spans both of FormLayout's columns (`@xl:col-span-2`). A read-only select is disabled. New states: `textarea`, `select`, `select-readonly`, `file`, `number`, and density rows for the select (36/48px) and the textarea (an 80/96px floor).
+- **`app/form-layout` 1.1.0.** `enctype?: "multipart/form-data"` on the form, for a file field; state `upload`.
+- **`app/bar-chart` 1.1.0.** Axis labels in the `columns` layout never crowd: at most 6 from `sm` up, and below `sm` only the first, the middle (from 5 points) and the last; always the first and the last, never one crowding the last. The label row is `data-axis`. New state `long` (12 points: 3 labels on a phone, 6 from `sm`). The SVG bars and `locale` are unchanged.
+- **`app/data-table` 1.1.0.** A cell's `tone` (`neutral`, `success`, `warning`, `info`, `accent`, `premium`) renders a status pill (`data-slot="status"`, `data-tone`) in the mineral container colours, declared as the contract's status colours (malachite, gold, cobalt, terracotta, tanzanite). `badge` keeps the registry badge's variants; `tone` wins over `badge`. New state `status`.
+- **`ui-variants`:** `appTextareaClasses`, `appFileInputClasses`, `STATUS_TONES` / `StatusTone` and `statusToneClasses(tone)`.
+
 ### Changed — Astro is the default web UI and every other build is the same component; `ui/toaster` in React (2026-10-05, #442)
 
 Owner, 2026-10-05: "Astro is our default web ui but other may not use Astro". Tracking: #427.
