@@ -156,6 +156,7 @@ jobs:
           pnpm openapi:generate:check
           pnpm node-map:generate:check
           pnpm rust:generate:check
+          pnpm changelog:generate:check
 
   rust:
     name: Rust
