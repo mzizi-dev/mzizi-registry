@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — Astro is the default web UI and every other build is the same component; `ui/toaster` in React (2026-10-05, #PRNUM)
+### Changed — Astro is the default web UI and every other build is the same component; `ui/toaster` in React (2026-10-05, #442)
 
 Owner, 2026-10-05: "Astro is our default web ui but other may not use Astro". Tracking: #427.
 
