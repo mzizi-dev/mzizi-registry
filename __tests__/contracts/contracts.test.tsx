@@ -32,7 +32,6 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { SafeAreaFrame } from "@/components/ui/safe-area-frame"
-import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const ROOT = path.resolve(__dirname, "../..")
@@ -232,7 +231,6 @@ const REACT: Record<string, ComponentType<Record<string, unknown>>> = {
   input: Input as ComponentType<Record<string, unknown>>,
   label: Label as ComponentType<Record<string, unknown>>,
   skeleton: Skeleton as ComponentType<Record<string, unknown>>,
-  "segmented-control": SegmentedControl as unknown as ComponentType<Record<string, unknown>>,
   "safe-area-frame": SafeAreaFrame as unknown as ComponentType<Record<string, unknown>>,
 }
 

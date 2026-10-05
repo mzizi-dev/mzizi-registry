@@ -500,10 +500,10 @@
     {
       "name": "ui/native-select",
       "title": "NativeSelect",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "file": "ui/native-select.contract.json",
       "astro": "native-select",
-      "tsx": null,
+      "tsx": "native-select",
       "rs": null
     },
     {
@@ -518,7 +518,7 @@
     {
       "name": "ui/segmented-control",
       "title": "SegmentedControl",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "ui/segmented-control.contract.json",
       "astro": "segmented-control",
       "tsx": "segmented-control",

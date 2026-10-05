@@ -1,36 +1,58 @@
 ---
 /**
- * NativeSelect — the Astro port of Mzizi `native-select`: a real <select> in
- * the pill input style (48px), with a chevron that never intercepts clicks.
+ * NativeSelect — the registry primitive (`contracts/ui/native-select`), pure Astro: a real
+ * <select> in the pill input style with a decorative chevron that never intercepts clicks.
+ * The same markup as `native-select.tsx`: the wrapper is `native-select-wrapper`, the
+ * <select> is `native-select`, built from `[value, label]` pairs.
  */
+import { cn } from "./ui-utils";
+
 interface Props {
   id: string;
   name?: string;
   /** `[value, label]` pairs. */
   options: [string, string][];
   value?: string;
+  size?: "default" | "sm";
   class?: string;
 }
 
-const { id, name = id, options, value, class: className } = Astro.props;
+const { id, name = id, options, value, size = "default", class: className } = Astro.props;
 ---
 
-<div data-slot="native-select" class={["relative", className].filter(Boolean).join(" ")}>
+<div
+  class={cn("group/native-select relative w-fit has-[select:disabled]:opacity-50", className)}
+  data-slot="native-select-wrapper"
+  data-portal="https://mzizi.dev/components/native-select-wrapper"
+  data-size={size}
+>
   <select
+    data-slot="native-select"
+    data-size={size}
     id={id}
     name={name}
-    class="h-12 w-full cursor-pointer appearance-none rounded-full border border-border bg-input pl-5 pr-12 text-body text-foreground transition-colors duration-200 ease-soft hover:border-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+    class="h-12 w-full min-w-0 appearance-none rounded-full border border-input bg-input/30 py-1 pr-8 pl-3 text-sm transition-colors outline-none select-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 data-[size=sm]:h-8 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40"
   >
-    {options.map(([v, label]) => <option value={v} selected={v === value}>{label}</option>)}
+    {
+      options.map(([v, label]) => (
+        <option value={v} selected={v === value} data-slot="native-select-option">
+          {label}
+        </option>
+      ))
+    }
   </select>
   <svg
-    class="pointer-events-none absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/80"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    stroke-width="1.75"
+    stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
-    aria-hidden="true"><path d="M19 9l-7 7-7-7"></path></svg
+    class="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-muted-foreground select-none"
+    aria-hidden="true"
+    data-slot="native-select-icon"><path d="m6 9 6 6 6-6"></path></svg
   >
 </div>
