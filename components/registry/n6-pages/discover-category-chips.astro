@@ -1,0 +1,37 @@
+---
+/**
+ * CategoryChips — the row of category links on a Discover page, as a named
+ * navigation landmark. Chips wrap onto new lines; the page never scrolls
+ * sideways. Pass `items`, or CategoryChip fragments in the default slot
+ * (for server-filled shells), or both: items render first.
+ *
+ * Mzizi Discover Standard (contracts/discover/category-chips).
+ */
+import CategoryChip from "./discover-category-chip.astro";
+
+interface Chip {
+  href: string;
+  label: string;
+  count?: string | number;
+  current?: boolean | string;
+}
+interface Props {
+  /** The landmark's name, e.g. "Categories". */
+  label: string;
+  items?: Chip[];
+  /** An "All" chip first, linking here. */
+  allHref?: string;
+  allLabel?: string;
+  /** Whether "All" is the current view. */
+  allCurrent?: boolean | string;
+}
+const { label, items = [], allHref, allLabel = "All", allCurrent } = Astro.props;
+---
+
+<nav aria-label={label} data-slot="category-chips">
+  <ul class="flex flex-wrap gap-2">
+    {allHref && <CategoryChip href={allHref} label={allLabel} current={allCurrent} />}
+    {items.map((c) => <CategoryChip href={c.href} label={c.label} count={c.count} current={c.current} />)}
+    <slot />
+  </ul>
+</nav>

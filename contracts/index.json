@@ -7,7 +7,7 @@
       "title": "AppShell",
       "version": "1.1.0",
       "file": "app/app-shell.contract.json",
-      "tsx": null,
+      "tsx": "app-shell",
       "rs": null
     },
     {
@@ -15,7 +15,7 @@
       "title": "SideNav",
       "version": "1.0.0",
       "file": "app/side-nav.contract.json",
-      "tsx": null,
+      "tsx": "app-side-nav",
       "rs": null
     },
     {
@@ -23,7 +23,7 @@
       "title": "WorkspaceSwitcher",
       "version": "1.0.0",
       "file": "app/workspace-switcher.contract.json",
-      "tsx": null,
+      "tsx": "app-workspace-switcher",
       "rs": null
     },
     {
@@ -31,7 +31,7 @@
       "title": "QuickSearch",
       "version": "1.0.0",
       "file": "app/quick-search.contract.json",
-      "tsx": null,
+      "tsx": "app-quick-search",
       "rs": null
     },
     {
@@ -39,7 +39,7 @@
       "title": "CommandPalette",
       "version": "1.0.0",
       "file": "app/command-palette.contract.json",
-      "tsx": null,
+      "tsx": "app-command-palette",
       "rs": null
     },
     {
@@ -47,7 +47,7 @@
       "title": "TopBarAction",
       "version": "1.0.0",
       "file": "app/top-bar-action.contract.json",
-      "tsx": null,
+      "tsx": "app-top-bar-action",
       "rs": null
     },
     {
@@ -55,7 +55,7 @@
       "title": "PageHeader",
       "version": "1.0.0",
       "file": "app/page-header.contract.json",
-      "tsx": null,
+      "tsx": "app-page-header",
       "rs": null
     },
     {
@@ -63,7 +63,7 @@
       "title": "Toolbar",
       "version": "1.0.0",
       "file": "app/toolbar.contract.json",
-      "tsx": null,
+      "tsx": "app-toolbar",
       "rs": null
     },
     {
@@ -71,7 +71,7 @@
       "title": "ToolbarMenu",
       "version": "1.0.0",
       "file": "app/toolbar-menu.contract.json",
-      "tsx": null,
+      "tsx": "app-toolbar-menu",
       "rs": null
     },
     {
@@ -79,7 +79,7 @@
       "title": "StatTiles",
       "version": "1.0.0",
       "file": "app/stat-tiles.contract.json",
-      "tsx": null,
+      "tsx": "app-stat-tiles",
       "rs": null
     },
     {
@@ -87,7 +87,7 @@
       "title": "StatTile",
       "version": "1.0.0",
       "file": "app/stat-tile.contract.json",
-      "tsx": null,
+      "tsx": "app-stat-tile",
       "rs": null
     },
     {
@@ -95,7 +95,7 @@
       "title": "InfoTip",
       "version": "1.0.0",
       "file": "app/info-tip.contract.json",
-      "tsx": null,
+      "tsx": "app-info-tip",
       "rs": null
     },
     {
@@ -103,7 +103,7 @@
       "title": "EmptyState",
       "version": "1.0.0",
       "file": "app/empty-state.contract.json",
-      "tsx": null,
+      "tsx": "app-empty-state",
       "rs": null
     },
     {
@@ -111,7 +111,7 @@
       "title": "BrandMark",
       "version": "1.0.0",
       "file": "app/brand-mark.contract.json",
-      "tsx": null,
+      "tsx": "app-brand-mark",
       "rs": null
     },
     {
@@ -119,7 +119,7 @@
       "title": "DataTable",
       "version": "1.0.0",
       "file": "app/data-table.contract.json",
-      "tsx": null,
+      "tsx": "app-data-table",
       "rs": null
     },
     {
@@ -127,7 +127,7 @@
       "title": "FilterBar",
       "version": "1.1.0",
       "file": "app/filter-bar.contract.json",
-      "tsx": null,
+      "tsx": "app-filter-bar",
       "rs": null
     },
     {
@@ -135,7 +135,7 @@
       "title": "Pagination",
       "version": "1.0.0",
       "file": "app/pagination.contract.json",
-      "tsx": null,
+      "tsx": "app-pagination",
       "rs": null
     },
     {
@@ -143,7 +143,7 @@
       "title": "DetailPanel",
       "version": "1.0.0",
       "file": "app/detail-panel.contract.json",
-      "tsx": null,
+      "tsx": "app-detail-panel",
       "rs": null
     },
     {
@@ -151,7 +151,7 @@
       "title": "FormLayout",
       "version": "1.0.0",
       "file": "app/form-layout.contract.json",
-      "tsx": null,
+      "tsx": "app-form-layout",
       "rs": null
     },
     {
@@ -159,7 +159,7 @@
       "title": "FormField",
       "version": "1.0.0",
       "file": "app/form-field.contract.json",
-      "tsx": null,
+      "tsx": "app-form-field",
       "rs": null
     },
     {
@@ -167,7 +167,7 @@
       "title": "StateMessage",
       "version": "1.0.0",
       "file": "app/state-message.contract.json",
-      "tsx": null,
+      "tsx": "app-state-message",
       "rs": null
     },
     {
@@ -175,7 +175,7 @@
       "title": "Toast",
       "version": "1.0.0",
       "file": "app/toast.contract.json",
-      "tsx": null,
+      "tsx": "app-toast",
       "rs": null
     },
     {
@@ -183,7 +183,7 @@
       "title": "AccountMenu",
       "version": "1.0.0",
       "file": "app/account-menu.contract.json",
-      "tsx": null,
+      "tsx": "app-account-menu",
       "rs": null
     },
     {
@@ -191,7 +191,7 @@
       "title": "BarChart",
       "version": "1.0.1",
       "file": "app/bar-chart.contract.json",
-      "tsx": null,
+      "tsx": "app-bar-chart",
       "rs": null
     },
     {
@@ -255,7 +255,7 @@
       "title": "DiscoverShell",
       "version": "1.0.0",
       "file": "discover/discover-shell.contract.json",
-      "tsx": null,
+      "tsx": "discover-shell",
       "rs": null
     },
     {
@@ -263,7 +263,7 @@
       "title": "DiscoverMeta",
       "version": "1.0.0",
       "file": "discover/discover-meta.contract.json",
-      "tsx": null,
+      "tsx": "discover-meta",
       "rs": null
     },
     {
@@ -271,7 +271,7 @@
       "title": "DiscoverHero",
       "version": "1.0.0",
       "file": "discover/discover-hero.contract.json",
-      "tsx": null,
+      "tsx": "discover-hero",
       "rs": null
     },
     {
@@ -279,7 +279,7 @@
       "title": "DiscoverSearch",
       "version": "1.0.0",
       "file": "discover/discover-search.contract.json",
-      "tsx": null,
+      "tsx": "discover-search",
       "rs": null
     },
     {
@@ -287,7 +287,7 @@
       "title": "CategoryChips",
       "version": "1.0.0",
       "file": "discover/category-chips.contract.json",
-      "tsx": null,
+      "tsx": "discover-category-chips",
       "rs": null
     },
     {
@@ -295,7 +295,7 @@
       "title": "CategoryChip",
       "version": "1.0.0",
       "file": "discover/category-chip.contract.json",
-      "tsx": null,
+      "tsx": "discover-category-chip",
       "rs": null
     },
     {
@@ -303,7 +303,7 @@
       "title": "DiscoverSection",
       "version": "1.0.0",
       "file": "discover/discover-section.contract.json",
-      "tsx": null,
+      "tsx": "discover-section",
       "rs": null
     },
     {
@@ -311,7 +311,7 @@
       "title": "ResultGrid",
       "version": "1.0.0",
       "file": "discover/result-grid.contract.json",
-      "tsx": null,
+      "tsx": "discover-result-grid",
       "rs": null
     },
     {
@@ -319,7 +319,7 @@
       "title": "DiscoverCard",
       "version": "1.0.0",
       "file": "discover/discover-card.contract.json",
-      "tsx": null,
+      "tsx": "discover-card",
       "rs": null
     },
     {
@@ -327,7 +327,7 @@
       "title": "LoadMore",
       "version": "1.0.0",
       "file": "discover/load-more.contract.json",
-      "tsx": null,
+      "tsx": "discover-load-more",
       "rs": null
     },
     {
@@ -335,7 +335,7 @@
       "title": "OpenInApp",
       "version": "1.0.0",
       "file": "discover/open-in-app.contract.json",
-      "tsx": null,
+      "tsx": "discover-open-in-app",
       "rs": null
     }
   ]

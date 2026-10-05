@@ -8,11 +8,12 @@
   "summary": "The \"Open in Mukoko\" action: an https link to the item in the Mukoko super-app (a universal link or a server redirect), with one line saying what happens. Never a bare custom scheme.",
   "implementations": {
     "astro": {
+      "registry": "discover-open-in-app",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/OpenInApp.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-open-in-app", "identity": "contract" },
     "rs": null,
     "related": []
   },

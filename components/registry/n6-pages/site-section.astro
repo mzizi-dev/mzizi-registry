@@ -1,0 +1,59 @@
+---
+/**
+ * Section — the standard page band. Wraps content in a vertical-rhythm
+ * section + the site container so pages stop hand-rolling
+ * `<section class="section ..."><div class="container-custom">`.
+ *
+ * Part of the components-only standard (docs/design-system.md): pages
+ * compose Section/SectionHeader, they don't repeat the layout shell.
+ */
+interface Props {
+  /** Background surface token. */
+  bg?: "canvas" | "secondary" | "transparent";
+  /** Vertical rhythm — maps to the .section* utilities. */
+  space?: "default" | "tight" | "loose";
+  /** Hairline bottom border (the quiet section divider). */
+  border?: boolean;
+  /** Wrap children in `.container-custom` (default) or render full-bleed. */
+  container?: boolean;
+  id?: string;
+  class?: string;
+}
+
+const {
+  bg = "canvas",
+  space = "default",
+  border = false,
+  container = true,
+  id,
+  class: className,
+} = Astro.props;
+
+const spaceClass = {
+  default: "section",
+  tight: "section-tight",
+  loose: "section-loose",
+}[space];
+
+const bgClass = {
+  canvas: "bg-canvas",
+  secondary: "bg-secondary",
+  transparent: "",
+}[bg];
+
+const classes = [spaceClass, bgClass, border && "border-b border-border", className]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<section class={classes} id={id} data-slot="section">
+  {
+    container ? (
+      <div class="container-custom">
+        <slot />
+      </div>
+    ) : (
+      <slot />
+    )
+  }
+</section>

@@ -1,0 +1,105 @@
+---
+/**
+ * Breadcrumb — visual nav + BreadcrumbList JSON-LD.
+ *
+ * Renders an `<nav aria-label="Breadcrumb">` with an ordered list
+ * of links, and emits a `BreadcrumbList` JSON-LD block so Google
+ * shows breadcrumb rich snippets in SERPs. Both halves come from
+ * the same `items` array — keeps the visible UI and the structured
+ * data in sync by construction.
+ *
+ * Convention: the final item is the current page. If its `url` is
+ * omitted (or matches the current URL), it renders as plain text
+ * with `aria-current="page"` instead of an anchor.
+ *
+ * The component renders nothing when fewer than two items are
+ * provided — a single-item trail is just "Home" with no value to
+ * the user or to Google.
+ */
+
+import type { BreadcrumbItem } from "./site-breadcrumbs";
+
+interface Props {
+  items: BreadcrumbItem[];
+  /** Fully-qualified origin used to expand site-relative `url`s
+   * into absolute URLs in the JSON-LD payload (Google requires
+   * absolute). Pass `Astro.site.toString()` or the app's domain
+   * constant. Falls back to the runtime origin when omitted, which
+   * works at request time but not at build time. */
+  origin?: string;
+  /** Extra classes for the wrapping <nav>. Spacing defaults assume
+   * the breadcrumb sits above the page hero or content. */
+  class?: string;
+}
+
+const { items, origin, class: extraClass } = Astro.props;
+
+const shouldRender = items.length >= 2;
+
+function toAbsolute(url: string): string {
+  if (/^https?:\/\//i.test(url)) return url;
+  const base = origin ?? Astro.site?.toString() ?? Astro.url.origin;
+  const baseTrimmed = base.replace(/\/$/, "");
+  const path = url.startsWith("/") ? url : `/${url}`;
+  return `${baseTrimmed}${path}`;
+}
+
+const jsonLd = shouldRender
+  ? {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        // Schema.org requires an absolute URL on every item including
+        // the last; fall back to the current page URL when an item
+        // has no explicit href.
+        item: toAbsolute(item.url ?? Astro.url.pathname),
+      })),
+    }
+  : null;
+---
+
+{shouldRender && (
+  <>
+    <nav
+      aria-label="Breadcrumb"
+      class:list={["text-body-sm text-muted-foreground", extraClass]}
+    >
+      <ol class="flex flex-wrap items-center gap-2">
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
+          return (
+            <>
+              <li
+                class:list={[
+                  isLast ? "text-foreground truncate" : undefined,
+                ]}
+              >
+                {isLast || !item.url ? (
+                  <span aria-current={isLast ? "page" : undefined}>
+                    {item.name}
+                  </span>
+                ) : (
+                  <a
+                    href={item.url}
+                    class="hover:text-foreground transition-colors"
+                  >
+                    {item.name}
+                  </a>
+                )}
+              </li>
+              {!isLast && <li aria-hidden="true">/</li>}
+            </>
+          );
+        })}
+      </ol>
+    </nav>
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(jsonLd)}
+    />
+  </>
+)}

@@ -8,6 +8,7 @@
   "summary": "A loading placeholder, sized by class, hidden from screen readers.",
   "implementations": {
     "astro": {
+      "registry": "skeleton",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Skeleton.astro",
       "since": "0.3.0"

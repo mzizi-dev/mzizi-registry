@@ -1,0 +1,228 @@
+---
+/**
+ * Hero — shared across all Bundu Ecosystem apps (was copy-pasted
+ * byte-identical into nyuchi/mukoko/bundu). Anthropic-restrained
+ * editorial: generous whitespace, serif Display headline, narrow body,
+ * an eyebrow tag, and at most two pill CTAs composed from <Button>.
+ *
+ * Optional, all off by default:
+ *   - `media` named slot — a demo, screenshot or live widget beside (split)
+ *     or below (stack) the text column.
+ *   - `layout="split"` — text and media side by side at `lg`, stacked on
+ *     smaller screens (text first).
+ *   - `badge` — a short status pill above the headline ("Beta",
+ *     "Phase 0 · research prototype").
+ *   - `variant="showcase"` — a richer, token-only background: soft washes
+ *     of the brand `--primary` and cobalt over `--background`.
+ *
+ * With none of them, the rendered markup is byte-identical to 0.1.x: the
+ * `legacy` branch below is the 0.1.1 template, untouched. Keep it that way;
+ * four sites render it.
+ */
+import Button from "./site-cta-button.astro";
+
+interface CTA {
+  text: string;
+  href: string;
+  external?: boolean;
+}
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  primaryCTA?: CTA;
+  secondaryCTA?: CTA;
+  variant?: "default" | "gradient" | "light" | "showcase";
+  align?: "center" | "start";
+  /** "stack" (default): one text column. "split": text beside the `media` slot at `lg`. */
+  layout?: "stack" | "split";
+  /** Short status pill above the headline. Keep it honest — it is read as a claim. */
+  badge?: string;
+  /** Accessible name for the media region; when set it renders as `role="group"` with this label. */
+  mediaLabel?: string;
+}
+
+const {
+  title,
+  subtitle,
+  description,
+  primaryCTA,
+  secondaryCTA,
+  variant = "default",
+  align = "start",
+  layout = "stack",
+  badge,
+  mediaLabel,
+} = Astro.props;
+
+const sectionClasses = {
+  default: "bg-canvas",
+  light: "bg-secondary",
+  gradient: "gradient-hero",
+  showcase: "gradient-showcase",
+};
+
+const alignClasses = {
+  start: "text-left",
+  center: "text-center mx-auto",
+};
+
+const hasMedia = Astro.slots.has("media");
+const split = layout === "split";
+/** 0.1.x markup, exactly: no media, no split, no badge, no showcase. */
+const legacy = !hasMedia && !split && !badge && variant !== "showcase";
+---
+
+{
+  legacy ? (
+    <section
+      class:list={["py-12 md:py-16 lg:py-20", sectionClasses[variant]]}
+      data-slot="hero"
+    >
+      <div class="container-custom">
+        <div class:list={["max-w-3xl", alignClasses[align]]}>
+          {subtitle && <p class="eyebrow">{subtitle}</p>}
+
+          <h1 class="font-serif text-display text-foreground text-balance">
+            {title}
+          </h1>
+
+          {description && (
+            <p
+              class:list={[
+                "mt-6 text-body-lg text-muted-foreground text-pretty max-w-2xl",
+                align === "center" && "mx-auto",
+              ]}
+            >
+              {description}
+            </p>
+          )}
+
+          {(primaryCTA || secondaryCTA) && (
+            <div
+              class:list={[
+                "mt-8 flex flex-wrap items-center gap-3",
+                align === "center" && "justify-center",
+              ]}
+            >
+              {primaryCTA && (
+                <Button href={primaryCTA.href} external={primaryCTA.external}>
+                  {primaryCTA.text}
+                </Button>
+              )}
+              {secondaryCTA && (
+                <Button
+                  href={secondaryCTA.href}
+                  external={secondaryCTA.external}
+                  variant="ghost"
+                  arrow
+                >
+                  {secondaryCTA.text}
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section
+      class:list={[
+        "py-12 md:py-16",
+        variant === "showcase" ? "lg:py-24" : "lg:py-20",
+        sectionClasses[variant],
+      ]}
+      data-slot="hero"
+      data-layout={layout}
+    >
+      <div
+        class:list={[
+          "container-custom",
+          split &&
+            "grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14",
+        ]}
+      >
+        <div
+          class:list={[
+            "min-w-0",
+            split ? "max-w-2xl" : "max-w-3xl",
+            alignClasses[align],
+          ]}
+          data-slot="hero-text"
+        >
+          {badge && (
+            <p
+              class:list={[
+                "mb-5 flex w-fit items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-caption font-medium text-foreground",
+                align === "center" && "mx-auto",
+              ]}
+              data-slot="hero-badge"
+            >
+              <span
+                class="inline-block h-2 w-2 shrink-0 rounded-full bg-primary"
+                aria-hidden="true"
+              />
+              {badge}
+            </p>
+          )}
+
+          {subtitle && (
+            <p class="eyebrow">{subtitle}</p>
+          )}
+
+          <h1 class="font-serif text-display text-foreground text-balance">
+            {title}
+          </h1>
+
+          {description && (
+            <p
+              class:list={[
+                "mt-6 text-body-lg text-muted-foreground text-pretty max-w-2xl",
+                align === "center" && "mx-auto",
+              ]}
+            >
+              {description}
+            </p>
+          )}
+
+          {(primaryCTA || secondaryCTA) && (
+            <div
+              class:list={[
+                "mt-8 flex flex-wrap items-center gap-3",
+                align === "center" && "justify-center",
+              ]}
+            >
+              {primaryCTA && (
+                <Button href={primaryCTA.href} external={primaryCTA.external}>
+                  {primaryCTA.text}
+                </Button>
+              )}
+              {secondaryCTA && (
+                <Button
+                  href={secondaryCTA.href}
+                  external={secondaryCTA.external}
+                  variant="ghost"
+                  arrow
+                >
+                  {secondaryCTA.text}
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {hasMedia && (
+          <div
+            class:list={["min-w-0", !split && "mt-12"]}
+            data-slot="hero-media"
+            role={mediaLabel ? "group" : undefined}
+            aria-label={mediaLabel}
+          >
+            <slot name="media" />
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

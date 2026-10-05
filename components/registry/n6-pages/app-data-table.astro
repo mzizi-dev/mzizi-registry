@@ -1,0 +1,106 @@
+---
+/**
+ * DataTable — a real <table> with a caption, column headers with scope, and
+ * a card-per-row layout on narrow screens (each cell shows its column name),
+ * so a phone never scrolls sideways. Filtering and paging happen on the
+ * server (`@bundu/ui/lib/table`); pair with FilterBar and Pagination.
+ *
+ * Cells are plain data, not markup, so a section cannot inject HTML:
+ * a string, or { text, href, badge, mono, sub }.
+ */
+import type { BadgeVariant } from "./ui-variants";
+import Badge from "./badge.astro";
+
+export type { BadgeVariant };
+export interface CellObject {
+  text: string;
+  href?: string;
+  badge?: BadgeVariant;
+  mono?: boolean;
+  sub?: string;
+  current?: boolean;
+}
+export type Cell = string | number | null | undefined | CellObject;
+export interface Column {
+  key: string;
+  label: string;
+  align?: "start" | "end";
+  /** Hidden visually on narrow screens' card view (still in the table). */
+  primary?: boolean;
+}
+interface Props {
+  caption: string;
+  /** Show the caption to sighted readers too (default: screen readers only). */
+  showCaption?: boolean;
+  columns: Column[];
+  rows: Record<string, Cell>[];
+  /** Key in each row that identifies it, for data-row. */
+  rowKey?: string;
+}
+const { caption, showCaption = false, columns, rows, rowKey } = Astro.props;
+const asObject = (cell: Cell): CellObject | null => {
+  if (cell === null || cell === undefined || cell === "") return null;
+  if (typeof cell === "object") return cell;
+  return { text: String(cell) };
+};
+---
+
+<div class="overflow-hidden rounded-md border border-border bg-card" data-slot="data-table">
+  <table class="w-full border-collapse text-body-sm">
+    <caption class={showCaption ? "px-3 py-2 text-start text-caption text-muted-foreground" : "sr-only"}>{caption}</caption>
+    <thead class="hidden border-b border-border bg-surface-muted md:table-header-group">
+      <tr>
+        {
+          columns.map((c) => (
+            <th scope="col" class={`h-9 px-3 text-caption font-medium text-muted-foreground ${c.align === "end" ? "text-end" : "text-start"}`}>
+              {c.label}
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-border">
+      {
+        rows.map((row) => {
+          const id = rowKey ? String((asObject(row[rowKey]) ?? { text: "" }).text) : undefined;
+          const current = columns.some((c) => asObject(row[c.key])?.current);
+          return (
+            <tr data-row={id} aria-current={current ? "true" : undefined} class={`block px-3 py-2.5 hover:bg-surface-muted md:table-row md:p-0 ${current ? "bg-muted" : ""}`}>
+              {columns.map((c, i) => {
+                const cell = asObject(row[c.key]);
+                const Tag = i === 0 ? "th" : "td";
+                return (
+                  <Tag
+                    scope={i === 0 ? "row" : undefined}
+                    class={`flex items-baseline justify-between gap-4 py-1 font-normal md:table-cell md:h-10 md:px-3 md:py-2 md:align-middle ${c.align === "end" ? "md:text-end" : "text-start"}`}
+                  >
+                    <span class="text-caption text-muted-foreground md:hidden" aria-hidden="true">
+                      {c.label}
+                    </span>
+                    <span class="min-w-0 text-end md:text-start">
+                      {cell === null ? (
+                        <span class="text-muted-foreground">
+                          <span aria-hidden="true">—</span>
+                          <span class="sr-only">none</span>
+                        </span>
+                      ) : cell.badge ? (
+                        <Badge variant={cell.badge}>{cell.text}</Badge>
+                      ) : cell.href ? (
+                        <a href={cell.href} class="font-medium text-primary underline-offset-4 hover:underline" aria-current={cell.current ? "true" : undefined}>
+                          {cell.text}
+                        </a>
+                      ) : (
+                        <span class={cell.mono ? "font-mono text-caption" : ""}>{cell.text}</span>
+                      )}
+                      {cell?.sub && <span class="block text-caption text-muted-foreground">{cell.sub}</span>}
+                    </span>
+                  </Tag>
+                );
+              })}
+            </tr>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</div>
