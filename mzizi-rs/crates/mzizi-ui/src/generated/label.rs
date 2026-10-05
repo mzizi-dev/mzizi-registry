@@ -70,3 +70,15 @@ pub fn Label(props: LabelProps) -> Element {
         }
     }
 }
+
+/// The contract this build implements, copied by `pnpm contracts:sync` from
+/// `contracts/ui/label.contract.json`, the one contract the Astro, React and Rust builds
+/// share: edit the contract file, never this copy. `tests/contracts_json.rs` renders every
+/// state the contract declares and evaluates every clause and check against the markup.
+pub const CONTRACT: &str = r#"contract
+  slot is "label"
+  portal is "https://mzizi.dev/components/label"
+  class contains "font-medium"
+  class contains "peer-disabled:opacity-50"
+  when default shows label "Name"
+end"#;

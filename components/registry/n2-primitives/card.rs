@@ -199,3 +199,16 @@ pub fn CardFooter(props: CardSlotProps) -> Element {
         }
     }
 }
+
+/// The contract this build implements, copied by `pnpm contracts:sync` from
+/// `contracts/ui/card.contract.json`, the one contract the Astro, React and Rust builds
+/// share: edit the contract file, never this copy. `tests/contracts_json.rs` renders every
+/// state the contract declares and evaluates every clause and check against the markup.
+pub const CONTRACT: &str = r#"contract
+  slot is "card"
+  class contains "bg-card"
+  class contains "rounded-[var(--radius-lg,14px)]"
+  when default shows div "Body"
+  when sm slot is "card"
+  when loading class contains "animate-pulse"
+end"#;

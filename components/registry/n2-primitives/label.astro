@@ -1,9 +1,11 @@
 ---
 /**
- * Label — a native <label>, pure Astro. Classes are `labelClasses`.
+ * Label — the registry primitive (`contracts/ui/label`), pure Astro: a native <label>
+ * with the classes of `label.tsx` and `label.rs`. The script is the one enhancement
+ * Radix's Label adds in React: a double-click does not select the label's text. The
+ * Dashboard Standard label is `./app-label.astro`.
  */
 import { cn } from "./ui-utils";
-import { labelClasses } from "./ui-variants";
 
 interface Props {
   for: string;
@@ -12,4 +14,20 @@ interface Props {
 const { for: htmlFor, class: extra } = Astro.props;
 ---
 
-<label data-slot="label" for={htmlFor} class={cn(labelClasses, extra)}><slot /></label>
+<label
+  data-slot="label"
+  data-portal="https://mzizi.dev/components/label"
+  for={htmlFor}
+  class={cn(
+    "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+    extra,
+  )}><slot /></label>
+
+<script>
+  document.addEventListener("mousedown", (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (event.detail > 1 && target?.closest('[data-slot="label"]') && !target.closest("button, input, select, textarea")) {
+      event.preventDefault();
+    }
+  });
+</script>
