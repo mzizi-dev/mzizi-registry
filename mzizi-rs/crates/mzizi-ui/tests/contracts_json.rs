@@ -14,7 +14,10 @@ use std::fs;
 use std::path::PathBuf;
 
 use dioxus::prelude::*;
-use mzizi_ui::{StatusBadge, StatusBadgeStatus};
+use mzizi_ui::card::CardSize;
+use mzizi_ui::{
+    Button, ButtonSize, ButtonVariant, Card, Input, Label, StatusBadge, StatusBadgeStatus,
+};
 use serde_json::Value;
 
 #[path = "../../../contract-eval/contract_eval.rs"]
@@ -84,10 +87,71 @@ fn status_badge_state() -> Element {
     }
 }
 
+fn flag(name: &str) -> bool {
+    PROPS.with(|p| p.borrow()["props"][name] == true)
+}
+
+fn text(name: &str) -> String {
+    slot(name).unwrap_or_default()
+}
+
+fn button_state() -> Element {
+    let variant = match prop("variant").as_deref() {
+        None | Some("default") => ButtonVariant::Default,
+        Some("outline") => ButtonVariant::Outline,
+        Some("secondary") => ButtonVariant::Secondary,
+        Some("ghost") => ButtonVariant::Ghost,
+        Some("destructive") => ButtonVariant::Destructive,
+        Some("link") => ButtonVariant::Link,
+        Some(other) => panic!("button: the contract names an unknown variant `{other}`"),
+    };
+    let size = match prop("size").as_deref() {
+        None | Some("default") => ButtonSize::Default,
+        Some("sm") => ButtonSize::Sm,
+        Some("lg") => ButtonSize::Lg,
+        Some("icon") => ButtonSize::Icon,
+        Some("icon-sm") => ButtonSize::IconSm,
+        Some(other) => panic!("button: the contract names an unknown size `{other}`"),
+    };
+    let label = text("default");
+    if flag("disabled") {
+        rsx! { Button { variant, size, disabled: true, "{label}" } }
+    } else {
+        rsx! { Button { variant, size, "{label}" } }
+    }
+}
+
+fn card_state() -> Element {
+    let size = match prop("size").as_deref() {
+        None | Some("default") => CardSize::Default,
+        Some("sm") => CardSize::Sm,
+        Some(other) => panic!("card: the contract names an unknown size `{other}`"),
+    };
+    let body = text("default");
+    rsx! { Card { size, loading: flag("loading"), "{body}" } }
+}
+
+fn input_state() -> Element {
+    let name = prop("name").unwrap_or_default();
+    let kind = prop("type").unwrap_or_default();
+    let label = prop("aria-label").unwrap_or_default();
+    rsx! { Input { name, r#type: kind, aria_label: label } }
+}
+
+fn label_state() -> Element {
+    let target = prop("for").unwrap_or_default();
+    let body = text("default");
+    rsx! { Label { r#for: target, "{body}" } }
+}
+
 /// The renderer for each registry item this crate implements a contract for. A contract whose
 /// `.rs` claims `identity: "contract"` with no renderer here fails, so none goes unevaluated.
 fn renderer(registry: &str) -> fn() -> Element {
     match registry {
+        "button" => button_state,
+        "card" => card_state,
+        "input" => input_state,
+        "label" => label_state,
         "status-badge" => status_badge_state,
         other => panic!(
             "contracts name `{other}.rs` with identity \"contract\", and tests/contracts_json.rs has \

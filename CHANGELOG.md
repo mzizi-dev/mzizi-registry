@@ -2,7 +2,23 @@
 
 All notable changes to the Mzizi registry (`mzizi-dev/mzizi-registry`: the components, the design tokens, the doctrine, the Mzizi Roots crates and the `/api/v1` handlers that api.mzizi.dev serves) are documented here.
 
-The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the code version follows [Semantic Versioning](https://semver.org/). Under `## [Unreleased]`,### Changed — one contract per component, whatever the language; `ui/status-badge` in every format (2026-10-05, #428)
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the code version follows [Semantic Versioning](https://semver.org/). Under `## [Unreleased]`, each change is a `### <Kind> — <what changed> (<merge date>, #<PR>)` subsection, newest first, where Kind is Added, Changed, Deprecated, Removed, Fixed or Security. Breaking changes are marked **Breaking**. A release moves the Unreleased entries under `## [x.y.z] - YYYY-MM-DD`. The machine-readable release record that `/api/v1/changelog` serves is `content/changelog/releases.json`; this file is the human narrative.
+
+**The rule (owner, 2026-09-30):** every pull request that changes behaviour, shipped content, an API response, a published package or crate, a default, a dependency or a documented fact adds its entry here, under `## [Unreleased]`, in the same pull request. The `changelog / entry required` check fails a pull request that doesn't. Pull requests that touch only `.github/`, lockfiles or lint config pass without one, and pure CI, lint or typo pull requests can carry the `no-changelog` label instead.
+
+From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): staging merges are patches, a release to `main` is the next minor above the highest tag, and a major is only released by hand. Versions released before then are not renumbered.
+
+## [Unreleased]
+
+### Changed — registry primitives get their own `ui/` contracts; the Dashboard Standard builds become `app-*` (2026-10-05, #428)
+
+Owner request, 2026-10-05: "Give registry primitives their own ui/ contracts". Tracking: #427.
+
+- **Added: `ui/button`, `ui/card`, `ui/input`, `ui/label`, `ui/alert` and `ui/skeleton`.** Each registry primitive now has a contract of its own, held in full (`identity: "contract"`) by every build: a new pure-Astro `<name>.astro` with the registry classes (the pill button and input, 56px/48px targets, the 14px card), `<name>.tsx`, and `<name>.rs` for button, card, input and label (rendered by `mzizi-ui`'s `tests/contracts_json.rs`; their `CONTRACT` consts are written by `pnpm contracts:sync`, and `mzizi_ui::CONTRACTS` lists them). `label.astro` ships the one enhancement Radix's Label adds: a double-click does not select its text.
+- **Changed: the Dashboard Standard builds are `app-*`.** The `.astro` files that implemented `app/button`, `app/card`, `app/input`, `app/label`, `app/alert` and `app/skeleton` are renamed `app-<name>.astro` (the `app-*` patterns import them by the new names), and each gains a React build, `app-<name>.tsx`, that keeps the whole app contract; the old `slot`/`slot+role` link from those contracts to the registry `.tsx`/`.rs` becomes `related`. New registry items `app-button`, `app-card`, `app-input`, `app-label` and `app-alert` (`npx shadcn add https://api.mzizi.dev/v1/ui/app-<name>`) join `app-skeleton`. **Breaking** for anyone importing `components/registry/n2-primitives/{button,card,input,label,alert,skeleton}.astro` directly: those paths are now the registry primitives; the app builds are `app-<name>.astro`. `app/badge` is unchanged: its builds already follow the registry badge.
+- **Fixed: this file's intro.** The #428 entry below had been spliced into the format paragraph; it is back under Unreleased.
+
+### Changed — one contract per component, whatever the language; `ui/status-badge` in every format (2026-10-05, #428)
 
 Owner decision, 2026-10-05: "a contract should be added for components no matter the language, a single contract per component". Tracking: #427.
 
@@ -14,14 +30,6 @@ Owner decision, 2026-10-05: "a contract should be added for components no matter
 - **`pnpm contracts:sync` / `contracts:sync:check`:** a `contract`-identity `.rs`'s `pub const CONTRACT` is written from its contract file. It is a copy, never authored by hand, and a new CI step fails on drift.
 - **Fixed — `status-badge.tsx` defaults `status` to `stable`,** as the contract and the other builds do. Rendered with no props, it used to carry no `data-status` and no label.
 - **AGENTS.md, CONTRIBUTING and `contracts/README.md`:** "contract first" for every new component or format, and local checks with Vite+ (`vp run test`, `vp run ci:check`).
-
-each change is a `### <Kind> — <what changed> (<merge date>, #<PR>)` subsection, newest first, where Kind is Added, Changed, Deprecated, Removed, Fixed or Security. Breaking changes are marked **Breaking**. A release moves the Unreleased entries under `## [x.y.z] - YYYY-MM-DD`. The machine-readable release record that `/api/v1/changelog` serves is `content/changelog/releases.json`; this file is the human narrative.
-
-**The rule (owner, 2026-09-30):** every pull request that changes behaviour, shipped content, an API response, a published package or crate, a default, a dependency or a documented fact adds its entry here, under `## [Unreleased]`, in the same pull request. The `changelog / entry required` check fails a pull request that doesn't. Pull requests that touch only `.github/`, lockfiles or lint config pass without one, and pure CI, lint or typo pull requests can carry the `no-changelog` label instead.
-
-From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): staging merges are patches, a release to `main` is the next minor above the highest tag, and a major is only released by hand. Versions released before then are not renumbered.
-
-## [Unreleased]
 
 ### Added — every component in every format here: the Astro target, React builds of every contract, the Discover detail pattern and Open in Mukoko (2026-10-05, #430)
 
