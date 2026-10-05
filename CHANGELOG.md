@@ -31,6 +31,14 @@ Owner decision, 2026-10-05: "a contract should be added for components no matter
 - **Fixed — `status-badge.tsx` defaults `status` to `stable`,** as the contract and the other builds do. Rendered with no props, it used to carry no `data-status` and no label.
 - **AGENTS.md, CONTRIBUTING and `contracts/README.md`:** "contract first" for every new component or format, and local checks with Vite+ (`vp run test`, `vp run ci:check`).
 
+## [4.2.0] - 2026-10-05
+
+The first release of `staging` to `main` under the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): the next minor above the highest tag (v4.1.16). The code version moves from 1.0.0 to 4.2.0 in `package.json`, `README.md` and `content/changelog/releases.json`; the pre-1.0 doctrine record also numbered 4.2.0 is a different release. Everything below, back to 1.0.0, ships in it.
+
+### Changed — the Roots RFC makes pure `.astro` a first-class implementation (2026-10-05, #431)
+
+- **`docs/roots/RFC-roots.md` §2.5, amended** (owner decision, 2026-10-05). It is now "The four formats and the frontend paths": a component is one registry name with one contract in `contracts/` and up to four sibling implementations, `.rs`, `.astro`, `.tsx` and `.mz`, all held to that contract by `contracts/runner.ts`. It sets the rules every `.astro` keeps (no framework and so no React layer under Astro, no client JavaScript unless the contract allows one script, no inline styles, which the runner enforces, flat imports), names the registry as the single source that `mzizi-dev/packages-npm` builds `@bundu/ui` and `@bundu/server` from behind its drift check, and documents the Astro target: `/v1/astro/{name}`, `mzizi add --target astro` and the MCP `astro` block. An Astro app now has three paths (a pure `.astro`, Roots as static HTML, a Roots island) instead of two. The original §2.5 is kept as Appendix B. No `.mz` file is touched.
+
 ### Added — every component in every format here: the Astro target, React builds of every contract, the Discover detail pattern and Open in Mukoko (2026-10-05, #430)
 
 Owner decision, 2026-10-04: this registry is the single source of every component in every format (`.tsx`, `.rs`, `.astro`, and `.mz` as it lands). Tracking: #397 (the Astro target) and #429 (the detail pattern).
