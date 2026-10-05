@@ -92,6 +92,29 @@ releases.forEach((entry, i) => {
   }
 })
 
+// The uniqueness gate. `/api/v1/changelog/{version}` (and api.mzizi.dev's
+// `/v1/changelog/{version}`) addresses a release by its `version` string, so a
+// version must name one release. The only exception is history: eight pre-1.0
+// versions carry two or three separate changesets each (see
+// `getChangelogByVersion`), and that line is closed, so those groups are
+// grandfathered. A duplicate that touches any other line fails, which is how
+// v4.2.0 (public) briefly shadowed the pre-1.0 Doctrine 4.2.0, now keyed
+// `4.2.0+doctrine` (#435).
+const byVersion = new Map()
+for (const entry of releases) {
+  byVersion.set(entry.version, [...(byVersion.get(entry.version) ?? []), entry])
+}
+for (const [version, entries] of byVersion) {
+  if (entries.length > 1 && entries.some((entry) => entry.line !== "pre-1.0")) {
+    fail(
+      `version ${version} names ${entries.length} releases ` +
+        `(${entries.map((entry) => `${entry.line}: "${entry.title}"`).join("; ")}). ` +
+        `A version must be unique outside the closed pre-1.0 line; give the older record a ` +
+        `distinct key (e.g. \`${version}+<name>\`).`
+    )
+  }
+}
+
 // The staleness gate. The release history is ordered newest-first — that is the
 // order the API serves and the order the `releases` view carried — so the head
 // of the array is the current release, and it must be the version this package
