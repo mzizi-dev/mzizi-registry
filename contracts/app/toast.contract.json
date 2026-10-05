@@ -14,6 +14,7 @@
     },
     "tsx": null,
     "rs": null,
+    "mz": null,
     "related": ["toast", "mzizi-toast-provider"]
   },
   "props": [

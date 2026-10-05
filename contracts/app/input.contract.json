@@ -23,6 +23,10 @@
       "registry": "input",
       "identity": "slot",
       "divergences": ["As for the .tsx."]
+    },
+    "mz": {
+      "registry": "input",
+      "identity": "slot"
     }
   },
   "props": [

@@ -120,6 +120,14 @@ ones, we need to adjust Mzizi so the design is always updating so we maintain co
 
 ## Adding a New UI Component
 
+**Contract first.** Every component has one contract, `contracts/<family>/<name>.contract.json`,
+whatever languages it ships in (owner, 2026-10-05; [#427](https://github.com/mzizi-dev/mzizi-registry/issues/427)).
+Write it before the code: its props, states, clauses, checks and density are what the `.tsx`, the
+`.rs` and the `.mz` are each tested against. A registry primitive with no `@bundu/ui` standard goes
+in `contracts/primitives/` with `identity: "contract"` for each build; add the `pub const CONTRACT`
+to the `.rs` and a `contract … end` block to the `.mz`, then run `pnpm contracts:sync` to fill both
+from the contract file. See [`contracts/README.md`](./contracts/README.md).
+
 1. **Create the component file** in `components/ui/`:
 
 ```tsx

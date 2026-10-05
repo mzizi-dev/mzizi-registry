@@ -17,13 +17,27 @@ gateway bundles at a pinned commit. It is a **Mzizi**-governed standard; Nyuchi
 operates it. It is **not** Mzizi-the-language (`mzizi-dev/mzizi`) — that's a different
 research project that happens to share the org and a name fragment.
 
-`contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
-component of the Mzizi Dashboard Standard: 31 in `contracts/app/`, in the format
+`contracts/` holds a versioned, machine-readable contract per component: the Dashboard
+Standard (`contracts/app/`), the Discover Standard (`contracts/discover/`) and registry
+primitives with no `@bundu/ui` standard yet (`contracts/primitives/`), in the format
 `contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`,
 with the coverage table in [`contracts/README.md`](./contracts/README.md) and the reference
 at [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts). Change a
 contract here, never the copy in `mzizi-dev/packages-npm`; `__tests__/contracts/contracts.test.tsx`
 keeps the index and the coverage table honest.
+
+**One contract per component, whatever the language** (owner, 2026-10-05; #427). The contract
+file is the only place a component's clauses, checks and density are written; its Astro, React
+(`.tsx`), Mzizi Roots (`.rs`) and Mzizi language (`.mz`) builds are all checked against it. A
+build whose `identity` is `contract` implements the whole contract: `__tests__/contracts`
+evaluates it on the `.tsx`, `mzizi-rs/crates/mzizi-ui/tests/contracts_json.rs` on the `.rs`,
+and `pnpm mz:check` on the `.mz`. The `.rs` `CONTRACT` and the `.mz` `contract` block are
+copies written by `pnpm contracts:sync`: never edit them by hand (`pnpm contracts:sync:check`
+fails CI on drift). A new component, or a new language build of one, starts from its contract.
+
+Local checks use **Vite+** (`vp`), as the org CI does: `vp run test` runs the test script the
+`vite-plus / test` job runs, `vp run ci:check` the lint and type check, and `pnpm check` (or
+`vp run check`) every gate in order.
 
 ### A naming collision worth knowing before you grep
 

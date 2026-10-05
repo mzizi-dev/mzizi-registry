@@ -19,7 +19,11 @@
         "Variants: the registry alert has default and destructive; the app Alert adds info, success and warning as status-container colours."
       ]
     },
-    "rs": null
+    "rs": null,
+    "mz": {
+      "registry": "alert",
+      "identity": "slot+role"
+    }
   },
   "props": [
     {

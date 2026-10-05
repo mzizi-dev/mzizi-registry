@@ -10,6 +10,20 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — one contract per component, whatever the language: `contracts/` drives the `.tsx`, `.rs` and `.mz` builds (2026-10-05, #428)
+
+Owner decision, 2026-10-05: "a contract should be added for components no matter the language, a single contract per component". Tracking: #427.
+
+- **The contract schema lists the Mzizi language build.** `implementations.mz` sits beside `astro`, `tsx` and `rs` in every contract, and `index.json` and the coverage tables gain a Mzizi `.mz` column. The `app/` contracts for `button`, `badge`, `card`, `input`, `alert` and `label` name their `.mz` siblings, identity-checked like the `.tsx` and `.rs`.
+- **New identity, `contract`:** the build implements the whole contract, not only its slot, variants or role. Every clause, check and density row is evaluated against it, in every language:
+  - the `.tsx` in `__tests__/contracts` (every state rendered);
+  - the `.rs` in `mzizi-ui`'s new `tests/contracts_json.rs` (every state rendered with `dioxus-ssr`; the shared evaluator gains `when <state> <attribute>`, `uses` and a CSS-selector subset for checks and density);
+  - the `.mz` with `mz contract`, on the clauses the language evaluates on source.
+- **New family, `contracts/primitives/`:** registry primitives with no `@bundu/ui` standard yet. The first is `primitives/status-badge`, whose React, Rust and Mzizi builds all have identity `contract`.
+- **`pnpm contracts:sync` / `contracts:sync:check`:** write each `contract`-identity contract into its `.rs` (`pub const CONTRACT`) and its `.mz` (`contract … end`). The copies are never authored by hand, and a new CI step fails on drift. `status-badge.rs` and `status-badge.mz` now carry the contract file's clauses instead of their own.
+- **Fixed — `status-badge.tsx` defaults `status` to `stable`,** as its contract and its Rust build do. Rendered with no props, it used to carry no `data-status` and no label. The new contract runner caught it.
+- **AGENTS.md and CONTRIBUTING:** "contract first" for every new component or language build, and local checks with Vite+ (`vp run test`, `vp run ci:check`), as the org CI runs them.
+
 ### Fixed — CONTRIBUTING no longer says to curl a local server (2026-10-04, #426)
 
 The "Verify" step for a new component ran `curl http://localhost:11736/api/v1/ui/my-component`, but the app and its `/api/*` handlers were removed on 2026-10-02 and nothing listens there.

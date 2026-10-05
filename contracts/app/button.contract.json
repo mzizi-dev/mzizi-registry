@@ -26,6 +26,10 @@
       "divergences": [
         "As for the .tsx: button.rs mirrors button.tsx's variants and pill shape."
       ]
+    },
+    "mz": {
+      "registry": "button",
+      "identity": "slot"
     }
   },
   "props": [

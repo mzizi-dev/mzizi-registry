@@ -19,7 +19,8 @@
         "The registry skeleton.tsx is not aria-hidden; the app Skeleton is (the announcement is StateMessage's job)."
       ]
     },
-    "rs": null
+    "rs": null,
+    "mz": null
   },
   "props": [
     {

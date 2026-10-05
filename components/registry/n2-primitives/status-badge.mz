@@ -1,7 +1,9 @@
 ## A pill-shaped lifecycle label: stable, beta, alpha or deprecated, each tinted with one of
 ## the Seven Minerals at 10% behind the mineral itself. The word is always shown, so the
 ## status never depends on colour alone. Not interactive, so no touch floor applies.
-## Siblings: status-badge.tsx (React) and status-badge.rs (Mzizi Roots). One contract.
+## Siblings: status-badge.tsx (React) and status-badge.rs (Mzizi Roots). One contract:
+## contracts/primitives/status-badge.contract.json. The `contract` block below is written from it
+## by `pnpm contracts:sync` (the clauses the language evaluates on source); never edit it here.
 component status_badge
 
   enum status_badge_status
@@ -36,10 +38,9 @@ component status_badge
 
   contract
     slot is "status-badge"
-    every status_badge_status class not_empty
-    every status_badge_status mineral not_empty
-    status_badge_status.stable class contains "malachite"
-    status_badge_status.deprecated class contains "line-through"
+    portal is "https://mzizi.dev/components/status-badge"
+    class contains "rounded-full"
+    class contains "uppercase"
   end
 
 end component status_badge

@@ -8,7 +8,8 @@
       "version": "1.1.0",
       "file": "app/app-shell.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/side-nav",
@@ -16,7 +17,8 @@
       "version": "1.0.0",
       "file": "app/side-nav.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/workspace-switcher",
@@ -24,7 +26,8 @@
       "version": "1.0.0",
       "file": "app/workspace-switcher.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/quick-search",
@@ -32,7 +35,8 @@
       "version": "1.0.0",
       "file": "app/quick-search.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/command-palette",
@@ -40,7 +44,8 @@
       "version": "1.0.0",
       "file": "app/command-palette.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/top-bar-action",
@@ -48,7 +53,8 @@
       "version": "1.0.0",
       "file": "app/top-bar-action.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/page-header",
@@ -56,7 +62,8 @@
       "version": "1.0.0",
       "file": "app/page-header.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/toolbar",
@@ -64,7 +71,8 @@
       "version": "1.0.0",
       "file": "app/toolbar.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/toolbar-menu",
@@ -72,7 +80,8 @@
       "version": "1.0.0",
       "file": "app/toolbar-menu.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/stat-tiles",
@@ -80,7 +89,8 @@
       "version": "1.0.0",
       "file": "app/stat-tiles.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/stat-tile",
@@ -88,7 +98,8 @@
       "version": "1.0.0",
       "file": "app/stat-tile.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/info-tip",
@@ -96,7 +107,8 @@
       "version": "1.0.0",
       "file": "app/info-tip.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/empty-state",
@@ -104,7 +116,8 @@
       "version": "1.0.0",
       "file": "app/empty-state.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/brand-mark",
@@ -112,7 +125,8 @@
       "version": "1.0.0",
       "file": "app/brand-mark.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/data-table",
@@ -120,7 +134,8 @@
       "version": "1.0.0",
       "file": "app/data-table.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/filter-bar",
@@ -128,7 +143,8 @@
       "version": "1.1.0",
       "file": "app/filter-bar.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/pagination",
@@ -136,7 +152,8 @@
       "version": "1.0.0",
       "file": "app/pagination.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/detail-panel",
@@ -144,7 +161,8 @@
       "version": "1.0.0",
       "file": "app/detail-panel.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/form-layout",
@@ -152,7 +170,8 @@
       "version": "1.0.0",
       "file": "app/form-layout.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/form-field",
@@ -160,7 +179,8 @@
       "version": "1.0.0",
       "file": "app/form-field.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/state-message",
@@ -168,7 +188,8 @@
       "version": "1.0.0",
       "file": "app/state-message.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/toast",
@@ -176,7 +197,8 @@
       "version": "1.0.0",
       "file": "app/toast.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/account-menu",
@@ -184,7 +206,8 @@
       "version": "1.0.0",
       "file": "app/account-menu.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/bar-chart",
@@ -192,7 +215,8 @@
       "version": "1.0.1",
       "file": "app/bar-chart.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "app/button",
@@ -200,7 +224,8 @@
       "version": "1.0.0",
       "file": "app/button.contract.json",
       "tsx": "button",
-      "rs": "button"
+      "rs": "button",
+      "mz": "button"
     },
     {
       "name": "app/badge",
@@ -208,7 +233,8 @@
       "version": "1.0.0",
       "file": "app/badge.contract.json",
       "tsx": "badge",
-      "rs": "badge"
+      "rs": "badge",
+      "mz": "badge"
     },
     {
       "name": "app/card",
@@ -216,7 +242,8 @@
       "version": "1.0.0",
       "file": "app/card.contract.json",
       "tsx": "card",
-      "rs": "card"
+      "rs": "card",
+      "mz": "card"
     },
     {
       "name": "app/alert",
@@ -224,7 +251,8 @@
       "version": "1.0.0",
       "file": "app/alert.contract.json",
       "tsx": "alert",
-      "rs": null
+      "rs": null,
+      "mz": "alert"
     },
     {
       "name": "app/input",
@@ -232,7 +260,8 @@
       "version": "1.0.0",
       "file": "app/input.contract.json",
       "tsx": "input",
-      "rs": "input"
+      "rs": "input",
+      "mz": "input"
     },
     {
       "name": "app/label",
@@ -240,7 +269,8 @@
       "version": "1.0.0",
       "file": "app/label.contract.json",
       "tsx": "label",
-      "rs": "label"
+      "rs": "label",
+      "mz": "label"
     },
     {
       "name": "app/skeleton",
@@ -248,7 +278,8 @@
       "version": "1.0.0",
       "file": "app/skeleton.contract.json",
       "tsx": "skeleton",
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/discover-shell",
@@ -256,7 +287,8 @@
       "version": "1.0.0",
       "file": "discover/discover-shell.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/discover-meta",
@@ -264,7 +296,8 @@
       "version": "1.0.0",
       "file": "discover/discover-meta.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/discover-hero",
@@ -272,7 +305,8 @@
       "version": "1.0.0",
       "file": "discover/discover-hero.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/discover-search",
@@ -280,7 +314,8 @@
       "version": "1.0.0",
       "file": "discover/discover-search.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/category-chips",
@@ -288,7 +323,8 @@
       "version": "1.0.0",
       "file": "discover/category-chips.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/category-chip",
@@ -296,7 +332,8 @@
       "version": "1.0.0",
       "file": "discover/category-chip.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/discover-section",
@@ -304,7 +341,8 @@
       "version": "1.0.0",
       "file": "discover/discover-section.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/result-grid",
@@ -312,7 +350,8 @@
       "version": "1.0.0",
       "file": "discover/result-grid.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/discover-card",
@@ -320,7 +359,8 @@
       "version": "1.0.0",
       "file": "discover/discover-card.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/load-more",
@@ -328,7 +368,8 @@
       "version": "1.0.0",
       "file": "discover/load-more.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
     },
     {
       "name": "discover/open-in-app",
@@ -336,7 +377,17 @@
       "version": "1.0.0",
       "file": "discover/open-in-app.contract.json",
       "tsx": null,
-      "rs": null
+      "rs": null,
+      "mz": null
+    },
+    {
+      "name": "primitives/status-badge",
+      "title": "StatusBadge",
+      "version": "1.0.0",
+      "file": "primitives/status-badge.contract.json",
+      "tsx": "status-badge",
+      "rs": "status-badge",
+      "mz": "status-badge"
     }
   ]
 }

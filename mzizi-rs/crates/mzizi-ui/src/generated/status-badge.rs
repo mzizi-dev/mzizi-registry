@@ -108,16 +108,18 @@ pub fn status_badge_variants(status: StatusBadgeStatus, extra: &str) -> String {
     out
 }
 
-/// The checkable clauses this component keeps (RFC-0006 grammar), evaluated by
-/// `tests/contract.rs` against `dioxus-ssr` markup.
+/// This component's contract (RFC-0006 clause grammar). WRITTEN BY `pnpm contracts:sync` from
+/// `contracts/primitives/status-badge.contract.json`, the one contract the React, Rust and Mzizi
+/// builds share: edit the contract file, never this copy. `tests/contracts_json.rs` renders every
+/// state the contract declares and evaluates every clause and check against the markup.
 pub const CONTRACT: &str = r#"contract
   slot is "status-badge"
   portal is "https://mzizi.dev/components/status-badge"
   class contains "rounded-full"
-  every status_badge_status class not_empty
-  status_badge_status.stable class contains "malachite"
-  status_badge_status.deprecated class contains "line-through"
+  class contains "uppercase"
   when default shows span "stable"
+  when beta class contains "text-cobalt"
+  when deprecated class contains "line-through"
   when deprecated shows span "deprecated"
 end"#;
 

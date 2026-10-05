@@ -1,0 +1,122 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "primitives/status-badge",
+  "title": "StatusBadge",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A pill-shaped lifecycle label (stable, beta, alpha or deprecated), each status tinted with one of the Seven Minerals at 10% behind the mineral itself. One contract for the React, Mzizi Roots and Mzizi language builds.",
+  "implementations": {
+    "astro": null,
+    "tsx": {
+      "registry": "status-badge",
+      "identity": "contract"
+    },
+    "rs": {
+      "registry": "status-badge",
+      "identity": "contract"
+    },
+    "mz": {
+      "registry": "status-badge",
+      "identity": "contract"
+    },
+    "related": ["badge"]
+  },
+  "props": [
+    {
+      "name": "status",
+      "type": "StatusBadgeStatus",
+      "required": false,
+      "default": "stable",
+      "values": ["stable", "beta", "alpha", "deprecated"],
+      "description": "The lifecycle stage. Also the label when no children are given."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "Optional label; the status itself when omitted."
+    }
+  ],
+  "behaviour": [
+    "data-status always names the status, the default included.",
+    "stable is malachite, beta is cobalt, alpha is gold and deprecated is terracotta, struck through: each status's mineral at 10% as the fill and the full mineral as the text.",
+    "The label is the status itself unless a label is given, so the status is always written out.",
+    "Text never wraps (whitespace-nowrap)."
+  ],
+  "states": {
+    "default": {
+      "props": {}
+    },
+    "beta": {
+      "props": {
+        "status": "beta"
+      }
+    },
+    "deprecated": {
+      "props": {
+        "status": "deprecated"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["none (text)"],
+    "keyboard": ["None: not interactive."],
+    "focus": ["None."],
+    "aria": [
+      "Meaning is in the written status, never colour alone; the strike-through on deprecated is reinforced by the word."
+    ],
+    "wcag": ["1.4.1", "1.4.3"]
+  },
+  "density": [
+    {
+      "part": "status-badge",
+      "select": "span",
+      "fine": 20,
+      "coarse": 20
+    }
+  ],
+  "theming": {
+    "tokens": ["--input", "--border"],
+    "brandOverlay": "None: the colour is the status's mineral, never the brand accent.",
+    "statusColours": ["malachite", "cobalt", "gold", "terracotta"]
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is markup with no script."
+  },
+  "responsive": ["Inline; never wraps."],
+  "contract": "contract\n  slot is \"status-badge\"\n  portal is \"https://mzizi.dev/components/status-badge\"\n  class contains \"rounded-full\"\n  class contains \"uppercase\"\n  when default shows span \"stable\"\n  when beta class contains \"text-cobalt\"\n  when deprecated class contains \"line-through\"\n  when deprecated shows span \"deprecated\"\nend",
+  "checks": [
+    {
+      "say": "data-status names the default.",
+      "select": "[data-slot=\"status-badge\"]",
+      "count": 1,
+      "attr": {
+        "data-status": "stable"
+      }
+    },
+    {
+      "say": "data-status names the status.",
+      "state": "deprecated",
+      "select": "[data-slot=\"status-badge\"]",
+      "count": 1,
+      "attr": {
+        "data-status": "deprecated"
+      }
+    },
+    {
+      "say": "The status is written out.",
+      "state": "beta",
+      "select": "[data-slot=\"status-badge\"]",
+      "count": 1,
+      "text": "beta"
+    }
+  ]
+}

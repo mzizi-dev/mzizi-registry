@@ -18,7 +18,8 @@ import { Badge } from "@/components/ui/badge"
  * so no touch floor applies; wrap it in a link and it inherits the link's hit area.
  *
  * Siblings: `status-badge.rs` (Mzizi Roots, Dioxus) and `status-badge.mz` (the Mzizi
- * language). The three share one contract.
+ * language). The three share one contract, `contracts/primitives/status-badge.contract.json`,
+ * and `__tests__/contracts` evaluates every clause and check of it on this file's markup.
  */
 
 export type StatusBadgeStatus = "stable" | "beta" | "alpha" | "deprecated"
@@ -31,11 +32,16 @@ const STATUS_STYLES: Record<StatusBadgeStatus, string> = {
 }
 
 export interface StatusBadgeProps extends React.ComponentProps<"span"> {
-  /** The lifecycle stage. Also the label, unless children are given. */
-  status: StatusBadgeStatus
+  /** The lifecycle stage; `stable` when omitted. Also the label, unless children are given. */
+  status?: StatusBadgeStatus
 }
 
-export function StatusBadge({ status, className, children, ...props }: StatusBadgeProps) {
+export function StatusBadge({
+  status = "stable",
+  className,
+  children,
+  ...props
+}: StatusBadgeProps) {
   return (
     <Badge
       variant="outline"
