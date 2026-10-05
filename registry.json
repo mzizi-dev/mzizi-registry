@@ -22262,7 +22262,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["components", "primitives"],
       "dependencies": [],
-      "description": "A toaster component to render toast notifications.",
+      "description": "A polite live region and toast(message, kind?): each message shows as a card for a few seconds, then leaves. The same component as the Astro toaster (window.toast), held to the whole ui/toaster contract. For a message a reader must not miss, use app-toast.",
       "docs": "Use it for: Application-level toast rendering container, Global toast position management, Queue display for stacked notifications, Root-level feedback provider for async operations, Cross-page persistent notification surface.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/toaster",
       "files": [
         {
@@ -22274,9 +22274,11 @@
       "meta": {
         "a11y": ["Semantic HTML"],
         "collection": "components",
+        "contract": "ui/toaster",
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "framework",
+        "targets": ["astro", "tsx"],
         "useCases": [
           "Application-level toast rendering container",
           "Global toast position management",
@@ -22287,10 +22289,7 @@
         "variants": ["default"]
       },
       "name": "toaster",
-      "registryDependencies": [
-        "https://api.mzizi.dev/v1/ui/toast",
-        "https://api.mzizi.dev/v1/ui/use-toast"
-      ],
+      "registryDependencies": [],
       "title": "Toaster",
       "type": "registry:ui"
     },

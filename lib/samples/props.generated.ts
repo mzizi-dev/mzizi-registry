@@ -13287,6 +13287,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "toaster": [
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false
+    }
+  ],
   "todo-item": [
     {
       "name": "loading",
