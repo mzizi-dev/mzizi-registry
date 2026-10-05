@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.2.0] - 2026-10-05
+
+The first release of `staging` to `main` under the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): the next minor above the highest tag (v4.1.16). The code version moves from 1.0.0 to 4.2.0 in `package.json`, `README.md` and `content/changelog/releases.json`; the pre-1.0 doctrine record also numbered 4.2.0 is a different release. Everything below, back to 1.0.0, ships in it.
+
 ### Changed — the Roots RFC makes pure `.astro` a first-class implementation (2026-10-05, #431)
 
 - **`docs/roots/RFC-roots.md` §2.5, amended** (owner decision, 2026-10-05). It is now "The four formats and the frontend paths": a component is one registry name with one contract in `contracts/` and up to four sibling implementations, `.rs`, `.astro`, `.tsx` and `.mz`, all held to that contract by `contracts/runner.ts`. It sets the rules every `.astro` keeps (no framework and so no React layer under Astro, no client JavaScript unless the contract allows one script, no inline styles, which the runner enforces, flat imports), names the registry as the single source that `mzizi-dev/packages-npm` builds `@bundu/ui` and `@bundu/server` from behind its drift check, and documents the Astro target: `/v1/astro/{name}`, `mzizi add --target astro` and the MCP `astro` block. An Astro app now has three paths (a pure `.astro`, Roots as static HTML, a Roots island) instead of two. The original §2.5 is kept as Appendix B. No `.mz` file is touched.
