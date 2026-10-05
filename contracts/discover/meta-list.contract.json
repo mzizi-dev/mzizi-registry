@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "discover/meta-list",
   "title": "MetaList",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
   "summary": "The facts of one item on its Discover page (when, where, price, organiser): a <dl> of label and value rows, each with an optional icon, link or machine-readable time, in responsive columns.",
@@ -35,10 +35,10 @@
   ],
   "slots": [],
   "behaviour": [
-    "A <dl>; each row is a <div> holding its <dt> and <dd> (valid HTML), beside its icon.",
+    "A <dl>; each row is a <div> whose only children are its <dt> and <dd> (valid HTML: no deeper wrapper); the icon sits in the <dt>, before the label.",
     "Icons are decorative (aria-hidden): the label says what the row is.",
     "`href` makes the value a link; `datetime` makes it a <time datetime>, inside the link when both are given.",
-    "Server-filled shells: every text is a plain string and an empty value hides itself (`empty:hidden`).",
+    "Server-filled shells: every text is a plain string; an empty value hides itself (`empty:hidden`) and so does its row (`has-[dd:empty]:hidden`), so optional facts can be placeholders.",
     "No items, nothing rendered."
   ],
   "states": {
@@ -125,9 +125,19 @@
   "contract": "contract\n  slot is \"meta-list\"\n  uses meta-list-item\n  uses icon\n  a \"Jacaranda Trust\" min_height 24\n  when default shows dt \"Where\"\n  when default shows time \"Sat 24 Oct, 18:00\"\n  when single shows dd \"Running · Sport\"\n  when template shows time \"{{when}}\"\nend",
   "checks": [
     {
-      "say": "A description list of rows.",
-      "select": "dl > div > div > dt",
+      "say": "A description list of rows: each <dt> is a child of its row <div>.",
+      "select": "dl > div > dt",
       "count": 4
+    },
+    {
+      "say": "No wrapper deeper than the row <div> (axe definition-list, dlitem).",
+      "select": "dl > div > div",
+      "absent": true
+    },
+    {
+      "say": "The icon is in the term.",
+      "select": "dt > [data-slot=\"icon\"]",
+      "count": 3
     },
     {
       "say": "Every label has its value.",
@@ -178,6 +188,12 @@
       "say": "An empty value hides itself.",
       "state": "template",
       "select": "dd.empty\\:hidden",
+      "count": 2
+    },
+    {
+      "say": "A row with an empty value hides itself.",
+      "state": "template",
+      "select": "[data-slot=\"meta-list-item\"].has-\\[dd\\:empty\\]\\:hidden",
       "count": 2
     },
     {

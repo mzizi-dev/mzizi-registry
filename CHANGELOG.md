@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `discover/meta-list` 1.1.0 is a valid description list, and hides a row with no value (2026-10-06, #PR)
+
+MetaList wrapped each row's `<dt>`/`<dd>` in a second `<div>` beside the icon (`dl > div > div > dt`). HTML allows only one `<div>` between a `<dl>` and its terms, and axe reports `definition-list` and `dlitem` as serious. Found adopting the detail pattern on mukoko-dev/mukoko-circles.
+
+- Each row is now `<div><dt><dd></div>`, with the icon inside the `<dt>`, before the label. This applies to the `.astro` and the `.tsx`.
+- A row whose value is empty hides itself (`has-[dd:empty]:hidden`), so a server-filled shell can leave optional facts (place, start date) empty.
+- Contract checks: `dl > div > dt` (4), no `dl > div > div`, the icon is in the `<dt>`, and the row-hiding class in the template state.
+
 ### Fixed — `text-body-sm` is defined in `mzizi-tokens-globals.css` (2026-10-06, #448)
 
 The registry's components use `text-body-sm` for the 14px body size (116 uses: `discover-card`, `discover-search`, `discover-category-chip`, `discover-hero`, `site-breadcrumb`, the n6 page and n7 shell components), and `@bundu/ui` / `@nyuchi/ui` 0.3.0 ship it in `styles/theme.css` and `tailwind-preset.mjs`, but the stylesheet the registry serves defined only `--text-small`. A repo that copied it and installed those components got no rule for `text-body-sm`, so the text rendered at 16px (mukoko-dev/mukoko-events `/discover`). The `@theme` block now carries `--text-body-sm: var(--fs-small)`, an alias of the existing 14px size, not a new one; `--text-small` stays. `__tests__/tokens-type-utilities.test.ts` fails when any `text-<size>` a registry component uses has no `--text-<size>` in the stylesheet.
