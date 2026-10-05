@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `discover/result-grid` 1.1.0: an error state (2026-10-06, #PRNUM)
+### Added — `discover/result-grid` 1.1.0: an error state (2026-10-06, #451)
 
 `ResultGrid` knew `ok` and `empty`, so a server-filled shell whose request failed had no block to show. mukoko-dev/super-app-web hid the grid with its own CSS rule and added a separate error message. `state` now also takes `error`, and a new `error` slot holds a `StateMessage kind="error"`. On `error`, the summary, the results, the empty block and "load more" hide, and the error block shows. As with the other states, every block is in the markup and CSS picks one, so a `{{placeholder}}` can set the state. The change is in the `.astro` and `.tsx` builds. The contract adds an `error` state and checks, and has no Rust build.
 
