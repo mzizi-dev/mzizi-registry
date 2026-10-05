@@ -549,7 +549,7 @@
       "file": "ui/skeleton.contract.json",
       "astro": "skeleton",
       "tsx": "skeleton",
-      "rs": null
+      "rs": "skeleton"
     },
     {
       "name": "ui/alert",
@@ -558,7 +558,7 @@
       "file": "ui/alert.contract.json",
       "astro": "alert",
       "tsx": "alert",
-      "rs": null
+      "rs": "alert"
     },
     {
       "name": "ui/button",
