@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — `ui/safe-area-frame`, `ui/alert` and `ui/skeleton` are held in full by every build (2026-10-05, #439)
+
+Follow-up to #428. Tracking: #427.
+
+- **`safe-area-frame.tsx` and `safe-area-frame.rs` render SVG geometry, like `safe-area-frame.astro`.** The thumbnail is now an `<svg>` (`width`/`height`/`viewBox`), and its canvas is a nested `<svg>` whose bands are `<rect>`s in a 100×100 space, instead of `<span>`s sized by inline `style` attributes. A page can keep `style-src 'self'`. The data-slots, the `data-band` values and `safeAreaBands` / `safe_area_bands` are unchanged. **Breaking** for CSS that targeted the old `<span>` markup: the outer element is now `svg.block.shrink-0`, not `span.grid`. The React props are now `<svg>` attributes, not `<span>` attributes. In Rust, the public class constants changed to match: `FRAME`, `CANVAS`, `BAND_Y` and `BAND_X` now hold SVG classes, and `CANVAS_FILL` and `OUTLINE` are new.
+- **New: `alert.rs` and `skeleton.rs`** in `mzizi-ui` (`Alert`, `AlertTitle`, `AlertDescription`, `AlertAction`, `AlertVariant`, `alert_variants`; `Skeleton`, `skeleton_variants`). They are the Rust builds of `ui/alert` and `ui/skeleton`.
+- These three contracts now name a `contract`-identity `.tsx` and `.rs`. `mzizi_ui::CONTRACTS` lists alert, safe-area-frame and skeleton, and `tests/contracts_json.rs` renders and evaluates them.
+- **The Rust contract evaluator** (`mzizi-rs/contract-eval/`) now understands child (`>`) and descendant (space) combinators in check selectors, as the TypeScript runner already does.
+
 ### Changed — registry primitives get their own `ui/` contracts; the Dashboard Standard builds become `app-*` (2026-10-05, #428)
 
 Owner request, 2026-10-05: "Give registry primitives their own ui/ contracts". Tracking: #427.
