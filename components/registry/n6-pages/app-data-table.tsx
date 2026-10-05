@@ -1,4 +1,9 @@
-import { badgeClasses, type BadgeVariant } from "@/lib/ui-variants";
+import {
+  badgeClasses,
+  statusToneClasses,
+  type BadgeVariant,
+  type StatusTone,
+} from "@/lib/ui-variants";
 
 /**
  * DataTable — a real <table> with a caption, column headers with scope, and
@@ -7,16 +12,20 @@ import { badgeClasses, type BadgeVariant } from "@/lib/ui-variants";
  * server (`@/lib/server-table`); pair with FilterBar and Pagination.
  *
  * Cells are plain data, not markup, so a section cannot inject HTML:
- * a string, or { text, href, badge, mono, sub }.
+ * a string, or { text, href, badge, tone, mono, sub }. `tone` renders a
+ * status pill in a fixed status colour; `badge` is the registry badge's
+ * variants.
  *
  * The React build of contract `app/data-table`, beside `app-data-table.astro`
  * (same markup and classes; a badge cell uses the shared `badgeClasses`
- * recipe). A server component.
+ * recipe and a tone cell `statusToneClasses`). A server component.
  */
 interface CellObject {
   text: string;
   href?: string;
   badge?: BadgeVariant;
+  /** A status pill: neutral, success, warning, info, accent or premium. */
+  tone?: StatusTone;
   mono?: boolean;
   sub?: string;
   current?: boolean;
@@ -54,6 +63,17 @@ function CellContent({ cell }: { cell: CellObject | null }) {
       <span className="text-muted-foreground">
         <span aria-hidden="true">—</span>
         <span className="sr-only">none</span>
+      </span>
+    );
+  }
+  if (cell.tone) {
+    return (
+      <span
+        data-slot="status"
+        data-tone={cell.tone}
+        className={statusToneClasses(cell.tone)}
+      >
+        {cell.text}
       </span>
     );
   }
@@ -176,4 +196,5 @@ export {
   type CellObject,
   type Column,
   type DataTableProps,
+  type StatusTone,
 };

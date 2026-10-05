@@ -6,16 +6,21 @@
  * server (`@bundu/ui/lib/table`); pair with FilterBar and Pagination.
  *
  * Cells are plain data, not markup, so a section cannot inject HTML:
- * a string, or { text, href, badge, mono, sub }.
+ * a string, or { text, href, badge, tone, mono, sub }. `tone` renders a
+ * status pill in a fixed status colour (`statusToneClasses`); `badge` is the
+ * registry badge's variants.
  */
-import type { BadgeVariant } from "./ui-variants";
+import type { BadgeVariant, StatusTone } from "./ui-variants";
+import { statusToneClasses } from "./ui-variants";
 import Badge from "./badge.astro";
 
-export type { BadgeVariant };
+export type { BadgeVariant, StatusTone };
 export interface CellObject {
   text: string;
   href?: string;
   badge?: BadgeVariant;
+  /** A status pill: neutral, success, warning, info, accent or premium. */
+  tone?: StatusTone;
   mono?: boolean;
   sub?: string;
   current?: boolean;
@@ -82,6 +87,10 @@ const asObject = (cell: Cell): CellObject | null => {
                         <span class="text-muted-foreground">
                           <span aria-hidden="true">—</span>
                           <span class="sr-only">none</span>
+                        </span>
+                      ) : cell.tone ? (
+                        <span data-slot="status" data-tone={cell.tone} class={statusToneClasses(cell.tone)}>
+                          {cell.text}
                         </span>
                       ) : cell.badge ? (
                         <Badge variant={cell.badge}>{cell.text}</Badge>
