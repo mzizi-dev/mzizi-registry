@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — Open in Mukoko covers every Mukoko service, and its examples use the canonical link (2026-10-05, #PR)
+### Changed — Open in Mukoko covers every Mukoko service, and its examples use the canonical link (2026-10-05, #432)
 
 - **`discover/open-in-app` 1.2.0 and `discover/detail-actions` 1.1.0:** `service` also takes `places` (Mukoko Kweli), `lingo` and `profile` (a handle, without the `@`), matching the resolver's link table in mukoko-dev/super-app-web (`crates/links`). `MUKOKO_SERVICES` in `discover-open-link.ts` gains the three.
 - **The `outline` example** is the canonical `https://mukoko.com/open/news/123`, not the retired `news.mukoko.com/open/article/123`.
