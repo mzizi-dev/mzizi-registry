@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "discover/detail-actions",
   "title": "DetailActions",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
   "summary": "The action row of one item's page: \"Open in Mukoko\" (an OpenInApp, primary, the canonical universal link) first, secondary links beside it, and share links under the hint. Every action is a link; never a client script.",
@@ -20,9 +20,17 @@
   "props": [
     {
       "name": "service",
-      "type": "\"news\" | \"events\" | \"weather\" | \"circles\"",
+      "type": "\"news\" | \"events\" | \"weather\" | \"circles\" | \"places\" | \"lingo\" | \"profile\"",
       "required": false,
-      "values": ["news", "events", "weather", "circles"],
+      "values": [
+        "news",
+        "events",
+        "weather",
+        "circles",
+        "places",
+        "lingo",
+        "profile"
+      ],
       "description": "The Mukoko service the item lives in. With `id`, \"Open in Mukoko\" is `https://mukoko.com/open/<service>/<id>`."
     },
     {

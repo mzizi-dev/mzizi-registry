@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — Open in Mukoko covers every Mukoko service, and its examples use the canonical link (2026-10-05, #432)
+
+- **`discover/open-in-app` 1.2.0 and `discover/detail-actions` 1.1.0:** `service` also takes `places` (Mukoko Kweli), `lingo` and `profile` (a handle, without the `@`), matching the resolver's link table in mukoko-dev/super-app-web (`crates/links`). `MUKOKO_SERVICES` in `discover-open-link.ts` gains the three.
+- **The `outline` example** is the canonical `https://mukoko.com/open/news/123`, not the retired `news.mukoko.com/open/article/123`.
+- **The behaviour text** says what the resolver does now: a desktop browser or a crawler is redirected to the item's public page; a phone gets "Open in the Mukoko app" or "Continue on the web".
+
 ## [4.2.0] - 2026-10-05
 
 The first release of `staging` to `main` under the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): the next minor above the highest tag (v4.1.16). The code version moves from 1.0.0 to 4.2.0 in `package.json`, `README.md` and `content/changelog/releases.json`; the pre-1.0 doctrine record also numbered 4.2.0 is a different release. Everything below, back to 1.0.0, ships in it.
