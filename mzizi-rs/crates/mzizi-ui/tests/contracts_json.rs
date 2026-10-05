@@ -16,7 +16,8 @@ use std::path::PathBuf;
 use dioxus::prelude::*;
 use mzizi_ui::card::CardSize;
 use mzizi_ui::{
-    Button, ButtonSize, ButtonVariant, Card, Input, Label, StatusBadge, StatusBadgeStatus,
+    Alert, AlertVariant, Button, ButtonSize, ButtonVariant, Card, Input, Label, SafeAreaFrame,
+    Skeleton, StatusBadge, StatusBadgeStatus,
 };
 use serde_json::Value;
 
@@ -144,14 +145,54 @@ fn label_state() -> Element {
     rsx! { Label { r#for: target, "{body}" } }
 }
 
+fn num(name: &str) -> Option<u32> {
+    PROPS.with(|p| {
+        p.borrow()["props"][name]
+            .as_u64()
+            .map(|n| u32::try_from(n).expect("a contract number fits in u32"))
+    })
+}
+
+fn alert_state() -> Element {
+    let variant = match prop("variant").as_deref() {
+        None | Some("default") => AlertVariant::Default,
+        Some("destructive") => AlertVariant::Destructive,
+        Some(other) => panic!("alert: the contract names an unknown variant `{other}`"),
+    };
+    let body = text("default");
+    rsx! { Alert { variant, "{body}" } }
+}
+
+fn skeleton_state() -> Element {
+    let class = prop("class").unwrap_or_default();
+    rsx! { Skeleton { class } }
+}
+
+fn safe_area_frame_state() -> Element {
+    let width = num("width").expect("safe-area-frame: width");
+    let height = num("height").expect("safe-area-frame: height");
+    let safe = PROPS.with(|p| {
+        p.borrow()["props"]["safe"].as_array().map_or([0; 4], |a| {
+            let n = |i: usize| u32::try_from(a[i].as_u64().unwrap()).unwrap();
+            [n(0), n(1), n(2), n(3)]
+        })
+    });
+    let box_px = num("box").unwrap_or(56);
+    let class = prop("class").unwrap_or_default();
+    rsx! { SafeAreaFrame { width, height, safe, box_px, class } }
+}
+
 /// The renderer for each registry item this crate implements a contract for. A contract whose
 /// `.rs` claims `identity: "contract"` with no renderer here fails, so none goes unevaluated.
 fn renderer(registry: &str) -> fn() -> Element {
     match registry {
+        "alert" => alert_state,
         "button" => button_state,
         "card" => card_state,
         "input" => input_state,
         "label" => label_state,
+        "safe-area-frame" => safe_area_frame_state,
+        "skeleton" => skeleton_state,
         "status-badge" => status_badge_state,
         other => panic!(
             "contracts name `{other}.rs` with identity \"contract\", and tests/contracts_json.rs has \
