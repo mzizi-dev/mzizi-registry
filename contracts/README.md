@@ -125,19 +125,19 @@ Every Discover component also works in a server-filled shell (an Astro page buil
 
 Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Where a build is marked `contract` it keeps the whole contract; the older ports share only what their `identity` says, or nothing yet (`—`), and their contracts list the divergences and gaps.
 
-| Contract               | Component        | Node | Version | Astro `.astro`      | React `.tsx`               | Rust `.rs`                |
-| ---------------------- | ---------------- | ---- | ------- | ------------------- | -------------------------- | ------------------------- |
-| `ui/alert`             | Alert            | N2   | 1.0.0   | `alert`             | `alert` (contract)         | —                         |
-| `ui/button`            | Button           | N2   | 1.0.0   | `button`            | `button` (contract)        | `button` (contract)       |
-| `ui/card`              | Card             | N2   | 1.0.0   | `card`              | `card` (contract)          | `card` (contract)         |
-| `ui/input`             | Input            | N2   | 1.0.0   | `input`             | `input` (contract)         | `input` (contract)        |
-| `ui/label`             | Label            | N2   | 1.0.0   | `label`             | `label` (contract)         | `label` (contract)        |
-| `ui/native-select`     | NativeSelect     | N2   | 1.0.0   | `native-select`     | —                          | —                         |
-| `ui/safe-area-frame`   | SafeAreaFrame    | N2   | 1.0.0   | `safe-area-frame`   | `safe-area-frame` (slot)   | `safe-area-frame` (slot)  |
-| `ui/segmented-control` | SegmentedControl | N2   | 1.0.0   | `segmented-control` | `segmented-control` (slot) | —                         |
-| `ui/skeleton`          | Skeleton         | N2   | 1.0.0   | `skeleton`          | `skeleton` (contract)      | —                         |
-| `ui/status-badge`      | StatusBadge      | N2   | 1.0.0   | `status-badge`      | `status-badge` (contract)  | `status-badge` (contract) |
-| `ui/toaster`           | Toaster          | N2   | 1.0.0   | `toaster`           | —                          | —                         |
+| Contract               | Component        | Node | Version | Astro `.astro`      | React `.tsx`                 | Rust `.rs`                   |
+| ---------------------- | ---------------- | ---- | ------- | ------------------- | ---------------------------- | ---------------------------- |
+| `ui/alert`             | Alert            | N2   | 1.0.0   | `alert`             | `alert` (contract)           | `alert` (contract)           |
+| `ui/button`            | Button           | N2   | 1.0.0   | `button`            | `button` (contract)          | `button` (contract)          |
+| `ui/card`              | Card             | N2   | 1.0.0   | `card`              | `card` (contract)            | `card` (contract)            |
+| `ui/input`             | Input            | N2   | 1.0.0   | `input`             | `input` (contract)           | `input` (contract)           |
+| `ui/label`             | Label            | N2   | 1.0.0   | `label`             | `label` (contract)           | `label` (contract)           |
+| `ui/native-select`     | NativeSelect     | N2   | 1.0.0   | `native-select`     | —                            | —                            |
+| `ui/safe-area-frame`   | SafeAreaFrame    | N2   | 1.0.0   | `safe-area-frame`   | `safe-area-frame` (contract) | `safe-area-frame` (contract) |
+| `ui/segmented-control` | SegmentedControl | N2   | 1.0.0   | `segmented-control` | `segmented-control` (slot)   | —                            |
+| `ui/skeleton`          | Skeleton         | N2   | 1.0.0   | `skeleton`          | `skeleton` (contract)        | `skeleton` (contract)        |
+| `ui/status-badge`      | StatusBadge      | N2   | 1.0.0   | `status-badge`      | `status-badge` (contract)    | `status-badge` (contract)    |
+| `ui/toaster`           | Toaster          | N2   | 1.0.0   | `toaster`           | —                            | —                            |
 
 **Follow-ups.** Rust ports of the app, discover and site components ([#401](https://github.com/mzizi-dev/mzizi-registry/issues/401)); each is done when it passes its contract. `button`, `card` and `input` share only their slot with their `.tsx` and `.rs`, which keep the registry's own variants, parts or height (each divergence is listed in the contract).
 

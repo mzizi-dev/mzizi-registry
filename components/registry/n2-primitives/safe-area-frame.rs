@@ -1,23 +1,28 @@
 //! SAFE AREA FRAME — N2 primitive, Dioxus.
 //!
-//! The Rust sibling of `safe-area-frame.tsx`: a canvas shape at thumbnail size, at its true
-//! aspect ratio, with the platform-UI bands shaded. Same `data-slot`s, same classes, and the
-//! same geometry from [`safe_area_bands`], which mirrors the TypeScript's `safeAreaBands`.
+//! The Rust build of `contracts/ui/safe-area-frame.contract.json`: a canvas shape at thumbnail
+//! size, at its true aspect ratio, with the platform-UI bands shaded. The same SVG as
+//! `safe-area-frame.astro` and `safe-area-frame.tsx`, sized by geometry and never a `style`
+//! attribute, and the same numbers from [`safe_area_bands`], which mirrors the TypeScript's
+//! `safeAreaBands`.
 //!
 //! Purely presentational: no state, no hooks. It renders identically under server-side
 //! rendering and in a browser.
 
 use dioxus::prelude::*;
 
-/// Classes on the outer box.
-pub const FRAME: &str = "grid shrink-0 place-items-center";
-/// Classes on the canvas shape.
-pub const CANVAS: &str =
-    "relative block overflow-hidden rounded-[4px] border border-foreground/40 bg-muted";
-/// Classes on a horizontal (top or bottom) band.
-pub const BAND_Y: &str = "absolute inset-x-0 bg-primary/30";
-/// Classes on a vertical (left or right) band.
-pub const BAND_X: &str = "absolute inset-y-0 bg-primary/20";
+/// Classes on the outer `<svg>`.
+pub const FRAME: &str = "block shrink-0";
+/// Classes on the canvas `<svg>`.
+pub const CANVAS: &str = "overflow-hidden";
+/// Fill of the canvas.
+pub const CANVAS_FILL: &str = "fill-muted";
+/// Fill of a horizontal (top or bottom) band.
+pub const BAND_Y: &str = "fill-primary/30";
+/// Fill of a vertical (left or right) band.
+pub const BAND_X: &str = "fill-primary/20";
+/// Stroke of the canvas outline.
+pub const OUTLINE: &str = "stroke-foreground/40";
 
 /// Thumbnail geometry: the shape's size in CSS pixels and each band as a percentage.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -75,7 +80,9 @@ pub struct SafeAreaFrameProps {
     pub class: String,
 }
 
-/// A canvas shape with its safe-area bands shaded.
+/// A canvas shape with its safe-area bands shaded. The canvas is a nested `<svg>` centred in
+/// the box; its bands are drawn in a 100×100 user space stretched to the canvas, so each band's
+/// percentage is its rect's size.
 #[component]
 pub fn SafeAreaFrame(props: SafeAreaFrameProps) -> Element {
     let b = safe_area_bands(props.width, props.height, props.safe, props.box_px);
@@ -85,29 +92,72 @@ pub fn SafeAreaFrame(props: SafeAreaFrameProps) -> Element {
         format!("{FRAME} {}", props.class)
     };
     let box_px = props.box_px;
+    let x = f64::from(box_px.saturating_sub(b.width)) / 2.0;
+    let y = f64::from(box_px.saturating_sub(b.height)) / 2.0;
+    let bottom_y = 100.0 - b.bottom;
+    let right_x = 100.0 - b.right;
     rsx! {
-        span {
+        svg {
             "data-slot": "safe-area-frame",
             "aria-hidden": "true",
+            "focusable": "false",
             class,
-            style: "width: {box_px}px; height: {box_px}px;",
-            span {
+            "width": "{box_px}",
+            "height": "{box_px}",
+            "viewBox": "0 0 {box_px} {box_px}",
+            svg {
                 "data-slot": "safe-area-frame-canvas",
+                "x": "{x}",
+                "y": "{y}",
+                "width": "{b.width}",
+                "height": "{b.height}",
+                "viewBox": "0 0 100 100",
+                "preserveAspectRatio": "none",
                 class: CANVAS,
-                style: "width: {b.width}px; height: {b.height}px;",
+                rect { "width": "100", "height": "100", class: CANVAS_FILL }
                 if b.top > 0.0 {
-                    span { "data-band": "top", class: "{BAND_Y} top-0", style: "height: {b.top}%;" }
+                    rect { "data-band": "top", "width": "100", "height": "{b.top}", class: BAND_Y }
                 }
                 if b.bottom > 0.0 {
-                    span { "data-band": "bottom", class: "{BAND_Y} bottom-0", style: "height: {b.bottom}%;" }
+                    rect {
+                        "data-band": "bottom",
+                        "y": "{bottom_y}",
+                        "width": "100",
+                        "height": "{b.bottom}",
+                        class: BAND_Y,
+                    }
                 }
                 if b.left > 0.0 {
-                    span { "data-band": "left", class: "{BAND_X} left-0", style: "width: {b.left}%;" }
+                    rect { "data-band": "left", "width": "{b.left}", "height": "100", class: BAND_X }
                 }
                 if b.right > 0.0 {
-                    span { "data-band": "right", class: "{BAND_X} right-0", style: "width: {b.right}%;" }
+                    rect {
+                        "data-band": "right",
+                        "x": "{right_x}",
+                        "width": "{b.right}",
+                        "height": "100",
+                        class: BAND_X,
+                    }
+                }
+                rect {
+                    "width": "100",
+                    "height": "100",
+                    "fill": "none",
+                    "vector-effect": "non-scaling-stroke",
+                    class: OUTLINE,
                 }
             }
         }
     }
 }
+
+/// The contract this build implements, copied by `pnpm contracts:sync` from
+/// `contracts/ui/safe-area-frame.contract.json`, the one contract the Astro, React and Rust
+/// builds share: edit the contract file, never this copy. `tests/contracts_json.rs` renders
+/// every state the contract declares and evaluates every clause and check against the markup.
+pub const CONTRACT: &str = r#"contract
+  slot is "safe-area-frame"
+  uses safe-area-frame-canvas
+  when rail slot is "safe-area-frame"
+  when plain class contains "opacity-80"
+end"#;
