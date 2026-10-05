@@ -374,7 +374,7 @@
     {
       "name": "discover/open-in-app",
       "title": "OpenInApp",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "file": "discover/open-in-app.contract.json",
       "astro": "discover-open-in-app",
       "tsx": "discover-open-in-app",
@@ -392,7 +392,7 @@
     {
       "name": "discover/detail-actions",
       "title": "DetailActions",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "discover/detail-actions.contract.json",
       "astro": "discover-detail-actions",
       "tsx": "discover-detail-actions",
