@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — `ui/native-select` and `ui/segmented-control` are one component in every build (2026-10-05, #PRNUM)
+### Changed — `ui/native-select` and `ui/segmented-control` are one component in every build (2026-10-05, #441)
 
 Owner decision, 2026-10-05: per component, so that each primitive has one design. Tracking: #427.
 
