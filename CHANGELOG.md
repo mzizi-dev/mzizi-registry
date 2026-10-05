@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.3.0] - 2026-10-05
+
+Releases `staging` to `main` as the next minor above v4.2.1 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.3.0.
+
 ### Fixed — the v4.2.0 release and the pre-1.0 Doctrine 4.2.0 no longer share a version, and CI fails on a duplicate (2026-10-05, #435)
 
 - **The pre-1.0 Doctrine 4.2.0 record is keyed `4.2.0+doctrine`** in `content/changelog/releases.json`. Its `major`, `minor`, `patch`, `line` and content are unchanged; the `+doctrine` build metadata only gives it its own key. `/api/v1/changelog/4.2.0` (and api.mzizi.dev's `/v1/changelog/4.2.0`) now answers the v4.2.0 release alone, and `/v1/changelog/4.2.0+doctrine` the doctrine record. v4.2.0 is the canonical holder of the number: it is the git tag and `package.json`'s version.
