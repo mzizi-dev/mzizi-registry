@@ -329,16 +329,35 @@ impl Case {
         let first = t.first().ok_or("empty clause")?.as_str();
 
         // `when <state> shows <element> "<text>"`
+        // and `when <state> <root attribute> <predicate…>`
         if first == "when" {
-            if t.len() != 5 || t[2] != "shows" {
-                return Err("only `when <state> shows <element> \"<text>\"` is evaluated".into());
+            let root = self.state(t.get(1).ok_or("`when` needs a state")?)?;
+            if t.len() == 5 && t[2] == "shows" {
+                let text = unquote(&t[4]);
+                return Ok(root
+                    .elements()
+                    .iter()
+                    .any(|e| e.tag() == t[3] && e.carries(text)));
             }
-            let root = self.state(&t[1])?;
-            let text = unquote(&t[4]);
+            if let Some(attr) = t.get(2).and_then(|s| root_attr(s)) {
+                let value = root
+                    .attr(attr)
+                    .ok_or_else(|| format!("the `{}` root has no `{attr}`", t[1]))?;
+                return holds(value, &t[3..]);
+            }
+            return Err(
+                "only `when <state> shows <element> \"<text>\"` and `when <state> <root attribute> <predicate>` are evaluated"
+                    .into(),
+            );
+        }
+
+        // `uses <data-slot>`: an element carrying that slot is rendered in the default state.
+        if first == "uses" && t.len() == 2 {
+            let root = self.state("default")?;
             return Ok(root
                 .elements()
                 .iter()
-                .any(|e| e.tag() == t[3] && e.carries(text)));
+                .any(|e| e.attr("data-slot") == Some(t[1].as_str())));
         }
 
         // `every <enum> <column> <predicate…>`
@@ -458,4 +477,76 @@ pub fn rows<T: Copy>(
     value: fn(T) -> String,
 ) -> Vec<(&'static str, String)> {
     all.iter().map(|&v| (slug(v), value(v))).collect()
+}
+
+// ─── A CSS selector subset, for a contract's `checks` and `density` ────────────────────────
+
+/// One compound selector: an optional tag, `.class`es and `[attr]` / `[attr="value"]`s. A
+/// selector outside this subset is an `Err`, which the caller turns into a failure (FM-12).
+#[derive(Debug, Default)]
+struct Compound {
+    tag: Option<String>,
+    classes: Vec<String>,
+    attrs: Vec<(String, Option<String>)>,
+}
+
+fn compound(selector: &str) -> Result<Compound, String> {
+    let s = selector.trim();
+    let mut out = Compound::default();
+    let mut i = 0;
+    let b = s.as_bytes();
+    let ident = |i: &mut usize| {
+        let start = *i;
+        while *i < b.len() && (b[*i].is_ascii_alphanumeric() || b[*i] == b'-' || b[*i] == b'_') {
+            *i += 1;
+        }
+        s[start..*i].to_owned()
+    };
+    if i < b.len() && b[i].is_ascii_alphabetic() {
+        out.tag = Some(ident(&mut i));
+    }
+    while i < b.len() {
+        match b[i] {
+            b'.' => {
+                i += 1;
+                out.classes.push(ident(&mut i));
+            }
+            b'[' => {
+                let end = s[i..]
+                    .find(']')
+                    .ok_or_else(|| format!("unclosed `[` in `{s}`"))?
+                    + i;
+                let inner = &s[i + 1..end];
+                match inner.split_once('=') {
+                    Some((k, v)) => out
+                        .attrs
+                        .push((k.trim().to_owned(), Some(unquote(v.trim()).to_owned()))),
+                    None => out.attrs.push((inner.trim().to_owned(), None)),
+                }
+                i = end + 1;
+            }
+            _ => return Err(format!("selector `{s}` is outside the evaluated subset")),
+        }
+    }
+    Ok(out)
+}
+
+/// Every element under (and including) `root` that matches `selector`.
+pub fn select<'a>(root: &'a Node, selector: &str) -> Result<Vec<&'a Node>, String> {
+    let c = compound(selector)?;
+    Ok(root
+        .elements()
+        .into_iter()
+        .filter(|e| {
+            c.tag.as_deref().is_none_or(|t| e.tag() == t)
+                && c.classes.iter().all(|k| {
+                    e.attr("class")
+                        .is_some_and(|v| v.split_whitespace().any(|w| w == k))
+                })
+                && c.attrs.iter().all(|(k, v)| match v {
+                    Some(v) => e.attr(k) == Some(v.as_str()),
+                    None => e.attr(k).is_some(),
+                })
+        })
+        .collect())
 }

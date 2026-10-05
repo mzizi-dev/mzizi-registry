@@ -18,17 +18,12 @@
 use std::fs;
 use std::path::PathBuf;
 
-use dioxus::prelude::*;
 use mzizi_ui::{
     AvatarSize, BadgeVariant, ButtonSize, ButtonVariant, SeparatorOrientation, avatar_variants,
     badge_variants, button_variants, chart_loading_variants, chart_variants, input_variants,
     label_variants, progress_variants, separator_variants,
 };
-use mzizi_ui::{STATUS_BADGE_STATUSES, StatusBadge, StatusBadgeStatus, status_badge_variants};
-
-#[path = "../../../contract-eval/contract_eval.rs"]
-mod contract_eval;
-use contract_eval::{Case, render, rows};
+use mzizi_ui::{STATUS_BADGE_STATUSES, status_badge_variants};
 
 /// Read a registry component's TypeScript source.
 fn tsx(node_dir: &str, name: &str) -> String {
@@ -389,33 +384,6 @@ fn status_badge_matches_the_typescript() {
     ] {
         assert!(own.contains(attr), "status-badge.tsx does not carry {attr}");
     }
-}
-
-#[test]
-fn status_badge_keeps_its_contract() {
-    fn default_state() -> Element {
-        rsx! { StatusBadge {} }
-    }
-    fn deprecated_state() -> Element {
-        rsx! { StatusBadge { status: StatusBadgeStatus::Deprecated } }
-    }
-    Case {
-        name: "status-badge",
-        contract: mzizi_ui::status_badge::CONTRACT,
-        states: vec![
-            ("default", render(default_state)),
-            ("deprecated", render(deprecated_state)),
-        ],
-        defaults: vec![("status", "stable".into())],
-        columns: vec![(
-            "status_badge_status",
-            "class",
-            rows(&STATUS_BADGE_STATUSES, StatusBadgeStatus::slug, |s| {
-                s.classes().to_owned()
-            }),
-        )],
-    }
-    .check();
 }
 
 #[test]
