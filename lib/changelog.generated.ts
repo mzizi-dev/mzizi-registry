@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.4.0",
+    title: "v4.4.0 — one contract per component, every build",
+    description:
+      "Releases staging to main as the next minor above v4.3.3 (nyuchi/.github#80). One contract per component whatever the language, with ui/ contracts for every registry primitive and Rust held to the whole contract (#428); safe-area-frame, alert and skeleton held in full by every build (#439); native-select and segmented-control one component in every build (#441); Astro the default web UI and ui/toaster in React (#442); four Dashboard Standard deltas from the Nyuchi console: form-field controls, multipart forms, thinned bar-chart labels and status pills (#443). CHANGELOG.md section [4.4.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 4,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-10-05T14:00:00.000+00:00",
+    created_at: "2026-10-05T14:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.3.0",
     title: "v4.3.0 — one release per changelog version",
     description:
