@@ -31,14 +31,7 @@ interface FormFieldProps {
   label: string;
   value?: string | null;
   type?:
-    | "text"
-    | "email"
-    | "tel"
-    | "url"
-    | "search"
-    | "number"
-    | "date"
-    | "file";
+    "text" | "email" | "tel" | "url" | "search" | "number" | "date" | "file";
   as?: "input" | "textarea" | "select";
   options?: FieldOption[];
   emptyOption?: string;

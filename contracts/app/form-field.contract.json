@@ -197,7 +197,7 @@
         "name": "bio",
         "label": "About",
         "as": "textarea",
-        "value": "Teacher & parent.",
+        "value": "Teacher and parent.",
         "rows": 4,
         "hint": "A sentence or two.",
         "error": "Keep it under 200 characters.",
@@ -351,7 +351,7 @@
         "aria-invalid": "true",
         "required": true
       },
-      "text": "Teacher & parent."
+      "text": "Teacher and parent."
     },
     {
       "say": "The textarea's label points at it.",
