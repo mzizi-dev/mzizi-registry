@@ -8,11 +8,12 @@
   "summary": "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens.",
   "implementations": {
     "astro": {
+      "registry": "app-bar-chart",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/BarChart.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-bar-chart", "identity": "contract" },
     "rs": null,
     "related": ["chart"]
   },

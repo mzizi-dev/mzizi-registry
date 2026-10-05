@@ -28,6 +28,7 @@ const REGISTRY = join(ROOT, "registry.json")
 const OUT = join(ROOT, "lib", "node-map.generated.ts")
 
 const NODE_PATTERN = /^components\/registry\/(n\d+)-/
+const ASSETS_PREFIX = "components/registry/assets/"
 
 async function prettified(filePath, source) {
   const config = await prettier.resolveConfig(filePath)
@@ -45,6 +46,8 @@ for (const item of registry.items) {
   for (const file of item.files ?? []) {
     const match = NODE_PATTERN.exec(file.path ?? "")
     if (match) nodes.add(match[1])
+    // Brand assets are N3's, as `parseNodeDir` in lib/registry.ts maps them.
+    else if ((file.path ?? "").startsWith(ASSETS_PREFIX)) nodes.add("n3")
   }
   if (nodes.size === 0) {
     // Root-level config items (`mzizi-base`, `mzizi-tokens`) install files

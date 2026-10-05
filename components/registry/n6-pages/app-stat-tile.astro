@@ -1,0 +1,78 @@
+---
+/**
+ * StatTile — one headline figure: a label, the value, and an optional
+ * trend against the previous period and a one-line note. The trend is
+ * written out in words ("up 12% on the previous 30 days"), never shown by
+ * colour or an arrow alone. A missing value reads "Not available", never 0.
+ *
+ * Use several in a <dl> grid via StatTile's own <div> wrapper: each tile is
+ * a description-list group, so screen readers hear "label, value".
+ *
+ * Follows the Mzizi registry's `stats-card` contract (value, trend,
+ * description). Numbers are formatted for `locale` (default en-GB).
+ */
+import InfoTip from "./app-info-tip.astro";
+
+interface Props {
+  label: string;
+  value: string | number | null | undefined;
+  /** Change against the previous period; percentage points if `points`. */
+  trend?: number | null;
+  /** The trend is in percentage points, not per cent. */
+  points?: boolean;
+  /** Whether a rise is good news (default true). Only affects the tone word. */
+  upIsGood?: boolean;
+  /** What the trend is compared with, e.g. "the previous 30 days". */
+  versus?: string;
+  note?: string;
+  href?: string;
+  /** BCP 47 locale for number formatting. */
+  locale?: string;
+  /** What the figure counts, as an info tooltip after the label. */
+  info?: string;
+}
+const { label, value, trend, points = false, upIsGood = true, versus, note, href, locale = "en-GB", info } = Astro.props;
+const infoId = `stat-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-info`;
+const shown = value === null || value === undefined || value === "" ? null : typeof value === "number" ? value.toLocaleString(locale) : value;
+const hasTrend = typeof trend === "number" && Number.isFinite(trend);
+const unit = points ? " points" : "%";
+const trendText = !hasTrend
+  ? null
+  : trend === 0
+    ? `No change${versus ? ` on ${versus}` : ""}`
+    : `${trend > 0 ? "Up" : "Down"} ${Math.abs(trend).toLocaleString(locale, { maximumFractionDigits: 1 })}${unit}${versus ? ` on ${versus}` : ""}`;
+// The badge is short and never wraps ("+12.5%", "−3 points", "No change");
+// what it is compared with follows as quiet text that may wrap. Screen
+// readers hear the full sentence once.
+const shortTrend = !hasTrend
+  ? null
+  : trend === 0
+    ? "No change"
+    : `${trend > 0 ? "+" : "−"}${Math.abs(trend).toLocaleString(locale, { maximumFractionDigits: 1 })}${points ? " pts" : "%"}`;
+const good = hasTrend && trend !== 0 ? (trend > 0) === upIsGood : null;
+const tone = good === null ? "text-muted-foreground" : good ? "text-malachite-on-container bg-malachite-container" : "text-terracotta-on-container bg-terracotta-container";
+---
+
+<div class="flex min-w-0 flex-col gap-1 rounded-md border border-border bg-card px-4 py-3.5" data-slot="stat-tile">
+  <dt class="flex items-center gap-1 text-body-sm text-muted-foreground">
+    {href ? <a href={href} class="underline-offset-4 hover:text-foreground hover:underline">{label}</a> : label}
+    {info && <InfoTip text={info} about={label} id={infoId} />}
+  </dt>
+  <dd class="flex flex-col gap-1.5">
+    <span class="text-h4 font-semibold tracking-tight tabular-nums">
+      {shown ?? <span class="text-body text-muted-foreground">Not available</span>}
+    </span>
+    {
+      trendText && (
+        <span class="flex flex-wrap items-baseline gap-x-1.5 text-caption" data-slot="stat-trend">
+          <span class="sr-only">{trendText}</span>
+          <span aria-hidden="true" class={`w-fit shrink-0 rounded-sm px-1.5 py-px font-medium whitespace-nowrap tabular-nums ${good === null ? "bg-muted" : tone}`}>
+            {shortTrend}
+          </span>
+          {versus && trend !== 0 && <span aria-hidden="true" class="text-muted-foreground">vs {versus}</span>}
+        </span>
+      )
+    }
+    {note && <span class="text-caption text-muted-foreground">{note}</span>}
+  </dd>
+</div>

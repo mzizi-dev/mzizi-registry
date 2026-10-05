@@ -8,11 +8,12 @@
   "summary": "The top of the sidebar: the product mark and name over the current workspace or organisation, opening a list of other workspaces and account links. With nothing to switch to it is a plain link home.",
   "implementations": {
     "astro": {
+      "registry": "app-workspace-switcher",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/WorkspaceSwitcher.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-workspace-switcher", "identity": "contract" },
     "rs": null,
     "related": ["app-switcher"]
   },

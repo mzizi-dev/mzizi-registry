@@ -1,0 +1,193 @@
+---
+/**
+ * CommandPalette — "go to anything": every navigation item, grouped, in a
+ * Popover API panel, opened by QuickSearch or ⌘K / Ctrl+K.
+ *
+ * Progressive enhancement, in layers:
+ * - No script: QuickSearch opens it (`popovertarget`), Escape and a click
+ *   outside close it (the platform's light dismiss), and every item is a
+ *   plain link. With `action`, the search box is a GET form, so the app can
+ *   answer `?q=` on the server (searchNav in ./nav.ts does the matching).
+ * - With script (the one small module below, and the only script in the
+ *   app patterns besides AppShell's): the ⌘K / Ctrl+K shortcut, live
+ *   filtering as you type with the count announced in a polite live
+ *   region, Enter to open the first match, and the arrow keys to move.
+ *   Neither is possible in CSS, which is why this script exists.
+ */
+import Icon from "./site-icon.astro";
+import { flattenNav, type NavGroup } from "./app-nav";
+
+interface Props {
+  groups: NavGroup[];
+  id?: string;
+  /** GET target for the search box when scripts do not run (e.g. "/search"). */
+  action?: string;
+  label?: string;
+  placeholder?: string;
+}
+const { groups, id = "command-palette", action, label = "Search", placeholder = "Search pages and settings" } = Astro.props;
+const flat = flattenNav(groups);
+const sections = [...new Set(flat.map((i) => i.group ?? ""))].map((g) => ({
+  label: g === "" ? "Go to" : g,
+  items: flat.filter((i) => (i.group ?? "") === g),
+}));
+const inputId = `${id}-q`;
+---
+
+<div id={id} popover role="dialog" aria-label={label} data-slot="command-palette">
+  {
+    action ? (
+      <form method="get" action={action} role="search" data-cmdk-form class="flex items-center gap-2 border-b border-border px-3">
+        <label for={inputId} class="sr-only">
+          {label}
+        </label>
+        <Icon name="search" class="h-4 w-4 shrink-0 text-muted-foreground" />
+        <input id={inputId} name="q" type="search" autocomplete="off" autofocus placeholder={placeholder} class="h-11 min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden" />
+      </form>
+    ) : (
+      <div class="flex items-center gap-2 border-b border-border px-3" data-cmdk-form>
+        <label for={inputId} class="sr-only">
+          {label}
+        </label>
+        <Icon name="search" class="h-4 w-4 shrink-0 text-muted-foreground" />
+        <input id={inputId} name="q" type="search" autocomplete="off" autofocus placeholder={placeholder} class="h-11 min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden" />
+      </div>
+    )
+  }
+  <div class="max-h-[min(60vh,28rem)] overflow-y-auto p-1" data-cmdk-list>
+    {
+      sections.map((s) => (
+        <section data-cmdk-group aria-label={s.label}>
+          <p aria-hidden="true" class="px-2 pt-2 pb-1 text-caption font-medium text-muted-foreground">
+            {s.label}
+          </p>
+          <ul role="list" class="grid gap-0.5">
+            {s.items.map((i) => (
+              <li data-cmdk-item data-search={[i.label, i.description ?? i.summary ?? "", i.group ?? "", ...i.trail].join(" ")}>
+                <a href={i.href} class="flex h-9 min-w-0 items-center gap-2.5 rounded-sm px-2 text-body-sm outline-none hover:bg-muted focus-visible:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11">
+                  {i.icon ? <Icon name={i.icon} class="h-4 w-4 shrink-0 text-muted-foreground" /> : <span class="w-4 shrink-0" />}
+                  <span class="shrink-0">
+                    {i.trail.length > 0 && <span class="text-muted-foreground">{i.trail.join(" › ")} › </span>}
+                    {i.label}
+                  </span>
+                  {(i.description ?? i.summary) && <span class="ml-auto hidden min-w-0 truncate text-caption text-muted-foreground sm:block">{i.description ?? i.summary}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+    <p data-cmdk-empty hidden class="px-3 py-8 text-center text-body-sm text-muted-foreground">No matches. Try another word.</p>
+  </div>
+  <p data-cmdk-status class="sr-only" aria-live="polite"></p>
+  <div class="hidden items-center gap-4 border-t border-border px-3 py-2 text-caption text-muted-foreground sm:flex" aria-hidden="true">
+    <span><kbd class="font-sans">↑</kbd><kbd class="font-sans">↓</kbd> move</span>
+    <span><kbd class="font-sans">Enter</kbd> open</span>
+    <span><kbd class="font-sans">Esc</kbd> close</span>
+  </div>
+</div>
+
+<style is:global>
+  [data-slot="command-palette"] {
+    position: fixed;
+    inset: 12vh auto auto 50%;
+    transform: translateX(-50%);
+    width: min(40rem, calc(100vw - 2rem));
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow:
+      0 24px 48px -12px color-mix(in oklab, var(--foreground) 25%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--foreground) 4%, transparent);
+    overflow: hidden;
+  }
+  [data-slot="command-palette"]::backdrop {
+    background: color-mix(in oklab, var(--foreground) 30%, transparent);
+  }
+  [data-slot="command-palette"] [hidden] {
+    display: none !important;
+  }
+</style>
+
+<script>
+  const fold = (s: string) =>
+    s
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .toLowerCase();
+
+  function setup(): void {
+    if (!/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) {
+      for (const kbd of document.querySelectorAll<HTMLElement>("[data-qs-kbd]")) kbd.textContent = "Ctrl K";
+    }
+    for (const el of document.querySelectorAll<HTMLElement>('[data-slot="command-palette"]')) {
+      if (el.dataset.ready) continue;
+      el.dataset.ready = "1";
+      const input = el.querySelector<HTMLInputElement>('input[name="q"]');
+      if (!input) continue;
+      const items = [...el.querySelectorAll<HTMLElement>("[data-cmdk-item]")];
+      const groups = [...el.querySelectorAll<HTMLElement>("[data-cmdk-group]")];
+      const empty = el.querySelector<HTMLElement>("[data-cmdk-empty]");
+      const status = el.querySelector<HTMLElement>("[data-cmdk-status]");
+      const links = () => items.filter((i) => !i.hidden).map((i) => i.querySelector("a")).filter((a): a is HTMLAnchorElement => a !== null);
+      const filter = () => {
+        const words = fold(input.value).split(/\s+/).filter(Boolean);
+        let shown = 0;
+        for (const item of items) {
+          const ok = words.every((w) => fold(item.dataset.search ?? "").includes(w));
+          item.hidden = !ok;
+          if (ok) shown += 1;
+        }
+        for (const g of groups) g.hidden = g.querySelector("[data-cmdk-item]:not([hidden])") === null;
+        if (empty) empty.hidden = shown !== 0;
+        if (status) status.textContent = words.length === 0 ? "" : `${shown} ${shown === 1 ? "match" : "matches"}`;
+      };
+      input.addEventListener("input", filter);
+      el.querySelector("[data-cmdk-form]")?.addEventListener("submit", (e) => {
+        const first = links()[0];
+        if (first) {
+          e.preventDefault();
+          window.location.assign(first.href);
+        }
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !(input.form ?? null)) {
+          const first = links()[0];
+          if (first) window.location.assign(first.href);
+        }
+      });
+      el.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+        const list = links();
+        if (list.length === 0) return;
+        e.preventDefault();
+        const at = list.indexOf(document.activeElement as HTMLAnchorElement);
+        if (e.key === "ArrowDown") (list[at + 1] ?? list[0])?.focus();
+        else if (at <= 0) input.focus();
+        else list[at - 1]?.focus();
+      });
+      el.addEventListener("toggle", (e) => {
+        if ((e as ToggleEvent).newState === "open") {
+          input.value = "";
+          filter();
+          input.focus();
+        }
+      });
+    }
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "k") return;
+    const el = document.querySelector<HTMLElement>('[data-slot="command-palette"]');
+    if (!el) return;
+    e.preventDefault();
+    if (el.matches(":popover-open")) el.hidePopover();
+    else el.showPopover();
+  });
+  setup();
+  document.addEventListener("astro:page-load", setup);
+</script>

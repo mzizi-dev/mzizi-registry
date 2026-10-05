@@ -1,0 +1,75 @@
+---
+/**
+ * DiscoverHero — the top of every Discover page: breadcrumbs, an eyebrow,
+ * the page's one <h1>, a lead, then the search box and the actions. The
+ * same block on the home page (`size="home"`, larger) and on a list,
+ * category or search page (`size="page"`).
+ *
+ * Text props that may arrive empty from a server-filled shell hide
+ * themselves (`empty:hidden`), so a `{{placeholder}}` that fills to ""
+ * leaves no gap.
+ *
+ * Mzizi Discover Standard (contracts/discover/discover-hero).
+ */
+import { cn } from "./ui-utils";
+
+interface Crumb {
+  label: string;
+  /** Omit on the last crumb: it is the current page. */
+  href?: string;
+}
+interface Props {
+  title: string;
+  eyebrow?: string;
+  lead?: string;
+  /** A short count beside the actions, e.g. "1,204 circles on Mukoko". */
+  count?: string;
+  crumbs?: Crumb[];
+  size?: "home" | "page";
+}
+const { title, eyebrow, lead, count, crumbs = [], size = "page" } = Astro.props;
+const hasActions = Astro.slots.has("actions") || count !== undefined;
+---
+
+<section class="gradient-showcase border-b border-border" data-slot="discover-hero" data-size={size}>
+  <div class={cn("container-custom", size === "home" ? "py-16 md:py-24" : "py-12 md:py-16")}>
+    {
+      crumbs.length > 0 && (
+        <nav aria-label="Breadcrumb" class="mb-4 text-body-sm">
+          <ol class="flex flex-wrap items-center gap-2">
+            {crumbs.map((c, i) => (
+              <li class="inline-flex items-center gap-2">
+                {i > 0 && <span aria-hidden="true" class="text-muted-foreground">/</span>}
+                {c.href ? (
+                  <a class="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground" href={c.href}>
+                    {c.label}
+                  </a>
+                ) : (
+                  <span aria-current="page">{c.label}</span>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+    {eyebrow !== undefined && <p class="eyebrow empty:hidden">{eyebrow}</p>}
+    <h1 class={cn("max-w-4xl font-serif text-h1 text-balance", size === "home" && "md:text-display")}>{title}</h1>
+    {lead !== undefined && <p class="mt-4 max-w-2xl text-body-lg text-muted-foreground text-pretty empty:hidden">{lead}</p>}
+    {
+      Astro.slots.has("search") && (
+        <div class="mt-8">
+          <slot name="search" />
+        </div>
+      )
+    }
+    {
+      hasActions && (
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <slot name="actions" />
+          {count !== undefined && <p class="text-body-sm text-muted-foreground empty:hidden">{count}</p>}
+        </div>
+      )
+    }
+  </div>
+</section>

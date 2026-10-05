@@ -8,6 +8,7 @@
   "summary": "A native <label>.",
   "implementations": {
     "astro": {
+      "registry": "label",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Label.astro",
       "since": "0.3.0"

@@ -181,8 +181,14 @@ function isDataItem(item: RegistryItem): boolean {
 
 let _cache: RegistryItem[] | null = null
 
-/** Parse `n<N>-<label>` into its node number and label. */
+/** The registry's brand-asset directory, a sibling of the `n<N>-<label>` node directories. */
+export const ASSETS_DIR = "assets"
+
+/** Parse `n<N>-<label>` (or `assets`) into its node number and label. */
 function parseNodeDir(dir: string): { node: number; label: string } | null {
+  // `assets/` holds the brand assets (the ecosystem's marks), filed like a node directory.
+  // Brand identity is N3's, so assets list under node 3 with their own label.
+  if (dir === ASSETS_DIR) return { node: 3, label: "assets" }
   const m = dir.match(/^n(\d+)-(.+)$/)
   if (!m) return null
   const node = Number.parseInt(m[1], 10)
@@ -208,6 +214,9 @@ type SourceEntry = {
  * silently handing a consumer Rust.
  */
 const PRIMARY_EXTENSIONS = ["tsx", "ts", "jsx", "js"]
+
+/** Raster brand assets: listed and indexed, never inlined as source. */
+const RASTER_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "webp", "avif"]
 
 /** Every component file on disk, keyed by component name. */
 function readSourceIndex(): Map<string, SourceEntry> {
@@ -260,9 +269,14 @@ function readSourceIndex(): Map<string, SourceEntry> {
       if (existing.sources[ext]) continue
       existing.sources[ext] = rel
       const current = extname(existing.sourcePath).replace(/^\./, "").toLowerCase()
+      // A raster asset ranks below its vector sibling, so `sourcePath` is the SVG the
+      // API can serve as text (as in scripts/generate-file-paths.mjs).
       const rank = (e: string) => {
         const i = PRIMARY_EXTENSIONS.indexOf(e)
-        return i === -1 ? PRIMARY_EXTENSIONS.length : i
+        if (i !== -1) return i
+        return RASTER_EXTENSIONS.includes(e)
+          ? PRIMARY_EXTENSIONS.length + 1
+          : PRIMARY_EXTENSIONS.length
       }
       if (rank(ext) < rank(current)) existing.sourcePath = rel
     }

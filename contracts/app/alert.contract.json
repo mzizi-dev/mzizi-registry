@@ -8,6 +8,7 @@
   "summary": "A message with role=\"alert\": an optional title line and a description.",
   "implementations": {
     "astro": {
+      "registry": "alert",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Alert.astro",
       "since": "0.3.0"

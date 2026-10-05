@@ -1,0 +1,41 @@
+---
+/**
+ * LoadMore — cursor pagination for a Discover page: one link to the next
+ * page (`?cursor=…`, `rel="next"`), so it works with no JavaScript and every
+ * page is a URL. When there is no next page it shows `endLabel` instead, or
+ * nothing.
+ *
+ * `state` is "more" or "end" (default: "more" when `href` is set). A
+ * server-filled shell passes both `href` and `state` as placeholders; CSS
+ * shows the matching part.
+ *
+ * Mzizi Discover Standard (contracts/discover/load-more).
+ */
+import { cn } from "./ui-utils";
+import { buttonVariants } from "./ui-variants";
+
+interface Props {
+  /** The next page's URL. */
+  href?: string;
+  /** Say what loads, e.g. "More circles". */
+  label: string;
+  /** "more" or "end" (a server-filled shell may pass a placeholder). */
+  state?: string;
+  /** Shown at the end, e.g. "That's every circle." */
+  endLabel?: string;
+  /** The landmark's name (default "More results"). */
+  navLabel?: string;
+}
+const { href, label, state = href ? "more" : "end", endLabel, navLabel = "More results" } = Astro.props;
+---
+
+<nav aria-label={navLabel} class="group/more flex flex-col items-start gap-2" data-slot="load-more" data-state={state}>
+  {
+    href !== undefined && state !== "end" && (
+      <a href={href} rel="next" class={cn(buttonVariants({ variant: "outline", size: "md" }), "group-data-[state=end]/more:hidden")}>
+        {label}
+      </a>
+    )
+  }
+  {endLabel !== undefined && <p class="hidden text-body-sm text-muted-foreground group-data-[state=end]/more:block">{endLabel}</p>}
+</nav>

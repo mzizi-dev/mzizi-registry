@@ -1,0 +1,39 @@
+## A chart container. Container/contract only, as chart.rs: chart.tsx wraps Recharts, a
+## JavaScript charting runtime with no equivalent on this target, so the series, tooltip and
+## legend are not expressed here. The loading skeleton's seven bars need a list literal,
+## which the language does not have, so loading renders one placeholder bar. A root class
+## cannot switch on a prop yet, so the loading and loaded wrappers are children of the root.
+## Siblings: chart.tsx (React) and chart.rs (Mzizi Roots). One contract.
+component chart
+
+  prop id: text
+  prop loading: bool = false
+
+  view
+    row
+      slot = "chart"
+      portal = "https://mzizi.dev/components/chart"
+      when loading
+        row
+          slot = "chart-loading"
+          class = "flex aspect-video animate-pulse items-end justify-center gap-2 p-6"
+          row
+            class = "flex-1 rounded-t bg-muted"
+          end
+        end
+      else
+        row
+          slot = "chart-body"
+          chart = "chart-{id}"
+          class = "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden"
+        end
+      end
+    end
+  end
+
+  contract
+    slot is "chart"
+    loading is false
+  end
+
+end component chart

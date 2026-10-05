@@ -1,0 +1,36 @@
+---
+/**
+ * NativeSelect — the Astro port of Mzizi `native-select`: a real <select> in
+ * the pill input style (48px), with a chevron that never intercepts clicks.
+ */
+interface Props {
+  id: string;
+  name?: string;
+  /** `[value, label]` pairs. */
+  options: [string, string][];
+  value?: string;
+  class?: string;
+}
+
+const { id, name = id, options, value, class: className } = Astro.props;
+---
+
+<div data-slot="native-select" class={["relative", className].filter(Boolean).join(" ")}>
+  <select
+    id={id}
+    name={name}
+    class="h-12 w-full cursor-pointer appearance-none rounded-full border border-border bg-input pl-5 pr-12 text-body text-foreground transition-colors duration-200 ease-soft hover:border-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+  >
+    {options.map(([v, label]) => <option value={v} selected={v === value}>{label}</option>)}
+  </select>
+  <svg
+    class="pointer-events-none absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/80"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"><path d="M19 9l-7 7-7-7"></path></svg
+  >
+</div>

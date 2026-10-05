@@ -1,0 +1,195 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/breadcrumb",
+  "title": "DiscoverBreadcrumb",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The trail above one item's page on a Discover site: a named <nav> with an ordered list of crumbs, the last the current page (aria-current=\"page\"), and the same trail as BreadcrumbList JSON-LD.",
+  "implementations": {
+    "astro": {
+      "registry": "discover-breadcrumb",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/DiscoverBreadcrumb.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "discover-breadcrumb", "identity": "contract" },
+    "rs": null,
+    "related": ["site-breadcrumb", "discover-hero"]
+  },
+  "props": [
+    {
+      "name": "crumbs",
+      "type": "{ label: string; href?: string }[]",
+      "required": true,
+      "description": "The trail, from the service's home to the current page. The last crumb is the current page and is never a link; its href (if any) is its URL in the JSON-LD."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Breadcrumb",
+      "description": "The nav's accessible name."
+    },
+    {
+      "name": "origin",
+      "type": "string",
+      "required": false,
+      "description": "The site's origin, e.g. \"https://events.mukoko.com\", that makes relative hrefs absolute in the JSON-LD. Without it, the request's origin."
+    },
+    {
+      "name": "jsonLd",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Emit the BreadcrumbList JSON-LD. Pass false when the page's DiscoverMeta already carries one."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A <nav> named \"Breadcrumb\" holding an <ol>; separators are aria-hidden text.",
+    "The last crumb is the current page: plain text with aria-current=\"page\", never a link, even when it has an href.",
+    "A crumb before it with no href is plain muted text.",
+    "The BreadcrumbList JSON-LD comes from the same `crumbs`: `position` from 1, `name`, and `item` as an absolute URL (relative hrefs resolve against `origin`, else the request's origin; the current page uses its href, else the request path; a crumb with no href and not current has no `item`). `<` is escaped so the data can never close its element. JSON-LD is data, not script.",
+    "No crumbs, nothing rendered."
+  ],
+  "states": {
+    "default": {
+      "description": "An event's page.",
+      "props": {
+        "crumbs": [
+          { "label": "Events", "href": "/" },
+          { "label": "Harare", "href": "/harare" },
+          { "label": "Jacaranda Music Festival", "href": "/jacaranda-2026" }
+        ],
+        "origin": "https://events.mukoko.com"
+      }
+    },
+    "relative": {
+      "description": "No origin and no href on the current page: both come from the request.",
+      "props": {
+        "crumbs": [{ "label": "Circles", "href": "/" }, { "label": "Running" }]
+      }
+    },
+    "nojsonld": {
+      "description": "The page's DiscoverMeta carries the BreadcrumbList.",
+      "props": {
+        "crumbs": [
+          { "label": "News", "href": "https://news.mukoko.com/" },
+          { "label": "Rains arrive early in Mashonaland" }
+        ],
+        "jsonLd": false
+      }
+    },
+    "empty": {
+      "description": "No crumbs.",
+      "props": {
+        "crumbs": []
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["navigation", "list", "link"],
+    "keyboard": [
+      "Tab reaches each crumb link in order; the current page is not a stop."
+    ],
+    "focus": ["Links show the `--ring` focus outline."],
+    "aria": [
+      "The nav is labelled \"Breadcrumb\"; the current crumb has aria-current=\"page\"; the separators are aria-hidden."
+    ],
+    "wcag": ["1.3.1", "2.4.4", "2.4.8", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "crumb link",
+      "select": "a",
+      "fine": 24,
+      "coarse": 44
+    },
+    {
+      "part": "current page",
+      "select": "[aria-current=\"page\"]",
+      "fine": 24,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": ["--foreground", "--muted-foreground", "--border", "--ring"],
+    "brandOverlay": "None of its own.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML; its JSON-LD is data (`type=\"application/ld+json\"`), not script."
+  },
+  "responsive": [
+    "The trail wraps onto more lines when narrow; it never scrolls sideways."
+  ],
+  "contract": "contract\n  slot is \"discover-breadcrumb\"\n  label is \"Breadcrumb\"\n  a \"Harare\" min_height 24\n  when default shows span \"Jacaranda Music Festival\"\n  when default shows a \"Events\"\n  when relative shows span \"Running\"\n  when nojsonld shows a \"News\"\nend",
+  "checks": [
+    {
+      "say": "A named nav and an ordered list.",
+      "select": "nav[aria-label=\"Breadcrumb\"] > ol > li",
+      "count": 3
+    },
+    {
+      "say": "The current page is marked, once.",
+      "select": "[aria-current=\"page\"]",
+      "count": 1,
+      "text": "Jacaranda Music Festival"
+    },
+    {
+      "say": "The current page is not a link.",
+      "select": "a[href=\"/jacaranda-2026\"], a[aria-current]",
+      "absent": true
+    },
+    {
+      "say": "Separators are decorative.",
+      "select": "li > span[aria-hidden=\"true\"]",
+      "count": 2
+    },
+    {
+      "say": "One BreadcrumbList.",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "\"@type\":\"BreadcrumbList\""
+    },
+    {
+      "say": "Relative hrefs are absolute in the JSON-LD.",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "\"position\":2,\"name\":\"Harare\",\"item\":\"https://events.mukoko.com/harare\""
+    },
+    {
+      "say": "The current page's own href is its URL.",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "\"item\":\"https://events.mukoko.com/jacaranda-2026\""
+    },
+    {
+      "say": "Without an origin or an href, the request gives the current page's URL.",
+      "state": "relative",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "\"name\":\"Running\",\"item\":\"https://console.example/content/news\""
+    },
+    {
+      "say": "jsonLd false leaves the data out.",
+      "state": "nojsonld",
+      "select": "script",
+      "absent": true
+    },
+    {
+      "say": "No script but JSON-LD.",
+      "state": "*",
+      "select": "script:not([type=\"application/ld+json\"])",
+      "absent": true
+    },
+    {
+      "say": "No crumbs, nothing rendered.",
+      "state": "empty",
+      "select": "nav, script",
+      "absent": true
+    }
+  ]
+}

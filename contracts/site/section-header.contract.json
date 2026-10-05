@@ -1,0 +1,222 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "site/section-header",
+  "title": "SectionHeader",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The eyebrow, serif heading and lead cluster at the top of a marketing section, with the heading level and its visual size set separately.",
+  "implementations": {
+    "astro": {
+      "registry": "site-section-header",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/SectionHeader.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "site-section-header", "identity": "contract" },
+    "rs": null,
+    "related": ["page-header", "discover-section", "site-section"]
+  },
+  "props": [
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false,
+      "description": "A short label above the heading (`.eyebrow`)."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "The heading text. Rich headings use the `title` slot instead (or as well: the slot follows the text)."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "The lead paragraph. Rich leads use the `description` slot."
+    },
+    {
+      "name": "align",
+      "type": "\"start\" | \"center\"",
+      "required": false,
+      "default": "start",
+      "values": ["start", "center"],
+      "description": "`center` centres the block and its text (`mx-auto text-center`) and the eyebrow (`justify-center`)."
+    },
+    {
+      "name": "as",
+      "type": "\"h1\" | \"h2\" | \"h3\"",
+      "required": false,
+      "default": "h2",
+      "values": ["h1", "h2", "h3"],
+      "description": "The heading level, for the document outline."
+    },
+    {
+      "name": "size",
+      "type": "\"display\" | \"h1\" | \"h2\" | \"h3\"",
+      "required": false,
+      "values": ["display", "h1", "h2", "h3"],
+      "description": "The heading's visual size (`text-display`, `text-h1`…); defaults to match `as`."
+    },
+    {
+      "name": "max",
+      "type": "string",
+      "required": false,
+      "default": "max-w-2xl",
+      "description": "The block's Tailwind max-width class."
+    },
+    {
+      "name": "eyebrowClass",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the eyebrow."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the block."
+    }
+  ],
+  "slots": [
+    {
+      "name": "description",
+      "expects": "Inline markup",
+      "description": "A rich lead, rendered after the `description` text. Either one makes the lead paragraph render."
+    },
+    {
+      "name": "title",
+      "expects": "Inline markup (a coloured <span>, interpolation)",
+      "description": "A rich heading, rendered after the `title` text inside the heading."
+    }
+  ],
+  "behaviour": [
+    "Renders a <div data-slot=\"section-header\"> holding the eyebrow <p> (only with `eyebrow`), the heading at level `as` (always), and the lead <p> (only with `description` or the `description` slot).",
+    "The heading's class is `font-serif <size> text-foreground text-balance`, the size following `size` or else `as`.",
+    "The block's class is `max`, then `mx-auto text-center` when centred, then `class`."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "eyebrow": "What we do",
+        "title": "Tools for builders",
+        "description": "Everything you need to ship."
+      }
+    },
+    "centered": {
+      "description": "A centred page title at display size, with a tinted eyebrow and a wider block.",
+      "props": {
+        "eyebrow": "Pricing",
+        "title": "Simple pricing",
+        "align": "center",
+        "as": "h1",
+        "size": "display",
+        "max": "max-w-3xl",
+        "eyebrowClass": "text-primary",
+        "class": "mb-12"
+      }
+    },
+    "rich": {
+      "description": "Heading and lead from the slots, at h3.",
+      "props": { "as": "h3" },
+      "slots": {
+        "title": "<span class='text-primary'>Open</span> by default",
+        "description": "Read the <a href='/charter'>charter</a>."
+      }
+    },
+    "bare": {
+      "description": "A title only: no eyebrow, no lead.",
+      "props": { "title": "Our partners" }
+    }
+  },
+  "accessibility": {
+    "roles": ["heading"],
+    "keyboard": ["None of its own; links in the slots are reached in order."],
+    "focus": ["None of its own."],
+    "aria": [
+      "No aria: the heading level (`as`) carries the structure, decoupled from its visual size."
+    ],
+    "wcag": ["1.3.1", "2.4.6"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--foreground", "--muted-foreground"],
+    "brandOverlay": "Nothing of its own; an `eyebrowClass` such as `text-primary` follows the overlay.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "The block is capped at `max` (max-w-2xl by default); the heading balances its lines and the lead is pretty-wrapped. The type-scale utilities step the sizes per breakpoint."
+  ],
+  "contract": "contract\n  slot is \"section-header\"\n  class is \"max-w-2xl\"\n  when centered class is \"max-w-3xl mx-auto text-center mb-12\"\n  when default shows h2 \"Tools for builders\"\n  when default shows p \"What we do\"\n  when default shows p \"Everything you need to ship.\"\n  when centered shows h1 \"Simple pricing\"\n  when rich shows h3 \"Open by default\"\n  when rich shows p \"charter\"\n  when bare shows h2 \"Our partners\"\nend",
+  "checks": [
+    {
+      "say": "One heading.",
+      "state": "*",
+      "select": "h1, h2, h3",
+      "count": 1
+    },
+    {
+      "say": "The heading defaults to an h2 at text-h2.",
+      "select": "h2",
+      "attr": { "class": "font-serif text-h2 text-foreground text-balance" }
+    },
+    {
+      "say": "The eyebrow.",
+      "select": "p.eyebrow",
+      "count": 1,
+      "text": "What we do"
+    },
+    {
+      "say": "The lead.",
+      "select": "p.text-muted-foreground",
+      "attr": { "class": "mt-4 text-body text-muted-foreground text-pretty" }
+    },
+    {
+      "say": "The visual size is decoupled from the level.",
+      "state": "centered",
+      "select": "h1",
+      "attr": {
+        "class": "font-serif text-display text-foreground text-balance"
+      }
+    },
+    {
+      "say": "A centred eyebrow is centred and tinted.",
+      "state": "centered",
+      "select": "p.eyebrow",
+      "attr": { "class": "eyebrow justify-center text-primary" }
+    },
+    {
+      "say": "No description, no lead.",
+      "state": "centered",
+      "select": "p.text-muted-foreground",
+      "absent": true
+    },
+    {
+      "say": "The rich heading renders its markup.",
+      "state": "rich",
+      "select": "h3.text-h3 span.text-primary",
+      "count": 1
+    },
+    {
+      "say": "The rich lead renders its markup.",
+      "state": "rich",
+      "select": "p.text-muted-foreground a[href=\"/charter\"]",
+      "count": 1
+    },
+    {
+      "say": "No eyebrow, no eyebrow paragraph.",
+      "state": "bare",
+      "select": "p",
+      "absent": true
+    }
+  ],
+  "gaps": [
+    "The `.eyebrow` and type-scale utilities (`text-display`, `text-h1`…, `text-body`) live in each consuming site's globals.css; the registry does not ship them.",
+    "`max`, `eyebrowClass` and `class` take raw Tailwind classes, so a caller can name a mineral or a colour value the brand overlay does not govern (the source comment suggests `text-gold`)."
+  ]
+}
