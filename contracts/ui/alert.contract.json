@@ -1,0 +1,97 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/alert",
+  "title": "Alert",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "The registry alert: a message with role=\"alert\", default or destructive. Title, description and action are its parts.",
+  "implementations": {
+    "astro": {
+      "registry": "alert",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Alert.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "alert",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": ["app-alert"]
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "\"default\" | \"destructive\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "destructive"],
+      "description": "destructive reads only the destructive token."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The content: an icon, the title and description parts, an optional action."
+    }
+  ],
+  "behaviour": [
+    "An icon as the first child takes its own column beside the text.",
+    "An action part reserves room on the right."
+  ],
+  "states": {
+    "default": {
+      "props": {},
+      "slots": {
+        "default": "Heads up"
+      }
+    },
+    "destructive": {
+      "props": {
+        "variant": "destructive"
+      },
+      "slots": {
+        "default": "Payment failed"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["alert"],
+    "keyboard": ["None."],
+    "focus": ["None: an alert does not take focus."],
+    "aria": ["role=\"alert\" announces it."],
+    "wcag": ["4.1.3", "1.4.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--card-foreground",
+      "--destructive",
+      "--muted-foreground",
+      "--radius-lg"
+    ],
+    "brandOverlay": "None: danger is never a brand colour.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Fills its container."],
+  "contract": "contract\n  slot is \"alert\"\n  role is \"alert\"\n  portal is \"https://mzizi.dev/components/alert\"\n  class contains \"bg-card\"\n  when default shows div \"Heads up\"\n  when destructive class contains \"text-destructive\"\nend",
+  "checks": [
+    {
+      "say": "One alert.",
+      "select": "[role=\"alert\"]",
+      "count": 1
+    }
+  ]
+}

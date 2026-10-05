@@ -8,19 +8,17 @@
   "summary": "A native <label>.",
   "implementations": {
     "astro": {
-      "registry": "label",
+      "registry": "app-label",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Label.astro",
       "since": "0.3.0"
     },
     "tsx": {
-      "registry": "label",
-      "identity": "slot"
+      "registry": "app-label",
+      "identity": "contract"
     },
-    "rs": {
-      "registry": "label",
-      "identity": "slot"
-    }
+    "rs": null,
+    "related": ["label"]
   },
   "props": [
     {

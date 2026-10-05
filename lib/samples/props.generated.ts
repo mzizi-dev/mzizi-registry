@@ -365,6 +365,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "app-alert": [
+    {
+      "name": "variant",
+      "type": "\"default\" | \"info\" | \"success\" | \"warning\" | \"destructive\"",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "state",
+      "type": "string",
+      "required": false
+    }
+  ],
   "app-bar-chart": [
     {
       "name": "title",
@@ -431,6 +448,55 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "decorative",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "app-button": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "\"button\" | \"submit\" | \"reset\"",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"primary\" | \"secondary\" | \"outline\" | \"ghost\" | \"destructive\" | \"destructive-outline\"",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "required": false
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "app-card": [
+    {
+      "name": "padding",
+      "type": "\"none\" | \"sm\" | \"md\" | \"lg\"",
       "required": false
     }
   ],
@@ -12647,7 +12713,7 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "status",
       "type": "StatusBadgeStatus",
-      "required": true
+      "required": false
     }
   ],
   "status-dot": [

@@ -1,0 +1,90 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/label",
+  "title": "Label",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "The registry label: a native <label> for a form control, inline with its icon, dimmed when its control or an enclosing group is disabled.",
+  "implementations": {
+    "astro": {
+      "registry": "label",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Label.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "label",
+      "identity": "contract"
+    },
+    "rs": {
+      "registry": "label",
+      "identity": "contract"
+    },
+    "related": ["app-label"]
+  },
+  "props": [
+    {
+      "name": "for",
+      "type": "string",
+      "required": true,
+      "description": "The control's id."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The label text, with an optional icon."
+    }
+  ],
+  "behaviour": [
+    "Always visible; never replaced by a placeholder.",
+    "Dims (and stops pointer events) when a peer control is disabled or an ancestor group carries data-disabled=\"true\": CSS only, no prop."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "for": "x"
+      },
+      "slots": {
+        "default": "Name"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["label"],
+    "keyboard": ["Clicking focuses the control."],
+    "focus": ["None."],
+    "aria": ["for → the control."],
+    "wcag": ["1.3.1", "3.3.2"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [],
+    "brandOverlay": "None: the label inherits the text colour around it.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "enhancement",
+    "without": "Everything: a native <label> that names and focuses its control.",
+    "with": "A double-click does not select the label's text (Radix Label's behaviour in React)."
+  },
+  "responsive": ["Inline."],
+  "contract": "contract\n  slot is \"label\"\n  portal is \"https://mzizi.dev/components/label\"\n  class contains \"font-medium\"\n  class contains \"peer-disabled:opacity-50\"\n  when default shows label \"Name\"\nend",
+  "checks": [
+    {
+      "say": "Points at its control.",
+      "select": "label",
+      "count": 1,
+      "attr": {
+        "for": "x"
+      }
+    }
+  ]
+}
