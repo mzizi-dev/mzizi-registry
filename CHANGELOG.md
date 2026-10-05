@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — `ui/safe-area-frame`, `ui/alert` and `ui/skeleton` are held in full by every build (2026-10-05, #438)
+### Changed — `ui/safe-area-frame`, `ui/alert` and `ui/skeleton` are held in full by every build (2026-10-05, #439)
 
 Follow-up to #428. Tracking: #427.
 
