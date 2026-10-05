@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.4.0",
+    title: "v4.4.0 — one contract per component, in every format",
+    description:
+      "Releases staging to main as the next minor above v4.3.3 (nyuchi/.github#80). Every component has one contract whatever the language (#427). Registry primitives get ui/ contracts held in full by their Astro, React and Rust builds, and the Dashboard Standard builds become app-<name> (#428, #439, #441). Astro is the default web UI and every other build is the same component; the React toaster follows the Astro one (#442). Four Dashboard Standard deltas from the Nyuchi console (#443). Breaking changes are marked in CHANGELOG.md section [4.4.0], which is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 4,
+    patch: 0,
+    release_kind: "minor",
+    breaking: true,
+    released_at: "2026-10-05T13:00:00.000+00:00",
+    created_at: "2026-10-05T13:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.3.0",
     title: "v4.3.0 — one release per changelog version",
     description:

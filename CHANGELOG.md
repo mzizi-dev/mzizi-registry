@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.4.0] - 2026-10-05
+
+Releases `staging` to `main` as the next minor above v4.3.3 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.4.0. **Breaking** changes are marked in the entries below. They cover safe-area-frame's markup, native-select's Astro root slot, the React segmented-control and toaster APIs, and the `n2-primitives/{button,card,input,label,alert,skeleton}.astro` paths, which are now the registry primitives. The Dashboard Standard builds are `app-<name>`.
+
 ### Added — four Dashboard Standard deltas from the Nyuchi console: form-field controls, multipart forms, thinned bar-chart labels, status pills (2026-10-05, #443)
 
 The Nyuchi console (nyuchi/nyuchi-platform `console/web`) carried these in local copies of `FormField`, `FormLayout`, `BarChart` and `DataTable`; they now live in the contracts and every build, so the console can use `@bundu/ui` as it is. Related: mzizi-dev/packages-npm#40.
