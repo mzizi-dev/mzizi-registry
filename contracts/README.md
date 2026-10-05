@@ -95,9 +95,9 @@ One design for every public discover and browse page in the Mukoko family (circl
 | `discover/result-grid`      | ResultGrid         | N6   | 1.0.0   | `discover-result-grid`    | `discover-result-grid` (contract)    | —          |
 | `discover/discover-card`    | DiscoverCard       | N6   | 1.0.0   | `discover-card`           | `discover-card` (contract)           | —          |
 | `discover/load-more`        | LoadMore           | N6   | 1.0.0   | `discover-load-more`      | `discover-load-more` (contract)      | —          |
-| `discover/open-in-app`      | OpenInApp          | N6   | 1.1.0   | `discover-open-in-app`    | `discover-open-in-app` (contract)    | —          |
+| `discover/open-in-app`      | OpenInApp          | N6   | 1.2.0   | `discover-open-in-app`    | `discover-open-in-app` (contract)    | —          |
 | `discover/breadcrumb`       | DiscoverBreadcrumb | N6   | 1.0.0   | `discover-breadcrumb`     | `discover-breadcrumb` (contract)     | —          |
-| `discover/detail-actions`   | DetailActions      | N6   | 1.0.0   | `discover-detail-actions` | `discover-detail-actions` (contract) | —          |
+| `discover/detail-actions`   | DetailActions      | N6   | 1.1.0   | `discover-detail-actions` | `discover-detail-actions` (contract) | —          |
 | `discover/detail-hero`      | DetailHero         | N6   | 1.0.0   | `discover-detail-hero`    | `discover-detail-hero` (contract)    | —          |
 | `discover/meta-list`        | MetaList           | N6   | 1.0.0   | `discover-meta-list`      | `discover-meta-list` (contract)      | —          |
 | `discover/related-rail`     | RelatedRail        | N6   | 1.0.0   | `discover-related-rail`   | `discover-related-rail` (contract)   | —          |
