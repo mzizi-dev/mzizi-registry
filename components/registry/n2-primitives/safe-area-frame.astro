@@ -1,0 +1,56 @@
+---
+/**
+ * SafeAreaFrame — a canvas shape at thumbnail size: its true aspect ratio,
+ * with the bands a platform covers with its own interface shaded (a story's
+ * top and reply bars, a reel's action rail). The Astro port of the registry's
+ * `safe-area-frame`; geometry from `safe-area.ts`. Decorative — put the size's
+ * name and dimensions in text beside it.
+ */
+import { safeAreaBands, type SafeInsets } from "./safe-area";
+
+interface Props {
+  width: number;
+  height: number;
+  safe?: SafeInsets;
+  /** The square it fits in, in CSS pixels. */
+  box?: number;
+  class?: string;
+}
+
+const { width, height, safe = [0, 0, 0, 0], box = 56, class: className } = Astro.props;
+const b = safeAreaBands(width, height, safe, box);
+// Sized by SVG geometry, never a `style` attribute, so a page can keep
+// `style-src 'self'` (the contracts' no-inline-style rule). The canvas is a
+// nested <svg> centred in the box; its bands are drawn in a 100×100 user space
+// stretched to the canvas, so each band's percentage is its rect's size.
+const x = (box - b.width) / 2;
+const y = (box - b.height) / 2;
+---
+
+<svg
+  data-slot="safe-area-frame"
+  aria-hidden="true"
+  focusable="false"
+  class={["block shrink-0", className].filter(Boolean).join(" ")}
+  width={box}
+  height={box}
+  viewBox={`0 0 ${box} ${box}`}
+>
+  <svg
+    data-slot="safe-area-frame-canvas"
+    x={x}
+    y={y}
+    width={b.width}
+    height={b.height}
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+    class="overflow-hidden"
+  >
+    <rect width="100" height="100" class="fill-muted" />
+    {b.top > 0 && <rect data-band="top" width="100" height={b.top} class="fill-primary/30" />}
+    {b.bottom > 0 && <rect data-band="bottom" y={100 - b.bottom} width="100" height={b.bottom} class="fill-primary/30" />}
+    {b.left > 0 && <rect data-band="left" width={b.left} height="100" class="fill-primary/20" />}
+    {b.right > 0 && <rect data-band="right" x={100 - b.right} width={b.right} height="100" class="fill-primary/20" />}
+    <rect width="100" height="100" fill="none" vector-effect="non-scaling-stroke" class="stroke-foreground/40" />
+  </svg>
+</svg>

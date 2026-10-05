@@ -1,0 +1,73 @@
+---
+/**
+ * SectionHeader — the eyebrow + serif heading + lead paragraph cluster
+ * that recurs at the top of ~every section (23 sections, 71 eyebrows in
+ * nyuchi alone). Composes it once instead of hand-rolling the markup.
+ *
+ * - `as` sets the heading level for a sane document outline; `size`
+ *   decouples the *visual* size (so an h2-level heading can render at
+ *   text-h1 to match an existing page).
+ * - `title`/`description` accept plain strings; for rich headings or
+ *   leads (a coloured `<span>`, interpolation), pass markup via the
+ *   `title` / `description` named slots instead.
+ */
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  align?: "start" | "center";
+  /** Heading level for correct document outline. */
+  as?: "h1" | "h2" | "h3";
+  /** Visual size override; defaults to match `as`. */
+  size?: "display" | "h1" | "h2" | "h3";
+  /** Tailwind max-width for the block (default constrains the lead text). */
+  max?: string;
+  /** Tint the eyebrow (e.g. text-gold / text-terracotta). */
+  eyebrowClass?: string;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  align = "start",
+  as = "h2",
+  size,
+  max = "max-w-2xl",
+  eyebrowClass,
+  class: className,
+} = Astro.props;
+
+const Heading = as;
+const sizeClass = {
+  display: "text-display",
+  h1: "text-h1",
+  h2: "text-h2",
+  h3: "text-h3",
+}[size ?? as];
+
+const wrapper = [max, align === "center" && "mx-auto text-center", className]
+  .filter(Boolean)
+  .join(" ");
+const eyebrowClasses = ["eyebrow", align === "center" && "justify-center", eyebrowClass]
+  .filter(Boolean)
+  .join(" ");
+
+const hasDescription = description != null || Astro.slots.has("description");
+---
+
+<div class={wrapper} data-slot="section-header">
+  {eyebrow && <p class={eyebrowClasses}>{eyebrow}</p>}
+  <Heading class={`font-serif ${sizeClass} text-foreground text-balance`}>
+    {title}<slot name="title" />
+  </Heading>
+  {
+    hasDescription && (
+      <p class="mt-4 text-body text-muted-foreground text-pretty">
+        {description}
+        <slot name="description" />
+      </p>
+    )
+  }
+</div>

@@ -8,11 +8,12 @@
   "summary": "Cursor pagination for a Discover page: one rel=\"next\" link to `?cursor=…`, so it works with no JavaScript and every page is a URL. At the end it shows `endLabel`, or nothing.",
   "implementations": {
     "astro": {
+      "registry": "discover-load-more",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/LoadMore.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-load-more", "identity": "contract" },
     "rs": null,
     "related": ["app/pagination"]
   },

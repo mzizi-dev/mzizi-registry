@@ -1,0 +1,83 @@
+---
+/**
+ * DiscoverBreadcrumb — the trail above an item's page on a Discover site
+ * ("Events / Harare / Jacaranda Music Festival"): a named <nav>, an ordered
+ * list of crumbs, the last one the current page (plain text,
+ * aria-current="page"), and the same trail as `BreadcrumbList` JSON-LD so
+ * search engines read it too. One `crumbs` array drives both, so they never
+ * disagree.
+ *
+ * JSON-LD needs absolute URLs: relative hrefs resolve against `origin`, or
+ * the request's origin when it is not given. The current page's crumb uses
+ * its `href` when it has one, else the request path; another crumb with no
+ * `href` is plain text, and has no `item`. JSON-LD is data, not
+ * script (`type="application/ld+json"`); `jsonLd={false}` leaves it out when
+ * the page's DiscoverMeta already carries a BreadcrumbList.
+ *
+ * Links are 24px on a fine pointer and 44px on touch.
+ *
+ * Mzizi Discover Standard (contracts/discover/breadcrumb).
+ */
+interface Crumb {
+  label: string;
+  /** Where the crumb goes. The last crumb is the current page and never a link. */
+  href?: string;
+}
+interface Props {
+  crumbs: Crumb[];
+  /** The nav's accessible name (default "Breadcrumb"). */
+  label?: string;
+  /** The site's origin, e.g. "https://events.mukoko.com", for absolute JSON-LD URLs. */
+  origin?: string;
+  /** Emit the BreadcrumbList JSON-LD (default true). */
+  jsonLd?: boolean;
+}
+const { crumbs, label = "Breadcrumb", origin, jsonLd = true } = Astro.props;
+const base = (origin ?? Astro.url.origin).replace(/\/$/, "");
+const absolute = (href: string) => (/^https?:\/\//i.test(href) ? href : `${base}${href.startsWith("/") ? "" : "/"}${href}`);
+const last = crumbs.length - 1;
+const ld =
+  jsonLd && crumbs.length > 0
+    ? JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: crumbs.map((c, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: c.label,
+          ...(c.href !== undefined || i === last ? { item: absolute(c.href ?? Astro.url.pathname) } : {}),
+        })),
+      }).replace(/</g, "\\u003c")
+    : undefined;
+const link = "inline-flex min-h-6 items-center text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-11";
+---
+
+{
+  crumbs.length > 0 && (
+    <nav aria-label={label} class="text-body-sm" data-slot="discover-breadcrumb">
+      <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+        {crumbs.map((c, i) => (
+          <li class="inline-flex min-w-0 items-center gap-2">
+            {i > 0 && (
+              <span aria-hidden="true" class="text-muted-foreground">
+                /
+              </span>
+            )}
+            {i < last && c.href ? (
+              <a class={link} href={c.href}>
+                {c.label}
+              </a>
+            ) : i === last ? (
+              <span aria-current="page" class="inline-flex min-h-6 items-center font-semibold text-foreground pointer-coarse:min-h-11">
+                {c.label}
+              </span>
+            ) : (
+              <span class="text-muted-foreground">{c.label}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+{ld !== undefined && <Fragment set:html={`<script type="application/ld+json">${ld}</script>`} />}

@@ -1,0 +1,75 @@
+---
+/**
+ * BrandMark — an ecosystem brand's official mark, with its wordmark when
+ * asked. The images are the official bundu-ecosystem-icons pair
+ * (<brand>-icon-{light,dark}.png, as vendored in nyuchi/workspace-tools; the
+ * same mark as mzizi-registry's public/icons, in its deeper, higher-contrast
+ * colourway with a tighter frame), scaled to 128px (2x for up to 64px) and
+ * never redrawn: the light-surface mark and the
+ * dark-surface mark are both in the page and CSS shows the one that fits
+ * the theme (`[data-theme="dark"]`, or the system setting when the app
+ * follows it), so it needs no script.
+ *
+ * The wordmark is the brand name in lower case in the serif face, as the
+ * registry's own logo component sets it, with an optional muted suffix
+ * ("console"). The mark alone carries the brand's name as its alt text
+ * unless `decorative` (when a neighbouring text already names it).
+ *
+ * Today the set is Nyuchi (the bee: nyuchi is "bee"). Add a brand by
+ * adding its pair to assets/brand/ and one entry to MARKS.
+ */
+import nyuchiDark from "./assets/nyuchi-mark-dark.png";
+import nyuchiLight from "./assets/nyuchi-mark-light.png";
+
+const MARKS = {
+  nyuchi: { name: "nyuchi", light: nyuchiLight, dark: nyuchiDark },
+} as const;
+
+export type BrandName = keyof typeof MARKS;
+
+interface Props {
+  brand?: BrandName;
+  /** Rendered size of the mark in CSS pixels. */
+  size?: number;
+  wordmark?: boolean;
+  suffix?: string;
+  decorative?: boolean;
+  class?: string;
+}
+const { brand = "nyuchi", size = 28, wordmark = false, suffix, decorative = false, class: extra } = Astro.props;
+const mark = MARKS[brand];
+const src = (m: { src: string } | string) => (typeof m === "string" ? m : m.src);
+const alt = decorative || wordmark ? "" : mark.name;
+---
+
+<span class={["inline-flex min-w-0 items-center gap-2", extra].filter(Boolean).join(" ")} data-slot="brand-mark" data-brand={brand}>
+  <img src={src(mark.light)} alt={alt} width={size} height={size} decoding="async" class="brand-mark-light block shrink-0" />
+  <img src={src(mark.dark)} alt={alt} width={size} height={size} decoding="async" class="brand-mark-dark hidden shrink-0" />
+  {
+    wordmark && (
+      <span data-slot="brand-wordmark" class="truncate font-serif text-body font-semibold tracking-tight lowercase">
+        {mark.name}
+        {suffix && <span class="font-normal text-muted-foreground"> {suffix}</span>}
+      </span>
+    )
+  }
+</span>
+
+<style is:global>
+  [data-theme="dark"] [data-slot="brand-mark"] .brand-mark-light,
+  .dark [data-slot="brand-mark"] .brand-mark-light {
+    display: none;
+  }
+  [data-theme="dark"] [data-slot="brand-mark"] .brand-mark-dark,
+  .dark [data-slot="brand-mark"] .brand-mark-dark {
+    display: block;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]):not(.light) [data-slot="brand-mark"] .brand-mark-light {
+      display: none;
+    }
+    :root:not([data-theme="light"]):not(.light) [data-slot="brand-mark"] .brand-mark-dark {
+      display: block;
+    }
+  }
+</style>

@@ -1,0 +1,14 @@
+---
+/**
+ * Skeleton — a loading placeholder, pure Astro. Size it with `class`.
+ */
+import { cn } from "./ui-utils";
+import { skeletonClasses } from "./ui-variants";
+
+interface Props {
+  class?: string;
+}
+const { class: extra } = Astro.props;
+---
+
+<div data-slot="skeleton" aria-hidden="true" class={cn(skeletonClasses, extra)}></div>

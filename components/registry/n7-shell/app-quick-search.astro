@@ -1,0 +1,29 @@
+---
+/**
+ * QuickSearch — the sidebar's search button with its ⌘K hint. It opens a
+ * CommandPalette through the Popover API (`popovertarget`), so it works
+ * with no script; the palette's own script adds the ⌘K / Ctrl+K shortcut
+ * and swaps the hint to "Ctrl K" off Apple platforms.
+ */
+import Icon from "./site-icon.astro";
+
+interface Props {
+  /** The CommandPalette's id. */
+  target?: string;
+  label?: string;
+}
+const { target = "command-palette", label = "Quick search" } = Astro.props;
+---
+
+<button
+  type="button"
+  popovertarget={target}
+  aria-label={label}
+  aria-keyshortcuts="Meta+K Control+K"
+  data-slot="quick-search"
+  class="flex h-8 w-full min-w-0 items-center gap-2 rounded-sm border border-border bg-background px-2.5 text-body-sm text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11"
+>
+  <Icon name="search" class="h-4 w-4 shrink-0" />
+  <span data-qs-text class="min-w-0 flex-1 truncate text-start">{label}…</span>
+  <kbd data-qs-kbd aria-hidden="true" class="hidden shrink-0 rounded-sm border border-border px-1.5 font-sans text-caption leading-4 lg:inline">⌘K</kbd>
+</button>

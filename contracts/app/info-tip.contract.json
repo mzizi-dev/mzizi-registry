@@ -8,11 +8,12 @@
   "summary": "A small info button that explains the thing beside it; the explanation is a tooltip on hover and focus, and the button's accessible description.",
   "implementations": {
     "astro": {
+      "registry": "app-info-tip",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/InfoTip.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-info-tip", "identity": "contract" },
     "rs": null,
     "related": ["tooltip"]
   },

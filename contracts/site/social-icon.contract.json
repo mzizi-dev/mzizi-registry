@@ -1,0 +1,166 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "site/social-icon",
+  "title": "SocialIcon",
+  "version": "1.0.0",
+  "node": 3,
+  "kind": "primitive",
+  "summary": "A round icon link to a social profile: the platform is detected from the URL's host and drawn with its glyph and named for assistive technology, with a generic globe for an unknown host.",
+  "implementations": {
+    "astro": {
+      "registry": "site-social-icon",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/SocialIcon.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "site-social-icon", "identity": "contract" },
+    "rs": null,
+    "related": ["site-icon"]
+  },
+  "props": [
+    {
+      "name": "url",
+      "type": "string",
+      "required": true,
+      "description": "The profile's full URL, protocol included; it is the link's href."
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "default": 18,
+      "description": "The glyph's width and height in px."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "Overrides the detected name (the platform, else the host) used for aria-label and title."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Renders one <a> to `url` that opens a new tab with rel=\"me noopener noreferrer\" (rel=me verifies the profile, e.g. on Mastodon).",
+    "The host (lower-cased, without www.) picks the platform: LinkedIn (linkedin.com, lnkd.in), X (x.com, twitter.com, t.co), Instagram, GitHub, YouTube (youtube.com, youtu.be), Threads, Bluesky (bsky.app), Facebook (facebook.com, fb.me), TikTok, ORCID, and Mastodon for any mastodon.* or *.social host. Anything else is `generic` (a globe).",
+    "The link carries data-social-platform=\"<key>\" and its name (aria-label and title): `label`, else the platform's name, else the host.",
+    "The glyph is one aria-hidden <svg> of `size` px."
+  ],
+  "states": {
+    "default": {
+      "description": "A LinkedIn profile.",
+      "props": { "url": "https://www.linkedin.com/in/someone" }
+    },
+    "mastodon": {
+      "description": "A Mastodon server, matched by pattern, at a larger size.",
+      "props": { "url": "https://mastodon.africa/@someone", "size": 24 }
+    },
+    "generic": {
+      "description": "An unknown host: the globe, named by the host.",
+      "props": { "url": "https://www.example.org/me" }
+    },
+    "labelled": {
+      "description": "A label overrides the detected name.",
+      "props": {
+        "url": "https://github.com/someone",
+        "label": "Someone on GitHub"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["link"],
+    "keyboard": ["Tab reaches the link; Enter follows it (in a new tab)."],
+    "focus": ["Relies on the browser's default focus outline."],
+    "aria": [
+      "The link is named by aria-label (also the title tooltip); the glyph is aria-hidden."
+    ],
+    "wcag": ["1.1.1", "2.4.4", "2.5.8", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "link",
+      "select": "a",
+      "fine": 36,
+      "coarse": 36
+    }
+  ],
+  "theming": {
+    "tokens": ["--muted-foreground", "--foreground", "--muted"],
+    "brandOverlay": "Nothing: the glyph is muted text, foreground on hover, on a muted hover wash. Platform glyphs are drawn in currentColor, never in the platform's brand colour.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["A fixed 36px circle at every width."],
+  "contract": "contract\n  slot is \"social-icon\"\n  label is \"LinkedIn\"\n  class contains \"rounded-full\"\n  when mastodon label is \"Mastodon\"\n  when generic label is \"example.org\"\n  when labelled label is \"Someone on GitHub\"\n  a \"LinkedIn\" min_height 36\nend",
+  "checks": [
+    {
+      "say": "A link to the profile that opens a new tab safely and verifies the profile.",
+      "state": "*",
+      "select": "a",
+      "attr": {
+        "target": "_blank",
+        "rel": "me noopener noreferrer",
+        "href": true,
+        "aria-label": true,
+        "title": true
+      }
+    },
+    {
+      "say": "The platform is detected.",
+      "select": "a",
+      "attr": {
+        "href": "https://www.linkedin.com/in/someone",
+        "data-social-platform": "linkedin",
+        "title": "LinkedIn"
+      }
+    },
+    {
+      "say": "One decorative glyph.",
+      "state": "*",
+      "select": "a > svg[aria-hidden=\"true\"]",
+      "count": 1
+    },
+    {
+      "say": "The glyph is 18px by default.",
+      "select": "svg",
+      "attr": { "width": "18", "height": "18" }
+    },
+    {
+      "say": "A Mastodon server is matched by pattern.",
+      "state": "mastodon",
+      "select": "a",
+      "attr": { "data-social-platform": "mastodon" }
+    },
+    {
+      "say": "`size` sets the glyph.",
+      "state": "mastodon",
+      "select": "svg",
+      "attr": { "width": "24", "height": "24" }
+    },
+    {
+      "say": "An unknown host falls back to the globe.",
+      "state": "generic",
+      "select": "a",
+      "attr": { "data-social-platform": "generic", "title": "example.org" }
+    },
+    {
+      "say": "The globe glyph is stroked.",
+      "state": "generic",
+      "select": "svg > circle",
+      "count": 1
+    },
+    {
+      "say": "A label overrides the name; the platform is still detected.",
+      "state": "labelled",
+      "select": "a",
+      "attr": { "data-social-platform": "github", "title": "Someone on GitHub" }
+    }
+  ],
+  "gaps": [
+    "The link is 36px (`w-9 h-9`) on every pointer: it meets WCAG 2.5.8 (24px) but not the 44px coarse-pointer target the app family uses.",
+    "No explicit focus style: it relies on the browser outline rather than `--ring`.",
+    "A URL that does not parse still renders as the link's href, named by an empty host (the `'External link'` fallback is unreachable because the host is `''`, not null)."
+  ]
+}
