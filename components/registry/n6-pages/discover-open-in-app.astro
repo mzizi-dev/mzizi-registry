@@ -1,31 +1,46 @@
 ---
 /**
  * OpenInApp — the "Open in Mukoko" action: a link to the item in the
- * Mukoko super-app, with one line saying what happens. The `href` is an
- * https link (a universal / app link, or a server redirect such as
- * circles.mukoko.com's `/c/{slug}/join`), so it opens the app where it is
- * installed and the web otherwise; never a bare custom scheme, which does
- * nothing without the app. Other actions (the default slot) sit beside the
- * button, above the hint.
+ * Mukoko super-app, with one line saying what happens.
+ *
+ * Give it `service` and `id` and the link is the canonical universal link,
+ * `https://mukoko.com/open/<service>/<id>` (`openInMukokoUrl`): the apps
+ * claim it, so it opens the item in the app where it is installed, and the
+ * web resolver (mukoko-dev/super-app-web `/open/*`) sends everyone else to
+ * the service's own page for it. `href` is an explicit override, kept for
+ * links that are not items (and for a server-filled shell that fills the
+ * whole URL): when it is given it wins. Either way the link is https, never
+ * a bare custom scheme, which does nothing without the app. Other actions
+ * (the default slot) sit beside the button, above the hint.
  *
  * Mzizi Discover Standard (contracts/discover/open-in-app).
  */
+import { openInMukokoUrl, type MukokoService } from "./discover-open-link";
 import { buttonVariants } from "./ui-variants";
 
 interface Props {
-  href: string;
+  /** The Mukoko service the item lives in; with `id`, the link is the canonical one. */
+  service?: MukokoService;
+  /** The item's id in that service. */
+  id?: string;
+  /** An explicit https URL; overrides `service` and `id`. */
+  href?: string;
   /** The action, e.g. "Join in Mukoko" (default "Open in Mukoko"). */
   label?: string;
   /** What happens; empty text hides itself. */
   hint?: string;
   variant?: "primary" | "outline";
 }
-const { href, label = "Open in Mukoko", hint = "Opens in the Mukoko app, or on the web if you don't have it.", variant = "primary" } = Astro.props;
+const { service, id, href, label = "Open in Mukoko", hint = "Opens in the Mukoko app, or on the web if you don't have it.", variant = "primary" } = Astro.props;
+if (href === undefined && (service === undefined || id === undefined)) {
+  throw new Error("OpenInApp: pass `service` and `id` (or an explicit `href`)");
+}
+const url = href ?? openInMukokoUrl(service as MukokoService, id as string);
 ---
 
 <div class="flex flex-col items-start gap-2" data-slot="open-in-app">
   <div class="flex flex-wrap items-center gap-3">
-    <a href={href} class={buttonVariants({ variant, size: "md" })} data-variant={variant}>{label}</a>
+    <a href={url} class={buttonVariants({ variant, size: "md" })} data-variant={variant}>{label}</a>
     <slot />
   </div>
   {hint !== "" && <p class="text-body-sm text-muted-foreground empty:hidden">{hint}</p>}

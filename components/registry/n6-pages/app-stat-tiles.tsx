@@ -1,0 +1,41 @@
+import type { ReactNode } from "react";
+
+/**
+ * StatTiles (React) — one bordered row of equal StatTiles with hairline
+ * dividers, as a description list (each tile is a "label, value" group). One
+ * column on phones, two from `sm`, and `columns` (default 4) from `lg`.
+ * Implements contract `app/stat-tiles` beside `app-stat-tiles.astro`, with the
+ * same markup. A server component: no script.
+ */
+interface StatTilesProps {
+  /** Accessible name of the row, e.g. "Activity this week". */
+  label?: string;
+  columns?: 2 | 3 | 4 | 5 | 6;
+  children?: ReactNode;
+}
+
+const LG = {
+  2: "lg:grid-cols-2",
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+  5: "lg:grid-cols-5",
+  6: "lg:grid-cols-6",
+} as const;
+
+function StatTiles({ label, columns = 4, children }: StatTilesProps) {
+  return (
+    <div
+      className="overflow-hidden rounded-md border border-border bg-card"
+      data-slot="stat-tiles"
+    >
+      <dl
+        aria-label={label}
+        className={`-mt-px -ml-px grid grid-cols-1 sm:grid-cols-2 ${LG[columns]} *:rounded-none *:border-0 *:border-t *:border-l *:border-border`}
+      >
+        {children}
+      </dl>
+    </div>
+  );
+}
+
+export { StatTiles, type StatTilesProps };

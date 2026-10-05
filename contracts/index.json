@@ -7,6 +7,7 @@
       "title": "AppShell",
       "version": "1.1.0",
       "file": "app/app-shell.contract.json",
+      "astro": "app-shell",
       "tsx": "app-shell",
       "rs": null
     },
@@ -15,6 +16,7 @@
       "title": "SideNav",
       "version": "1.0.0",
       "file": "app/side-nav.contract.json",
+      "astro": "app-side-nav",
       "tsx": "app-side-nav",
       "rs": null
     },
@@ -23,6 +25,7 @@
       "title": "WorkspaceSwitcher",
       "version": "1.0.0",
       "file": "app/workspace-switcher.contract.json",
+      "astro": "app-workspace-switcher",
       "tsx": "app-workspace-switcher",
       "rs": null
     },
@@ -31,6 +34,7 @@
       "title": "QuickSearch",
       "version": "1.0.0",
       "file": "app/quick-search.contract.json",
+      "astro": "app-quick-search",
       "tsx": "app-quick-search",
       "rs": null
     },
@@ -39,6 +43,7 @@
       "title": "CommandPalette",
       "version": "1.0.0",
       "file": "app/command-palette.contract.json",
+      "astro": "app-command-palette",
       "tsx": "app-command-palette",
       "rs": null
     },
@@ -47,6 +52,7 @@
       "title": "TopBarAction",
       "version": "1.0.0",
       "file": "app/top-bar-action.contract.json",
+      "astro": "app-top-bar-action",
       "tsx": "app-top-bar-action",
       "rs": null
     },
@@ -55,6 +61,7 @@
       "title": "PageHeader",
       "version": "1.0.0",
       "file": "app/page-header.contract.json",
+      "astro": "app-page-header",
       "tsx": "app-page-header",
       "rs": null
     },
@@ -63,6 +70,7 @@
       "title": "Toolbar",
       "version": "1.0.0",
       "file": "app/toolbar.contract.json",
+      "astro": "app-toolbar",
       "tsx": "app-toolbar",
       "rs": null
     },
@@ -71,6 +79,7 @@
       "title": "ToolbarMenu",
       "version": "1.0.0",
       "file": "app/toolbar-menu.contract.json",
+      "astro": "app-toolbar-menu",
       "tsx": "app-toolbar-menu",
       "rs": null
     },
@@ -79,6 +88,7 @@
       "title": "StatTiles",
       "version": "1.0.0",
       "file": "app/stat-tiles.contract.json",
+      "astro": "app-stat-tiles",
       "tsx": "app-stat-tiles",
       "rs": null
     },
@@ -87,6 +97,7 @@
       "title": "StatTile",
       "version": "1.0.0",
       "file": "app/stat-tile.contract.json",
+      "astro": "app-stat-tile",
       "tsx": "app-stat-tile",
       "rs": null
     },
@@ -95,6 +106,7 @@
       "title": "InfoTip",
       "version": "1.0.0",
       "file": "app/info-tip.contract.json",
+      "astro": "app-info-tip",
       "tsx": "app-info-tip",
       "rs": null
     },
@@ -103,6 +115,7 @@
       "title": "EmptyState",
       "version": "1.0.0",
       "file": "app/empty-state.contract.json",
+      "astro": "app-empty-state",
       "tsx": "app-empty-state",
       "rs": null
     },
@@ -111,6 +124,7 @@
       "title": "BrandMark",
       "version": "1.0.0",
       "file": "app/brand-mark.contract.json",
+      "astro": "app-brand-mark",
       "tsx": "app-brand-mark",
       "rs": null
     },
@@ -119,6 +133,7 @@
       "title": "DataTable",
       "version": "1.0.0",
       "file": "app/data-table.contract.json",
+      "astro": "app-data-table",
       "tsx": "app-data-table",
       "rs": null
     },
@@ -127,6 +142,7 @@
       "title": "FilterBar",
       "version": "1.1.0",
       "file": "app/filter-bar.contract.json",
+      "astro": "app-filter-bar",
       "tsx": "app-filter-bar",
       "rs": null
     },
@@ -135,6 +151,7 @@
       "title": "Pagination",
       "version": "1.0.0",
       "file": "app/pagination.contract.json",
+      "astro": "app-pagination",
       "tsx": "app-pagination",
       "rs": null
     },
@@ -143,6 +160,7 @@
       "title": "DetailPanel",
       "version": "1.0.0",
       "file": "app/detail-panel.contract.json",
+      "astro": "app-detail-panel",
       "tsx": "app-detail-panel",
       "rs": null
     },
@@ -151,6 +169,7 @@
       "title": "FormLayout",
       "version": "1.0.0",
       "file": "app/form-layout.contract.json",
+      "astro": "app-form-layout",
       "tsx": "app-form-layout",
       "rs": null
     },
@@ -159,6 +178,7 @@
       "title": "FormField",
       "version": "1.0.0",
       "file": "app/form-field.contract.json",
+      "astro": "app-form-field",
       "tsx": "app-form-field",
       "rs": null
     },
@@ -167,6 +187,7 @@
       "title": "StateMessage",
       "version": "1.0.0",
       "file": "app/state-message.contract.json",
+      "astro": "app-state-message",
       "tsx": "app-state-message",
       "rs": null
     },
@@ -175,6 +196,7 @@
       "title": "Toast",
       "version": "1.0.0",
       "file": "app/toast.contract.json",
+      "astro": "app-toast",
       "tsx": "app-toast",
       "rs": null
     },
@@ -183,6 +205,7 @@
       "title": "AccountMenu",
       "version": "1.0.0",
       "file": "app/account-menu.contract.json",
+      "astro": "app-account-menu",
       "tsx": "app-account-menu",
       "rs": null
     },
@@ -191,6 +214,7 @@
       "title": "BarChart",
       "version": "1.0.1",
       "file": "app/bar-chart.contract.json",
+      "astro": "app-bar-chart",
       "tsx": "app-bar-chart",
       "rs": null
     },
@@ -199,6 +223,7 @@
       "title": "Button",
       "version": "1.0.0",
       "file": "app/button.contract.json",
+      "astro": "button",
       "tsx": "button",
       "rs": "button"
     },
@@ -207,6 +232,7 @@
       "title": "Badge",
       "version": "1.0.0",
       "file": "app/badge.contract.json",
+      "astro": "badge",
       "tsx": "badge",
       "rs": "badge"
     },
@@ -215,6 +241,7 @@
       "title": "Card",
       "version": "1.0.0",
       "file": "app/card.contract.json",
+      "astro": "card",
       "tsx": "card",
       "rs": "card"
     },
@@ -223,6 +250,7 @@
       "title": "Alert",
       "version": "1.0.0",
       "file": "app/alert.contract.json",
+      "astro": "alert",
       "tsx": "alert",
       "rs": null
     },
@@ -231,6 +259,7 @@
       "title": "Input",
       "version": "1.0.0",
       "file": "app/input.contract.json",
+      "astro": "input",
       "tsx": "input",
       "rs": "input"
     },
@@ -239,6 +268,7 @@
       "title": "Label",
       "version": "1.0.0",
       "file": "app/label.contract.json",
+      "astro": "label",
       "tsx": "label",
       "rs": "label"
     },
@@ -247,6 +277,7 @@
       "title": "Skeleton",
       "version": "1.0.0",
       "file": "app/skeleton.contract.json",
+      "astro": "skeleton",
       "tsx": "skeleton",
       "rs": null
     },
@@ -255,6 +286,7 @@
       "title": "DiscoverShell",
       "version": "1.0.0",
       "file": "discover/discover-shell.contract.json",
+      "astro": "discover-shell",
       "tsx": "discover-shell",
       "rs": null
     },
@@ -263,6 +295,7 @@
       "title": "DiscoverMeta",
       "version": "1.0.0",
       "file": "discover/discover-meta.contract.json",
+      "astro": "discover-meta",
       "tsx": "discover-meta",
       "rs": null
     },
@@ -271,6 +304,7 @@
       "title": "DiscoverHero",
       "version": "1.0.0",
       "file": "discover/discover-hero.contract.json",
+      "astro": "discover-hero",
       "tsx": "discover-hero",
       "rs": null
     },
@@ -279,6 +313,7 @@
       "title": "DiscoverSearch",
       "version": "1.0.0",
       "file": "discover/discover-search.contract.json",
+      "astro": "discover-search",
       "tsx": "discover-search",
       "rs": null
     },
@@ -287,6 +322,7 @@
       "title": "CategoryChips",
       "version": "1.0.0",
       "file": "discover/category-chips.contract.json",
+      "astro": "discover-category-chips",
       "tsx": "discover-category-chips",
       "rs": null
     },
@@ -295,6 +331,7 @@
       "title": "CategoryChip",
       "version": "1.0.0",
       "file": "discover/category-chip.contract.json",
+      "astro": "discover-category-chip",
       "tsx": "discover-category-chip",
       "rs": null
     },
@@ -303,6 +340,7 @@
       "title": "DiscoverSection",
       "version": "1.0.0",
       "file": "discover/discover-section.contract.json",
+      "astro": "discover-section",
       "tsx": "discover-section",
       "rs": null
     },
@@ -311,6 +349,7 @@
       "title": "ResultGrid",
       "version": "1.0.0",
       "file": "discover/result-grid.contract.json",
+      "astro": "discover-result-grid",
       "tsx": "discover-result-grid",
       "rs": null
     },
@@ -319,6 +358,7 @@
       "title": "DiscoverCard",
       "version": "1.0.0",
       "file": "discover/discover-card.contract.json",
+      "astro": "discover-card",
       "tsx": "discover-card",
       "rs": null
     },
@@ -327,15 +367,134 @@
       "title": "LoadMore",
       "version": "1.0.0",
       "file": "discover/load-more.contract.json",
+      "astro": "discover-load-more",
       "tsx": "discover-load-more",
       "rs": null
     },
     {
       "name": "discover/open-in-app",
       "title": "OpenInApp",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "discover/open-in-app.contract.json",
+      "astro": "discover-open-in-app",
       "tsx": "discover-open-in-app",
+      "rs": null
+    },
+    {
+      "name": "discover/breadcrumb",
+      "title": "DiscoverBreadcrumb",
+      "version": "1.0.0",
+      "file": "discover/breadcrumb.contract.json",
+      "astro": "discover-breadcrumb",
+      "tsx": "discover-breadcrumb",
+      "rs": null
+    },
+    {
+      "name": "discover/detail-actions",
+      "title": "DetailActions",
+      "version": "1.0.0",
+      "file": "discover/detail-actions.contract.json",
+      "astro": "discover-detail-actions",
+      "tsx": "discover-detail-actions",
+      "rs": null
+    },
+    {
+      "name": "discover/detail-hero",
+      "title": "DetailHero",
+      "version": "1.0.0",
+      "file": "discover/detail-hero.contract.json",
+      "astro": "discover-detail-hero",
+      "tsx": "discover-detail-hero",
+      "rs": null
+    },
+    {
+      "name": "discover/meta-list",
+      "title": "MetaList",
+      "version": "1.0.0",
+      "file": "discover/meta-list.contract.json",
+      "astro": "discover-meta-list",
+      "tsx": "discover-meta-list",
+      "rs": null
+    },
+    {
+      "name": "discover/related-rail",
+      "title": "RelatedRail",
+      "version": "1.0.0",
+      "file": "discover/related-rail.contract.json",
+      "astro": "discover-related-rail",
+      "tsx": "discover-related-rail",
+      "rs": null
+    },
+    {
+      "name": "site/breadcrumb",
+      "title": "Breadcrumb",
+      "version": "1.0.0",
+      "file": "site/breadcrumb.contract.json",
+      "astro": "site-breadcrumb",
+      "tsx": "site-breadcrumb",
+      "rs": null
+    },
+    {
+      "name": "site/container",
+      "title": "Container",
+      "version": "1.0.0",
+      "file": "site/container.contract.json",
+      "astro": "site-container",
+      "tsx": "site-container",
+      "rs": null
+    },
+    {
+      "name": "site/hero",
+      "title": "Hero",
+      "version": "1.0.0",
+      "file": "site/hero.contract.json",
+      "astro": "site-hero",
+      "tsx": "site-hero",
+      "rs": null
+    },
+    {
+      "name": "site/icon",
+      "title": "Icon",
+      "version": "1.0.0",
+      "file": "site/icon.contract.json",
+      "astro": "site-icon",
+      "tsx": "site-icon",
+      "rs": null
+    },
+    {
+      "name": "site/mineral-strip",
+      "title": "MineralStrip",
+      "version": "1.0.0",
+      "file": "site/mineral-strip.contract.json",
+      "astro": "site-mineral-strip",
+      "tsx": "site-mineral-strip",
+      "rs": null
+    },
+    {
+      "name": "site/section",
+      "title": "Section",
+      "version": "1.0.0",
+      "file": "site/section.contract.json",
+      "astro": "site-section",
+      "tsx": "site-section",
+      "rs": null
+    },
+    {
+      "name": "site/section-header",
+      "title": "SectionHeader",
+      "version": "1.0.0",
+      "file": "site/section-header.contract.json",
+      "astro": "site-section-header",
+      "tsx": "site-section-header",
+      "rs": null
+    },
+    {
+      "name": "site/social-icon",
+      "title": "SocialIcon",
+      "version": "1.0.0",
+      "file": "site/social-icon.contract.json",
+      "astro": "site-social-icon",
+      "tsx": "site-social-icon",
       "rs": null
     }
   ]

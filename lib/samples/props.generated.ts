@@ -343,6 +343,644 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "app-account-menu": [
+    {
+      "name": "name",
+      "type": "string | null",
+      "required": false
+    },
+    {
+      "name": "email",
+      "type": "string | null",
+      "required": false
+    },
+    {
+      "name": "signOutAction",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "signOutLabel",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "app-bar-chart": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "caption",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "data",
+      "type": "BarChartPoint[]",
+      "required": true
+    },
+    {
+      "name": "layout",
+      "type": "\"columns\" | \"rows\"",
+      "required": false
+    },
+    {
+      "name": "valueLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "labelHeading",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "app-brand-mark": [
+    {
+      "name": "brand",
+      "type": "BrandName",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "wordmark",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "suffix",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "decorative",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "app-command-palette": [
+    {
+      "name": "groups",
+      "type": "NavGroup[]",
+      "required": true
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "app-data-table": [
+    {
+      "name": "caption",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "showCaption",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "columns",
+      "type": "Column[]",
+      "required": true
+    },
+    {
+      "name": "rows",
+      "type": "Record<string, Cell>[]",
+      "required": true
+    },
+    {
+      "name": "rowKey",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "app-detail-panel": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "level",
+      "type": "2 | 3",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "items",
+      "type": "DetailItem[]",
+      "required": true
+    },
+    {
+      "name": "record",
+      "type": "unknown",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "app-empty-state": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "icon",
+      "type": "IconName",
+      "required": false
+    },
+    {
+      "name": "level",
+      "type": "2 | 3 | 4",
+      "required": false
+    }
+  ],
+  "app-filter-bar": [
+    {
+      "name": "searchLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "q",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "search",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "selects",
+      "type": "FilterSelect[]",
+      "required": false
+    },
+    {
+      "name": "values",
+      "type": "Record<string, string>",
+      "required": false
+    },
+    {
+      "name": "keep",
+      "type": "Record<string, string>",
+      "required": false
+    },
+    {
+      "name": "clearHref",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "app-form-field": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string | null",
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "\"text\" | \"email\" | \"tel\" | \"url\" | \"search\"",
+      "required": false
+    },
+    {
+      "name": "hint",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "string | null",
+      "required": false
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "readonly",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "autocomplete",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "maxlength",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "inputmode",
+      "type": "\"text\" | \"tel\" | \"email\" | \"url\"",
+      "required": false
+    }
+  ],
+  "app-form-layout": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "string | null",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "app-info-tip": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "about",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "app-page-header": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "crumbs",
+      "type": "PageHeaderCrumb[]",
+      "required": false
+    },
+    {
+      "name": "docsHref",
+      "type": "string | URL",
+      "required": false
+    },
+    {
+      "name": "docsLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "app-pagination": [
+    {
+      "name": "url",
+      "type": "string | URL",
+      "required": true
+    },
+    {
+      "name": "page",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "pageCount",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "total",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "from",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "to",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "noun",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "app-quick-search": [
+    {
+      "name": "target",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "app-shell": [
+    {
+      "name": "navLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "collapsed",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "persist",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "footerLinks",
+      "type": "FooterLink[]",
+      "required": false
+    },
+    {
+      "name": "sidebarLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "accent",
+      "type": "Accent",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "workspace",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "search",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "nav",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "sidebarFooter",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "brand",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "account",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "overlay",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "app-side-nav": [
+    {
+      "name": "groups",
+      "type": "NavGroup[]",
+      "required": false
+    },
+    {
+      "name": "items",
+      "type": "NavItem[]",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "current",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "idPrefix",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "requestUrl",
+      "type": "string | URL",
+      "required": false
+    }
+  ],
+  "app-stat-tile": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string | number | null | undefined",
+      "required": true
+    },
+    {
+      "name": "trend",
+      "type": "number | null",
+      "required": false
+    },
+    {
+      "name": "points",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "upIsGood",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "versus",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "note",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string | URL",
+      "required": false
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "info",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "app-stat-tiles": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "columns",
+      "type": "2 | 3 | 4 | 5 | 6",
+      "required": false
+    }
+  ],
+  "app-state-message": [
+    {
+      "name": "kind",
+      "type": "\"empty\" | \"error\" | \"unconfigured\" | \"unavailable\" | \"loading\"",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "level",
+      "type": "2 | 3 | 4",
+      "required": false
+    }
+  ],
   "app-switcher": [
     {
       "name": "apps",
@@ -352,6 +990,141 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "currentApp",
       "type": "string",
+      "required": false
+    }
+  ],
+  "app-toast": [
+    {
+      "name": "flash",
+      "type": "ToastMessage | null",
+      "required": true
+    },
+    {
+      "name": "dismissLabel",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "app-toolbar": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "string | URL",
+      "required": false
+    },
+    {
+      "name": "keep",
+      "type": "Record<string, string>",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "filters",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "app-toolbar-menu": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "choices",
+      "type": "ToolbarChoice[]",
+      "required": true
+    },
+    {
+      "name": "icon",
+      "type": "IconName",
+      "required": false
+    }
+  ],
+  "app-top-bar-action": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "icon",
+      "type": "IconName",
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "external",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "popovertarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "current",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "app-workspace-switcher": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "workspaces",
+      "type": "Workspace[]",
+      "required": false
+    },
+    {
+      "name": "links",
+      "type": "WorkspaceLink[]",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mark",
+      "type": "ReactNode",
       "required": false
     }
   ],
@@ -2714,6 +3487,683 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "direction",
       "type": "React.ComponentProps<typeof Direction.DirectionProvider>[\"dir\"]",
+      "required": false
+    }
+  ],
+  "discover-breadcrumb": [
+    {
+      "name": "crumbs",
+      "type": "DiscoverBreadcrumbCrumb[]",
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "origin",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "jsonLd",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "requestUrl",
+      "type": "string | URL",
+      "required": false
+    }
+  ],
+  "discover-card": [
+    {
+      "name": "variant",
+      "type": "\"article\" | \"event\" | \"circle\" | \"place\"",
+      "required": true
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "summary",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "imageAlt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "initial",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "datetime",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "dateLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "place",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "figure",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "figureLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "meta",
+      "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "badge",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "badgeTone",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "appHref",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "appLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "external",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "level",
+      "type": "2 | 3 | 4",
+      "required": false
+    },
+    {
+      "name": "media",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "discover-category-chip": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "count",
+      "type": "string | number",
+      "required": false
+    },
+    {
+      "name": "current",
+      "type": "boolean | string",
+      "required": false
+    }
+  ],
+  "discover-category-chips": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "items",
+      "type": "CategoryChipsItem[]",
+      "required": false
+    },
+    {
+      "name": "allHref",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "allLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "allCurrent",
+      "type": "boolean | string",
+      "required": false
+    }
+  ],
+  "discover-detail-actions": [
+    {
+      "name": "service",
+      "type": "MukokoService",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "hint",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "links",
+      "type": "DetailAction[]",
+      "required": false
+    },
+    {
+      "name": "share",
+      "type": "DetailAction[]",
+      "required": false
+    },
+    {
+      "name": "shareLabel",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "discover-detail-hero": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "lead",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "imageAlt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "datetime",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "dateLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "place",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "breadcrumb",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "media",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "discover-hero": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "lead",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "count",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "crumbs",
+      "type": "DiscoverHeroCrumb[]",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"home\" | \"page\"",
+      "required": false
+    },
+    {
+      "name": "search",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "discover-load-more": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "state",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "endLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "navLabel",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "discover-meta": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "canonical",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "siteName",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "imageAlt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "robots",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "noindex",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "jsonLd",
+      "type": "string | Record<string, unknown>",
+      "required": false
+    }
+  ],
+  "discover-meta-list": [
+    {
+      "name": "items",
+      "type": "MetaListItem[]",
+      "required": true
+    },
+    {
+      "name": "columns",
+      "type": "1 | 2 | 3",
+      "required": false
+    }
+  ],
+  "discover-open-in-app": [
+    {
+      "name": "service",
+      "type": "MukokoService",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "hint",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"primary\" | \"outline\"",
+      "required": false
+    }
+  ],
+  "discover-related-rail": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "items",
+      "type": "RelatedRailItem[]",
+      "required": true
+    },
+    {
+      "name": "level",
+      "type": "2 | 3",
+      "required": false
+    },
+    {
+      "name": "seeAllHref",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "seeAllLabel",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "discover-result-grid": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "layout",
+      "type": "\"grid\" | \"list\" | \"rail\"",
+      "required": false
+    },
+    {
+      "name": "columns",
+      "type": "2 | 3 | 4",
+      "required": false
+    },
+    {
+      "name": "state",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "summary",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "more",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "discover-search": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "q",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "submitLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "keep",
+      "type": "Record<string, string>",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "showLabel",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "maxlength",
+      "type": "number",
+      "required": false
+    }
+  ],
+  "discover-section": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "seeAllHref",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "seeAllLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "tone",
+      "type": "\"default\" | \"muted\"",
+      "required": false
+    },
+    {
+      "name": "space",
+      "type": "\"default\" | \"tight\"",
+      "required": false
+    },
+    {
+      "name": "level",
+      "type": "2 | 3",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "state",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "discover-shell": [
+    {
+      "name": "homeLabel",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "homeHref",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "nav",
+      "type": "DiscoverShellLink[]",
+      "required": false
+    },
+    {
+      "name": "footerLinks",
+      "type": "DiscoverShellLink[]",
+      "required": false
+    },
+    {
+      "name": "footerNote",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "strip",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "skipLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "brand",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
       "required": false
     }
   ],
@@ -10820,6 +12270,232 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "animation",
       "type": "`nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`",
       "required": true
+    }
+  ],
+  "site-breadcrumb": [
+    {
+      "name": "items",
+      "type": "BreadcrumbItem[]",
+      "required": true
+    },
+    {
+      "name": "origin",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "requestUrl",
+      "type": "string | URL",
+      "required": false
+    }
+  ],
+  "site-container": [
+    {
+      "name": "size",
+      "type": "\"default\" | \"narrow\" | \"prose\"",
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "\"div\" | \"section\" | \"main\" | \"article\"",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "site-cta-button": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "external",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "arrow",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "required": false
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "\"button\" | \"submit\" | \"reset\"",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "site-hero": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "primaryCTA",
+      "type": "HeroCTA",
+      "required": false
+    },
+    {
+      "name": "secondaryCTA",
+      "type": "HeroCTA",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"gradient\" | \"light\" | \"showcase\"",
+      "required": false
+    },
+    {
+      "name": "align",
+      "type": "\"center\" | \"start\"",
+      "required": false
+    },
+    {
+      "name": "layout",
+      "type": "\"stack\" | \"split\"",
+      "required": false
+    },
+    {
+      "name": "badge",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "mediaLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "media",
+      "type": "ReactNode",
+      "required": false
+    }
+  ],
+  "site-icon": [
+    {
+      "name": "name",
+      "type": "IconName",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "site-section": [
+    {
+      "name": "bg",
+      "type": "\"canvas\" | \"secondary\" | \"transparent\"",
+      "required": false
+    },
+    {
+      "name": "space",
+      "type": "\"default\" | \"tight\" | \"loose\"",
+      "required": false
+    },
+    {
+      "name": "border",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "container",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "site-section-header": [
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "required": false
+    },
+    {
+      "name": "align",
+      "type": "\"start\" | \"center\"",
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "\"h1\" | \"h2\" | \"h3\"",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"display\" | \"h1\" | \"h2\" | \"h3\"",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "eyebrowClass",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "site-social-icon": [
+    {
+      "name": "url",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
     }
   ],
   "social-feed-page": [

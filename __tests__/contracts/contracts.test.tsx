@@ -1,8 +1,8 @@
 /**
  * Component contracts (contracts/, #404).
  *
- * Two families: `app/` (the Dashboard Standard, #404) and `discover/` (the
- * Discover Standard, #413).
+ * Three families: `app/` (the Dashboard Standard, #404), `discover/` (the
+ * Discover Standard, #413) and `site/` (the marketing-site components).
  *
  * 1. Every contract is well formed: it validates against
  *    contracts/schema/component-contract.schema.json (read here, not
@@ -15,8 +15,9 @@
  *    rendered; the .rs is read (its crate's tests/contract.rs renders it
  *    against the .tsx).
  *
- * The Astro builds are evaluated in full in mzizi-dev/packages-npm
- * (`src/app/contracts.test.ts`), against a copy of this directory.
+ * The Astro builds (`components/registry/n<N>-*\/<name>.astro`) are evaluated
+ * in full by __tests__/astro/contracts.test.ts, and the React builds that keep
+ * the whole contract by tsx-contracts.test.tsx.
  */
 import { readFileSync, readdirSync } from "node:fs"
 import path from "node:path"
@@ -39,7 +40,7 @@ const read = (p: string) => readFileSync(path.join(DIR, p), "utf8")
 type Json = null | boolean | number | string | Json[] | { [k: string]: Json }
 interface Sibling {
   registry: string
-  identity: "slot" | "slot+role" | "slot+variants"
+  identity: "slot" | "slot+role" | "slot+variants" | "contract"
   divergences?: string[]
 }
 interface Contract {
@@ -50,20 +51,29 @@ interface Contract {
   states: Record<string, unknown>
   contract: string
   props: { name: string; values?: string[] }[]
-  implementations: { tsx: Sibling | null; rs: Sibling | null }
+  implementations: { astro: { registry: string } | null; tsx: Sibling | null; rs: Sibling | null }
   gaps?: string[]
 }
 
 const schema = JSON.parse(read("schema/component-contract.schema.json")) as Record<string, Json>
 const index = JSON.parse(read("index.json")) as {
   schema: string
-  contracts: { name: string; title: string; version: string; file: string; tsx: string | null; rs: string | null }[]
+  contracts: {
+    name: string
+    title: string
+    version: string
+    file: string
+    astro: string | null
+    tsx: string | null
+    rs: string | null
+  }[]
 }
 /**
  * The contract families, one directory each: `app/` is the Dashboard
- * Standard (#404), `discover/` the Discover Standard (#413).
+ * Standard (#404), `discover/` the Discover Standard (#413) with its detail
+ * pattern, `site/` the marketing-site components.
  */
-const FAMILIES = { app: 31, discover: 11 } as const
+const FAMILIES = { app: 31, discover: 16, site: 8 } as const
 // Keys are `<family>/<file>`, the path under contracts/.
 const files = Object.keys(FAMILIES)
   .flatMap((family) =>
@@ -186,10 +196,11 @@ describe("index.json and the README agree with the files", () => {
     expect(index.contracts.map((e) => e.file).sort()).toEqual(files)
     for (const e of index.contracts) {
       const c = contracts[e.file]
-      expect([e.name, e.title, e.version, e.tsx, e.rs]).toEqual([
+      expect([e.name, e.title, e.version, e.astro, e.tsx, e.rs]).toEqual([
         c.name,
         c.title,
         c.version,
+        c.implementations.astro?.registry ?? null,
         c.implementations.tsx?.registry ?? null,
         c.implementations.rs?.registry ?? null,
       ])
@@ -201,7 +212,8 @@ describe("index.json and the README agree with the files", () => {
     const readme = read("README.md").replace(/ {2,}/g, " ")
     const cell = (s: Sibling | null) => (s ? `\`${s.registry}\` (${s.identity})` : "—")
     for (const c of Object.values(contracts)) {
-      const row = `| \`${c.name}\` | ${c.title} | N${c.node} | ${c.version} | ${cell(c.implementations.tsx)} | ${cell(c.implementations.rs)} |`
+      const astro = c.implementations.astro ? `\`${c.implementations.astro.registry}\`` : "—"
+      const row = `| \`${c.name}\` | ${c.title} | N${c.node} | ${c.version} | ${astro} | ${cell(c.implementations.tsx)} | ${cell(c.implementations.rs)} |`
       expect(readme, c.name).toContain(row)
     }
   })
@@ -244,7 +256,11 @@ const roleOf = (c: Contract) =>
     .map((l) => /^role is "([^"]+)"$/.exec(l)?.[1])
     .find(Boolean)
 
-const withTsx = Object.values(contracts).filter((c) => c.implementations.tsx)
+// `contract` siblings keep the whole contract and are evaluated in full by
+// tsx-contracts.test.tsx; this checks the identity-only ones.
+const withTsx = Object.values(contracts).filter(
+  (c) => c.implementations.tsx && c.implementations.tsx.identity !== "contract",
+)
 const withRs = Object.values(contracts).filter((c) => c.implementations.rs)
 
 describe("React (.tsx) siblings carry the contract's identity", () => {

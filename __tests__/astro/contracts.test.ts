@@ -35,12 +35,16 @@ const ROOT = path.resolve(__dirname, "../..")
 const REGISTRY = path.join(ROOT, "components/registry")
 const CONTRACTS = path.join(ROOT, "contracts")
 
-const index = JSON.parse(readFileSync(path.join(CONTRACTS, "index.json"), "utf8")) as {
-  contracts: { file: string }[]
-}
-const contracts = index.contracts.map(
-  (e) => JSON.parse(readFileSync(path.join(CONTRACTS, e.file), "utf8")) as Contract
-)
+/** Every contract file, read from disk (contracts.test.tsx keeps index.json in step). */
+const contracts = readdirSync(CONTRACTS, { withFileTypes: true })
+  .filter((d) => d.isDirectory() && d.name !== "schema")
+  .flatMap((d) =>
+    readdirSync(path.join(CONTRACTS, d.name))
+      .filter((f) => f.endsWith(".contract.json"))
+      .map((f) => `${d.name}/${f}`)
+  )
+  .sort()
+  .map((f) => JSON.parse(readFileSync(path.join(CONTRACTS, f), "utf8")) as Contract)
 
 /** Every `.astro` in the registry, by component name → path under components/registry/. */
 const astroFiles = new Map<string, string>()

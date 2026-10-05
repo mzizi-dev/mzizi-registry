@@ -1,0 +1,304 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "site/hero",
+  "title": "Hero",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The top band of a marketing page: an optional status badge and eyebrow, the page's one serif <h1>, a lead, and at most two pill calls to action, with an optional media region beside (split) or below (stack) the text.",
+  "implementations": {
+    "astro": {
+      "registry": "site-hero",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Hero.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "site-hero", "identity": "contract" },
+    "rs": null,
+    "related": ["discover-hero", "site-cta-button"]
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The page's <h1>, set in the serif display size."
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false,
+      "description": "The eyebrow above the title (`.eyebrow`)."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "The lead paragraph under the title."
+    },
+    {
+      "name": "primaryCTA",
+      "type": "{ text: string; href: string; external?: boolean }",
+      "required": false,
+      "description": "The primary pill call to action (CtaButton, variant primary). `external` opens it in a new tab."
+    },
+    {
+      "name": "secondaryCTA",
+      "type": "{ text: string; href: string; external?: boolean }",
+      "required": false,
+      "description": "The secondary call to action (CtaButton, variant ghost, with a trailing arrow)."
+    },
+    {
+      "name": "variant",
+      "type": "\"default\" | \"gradient\" | \"light\" | \"showcase\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "gradient", "light", "showcase"],
+      "description": "The band's background: `bg-canvas`, `gradient-hero`, `bg-secondary`, or the `gradient-showcase` wash (which also deepens the bottom padding at lg)."
+    },
+    {
+      "name": "align",
+      "type": "\"center\" | \"start\"",
+      "required": false,
+      "default": "start",
+      "values": ["center", "start"],
+      "description": "Text alignment of the text column; `center` also centres the lead, the badge and the calls to action."
+    },
+    {
+      "name": "layout",
+      "type": "\"stack\" | \"split\"",
+      "required": false,
+      "default": "stack",
+      "values": ["stack", "split"],
+      "description": "`stack`: one text column, media below. `split`: text beside the `media` slot from lg, stacked (text first) below lg."
+    },
+    {
+      "name": "badge",
+      "type": "string",
+      "required": false,
+      "description": "A short status pill above the headline (\"Beta\"). It is read as a claim: keep it honest."
+    },
+    {
+      "name": "mediaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible name for the media region; when set the region is role=\"group\" with this aria-label."
+    }
+  ],
+  "slots": [
+    {
+      "name": "media",
+      "expects": "A demo, screenshot or live widget",
+      "description": "Rendered beside the text (split) or below it (stack). Absent: no media region."
+    }
+  ],
+  "behaviour": [
+    "The title is the hero's only <h1>.",
+    "With no media, no split layout, no badge and a variant other than showcase, the markup is the 0.1.x template exactly (the legacy branch): no data-layout, no data-slot on the text column.",
+    "Otherwise the root carries data-layout, the text column is data-slot=\"hero-text\", the badge is data-slot=\"hero-badge\" and the media region data-slot=\"hero-media\".",
+    "The calls to action are CtaButton links (data-slot=\"button\"): the primary is the primary pill, the secondary the ghost pill with an aria-hidden arrow. An external one has target=\"_blank\" and rel=\"noopener noreferrer\".",
+    "The badge's dot is decorative (aria-hidden)."
+  ],
+  "states": {
+    "default": {
+      "description": "The legacy markup: eyebrow, title, lead and both calls to action.",
+      "props": {
+        "subtitle": "Nyuchi Africa",
+        "title": "Infrastructure for African builders",
+        "description": "Open tools, open data, built to last.",
+        "primaryCTA": { "text": "Get started", "href": "/start" },
+        "secondaryCTA": {
+          "text": "Read the docs",
+          "href": "https://docs.example.org",
+          "external": true
+        }
+      }
+    },
+    "centered": {
+      "description": "Centred, on the light background.",
+      "props": {
+        "title": "Learn with Nyuchi",
+        "description": "Courses for every learner.",
+        "align": "center",
+        "variant": "light",
+        "primaryCTA": { "text": "Browse courses", "href": "/courses" }
+      }
+    },
+    "minimal": {
+      "description": "A title alone, on the gradient.",
+      "props": { "title": "About us", "variant": "gradient" }
+    },
+    "split": {
+      "description": "The showcase hero: badge, split layout and a labelled media region.",
+      "props": {
+        "title": "See it working",
+        "subtitle": "Live demo",
+        "badge": "Beta",
+        "variant": "showcase",
+        "layout": "split",
+        "mediaLabel": "Product demo",
+        "primaryCTA": { "text": "Try it", "href": "/try" }
+      },
+      "slots": { "media": "<img src='/demo.png' alt='The dashboard'>" }
+    },
+    "stacked-media": {
+      "description": "Media below the text, unlabelled.",
+      "props": { "title": "Our work" },
+      "slots": { "media": "<img src='/work.png' alt=''>" }
+    }
+  },
+  "accessibility": {
+    "roles": ["heading", "link", "group"],
+    "keyboard": [
+      "Tab reaches the calls to action in order, then anything focusable in the media slot."
+    ],
+    "focus": [
+      "Calls to action show the `--ring` focus ring (focus-visible:ring-2) offset from the background."
+    ],
+    "aria": [
+      "The media region is role=\"group\" with aria-label only when mediaLabel is given.",
+      "The badge dot and the secondary call to action's arrow are aria-hidden."
+    ],
+    "wcag": ["1.3.1", "1.4.3", "2.4.6", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "call to action",
+      "select": "[data-slot=\"button\"]",
+      "fine": 48,
+      "coarse": 48
+    },
+    {
+      "part": "call to action (centred)",
+      "state": "centered",
+      "select": "[data-slot=\"button\"]",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--muted-foreground",
+      "--secondary",
+      "--card",
+      "--border",
+      "--muted",
+      "--primary",
+      "--primary-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "The primary call to action, the badge dot and the focus ring follow `--primary` / `--ring`; the gradient-hero and gradient-showcase washes mix `--primary` into the background. Layout never varies by brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Vertical padding steps up at md and lg (py-12, md:py-16, lg:py-20; lg:py-24 for showcase).",
+    "The text column is capped (max-w-3xl, max-w-2xl when split); the title balances its lines and the lead is pretty-wrapped.",
+    "Split: one column below lg (text first), two columns from lg.",
+    "The calls to action wrap onto new lines on a narrow screen."
+  ],
+  "contract": "contract\n  slot is \"hero\"\n  class contains \"bg-canvas\"\n  when centered class contains \"bg-secondary\"\n  when minimal class contains \"gradient-hero\"\n  when split class contains \"gradient-showcase\"\n  when default shows h1 \"Infrastructure for African builders\"\n  when default shows p \"Nyuchi Africa\"\n  when split shows p \"Beta\"\n  a \"Get started\" min_height 48\n  a \"Read the docs\" min_height 48\n  uses button\nend",
+  "checks": [
+    {
+      "say": "One h1.",
+      "state": "*",
+      "select": "h1",
+      "count": 1
+    },
+    {
+      "say": "The legacy markup carries no data-layout.",
+      "select": "[data-slot=\"hero\"][data-layout]",
+      "absent": true
+    },
+    {
+      "say": "The legacy markup has no hero-text column.",
+      "select": "[data-slot=\"hero-text\"]",
+      "absent": true
+    },
+    {
+      "say": "Two calls to action, as links.",
+      "select": "a[data-slot=\"button\"]",
+      "count": 2
+    },
+    {
+      "say": "The primary call to action stays in the tab.",
+      "select": "a[href=\"/start\"]",
+      "attr": { "target": false, "rel": false }
+    },
+    {
+      "say": "An external call to action opens a new tab safely.",
+      "select": "a[href=\"https://docs.example.org\"]",
+      "attr": { "target": "_blank", "rel": "noopener noreferrer" }
+    },
+    {
+      "say": "The secondary call to action's arrow is decorative.",
+      "select": "a[href=\"https://docs.example.org\"] svg",
+      "attr": { "aria-hidden": "true" }
+    },
+    {
+      "say": "A title alone renders no calls to action.",
+      "state": "minimal",
+      "select": "[data-slot=\"button\"]",
+      "absent": true
+    },
+    {
+      "say": "Split is marked on the root.",
+      "state": "split",
+      "select": "[data-slot=\"hero\"]",
+      "attr": { "data-layout": "split" }
+    },
+    {
+      "say": "The badge renders above the title.",
+      "state": "split",
+      "select": "[data-slot=\"hero-text\"] [data-slot=\"hero-badge\"]",
+      "count": 1,
+      "text": "Beta"
+    },
+    {
+      "say": "The badge dot is decorative.",
+      "state": "split",
+      "select": "[data-slot=\"hero-badge\"] span",
+      "attr": { "aria-hidden": "true" }
+    },
+    {
+      "say": "A labelled media region is a named group.",
+      "state": "split",
+      "select": "[data-slot=\"hero-media\"]",
+      "attr": { "role": "group", "aria-label": "Product demo" }
+    },
+    {
+      "say": "The media slot is rendered in the media region.",
+      "state": "split",
+      "select": "[data-slot=\"hero-media\"] img",
+      "count": 1
+    },
+    {
+      "say": "Stacked media is marked on the root.",
+      "state": "stacked-media",
+      "select": "[data-slot=\"hero\"]",
+      "attr": { "data-layout": "stack" }
+    },
+    {
+      "say": "An unlabelled media region has no role.",
+      "state": "stacked-media",
+      "select": "[data-slot=\"hero-media\"]",
+      "attr": { "role": false, "aria-label": false }
+    },
+    {
+      "say": "No media slot, no media region.",
+      "select": "[data-slot=\"hero-media\"]",
+      "absent": true
+    }
+  ],
+  "gaps": [
+    "The utilities it relies on (`container-custom`, `eyebrow`, `gradient-hero`, `gradient-showcase`, `bg-canvas`, `text-display`, `text-body-lg`, `ease-soft`) live in each consuming site's globals.css; the registry does not ship them.",
+    "The two branches (legacy 0.1.x and the newer one) duplicate the text column; the legacy branch is kept byte-identical for four sites. A 2.0.0 contract could drop it.",
+    "The gradient-showcase wash mixes cobalt as well as `--primary`, so part of the showcase background does not follow the brand overlay.",
+    "The calls to action are always links; there is no button form for an in-page action."
+  ]
+}

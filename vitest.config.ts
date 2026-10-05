@@ -54,8 +54,24 @@ const registryLibAliases = REGISTRY_UI_ROOTS.flatMap((root) =>
     }))
 )
 
+/**
+ * A registry component imports a brand asset as `./assets/<file>`, the way it installs
+ * (`assets/` beside the component); on disk the assets live once, in
+ * `components/registry/assets/`.
+ */
+const REGISTRY_DIR = path.resolve(__dirname, "components/registry")
+const registryAssets = {
+  name: "mzizi-registry-assets",
+  enforce: "pre" as const,
+  resolveId(source: string, importer?: string) {
+    if (!importer || !source.startsWith("./assets/") || !importer.startsWith(REGISTRY_DIR)) return null
+    const file = path.join(REGISTRY_DIR, source.slice(2))
+    return existsSync(file) ? file : null
+  },
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), registryAssets],
   test: {
     environment: "jsdom",
     globals: true,

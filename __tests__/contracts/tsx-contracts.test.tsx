@@ -40,12 +40,16 @@ const REGISTRY = path.join(ROOT, "components/registry")
 const CONTRACTS = path.join(ROOT, "contracts")
 export const REQUEST_URL = "https://console.example/content/news"
 
-const index = JSON.parse(readFileSync(path.join(CONTRACTS, "index.json"), "utf8")) as {
-  contracts: { file: string }[]
-}
-const contracts = index.contracts.map(
-  (e) => JSON.parse(readFileSync(path.join(CONTRACTS, e.file), "utf8")) as Contract & { node: number }
-)
+/** Every contract file, read from disk (contracts.test.tsx keeps index.json in step). */
+const contracts = readdirSync(CONTRACTS, { withFileTypes: true })
+  .filter((d) => d.isDirectory() && d.name !== "schema")
+  .flatMap((d) =>
+    readdirSync(path.join(CONTRACTS, d.name))
+      .filter((f) => f.endsWith(".contract.json"))
+      .map((f) => `${d.name}/${f}`)
+  )
+  .sort()
+  .map((f) => JSON.parse(readFileSync(path.join(CONTRACTS, f), "utf8")) as Contract & { node: number })
 const full = contracts.filter((c) => c.implementations.tsx?.identity === "contract")
 
 function tsxPath(name: string): string | null {

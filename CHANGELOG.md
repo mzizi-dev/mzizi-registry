@@ -10,6 +10,19 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — every component in every format here: the Astro target, React builds of every contract, the Discover detail pattern and Open in Mukoko (2026-10-05, #TBD)
+
+Owner decision, 2026-10-04: this registry is the single source of every component in every format (`.tsx`, `.rs`, `.astro`, and `.mz` as it lands). Tracking: #397 (the Astro target) and #429 (the detail pattern).
+
+- **Added: `.astro` implementations.** The 50 Astro components `@bundu/ui` hand-authored in `mzizi-dev/packages-npm` (the Dashboard Standard's `src/app/*`, the Discover Standard's `src/discover/*`, the primitives and the marketing-site components) now live here, beside each component's `.tsx`: `app-*` (N6/N7, `app-brand-mark` in N3), `discover-*`, `site-*`, and `button`, `badge`, `card`, `alert`, `input`, `label`, `skeleton` beside their existing `.tsx`/`.rs`. With them come the framework-free modules they use (`ui-utils`, `ui-variants`, `app-nav`, `site-icons`, `site-breadcrumbs`), `@bundu/server`'s helpers as `n4-safety/server-*.ts` (the TypeScript mirror of `mzizi-roots-server`), and the Nyuchi brand-mark pair in `components/registry/assets/`. `site-hero` now composes a pure-Astro `site-cta-button` instead of a React button, so no `.astro` has React under it.
+- **Added: React (`.tsx`) builds of every contract.** The 24 Dashboard Standard patterns and shell components, the 11 Discover components and the 8 site components each have a `.tsx` that keeps the whole contract (`identity: "contract"`), so Next.js apps adopt the same design through the registry (`mzizi add <name> --target tsx` or `npx shadcn add https://api.mzizi.dev/v1/ui/<name>`).
+- **Added: the Discover detail pattern** (`discover/detail-hero`, `breadcrumb`, `meta-list`, `detail-actions`, `related-rail`), each a contract, an `.astro` and a `.tsx`, for the page of one item reached from a discover page.
+- **Changed: Open in Mukoko** (`discover/open-in-app` 1.1.0). New `service` and `id` props build the canonical universal link `https://mukoko.com/open/<service>/<id>` (`discover-open-link.ts`, `openInMukokoUrl`); `href` stays as an explicit override.
+- **Added: the `site/` contract family** (8 contracts), so every component has a contract. `site-breadcrumb` and `site-social-icon` gain a root `data-slot`.
+- **Added: contracts test every format.** `__tests__/astro/contracts.test.ts` (`pnpm test:astro`, run by `pnpm test`) renders every `.astro` in every state; `__tests__/contracts/tsx-contracts.test.tsx` holds every `contract`-identity `.tsx` to the whole contract with the same runner, now canonical here as `contracts/runner.ts` (it lower-cases attribute names as a browser does). The schema gains `implementations.astro.registry` and the `contract` identity; `index.json` gains `astro`.
+- **Added: `lib/astro.ts`**, the reader `mzizi-api-gateway` bundles for `GET /v1/astro/{name}` (documented in `openapi.yaml`): the `.astro` (or framework-free `.ts`), its flat imports as `/v1/astro/` registry dependencies, its npm dependencies, and its brand assets as base64 files (`lib/registry-assets.generated.json`). `pnpm registry:validate` rejects a framework import in an `.astro` or a flat import that does not resolve.
+- **Changed:** registry `.astro` and framework-free `.ts` files import each other flat (`./button.astro`, `./ui-utils`), as installed; `vitest.astro.config.ts`, the default vitest config and tsconfig's `rootDirs` resolve them. `astro`, `css-select`, `domhandler`, `domutils` and `htmlparser2` are new devDependencies.
+
 ### Fixed — CONTRIBUTING no longer says to curl a local server (2026-10-04, #426)
 
 The "Verify" step for a new component ran `curl http://localhost:11736/api/v1/ui/my-component`, but the app and its `/api/*` handlers were removed on 2026-10-02 and nothing listens there.
