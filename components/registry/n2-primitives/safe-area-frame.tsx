@@ -7,8 +7,9 @@ import { cn } from "@/lib/utils"
  * with the bands a platform covers with its own interface shaded (a story's
  * top bar and reply bar, a reel's action rail, a video's duration badge).
  *
- * Purely presentational and server-safe. The Rust sibling,
- * `safe-area-frame.rs`, renders the same markup and classes.
+ * Purely presentational and server-safe. One contract for every build:
+ * `contracts/ui/safe-area-frame.contract.json`; the Astro and Rust builds render the
+ * same SVG.
  */
 
 /** `[top, right, bottom, left]` insets, in the canvas's own pixels. */
@@ -49,7 +50,7 @@ function safeAreaBands(
   }
 }
 
-interface SafeAreaFrameProps extends React.ComponentProps<"span"> {
+interface SafeAreaFrameProps extends Omit<React.ComponentProps<"svg">, "width" | "height"> {
   /** The canvas width in pixels, e.g. 1080. */
   width: number
   /** The canvas height in pixels, e.g. 1920. */
@@ -60,6 +61,13 @@ interface SafeAreaFrameProps extends React.ComponentProps<"span"> {
   box?: number
 }
 
+/**
+ * Sized by SVG geometry, never a `style` attribute, so a page can keep
+ * `style-src 'self'` (the contract's no-inline-style rule). The canvas is a
+ * nested <svg> centred in the box; its bands are drawn in a 100×100 user space
+ * stretched to the canvas, so each band's percentage is its rect's size. The
+ * same markup as `safe-area-frame.astro` and `safe-area-frame.rs`.
+ */
 function SafeAreaFrame({
   width,
   height,
@@ -69,49 +77,59 @@ function SafeAreaFrame({
   ...props
 }: SafeAreaFrameProps) {
   const b = safeAreaBands(width, height, safe, box)
+  const x = (box - b.width) / 2
+  const y = (box - b.height) / 2
   return (
-    <span
+    <svg
       data-slot="safe-area-frame"
       aria-hidden="true"
-      className={cn("grid shrink-0 place-items-center", className)}
-      style={{ width: box, height: box }}
+      focusable="false"
+      className={cn("block shrink-0", className)}
+      width={box}
+      height={box}
+      viewBox={`0 0 ${box} ${box}`}
       {...props}
     >
-      <span
+      <svg
         data-slot="safe-area-frame-canvas"
-        className="relative block overflow-hidden rounded-[4px] border border-foreground/40 bg-muted"
-        style={{ width: b.width, height: b.height }}
+        x={x}
+        y={y}
+        width={b.width}
+        height={b.height}
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        className="overflow-hidden"
       >
-        {b.top > 0 && (
-          <span
-            data-band="top"
-            className="absolute inset-x-0 top-0 bg-primary/30"
-            style={{ height: `${b.top}%` }}
-          />
-        )}
+        <rect width="100" height="100" className="fill-muted" />
+        {b.top > 0 && <rect data-band="top" width="100" height={b.top} className="fill-primary/30" />}
         {b.bottom > 0 && (
-          <span
+          <rect
             data-band="bottom"
-            className="absolute inset-x-0 bottom-0 bg-primary/30"
-            style={{ height: `${b.bottom}%` }}
+            y={100 - b.bottom}
+            width="100"
+            height={b.bottom}
+            className="fill-primary/30"
           />
         )}
-        {b.left > 0 && (
-          <span
-            data-band="left"
-            className="absolute inset-y-0 left-0 bg-primary/20"
-            style={{ width: `${b.left}%` }}
-          />
-        )}
+        {b.left > 0 && <rect data-band="left" width={b.left} height="100" className="fill-primary/20" />}
         {b.right > 0 && (
-          <span
+          <rect
             data-band="right"
-            className="absolute inset-y-0 right-0 bg-primary/20"
-            style={{ width: `${b.right}%` }}
+            x={100 - b.right}
+            width={b.right}
+            height="100"
+            className="fill-primary/20"
           />
         )}
-      </span>
-    </span>
+        <rect
+          width="100"
+          height="100"
+          fill="none"
+          vectorEffect="non-scaling-stroke"
+          className="stroke-foreground/40"
+        />
+      </svg>
+    </svg>
   )
 }
 

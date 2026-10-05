@@ -481,8 +481,9 @@ pub fn rows<T: Copy>(
 
 // ─── A CSS selector subset, for a contract's `checks` and `density` ────────────────────────
 
-/// One compound selector: an optional tag, `.class`es and `[attr]` / `[attr="value"]`s. A
-/// selector outside this subset is an `Err`, which the caller turns into a failure (FM-12).
+/// One compound selector: an optional tag, `.class`es and `[attr]` / `[attr="value"]`s,
+/// joined by `>` or a space. A selector outside this subset is an `Err`, which the caller
+/// turns into a failure (FM-12).
 #[derive(Debug, Default)]
 struct Compound {
     tag: Option<String>,
@@ -531,22 +532,99 @@ fn compound(selector: &str) -> Result<Compound, String> {
     Ok(out)
 }
 
-/// Every element under (and including) `root` that matches `selector`.
+impl Compound {
+    fn matches(&self, e: &Node) -> bool {
+        self.tag.as_deref().is_none_or(|t| e.tag() == t)
+            && self.classes.iter().all(|k| {
+                e.attr("class")
+                    .is_some_and(|v| v.split_whitespace().any(|w| w == k))
+            })
+            && self.attrs.iter().all(|(k, v)| match v {
+                Some(v) => e.attr(k) == Some(v.as_str()),
+                None => e.attr(k).is_some(),
+            })
+    }
+}
+
+/// Split a selector into compounds and the combinators between them: `>` (child) or a space
+/// (descendant). Whitespace inside `[…]` is part of the attribute, not a combinator.
+fn chain(selector: &str) -> Result<(Compound, Vec<(bool, Compound)>), String> {
+    let mut parts: Vec<String> = Vec::new();
+    let mut child = Vec::new();
+    let mut cur = String::new();
+    let mut depth = 0;
+    let mut pending_child = false;
+    let flush = |cur: &mut String, parts: &mut Vec<String>| {
+        if !cur.is_empty() {
+            parts.push(std::mem::take(cur));
+        }
+    };
+    for ch in selector.trim().chars() {
+        if depth == 0 && ch == '>' {
+            flush(&mut cur, &mut parts);
+            pending_child = true;
+            continue;
+        }
+        if depth == 0 && ch.is_whitespace() {
+            flush(&mut cur, &mut parts);
+            continue;
+        }
+        // The first character of a compound after the first: record how it is joined.
+        if cur.is_empty() && !parts.is_empty() {
+            child.push(std::mem::take(&mut pending_child));
+        }
+        match ch {
+            '[' => depth += 1,
+            ']' => depth -= 1,
+            _ => {}
+        }
+        cur.push(ch);
+    }
+    flush(&mut cur, &mut parts);
+    if pending_child || parts.is_empty() {
+        return Err(format!(
+            "selector `{selector}` is outside the evaluated subset"
+        ));
+    }
+    let first = compound(&parts[0])?;
+    let rest = parts[1..]
+        .iter()
+        .zip(child)
+        .map(|(p, is_child)| compound(p).map(|c| (is_child, c)))
+        .collect::<Result<_, _>>()?;
+    Ok((first, rest))
+}
+
+/// Every element under (and including) `root` that matches `selector`: compound selectors
+/// joined by `>` (child) or a space (descendant).
 pub fn select<'a>(root: &'a Node, selector: &str) -> Result<Vec<&'a Node>, String> {
-    let c = compound(selector)?;
-    Ok(root
+    let (first, rest) = chain(selector)?;
+    let mut set: Vec<&Node> = root
         .elements()
         .into_iter()
-        .filter(|e| {
-            c.tag.as_deref().is_none_or(|t| e.tag() == t)
-                && c.classes.iter().all(|k| {
-                    e.attr("class")
-                        .is_some_and(|v| v.split_whitespace().any(|w| w == k))
-                })
-                && c.attrs.iter().all(|(k, v)| match v {
-                    Some(v) => e.attr(k) == Some(v.as_str()),
-                    None => e.attr(k).is_some(),
-                })
-        })
-        .collect())
+        .filter(|e| first.matches(e))
+        .collect();
+    for (is_child, c) in rest {
+        let mut next: Vec<&Node> = Vec::new();
+        for parent in set {
+            let Node::Element { children, .. } = parent else {
+                continue;
+            };
+            let candidates: Vec<&Node> = if is_child {
+                children
+                    .iter()
+                    .filter(|n| matches!(n, Node::Element { .. }))
+                    .collect()
+            } else {
+                children.iter().flat_map(Node::elements).collect()
+            };
+            for e in candidates {
+                if c.matches(e) && !next.iter().any(|n| std::ptr::eq(*n, e)) {
+                    next.push(e);
+                }
+            }
+        }
+        set = next;
+    }
+    Ok(set)
 }

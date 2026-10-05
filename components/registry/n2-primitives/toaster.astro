@@ -1,9 +1,9 @@
 ---
 /**
- * Toaster — the Astro port of Mzizi `toast`/`sonner` for script-light
- * pages: a polite live region plus `window.toast(message, kind?)`. Each toast
+ * Toaster — the registry primitive (`contracts/ui/toaster`) and the default
+ * build: a polite live region plus `window.toast(message, kind?)`. Each toast
  * leaves after `duration` ms; motion is the global rise, off under
- * prefers-reduced-motion.
+ * prefers-reduced-motion. `toaster.tsx` is the same component for React apps.
  */
 interface Props {
   duration?: number;

@@ -120,7 +120,9 @@ ones, we need to adjust Mzizi so the design is always updating so we maintain co
 
 ## Adding a New UI Component
 
-**Contract first.** Every component has one contract, `contracts/<family>/<name>.contract.json`,
+**Contract first; Astro by default.** Astro is the default web UI, so a new component's design
+starts from its Astro build; its React and Rust builds then render the same component for
+consumers that do not use Astro (see AGENTS.md). Every component has one contract, `contracts/<family>/<name>.contract.json`,
 whatever languages it ships in (owner, 2026-10-05; [#427](https://github.com/mzizi-dev/mzizi-registry/issues/427)).
 Write it before the code: its props, states, clauses, checks and density are what the `.astro`, the
 `.tsx`, the `.rs` and the `.mz` are each tested against. A registry primitive goes in `contracts/ui/`

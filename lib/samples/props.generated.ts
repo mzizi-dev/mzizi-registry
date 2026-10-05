@@ -667,8 +667,53 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
-      "name": "type",
-      "type": "\"text\" | \"email\" | \"tel\" | \"url\" | \"search\"",
+      "name": "as",
+      "type": "\"input\" | \"textarea\" | \"select\"",
+      "required": false
+    },
+    {
+      "name": "options",
+      "type": "FieldOption[]",
+      "required": false
+    },
+    {
+      "name": "emptyOption",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false
+    },
+    {
+      "name": "accept",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "multiple",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "min",
+      "type": "string | number",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "string | number",
+      "required": false
+    },
+    {
+      "name": "step",
+      "type": "string | number",
+      "required": false
+    },
+    {
+      "name": "wide",
+      "type": "boolean",
       "required": false
     },
     {
@@ -703,7 +748,7 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "inputmode",
-      "type": "\"text\" | \"tel\" | \"email\" | \"url\"",
+      "type": "\"text\" | \"tel\" | \"email\" | \"url\" | \"numeric\" | \"decimal\"",
       "required": false
     }
   ],
@@ -726,6 +771,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "action",
       "type": "string",
+      "required": false
+    },
+    {
+      "name": "enctype",
+      "type": "\"multipart/form-data\"",
       "required": false
     },
     {
@@ -10623,6 +10673,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "native-select": [
+    {
+      "name": "defaultValue",
+      "type": "value ?? defaultValue",
+      "required": true
+    }
+  ],
   "navigation-menu": [
     {
       "name": "viewport",
@@ -12077,29 +12134,34 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
   ],
   "segmented-control": [
     {
-      "name": "value",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "defaultValue",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onValueChange",
-      "type": "(value: string) => void",
-      "required": false
-    },
-    {
       "name": "name",
       "type": "string",
+      "required": true
+    },
+    {
+      "name": "legend",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "options",
+      "type": "[string, string][]",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "hideLegend",
+      "type": "boolean",
       "required": false
     },
     {
-      "name": "ariaLabel",
-      "type": "string",
-      "required": true
+      "name": "size",
+      "type": "keyof typeof SEGMENT_SIZE",
+      "required": false
     }
   ],
   "select": [
@@ -13272,6 +13334,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "compact",
       "type": "boolean",
+      "required": false
+    }
+  ],
+  "toaster": [
+    {
+      "name": "duration",
+      "type": "number",
       "required": false
     }
   ],
