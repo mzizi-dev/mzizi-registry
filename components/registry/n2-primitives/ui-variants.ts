@@ -176,3 +176,57 @@ export function badgeClasses(
     .filter(Boolean)
     .join(" ");
 }
+
+/**
+ * A dense app textarea: the app input's border, fill, type and focus ring,
+ * with its height from `rows` above a floor of 80px (96px on touch), so it is
+ * never a 36px strip.
+ */
+export const appTextareaClasses =
+  "flex min-h-20 w-full min-w-0 rounded-sm border border-border bg-card px-3 py-2 text-body-sm text-foreground transition-colors placeholder:text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50 disabled:cursor-not-allowed pointer-coarse:min-h-24 pointer-coarse:text-body";
+
+/**
+ * Added to `appInputClasses` for a file input: its height follows the
+ * file-selector button, which is a muted pill.
+ */
+export const appFileInputClasses =
+  "h-auto py-2 pointer-coarse:h-auto file:me-4 file:rounded-full file:border-0 file:bg-muted file:px-4 file:py-1.5 file:text-body-sm file:font-medium file:text-foreground";
+
+/**
+ * A status pill: the badge's shape in a fixed status colour, for a table cell
+ * or a list that says a record's state (active, pending, failed). The tones
+ * are the mineral container pairs, the same in every brand; `neutral` is
+ * muted. A component that renders one declares the minerals in its
+ * contract's `theming.statusColours`.
+ */
+export const STATUS_TONES = [
+  "neutral",
+  "success",
+  "warning",
+  "info",
+  "accent",
+  "premium",
+] as const;
+export type StatusTone = (typeof STATUS_TONES)[number];
+
+const statusToneBase =
+  "inline-flex h-5 w-fit shrink-0 items-center justify-center whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium";
+
+const statusToneVariantClasses: Record<StatusTone, string> = {
+  neutral: "bg-muted text-muted-foreground",
+  success: "bg-malachite-container text-malachite-on-container",
+  warning: "bg-gold-container text-gold-on-container",
+  info: "bg-cobalt-container text-cobalt-on-container",
+  accent: "bg-terracotta-container text-terracotta-on-container",
+  premium: "bg-tanzanite-container text-tanzanite-on-container",
+};
+
+/** The full class string for a status pill of one tone. */
+export function statusToneClasses(
+  tone: StatusTone = "neutral",
+  extra = "",
+): string {
+  return [statusToneBase, statusToneVariantClasses[tone], extra]
+    .filter(Boolean)
+    .join(" ");
+}

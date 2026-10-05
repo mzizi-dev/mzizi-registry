@@ -63,16 +63,16 @@ Every format that exists is tested against the contract, here:
 | `app/info-tip`           | InfoTip           | N6   | 1.0.0   | `app-info-tip`           | `app-info-tip` (contract)           | —                       |
 | `app/empty-state`        | EmptyState        | N6   | 1.0.0   | `app-empty-state`        | `app-empty-state` (contract)        | —                       |
 | `app/brand-mark`         | BrandMark         | N3   | 1.0.0   | `app-brand-mark`         | `app-brand-mark` (contract)         | —                       |
-| `app/data-table`         | DataTable         | N6   | 1.0.0   | `app-data-table`         | `app-data-table` (contract)         | —                       |
+| `app/data-table`         | DataTable         | N6   | 1.1.0   | `app-data-table`         | `app-data-table` (contract)         | —                       |
 | `app/filter-bar`         | FilterBar         | N6   | 1.1.0   | `app-filter-bar`         | `app-filter-bar` (contract)         | —                       |
 | `app/pagination`         | Pagination        | N6   | 1.0.0   | `app-pagination`         | `app-pagination` (contract)         | —                       |
 | `app/detail-panel`       | DetailPanel       | N6   | 1.0.0   | `app-detail-panel`       | `app-detail-panel` (contract)       | —                       |
-| `app/form-layout`        | FormLayout        | N6   | 1.0.0   | `app-form-layout`        | `app-form-layout` (contract)        | —                       |
-| `app/form-field`         | FormField         | N6   | 1.0.0   | `app-form-field`         | `app-form-field` (contract)         | —                       |
+| `app/form-layout`        | FormLayout        | N6   | 1.1.0   | `app-form-layout`        | `app-form-layout` (contract)        | —                       |
+| `app/form-field`         | FormField         | N6   | 1.1.0   | `app-form-field`         | `app-form-field` (contract)         | —                       |
 | `app/state-message`      | StateMessage      | N6   | 1.0.0   | `app-state-message`      | `app-state-message` (contract)      | —                       |
 | `app/toast`              | Toast             | N6   | 1.0.0   | `app-toast`              | `app-toast` (contract)              | —                       |
 | `app/account-menu`       | AccountMenu       | N7   | 1.0.0   | `app-account-menu`       | `app-account-menu` (contract)       | —                       |
-| `app/bar-chart`          | BarChart          | N6   | 1.0.1   | `app-bar-chart`          | `app-bar-chart` (contract)          | —                       |
+| `app/bar-chart`          | BarChart          | N6   | 1.1.0   | `app-bar-chart`          | `app-bar-chart` (contract)          | —                       |
 | `app/button`             | Button            | N2   | 1.0.0   | `app-button`             | `app-button` (contract)             | —                       |
 | `app/badge`              | Badge             | N2   | 1.0.0   | `badge`                  | `badge` (slot+variants)             | `badge` (slot+variants) |
 | `app/card`               | Card              | N2   | 1.0.0   | `app-card`               | `app-card` (contract)               | —                       |

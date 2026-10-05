@@ -12,7 +12,8 @@ import {
  * FormLayout — a titled form card that uses the width it is given: fields
  * flow in two columns from md up and one below, actions sit at the foot.
  * Posts to the page itself (Post/Redirect/Get). A form-level error is
- * announced as an alert.
+ * announced as an alert. A form with a file field sets
+ * `enctype="multipart/form-data"`.
  *
  * The React build of contract `app/form-layout`, beside
  * `app-form-layout.astro` (same markup and classes; the card and alert use
@@ -23,6 +24,8 @@ interface FormLayoutProps {
   description?: string;
   error?: string | null;
   action?: string;
+  /** "multipart/form-data" for a form with a file field. */
+  enctype?: "multipart/form-data";
   id?: string;
   /** The fields. */
   children?: ReactNode;
@@ -35,6 +38,7 @@ function FormLayout({
   description,
   error,
   action,
+  enctype,
   id = "form",
   children,
   actions,
@@ -63,6 +67,7 @@ function FormLayout({
         <form
           method="post"
           action={action}
+          encType={enctype}
           className="grid gap-4 px-4 py-4"
           noValidate
         >

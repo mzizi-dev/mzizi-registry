@@ -2,10 +2,10 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/form-field",
   "title": "FormField",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
-  "summary": "Label, input, hint and error wired together: the label is always visible, the hint and error are the input's description, and an error sets aria-invalid.",
+  "summary": "Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid. The control is an input, a textarea or a native select.",
   "implementations": {
     "astro": {
       "registry": "app-form-field",
@@ -38,11 +38,86 @@
     },
     {
       "name": "type",
-      "type": "\"text\" | \"email\" | \"tel\" | \"url\" | \"search\"",
+      "type": "\"text\" | \"email\" | \"tel\" | \"url\" | \"search\" | \"number\" | \"date\" | \"file\"",
       "required": false,
       "default": "text",
-      "values": ["text", "email", "tel", "url", "search"],
-      "description": "Input type."
+      "values": [
+        "text",
+        "email",
+        "tel",
+        "url",
+        "search",
+        "number",
+        "date",
+        "file"
+      ],
+      "description": "Input type (an input only). A file input never carries a value."
+    },
+    {
+      "name": "as",
+      "type": "\"input\" | \"textarea\" | \"select\"",
+      "required": false,
+      "default": "input",
+      "values": ["input", "textarea", "select"],
+      "description": "The control: an input, a textarea or a native select."
+    },
+    {
+      "name": "options",
+      "type": "{ value: string; label: string }[]",
+      "required": false,
+      "default": [],
+      "description": "A select's options; the one whose value is `value` is selected."
+    },
+    {
+      "name": "emptyOption",
+      "type": "string",
+      "required": false,
+      "description": "A select's first, empty option (e.g. \"Choose a type\"), selected when there is no value."
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "default": 5,
+      "description": "A textarea's rows."
+    },
+    {
+      "name": "accept",
+      "type": "string",
+      "required": false,
+      "description": "A file input's accepted types (e.g. \"image/*\")."
+    },
+    {
+      "name": "multiple",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "A file input that takes several files."
+    },
+    {
+      "name": "min",
+      "type": "string | number",
+      "required": false,
+      "description": "Lowest value of a number or date input."
+    },
+    {
+      "name": "max",
+      "type": "string | number",
+      "required": false,
+      "description": "Highest value of a number or date input."
+    },
+    {
+      "name": "step",
+      "type": "string | number",
+      "required": false,
+      "description": "Step of a number or date input."
+    },
+    {
+      "name": "wide",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Spans both of FormLayout's columns (`@xl:col-span-2`)."
     },
     {
       "name": "hint",
@@ -68,7 +143,7 @@
       "type": "boolean",
       "required": false,
       "default": false,
-      "description": "Read-only, on a muted fill."
+      "description": "Read-only, on a muted fill. A select is disabled instead (a select has no read-only state), so it is not posted."
     },
     {
       "name": "autocomplete",
@@ -84,9 +159,9 @@
     },
     {
       "name": "inputmode",
-      "type": "\"text\" | \"tel\" | \"email\" | \"url\"",
+      "type": "\"text\" | \"tel\" | \"email\" | \"url\" | \"numeric\" | \"decimal\"",
       "required": false,
-      "values": ["text", "tel", "email", "url"],
+      "values": ["text", "tel", "email", "url", "numeric", "decimal"],
       "description": "Virtual keyboard hint."
     }
   ],
@@ -94,7 +169,10 @@
   "behaviour": [
     "\"(required)\" is written in the label, not shown by an asterisk alone.",
     "aria-describedby lists the hint and then the error.",
-    "aria-invalid=\"true\" only with an error."
+    "aria-invalid=\"true\" only with an error.",
+    "A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density.",
+    "A select with `emptyOption` starts with an empty option, selected when there is no value.",
+    "A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`."
   ],
   "states": {
     "default": {
@@ -112,11 +190,80 @@
         "name": "name",
         "label": "Name"
       }
+    },
+    "textarea": {
+      "description": "A textarea with a hint and an error.",
+      "props": {
+        "name": "bio",
+        "label": "About",
+        "as": "textarea",
+        "value": "Teacher and parent.",
+        "rows": 4,
+        "hint": "A sentence or two.",
+        "error": "Keep it under 200 characters.",
+        "required": true,
+        "wide": true
+      }
+    },
+    "select": {
+      "description": "A select with an empty first option and no value.",
+      "props": {
+        "name": "kind",
+        "label": "Type",
+        "as": "select",
+        "emptyOption": "Choose a type",
+        "options": [
+          { "value": "article", "label": "Article" },
+          { "value": "event", "label": "Event" }
+        ],
+        "hint": "What you are adding.",
+        "required": true
+      }
+    },
+    "select-readonly": {
+      "description": "A read-only select with a value: disabled, its option selected.",
+      "props": {
+        "name": "kind",
+        "label": "Type",
+        "as": "select",
+        "value": "event",
+        "readonly": true,
+        "options": [
+          { "value": "article", "label": "Article" },
+          { "value": "event", "label": "Event" }
+        ]
+      }
+    },
+    "file": {
+      "description": "A file input for several images, spanning both columns.",
+      "props": {
+        "name": "photos",
+        "label": "Photos",
+        "type": "file",
+        "value": "ignored.jpg",
+        "accept": "image/*",
+        "multiple": true,
+        "wide": true,
+        "hint": "JPEG or PNG."
+      }
+    },
+    "number": {
+      "description": "A number input with bounds.",
+      "props": {
+        "name": "seats",
+        "label": "Seats",
+        "type": "number",
+        "value": "12",
+        "min": 1,
+        "max": 500,
+        "step": 1,
+        "inputmode": "numeric"
+      }
     }
   },
   "accessibility": {
-    "roles": ["textbox"],
-    "keyboard": ["Native input."],
+    "roles": ["textbox", "combobox (select)"],
+    "keyboard": ["Native input, textarea and select."],
     "focus": ["`--ring` focus ring."],
     "aria": [
       "aria-describedby to hint and error.",
@@ -130,6 +277,20 @@
       "select": "input",
       "fine": 36,
       "coarse": 48
+    },
+    {
+      "part": "select",
+      "state": "select",
+      "select": "select",
+      "fine": 36,
+      "coarse": 48
+    },
+    {
+      "part": "textarea (floor; rows set the height)",
+      "state": "textarea",
+      "select": "textarea",
+      "fine": 80,
+      "coarse": 96
     }
   ],
   "theming": {
@@ -151,8 +312,11 @@
     "script": "none",
     "without": "Everything: the component is server-rendered HTML with no script."
   },
-  "responsive": ["Fills its column; 16px text on touch so iOS never zooms."],
-  "contract": "contract\n  slot is \"form-field\"\n  uses label\n  uses input\n  when default shows label \"(required)\"\nend",
+  "responsive": [
+    "Fills its column; 16px text on touch so iOS never zooms.",
+    "`wide` spans both columns of FormLayout's container grid from @xl."
+  ],
+  "contract": "contract\n  slot is \"form-field\"\n  uses label\n  uses input\n  when default shows label \"(required)\"\n  when textarea class contains \"@xl:col-span-2\"\n  when file class contains \"@xl:col-span-2\"\nend",
   "checks": [
     {
       "say": "The input is described by hint and error.",
@@ -174,6 +338,87 @@
       "state": "clean",
       "select": "input[aria-invalid]",
       "absent": true
+    },
+    {
+      "say": "A textarea is wired as an input is.",
+      "state": "textarea",
+      "select": "textarea#field-bio[data-slot=\"textarea\"]",
+      "count": 1,
+      "attr": {
+        "name": "bio",
+        "rows": "4",
+        "aria-describedby": "field-bio-hint field-bio-error",
+        "aria-invalid": "true",
+        "required": true
+      },
+      "text": "Teacher and parent."
+    },
+    {
+      "say": "The textarea's label points at it.",
+      "state": "textarea",
+      "select": "label[for=\"field-bio\"]",
+      "count": 1
+    },
+    {
+      "say": "A select is wired as an input is.",
+      "state": "select",
+      "select": "select#field-kind[data-slot=\"select\"]",
+      "count": 1,
+      "attr": {
+        "name": "kind",
+        "aria-describedby": "field-kind-hint",
+        "required": true,
+        "disabled": false
+      }
+    },
+    {
+      "say": "The empty option comes first and is selected with no value.",
+      "state": "select",
+      "select": "select > option:first-child[value=\"\"][selected]",
+      "count": 1,
+      "text": "Choose a type"
+    },
+    {
+      "say": "Every option is rendered.",
+      "state": "select",
+      "select": "select > option",
+      "count": 3
+    },
+    {
+      "say": "A read-only select is disabled, its value selected.",
+      "state": "select-readonly",
+      "select": "select[disabled] > option[value=\"event\"][selected]",
+      "count": 1
+    },
+    {
+      "say": "Without emptyOption there is no empty option.",
+      "state": "select-readonly",
+      "select": "option[value=\"\"]",
+      "absent": true
+    },
+    {
+      "say": "A file input takes types and several files, and never a value.",
+      "state": "file",
+      "select": "input#field-photos[type=\"file\"]",
+      "count": 1,
+      "attr": {
+        "accept": "image/*",
+        "multiple": true,
+        "value": false
+      }
+    },
+    {
+      "say": "A number input carries its bounds.",
+      "state": "number",
+      "select": "input#field-seats[type=\"number\"]",
+      "count": 1,
+      "attr": {
+        "min": "1",
+        "max": "500",
+        "step": "1",
+        "inputmode": "numeric",
+        "value": "12"
+      }
     }
   ]
 }
