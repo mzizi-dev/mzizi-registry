@@ -10,6 +10,18 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — `ui/native-select` and `ui/segmented-control` are one component in every build (2026-10-05, #441)
+
+Owner decision, 2026-10-05: per component, so that each primitive has one design. Tracking: #427.
+
+- **`ui/native-select` 2.0.0 follows the registry's React markup.** The wrapper is `native-select-wrapper` (with `data-portal` and `data-size`), the `<select>` is `native-select` and the chevron is `native-select-icon`.
+  - `native-select.tsx` gains an `options` prop (`[value, label]` pairs) beside <option> children. `name` defaults to `id`. A `value` with no `onChange` marks the selected option instead of making the field controlled.
+  - `native-select.astro` now renders the same markup and takes `size`.
+  - **Breaking** for CSS or scripts that targeted the Astro build's old root, `[data-slot="native-select"]` on the wrapper: that slot is now the `<select>` itself.
+- **`ui/segmented-control` 1.1.0: the no-JS design wins.** `segmented-control.tsx` is now a server component with the same markup as the Astro build: a `<fieldset>` and `<legend>` with native radios. Its props are `name`, `legend`, `options`, `value`, `hideLegend`, `size` and `className`.
+  - **Breaking** for React users. `SegmentedControlItem`, `value`/`onValueChange`/`ariaLabel`, the `lg` size and the `segmentedControlVariants`/`segmentVariants` exports are removed. The registry item drops `class-variance-authority` and is no longer marked ALPHA.
+- Both contracts now name a `contract`-identity `.tsx`, evaluated by `tsx-contracts.test.tsx`.
+
 ### Changed — `ui/safe-area-frame`, `ui/alert` and `ui/skeleton` are held in full by every build (2026-10-05, #439)
 
 Follow-up to #428. Tracking: #427.

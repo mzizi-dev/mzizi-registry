@@ -2,10 +2,10 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/native-select",
   "title": "NativeSelect",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "node": 2,
   "kind": "primitive",
-  "summary": "A real <select> in the pill input style (48px), built from `[value, label]` pairs, with a decorative chevron that never intercepts clicks.",
+  "summary": "A real <select> in the pill input style (48px, or 32px at `sm`), built from `[value, label]` pairs, with a decorative chevron that never intercepts clicks.",
   "implementations": {
     "astro": {
       "registry": "native-select",
@@ -13,9 +13,12 @@
       "export": "@bundu/ui/NativeSelect.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": {
+      "registry": "native-select",
+      "identity": "contract"
+    },
     "rs": null,
-    "related": ["native-select", "select"]
+    "related": ["select"]
   },
   "props": [
     {
@@ -44,6 +47,14 @@
       "description": "The selected option's value. When no option matches, the browser selects the first."
     },
     {
+      "name": "size",
+      "type": "\"default\" | \"sm\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "sm"],
+      "description": "48px, or 32px for a dense toolbar."
+    },
+    {
       "name": "class",
       "type": "string",
       "required": false,
@@ -52,10 +63,12 @@
   ],
   "slots": [],
   "behaviour": [
-    "Renders a wrapper <div> holding one native <select> and an aria-hidden chevron <svg>.",
-    "Each `[value, label]` pair becomes an <option>; the one whose value equals `value` is `selected`.",
+    "Renders a wrapper <div> (`native-select-wrapper`) holding one native <select> (`native-select`) and an aria-hidden chevron <svg> (`native-select-icon`).",
+    "Each `[value, label]` pair becomes an <option>; the one whose value equals `value` is `selected`. The React build also takes <option> children.",
     "`name` defaults to `id`, so the field submits with a plain form.",
-    "The chevron is `pointer-events-none`, so a click on it opens the select."
+    "The chevron is `pointer-events-none`, so a click on it opens the select.",
+    "A disabled <select> dims the whole control.",
+    "At `size=\"sm\"` the select is 32px (`data-[size=sm]:h-8`), for dense toolbars; the default is the 48px target."
   ],
   "states": {
     "default": {
@@ -79,6 +92,17 @@
         ],
         "class": "max-w-xs"
       }
+    },
+    "small": {
+      "description": "The dense size.",
+      "props": {
+        "id": "country",
+        "options": [
+          ["zw", "Zimbabwe"],
+          ["za", "South Africa"]
+        ],
+        "size": "sm"
+      }
     }
   },
   "accessibility": {
@@ -101,17 +125,16 @@
       "select": "select",
       "fine": 48,
       "coarse": 48
-    },
-    {
-      "part": "select (named)",
-      "state": "named",
-      "select": "select",
-      "fine": 48,
-      "coarse": 48
     }
   ],
   "theming": {
-    "tokens": ["--border", "--input", "--foreground", "--ring", "--background"],
+    "tokens": [
+      "--input",
+      "--ring",
+      "--muted-foreground",
+      "--destructive",
+      "--primary"
+    ],
     "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
     "statusColours": []
   },
@@ -120,11 +143,11 @@
     "without": "Everything: the component is server-rendered HTML with no script."
   },
   "responsive": ["Fills its container's width at every size from 320px."],
-  "contract": "contract\n  slot is \"native-select\"\n  select \"Zimbabwe\" min_height 48\n  when default shows option \"South Africa\"\n  when named slot is \"native-select\"\n  when named class contains \"max-w-xs\"\nend",
+  "contract": "contract\n  slot is \"native-select-wrapper\"\n  portal is \"https://mzizi.dev/components/native-select-wrapper\"\n  select \"Zimbabwe\" min_height 48\n  when default shows option \"South Africa\"\n  when named slot is \"native-select-wrapper\"\n  when named class contains \"max-w-xs\"\nend",
   "checks": [
     {
       "say": "One native select, its name defaulting to its id.",
-      "select": "select",
+      "select": "select[data-slot=\"native-select\"]",
       "count": 1,
       "attr": {
         "id": "country",
@@ -134,7 +157,7 @@
     {
       "say": "An explicit name is kept.",
       "state": "named",
-      "select": "select",
+      "select": "select[data-slot=\"native-select\"]",
       "count": 1,
       "attr": {
         "id": "country",
@@ -165,16 +188,21 @@
     {
       "say": "The chevron is decorative and lets clicks through.",
       "state": "*",
-      "select": "[data-slot=\"native-select\"] > svg",
+      "select": "[data-slot=\"native-select-wrapper\"] > svg",
       "count": 1,
       "attr": {
         "aria-hidden": "true"
       }
+    },
+    {
+      "say": "The size is carried on the wrapper and the select.",
+      "state": "small",
+      "select": "[data-size=\"sm\"]",
+      "count": 2
     }
   ],
   "gaps": [
-    "Only id, name, options, value and class are accepted: a caller cannot mark the select required, disabled or aria-invalid, or describe it with aria-describedby.",
-    "No option groups and no disabled options.",
-    "The React `native-select.tsx` is a different component: its root is `data-slot=\"native-select-wrapper\"` (the <select> itself carries `native-select`), it takes <option> children rather than `options`, and its heights and classes differ (pr-8 pl-3 text-sm, an `sm` 32px size). It does not share this contract's slot, so `implementations.tsx` is null until a React build renders this markup."
+    "The Astro build accepts only id, name, options, value, size and class: it cannot mark the select required, disabled or aria-invalid, or describe it with aria-describedby (the React build passes every <select> attribute through).",
+    "No option groups or disabled options in the Astro build (React: `NativeSelectOptGroup` and <option> children)."
   ]
 }

@@ -10623,6 +10623,13 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "native-select": [
+    {
+      "name": "defaultValue",
+      "type": "value ?? defaultValue",
+      "required": true
+    }
+  ],
   "navigation-menu": [
     {
       "name": "viewport",
@@ -12077,29 +12084,34 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
   ],
   "segmented-control": [
     {
-      "name": "value",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "defaultValue",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "onValueChange",
-      "type": "(value: string) => void",
-      "required": false
-    },
-    {
       "name": "name",
       "type": "string",
+      "required": true
+    },
+    {
+      "name": "legend",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "options",
+      "type": "[string, string][]",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "hideLegend",
+      "type": "boolean",
       "required": false
     },
     {
-      "name": "ariaLabel",
-      "type": "string",
-      "required": true
+      "name": "size",
+      "type": "keyof typeof SEGMENT_SIZE",
+      "required": false
     }
   ],
   "select": [
