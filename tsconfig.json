@@ -13,16 +13,51 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "rootDirs": [
+      "./components/registry/n1-tokens",
+      "./components/registry/n2-primitives",
+      "./components/registry/n3-brand",
+      "./components/registry/n4-safety",
+      "./components/registry/n5-resilience",
+      "./components/registry/n6-pages",
+      "./components/registry/n7-shell",
+      "./components/registry/n8-assurance",
+      "./components/registry/n9-fundi",
+      "./components/registry/n10-documentation",
+      "./components/registry/n11-discovery"
+    ],
     "paths": {
       "@/*": ["./*"],
       "@/components/brand/*": ["./components/layout/*"],
       "@/components/ui/*": [
         "./components/ui/*",
+        "./components/registry/n1-tokens/*",
         "./components/registry/n2-primitives/*",
         "./components/registry/n3-brand/*",
-        "./components/registry/n7-shell/*"
+        "./components/registry/n4-safety/*",
+        "./components/registry/n5-resilience/*",
+        "./components/registry/n6-pages/*",
+        "./components/registry/n7-shell/*",
+        "./components/registry/n8-assurance/*",
+        "./components/registry/n9-fundi/*",
+        "./components/registry/n10-documentation/*",
+        "./components/registry/n11-discovery/*"
       ],
-      "@/hooks/*": ["./hooks/*", "./components/registry/n2-primitives/*"]
+      "@/hooks/*": ["./hooks/*", "./components/registry/n2-primitives/*"],
+      "@/lib/*": [
+        "./lib/*",
+        "./components/registry/n1-tokens/*",
+        "./components/registry/n2-primitives/*",
+        "./components/registry/n3-brand/*",
+        "./components/registry/n4-safety/*",
+        "./components/registry/n5-resilience/*",
+        "./components/registry/n6-pages/*",
+        "./components/registry/n7-shell/*",
+        "./components/registry/n8-assurance/*",
+        "./components/registry/n9-fundi/*",
+        "./components/registry/n10-documentation/*",
+        "./components/registry/n11-discovery/*"
+      ]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

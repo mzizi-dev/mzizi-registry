@@ -8,11 +8,12 @@
   "summary": "A Toolbar button that opens a short list of choices, each a link (a date range: \"Last 24 hours\", \"Last 7 days\"). The current choice is the button's text.",
   "implementations": {
     "astro": {
+      "registry": "app-toolbar-menu",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/ToolbarMenu.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-toolbar-menu", "identity": "contract" },
     "rs": null,
     "related": ["dropdown-menu"]
   },

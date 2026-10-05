@@ -1,0 +1,31 @@
+## A surface container. Composes freely; children are supplied by the caller.
+## Corpus reference: n2-primitives/card.tsx.
+component card
+
+  prop heading: text
+  prop body: text
+
+  view
+    surface
+      slot = "card"
+      portal = "https://mzizi.dev/components/card"
+      class = "group/card flex flex-col gap-4 overflow-hidden rounded-[var(--radius-lg,14px)] bg-card p-6 text-sm text-card-foreground ring-1 ring-foreground/10"
+      row
+        slot = "card-header"
+        class = "flex flex-col gap-1"
+        text = heading
+      end
+      row
+        slot = "card-body"
+        class = "text-muted-foreground"
+        text = body
+      end
+    end
+  end
+
+  contract
+    slot is "card"
+    class uses "--radius-lg"
+  end
+
+end component card

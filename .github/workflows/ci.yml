@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
   pull_request:
-    branches: [main]
+    branches: [main, staging]
   # Manual trigger. Added because on 2026-08-26 neither this workflow nor its
   # sibling produced ANY run for PR #265 — zero runs created, both workflows
   # `active`, valid, correctly triggered on `pull_request: [main]`, while the
@@ -93,6 +93,12 @@ jobs:
       # reason for it not to run on every push.
       - name: Verify every token artifact matches lib/tokens/palette.source.ts
         run: pnpm tokens:verify
+
+      # design-system/tokens.json is the design system's tokens as data, generated
+      # from styles/globals.css and lib/tokens/. Checked here, not only in `pnpm
+      # check`, for the reason the step above gives.
+      - name: Verify design-system/tokens.json matches its sources
+        run: pnpm design-system:generate:check
 
       # title / categories / docs / author are derived from data already on each item.
       # Checked rather than hand-maintained so 574 items cannot fall out of step one at
@@ -195,6 +201,30 @@ jobs:
       - name: Package every crate
         run: cargo package --manifest-path mzizi-rs/Cargo.toml --workspace
 
+  mzizi:
+    name: Mzizi components
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    # Every `.mz` beside a component's `.tsx` and `.rs` is checked with `mz check` and its
+    # contract evaluated with `mz contract`. `mz` is built from mzizi-dev/mzizi at the commit
+    # in `scripts/mz-pin`, so a language change reaches this registry only by moving the pin.
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Check out the Mzizi language at the pinned commit
+        run: |
+          git clone --filter=blob:none https://github.com/mzizi-dev/mzizi "$RUNNER_TEMP/mzizi"
+          git -C "$RUNNER_TEMP/mzizi" checkout "$(cat scripts/mz-pin)"
+      - name: Install the Rust toolchain
+        run: rustup toolchain install stable --profile minimal
+      - name: Build mz
+        run: cargo build --release --manifest-path "$RUNNER_TEMP/mzizi/compiler/Cargo.toml" --bin mz
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: 22
+      - name: mz check and mz contract on every registry .mz
+        run: MZ="$RUNNER_TEMP/mzizi/target/release/mz" node scripts/check-mz.mjs
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -209,6 +239,11 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+      # The palette-hex gate (scripts/lint-colors.ts): a raw hex equal to a mineral
+      # or heritage value is a hardcoded brand colour that should reference its N1
+      # token. It ran only via `pnpm check`, so main went red for nine literals and
+      # nothing reported it (#423). It needs no network and no secret.
+      - run: pnpm lint:colors
       # No `prettier --check` step here. Prettier is owned by the one org
       # gate, `.github/workflows/lint.yml`, which publishes `lint / prettier`.
       # Two prettier invocations in one repo, with different globs and the

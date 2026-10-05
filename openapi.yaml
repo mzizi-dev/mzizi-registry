@@ -174,6 +174,126 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /astro:
+    get:
+      summary: Astro Implementations
+      description: |
+        Every name with an Astro implementation (mzizi-registry#397): a pure `.astro` file beside
+        the component's `.tsx` (and `.rs`), or a framework-free `.ts` module the `.astro` files
+        import. Install one with `npx @nyuchi/mzizi-cli add <name> --target astro`.
+      operationId: listAstro
+      tags: [Registry]
+      responses:
+        "200":
+          description: The Astro names, each with its document URL
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  target:
+                    type: string
+                    enum: [astro]
+                  install:
+                    type: string
+                  count:
+                    type: integer
+                  components:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        url:
+                          type: string
+                          format: uri
+
+  /astro/{name}:
+    get:
+      summary: Astro Implementation
+      description: |
+        The Astro implementation of a component, as a registry document an installer writes into
+        `src/components/mzizi/`. Pure Astro: no React or other framework under it, and no client
+        JavaScript unless the component's contract allows one enhancement script. Its
+        `registryDependencies` are absolute `/v1/astro/` URLs derived from the source's flat imports
+        (`./button.astro`, `./ui-utils`); its bare imports are its npm `dependencies`; a brand asset
+        it imports ships beside it as a `registry:asset` file with `encoding: base64`.
+      operationId: getAstroComponent
+      tags: [Registry]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Component name in kebab-case (e.g., "app-data-table", "button", "ui-utils")
+          schema:
+            type: string
+            pattern: "^[a-z][a-z0-9-]*$"
+      responses:
+        "200":
+          description: The Astro document
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [name, type, target, dependencies, registryDependencies, files]
+                properties:
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum: [registry:astro, registry:lib]
+                  target:
+                    type: string
+                    enum: [astro]
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  dependencies:
+                    type: array
+                    items:
+                      type: string
+                  registryDependencies:
+                    type: array
+                    items:
+                      type: string
+                      format: uri
+                  files:
+                    type: array
+                    items:
+                      type: object
+                      required: [path, type, target, content]
+                      properties:
+                        path:
+                          type: string
+                        type:
+                          type: string
+                          enum: [registry:astro, registry:lib, registry:asset]
+                        target:
+                          type: string
+                        content:
+                          type: string
+                        encoding:
+                          type: string
+                          enum: [base64]
+        "404":
+          description: Unknown component, or a component with no Astro implementation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /ecosystem:
     get:
       summary: Ecosystem Architecture

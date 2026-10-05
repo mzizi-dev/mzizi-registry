@@ -1,0 +1,33 @@
+## A busy indicator. Motion is a declared capability, so a reader knows it animates.
+## Corpus reference: n2-primitives/spinner.tsx.
+component spinner
+
+  use motion
+
+  enum spinner_size
+    default  class "size-6"
+    sm       class "size-4"
+    lg       class "size-10"
+  end
+
+  prop size: spinner_size = default
+  prop announce: text = "Loading"
+
+  view
+    busy
+      slot = "spinner"
+      portal = "https://mzizi.dev/components/spinner"
+      size = size
+      role = "status"
+      label = announce
+      class = "animate-spin rounded-full border-2 border-muted border-t-primary {size.class}"
+    end
+  end
+
+  contract
+    role is "status"
+    announce not_empty
+    slot is "spinner"
+  end
+
+end component spinner

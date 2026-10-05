@@ -18,11 +18,17 @@
 use std::fs;
 use std::path::PathBuf;
 
+use dioxus::prelude::*;
 use mzizi_ui::{
     AvatarSize, BadgeVariant, ButtonSize, ButtonVariant, SeparatorOrientation, avatar_variants,
     badge_variants, button_variants, chart_loading_variants, chart_variants, input_variants,
     label_variants, progress_variants, separator_variants,
 };
+use mzizi_ui::{STATUS_BADGE_STATUSES, StatusBadge, StatusBadgeStatus, status_badge_variants};
+
+#[path = "../../../contract-eval/contract_eval.rs"]
+mod contract_eval;
+use contract_eval::{Case, render, rows};
 
 /// Read a registry component's TypeScript source.
 fn tsx(node_dir: &str, name: &str) -> String {
@@ -191,6 +197,11 @@ fn every_data_slot_the_rust_emits_exists_in_the_typescript() {
             ][..],
         ),
         ("n2-primitives", "chart", &["chart"][..]),
+        (
+            "n2-primitives",
+            "safe-area-frame",
+            &["safe-area-frame", "safe-area-frame-canvas"][..],
+        ),
     ] {
         let ts = tsx(node_dir, name);
         for slot in slots {
@@ -352,4 +363,89 @@ fn chart_classes_match_the_typescript() {
     // asymmetry already present there, not something to reconcile quietly (rule 1: match
     // the contract, not a guess at what it "should" be).
     assert!(ts.contains("data-portal=\"https://mzizi.dev/components/chart\""));
+}
+
+#[test]
+fn status_badge_matches_the_typescript() {
+    // The React build composes `Badge` (outline) with its own classes, so the Rust's classes
+    // are checked against the two files together.
+    let ts = tsx("n2-primitives", "status-badge") + &tsx("n2-primitives", "badge");
+    for status in STATUS_BADGE_STATUSES {
+        assert_classes_present(
+            &status_badge_variants(status, ""),
+            &ts,
+            &format!("status-badge/{}", status.slug()),
+        );
+        assert!(
+            ts.contains(&format!("{}:", status.slug())),
+            "status-badge: status `{}` is not declared in STATUS_STYLES",
+            status.slug()
+        );
+    }
+    let own = tsx("n2-primitives", "status-badge");
+    for attr in [
+        "data-slot=\"status-badge\"",
+        "data-portal=\"https://mzizi.dev/components/status-badge\"",
+    ] {
+        assert!(own.contains(attr), "status-badge.tsx does not carry {attr}");
+    }
+}
+
+#[test]
+fn status_badge_keeps_its_contract() {
+    fn default_state() -> Element {
+        rsx! { StatusBadge {} }
+    }
+    fn deprecated_state() -> Element {
+        rsx! { StatusBadge { status: StatusBadgeStatus::Deprecated } }
+    }
+    Case {
+        name: "status-badge",
+        contract: mzizi_ui::status_badge::CONTRACT,
+        states: vec![
+            ("default", render(default_state)),
+            ("deprecated", render(deprecated_state)),
+        ],
+        defaults: vec![("status", "stable".into())],
+        columns: vec![(
+            "status_badge_status",
+            "class",
+            rows(&STATUS_BADGE_STATUSES, StatusBadgeStatus::slug, |s| {
+                s.classes().to_owned()
+            }),
+        )],
+    }
+    .check();
+}
+
+#[test]
+fn every_exported_contract_is_listed() {
+    assert!(
+        mzizi_ui::CONTRACTS
+            .iter()
+            .any(|(name, c)| *name == "status-badge" && c.starts_with("contract"))
+    );
+}
+
+#[test]
+fn safe_area_frame_classes_and_geometry_match_the_typescript() {
+    use mzizi_ui::safe_area_frame::{BAND_X, BAND_Y, CANVAS, FRAME};
+    let ts = tsx("n2-primitives", "safe-area-frame");
+    for (what, classes) in [
+        ("frame", FRAME),
+        ("canvas", CANVAS),
+        ("band-y", BAND_Y),
+        ("band-x", BAND_X),
+    ] {
+        assert_classes_present(classes, &ts, &format!("safe-area-frame/{what}"));
+    }
+    // A 1080x1920 story with Meta's 250/340 bands in a 56px box: the TypeScript's
+    // safeAreaBands gives 32x56, top 13.02%, bottom 17.71%, sides 5.93%.
+    let b = mzizi_ui::safe_area_bands(1080, 1920, [250, 64, 340, 64], 56);
+    assert_eq!((b.width, b.height), (32, 56));
+    assert!((b.top - 13.02).abs() < 1e-9 && (b.bottom - 17.71).abs() < 1e-9);
+    assert!((b.left - 5.93).abs() < 1e-9 && (b.right - 5.93).abs() < 1e-9);
+    // A favicon never collapses below 6px a side.
+    let f = mzizi_ui::safe_area_bands(32, 4, [0, 0, 0, 0], 56);
+    assert_eq!((f.width, f.height), (56, 7));
 }

@@ -1,0 +1,230 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/segmented-control",
+  "title": "SegmentedControl",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A choice of one from a few, as a pill track of segments built on native radios in a fieldset: no script, arrow keys move between segments and screen readers announce a radio group.",
+  "implementations": {
+    "astro": {
+      "registry": "segmented-control",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/SegmentedControl.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "segmented-control",
+      "identity": "slot",
+      "divergences": [
+        "Root: a <div role=\"radiogroup\" aria-label> with a data-portal, not a <fieldset> with a <legend>.",
+        "Segments: <button role=\"radio\" aria-checked> children (`SegmentedControlItem`, data-slot `segmented-control-item`) with a client script (\"use client\", useState, arrow-key handlers), not native radios built from `options`.",
+        "Props: value/defaultValue/onValueChange/ariaLabel and children, not name/legend/options/value/hideLegend.",
+        "Sizes: sm/default/lg with a 40px/48px/56px track and 32px/40px/48px segments, not 40px/48px segments.",
+        "Classes: data-[state=on]:bg-background, not peer-checked:bg-card."
+      ]
+    },
+    "rs": null
+  },
+  "props": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "The radios' shared name, so the choice submits with a plain form."
+    },
+    {
+      "name": "legend",
+      "type": "string",
+      "required": true,
+      "description": "The group's accessible name, rendered as the fieldset's <legend>."
+    },
+    {
+      "name": "options",
+      "type": "[string, string][]",
+      "required": true,
+      "description": "`[value, label]` pairs, one segment each, in order."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": true,
+      "description": "The checked segment's value."
+    },
+    {
+      "name": "hideLegend",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Keep the legend for screen readers only (sr-only)."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"default\"",
+      "required": false,
+      "default": "default",
+      "values": ["sm", "default"],
+      "description": "Segment height: 48px (default) or 40px (sm)."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the fieldset."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Renders a <fieldset> with a <legend> and a pill track holding one <label> per option.",
+    "Each label wraps a visually hidden native radio (peer sr-only) and the visible segment <span>; the radio matching `value` is checked.",
+    "The checked segment is styled through `peer-checked:` (card background, shadow) and the focused one through `peer-focus-visible:` (ring), so it needs no script.",
+    "The track wraps onto more lines when the segments do not fit."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "name": "view",
+        "legend": "View",
+        "options": [
+          ["list", "List"],
+          ["grid", "Grid"]
+        ],
+        "value": "list"
+      }
+    },
+    "hidden-legend": {
+      "description": "The legend kept for screen readers only.",
+      "props": {
+        "name": "view",
+        "legend": "View",
+        "options": [
+          ["list", "List"],
+          ["grid", "Grid"]
+        ],
+        "value": "grid",
+        "hideLegend": true
+      }
+    },
+    "small": {
+      "description": "The 40px size.",
+      "props": {
+        "name": "view",
+        "legend": "View",
+        "options": [
+          ["list", "List"],
+          ["grid", "Grid"]
+        ],
+        "value": "list",
+        "size": "sm"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["group (fieldset, named by its legend)", "radio (native)"],
+    "keyboard": [
+      "Native radios: Tab enters the group at the checked segment; arrow keys move and check."
+    ],
+    "focus": [
+      "The focused segment shows a 2px `--ring` ring, offset from `--background`."
+    ],
+    "aria": [
+      "The fieldset's <legend> names the group, also when hidden (sr-only).",
+      "Each segment's label text names its radio."
+    ],
+    "wcag": ["1.3.1", "2.1.1", "2.4.7", "2.5.8", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "segment",
+      "select": "[data-slot=\"segmented-control-segment\"]",
+      "fine": 48,
+      "coarse": 48
+    },
+    {
+      "part": "segment (sm)",
+      "state": "small",
+      "select": "[data-slot=\"segmented-control-segment\"]",
+      "fine": 40,
+      "coarse": 40
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--border",
+      "--muted",
+      "--card",
+      "--foreground",
+      "--ring",
+      "--background"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: the checked segment is `--card` on `--muted` in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: native radios check, move with the arrow keys and submit with the form."
+  },
+  "responsive": [
+    "The track is inline and at most its container's width; segments wrap onto further lines when they do not fit, from 320px."
+  ],
+  "contract": "contract\n  slot is \"segmented-control\"\n  span \"List\" min_height 40\n  when default shows legend \"View\"\n  when hidden-legend shows legend \"View\"\n  when small slot is \"segmented-control\"\nend",
+  "checks": [
+    {
+      "say": "The root is a fieldset.",
+      "state": "*",
+      "select": "fieldset[data-slot=\"segmented-control\"]",
+      "count": 1
+    },
+    {
+      "say": "One native radio per option, sharing the name.",
+      "state": "*",
+      "select": "input[type=\"radio\"]",
+      "count": 2,
+      "attr": {
+        "name": "view"
+      }
+    },
+    {
+      "say": "The radio matching value is checked.",
+      "select": "input[checked]",
+      "count": 1,
+      "attr": {
+        "value": "list"
+      }
+    },
+    {
+      "say": "The radio matching value is checked (grid).",
+      "state": "hidden-legend",
+      "select": "input[checked]",
+      "count": 1,
+      "attr": {
+        "value": "grid"
+      }
+    },
+    {
+      "say": "One segment per option, each in a label with its radio.",
+      "state": "*",
+      "select": "label > [data-slot=\"segmented-control-segment\"]",
+      "count": 2
+    },
+    {
+      "say": "The legend is visible by default.",
+      "select": "legend.sr-only",
+      "absent": true
+    },
+    {
+      "say": "hideLegend keeps the legend for screen readers only.",
+      "state": "hidden-legend",
+      "select": "legend",
+      "count": 1,
+      "attr": {
+        "class": "sr-only"
+      },
+      "text": "View"
+    }
+  ],
+  "gaps": [
+    "The `sm` size is 40px on every pointer: on touch it is under the 44px target (WCAG 2.5.8 is met; 2.5.5 is not).",
+    "No disabled segments, and no way to mark the group required."
+  ]
+}
