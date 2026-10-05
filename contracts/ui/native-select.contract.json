@@ -1,0 +1,180 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/native-select",
+  "title": "NativeSelect",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A real <select> in the pill input style (48px), built from `[value, label]` pairs, with a decorative chevron that never intercepts clicks.",
+  "implementations": {
+    "astro": {
+      "registry": "native-select",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/NativeSelect.astro",
+      "since": "0.3.0"
+    },
+    "tsx": null,
+    "rs": null,
+    "related": ["native-select", "select"]
+  },
+  "props": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "description": "The <select>'s id, for the caller's <label for>."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "default": "the id",
+      "description": "The form field name; the id when not given."
+    },
+    {
+      "name": "options",
+      "type": "[string, string][]",
+      "required": true,
+      "description": "`[value, label]` pairs, one <option> each, in order."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "description": "The selected option's value. When no option matches, the browser selects the first."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the wrapper."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Renders a wrapper <div> holding one native <select> and an aria-hidden chevron <svg>.",
+    "Each `[value, label]` pair becomes an <option>; the one whose value equals `value` is `selected`.",
+    "`name` defaults to `id`, so the field submits with a plain form.",
+    "The chevron is `pointer-events-none`, so a click on it opens the select."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "id": "country",
+        "options": [
+          ["zw", "Zimbabwe"],
+          ["za", "South Africa"]
+        ],
+        "value": "za"
+      }
+    },
+    "named": {
+      "description": "An explicit name and an extra class.",
+      "props": {
+        "id": "country",
+        "name": "address[country]",
+        "options": [
+          ["zw", "Zimbabwe"],
+          ["za", "South Africa"]
+        ],
+        "class": "max-w-xs"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["combobox (a native single <select>)"],
+    "keyboard": [
+      "Native: Tab focuses it; arrow keys, type-ahead and Enter/Space choose."
+    ],
+    "focus": [
+      "A 2px `--ring` focus ring, offset from `--background`, on keyboard focus."
+    ],
+    "aria": [
+      "The caller labels it with a <label for> matching `id`.",
+      "The chevron is aria-hidden."
+    ],
+    "wcag": ["1.3.1", "2.1.1", "2.4.7", "2.5.8", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "select",
+      "select": "select",
+      "fine": 48,
+      "coarse": 48
+    },
+    {
+      "part": "select (named)",
+      "state": "named",
+      "select": "select",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": ["--border", "--input", "--foreground", "--ring", "--background"],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Fills its container's width at every size from 320px."],
+  "contract": "contract\n  slot is \"native-select\"\n  select \"Zimbabwe\" min_height 48\n  when default shows option \"South Africa\"\n  when named slot is \"native-select\"\n  when named class contains \"max-w-xs\"\nend",
+  "checks": [
+    {
+      "say": "One native select, its name defaulting to its id.",
+      "select": "select",
+      "count": 1,
+      "attr": {
+        "id": "country",
+        "name": "country"
+      }
+    },
+    {
+      "say": "An explicit name is kept.",
+      "state": "named",
+      "select": "select",
+      "count": 1,
+      "attr": {
+        "id": "country",
+        "name": "address[country]"
+      }
+    },
+    {
+      "say": "One option per pair.",
+      "state": "*",
+      "select": "select > option",
+      "count": 2
+    },
+    {
+      "say": "The option matching value is selected.",
+      "select": "option[selected]",
+      "count": 1,
+      "attr": {
+        "value": "za"
+      },
+      "text": "South Africa"
+    },
+    {
+      "say": "With no value, no option is marked selected.",
+      "state": "named",
+      "select": "option[selected]",
+      "absent": true
+    },
+    {
+      "say": "The chevron is decorative and lets clicks through.",
+      "state": "*",
+      "select": "[data-slot=\"native-select\"] > svg",
+      "count": 1,
+      "attr": {
+        "aria-hidden": "true"
+      }
+    }
+  ],
+  "gaps": [
+    "Only id, name, options, value and class are accepted: a caller cannot mark the select required, disabled or aria-invalid, or describe it with aria-describedby.",
+    "No option groups and no disabled options.",
+    "The React `native-select.tsx` is a different component: its root is `data-slot=\"native-select-wrapper\"` (the <select> itself carries `native-select`), it takes <option> children rather than `options`, and its heights and classes differ (pr-8 pl-3 text-sm, an `sm` 32px size). It does not share this contract's slot, so `implementations.tsx` is null until a React build renders this markup."
+  ]
+}

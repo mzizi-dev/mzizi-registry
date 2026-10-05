@@ -18693,6 +18693,33 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": [],
+      "description": "Safe-area thumbnail geometry for safe-area-frame: a canvas's thumbnail size and each platform band as a percentage, the same numbers as the React safeAreaBands and the Rust safe_area_bands.",
+      "docs": "Use it for: Safe-area thumbnail geometry.\nIncludes: One geometry in every renderer.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/safe-area",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/safe-area.ts",
+          "target": "lib/safe-area.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["One geometry in every renderer"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Safe-area thumbnail geometry"]
+      },
+      "name": "safe-area",
+      "registryDependencies": [],
+      "title": "Safe Area",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
       "description": "A canvas shape at thumbnail size — true aspect ratio, with the bands a platform covers with its own interface shaded (a story's top and reply bars, a reel's action rail, a video's duration badge). Purely presentational and server-safe; a Mzizi Roots (Rust/Dioxus) sibling renders the same markup from the same geometry. Built for nyuchi-tools' image Studio.",

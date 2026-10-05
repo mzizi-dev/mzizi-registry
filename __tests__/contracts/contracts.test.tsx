@@ -31,6 +31,8 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { SafeAreaFrame } from "@/components/ui/safe-area-frame"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const ROOT = path.resolve(__dirname, "../..")
@@ -71,9 +73,10 @@ const index = JSON.parse(read("index.json")) as {
 /**
  * The contract families, one directory each: `app/` is the Dashboard
  * Standard (#404), `discover/` the Discover Standard (#413) with its detail
- * pattern, `site/` the marketing-site components.
+ * pattern, `site/` the marketing-site components, `ui/` the Astro ports of
+ * registry primitives.
  */
-const FAMILIES = { app: 31, discover: 16, site: 8 } as const
+const FAMILIES = { app: 31, discover: 16, site: 8, ui: 4 } as const
 // Keys are `<family>/<file>`, the path under contracts/.
 const files = Object.keys(FAMILIES)
   .flatMap((family) =>
@@ -229,6 +232,8 @@ const REACT: Record<string, ComponentType<Record<string, unknown>>> = {
   input: Input as ComponentType<Record<string, unknown>>,
   label: Label as ComponentType<Record<string, unknown>>,
   skeleton: Skeleton as ComponentType<Record<string, unknown>>,
+  "segmented-control": SegmentedControl as unknown as ComponentType<Record<string, unknown>>,
+  "safe-area-frame": SafeAreaFrame as unknown as ComponentType<Record<string, unknown>>,
 }
 
 function registryFile(name: string, ext: "tsx" | "rs"): string {

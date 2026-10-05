@@ -34,6 +34,25 @@ describe("every .astro resolves to an installable document", () => {
   })
 })
 
+describe("no name breaks the Astro build", () => {
+  test("astroDocument answers or returns null for every component, never throws", async () => {
+    const { readComponents } = await import("@/lib/registry")
+    const bad: string[] = []
+    for (const c of readComponents()) {
+      try {
+        astroDocument(c.name)
+      } catch (e) {
+        bad.push(`${c.name}: ${(e as Error).message}`)
+      }
+    }
+    expect(bad).toEqual([])
+  })
+
+  test("a framework-free module whose import is React-only is not an Astro module", () => {
+    expect(astroDocument("mzizi-otel")).toBeNull()
+  })
+})
+
 describe("framework-free modules and assets", () => {
   test("a .ts module the .astro files use is served as registry:lib", () => {
     const doc = astroDocument("ui-utils")

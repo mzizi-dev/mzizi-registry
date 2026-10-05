@@ -1,0 +1,174 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/safe-area-frame",
+  "title": "SafeAreaFrame",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A canvas shape at thumbnail size: its true aspect ratio fitted in a square, with the bands a platform covers with its own interface shaded (a story's top and reply bars, a reel's action rail). Decorative.",
+  "implementations": {
+    "astro": {
+      "registry": "safe-area-frame",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/SafeAreaFrame.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "safe-area-frame",
+      "identity": "slot",
+      "divergences": [
+        "It renders the same markup and classes, inline styles included, so it fails this contract's brand-overlay (no inline style) rule exactly as the .astro does; it is not `contract` until both move their sizes off inline styles.",
+        "It takes `className`, and passes any other <span> attribute through to the root."
+      ]
+    },
+    "rs": {
+      "registry": "safe-area-frame",
+      "identity": "slot",
+      "divergences": [
+        "As for the .tsx (the same markup, inline styles included).",
+        "The box prop is `box_px`, and the insets are `[u32; 4]`."
+      ]
+    }
+  },
+  "props": [
+    {
+      "name": "width",
+      "type": "number",
+      "required": true,
+      "description": "The canvas width in pixels, e.g. 1080."
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": true,
+      "description": "The canvas height in pixels, e.g. 1920."
+    },
+    {
+      "name": "safe",
+      "type": "[number, number, number, number]",
+      "required": false,
+      "default": [0, 0, 0, 0],
+      "description": "Platform-UI insets `[top, right, bottom, left]` in canvas pixels."
+    },
+    {
+      "name": "box",
+      "type": "number",
+      "required": false,
+      "default": 56,
+      "description": "The square the thumbnail fits in, in CSS pixels."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the outer box."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Fits a `width` × `height` canvas into a `box` × `box` square at its true aspect ratio (each side at least 6px), by `safeAreaBands` in `safe-area.ts`.",
+    "Each non-zero inset becomes a shaded band (`data-band` top, bottom, left or right), sized as a percentage of its axis; a zero inset renders no band.",
+    "Top and bottom bands are `--primary` at 30%; left and right at 20%.",
+    "The whole frame is aria-hidden: the caller puts the size's name and dimensions in text beside it."
+  ],
+  "states": {
+    "default": {
+      "description": "A 9:16 story with top and reply bars.",
+      "props": {
+        "width": 1080,
+        "height": 1920,
+        "safe": [250, 0, 340, 0]
+      }
+    },
+    "rail": {
+      "description": "A reel with a right-hand action rail, in a larger box.",
+      "props": {
+        "width": 1080,
+        "height": 1920,
+        "safe": [0, 160, 0, 0],
+        "box": 80
+      }
+    },
+    "plain": {
+      "description": "A landscape canvas with no insets.",
+      "props": {
+        "width": 1920,
+        "height": 1080,
+        "class": "opacity-80"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["none (aria-hidden)"],
+    "keyboard": ["None: it is not interactive."],
+    "focus": ["Never focusable."],
+    "aria": [
+      "aria-hidden=\"true\" on the root; the caller describes the size in text."
+    ],
+    "wcag": ["1.1.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--foreground", "--muted", "--primary"],
+    "brandOverlay": "The bands follow the brand's `--primary`. Nothing else changes.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "A fixed `box` square at every width; it does not shrink (shrink-0)."
+  ],
+  "contract": "contract\n  slot is \"safe-area-frame\"\n  uses safe-area-frame-canvas\n  when rail slot is \"safe-area-frame\"\n  when plain class contains \"opacity-80\"\nend",
+  "checks": [
+    {
+      "say": "The frame is decorative.",
+      "state": "*",
+      "select": "[data-slot=\"safe-area-frame\"]",
+      "count": 1,
+      "attr": {
+        "aria-hidden": "true"
+      }
+    },
+    {
+      "say": "One canvas inside the frame.",
+      "state": "*",
+      "select": "[data-slot=\"safe-area-frame\"] > [data-slot=\"safe-area-frame-canvas\"]",
+      "count": 1
+    },
+    {
+      "say": "A story shows its top and bottom bands, and no side bands.",
+      "select": "[data-band]",
+      "count": 2
+    },
+    {
+      "say": "The top band.",
+      "select": "[data-band=\"top\"]",
+      "count": 1
+    },
+    {
+      "say": "The bottom band.",
+      "select": "[data-band=\"bottom\"]",
+      "count": 1
+    },
+    {
+      "say": "A reel shows only its right-hand rail.",
+      "state": "rail",
+      "select": "[data-band]",
+      "count": 1,
+      "attr": {
+        "data-band": "right"
+      }
+    },
+    {
+      "say": "No insets, no bands.",
+      "state": "plain",
+      "select": "[data-band]",
+      "absent": true
+    }
+  ],
+  "gaps": [
+    "The .tsx and .rs still size the box, canvas and bands with `style` attributes (the .astro draws them as SVG geometry since registry #430), so they share only the slot until they follow."
+  ]
+}

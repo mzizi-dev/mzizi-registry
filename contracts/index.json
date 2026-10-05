@@ -496,6 +496,42 @@
       "astro": "site-social-icon",
       "tsx": "site-social-icon",
       "rs": null
+    },
+    {
+      "name": "ui/native-select",
+      "title": "NativeSelect",
+      "version": "1.0.0",
+      "file": "ui/native-select.contract.json",
+      "astro": "native-select",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "ui/safe-area-frame",
+      "title": "SafeAreaFrame",
+      "version": "1.0.0",
+      "file": "ui/safe-area-frame.contract.json",
+      "astro": "safe-area-frame",
+      "tsx": "safe-area-frame",
+      "rs": "safe-area-frame"
+    },
+    {
+      "name": "ui/segmented-control",
+      "title": "SegmentedControl",
+      "version": "1.0.0",
+      "file": "ui/segmented-control.contract.json",
+      "astro": "segmented-control",
+      "tsx": "segmented-control",
+      "rs": null
+    },
+    {
+      "name": "ui/toaster",
+      "title": "Toaster",
+      "version": "1.0.0",
+      "file": "ui/toaster.contract.json",
+      "astro": "toaster",
+      "tsx": null,
+      "rs": null
     }
   ]
 }

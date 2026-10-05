@@ -2,11 +2,12 @@
 
 Owner decision, 2026-10-04: "the components should also be updated, same as the mzizi language — every component should have a contract." This directory holds those contracts, one machine-readable file per component. Tracking: [#404](https://github.com/mzizi-dev/mzizi-registry/issues/404).
 
-Three families, all in one format. Every contract has an Astro build and a React build in this registry, beside each other (`components/registry/n<N>-*/<name>.astro` and `.tsx`), and some have a Rust build too:
+Four families, all in one format. Every contract has an Astro build in this registry, beside its React build (`components/registry/n<N>-*/<name>.astro` and `.tsx`), and some have a Rust build too:
 
 - `app/`: the 31 server-rendered app components. Together they are the **Mzizi Dashboard Standard**, the one dashboard design for every product in the Bundu ecosystem, with each brand's mineral as an overlay ([docs.mzizi.dev/patterns/dashboard-standard](https://docs.mzizi.dev/patterns/dashboard-standard)).
 - `discover/`: the **Mzizi Discover Standard** ([below](#the-discover-standard-discover)), with its detail pattern.
 - `site/`: the marketing-site components (hero, sections, container, breadcrumb, icons, the mineral strip).
+- `ui/`: the Astro ports of registry primitives (native select, segmented control, toaster, safe-area frame).
 
 `@bundu/ui` (`mzizi-dev/packages-npm`) is built from these files at a pinned registry commit (`pnpm registry:sync` there), and its CI fails if the package drifts from the registry.
 
@@ -117,6 +118,17 @@ Every Discover component also works in a server-filled shell (an Astro page buil
 | `site/section`        | Section       | N6   | 1.0.0   | `site-section`        | `site-section` (contract)        | —          |
 | `site/section-header` | SectionHeader | N6   | 1.0.0   | `site-section-header` | `site-section-header` (contract) | —          |
 | `site/social-icon`    | SocialIcon    | N3   | 1.0.0   | `site-social-icon`    | `site-social-icon` (contract)    | —          |
+
+### Astro ports of registry primitives (`ui/`)
+
+The `.astro` builds of existing registry primitives, beside their `.tsx` (and `.rs`). Their React builds keep the registry's own API, so each shares only what its `identity` says, or nothing yet (`—`); the contracts list the divergences and gaps.
+
+| Contract               | Component        | Node | Version | Astro `.astro`      | React `.tsx`               | Rust `.rs`               |
+| ---------------------- | ---------------- | ---- | ------- | ------------------- | -------------------------- | ------------------------ |
+| `ui/native-select`     | NativeSelect     | N2   | 1.0.0   | `native-select`     | —                          | —                        |
+| `ui/safe-area-frame`   | SafeAreaFrame    | N2   | 1.0.0   | `safe-area-frame`   | `safe-area-frame` (slot)   | `safe-area-frame` (slot) |
+| `ui/segmented-control` | SegmentedControl | N2   | 1.0.0   | `segmented-control` | `segmented-control` (slot) | —                        |
+| `ui/toaster`           | Toaster          | N2   | 1.0.0   | `toaster`           | —                          | —                        |
 
 **Follow-ups.** Rust ports of the app, discover and site components ([#401](https://github.com/mzizi-dev/mzizi-registry/issues/401)); each is done when it passes its contract. `button`, `card` and `input` share only their slot with their `.tsx` and `.rs`, which keep the registry's own variants, parts or height (each divergence is listed in the contract).
 

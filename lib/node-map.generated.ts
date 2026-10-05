@@ -527,6 +527,7 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "role-selector": "n2",
   "route-card": "n2",
   "rtl-conformity-check": "n8",
+  "safe-area": "n2",
   "safe-area-frame": "n2",
   "schema-viewer": "n2",
   "scroll-area": "n2",

@@ -74,13 +74,30 @@ function isFrameworkFree(source: string): boolean {
   )
 }
 
-/** The source the Astro target serves for a name, and its kind, or null. */
-export function astroSource(name: string): { ext: "astro" | "ts"; source: string } | null {
+/**
+ * The source the Astro target serves for a name, and its kind, or null.
+ *
+ * A `.ts` qualifies only when it is framework-free AND every flat import it makes
+ * qualifies too, so a served document's closure always installs: `mzizi-otel.ts` is
+ * framework-free, but it imports a React-only module, so it is not an Astro module.
+ */
+export function astroSource(
+  name: string,
+  seen: Set<string> = new Set()
+): { ext: "astro" | "ts"; source: string } | null {
   const astro = readComponentSourceFor(name, "astro")
   if (astro !== null) return { ext: "astro", source: astro }
   const ts = readComponentSourceFor(name, "ts")
-  if (ts !== null && isFrameworkFree(ts)) return { ext: "ts", source: ts }
-  return null
+  if (ts === null || !isFrameworkFree(ts)) return null
+  seen.add(name)
+  for (const spec of importSpecifiers(ts)) {
+    if (!spec.startsWith(".")) continue
+    const flat = FLAT.exec(spec)
+    if (!flat) return null
+    const dep = flat[1] ?? ""
+    if (!seen.has(dep) && astroSource(dep, seen) === null) return null
+  }
+  return { ext: "ts", source: ts }
 }
 
 /** True when `/v1/astro/{name}` answers 200. */
