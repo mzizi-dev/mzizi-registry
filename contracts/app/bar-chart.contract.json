@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/bar-chart",
   "title": "BarChart",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
   "summary": "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens.",
@@ -77,7 +77,7 @@
   "behaviour": [
     "The bars are aria-hidden; the figures table (with a total) is the accessible version.",
     "No data or all zero: \"Nothing to chart in this range.\"",
-    "At most ~8 axis labels, always the first and last.",
+    "Axis labels (columns) are thinned so they never crowd: always the first and the last, never one crowding the last; at most 6 from sm up, and below sm only the first, the middle (with at least 5 points) and the last.",
     "Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'."
   ],
   "states": {
@@ -110,6 +110,63 @@
           {
             "label": "Admin",
             "value": 2
+          }
+        ]
+      }
+    },
+    "long": {
+      "description": "Twelve points: six axis labels from sm up, three on a phone.",
+      "props": {
+        "title": "Sign-ups",
+        "caption": "Per day, last 12 days",
+        "data": [
+          {
+            "label": "D1",
+            "value": 4
+          },
+          {
+            "label": "D2",
+            "value": 7
+          },
+          {
+            "label": "D3",
+            "value": 2
+          },
+          {
+            "label": "D4",
+            "value": 9
+          },
+          {
+            "label": "D5",
+            "value": 5
+          },
+          {
+            "label": "D6",
+            "value": 3
+          },
+          {
+            "label": "D7",
+            "value": 8
+          },
+          {
+            "label": "D8",
+            "value": 6
+          },
+          {
+            "label": "D9",
+            "value": 1
+          },
+          {
+            "label": "D10",
+            "value": 7
+          },
+          {
+            "label": "D11",
+            "value": 4
+          },
+          {
+            "label": "D12",
+            "value": 10
           }
         ]
       }
@@ -157,7 +214,8 @@
     "without": "Everything: the component is server-rendered HTML with no script."
   },
   "responsive": [
-    "Scales from 320px to 1920px without distorting text; the plot is 12rem tall, 14rem from sm."
+    "Scales from 320px to 1920px without distorting text; the plot is 12rem tall, 14rem from sm.",
+    "Axis labels: at most 6 from sm up; first, middle and last below sm."
   ],
   "contract": "contract\n  slot is \"bar-chart\"\n  summary \"Show the figures\" min_height 44\n  when default shows h3 \"Sign-ups\"\n  when empty shows p \"Nothing to chart in this range.\"\n  when rows shows th \"Admin\"\nend",
   "checks": [
@@ -181,6 +239,39 @@
       "select": "tfoot th",
       "count": 1,
       "text": "Total"
+    },
+    {
+      "say": "On a phone, twelve points show three axis labels.",
+      "state": "long",
+      "select": "[data-axis] span:not(.hidden)",
+      "count": 3
+    },
+    {
+      "say": "From sm up, twelve points show six axis labels.",
+      "state": "long",
+      "select": "[data-axis] span:not([class~=\"sm:hidden\"])",
+      "count": 6
+    },
+    {
+      "say": "The first label is always shown.",
+      "state": "long",
+      "select": "[data-axis] > div:first-child > span:not(.hidden)",
+      "count": 1,
+      "text": "D1"
+    },
+    {
+      "say": "The middle label is shown on a phone.",
+      "state": "long",
+      "select": "[data-axis] > div:nth-child(7) > span:not(.hidden)",
+      "count": 1,
+      "text": "D7"
+    },
+    {
+      "say": "The last label is always shown.",
+      "state": "long",
+      "select": "[data-axis] > div:last-child > span:not(.hidden)",
+      "count": 1,
+      "text": "D12"
     }
   ]
 }

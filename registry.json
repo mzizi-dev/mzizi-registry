@@ -736,7 +736,7 @@
       "categories": ["app", "pages"],
       "dependencies": [],
       "description": "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens.",
-      "docs": "Use it for: A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens (Mzizi Dashboard Standard).\nIncludes: The bars are aria-hidden; the figures table (with a total) is the accessible version., No data or all zero: \"Nothing to chart in this range.\", At most ~8 axis labels, always the first and last., Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'..\nAccessibility: Bars aria-hidden; the table has a caption..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-bar-chart",
+      "docs": "Use it for: A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens (Mzizi Dashboard Standard).\nIncludes: The bars are aria-hidden; the figures table (with a total) is the accessible version., No data or all zero: \"Nothing to chart in this range.\", Axis labels (columns) are thinned so they never crowd: always the first and the last, never one crowding the last; at most 6 from sm up, and below sm only the first, the middle (with at least 5 points) and the last., Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'..\nAccessibility: Bars aria-hidden; the table has a caption..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-bar-chart",
       "files": [
         {
           "path": "components/registry/n6-pages/app-bar-chart.tsx",
@@ -751,7 +751,7 @@
         "features": [
           "The bars are aria-hidden; the figures table (with a total) is the accessible version.",
           "No data or all zero: \"Nothing to chart in this range.\"",
-          "At most ~8 axis labels, always the first and last.",
+          "Axis labels (columns) are thinned so they never crowd: always the first and the last, never one crowding the last; at most 6 from sm up, and below sm only the first, the middle (with at least 5 points) and the last.",
           "Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'."
         ],
         "hasDemo": false,
@@ -917,7 +917,7 @@
       "categories": ["app", "pages"],
       "dependencies": [],
       "description": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup.",
-      "docs": "Use it for: A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways (Mzizi Dashboard Standard).\nIncludes: Cell text is escaped: a row cannot inject markup., An empty cell shows a dash to the eye and \"none\" to a screen reader., A cell with `current` marks its row aria-current=\"true\"., Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination..\nAccessibility: <caption> always present., Phone card labels are aria-hidden duplicates of the headers., aria-current=\"true\" on the current row..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-data-table",
+      "docs": "Use it for: A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways (Mzizi Dashboard Standard).\nIncludes: Cell text is escaped: a row cannot inject markup., An empty cell shows a dash to the eye and \"none\" to a screen reader., A cell with `current` marks its row aria-current=\"true\"., A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`., Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination..\nAccessibility: <caption> always present., Phone card labels are aria-hidden duplicates of the headers., aria-current=\"true\" on the current row..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-data-table",
       "files": [
         {
           "path": "components/registry/n6-pages/app-data-table.tsx",
@@ -937,6 +937,7 @@
           "Cell text is escaped: a row cannot inject markup.",
           "An empty cell shows a dash to the eye and \"none\" to a screen reader.",
           "A cell with `current` marks its row aria-current=\"true\".",
+          "A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`.",
           "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination."
         ],
         "hasDemo": false,
@@ -1063,8 +1064,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "pages"],
       "dependencies": [],
-      "description": "Label, input, hint and error wired together: the label is always visible, the hint and error are the input's description, and an error sets aria-invalid.",
-      "docs": "Use it for: Label, input, hint and error wired together: the label is always visible, the hint and error are the input's description, and an error sets aria-invalid (Mzizi Dashboard Standard).\nIncludes: \"(required)\" is written in the label, not shown by an asterisk alone., aria-describedby lists the hint and then the error., aria-invalid=\"true\" only with an error..\nAccessibility: aria-describedby to hint and error., aria-invalid with an error..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-field",
+      "description": "Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid. The control is an input, a textarea or a native select.",
+      "docs": "Use it for: Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid (Mzizi Dashboard Standard).\nIncludes: \"(required)\" is written in the label, not shown by an asterisk alone., aria-describedby lists the hint and then the error., aria-invalid=\"true\" only with an error., A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density., A select with `emptyOption` starts with an empty option, selected when there is no value., A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`..\nAccessibility: aria-describedby to hint and error., aria-invalid with an error..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-field",
       "files": [
         {
           "path": "components/registry/n6-pages/app-form-field.tsx",
@@ -1082,13 +1083,16 @@
         "features": [
           "\"(required)\" is written in the label, not shown by an asterisk alone.",
           "aria-describedby lists the hint and then the error.",
-          "aria-invalid=\"true\" only with an error."
+          "aria-invalid=\"true\" only with an error.",
+          "A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density.",
+          "A select with `emptyOption` starts with an empty option, selected when there is no value.",
+          "A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`."
         ],
         "hasDemo": false,
         "owner": "mzizi",
         "targets": ["astro", "tsx"],
         "useCases": [
-          "Label, input, hint and error wired together: the label is always visible, the hint and error are the input's description, and an error sets aria-invalid (Mzizi Dashboard Standard)"
+          "Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid (Mzizi Dashboard Standard)"
         ]
       },
       "name": "app-form-field",
@@ -1104,7 +1108,7 @@
       "categories": ["app", "pages"],
       "dependencies": [],
       "description": "A titled form card: fields in two columns from the container's xl and one below, actions at the foot, a form-level error as an alert. Posts to itself (Post/Redirect/Get).",
-      "docs": "Use it for: A titled form card: fields in two columns from the container's xl and one below, actions at the foot, a form-level error as an alert (Mzizi Dashboard Standard).\nIncludes: method=\"post\", novalidate: the server validates and re-renders with errors., A form-level error is role=\"alert\"..\nAccessibility: The error is announced as an alert..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-layout",
+      "docs": "Use it for: A titled form card: fields in two columns from the container's xl and one below, actions at the foot, a form-level error as an alert (Mzizi Dashboard Standard).\nIncludes: method=\"post\", novalidate: the server validates and re-renders with errors., A form-level error is role=\"alert\"., With a file field, `enctype=\"multipart/form-data\"` posts the files; without `enctype` the form carries no enctype attribute..\nAccessibility: The error is announced as an alert..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-layout",
       "files": [
         {
           "path": "components/registry/n6-pages/app-form-layout.tsx",
@@ -1118,7 +1122,8 @@
         "contract": "app/form-layout",
         "features": [
           "method=\"post\", novalidate: the server validates and re-renders with errors.",
-          "A form-level error is role=\"alert\"."
+          "A form-level error is role=\"alert\".",
+          "With a file field, `enctype=\"multipart/form-data\"` posts the files; without `enctype` the form carries no enctype attribute."
         ],
         "hasDemo": false,
         "owner": "mzizi",

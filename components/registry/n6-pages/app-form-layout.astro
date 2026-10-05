@@ -3,7 +3,8 @@
  * FormLayout — a titled form card that uses the width it is given: fields
  * flow in two columns from md up and one below, actions sit at the foot.
  * Posts to the page itself (Post/Redirect/Get); Astro refuses cross-site
- * posts. A form-level error is announced as an alert.
+ * posts. A form-level error is announced as an alert. A form with a file
+ * field sets `enctype="multipart/form-data"`.
  */
 import Alert from "./app-alert.astro";
 import Card from "./app-card.astro";
@@ -13,9 +14,11 @@ interface Props {
   description?: string;
   error?: string | null;
   action?: string;
+  /** "multipart/form-data" for a form with a file field. */
+  enctype?: "multipart/form-data";
   id?: string;
 }
-const { title, description, error, action, id = "form" } = Astro.props;
+const { title, description, error, action, enctype, id = "form" } = Astro.props;
 ---
 
 <section aria-labelledby={`${id}-title`} class="@container" data-slot="form-layout">
@@ -24,7 +27,7 @@ const { title, description, error, action, id = "form" } = Astro.props;
       <h2 id={`${id}-title`} class="text-h6 font-semibold">{title}</h2>
       {description && <p class="text-body-sm text-muted-foreground">{description}</p>}
     </div>
-    <form method="post" action={action} class="grid gap-4 px-4 py-4" novalidate>
+    <form method="post" action={action} enctype={enctype} class="grid gap-4 px-4 py-4" novalidate>
       {
         error && (
           <Alert variant="destructive" title="Not saved">

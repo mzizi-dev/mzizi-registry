@@ -4,7 +4,8 @@
  * text, and follows the theme through tokens.
  *
  * - `columns`: one bar per point along the bottom (a series over time). Axis
- *   labels are thinned to fit; every value is in the figures table.
+ *   labels are thinned so they never crowd (at most 6 from sm up, first /
+ *   middle / last on a phone); every value is in the figures table.
  * - `rows`: one labelled bar per category, the value written beside it.
  *
  * The bars are hidden from screen readers; the exact figures are in a real
@@ -52,12 +53,32 @@ function BarChart({
   // Two decimals is finer than a pixel at any chart size.
   const geo = (v: number) => String(Math.round(pct(v) * 100) / 100);
   const fmt = (v: number) => v.toLocaleString(locale);
-  // At most ~8 axis labels, always the first and the last.
-  const step = Math.max(1, Math.ceil(data.length / 8));
-  const showLabel = (i: number) =>
-    i === 0 ||
-    i === data.length - 1 ||
-    (i % step === 0 && data.length - 1 - i >= step / 2);
+  // Axis labels are thinned so they never crowd: always the first and the
+  // last, never one crowding the last; at most 6 from sm up, and on a phone
+  // only the first, the middle (from 5 points) and the last. Every value is
+  // in the figures table either way.
+  const last = data.length - 1;
+  const thin = (count: number) => {
+    const step = Math.max(1, Math.ceil(data.length / count));
+    return (i: number) =>
+      i === 0 || i === last || (i % step === 0 && last - i >= step);
+  };
+  const wide = thin(6);
+  const middle = Math.round(last / 2);
+  const narrow = (i: number) =>
+    i === 0 || i === last || (i === middle && last >= 4);
+  const place = (i: number) =>
+    i === 0 ? "left-0" : i === last ? "right-0" : "left-1/2 -translate-x-1/2";
+  const labelClass = (i: number) =>
+    [
+      "absolute top-0 whitespace-nowrap",
+      narrow(i) ? "" : "hidden sm:inline",
+      place(i),
+    ]
+      .filter(Boolean)
+      .join(" ");
+  const phoneLabelClass =
+    "absolute top-0 left-1/2 -translate-x-1/2 whitespace-nowrap sm:hidden";
 
   return (
     <figure
@@ -103,15 +124,15 @@ function BarChart({
               </div>
             ))}
           </div>
-          <div className="mt-2 flex gap-px text-body-sm text-muted-foreground">
+          <div
+            className="mt-2 flex gap-px text-body-sm text-muted-foreground"
+            data-axis=""
+          >
             {data.map((d, i) => (
               <div key={`${i}-${d.label}`} className="relative min-w-0 flex-1">
-                {showLabel(i) && (
-                  <span
-                    className={`absolute top-0 whitespace-nowrap ${i === 0 ? "left-0" : i === data.length - 1 ? "right-0" : "left-1/2 -translate-x-1/2"}`}
-                  >
-                    {d.label}
-                  </span>
+                {wide(i) && <span className={labelClass(i)}>{d.label}</span>}
+                {!wide(i) && narrow(i) && (
+                  <span className={phoneLabelClass}>{d.label}</span>
                 )}
               </div>
             ))}

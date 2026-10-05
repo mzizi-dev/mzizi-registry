@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/form-layout",
   "title": "FormLayout",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
   "summary": "A titled form card: fields in two columns from the container's xl and one below, actions at the foot, a form-level error as an alert. Posts to itself (Post/Redirect/Get).",
@@ -43,6 +43,13 @@
       "description": "Form action; the page itself when omitted."
     },
     {
+      "name": "enctype",
+      "type": "\"multipart/form-data\"",
+      "required": false,
+      "values": ["multipart/form-data"],
+      "description": "The form's encoding: \"multipart/form-data\" for a form with a file field; omitted, the browser's default."
+    },
+    {
       "name": "id",
       "type": "string",
       "required": false,
@@ -64,7 +71,8 @@
   ],
   "behaviour": [
     "method=\"post\", novalidate: the server validates and re-renders with errors.",
-    "A form-level error is role=\"alert\"."
+    "A form-level error is role=\"alert\".",
+    "With a file field, `enctype=\"multipart/form-data\"` posts the files; without `enctype` the form carries no enctype attribute."
   ],
   "states": {
     "default": {
@@ -80,6 +88,17 @@
     "clean": {
       "props": {
         "title": "Profile"
+      }
+    },
+    "upload": {
+      "description": "A form with a file field.",
+      "props": {
+        "title": "Photos",
+        "enctype": "multipart/form-data"
+      },
+      "slots": {
+        "default": "<input type='file' name='photos'>",
+        "actions": "<button type='submit'>Upload</button>"
       }
     }
   },
@@ -128,6 +147,18 @@
       "say": "No error, no alert.",
       "state": "clean",
       "select": "[role=\"alert\"]",
+      "absent": true
+    },
+    {
+      "say": "A form with a file field posts multipart.",
+      "state": "upload",
+      "select": "form[enctype=\"multipart/form-data\"]",
+      "count": 1
+    },
+    {
+      "say": "No enctype unless asked for.",
+      "state": "default",
+      "select": "form[enctype]",
       "absent": true
     }
   ]
