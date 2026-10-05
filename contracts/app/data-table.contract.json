@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/data-table",
   "title": "DataTable",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
   "summary": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup.",
@@ -41,7 +41,7 @@
       "name": "rows",
       "type": "Record<string, Cell>[]",
       "required": true,
-      "description": "Cell = string | number | null | undefined | { text, href?, badge?, mono?, sub?, current? }."
+      "description": "Cell = string | number | null | undefined | { text, href?, badge?, tone?, mono?, sub?, current? }. `badge` is a registry badge variant (default, secondary, destructive, outline, ghost, link); `tone` is a status pill: \"neutral\" | \"success\" | \"warning\" | \"info\" | \"accent\" | \"premium\"."
     },
     {
       "name": "rowKey",
@@ -55,6 +55,7 @@
     "Cell text is escaped: a row cannot inject markup.",
     "An empty cell shows a dash to the eye and \"none\" to a screen reader.",
     "A cell with `current` marks its row aria-current=\"true\".",
+    "A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`.",
     "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination."
   ],
   "states": {
@@ -94,6 +95,46 @@
             "name": "Rudo",
             "role": null,
             "count": 0
+          }
+        ]
+      }
+    },
+    "status": {
+      "description": "Status pills in three tones, one with hostile text.",
+      "props": {
+        "caption": "Sources, 3 in all",
+        "columns": [
+          {
+            "key": "name",
+            "label": "Source"
+          },
+          {
+            "key": "state",
+            "label": "State"
+          }
+        ],
+        "rows": [
+          {
+            "name": "Herald",
+            "state": {
+              "text": "Active",
+              "tone": "success"
+            }
+          },
+          {
+            "name": "Chronicle",
+            "state": {
+              "text": "Paused",
+              "tone": "warning"
+            }
+          },
+          {
+            "name": "Gazette",
+            "state": {
+              "text": "<b>Draft</b>",
+              "tone": "neutral",
+              "badge": "outline"
+            }
           }
         ]
       }
@@ -151,8 +192,8 @@
       "--surface-muted",
       "--primary"
     ],
-    "brandOverlay": "Cell links are `--primary`. Rows and spacing are the same in every brand.",
-    "statusColours": []
+    "brandOverlay": "Cell links are `--primary`. Rows and spacing are the same in every brand. Status pills (`tone`) are fixed status colours, the same in every brand.",
+    "statusColours": ["malachite", "gold", "cobalt", "terracotta", "tanzanite"]
   },
   "noJs": {
     "script": "none",
@@ -197,6 +238,31 @@
       "say": "Cells cannot inject markup.",
       "state": "hostile",
       "select": "img",
+      "absent": true
+    },
+    {
+      "say": "A tone cell is a status pill.",
+      "state": "status",
+      "select": "td [data-slot=\"status\"][data-tone=\"success\"]",
+      "count": 1,
+      "text": "Active"
+    },
+    {
+      "say": "Every tone cell is a pill; tone wins over badge.",
+      "state": "status",
+      "select": "td [data-slot=\"status\"]",
+      "count": 3
+    },
+    {
+      "say": "A tone cell with a badge renders no badge.",
+      "state": "status",
+      "select": "[data-slot=\"badge\"]",
+      "absent": true
+    },
+    {
+      "say": "A status pill's text cannot inject markup.",
+      "state": "status",
+      "select": "b",
       "absent": true
     },
     {

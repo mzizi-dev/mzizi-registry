@@ -10,6 +10,49 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.4.0] - 2026-10-05
+
+Releases `staging` to `main` as the next minor above v4.3.3 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.4.0.
+
+### Added — four Dashboard Standard deltas from the Nyuchi console: form-field controls, multipart forms, thinned bar-chart labels, status pills (2026-10-05, #443)
+
+The Nyuchi console (nyuchi/nyuchi-platform `console/web`) carried these in local copies of `FormField`, `FormLayout`, `BarChart` and `DataTable`; they now live in the contracts and every build, so the console can use `@bundu/ui` as it is. Related: mzizi-dev/packages-npm#40.
+
+- **`app/form-field` 1.1.0.** The control can be a textarea (`as="textarea"`, `rows`, default 5) or a native select (`as="select"`, `options: { value, label }[]`, `emptyOption`), with the same id, name, required, aria-describedby and aria-invalid wiring and app density as the input. `type` adds `number`, `date` and `file`; `accept` and `multiple` (file; a file input never carries a value), `min` / `max` / `step` (number and date), `inputmode` adds `numeric` and `decimal`. `wide` spans both of FormLayout's columns (`@xl:col-span-2`). A read-only select is disabled. New states: `textarea`, `select`, `select-readonly`, `file`, `number`, and density rows for the select (36/48px) and the textarea (an 80/96px floor).
+- **`app/form-layout` 1.1.0.** `enctype?: "multipart/form-data"` on the form, for a file field; state `upload`.
+- **`app/bar-chart` 1.1.0.** Axis labels in the `columns` layout never crowd: at most 6 from `sm` up, and below `sm` only the first, the middle (from 5 points) and the last; always the first and the last, never one crowding the last. The label row is `data-axis`. New state `long` (12 points: 3 labels on a phone, 6 from `sm`). The SVG bars and `locale` are unchanged.
+- **`app/data-table` 1.1.0.** A cell's `tone` (`neutral`, `success`, `warning`, `info`, `accent`, `premium`) renders a status pill (`data-slot="status"`, `data-tone`) in the mineral container colours, declared as the contract's status colours (malachite, gold, cobalt, terracotta, tanzanite). `badge` keeps the registry badge's variants; `tone` wins over `badge`. New state `status`.
+- **`ui-variants`:** `appTextareaClasses`, `appFileInputClasses`, `STATUS_TONES` / `StatusTone` and `statusToneClasses(tone)`.
+
+### Changed — Astro is the default web UI and every other build is the same component; `ui/toaster` in React (2026-10-05, #442)
+
+Owner, 2026-10-05: "Astro is our default web ui but other may not use Astro". Tracking: #427.
+
+- **The rule** is now in AGENTS.md, CONTRIBUTING and `contracts/README.md`. A component's Astro build is its default build. Where builds disagree, the Astro design is the contract unless the owner decides otherwise. React and Rust builds must be the same component, complete, for consumers that do not use Astro.
+- **`ui/toaster` 1.1.0: `toaster.tsx` now renders the Astro toaster's markup.** It is a polite `role="status"` live region (`#toaster`, `data-duration`). It exports `toast(message, kind?)`, which does what `toaster.astro`'s inline `window.toast` does, and it sets `window.toast` once mounted. The contract names it as a `contract`-identity build, and `__tests__/components/toaster.test.tsx` covers `toast()`.
+  - **Breaking** for React users of the old Radix toaster, which rendered the `useToast` queue. The `toaster` item no longer depends on `toast` and `use-toast`. Those primitives, and `sonner`, are unchanged for apps that want a hook-driven toast. For a message a reader must not miss, use `app-toast`, which has no timeout.
+
+### Changed — `ui/native-select` and `ui/segmented-control` are one component in every build (2026-10-05, #441)
+
+Owner decision, 2026-10-05: per component, so that each primitive has one design. Tracking: #427.
+
+- **`ui/native-select` 2.0.0 follows the registry's React markup.** The wrapper is `native-select-wrapper` (with `data-portal` and `data-size`), the `<select>` is `native-select` and the chevron is `native-select-icon`.
+  - `native-select.tsx` gains an `options` prop (`[value, label]` pairs) beside <option> children. `name` defaults to `id`. A `value` with no `onChange` marks the selected option instead of making the field controlled.
+  - `native-select.astro` now renders the same markup and takes `size`.
+  - **Breaking** for CSS or scripts that targeted the Astro build's old root, `[data-slot="native-select"]` on the wrapper: that slot is now the `<select>` itself.
+- **`ui/segmented-control` 1.1.0: the no-JS design wins.** `segmented-control.tsx` is now a server component with the same markup as the Astro build: a `<fieldset>` and `<legend>` with native radios. Its props are `name`, `legend`, `options`, `value`, `hideLegend`, `size` and `className`.
+  - **Breaking** for React users. `SegmentedControlItem`, `value`/`onValueChange`/`ariaLabel`, the `lg` size and the `segmentedControlVariants`/`segmentVariants` exports are removed. The registry item drops `class-variance-authority` and is no longer marked ALPHA.
+- Both contracts now name a `contract`-identity `.tsx`, evaluated by `tsx-contracts.test.tsx`.
+
+### Changed — `ui/safe-area-frame`, `ui/alert` and `ui/skeleton` are held in full by every build (2026-10-05, #439)
+
+Follow-up to #428. Tracking: #427.
+
+- **`safe-area-frame.tsx` and `safe-area-frame.rs` render SVG geometry, like `safe-area-frame.astro`.** The thumbnail is now an `<svg>` (`width`/`height`/`viewBox`), and its canvas is a nested `<svg>` whose bands are `<rect>`s in a 100×100 space, instead of `<span>`s sized by inline `style` attributes. A page can keep `style-src 'self'`. The data-slots, the `data-band` values and `safeAreaBands` / `safe_area_bands` are unchanged. **Breaking** for CSS that targeted the old `<span>` markup: the outer element is now `svg.block.shrink-0`, not `span.grid`. The React props are now `<svg>` attributes, not `<span>` attributes. In Rust, the public class constants changed to match: `FRAME`, `CANVAS`, `BAND_Y` and `BAND_X` now hold SVG classes, and `CANVAS_FILL` and `OUTLINE` are new.
+- **New: `alert.rs` and `skeleton.rs`** in `mzizi-ui` (`Alert`, `AlertTitle`, `AlertDescription`, `AlertAction`, `AlertVariant`, `alert_variants`; `Skeleton`, `skeleton_variants`). They are the Rust builds of `ui/alert` and `ui/skeleton`.
+- These three contracts now name a `contract`-identity `.tsx` and `.rs`. `mzizi_ui::CONTRACTS` lists alert, safe-area-frame and skeleton, and `tests/contracts_json.rs` renders and evaluates them.
+- **The Rust contract evaluator** (`mzizi-rs/contract-eval/`) now understands child (`>`) and descendant (space) combinators in check selectors, as the TypeScript runner already does.
+
 ### Changed — registry primitives get their own `ui/` contracts; the Dashboard Standard builds become `app-*` (2026-10-05, #428)
 
 Owner request, 2026-10-05: "Give registry primitives their own ui/ contracts". Tracking: #427.

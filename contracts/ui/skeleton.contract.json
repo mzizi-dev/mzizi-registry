@@ -17,7 +17,10 @@
       "registry": "skeleton",
       "identity": "contract"
     },
-    "rs": null,
+    "rs": {
+      "registry": "skeleton",
+      "identity": "contract"
+    },
     "related": ["app-skeleton"]
   },
   "props": [

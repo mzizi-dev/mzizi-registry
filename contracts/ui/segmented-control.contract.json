@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/segmented-control",
   "title": "SegmentedControl",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 2,
   "kind": "primitive",
   "summary": "A choice of one from a few, as a pill track of segments built on native radios in a fieldset: no script, arrow keys move between segments and screen readers announce a radio group.",
@@ -15,14 +15,7 @@
     },
     "tsx": {
       "registry": "segmented-control",
-      "identity": "slot",
-      "divergences": [
-        "Root: a <div role=\"radiogroup\" aria-label> with a data-portal, not a <fieldset> with a <legend>.",
-        "Segments: <button role=\"radio\" aria-checked> children (`SegmentedControlItem`, data-slot `segmented-control-item`) with a client script (\"use client\", useState, arrow-key handlers), not native radios built from `options`.",
-        "Props: value/defaultValue/onValueChange/ariaLabel and children, not name/legend/options/value/hideLegend.",
-        "Sizes: sm/default/lg with a 40px/48px/56px track and 32px/40px/48px segments, not 40px/48px segments.",
-        "Classes: data-[state=on]:bg-background, not peer-checked:bg-card."
-      ]
+      "identity": "contract"
     },
     "rs": null
   },
