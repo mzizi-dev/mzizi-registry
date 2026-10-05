@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.3.0",
+    title: "v4.3.0 — one release per changelog version",
+    description:
+      "Releases staging to main as the next minor above v4.2.1 (nyuchi/.github#80). The pre-1.0 Doctrine 4.2.0 record is keyed `4.2.0+doctrine`, so `/v1/changelog/4.2.0` answers the v4.2.0 release alone, and the changelog generator fails CI when a version names more than one release outside the closed pre-1.0 line (#435, #436). CHANGELOG.md section [4.3.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 3,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-10-05T03:00:00.000+00:00",
+    created_at: "2026-10-05T03:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.2.0",
     title: "v4.2.0 — first release under the org versioning policy",
     description:
