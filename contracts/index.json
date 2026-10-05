@@ -527,10 +527,10 @@
     {
       "name": "ui/toaster",
       "title": "Toaster",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "ui/toaster.contract.json",
       "astro": "toaster",
-      "tsx": null,
+      "tsx": "toaster",
       "rs": null
     },
     {

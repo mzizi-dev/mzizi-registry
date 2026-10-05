@@ -45,6 +45,21 @@ sibling file `components/registry/n<N>-*/<name>.<ext>`. **Do not create, edit or
 files or `mz`-language directories here**: they are being built elsewhere and land as their
 own change.
 
+**Astro is the default web UI; other stacks get the same component** (owner, 2026-10-05: "Astro
+is our default web ui but other may not use Astro"). Mzizi's own sites and apps are built in
+Astro, so a component's Astro build is its default build. But consumers in the bundu ecosystem
+may use React (Next.js), Rust (Dioxus) or another stack, so every other build must be complete
+and must be the same component, not a fallback or a different design:
+
+- Where builds disagree, the Astro design is the contract and the others follow it, unless the
+  owner decides otherwise for that component. For example, `ui/native-select` follows the React
+  markup by the owner's choice.
+- A non-Astro build matches the Astro build's markup, behaviour and no-JS story. Where Astro uses
+  an inline enhancement script, the React build does the same thing in code: `toaster.tsx`
+  exports `toast()` and sets `window.toast`, as `toaster.astro`'s script does.
+- Never leave a non-Astro build as a different component under the same name. Bring it to the
+  contract, or say in the contract's `gaps` why it can't be brought there yet.
+
 - **Astro (#397).** A `.astro` is pure Astro: no React or any framework under it, no client
   JavaScript unless its contract allows one enhancement script. Registry `.astro` files and
   the framework-free `.ts` modules they use (`ui-utils`, `ui-variants`, `app-nav`,

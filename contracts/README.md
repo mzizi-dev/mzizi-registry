@@ -2,7 +2,7 @@
 
 Owner decision, 2026-10-04: "the components should also be updated, same as the mzizi language — every component should have a contract." This directory holds those contracts, one machine-readable file per component. Tracking: [#404](https://github.com/mzizi-dev/mzizi-registry/issues/404).
 
-Four families, all in one format. Every contract has an Astro build in this registry, beside its React build (`components/registry/n<N>-*/<name>.astro` and `.tsx`), and some have a Rust build too:
+Four families, all in one format. Astro is the default web UI, so every contract has an Astro build in this registry, and where builds disagree, the Astro design is the contract unless the owner decides otherwise. React and Rust builds are the same component for consumers that do not use Astro. Each contract's Astro build sits beside its React build (`components/registry/n<N>-*/<name>.astro` and `.tsx`), and some have a Rust build too:
 
 - `app/`: the 31 server-rendered app components. Together they are the **Mzizi Dashboard Standard**, the one dashboard design for every product in the Bundu ecosystem, with each brand's mineral as an overlay ([docs.mzizi.dev/patterns/dashboard-standard](https://docs.mzizi.dev/patterns/dashboard-standard)).
 - `discover/`: the **Mzizi Discover Standard** ([below](#the-discover-standard-discover)), with its detail pattern.
@@ -137,7 +137,7 @@ Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Wher
 | `ui/segmented-control` | SegmentedControl | N2   | 1.1.0   | `segmented-control` | `segmented-control` (contract) | —                            |
 | `ui/skeleton`          | Skeleton         | N2   | 1.0.0   | `skeleton`          | `skeleton` (contract)          | `skeleton` (contract)        |
 | `ui/status-badge`      | StatusBadge      | N2   | 1.0.0   | `status-badge`      | `status-badge` (contract)      | `status-badge` (contract)    |
-| `ui/toaster`           | Toaster          | N2   | 1.0.0   | `toaster`           | —                              | —                            |
+| `ui/toaster`           | Toaster          | N2   | 1.1.0   | `toaster`           | `toaster` (contract)           | —                            |
 
 **Follow-ups.** Rust ports of the app, discover and site components ([#401](https://github.com/mzizi-dev/mzizi-registry/issues/401)); each is done when it passes its contract. `button`, `card` and `input` share only their slot with their `.tsx` and `.rs`, which keep the registry's own variants, parts or height (each divergence is listed in the contract).
 
