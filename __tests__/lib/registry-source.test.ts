@@ -7,6 +7,7 @@
  * leaving the thing the migration exists to guarantee untested.
  */
 
+import { REGISTRY_FILES } from "../../lib/registry.generated"
 import { describe, expect, it, beforeEach } from "vitest"
 import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
@@ -132,6 +133,9 @@ describe("multi-language components", () => {
       if (!dir.isDirectory()) continue
       for (const entry of readdirSync(join(root, dir.name))) {
         if (entry.startsWith(".")) continue
+        // A raster brand asset is listed, not served: it waits on a vector master
+        // (validate-registry warns that it is not installable). Asserted below.
+        if (dir.name === "assets" && /\.(png|jpe?g|gif|webp|avif)$/i.test(entry)) continue
         const name = entry.replace(/\.[^.]+$/, "")
         if (!indexed.has(name)) missing.push(`${dir.name}/${entry}`)
       }
@@ -141,5 +145,6 @@ describe("multi-language components", () => {
     // drop means a 404 for a component the registry still advertises.
     expect(missing).toEqual([])
     expect(indexed.size).toBeGreaterThan(500)
+    expect(REGISTRY_FILES.some((f) => f.startsWith("assets/") && f.endsWith(".png"))).toBe(true)
   })
 })

@@ -1,0 +1,279 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/detail-actions",
+  "title": "DetailActions",
+  "version": "1.1.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The action row of one item's page: \"Open in Mukoko\" (an OpenInApp, primary, the canonical universal link) first, secondary links beside it, and share links under the hint. Every action is a link; never a client script.",
+  "implementations": {
+    "astro": {
+      "registry": "discover-detail-actions",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/DetailActions.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "discover-detail-actions", "identity": "contract" },
+    "rs": null,
+    "related": ["discover-open-in-app"]
+  },
+  "props": [
+    {
+      "name": "service",
+      "type": "\"news\" | \"events\" | \"weather\" | \"circles\" | \"places\" | \"lingo\" | \"profile\"",
+      "required": false,
+      "values": [
+        "news",
+        "events",
+        "weather",
+        "circles",
+        "places",
+        "lingo",
+        "profile"
+      ],
+      "description": "The Mukoko service the item lives in. With `id`, \"Open in Mukoko\" is `https://mukoko.com/open/<service>/<id>`."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "The item's id in that service."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "An explicit https URL for \"Open in Mukoko\"; overrides `service` and `id`. One of `href`, or `service` with `id`, is required."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Open in Mukoko",
+      "description": "The primary action's text, e.g. \"Join in Mukoko\"."
+    },
+    {
+      "name": "hint",
+      "type": "string",
+      "required": false,
+      "default": "Opens in the Mukoko app, or on the web if you don't have it.",
+      "description": "What \"Open in Mukoko\" does; \"\" for none."
+    },
+    {
+      "name": "links",
+      "type": "{ label: string; href: string; external?: boolean }[]",
+      "required": false,
+      "default": [],
+      "description": "Secondary actions in the same row, as outline buttons (\"Add to calendar\", \"Read at the source\"). `external` sets rel=\"external noopener\"."
+    },
+    {
+      "name": "share",
+      "type": "{ label: string; href: string; external?: boolean }[]",
+      "required": false,
+      "default": [],
+      "description": "Share links: share URLs (https://wa.me/?text=…, mailto:…), never a script."
+    },
+    {
+      "name": "shareLabel",
+      "type": "string",
+      "required": false,
+      "default": "Share",
+      "description": "The share list's visible label and accessible name."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "Links styled as buttons",
+      "description": "More actions, after `links` in the same row."
+    }
+  ],
+  "behaviour": [
+    "Composes OpenInApp (variant primary): the first action in the row is \"Open in Mukoko\", and the hint is under the row.",
+    "With `service` and `id` the primary href is the canonical universal link `https://mukoko.com/open/<service>/<id>`: the apps claim it (universal links, app links), and the resolver in mukoko-dev/super-app-web (`/open/*`) sends anyone without the app to the service's web page for the item. `href` overrides it.",
+    "`links`, then the default slot, follow \"Open in Mukoko\" in the same row, as outline buttons.",
+    "Share links are a labelled list under the hint, as ghost buttons; there is no share script and no Web Share API call, so the row has no JavaScript at all.",
+    "Never a bare custom scheme: every href is https (or a relative or mailto: link the page supplies)."
+  ],
+  "states": {
+    "default": {
+      "description": "An event's page.",
+      "props": {
+        "service": "events",
+        "id": "jacaranda-2026",
+        "links": [
+          { "label": "Add to calendar", "href": "/jacaranda-2026.ics" }
+        ],
+        "share": [
+          {
+            "label": "WhatsApp",
+            "href": "https://wa.me/?text=Jacaranda%20Music%20Festival%20https%3A%2F%2Fevents.mukoko.com%2Fjacaranda-2026",
+            "external": true
+          },
+          {
+            "label": "Email",
+            "href": "mailto:?subject=Jacaranda%20Music%20Festival&body=https%3A%2F%2Fevents.mukoko.com%2Fjacaranda-2026"
+          }
+        ]
+      }
+    },
+    "circle": {
+      "description": "A public circle: a custom label and a slotted action.",
+      "props": {
+        "service": "circles",
+        "id": "harare-runners",
+        "label": "Join in Mukoko"
+      },
+      "slots": {
+        "default": "<a href='/create'>Start your own circle</a>"
+      }
+    },
+    "article": {
+      "description": "An article: the source as an external secondary link, no hint.",
+      "props": {
+        "service": "news",
+        "id": "rains-arrive-early",
+        "hint": "",
+        "links": [
+          {
+            "label": "Read at The Herald",
+            "href": "https://example.org/story",
+            "external": true
+          }
+        ]
+      }
+    },
+    "override": {
+      "description": "An explicit href overrides service and id.",
+      "props": {
+        "service": "circles",
+        "id": "harare-runners",
+        "href": "https://circles.mukoko.com/c/harare-runners/join"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["link", "list"],
+    "keyboard": [
+      "Tab: \"Open in Mukoko\", each secondary action, then each share link; Enter follows it."
+    ],
+    "focus": ["Every action shows the `--ring` focus ring."],
+    "aria": [
+      "Every action is a link whose text says what it does; the share list is named by `shareLabel` (its visible label is aria-hidden so it is not read twice)."
+    ],
+    "wcag": ["2.4.4", "2.5.8", "3.2.5", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "secondary action",
+      "select": "[data-slot=\"detail-actions-link\"]",
+      "fine": 48,
+      "coarse": 48
+    },
+    {
+      "part": "share link",
+      "select": "[data-slot=\"detail-actions-share\"] a",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--primary",
+      "--primary-foreground",
+      "--foreground",
+      "--muted",
+      "--muted-foreground",
+      "--ring"
+    ],
+    "brandOverlay": "\"Open in Mukoko\" fills with `--primary`, so it is the brand's mineral; nothing else follows the brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: every action, sharing included, is a link; the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "The row wraps: \"Open in Mukoko\" first, the others after it; the hint and the share links wrap under the row."
+  ],
+  "contract": "contract\n  slot is \"detail-actions\"\n  uses open-in-app\n  uses detail-actions-share\n  a \"Open in Mukoko\" min_height 48\n  a \"Add to calendar\" min_height 48\n  a \"WhatsApp\" min_height 48\n  a \"Join in Mukoko\" min_height 48\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when circle shows a \"Start your own circle\"\n  when article shows a \"Read at The Herald\"\nend",
+  "checks": [
+    {
+      "say": "\"Open in Mukoko\" is the canonical universal link, primary.",
+      "select": "[data-slot=\"open-in-app\"] a[data-variant]",
+      "count": 1,
+      "attr": {
+        "href": "https://mukoko.com/open/events/jacaranda-2026",
+        "data-variant": "primary"
+      }
+    },
+    {
+      "say": "\"Open in Mukoko\" comes first in the row.",
+      "state": "*",
+      "select": "[data-slot=\"open-in-app\"] > div > a:first-child[data-variant=\"primary\"]",
+      "count": 1
+    },
+    {
+      "say": "Secondary actions share the row.",
+      "select": "[data-slot=\"open-in-app\"] > div > a",
+      "count": 2
+    },
+    {
+      "say": "The share links are a named list.",
+      "select": "ul[aria-label=\"Share\"] > li > a",
+      "count": 2
+    },
+    {
+      "say": "An external share link is marked.",
+      "select": "a[href^=\"https://wa.me/\"]",
+      "count": 1,
+      "attr": { "rel": "external noopener" }
+    },
+    {
+      "say": "Never a bare custom scheme, never a button that needs a script.",
+      "state": "*",
+      "select": "a[href^=\"mukoko:\"], button, script",
+      "absent": true
+    },
+    {
+      "say": "The circle's own label and its slotted action.",
+      "state": "circle",
+      "select": "[data-slot=\"open-in-app\"] > div > a",
+      "count": 2
+    },
+    {
+      "say": "The circle's canonical link.",
+      "state": "circle",
+      "select": "a[data-variant=\"primary\"]",
+      "attr": { "href": "https://mukoko.com/open/circles/harare-runners" }
+    },
+    {
+      "say": "No share links, no share list.",
+      "state": "circle",
+      "select": "[data-slot=\"detail-actions-share\"]",
+      "absent": true
+    },
+    {
+      "say": "The source leaves the site.",
+      "state": "article",
+      "select": "[data-slot=\"detail-actions-link\"]",
+      "count": 1,
+      "attr": {
+        "rel": "external noopener",
+        "href": "https://example.org/story"
+      }
+    },
+    {
+      "say": "An empty hint is left out.",
+      "state": "article",
+      "select": "[data-slot=\"open-in-app\"] p",
+      "absent": true
+    },
+    {
+      "say": "An explicit href wins.",
+      "state": "override",
+      "select": "a[data-variant=\"primary\"]",
+      "attr": { "href": "https://circles.mukoko.com/c/harare-runners/join" }
+    }
+  ]
+}

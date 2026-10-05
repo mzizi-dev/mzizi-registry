@@ -1,0 +1,112 @@
+{
+  "v": 3,
+  "layout": "files",
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-09-30T17:08:33Z"
+  },
+  "title": "mzizi",
+  "namespace": "Mzizi",
+  "libraries": [],
+  "sections": {},
+  "groups": ["Logos", "Ecosystem"],
+  "assetGroups": {
+    "Logos": {
+      "name": "Logos",
+      "tile": "l",
+      "order": [
+        "mzizi-mark-light.svg",
+        "mzizi-mark-dark.svg",
+        "mzizi-mark-light.png",
+        "mzizi-mark-dark.png"
+      ],
+      "files": {
+        "mzizi-mark-light.svg": {
+          "name": "mzizi-mark-light.svg",
+          "blob": "2718e28c2753c50334e243fd3c5a0667",
+          "size": 1097,
+          "type": "image/svg+xml"
+        },
+        "mzizi-mark-dark.svg": {
+          "name": "mzizi-mark-dark.svg",
+          "blob": "2d1237cf0f4ec14040c4a273155a9c6f",
+          "size": 1097,
+          "type": "image/svg+xml"
+        },
+        "mzizi-mark-light.png": {
+          "name": "mzizi-mark-light.png",
+          "blob": "a799165eb4312948b7a2fee5aaf01e3a",
+          "size": 16217,
+          "type": "image/png"
+        },
+        "mzizi-mark-dark.png": {
+          "name": "mzizi-mark-dark.png",
+          "blob": "538d57a6128833b688707b83376f4e5f",
+          "size": 16501,
+          "type": "image/png"
+        }
+      }
+    },
+    "Ecosystem": {
+      "name": "Ecosystem",
+      "tile": "m",
+      "order": [
+        "bundu-mark-light.png",
+        "bundu-mark-dark.png",
+        "nyuchi-bee-light.png",
+        "nyuchi-bee-dark.png",
+        "mukoko-mark-light.png",
+        "mukoko-mark-dark.png"
+      ],
+      "files": {
+        "bundu-mark-light.png": {
+          "name": "bundu-mark-light.png",
+          "blob": "86cd3e5ca82b1136e493ab699abb5947",
+          "size": 86339,
+          "type": "image/png"
+        },
+        "bundu-mark-dark.png": {
+          "name": "bundu-mark-dark.png",
+          "blob": "cbf41ba53180a2e248b2b14f9ff09af1",
+          "size": 87018,
+          "type": "image/png"
+        },
+        "nyuchi-bee-light.png": {
+          "name": "nyuchi-bee-light.png",
+          "blob": "9e8016d8f4739e5bdc94e6e93d190d71",
+          "size": 65633,
+          "type": "image/png"
+        },
+        "nyuchi-bee-dark.png": {
+          "name": "nyuchi-bee-dark.png",
+          "blob": "381976da4e7434d09a7ad16a06aec965",
+          "size": 63895,
+          "type": "image/png"
+        },
+        "mukoko-mark-light.png": {
+          "name": "mukoko-mark-light.png",
+          "blob": "35f2b6f0e3cf560a9235931efab1bd18",
+          "size": 94928,
+          "type": "image/png"
+        },
+        "mukoko-mark-dark.png": {
+          "name": "mukoko-mark-dark.png",
+          "blob": "a851eb46fe9dcbcdfd51ccf4625c630c",
+          "size": 80333,
+          "type": "image/png"
+        }
+      }
+    }
+  },
+  "blobs": {},
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "lastChange": {
+    "by": "Bryan Fawcett",
+    "at": "2026-10-04T13:38:05Z",
+    "via": "GitHub \u00b7 mzizi-dev/mzizi-registry",
+    "note": "mzizi mark redrawn in hematite (mzizi is not gold); design system now kept in the repo"
+  }
+}

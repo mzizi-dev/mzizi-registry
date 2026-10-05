@@ -10,6 +10,101 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — Open in Mukoko covers every Mukoko service, and its examples use the canonical link (2026-10-05, #432)
+
+- **`discover/open-in-app` 1.2.0 and `discover/detail-actions` 1.1.0:** `service` also takes `places` (Mukoko Kweli), `lingo` and `profile` (a handle, without the `@`), matching the resolver's link table in mukoko-dev/super-app-web (`crates/links`). `MUKOKO_SERVICES` in `discover-open-link.ts` gains the three.
+- **The `outline` example** is the canonical `https://mukoko.com/open/news/123`, not the retired `news.mukoko.com/open/article/123`.
+- **The behaviour text** says what the resolver does now: a desktop browser or a crawler is redirected to the item's public page; a phone gets "Open in the Mukoko app" or "Continue on the web".
+
+## [4.2.0] - 2026-10-05
+
+The first release of `staging` to `main` under the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): the next minor above the highest tag (v4.1.16). The code version moves from 1.0.0 to 4.2.0 in `package.json`, `README.md` and `content/changelog/releases.json`; the pre-1.0 doctrine record also numbered 4.2.0 is a different release. Everything below, back to 1.0.0, ships in it.
+
+### Changed — the Roots RFC makes pure `.astro` a first-class implementation (2026-10-05, #431)
+
+- **`docs/roots/RFC-roots.md` §2.5, amended** (owner decision, 2026-10-05). It is now "The four formats and the frontend paths": a component is one registry name with one contract in `contracts/` and up to four sibling implementations, `.rs`, `.astro`, `.tsx` and `.mz`, all held to that contract by `contracts/runner.ts`. It sets the rules every `.astro` keeps (no framework and so no React layer under Astro, no client JavaScript unless the contract allows one script, no inline styles, which the runner enforces, flat imports), names the registry as the single source that `mzizi-dev/packages-npm` builds `@bundu/ui` and `@bundu/server` from behind its drift check, and documents the Astro target: `/v1/astro/{name}`, `mzizi add --target astro` and the MCP `astro` block. An Astro app now has three paths (a pure `.astro`, Roots as static HTML, a Roots island) instead of two. The original §2.5 is kept as Appendix B. No `.mz` file is touched.
+
+### Added — every component in every format here: the Astro target, React builds of every contract, the Discover detail pattern and Open in Mukoko (2026-10-05, #430)
+
+Owner decision, 2026-10-04: this registry is the single source of every component in every format (`.tsx`, `.rs`, `.astro`, and `.mz` as it lands). Tracking: #397 (the Astro target) and #429 (the detail pattern).
+
+- **Added: `.astro` implementations.** The 54 Astro components `@bundu/ui` hand-authored in `mzizi-dev/packages-npm` (the Dashboard Standard's `src/app/*`, the Discover Standard's `src/discover/*`, the primitives and the marketing-site components) now live here, beside each component's `.tsx`: `app-*` (N6/N7, `app-brand-mark` in N3), `discover-*`, `site-*`, and `button`, `badge`, `card`, `alert`, `input`, `label`, `skeleton` beside their existing `.tsx`/`.rs`. With them come the framework-free modules they use (`ui-utils`, `ui-variants`, `app-nav`, `site-icons`, `site-breadcrumbs`), `@bundu/server`'s helpers as `n4-safety/server-*.ts` (the TypeScript mirror of `mzizi-roots-server`), and the Nyuchi brand-mark pair in `components/registry/assets/`. `site-hero` now composes a pure-Astro `site-cta-button` instead of a React button, so no `.astro` has React under it.
+- **Added: React (`.tsx`) builds of every contract.** The 24 Dashboard Standard patterns and shell components, the 11 Discover components and the 8 site components each have a `.tsx` that keeps the whole contract (`identity: "contract"`), so Next.js apps adopt the same design through the registry (`mzizi add <name> --target tsx` or `npx shadcn add https://api.mzizi.dev/v1/ui/<name>`).
+- **Added: the Discover detail pattern** (`discover/detail-hero`, `breadcrumb`, `meta-list`, `detail-actions`, `related-rail`), each a contract, an `.astro` and a `.tsx`, for the page of one item reached from a discover page.
+- **Changed: Open in Mukoko** (`discover/open-in-app` 1.1.0). New `service` and `id` props build the canonical universal link `https://mukoko.com/open/<service>/<id>` (`discover-open-link.ts`, `openInMukokoUrl`); `href` stays as an explicit override.
+- **Added: the `site/` contract family** (8 contracts), so every component has a contract. `site-breadcrumb` and `site-social-icon` gain a root `data-slot`.
+- **Added: the `ui/` contract family** (4 contracts) for the Astro ports of existing registry primitives that `@bundu/ui` 0.3.0 added: `native-select`, `segmented-control`, `toaster` and `safe-area-frame` (`.astro` beside their `.tsx`, with the `safe-area` geometry module). `safe-area-frame.astro` now draws its box, canvas and bands as SVG geometry instead of inline `style` attributes, so it keeps the no-inline-style rule; its `.tsx` and `.rs` share only the slot until they follow.
+- **Added: contracts test every format.** `__tests__/astro/contracts.test.ts` (`pnpm test:astro`, run by `pnpm test`) renders every `.astro` in every state; `__tests__/contracts/tsx-contracts.test.tsx` holds every `contract`-identity `.tsx` to the whole contract with the same runner, now canonical here as `contracts/runner.ts` (it lower-cases attribute names as a browser does). The schema gains `implementations.astro.registry` and the `contract` identity; `index.json` gains `astro`.
+- **Added: `lib/astro.ts`**, the reader `mzizi-api-gateway` bundles for `GET /v1/astro/{name}` (documented in `openapi.yaml`): the `.astro` (or framework-free `.ts`), its flat imports as `/v1/astro/` registry dependencies, its npm dependencies, and its brand assets as base64 files (`lib/registry-assets.generated.json`). `pnpm registry:validate` rejects a framework import in an `.astro` or a flat import that does not resolve.
+- **Changed:** registry `.astro` and framework-free `.ts` files import each other flat (`./button.astro`, `./ui-utils`), as installed; `vitest.astro.config.ts`, the default vitest config and tsconfig's `rootDirs` resolve them. `astro`, `css-select`, `domhandler`, `domutils` and `htmlparser2` are new devDependencies.
+
+### Fixed — CONTRIBUTING no longer says to curl a local server (2026-10-04, #426)
+
+The "Verify" step for a new component ran `curl http://localhost:11736/api/v1/ui/my-component`, but the app and its `/api/*` handlers were removed on 2026-10-02 and nothing listens there.
+
+- **`CONTRIBUTING.md`**: the step now runs `pnpm registry:validate && pnpm registry:verify`, then `pnpm build && git status --porcelain` (every generator in write mode; commit what it writes). Once the change is on `main` and mzizi-api-gateway's registry pin reaches it, `https://api.mzizi.dev/v1/ui/my-component` serves it.
+- **`.github/pull_request_template.md`**: the "API verified" checkbox that curled the same local URL is replaced by the same `pnpm build` check.
+
+### Added — a push to `main` tells the registry pin bots at once (2026-10-04, #425)
+
+The registry pin bots (`registry-pin-bump.yml` in mzizi-api-gateway and agent-tools) only ran on their hourly schedule, and GitHub delays and drops scheduled runs: on 2026-10-04 they ran 2–3 hours apart, so api.mzizi.dev and mcp.mzizi.dev served a registry hours behind `main`.
+
+- **`.github/workflows/notify-pin-bots.yml`**: on every push to `main` (and by hand), it sends a `repository_dispatch` of type `registry-main-moved` to mzizi-dev/mzizi-api-gateway and agent-tools with `RELEASE_BUMP_TOKEN`, carrying the pushed SHA. It checks out and runs no code. A send that fails, or a missing token, only warns: the hourly run stays the backstop.
+- It does nothing until each bot also triggers on `repository_dispatch`, which lands in those repositories separately.
+
+### Fixed — `wallet-card` and `mzizi-create-listing` take their colours from N1, and CI runs `lint:colors` (2026-10-04)
+
+`pnpm lint:colors` failed on `main` for nine raw palette hexes, and no CI job ran it (#423).
+
+- **`wallet-card`**: each token type's card is its mineral (MIT tanzanite, MXT malachite, NST cobalt, NHC gold), filled from `var(--color-<mineral>)` to `var(--color-<mineral>-on-container)` with `text-<mineral>-container` text, in place of four fixed hex gradients under `text-white`. The card now follows the theme: a deep fill with pale text in light mode and a bright fill with deep text in dark mode, where white text on the old bright end (`#FFD740`, `#64FFDA`) was barely legible.
+- **`mzizi-create-listing`**: the terracotta cover theme ends on `var(--color-terracotta)` instead of a raw `#A0522D`, and the gold and terracotta swatch comments, which were swapped, name the right mineral.
+- **CI**: the `Lint` job runs `pnpm lint:colors` after ESLint, so a hardcoded palette hex fails a pull request instead of waiting for someone to run `pnpm check`.
+
+### Added — `status-badge` in three builds (React, Mzizi Roots, the Mzizi language), and a CI gate for `.mz` components (2026-10-04, #418)
+
+Owner decision, 2026-10-04: StatusBadge comes back as a registry component, built in Rust and in the Mzizi language. Components gain Rust and `.mz` builds beside their TypeScript, and the TypeScript stays for now.
+
+- **`status-badge`** (N2): a pill-shaped lifecycle label, tinted with one of the Seven Minerals at 10% behind the mineral itself. `stable` is malachite, `beta` is cobalt, `alpha` is gold, and `deprecated` is terracotta, struck through. It ships in three builds that share one contract:
+  - `status-badge.tsx` (React, built on `Badge`; `npx shadcn@latest add https://api.mzizi.dev/v1/ui/status-badge`);
+  - `status-badge.rs` (Mzizi Roots, exported from `mzizi-ui` as `StatusBadge` with a `CONTRACT`);
+  - `status-badge.mz` (the Mzizi language).
+    `beta` is new; the removed app-only component had three statuses.
+- **`.mz` files sit beside `.tsx` and `.rs`** in the registry. There are twelve. Eight are the N2 primitives already written and verified in mzizi-dev/mzizi `primitives/`: `button`, `badge`, `card`, `avatar`, `input`, `separator`, `spinner` and `alert`. They are copied beside their siblings unchanged. The other four, `status-badge`, `label`, `progress` and `chart`, are written here. `lib/registry.generated.ts` and `lib/registry-source.generated.json` list every one. **`pnpm mz:check`** (`scripts/check-mz.mjs`) runs `mz check` and `mz contract` on every one. A new **Mzizi components** CI job builds `mz` from mzizi-dev/mzizi at the commit in `scripts/mz-pin`. Any error or warning fails the job.
+- **`mzizi-ui` now evaluates `CONTRACT` clauses** against `dioxus-ssr` markup, as `mzizi-brand` does, and exports `CONTRACTS`. The evaluator moved out of `mzizi-brand`'s test file into `mzizi-rs/contract-eval/contract_eval.rs`, shared by both suites, so there is no second copy.
+
+### Added — the mzizi design system in `design-system/`, and a registry `assets/` directory with the official marks (2026-10-04, #418)
+
+Owner decisions, 2026-10-04:
+
+- The official marks are the mzizi seven-node network, the bundu ring, the nyuchi bee and the mukoko seven-mineral honeycomb, each in a light and a dark version.
+- **mzizi is not gold.** Its mark is drawn in hematite, mzizi's ecosystem mineral. The first supplied version used nyuchi's gold.
+- The repo is the source of the design system. The Design System artifact is published from `design-system/`.
+
+The copper crosshair disc that used to ship as `public/icons/mzizi-icon.*` was not mzizi's mark. Tracking: #417.
+
+- **`components/registry/assets/`**: a brand-asset directory beside the node directories, holding the marks for mzizi, bundu, nyuchi and mukoko. Its items list under N3 (brand) in `lib/registry.ts` and the node map, so `ui.mzizi.dev` serves them.
+  - **`mzizi-mark-light` and `mzizi-mark-dark` are new installable items**: vector SVG masters in hematite (`#546e7a` light, `#90a4ae` dark), redrawn from the supplied geometry, with PNG renders beside them. Install one with `npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-mark-light`.
+  - The bundu, nyuchi and mukoko marks are raster PNGs. They are listed but not installable until vector masters exist, and `registry:validate` says so.
+  - `generate-registry-source` skips binary files, and `generate-file-paths`, `validate-registry` and `lib/registry.ts` rank a vector asset above its raster sibling.
+- **`design-system/`**: the design system, mirroring the artifact's files one to one.
+  - `design-system.json` is the artifact's index.
+  - `README.md` is the brand book: voice and casing, surfaces, ink and accent, the ecosystem minerals (Mukoko Events, kweli, Nyuchi Learning, news and weather included), the 21 colour families, type, shape, spacing, states, accessibility and iconography.
+  - `assets/<Group>/README.md` holds the mark notes.
+  - `components/` holds static renditions of the Button, Input, Badge, Card, Switch, Checkbox and Tabs primitives, plus the cover.
+  - `PUBLISHING.md` says how it stays current and how it is published.
+- **`design-system/tokens.json`**: 104 colour tokens with light and dark values, plus type, spacing, radius, size and aspect tokens. It is generated by `pnpm design-system:generate` from `styles/globals.css`, `lib/tokens/palette.source.ts` and `lib/tokens/brand.source.ts`. `pnpm design-system:generate:check` gates it in CI and in `pnpm check`.
+- **`__tests__/design-system.test.ts`** fails if any of these happens:
+  - the flagged low-contrast colours (copper, sunset and kalahari in light; sodalite in dark) stop matching the palette;
+  - an on-container pair drops below 7:1;
+  - a colour alias dangles;
+  - a mark is missing;
+  - the mzizi mark is drawn in anything but hematite;
+  - a component rendition names a source file that no longer exists.
+
+### Added — `safe-area-frame`, `preview-canvas`, `preset-picker` and `mzizi-email-preview` (2026-10-04, #398)
+
+- **Four components from nyuchi-tools** (`nyuchi/workspace-tools`), contributed because the registry had no equivalent. `safe-area-frame` (N2) draws a canvas shape at thumbnail size with its platform-UI bands shaded, in React and as a Mzizi Roots component in `mzizi-ui` (`SafeAreaFrame`, `safe_area_bands`) — one geometry, held together by the contract suite. `preview-canvas` (N2) is a single-image stage with Fit or scaled zoom and a busy state; `preset-picker` (N2) picks output sizes on `safe-area-frame`, keeping "active" and "included" apart; `mzizi-email-preview` (N3) shows email HTML in a sandboxed frame on an always-light body. Tests in `__tests__/components/` and `mzizi-rs/crates/mzizi-ui/tests/contract.rs`.
+
 ### Added — `mzizi-activitypub`, the shared ActivityPub crate (2026-10-04)
 
 Owner decision Q5, 2026-10-04 (mukoko-dev/kweli#171; nyuchi/api-gateway `docs/architecture/activitypub.md`): the ActivityPub code circles.mukoko.com and kweli.mukoko.com each carried is one Mzizi server crate, used by both Workers.

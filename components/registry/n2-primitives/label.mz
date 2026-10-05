@@ -1,0 +1,22 @@
+## A form label. Not interactive on its own, so no touch floor applies; it names the control
+## beside it.
+## Siblings: label.tsx (React) and label.rs (Mzizi Roots). One contract.
+component label
+
+  prop text: text
+
+  view
+    caption
+      slot = "label"
+      portal = "https://mzizi.dev/components/label"
+      class = "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50"
+      text = text
+    end
+  end
+
+  contract
+    slot is "label"
+    class contains "font-medium"
+  end
+
+end component label

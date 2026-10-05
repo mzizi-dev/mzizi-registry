@@ -1,0 +1,36 @@
+---
+/**
+ * Toaster — the Astro port of Mzizi `toast`/`sonner` for script-light
+ * pages: a polite live region plus `window.toast(message, kind?)`. Each toast
+ * leaves after `duration` ms; motion is the global rise, off under
+ * prefers-reduced-motion.
+ */
+interface Props {
+  duration?: number;
+}
+const { duration = 5000 } = Astro.props;
+---
+
+<div
+  id="toaster"
+  data-slot="toaster"
+  data-duration={duration}
+  class="pointer-events-none fixed inset-x-4 bottom-4 z-50 flex flex-col items-center gap-2 sm:inset-x-auto sm:right-6 sm:items-end"
+  role="status"
+  aria-live="polite"
+></div>
+<script is:inline>
+  window.toast = function (msg, kind) {
+    var host = document.getElementById("toaster");
+    var el = document.createElement("div");
+    el.setAttribute("data-slot", "toast");
+    el.className =
+      "pointer-events-auto max-w-sm rounded-[14px] border bg-card px-4 py-3 text-body-sm text-foreground shadow-lg " +
+      (kind === "error" ? "border-destructive" : "border-border");
+    el.textContent = msg;
+    host.appendChild(el);
+    setTimeout(function () {
+      el.remove();
+    }, Number(host.getAttribute("data-duration")) || 5000);
+  };
+</script>

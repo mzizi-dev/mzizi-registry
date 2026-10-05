@@ -1,6 +1,7 @@
 # RFC: Mzizi Roots
 
-**Status:** proposed, 2026-09-29.
+**Status:** proposed, 2026-09-29. **Amended** 2026-10-05: §2.5, pure `.astro` is a first-class
+implementation beside `.tsx`, `.rs` and `.mz` (the original §2.5 is Appendix B).
 **Scope:** Mzizi's own branded components (`mzizi`- and `nyuchi`-owned registry items),
 converted to Rust as UI components and server components for the agentic web.
 **Snapshot:** registry `main` at `f19bb0b`. Every count below is computed from
@@ -250,36 +251,139 @@ A Roots component is done when all of these pass in CI:
 Server components add a `wasm32-unknown-unknown` build check once the Workers adapter lands,
 so a core that stops building for Workers fails CI rather than a deploy.
 
-### 2.5 The two frontend paths
+### 2.5 The four formats and the frontend paths
 
-The frontend is either **Astro with Roots underneath**, or **pure Rust end to end**.
+> **Amended 2026-10-05** (owner decision, building on the 2026-10-04 decision that landed in
+> [#430](https://github.com/mzizi-dev/mzizi-registry/pull/430)). Pure `.astro` is a
+> first-class implementation of a component, alongside `.tsx`, `.rs` and `.mz`. This section
+> used to say that Astro only places Roots output and that there are no `.astro` components to
+> install; that text is kept, superseded, in [Appendix B](#appendix-b-25-as-first-proposed).
+> Nothing else in this RFC changes, and Rust stays first (§4).
+
+#### The four formats
+
+A component is one registry name with **one contract** and up to four implementations. Each
+is a sibling file, `components/registry/n<N>-*/<name>.<ext>`:
+
+| Format   | What it is                                                        | Served at                       |
+| -------- | ----------------------------------------------------------------- | ------------------------------- |
+| `.rs`    | Mzizi Roots: a Dioxus UI component or a host-agnostic server core | `/v1/rs/{name}`, crates.io (§3) |
+| `.astro` | Pure Astro: static HTML, no framework under it                    | `/v1/astro/{name}`              |
+| `.tsx`   | The React build: Rust is presented first where it exists          | `/v1/ui/{name}` (shadcn)        |
+| `.mz`    | The Mzizi language, as it lands                                   | not served yet                  |
+
+No format is the "real" one with the others as ports. Each is an implementation of the same
+contract, and a component may have any subset. Rust stays first where it exists (§4), and
+`.mz` files are the language's to define (§7); this RFC does not specify them.
+
+**One contract per component.** The machine-readable contract lives in the registry's
+`contracts/` directory (`contracts/<family>/<name>.contract.json`, where the family is `app`,
+`discover`, `site` or `ui`; schema in
+`contracts/schema/component-contract.schema.json`, listed in `contracts/index.json`). It holds
+the props and slots, named states, accessibility, density for fine and coarse pointers,
+theming, the no-JS fallback and a `contract … end` block in the RFC-0006 / RFC-0010 clause
+grammar. Every format that exists is tested against it; `.astro` and `.tsx` share one runner,
+`contracts/runner.ts`:
+
+- `.astro`: `__tests__/astro/contracts.test.ts` renders every `.astro` in every contract state
+  with Astro's container and no renderer.
+- `.tsx`: `__tests__/contracts/tsx-contracts.test.tsx` renders every `.tsx` whose contract
+  `identity` is `contract` and holds it to the whole contract.
+- `.rs`: the crate's `tests/contract.rs` evaluates the module's `CONTRACT` on `dioxus-ssr`
+  markup (§2.3), and `__tests__/contracts/contracts.test.tsx` holds the `.rs` sibling's
+  identity.
+
+A clause the runner cannot evaluate fails, as in §2.3 (RFC-0006 FM-12).
+
+#### Rules every Astro implementation keeps
+
+1. **No framework under Astro.** A `.astro` is pure Astro. It imports no React, React DOM,
+   Next, Preact, Vue or Svelte, and composes only other `.astro` files and framework-free
+   `.ts` modules (`ui-utils`, `ui-variants`, `app-nav`, `site-icons`, `server-*`). There is no
+   React layer: where a React component used to sit inside an Astro one, the registry adds an
+   Astro sibling instead (as `site-cta-button` replaced the React button in `site-hero`).
+   `pnpm registry:validate` rejects a framework import, a `"use client"` module or a flat
+   import that does not resolve.
+2. **No client JavaScript by default.** A `.astro` ships HTML. It carries one enhancement
+   script only where its contract allows one, and the no-JS fallback in the contract still
+   holds without it.
+3. **No inline styles.** No element carries a `style` attribute, in any format. Sizes and
+   custom properties go through classes, data attributes or SVG geometry, so a page's
+   Content-Security-Policy keeps `style-src 'self'` with no `style-src-attr 'unsafe-inline'`.
+   The contract runner enforces this (`evaluateTheming` in `contracts/runner.ts` fails on an
+   inline `style`, a literal hex colour or a colour function), for `.astro` and `.tsx` alike.
+4. **Flat imports, as installed.** Registry `.astro` and `.ts` files import each other flat
+   (`./button.astro`, `./ui-utils`, `./server-cookies.js`, `./assets/<file>`), the way
+   `mzizi add --target astro` installs them into one directory.
+
+#### The registry is the single source
+
+The registry holds every format of every component. Nothing is authored anywhere else:
+
+- **`mzizi-dev/packages-npm`** builds `@bundu/ui` (the `.astro` components and modules, the
+  brand assets, the contract runner) and `@bundu/server` (the `n4-safety/server-*.ts`
+  helpers, the TypeScript mirror of `mzizi-roots-server`) from this repo at a pinned commit
+  (`pnpm registry:sync`). Its CI fails on any drift from that commit (`pnpm registry:check`;
+  [packages-npm#38](https://github.com/mzizi-dev/packages-npm/pull/38)). A component is
+  never fixed there: it is fixed here and the pin is bumped.
+- The crates (§3) compile the registry's `.rs` files, and `pnpm rust:generate:check` fails
+  on a stale copy (§2.4).
+
+#### The Astro target
+
+The Astro implementation is served and installed the same way the Rust and React builds are:
+
+- **API.** `GET /v1/astro` lists every name with an Astro implementation, and
+  `GET /v1/astro/{name}` returns its document: the `.astro` or framework-free `.ts`, its flat
+  imports as absolute `/v1/astro/` dependencies, its npm dependencies and any imported brand
+  asset. `lib/astro.ts` builds it, `openapi.yaml` documents it, and the gateway serves it
+  ([mzizi-api-gateway#49](https://github.com/mzizi-dev/mzizi-api-gateway/pull/49)).
+- **CLI.** `mzizi add <name> --target astro` installs a component and its `/v1/astro/`
+  closure flat into one directory (`src/components/mzizi/`), and detects an Astro project
+  on its own
+  ([agent-tools#203](https://github.com/mzizi-dev/agent-tools/pull/203)).
+- **MCP.** `mzizi_get_component` returns an `astro` block (the install line, the API URL,
+  the files and the dependencies) beside the Rust and React ones, `null` where there is no
+  `.astro`; `mzizi_list_components` and `mzizi_search` mark rows with `astroFile`. The MCP
+  bundles the registry's own `lib/astro.ts`, so it and the API serve the same document
+  (agent-tools#203).
+
+This is additive, like §4: no existing URL or install command changes.
+
+#### The frontend paths
+
+The frontend is **Astro** or **pure Rust end to end**.
 
 **Pure Rust.** A Dioxus app depends on the Roots crates and mounts the components directly,
 on web (wasm), desktop or mobile, with its server as a `workers-rs` Worker or a Dioxus
 fullstack server. This is what the crates are built for, and every batch supports it.
 
-**Astro with Roots underneath.** Astro renders the page chrome as static HTML, and Roots
-components render inside it in one of two ways:
+**Astro.** Astro renders the page, and a component reaches it in one of three ways:
 
-1. **Static HTML at build or request time.** Rust renders the component to an HTML string
-   with `dioxus-ssr`, in a build step or in a `workers-rs` Worker, and Astro places the
-   fragment. It carries the same classes as the React build, so the site's Tailwind
-   stylesheet styles it, and it ships no JavaScript. This suits display components: cards,
-   stats, gauges, headers, states.
-2. **Interactive islands.** The component is compiled to wasm with Dioxus's web renderer and
-   wrapped as a custom element (`<mzizi-alert-banner>`), loaded from a plain
+1. **A pure `.astro` component**, installed with `mzizi add --target astro` and rendered by
+   Astro itself. This is the default for an Astro app wherever the component has an Astro
+   implementation, and it is how the Dashboard Standard, the Discover Standard and the
+   marketing-site components ship today.
+2. **Roots as static HTML.** Rust renders the component to an HTML string with
+   `dioxus-ssr`, in a build step or in a `workers-rs` Worker, and Astro places the fragment.
+   It carries the same classes as the other builds, so the site's stylesheet styles it, and it
+   ships no JavaScript. This suits a display component that has a `.rs` and no `.astro` yet.
+3. **Roots as an interactive island.** The component is compiled to wasm with Dioxus's web
+   renderer and wrapped as a custom element (`<mzizi-alert-banner>`), loaded from a plain
    `<script type="module">`. Astro renders the tag and the island hydrates itself. This is
    the charter's Phase 1 "self-contained artifact … an ES module / custom element (and its
-   WASM bundle)", and it is the pattern mzizi.dev describes for app.mzizi.dev: "Astro chrome,
-   Rust/Dioxus islands".
+   WASM bundle)", and the pattern mzizi.dev describes for app.mzizi.dev: "Astro chrome,
+   Rust/Dioxus islands". The wrapper crate (`mzizi-islands`, proposed) is not packaged yet;
+   it belongs with batch 2.
 
-**What the first batch supports.** All twelve components work in a pure-Rust Dioxus app. All
-twelve render to static HTML through `dioxus-ssr`: the contract suite does exactly that for
-every component on every run, and the crate type-checks for `wasm32-unknown-unknown`. No
-Astro integration or custom-element wrapper exists yet, so neither Astro path is packaged. The
-wrapper is a small crate (`mzizi-islands`, proposed) that registers each component as a
-custom element, and it belongs with batch 2, when the first interactive brand components need
-it.
+Under every Astro path there is no React, Svelte or Vue layer.
+
+**What exists today.** All twelve batch-1 components work in a pure-Rust Dioxus app and
+render to static HTML through `dioxus-ssr` (the contract suite does exactly that on every
+run). Pure `.astro` implementations exist for the components #430 brought in or added: the
+`app-*`, `discover-*` and `site-*` families and the `button`, `badge`, `card`, `alert`,
+`input`, `label`, `skeleton`, `native-select`, `segmented-control`, `toaster` and
+`safe-area-frame` primitives. Every one of them passes its contract.
 
 ## 3. Naming and packaging
 
@@ -968,3 +1072,38 @@ Rust status and kind as defined in §1.2; batch as in §5 ("—" is already Rust
 | Item        | Owner    | Collection | Kind   | Rust | Batch |
 | ----------- | -------- | ---------- | ------ | ---- | ----- |
 | `mzizi-seo` | `nyuchi` | pages      | server | has  | —     |
+
+## Appendix B. §2.5 as first proposed
+
+Superseded by the 2026-10-05 amendment to §2.5. Kept so the change is visible.
+
+### 2.5 The two frontend paths (superseded)
+
+The frontend is either **Astro with Roots underneath**, or **pure Rust end to end**.
+
+**Pure Rust.** A Dioxus app depends on the Roots crates and mounts the components directly,
+on web (wasm), desktop or mobile, with its server as a `workers-rs` Worker or a Dioxus
+fullstack server. This is what the crates are built for, and every batch supports it.
+
+**Astro with Roots underneath.** Astro renders the page chrome as static HTML, and Roots
+components render inside it in one of two ways:
+
+1. **Static HTML at build or request time.** Rust renders the component to an HTML string
+   with `dioxus-ssr`, in a build step or in a `workers-rs` Worker, and Astro places the
+   fragment. It carries the same classes as the React build, so the site's Tailwind
+   stylesheet styles it, and it ships no JavaScript. This suits display components: cards,
+   stats, gauges, headers, states.
+2. **Interactive islands.** The component is compiled to wasm with Dioxus's web renderer and
+   wrapped as a custom element (`<mzizi-alert-banner>`), loaded from a plain
+   `<script type="module">`. Astro renders the tag and the island hydrates itself. This is
+   the charter's Phase 1 "self-contained artifact … an ES module / custom element (and its
+   WASM bundle)", and it is the pattern mzizi.dev describes for app.mzizi.dev: "Astro chrome,
+   Rust/Dioxus islands".
+
+**What the first batch supports.** All twelve components work in a pure-Rust Dioxus app. All
+twelve render to static HTML through `dioxus-ssr`: the contract suite does exactly that for
+every component on every run, and the crate type-checks for `wasm32-unknown-unknown`. No
+Astro integration or custom-element wrapper exists yet, so neither Astro path is packaged. The
+wrapper is a small crate (`mzizi-islands`, proposed) that registers each component as a
+custom element, and it belongs with batch 2, when the first interactive brand components need
+it.

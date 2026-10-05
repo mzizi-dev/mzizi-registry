@@ -8,11 +8,12 @@
   "summary": "One record as a titled description list, with an optional read-only \"Full record\" disclosure and actions. Used beside a DataTable and for single-record sections.",
   "implementations": {
     "astro": {
+      "registry": "app-detail-panel",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/DetailPanel.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-detail-panel", "identity": "contract" },
     "rs": null,
     "related": ["mzizi-detail-layout"]
   },

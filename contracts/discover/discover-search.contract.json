@@ -8,11 +8,12 @@
   "summary": "The one search box of a Discover page: a GET form, so every search is a URL that works with no JavaScript. 48px on every pointer.",
   "implementations": {
     "astro": {
+      "registry": "discover-search",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/DiscoverSearch.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-search", "identity": "contract" },
     "rs": null,
     "related": ["app/filter-bar"]
   },

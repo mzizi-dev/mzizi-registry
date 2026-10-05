@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500" role="img" aria-label="mzizi">
+  <title>mzizi</title>
+  <!-- The mzizi mark: seven nodes, a hub and six roots, in hematite (dark value #90a4ae). Edges at 55%. -->
+  <g stroke="#90a4ae" stroke-opacity="0.55" stroke-width="5" stroke-linecap="round"><line x1="150" y1="125" x2="350" y2="150"/><line x1="150" y1="125" x2="250" y2="275"/><line x1="150" y1="125" x2="125" y2="325"/><line x1="350" y1="150" x2="250" y2="275"/><line x1="350" y1="150" x2="400" y2="325"/><line x1="250" y1="275" x2="125" y2="325"/><line x1="250" y1="275" x2="400" y2="325"/><line x1="250" y1="275" x2="225" y2="412"/><line x1="250" y1="275" x2="300" y2="412"/><line x1="125" y1="325" x2="225" y2="412"/><line x1="400" y1="325" x2="300" y2="412"/></g>
+  <g fill="#90a4ae"><circle cx="150" cy="125" r="20"/><circle cx="350" cy="150" r="20"/><circle cx="250" cy="275" r="22"/><circle cx="125" cy="325" r="20"/><circle cx="400" cy="325" r="20"/><circle cx="225" cy="412" r="20"/><circle cx="300" cy="412" r="20"/></g>
+</svg>

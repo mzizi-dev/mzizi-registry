@@ -8,11 +8,12 @@
   "summary": "The sidebar's search button with its ⌘K hint. It opens a CommandPalette through the Popover API, so it works with no script.",
   "implementations": {
     "astro": {
+      "registry": "app-quick-search",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/QuickSearch.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-quick-search", "identity": "contract" },
     "rs": null,
     "related": ["mzizi-command-palette", "command"]
   },

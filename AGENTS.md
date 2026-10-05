@@ -25,6 +25,37 @@ at [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts
 contract here, never the copy in `mzizi-dev/packages-npm`; `__tests__/contracts/contracts.test.tsx`
 keeps the index and the coverage table honest.
 
+### Every component, every format, one place (owner decision 2026-10-04)
+
+This registry is the single source of every component in every format: `.tsx` (React),
+`.rs` (Mzizi Roots, Dioxus), `.astro` (pure Astro) and, from the owner's work in progress,
+`.mz` (the Mzizi language). One component has one name and one contract; each format is a
+sibling file `components/registry/n<N>-*/<name>.<ext>`. **Do not create, edit or move `.mz`
+files or `mz`-language directories here**: they are being built elsewhere and land as their
+own change.
+
+- **Astro (#397).** A `.astro` is pure Astro: no React or any framework under it, no client
+  JavaScript unless its contract allows one enhancement script. Registry `.astro` files and
+  the framework-free `.ts` modules they use (`ui-utils`, `ui-variants`, `app-nav`,
+  `site-icons`, `server-*`) import each other **flat**, the way `mzizi add --target astro`
+  installs them into one directory (`./button.astro`, `./ui-utils`, `./server-cookies.js`); a
+  brand asset is `./assets/<file>` under the node's `assets/` directory.
+  `vitest.astro.config.ts` resolves flat imports across node directories, tsconfig's
+  `rootDirs` does the same for `tsc`, and `pnpm registry:validate` rejects a framework import
+  or a flat import that does not resolve. `lib/astro.ts` builds the `/v1/astro/{name}`
+  document the gateway serves.
+- **Contracts test every format that exists.** `__tests__/astro/contracts.test.ts` renders
+  every `.astro` in every contract state (Astro container, no renderer); `__tests__/contracts/
+tsx-contracts.test.tsx` renders every `.tsx` whose contract `identity` is `contract` and
+  holds it to the whole contract with the same runner (`contracts/runner.ts`);
+  `__tests__/contracts/contracts.test.tsx` and the crates' `tests/contract.rs` hold the
+  identity of the `.rs` siblings.
+- **Packages are built from here.** `mzizi-dev/packages-npm` builds `@bundu/ui`'s `.astro`
+  components and modules, `@bundu/server`'s helpers (the TypeScript mirror of
+  `mzizi-roots-server`, in `n4-safety/server-*.ts`), the brand assets and the contract runner
+  from this repo at a pinned commit (`pnpm registry:sync`), and its CI fails on any drift
+  (`pnpm registry:check`). Never fix a component there: fix it here and bump the pin.
+
 ### A naming collision worth knowing before you grep
 
 **`mzizi-ui` names two different things in this repo**, and confusing them will send you
@@ -225,6 +256,10 @@ add it as its own section rather than re-creating a dead link.
   changelog. [`.github/workflows/publish-crates.yml`](./.github/workflows/publish-crates.yml)
   publishes any crate version not yet on crates.io and tags it `mzizi-rs-vX.Y.Z`. Both run
   on merge to `main` with `RELEASE_BUMP_TOKEN`; nobody pushes a tag by hand.
+  [`.github/workflows/notify-pin-bots.yml`](./.github/workflows/notify-pin-bots.yml) also
+  runs on every push to `main`: it sends `registry-main-moved` to the registry pin bots in
+  mzizi-api-gateway and agent-tools, so api.mzizi.dev and mcp.mzizi.dev follow `main`
+  without waiting for the bots' hourly run.
 
 ## Track big work in GitHub issues
 

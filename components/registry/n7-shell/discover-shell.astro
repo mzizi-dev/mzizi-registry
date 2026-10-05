@@ -1,0 +1,96 @@
+---
+/**
+ * DiscoverShell — the frame of every public Discover site in the Mukoko
+ * family (circles, news, events, weather, and the super-app on the web):
+ * a skip link, the mineral strip, a header (the brand, the main navigation,
+ * one action), the page in <main id="main">, and a footer. It goes inside
+ * <body>; the app owns <head> (with DiscoverMeta) and its stylesheets.
+ *
+ * Only the brand changes between services: the `brand` slot (mark and
+ * wordmark) and the brand overlay stylesheet. Layout never varies.
+ *
+ * Mzizi Discover Standard (contracts/discover/discover-shell).
+ */
+import MineralStrip from "./site-mineral-strip.astro";
+import { buttonVariants } from "./ui-variants";
+
+interface Link {
+  label: string;
+  href: string;
+  /** The current section: true (or "page") sets aria-current="page". */
+  current?: boolean | string;
+}
+interface Props {
+  /** The home link's accessible name, e.g. "mukoko circles, home". */
+  homeLabel: string;
+  homeHref?: string;
+  nav?: Link[];
+  footerLinks?: Link[];
+  /** One quiet line at the foot, e.g. "Part of the Bundu ecosystem." */
+  footerNote?: string;
+  /** The seven-mineral strip on the left edge (default true). */
+  strip?: boolean;
+  skipLabel?: string;
+}
+const { homeLabel, homeHref = "/", nav = [], footerLinks = [], footerNote, strip = true, skipLabel = "Skip to content" } = Astro.props;
+const cur = (c: Link["current"]) => (c === true ? "page" : c === false || c === undefined ? undefined : c);
+const link = "text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground";
+---
+
+<div class="flex min-h-dvh flex-col" data-slot="discover-shell">
+  <a href="#main" class={`sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 ${buttonVariants({ variant: "secondary", size: "md" })}`}>{skipLabel}</a>
+  {strip && <MineralStrip />}
+  <header class="border-b border-border bg-background">
+    <div class="container-custom flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
+      <a href={homeHref} aria-label={homeLabel} class="inline-flex min-h-11 items-center gap-2 text-foreground no-underline" data-slot="discover-home">
+        <slot name="brand" />
+      </a>
+      {
+        nav.length > 0 && (
+          <nav aria-label="Main" class="order-3 w-full sm:order-none sm:w-auto">
+            <ul class="flex flex-wrap items-center gap-x-6 gap-y-1 text-body-sm">
+              {nav.map((l) => (
+                <li>
+                  <a href={l.href} aria-current={cur(l.current)} class={`inline-flex min-h-11 items-center ${link} aria-[current=page]:font-semibold aria-[current=page]:decoration-foreground`}>
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+      {
+        Astro.slots.has("action") && (
+          <div class="flex items-center gap-2">
+            <slot name="action" />
+          </div>
+        )
+      }
+    </div>
+  </header>
+  <main id="main" tabindex="-1" class="flex-1 focus:outline-none">
+    <slot />
+  </main>
+  <footer class="mt-auto border-t border-border bg-secondary">
+    <div class="container-custom grid gap-8 py-12 md:grid-cols-3">
+      <slot name="footer" />
+      {
+        footerLinks.length > 0 && (
+          <nav aria-label="Footer" class="text-body-sm">
+            <ul class="space-y-1">
+              {footerLinks.map((l) => (
+                <li>
+                  <a href={l.href} aria-current={cur(l.current)} class={`inline-flex min-h-11 items-center ${link}`}>
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+      {footerNote !== undefined && <p class="text-body-sm text-muted-foreground md:col-span-3 empty:hidden">{footerNote}</p>}
+    </div>
+  </footer>
+</div>

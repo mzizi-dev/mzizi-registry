@@ -1,0 +1,137 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "site/icon",
+  "title": "Icon",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "One glyph from the design system's curated inline-SVG set: stroke-drawn at 1.75 weight on a 24px grid, in currentColor, sized to 1em. Decorative unless it has a title.",
+  "implementations": {
+    "astro": {
+      "registry": "site-icon",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Icon.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "site-icon", "identity": "contract" },
+    "rs": null,
+    "related": ["site-social-icon"]
+  },
+  "props": [
+    {
+      "name": "name",
+      "type": "IconName",
+      "required": true,
+      "description": "The glyph: a key of ICON_PATHS (site-icons.ts), e.g. \"arrow-right\", \"search\", \"home\"."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "The accessible name. Without it the icon is decorative (aria-hidden)."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, after the 1em sizing (a later `h-5 w-5` overrides it)."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Renders one <svg data-slot=\"icon\" data-icon=\"<name>\"> on a 0 0 24 24 viewBox with fill none, stroke currentColor, stroke-width 1.75 and round caps and joins, holding one <path> from ICON_PATHS.",
+    "Without a title it is aria-hidden=\"true\" with no role and no label.",
+    "With a title it is role=\"img\" with aria-label set to the title, and carries a <title> child."
+  ],
+  "states": {
+    "default": {
+      "description": "Decorative.",
+      "props": { "name": "arrow-right" }
+    },
+    "titled": {
+      "description": "Meaningful: named by its title.",
+      "props": { "name": "search", "title": "Search" }
+    },
+    "sized": {
+      "description": "Sized by an extra class.",
+      "props": { "name": "home", "class": "h-5 w-5 text-primary" }
+    }
+  },
+  "accessibility": {
+    "roles": ["img"],
+    "keyboard": ["None: it is never focusable."],
+    "focus": ["None."],
+    "aria": [
+      "Decorative (no title): aria-hidden=\"true\".",
+      "Meaningful (title): role=\"img\", aria-label and a <title>."
+    ],
+    "wcag": ["1.1.1", "1.4.11"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [],
+    "brandOverlay": "Nothing: it draws in currentColor, so it takes its colour from the text around it.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered SVG with no script."
+  },
+  "responsive": [
+    "It scales with the font size (1em) unless a class sets its size."
+  ],
+  "contract": "contract\n  slot is \"icon\"\n  class is \"inline-block h-[1em] w-[1em]\"\n  when titled role is \"img\"\n  when titled label is \"Search\"\n  when sized class is \"inline-block h-[1em] w-[1em] h-5 w-5 text-primary\"\nend",
+  "checks": [
+    {
+      "say": "The glyph is named and drawn as a stroke on the 24px grid.",
+      "state": "*",
+      "select": "svg[data-slot=\"icon\"]",
+      "attr": {
+        "data-icon": true,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-width": "1.75",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round"
+      }
+    },
+    {
+      "say": "One path.",
+      "state": "*",
+      "select": "svg > path[d]",
+      "count": 1
+    },
+    {
+      "say": "The glyph's name is on the svg.",
+      "select": "svg",
+      "attr": { "data-icon": "arrow-right" }
+    },
+    {
+      "say": "Decorative: hidden, no role, no label.",
+      "select": "svg",
+      "attr": { "aria-hidden": "true", "role": false, "aria-label": false }
+    },
+    {
+      "say": "Decorative: no title.",
+      "select": "svg title",
+      "absent": true
+    },
+    {
+      "say": "Meaningful: not hidden, with a title.",
+      "state": "titled",
+      "select": "svg",
+      "attr": { "aria-hidden": false }
+    },
+    {
+      "say": "The title element.",
+      "state": "titled",
+      "select": "svg > title",
+      "count": 1,
+      "text": "Search"
+    }
+  ],
+  "gaps": [
+    "Size comes from classes (`h-[1em] w-[1em]`), so a later size class only wins through the stylesheet order; the component does not merge them.",
+    "The set is curated by hand; there is no check that every glyph is drawn on the 24px grid at the 1.75 weight."
+  ]
+}

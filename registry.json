@@ -662,6 +662,734 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "shell"],
+      "dependencies": [],
+      "description": "Who is signed in, the app's account actions, and sign-out as a POST form, in a <details> disclosure at the end of the top bar.",
+      "docs": "Use it for: Who is signed in, the app's account actions, and sign-out as a POST form, in a <details> disclosure at the end of the top bar (Mzizi Dashboard Standard).\nIncludes: Initials in a 24px avatar; the name shows from xl and is the accessible name below it., Sign-out is a POST form, so no other page can trigger it with a link..\nAccessibility: \"Account menu for <name>\" below xl., The avatar is aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-account-menu",
+      "files": [
+        {
+          "path": "components/registry/n7-shell/app-account-menu.tsx",
+          "target": "components/ui/app-account-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "\"Account menu for <name>\" below xl.",
+          "The avatar is aria-hidden."
+        ],
+        "collection": "app",
+        "contract": "app/account-menu",
+        "features": [
+          "Initials in a 24px avatar; the name shows from xl and is the accessible name below it.",
+          "Sign-out is a POST form, so no other page can trigger it with a link."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Who is signed in, the app's account actions, and sign-out as a POST form, in a <details> disclosure at the end of the top bar (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-account-menu",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
+      "title": "App Account Menu",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens.",
+      "docs": "Use it for: A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens (Mzizi Dashboard Standard).\nIncludes: The bars are aria-hidden; the figures table (with a total) is the accessible version., No data or all zero: \"Nothing to chart in this range.\", At most ~8 axis labels, always the first and last., Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'..\nAccessibility: Bars aria-hidden; the table has a caption..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-bar-chart",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-bar-chart.tsx",
+          "target": "components/ui/app-bar-chart.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Bars aria-hidden; the table has a caption."],
+        "collection": "app",
+        "contract": "app/bar-chart",
+        "features": [
+          "The bars are aria-hidden; the figures table (with a total) is the accessible version.",
+          "No data or all zero: \"Nothing to chart in this range.\"",
+          "At most ~8 axis labels, always the first and last.",
+          "Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-bar-chart",
+      "registryDependencies": [],
+      "title": "App Bar Chart",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "brand"],
+      "dependencies": [],
+      "description": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
+      "docs": "Use it for: An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked (Mzizi Dashboard Standard).\nIncludes: The marks are the registry's canonical icon pair, never redrawn., Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script., The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"..\nAccessibility: alt is the brand name, or empty when text names it..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-brand-mark",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/app-brand-mark.tsx",
+          "target": "components/ui/app-brand-mark.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["alt is the brand name, or empty when text names it."],
+        "collection": "app",
+        "contract": "app/brand-mark",
+        "features": [
+          "The marks are the registry's canonical icon pair, never redrawn.",
+          "Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script.",
+          "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-brand-mark",
+      "registryDependencies": [],
+      "title": "App Brand Mark",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "shell"],
+      "dependencies": [],
+      "description": "\"Go to anything\": every navigation item, grouped, in a Popover API dialog opened by QuickSearch or ⌘K / Ctrl+K. Progressive enhancement: links and a GET form without script; live filtering and arrow keys with it.",
+      "docs": "Use it for: \"Go to anything\": every navigation item, grouped, in a Popover API dialog opened by QuickSearch or ⌘K / Ctrl+K (Mzizi Dashboard Standard).\nIncludes: A popover with role=\"dialog\"; Escape and a click outside close it (light dismiss)., Lists every item of `groups`, flattened, under its group's name (\"Go to\" for an unlabelled group), each a plain link; nested items show their trail (\"Content › News\")., With `action` the search box is a role=\"search\" GET form, so search works without script., With script: ⌘K / Ctrl+K toggles it, typing filters (diacritics folded) and announces \"N matches\" in a polite live region, Enter opens the first match, ↑/↓ move between results, and opening clears and focuses the box..\nAccessibility: The search box has a visually hidden <label>., The match count is announced by aria-live=\"polite\"., Group names are aria-hidden text; each <section> carries the name as aria-label..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-command-palette",
+      "files": [
+        {
+          "path": "components/registry/n7-shell/app-command-palette.tsx",
+          "target": "components/ui/app-command-palette.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The search box has a visually hidden <label>.",
+          "The match count is announced by aria-live=\"polite\".",
+          "Group names are aria-hidden text; each <section> carries the name as aria-label."
+        ],
+        "collection": "app",
+        "contract": "app/command-palette",
+        "features": [
+          "A popover with role=\"dialog\"; Escape and a click outside close it (light dismiss).",
+          "Lists every item of `groups`, flattened, under its group's name (\"Go to\" for an unlabelled group), each a plain link; nested items show their trail (\"Content › News\").",
+          "With `action` the search box is a role=\"search\" GET form, so search works without script.",
+          "With script: ⌘K / Ctrl+K toggles it, typing filters (diacritics folded) and announces \"N matches\" in a polite live region, Enter opens the first match, ↑/↓ move between results, and opening clears and focuses the box."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "\"Go to anything\": every navigation item, grouped, in a Popover API dialog opened by QuickSearch or ⌘K / Ctrl+K (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-command-palette",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/app-nav"
+      ],
+      "title": "App Command Palette",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup.",
+      "docs": "Use it for: A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways (Mzizi Dashboard Standard).\nIncludes: Cell text is escaped: a row cannot inject markup., An empty cell shows a dash to the eye and \"none\" to a screen reader., A cell with `current` marks its row aria-current=\"true\"., Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination..\nAccessibility: <caption> always present., Phone card labels are aria-hidden duplicates of the headers., aria-current=\"true\" on the current row..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-data-table",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-data-table.tsx",
+          "target": "components/ui/app-data-table.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "<caption> always present.",
+          "Phone card labels are aria-hidden duplicates of the headers.",
+          "aria-current=\"true\" on the current row."
+        ],
+        "collection": "app",
+        "contract": "app/data-table",
+        "features": [
+          "Cell text is escaped: a row cannot inject markup.",
+          "An empty cell shows a dash to the eye and \"none\" to a screen reader.",
+          "A cell with `current` marks its row aria-current=\"true\".",
+          "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-data-table",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-variants"],
+      "title": "App Data Table",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "One record as a titled description list, with an optional read-only \"Full record\" disclosure and actions. Used beside a DataTable and for single-record sections.",
+      "docs": "Use it for: One record as a titled description list, with an optional read-only \"Full record\" disclosure and actions (Mzizi Dashboard Standard).\nIncludes: A <section> labelled by its heading., Empty values read \"Not set\"., The record is text in a <pre>, never markup..\nAccessibility: aria-labelledby to the heading..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-detail-panel",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-detail-panel.tsx",
+          "target": "components/ui/app-detail-panel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["aria-labelledby to the heading."],
+        "collection": "app",
+        "contract": "app/detail-panel",
+        "features": [
+          "A <section> labelled by its heading.",
+          "Empty values read \"Not set\".",
+          "The record is text in a <pre>, never markup."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "One record as a titled description list, with an optional read-only \"Full record\" disclosure and actions (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-detail-panel",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Detail Panel",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "A calm, centred card for \"nothing here yet\": a heading, one or two lines of help, and the next steps.",
+      "docs": "Use it for: A calm, centred card for \"nothing here yet\": a heading, one or two lines of help, and the next steps (Mzizi Dashboard Standard).\nIncludes: The title is a real heading at `level`., No illustration; actions render only when given..\nAccessibility: The icon is decorative..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-empty-state",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-empty-state.tsx",
+          "target": "components/ui/app-empty-state.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["The icon is decorative."],
+        "collection": "app",
+        "contract": "app/empty-state",
+        "features": [
+          "The title is a real heading at `level`.",
+          "No illustration; actions render only when given."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A calm, centred card for \"nothing here yet\": a heading, one or two lines of help, and the next steps (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-empty-state",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
+      "title": "App Empty State",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "Search and select filters as a GET form, so the filtered view is a URL: linkable and working without JavaScript. Changing a filter goes back to page 1.",
+      "docs": "Use it for: Search and select filters as a GET form, so the filtered view is a URL: linkable and working without JavaScript (Mzizi Dashboard Standard).\nIncludes: A role=\"search\" GET form with visible labels., \"Apply\" submits; \"Clear\" appears only when a filter is active., Has no `page` field, so applying returns to page 1., `search={false}` renders no search field; a select whose value is \"\" is not an active filter..\nAccessibility: Every field has a visible <label>..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-filter-bar",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-filter-bar.tsx",
+          "target": "components/ui/app-filter-bar.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Every field has a visible <label>."],
+        "collection": "app",
+        "contract": "app/filter-bar",
+        "features": [
+          "A role=\"search\" GET form with visible labels.",
+          "\"Apply\" submits; \"Clear\" appears only when a filter is active.",
+          "Has no `page` field, so applying returns to page 1.",
+          "`search={false}` renders no search field; a select whose value is \"\" is not an active filter."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Search and select filters as a GET form, so the filtered view is a URL: linkable and working without JavaScript (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-filter-bar",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Filter Bar",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "Label, input, hint and error wired together: the label is always visible, the hint and error are the input's description, and an error sets aria-invalid.",
+      "docs": "Use it for: Label, input, hint and error wired together: the label is always visible, the hint and error are the input's description, and an error sets aria-invalid (Mzizi Dashboard Standard).\nIncludes: \"(required)\" is written in the label, not shown by an asterisk alone., aria-describedby lists the hint and then the error., aria-invalid=\"true\" only with an error..\nAccessibility: aria-describedby to hint and error., aria-invalid with an error..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-field",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-form-field.tsx",
+          "target": "components/ui/app-form-field.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-describedby to hint and error.",
+          "aria-invalid with an error."
+        ],
+        "collection": "app",
+        "contract": "app/form-field",
+        "features": [
+          "\"(required)\" is written in the label, not shown by an asterisk alone.",
+          "aria-describedby lists the hint and then the error.",
+          "aria-invalid=\"true\" only with an error."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Label, input, hint and error wired together: the label is always visible, the hint and error are the input's description, and an error sets aria-invalid (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-form-field",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Form Field",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "A titled form card: fields in two columns from the container's xl and one below, actions at the foot, a form-level error as an alert. Posts to itself (Post/Redirect/Get).",
+      "docs": "Use it for: A titled form card: fields in two columns from the container's xl and one below, actions at the foot, a form-level error as an alert (Mzizi Dashboard Standard).\nIncludes: method=\"post\", novalidate: the server validates and re-renders with errors., A form-level error is role=\"alert\"..\nAccessibility: The error is announced as an alert..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-layout",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-form-layout.tsx",
+          "target": "components/ui/app-form-layout.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["The error is announced as an alert."],
+        "collection": "app",
+        "contract": "app/form-layout",
+        "features": [
+          "method=\"post\", novalidate: the server validates and re-renders with errors.",
+          "A form-level error is role=\"alert\"."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A titled form card: fields in two columns from the container's xl and one below, actions at the foot, a form-level error as an alert (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-form-layout",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Form Layout",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "A small info button that explains the thing beside it; the explanation is a tooltip on hover and focus, and the button's accessible description.",
+      "docs": "Use it for: A small info button that explains the thing beside it; the explanation is a tooltip on hover and focus, and the button's accessible description (Mzizi Dashboard Standard).\nIncludes: A focusable button with role=\"tooltip\" text shown on hover and focus-visible., Escape hides it (AppShell's script, WCAG 1.4.13)..\nAccessibility: aria-describedby to the tooltip..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-info-tip",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-info-tip.tsx",
+          "target": "components/ui/app-info-tip.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["aria-describedby to the tooltip."],
+        "collection": "app",
+        "contract": "app/info-tip",
+        "features": [
+          "A focusable button with role=\"tooltip\" text shown on hover and focus-visible.",
+          "Escape hides it (AppShell's script, WCAG 1.4.13)."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A small info button that explains the thing beside it; the explanation is a tooltip on hover and focus, and the button's accessible description (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-info-tip",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
+      "title": "App Info Tip",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "shell"],
+      "dependencies": [],
+      "description": "Typed navigation groups for the Dashboard Standard's app shell, side nav and command palette: flatten, group, search and current-page matching.",
+      "docs": "Use it for: Navigation model for the app shell.\nIncludes: Navigation model for the app shell.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-nav",
+      "files": [
+        {
+          "path": "components/registry/n7-shell/app-nav.ts",
+          "target": "lib/app-nav.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["Navigation model for the app shell"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Navigation model for the app shell"]
+      },
+      "name": "app-nav",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icons"],
+      "title": "App Nav",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "A page's title with optional breadcrumbs, a \"View docs\" pill, one line of description and actions. Compact: a 20px title, no rule. The one <h1> on an app page.",
+      "docs": "Use it for: A page's title with optional breadcrumbs, a \"View docs\" pill, one line of description and actions (Mzizi Dashboard Standard).\nIncludes: Renders exactly one <h1>., Breadcrumbs render only when given, as a named <nav> with an ordered list; the crumb without href is aria-current=\"page\"., The docs pill's accessible name includes the page title (\"View docs for People\")..\nAccessibility: aria-current=\"page\" on the current crumb., Separators are aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-page-header",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-page-header.tsx",
+          "target": "components/ui/app-page-header.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-current=\"page\" on the current crumb.",
+          "Separators are aria-hidden."
+        ],
+        "collection": "app",
+        "contract": "app/page-header",
+        "features": [
+          "Renders exactly one <h1>.",
+          "Breadcrumbs render only when given, as a named <nav> with an ordered list; the crumb without href is aria-current=\"page\".",
+          "The docs pill's accessible name includes the page title (\"View docs for People\")."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A page's title with optional breadcrumbs, a \"View docs\" pill, one line of description and actions (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-page-header",
+      "registryDependencies": [],
+      "title": "App Page Header",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "\"Showing 26–50 of 112\" with previous, next and page links. Links, not buttons: every page is a URL. The links are hidden when everything fits on one page.",
+      "docs": "Use it for: \"Showing 26–50 of 112\" with previous, next and page links (Mzizi Dashboard Standard).\nIncludes: The summary is a polite live region., Pages shown: the first, the last and the current ±1, with an ellipsis for gaps., Previous and Next are links with rel=prev/next, or aria-disabled text at an end..\nAccessibility: aria-current=\"page\" on the current page., Each number is named \"Page N\"., aria-disabled on an unavailable Previous/Next..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-pagination",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-pagination.tsx",
+          "target": "components/ui/app-pagination.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-current=\"page\" on the current page.",
+          "Each number is named \"Page N\".",
+          "aria-disabled on an unavailable Previous/Next."
+        ],
+        "collection": "app",
+        "contract": "app/pagination",
+        "features": [
+          "The summary is a polite live region.",
+          "Pages shown: the first, the last and the current ±1, with an ellipsis for gaps.",
+          "Previous and Next are links with rel=prev/next, or aria-disabled text at an end."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "\"Showing 26–50 of 112\" with previous, next and page links (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-pagination",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/server-table"],
+      "title": "App Pagination",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "shell"],
+      "dependencies": [],
+      "description": "The sidebar's search button with its ⌘K hint. It opens a CommandPalette through the Popover API, so it works with no script.",
+      "docs": "Use it for: The sidebar's search button with its ⌘K hint (Mzizi Dashboard Standard).\nIncludes: A <button popovertarget> that opens the palette with no script., Advertises the ⌘K / Ctrl+K shortcut with aria-keyshortcuts; the visible hint is decorative (aria-hidden) and shows from lg., The palette's script swaps the hint to \"Ctrl K\" off Apple platforms..\nAccessibility: aria-keyshortcuts=\"Meta+K Control+K\"., The <kbd> hint is aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-quick-search",
+      "files": [
+        {
+          "path": "components/registry/n7-shell/app-quick-search.tsx",
+          "target": "components/ui/app-quick-search.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-keyshortcuts=\"Meta+K Control+K\".",
+          "The <kbd> hint is aria-hidden."
+        ],
+        "collection": "app",
+        "contract": "app/quick-search",
+        "features": [
+          "A <button popovertarget> that opens the palette with no script.",
+          "Advertises the ⌘K / Ctrl+K shortcut with aria-keyshortcuts; the visible hint is decorative (aria-hidden) and shows from lg.",
+          "The palette's script swaps the hint to \"Ctrl K\" off Apple platforms."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The sidebar's search button with its ⌘K hint (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-quick-search",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
+      "title": "App Quick Search",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "shell"],
+      "dependencies": [],
+      "description": "The signed-in frame of an app or console, laid out as a full-width product dashboard: a fixed left sidebar (workspace switcher, quick search, grouped navigation, collapse toggle) and a main column (top bar, the page in <main>, a quiet footer). No centred page container.",
+      "docs": "Use it for: The signed-in frame of an app or console, laid out as a full-width product dashboard: a fixed left sidebar (workspace switcher, quick search, grouped navigation, collapse toggle) and a main column (top bar, the page in <main>, a quiet footer) (Mzizi Dashboard Standard).\nIncludes: From 64rem the sidebar is a sticky 16.25rem column and the main column fills the rest of the viewport; nothing centres the page., Below 64rem the same <aside> is a Popover API drawer, opened by the top bar's menu button and closed by its close button, Escape or a click outside (light dismiss). The nav is never rendered twice., Collapse is a real checkbox. Checked, the sidebar becomes a 3.5rem icon rail: labels, group names, badges, the wordmark and the search text hide; tooltips show the label; a nested group becomes one link to its first item., `collapsed` sets the checkbox from the server, so a persisted preference renders without a flash..\nAccessibility: The menu and close buttons are named \"Open <navLabel>\" / \"Close <navLabel>\"., The collapse checkbox is named \"Collapse <navLabel>\" by a visually hidden span..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-shell",
+      "files": [
+        {
+          "path": "components/registry/n7-shell/app-shell.tsx",
+          "target": "components/ui/app-shell.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The menu and close buttons are named \"Open <navLabel>\" / \"Close <navLabel>\".",
+          "The collapse checkbox is named \"Collapse <navLabel>\" by a visually hidden span."
+        ],
+        "collection": "app",
+        "contract": "app/app-shell",
+        "features": [
+          "From 64rem the sidebar is a sticky 16.25rem column and the main column fills the rest of the viewport; nothing centres the page.",
+          "Below 64rem the same <aside> is a Popover API drawer, opened by the top bar's menu button and closed by its close button, Escape or a click outside (light dismiss). The nav is never rendered twice.",
+          "Collapse is a real checkbox. Checked, the sidebar becomes a 3.5rem icon rail: labels, group names, badges, the wordmark and the search text hide; tooltips show the label; a nested group becomes one link to its first item.",
+          "`collapsed` sets the checkbox from the server, so a persisted preference renders without a flash."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The signed-in frame of an app or console, laid out as a full-width product dashboard: a fixed left sidebar (workspace switcher, quick search, grouped navigation, collapse toggle) and a main column (top bar, the page in <main>, a quiet footer) (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-shell",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
+      "title": "App Shell",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "shell"],
+      "dependencies": [],
+      "description": "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (44px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator. Descriptions are tooltips and accessible descriptions, never printed.",
+      "docs": "Use it for: An app's navigation, dense like a product console: quiet group labels, one 32px row per item (44px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator (Mzizi Dashboard Standard).\nIncludes: Exactly one item, the current one, carries aria-current=\"page\" and the filled row with a 2px `--primary` indicator., An item with children is a <details> disclosure, open when it contains the current page. A parent that is a page itself is listed first among its children (\"Overview\", or `overviewLabel`)., An item's `description` (0.3: `summary`) is a role=\"tooltip\" element and the link's aria-describedby; it is shown on hover and keyboard focus from 64rem, and never printed in the list., In AppShell's collapsed rail each tooltip also shows the label, and a nested group is replaced by one rail link to its first item..\nAccessibility: aria-current=\"page\" on exactly one link., aria-describedby from a link to its description., aria-labelledby from each group list to its label..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-side-nav",
+      "files": [
+        {
+          "path": "components/registry/n7-shell/app-side-nav.tsx",
+          "target": "components/ui/app-side-nav.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-current=\"page\" on exactly one link.",
+          "aria-describedby from a link to its description.",
+          "aria-labelledby from each group list to its label."
+        ],
+        "collection": "app",
+        "contract": "app/side-nav",
+        "features": [
+          "Exactly one item, the current one, carries aria-current=\"page\" and the filled row with a 2px `--primary` indicator.",
+          "An item with children is a <details> disclosure, open when it contains the current page. A parent that is a page itself is listed first among its children (\"Overview\", or `overviewLabel`).",
+          "An item's `description` (0.3: `summary`) is a role=\"tooltip\" element and the link's aria-describedby; it is shown on hover and keyboard focus from 64rem, and never printed in the list.",
+          "In AppShell's collapsed rail each tooltip also shows the label, and a nested group is replaced by one rail link to its first item."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (44px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-side-nav",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/app-nav"
+      ],
+      "title": "App Side Nav",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "One headline figure: a label, the value, an optional trend in words and a note. A missing value reads \"Not available\", never 0.",
+      "docs": "Use it for: One headline figure: a label, the value, an optional trend in words and a note (Mzizi Dashboard Standard).\nIncludes: A <div> holding <dt> (label) and <dd> (value, trend, note), so it sits in a <dl>., The trend is said once, in words, to screen readers (\"Up 12.5% on the previous 30 days\", \"No change\"); the visible badge is short and never wraps (\"+12.5%\"), with \"vs …\" after it. Never colour or an arrow alone., Good news is malachite, bad news terracotta, and both are status colours that never follow the brand..\nAccessibility: Trend text carries the meaning; colour is redundant..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-stat-tile",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-stat-tile.tsx",
+          "target": "components/ui/app-stat-tile.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Trend text carries the meaning; colour is redundant."],
+        "collection": "app",
+        "contract": "app/stat-tile",
+        "features": [
+          "A <div> holding <dt> (label) and <dd> (value, trend, note), so it sits in a <dl>.",
+          "The trend is said once, in words, to screen readers (\"Up 12.5% on the previous 30 days\", \"No change\"); the visible badge is short and never wraps (\"+12.5%\"), with \"vs …\" after it. Never colour or an arrow alone.",
+          "Good news is malachite, bad news terracotta, and both are status colours that never follow the brand."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "One headline figure: a label, the value, an optional trend in words and a note (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-stat-tile",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/app-info-tip"],
+      "title": "App Stat Tile",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "One bordered row of equal StatTiles with hairline dividers, as a description list.",
+      "docs": "Use it for: One bordered row of equal StatTiles with hairline dividers, as a description list (Mzizi Dashboard Standard).\nIncludes: One <dl>; each StatTile is a <div> group of <dt>/<dd>., Tiles lose their own border and radius and share hairline dividers..\nAccessibility: aria-label on the <dl>..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-stat-tiles",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-stat-tiles.tsx",
+          "target": "components/ui/app-stat-tiles.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["aria-label on the <dl>."],
+        "collection": "app",
+        "contract": "app/stat-tiles",
+        "features": [
+          "One <dl>; each StatTile is a <div> group of <dt>/<dd>.",
+          "Tiles lose their own border and radius and share hairline dividers."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "One bordered row of equal StatTiles with hairline dividers, as a description list (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-stat-tiles",
+      "registryDependencies": [],
+      "title": "App Stat Tiles",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "The empty, error, not-configured, unavailable and loading states every section needs, so no page invents its own wording or colours.",
+      "docs": "Use it for: The empty, error, not-configured, unavailable and loading states every section needs, so no page invents its own wording or colours (Mzizi Dashboard Standard).\nIncludes: empty → an EmptyState card (\"Nothing here yet\")., error → a destructive Alert (\"Something went wrong\")., unconfigured → a warning Alert (\"Not configured\"), for an API 503., unavailable → a warning Alert (\"Temporarily unavailable\")..\nAccessibility: Loading is announced politely; skeletons are aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-state-message",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-state-message.tsx",
+          "target": "components/ui/app-state-message.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Loading is announced politely; skeletons are aria-hidden."],
+        "collection": "app",
+        "contract": "app/state-message",
+        "features": [
+          "empty → an EmptyState card (\"Nothing here yet\").",
+          "error → a destructive Alert (\"Something went wrong\").",
+          "unconfigured → a warning Alert (\"Not configured\"), for an API 503.",
+          "unavailable → a warning Alert (\"Temporarily unavailable\")."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The empty, error, not-configured, unavailable and loading states every section needs, so no page invents its own wording or colours (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-state-message",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/app-empty-state",
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App State Message",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["shell"],
       "dependencies": ["radix-ui"],
       "description": "Ecosystem app selector popover with grid of Nyuchi app icons.",
@@ -704,6 +1432,184 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
       "title": "App Switcher",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "The result of the last action (saved, signed out), carried across Post/Redirect/Get as a flash, in a polite live region. It stays until dismissed; dismissing needs no script.",
+      "docs": "Use it for: The result of the last action (saved, signed out), carried across Post/Redirect/Get as a flash, in a polite live region (Mzizi Dashboard Standard).\nIncludes: The live region is always rendered, so a message that arrives is announced., No timeout (WCAG 2.2.3)., Dismiss is a <label> for a hidden checkbox; checked, the toast hides..\nAccessibility: aria-live=\"polite\" region..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-toast",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-toast.tsx",
+          "target": "components/ui/app-toast.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["aria-live=\"polite\" region."],
+        "collection": "app",
+        "contract": "app/toast",
+        "features": [
+          "The live region is always rendered, so a message that arrives is announced.",
+          "No timeout (WCAG 2.2.3).",
+          "Dismiss is a <label> for a hidden checkbox; checked, the toast hides."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The result of the last action (saved, signed out), carried across Post/Redirect/Get as a flash, in a polite live region (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-toast",
+      "registryDependencies": [],
+      "title": "App Toast",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "The row above a list: a full-width search box (a GET form) joined to a button group of filters or menus.",
+      "docs": "Use it for: The row above a list: a full-width search box (a GET form) joined to a button group of filters or menus (Mzizi Dashboard Standard).\nIncludes: Search is a role=\"search\" GET form: Enter submits, the result is a URL., `keep` parameters survive a search., A visually hidden submit button appears on focus for keyboard users..\nAccessibility: The box has a visually hidden <label>..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-toolbar",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-toolbar.tsx",
+          "target": "components/ui/app-toolbar.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["The box has a visually hidden <label>."],
+        "collection": "app",
+        "contract": "app/toolbar",
+        "features": [
+          "Search is a role=\"search\" GET form: Enter submits, the result is a URL.",
+          "`keep` parameters survive a search.",
+          "A visually hidden submit button appears on focus for keyboard users."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The row above a list: a full-width search box (a GET form) joined to a button group of filters or menus (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-toolbar",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
+      "title": "App Toolbar",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "A Toolbar button that opens a short list of choices, each a link (a date range: \"Last 24 hours\", \"Last 7 days\"). The current choice is the button's text.",
+      "docs": "Use it for: A Toolbar button that opens a short list of choices, each a link (a date range: \"Last 24 hours\", \"Last 7 days\") (Mzizi Dashboard Standard).\nIncludes: A <details> disclosure of links., The button shows the current choice (the first when none is marked)., The current choice is aria-current=\"true\" with a check..\nAccessibility: The summary reads \"<label>: <current>\"., aria-current=\"true\" on the current choice..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-toolbar-menu",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-toolbar-menu.tsx",
+          "target": "components/ui/app-toolbar-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The summary reads \"<label>: <current>\".",
+          "aria-current=\"true\" on the current choice."
+        ],
+        "collection": "app",
+        "contract": "app/toolbar-menu",
+        "features": [
+          "A <details> disclosure of links.",
+          "The button shows the current choice (the first when none is marked).",
+          "The current choice is aria-current=\"true\" with a check."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A Toolbar button that opens a short list of choices, each a link (a date range: \"Last 24 hours\", \"Last 7 days\") (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-toolbar-menu",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
+      "title": "App Toolbar Menu",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "shell"],
+      "dependencies": [],
+      "description": "One item in AppShell's top bar (\"Ask Nyuchi AI\", \"Support\"): an icon and a short label; a link with `href`, a button otherwise.",
+      "docs": "Use it for: One item in AppShell's top bar (\"Ask Nyuchi AI\", \"Support\"): an icon and a short label; a link with `href`, a button otherwise (Mzizi Dashboard Standard).\nIncludes: A link with `href`, otherwise a type=\"button\" button., With an icon, the label is visually hidden below sm and stays the accessible name..\nAccessibility: aria-current=\"page\" when `current`., An external link says so to screen readers..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-top-bar-action",
+      "files": [
+        {
+          "path": "components/registry/n7-shell/app-top-bar-action.tsx",
+          "target": "components/ui/app-top-bar-action.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-current=\"page\" when `current`.",
+          "An external link says so to screen readers."
+        ],
+        "collection": "app",
+        "contract": "app/top-bar-action",
+        "features": [
+          "A link with `href`, otherwise a type=\"button\" button.",
+          "With an icon, the label is visually hidden below sm and stays the accessible name."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "One item in AppShell's top bar (\"Ask Nyuchi AI\", \"Support\"): an icon and a short label; a link with `href`, a button otherwise (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-top-bar-action",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
+      "title": "App Top Bar Action",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "shell"],
+      "dependencies": [],
+      "description": "The top of the sidebar: the product mark and name over the current workspace or organisation, opening a list of other workspaces and account links. With nothing to switch to it is a plain link home.",
+      "docs": "Use it for: The top of the sidebar: the product mark and name over the current workspace or organisation, opening a list of other workspaces and account links (Mzizi Dashboard Standard).\nIncludes: With more than one workspace or any link, it is a <details> disclosure whose summary reads \"<label>: <name>\" and whose panel lists workspaces then links., With one workspace and no links it renders as a plain link to `href`, with no chevrons: never a control that does nothing., The current workspace is marked aria-current=\"true\" and shows a check..\nAccessibility: The summary is named \"<label>: <name>\"., aria-current=\"true\" on the current workspace..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-workspace-switcher",
+      "files": [
+        {
+          "path": "components/registry/n7-shell/app-workspace-switcher.tsx",
+          "target": "components/ui/app-workspace-switcher.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The summary is named \"<label>: <name>\".",
+          "aria-current=\"true\" on the current workspace."
+        ],
+        "collection": "app",
+        "contract": "app/workspace-switcher",
+        "features": [
+          "With more than one workspace or any link, it is a <details> disclosure whose summary reads \"<label>: <name>\" and whose panel lists workspaces then links.",
+          "With one workspace and no links it renders as a plain link to `href`, with no chevrons: never a control that does nothing.",
+          "The current workspace is marked aria-current=\"true\" and shows a check."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The top of the sidebar: the product mark and name over the current workspace or organisation, opening a list of other workspaces and account links (Mzizi Dashboard Standard)"
+        ]
+      },
+      "name": "app-workspace-switcher",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
+      "title": "App Workspace Switcher",
       "type": "registry:ui"
     },
     {
@@ -5750,6 +6656,638 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The trail above one item's page on a Discover site: a named <nav> with an ordered list of crumbs, the last the current page (aria-current=\"page\"), and the same trail as BreadcrumbList JSON-LD.",
+      "docs": "Use it for: The trail above one item's page on a Discover site: a named <nav> with an ordered list of crumbs, the last the current page (aria-current=\"page\"), and the same trail as BreadcrumbList JSON-LD (Mzizi Discover Standard).\nIncludes: A <nav> named \"Breadcrumb\" holding an <ol>; separators are aria-hidden text., The last crumb is the current page: plain text with aria-current=\"page\", never a link, even when it has an href., A crumb before it with no href is plain muted text., The BreadcrumbList JSON-LD comes from the same `crumbs`: `position` from 1, `name`, and `item` as an absolute URL (relative hrefs resolve against `origin`, else the request's origin; the current page uses its href, else the request path; a crumb with no href and not current has no `item`). `<` is escaped so the data can never close its element. JSON-LD is data, not script..\nAccessibility: The nav is labelled \"Breadcrumb\"; the current crumb has aria-current=\"page\"; the separators are aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-breadcrumb",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-breadcrumb.tsx",
+          "target": "components/ui/discover-breadcrumb.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The nav is labelled \"Breadcrumb\"; the current crumb has aria-current=\"page\"; the separators are aria-hidden."
+        ],
+        "collection": "discover",
+        "contract": "discover/breadcrumb",
+        "features": [
+          "A <nav> named \"Breadcrumb\" holding an <ol>; separators are aria-hidden text.",
+          "The last crumb is the current page: plain text with aria-current=\"page\", never a link, even when it has an href.",
+          "A crumb before it with no href is plain muted text.",
+          "The BreadcrumbList JSON-LD comes from the same `crumbs`: `position` from 1, `name`, and `item` as an absolute URL (relative hrefs resolve against `origin`, else the request's origin; the current page uses its href, else the request path; a crumb with no href and not current has no `item`). `<` is escaped so the data can never close its element. JSON-LD is data, not script."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The trail above one item's page on a Discover site: a named <nav> with an ordered list of crumbs, the last the current page (aria-current=\"page\"), and the same trail as BreadcrumbList JSON-LD (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-breadcrumb",
+      "registryDependencies": [],
+      "title": "Discover Breadcrumb",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "ONE card for every Discover page, with typed variants (article, event, circle, place) that share one anatomy: media, eyebrow, title (the primary link, covering the card), time, badge, figure, summary, meta, and actions (\"Open in Mukoko\").",
+      "docs": "Use it for: ONE card for every Discover page, with typed variants (article, event, circle, place) that share one anatomy: media, eyebrow, title (the primary link, covering the card), time, badge, figure, summary, meta, and actions (\"Open in Mukoko\") (Mzizi Discover Standard).\nIncludes: Renders its own <li>, to sit in a ResultGrid., The title is a heading containing the one primary link, stretched over the card (`after:inset-0`); other actions sit above it (`z-10`) and stay separately focusable., The app link's accessible name includes the title (\"Open in Mukoko: Harare Runners\")., Badge tones are a `data-tone` attribute styled by classes; status tones use the status minerals, `brand` uses `--primary`..\nAccessibility: Media and the monogram are decorative (alt=\"\", aria-hidden) unless `imageAlt` says more; meaning is never colour alone (badges carry text)..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-card",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-card.tsx",
+          "target": "components/ui/discover-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Media and the monogram are decorative (alt=\"\", aria-hidden) unless `imageAlt` says more; meaning is never colour alone (badges carry text)."
+        ],
+        "collection": "discover",
+        "contract": "discover/discover-card",
+        "features": [
+          "Renders its own <li>, to sit in a ResultGrid.",
+          "The title is a heading containing the one primary link, stretched over the card (`after:inset-0`); other actions sit above it (`z-10`) and stay separately focusable.",
+          "The app link's accessible name includes the title (\"Open in Mukoko: Harare Runners\").",
+          "Badge tones are a `data-tone` attribute styled by classes; status tones use the status minerals, `brand` uses `--primary`."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "ONE card for every Discover page, with typed variants (article, event, circle, place) that share one anatomy: media, eyebrow, title (the primary link, covering the card), time, badge, figure, summary, meta, and actions (\"Open in Mukoko\") (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-card",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "Discover Card",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button.",
+      "docs": "Use it for: One category link in a CategoryChips row: a 44px pill with the name and an optional count (Mzizi Discover Standard).\nIncludes: Renders its own <li>, so it can be repeated as a fragment., The current chip is filled (foreground on background) and has aria-current..\nAccessibility: aria-current=\"page\" on the current category; the state is never colour alone..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-category-chip",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-category-chip.tsx",
+          "target": "components/ui/discover-category-chip.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-current=\"page\" on the current category; the state is never colour alone."
+        ],
+        "collection": "discover",
+        "contract": "discover/category-chip",
+        "features": [
+          "Renders its own <li>, so it can be repeated as a fragment.",
+          "The current chip is filled (foreground on background) and has aria-current."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "One category link in a CategoryChips row: a 44px pill with the name and an optional count (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-category-chip",
+      "registryDependencies": [],
+      "title": "Discover Category Chip",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The row of category links on a Discover page, as a named navigation landmark. Chips wrap; the page never scrolls sideways.",
+      "docs": "Use it for: The row of category links on a Discover page, as a named navigation landmark (Mzizi Discover Standard).\nIncludes: A <nav> named by `label`, holding one <ul> of CategoryChip., Filtering by category is navigation to that category's URL; it never filters in the browser..\nAccessibility: The nav is named; the current chip has aria-current=\"page\"..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-category-chips",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-category-chips.tsx",
+          "target": "components/ui/discover-category-chips.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The nav is named; the current chip has aria-current=\"page\"."
+        ],
+        "collection": "discover",
+        "contract": "discover/category-chips",
+        "features": [
+          "A <nav> named by `label`, holding one <ul> of CategoryChip.",
+          "Filtering by category is navigation to that category's URL; it never filters in the browser."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The row of category links on a Discover page, as a named navigation landmark (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-category-chips",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/discover-category-chip"
+      ],
+      "title": "Discover Category Chips",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The action row of one item's page: \"Open in Mukoko\" (an OpenInApp, primary, the canonical universal link) first, secondary links beside it, and share links under the hint. Every action is a link; never a client script.",
+      "docs": "Use it for: The action row of one item's page: \"Open in Mukoko\" (an OpenInApp, primary, the canonical universal link) first, secondary links beside it, and share links under the hint (Mzizi Discover Standard).\nIncludes: Composes OpenInApp (variant primary): the first action in the row is \"Open in Mukoko\", and the hint is under the row., With `service` and `id` the primary href is the canonical universal link `https://mukoko.com/open/<service>/<id>`: the apps claim it (universal links, app links), and the resolver in mukoko-dev/super-app-web (`/open/*`) sends anyone without the app to the service's web page for the item. `href` overrides it., `links`, then the default slot, follow \"Open in Mukoko\" in the same row, as outline buttons., Share links are a labelled list under the hint, as ghost buttons; there is no share script and no Web Share API call, so the row has no JavaScript at all..\nAccessibility: Every action is a link whose text says what it does; the share list is named by `shareLabel` (its visible label is aria-hidden so it is not read twice)..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-detail-actions",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-detail-actions.tsx",
+          "target": "components/ui/discover-detail-actions.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Every action is a link whose text says what it does; the share list is named by `shareLabel` (its visible label is aria-hidden so it is not read twice)."
+        ],
+        "collection": "discover",
+        "contract": "discover/detail-actions",
+        "features": [
+          "Composes OpenInApp (variant primary): the first action in the row is \"Open in Mukoko\", and the hint is under the row.",
+          "With `service` and `id` the primary href is the canonical universal link `https://mukoko.com/open/<service>/<id>`: the apps claim it (universal links, app links), and the resolver in mukoko-dev/super-app-web (`/open/*`) sends anyone without the app to the service's web page for the item. `href` overrides it.",
+          "`links`, then the default slot, follow \"Open in Mukoko\" in the same row, as outline buttons.",
+          "Share links are a labelled list under the hint, as ghost buttons; there is no share script and no Web Share API call, so the row has no JavaScript at all."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The action row of one item's page: \"Open in Mukoko\" (an OpenInApp, primary, the canonical universal link) first, secondary links beside it, and share links under the hint (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-detail-actions",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/discover-open-in-app",
+        "https://api.mzizi.dev/v1/ui/discover-open-link",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "Discover Detail Actions",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The top of the page for one item reached from a Discover page (an article, an event, a public circle, a place): breadcrumb, eyebrow, the page's one <h1>, when and where, a lead, the actions, and the item's image or media.",
+      "docs": "Use it for: The top of the page for one item reached from a Discover page (an article, an event, a public circle, a place): breadcrumb, eyebrow, the page's one <h1>, when and where, a lead, the actions, and the item's image or media (Mzizi Discover Standard).\nIncludes: The title is the page's only <h1>; the hero is a <header> in <main> (no banner landmark)., When and where (`dateLabel`, `place`) are a list under the title, each with a decorative icon; the time is a <time datetime>., The image is the item's own: eager (it is likely the largest paint), sized 1200×675 at 16:9, decorative by default (`imageAlt` \"\")., With an image or media the hero is two columns from 64rem, text first, and exposes `data-media=\"true\"`; without, one column..\nAccessibility: One <h1>; the when-and-where icons are aria-hidden (the text says it); the image is decorative unless `imageAlt` says more..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-detail-hero",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-detail-hero.tsx",
+          "target": "components/ui/discover-detail-hero.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "One <h1>; the when-and-where icons are aria-hidden (the text says it); the image is decorative unless `imageAlt` says more."
+        ],
+        "collection": "discover",
+        "contract": "discover/detail-hero",
+        "features": [
+          "The title is the page's only <h1>; the hero is a <header> in <main> (no banner landmark).",
+          "When and where (`dateLabel`, `place`) are a list under the title, each with a decorative icon; the time is a <time datetime>.",
+          "The image is the item's own: eager (it is likely the largest paint), sized 1200×675 at 16:9, decorative by default (`imageAlt` \"\").",
+          "With an image or media the hero is two columns from 64rem, text first, and exposes `data-media=\"true\"`; without, one column."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The top of the page for one item reached from a Discover page (an article, an event, a public circle, a place): breadcrumb, eyebrow, the page's one <h1>, when and where, a lead, the actions, and the item's image or media (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-detail-hero",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils"
+      ],
+      "title": "Discover Detail Hero",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The top of every Discover page: breadcrumbs, an eyebrow, the page's one <h1>, a lead, the search box and the actions. Larger on the home page.",
+      "docs": "Use it for: The top of every Discover page: breadcrumbs, an eyebrow, the page's one <h1>, a lead, the search box and the actions (Mzizi Discover Standard).\nIncludes: The title is the page's only <h1>., Breadcrumbs are a named <nav> and an ordered list; the current page is plain text with aria-current=\"page\"., The background is the brand wash (`gradient-showcase`)., Server-filled shells: every text prop is a plain string, and text that fills to \"\" hides itself (`empty:hidden`), so the component can be built once with `{{placeholders}}` and filled by a server (circles.mukoko.com's Rust Worker)..\nAccessibility: Breadcrumb nav is labelled \"Breadcrumb\"; the current crumb has aria-current=\"page\"; the separators are aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-hero",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-hero.tsx",
+          "target": "components/ui/discover-hero.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Breadcrumb nav is labelled \"Breadcrumb\"; the current crumb has aria-current=\"page\"; the separators are aria-hidden."
+        ],
+        "collection": "discover",
+        "contract": "discover/discover-hero",
+        "features": [
+          "The title is the page's only <h1>.",
+          "Breadcrumbs are a named <nav> and an ordered list; the current page is plain text with aria-current=\"page\".",
+          "The background is the brand wash (`gradient-showcase`).",
+          "Server-filled shells: every text prop is a plain string, and text that fills to \"\" hides itself (`empty:hidden`), so the component can be built once with `{{placeholders}}` and filled by a server (circles.mukoko.com's Rust Worker)."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The top of every Discover page: breadcrumbs, an eyebrow, the page's one <h1>, a lead, the search box and the actions (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-hero",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "Discover Hero",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "Cursor pagination for a Discover page: one rel=\"next\" link to `?cursor=…`, so it works with no JavaScript and every page is a URL. At the end it shows `endLabel`, or nothing.",
+      "docs": "Use it for: Cursor pagination for a Discover page: one rel=\"next\" link to `?cursor=…`, so it works with no JavaScript and every page is a URL (Mzizi Discover Standard).\nIncludes: A named <nav> with one link; `data-state` lets CSS show the link or the end line., Pages past the first are `noindex` (DiscoverMeta): the cursor is opaque and short-lived..\nAccessibility: The nav is named; the link says what loads..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-load-more",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-load-more.tsx",
+          "target": "components/ui/discover-load-more.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["The nav is named; the link says what loads."],
+        "collection": "discover",
+        "contract": "discover/load-more",
+        "features": [
+          "A named <nav> with one link; `data-state` lets CSS show the link or the end line.",
+          "Pages past the first are `noindex` (DiscoverMeta): the cursor is opaque and short-lived."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Cursor pagination for a Discover page: one rel=\"next\" link to `?cursor=…`, so it works with no JavaScript and every page is a URL (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-load-more",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "Discover Load More",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The <head> tags of every Discover page: title, description, robots, canonical, Open Graph, the X card and JSON-LD, so search engines and link previews read every Mukoko service the same way.",
+      "docs": "Use it for: The <head> tags of every Discover page: title, description, robots, canonical, Open Graph, the X card and JSON-LD, so search engines and link previews read every Mukoko service the same way (Mzizi Discover Standard).\nIncludes: Renders only head elements: <title>, <meta>, <link rel=\"canonical\">, and one <script type=\"application/ld+json\"> when `jsonLd` is given., JSON-LD conventions: `WebSite` with a `SearchAction` on the home page; `CollectionPage` → `ItemList` of the results and a `BreadcrumbList` on list, category and search pages., `<` in JSON-LD is written \\u003c, so a value can never close the element., Server-filled shells: every text prop is a plain string, and text that fills to \"\" hides itself (`empty:hidden`), so the component can be built once with `{{placeholders}}` and filled by a server (circles.mukoko.com's Rust Worker)..\nAccessibility: The <title> names the page (WCAG 2.4.2)..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-meta",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-meta.tsx",
+          "target": "components/ui/discover-meta.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["The <title> names the page (WCAG 2.4.2)."],
+        "collection": "discover",
+        "contract": "discover/discover-meta",
+        "features": [
+          "Renders only head elements: <title>, <meta>, <link rel=\"canonical\">, and one <script type=\"application/ld+json\"> when `jsonLd` is given.",
+          "JSON-LD conventions: `WebSite` with a `SearchAction` on the home page; `CollectionPage` → `ItemList` of the results and a `BreadcrumbList` on list, category and search pages.",
+          "`<` in JSON-LD is written \\u003c, so a value can never close the element.",
+          "Server-filled shells: every text prop is a plain string, and text that fills to \"\" hides itself (`empty:hidden`), so the component can be built once with `{{placeholders}}` and filled by a server (circles.mukoko.com's Rust Worker)."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The <head> tags of every Discover page: title, description, robots, canonical, Open Graph, the X card and JSON-LD, so search engines and link previews read every Mukoko service the same way (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-meta",
+      "registryDependencies": [],
+      "title": "Discover Meta",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The facts of one item on its Discover page (when, where, price, organiser): a <dl> of label and value rows, each with an optional icon, link or machine-readable time, in responsive columns.",
+      "docs": "Use it for: The facts of one item on its Discover page (when, where, price, organiser): a <dl> of label and value rows, each with an optional icon, link or machine-readable time, in responsive columns (Mzizi Discover Standard).\nIncludes: A <dl>; each row is a <div> holding its <dt> and <dd> (valid HTML), beside its icon., Icons are decorative (aria-hidden): the label says what the row is., `href` makes the value a link; `datetime` makes it a <time datetime>, inside the link when both are given., Server-filled shells: every text is a plain string and an empty value hides itself (`empty:hidden`)..\nAccessibility: A description list pairs each label with its value; icons are aria-hidden, so meaning is never in the icon alone..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-meta-list",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-meta-list.tsx",
+          "target": "components/ui/discover-meta-list.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "A description list pairs each label with its value; icons are aria-hidden, so meaning is never in the icon alone."
+        ],
+        "collection": "discover",
+        "contract": "discover/meta-list",
+        "features": [
+          "A <dl>; each row is a <div> holding its <dt> and <dd> (valid HTML), beside its icon.",
+          "Icons are decorative (aria-hidden): the label says what the row is.",
+          "`href` makes the value a link; `datetime` makes it a <time datetime>, inside the link when both are given.",
+          "Server-filled shells: every text is a plain string and an empty value hides itself (`empty:hidden`)."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The facts of one item on its Discover page (when, where, price, organiser): a <dl> of label and value rows, each with an optional icon, link or machine-readable time, in responsive columns (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-meta-list",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/site-icons",
+        "https://api.mzizi.dev/v1/ui/ui-utils"
+      ],
+      "title": "Discover Meta List",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The \"Open in Mukoko\" action: an https link to the item in the Mukoko super-app, by default the canonical universal link `https://mukoko.com/open/<service>/<id>`, with one line saying what happens. Never a bare custom scheme.",
+      "docs": "Use it for: The \"Open in Mukoko\" action: an https link to the item in the Mukoko super-app, by default the canonical universal link `https://mukoko.com/open/<service>/<id>`, with one line saying what happens (Mzizi Discover Standard).\nIncludes: One link styled as a button, then the hint., With `service` and `id` the href is the canonical universal link `https://mukoko.com/open/<service>/<id>` (`openInMukokoUrl`, `discover-open-link.ts`; `MUKOKO_OPEN_ORIGIN` is `https://mukoko.com`). The Mukoko apps claim `mukoko.com/open/*` (universal links, app links), so it opens the item in the app where it is installed; elsewhere the resolver in mukoko-dev/super-app-web (`/open/*`) sends it to the service's own web page for the item., An explicit `href` wins over `service` and `id`. With neither `href` nor both of `service` and `id`, rendering fails; an unknown service or an empty id fails too (a RangeError), so a broken link is a build error, not a 404., The link is https: a `mukoko://` link does nothing for someone without the app, so it is never the href..\nAccessibility: The label says the action; the hint is plain text after it..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-open-in-app",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-open-in-app.tsx",
+          "target": "components/ui/discover-open-in-app.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["The label says the action; the hint is plain text after it."],
+        "collection": "discover",
+        "contract": "discover/open-in-app",
+        "features": [
+          "One link styled as a button, then the hint.",
+          "With `service` and `id` the href is the canonical universal link `https://mukoko.com/open/<service>/<id>` (`openInMukokoUrl`, `discover-open-link.ts`; `MUKOKO_OPEN_ORIGIN` is `https://mukoko.com`). The Mukoko apps claim `mukoko.com/open/*` (universal links, app links), so it opens the item in the app where it is installed; elsewhere the resolver in mukoko-dev/super-app-web (`/open/*`) sends it to the service's own web page for the item.",
+          "An explicit `href` wins over `service` and `id`. With neither `href` nor both of `service` and `id`, rendering fails; an unknown service or an empty id fails too (a RangeError), so a broken link is a build error, not a 404.",
+          "The link is https: a `mukoko://` link does nothing for someone without the app, so it is never the href."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The \"Open in Mukoko\" action: an https link to the item in the Mukoko super-app, by default the canonical universal link `https://mukoko.com/open/<service>/<id>`, with one line saying what happens (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-open-in-app",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/discover-open-link",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "Discover Open In App",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "pages"],
+      "dependencies": [],
+      "description": "The canonical Open in Mukoko universal link, https://mukoko.com/open/<service>/<id>, built and validated for discover-open-in-app and discover-detail-actions.",
+      "docs": "Use it for: Open in Mukoko canonical link.\nIncludes: Open in Mukoko canonical link.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-open-link",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-open-link.ts",
+          "target": "lib/discover-open-link.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["Open in Mukoko canonical link"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Open in Mukoko canonical link"]
+      },
+      "name": "discover-open-link",
+      "registryDependencies": [],
+      "title": "Discover Open Link",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "\"More like this\" under one item's page: a titled section of DiscoverCards, a scroll-snap rail on phones and a grid on wide screens, hidden entirely when there are no items.",
+      "docs": "Use it for: \"More like this\" under one item's page: a titled section of DiscoverCards, a scroll-snap rail on phones and a grid on wide screens, hidden entirely when there are no items (Mzizi Discover Standard).\nIncludes: A <section> labelled by its heading, so it is a named region; the list is labelled by the same heading., Each item is a DiscoverCard (its own <li>), its title one heading level under the rail's., Under 48rem the list is one row that scrolls inside itself, cards 18rem wide and snapping to their start; it is keyboard-focusable (tabindex 0) so the row can be scrolled without a pointer, and the page never scrolls sideways. From 48rem it is a grid of two columns, three from 64rem., No items, nothing rendered: no heading, no empty band..\nAccessibility: aria-labelledby names the region and the list by the heading..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-related-rail",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-related-rail.tsx",
+          "target": "components/ui/discover-related-rail.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-labelledby names the region and the list by the heading."
+        ],
+        "collection": "discover",
+        "contract": "discover/related-rail",
+        "features": [
+          "A <section> labelled by its heading, so it is a named region; the list is labelled by the same heading.",
+          "Each item is a DiscoverCard (its own <li>), its title one heading level under the rail's.",
+          "Under 48rem the list is one row that scrolls inside itself, cards 18rem wide and snapping to their start; it is keyboard-focusable (tabindex 0) so the row can be scrolled without a pointer, and the page never scrolls sideways. From 48rem it is a grid of two columns, three from 64rem.",
+          "No items, nothing rendered: no heading, no empty band."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "\"More like this\" under one item's page: a titled section of DiscoverCards, a scroll-snap rail on phones and a grid on wide screens, hidden entirely when there are no items (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-related-rail",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/discover-card",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "Discover Related Rail",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The results of a Discover page: a polite status line, the cards, the empty state and \"load more\". Both the results and the empty state are in the markup; `state` picks one with CSS, so a server-filled shell needs no template logic.",
+      "docs": "Use it for: The results of a Discover page: a polite status line, the cards, the empty state and \"load more\" (Mzizi Discover Standard).\nIncludes: The summary is a role=\"status\" live region, so a new page of results is announced., `data-state` on the root; the results and \"more\" hide when it is \"empty\", the empty block shows., `rail` is keyboard-focusable (tabindex=\"0\") so it can be scrolled without a pointer; the page itself never scrolls sideways..\nAccessibility: The list is named by `label`; the summary is a polite status..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-result-grid",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-result-grid.tsx",
+          "target": "components/ui/discover-result-grid.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The list is named by `label`; the summary is a polite status."
+        ],
+        "collection": "discover",
+        "contract": "discover/result-grid",
+        "features": [
+          "The summary is a role=\"status\" live region, so a new page of results is announced.",
+          "`data-state` on the root; the results and \"more\" hide when it is \"empty\", the empty block shows.",
+          "`rail` is keyboard-focusable (tabindex=\"0\") so it can be scrolled without a pointer; the page itself never scrolls sideways."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The results of a Discover page: a polite status line, the cards, the empty state and \"load more\" (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-result-grid",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "Discover Result Grid",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "The one search box of a Discover page: a GET form, so every search is a URL that works with no JavaScript. 48px on every pointer.",
+      "docs": "Use it for: The one search box of a Discover page: a GET form, so every search is a URL that works with no JavaScript (Mzizi Discover Standard).\nIncludes: A role=\"search\" GET form named by `label`, with a labelled `q` field and a submit button., Submitting goes to `action?q=…`; there is no client-side filtering and no `cursor` field, so a new search starts at the first page..\nAccessibility: The field has a <label> (visually hidden unless `showLabel`); the form is a search landmark named by `label`..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-search",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-search.tsx",
+          "target": "components/ui/discover-search.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The field has a <label> (visually hidden unless `showLabel`); the form is a search landmark named by `label`."
+        ],
+        "collection": "discover",
+        "contract": "discover/discover-search",
+        "features": [
+          "A role=\"search\" GET form named by `label`, with a labelled `q` field and a submit button.",
+          "Submitting goes to `action?q=…`; there is no client-side filtering and no `cursor` field, so a new search starts at the first page."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The one search box of a Discover page: a GET form, so every search is a URL that works with no JavaScript (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-search",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-variants"],
+      "title": "Discover Search",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "pages"],
+      "dependencies": [],
+      "description": "One band of a Discover page: eyebrow, heading, description and a \"See all\" link over its content. A featured rail is a DiscoverSection holding a ResultGrid.",
+      "docs": "Use it for: One band of a Discover page: eyebrow, heading, description and a \"See all\" link over its content (Mzizi Discover Standard).\nIncludes: A <section> labelled by its heading, so it is a named region., \"See all\" is a link styled as an outline button., `state=\"empty\"` hides the band (`data-state` and a class), so a section whose data came back empty disappears without template logic..\nAccessibility: aria-labelledby names the region by its heading..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-section",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/discover-section.tsx",
+          "target": "components/ui/discover-section.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["aria-labelledby names the region by its heading."],
+        "collection": "discover",
+        "contract": "discover/discover-section",
+        "features": [
+          "A <section> labelled by its heading, so it is a named region.",
+          "\"See all\" is a link styled as an outline button.",
+          "`state=\"empty\"` hides the band (`data-state` and a class), so a section whose data came back empty disappears without template logic."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "One band of a Discover page: eyebrow, heading, description and a \"See all\" link over its content (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-section",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "Discover Section",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["discover", "shell"],
+      "dependencies": [],
+      "description": "The frame of every public Discover site in the Mukoko family: skip link, mineral strip, a header (brand, main navigation, one action), the page in <main id=\"main\">, and a footer. Only the brand changes between services.",
+      "docs": "Use it for: The frame of every public Discover site in the Mukoko family: skip link, mineral strip, a header (brand, main navigation, one action), the page in <main id=\"main\">, and a footer (Mzizi Discover Standard).\nIncludes: The skip link is first and targets <main id=\"main\" tabindex=\"-1\">., The header holds the brand (a link home with an accessible name), the \"Main\" navigation and one action; on phones the navigation wraps onto its own row., `aria-current=\"page\"` on the current section., It goes inside <body>; the app owns <head> (use DiscoverMeta) and its stylesheets..\nAccessibility: The home link is named by `homeLabel`; the navigations are \"Main\" and \"Footer\"; the current section has aria-current=\"page\"; the mineral strip is aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-shell",
+      "files": [
+        {
+          "path": "components/registry/n7-shell/discover-shell.tsx",
+          "target": "components/ui/discover-shell.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The home link is named by `homeLabel`; the navigations are \"Main\" and \"Footer\"; the current section has aria-current=\"page\"; the mineral strip is aria-hidden."
+        ],
+        "collection": "discover",
+        "contract": "discover/discover-shell",
+        "features": [
+          "The skip link is first and targets <main id=\"main\" tabindex=\"-1\">.",
+          "The header holds the brand (a link home with an accessible name), the \"Main\" navigation and one action; on phones the navigation wraps onto its own row.",
+          "`aria-current=\"page\"` on the current section.",
+          "It goes inside <body>; the app owns <head> (use DiscoverMeta) and its stylesheets."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The frame of every public Discover site in the Mukoko family: skip link, mineral strip, a header (brand, main navigation, one action), the page in <main id=\"main\">, and a footer (Mzizi Discover Standard)"
+        ]
+      },
+      "name": "discover-shell",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/site-mineral-strip",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "Discover Shell",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Grip indicator for drag-and-drop reordering.",
@@ -10302,6 +11840,45 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["brand"],
+      "dependencies": [],
+      "description": "An email message as a mail client shows it — header lines, a sample opening line, then the HTML under test (a signature, a newsletter block) in a sandboxed frame that can display it but never run it. The body is white in every theme, like the email it stands for. Server-safe. Built for nyuchi-tools' signature generator.",
+      "docs": "Use it for: Email signature preview, Newsletter or announcement block preview, Any HTML-email fragment review.\nVariants: empty, filled.\nSizes: frameHeight.\nIncludes: Sandboxed iframe (sandbox=\"\"), Always-light message body, Placeholder slot.\nAccessibility: Decorative header lines aria-hidden, Titled iframe, Placeholder text at AAA contrast on white.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-email-preview",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/mzizi-email-preview.tsx",
+          "target": "components/ui/mzizi-email-preview.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Decorative header lines aria-hidden",
+          "Titled iframe",
+          "Placeholder text at AAA contrast on white"
+        ],
+        "collection": "brand",
+        "features": [
+          "Sandboxed iframe (sandbox=\"\")",
+          "Always-light message body",
+          "Placeholder slot"
+        ],
+        "owner": "nyuchi",
+        "sizes": ["frameHeight"],
+        "useCases": [
+          "Email signature preview",
+          "Newsletter or announcement block preview",
+          "Any HTML-email fragment review"
+        ],
+        "variants": ["empty", "filled"]
+      },
+      "name": "mzizi-email-preview",
+      "registryDependencies": [],
+      "title": "mzizi Email Preview",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["pages"],
       "dependencies": [],
       "description": "Default empty state screen for pages with no content yet. Used across mini-apps when a feed, list, or section has zero items. Branded illustration placeholder, message, and optional CTA.",
@@ -11602,6 +13179,78 @@
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-tokens"],
       "title": "mzizi Locale",
       "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The mzizi mark for dark grounds: seven nodes, a hub and six roots, joined into one network, drawn in hematite (mzizi's mineral, #90a4ae) with the edges at 55%. A vector SVG master; installs into public/brand/. Never recolour or redraw it.",
+      "docs": "Use it for: The mzizi logo on dark grounds, App icons and favicons, Headers, footers and docs pages.\nIncludes: Vector SVG master, Hematite, mzizi's ecosystem mineral, role=\"img\" with a <title>.\nAccessibility: role=\"img\" and aria-label=\"mzizi\", Nodes clear 4.5:1 on their dark ground.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-mark-dark",
+      "files": [
+        {
+          "path": "components/registry/assets/mzizi-mark-dark.svg",
+          "target": "public/brand/mzizi-mark-dark.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"img\" and aria-label=\"mzizi\"",
+          "Nodes clear 4.5:1 on their dark ground"
+        ],
+        "collection": "assets",
+        "features": [
+          "Vector SVG master",
+          "Hematite, mzizi's ecosystem mineral",
+          "role=\"img\" with a <title>"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The mzizi logo on dark grounds",
+          "App icons and favicons",
+          "Headers, footers and docs pages"
+        ]
+      },
+      "name": "mzizi-mark-dark",
+      "registryDependencies": [],
+      "title": "mzizi Mark Dark",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The mzizi mark for light grounds (background, card): seven nodes, a hub and six roots, joined into one network, drawn in hematite (mzizi's mineral, #546e7a) with the edges at 55%. A vector SVG master; installs into public/brand/. Never recolour or redraw it.",
+      "docs": "Use it for: The mzizi logo on light grounds (background, card), App icons and favicons, Headers, footers and docs pages.\nIncludes: Vector SVG master, Hematite, mzizi's ecosystem mineral, role=\"img\" with a <title>.\nAccessibility: role=\"img\" and aria-label=\"mzizi\", Nodes clear 4.5:1 on their light ground.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-mark-light",
+      "files": [
+        {
+          "path": "components/registry/assets/mzizi-mark-light.svg",
+          "target": "public/brand/mzizi-mark-light.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"img\" and aria-label=\"mzizi\"",
+          "Nodes clear 4.5:1 on their light ground"
+        ],
+        "collection": "assets",
+        "features": [
+          "Vector SVG master",
+          "Hematite, mzizi's ecosystem mineral",
+          "role=\"img\" with a <title>"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The mzizi logo on light grounds (background, card)",
+          "App icons and favicons",
+          "Headers, footers and docs pages"
+        ]
+      },
+      "name": "mzizi-mark-light",
+      "registryDependencies": [],
+      "title": "mzizi Mark Light",
+      "type": "registry:item"
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
@@ -16111,6 +17760,86 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
+      "description": "Choose output sizes from groups of presets, each a true-aspect SafeAreaFrame thumbnail. Two separate actions per size: select the card to make it the active size (aria-pressed, one at a time) and tick its checkbox to include it in a batch (any number). Built for nyuchi-tools' Studio.",
+      "docs": "Use it for: Pick the sizes for a campaign or launch set, Switch the size a live preview shows, Batch export selection.\nVariants: default.\nSizes: 2-4 columns, responsive.\nIncludes: Grouped by platform, Active vs included kept distinct, Safe-area thumbnails.\nAccessibility: aria-pressed on the active card, Labelled checkboxes (Include <size> in the set), 44px+ targets for both actions, Visible focus ring.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/preset-picker",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/preset-picker.tsx",
+          "target": "components/ui/preset-picker.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-pressed on the active card",
+          "Labelled checkboxes (Include <size> in the set)",
+          "44px+ targets for both actions",
+          "Visible focus ring"
+        ],
+        "collection": "primitives",
+        "features": [
+          "Grouped by platform",
+          "Active vs included kept distinct",
+          "Safe-area thumbnails"
+        ],
+        "owner": "mzizi",
+        "sizes": ["2-4 columns, responsive"],
+        "useCases": [
+          "Pick the sizes for a campaign or launch set",
+          "Switch the size a live preview shows",
+          "Batch export selection"
+        ],
+        "variants": ["default"]
+      },
+      "name": "preset-picker",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/safe-area-frame"],
+      "title": "Preset Picker",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "A stage for one rendered image: checkerboard surface so transparency reads as transparency, Fit or fixed-scale zoom (Fit keeps a 9:16 story or a wide tile whole, at its aspect ratio), an aria-busy flag with a visible rendering label, and an empty slot before the first render. Built for nyuchi-tools' Studio.",
+      "docs": "Use it for: Live preview of a generated social or store image, Zoomable review of a render at 50% / 100%, Any single-image preview with a loading state.\nVariants: fit, scaled.\nSizes: fitHeight.\nIncludes: Fit / numeric zoom, Checkerboard surface from tokens, Busy label and aria-busy, Empty-state slot.\nAccessibility: aria-live polite region, aria-busy while rendering, Alt text passed through to the image.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/preview-canvas",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/preview-canvas.tsx",
+          "target": "components/ui/preview-canvas.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-live polite region",
+          "aria-busy while rendering",
+          "Alt text passed through to the image"
+        ],
+        "collection": "primitives",
+        "features": [
+          "Fit / numeric zoom",
+          "Checkerboard surface from tokens",
+          "Busy label and aria-busy",
+          "Empty-state slot"
+        ],
+        "owner": "mzizi",
+        "sizes": ["fitHeight"],
+        "useCases": [
+          "Live preview of a generated social or store image",
+          "Zoomable review of a render at 50% / 100%",
+          "Any single-image preview with a loading state"
+        ],
+        "variants": ["fit", "scaled"]
+      },
+      "name": "preview-canvas",
+      "registryDependencies": [],
+      "title": "Preview Canvas",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
       "description": "Formatted price with currency, original price, and discount badge.",
       "docs": "Use it for: Product price in marketplace listings, Discount price with strikethrough original, Subscription tier pricing display, Multi-currency price with conversion, Promotional pricing with countdown.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/price-display",
       "files": [
@@ -16964,6 +18693,71 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": [],
+      "description": "Safe-area thumbnail geometry for safe-area-frame: a canvas's thumbnail size and each platform band as a percentage, the same numbers as the React safeAreaBands and the Rust safe_area_bands.",
+      "docs": "Use it for: Safe-area thumbnail geometry.\nIncludes: One geometry in every renderer.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/safe-area",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/safe-area.ts",
+          "target": "lib/safe-area.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["One geometry in every renderer"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Safe-area thumbnail geometry"]
+      },
+      "name": "safe-area",
+      "registryDependencies": [],
+      "title": "Safe Area",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "A canvas shape at thumbnail size — true aspect ratio, with the bands a platform covers with its own interface shaded (a story's top and reply bars, a reel's action rail, a video's duration badge). Purely presentational and server-safe; a Mzizi Roots (Rust/Dioxus) sibling renders the same markup from the same geometry. Built for nyuchi-tools' image Studio.",
+      "docs": "Use it for: Image size pickers (story, feed, store, icon presets), Preset catalogues that show where text must not go, Any UI that previews an output shape before rendering.\nVariants: default.\nSizes: box (CSS px).\nIncludes: True aspect ratio in a fixed square, Safe-area bands from [top, right, bottom, left] insets, Pure safeAreaBands() geometry shared with the Rust sibling, Never collapses below 6px a side.\nAccessibility: Decorative: aria-hidden — the size's name and dimensions are text beside it.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/safe-area-frame",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/safe-area-frame.tsx",
+          "target": "components/ui/safe-area-frame.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Decorative: aria-hidden — the size's name and dimensions are text beside it"
+        ],
+        "collection": "primitives",
+        "features": [
+          "True aspect ratio in a fixed square",
+          "Safe-area bands from [top, right, bottom, left] insets",
+          "Pure safeAreaBands() geometry shared with the Rust sibling",
+          "Never collapses below 6px a side"
+        ],
+        "owner": "mzizi",
+        "sizes": ["box (CSS px)"],
+        "useCases": [
+          "Image size pickers (story, feed, store, icon presets)",
+          "Preset catalogues that show where text must not go",
+          "Any UI that previews an output shape before rendering"
+        ],
+        "variants": ["default"]
+      },
+      "name": "safe-area-frame",
+      "registryDependencies": [],
+      "title": "Safe Area Frame",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
       "description": "JSON schema tree display with type badges.",
@@ -17328,6 +19122,253 @@
       "registryDependencies": [],
       "title": "Separator",
       "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "safety"],
+      "dependencies": [],
+      "description": "base64url encoding on Web APIs. Framework-free on Web APIs (Web Crypto, URL, Headers), so it runs in Astro server routes and middleware, Node and Cloudflare Workers. The TypeScript mirror of Mzizi Roots' mzizi-roots-server.",
+      "docs": "Use it for: base64url encoding on Web APIs.\nIncludes: base64url encoding on Web APIs.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/server-base64url",
+      "files": [
+        {
+          "path": "components/registry/n4-safety/server-base64url.ts",
+          "target": "lib/server-base64url.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["base64url encoding on Web APIs"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["base64url encoding on Web APIs"]
+      },
+      "name": "server-base64url",
+      "registryDependencies": [],
+      "title": "Server Base64url",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "safety"],
+      "dependencies": [],
+      "description": "Cookie and Set-Cookie helpers. Framework-free on Web APIs (Web Crypto, URL, Headers), so it runs in Astro server routes and middleware, Node and Cloudflare Workers. The TypeScript mirror of Mzizi Roots' mzizi-roots-server.",
+      "docs": "Use it for: Cookie and Set-Cookie helpers.\nIncludes: Cookie and Set-Cookie helpers.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/server-cookies",
+      "files": [
+        {
+          "path": "components/registry/n4-safety/server-cookies.ts",
+          "target": "lib/server-cookies.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["Cookie and Set-Cookie helpers"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Cookie and Set-Cookie helpers"]
+      },
+      "name": "server-cookies",
+      "registryDependencies": [],
+      "title": "Server Cookies",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "safety"],
+      "dependencies": [],
+      "description": "One-shot flash messages in a cookie. Framework-free on Web APIs (Web Crypto, URL, Headers), so it runs in Astro server routes and middleware, Node and Cloudflare Workers. The TypeScript mirror of Mzizi Roots' mzizi-roots-server.",
+      "docs": "Use it for: One-shot flash messages in a cookie.\nIncludes: One-shot flash messages in a cookie.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/server-flash",
+      "files": [
+        {
+          "path": "components/registry/n4-safety/server-flash.ts",
+          "target": "lib/server-flash.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["One-shot flash messages in a cookie"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["One-shot flash messages in a cookie"]
+      },
+      "name": "server-flash",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/server-cookies"],
+      "title": "Server Flash",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "safety"],
+      "dependencies": [],
+      "description": "Bare-origin URL checks. Framework-free on Web APIs (Web Crypto, URL, Headers), so it runs in Astro server routes and middleware, Node and Cloudflare Workers. The TypeScript mirror of Mzizi Roots' mzizi-roots-server.",
+      "docs": "Use it for: Bare-origin URL checks.\nIncludes: Bare-origin URL checks.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/server-origin",
+      "files": [
+        {
+          "path": "components/registry/n4-safety/server-origin.ts",
+          "target": "lib/server-origin.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["Bare-origin URL checks"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Bare-origin URL checks"]
+      },
+      "name": "server-origin",
+      "registryDependencies": [],
+      "title": "Server Origin",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "safety"],
+      "dependencies": [],
+      "description": "Same-origin return paths. Framework-free on Web APIs (Web Crypto, URL, Headers), so it runs in Astro server routes and middleware, Node and Cloudflare Workers. The TypeScript mirror of Mzizi Roots' mzizi-roots-server.",
+      "docs": "Use it for: Same-origin return paths.\nIncludes: Same-origin return paths.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/server-redirect",
+      "files": [
+        {
+          "path": "components/registry/n4-safety/server-redirect.ts",
+          "target": "lib/server-redirect.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["Same-origin return paths"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Same-origin return paths"]
+      },
+      "name": "server-redirect",
+      "registryDependencies": [],
+      "title": "Server Redirect",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "safety"],
+      "dependencies": [],
+      "description": "Purpose-bound sealed cookies (AES-256-GCM), wire-compatible with mzizi-roots-server. Framework-free on Web APIs (Web Crypto, URL, Headers), so it runs in Astro server routes and middleware, Node and Cloudflare Workers. The TypeScript mirror of Mzizi Roots' mzizi-roots-server.",
+      "docs": "Use it for: Purpose-bound sealed cookies (AES-256-GCM), wire-compatible with mzizi-roots-server.\nIncludes: Purpose-bound sealed cookies (AES-256-GCM), wire-compatible with mzizi-roots-server.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/server-seal",
+      "files": [
+        {
+          "path": "components/registry/n4-safety/server-seal.ts",
+          "target": "lib/server-seal.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Purpose-bound sealed cookies (AES-256-GCM), wire-compatible with mzizi-roots-server"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Purpose-bound sealed cookies (AES-256-GCM), wire-compatible with mzizi-roots-server"
+        ]
+      },
+      "name": "server-seal",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/server-base64url"],
+      "title": "Server Seal",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "safety"],
+      "dependencies": [],
+      "description": "Security headers. Framework-free on Web APIs (Web Crypto, URL, Headers), so it runs in Astro server routes and middleware, Node and Cloudflare Workers. The TypeScript mirror of Mzizi Roots' mzizi-roots-server.",
+      "docs": "Use it for: Security headers.\nIncludes: Security headers.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/server-security",
+      "files": [
+        {
+          "path": "components/registry/n4-safety/server-security.ts",
+          "target": "lib/server-security.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["Security headers"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Security headers"]
+      },
+      "name": "server-security",
+      "registryDependencies": [],
+      "title": "Server Security",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "safety"],
+      "dependencies": [],
+      "description": "URL-driven table query and paging core. Framework-free on Web APIs (Web Crypto, URL, Headers), so it runs in Astro server routes and middleware, Node and Cloudflare Workers. The TypeScript mirror of Mzizi Roots' mzizi-roots-server.",
+      "docs": "Use it for: URL-driven table query and paging core.\nIncludes: URL-driven table query and paging core.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/server-table",
+      "files": [
+        {
+          "path": "components/registry/n4-safety/server-table.ts",
+          "target": "lib/server-table.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["URL-driven table query and paging core"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["URL-driven table query and paging core"]
+      },
+      "name": "server-table",
+      "registryDependencies": [],
+      "title": "Server Table",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "safety"],
+      "dependencies": [],
+      "description": "The theme preference cookie. Framework-free on Web APIs (Web Crypto, URL, Headers), so it runs in Astro server routes and middleware, Node and Cloudflare Workers. The TypeScript mirror of Mzizi Roots' mzizi-roots-server.",
+      "docs": "Use it for: The theme preference cookie.\nIncludes: The theme preference cookie.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/server-theme",
+      "files": [
+        {
+          "path": "components/registry/n4-safety/server-theme.ts",
+          "target": "lib/server-theme.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["The theme preference cookie"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["The theme preference cookie"]
+      },
+      "name": "server-theme",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/server-cookies"],
+      "title": "Server Theme",
+      "type": "registry:lib"
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
@@ -18367,6 +20408,392 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["site", "pages"],
+      "dependencies": [],
+      "description": "The breadcrumb trail of a marketing page: a labelled <nav> with an ordered list of links, and the matching schema.org BreadcrumbList JSON-LD, both from one `items` array. Fewer than two items render nothing.",
+      "docs": "Use it for: The breadcrumb trail of a marketing page: a labelled <nav> with an ordered list of links, and the matching schema.org BreadcrumbList JSON-LD, both from one `items` array (marketing-site family).\nIncludes: With fewer than two items it renders nothing at all: no nav, no JSON-LD., Otherwise it renders <nav aria-label=\"Breadcrumb\"> holding an <ol>; each item is an <li>, with an aria-hidden \"/\" <li> between items., The last item is plain text in a <span aria-current=\"page\">, whatever its url. An earlier item with a url is a link; one without a url is plain text with no aria-current., After the nav it emits a <script type=\"application/ld+json\"> BreadcrumbList: one ListItem per item, position from 1, `item` an absolute URL. A relative url is joined to `origin` (else the site URL, else the request origin); an item without a url uses the current request's pathname..\nAccessibility: The nav is labelled \"Breadcrumb\"., The current page is aria-current=\"page\"., The \"/\" separators are aria-hidden list items..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-breadcrumb",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/site-breadcrumb.tsx",
+          "target": "components/ui/site-breadcrumb.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The nav is labelled \"Breadcrumb\".",
+          "The current page is aria-current=\"page\".",
+          "The \"/\" separators are aria-hidden list items."
+        ],
+        "collection": "site",
+        "contract": "site/breadcrumb",
+        "features": [
+          "With fewer than two items it renders nothing at all: no nav, no JSON-LD.",
+          "Otherwise it renders <nav aria-label=\"Breadcrumb\"> holding an <ol>; each item is an <li>, with an aria-hidden \"/\" <li> between items.",
+          "The last item is plain text in a <span aria-current=\"page\">, whatever its url. An earlier item with a url is a link; one without a url is plain text with no aria-current.",
+          "After the nav it emits a <script type=\"application/ld+json\"> BreadcrumbList: one ListItem per item, position from 1, `item` an absolute URL. A relative url is joined to `origin` (else the site URL, else the request origin); an item without a url uses the current request's pathname."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The breadcrumb trail of a marketing page: a labelled <nav> with an ordered list of links, and the matching schema.org BreadcrumbList JSON-LD, both from one `items` array (marketing-site family)"
+        ]
+      },
+      "name": "site-breadcrumb",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-breadcrumbs"],
+      "title": "Site Breadcrumb",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "pages"],
+      "dependencies": [],
+      "description": "Derive a breadcrumb trail from a URL pathname and a per-app label map, for site-breadcrumb.",
+      "docs": "Use it for: Breadcrumb trail from a pathname.\nIncludes: Breadcrumb trail from a pathname.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-breadcrumbs",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/site-breadcrumbs.ts",
+          "target": "lib/site-breadcrumbs.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["Breadcrumb trail from a pathname"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Breadcrumb trail from a pathname"]
+      },
+      "name": "site-breadcrumbs",
+      "registryDependencies": [],
+      "title": "Site Breadcrumbs",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["site", "pages"],
+      "dependencies": [],
+      "description": "The max-width content wrapper of the marketing sites: centres content at one of three widths with the standard responsive gutters, as a div, section, main or article.",
+      "docs": "Use it for: The max-width content wrapper of the marketing sites: centres content at one of three widths with the standard responsive gutters, as a div, section, main or article (marketing-site family).\nIncludes: Renders one `as` element with data-slot=\"container\" whose class is the width utility, then `class`., It adds nothing else: no role, no aria, no wrapper..\nAccessibility: None; `as` picks a landmark element (main) or a sectioning one where the page needs it..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-container",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/site-container.tsx",
+          "target": "components/ui/site-container.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "None; `as` picks a landmark element (main) or a sectioning one where the page needs it."
+        ],
+        "collection": "site",
+        "contract": "site/container",
+        "features": [
+          "Renders one `as` element with data-slot=\"container\" whose class is the width utility, then `class`.",
+          "It adds nothing else: no role, no aria, no wrapper."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The max-width content wrapper of the marketing sites: centres content at one of three widths with the standard responsive gutters, as a div, section, main or article (marketing-site family)"
+        ]
+      },
+      "name": "site-container",
+      "registryDependencies": [],
+      "title": "Site Container",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["site", "primitives"],
+      "dependencies": [],
+      "description": "The marketing pill call-to-action that site-hero composes: a link when href is set, otherwise a button, with an optional trailing arrow. The same markup in Astro and React, from the ui-variants buttonVariants recipe.",
+      "docs": "Use it for: Hero call to action (marketing-site family).\nIncludes: Pill shape, primary, secondary, outline, ghost, destructive variants, Opens external links in a new tab with a safe rel.\nAccessibility: Native link or button, Focus-visible ring with --ring token, Arrow glyph is aria-hidden.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-cta-button",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/site-cta-button.tsx",
+          "target": "components/ui/site-cta-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Native link or button",
+          "Focus-visible ring with --ring token",
+          "Arrow glyph is aria-hidden"
+        ],
+        "collection": "site",
+        "features": [
+          "Pill shape",
+          "primary, secondary, outline, ghost, destructive variants",
+          "Opens external links in a new tab with a safe rel"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Hero call to action (marketing-site family)"]
+      },
+      "name": "site-cta-button",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "Site Cta Button",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["site", "pages"],
+      "dependencies": [],
+      "description": "The top band of a marketing page: an optional status badge and eyebrow, the page's one serif <h1>, a lead, and at most two pill calls to action, with an optional media region beside (split) or below (stack) the text.",
+      "docs": "Use it for: The top band of a marketing page: an optional status badge and eyebrow, the page's one serif <h1>, a lead, and at most two pill calls to action, with an optional media region beside (split) or below (stack) the text (marketing-site family).\nIncludes: The title is the hero's only <h1>., With no media, no split layout, no badge and a variant other than showcase, the markup is the 0.1.x template exactly (the legacy branch): no data-layout, no data-slot on the text column., Otherwise the root carries data-layout, the text column is data-slot=\"hero-text\", the badge is data-slot=\"hero-badge\" and the media region data-slot=\"hero-media\"., The calls to action are CtaButton links (data-slot=\"button\"): the primary is the primary pill, the secondary the ghost pill with an aria-hidden arrow. An external one has target=\"_blank\" and rel=\"noopener noreferrer\"..\nAccessibility: The media region is role=\"group\" with aria-label only when mediaLabel is given., The badge dot and the secondary call to action's arrow are aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-hero",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/site-hero.tsx",
+          "target": "components/ui/site-hero.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The media region is role=\"group\" with aria-label only when mediaLabel is given.",
+          "The badge dot and the secondary call to action's arrow are aria-hidden."
+        ],
+        "collection": "site",
+        "contract": "site/hero",
+        "features": [
+          "The title is the hero's only <h1>.",
+          "With no media, no split layout, no badge and a variant other than showcase, the markup is the 0.1.x template exactly (the legacy branch): no data-layout, no data-slot on the text column.",
+          "Otherwise the root carries data-layout, the text column is data-slot=\"hero-text\", the badge is data-slot=\"hero-badge\" and the media region data-slot=\"hero-media\".",
+          "The calls to action are CtaButton links (data-slot=\"button\"): the primary is the primary pill, the secondary the ghost pill with an aria-hidden arrow. An external one has target=\"_blank\" and rel=\"noopener noreferrer\"."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The top band of a marketing page: an optional status badge and eyebrow, the page's one serif <h1>, a lead, and at most two pill calls to action, with an optional media region beside (split) or below (stack) the text (marketing-site family)"
+        ]
+      },
+      "name": "site-hero",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-cta-button"],
+      "title": "Site Hero",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["site", "primitives"],
+      "dependencies": [],
+      "description": "One glyph from the design system's curated inline-SVG set: stroke-drawn at 1.75 weight on a 24px grid, in currentColor, sized to 1em. Decorative unless it has a title.",
+      "docs": "Use it for: One glyph from the design system's curated inline-SVG set: stroke-drawn at 1.75 weight on a 24px grid, in currentColor, sized to 1em (marketing-site family).\nIncludes: Renders one <svg data-slot=\"icon\" data-icon=\"<name>\"> on a 0 0 24 24 viewBox with fill none, stroke currentColor, stroke-width 1.75 and round caps and joins, holding one <path> from ICON_PATHS., Without a title it is aria-hidden=\"true\" with no role and no label., With a title it is role=\"img\" with aria-label set to the title, and carries a <title> child..\nAccessibility: Decorative (no title): aria-hidden=\"true\"., Meaningful (title): role=\"img\", aria-label and a <title>..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-icon",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/site-icon.tsx",
+          "target": "components/ui/site-icon.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Decorative (no title): aria-hidden=\"true\".",
+          "Meaningful (title): role=\"img\", aria-label and a <title>."
+        ],
+        "collection": "site",
+        "contract": "site/icon",
+        "features": [
+          "Renders one <svg data-slot=\"icon\" data-icon=\"<name>\"> on a 0 0 24 24 viewBox with fill none, stroke currentColor, stroke-width 1.75 and round caps and joins, holding one <path> from ICON_PATHS.",
+          "Without a title it is aria-hidden=\"true\" with no role and no label.",
+          "With a title it is role=\"img\" with aria-label set to the title, and carries a <title> child."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "One glyph from the design system's curated inline-SVG set: stroke-drawn at 1.75 weight on a 24px grid, in currentColor, sized to 1em (marketing-site family)"
+        ]
+      },
+      "name": "site-icon",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icons"],
+      "title": "Site Icon",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": [],
+      "description": "The stroke paths behind Icon (site-icon), framework-free, so the Astro and React Icon and typed navigation data share one set.",
+      "docs": "Use it for: The Icon glyph set.\nIncludes: The Icon glyph set.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-icons",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/site-icons.ts",
+          "target": "lib/site-icons.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["The Icon glyph set"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["The Icon glyph set"]
+      },
+      "name": "site-icons",
+      "registryDependencies": [],
+      "title": "Site Icons",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["site", "brand"],
+      "dependencies": [],
+      "description": "The decorative seven-mineral accent bar: a full-height ~6px strip fixed to the left edge of the page, in seven equal segments coloured cobalt, tanzanite, malachite, gold, terracotta, sodalite and copper, top to bottom.",
+      "docs": "Use it for: The decorative seven-mineral accent bar: a full-height ~6px strip fixed to the left edge of the page, in seven equal segments coloured cobalt, tanzanite, malachite, gold, terracotta, sodalite and copper, top to bottom (marketing-site family).\nIncludes: Renders one <div class=\"mineral-strip\" data-slot=\"mineral-strip\" aria-hidden=\"true\"> holding seven empty <span data-mineral=\"<mineral>\">, in the order cobalt, tanzanite, malachite, gold, terracotta, sodalite, copper., Its own stylesheet fixes it to the left edge (6px wide, 100dvh tall, z-index 50, pointer-events none) and colours each segment by its data-mineral from the `--color-<mineral>` custom property., No inline style attribute: the segments are coloured by attribute selector, so a page's CSP can keep `style-src 'self'`..\nAccessibility: aria-hidden=\"true\": it never reaches the accessibility tree..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-mineral-strip",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/site-mineral-strip.tsx",
+          "target": "components/ui/site-mineral-strip.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "aria-hidden=\"true\": it never reaches the accessibility tree."
+        ],
+        "collection": "site",
+        "contract": "site/mineral-strip",
+        "features": [
+          "Renders one <div class=\"mineral-strip\" data-slot=\"mineral-strip\" aria-hidden=\"true\"> holding seven empty <span data-mineral=\"<mineral>\">, in the order cobalt, tanzanite, malachite, gold, terracotta, sodalite, copper.",
+          "Its own stylesheet fixes it to the left edge (6px wide, 100dvh tall, z-index 50, pointer-events none) and colours each segment by its data-mineral from the `--color-<mineral>` custom property.",
+          "No inline style attribute: the segments are coloured by attribute selector, so a page's CSP can keep `style-src 'self'`."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The decorative seven-mineral accent bar: a full-height ~6px strip fixed to the left edge of the page, in seven equal segments coloured cobalt, tanzanite, malachite, gold, terracotta, sodalite and copper, top to bottom (marketing-site family)"
+        ]
+      },
+      "name": "site-mineral-strip",
+      "registryDependencies": [],
+      "title": "Site Mineral Strip",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["site", "pages"],
+      "dependencies": [],
+      "description": "The standard marketing page band: a <section> with the vertical rhythm, a background surface and an optional hairline divider, wrapping its content in the site container unless it is full-bleed.",
+      "docs": "Use it for: The standard marketing page band: a <section> with the vertical rhythm, a background surface and an optional hairline divider, wrapping its content in the site container unless it is full-bleed (marketing-site family).\nIncludes: Renders one <section data-slot=\"section\"> whose class is the rhythm utility, then the surface, then the border, then `class`, space-separated with empty parts dropped., With `container` (the default) the content sits in one <div class=\"container-custom\">; without it the content is the section's direct child., It adds no heading and no landmark name: a section is labelled by the heading its content brings..\nAccessibility: No aria of its own; an unnamed <section> is not a landmark, so the heading inside carries the structure..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-section",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/site-section.tsx",
+          "target": "components/ui/site-section.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "No aria of its own; an unnamed <section> is not a landmark, so the heading inside carries the structure."
+        ],
+        "collection": "site",
+        "contract": "site/section",
+        "features": [
+          "Renders one <section data-slot=\"section\"> whose class is the rhythm utility, then the surface, then the border, then `class`, space-separated with empty parts dropped.",
+          "With `container` (the default) the content sits in one <div class=\"container-custom\">; without it the content is the section's direct child.",
+          "It adds no heading and no landmark name: a section is labelled by the heading its content brings."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The standard marketing page band: a <section> with the vertical rhythm, a background surface and an optional hairline divider, wrapping its content in the site container unless it is full-bleed (marketing-site family)"
+        ]
+      },
+      "name": "site-section",
+      "registryDependencies": [],
+      "title": "Site Section",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["site", "pages"],
+      "dependencies": [],
+      "description": "The eyebrow, serif heading and lead cluster at the top of a marketing section, with the heading level and its visual size set separately.",
+      "docs": "Use it for: The eyebrow, serif heading and lead cluster at the top of a marketing section, with the heading level and its visual size set separately (marketing-site family).\nIncludes: Renders a <div data-slot=\"section-header\"> holding the eyebrow <p> (only with `eyebrow`), the heading at level `as` (always), and the lead <p> (only with `description` or the `description` slot)., The heading's class is `font-serif <size> text-foreground text-balance`, the size following `size` or else `as`., The block's class is `max`, then `mx-auto text-center` when centred, then `class`..\nAccessibility: No aria: the heading level (`as`) carries the structure, decoupled from its visual size..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-section-header",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/site-section-header.tsx",
+          "target": "components/ui/site-section-header.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "No aria: the heading level (`as`) carries the structure, decoupled from its visual size."
+        ],
+        "collection": "site",
+        "contract": "site/section-header",
+        "features": [
+          "Renders a <div data-slot=\"section-header\"> holding the eyebrow <p> (only with `eyebrow`), the heading at level `as` (always), and the lead <p> (only with `description` or the `description` slot).",
+          "The heading's class is `font-serif <size> text-foreground text-balance`, the size following `size` or else `as`.",
+          "The block's class is `max`, then `mx-auto text-center` when centred, then `class`."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "The eyebrow, serif heading and lead cluster at the top of a marketing section, with the heading level and its visual size set separately (marketing-site family)"
+        ]
+      },
+      "name": "site-section-header",
+      "registryDependencies": [],
+      "title": "Site Section Header",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["site", "brand"],
+      "dependencies": [],
+      "description": "A round icon link to a social profile: the platform is detected from the URL's host and drawn with its glyph and named for assistive technology, with a generic globe for an unknown host.",
+      "docs": "Use it for: A round icon link to a social profile: the platform is detected from the URL's host and drawn with its glyph and named for assistive technology, with a generic globe for an unknown host (marketing-site family).\nIncludes: Renders one <a> to `url` that opens a new tab with rel=\"me noopener noreferrer\" (rel=me verifies the profile, e.g. on Mastodon)., The host (lower-cased, without www.) picks the platform: LinkedIn (linkedin.com, lnkd.in), X (x.com, twitter.com, t.co), Instagram, GitHub, YouTube (youtube.com, youtu.be), Threads, Bluesky (bsky.app), Facebook (facebook.com, fb.me), TikTok, ORCID, and Mastodon for any mastodon.* or *.social host. Anything else is `generic` (a globe)., The link carries data-social-platform=\"<key>\" and its name (aria-label and title): `label`, else the platform's name, else the host., The glyph is one aria-hidden <svg> of `size` px..\nAccessibility: The link is named by aria-label (also the title tooltip); the glyph is aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/site-social-icon",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/site-social-icon.tsx",
+          "target": "components/ui/site-social-icon.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The link is named by aria-label (also the title tooltip); the glyph is aria-hidden."
+        ],
+        "collection": "site",
+        "contract": "site/social-icon",
+        "features": [
+          "Renders one <a> to `url` that opens a new tab with rel=\"me noopener noreferrer\" (rel=me verifies the profile, e.g. on Mastodon).",
+          "The host (lower-cased, without www.) picks the platform: LinkedIn (linkedin.com, lnkd.in), X (x.com, twitter.com, t.co), Instagram, GitHub, YouTube (youtube.com, youtu.be), Threads, Bluesky (bsky.app), Facebook (facebook.com, fb.me), TikTok, ORCID, and Mastodon for any mastodon.* or *.social host. Anything else is `generic` (a globe).",
+          "The link carries data-social-platform=\"<key>\" and its name (aria-label and title): `label`, else the platform's name, else the host.",
+          "The glyph is one aria-hidden <svg> of `size` px."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A round icon link to a social profile: the platform is detected from the URL's host and drawn with its glyph and named for assistive technology, with a generic globe for an unknown host (marketing-site family)"
+        ]
+      },
+      "name": "site-social-icon",
+      "registryDependencies": [],
+      "title": "Site Social Icon",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["components", "primitives"],
       "dependencies": [],
       "description": "Used to show a placeholder while content is loading.",
@@ -18665,6 +21092,44 @@
       "name": "stats-card",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/card"],
       "title": "Stats Card",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "A pill-shaped lifecycle label — stable, beta, alpha or deprecated — each tinted with one of the Seven Minerals at 10% behind the mineral itself (malachite, cobalt, gold, terracotta). Built on Badge. Ships in three builds that share one contract: React (.tsx), Mzizi Roots (.rs, mzizi-ui) and the Mzizi language (.mz).",
+      "docs": "Use it for: Component and API lifecycle labels in docs and registries, Feature maturity next to a setting or a nav item, Release notes and changelogs.\nVariants: stable, beta, alpha, deprecated.\nIncludes: cn() for className composition, data-slot attribute, Mineral tints from the Seven Minerals, Rust (mzizi-ui) and Mzizi (.mz) siblings with one contract.\nAccessibility: The status is always written out, never colour alone, Text clears 4.5:1 on its tint in both themes.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/status-badge",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/status-badge.tsx",
+          "target": "components/ui/status-badge.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The status is always written out, never colour alone",
+          "Text clears 4.5:1 on its tint in both themes"
+        ],
+        "collection": "primitives",
+        "features": [
+          "cn() for className composition",
+          "data-slot attribute",
+          "Mineral tints from the Seven Minerals",
+          "Rust (mzizi-ui) and Mzizi (.mz) siblings with one contract"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "Component and API lifecycle labels in docs and registries",
+          "Feature maturity next to a setting or a nav item",
+          "Release notes and changelogs"
+        ],
+        "variants": ["stable", "beta", "alpha", "deprecated"]
+      },
+      "name": "status-badge",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/badge"],
+      "title": "Status Badge",
       "type": "registry:ui"
     },
     {
@@ -20094,6 +22559,60 @@
       "registryDependencies": [],
       "title": "Typography",
       "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": ["clsx", "tailwind-merge"],
+      "description": "cn() for the Astro and React builds of the contracted components: clsx plus a tailwind-merge that knows the named type scale (text-body, text-h2, ...), so a size class never drops a colour class.",
+      "docs": "Use it for: cn() with a tailwind-merge that knows the type scale.\nIncludes: cn() with a tailwind-merge that knows the type scale.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/ui-utils",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/ui-utils.ts",
+          "target": "lib/ui-utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["cn() with a tailwind-merge that knows the type scale"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["cn() with a tailwind-merge that knows the type scale"]
+      },
+      "name": "ui-utils",
+      "registryDependencies": [],
+      "title": "UI Utils",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The class recipes behind the contracted primitives (app button, badge, card, alert, input, label, skeleton, the marketing pill button), with no framework in them, so the .astro and .tsx builds of a contract emit identical classes.",
+      "docs": "Use it for: Class recipes shared by the Astro and React builds.\nIncludes: Class recipes shared by the Astro and React builds.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/ui-variants",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/ui-variants.ts",
+          "target": "lib/ui-variants.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": ["Class recipes shared by the Astro and React builds"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Class recipes shared by the Astro and React builds"]
+      },
+      "name": "ui-variants",
+      "registryDependencies": [],
+      "title": "UI Variants",
+      "type": "registry:lib"
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
