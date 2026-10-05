@@ -5,8 +5,8 @@
 //! contract whose `.rs` implementation has `identity: "contract"` and lives in this crate, this
 //! suite renders every state the contract declares with `dioxus-ssr` and evaluates, on the
 //! markup, every clause (through the shared evaluator in `mzizi-rs/contract-eval/`), every check
-//! and every density row. The `.tsx` is held to the same file by `__tests__/contracts` and the
-//! `.mz` by `pnpm mz:check`. A clause, check or selector this suite cannot evaluate fails
+//! and every density row. The `.astro` and `.tsx` are held to the same file by `__tests__/astro`
+//! and `__tests__/contracts`. A clause, check or selector this suite cannot evaluate fails
 //! (RFC-0006, FM-12).
 
 use std::cell::RefCell;

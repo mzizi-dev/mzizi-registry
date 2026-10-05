@@ -1,0 +1,161 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "site/section",
+  "title": "Section",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The standard marketing page band: a <section> with the vertical rhythm, a background surface and an optional hairline divider, wrapping its content in the site container unless it is full-bleed.",
+  "implementations": {
+    "astro": {
+      "registry": "site-section",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Section.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "site-section", "identity": "contract" },
+    "rs": null,
+    "related": ["discover-section", "site-container", "site-section-header"]
+  },
+  "props": [
+    {
+      "name": "bg",
+      "type": "\"canvas\" | \"secondary\" | \"transparent\"",
+      "required": false,
+      "default": "canvas",
+      "values": ["canvas", "secondary", "transparent"],
+      "description": "Background surface: `bg-canvas`, `bg-secondary`, or none."
+    },
+    {
+      "name": "space",
+      "type": "\"default\" | \"tight\" | \"loose\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "tight", "loose"],
+      "description": "Vertical rhythm: the `.section`, `.section-tight` or `.section-loose` utility."
+    },
+    {
+      "name": "border",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "A hairline bottom border (`border-b border-border`), the quiet section divider."
+    },
+    {
+      "name": "container",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Wrap the content in `.container-custom`; false renders it full-bleed."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "The section's id, for in-page links."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, appended after the rhythm, surface and border classes."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "expects": "SectionHeader, then the band's content",
+      "description": "The band's content."
+    }
+  ],
+  "behaviour": [
+    "Renders one <section data-slot=\"section\"> whose class is the rhythm utility, then the surface, then the border, then `class`, space-separated with empty parts dropped.",
+    "With `container` (the default) the content sits in one <div class=\"container-custom\">; without it the content is the section's direct child.",
+    "It adds no heading and no landmark name: a section is labelled by the heading its content brings."
+  ],
+  "states": {
+    "default": {
+      "props": {},
+      "slots": { "default": "<h2>Our work</h2>" }
+    },
+    "secondary-tight": {
+      "description": "Tight rhythm on the secondary surface, with a divider, an id and an extra class.",
+      "props": {
+        "bg": "secondary",
+        "space": "tight",
+        "border": true,
+        "id": "pricing",
+        "class": "relative"
+      },
+      "slots": { "default": "<h2>Pricing</h2>" }
+    },
+    "full-bleed": {
+      "description": "Loose, transparent and full-bleed: no container.",
+      "props": { "bg": "transparent", "space": "loose", "container": false },
+      "slots": { "default": "<img src='/band.png' alt=''>" }
+    }
+  },
+  "accessibility": {
+    "roles": [],
+    "keyboard": ["None of its own: it is a layout band."],
+    "focus": ["None of its own."],
+    "aria": [
+      "No aria of its own; an unnamed <section> is not a landmark, so the heading inside carries the structure."
+    ],
+    "wcag": ["1.3.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--background", "--secondary", "--border"],
+    "brandOverlay": "Nothing: the surfaces and the divider are neutral tokens.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "The `.section*` utilities set the vertical padding per breakpoint; `.container-custom` sets the max width and the responsive side gutters."
+  ],
+  "contract": "contract\n  slot is \"section\"\n  class is \"section bg-canvas\"\n  when secondary-tight class is \"section-tight bg-secondary border-b border-border relative\"\n  when full-bleed class is \"section-loose\"\n  when default shows h2 \"Our work\"\nend",
+  "checks": [
+    {
+      "say": "The root is a <section>.",
+      "state": "*",
+      "select": "section[data-slot=\"section\"]",
+      "count": 1
+    },
+    {
+      "say": "The content sits in one site container.",
+      "select": "section > div.container-custom > h2",
+      "count": 1
+    },
+    {
+      "say": "The id is on the section.",
+      "state": "secondary-tight",
+      "select": "section[data-slot=\"section\"]",
+      "attr": { "id": "pricing" }
+    },
+    {
+      "say": "No id, no id attribute.",
+      "select": "section[data-slot=\"section\"]",
+      "attr": { "id": false }
+    },
+    {
+      "say": "Full-bleed has no container.",
+      "state": "full-bleed",
+      "select": ".container-custom",
+      "absent": true
+    },
+    {
+      "say": "Full-bleed content is the section's direct child.",
+      "state": "full-bleed",
+      "select": "section > img",
+      "count": 1
+    }
+  ],
+  "gaps": [
+    "The `.section`, `.section-tight`, `.section-loose`, `bg-canvas` and `.container-custom` utilities live in each consuming site's globals.css; the registry does not ship them.",
+    "There is no way to name the band (aria-labelledby) so it becomes a region landmark."
+  ]
+}

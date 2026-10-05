@@ -8,13 +8,13 @@
   "summary": "The top of every Discover page: breadcrumbs, an eyebrow, the page's one <h1>, a lead, the search box and the actions. Larger on the home page.",
   "implementations": {
     "astro": {
+      "registry": "discover-hero",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/DiscoverHero.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-hero", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": []
   },
   "props": [

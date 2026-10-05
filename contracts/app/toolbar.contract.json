@@ -8,13 +8,13 @@
   "summary": "The row above a list: a full-width search box (a GET form) joined to a button group of filters or menus.",
   "implementations": {
     "astro": {
+      "registry": "app-toolbar",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Toolbar.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-toolbar", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["filter-bar"]
   },
   "props": [

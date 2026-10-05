@@ -17,9 +17,8 @@ gateway bundles at a pinned commit. It is a **Mzizi**-governed standard; Nyuchi
 operates it. It is **not** Mzizi-the-language (`mzizi-dev/mzizi`) — that's a different
 research project that happens to share the org and a name fragment.
 
-`contracts/` holds a versioned, machine-readable contract per component: the Dashboard
-Standard (`contracts/app/`), the Discover Standard (`contracts/discover/`) and registry
-primitives with no `@bundu/ui` standard yet (`contracts/primitives/`), in the format
+`contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
+component of the Mzizi Dashboard Standard: 31 in `contracts/app/`, in the format
 `contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`,
 with the coverage table in [`contracts/README.md`](./contracts/README.md) and the reference
 at [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts). Change a
@@ -27,17 +26,46 @@ contract here, never the copy in `mzizi-dev/packages-npm`; `__tests__/contracts/
 keeps the index and the coverage table honest.
 
 **One contract per component, whatever the language** (owner, 2026-10-05; #427). The contract
-file is the only place a component's clauses, checks and density are written; its Astro, React
-(`.tsx`), Mzizi Roots (`.rs`) and Mzizi language (`.mz`) builds are all checked against it. A
-build whose `identity` is `contract` implements the whole contract: `__tests__/contracts`
-evaluates it on the `.tsx`, `mzizi-rs/crates/mzizi-ui/tests/contracts_json.rs` on the `.rs`,
-and `pnpm mz:check` on the `.mz`. The `.rs` `CONTRACT` and the `.mz` `contract` block are
-copies written by `pnpm contracts:sync`: never edit them by hand (`pnpm contracts:sync:check`
-fails CI on drift). A new component, or a new language build of one, starts from its contract.
+file is the only place a component's clauses, checks and density are written, and every format
+is held to it. A `.rs` whose `identity` is `contract` is rendered in every state and evaluated
+in full by `mzizi-rs/crates/mzizi-ui/tests/contracts_json.rs`; its `pub const CONTRACT` is a
+copy written by `pnpm contracts:sync` (never edit it by hand; `pnpm contracts:sync:check` fails
+CI on drift). A new component, or a new format of one, starts from its contract.
 
 Local checks use **Vite+** (`vp`), as the org CI does: `vp run test` runs the test script the
 `vite-plus / test` job runs, `vp run ci:check` the lint and type check, and `pnpm check` (or
 `vp run check`) every gate in order.
+
+### Every component, every format, one place (owner decision 2026-10-04)
+
+This registry is the single source of every component in every format: `.tsx` (React),
+`.rs` (Mzizi Roots, Dioxus), `.astro` (pure Astro) and, from the owner's work in progress,
+`.mz` (the Mzizi language). One component has one name and one contract; each format is a
+sibling file `components/registry/n<N>-*/<name>.<ext>`. **Do not create, edit or move `.mz`
+files or `mz`-language directories here**: they are being built elsewhere and land as their
+own change.
+
+- **Astro (#397).** A `.astro` is pure Astro: no React or any framework under it, no client
+  JavaScript unless its contract allows one enhancement script. Registry `.astro` files and
+  the framework-free `.ts` modules they use (`ui-utils`, `ui-variants`, `app-nav`,
+  `site-icons`, `server-*`) import each other **flat**, the way `mzizi add --target astro`
+  installs them into one directory (`./button.astro`, `./ui-utils`, `./server-cookies.js`); a
+  brand asset is `./assets/<file>` under the node's `assets/` directory.
+  `vitest.astro.config.ts` resolves flat imports across node directories, tsconfig's
+  `rootDirs` does the same for `tsc`, and `pnpm registry:validate` rejects a framework import
+  or a flat import that does not resolve. `lib/astro.ts` builds the `/v1/astro/{name}`
+  document the gateway serves.
+- **Contracts test every format that exists.** `__tests__/astro/contracts.test.ts` renders
+  every `.astro` in every contract state (Astro container, no renderer); `__tests__/contracts/
+tsx-contracts.test.tsx` renders every `.tsx` whose contract `identity` is `contract` and
+  holds it to the whole contract with the same runner (`contracts/runner.ts`);
+  `__tests__/contracts/contracts.test.tsx` and the crates' `tests/contract.rs` hold the
+  identity of the `.rs` siblings.
+- **Packages are built from here.** `mzizi-dev/packages-npm` builds `@bundu/ui`'s `.astro`
+  components and modules, `@bundu/server`'s helpers (the TypeScript mirror of
+  `mzizi-roots-server`, in `n4-safety/server-*.ts`), the brand assets and the contract runner
+  from this repo at a pinned commit (`pnpm registry:sync`), and its CI fails on any drift
+  (`pnpm registry:check`). Never fix a component there: fix it here and bump the pin.
 
 ### A naming collision worth knowing before you grep
 

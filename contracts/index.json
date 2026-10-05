@@ -7,387 +7,540 @@
       "title": "AppShell",
       "version": "1.1.0",
       "file": "app/app-shell.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-shell",
+      "tsx": "app-shell",
+      "rs": null
     },
     {
       "name": "app/side-nav",
       "title": "SideNav",
       "version": "1.0.0",
       "file": "app/side-nav.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-side-nav",
+      "tsx": "app-side-nav",
+      "rs": null
     },
     {
       "name": "app/workspace-switcher",
       "title": "WorkspaceSwitcher",
       "version": "1.0.0",
       "file": "app/workspace-switcher.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-workspace-switcher",
+      "tsx": "app-workspace-switcher",
+      "rs": null
     },
     {
       "name": "app/quick-search",
       "title": "QuickSearch",
       "version": "1.0.0",
       "file": "app/quick-search.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-quick-search",
+      "tsx": "app-quick-search",
+      "rs": null
     },
     {
       "name": "app/command-palette",
       "title": "CommandPalette",
       "version": "1.0.0",
       "file": "app/command-palette.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-command-palette",
+      "tsx": "app-command-palette",
+      "rs": null
     },
     {
       "name": "app/top-bar-action",
       "title": "TopBarAction",
       "version": "1.0.0",
       "file": "app/top-bar-action.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-top-bar-action",
+      "tsx": "app-top-bar-action",
+      "rs": null
     },
     {
       "name": "app/page-header",
       "title": "PageHeader",
       "version": "1.0.0",
       "file": "app/page-header.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-page-header",
+      "tsx": "app-page-header",
+      "rs": null
     },
     {
       "name": "app/toolbar",
       "title": "Toolbar",
       "version": "1.0.0",
       "file": "app/toolbar.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-toolbar",
+      "tsx": "app-toolbar",
+      "rs": null
     },
     {
       "name": "app/toolbar-menu",
       "title": "ToolbarMenu",
       "version": "1.0.0",
       "file": "app/toolbar-menu.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-toolbar-menu",
+      "tsx": "app-toolbar-menu",
+      "rs": null
     },
     {
       "name": "app/stat-tiles",
       "title": "StatTiles",
       "version": "1.0.0",
       "file": "app/stat-tiles.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-stat-tiles",
+      "tsx": "app-stat-tiles",
+      "rs": null
     },
     {
       "name": "app/stat-tile",
       "title": "StatTile",
       "version": "1.0.0",
       "file": "app/stat-tile.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-stat-tile",
+      "tsx": "app-stat-tile",
+      "rs": null
     },
     {
       "name": "app/info-tip",
       "title": "InfoTip",
       "version": "1.0.0",
       "file": "app/info-tip.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-info-tip",
+      "tsx": "app-info-tip",
+      "rs": null
     },
     {
       "name": "app/empty-state",
       "title": "EmptyState",
       "version": "1.0.0",
       "file": "app/empty-state.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-empty-state",
+      "tsx": "app-empty-state",
+      "rs": null
     },
     {
       "name": "app/brand-mark",
       "title": "BrandMark",
       "version": "1.0.0",
       "file": "app/brand-mark.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-brand-mark",
+      "tsx": "app-brand-mark",
+      "rs": null
     },
     {
       "name": "app/data-table",
       "title": "DataTable",
       "version": "1.0.0",
       "file": "app/data-table.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-data-table",
+      "tsx": "app-data-table",
+      "rs": null
     },
     {
       "name": "app/filter-bar",
       "title": "FilterBar",
       "version": "1.1.0",
       "file": "app/filter-bar.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-filter-bar",
+      "tsx": "app-filter-bar",
+      "rs": null
     },
     {
       "name": "app/pagination",
       "title": "Pagination",
       "version": "1.0.0",
       "file": "app/pagination.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-pagination",
+      "tsx": "app-pagination",
+      "rs": null
     },
     {
       "name": "app/detail-panel",
       "title": "DetailPanel",
       "version": "1.0.0",
       "file": "app/detail-panel.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-detail-panel",
+      "tsx": "app-detail-panel",
+      "rs": null
     },
     {
       "name": "app/form-layout",
       "title": "FormLayout",
       "version": "1.0.0",
       "file": "app/form-layout.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-form-layout",
+      "tsx": "app-form-layout",
+      "rs": null
     },
     {
       "name": "app/form-field",
       "title": "FormField",
       "version": "1.0.0",
       "file": "app/form-field.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-form-field",
+      "tsx": "app-form-field",
+      "rs": null
     },
     {
       "name": "app/state-message",
       "title": "StateMessage",
       "version": "1.0.0",
       "file": "app/state-message.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-state-message",
+      "tsx": "app-state-message",
+      "rs": null
     },
     {
       "name": "app/toast",
       "title": "Toast",
       "version": "1.0.0",
       "file": "app/toast.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-toast",
+      "tsx": "app-toast",
+      "rs": null
     },
     {
       "name": "app/account-menu",
       "title": "AccountMenu",
       "version": "1.0.0",
       "file": "app/account-menu.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-account-menu",
+      "tsx": "app-account-menu",
+      "rs": null
     },
     {
       "name": "app/bar-chart",
       "title": "BarChart",
       "version": "1.0.1",
       "file": "app/bar-chart.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "app-bar-chart",
+      "tsx": "app-bar-chart",
+      "rs": null
     },
     {
       "name": "app/button",
       "title": "Button",
       "version": "1.0.0",
       "file": "app/button.contract.json",
+      "astro": "button",
       "tsx": "button",
-      "rs": "button",
-      "mz": "button"
+      "rs": "button"
     },
     {
       "name": "app/badge",
       "title": "Badge",
       "version": "1.0.0",
       "file": "app/badge.contract.json",
+      "astro": "badge",
       "tsx": "badge",
-      "rs": "badge",
-      "mz": "badge"
+      "rs": "badge"
     },
     {
       "name": "app/card",
       "title": "Card",
       "version": "1.0.0",
       "file": "app/card.contract.json",
+      "astro": "card",
       "tsx": "card",
-      "rs": "card",
-      "mz": "card"
+      "rs": "card"
     },
     {
       "name": "app/alert",
       "title": "Alert",
       "version": "1.0.0",
       "file": "app/alert.contract.json",
+      "astro": "alert",
       "tsx": "alert",
-      "rs": null,
-      "mz": "alert"
+      "rs": null
     },
     {
       "name": "app/input",
       "title": "Input",
       "version": "1.0.0",
       "file": "app/input.contract.json",
+      "astro": "input",
       "tsx": "input",
-      "rs": "input",
-      "mz": "input"
+      "rs": "input"
     },
     {
       "name": "app/label",
       "title": "Label",
       "version": "1.0.0",
       "file": "app/label.contract.json",
+      "astro": "label",
       "tsx": "label",
-      "rs": "label",
-      "mz": "label"
+      "rs": "label"
     },
     {
       "name": "app/skeleton",
       "title": "Skeleton",
       "version": "1.0.0",
       "file": "app/skeleton.contract.json",
+      "astro": "skeleton",
       "tsx": "skeleton",
-      "rs": null,
-      "mz": null
+      "rs": null
     },
     {
       "name": "discover/discover-shell",
       "title": "DiscoverShell",
       "version": "1.0.0",
       "file": "discover/discover-shell.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-shell",
+      "tsx": "discover-shell",
+      "rs": null
     },
     {
       "name": "discover/discover-meta",
       "title": "DiscoverMeta",
       "version": "1.0.0",
       "file": "discover/discover-meta.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-meta",
+      "tsx": "discover-meta",
+      "rs": null
     },
     {
       "name": "discover/discover-hero",
       "title": "DiscoverHero",
       "version": "1.0.0",
       "file": "discover/discover-hero.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-hero",
+      "tsx": "discover-hero",
+      "rs": null
     },
     {
       "name": "discover/discover-search",
       "title": "DiscoverSearch",
       "version": "1.0.0",
       "file": "discover/discover-search.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-search",
+      "tsx": "discover-search",
+      "rs": null
     },
     {
       "name": "discover/category-chips",
       "title": "CategoryChips",
       "version": "1.0.0",
       "file": "discover/category-chips.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-category-chips",
+      "tsx": "discover-category-chips",
+      "rs": null
     },
     {
       "name": "discover/category-chip",
       "title": "CategoryChip",
       "version": "1.0.0",
       "file": "discover/category-chip.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-category-chip",
+      "tsx": "discover-category-chip",
+      "rs": null
     },
     {
       "name": "discover/discover-section",
       "title": "DiscoverSection",
       "version": "1.0.0",
       "file": "discover/discover-section.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-section",
+      "tsx": "discover-section",
+      "rs": null
     },
     {
       "name": "discover/result-grid",
       "title": "ResultGrid",
       "version": "1.0.0",
       "file": "discover/result-grid.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-result-grid",
+      "tsx": "discover-result-grid",
+      "rs": null
     },
     {
       "name": "discover/discover-card",
       "title": "DiscoverCard",
       "version": "1.0.0",
       "file": "discover/discover-card.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-card",
+      "tsx": "discover-card",
+      "rs": null
     },
     {
       "name": "discover/load-more",
       "title": "LoadMore",
       "version": "1.0.0",
       "file": "discover/load-more.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-load-more",
+      "tsx": "discover-load-more",
+      "rs": null
     },
     {
       "name": "discover/open-in-app",
       "title": "OpenInApp",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "discover/open-in-app.contract.json",
-      "tsx": null,
-      "rs": null,
-      "mz": null
+      "astro": "discover-open-in-app",
+      "tsx": "discover-open-in-app",
+      "rs": null
     },
     {
-      "name": "primitives/status-badge",
+      "name": "discover/breadcrumb",
+      "title": "DiscoverBreadcrumb",
+      "version": "1.0.0",
+      "file": "discover/breadcrumb.contract.json",
+      "astro": "discover-breadcrumb",
+      "tsx": "discover-breadcrumb",
+      "rs": null
+    },
+    {
+      "name": "discover/detail-actions",
+      "title": "DetailActions",
+      "version": "1.0.0",
+      "file": "discover/detail-actions.contract.json",
+      "astro": "discover-detail-actions",
+      "tsx": "discover-detail-actions",
+      "rs": null
+    },
+    {
+      "name": "discover/detail-hero",
+      "title": "DetailHero",
+      "version": "1.0.0",
+      "file": "discover/detail-hero.contract.json",
+      "astro": "discover-detail-hero",
+      "tsx": "discover-detail-hero",
+      "rs": null
+    },
+    {
+      "name": "discover/meta-list",
+      "title": "MetaList",
+      "version": "1.0.0",
+      "file": "discover/meta-list.contract.json",
+      "astro": "discover-meta-list",
+      "tsx": "discover-meta-list",
+      "rs": null
+    },
+    {
+      "name": "discover/related-rail",
+      "title": "RelatedRail",
+      "version": "1.0.0",
+      "file": "discover/related-rail.contract.json",
+      "astro": "discover-related-rail",
+      "tsx": "discover-related-rail",
+      "rs": null
+    },
+    {
+      "name": "site/breadcrumb",
+      "title": "Breadcrumb",
+      "version": "1.0.0",
+      "file": "site/breadcrumb.contract.json",
+      "astro": "site-breadcrumb",
+      "tsx": "site-breadcrumb",
+      "rs": null
+    },
+    {
+      "name": "site/container",
+      "title": "Container",
+      "version": "1.0.0",
+      "file": "site/container.contract.json",
+      "astro": "site-container",
+      "tsx": "site-container",
+      "rs": null
+    },
+    {
+      "name": "site/hero",
+      "title": "Hero",
+      "version": "1.0.0",
+      "file": "site/hero.contract.json",
+      "astro": "site-hero",
+      "tsx": "site-hero",
+      "rs": null
+    },
+    {
+      "name": "site/icon",
+      "title": "Icon",
+      "version": "1.0.0",
+      "file": "site/icon.contract.json",
+      "astro": "site-icon",
+      "tsx": "site-icon",
+      "rs": null
+    },
+    {
+      "name": "site/mineral-strip",
+      "title": "MineralStrip",
+      "version": "1.0.0",
+      "file": "site/mineral-strip.contract.json",
+      "astro": "site-mineral-strip",
+      "tsx": "site-mineral-strip",
+      "rs": null
+    },
+    {
+      "name": "site/section",
+      "title": "Section",
+      "version": "1.0.0",
+      "file": "site/section.contract.json",
+      "astro": "site-section",
+      "tsx": "site-section",
+      "rs": null
+    },
+    {
+      "name": "site/section-header",
+      "title": "SectionHeader",
+      "version": "1.0.0",
+      "file": "site/section-header.contract.json",
+      "astro": "site-section-header",
+      "tsx": "site-section-header",
+      "rs": null
+    },
+    {
+      "name": "site/social-icon",
+      "title": "SocialIcon",
+      "version": "1.0.0",
+      "file": "site/social-icon.contract.json",
+      "astro": "site-social-icon",
+      "tsx": "site-social-icon",
+      "rs": null
+    },
+    {
+      "name": "ui/native-select",
+      "title": "NativeSelect",
+      "version": "1.0.0",
+      "file": "ui/native-select.contract.json",
+      "astro": "native-select",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "ui/safe-area-frame",
+      "title": "SafeAreaFrame",
+      "version": "1.0.0",
+      "file": "ui/safe-area-frame.contract.json",
+      "astro": "safe-area-frame",
+      "tsx": "safe-area-frame",
+      "rs": "safe-area-frame"
+    },
+    {
+      "name": "ui/segmented-control",
+      "title": "SegmentedControl",
+      "version": "1.0.0",
+      "file": "ui/segmented-control.contract.json",
+      "astro": "segmented-control",
+      "tsx": "segmented-control",
+      "rs": null
+    },
+    {
+      "name": "ui/toaster",
+      "title": "Toaster",
+      "version": "1.0.0",
+      "file": "ui/toaster.contract.json",
+      "astro": "toaster",
+      "tsx": null,
+      "rs": null
+    },
+    {
+      "name": "ui/status-badge",
       "title": "StatusBadge",
       "version": "1.0.0",
-      "file": "primitives/status-badge.contract.json",
+      "file": "ui/status-badge.contract.json",
+      "astro": "status-badge",
       "tsx": "status-badge",
-      "rs": "status-badge",
-      "mz": "status-badge"
+      "rs": "status-badge"
     }
   ]
 }

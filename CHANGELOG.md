@@ -2,7 +2,20 @@
 
 All notable changes to the Mzizi registry (`mzizi-dev/mzizi-registry`: the components, the design tokens, the doctrine, the Mzizi Roots crates and the `/api/v1` handlers that api.mzizi.dev serves) are documented here.
 
-The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the code version follows [Semantic Versioning](https://semver.org/). Under `## [Unreleased]`, each change is a `### <Kind> — <what changed> (<merge date>, #<PR>)` subsection, newest first, where Kind is Added, Changed, Deprecated, Removed, Fixed or Security. Breaking changes are marked **Breaking**. A release moves the Unreleased entries under `## [x.y.z] - YYYY-MM-DD`. The machine-readable release record that `/api/v1/changelog` serves is `content/changelog/releases.json`; this file is the human narrative.
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the code version follows [Semantic Versioning](https://semver.org/). Under `## [Unreleased]`,### Changed — one contract per component, whatever the language; `ui/status-badge` in every format (2026-10-05, #428)
+
+Owner decision, 2026-10-05: "a contract should be added for components no matter the language, a single contract per component". Tracking: #427.
+
+- **`ui/status-badge`, a contract for StatusBadge.** Its four statuses are tinted with the Seven Minerals: stable is malachite, beta cobalt, alpha gold, and deprecated terracotta, struck through. It is held in full (`identity: "contract"`) by:
+  - a new `status-badge.astro` (`@bundu/ui/StatusBadge.astro`), rendered in every state by `__tests__/astro`;
+  - `status-badge.tsx`, by `__tests__/contracts/tsx-contracts.test.tsx`;
+  - `status-badge.rs`, by `mzizi-ui`'s new `tests/contracts_json.rs`.
+- **Rust builds are evaluated against the whole contract.** `tests/contracts_json.rs` renders every contract state of each `contract`-identity `.rs` with `dioxus-ssr` and evaluates every clause, check and density row, through the shared evaluator in `mzizi-rs/contract-eval/`. The evaluator gains `when <state> <attribute>`, `uses <slot>`, and a CSS-selector subset for checks and density.
+- **`pnpm contracts:sync` / `contracts:sync:check`:** a `contract`-identity `.rs`'s `pub const CONTRACT` is written from its contract file. It is a copy, never authored by hand, and a new CI step fails on drift.
+- **Fixed — `status-badge.tsx` defaults `status` to `stable`,** as the contract and the other builds do. Rendered with no props, it used to carry no `data-status` and no label.
+- **AGENTS.md, CONTRIBUTING and `contracts/README.md`:** "contract first" for every new component or format, and local checks with Vite+ (`vp run test`, `vp run ci:check`).
+
+each change is a `### <Kind> — <what changed> (<merge date>, #<PR>)` subsection, newest first, where Kind is Added, Changed, Deprecated, Removed, Fixed or Security. Breaking changes are marked **Breaking**. A release moves the Unreleased entries under `## [x.y.z] - YYYY-MM-DD`. The machine-readable release record that `/api/v1/changelog` serves is `content/changelog/releases.json`; this file is the human narrative.
 
 **The rule (owner, 2026-09-30):** every pull request that changes behaviour, shipped content, an API response, a published package or crate, a default, a dependency or a documented fact adds its entry here, under `## [Unreleased]`, in the same pull request. The `changelog / entry required` check fails a pull request that doesn't. Pull requests that touch only `.github/`, lockfiles or lint config pass without one, and pure CI, lint or typo pull requests can carry the `no-changelog` label instead.
 
@@ -10,19 +23,19 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — one contract per component, whatever the language: `contracts/` drives the `.tsx`, `.rs` and `.mz` builds (2026-10-05, #428)
+### Added — every component in every format here: the Astro target, React builds of every contract, the Discover detail pattern and Open in Mukoko (2026-10-05, #430)
 
-Owner decision, 2026-10-05: "a contract should be added for components no matter the language, a single contract per component". Tracking: #427.
+Owner decision, 2026-10-04: this registry is the single source of every component in every format (`.tsx`, `.rs`, `.astro`, and `.mz` as it lands). Tracking: #397 (the Astro target) and #429 (the detail pattern).
 
-- **The contract schema lists the Mzizi language build.** `implementations.mz` sits beside `astro`, `tsx` and `rs` in every contract, and `index.json` and the coverage tables gain a Mzizi `.mz` column. The `app/` contracts for `button`, `badge`, `card`, `input`, `alert` and `label` name their `.mz` siblings, identity-checked like the `.tsx` and `.rs`.
-- **New identity, `contract`:** the build implements the whole contract, not only its slot, variants or role. Every clause, check and density row is evaluated against it, in every language:
-  - the `.tsx` in `__tests__/contracts` (every state rendered);
-  - the `.rs` in `mzizi-ui`'s new `tests/contracts_json.rs` (every state rendered with `dioxus-ssr`; the shared evaluator gains `when <state> <attribute>`, `uses` and a CSS-selector subset for checks and density);
-  - the `.mz` with `mz contract`, on the clauses the language evaluates on source.
-- **New family, `contracts/primitives/`:** registry primitives with no `@bundu/ui` standard yet. The first is `primitives/status-badge`, whose React, Rust and Mzizi builds all have identity `contract`.
-- **`pnpm contracts:sync` / `contracts:sync:check`:** write each `contract`-identity contract into its `.rs` (`pub const CONTRACT`) and its `.mz` (`contract … end`). The copies are never authored by hand, and a new CI step fails on drift. `status-badge.rs` and `status-badge.mz` now carry the contract file's clauses instead of their own.
-- **Fixed — `status-badge.tsx` defaults `status` to `stable`,** as its contract and its Rust build do. Rendered with no props, it used to carry no `data-status` and no label. The new contract runner caught it.
-- **AGENTS.md and CONTRIBUTING:** "contract first" for every new component or language build, and local checks with Vite+ (`vp run test`, `vp run ci:check`), as the org CI runs them.
+- **Added: `.astro` implementations.** The 54 Astro components `@bundu/ui` hand-authored in `mzizi-dev/packages-npm` (the Dashboard Standard's `src/app/*`, the Discover Standard's `src/discover/*`, the primitives and the marketing-site components) now live here, beside each component's `.tsx`: `app-*` (N6/N7, `app-brand-mark` in N3), `discover-*`, `site-*`, and `button`, `badge`, `card`, `alert`, `input`, `label`, `skeleton` beside their existing `.tsx`/`.rs`. With them come the framework-free modules they use (`ui-utils`, `ui-variants`, `app-nav`, `site-icons`, `site-breadcrumbs`), `@bundu/server`'s helpers as `n4-safety/server-*.ts` (the TypeScript mirror of `mzizi-roots-server`), and the Nyuchi brand-mark pair in `components/registry/assets/`. `site-hero` now composes a pure-Astro `site-cta-button` instead of a React button, so no `.astro` has React under it.
+- **Added: React (`.tsx`) builds of every contract.** The 24 Dashboard Standard patterns and shell components, the 11 Discover components and the 8 site components each have a `.tsx` that keeps the whole contract (`identity: "contract"`), so Next.js apps adopt the same design through the registry (`mzizi add <name> --target tsx` or `npx shadcn add https://api.mzizi.dev/v1/ui/<name>`).
+- **Added: the Discover detail pattern** (`discover/detail-hero`, `breadcrumb`, `meta-list`, `detail-actions`, `related-rail`), each a contract, an `.astro` and a `.tsx`, for the page of one item reached from a discover page.
+- **Changed: Open in Mukoko** (`discover/open-in-app` 1.1.0). New `service` and `id` props build the canonical universal link `https://mukoko.com/open/<service>/<id>` (`discover-open-link.ts`, `openInMukokoUrl`); `href` stays as an explicit override.
+- **Added: the `site/` contract family** (8 contracts), so every component has a contract. `site-breadcrumb` and `site-social-icon` gain a root `data-slot`.
+- **Added: the `ui/` contract family** (4 contracts) for the Astro ports of existing registry primitives that `@bundu/ui` 0.3.0 added: `native-select`, `segmented-control`, `toaster` and `safe-area-frame` (`.astro` beside their `.tsx`, with the `safe-area` geometry module). `safe-area-frame.astro` now draws its box, canvas and bands as SVG geometry instead of inline `style` attributes, so it keeps the no-inline-style rule; its `.tsx` and `.rs` share only the slot until they follow.
+- **Added: contracts test every format.** `__tests__/astro/contracts.test.ts` (`pnpm test:astro`, run by `pnpm test`) renders every `.astro` in every state; `__tests__/contracts/tsx-contracts.test.tsx` holds every `contract`-identity `.tsx` to the whole contract with the same runner, now canonical here as `contracts/runner.ts` (it lower-cases attribute names as a browser does). The schema gains `implementations.astro.registry` and the `contract` identity; `index.json` gains `astro`.
+- **Added: `lib/astro.ts`**, the reader `mzizi-api-gateway` bundles for `GET /v1/astro/{name}` (documented in `openapi.yaml`): the `.astro` (or framework-free `.ts`), its flat imports as `/v1/astro/` registry dependencies, its npm dependencies, and its brand assets as base64 files (`lib/registry-assets.generated.json`). `pnpm registry:validate` rejects a framework import in an `.astro` or a flat import that does not resolve.
+- **Changed:** registry `.astro` and framework-free `.ts` files import each other flat (`./button.astro`, `./ui-utils`), as installed; `vitest.astro.config.ts`, the default vitest config and tsconfig's `rootDirs` resolve them. `astro`, `css-select`, `domhandler`, `domutils` and `htmlparser2` are new devDependencies.
 
 ### Fixed — CONTRIBUTING no longer says to curl a local server (2026-10-04, #426)
 

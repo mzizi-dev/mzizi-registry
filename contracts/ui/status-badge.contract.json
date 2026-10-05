@@ -1,22 +1,23 @@
 {
   "$schema": "../schema/component-contract.schema.json",
-  "name": "primitives/status-badge",
+  "name": "ui/status-badge",
   "title": "StatusBadge",
   "version": "1.0.0",
   "node": 2,
   "kind": "primitive",
-  "summary": "A pill-shaped lifecycle label (stable, beta, alpha or deprecated), each status tinted with one of the Seven Minerals at 10% behind the mineral itself. One contract for the React, Mzizi Roots and Mzizi language builds.",
+  "summary": "A pill-shaped lifecycle label (stable, beta, alpha or deprecated), each status tinted with one of the Seven Minerals at 10% behind the mineral itself. One contract for the Astro, React and Mzizi Roots builds.",
   "implementations": {
-    "astro": null,
+    "astro": {
+      "registry": "status-badge",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/StatusBadge.astro",
+      "since": "0.3.0"
+    },
     "tsx": {
       "registry": "status-badge",
       "identity": "contract"
     },
     "rs": {
-      "registry": "status-badge",
-      "identity": "contract"
-    },
-    "mz": {
       "registry": "status-badge",
       "identity": "contract"
     },

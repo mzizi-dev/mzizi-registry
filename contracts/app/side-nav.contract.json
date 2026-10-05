@@ -8,13 +8,13 @@
   "summary": "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (44px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator. Descriptions are tooltips and accessible descriptions, never printed.",
   "implementations": {
     "astro": {
+      "registry": "app-side-nav",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/SideNav.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-side-nav", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["mzizi-sidebar", "sidebar"]
   },
   "props": [

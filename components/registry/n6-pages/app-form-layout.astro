@@ -1,0 +1,43 @@
+---
+/**
+ * FormLayout — a titled form card that uses the width it is given: fields
+ * flow in two columns from md up and one below, actions sit at the foot.
+ * Posts to the page itself (Post/Redirect/Get); Astro refuses cross-site
+ * posts. A form-level error is announced as an alert.
+ */
+import Alert from "./alert.astro";
+import Card from "./card.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  error?: string | null;
+  action?: string;
+  id?: string;
+}
+const { title, description, error, action, id = "form" } = Astro.props;
+---
+
+<section aria-labelledby={`${id}-title`} class="@container" data-slot="form-layout">
+  <Card padding="none" class="overflow-hidden rounded-md">
+    <div class="flex flex-col gap-1 border-b border-border px-4 py-3">
+      <h2 id={`${id}-title`} class="text-h6 font-semibold">{title}</h2>
+      {description && <p class="text-body-sm text-muted-foreground">{description}</p>}
+    </div>
+    <form method="post" action={action} class="grid gap-4 px-4 py-4" novalidate>
+      {
+        error && (
+          <Alert variant="destructive" title="Not saved">
+            {error}
+          </Alert>
+        )
+      }
+      <div class="grid gap-4 @xl:grid-cols-2">
+        <slot />
+      </div>
+      <div class="flex flex-wrap items-center gap-2 border-t border-border pt-4">
+        <slot name="actions" />
+      </div>
+    </form>
+  </Card>
+</section>

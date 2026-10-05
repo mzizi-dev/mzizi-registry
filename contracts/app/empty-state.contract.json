@@ -8,13 +8,13 @@
   "summary": "A calm, centred card for \"nothing here yet\": a heading, one or two lines of help, and the next steps.",
   "implementations": {
     "astro": {
+      "registry": "app-empty-state",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/EmptyState.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-empty-state", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["empty-state", "mzizi-empty-state"]
   },
   "props": [

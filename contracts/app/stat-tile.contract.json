@@ -8,13 +8,13 @@
   "summary": "One headline figure: a label, the value, an optional trend in words and a note. A missing value reads \"Not available\", never 0.",
   "implementations": {
     "astro": {
+      "registry": "app-stat-tile",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/StatTile.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-stat-tile", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["stats-card", "mzizi-hero-stat", "mzizi-meta-tile"]
   },
   "props": [

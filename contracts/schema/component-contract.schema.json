@@ -29,7 +29,7 @@
   "properties": {
     "$schema": { "type": "string" },
     "name": {
-      "description": "The contract's id: `<family>/<kebab-name>`. The `app/` family is the Dashboard Standard; `discover/` is the Discover Standard; `primitives/` holds registry primitives whose contract is not (yet) part of a `@bundu/ui` standard, so their registry builds implement it in full.",
+      "description": "The contract's id: `<family>/<kebab-name>`. The `app/` family is the Dashboard Standard; `discover/` is the Discover Standard; `site/` is the marketing-site family.",
       "type": "string",
       "pattern": "^[a-z]+/[a-z0-9]+(-[a-z0-9]+)*$"
     },
@@ -53,14 +53,15 @@
     "implementations": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["astro", "tsx", "rs", "mz"],
+      "required": ["astro", "tsx", "rs"],
       "properties": {
         "astro": {
-          "description": "The Astro build. `null` only for a contract with no Astro build yet.",
+          "description": "The Astro build: `registry` is the registry item whose `.astro` file implements the contract (`components/registry/n<N>-*/<registry>.astro`, served at `/v1/astro/<registry>`), and `package`/`export` the package export built from it. `null` only for a contract with no Astro build yet.",
           "type": ["object", "null"],
           "additionalProperties": false,
-          "required": ["package", "export", "since"],
+          "required": ["registry", "package", "export", "since"],
           "properties": {
+            "registry": { "type": "string" },
             "package": { "type": "string" },
             "export": { "type": "string" },
             "since": { "type": "string" }
@@ -68,7 +69,6 @@
         },
         "tsx": { "$ref": "#/$defs/sibling" },
         "rs": { "$ref": "#/$defs/sibling" },
-        "mz": { "$ref": "#/$defs/sibling" },
         "related": {
           "description": "Registry items with a similar purpose and a DIFFERENT contract. Not checked; listed so nobody mistakes them for implementations.",
           "type": "array",
@@ -256,17 +256,17 @@
   },
   "$defs": {
     "sibling": {
-      "description": "A registry implementation in one language: `tsx` (React), `rs` (Mzizi Roots) or `mz` (the Mzizi language). `null` when there is none (a follow-up). `identity` names what the runners check against it.",
+      "description": "A registry implementation in another language. `null` when there is none (a follow-up). `identity` names what the runner checks against it.",
       "type": ["object", "null"],
       "additionalProperties": false,
       "required": ["registry", "identity"],
       "properties": {
         "registry": {
-          "description": "The registry item name (`components/registry/n<N>-*/<name>.tsx|.rs|.mz`).",
+          "description": "The registry item name (`components/registry/n<N>-*/<name>.tsx|.rs`).",
           "type": "string"
         },
         "identity": {
-          "description": "What the implementation shares with the contract. `slot`, `slot+role` or `slot+variants` (the same data-variant values) are identity only, for a sibling of an Astro build that diverges where `divergences` says. `contract` means it implements the whole contract: every clause, check and density row is evaluated against it, and `pnpm contracts:sync` writes the contract into its `.rs` `CONTRACT` and its `.mz` `contract` block.",
+          "description": "What is shared with the Astro build: `slot` alone, `slot+role`, `slot+variants` (the same data-variant values), or `contract` (the whole contract: every state renders and every clause, check, density row and theming rule holds, exactly as for the Astro build).",
           "type": "string",
           "enum": ["slot", "slot+role", "slot+variants", "contract"]
         },

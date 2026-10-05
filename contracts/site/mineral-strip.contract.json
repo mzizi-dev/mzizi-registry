@@ -1,0 +1,126 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "site/mineral-strip",
+  "title": "MineralStrip",
+  "version": "1.0.0",
+  "node": 3,
+  "kind": "primitive",
+  "summary": "The decorative seven-mineral accent bar: a full-height ~6px strip fixed to the left edge of the page, in seven equal segments coloured cobalt, tanzanite, malachite, gold, terracotta, sodalite and copper, top to bottom.",
+  "implementations": {
+    "astro": {
+      "registry": "site-mineral-strip",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/MineralStrip.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "site-mineral-strip", "identity": "contract" },
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "...attributes",
+      "type": "never",
+      "required": false,
+      "description": "None: the component takes no props and forwards no attributes. Listed this way because the .astro declares no `interface Props`, which the Astro runner reads as attribute pass-through."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Renders one <div class=\"mineral-strip\" data-slot=\"mineral-strip\" aria-hidden=\"true\"> holding seven empty <span data-mineral=\"<mineral>\">, in the order cobalt, tanzanite, malachite, gold, terracotta, sodalite, copper.",
+    "Its own stylesheet fixes it to the left edge (6px wide, 100dvh tall, z-index 50, pointer-events none) and colours each segment by its data-mineral from the `--color-<mineral>` custom property.",
+    "No inline style attribute: the segments are coloured by attribute selector, so a page's CSP can keep `style-src 'self'`."
+  ],
+  "states": {
+    "default": {
+      "props": {}
+    }
+  },
+  "accessibility": {
+    "roles": [],
+    "keyboard": ["None: it is decorative and never focusable."],
+    "focus": ["None."],
+    "aria": ["aria-hidden=\"true\": it never reaches the accessibility tree."],
+    "wcag": ["1.3.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--color-cobalt",
+      "--color-tanzanite",
+      "--color-malachite",
+      "--color-gold",
+      "--color-terracotta",
+      "--color-sodalite",
+      "--color-copper"
+    ],
+    "brandOverlay": "Nothing: the strip is the seven minerals in a fixed order on every brand. They are named only as data-mineral attributes and in the component's stylesheet, never as colour classes.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML and CSS with no script."
+  },
+  "responsive": [
+    "The same 6px full-height strip at every width; it does not take layout space (position fixed), so content must leave room for it."
+  ],
+  "contract": "contract\n  slot is \"mineral-strip\"\n  class contains \"mineral-strip\"\nend",
+  "checks": [
+    {
+      "say": "The strip is decorative.",
+      "select": "[data-slot=\"mineral-strip\"]",
+      "attr": { "aria-hidden": "true" }
+    },
+    {
+      "say": "Seven segments.",
+      "select": "[data-slot=\"mineral-strip\"] > span[data-mineral]",
+      "count": 7
+    },
+    {
+      "say": "Cobalt is the top segment.",
+      "select": "[data-slot=\"mineral-strip\"] > span:first-child",
+      "attr": { "data-mineral": "cobalt" }
+    },
+    {
+      "say": "Tanzanite is second.",
+      "select": "[data-slot=\"mineral-strip\"] > span:nth-child(2)",
+      "attr": { "data-mineral": "tanzanite" }
+    },
+    {
+      "say": "Malachite is third.",
+      "select": "[data-slot=\"mineral-strip\"] > span:nth-child(3)",
+      "attr": { "data-mineral": "malachite" }
+    },
+    {
+      "say": "Gold is fourth.",
+      "select": "[data-slot=\"mineral-strip\"] > span:nth-child(4)",
+      "attr": { "data-mineral": "gold" }
+    },
+    {
+      "say": "Terracotta is fifth.",
+      "select": "[data-slot=\"mineral-strip\"] > span:nth-child(5)",
+      "attr": { "data-mineral": "terracotta" }
+    },
+    {
+      "say": "Sodalite is sixth.",
+      "select": "[data-slot=\"mineral-strip\"] > span:nth-child(6)",
+      "attr": { "data-mineral": "sodalite" }
+    },
+    {
+      "say": "Copper is the bottom segment.",
+      "select": "[data-slot=\"mineral-strip\"] > span:last-child",
+      "attr": { "data-mineral": "copper" }
+    },
+    {
+      "say": "The segments are empty.",
+      "select": "[data-slot=\"mineral-strip\"] span *",
+      "absent": true
+    }
+  ],
+  "gaps": [
+    "The position, size and colours live in the component's own stylesheet, which the contract cannot check: only the markup is evaluated. The React build must ship an equivalent stylesheet (the `.mineral-strip` rules) for the strip to show at all.",
+    "It reads `--color-<mineral>` custom properties each site defines in its own global.css; the registry does not ship them.",
+    "It takes no props: the Astro runner reads a missing `interface Props` as attribute pass-through, so the prop list says `...attributes` (type never) rather than an empty list.",
+    "Fixed to the left edge with no reserved space: content that reaches the edge sits under it."
+  ]
+}

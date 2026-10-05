@@ -1,0 +1,247 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/detail-hero",
+  "title": "DetailHero",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The top of the page for one item reached from a Discover page (an article, an event, a public circle, a place): breadcrumb, eyebrow, the page's one <h1>, when and where, a lead, the actions, and the item's image or media.",
+  "implementations": {
+    "astro": {
+      "registry": "discover-detail-hero",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/DetailHero.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "discover-detail-hero", "identity": "contract" },
+    "rs": null,
+    "related": ["discover-hero", "mzizi-detail-page"]
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The item's name: the page's only <h1>."
+    },
+    {
+      "name": "eyebrow",
+      "type": "string",
+      "required": false,
+      "description": "The service, source or category above the title, e.g. \"Mukoko Events\"."
+    },
+    {
+      "name": "lead",
+      "type": "string",
+      "required": false,
+      "description": "One or two sentences."
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false,
+      "description": "The item's image URL, 16:9; replaced by the `media` slot."
+    },
+    {
+      "name": "imageAlt",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "description": "Alt text when the image says something the title does not."
+    },
+    {
+      "name": "datetime",
+      "type": "string",
+      "required": false,
+      "description": "ISO 8601 for <time datetime>."
+    },
+    {
+      "name": "dateLabel",
+      "type": "string",
+      "required": false,
+      "description": "The time as read: when it starts (event) or was published (article)."
+    },
+    {
+      "name": "place",
+      "type": "string",
+      "required": false,
+      "description": "Venue, town or region."
+    }
+  ],
+  "slots": [
+    {
+      "name": "breadcrumb",
+      "expects": "DiscoverBreadcrumb",
+      "description": "The trail above the eyebrow."
+    },
+    {
+      "name": "actions",
+      "expects": "DetailActions",
+      "description": "Under the lead: \"Open in Mukoko\" and the other actions."
+    },
+    {
+      "name": "media",
+      "expects": "An <img>, <svg>, <picture> or a map",
+      "description": "Replaces `image`, e.g. a weather figure or a map."
+    }
+  ],
+  "behaviour": [
+    "The title is the page's only <h1>; the hero is a <header> in <main> (no banner landmark).",
+    "When and where (`dateLabel`, `place`) are a list under the title, each with a decorative icon; the time is a <time datetime>.",
+    "The image is the item's own: eager (it is likely the largest paint), sized 1200×675 at 16:9, decorative by default (`imageAlt` \"\").",
+    "With an image or media the hero is two columns from 64rem, text first, and exposes `data-media=\"true\"`; without, one column.",
+    "Server-filled shells: every text prop is a plain string, and text that fills to \"\" hides itself (`empty:hidden`)."
+  ],
+  "states": {
+    "default": {
+      "description": "An event.",
+      "props": {
+        "eyebrow": "Mukoko Events",
+        "title": "Jacaranda Music Festival",
+        "lead": "Three days of music under the jacarandas, free for everyone.",
+        "image": "https://images.example/jacaranda.jpg",
+        "datetime": "2026-10-24T18:00:00+02:00",
+        "dateLabel": "Sat 24 Oct, 18:00",
+        "place": "Harare Gardens, Harare"
+      },
+      "slots": {
+        "breadcrumb": "<nav aria-label='Breadcrumb'><ol><li><a href='/'>Events</a></li></ol></nav>",
+        "actions": "<a href='https://mukoko.com/open/events/jacaranda-2026'>Open in Mukoko</a>"
+      }
+    },
+    "article": {
+      "description": "A news article: a published date, no place, no image.",
+      "props": {
+        "eyebrow": "The Herald",
+        "title": "Rains arrive early in Mashonaland",
+        "datetime": "2026-10-04T08:00:00Z",
+        "dateLabel": "4 October 2026"
+      }
+    },
+    "media": {
+      "description": "A place, with a weather figure in the media slot.",
+      "props": {
+        "eyebrow": "Harare Province",
+        "title": "Harare",
+        "place": "1,490 m above sea level"
+      },
+      "slots": {
+        "media": "<svg aria-hidden='true' viewBox='0 0 1 1'></svg>"
+      }
+    },
+    "template": {
+      "description": "A server-filled shell.",
+      "props": {
+        "eyebrow": "{{eyebrow}}",
+        "title": "{{name}}",
+        "lead": "{{summary}}",
+        "datetime": "{{starts_at}}",
+        "dateLabel": "{{when}}",
+        "place": "{{venue}}"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["heading", "list", "img"],
+    "keyboard": [
+      "Through the breadcrumb, then the actions; the hero has no stops of its own."
+    ],
+    "focus": ["Its slots' links show the `--ring` focus outline."],
+    "aria": [
+      "One <h1>; the when-and-where icons are aria-hidden (the text says it); the image is decorative unless `imageAlt` says more."
+    ],
+    "wcag": ["1.1.1", "1.3.1", "2.4.6", "1.4.10"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--background",
+      "--foreground",
+      "--border",
+      "--muted",
+      "--muted-foreground"
+    ],
+    "brandOverlay": "None of its own: the eyebrow and the slots' actions carry the brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "One column on phones: text, then the image or media at full width.",
+    "From 64rem, with media, two columns, text first; the title balances its lines and text keeps the prose measure.",
+    "Padding grows from 48rem."
+  ],
+  "contract": "contract\n  slot is \"detail-hero\"\n  uses icon\n  uses detail-hero-when\n  uses detail-hero-media\n  when default shows h1 \"Jacaranda Music Festival\"\n  when default shows time \"Sat 24 Oct, 18:00\"\n  when default shows a \"Open in Mukoko\"\n  when article shows h1 \"Rains arrive early in Mashonaland\"\n  when media shows span \"1,490 m above sea level\"\n  when template shows h1 \"{{name}}\"\nend",
+  "checks": [
+    {
+      "say": "One h1.",
+      "state": "*",
+      "select": "h1",
+      "count": 1
+    },
+    {
+      "say": "The time is machine-readable.",
+      "select": "time",
+      "count": 1,
+      "attr": { "datetime": "2026-10-24T18:00:00+02:00" }
+    },
+    {
+      "say": "When and where.",
+      "select": "[data-slot=\"detail-hero-when\"] > li",
+      "count": 2
+    },
+    {
+      "say": "Their icons are decorative.",
+      "select": "[data-slot=\"detail-hero-when\"] [data-slot=\"icon\"][aria-hidden=\"true\"]",
+      "count": 2
+    },
+    {
+      "say": "The image is decorative, eager and sized.",
+      "select": "img[data-slot=\"detail-hero-media\"]",
+      "count": 1,
+      "attr": { "alt": "", "width": "1200", "height": "675", "loading": false }
+    },
+    {
+      "say": "With media, two columns.",
+      "select": "[data-slot=\"detail-hero\"]",
+      "attr": { "data-media": "true" }
+    },
+    {
+      "say": "The breadcrumb sits above the title.",
+      "select": "nav[aria-label=\"Breadcrumb\"]",
+      "count": 1
+    },
+    {
+      "say": "No image, one column.",
+      "state": "article",
+      "select": "[data-slot=\"detail-hero\"]",
+      "attr": { "data-media": "false" }
+    },
+    {
+      "say": "No image, no media.",
+      "state": "article",
+      "select": "img, [data-slot=\"detail-hero-media\"]",
+      "absent": true
+    },
+    {
+      "say": "No place, one fact.",
+      "state": "article",
+      "select": "[data-slot=\"detail-hero-when\"] > li",
+      "count": 1
+    },
+    {
+      "say": "The media slot replaces the image.",
+      "state": "media",
+      "select": "[data-slot=\"detail-hero-media\"] svg",
+      "count": 1
+    },
+    {
+      "say": "Empty text hides itself.",
+      "state": "template",
+      "select": ".empty\\:hidden",
+      "min": 4
+    }
+  ]
+}

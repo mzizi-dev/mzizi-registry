@@ -8,13 +8,13 @@
   "summary": "ONE card for every Discover page, with typed variants (article, event, circle, place) that share one anatomy: media, eyebrow, title (the primary link, covering the card), time, badge, figure, summary, meta, and actions (\"Open in Mukoko\").",
   "implementations": {
     "astro": {
+      "registry": "discover-card",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/DiscoverCard.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-card", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["card", "nyuchi-article-card", "nyuchi-timeline"]
   },
   "props": [

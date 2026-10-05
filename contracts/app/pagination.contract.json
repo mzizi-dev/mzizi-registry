@@ -8,13 +8,13 @@
   "summary": "\"Showing 26–50 of 112\" with previous, next and page links. Links, not buttons: every page is a URL. The links are hidden when everything fits on one page.",
   "implementations": {
     "astro": {
+      "registry": "app-pagination",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Pagination.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-pagination", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["pagination"]
   },
   "props": [

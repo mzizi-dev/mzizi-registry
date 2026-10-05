@@ -1,0 +1,137 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "site/container",
+  "title": "Container",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "primitive",
+  "summary": "The max-width content wrapper of the marketing sites: centres content at one of three widths with the standard responsive gutters, as a div, section, main or article.",
+  "implementations": {
+    "astro": {
+      "registry": "site-container",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Container.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "site-container", "identity": "contract" },
+    "rs": null,
+    "related": ["site-section"]
+  },
+  "props": [
+    {
+      "name": "size",
+      "type": "\"default\" | \"narrow\" | \"prose\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "narrow", "prose"],
+      "description": "The width: `.container-custom` (the wide grid column), `.container-narrow` (the editorial column) or `.container-prose` (the reading measure)."
+    },
+    {
+      "name": "as",
+      "type": "\"div\" | \"section\" | \"main\" | \"article\"",
+      "required": false,
+      "default": "div",
+      "values": ["div", "section", "main", "article"],
+      "description": "The element rendered."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "The element's id."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, after the width utility."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The content."
+    }
+  ],
+  "behaviour": [
+    "Renders one `as` element with data-slot=\"container\" whose class is the width utility, then `class`.",
+    "It adds nothing else: no role, no aria, no wrapper."
+  ],
+  "states": {
+    "default": {
+      "props": {},
+      "slots": { "default": "<p>Content</p>" }
+    },
+    "prose-main": {
+      "description": "The reading measure, as <main>, with an id and an extra class.",
+      "props": {
+        "size": "prose",
+        "as": "main",
+        "id": "content",
+        "class": "py-12"
+      },
+      "slots": { "default": "<p>Article body</p>" }
+    },
+    "narrow-article": {
+      "description": "The editorial column, as <article>.",
+      "props": { "size": "narrow", "as": "article" },
+      "slots": { "default": "<h2>Story</h2>" }
+    }
+  },
+  "accessibility": {
+    "roles": [],
+    "keyboard": ["None of its own."],
+    "focus": ["None of its own."],
+    "aria": [
+      "None; `as` picks a landmark element (main) or a sectioning one where the page needs it."
+    ],
+    "wcag": ["1.3.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [],
+    "brandOverlay": "Nothing: it sets width and gutters only.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "The width utilities set the max width and step the horizontal padding up per breakpoint (px-6, sm:px-8, lg:px-10)."
+  ],
+  "contract": "contract\n  slot is \"container\"\n  class is \"container-custom\"\n  when prose-main class is \"container-prose py-12\"\n  when narrow-article class is \"container-narrow\"\n  when default shows p \"Content\"\nend",
+  "checks": [
+    {
+      "say": "A div by default, holding the content.",
+      "select": "div[data-slot=\"container\"] > p",
+      "count": 1
+    },
+    {
+      "say": "No id, no id attribute.",
+      "select": "[data-slot=\"container\"]",
+      "attr": { "id": false }
+    },
+    {
+      "say": "`as` picks the element.",
+      "state": "prose-main",
+      "select": "main[data-slot=\"container\"]",
+      "count": 1
+    },
+    {
+      "say": "The id is on the element.",
+      "state": "prose-main",
+      "select": "main[data-slot=\"container\"]",
+      "attr": { "id": "content" }
+    },
+    {
+      "say": "An article.",
+      "state": "narrow-article",
+      "select": "article[data-slot=\"container\"] > h2",
+      "count": 1
+    }
+  ],
+  "gaps": [
+    "The `.container-custom`, `.container-narrow` and `.container-prose` utilities live in each consuming site's globals.css; the registry does not ship them."
+  ]
+}

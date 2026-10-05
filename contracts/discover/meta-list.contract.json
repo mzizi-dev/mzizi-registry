@@ -1,0 +1,190 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "discover/meta-list",
+  "title": "MetaList",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The facts of one item on its Discover page (when, where, price, organiser): a <dl> of label and value rows, each with an optional icon, link or machine-readable time, in responsive columns.",
+  "implementations": {
+    "astro": {
+      "registry": "discover-meta-list",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/discover/MetaList.astro",
+      "since": "0.3.0"
+    },
+    "tsx": { "registry": "discover-meta-list", "identity": "contract" },
+    "rs": null,
+    "related": ["discover-card", "detail-panel"]
+  },
+  "props": [
+    {
+      "name": "items",
+      "type": "{ label: string; value: string; icon?: IconName; href?: string; datetime?: string }[]",
+      "required": true,
+      "description": "The rows, in order: `label` (the <dt>), `value` (the <dd>), an optional `icon` from the design system's set (site-icons), an optional `href` that links the value, and an optional ISO 8601 `datetime` that makes the value a <time>."
+    },
+    {
+      "name": "columns",
+      "type": "1 | 2 | 3",
+      "required": false,
+      "default": 2,
+      "values": [1, 2, 3],
+      "description": "Columns from 40rem (2) and 64rem (3); 1 keeps one column."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A <dl>; each row is a <div> holding its <dt> and <dd> (valid HTML), beside its icon.",
+    "Icons are decorative (aria-hidden): the label says what the row is.",
+    "`href` makes the value a link; `datetime` makes it a <time datetime>, inside the link when both are given.",
+    "Server-filled shells: every text is a plain string and an empty value hides itself (`empty:hidden`).",
+    "No items, nothing rendered."
+  ],
+  "states": {
+    "default": {
+      "description": "An event's facts.",
+      "props": {
+        "items": [
+          {
+            "label": "When",
+            "value": "Sat 24 Oct, 18:00",
+            "icon": "calendar",
+            "datetime": "2026-10-24T18:00:00+02:00"
+          },
+          {
+            "label": "Where",
+            "value": "Harare Gardens, Harare",
+            "icon": "map-pin",
+            "href": "https://www.openstreetmap.org/search?query=Harare%20Gardens"
+          },
+          { "label": "Price", "value": "Free" },
+          {
+            "label": "Organiser",
+            "value": "Jacaranda Trust",
+            "icon": "users",
+            "href": "/organisers/jacaranda-trust"
+          }
+        ]
+      }
+    },
+    "single": {
+      "description": "One column, no icons.",
+      "props": {
+        "columns": 1,
+        "items": [
+          { "label": "Members", "value": "1,204" },
+          { "label": "Category", "value": "Running · Sport" }
+        ]
+      }
+    },
+    "template": {
+      "description": "A server-filled shell.",
+      "props": {
+        "columns": 3,
+        "items": [
+          { "label": "When", "value": "{{when}}", "datetime": "{{starts_at}}" },
+          { "label": "Where", "value": "{{venue}}" }
+        ]
+      }
+    },
+    "empty": {
+      "description": "No facts.",
+      "props": { "items": [] }
+    }
+  },
+  "accessibility": {
+    "roles": ["term", "definition", "link"],
+    "keyboard": ["Tab reaches each linked value in order."],
+    "focus": ["Links show the `--ring` focus outline."],
+    "aria": [
+      "A description list pairs each label with its value; icons are aria-hidden, so meaning is never in the icon alone."
+    ],
+    "wcag": ["1.1.1", "1.3.1", "1.4.10", "2.4.4", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "linked value",
+      "select": "dd a",
+      "fine": 24,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": ["--foreground", "--muted-foreground", "--border", "--ring"],
+    "brandOverlay": "None of its own.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "One column on phones, two from 40rem, three from 64rem when `columns` is 3; long values wrap."
+  ],
+  "contract": "contract\n  slot is \"meta-list\"\n  uses meta-list-item\n  uses icon\n  a \"Jacaranda Trust\" min_height 24\n  when default shows dt \"Where\"\n  when default shows time \"Sat 24 Oct, 18:00\"\n  when single shows dd \"Running · Sport\"\n  when template shows time \"{{when}}\"\nend",
+  "checks": [
+    {
+      "say": "A description list of rows.",
+      "select": "dl > div > div > dt",
+      "count": 4
+    },
+    {
+      "say": "Every label has its value.",
+      "select": "dt + dd",
+      "count": 4
+    },
+    {
+      "say": "The time is machine-readable.",
+      "select": "dd time",
+      "count": 1,
+      "attr": { "datetime": "2026-10-24T18:00:00+02:00" }
+    },
+    {
+      "say": "Icons are decorative.",
+      "select": "[data-slot=\"icon\"][aria-hidden=\"true\"]",
+      "count": 3
+    },
+    {
+      "say": "A row without an icon has none.",
+      "state": "single",
+      "select": "[data-slot=\"icon\"]",
+      "absent": true
+    },
+    {
+      "say": "Linked values.",
+      "select": "dd > a",
+      "count": 2
+    },
+    {
+      "say": "The columns.",
+      "select": "[data-slot=\"meta-list\"].sm\\:grid-cols-2",
+      "count": 1,
+      "attr": { "data-columns": "2" }
+    },
+    {
+      "say": "One column stays one column.",
+      "state": "single",
+      "select": "[class*=\"grid-cols\"]",
+      "absent": true
+    },
+    {
+      "say": "Three columns from 64rem.",
+      "state": "template",
+      "select": "[data-slot=\"meta-list\"].lg\\:grid-cols-3",
+      "count": 1
+    },
+    {
+      "say": "An empty value hides itself.",
+      "state": "template",
+      "select": "dd.empty\\:hidden",
+      "count": 2
+    },
+    {
+      "say": "No items, nothing rendered.",
+      "state": "empty",
+      "select": "dl",
+      "absent": true
+    }
+  ]
+}

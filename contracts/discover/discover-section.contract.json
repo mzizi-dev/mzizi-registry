@@ -8,13 +8,13 @@
   "summary": "One band of a Discover page: eyebrow, heading, description and a \"See all\" link over its content. A featured rail is a DiscoverSection holding a ResultGrid.",
   "implementations": {
     "astro": {
+      "registry": "discover-section",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/DiscoverSection.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-section", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["section", "section-header"]
   },
   "props": [

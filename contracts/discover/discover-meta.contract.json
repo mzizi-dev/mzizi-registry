@@ -8,13 +8,13 @@
   "summary": "The <head> tags of every Discover page: title, description, robots, canonical, Open Graph, the X card and JSON-LD, so search engines and link previews read every Mukoko service the same way.",
   "implementations": {
     "astro": {
+      "registry": "discover-meta",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/DiscoverMeta.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-meta", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": []
   },
   "props": [

@@ -8,6 +8,7 @@
   "summary": "The app-density button: a link with `href`, a <button> otherwise. 36px with a fine pointer (32 sm, 40 lg), 44–48px on touch, small corners.",
   "implementations": {
     "astro": {
+      "registry": "button",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Button.astro",
       "since": "0.3.0"
@@ -26,10 +27,6 @@
       "divergences": [
         "As for the .tsx: button.rs mirrors button.tsx's variants and pill shape."
       ]
-    },
-    "mz": {
-      "registry": "button",
-      "identity": "slot"
     }
   },
   "props": [

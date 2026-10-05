@@ -8,13 +8,13 @@
   "summary": "\"Go to anything\": every navigation item, grouped, in a Popover API dialog opened by QuickSearch or ⌘K / Ctrl+K. Progressive enhancement: links and a GET form without script; live filtering and arrow keys with it.",
   "implementations": {
     "astro": {
+      "registry": "app-command-palette",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/CommandPalette.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-command-palette", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["mzizi-command-palette", "command"]
   },
   "props": [

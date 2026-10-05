@@ -8,13 +8,13 @@
   "summary": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button.",
   "implementations": {
     "astro": {
+      "registry": "discover-category-chip",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/CategoryChip.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-category-chip", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": []
   },
   "props": [

@@ -8,13 +8,13 @@
   "summary": "The signed-in frame of an app or console, laid out as a full-width product dashboard: a fixed left sidebar (workspace switcher, quick search, grouped navigation, collapse toggle) and a main column (top bar, the page in <main>, a quiet footer). No centred page container.",
   "implementations": {
     "astro": {
+      "registry": "app-shell",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/AppShell.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-shell", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["mzizi-sidebar", "mzizi-dashboard-layout", "sidebar"]
   },
   "props": [

@@ -53,7 +53,7 @@
     "skills:generate:check": "node scripts/generate-skills.mjs --check",
     "plugin:skills": "node scripts/generate-plugin-skills.mjs",
     "plugin:skills:check": "node scripts/generate-plugin-skills.mjs --check",
-    "test": "vitest run",
+    "test": "vitest run && vitest run --config vitest.astro.config.ts",
     "test:packages": "pnpm --filter \"./packages/*\" test",
     "test:watch": "vitest",
     "tokens:registry": "node scripts/generate-theme-tokens.mjs",
@@ -65,7 +65,8 @@
     "typecheck": "tsc --noEmit",
     "typecheck:packages": "pnpm --filter \"./packages/*\" typecheck",
     "ui:dev": "wrangler dev --config mzizi-ui/wrangler.jsonc --local",
-    "generate": "pnpm skills:generate && pnpm plugin:skills && pnpm changelog:generate && pnpm doctrine:generate && pnpm contracts:sync && pnpm tokens:sync && pnpm design-system:generate && pnpm tokens:registry && pnpm registry:normalize && pnpm registry:metadata && pnpm registry:paths && pnpm registry:index && pnpm registry:source && pnpm props:extract && pnpm openapi:generate && pnpm node-map:generate && pnpm rust:generate && prettier --write --log-level warn registry.json"
+    "generate": "pnpm skills:generate && pnpm plugin:skills && pnpm changelog:generate && pnpm doctrine:generate && pnpm contracts:sync && pnpm tokens:sync && pnpm design-system:generate && pnpm tokens:registry && pnpm registry:normalize && pnpm registry:metadata && pnpm registry:paths && pnpm registry:index && pnpm registry:source && pnpm props:extract && pnpm openapi:generate && pnpm node-map:generate && pnpm rust:generate && prettier --write --log-level warn registry.json",
+    "test:astro": "vitest run --config vitest.astro.config.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -132,7 +133,12 @@
     "@types/react-dom": "19.2.7",
     "@types/sanitize-html": "^2.16.1",
     "@vitejs/plugin-react": "^5.2.0",
+    "astro": "7.3.5",
+    "css-select": "6.0.0",
+    "domhandler": "5.0.3",
+    "domutils": "3.2.2",
     "eslint": "^10.9.1",
+    "htmlparser2": "^10.1.0",
     "husky": "^9.1.7",
     "jsdom": "^30.1.1",
     "lint-staged": "^17.5.1",

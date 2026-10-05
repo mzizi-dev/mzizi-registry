@@ -1,0 +1,59 @@
+---
+/**
+ * ResultGrid — the results of a Discover page: a polite status line ("24
+ * circles"), the cards (DiscoverCard, in the default slot), the empty
+ * state (the `empty` slot: an EmptyState), and "load more" (the `more`
+ * slot: a LoadMore).
+ *
+ * `state` is "ok" or "empty". Both blocks are always in the markup and CSS
+ * shows the matching one, so a server-filled shell can set `state` with a
+ * `{{placeholder}}` and needs no logic in the template.
+ *
+ * Layouts: `grid` (1 column on phones, 2 from 40rem, then `columns`),
+ * `list` (one column), and `rail` (one row that scrolls inside itself,
+ * keyboard-focusable, for a featured strip; the page never scrolls
+ * sideways).
+ *
+ * Mzizi Discover Standard (contracts/discover/result-grid).
+ */
+import { cn } from "./ui-utils";
+
+interface Props {
+  /** The list's accessible name, e.g. "Circles" or "Featured circles". */
+  label: string;
+  layout?: "grid" | "list" | "rail";
+  /** Columns from 64rem in the grid layout. */
+  columns?: 2 | 3 | 4;
+  /** "ok" or "empty" (a server-filled shell may pass a placeholder). */
+  state?: string;
+  /** The status line, e.g. "24 circles". Empty text hides itself. */
+  summary?: string;
+}
+const { label, layout = "grid", columns = 3, state = "ok", summary } = Astro.props;
+const list = {
+  grid: cn("grid gap-4 sm:grid-cols-2", { 2: "", 3: "lg:grid-cols-3", 4: "lg:grid-cols-3 xl:grid-cols-4" }[columns]),
+  list: "grid gap-4",
+  rail: "flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-3 [&>li]:w-72 [&>li]:shrink-0 [&>li]:snap-start focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring",
+}[layout];
+---
+
+<div class="group/results grid gap-6" data-slot="result-grid" data-state={state} data-layout={layout}>
+  {summary !== undefined && <p class="text-body-sm text-muted-foreground empty:hidden" role="status">{summary}</p>}
+  <ul aria-label={label} tabindex={layout === "rail" ? 0 : undefined} class={cn(list, "group-data-[state=empty]/results:hidden")} data-when="ok">
+    <slot />
+  </ul>
+  {
+    Astro.slots.has("empty") && (
+      <div class="hidden group-data-[state=empty]/results:block" data-when="empty">
+        <slot name="empty" />
+      </div>
+    )
+  }
+  {
+    Astro.slots.has("more") && (
+      <div class="group-data-[state=empty]/results:hidden" data-when="ok">
+        <slot name="more" />
+      </div>
+    )
+  }
+</div>

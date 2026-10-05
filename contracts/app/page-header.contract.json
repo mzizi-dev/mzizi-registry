@@ -8,13 +8,13 @@
   "summary": "A page's title with optional breadcrumbs, a \"View docs\" pill, one line of description and actions. Compact: a 20px title, no rule. The one <h1> on an app page.",
   "implementations": {
     "astro": {
+      "registry": "app-page-header",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/PageHeader.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-page-header", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["page-header"]
   },
   "props": [

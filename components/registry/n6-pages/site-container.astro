@@ -1,0 +1,39 @@
+---
+/**
+ * Container — the max-width content wrapper used across the Bundu
+ * Ecosystem sites. Centres content and applies the standard responsive
+ * horizontal padding, so pages stop hand-rolling
+ * `<div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">`.
+ *
+ * Sizes map onto the design-system container utilities:
+ *   - `default` → `.container-custom` (max-w-7xl wide grid column)
+ *   - `narrow`  → `.container-narrow`  (max-w-narrow editorial column)
+ *   - `prose`   → `.container-prose`   (max-w-3xl reading measure)
+ *
+ * The utility classes live in the canonical globals.css
+ * (@layer components), so no hex or raw spacing values here.
+ */
+interface Props {
+  /** Content width. Defaults to the wide grid column. */
+  size?: "default" | "narrow" | "prose";
+  /** Render element (defaults to a plain <div>). */
+  as?: "div" | "section" | "main" | "article";
+  id?: string;
+  class?: string;
+}
+
+const { size = "default", as = "div", id, class: className } = Astro.props;
+
+const sizeClass = {
+  default: "container-custom",
+  narrow: "container-narrow",
+  prose: "container-prose",
+}[size];
+
+const Tag = as;
+const classes = [sizeClass, className].filter(Boolean).join(" ");
+---
+
+<Tag class={classes} id={id} data-slot="container">
+  <slot />
+</Tag>

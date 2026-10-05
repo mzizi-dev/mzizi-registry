@@ -8,13 +8,13 @@
   "summary": "One item in AppShell's top bar (\"Ask Nyuchi AI\", \"Support\"): an icon and a short label; a link with `href`, a button otherwise.",
   "implementations": {
     "astro": {
+      "registry": "app-top-bar-action",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/TopBarAction.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
-    "rs": null,
-    "mz": null
+    "tsx": { "registry": "app-top-bar-action", "identity": "contract" },
+    "rs": null
   },
   "props": [
     {

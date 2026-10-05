@@ -8,13 +8,13 @@
   "summary": "One bordered row of equal StatTiles with hairline dividers, as a description list.",
   "implementations": {
     "astro": {
+      "registry": "app-stat-tiles",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/StatTiles.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-stat-tiles", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["mzizi-stats-row"]
   },
   "props": [

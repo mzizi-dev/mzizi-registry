@@ -8,13 +8,13 @@
   "summary": "Label, input, hint and error wired together: the label is always visible, the hint and error are the input's description, and an error sets aria-invalid.",
   "implementations": {
     "astro": {
+      "registry": "app-form-field",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/FormField.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-form-field", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["form"]
   },
   "props": [

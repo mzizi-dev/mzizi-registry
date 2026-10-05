@@ -8,13 +8,13 @@
   "summary": "The result of the last action (saved, signed out), carried across Post/Redirect/Get as a flash, in a polite live region. It stays until dismissed; dismissing needs no script.",
   "implementations": {
     "astro": {
+      "registry": "app-toast",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Toast.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-toast", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["toast", "mzizi-toast-provider"]
   },
   "props": [

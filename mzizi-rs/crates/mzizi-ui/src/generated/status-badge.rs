@@ -109,7 +109,7 @@ pub fn status_badge_variants(status: StatusBadgeStatus, extra: &str) -> String {
 }
 
 /// This component's contract (RFC-0006 clause grammar). WRITTEN BY `pnpm contracts:sync` from
-/// `contracts/primitives/status-badge.contract.json`, the one contract the React, Rust and Mzizi
+/// `contracts/ui/status-badge.contract.json`, the one contract the React, Rust and Mzizi
 /// builds share: edit the contract file, never this copy. `tests/contracts_json.rs` renders every
 /// state the contract declares and evaluates every clause and check against the markup.
 pub const CONTRACT: &str = r#"contract

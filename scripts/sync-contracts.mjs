@@ -2,16 +2,13 @@
 // Write each component contract into the builds that carry it inline.
 //
 // One contract per component, whatever the language (owner, 2026-10-05; #427). The
-// contract is `contracts/<family>/<name>.contract.json` and nothing else. Two builds need
-// its clauses inside their own source:
+// contract is `contracts/<family>/<name>.contract.json` and nothing else. The Rust build
+// needs its clauses inside its own source: `pub const CONTRACT: &str = r#"contract … end"#;`,
+// which the crate exports and the API serves beside the source. That const is the contract's
+// `contract` block, verbatim, written here and never by hand.
 //
-//   .rs  `pub const CONTRACT: &str = r#"contract … end"#;`, which the crate exports and
-//        the API serves beside the source. It is the contract's `contract` block, verbatim.
-//   .mz  the `contract … end` block `mz contract` evaluates. `mz check` warns on a component
-//        with none, and the language evaluates its clauses on the source, not on a rendered
-//        state, so it gets the clauses that read the root element (`slot`, `portal`, `role`,
-//        `label`, `class`) and `<element> "<text>" min_height N`. The `when <state>` clauses,
-//        `uses` and the checks need rendered markup: the .tsx and .rs runners hold those.
+// (`.mz` files are not touched: per AGENTS.md they are built elsewhere and land as their own
+// change.)
 //
 // Only implementations whose `identity` is `contract` are written: an identity-only sibling
 // (`slot`, `slot+role`, `slot+variants`) diverges from its contract by design, so its
@@ -53,18 +50,6 @@ function registryFile(name, ext) {
   return null
 }
 
-const ROOT_SUBJECT = /^(?:slot|portal|role|label|class) /
-const MIN_HEIGHT = /^[a-z0-9]+ "[^"]*" min_height \d+$/
-
-/** The clauses `mz contract` evaluates on source. */
-function mzClauses(contract) {
-  return contract
-    .split("\n")
-    .slice(1, -1)
-    .map((l) => l.trim())
-    .filter((l) => ROOT_SUBJECT.test(l) || MIN_HEIGHT.test(l))
-}
-
 function syncRs(path, contract) {
   const src = readFileSync(path, "utf8")
   const re = /(pub const CONTRACT: &str = r#")([\s\S]*?)("#;)/
@@ -77,35 +62,13 @@ function syncRs(path, contract) {
   return src.replace(re, (_, open, _old, close) => `${open}${contract}${close}`)
 }
 
-function syncMz(path, contract, contractFile) {
-  const src = readFileSync(path, "utf8")
-  const clauses = mzClauses(contract)
-  if (clauses.length === 0) {
-    throw new Error(
-      `${contractFile} has no clause the Mzizi language evaluates on source (slot, portal, role, ` +
-        "label, class or min_height), so its .mz would carry an empty contract. Add one."
-    )
-  }
-  const block = ["  contract", ...clauses.map((c) => `    ${c}`), "  end"].join("\n")
-  const re = /^ {2}contract\n[\s\S]*?^ {2}end$/m
-  if (!re.test(src)) {
-    throw new Error(
-      `${relative(ROOT, path)} has no \`  contract … end\` block for its contract to be written into.`
-    )
-  }
-  return src.replace(re, block)
-}
-
 const drift = []
 let written = 0
 let copies = 0
 for (const file of contractFiles()) {
   const c = JSON.parse(readFileSync(file, "utf8"))
   const rel = relative(ROOT, file)
-  for (const [lang, sync] of [
-    ["rs", (p) => syncRs(p, c.contract)],
-    ["mz", (p) => syncMz(p, c.contract, rel)],
-  ]) {
+  for (const [lang, sync] of [["rs", (p) => syncRs(p, c.contract)]]) {
     const sib = c.implementations?.[lang]
     if (!sib || sib.identity !== "contract") continue
     const path = registryFile(sib.registry, lang)

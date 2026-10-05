@@ -8,13 +8,13 @@
   "summary": "The row of category links on a Discover page, as a named navigation landmark. Chips wrap; the page never scrolls sideways.",
   "implementations": {
     "astro": {
+      "registry": "discover-category-chips",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/CategoryChips.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-category-chips", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["filter-bar"]
   },
   "props": [

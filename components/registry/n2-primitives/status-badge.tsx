@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge"
  * so no touch floor applies; wrap it in a link and it inherits the link's hit area.
  *
  * Siblings: `status-badge.rs` (Mzizi Roots, Dioxus) and `status-badge.mz` (the Mzizi
- * language). The three share one contract, `contracts/primitives/status-badge.contract.json`,
+ * language). The three share one contract, `contracts/ui/status-badge.contract.json`,
  * and `__tests__/contracts` evaluates every clause and check of it on this file's markup.
  */
 

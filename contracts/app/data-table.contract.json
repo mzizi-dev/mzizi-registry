@@ -8,13 +8,13 @@
   "summary": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup.",
   "implementations": {
     "astro": {
+      "registry": "app-data-table",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/DataTable.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-data-table", "identity": "contract" },
     "rs": null,
-    "mz": null,
     "related": ["data-table", "table"]
   },
   "props": [

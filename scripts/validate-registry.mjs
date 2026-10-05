@@ -33,7 +33,7 @@
  * gate that trains people to ignore it.
  */
 
-import { readFileSync, existsSync, readdirSync } from "node:fs"
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs"
 import { basename, extname, join } from "node:path"
 // TypeScript's own parser, so the JSX check below is exact rather than a regex guess.
 import ts from "typescript"
@@ -160,6 +160,8 @@ function indexDisk() {
     if (!dir.isDirectory()) continue
     for (const entry of readdirSync(join(REGISTRY_DIR, dir.name))) {
       if (entry.startsWith(".")) continue
+      // `<node>/assets/` holds binary assets a component imports (brand marks), not source.
+      if (statSync(join(REGISTRY_DIR, dir.name, entry)).isDirectory()) continue
       const ext = extname(entry)
       if (NOT_SOURCE.has(ext.toLowerCase())) continue
       const name = basename(entry, ext)
@@ -503,6 +505,46 @@ function main() {
       }
 
       // §8.2 touch targets are not checked here — see the note by NOT_SOURCE.
+    }
+  }
+
+  // — the Astro target (#397): pure Astro, flat imports that resolve —
+  //
+  // A `.astro` file is the Astro implementation beside a component's `.tsx`/`.rs`. It may
+  // not put a framework under Astro, and it imports its siblings FLAT, as installed
+  // (`./button.astro`, `./ui-utils`, `./server-cookies.js`, `./assets/<file>`), so every
+  // such import must name a component with an `.astro`, or a framework-free `.ts`, or an
+  // asset in `components/registry/assets/`. lib/astro.ts builds `/v1/astro/{name}` from the same
+  // rules; a broken edge here is a broken `mzizi add --target astro`.
+  const FRAMEWORK = /^(react|react-dom|next|preact|vue|svelte)(\/|$)/
+  const specifiersOf = (text) =>
+    [...text.matchAll(/(?:\bfrom\s*|\bimport\s*\(?\s*)["']([^"']+)["']/g)].map((m) => m[1])
+  const astroUsable = (name) => {
+    const meta = disk.get(name)
+    if (!meta) return false
+    if (meta.targets.some((t) => t.endsWith(".astro"))) return true
+    const ts = meta.targets.find((t) => t.endsWith(".ts"))
+    if (!ts) return false
+    const text = readFileSync(join(REGISTRY_DIR, ts), "utf8")
+    return !/^\s*["']use client["']/m.test(text) && specifiersOf(text).every((s) => !s.startsWith("@/") && !FRAMEWORK.test(s))
+  }
+  for (const [name, meta] of disk) {
+    const astro = meta.targets.find((t) => t.endsWith(".astro"))
+    if (!astro) continue
+    if (!meta.targets.some((t) => t.endsWith(".tsx"))) {
+      warn(name, `${astro} has no .tsx sibling — every contracted component ships React and Astro`)
+    }
+    const text = readFileSync(join(REGISTRY_DIR, astro), "utf8")
+    for (const spec of specifiersOf(text)) {
+      if (FRAMEWORK.test(spec)) {
+        err(name, `${astro} imports ${spec}: no framework under Astro — the Astro target is pure Astro`)
+      } else if (/^\.\/assets\/[A-Za-z0-9._-]+$/.test(spec)) {
+        if (!existsSync(join(REGISTRY_DIR, spec))) err(name, `${astro} imports ${spec}, which is not in components/registry/assets/`)
+      } else if (spec.startsWith(".")) {
+        const m = /^\.\/([a-z0-9]+(?:-[a-z0-9]+)*)(?:\.astro|\.js|\.ts)?$/.exec(spec)
+        if (!m) err(name, `${astro} imports ${spec}: not a flat registry import (./<name>, ./<name>.astro, ./assets/<file>)`)
+        else if (!astroUsable(m[1])) err(name, `${astro} imports ${spec}, and "${m[1]}" has no .astro or framework-free .ts`)
+      }
     }
   }
 
