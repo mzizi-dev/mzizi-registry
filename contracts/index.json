@@ -131,7 +131,7 @@
     {
       "name": "app/data-table",
       "title": "DataTable",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "app/data-table.contract.json",
       "astro": "app-data-table",
       "tsx": "app-data-table",
@@ -167,7 +167,7 @@
     {
       "name": "app/form-layout",
       "title": "FormLayout",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "app/form-layout.contract.json",
       "astro": "app-form-layout",
       "tsx": "app-form-layout",
@@ -176,7 +176,7 @@
     {
       "name": "app/form-field",
       "title": "FormField",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "app/form-field.contract.json",
       "astro": "app-form-field",
       "tsx": "app-form-field",
@@ -212,7 +212,7 @@
     {
       "name": "app/bar-chart",
       "title": "BarChart",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "file": "app/bar-chart.contract.json",
       "astro": "app-bar-chart",
       "tsx": "app-bar-chart",
@@ -500,10 +500,10 @@
     {
       "name": "ui/native-select",
       "title": "NativeSelect",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "file": "ui/native-select.contract.json",
       "astro": "native-select",
-      "tsx": null,
+      "tsx": "native-select",
       "rs": null
     },
     {
@@ -518,7 +518,7 @@
     {
       "name": "ui/segmented-control",
       "title": "SegmentedControl",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "ui/segmented-control.contract.json",
       "astro": "segmented-control",
       "tsx": "segmented-control",
@@ -527,10 +527,10 @@
     {
       "name": "ui/toaster",
       "title": "Toaster",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "ui/toaster.contract.json",
       "astro": "toaster",
-      "tsx": null,
+      "tsx": "toaster",
       "rs": null
     },
     {
@@ -549,7 +549,7 @@
       "file": "ui/skeleton.contract.json",
       "astro": "skeleton",
       "tsx": "skeleton",
-      "rs": null
+      "rs": "skeleton"
     },
     {
       "name": "ui/alert",
@@ -558,7 +558,7 @@
       "file": "ui/alert.contract.json",
       "astro": "alert",
       "tsx": "alert",
-      "rs": null
+      "rs": "alert"
     },
     {
       "name": "ui/button",

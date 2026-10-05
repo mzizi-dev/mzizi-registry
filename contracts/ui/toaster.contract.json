@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/toaster",
   "title": "Toaster",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 2,
   "kind": "primitive",
   "summary": "A polite live region for script-light pages, with one inline script that defines `window.toast(message, kind?)`: each toast is appended to the region and leaves after `duration` ms.",
@@ -13,9 +13,12 @@
       "export": "@bundu/ui/Toaster.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": {
+      "registry": "toaster",
+      "identity": "contract"
+    },
     "rs": null,
-    "related": ["toaster", "toast", "app-toast", "sonner"]
+    "related": ["app-toast", "toast", "sonner"]
   },
   "props": [
     {
@@ -31,7 +34,8 @@
     "Renders an empty `<div id=\"toaster\" role=\"status\" aria-live=\"polite\">`, fixed at the bottom of the viewport, so a toast added later is announced.",
     "Its inline script defines `window.toast(msg, kind)`: it appends a `data-slot=\"toast\"` card with the message as text (never HTML) and removes it after `data-duration` ms (5000 if unset).",
     "`kind === \"error\"` gives the toast a `--destructive` border; any other kind a `--border` one.",
-    "The region ignores pointer events; each toast takes them."
+    "The region ignores pointer events; each toast takes them.",
+    "The React build renders the same region and exports `toast(message, kind?)`, which does what the Astro script's `window.toast` does; once mounted it also sets `window.toast`."
   ],
   "states": {
     "default": {
@@ -106,7 +110,6 @@
   "gaps": [
     "Toasts leave after `duration` ms with no way to pause, extend or dismiss them: WCAG 2.2.1 (Timing Adjustable) is not met for a message a reader needs; prefer `app/toast` (no timeout) for those.",
     "The region's id is fixed (`toaster`), so one Toaster per page; a second would collide.",
-    "`window.toast` is a global, and the toast markup is built by the script, so the runners (which do not execute scripts) cannot check it.",
-    "The React `toaster.tsx` is a different component: a Radix ToastProvider (which renders no element, so its `data-slot=\"toaster\"` is dropped) driven by the `useToast` hook, with a viewport region that carries no data-slot. It does not share this contract's slot, and its `@/hooks/use-toast` import does not resolve under the registry's vitest aliases, so `implementations.tsx` is null until a React build renders this markup."
+    "`window.toast` is a global, and the toast markup is built by script, so the contract runners (which do not execute scripts) cannot check it; `__tests__/components/toaster.test.tsx` checks the React `toast()` instead."
   ]
 }

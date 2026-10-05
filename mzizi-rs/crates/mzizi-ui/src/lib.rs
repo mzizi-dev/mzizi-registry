@@ -32,6 +32,9 @@
 //! `/api/v1/rs/{name}` serves the source to READ — for an agent, a reviewer, or someone
 //! porting — never as an install path.
 
+#[path = "generated/alert.rs"]
+pub mod alert;
+
 #[path = "generated/button.rs"]
 pub mod button;
 
@@ -55,6 +58,9 @@ pub mod progress;
 
 #[path = "generated/separator.rs"]
 pub mod separator;
+
+#[path = "generated/skeleton.rs"]
+pub mod skeleton;
 
 #[path = "generated/chart.rs"]
 pub mod chart;
@@ -89,6 +95,10 @@ pub mod safe_area_frame;
 // ── wave 1 · batch H · modules ──
 // ── end wave 1 · batch H · modules ──
 
+pub use alert::{
+    Alert, AlertAction, AlertDescription, AlertPartProps, AlertProps, AlertTitle, AlertVariant,
+    alert_variants,
+};
 pub use avatar::{
     Avatar, AvatarBadge, AvatarBadgeProps, AvatarFallback, AvatarFallbackProps, AvatarGroup,
     AvatarGroupCount, AvatarGroupCountProps, AvatarGroupProps, AvatarImage, AvatarImageProps,
@@ -103,6 +113,7 @@ pub use label::{Label, LabelProps, label_variants};
 pub use progress::{Progress, ProgressProps, progress_variants};
 pub use safe_area_frame::{SafeAreaBands, SafeAreaFrame, SafeAreaFrameProps, safe_area_bands};
 pub use separator::{Separator, SeparatorOrientation, SeparatorProps, separator_variants};
+pub use skeleton::{Skeleton, SkeletonProps, skeleton_variants};
 pub use status_badge::{
     STATUS_BADGE_STATUSES, StatusBadge, StatusBadgeProps, StatusBadgeStatus, status_badge_variants,
 };
@@ -133,10 +144,13 @@ pub use status_badge::{
 
 /// Every N2 primitive that exports a `CONTRACT`, with its registry name.
 pub const CONTRACTS: &[(&str, &str)] = &[
+    ("alert", alert::CONTRACT),
     ("button", button::CONTRACT),
     ("card", card::CONTRACT),
     ("input", input::CONTRACT),
     ("label", label::CONTRACT),
+    ("safe-area-frame", safe_area_frame::CONTRACT),
+    ("skeleton", skeleton::CONTRACT),
     ("status-badge", status_badge::CONTRACT),
     // ── wave 1 · batch A · contracts ──
     // ── end wave 1 · batch A · contracts ──

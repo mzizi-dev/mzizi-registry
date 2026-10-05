@@ -15,19 +15,11 @@
     },
     "tsx": {
       "registry": "safe-area-frame",
-      "identity": "slot",
-      "divergences": [
-        "It renders the same markup and classes, inline styles included, so it fails this contract's brand-overlay (no inline style) rule exactly as the .astro does; it is not `contract` until both move their sizes off inline styles.",
-        "It takes `className`, and passes any other <span> attribute through to the root."
-      ]
+      "identity": "contract"
     },
     "rs": {
       "registry": "safe-area-frame",
-      "identity": "slot",
-      "divergences": [
-        "As for the .tsx (the same markup, inline styles included).",
-        "The box prop is `box_px`, and the insets are `[u32; 4]`."
-      ]
+      "identity": "contract"
     }
   },
   "props": [
