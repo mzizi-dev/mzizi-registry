@@ -16907,9 +16907,11 @@
       "meta": {
         "a11y": ["ARIA attributes", "Keyboard accessible"],
         "collection": "primitives",
+        "contract": "ui/native-select",
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
         "owner": "mzizi",
+        "targets": ["astro", "tsx"],
         "useCases": [
           "Simple dropdown forms (country, language)",
           "Mobile-optimized form fields",
@@ -19186,9 +19188,9 @@
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
-      "dependencies": ["class-variance-authority"],
-      "description": "Connected multi-option selector as a single pill-shaped control. Inline alternative to radio-group for 2-4 mutually exclusive options like view mode switchers, time range selectors, or binary choices. Audit flagged as missing primitive. ALPHA — awaiting frontend implementation.",
-      "docs": "Use it for: View mode switcher (grid/list/calendar), Time range picker (day/week/month/year), Binary preference toggle with two labels, Segment selection in settings, Filter mode selection.\nVariants: default, compact, icon-only, icon-with-label.\nIncludes: Pill-shaped connected group per brand identity, Keyboard navigation (arrow keys), Single-select behavior, Mineral accent on active segment, Harness integration (log, motion, LiveRegion).\nAccessibility: role=radiogroup with aria-label, Each segment role=radio, Arrow keys move selection, 48px minimum touch target, Selected state announced.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/segmented-control",
+      "dependencies": [],
+      "description": "Connected pill of 2-4 mutually exclusive options, built on native radios in a fieldset so it needs no script: an inline alternative to radio-group for view modes, time ranges or binary choices. Held to the whole ui/segmented-control contract, with an Astro twin.",
+      "docs": "Use it for: View mode switcher (grid/list/calendar), Time range picker (day/week/month/year), Binary preference toggle with two labels, Segment selection in settings, Filter mode selection.\nVariants: default, sm.\nIncludes: Pill-shaped connected group, Native radios: works with no script, Submits with a plain form, A legend, visible or screen-reader only.\nAccessibility: A fieldset and legend name the group, Native radio semantics: arrow keys move the selection, 48px segments (40px at sm), Visible focus ring on the focused segment.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/segmented-control",
       "files": [
         {
           "path": "components/registry/n2-primitives/segmented-control.tsx",
@@ -19198,22 +19200,22 @@
       ],
       "meta": {
         "a11y": [
-          "role=radiogroup with aria-label",
-          "Each segment role=radio",
-          "Arrow keys move selection",
-          "48px minimum touch target",
-          "Selected state announced"
+          "A fieldset and legend name the group",
+          "Native radio semantics: arrow keys move the selection",
+          "48px segments (40px at sm)",
+          "Visible focus ring on the focused segment"
         ],
         "collection": "primitives",
+        "contract": "ui/segmented-control",
         "features": [
-          "Pill-shaped connected group per brand identity",
-          "Keyboard navigation (arrow keys)",
-          "Single-select behavior",
-          "Mineral accent on active segment",
-          "Harness integration (log, motion, LiveRegion)"
+          "Pill-shaped connected group",
+          "Native radios: works with no script",
+          "Submits with a plain form",
+          "A legend, visible or screen-reader only"
         ],
         "hasDemo": true,
         "owner": "mzizi",
+        "targets": ["astro", "tsx"],
         "useCases": [
           "View mode switcher (grid/list/calendar)",
           "Time range picker (day/week/month/year)",
@@ -19221,7 +19223,7 @@
           "Segment selection in settings",
           "Filter mode selection"
         ],
-        "variants": ["default", "compact", "icon-only", "icon-with-label"]
+        "variants": ["default", "sm"]
       },
       "name": "segmented-control",
       "registryDependencies": [],
