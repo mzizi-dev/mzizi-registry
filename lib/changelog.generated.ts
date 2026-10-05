@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.2.0",
+    title: "v4.2.0 — first release under the org versioning policy",
+    description:
+      "The first release of staging to main under the org versioning policy (nyuchi/.github#80): staging merges are patches (v4.1.9 to v4.1.16) and a release to main is the next minor above the highest tag. The code version moves from 1.0.0 to 4.2.0 because tags v4.1.x already exist; it is not the pre-1.0 doctrine 4.2.0 further down. It ships the Mzizi Discover Standard contracts, the mzizi-activitypub crate, the mzizi design system and registry assets/, every component in every format (the Astro target, React builds of every contract, the Discover detail pattern and Open in Mukoko), and the staging release workflow. CHANGELOG.md section [4.2.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 2,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-10-05T02:08:34.042+00:00",
+    created_at: "2026-10-05T02:08:34.042+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "1.0.0",
     title: "v1.0.0 — first public release of the Mzizi portal",
     description:
