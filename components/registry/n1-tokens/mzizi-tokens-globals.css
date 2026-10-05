@@ -244,6 +244,7 @@
   --text-small: var(--fs-small);
   --text-caption: var(--fs-caption);
   --text-code: var(--fs-code);
+  --text-body-sm: var(--fs-small);
   --shadow-none: var(--elevation-none);
   --shadow-xs: var(--elevation-xs);
   --shadow-sm: var(--elevation-sm);
