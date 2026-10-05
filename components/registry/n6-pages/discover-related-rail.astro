@@ -1,0 +1,67 @@
+---
+/**
+ * RelatedRail — "More like this" under one item's page on a Discover site: a
+ * titled section of DiscoverCards. On phones the cards are one row that
+ * scrolls inside itself with scroll-snap (keyboard-focusable; the page
+ * never scrolls sideways); from 48rem they are a grid, two columns, then
+ * three from 64rem.
+ *
+ * A named region, labelled by its heading. No items, nothing rendered:
+ * heading included, so an empty "related" query leaves no empty band.
+ * Card titles sit one level under the rail's heading.
+ *
+ * Mzizi Discover Standard (contracts/discover/related-rail).
+ */
+import type { ComponentProps } from "astro/types";
+import DiscoverCard from "./discover-card.astro";
+import { buttonVariants } from "./ui-variants";
+
+type Card = Omit<ComponentProps<typeof DiscoverCard>, "level">;
+
+interface Props {
+  /** The rail's heading, e.g. "More events in Harare". */
+  title: string;
+  /** The section's id; its heading is `<id>-title`. Unique per page. */
+  id: string;
+  /** The related items, as DiscoverCard props. */
+  items: Card[];
+  /** Heading level (default 2); the cards' titles are one level under it. */
+  level?: 2 | 3;
+  /** Where "See all" goes; no link without it. */
+  seeAllHref?: string;
+  seeAllLabel?: string;
+}
+const { title, id, items, level = 2, seeAllHref, seeAllLabel = "See all" } = Astro.props;
+const Heading = `h${level}` as "h2" | "h3";
+const titleId = `${id}-title`;
+const cardLevel = (level + 1) as 3 | 4;
+---
+
+{
+  items.length > 0 && (
+    <section id={id} aria-labelledby={titleId} class="py-12 md:py-16" data-slot="related-rail">
+      <div class="container-custom">
+        <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <Heading id={titleId} class="font-serif text-h3 text-balance">
+            {title}
+          </Heading>
+          {seeAllHref && (
+            <a href={seeAllHref} class={buttonVariants({ variant: "outline", size: "sm" })}>
+              {seeAllLabel}
+            </a>
+          )}
+        </div>
+        <ul
+          aria-labelledby={titleId}
+          tabindex="0"
+          class="flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring [&>li]:w-72 [&>li]:shrink-0 [&>li]:snap-start md:grid md:snap-none md:grid-cols-2 md:overflow-visible md:pb-0 md:[&>li]:w-auto lg:grid-cols-3"
+          data-slot="related-rail-list"
+        >
+          {items.map((item) => (
+            <DiscoverCard {...item} level={cardLevel} />
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

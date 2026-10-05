@@ -1,0 +1,59 @@
+---
+/**
+ * StateMessage — the empty, error, "not configured" and loading states every
+ * section needs, so no page invents its own wording or colours.
+ *
+ * - empty:        nothing to show yet (not a fault)
+ * - error:        the request failed; says what to do next
+ * - unconfigured: the API answered 503 (a product database is not set up)
+ * - unavailable:  the backend or WorkOS is briefly unreachable; retry
+ * - loading:      skeleton rows (for streamed or slow sections)
+ */
+import Alert from "./alert.astro";
+import EmptyState from "./app-empty-state.astro";
+import Skeleton from "./skeleton.astro";
+
+interface Props {
+  kind: "empty" | "error" | "unconfigured" | "unavailable" | "loading";
+  title?: string;
+  message?: string;
+  rows?: number;
+  /** Heading level of the empty state's title (default 2). */
+  level?: 2 | 3 | 4;
+}
+const { kind, title, message, rows = 4, level = 2 } = Astro.props;
+const defaults = {
+  empty: { title: "Nothing here yet", variant: "default" },
+  error: { title: "Something went wrong", variant: "destructive" },
+  unconfigured: { title: "Not configured", variant: "warning" },
+  unavailable: { title: "Temporarily unavailable", variant: "warning" },
+  loading: { title: "Loading", variant: "default" },
+} as const;
+const d = defaults[kind];
+---
+
+{
+  kind === "loading" ? (
+    <div role="status" aria-live="polite" class="space-y-3" data-slot="state-loading">
+      <span class="sr-only">{title ?? d.title}</span>
+      {Array.from({ length: rows }).map(() => (
+        <Skeleton class="h-10 w-full" />
+      ))}
+    </div>
+  ) : kind === "empty" ? (
+    <div data-slot="state-empty">
+      {Astro.slots.has("default") ? (
+        <EmptyState title={title ?? d.title} message={message} level={level}>
+          <slot />
+        </EmptyState>
+      ) : (
+        <EmptyState title={title ?? d.title} message={message} level={level} />
+      )}
+    </div>
+  ) : (
+    <Alert variant={d.variant} title={title ?? d.title} state={kind}>
+      {message && <p>{message}</p>}
+      <slot />
+    </Alert>
+  )
+}

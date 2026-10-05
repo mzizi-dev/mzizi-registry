@@ -8,11 +8,12 @@
   "summary": "A titled form card: fields in two columns from the container's xl and one below, actions at the foot, a form-level error as an alert. Posts to itself (Post/Redirect/Get).",
   "implementations": {
     "astro": {
+      "registry": "app-form-layout",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/FormLayout.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-form-layout", "identity": "contract" },
     "rs": null,
     "related": ["form", "mzizi-settings-page"]
   },

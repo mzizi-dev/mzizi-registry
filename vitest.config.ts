@@ -9,11 +9,10 @@ import { existsSync, readdirSync } from "node:fs"
  * Vitest does not read. Registry source imports the path a CONSUMER installs
  * to, so it must keep working here without the source being forked.
  */
-const REGISTRY_UI_ROOTS = [
-  "components/registry/n2-primitives",
-  "components/registry/n3-brand",
-  "components/registry/n7-shell",
-]
+const REGISTRY_UI_ROOTS = readdirSync(path.resolve(__dirname, "components/registry"))
+  .filter((dir) => /^n\d+-/.test(dir))
+  .sort((a, b) => Number(a.slice(1).split("-")[0]) - Number(b.slice(1).split("-")[0]))
+  .map((dir) => `components/registry/${dir}`)
 
 /**
  * Extensions this alias map may point at.
@@ -41,13 +40,45 @@ const registryUiAliases = REGISTRY_UI_ROOTS.flatMap((root) =>
     : []
 )
 
+/**
+ * `@/lib/<name>` for a framework-free registry module (`ui-variants`, `app-nav`,
+ * `server-table`, …) that has no copy under the repo's own `lib/`: it installs to
+ * `lib/<name>.ts`, so registry `.tsx` imports it by that path.
+ */
+const registryLibAliases = REGISTRY_UI_ROOTS.flatMap((root) =>
+  readdirSync(path.resolve(__dirname, root))
+    .filter((file) => file.endsWith(".ts") && !existsSync(path.resolve(__dirname, "lib", file)))
+    .map((file) => ({
+      find: `@/lib/${file.replace(/\.ts$/, "")}`,
+      replacement: path.resolve(__dirname, root, file),
+    }))
+)
+
+/**
+ * A registry component imports a brand asset as `./assets/<file>`, the way it installs
+ * (`assets/` beside the component); on disk the assets live once, in
+ * `components/registry/assets/`.
+ */
+const REGISTRY_DIR = path.resolve(__dirname, "components/registry")
+const registryAssets = {
+  name: "mzizi-registry-assets",
+  enforce: "pre" as const,
+  resolveId(source: string, importer?: string) {
+    if (!importer || !source.startsWith("./assets/") || !importer.startsWith(REGISTRY_DIR)) return null
+    const file = path.join(REGISTRY_DIR, source.slice(2))
+    return existsSync(file) ? file : null
+  },
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), registryAssets],
   test: {
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
     include: ["__tests__/**/*.{test,spec}.{ts,tsx}"],
+    // The Astro implementations run under vitest.astro.config.ts (Astro compiles them).
+    exclude: ["**/node_modules/**", "__tests__/astro/**"],
     // React's CJS files check `process.env.NODE_ENV === "development"` at
     // require-time to pick dev vs prod builds. Vitest defaults NODE_ENV to
     // "test", which falls back to React's production build — that strips
@@ -56,7 +87,7 @@ export default defineConfig({
     env: { NODE_ENV: "development" },
   },
   resolve: {
-    alias: [...registryUiAliases, { find: "@", replacement: path.resolve(__dirname, ".") }],
+    alias: [...registryUiAliases, ...registryLibAliases, { find: "@", replacement: path.resolve(__dirname, ".") }],
     conditions: ["development", "module", "browser", "default"],
   },
 })

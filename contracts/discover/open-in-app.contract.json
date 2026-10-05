@@ -2,26 +2,40 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "discover/open-in-app",
   "title": "OpenInApp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
-  "summary": "The \"Open in Mukoko\" action: an https link to the item in the Mukoko super-app (a universal link or a server redirect), with one line saying what happens. Never a bare custom scheme.",
+  "summary": "The \"Open in Mukoko\" action: an https link to the item in the Mukoko super-app, by default the canonical universal link `https://mukoko.com/open/<service>/<id>`, with one line saying what happens. Never a bare custom scheme.",
   "implementations": {
     "astro": {
+      "registry": "discover-open-in-app",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/OpenInApp.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-open-in-app", "identity": "contract" },
     "rs": null,
     "related": []
   },
   "props": [
     {
+      "name": "service",
+      "type": "\"news\" | \"events\" | \"weather\" | \"circles\"",
+      "required": false,
+      "values": ["news", "events", "weather", "circles"],
+      "description": "The Mukoko service the item lives in (`MukokoService`). With `id`, the link is `openInMukokoUrl(service, id)`."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "The item's id in that service; percent-encoded into one path segment."
+    },
+    {
       "name": "href",
       "type": "string",
-      "required": true,
-      "description": "An https URL that opens the app where it is installed and the web otherwise."
+      "required": false,
+      "description": "An explicit https URL that opens the app where it is installed and the web otherwise. Overrides `service` and `id` when given (kept for links that are not one item, and for server-filled shells). One of `href`, or `service` with `id`, is required."
     },
     {
       "name": "label",
@@ -55,6 +69,8 @@
   ],
   "behaviour": [
     "One link styled as a button, then the hint.",
+    "With `service` and `id` the href is the canonical universal link `https://mukoko.com/open/<service>/<id>` (`openInMukokoUrl`, `discover-open-link.ts`; `MUKOKO_OPEN_ORIGIN` is `https://mukoko.com`). The Mukoko apps claim `mukoko.com/open/*` (universal links, app links), so it opens the item in the app where it is installed; elsewhere the resolver in mukoko-dev/super-app-web (`/open/*`) sends it to the service's own web page for the item.",
+    "An explicit `href` wins over `service` and `id`. With neither `href` nor both of `service` and `id`, rendering fails; an unknown service or an empty id fails too (a RangeError), so a broken link is a build error, not a 404.",
     "The link is https: a `mukoko://` link does nothing for someone without the app, so it is never the href.",
     "Other actions (the default slot) sit in the button's row; the hint is under the whole row."
   ],
@@ -80,6 +96,21 @@
       },
       "slots": {
         "default": "<a href='/create'>Start your own circle</a>"
+      }
+    },
+    "canonical": {
+      "description": "An item by service and id: the canonical universal link.",
+      "props": {
+        "service": "circles",
+        "id": "harare-runners"
+      }
+    },
+    "encoded": {
+      "description": "An id that is not URL-safe is encoded into one path segment.",
+      "props": {
+        "service": "news",
+        "id": "2026/10 rains",
+        "variant": "outline"
       }
     }
   },
@@ -114,7 +145,7 @@
     "without": "Everything: the component is server-rendered HTML with no script."
   },
   "responsive": ["The hint wraps under the button."],
-  "contract": "contract\n  slot is \"open-in-app\"\n  a \"Join in Mukoko\" min_height 48\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when outline shows a \"Open in Mukoko\"\n  when actions shows a \"Start your own circle\"\nend",
+  "contract": "contract\n  slot is \"open-in-app\"\n  a \"Join in Mukoko\" min_height 48\n  a \"Open in Mukoko\" min_height 48\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when outline shows a \"Open in Mukoko\"\n  when actions shows a \"Start your own circle\"\n  when canonical shows a \"Open in Mukoko\"\nend",
   "checks": [
     {
       "say": "An https link.",
@@ -149,6 +180,23 @@
       "state": "actions",
       "select": "[data-slot=\"open-in-app\"] > div > a",
       "count": 2
+    },
+    {
+      "say": "service and id make the canonical universal link.",
+      "state": "canonical",
+      "select": "a",
+      "attr": {
+        "href": "https://mukoko.com/open/circles/harare-runners",
+        "data-variant": "primary"
+      }
+    },
+    {
+      "say": "The id is one encoded path segment.",
+      "state": "encoded",
+      "select": "a",
+      "attr": {
+        "href": "https://mukoko.com/open/news/2026%2F10%20rains"
+      }
     }
   ]
 }

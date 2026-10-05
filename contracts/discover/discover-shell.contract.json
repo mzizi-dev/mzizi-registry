@@ -8,11 +8,12 @@
   "summary": "The frame of every public Discover site in the Mukoko family: skip link, mineral strip, a header (brand, main navigation, one action), the page in <main id=\"main\">, and a footer. Only the brand changes between services.",
   "implementations": {
     "astro": {
+      "registry": "discover-shell",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/DiscoverShell.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-shell", "identity": "contract" },
     "rs": null,
     "related": ["mineral-strip"]
   },

@@ -8,6 +8,7 @@
   "summary": "The app-density button: a link with `href`, a <button> otherwise. 36px with a fine pointer (32 sm, 40 lg), 44–48px on touch, small corners.",
   "implementations": {
     "astro": {
+      "registry": "button",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Button.astro",
       "since": "0.3.0"

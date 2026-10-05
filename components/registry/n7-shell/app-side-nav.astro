@@ -1,0 +1,225 @@
+---
+/**
+ * SideNav — an app's navigation, dense like a product console: quiet group
+ * labels, one 32px row per item (48px on touch) with an icon and the label
+ * only, a "New"-style badge, nested items under a disclosure with a
+ * chevron, and the current item filled with a gold indicator. The current
+ * item carries aria-current="page".
+ *
+ * An item's `description` is never printed in the list. It is a tooltip,
+ * shown on hover and on keyboard focus, and it is the link's accessible
+ * description (aria-describedby), so screen readers still hear it. Escape
+ * hides a tooltip (AppShell's script). In AppShell's collapsed rail the
+ * tooltip shows the label as well, and a nested group becomes one link to
+ * its first item.
+ *
+ * Pass `groups` (see `./nav.ts`, `groupNav` builds them from flat
+ * registrations) or, as in 0.3, a flat `items` list. `current` is the
+ * current href; when omitted it is the longest href the page path is at or
+ * below. No script: the disclosures are <details>.
+ */
+import Icon from "./site-icon.astro";
+import { containsHref, currentHref, type NavGroup, type NavItem } from "./app-nav";
+
+export type { NavGroup, NavItem };
+/** 0.3 name of a flat item. */
+export type SideNavItem = NavItem;
+
+interface Props {
+  groups?: NavGroup[];
+  items?: NavItem[];
+  /** Accessible name of the navigation landmark. */
+  label?: string;
+  current?: string;
+  /** Prefix for the ids the tooltips need; unique per page. */
+  idPrefix?: string;
+  id?: string;
+}
+const { groups: given, items, label = "Sections", current: currentProp, idPrefix = "nav", id } = Astro.props;
+const groups: NavGroup[] = given ?? [{ items: items ?? [] }];
+const current = currentProp ?? currentHref(Astro.url.pathname, groups);
+
+let n = 0;
+const nextId = () => `${idPrefix}-tip-${++n}`;
+const describe = (item: NavItem) => item.description ?? item.summary;
+
+const row =
+  "group/row relative flex h-8 w-full min-w-0 items-center gap-2.5 rounded-sm px-2.5 text-body-sm text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11";
+const here =
+  "bg-muted font-medium before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-[var(--app-accent,var(--primary))]";
+const icon = "h-4 w-4 shrink-0 text-muted-foreground group-hover/row:text-foreground";
+const badge = "shrink-0 rounded-sm border border-border px-1.5 text-caption leading-4 font-medium text-muted-foreground";
+const tip =
+  "pointer-events-none z-50 hidden w-max max-w-64 rounded-sm bg-foreground px-2.5 py-1.5 text-caption leading-snug text-background shadow-md";
+---
+
+<nav aria-label={label} id={id} data-slot="side-nav" class="grid gap-3">
+  {
+    groups.map((group, gi) => {
+      const labelId = group.label ? `${idPrefix}-group-${gi}` : undefined;
+      return (
+        <div data-slot="nav-group" class="grid gap-0.5">
+          {group.label && (
+            <p id={labelId} data-slot="nav-group-label" class="px-2.5 pt-1 pb-1 text-caption font-medium text-muted-foreground">
+              {group.label}
+            </p>
+          )}
+          <ul role="list" aria-labelledby={labelId} class="grid gap-0.5">
+            {group.items.map((item) => {
+              const desc = describe(item);
+              const tipId = nextId();
+              const descId = `${tipId}-d`;
+              const kids = item.children ?? [];
+              if (kids.length === 0) {
+                const isHere = item.href === current;
+                return (
+                  <li class="relative" data-slot="nav-item">
+                    <span role="tooltip" id={tipId} data-slot="nav-tip" data-empty={desc ? undefined : ""} class={tip}>
+                      <span data-tip-label class="block font-medium">
+                        {item.label}
+                      </span>
+                      {desc && <span id={descId}>{desc}</span>}
+                    </span>
+                    <a
+                      href={item.href}
+                      aria-current={isHere ? "page" : undefined}
+                      aria-describedby={desc ? descId : undefined}
+                      class={`${row} ${isHere ? here : ""}`}
+                      data-nav-row
+                    >
+                      {item.icon && <Icon name={item.icon} class={icon} />}
+                      <span data-nav-text class="min-w-0 flex-1 truncate">
+                        {item.label}
+                      </span>
+                      {item.badge && (
+                        <span data-nav-text class={badge}>
+                          {item.badge}
+                        </span>
+                      )}
+                    </a>
+                  </li>
+                );
+              }
+              // A parent that is a page itself is listed first among its
+              // children ("Overview"), so the disclosure never hides it.
+              const own = item.href !== "" && !kids.some((k) => k.href === item.href);
+              const branch: NavItem[] = own ? [{ href: item.href, label: item.overviewLabel ?? "Overview" }, ...kids] : kids;
+              const open = containsHref(item, current);
+              const railHref = item.href !== "" ? item.href : (kids[0]?.href ?? "#");
+              return (
+                <li class="relative" data-slot="nav-item">
+                  <span role="tooltip" id={tipId} data-slot="nav-tip" data-empty={desc ? undefined : ""} class={tip}>
+                    <span data-tip-label class="block font-medium">
+                      {item.label}
+                    </span>
+                    {desc && <span id={descId}>{desc}</span>}
+                  </span>
+                  <details data-slot="nav-branch" open={open}>
+                    <summary
+                      class={`${row} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}
+                      aria-describedby={desc ? descId : undefined}
+                      data-nav-row
+                    >
+                      {item.icon && <Icon name={item.icon} class={icon} />}
+                      <span data-nav-text class="min-w-0 flex-1 truncate">
+                        {item.label}
+                      </span>
+                      {item.badge && (
+                        <span data-nav-text class={badge}>
+                          {item.badge}
+                        </span>
+                      )}
+                      <Icon name="chevron-right" class="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    </summary>
+                    <ul role="list" class="mt-0.5 ml-[1.0625rem] grid gap-0.5 border-l border-border pl-2" data-slot="nav-children">
+                      {branch.map((child) => {
+                        const childDesc = describe(child);
+                        const childTip = nextId();
+                        const childDescId = `${childTip}-d`;
+                        const childHere = child.href === current;
+                        return (
+                          <li class="relative" data-slot="nav-item">
+                            {childDesc && (
+                              <span role="tooltip" id={childTip} data-slot="nav-tip" class={tip}>
+                                <span id={childDescId}>{childDesc}</span>
+                              </span>
+                            )}
+                            <a
+                              href={child.href}
+                              aria-current={childHere ? "page" : undefined}
+                              aria-describedby={childDesc ? childDescId : undefined}
+                              class={`${row} ${childHere ? here : ""}`}
+                              data-nav-row
+                            >
+                              <span class="min-w-0 flex-1 truncate">{child.label}</span>
+                              {child.badge && <span class={badge}>{child.badge}</span>}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </details>
+                  <a
+                    href={railHref}
+                    data-slot="nav-rail-link"
+                    aria-current={open ? "page" : undefined}
+                    aria-describedby={desc ? descId : undefined}
+                    class={`${row} ${open ? here : ""} hidden`}
+                    data-nav-row
+                  >
+                    {item.icon && <Icon name={item.icon} class={icon} />}
+                    <span data-nav-text class="min-w-0 flex-1 truncate">
+                      {item.label}
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      );
+    })
+  }
+</nav>
+
+<style is:global>
+  /* Tooltips: fixed, so the sidebar's scroll box cannot clip them. The
+     tooltip comes first in its item, so with top: auto it sits at its
+     static position, the row's top edge, and is lifted onto the row's
+     centre; left is the sidebar's edge. Drawn only from 64rem up: on a
+     phone the description is still the link's accessible description. */
+  [data-slot="side-nav"] [data-slot="nav-tip"] {
+    position: fixed;
+    left: calc(var(--app-sidebar-w, 16.25rem) + 0.5rem);
+    transform: translateY(calc(1rem - 50%));
+  }
+  [data-slot="side-nav"] [data-slot="nav-tip"] [data-tip-label] {
+    display: none;
+  }
+  @media (min-width: 64rem) {
+    [data-slot="nav-item"]:has(
+        > [data-nav-row]:hover,
+        > [data-nav-row]:focus-visible,
+        > details > summary:hover,
+        > details > summary:focus-visible
+      )
+      > [data-slot="nav-tip"]:not([data-empty]) {
+      display: block;
+    }
+  }
+  [data-tips-hidden] [data-slot="nav-tip"] {
+    display: none !important;
+  }
+  /* The open branch's chevron. */
+  [data-slot="nav-branch"] > summary [data-icon="chevron-right"] {
+    transition: transform 150ms ease;
+  }
+  [data-slot="nav-branch"][open] > summary [data-icon="chevron-right"] {
+    transform: rotate(90deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-slot="side-nav"] * {
+      transition: none !important;
+    }
+  }
+</style>

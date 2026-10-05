@@ -1,0 +1,49 @@
+---
+/**
+ * CtaButton — the marketing pill call-to-action that Hero composes. Pure
+ * Astro: it renders the same markup as @bundu/ui's React `Button`
+ * (`ui/button.tsx`) for the props Hero passes, from the same `buttonVariants`
+ * recipe, so Hero needs no React under Astro. An `<a>` when `href` is set,
+ * otherwise a `<button>`; `external` opens in a new tab with a safe `rel`;
+ * `arrow` appends the trailing arrow glyph.
+ */
+import { cn } from "./ui-utils";
+import { buttonVariants } from "./ui-variants";
+
+interface Props {
+  href?: string;
+  external?: boolean;
+  arrow?: boolean;
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "destructive" | "destructive-outline";
+  size?: "sm" | "md" | "lg";
+  fullWidth?: boolean;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  class?: string;
+}
+
+const { href, external = false, arrow = false, variant, size, fullWidth, type = "button", disabled, class: extra } = Astro.props;
+const classes = cn(buttonVariants({ variant, size, fullWidth }), extra);
+---
+
+{
+  href ? (
+    <a href={href} class={classes} data-slot="button" target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>
+      <slot />
+      {arrow && (
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      )}
+    </a>
+  ) : (
+    <button type={type} disabled={disabled} class={classes} data-slot="button">
+      <slot />
+      {arrow && (
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      )}
+    </button>
+  )
+}

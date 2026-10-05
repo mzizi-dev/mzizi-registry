@@ -8,11 +8,12 @@
   "summary": "Who is signed in, the app's account actions, and sign-out as a POST form, in a <details> disclosure at the end of the top bar.",
   "implementations": {
     "astro": {
+      "registry": "app-account-menu",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/AccountMenu.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-account-menu", "identity": "contract" },
     "rs": null,
     "related": ["mzizi-user-card", "dropdown-menu"]
   },

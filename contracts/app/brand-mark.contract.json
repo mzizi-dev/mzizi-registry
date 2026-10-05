@@ -8,11 +8,12 @@
   "summary": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
   "implementations": {
     "astro": {
+      "registry": "app-brand-mark",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/BrandMark.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-brand-mark", "identity": "contract" },
     "rs": null,
     "related": ["mzizi-logo"]
   },

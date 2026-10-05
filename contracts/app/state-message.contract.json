@@ -8,11 +8,12 @@
   "summary": "The empty, error, not-configured, unavailable and loading states every section needs, so no page invents its own wording or colours.",
   "implementations": {
     "astro": {
+      "registry": "app-state-message",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/StateMessage.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-state-message", "identity": "contract" },
     "rs": null,
     "related": [
       "mzizi-error-screen",
