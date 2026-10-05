@@ -8,11 +8,12 @@
   "summary": "The results of a Discover page: a polite status line, the cards, the empty state and \"load more\". Both the results and the empty state are in the markup; `state` picks one with CSS, so a server-filled shell needs no template logic.",
   "implementations": {
     "astro": {
+      "registry": "discover-result-grid",
       "package": "@bundu/ui",
       "export": "@bundu/ui/discover/ResultGrid.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "discover-result-grid", "identity": "contract" },
     "rs": null,
     "related": []
   },

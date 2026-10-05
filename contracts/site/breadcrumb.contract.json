@@ -1,0 +1,219 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "site/breadcrumb",
+  "title": "Breadcrumb",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The breadcrumb trail of a marketing page: a labelled <nav> with an ordered list of links, and the matching schema.org BreadcrumbList JSON-LD, both from one `items` array. Fewer than two items render nothing.",
+  "implementations": {
+    "astro": {
+      "registry": "site-breadcrumb",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Breadcrumb.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "site-breadcrumb",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": ["discover-hero"]
+  },
+  "props": [
+    {
+      "name": "items",
+      "type": "BreadcrumbItem[]",
+      "required": true,
+      "description": "The trail, root first: `{ name: string; url?: string }` (site-breadcrumbs.ts, which also derives it from a pathname). The last item is the current page."
+    },
+    {
+      "name": "origin",
+      "type": "string",
+      "required": false,
+      "description": "The absolute origin that expands site-relative urls in the JSON-LD (Google requires absolute). Falls back to the site's configured URL, then the request's origin."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the <nav>."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "With fewer than two items it renders nothing at all: no nav, no JSON-LD.",
+    "Otherwise it renders <nav aria-label=\"Breadcrumb\"> holding an <ol>; each item is an <li>, with an aria-hidden \"/\" <li> between items.",
+    "The last item is plain text in a <span aria-current=\"page\">, whatever its url. An earlier item with a url is a link; one without a url is plain text with no aria-current.",
+    "After the nav it emits a <script type=\"application/ld+json\"> BreadcrumbList: one ListItem per item, position from 1, `item` an absolute URL. A relative url is joined to `origin` (else the site URL, else the request origin); an item without a url uses the current request's pathname."
+  ],
+  "states": {
+    "default": {
+      "description": "Three crumbs, with an explicit origin.",
+      "props": {
+        "items": [
+          {
+            "name": "Home",
+            "url": "/"
+          },
+          {
+            "name": "Education",
+            "url": "/education"
+          },
+          {
+            "name": "K12 Digital Campus"
+          }
+        ],
+        "origin": "https://nyuchi.com/"
+      }
+    },
+    "request-origin": {
+      "description": "No origin: the JSON-LD uses the request's origin; a middle crumb without a url is plain text; an absolute url is kept.",
+      "props": {
+        "items": [
+          {
+            "name": "Home",
+            "url": "https://nyuchi.com/"
+          },
+          {
+            "name": "Blog"
+          },
+          {
+            "name": "A post",
+            "url": "/blog/a-post"
+          }
+        ],
+        "class": "mb-6"
+      }
+    },
+    "single": {
+      "description": "One crumb: nothing renders.",
+      "props": {
+        "items": [
+          {
+            "name": "Home",
+            "url": "/"
+          }
+        ]
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["navigation", "link"],
+    "keyboard": [
+      "Tab moves through the crumb links; the current page is not a link."
+    ],
+    "focus": ["Links rely on the browser's default focus outline."],
+    "aria": [
+      "The nav is labelled \"Breadcrumb\".",
+      "The current page is aria-current=\"page\".",
+      "The \"/\" separators are aria-hidden list items."
+    ],
+    "wcag": ["1.3.1", "2.4.4", "2.4.8"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": ["--muted-foreground", "--foreground"],
+    "brandOverlay": "Nothing: the trail is muted text and the current page foreground.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the only <script> is JSON-LD data, never executed."
+  },
+  "responsive": [
+    "The list wraps (flex-wrap) on a narrow screen; the current page truncates rather than overflow."
+  ],
+  "contract": "contract\n  slot is \"breadcrumb\"\n  label is \"Breadcrumb\"\n  class is \"text-body-sm text-muted-foreground\"\n  when request-origin class is \"text-body-sm text-muted-foreground mb-6\"\n  when default shows a \"Education\"\n  when default shows span \"K12 Digital Campus\"\n  when request-origin shows span \"Blog\"\nend",
+  "checks": [
+    {
+      "say": "One labelled nav.",
+      "select": "nav[aria-label=\"Breadcrumb\"] > ol",
+      "count": 1
+    },
+    {
+      "say": "One list item per crumb, plus a separator between each.",
+      "select": "nav ol > li",
+      "count": 5
+    },
+    {
+      "say": "The separators are hidden from assistive technology.",
+      "select": "nav ol > li[aria-hidden=\"true\"]",
+      "count": 2,
+      "text": "/"
+    },
+    {
+      "say": "Earlier crumbs with a url are links.",
+      "select": "nav a",
+      "count": 2
+    },
+    {
+      "say": "The current page in the default trail.",
+      "select": "span[aria-current=\"page\"]",
+      "count": 1,
+      "text": "K12 Digital Campus"
+    },
+    {
+      "say": "The last crumb is never a link, even with a url.",
+      "state": "request-origin",
+      "select": "a[href=\"/blog/a-post\"]",
+      "absent": true
+    },
+    {
+      "say": "A middle crumb without a url is plain text, not current.",
+      "state": "request-origin",
+      "select": "span[aria-current]",
+      "count": 1,
+      "text": "A post"
+    },
+    {
+      "say": "One JSON-LD block.",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "\"@type\":\"BreadcrumbList\""
+    },
+    {
+      "say": "JSON-LD urls are absolute, on the given origin.",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "\"item\":\"https://nyuchi.com/education\""
+    },
+    {
+      "say": "A crumb without a url is the current request path.",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "\"item\":\"https://nyuchi.com/content/news\""
+    },
+    {
+      "say": "Without an origin, relative urls use the request origin.",
+      "state": "request-origin",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "\"item\":\"https://console.example/blog/a-post\""
+    },
+    {
+      "say": "Absolute urls are kept.",
+      "state": "request-origin",
+      "select": "script[type=\"application/ld+json\"]",
+      "count": 1,
+      "text": "\"item\":\"https://nyuchi.com/\""
+    },
+    {
+      "say": "One crumb renders no nav.",
+      "state": "single",
+      "select": "nav",
+      "absent": true
+    },
+    {
+      "say": "One crumb renders no JSON-LD.",
+      "state": "single",
+      "select": "script",
+      "absent": true
+    }
+  ],
+  "gaps": [
+    "Crumb links are inline text with no minimum target height (WCAG 2.5.8 relies on the inline-text exception) and no explicit `--ring` focus style.",
+    "A middle crumb without a url still gets a JSON-LD `item` of the current page's URL, which misstates that crumb's location.",
+    "The fallback to `Astro.site` / the request origin is Astro-specific; the React build takes the request URL as `requestUrl`."
+  ]
+}

@@ -1,0 +1,35 @@
+---
+/**
+ * CategoryChip — one category link in a CategoryChips row: a pill with the
+ * name and, optionally, how many items it holds. A link, never a button:
+ * every category is a URL.
+ *
+ * Renders its own `<li>`, so an app that fills page shells on the server
+ * (circles.mukoko.com's Rust Worker) can repeat it as a fragment with
+ * `{{placeholders}}`: every prop is a plain string, and `current` may be
+ * the string "page" or "false" so the server can set it.
+ *
+ * Mzizi Discover Standard (contracts/discover/category-chip).
+ */
+interface Props {
+  href: string;
+  label: string;
+  /** How many items, e.g. 12 or "1,204". Empty text hides itself. */
+  count?: string | number;
+  /** The current category: true (or "page") sets aria-current="page". */
+  current?: boolean | string;
+}
+const { href, label, count, current } = Astro.props;
+const ariaCurrent = current === true ? "page" : current === false || current === undefined ? undefined : current;
+---
+
+<li data-slot="category-chip">
+  <a
+    href={href}
+    aria-current={ariaCurrent}
+    class="group/chip inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-4 text-body-sm font-medium text-foreground no-underline transition-colors hover:border-foreground aria-[current=page]:border-foreground aria-[current=page]:bg-foreground aria-[current=page]:text-background"
+  >
+    {label}
+    {count !== undefined && <span class="text-caption text-muted-foreground empty:hidden group-aria-[current=page]/chip:text-background">{count}</span>}
+  </a>
+</li>

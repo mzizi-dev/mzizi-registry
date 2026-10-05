@@ -1,0 +1,78 @@
+---
+/**
+ * DetailActions — the action row of one item's page on a Discover site.
+ * "Open in Mukoko" leads (an OpenInApp, primary): give it `service` and
+ * `id` and it is the canonical universal link,
+ * `https://mukoko.com/open/<service>/<id>`, which opens the item in the
+ * Mukoko app where it is installed and on the service's web page otherwise;
+ * `href` overrides it. Secondary actions follow in the same row (`links`,
+ * outline buttons, then the default slot), and the share links sit under
+ * the hint in their own labelled list.
+ *
+ * Every action is a link: sharing is a share URL (WhatsApp, X, email), not
+ * a script, so the row works with no JavaScript at all.
+ *
+ * Mzizi Discover Standard (contracts/discover/detail-actions).
+ */
+import OpenInApp from "./discover-open-in-app.astro";
+import type { MukokoService } from "./discover-open-link";
+import { buttonVariants } from "./ui-variants";
+
+interface Action {
+  label: string;
+  href: string;
+  /** The link leaves the site: rel="external noopener". */
+  external?: boolean;
+}
+interface Props {
+  /** The Mukoko service the item lives in; with `id`, "Open in Mukoko" is the canonical link. */
+  service?: MukokoService;
+  /** The item's id in that service. */
+  id?: string;
+  /** An explicit https URL for "Open in Mukoko"; overrides `service` and `id`. */
+  href?: string;
+  /** The primary action's text (default "Open in Mukoko"). */
+  label?: string;
+  /** What "Open in Mukoko" does; "" for none. */
+  hint?: string;
+  /** Secondary actions in the same row, as outline buttons. */
+  links?: Action[];
+  /** Share links (share URLs, never a script). */
+  share?: Action[];
+  /** The share list's name (default "Share"). */
+  shareLabel?: string;
+}
+const { service, id, href, label, hint, links = [], share = [], shareLabel = "Share" } = Astro.props;
+const rel = (a: Action) => (a.external ? "external noopener" : undefined);
+---
+
+<div class="grid gap-4" data-slot="detail-actions">
+  <OpenInApp service={service} id={id} href={href} label={label} hint={hint} variant="primary">
+    {
+      links.map((a) => (
+        <a href={a.href} rel={rel(a)} class={buttonVariants({ variant: "outline", size: "md" })} data-slot="detail-actions-link">
+          {a.label}
+        </a>
+      ))
+    }
+    <slot />
+  </OpenInApp>
+  {
+    share.length > 0 && (
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1" data-slot="detail-actions-share">
+        <p class="text-body-sm font-semibold text-muted-foreground" aria-hidden="true">
+          {shareLabel}
+        </p>
+        <ul aria-label={shareLabel} class="flex flex-wrap items-center gap-1">
+          {share.map((a) => (
+            <li>
+              <a href={a.href} rel={rel(a)} class={buttonVariants({ variant: "ghost", size: "sm" })}>
+                {a.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</div>

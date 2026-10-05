@@ -1,0 +1,42 @@
+---
+/**
+ * Toast — the result of the last action (saved, signed out), carried
+ * across a Post/Redirect/Get as a flash (the app decides how). Rendered by the
+ * server inside a polite live region; it stays until dismissed, so nobody
+ * is timed out of reading it (WCAG 2.2.3). Dismissing needs no script: the
+ * button is a label for a hidden checkbox.
+ */
+
+interface Props {
+  /** The message to show, or null for an empty live region. */
+  flash: ToastMessage | null;
+  /** Accessible name of the dismiss control. */
+  dismissLabel?: string;
+}
+export interface ToastMessage {
+  tone: "success" | "info" | "error";
+  text: string;
+}
+const { flash, dismissLabel = "Dismiss" } = Astro.props;
+const tone = {
+  success: "bg-malachite-container text-malachite-on-container",
+  info: "bg-cobalt-container text-cobalt-on-container",
+  error: "bg-card text-destructive border border-destructive",
+} as const;
+---
+
+<div aria-live="polite" role="status" class="pointer-events-none fixed inset-x-4 bottom-4 z-50 flex justify-center sm:inset-x-auto sm:right-6 sm:bottom-6" data-slot="toast-region">
+  {
+    flash && (
+      <>
+        <input type="checkbox" id="toast-dismiss" class="peer sr-only" />
+        <div class={`pointer-events-auto flex w-full max-w-md items-start gap-4 rounded-lg px-5 py-4 shadow-lg peer-checked:hidden peer-focus-visible:ring-2 peer-focus-visible:ring-ring ${tone[flash.tone]}`} data-slot="toast" data-tone={flash.tone}>
+          <p class="flex-1 text-body font-medium">{flash.text}</p>
+          <label for="toast-dismiss" class="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full text-body-sm underline underline-offset-4">
+            {dismissLabel}
+          </label>
+        </div>
+      </>
+    )
+  }
+</div>

@@ -8,11 +8,12 @@
   "summary": "Search and select filters as a GET form, so the filtered view is a URL: linkable and working without JavaScript. Changing a filter goes back to page 1.",
   "implementations": {
     "astro": {
+      "registry": "app-filter-bar",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/FilterBar.astro",
       "since": "0.3.0"
     },
-    "tsx": null,
+    "tsx": { "registry": "app-filter-bar", "identity": "contract" },
     "rs": null,
     "related": ["filter-bar"]
   },

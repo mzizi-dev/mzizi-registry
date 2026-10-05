@@ -1,0 +1,63 @@
+---
+/**
+ * MetaList — the facts of one item on its Discover page ("When", "Where",
+ * "Price", "Organiser"): a <dl> of label and value rows. A row may carry an
+ * icon (the design system's set, decorative), link its value (`href`), or
+ * make it a machine-readable time (`datetime`, as <time>).
+ *
+ * One column on phones; `columns` from 40rem (2) and 64rem (3). Values wrap
+ * rather than overflow. Every text is a plain string and an empty value
+ * hides its row's value (`empty:hidden`), so a server-filled shell can use
+ * it with `{{placeholders}}`. No items, nothing rendered.
+ *
+ * Mzizi Discover Standard (contracts/discover/meta-list).
+ */
+import { cn } from "./ui-utils";
+import Icon from "./site-icon.astro";
+import type { IconName } from "./site-icons";
+
+interface Item {
+  label: string;
+  value: string;
+  /** A glyph from the design system's set; decorative. */
+  icon?: IconName;
+  /** Links the value (a map, a profile, a source). */
+  href?: string;
+  /** ISO 8601: the value is a <time datetime>. */
+  datetime?: string;
+}
+interface Props {
+  items: Item[];
+  /** Columns from 40rem (2) and 64rem (3); 1 keeps one column. */
+  columns?: 1 | 2 | 3;
+}
+const { items, columns = 2 } = Astro.props;
+const cols = { 1: "", 2: "sm:grid-cols-2", 3: "sm:grid-cols-2 lg:grid-cols-3" }[columns];
+const link = "inline-flex min-h-6 items-center text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-11";
+---
+
+{
+  items.length > 0 && (
+    <dl class={cn("grid gap-x-8 gap-y-5", cols)} data-slot="meta-list" data-columns={columns}>
+      {items.map((item) => (
+        <div class="flex min-w-0 items-start gap-3" data-slot="meta-list-item">
+          {item.icon !== undefined && <Icon name={item.icon} class="mt-0.5 shrink-0 text-body-lg text-muted-foreground" />}
+          <div class="min-w-0">
+            <dt class="text-caption font-semibold uppercase tracking-wider text-muted-foreground">{item.label}</dt>
+            <dd class="mt-1 text-body break-words text-foreground empty:hidden">
+              {item.href !== undefined ? (
+                <a class={link} href={item.href}>
+                  {item.datetime !== undefined ? <time datetime={item.datetime}>{item.value}</time> : item.value}
+                </a>
+              ) : item.datetime !== undefined ? (
+                <time datetime={item.datetime}>{item.value}</time>
+              ) : (
+                item.value
+              )}
+            </dd>
+          </div>
+        </div>
+      ))}
+    </dl>
+  )
+}

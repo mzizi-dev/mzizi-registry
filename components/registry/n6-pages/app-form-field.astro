@@ -1,0 +1,63 @@
+---
+/**
+ * FormField — label, input, hint and error wired together: the hint and
+ * the error are announced with the field (aria-describedby), an error sets
+ * aria-invalid, and the label is always visible (never placeholder-only).
+ */
+import type { HTMLAttributes } from "astro/types";
+
+import Input from "./input.astro";
+import Label from "./label.astro";
+
+interface Props {
+  name: string;
+  label: string;
+  value?: string | null;
+  type?: "text" | "email" | "tel" | "url" | "search";
+  hint?: string;
+  error?: string | null;
+  required?: boolean;
+  readonly?: boolean;
+  autocomplete?: string;
+  maxlength?: number;
+  inputmode?: "text" | "tel" | "email" | "url";
+}
+const {
+  name,
+  label,
+  value,
+  type = "text",
+  hint,
+  error,
+  required = false,
+  readonly = false,
+  autocomplete,
+  maxlength,
+  inputmode,
+} = Astro.props;
+const id = `field-${name}`;
+const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-error` : null].filter(Boolean).join(" ") || undefined;
+---
+
+<div class="grid content-start gap-1.5" data-slot="form-field">
+  <Label for={id}>
+    {label}
+    {required && <span class="text-muted-foreground"> (required)</span>}
+  </Label>
+  <Input
+    id={id}
+    name={name}
+    type={type}
+    value={value ?? ""}
+    required={required}
+    readonly={readonly}
+    autocomplete={autocomplete as HTMLAttributes<"input">["autocomplete"]}
+    maxlength={maxlength}
+    inputmode={inputmode}
+    aria-describedby={describedBy}
+    aria-invalid={error ? "true" : undefined}
+    class={readonly ? "bg-muted" : undefined}
+  />
+  {hint && <p id={`${id}-hint`} class="text-body-sm text-muted-foreground">{hint}</p>}
+  {error && <p id={`${id}-error`} class="text-body-sm font-medium text-destructive">{error}</p>}
+</div>
