@@ -43,3 +43,5 @@ dioxus = { version = "0.7", default-features = false, features = ["macro", "sign
 # The contract suite renders components to HTML and evaluates their `CONTRACT` clauses
 # against the markup (the shared evaluator in `mzizi-rs/contract-eval/`).
 dioxus-ssr = "0.7"
+# Reads `contracts/*.contract.json` in `tests/contracts_json.rs`.
+serde_json = "1"

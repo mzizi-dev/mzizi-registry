@@ -1,0 +1,16 @@
+---
+/**
+ * AppSkeleton — the Dashboard Standard skeleton (`contracts/app/skeleton`), pure Astro:
+ * a loading placeholder, sized by `class`, hidden from screen readers. The registry
+ * primitive is `./skeleton.astro` (`contracts/ui/skeleton`).
+ */
+import { cn } from "./ui-utils";
+import { skeletonClasses } from "./ui-variants";
+
+interface Props {
+  class?: string;
+}
+const { class: extra } = Astro.props;
+---
+
+<div data-slot="skeleton" aria-hidden="true" class={cn(skeletonClasses, extra)}></div>

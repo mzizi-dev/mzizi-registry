@@ -698,6 +698,41 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The Dashboard Standard alert (contracts/app/alert): role=\"alert\", a title line and a description, with info, success and warning as status-container colours. React twin of app-alert.astro; the registry primitive is alert.",
+      "docs": "Use it for: Form-level errors and notices in a console.\nIncludes: info cobalt, success malachite, warning gold: status colours, data-slot attribute, Held to the whole app/alert contract.\nAccessibility: role=\"alert\" announces it.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-alert",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/app-alert.tsx",
+          "target": "components/ui/app-alert.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["role=\"alert\" announces it"],
+        "collection": "app",
+        "contract": "app/alert",
+        "features": [
+          "info cobalt, success malachite, warning gold: status colours",
+          "data-slot attribute",
+          "Held to the whole app/alert contract"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Form-level errors and notices in a console"]
+      },
+      "name": "app-alert",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Alert",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "pages"],
       "dependencies": [],
       "description": "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens.",
@@ -763,6 +798,76 @@
       "name": "app-brand-mark",
       "registryDependencies": [],
       "title": "App Brand Mark",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The Dashboard Standard button (contracts/app/button): an <a> with href, otherwise a <button type=\"button\">, at app density with small corners; destructive variants read only the destructive tokens. React twin of app-button.astro; the registry primitive is button.",
+      "docs": "Use it for: Actions in a console toolbar, form or panel.\nIncludes: 32 / 36 / 40px fine, 44 / 48px on touch, data-slot attribute, Held to the whole app/button contract.\nAccessibility: Native button and link semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-button",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/app-button.tsx",
+          "target": "components/ui/app-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Native button and link semantics"],
+        "collection": "app",
+        "contract": "app/button",
+        "features": [
+          "32 / 36 / 40px fine, 44 / 48px on touch",
+          "data-slot attribute",
+          "Held to the whole app/button contract"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["Actions in a console toolbar, form or panel"]
+      },
+      "name": "app-button",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Button",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The Dashboard Standard card (contracts/app/card): the .card surface with 0 / 16 / 24 / 32px padding. React twin of app-card.astro; the registry primitive, with its parts, is card.",
+      "docs": "Use it for: A panel surface in a Dashboard Standard page.\nIncludes: Padding none, sm, md (default) or lg, data-slot attribute, Held to the whole app/card contract.\nAccessibility: None: the content carries its own semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-card",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/app-card.tsx",
+          "target": "components/ui/app-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["None: the content carries its own semantics"],
+        "collection": "app",
+        "contract": "app/card",
+        "features": [
+          "Padding none, sm, md (default) or lg",
+          "data-slot attribute",
+          "Held to the whole app/card contract"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["A panel surface in a Dashboard Standard page"]
+      },
+      "name": "app-card",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Card",
       "type": "registry:ui"
     },
     {
@@ -1065,6 +1170,76 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The Dashboard Standard input (contracts/app/input): a native <input> at app density, 36px and 48px with 16px text on touch, every attribute passed through. React twin of app-input.astro; the registry primitive is input.",
+      "docs": "Use it for: A dense text field in a console form.\nIncludes: 36px with a fine pointer, 48px on touch, data-slot attribute, Held to the whole app/input contract.\nAccessibility: The caller labels it (Label or aria-label).\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-input",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/app-input.tsx",
+          "target": "components/ui/app-input.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["The caller labels it (Label or aria-label)"],
+        "collection": "app",
+        "contract": "app/input",
+        "features": [
+          "36px with a fine pointer, 48px on touch",
+          "data-slot attribute",
+          "Held to the whole app/input contract"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["A dense text field in a console form"]
+      },
+      "name": "app-input",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Input",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The Dashboard Standard label (contracts/app/label): a native <label> with the app label classes. React twin of app-label.astro; the registry primitive is label.",
+      "docs": "Use it for: A visible label for a Dashboard Standard form control.\nIncludes: Always visible; never replaced by a placeholder, data-slot attribute, Held to the whole app/label contract.\nAccessibility: for → the control.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-label",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/app-label.tsx",
+          "target": "components/ui/app-label.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["for → the control"],
+        "collection": "app",
+        "contract": "app/label",
+        "features": [
+          "Always visible; never replaced by a placeholder",
+          "data-slot attribute",
+          "Held to the whole app/label contract"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["A visible label for a Dashboard Standard form control"]
+      },
+      "name": "app-label",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Label",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["lib", "shell"],
       "dependencies": [],
       "description": "Typed navigation groups for the Dashboard Standard's app shell, side nav and command palette: flatten, group, search and current-page matching.",
@@ -1280,6 +1455,41 @@
         "https://api.mzizi.dev/v1/ui/app-nav"
       ],
       "title": "App Side Nav",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "primitives"],
+      "dependencies": [],
+      "description": "The Dashboard Standard skeleton (contracts/app/skeleton): a loading placeholder on the muted token with the small radius, sized by className, hidden from screen readers. React twin of app-skeleton.astro; the registry primitive is skeleton.",
+      "docs": "Use it for: Loading rows in a Dashboard Standard table or panel, A placeholder inside StateMessage's loading state.\nIncludes: cn() for className composition, data-slot attribute, Held to the whole app/skeleton contract.\nAccessibility: aria-hidden: StateMessage announces the loading state.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-skeleton",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/app-skeleton.tsx",
+          "target": "components/ui/app-skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["aria-hidden: StateMessage announces the loading state"],
+        "collection": "app",
+        "contract": "app/skeleton",
+        "features": [
+          "cn() for className composition",
+          "data-slot attribute",
+          "Held to the whole app/skeleton contract"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Loading rows in a Dashboard Standard table or panel",
+          "A placeholder inside StateMessage's loading state"
+        ]
+      },
+      "name": "app-skeleton",
+      "registryDependencies": [],
+      "title": "App Skeleton",
       "type": "registry:ui"
     },
     {

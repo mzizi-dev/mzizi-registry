@@ -120,6 +120,14 @@ ones, we need to adjust Mzizi so the design is always updating so we maintain co
 
 ## Adding a New UI Component
 
+**Contract first.** Every component has one contract, `contracts/<family>/<name>.contract.json`,
+whatever languages it ships in (owner, 2026-10-05; [#427](https://github.com/mzizi-dev/mzizi-registry/issues/427)).
+Write it before the code: its props, states, clauses, checks and density are what the `.astro`, the
+`.tsx`, the `.rs` and the `.mz` are each tested against. A registry primitive goes in `contracts/ui/`
+with `identity: "contract"` for each registry build (a Dashboard Standard build of the same primitive is
+`app-<name>` under `contracts/app/`); add the `pub const CONTRACT` to the `.rs`, then run
+`pnpm contracts:sync` to fill it from the contract file (`.mz` files are built elsewhere, per AGENTS.md). See [`contracts/README.md`](./contracts/README.md).
+
 1. **Create the component file** in `components/ui/`:
 
 ```tsx

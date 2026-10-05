@@ -1,0 +1,43 @@
+---
+/**
+ * StatusBadge — a pill-shaped lifecycle label, pure Astro: stable, beta, alpha
+ * or deprecated, each status tinted with one of the Seven Minerals at 10%
+ * behind the mineral itself. One contract for every build:
+ * `contracts/ui/status-badge.contract.json` (status-badge.tsx, .rs and .mz).
+ */
+import { badgeClasses } from "./ui-variants";
+
+type StatusBadgeStatus = "stable" | "beta" | "alpha" | "deprecated";
+
+interface Props {
+  status?: StatusBadgeStatus;
+  class?: string;
+}
+const { status = "stable", class: extra = "" } = Astro.props;
+
+const STATUS_CLASSES: Record<StatusBadgeStatus, string> = {
+  stable: "bg-malachite/10 text-malachite",
+  beta: "bg-cobalt/10 text-cobalt",
+  alpha: "bg-gold/10 text-gold",
+  deprecated: "bg-terracotta/10 text-terracotta line-through",
+};
+const classes = badgeClasses(
+  "outline",
+  [
+    "rounded-full border-transparent font-mono text-[10px] tracking-wide uppercase",
+    STATUS_CLASSES[status],
+    extra,
+  ]
+    .filter(Boolean)
+    .join(" "),
+);
+const labelled = Astro.slots.has("default");
+---
+
+<span
+  data-slot="status-badge"
+  data-portal="https://mzizi.dev/components/status-badge"
+  data-variant="outline"
+  data-status={status}
+  class={classes}
+>{labelled ? <slot /> : status}</span>

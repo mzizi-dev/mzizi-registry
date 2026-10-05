@@ -714,6 +714,7 @@ dependencies = [
  "dioxus",
  "dioxus-ssr",
  "mzizi-tokens",
+ "serde_json",
 ]
 
 [[package]]

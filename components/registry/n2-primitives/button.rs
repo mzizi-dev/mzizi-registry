@@ -179,3 +179,16 @@ pub fn Button(props: ButtonProps) -> Element {
         }
     }
 }
+
+/// The contract this build implements, copied by `pnpm contracts:sync` from
+/// `contracts/ui/button.contract.json`, the one contract the Astro, React and Rust builds
+/// share: edit the contract file, never this copy. `tests/contracts_json.rs` renders every
+/// state the contract declares and evaluates every clause and check against the markup.
+pub const CONTRACT: &str = r#"contract
+  slot is "button"
+  portal is "https://mzizi.dev/components/button"
+  class contains "rounded-full"
+  button "Save" min_height 48
+  when outline class contains "border-border"
+  when sm class contains "h-12"
+end"#;

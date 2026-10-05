@@ -8,19 +8,17 @@
   "summary": "A loading placeholder, sized by class, hidden from screen readers.",
   "implementations": {
     "astro": {
-      "registry": "skeleton",
+      "registry": "app-skeleton",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Skeleton.astro",
       "since": "0.3.0"
     },
     "tsx": {
-      "registry": "skeleton",
-      "identity": "slot",
-      "divergences": [
-        "The registry skeleton.tsx is not aria-hidden; the app Skeleton is (the announcement is StateMessage's job)."
-      ]
+      "registry": "app-skeleton",
+      "identity": "contract"
     },
-    "rs": null
+    "rs": null,
+    "related": ["skeleton"]
   },
   "props": [
     {

@@ -8,23 +8,17 @@
   "summary": "A native <input> at app density (36px, 48px and 16px text on touch). Every attribute except class passes through.",
   "implementations": {
     "astro": {
-      "registry": "input",
+      "registry": "app-input",
       "package": "@bundu/ui",
       "export": "@bundu/ui/app/Input.astro",
       "since": "0.3.0"
     },
     "tsx": {
-      "registry": "input",
-      "identity": "slot",
-      "divergences": [
-        "Height: the registry input is 48px everywhere; the app Input is 36px with a fine pointer."
-      ]
+      "registry": "app-input",
+      "identity": "contract"
     },
-    "rs": {
-      "registry": "input",
-      "identity": "slot",
-      "divergences": ["As for the .tsx."]
-    }
+    "rs": null,
+    "related": ["input"]
   },
   "props": [
     {
