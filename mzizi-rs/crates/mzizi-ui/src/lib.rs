@@ -133,6 +133,10 @@ pub use status_badge::{
 
 /// Every N2 primitive that exports a `CONTRACT`, with its registry name.
 pub const CONTRACTS: &[(&str, &str)] = &[
+    ("button", button::CONTRACT),
+    ("card", card::CONTRACT),
+    ("input", input::CONTRACT),
+    ("label", label::CONTRACT),
     ("status-badge", status_badge::CONTRACT),
     // ── wave 1 · batch A · contracts ──
     // ── end wave 1 · batch A · contracts ──

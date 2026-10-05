@@ -1,0 +1,94 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/input",
+  "title": "Input",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "The registry input: a native <input> with the pill radius and a 48px target on every pointer. Every attribute except class passes through.",
+  "implementations": {
+    "astro": {
+      "registry": "input",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Input.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "input",
+      "identity": "contract"
+    },
+    "rs": {
+      "registry": "input",
+      "identity": "contract"
+    },
+    "related": ["app-input"]
+  },
+  "props": [
+    {
+      "name": "...attributes",
+      "type": "HTMLAttributes<\"input\">",
+      "required": false,
+      "description": "Passed through: name, type, value, required, autocomplete, aria-*."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "Renders exactly the attributes given, plus data-slot, data-portal and the classes.",
+    "aria-invalid styles the error state; the browser's own validity drives it, not a prop."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "name": "email",
+        "type": "email",
+        "aria-label": "Email"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["textbox"],
+    "keyboard": ["Native."],
+    "focus": ["`--ring` focus ring and border."],
+    "aria": [
+      "The caller labels it (Label or aria-label).",
+      "aria-invalid shows the destructive ring."
+    ],
+    "wcag": ["1.3.5", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "input",
+      "select": "input",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--input",
+      "--foreground",
+      "--muted-foreground",
+      "--ring",
+      "--destructive"
+    ],
+    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Fills its container."],
+  "contract": "contract\n  slot is \"input\"\n  portal is \"https://mzizi.dev/components/input\"\n  label is \"Email\"\n  class contains \"rounded-full\"\nend",
+  "checks": [
+    {
+      "say": "Attributes pass through.",
+      "select": "input",
+      "count": 1,
+      "attr": {
+        "name": "email",
+        "type": "email"
+      }
+    }
+  ]
+}

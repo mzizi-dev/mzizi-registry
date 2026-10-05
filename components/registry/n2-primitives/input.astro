@@ -1,16 +1,24 @@
 ---
 /**
- * Input — a native <input>, pure Astro, 48px tall. Every attribute other
- * than `class` is passed through (name, type, value, required,
- * autocomplete, aria-*, …). Classes are `inputClasses`.
+ * Input — the registry primitive (`contracts/ui/input`), pure Astro: a native <input>
+ * with the classes of `input.tsx` and `input.rs`: the pill radius and a 48px target on
+ * every pointer. Every attribute other than `class` is passed through. The Dashboard
+ * Standard input is `./app-input.astro`.
  */
 import type { HTMLAttributes } from "astro/types";
 
 import { cn } from "./ui-utils";
-import { appInputClasses } from "./ui-variants";
 
 type Props = HTMLAttributes<"input">;
 const { class: extra, ...attrs } = Astro.props;
 ---
 
-<input data-slot="input" class={cn(appInputClasses, extra as string | undefined)} {...attrs} />
+<input
+  data-slot="input"
+  data-portal="https://mzizi.dev/components/input"
+  class={cn(
+    "h-12 w-full min-w-0 rounded-full border border-input bg-input/30 px-4 py-1 text-base transition-colors outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 md:text-sm dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+    extra as string | undefined,
+  )}
+  {...attrs}
+/>

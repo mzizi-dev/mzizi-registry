@@ -1,0 +1,136 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/card",
+  "title": "Card",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "The registry card: the card surface (14px radius, hairline ring), default or sm, with a built-in loading skeleton. Header, title, description, action, content and footer are its parts.",
+  "implementations": {
+    "astro": {
+      "registry": "card",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Card.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "card",
+      "identity": "contract"
+    },
+    "rs": {
+      "registry": "card",
+      "identity": "contract"
+    },
+    "related": ["app-card"]
+  },
+  "props": [
+    {
+      "name": "size",
+      "type": "\"default\" | \"sm\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "sm"],
+      "description": "sm tightens the gap and padding."
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "Renders its own skeleton instead of the content."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The content: usually the header, content and footer parts."
+    }
+  ],
+  "behaviour": [
+    "While loading, the content is not rendered: three muted bars pulse in its place.",
+    "data-size carries the size so the parts can tighten with it."
+  ],
+  "states": {
+    "default": {
+      "props": {},
+      "slots": {
+        "default": "Body"
+      }
+    },
+    "sm": {
+      "props": {
+        "size": "sm"
+      },
+      "slots": {
+        "default": "Body"
+      }
+    },
+    "loading": {
+      "props": {
+        "loading": true
+      },
+      "slots": {
+        "default": "Body"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["none"],
+    "keyboard": ["None: a surface, not a control."],
+    "focus": ["None."],
+    "aria": ["None: the content carries its own semantics."],
+    "wcag": ["1.4.11"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--card-foreground",
+      "--foreground",
+      "--muted",
+      "--radius-lg",
+      "--radius-md"
+    ],
+    "brandOverlay": "None: the card surface is the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Fills its container."],
+  "contract": "contract\n  slot is \"card\"\n  class contains \"bg-card\"\n  class contains \"rounded-[var(--radius-lg,14px)]\"\n  when default shows div \"Body\"\n  when sm slot is \"card\"\n  when loading class contains \"animate-pulse\"\nend",
+  "checks": [
+    {
+      "say": "The default size.",
+      "select": "[data-slot=\"card\"][data-size=\"default\"]",
+      "count": 1
+    },
+    {
+      "say": "The sm size.",
+      "state": "sm",
+      "select": "[data-slot=\"card\"][data-size=\"sm\"]",
+      "count": 1
+    },
+    {
+      "say": "Loading is marked.",
+      "state": "loading",
+      "select": "[data-slot=\"card\"]",
+      "count": 1,
+      "attr": {
+        "data-loading": true
+      }
+    },
+    {
+      "say": "Loading shows three skeleton bars.",
+      "state": "loading",
+      "select": ".bg-muted",
+      "count": 3
+    }
+  ]
+}

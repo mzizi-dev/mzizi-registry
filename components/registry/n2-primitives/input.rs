@@ -57,3 +57,14 @@ pub fn Input(props: InputProps) -> Element {
         }
     }
 }
+
+/// The contract this build implements, copied by `pnpm contracts:sync` from
+/// `contracts/ui/input.contract.json`, the one contract the Astro, React and Rust builds
+/// share: edit the contract file, never this copy. `tests/contracts_json.rs` renders every
+/// state the contract declares and evaluates every clause and check against the markup.
+pub const CONTRACT: &str = r#"contract
+  slot is "input"
+  portal is "https://mzizi.dev/components/input"
+  label is "Email"
+  class contains "rounded-full"
+end"#;

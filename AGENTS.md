@@ -25,6 +25,17 @@ at [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts
 contract here, never the copy in `mzizi-dev/packages-npm`; `__tests__/contracts/contracts.test.tsx`
 keeps the index and the coverage table honest.
 
+**One contract per component, whatever the language** (owner, 2026-10-05; #427). The contract
+file is the only place a component's clauses, checks and density are written, and every format
+is held to it. A `.rs` whose `identity` is `contract` is rendered in every state and evaluated
+in full by `mzizi-rs/crates/mzizi-ui/tests/contracts_json.rs`; its `pub const CONTRACT` is a
+copy written by `pnpm contracts:sync` (never edit it by hand; `pnpm contracts:sync:check` fails
+CI on drift). A new component, or a new format of one, starts from its contract.
+
+Local checks use **Vite+** (`vp`), as the org CI does: `vp run test` runs the test script the
+`vite-plus / test` job runs, `vp run ci:check` the lint and type check, and `pnpm check` (or
+`vp run check`) every gate in order.
+
 ### Every component, every format, one place (owner decision 2026-10-04)
 
 This registry is the single source of every component in every format: `.tsx` (React),

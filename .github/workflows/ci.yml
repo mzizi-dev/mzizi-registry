@@ -100,6 +100,12 @@ jobs:
       - name: Verify design-system/tokens.json matches its sources
         run: pnpm design-system:generate:check
 
+      # One contract per component, whatever the language (#427). A `.rs` CONTRACT or a
+      # `.mz` contract block is a copy written from contracts/ by `pnpm contracts:sync`;
+      # this fails if either differs from its contract file.
+      - name: Verify every inline contract matches contracts/
+        run: pnpm contracts:sync:check
+
       # title / categories / docs / author are derived from data already on each item.
       # Checked rather than hand-maintained so 574 items cannot fall out of step one at
       # a time.
@@ -150,6 +156,7 @@ jobs:
           pnpm openapi:generate:check
           pnpm node-map:generate:check
           pnpm rust:generate:check
+          pnpm changelog:generate:check
 
   rust:
     name: Rust

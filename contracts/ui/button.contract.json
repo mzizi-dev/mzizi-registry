@@ -1,0 +1,173 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/button",
+  "title": "Button",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "The registry button: a pill <button> with a 56px default target (48px sm, never smaller) and six variants.",
+  "implementations": {
+    "astro": {
+      "registry": "button",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/Button.astro",
+      "since": "0.3.0"
+    },
+    "tsx": {
+      "registry": "button",
+      "identity": "contract"
+    },
+    "rs": {
+      "registry": "button",
+      "identity": "contract"
+    },
+    "related": ["app-button"]
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "\"default\" | \"outline\" | \"secondary\" | \"ghost\" | \"destructive\" | \"link\"",
+      "required": false,
+      "default": "default",
+      "values": [
+        "default",
+        "outline",
+        "secondary",
+        "ghost",
+        "destructive",
+        "link"
+      ],
+      "description": "default wears --primary; destructive reads only the destructive token."
+    },
+    {
+      "name": "size",
+      "type": "\"default\" | \"sm\" | \"lg\" | \"icon\" | \"icon-sm\"",
+      "required": false,
+      "default": "default",
+      "values": ["default", "sm", "lg", "icon", "icon-sm"],
+      "description": "56 / 48 / 56px tall; icon sizes are 56 and 48px squares."
+    },
+    {
+      "name": "type",
+      "type": "\"button\" | \"submit\" | \"reset\"",
+      "required": false,
+      "values": ["button", "submit", "reset"],
+      "description": "The native type."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "The native attribute."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "The label (and an optional icon)."
+    }
+  ],
+  "behaviour": [
+    "data-variant and data-size carry the variant and size.",
+    "Never below a 48px touch target."
+  ],
+  "states": {
+    "default": {
+      "props": {},
+      "slots": {
+        "default": "Save"
+      }
+    },
+    "outline": {
+      "props": {
+        "variant": "outline"
+      },
+      "slots": {
+        "default": "Cancel"
+      }
+    },
+    "sm": {
+      "props": {
+        "size": "sm"
+      },
+      "slots": {
+        "default": "Edit"
+      }
+    },
+    "disabled": {
+      "props": {
+        "disabled": true
+      },
+      "slots": {
+        "default": "Save"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["button"],
+    "keyboard": ["Native: Enter and Space."],
+    "focus": ["`--ring` focus ring."],
+    "aria": [
+      "aria-invalid shows the destructive ring; aria-expanded the open state."
+    ],
+    "wcag": ["2.5.8", "2.4.7"]
+  },
+  "density": [
+    {
+      "part": "default",
+      "select": "button",
+      "fine": 56,
+      "coarse": 56
+    },
+    {
+      "part": "sm",
+      "state": "sm",
+      "select": "button",
+      "fine": 48,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--primary",
+      "--primary-foreground",
+      "--secondary",
+      "--secondary-foreground",
+      "--muted",
+      "--input",
+      "--border",
+      "--destructive",
+      "--ring"
+    ],
+    "brandOverlay": "The default variant follows the brand's `--primary` and the focus ring its `--ring`. Destructive never takes a brand colour.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["Inline; sized by its label."],
+  "contract": "contract\n  slot is \"button\"\n  portal is \"https://mzizi.dev/components/button\"\n  class contains \"rounded-full\"\n  button \"Save\" min_height 48\n  when outline class contains \"border-border\"\n  when sm class contains \"h-12\"\nend",
+  "checks": [
+    {
+      "say": "The default variant and size.",
+      "select": "button[data-variant=\"default\"][data-size=\"default\"]",
+      "count": 1
+    },
+    {
+      "say": "Disabled is the native attribute.",
+      "state": "disabled",
+      "select": "button",
+      "count": 1,
+      "attr": {
+        "disabled": true
+      }
+    }
+  ]
+}

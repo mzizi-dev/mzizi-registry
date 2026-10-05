@@ -1,16 +1,47 @@
 ---
 /**
- * Card — the `.card` surface, pure Astro. Classes are `cardVariants`
- * (shared with the React `Card`).
+ * Card — the registry primitive (`contracts/ui/card`), pure Astro: the card surface
+ * with the classes of `card.tsx` and `card.rs`, `size` default or sm, and a built-in
+ * `loading` skeleton. The parts (header, title, description, action, content, footer)
+ * are the React and Rust builds' sub-components; here they are markup in the slot. The
+ * Dashboard Standard card is `./app-card.astro`.
  */
 import { cn } from "./ui-utils";
-import { cardVariants } from "./ui-variants";
 
 interface Props {
-  padding?: "none" | "sm" | "md" | "lg";
+  size?: "default" | "sm";
+  loading?: boolean;
   class?: string;
 }
-const { padding, class: extra } = Astro.props;
+const { size = "default", loading = false, class: extra } = Astro.props;
 ---
 
-<div class={cn(cardVariants({ padding }), extra)} data-slot="card"><slot /></div>
+{
+  loading ? (
+    <div
+      data-slot="card"
+      data-portal="https://mzizi.dev/components/card"
+      data-loading
+      class={cn(
+        "group/card flex animate-pulse flex-col gap-4 overflow-hidden rounded-[var(--radius-lg,14px)] bg-card p-6 text-sm ring-1 ring-foreground/10",
+        size === "sm" && "gap-3 p-4",
+        extra,
+      )}
+    >
+      <div class="h-4 w-2/3 rounded bg-muted" />
+      <div class="h-3 w-full rounded bg-muted" />
+      <div class="h-3 w-4/5 rounded bg-muted" />
+    </div>
+  ) : (
+    <div
+      data-slot="card"
+      data-size={size}
+      class={cn(
+        "group/card flex flex-col gap-6 overflow-hidden rounded-[var(--radius-lg,14px)] bg-card py-6 text-sm text-card-foreground ring-1 ring-foreground/10 has-[>img:first-child]:pt-0 data-[size=sm]:gap-4 data-[size=sm]:py-4 *:[img:first-child]:rounded-t-[var(--radius-md,12px)] *:[img:last-child]:rounded-b-[var(--radius-md,12px)]",
+        extra,
+      )}
+    >
+      <slot />
+    </div>
+  )
+}
