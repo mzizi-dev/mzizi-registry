@@ -192,6 +192,18 @@ export const TYPE = [
   ["code", "0.875rem", 14, "1.6", 400, "mono"],
 ] as const
 
+/**
+ * Utility names for a size in TYPE under another name — not new sizes.
+ *
+ * `text-body-sm` is the name the registry's own components use for the 14px body
+ * size (discover-card, discover-search, site-breadcrumb, the n6/n7 app shell…),
+ * and the name `@bundu/ui` and `@nyuchi/ui` ship in `styles/theme.css` and
+ * `tailwind-preset.mjs`. Without it, a repo that copies this stylesheet and
+ * installs those components gets no rule for `text-body-sm` at all: the text
+ * silently inherits 16px.
+ */
+export const TYPE_ALIASES = [["body-sm", "small"]] as const
+
 /** The nine NAMED line-heights. `caption` shares `small`'s, `code` shares `body`'s. */
 export const LEADING = [
   ["display", "1.1"], ["h1", "1.15"], ["h2", "1.2"], ["h3", "1.25"], ["h4", "1.3"],
@@ -824,6 +836,7 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
   for (const [n] of SPACING) out.push(`  --spacing-${n}: var(--space-${n});`)
   for (const [n] of RADIUS) out.push(`  --radius-${n}: var(--r-${n});`)
   for (const [n] of TYPE) out.push(`  --text-${n}: var(--fs-${n});`)
+  for (const [alias, size] of TYPE_ALIASES) out.push(`  --text-${alias}: var(--fs-${size});`)
   for (const [n] of SHADOW) out.push(`  --shadow-${n}: var(--elevation-${n});`)
   for (const [n] of EASING) out.push(`  --ease-${n}: var(--easing-${n});`)
   out.push("}")
