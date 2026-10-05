@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — `discover/meta-list` 1.1.0 is a valid description list, and hides a row with no value (2026-10-06, #PR)
+### Fixed — `discover/meta-list` 1.1.0 is a valid description list, and hides a row with no value (2026-10-06, #450)
 
 MetaList wrapped each row's `<dt>`/`<dd>` in a second `<div>` beside the icon (`dl > div > div > dt`). HTML allows only one `<div>` between a `<dl>` and its terms, and axe reports `definition-list` and `dlitem` as serious. Found adopting the detail pattern on mukoko-dev/mukoko-circles.
 
