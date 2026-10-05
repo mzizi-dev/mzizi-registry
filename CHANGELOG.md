@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — `text-body-sm` is defined in `mzizi-tokens-globals.css` (2026-10-06, #PR)
+### Fixed — `text-body-sm` is defined in `mzizi-tokens-globals.css` (2026-10-06, #448)
 
 The registry's components use `text-body-sm` for the 14px body size (116 uses: `discover-card`, `discover-search`, `discover-category-chip`, `discover-hero`, `site-breadcrumb`, the n6 page and n7 shell components), and `@bundu/ui` / `@nyuchi/ui` 0.3.0 ship it in `styles/theme.css` and `tailwind-preset.mjs`, but the stylesheet the registry serves defined only `--text-small`. A repo that copied it and installed those components got no rule for `text-body-sm`, so the text rendered at 16px (mukoko-dev/mukoko-events `/discover`). The `@theme` block now carries `--text-body-sm: var(--fs-small)`, an alias of the existing 14px size, not a new one; `--text-small` stays. `__tests__/tokens-type-utilities.test.ts` fails when any `text-<size>` a registry component uses has no `--text-<size>` in the stylesheet.
 
