@@ -15,14 +15,21 @@
  * ("console"). The mark alone carries the brand's name as its alt text
  * unless `decorative` (when a neighbouring text already names it).
  *
- * Today the set is Nyuchi (the bee: nyuchi is "bee"). Add a brand by
- * adding its pair to assets/brand/ and one entry to MARKS.
+ * Today the set is Nyuchi (the bee: nyuchi is "bee") and Mukoko (the
+ * honeycomb: mukoko is "beehive"). Mukoko's pair is
+ * assets/mukoko-icon-{light,dark}.png, because assets/mukoko-mark-*.png is
+ * the design system's 500px tile on an opaque ground, not the transparent
+ * icon. Add a brand by adding its scaled pair to assets/ and one entry to
+ * MARKS (and the contract's `brand` values).
  */
+import mukokoDark from "./assets/mukoko-icon-dark.png";
+import mukokoLight from "./assets/mukoko-icon-light.png";
 import nyuchiDark from "./assets/nyuchi-mark-dark.png";
 import nyuchiLight from "./assets/nyuchi-mark-light.png";
 
 const MARKS = {
   nyuchi: { name: "nyuchi", light: nyuchiLight, dark: nyuchiDark },
+  mukoko: { name: "mukoko", light: mukokoLight, dark: mukokoDark },
 } as const;
 
 export type BrandName = keyof typeof MARKS;

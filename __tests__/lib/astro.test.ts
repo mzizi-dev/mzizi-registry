@@ -70,6 +70,8 @@ describe("framework-free modules and assets", () => {
     const doc = astroDocument("app-brand-mark")
     const assets = doc?.files.filter((f) => f.type === "registry:asset") ?? []
     expect(assets.map((f) => f.target).sort()).toEqual([
+      `${ASTRO_INSTALL_DIR}/assets/mukoko-icon-dark.png`,
+      `${ASTRO_INSTALL_DIR}/assets/mukoko-icon-light.png`,
       `${ASTRO_INSTALL_DIR}/assets/nyuchi-mark-dark.png`,
       `${ASTRO_INSTALL_DIR}/assets/nyuchi-mark-light.png`,
     ])
