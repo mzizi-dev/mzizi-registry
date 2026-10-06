@@ -618,13 +618,15 @@ export const brandOverrides: Record<
     container: "#FFF8E1",
     onContainer: "#3E2723",
   },
+  // Mukoko Circles (owner decision, 2026-10-06): tanzanite, as Mukoko;
+  // terracotta is its accent (canon `ecosystem[name=circles].accent`).
   circles: {
-    primary: "#D4A574",
-    mineral: "terracotta",
-    primaryHover: "#E0B88A",
-    primaryMuted: "rgba(212,165,116,0.12)",
-    container: "#FBE9E7",
-    onContainer: "#5D2906",
+    primary: "#B388FF",
+    mineral: "tanzanite",
+    primaryHover: "#CE9FFF",
+    primaryMuted: "rgba(179,136,255,0.12)",
+    container: "#F3E5F5",
+    onContainer: "#2E004D",
   },
   planner: {
     primary: "#00B0FF",
