@@ -15,6 +15,8 @@
 export const REGISTRY_FILES: readonly string[] = [
   "assets/bundu-mark-dark.png",
   "assets/bundu-mark-light.png",
+  "assets/mukoko-icon-dark.png",
+  "assets/mukoko-icon-light.png",
   "assets/mukoko-mark-dark.png",
   "assets/mukoko-mark-light.png",
   "assets/mzizi-mark-dark.png",
