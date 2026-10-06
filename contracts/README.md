@@ -101,7 +101,7 @@ One design for every public discover and browse page in the Mukoko family (circl
 | `discover/breadcrumb`       | DiscoverBreadcrumb | N6   | 1.0.0   | `discover-breadcrumb`     | `discover-breadcrumb` (contract)     | —          |
 | `discover/detail-actions`   | DetailActions      | N6   | 1.1.0   | `discover-detail-actions` | `discover-detail-actions` (contract) | —          |
 | `discover/detail-hero`      | DetailHero         | N6   | 1.0.0   | `discover-detail-hero`    | `discover-detail-hero` (contract)    | —          |
-| `discover/meta-list`        | MetaList           | N6   | 1.0.0   | `discover-meta-list`      | `discover-meta-list` (contract)      | —          |
+| `discover/meta-list`        | MetaList           | N6   | 1.1.0   | `discover-meta-list`      | `discover-meta-list` (contract)      | —          |
 | `discover/related-rail`     | RelatedRail        | N6   | 1.0.0   | `discover-related-rail`   | `discover-related-rail` (contract)   | —          |
 
 Every Discover component also works in a server-filled shell (an Astro page built once with `{{placeholders}}` and filled by a server, as circles.mukoko.com's Rust Worker does): text props are plain strings, empty text hides itself, and state switches are attributes styled by classes. Each contract has a `template` state where that matters.
