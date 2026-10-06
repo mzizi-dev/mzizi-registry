@@ -62,7 +62,7 @@ Every format that exists is tested against the contract, here:
 | `app/stat-tile`          | StatTile          | N6   | 1.0.0   | `app-stat-tile`          | `app-stat-tile` (contract)          | —                       |
 | `app/info-tip`           | InfoTip           | N6   | 1.0.0   | `app-info-tip`           | `app-info-tip` (contract)           | —                       |
 | `app/empty-state`        | EmptyState        | N6   | 1.0.0   | `app-empty-state`        | `app-empty-state` (contract)        | —                       |
-| `app/brand-mark`         | BrandMark         | N3   | 1.0.0   | `app-brand-mark`         | `app-brand-mark` (contract)         | —                       |
+| `app/brand-mark`         | BrandMark         | N3   | 1.1.0   | `app-brand-mark`         | `app-brand-mark` (contract)         | —                       |
 | `app/data-table`         | DataTable         | N6   | 1.1.0   | `app-data-table`         | `app-data-table` (contract)         | —                       |
 | `app/filter-bar`         | FilterBar         | N6   | 1.1.0   | `app-filter-bar`         | `app-filter-bar` (contract)         | —                       |
 | `app/pagination`         | Pagination        | N6   | 1.0.0   | `app-pagination`         | `app-pagination` (contract)         | —                       |
