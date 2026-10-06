@@ -1,8 +1,8 @@
 /**
  * ResultGrid — the results of a Discover page: a polite status line, the
  * cards (DiscoverCard children), the empty state (`empty`) and "load more"
- * (`more`). `state` is "ok" or "empty"; both blocks are in the markup and CSS
- * shows the matching one. Layouts: `grid`, `list` and `rail`.
+ * (`more`), and the failure (`error`). `state` is "ok", "empty" or "error";
+ * every block is in the markup and CSS shows the matching one. Layouts: `grid`, `list` and `rail`.
  *
  * The React build of contract `discover/result-grid`, beside
  * `discover-result-grid.astro`: the same markup and classes.
@@ -17,7 +17,7 @@ export interface ResultGridProps {
   layout?: "grid" | "list" | "rail"
   /** Columns from 64rem in the grid layout. */
   columns?: 2 | 3 | 4
-  /** "ok" or "empty" (a server-filled shell may pass a placeholder). */
+  /** "ok", "empty" or "error" (a server-filled shell may pass a placeholder). */
   state?: string
   /** The status line, e.g. "24 circles". Empty text hides itself. */
   summary?: string
@@ -27,11 +27,13 @@ export interface ResultGridProps {
   empty?: ReactNode
   /** "Load more" (a LoadMore). */
   more?: ReactNode
+  /** The failure (a StateMessage kind="error"), shown when `state` is "error". */
+  error?: ReactNode
 }
 
 const has = (n: ReactNode) => n !== undefined && n !== null && n !== false
 
-export function ResultGrid({ label, layout = "grid", columns = 3, state = "ok", summary, children, empty, more }: ResultGridProps) {
+export function ResultGrid({ label, layout = "grid", columns = 3, state = "ok", summary, children, empty, more, error }: ResultGridProps) {
   const list = {
     grid: cn("grid gap-4 sm:grid-cols-2", { 2: "", 3: "lg:grid-cols-3", 4: "lg:grid-cols-3 xl:grid-cols-4" }[columns]),
     list: "grid gap-4",
@@ -40,14 +42,14 @@ export function ResultGrid({ label, layout = "grid", columns = 3, state = "ok", 
   return (
     <div className="group/results grid gap-6" data-slot="result-grid" data-state={state} data-layout={layout}>
       {summary !== undefined && (
-        <p className="text-body-sm text-muted-foreground empty:hidden" role="status">
+        <p className="text-body-sm text-muted-foreground empty:hidden group-data-[state=error]/results:hidden" role="status">
           {summary}
         </p>
       )}
       <ul
         aria-label={label}
         tabIndex={layout === "rail" ? 0 : undefined}
-        className={cn(list, "group-data-[state=empty]/results:hidden")}
+        className={cn(list, "group-data-[state=empty]/results:hidden group-data-[state=error]/results:hidden")}
         data-when="ok"
       >
         {children}
@@ -57,8 +59,13 @@ export function ResultGrid({ label, layout = "grid", columns = 3, state = "ok", 
           {empty}
         </div>
       )}
+      {has(error) && (
+        <div className="hidden group-data-[state=error]/results:block" data-when="error">
+          {error}
+        </div>
+      )}
       {has(more) && (
-        <div className="group-data-[state=empty]/results:hidden" data-when="ok">
+        <div className="group-data-[state=empty]/results:hidden group-data-[state=error]/results:hidden" data-when="ok">
           {more}
         </div>
       )}
