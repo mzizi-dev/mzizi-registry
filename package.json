@@ -1,6 +1,6 @@
 {
   "name": "mzizi",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "private": true,
   "description": "Mzizi — an independent open-architecture project. The component registry, design tokens and Rust components (Mzizi Roots), operated and developed by Nyuchi.",
   "homepage": "https://mzizi.dev",

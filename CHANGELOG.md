@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.5.0] - 2026-10-06
+
+Releases `staging` to `main` as the next minor above v4.4.5 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.5.0.
+
 ### Fixed — `discover/meta-list` 1.1.0 is a valid description list, and hides a row with no value (2026-10-06, #450)
 
 MetaList wrapped each row's `<dt>`/`<dd>` in a second `<div>` beside the icon (`dl > div > div > dt`). HTML allows only one `<div>` between a `<dl>` and its terms, and axe reports `definition-list` and `dlitem` as serious. Found adopting the detail pattern on mukoko-dev/mukoko-circles.
