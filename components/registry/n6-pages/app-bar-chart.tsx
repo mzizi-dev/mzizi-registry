@@ -16,7 +16,8 @@
  */
 interface BarChartPoint {
   label: string;
-  value: number;
+  /** null: the value is withheld or unknown (drawn as no bar, never as 0). */
+  value: number | null;
   /** Optional longer label for the figures table, e.g. a full date. */
   long?: string;
 }
@@ -34,6 +35,8 @@ interface BarChartProps {
   id?: string;
   /** BCP 47 locale for number formatting. */
   locale?: string;
+  /** What a null value reads as, e.g. "Fewer than 5". */
+  missingLabel?: string;
 }
 
 function BarChart({
@@ -45,14 +48,18 @@ function BarChart({
   labelHeading = "Label",
   id = "chart",
   locale = "en-GB",
+  missingLabel = "Not available",
 }: BarChartProps) {
-  const max = Math.max(0, ...data.map((d) => d.value));
-  const total = data.reduce((sum, d) => sum + d.value, 0);
+  const known = data.flatMap((d) => (d.value === null ? [] : [d.value]));
+  const missing = data.length - known.length;
+  const max = Math.max(0, ...known);
+  const total = known.reduce((sum, v) => sum + v, 0);
   const pct = (v: number) =>
     max > 0 ? Math.max(v > 0 ? 2 : 0, (v / max) * 100) : 0;
   // Two decimals is finer than a pixel at any chart size.
   const geo = (v: number) => String(Math.round(pct(v) * 100) / 100);
   const fmt = (v: number) => v.toLocaleString(locale);
+  const show = (v: number | null) => (v === null ? missingLabel : fmt(v));
   // Axis labels are thinned so they never crowd: always the first and the
   // last, never one crowding the last; at most 6 from sm up, and on a phone
   // only the first, the middle (from 5 points) and the last. Every value is
@@ -93,7 +100,12 @@ function BarChart({
         <p className="text-body-sm text-muted-foreground">{caption}</p>
       </div>
 
-      {data.length === 0 || max === 0 ? (
+      {data.length > 0 && known.length === 0 ? (
+        <p className="rounded-md border border-dashed border-border px-4 py-8 text-center text-body-sm text-muted-foreground">
+          No figure in this range can be shown: {missingLabel.toLowerCase()} for
+          every point.
+        </p>
+      ) : data.length === 0 || (max === 0 && missing === 0) ? (
         <p className="rounded-md border border-dashed border-border px-4 py-8 text-center text-body-sm text-muted-foreground">
           Nothing to chart in this range.
         </p>
@@ -104,7 +116,8 @@ function BarChart({
               <div
                 key={`${i}-${d.label}`}
                 className="flex h-full min-w-0 flex-1 items-end"
-                title={`${d.long ?? d.label}: ${fmt(d.value)}`}
+                title={`${d.long ?? d.label}: ${show(d.value)}`}
+                data-missing={d.value === null ? "" : undefined}
               >
                 <svg
                   className="h-full w-full"
@@ -113,13 +126,23 @@ function BarChart({
                   focusable="false"
                   data-bar=""
                 >
-                  <rect
-                    x="0"
-                    y={String(100 - Number(geo(d.value)))}
-                    width="10"
-                    height={geo(d.value)}
-                    className="fill-primary"
-                  />
+                  {d.value === null ? (
+                    <rect
+                      x="3"
+                      y="98"
+                      width="4"
+                      height="2"
+                      className="fill-muted-foreground"
+                    />
+                  ) : (
+                    <rect
+                      x="0"
+                      y={String(100 - Number(geo(d.value)))}
+                      width="10"
+                      height={geo(d.value)}
+                      className="fill-primary"
+                    />
+                  )}
                 </svg>
               </div>
             ))}
@@ -156,17 +179,21 @@ function BarChart({
                     focusable="false"
                     data-bar=""
                   >
-                    <rect
-                      x="0"
-                      y="0"
-                      width={geo(d.value)}
-                      height="3"
-                      className="fill-primary"
-                    />
+                    {d.value !== null && (
+                      <rect
+                        x="0"
+                        y="0"
+                        width={geo(d.value)}
+                        height="3"
+                        className="fill-primary"
+                      />
+                    )}
                   </svg>
                 </span>
-                <span className="w-12 text-end text-body-sm font-medium tabular-nums">
-                  {fmt(d.value)}
+                <span
+                  className={`text-end text-body-sm tabular-nums ${d.value === null ? "text-muted-foreground" : "w-12 font-medium"}`}
+                >
+                  {show(d.value)}
                 </span>
               </span>
             </li>
@@ -198,7 +225,11 @@ function BarChart({
                 <th scope="row" className="py-2 text-start font-normal">
                   {d.long ?? d.label}
                 </th>
-                <td className="py-2 text-end tabular-nums">{fmt(d.value)}</td>
+                <td
+                  className={`py-2 text-end tabular-nums ${d.value === null ? "text-muted-foreground" : ""}`}
+                >
+                  {show(d.value)}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -208,7 +239,7 @@ function BarChart({
                 Total
               </th>
               <td className="py-2 text-end font-semibold tabular-nums">
-                {fmt(total)}
+                {missing > 0 ? `At least ${fmt(total)}` : fmt(total)}
               </td>
             </tr>
           </tfoot>

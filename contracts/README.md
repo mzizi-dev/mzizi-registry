@@ -72,7 +72,7 @@ Every format that exists is tested against the contract, here:
 | `app/state-message`      | StateMessage      | N6   | 1.0.0   | `app-state-message`      | `app-state-message` (contract)      | —                       |
 | `app/toast`              | Toast             | N6   | 1.0.0   | `app-toast`              | `app-toast` (contract)              | —                       |
 | `app/account-menu`       | AccountMenu       | N7   | 1.0.0   | `app-account-menu`       | `app-account-menu` (contract)       | —                       |
-| `app/bar-chart`          | BarChart          | N6   | 1.1.0   | `app-bar-chart`          | `app-bar-chart` (contract)          | —                       |
+| `app/bar-chart`          | BarChart          | N6   | 1.2.0   | `app-bar-chart`          | `app-bar-chart` (contract)          | —                       |
 | `app/button`             | Button            | N2   | 1.0.0   | `app-button`             | `app-button` (contract)             | —                       |
 | `app/badge`              | Badge             | N2   | 1.0.0   | `badge`                  | `badge` (slot+variants)             | `badge` (slot+variants) |
 | `app/card`               | Card              | N2   | 1.0.0   | `app-card`               | `app-card` (contract)               | —                       |
