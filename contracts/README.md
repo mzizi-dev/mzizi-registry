@@ -113,11 +113,11 @@ Every Discover component also works in a server-filled shell (an Astro page buil
 | Contract              | Component     | Node | Version | Astro `.astro`        | React `.tsx`                     | Rust `.rs` |
 | --------------------- | ------------- | ---- | ------- | --------------------- | -------------------------------- | ---------- |
 | `site/breadcrumb`     | Breadcrumb    | N6   | 1.0.0   | `site-breadcrumb`     | `site-breadcrumb` (contract)     | —          |
-| `site/container`      | Container     | N6   | 1.0.0   | `site-container`      | `site-container` (contract)      | —          |
-| `site/hero`           | Hero          | N6   | 1.0.0   | `site-hero`           | `site-hero` (contract)           | —          |
+| `site/container`      | Container     | N6   | 1.0.1   | `site-container`      | `site-container` (contract)      | —          |
+| `site/hero`           | Hero          | N6   | 1.0.1   | `site-hero`           | `site-hero` (contract)           | —          |
 | `site/icon`           | Icon          | N2   | 1.0.0   | `site-icon`           | `site-icon` (contract)           | —          |
 | `site/mineral-strip`  | MineralStrip  | N3   | 1.0.0   | `site-mineral-strip`  | `site-mineral-strip` (contract)  | —          |
-| `site/section`        | Section       | N6   | 1.0.0   | `site-section`        | `site-section` (contract)        | —          |
+| `site/section`        | Section       | N6   | 1.0.1   | `site-section`        | `site-section` (contract)        | —          |
 | `site/section-header` | SectionHeader | N6   | 1.0.0   | `site-section-header` | `site-section-header` (contract) | —          |
 | `site/social-icon`    | SocialIcon    | N3   | 1.0.0   | `site-social-icon`    | `site-social-icon` (contract)    | —          |
 
