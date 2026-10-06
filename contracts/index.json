@@ -347,7 +347,7 @@
     {
       "name": "discover/result-grid",
       "title": "ResultGrid",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "discover/result-grid.contract.json",
       "astro": "discover-result-grid",
       "tsx": "discover-result-grid",
@@ -410,7 +410,7 @@
     {
       "name": "discover/meta-list",
       "title": "MetaList",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "discover/meta-list.contract.json",
       "astro": "discover-meta-list",
       "tsx": "discover-meta-list",

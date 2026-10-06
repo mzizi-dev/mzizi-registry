@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.5.0",
+    title: "v4.5.0 — Discover error and empty states, Circles tanzanite",
+    description:
+      "Releases staging to main as the next minor above v4.4.5 (nyuchi/.github#80). discover/meta-list 1.1.0 is a valid description list and hides an empty row (#450); discover/result-grid 1.1.0 has an error state (#451); text-body-sm is defined in mzizi-tokens-globals.css (#448); Mukoko Circles is tanzanite with a terracotta accent (#449); overrides for the 2026-10-06 proxy-addr, source-map-js and smol-toml advisories (#452). CHANGELOG.md section [4.5.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 5,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-10-06T14:00:00.000+00:00",
+    created_at: "2026-10-06T14:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.4.0",
     title: "v4.4.0 — one contract per component, every build",
     description:

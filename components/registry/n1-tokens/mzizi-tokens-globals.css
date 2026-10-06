@@ -244,6 +244,7 @@
   --text-small: var(--fs-small);
   --text-caption: var(--fs-caption);
   --text-code: var(--fs-code);
+  --text-body-sm: var(--fs-small);
   --shadow-none: var(--elevation-none);
   --shadow-xs: var(--elevation-xs);
   --shadow-sm: var(--elevation-sm);
@@ -932,6 +933,14 @@
 [data-brand="learning"] {
   --primary: var(--mineral-gold-aa);
   --ring: var(--mineral-cobalt-aa);
+}
+
+/* circles — tanzanite, terracotta accent.
+ * /v1/brand ecosystem[name=circles].mineral, Mukoko Circles; accent from ecosystem[name=circles].accent (owner decision, 2026-10-06) */
+[data-brand="circles"] {
+  --primary: var(--mineral-tanzanite-aa);
+  --ring: var(--mineral-cobalt-aa);
+  --brand-accent: var(--mineral-terracotta-aa);
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
