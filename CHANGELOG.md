@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `app/bar-chart` 1.2.0: nullable values for withheld counts (2026-10-06, #PRNUM)
+### Added — `app/bar-chart` 1.2.0: nullable values for withheld counts (2026-10-06, #457)
 
 BarChart drew every point as a number, so an app that withholds small counts (k-anonymity: a day with fewer than 5 is returned as `null`) had to draw it as 0 or drop the day, and the total then read as exact. Mukoko Events admin's Insights page needs both to be honest (nyuchi/api-gateway#268). The change is in the `.astro` and `.tsx` builds, with the same markup, and is backwards compatible.
 
