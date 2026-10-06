@@ -422,6 +422,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "locale",
       "type": "string",
       "required": false
+    },
+    {
+      "name": "missingLabel",
+      "type": "string",
+      "required": false
     }
   ],
   "app-brand-mark": [

@@ -162,6 +162,15 @@ The next minor above `mzizi-rs-v0.1.0` (nyuchi/.github#80): the workspace versio
 - The contract adds the `mukoko` and `mukoko-lockup` states and five checks (alt text, the right image in each theme, `data-brand`, the wordmark). The `/v1/astro/app-brand-mark` document now carries four assets.
 - `@bundu/ui` picks this up when its registry pin moves past this change (mzizi-dev/packages-npm).
 
+### Added — `app/bar-chart` 1.2.0: nullable values for withheld counts (2026-10-06, #PRNUM)
+
+BarChart drew every point as a number, so an app that withholds small counts (k-anonymity: a day with fewer than 5 is returned as `null`) had to draw it as 0 or drop the day, and the total then read as exact. Mukoko Events admin's Insights page needs both to be honest (nyuchi/api-gateway#268). The change is in the `.astro` and `.tsx` builds, with the same markup, and is backwards compatible.
+
+- `data[].value` is now `number | null`. A new optional prop, `missingLabel` (default `"Not available"`), is what a null reads as, e.g. `"Fewer than 5"`.
+- A null draws no bar. In `columns` it leaves a small muted baseline tick (`fill-muted-foreground`) on a column marked `data-missing`, whose title reads `<label>: <missingLabel>`. In `rows` the bar is empty and the value is the `missingLabel` in muted text.
+- The figures table shows the `missingLabel` (muted) for a null. The total sums the known values and reads `At least <n>` when any value is null.
+- Every value null: "No figure in this range can be shown: <missingLabel, lower-cased> for every point." No data, or every value 0 with none null, still reads "Nothing to chart in this range."
+- The contract adds the `suppressed`, `suppressed-rows` and `suppressed-all` states and their checks, which both builds pass.
 ### Added — `AGENTS.md` loads the Mzizi dev skills (2026-10-06)
 
 - **`AGENTS.md` gains "Dev skills, progress reports and the merge gate"**, the canonical rule block from nyuchi/.github#87, after "Track big work in GitHub issues": load the Mzizi dev skills (`digital-hygiene` and `progress-report`), clone only into a directory unique to the agent, run dev work on a 10-minute progress-report loop whose ticks never publish, release, merge or deploy without the owner's approval, and merge only through the merge gate. Docs only: no behaviour changes, and CI is unchanged.
