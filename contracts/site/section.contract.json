@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "site/section",
   "title": "Section",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "node": 6,
   "kind": "pattern",
   "summary": "The standard marketing page band: a <section> with the vertical rhythm, a background surface and an optional hairline divider, wrapping its content in the site container unless it is full-bleed.",
@@ -155,7 +155,7 @@
     }
   ],
   "gaps": [
-    "The `.section`, `.section-tight`, `.section-loose`, `bg-canvas` and `.container-custom` utilities live in each consuming site's globals.css; the registry does not ship them.",
+    "The `.section`, `.section-tight`, `.section-loose` and `bg-canvas` utilities live in each consuming site's globals.css; the registry does not ship them.",
     "There is no way to name the band (aria-labelledby) so it becomes a region landmark."
   ]
 }

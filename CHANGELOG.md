@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the shipped `globals.css` carries the container utilities (2026-10-06, #455)
+
+`site-container`, `site-section`, `site-hero` and the Discover pages render through `.container-custom`, `.container-narrow` and `.container-prose`, which lived only in each consuming site's `globals.css`. A repo that copied `mzizi-tokens-globals.css` and installed those components got a full-width div with no gutters. The generator (`scripts/render-globals-css.ts`) now emits them in the generated part of the file.
+
+- `@theme { --container-narrow: 42rem; --container-prose: 48rem; --container-wide: 80rem }`: the widths `@bundu/ui` 0.5.0 renders (`max-w-narrow`, `max-w-3xl`, `max-w-7xl`). `max-w-narrow` and `max-w-wide` are new utilities. Tailwind's `max-w-prose` keeps its 65ch: it is a static utility and wins over the theme key.
+- `@utility container-custom`, `container-narrow` and `container-prose`: `@bundu/ui`'s boxes on the spacing ladder (`--space-lg`, then `--space-xl` from `sm`, and `--space-xl-plus` from `lg` for `container-custom`).
+- `site/container` 1.0.1 has no gaps left. `site/section` 1.0.1 and `site/hero` 1.0.1 no longer list `.container-custom` as missing.
+- A site that defines its own unlayered `.container-*` rules keeps them (unlayered CSS wins); drop the local copy to take the registry's.
+
 ## [4.5.0] - 2026-10-06
 
 Releases `staging` to `main` as the next minor above v4.4.5 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.5.0.

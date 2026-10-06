@@ -23,6 +23,8 @@
  *   status / chart / sidebar / the shadcn semantic set
  *   non-colour ladders   spacing 17, motion 4+4+3, type 13+9, shadow 8,
  *                        radius 7, touch targets, control heights, z-index
+ *   containers           3 widths (narrow, prose, wide) and the
+ *                        `.container-custom` / `-narrow` / `-prose` utilities
  *   brand blocks         8 `[data-brand]` selectors, each moving `--primary`
  *                        and `--ring` only
  *
@@ -257,6 +259,13 @@
   --ease-exit: var(--easing-exit);
   --ease-standard: var(--easing-standard);
   --ease-spring: var(--easing-spring);
+}
+
+@theme {
+  /* ── CONTAINER WIDTHS ────────────────────────────────────────────────────── */
+  --container-narrow: 42rem; /* 672px — the editorial column (.container-narrow) */
+  --container-prose: 48rem; /* 768px — the reading column (.container-prose); max-w-prose stays 65ch */
+  --container-wide: 80rem; /* 1280px — the wide grid column (.container-custom) */
 }
 
 /* ════ LIGHT — the default theme ════ */
@@ -835,6 +844,46 @@
   --border: #2a2927;
   /* --input  registry: rgba(10,10,10,0.06) | /v1/brand: #100F0E */
   --input: #100f0e;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * CONTAINERS
+ *
+ * The three content columns the site components render through. They used to
+ * live in each consuming site's globals.css, so a repo that copied this file
+ * and installed `site-container` got an unstyled div. `@utility` rather than
+ * `@layer components`, so they take variants (`md:container-narrow`) and a
+ * plain utility after them (`px-0`) still wins.
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+@utility container-custom {
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+  @variant sm {
+    padding-inline: var(--space-xl);
+  }
+  @variant lg {
+    padding-inline: var(--space-xl-plus);
+  }
+}
+
+@utility container-narrow {
+  max-width: var(--container-narrow);
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+  @variant sm {
+    padding-inline: var(--space-xl);
+  }
+}
+
+@utility container-prose {
+  max-width: var(--container-prose);
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+  @variant sm {
+    padding-inline: var(--space-xl);
+  }
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
