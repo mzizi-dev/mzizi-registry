@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — override `proxy-addr`, `source-map-js` and `smol-toml` for the 2026-10-06 advisories (2026-10-06, #452)
+
+Three advisories published on 2026-10-06 failed the pre-commit audit, which blocked every commit. `pnpm.overrides` now pins each to its patched release within the same major:
+
+- **`proxy-addr` `^2.0.8`** — GHSA-jqcg-44mw-7w3h (critical), via `shadcn` > `@modelcontextprotocol/sdk` > `express`.
+- **`source-map-js` `^1.2.2`** — GHSA-68fv-2mgg-jv7q (high), via `astro` > `magicast`.
+- **`smol-toml` `^1.9.0`** (was `^1.7.1`) — GHSA-r4xh-jqrq-34v2 (moderate), via `astro`.
+
 ### Changed — Mukoko Circles is tanzanite with a terracotta accent (2026-10-06, #449)
 
 Owner decision, 2026-10-06: circles.mukoko.com is tanzanite primary + terracotta accent. Canon's `circles` row was terracotta primary.
