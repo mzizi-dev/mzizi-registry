@@ -2,10 +2,10 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "discover/result-grid",
   "title": "ResultGrid",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
-  "summary": "The results of a Discover page: a polite status line, the cards, the empty state and \"load more\". Both the results and the empty state are in the markup; `state` picks one with CSS, so a server-filled shell needs no template logic.",
+  "summary": "The results of a Discover page: a polite status line, the cards, the empty state, the error state and \"load more\". The results, the empty state and the error state are all in the markup; `state` picks one with CSS, so a server-filled shell needs no template logic.",
   "implementations": {
     "astro": {
       "registry": "discover-result-grid",
@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/ResultGrid.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-result-grid", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-result-grid",
+      "identity": "contract"
+    },
     "rs": null,
     "related": []
   },
@@ -45,7 +48,7 @@
       "type": "string",
       "required": false,
       "default": "ok",
-      "description": "\"ok\" or \"empty\"; a server-filled shell may pass a placeholder."
+      "description": "\"ok\", \"empty\" or \"error\"; a server-filled shell may pass a placeholder."
     },
     {
       "name": "summary",
@@ -66,6 +69,11 @@
       "description": "Shown when `state` is \"empty\"."
     },
     {
+      "name": "error",
+      "expects": "StateMessage kind=\"error\" (app/state-message)",
+      "description": "Shown when `state` is \"error\" (the request failed), in place of the summary, the results and \"load more\"."
+    },
+    {
       "name": "more",
       "expects": "LoadMore",
       "description": "Cursor pagination, shown with the results."
@@ -74,6 +82,7 @@
   "behaviour": [
     "The summary is a role=\"status\" live region, so a new page of results is announced.",
     "`data-state` on the root; the results and \"more\" hide when it is \"empty\", the empty block shows.",
+    "When `state` is \"error\", the summary, the results, the empty block and \"more\" hide, and the error block shows.",
     "`rail` is keyboard-focusable (tabindex=\"0\") so it can be scrolled without a pointer; the page itself never scrolls sideways."
   ],
   "states": {
@@ -97,6 +106,19 @@
       "slots": {
         "default": "",
         "empty": "<div data-slot='empty-state'><h2>No circles here yet.</h2></div>",
+        "more": "<nav data-slot='load-more'><a href='/circles?cursor=x' rel='next'>More circles</a></nav>"
+      }
+    },
+    "error": {
+      "props": {
+        "label": "Circles",
+        "state": "error",
+        "summary": ""
+      },
+      "slots": {
+        "default": "",
+        "empty": "<div data-slot='empty-state'><h2>No circles here yet.</h2></div>",
+        "error": "<div role='alert' data-slot='alert'><p>We couldn't load circles just now.</p></div>",
         "more": "<nav data-slot='load-more'><a href='/circles?cursor=x' rel='next'>More circles</a></nav>"
       }
     },
@@ -143,7 +165,7 @@
     "Grid: one column on phones, two from 40rem, then `columns` from 64rem.",
     "Rail: 18rem cards in one row that scrolls inside itself with snap points."
   ],
-  "contract": "contract\n  slot is \"result-grid\"\n  uses discover-card\n  when default shows a \"More circles\"\n  when empty shows h2 \"No circles here yet.\"\n  when template slot is \"result-grid\"\nend",
+  "contract": "contract\n  slot is \"result-grid\"\n  uses discover-card\n  when default shows a \"More circles\"\n  when empty shows h2 \"No circles here yet.\"\n  when error shows p \"We couldn't load circles just now.\"\n  when template slot is \"result-grid\"\nend",
   "checks": [
     {
       "say": "The list is named.",
@@ -175,6 +197,31 @@
       "attr": {
         "data-state": "empty"
       }
+    },
+    {
+      "say": "Error state is exposed for CSS.",
+      "state": "error",
+      "select": "[data-slot=\"result-grid\"]",
+      "attr": {
+        "data-state": "error"
+      }
+    },
+    {
+      "say": "The error block is in the markup, hidden until the state is error.",
+      "state": "error",
+      "select": "[data-when=\"error\"].hidden",
+      "count": 1
+    },
+    {
+      "say": "The results hide on error.",
+      "state": "error",
+      "select": "ul[data-when=\"ok\"][class*=\"group-data-[state=error]/results:hidden\"]",
+      "count": 1
+    },
+    {
+      "say": "No error slot, no error block.",
+      "select": "[data-when=\"error\"]",
+      "absent": true
     },
     {
       "say": "A rail is focusable.",
