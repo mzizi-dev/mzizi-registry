@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/brand-mark",
   "title": "BrandMark",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 3,
   "kind": "primitive",
   "summary": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
@@ -13,7 +13,10 @@
       "export": "@bundu/ui/app/BrandMark.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "app-brand-mark", "identity": "contract" },
+    "tsx": {
+      "registry": "app-brand-mark",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["mzizi-logo"]
   },
@@ -23,7 +26,7 @@
       "type": "BrandName",
       "required": false,
       "default": "nyuchi",
-      "values": ["nyuchi"],
+      "values": ["nyuchi", "mukoko"],
       "description": "Which brand. The set grows by adding the registry's icon pair."
     },
     {
@@ -76,6 +79,17 @@
       "props": {
         "wordmark": true,
         "suffix": "console"
+      }
+    },
+    "mukoko": {
+      "props": {
+        "brand": "mukoko"
+      }
+    },
+    "mukoko-lockup": {
+      "props": {
+        "brand": "mukoko",
+        "wordmark": true
       }
     }
   },
@@ -131,9 +145,46 @@
       "attr": {
         "data-brand": "nyuchi"
       }
+    },
+    {
+      "say": "Mukoko shows the Mukoko pair, named.",
+      "state": "mukoko",
+      "select": "img",
+      "count": 2,
+      "attr": {
+        "alt": "mukoko"
+      }
+    },
+    {
+      "say": "Mukoko's light-surface image is the mukoko icon.",
+      "state": "mukoko",
+      "select": "img.brand-mark-light[src*=\"mukoko-icon-light\"]",
+      "count": 1
+    },
+    {
+      "say": "Mukoko's dark-surface image is the mukoko icon.",
+      "state": "mukoko",
+      "select": "img.brand-mark-dark[src*=\"mukoko-icon-dark\"]",
+      "count": 1
+    },
+    {
+      "say": "The Mukoko root names its brand.",
+      "state": "mukoko",
+      "select": "[data-slot=\"brand-mark\"]",
+      "count": 1,
+      "attr": {
+        "data-brand": "mukoko"
+      }
+    },
+    {
+      "say": "The Mukoko wordmark is the brand name.",
+      "state": "mukoko-lockup",
+      "select": "[data-slot=\"brand-wordmark\"]",
+      "count": 1,
+      "text": "mukoko"
     }
   ],
   "gaps": [
-    "Only the Nyuchi mark ships. Mukoko, Bundu, Mzizi and the sub-brands need their registry icon pairs added before their dashboards can adopt the standard."
+    "Nyuchi and Mukoko ship. Bundu, Mzizi and the sub-brands need their bundu-ecosystem-icons pair added (scaled to 128px, never redrawn) before their dashboards can adopt the standard."
   ]
 }

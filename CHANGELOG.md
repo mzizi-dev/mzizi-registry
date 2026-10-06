@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `app/brand-mark` 1.1.0: `brand="mukoko"` renders the Mukoko mark (2026-10-06, #459)
+
+`BrandMark` knew only Nyuchi, so a Mukoko app (verify.mukoko.com, the Mukoko dashboards) had no way to show its own logo through the Dashboard Standard. `brand` now also takes `mukoko`, in the `.astro` and the `.tsx`.
+
+- The images are the bundu-ecosystem-icons pair `mukoko-icon-{light,dark}.png` (the honeycomb, as vendored in nyuchi/workspace-tools), scaled to 128px with the same `sips -z 128 128` step that made `nyuchi-mark-*.png` (byte-identical for Nyuchi), never redrawn. They ship as `components/registry/assets/mukoko-icon-{light,dark}.png`, transparent like the Nyuchi pair.
+- `assets/mukoko-mark-{light,dark}.png` is not used: it is the design system's 500px tile on an opaque cream or near-black ground, which shows as a square behind the mark in a header.
+- The contract adds the `mukoko` and `mukoko-lockup` states and five checks (alt text, the right image in each theme, `data-brand`, the wordmark). The `/v1/astro/app-brand-mark` document now carries four assets.
+- `@bundu/ui` picks this up when its registry pin moves past this change (mzizi-dev/packages-npm).
+
 ### Added — `AGENTS.md` loads the Mzizi dev skills (2026-10-06)
 
 - **`AGENTS.md` gains "Dev skills, progress reports and the merge gate"**, the canonical rule block from nyuchi/.github#87, after "Track big work in GitHub issues": load the Mzizi dev skills (`digital-hygiene` and `progress-report`), clone only into a directory unique to the agent, run dev work on a 10-minute progress-report loop whose ticks never publish, release, merge or deploy without the owner's approval, and merge only through the merge gate. Docs only: no behaviour changes, and CI is unchanged.
