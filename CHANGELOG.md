@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `app/brand-mark` 1.1.0: `brand="mukoko"` renders the Mukoko mark (2026-10-06)
+### Added — `app/brand-mark` 1.1.0: `brand="mukoko"` renders the Mukoko mark (2026-10-06, #459)
 
 `BrandMark` knew only Nyuchi, so a Mukoko app (verify.mukoko.com, the Mukoko dashboards) had no way to show its own logo through the Dashboard Standard. `brand` now also takes `mukoko`, in the `.astro` and the `.tsx`.
 
