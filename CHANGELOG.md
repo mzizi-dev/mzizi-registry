@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `AGENTS.md` loads the Mzizi dev skills (2026-10-06)
+
+- **`AGENTS.md` gains "Dev skills, progress reports and the merge gate"**, the canonical rule block from nyuchi/.github#87, after "Track big work in GitHub issues": load the Mzizi dev skills (`digital-hygiene` and `progress-report`), clone only into a directory unique to the agent, run dev work on a 10-minute progress-report loop whose ticks never publish, release, merge or deploy without the owner's approval, and merge only through the merge gate. Docs only: no behaviour changes, and CI is unchanged.
+
 ### Added — the shipped `globals.css` carries the container utilities (2026-10-06, #455)
 
 `site-container`, `site-section`, `site-hero` and the Discover pages render through `.container-custom`, `.container-narrow` and `.container-prose`, which lived only in each consuming site's `globals.css`. A repo that copied `mzizi-tokens-globals.css` and installed those components got a full-width div with no gutters. The generator (`scripts/render-globals-css.ts`) now emits them in the generated part of the file.
