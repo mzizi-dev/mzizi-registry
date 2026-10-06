@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `discover/meta-list` 1.1.0 is a valid description list, and hides a row with no value (2026-10-06, #450)
+
+MetaList wrapped each row's `<dt>`/`<dd>` in a second `<div>` beside the icon (`dl > div > div > dt`). HTML allows only one `<div>` between a `<dl>` and its terms, and axe reports `definition-list` and `dlitem` as serious. Found adopting the detail pattern on mukoko-dev/mukoko-circles.
+
+- Each row is now `<div><dt><dd></div>`, with the icon inside the `<dt>`, before the label. This applies to the `.astro` and the `.tsx`.
+- A row whose value is empty hides itself (`has-[dd:empty]:hidden`), so a server-filled shell can leave optional facts (place, start date) empty.
+- Contract checks: `dl > div > dt` (4), no `dl > div > div`, the icon is in the `<dt>`, and the row-hiding class in the template state.
+
 ### Added — `discover/result-grid` 1.1.0: an error state (2026-10-06, #451)
 
 `ResultGrid` knew `ok` and `empty`, so a server-filled shell whose request failed had no block to show. mukoko-dev/super-app-web hid the grid with its own CSS rule and added a separate error message. `state` now also takes `error`, and a new `error` slot holds a `StateMessage kind="error"`. On `error`, the summary, the results, the empty block and "load more" hide, and the error block shows. As with the other states, every block is in the markup and CSS picks one, so a `{{placeholder}}` can set the state. The change is in the `.astro` and `.tsx` builds. The contract adds an `error` state and checks, and has no Rust build.
