@@ -527,7 +527,13 @@ export const BRANDS: ReadonlyArray<readonly [string, string, string]> = [
   ["weather", ecosystemMineral("weather"), "/v1/brand ecosystem[name=weather].mineral (owner decision, 2026-10-04)"],
   ["kweli", ecosystemMineral("kweli"), "/v1/brand ecosystem[name=kweli].mineral (owner decision, 2026-10-04)"],
   ["learning", ecosystemMineral("learning"), "/v1/brand ecosystem[name=learning].mineral (owner decision, 2026-10-04: every Nyuchi brand is gold)"],
+  ["circles", ecosystemMineral("circles"), "/v1/brand ecosystem[name=circles].mineral, Mukoko Circles; accent from ecosystem[name=circles].accent (owner decision, 2026-10-06)"],
 ]
+
+/** A brand's accent family (`--brand-accent`), when its canon row names one. */
+export function ecosystemAccent(brand: string): string | undefined {
+  return ecosystem.find((b) => b.name === brand)?.accent
+}
 
 /**
  * Deprecated `data-brand` values, each mapped to the brand it now means. A
@@ -576,11 +582,13 @@ function brandBlocks(heritage: ReadonlyArray<{ name: string }>, experimental: Re
       const aliasNote = aliases.length
         ? `\n * Deprecated alias${aliases.length > 1 ? "es" : ""}, still honoured: ${aliases.join(", ")}.`
         : ""
-      return `/* ${brand} — ${mineral}.
+      const accent = ecosystemAccent(brand)
+      const accentLine = accent ? `\n  --brand-accent: var(${aaVar(accent, heritage, experimental)});` : ""
+      return `/* ${brand} — ${mineral}${accent ? `, ${accent} accent` : ""}.
  * ${source}${aliasNote} */
 ${brandSelectors(brand)} {
   --primary: var(${aaVar(mineral, heritage, experimental)});
-  --ring: var(--mineral-cobalt-aa);
+  --ring: var(--mineral-cobalt-aa);${accentLine}
 }`
     }
   ).join("\n\n")

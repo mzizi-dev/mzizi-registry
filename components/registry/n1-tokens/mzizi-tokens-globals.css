@@ -935,6 +935,14 @@
   --ring: var(--mineral-cobalt-aa);
 }
 
+/* circles — tanzanite, terracotta accent.
+ * /v1/brand ecosystem[name=circles].mineral, Mukoko Circles; accent from ecosystem[name=circles].accent (owner decision, 2026-10-06) */
+[data-brand="circles"] {
+  --primary: var(--mineral-tanzanite-aa);
+  --ring: var(--mineral-cobalt-aa);
+  --brand-accent: var(--mineral-terracotta-aa);
+}
+
 /* ════════════════════════════════════════════════════════════════════════════
  * LOCAL OVERRIDES — the only block a consuming repo edits.
  *
