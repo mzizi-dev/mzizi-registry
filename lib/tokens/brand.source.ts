@@ -97,6 +97,13 @@ export interface BrandEcosystemEntry {
    * `ecosystemAliases` and `resolveEcosystemName`.
    */
   aliases?: string[]
+  /**
+   * A second palette family for `--brand-accent` (accent fills, the page
+   * wash), where the brand pairs one with its primary `mineral`. Optional:
+   * without it `--brand-accent` follows `--primary`. Mukoko Circles is
+   * tanzanite with a terracotta accent (owner decision, 2026-10-06).
+   */
+  accent?: string
 }
 
 export interface BrandMeta {
@@ -994,13 +1001,19 @@ export const ecosystem: BrandEcosystemEntry[] = [
       "Health info, telemedicine booking, medication reminders. Connected to Nyuchi Medical.",
     adopterType: "ecosystem_brand",
   },
+  // Mukoko Circles (owner decision, 2026-10-06): a Mukoko surface, so the
+  // primary is Mukoko's tanzanite, and terracotta (community, warmth) moves to
+  // the accent. Before this the row was terracotta primary. @bundu/ui's
+  // brand-circles.css overlay is generated from this row.
   {
     url: "https://circles.mukoko.com",
     name: "circles",
+    displayName: "Mukoko Circles",
     role: "Community messaging",
     voice: "Inclusive, moderated, community-driven",
     meaning: "Circles",
-    mineral: "terracotta",
+    mineral: "tanzanite",
+    accent: "terracotta",
     language: "English",
     sortOrder: 16,
     description: "Community channels — WhatsApp groups, Discord servers for Africa.",

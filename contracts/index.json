@@ -347,7 +347,7 @@
     {
       "name": "discover/result-grid",
       "title": "ResultGrid",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "discover/result-grid.contract.json",
       "astro": "discover-result-grid",
       "tsx": "discover-result-grid",
