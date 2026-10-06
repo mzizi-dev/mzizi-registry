@@ -5,8 +5,10 @@
  * state (the `empty` slot: an EmptyState), and "load more" (the `more`
  * slot: a LoadMore).
  *
- * `state` is "ok" or "empty". Both blocks are always in the markup and CSS
- * shows the matching one, so a server-filled shell can set `state` with a
+ * `state` is "ok", "empty" or "error" (the request failed: the `error` slot,
+ * a StateMessage kind="error", shows instead of the results, the summary and
+ * "load more"). Every block is always in the markup and CSS shows the
+ * matching one, so a server-filled shell can set `state` with a
  * `{{placeholder}}` and needs no logic in the template.
  *
  * Layouts: `grid` (1 column on phones, 2 from 40rem, then `columns`),
@@ -24,7 +26,7 @@ interface Props {
   layout?: "grid" | "list" | "rail";
   /** Columns from 64rem in the grid layout. */
   columns?: 2 | 3 | 4;
-  /** "ok" or "empty" (a server-filled shell may pass a placeholder). */
+  /** "ok", "empty" or "error" (a server-filled shell may pass a placeholder). */
   state?: string;
   /** The status line, e.g. "24 circles". Empty text hides itself. */
   summary?: string;
@@ -38,8 +40,8 @@ const list = {
 ---
 
 <div class="group/results grid gap-6" data-slot="result-grid" data-state={state} data-layout={layout}>
-  {summary !== undefined && <p class="text-body-sm text-muted-foreground empty:hidden" role="status">{summary}</p>}
-  <ul aria-label={label} tabindex={layout === "rail" ? 0 : undefined} class={cn(list, "group-data-[state=empty]/results:hidden")} data-when="ok">
+  {summary !== undefined && <p class="text-body-sm text-muted-foreground empty:hidden group-data-[state=error]/results:hidden" role="status">{summary}</p>}
+  <ul aria-label={label} tabindex={layout === "rail" ? 0 : undefined} class={cn(list, "group-data-[state=empty]/results:hidden group-data-[state=error]/results:hidden")} data-when="ok">
     <slot />
   </ul>
   {
@@ -50,8 +52,15 @@ const list = {
     )
   }
   {
+    Astro.slots.has("error") && (
+      <div class="hidden group-data-[state=error]/results:block" data-when="error">
+        <slot name="error" />
+      </div>
+    )
+  }
+  {
     Astro.slots.has("more") && (
-      <div class="group-data-[state=empty]/results:hidden" data-when="ok">
+      <div class="group-data-[state=empty]/results:hidden group-data-[state=error]/results:hidden" data-when="ok">
         <slot name="more" />
       </div>
     )
