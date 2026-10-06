@@ -41,22 +41,20 @@ export function MetaList({ items, columns = 2 }: MetaListProps) {
         const value =
           item.datetime !== undefined ? <time dateTime={item.datetime}>{item.value}</time> : item.value
         return (
-          <div key={`${i}|${item.label}`} className="flex min-w-0 items-start gap-3" data-slot="meta-list-item">
-            {item.icon !== undefined && (
-              <Icon name={item.icon} className="mt-0.5 shrink-0 text-body-lg text-muted-foreground" />
-            )}
-            <div className="min-w-0">
-              <dt className="text-caption font-semibold uppercase tracking-wider text-muted-foreground">{item.label}</dt>
-              <dd className="mt-1 text-body break-words text-foreground empty:hidden">
-                {item.href !== undefined ? (
-                  <a className={link} href={item.href}>
-                    {value}
-                  </a>
-                ) : (
-                  value
-                )}
-              </dd>
-            </div>
+          <div key={`${i}|${item.label}`} className="min-w-0 has-[dd:empty]:hidden" data-slot="meta-list-item">
+            <dt className="flex items-center gap-2 text-caption font-semibold uppercase tracking-wider text-muted-foreground">
+              {item.icon !== undefined && <Icon name={item.icon} className="shrink-0 text-body-lg text-muted-foreground" />}
+              {item.label}
+            </dt>
+            <dd className="mt-1 text-body break-words text-foreground empty:hidden">
+              {item.href !== undefined ? (
+                <a className={link} href={item.href}>
+                  {value}
+                </a>
+              ) : (
+                value
+              )}
+            </dd>
           </div>
         )
       })}

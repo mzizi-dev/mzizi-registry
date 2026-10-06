@@ -10,6 +10,44 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.5.0] - 2026-10-06
+
+Releases `staging` to `main` as the next minor above v4.4.5 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.5.0.
+
+### Fixed — `discover/meta-list` 1.1.0 is a valid description list, and hides a row with no value (2026-10-06, #450)
+
+MetaList wrapped each row's `<dt>`/`<dd>` in a second `<div>` beside the icon (`dl > div > div > dt`). HTML allows only one `<div>` between a `<dl>` and its terms, and axe reports `definition-list` and `dlitem` as serious. Found adopting the detail pattern on mukoko-dev/mukoko-circles.
+
+- Each row is now `<div><dt><dd></div>`, with the icon inside the `<dt>`, before the label. This applies to the `.astro` and the `.tsx`.
+- A row whose value is empty hides itself (`has-[dd:empty]:hidden`), so a server-filled shell can leave optional facts (place, start date) empty.
+- Contract checks: `dl > div > dt` (4), no `dl > div > div`, the icon is in the `<dt>`, and the row-hiding class in the template state.
+
+### Added — `discover/result-grid` 1.1.0: an error state (2026-10-06, #451)
+
+`ResultGrid` knew `ok` and `empty`, so a server-filled shell whose request failed had no block to show. mukoko-dev/super-app-web hid the grid with its own CSS rule and added a separate error message. `state` now also takes `error`, and a new `error` slot holds a `StateMessage kind="error"`. On `error`, the summary, the results, the empty block and "load more" hide, and the error block shows. As with the other states, every block is in the markup and CSS picks one, so a `{{placeholder}}` can set the state. The change is in the `.astro` and `.tsx` builds. The contract adds an `error` state and checks, and has no Rust build.
+
+### Security — override `proxy-addr`, `source-map-js` and `smol-toml` for the 2026-10-06 advisories (2026-10-06, #452)
+
+Three advisories published on 2026-10-06 failed the pre-commit audit, which blocked every commit. `pnpm.overrides` now pins each to its patched release within the same major:
+
+- **`proxy-addr` `^2.0.8`** — GHSA-jqcg-44mw-7w3h (critical), via `shadcn` > `@modelcontextprotocol/sdk` > `express`.
+- **`source-map-js` `^1.2.2`** — GHSA-68fv-2mgg-jv7q (high), via `astro` > `magicast`.
+- **`smol-toml` `^1.9.0`** (was `^1.7.1`) — GHSA-r4xh-jqrq-34v2 (moderate), via `astro`.
+
+### Changed — Mukoko Circles is tanzanite with a terracotta accent (2026-10-06, #449)
+
+Owner decision, 2026-10-06: circles.mukoko.com is tanzanite primary + terracotta accent. Canon's `circles` row was terracotta primary.
+
+- **`BrandEcosystemEntry.accent`** (optional): a second palette family for `--brand-accent`. Without it `--brand-accent` follows `--primary`, as before.
+- **`circles` row:** `mineral: "tanzanite"`, `accent: "terracotta"`, `displayName: "Mukoko Circles"`. `/v1/brand` serves it.
+- **`mzizi-tokens-globals.css`:** a `[data-brand="circles"]` block sets `--primary` (tanzanite) and `--brand-accent` (terracotta).
+- **Mini-app accent table** (`lib/tokens` `brandOverrides.circles`): tanzanite, following canon.
+- @bundu/ui's `brand-circles.css` follows in mzizi-dev/packages-npm#46.
+
+### Fixed — `text-body-sm` is defined in `mzizi-tokens-globals.css` (2026-10-06, #448)
+
+The registry's components use `text-body-sm` for the 14px body size (116 uses: `discover-card`, `discover-search`, `discover-category-chip`, `discover-hero`, `site-breadcrumb`, the n6 page and n7 shell components), and `@bundu/ui` / `@nyuchi/ui` 0.3.0 ship it in `styles/theme.css` and `tailwind-preset.mjs`, but the stylesheet the registry serves defined only `--text-small`. A repo that copied it and installed those components got no rule for `text-body-sm`, so the text rendered at 16px (mukoko-dev/mukoko-events `/discover`). The `@theme` block now carries `--text-body-sm: var(--fs-small)`, an alias of the existing 14px size, not a new one; `--text-small` stays. `__tests__/tokens-type-utilities.test.ts` fails when any `text-<size>` a registry component uses has no `--text-<size>` in the stylesheet.
+
 ## [4.4.0] - 2026-10-05
 
 Releases `staging` to `main` as the next minor above v4.3.3 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.4.0.

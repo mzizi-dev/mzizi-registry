@@ -192,6 +192,18 @@ export const TYPE = [
   ["code", "0.875rem", 14, "1.6", 400, "mono"],
 ] as const
 
+/**
+ * Utility names for a size in TYPE under another name — not new sizes.
+ *
+ * `text-body-sm` is the name the registry's own components use for the 14px body
+ * size (discover-card, discover-search, site-breadcrumb, the n6/n7 app shell…),
+ * and the name `@bundu/ui` and `@nyuchi/ui` ship in `styles/theme.css` and
+ * `tailwind-preset.mjs`. Without it, a repo that copies this stylesheet and
+ * installs those components gets no rule for `text-body-sm` at all: the text
+ * silently inherits 16px.
+ */
+export const TYPE_ALIASES = [["body-sm", "small"]] as const
+
 /** The nine NAMED line-heights. `caption` shares `small`'s, `code` shares `body`'s. */
 export const LEADING = [
   ["display", "1.1"], ["h1", "1.15"], ["h2", "1.2"], ["h3", "1.25"], ["h4", "1.3"],
@@ -515,7 +527,13 @@ export const BRANDS: ReadonlyArray<readonly [string, string, string]> = [
   ["weather", ecosystemMineral("weather"), "/v1/brand ecosystem[name=weather].mineral (owner decision, 2026-10-04)"],
   ["kweli", ecosystemMineral("kweli"), "/v1/brand ecosystem[name=kweli].mineral (owner decision, 2026-10-04)"],
   ["learning", ecosystemMineral("learning"), "/v1/brand ecosystem[name=learning].mineral (owner decision, 2026-10-04: every Nyuchi brand is gold)"],
+  ["circles", ecosystemMineral("circles"), "/v1/brand ecosystem[name=circles].mineral, Mukoko Circles; accent from ecosystem[name=circles].accent (owner decision, 2026-10-06)"],
 ]
+
+/** A brand's accent family (`--brand-accent`), when its canon row names one. */
+export function ecosystemAccent(brand: string): string | undefined {
+  return ecosystem.find((b) => b.name === brand)?.accent
+}
 
 /**
  * Deprecated `data-brand` values, each mapped to the brand it now means. A
@@ -564,11 +582,13 @@ function brandBlocks(heritage: ReadonlyArray<{ name: string }>, experimental: Re
       const aliasNote = aliases.length
         ? `\n * Deprecated alias${aliases.length > 1 ? "es" : ""}, still honoured: ${aliases.join(", ")}.`
         : ""
-      return `/* ${brand} — ${mineral}.
+      const accent = ecosystemAccent(brand)
+      const accentLine = accent ? `\n  --brand-accent: var(${aaVar(accent, heritage, experimental)});` : ""
+      return `/* ${brand} — ${mineral}${accent ? `, ${accent} accent` : ""}.
  * ${source}${aliasNote} */
 ${brandSelectors(brand)} {
   --primary: var(${aaVar(mineral, heritage, experimental)});
-  --ring: var(--mineral-cobalt-aa);
+  --ring: var(--mineral-cobalt-aa);${accentLine}
 }`
     }
   ).join("\n\n")
@@ -824,6 +844,7 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
   for (const [n] of SPACING) out.push(`  --spacing-${n}: var(--space-${n});`)
   for (const [n] of RADIUS) out.push(`  --radius-${n}: var(--r-${n});`)
   for (const [n] of TYPE) out.push(`  --text-${n}: var(--fs-${n});`)
+  for (const [alias, size] of TYPE_ALIASES) out.push(`  --text-${alias}: var(--fs-${size});`)
   for (const [n] of SHADOW) out.push(`  --shadow-${n}: var(--elevation-${n});`)
   for (const [n] of EASING) out.push(`  --ease-${n}: var(--easing-${n});`)
   out.push("}")

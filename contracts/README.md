@@ -94,14 +94,14 @@ One design for every public discover and browse page in the Mukoko family (circl
 | `discover/category-chips`   | CategoryChips      | N6   | 1.0.0   | `discover-category-chips` | `discover-category-chips` (contract) | —          |
 | `discover/category-chip`    | CategoryChip       | N6   | 1.0.0   | `discover-category-chip`  | `discover-category-chip` (contract)  | —          |
 | `discover/discover-section` | DiscoverSection    | N6   | 1.0.0   | `discover-section`        | `discover-section` (contract)        | —          |
-| `discover/result-grid`      | ResultGrid         | N6   | 1.0.0   | `discover-result-grid`    | `discover-result-grid` (contract)    | —          |
+| `discover/result-grid`      | ResultGrid         | N6   | 1.1.0   | `discover-result-grid`    | `discover-result-grid` (contract)    | —          |
 | `discover/discover-card`    | DiscoverCard       | N6   | 1.0.0   | `discover-card`           | `discover-card` (contract)           | —          |
 | `discover/load-more`        | LoadMore           | N6   | 1.0.0   | `discover-load-more`      | `discover-load-more` (contract)      | —          |
 | `discover/open-in-app`      | OpenInApp          | N6   | 1.2.0   | `discover-open-in-app`    | `discover-open-in-app` (contract)    | —          |
 | `discover/breadcrumb`       | DiscoverBreadcrumb | N6   | 1.0.0   | `discover-breadcrumb`     | `discover-breadcrumb` (contract)     | —          |
 | `discover/detail-actions`   | DetailActions      | N6   | 1.1.0   | `discover-detail-actions` | `discover-detail-actions` (contract) | —          |
 | `discover/detail-hero`      | DetailHero         | N6   | 1.0.0   | `discover-detail-hero`    | `discover-detail-hero` (contract)    | —          |
-| `discover/meta-list`        | MetaList           | N6   | 1.0.0   | `discover-meta-list`      | `discover-meta-list` (contract)      | —          |
+| `discover/meta-list`        | MetaList           | N6   | 1.1.0   | `discover-meta-list`      | `discover-meta-list` (contract)      | —          |
 | `discover/related-rail`     | RelatedRail        | N6   | 1.0.0   | `discover-related-rail`   | `discover-related-rail` (contract)   | —          |
 
 Every Discover component also works in a server-filled shell (an Astro page built once with `{{placeholders}}` and filled by a server, as circles.mukoko.com's Rust Worker does): text props are plain strings, empty text hides itself, and state switches are attributes styled by classes. Each contract has a `template` state where that matters.

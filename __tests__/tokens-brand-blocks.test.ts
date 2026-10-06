@@ -101,6 +101,26 @@ describe("mzizi-tokens-globals.css brand blocks", () => {
       expect(accent.mineral, brand).toBe(row.mineral)
     }
   })
+  // Owner decision, 2026-10-06: Mukoko Circles is tanzanite (Mukoko's
+  // mineral) with a terracotta accent, which its block sets as --brand-accent.
+  it("gives Mukoko Circles tanzanite with a terracotta --brand-accent", () => {
+    const row = ecosystem.find((b) => b.name === "circles")
+    expect(row?.mineral).toBe("tanzanite")
+    expect(row?.accent).toBe("terracotta")
+    expect(blockPrimary("circles")).toBe("--mineral-tanzanite-aa")
+    const block = CSS.match(/\[data-brand="circles"\][^{}]*\{([^}]*)\}/)?.[1] ?? ""
+    expect(block).toMatch(/--brand-accent:\s*var\(--mineral-terracotta-aa\)/)
+  })
+
+  it("sets --brand-accent only in the blocks of brands whose canon row names an accent", () => {
+    for (const [brand] of BRANDS) {
+      const row = ecosystem.find((b) => b.name === brand)
+      const block = CSS.match(new RegExp(`\\[data-brand="${brand}"\\][^{}]*\\{([^}]*)\\}`))?.[1] ?? ""
+      if (row?.accent) expect(block, brand).toContain(`--brand-accent: var(${aaVar(row.accent)})`)
+      else expect(block, brand).not.toContain("--brand-accent")
+    }
+  })
+
   // Owner decision, 2026-10-04 (mukoko-dev/nhimbe#155): the nhimbe brand is
   // retired; the events platform is Mukoko Events at events.mukoko.com, and
   // its mineral stays malachite. `nhimbe` stays a deprecated alias.
