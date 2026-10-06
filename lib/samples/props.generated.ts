@@ -4130,6 +4130,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "more",
       "type": "ReactNode",
       "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "required": false
     }
   ],
   "discover-search": [

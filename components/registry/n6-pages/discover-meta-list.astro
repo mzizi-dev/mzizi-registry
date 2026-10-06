@@ -6,9 +6,14 @@
  * make it a machine-readable time (`datetime`, as <time>).
  *
  * One column on phones; `columns` from 40rem (2) and 64rem (3). Values wrap
- * rather than overflow. Every text is a plain string and an empty value
- * hides its row's value (`empty:hidden`), so a server-filled shell can use
- * it with `{{placeholders}}`. No items, nothing rendered.
+ * rather than overflow. Every text is a plain string and a row whose value
+ * is empty hides itself (`has-[dd:empty]:hidden`), so a server-filled shell
+ * can use it with `{{placeholders}}` for optional facts. No items, nothing
+ * rendered.
+ *
+ * Valid HTML: each row is a <div> whose only children are its <dt> and <dd>
+ * (a <dl> allows one wrapping <div> and nothing deeper); the icon sits in
+ * the <dt>, before the label.
  *
  * Mzizi Discover Standard (contracts/discover/meta-list).
  */
@@ -40,11 +45,12 @@ const link = "inline-flex min-h-6 items-center text-foreground underline decorat
   items.length > 0 && (
     <dl class={cn("grid gap-x-8 gap-y-5", cols)} data-slot="meta-list" data-columns={columns}>
       {items.map((item) => (
-        <div class="flex min-w-0 items-start gap-3" data-slot="meta-list-item">
-          {item.icon !== undefined && <Icon name={item.icon} class="mt-0.5 shrink-0 text-body-lg text-muted-foreground" />}
-          <div class="min-w-0">
-            <dt class="text-caption font-semibold uppercase tracking-wider text-muted-foreground">{item.label}</dt>
-            <dd class="mt-1 text-body break-words text-foreground empty:hidden">
+        <div class="min-w-0 has-[dd:empty]:hidden" data-slot="meta-list-item">
+          <dt class="flex items-center gap-2 text-caption font-semibold uppercase tracking-wider text-muted-foreground">
+            {item.icon !== undefined && <Icon name={item.icon} class="shrink-0 text-body-lg text-muted-foreground" />}
+            {item.label}
+          </dt>
+          <dd class="mt-1 text-body break-words text-foreground empty:hidden">
               {item.href !== undefined ? (
                 <a class={link} href={item.href}>
                   {item.datetime !== undefined ? <time datetime={item.datetime}>{item.value}</time> : item.value}
@@ -54,8 +60,7 @@ const link = "inline-flex min-h-6 items-center text-foreground underline decorat
               ) : (
                 item.value
               )}
-            </dd>
-          </div>
+          </dd>
         </div>
       ))}
     </dl>
