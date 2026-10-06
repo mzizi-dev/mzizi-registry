@@ -736,7 +736,7 @@
       "categories": ["app", "pages"],
       "dependencies": [],
       "description": "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens.",
-      "docs": "Use it for: A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens (Mzizi Dashboard Standard).\nIncludes: The bars are aria-hidden; the figures table (with a total) is the accessible version., No data or all zero: \"Nothing to chart in this range.\", Axis labels (columns) are thinned so they never crowd: always the first and the last, never one crowding the last; at most 6 from sm up, and below sm only the first, the middle (with at least 5 points) and the last., Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'..\nAccessibility: Bars aria-hidden; the table has a caption..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-bar-chart",
+      "docs": "Use it for: A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens (Mzizi Dashboard Standard).\nIncludes: The bars are aria-hidden; the figures table (with a total) is the accessible version., No data, or every value 0 with none null: \"Nothing to chart in this range.\", A null value draws no bar. In columns it leaves a small muted baseline tick (`fill-muted-foreground`) on a column marked `data-missing`, whose title reads \"<label>: <missingLabel>\"; in rows the bar is empty and the value is the missingLabel in muted text., The figures table shows the missingLabel (muted) for a null; the total sums the known values and reads \"At least <n>\" when any value is null (values are non-negative counts)., Every value null: \"No figure in this range can be shown: <missingLabel, lower-cased> for every point.\", Axis labels (columns) are thinned so they never crowd: always the first and the last, never one crowding the last; at most 6 from sm up, and below sm only the first, the middle (with at least 5 points) and the last., Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'..\nAccessibility: Bars aria-hidden; the table has a caption..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-bar-chart",
       "files": [
         {
           "path": "components/registry/n6-pages/app-bar-chart.tsx",
@@ -750,7 +750,10 @@
         "contract": "app/bar-chart",
         "features": [
           "The bars are aria-hidden; the figures table (with a total) is the accessible version.",
-          "No data or all zero: \"Nothing to chart in this range.\"",
+          "No data, or every value 0 with none null: \"Nothing to chart in this range.\"",
+          "A null value draws no bar. In columns it leaves a small muted baseline tick (`fill-muted-foreground`) on a column marked `data-missing`, whose title reads \"<label>: <missingLabel>\"; in rows the bar is empty and the value is the missingLabel in muted text.",
+          "The figures table shows the missingLabel (muted) for a null; the total sums the known values and reads \"At least <n>\" when any value is null (values are non-negative counts).",
+          "Every value null: \"No figure in this range can be shown: <missingLabel, lower-cased> for every point.\"",
           "Axis labels (columns) are thinned so they never crowd: always the first and the last, never one crowding the last; at most 6 from sm up, and below sm only the first, the middle (with at least 5 points) and the last.",
           "Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'."
         ],

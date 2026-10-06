@@ -212,7 +212,7 @@
     {
       "name": "app/bar-chart",
       "title": "BarChart",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "file": "app/bar-chart.contract.json",
       "astro": "app-bar-chart",
       "tsx": "app-bar-chart",
