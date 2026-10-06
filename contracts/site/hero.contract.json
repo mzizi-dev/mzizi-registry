@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "site/hero",
   "title": "Hero",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "node": 6,
   "kind": "pattern",
   "summary": "The top band of a marketing page: an optional status badge and eyebrow, the page's one serif <h1>, a lead, and at most two pill calls to action, with an optional media region beside (split) or below (stack) the text.",
@@ -296,7 +296,7 @@
     }
   ],
   "gaps": [
-    "The utilities it relies on (`container-custom`, `eyebrow`, `gradient-hero`, `gradient-showcase`, `bg-canvas`, `text-display`, `text-body-lg`, `ease-soft`) live in each consuming site's globals.css; the registry does not ship them.",
+    "The utilities it relies on (`eyebrow`, `gradient-hero`, `gradient-showcase`, `bg-canvas`, `text-display`, `text-body-lg`, `ease-soft`) live in each consuming site's globals.css; the registry does not ship them.",
     "The two branches (legacy 0.1.x and the newer one) duplicate the text column; the legacy branch is kept byte-identical for four sites. A 2.0.0 contract could drop it.",
     "The gradient-showcase wash mixes cobalt as well as `--primary`, so part of the showcase background does not follow the brand overlay.",
     "The calls to action are always links; there is no button form for an in-page action."
