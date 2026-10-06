@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "site/container",
   "title": "Container",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "node": 6,
   "kind": "primitive",
   "summary": "The max-width content wrapper of the marketing sites: centres content at one of three widths with the standard responsive gutters, as a div, section, main or article.",
@@ -131,7 +131,5 @@
       "count": 1
     }
   ],
-  "gaps": [
-    "The `.container-custom`, `.container-narrow` and `.container-prose` utilities live in each consuming site's globals.css; the registry does not ship them."
-  ]
+  "gaps": []
 }

@@ -269,6 +269,43 @@ export const ZINDEX = [
   ["modal", "40"], ["toast", "50"], ["tooltip", "60"],
 ] as const
 
+/**
+ * Content widths — the three columns `site/container` (and `site/section`,
+ * `site/hero`, the Discover pages) render through `.container-custom`,
+ * `.container-narrow` and `.container-prose`.
+ *
+ * The values are what `@bundu/ui` 0.5.0 actually RENDERS, not what its theme
+ * declares: its `globals.css` builds `.container-custom` on `max-w-7xl` (80rem),
+ * `.container-narrow` on `max-w-narrow` (its `--container-narrow: 42rem`) and
+ * `.container-prose` on `max-w-3xl` (48rem). Its `theme.css` also declares
+ * `--container-prose: 65ch`, but no utility of its uses that, so 48rem is the
+ * reading column every consuming site has shipped.
+ *
+ * `--container-prose: 48rem` does NOT change Tailwind's `max-w-prose`: that is
+ * a static utility (65ch) and wins over the theme key (checked against
+ * tailwindcss 4.3.3). So `max-w-prose` keeps its 65ch meaning — the registry's
+ * app-page-header, app-empty-state and cover-wash-header rely on it — and the
+ * theme key feeds only `.container-prose` and the `@prose:` container variant.
+ * `max-w-narrow` and `max-w-wide` are new utilities from these keys.
+ */
+export const CONTAINERS = [
+  ["narrow", "42rem", "672px — the editorial column (.container-narrow)"],
+  ["prose", "48rem", "768px — the reading column (.container-prose); max-w-prose stays 65ch"],
+  ["wide", "80rem", "1280px — the wide grid column (.container-custom)"],
+] as const
+
+/**
+ * The container utilities: width, centring, and the responsive side gutters,
+ * on the spacing ladder. Same boxes as `@bundu/ui` 0.5.0's `px-6 sm:px-8
+ * lg:px-10` — `--space-lg` 24px, `--space-xl` 32px, `--space-xl-plus` 40px at
+ * Tailwind's default `sm` (40rem) and `lg` (64rem).
+ */
+export const CONTAINER_UTILITIES = [
+  ["container-custom", "wide", ["lg", "xl", "xl-plus"]],
+  ["container-narrow", "narrow", ["lg", "xl"]],
+  ["container-prose", "prose", ["lg", "xl"]],
+] as const
+
 // ════════════════════════════════════════════════════════════════════════════
 // DERIVED TIERS — computed from the palette, never typed in
 // ════════════════════════════════════════════════════════════════════════════
@@ -738,8 +775,10 @@ export function renderGlobalsCss(
   return [
     header(),
     themeBlock(minerals, heritage, experimental),
+    containerTheme(),
     rootBlock(vars("light"), defaultPrimary),
     darkBlock(vars("dark"), defaultPrimary),
+    containerUtilities(),
     brandSection(heritage, experimental),
   ].join("\n\n")
 }
@@ -770,6 +809,8 @@ function header(): string {
  *   status / chart / sidebar / the shadcn semantic set
  *   non-colour ladders   spacing 17, motion 4+4+3, type 13+9, shadow 8,
  *                        radius 7, touch targets, control heights, z-index
+ *   containers           3 widths (narrow, prose, wide) and the
+ *                        \`.container-custom\` / \`-narrow\` / \`-prose\` utilities
  *   brand blocks         8 \`[data-brand]\` selectors, each moving \`--primary\`
  *                        and \`--ring\` only
  *
@@ -849,6 +890,49 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
   for (const [n] of EASING) out.push(`  --ease-${n}: var(--easing-${n});`)
   out.push("}")
   return out.join("\n")
+}
+
+/**
+ * The content widths, in a plain `@theme` (not `inline`): the values are
+ * theme-invariant literals, and a non-inline key keeps `max-w-narrow` and the
+ * container utilities resolving through `var(--container-*)`, so a consumer
+ * can move a width with one line in LOCAL OVERRIDES.
+ */
+function containerTheme(): string {
+  const out: string[] = ["@theme {"]
+  out.push(box("CONTAINER WIDTHS"))
+  for (const [n, v, why] of CONTAINERS) out.push(`  --container-${n}: ${v}; /* ${why} */`)
+  out.push("}")
+  return out.join("\n")
+}
+
+/** `.container-custom`, `.container-narrow`, `.container-prose` as `@utility`. */
+function containerUtilities(): string {
+  const bp = ["sm", "lg"] as const
+  const blocks = CONTAINER_UTILITIES.map(([name, width, gutters]) => {
+    const out = [`@utility ${name} {`]
+    out.push(`  max-width: var(--container-${width});`)
+    out.push(`  margin-inline: auto;`)
+    out.push(`  padding-inline: var(--space-${gutters[0]});`)
+    gutters.slice(1).forEach((g, i) => {
+      out.push(`  @variant ${bp[i]} {`)
+      out.push(`    padding-inline: var(--space-${g});`)
+      out.push(`  }`)
+    })
+    out.push("}")
+    return out.join("\n")
+  })
+  return `/* ════════════════════════════════════════════════════════════════════════════
+ * CONTAINERS
+ *
+ * The three content columns the site components render through. They used to
+ * live in each consuming site's globals.css, so a repo that copied this file
+ * and installed \`site-container\` got an unstyled div. \`@utility\` rather than
+ * \`@layer components\`, so they take variants (\`md:container-narrow\`) and a
+ * plain utility after them (\`px-0\`) still wins.
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+${blocks.join("\n\n")}`
 }
 
 /** The ladders and the unresolved block — theme-invariant, so `:root` only. */
