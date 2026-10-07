@@ -10,6 +10,31 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `markdown-renderer` 1.2.0: a link shows its address on hover, normalised, with an IDN host as punycode (2026-10-07, #483)
+
+Closes #470, a follow-up from the Toddle extension's review (#460): its old flag renderer showed each link's address on hover, and `markdown-renderer` 1.1.0 did not.
+
+- **Every kept link has a `title`**: its address as the URL parser writes it, with the scheme and host lower-cased and the host in ASCII. An internationalised host shows as punycode, so a look-alike such as `https://аpple.com` (a Cyrillic `а`) reads `https://xn--pple-43d.com` on hover. The `href` stays as written. All three builds give the same title: TypeScript reads the WHATWG URL `hostname`, and Rust uses the `url` crate's host parser (`idna` plus the same percent-decoding and IPv4/IPv6 rules), now a dependency of `mzizi-ui`.
+- **A web address whose host the URL parser rejects is refused** (`https://a<b/`, `https://1.2.3.999/`, `//:80/x`), since no browser could follow it. The https-only rule and the host and credentials checks are unchanged.
+- **The tree.** A link node now carries `title` (`{ t: "link", href, title, c }`; Rust `Inline::Link { href, title, children }`), and `markdown-parse` exports `safeLink` (`mzizi_ui::safe_link`), which returns both. `safeHref` and `safe_href` are kept. **Breaking** for code that builds or matches link nodes or list items itself (see the next entry).
+- `contracts/ui/markdown-renderer` 1.2.0 adds a `titles` state (an IDN look-alike, a loud scheme and host, a relative link) with checks on each title, and a check that every kept link has one. The Astro, React and Rust builds pass it.
+
+### Fixed — `markdown-renderer`: five parser bugs in `markdown-parse` and the Rust parser (2026-10-07, #483)
+
+Found by a code review and confirmed by running the code. Each has a shared fixture case that TypeScript and Rust both run (63 cases in all) and a unit test in each language.
+
+- **Emphasis.** A search for a closing marker that failed over the whole line stopped later searches inside a mark from finding theirs: `*x **a *b***` showed the text `*x` and then a bold `a *b*`. The cache now remembers where the failed search started and answers only searches to the end from there on, so it renders `*x <strong>a <em>b</em></strong>`, as CommonMark does (`_x __a _b___` and `*a* b *c **d *e***` too).
+- **Rich text: dropped elements.** A `<script>`, `<style>` or other dropped element ended at any tag that started with its name, so `<script>var s="</scripts>"; secret()</script>` showed `"; secret()` as text. It now ends only at its own end tag (`</script` followed by whitespace, `/` or `>`), as a browser ends it.
+- **Rich text: lists.** Text after a nested list in an `<li>` was joined to the text before it and the list moved below: `<li>a<ul><li>b</li></ul>c</li>` showed `ac`. It now stays in document order: a list item's `children` can hold `{ kind: "lines", lines }` after a nested list (Rust `ListChild::Lines`).
+- **Trailing backslash.** Every paragraph line lost one trailing backslash, so `Save it to C:\` lost its `\`. A backslash is dropped (as a hard break) only when another line follows.
+- **Link addresses.** The address ended only at a space or a newline, and backslash escapes stayed in it: `[a](http://x.com\t"title")`, with a tab before the title, put the title into the `href`, and `[a](http://x.com/\(y\))` kept the backslashes. It now ends at any whitespace, and escaped ASCII punctuation is unescaped, as CommonMark does.
+
+Also: `markdown-parse.ts` is formatted with the repo's Prettier config (packages-npm syncs it byte for byte and had to exempt it from `vp fmt`), and `markdown-renderer.astro` draws the tree with plain recursive template functions and one dynamic heading tag instead of an `Astro.self` instance per node and a six-way ternary. Its output is byte for byte the same.
+
+### Changed — the Mzizi Roots crates move to 0.4.0 (2026-10-07, #483)
+
+The next minor above `mzizi-rs-v0.3.0`, so `mzizi-ui` 0.4.0 on crates.io carries `markdown-renderer` 1.2.0. **Breaking** for code that builds or matches `Inline::Link` or `ListItem::children` (now `Vec<ListChild>`). The crate READMEs and the `mzizi-roots` crate docs install `"0.4"`.
+
 ### Fixed — the doctrine calls the system Mzizi, and no longer describes a database as its source (2026-10-07, #479)
 
 Eight `documentation/` doctrine pages, `mzizi-ai-context` and `ui-utils` still called the system "the Nyuchi Design System" (#323). Several of the same pages, and the three AI instruction sets, also described Supabase as the source of truth, the follow-up #474 left (#472). This entry covers both:

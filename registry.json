@@ -9733,7 +9733,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["lib", "primitives"],
       "dependencies": [],
-      "description": "The framework-free half of markdown-renderer: Markdown in, a typed tree out (blocks and inlines), with the link scheme allow-list (safeHref) and a rich-text reader (richTextBlocks) that never builds a DOM. Builds no HTML.",
+      "description": "The framework-free half of markdown-renderer: Markdown in, a typed tree out (blocks and inlines), with the link allow-list (safeLink: the kept href, and the address normalised for its hover title, an IDN host as punycode) and a rich-text reader (richTextBlocks) that never builds a DOM. Builds no HTML.",
       "docs": "Use it for: Parsing Markdown into data for markdown-renderer, Checking a link address against a scheme allow-list.\nIncludes: Typed Markdown tree, Link scheme allow-list, Rich text read without a DOM.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-parse",
       "files": [
         {
@@ -9767,8 +9767,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list (https-only on request). Ships in three builds under one contract: React (.tsx), Astro (.astro) and Mzizi Roots (.rs, mzizi-ui).",
-      "docs": "Use it for: Untrusted user text (notes, comments, flags) on pages that hold personal data, Rendering LLM markdown output with Nyuchi typography, Documentation pages rendered from markdown source, Rich text from editors that store HTML (from=\"html\").\nVariants: safe, https.\nIncludes: cn() for className composition, data-slot attribute, Typed Markdown tree (markdown-parse), No HTML string sink in any build, Scheme allow-list for links, GFM tables, nested lists, fenced code, Rust (mzizi-ui) and Astro siblings with one contract.\nAccessibility: Semantic HTML: headings, lists, blockquote, tables with th scope=col, Links keep a focus-visible outline in the ring token, headingBase fits the text under the page's own headings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-renderer",
+      "description": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list (https-only on request) and show their address on hover, normalised (an IDN host as punycode). Ships in three builds under one contract: React (.tsx), Astro (.astro) and Mzizi Roots (.rs, mzizi-ui).",
+      "docs": "Use it for: Untrusted user text (notes, comments, flags) on pages that hold personal data, Rendering LLM markdown output with Nyuchi typography, Documentation pages rendered from markdown source, Rich text from editors that store HTML (from=\"html\").\nVariants: safe, https.\nIncludes: cn() for className composition, data-slot attribute, Typed Markdown tree (markdown-parse), No HTML string sink in any build, Scheme allow-list for links, Link titles: the address normalised, an IDN host as punycode, GFM tables, nested lists, fenced code, Rust (mzizi-ui) and Astro siblings with one contract.\nAccessibility: Semantic HTML: headings, lists, blockquote, tables with th scope=col, Links keep a focus-visible outline in the ring token, headingBase fits the text under the page's own headings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-renderer",
       "files": [
         {
           "path": "components/registry/n2-primitives/markdown-renderer.tsx",
@@ -9789,6 +9789,7 @@
           "Typed Markdown tree (markdown-parse)",
           "No HTML string sink in any build",
           "Scheme allow-list for links",
+          "Link titles: the address normalised, an IDN host as punycode",
           "GFM tables, nested lists, fenced code",
           "Rust (mzizi-ui) and Astro siblings with one contract"
         ],

@@ -241,6 +241,7 @@
               {
                 "t": "link",
                 "href": "https://example.org/p",
+                "title": "https://example.org/p",
                 "c": [
                   {
                     "t": "text",
@@ -276,7 +277,7 @@
     },
     {
       "say": "hostile links lose their address",
-      "input": "[js](javascript:alert(1)) [tab](\tjavascript:alert(2)) [split](java\tscript:alert(3)) [nl](java\nscript:x) [data](data:text/html;base64,PHNjcmlwdD4=) [vb](VBScript:msgbox(1)) [angle](<javascript:alert(4)>) [ok](https://example.org/a) [mail](mailto:a@example.org) [tel](tel:+263) [rel](/a/b) [hash](#top)",
+      "input": "[js](javascript:alert(1)) [tab](\tjavascript:alert(2)) [split](<java\tscript:alert(3)>) [nl](java\nscript:x) [data](data:text/html;base64,PHNjcmlwdD4=) [vb](VBScript:msgbox(1)) [angle](<javascript:alert(4)>) [ok](https://example.org/a) [mail](mailto:a@example.org) [tel](tel:+263) [rel](/a/b) [hash](#top)",
       "expect": [
         {
           "kind": "p",
@@ -295,6 +296,7 @@
               {
                 "t": "link",
                 "href": "https://example.org/a",
+                "title": "https://example.org/a",
                 "c": [
                   {
                     "t": "text",
@@ -309,6 +311,7 @@
               {
                 "t": "link",
                 "href": "mailto:a@example.org",
+                "title": "mailto:a@example.org",
                 "c": [
                   {
                     "t": "text",
@@ -323,6 +326,7 @@
               {
                 "t": "link",
                 "href": "tel:+263",
+                "title": "tel:+263",
                 "c": [
                   {
                     "t": "text",
@@ -337,6 +341,7 @@
               {
                 "t": "link",
                 "href": "/a/b",
+                "title": "/a/b",
                 "c": [
                   {
                     "t": "text",
@@ -351,6 +356,7 @@
               {
                 "t": "link",
                 "href": "#top",
+                "title": "#top",
                 "c": [
                   {
                     "t": "text",
@@ -703,6 +709,7 @@
               {
                 "t": "link",
                 "href": "https://x.org/a",
+                "title": "https://x.org/a",
                 "c": [
                   {
                     "t": "text",
@@ -726,6 +733,7 @@
               {
                 "t": "link",
                 "href": "https://x.org",
+                "title": "https://x.org",
                 "c": [
                   {
                     "t": "strong",
@@ -1066,6 +1074,7 @@
               {
                 "t": "link",
                 "href": "https://x.org/a_(b)",
+                "title": "https://x.org/a_(b)",
                 "c": [
                   {
                     "t": "text",
@@ -1382,6 +1391,7 @@
               {
                 "t": "link",
                 "href": "https://x.org/a?b=1&c=2",
+                "title": "https://x.org/a?b=1&c=2",
                 "c": [
                   {
                     "t": "text",
@@ -1897,6 +1907,7 @@
               {
                 "t": "link",
                 "href": "https://x.org",
+                "title": "https://x.org",
                 "c": [
                   {
                     "t": "text",
@@ -1909,6 +1920,7 @@
               {
                 "t": "link",
                 "href": "https://x.org",
+                "title": "https://x.org",
                 "c": [
                   {
                     "t": "text",
@@ -2136,7 +2148,7 @@
     },
     {
       "say": "links need a host and no credentials; whitespace inside refuses them",
-      "input": "[a](https://bank.example@evil.example/x) [b](//user@evil.example) [c](https://) [d](http:/x.org) [e](<https://x.org/c d>) [f](https://x.org/ok?q=a@b) [g](//cdn.example/x) [h](https:\\\\evil.example)",
+      "input": "[a](https://bank.example@evil.example/x) [b](//user@evil.example) [c](https://) [d](http:/x.org) [e](<https://x.org/c d>) [f](https://x.org/ok?q=a@b) [g](//cdn.example/x) [h](https:\\\\\\\\evil.example)",
       "expect": [
         {
           "kind": "p",
@@ -2149,6 +2161,7 @@
               {
                 "t": "link",
                 "href": "https://x.org/ok?q=a@b",
+                "title": "https://x.org/ok?q=a@b",
                 "c": [
                   {
                     "t": "text",
@@ -2163,6 +2176,7 @@
               {
                 "t": "link",
                 "href": "//cdn.example/x",
+                "title": "//cdn.example/x",
                 "c": [
                   {
                     "t": "text",
@@ -2177,6 +2191,7 @@
               {
                 "t": "link",
                 "href": "https:\\\\evil.example",
+                "title": "https:\\\\evil.example",
                 "c": [
                   {
                     "t": "text",
@@ -2190,8 +2205,8 @@
       ]
     },
     {
-      "say": "backslash forms are scheme-relative: host and credentials checked",
-      "input": "[a](\\\\bank.example@evil.example) [b](/\\bank.example@evil.example) [c](/\\evil.example) [d](\\/cdn.example/x) [e](\\path) [f](/\\) [g](\\\\)",
+      "say": "backslash forms are scheme-relative: host and credentials checked (a literal backslash written as \\\\)",
+      "input": "[a](\\\\\\\\bank.example@evil.example) [b](/\\\\bank.example@evil.example) [c](/\\\\evil.example) [d](\\\\/cdn.example/x) [e](\\\\path) [f](/\\\\) [g](\\\\\\\\)",
       "expect": [
         {
           "kind": "p",
@@ -2204,6 +2219,7 @@
               {
                 "t": "link",
                 "href": "/\\evil.example",
+                "title": "/\\evil.example",
                 "c": [
                   {
                     "t": "text",
@@ -2218,6 +2234,7 @@
               {
                 "t": "link",
                 "href": "\\/cdn.example/x",
+                "title": "\\/cdn.example/x",
                 "c": [
                   {
                     "t": "text",
@@ -2232,6 +2249,7 @@
               {
                 "t": "link",
                 "href": "\\path",
+                "title": "\\path",
                 "c": [
                   {
                     "t": "text",
@@ -2241,7 +2259,7 @@
               },
               {
                 "t": "text",
-                "v": " [f](/) g"
+                "v": " f g"
               }
             ]
           ]
@@ -2263,6 +2281,7 @@
               {
                 "t": "link",
                 "href": "https://x.org/ok",
+                "title": "https://x.org/ok",
                 "c": [
                   {
                     "t": "text",
@@ -2289,6 +2308,660 @@
                 "v": "x y"
               }
             ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "emphasis: a closer inside a mark is found after a search to the end found none (CommonMark)",
+      "input": "*x **a *b***\n_x __a _b___\n*a* b *c **d *e***",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "*x "
+              },
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a "
+                  },
+                  {
+                    "t": "em",
+                    "c": [
+                      {
+                        "t": "text",
+                        "v": "b"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "_x "
+              },
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a "
+                  },
+                  {
+                    "t": "em",
+                    "c": [
+                      {
+                        "t": "text",
+                        "v": "b"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " b *c "
+              },
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "d "
+                  },
+                  {
+                    "t": "em",
+                    "c": [
+                      {
+                        "t": "text",
+                        "v": "e"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "a trailing backslash is a break only before another line; on the last line it is text",
+      "input": "Save it to C:\\\n\nline one\\\nline two\\\n\nescaped \\\\",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Save it to C:\\"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "line one"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "line two\\"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "escaped \\"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "a link's address ends at any whitespace (the title is dropped) and escapes are undone",
+      "input": "[a](http://x.com\t\"title\") [b](http://x.com/\\(y\\)) [c](a.html junk) [d](https://x.org/a\\_b \"t\") [e](\\<javascript:alert(1)\\>)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "link",
+                "href": "http://x.com",
+                "title": "http://x.com",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "http://x.com/(y)",
+                "title": "http://x.com/(y)",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "b"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "a.html",
+                "title": "a.html",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "c"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "https://x.org/a_b",
+                "title": "https://x.org/a_b",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "d"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " e"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "a link's title is its address normalised: scheme and host lower-cased, the host as punycode (an IDN look-alike shows as xn--)",
+      "input": "[i](https://аpple.com/login) [m](HTTPS://Example.ORG/Docs?Q=1) [s](//Bücher.example/x) [p](https://EXAMPLE.org:8443/a) [r](/Rel/Path) [e](MAILTO:Hello@Example.org) [n](https://0x7f.1/) [q](https://%41b.example/) [v](https://[::FFFF:1.2.3.4]/) [x](https://a<b/) [y](https://1.2.3.999/) [z](//:80/x)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "link",
+                "href": "https://аpple.com/login",
+                "title": "https://xn--pple-43d.com/login",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "i"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "HTTPS://Example.ORG/Docs?Q=1",
+                "title": "https://example.org/Docs?Q=1",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "m"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "//Bücher.example/x",
+                "title": "//xn--bcher-kva.example/x",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "s"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "https://EXAMPLE.org:8443/a",
+                "title": "https://example.org:8443/a",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "p"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "/Rel/Path",
+                "title": "/Rel/Path",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "r"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "MAILTO:Hello@Example.org",
+                "title": "mailto:Hello@Example.org",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "e"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "https://0x7f.1/",
+                "title": "https://127.0.0.1/",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "n"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "https://%41b.example/",
+                "title": "https://ab.example/",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "q"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "https://[::FFFF:1.2.3.4]/",
+                "title": "https://[::ffff:102:304]/",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "v"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " x y z"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "links=https: an IDN host is still shown as punycode",
+      "links": "https",
+      "input": "[pay](https://pаypal.example/) [ok](HTTPS://Example.org)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "link",
+                "href": "https://pаypal.example/",
+                "title": "https://xn--pypal-4ve.example/",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "pay"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "HTTPS://Example.org",
+                "title": "https://example.org",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "ok"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a link's title is its address normalised too",
+      "from": "html",
+      "input": "<p><a href=\"https://аpple.com/x\">look-alike</a> <a href=\"HTTP://WWW.Example.org/A\">loud</a> <a href=\"/here\">here</a></p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "link",
+                "href": "https://аpple.com/x",
+                "title": "https://xn--pple-43d.com/x",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "look-alike"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "HTTP://WWW.Example.org/A",
+                "title": "http://www.example.org/A",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "loud"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "/here",
+                "title": "/here",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "here"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a dropped element ends only at its own end tag",
+      "from": "html",
+      "input": "<p>a</p><script>var s=\"</scripts>\"; secret()</script><p>b</p><style>p{}</styles>x{}</style><p>c</p><script>d()</script\n>e<textarea></textareas>f</textarea/>g",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "b"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "c"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "eg"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: text after a nested list stays after it, in order and apart",
+      "from": "html",
+      "input": "<ul><li>a<ul><li>b</li></ul>c</li><li>d<ol start=\"2\"><li>e</li></ol>f<ul><li>g</li></ul>h</li><li><ul><li>i</li></ul>j</li></ul>",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              ],
+              "children": [
+                {
+                  "kind": "ul",
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "b"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "kind": "lines",
+                  "lines": [
+                    [
+                      {
+                        "t": "text",
+                        "v": "c"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "d"
+                  }
+                ]
+              ],
+              "children": [
+                {
+                  "kind": "ol",
+                  "start": 2,
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "e"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "kind": "lines",
+                  "lines": [
+                    [
+                      {
+                        "t": "text",
+                        "v": "f"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "kind": "ul",
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "g"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "kind": "lines",
+                  "lines": [
+                    [
+                      {
+                        "t": "text",
+                        "v": "h"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "lines": [],
+              "children": [
+                {
+                  "kind": "ul",
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "i"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "kind": "lines",
+                  "lines": [
+                    [
+                      {
+                        "t": "text",
+                        "v": "j"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
           ]
         }
       ]

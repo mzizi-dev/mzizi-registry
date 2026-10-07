@@ -17,6 +17,7 @@ import {
   parseInlines,
   richTextBlocks,
   safeHref,
+  safeLink,
 } from "@/components/registry/n2-primitives/markdown-parse"
 
 const fixture = JSON.parse(
@@ -77,7 +78,58 @@ describe("safeHref", () => {
   })
 })
 
+describe("safeLink: the title a reader sees on hover (#470)", () => {
+  it.each([
+    ["https://\u0430pple.com/login", "https://xn--pple-43d.com/login"],
+    ["HTTPS://Example.ORG/Docs?Q=A#X", "https://example.org/Docs?Q=A#X"],
+    ["//B\u00fccher.example/x", "//xn--bcher-kva.example/x"],
+    ["https://EXAMPLE.org:8443/a", "https://example.org:8443/a"],
+    ["https://0x7f.1/", "https://127.0.0.1/"],
+    ["MAILTO:a@B.c", "mailto:a@B.c"],
+    ["/Rel/Path", "/Rel/Path"],
+  ])("%j shows as %j, its href as written", (raw, title) => {
+    expect(safeLink(raw)).toEqual({ href: raw, title })
+  })
+
+  it.each(["https://a<b/", "https://1.2.3.999/", "//:80/x", "https://ex%2Fa/"])(
+    "refuses %j: the URL parser rejects its host",
+    (raw) => {
+      expect(safeLink(raw)).toBeNull()
+    }
+  )
+
+  it("without a URL global, keeps only plain ASCII hosts, lower-cased", () => {
+    const g = globalThis as { URL?: unknown }
+    const saved = g.URL
+    g.URL = undefined
+    try {
+      expect(safeLink("https://Example.ORG/A")).toEqual({ href: "https://Example.ORG/A", title: "https://example.org/A" })
+      expect(safeLink("https://\u0430pple.com/")).toBeNull()
+    } finally {
+      g.URL = saved
+    }
+  })
+})
+
 describe("parseInlines", () => {
+  it("finds a closer inside a mark after a search to the end found none", () => {
+    expect(parseInlines("*x **a *b***")).toEqual([
+      { t: "text", v: "*x " },
+      { t: "strong", c: [{ t: "text", v: "a " }, { t: "em", c: [{ t: "text", v: "b" }] }] },
+    ])
+    expect(parseInlines("*a* b *c **d *e***")).toEqual([
+      { t: "em", c: [{ t: "text", v: "a" }] },
+      { t: "text", v: " b *c " },
+      { t: "strong", c: [{ t: "text", v: "d " }, { t: "em", c: [{ t: "text", v: "e" }] }] },
+    ])
+  })
+
+  it("ends a link's address at any whitespace and undoes its escapes", () => {
+    const link = (href: string) => [{ t: "link", href, title: href, c: [{ t: "text", v: "a" }] }]
+    expect(parseInlines('[a](http://x.com\t"title")')).toEqual(link("http://x.com"))
+    expect(parseInlines("[a](http://x.com/\\(y\\))")).toEqual(link("http://x.com/(y)"))
+  })
+
   it("a refused link keeps its words and their marks", () => {
     expect(parseInlines("[**x** y](javascript:alert(1))")).toEqual([
       { t: "strong", c: [{ t: "text", v: "x" }] },
@@ -119,6 +171,31 @@ describe("rich text", () => {
     expect(looksLikeRichText("<b_x>")).toBe(false)
   })
 
+  it("ends a dropped element only at its own end tag", () => {
+    expect(richTextBlocks('<p>a</p><script>var s="</scripts>"; secret()</script><p>b</p>')).toEqual([
+      { kind: "p", lines: [[{ t: "text", v: "a" }]] },
+      { kind: "p", lines: [[{ t: "text", v: "b" }]] },
+    ])
+  })
+
+  it("keeps text after a nested list after it, apart", () => {
+    expect(richTextBlocks("<ul><li>a<ul><li>b</li></ul>c</li></ul>")).toEqual([
+      {
+        kind: "ul",
+        items: [
+          {
+            lines: [[{ t: "text", v: "a" }]],
+            children: [
+              { kind: "ul", items: [{ lines: [[{ t: "text", v: "b" }]], children: [] }] },
+              { kind: "lines", lines: [[{ t: "text", v: "c" }]] },
+            ],
+          },
+        ],
+      },
+    ])
+    expect(html("<ul><li>a<ul><li>b</li></ul>c</li></ul>", { from: "html" })).toMatch(/<li>a<ul [^>]*><li>b<\/li><\/ul>c<\/li>/)
+  })
+
   it("decodes character references", () => {
     expect(decodeEntities("&lt;&amp;&#65;&#x42;&nbsp;&copy;&#0;")).toBe("<&AB\u00a0&copy;\ufffd")
   })
@@ -143,16 +220,26 @@ describe("MarkdownRenderer (React)", () => {
 
   it("external links open in a new tab safely; others stay in place", () => {
     const out = html("[a](https://x.org) [b](/here) [c](mailto:a@b.c)")
-    expect(out).toContain('<a href="https://x.org" class="')
+    expect(out).toContain('<a href="https://x.org" title="https://x.org" class="')
     expect(out).toMatch(/href="https:\/\/x\.org"[^>]*target="_blank" rel="noopener noreferrer"/)
-    expect(out).toMatch(/href="\/here" class="[^"]*">b<\/a>/)
-    expect(out).toMatch(/href="mailto:a@b\.c" class="[^"]*">c<\/a>/)
+    expect(out).toMatch(/href="\/here" title="\/here" class="[^"]*">b<\/a>/)
+    expect(out).toMatch(/href="mailto:a@b\.c" title="mailto:a@b\.c" class="[^"]*">c<\/a>/)
   })
 
   it("links=https keeps https only", () => {
     const out = html("[a](https://x.org) [b](http://x.org) [c](/r)", { links: "https" })
     expect(out.match(/<a /g)).toHaveLength(1)
     expect(out).toContain("b c")
+  })
+
+  it("a trailing backslash on a paragraph's last line is text", () => {
+    expect(html("Save it to C:\\")).toContain(">Save it to C:\\</p>")
+    expect(html("a\\\nb")).toMatch(/>a<br\/>b<\/p>/)
+  })
+
+  it("a link shows its address, normalised, on hover", () => {
+    const out = html("[look-alike](https://\u0430pple.com/login)")
+    expect(out).toContain('href="https://\u0430pple.com/login" title="https://xn--pple-43d.com/login"')
   })
 
   it("headingBase shifts headings and stops at h6", () => {
