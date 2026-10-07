@@ -1,6 +1,6 @@
 {
   "name": "mzizi",
-  "version": "4.7.0",
+  "version": "4.8.0",
   "private": true,
   "description": "Mzizi — an independent open-architecture project. The component registry, design tokens and Rust components (Mzizi Roots), operated and developed by Nyuchi.",
   "homepage": "https://mzizi.dev",
@@ -62,7 +62,7 @@
     "tokens:verify": "tsx scripts/sync-tokens.ts --check",
     "design-system:generate": "tsx scripts/generate-design-system.ts",
     "design-system:generate:check": "tsx scripts/generate-design-system.ts --check",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.consumer-strict.json",
     "typecheck:packages": "pnpm --filter \"./packages/*\" typecheck",
     "ui:dev": "wrangler dev --config mzizi-ui/wrangler.jsonc --local",
     "generate": "pnpm skills:generate && pnpm plugin:skills && pnpm changelog:generate && pnpm doctrine:generate && pnpm contracts:sync && pnpm tokens:sync && pnpm design-system:generate && pnpm tokens:registry && pnpm registry:normalize && pnpm registry:metadata && pnpm registry:paths && pnpm registry:index && pnpm registry:source && pnpm props:extract && pnpm openapi:generate && pnpm node-map:generate && pnpm rust:generate && prettier --write --log-level warn registry.json",

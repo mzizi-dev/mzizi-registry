@@ -155,7 +155,7 @@ export function safeHref(raw: string, policy: MarkdownLinkPolicy = "safe"): stri
   // where `<\u0001javascript:…>` would otherwise read as scheme-less) is not one address.
   for (const c of url) if (isWs(c) || c.charCodeAt(0) < 0x20 || c.charCodeAt(0) === 0x7f) return null
   const scheme = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(url)
-  const name = scheme ? scheme[1].toLowerCase() : null
+  const name = scheme ? (scheme[1] ?? "").toLowerCase() : null
   if (policy === "https" ? name !== "https" : name !== null && !SAFE_SCHEMES.includes(name)) return null
   // A web address needs a host and no credentials: `https://bank.example@evil.example` shows
   // one site and goes to another. The same holds for a scheme-relative `//host` address.
@@ -172,7 +172,7 @@ const SCHEME_RELATIVE = /^[/\\]{2}/
 function webAuthorityOk(rest: string): boolean {
   if (!SCHEME_RELATIVE.test(rest)) return false
   let end = 2
-  while (end < rest.length && !"/?#\\".includes(rest[end])) end++
+  while (end < rest.length && !"/?#\\".includes(rest.charAt(end))) end++
   const authority = rest.slice(2, end)
   return authority !== "" && !authority.includes("@")
 }
@@ -188,7 +188,8 @@ export function isExternal(href: string): boolean {
 // (JavaScript's `\s` and Rust's `char::is_whitespace` differ on U+0085 and U+FEFF).
 
 const WS = new Set([
-  ..."\t\n\v\f\r \u0085\u00a0\u1680\u2028\u2029\u202f\u205f\u3000\ufeff",
+  // One UTF-16 unit each, so split("") is exact here.
+  ..."\t\n\v\f\r \u0085\u00a0\u1680\u2028\u2029\u202f\u205f\u3000\ufeff".split(""),
   ...Array.from({ length: 11 }, (_, k) => String.fromCharCode(0x2000 + k)),
 ])
 
@@ -199,15 +200,15 @@ export const isWs = (c: string | undefined): boolean => c !== undefined && WS.ha
 export function trimWs(s: string): string {
   let a = 0
   let b = s.length
-  while (a < b && WS.has(s[a])) a++
-  while (b > a && WS.has(s[b - 1])) b--
+  while (a < b && WS.has(s.charAt(a))) a++
+  while (b > a && WS.has(s.charAt(b - 1))) b--
   return s.slice(a, b)
 }
 
 /** How many whitespace characters a line starts with. */
 const leadingWs = (s: string): number => {
   let n = 0
-  while (n < s.length && WS.has(s[n])) n++
+  while (n < s.length && WS.has(s.charAt(n))) n++
   return n
 }
 
@@ -348,7 +349,7 @@ class InlineParser {
     let i = from
     while (i < to) {
       const ch = s[i]
-      if (ch === "\\" && i + 1 < to && PUNCT.has(s[i + 1])) {
+      if (ch === "\\" && i + 1 < to && PUNCT.has(s[i + 1] ?? "")) {
         buf += s[i + 1]
         i += 2
         continue
@@ -473,14 +474,14 @@ export function parseInlines(text: string, policy: MarkdownLinkPolicy = "safe"):
 /** A fence line: its marker and its info word, or null. */
 function fence(line: string): { mark: string; word: string } | null {
   const m = /^ {0,3}(`{3,}|~{3,})([^]*)$/.exec(line)
-  if (!m || m[2].includes("`")) return null
-  const info = m[2].replace(/^[ \t]*/, "")
+  if (!m || (m[2] ?? "").includes("`")) return null
+  const info = (m[2] ?? "").replace(/^[ \t]*/, "")
   let word = ""
   for (const c of info) {
     if (WS.has(c)) break
     word += c
   }
-  return { mark: m[1], word }
+  return { mark: m[1] ?? "", word }
 }
 // `[^]` rather than `.`, which in JavaScript skips U+2028 and U+2029 (the Rust build reads any
 // character, and lines only ever split on \n).
@@ -522,9 +523,10 @@ function delimiterRow(line: string): MarkdownAlign[] | null {
 }
 
 function tableStarts(lines: string[], i: number): MarkdownAlign[] | null {
-  if (i + 1 >= lines.length || !lines[i].includes("|")) return null
-  const align = delimiterRow(lines[i + 1])
-  return align && cells(lines[i]).length === align.length ? align : null
+  const line = lines[i] ?? ""
+  if (i + 1 >= lines.length || !line.includes("|")) return null
+  const align = delimiterRow(lines[i + 1] ?? "")
+  return align && cells(line).length === align.length ? align : null
 }
 
 /** Leading tabs as four spaces, so indentation reads one way. */
@@ -534,7 +536,7 @@ function untab(line: string): string {
 }
 
 function startsBlock(lines: string[], i: number): boolean {
-  const line = lines[i]
+  const line = lines[i] ?? ""
   return (
     fence(line) !== null ||
     HEADING.test(line) ||
@@ -558,9 +560,10 @@ class BlockParser {
 
   parse(lines: string[], depth: number): MarkdownBlock[] {
     const out: MarkdownBlock[] = []
+    const at = (k: number) => lines[k] ?? ""
     let i = 0
     while (i < lines.length) {
-      const line = lines[i]
+      const line = at(i)
       if (blank(line)) {
         i++
         continue
@@ -572,9 +575,9 @@ class BlockParser {
         const body: string[] = []
         i++
         while (i < lines.length) {
-          const l = lines[i]
+          const l = at(i)
           const t = trimWs(l)
-          if (t.length >= mark.length && t === mark[0].repeat(t.length) && leadingWs(l) <= 3) {
+          if (t.length >= mark.length && t === mark.charAt(0).repeat(t.length) && leadingWs(l) <= 3) {
             i++
             break
           }
@@ -586,7 +589,7 @@ class BlockParser {
       }
       const heading = HEADING.exec(line)
       if (heading) {
-        out.push({ kind: "h", level: heading[1].length as 1 | 2 | 3 | 4 | 5 | 6, c: this.inl(heading[2]) })
+        out.push({ kind: "h", level: (heading[1] ?? "#").length as 1 | 2 | 3 | 4 | 5 | 6, c: this.inl(heading[2] ?? "") })
         i++
         continue
       }
@@ -597,8 +600,8 @@ class BlockParser {
       }
       if (QUOTE.test(line)) {
         const inner: string[] = []
-        while (i < lines.length && QUOTE.test(lines[i])) {
-          inner.push(QUOTE.exec(lines[i])?.[1] ?? "")
+        while (i < lines.length && QUOTE.test(at(i))) {
+          inner.push(QUOTE.exec(at(i))?.[1] ?? "")
           i++
         }
         if (depth + 1 >= MAX_NESTING) out.push({ kind: "p", lines: inner.filter((l) => !blank(l)).map((l) => this.inl(trimWs(l))) })
@@ -616,16 +619,16 @@ class BlockParser {
         const head = fit(cells(line))
         const rows: MarkdownInline[][][] = []
         i += 2
-        while (i < lines.length && !blank(lines[i]) && lines[i].includes("|") && !startsBlock(lines, i)) {
-          rows.push(fit(cells(lines[i])))
+        while (i < lines.length && !blank(at(i)) && at(i).includes("|") && !startsBlock(lines, i)) {
+          rows.push(fit(cells(at(i))))
           i++
         }
         out.push({ kind: "table", align, head, rows })
         continue
       }
       const para: MarkdownInline[][] = []
-      while (i < lines.length && !blank(lines[i]) && (para.length === 0 || !startsBlock(lines, i))) {
-        para.push(this.inl(trimWs(lines[i]).replace(/\\$/, "")))
+      while (i < lines.length && !blank(at(i)) && (para.length === 0 || !startsBlock(lines, i))) {
+        para.push(this.inl(trimWs(at(i)).replace(/\\$/, "")))
         i++
       }
       out.push({ kind: "p", lines: para })
@@ -635,15 +638,23 @@ class BlockParser {
 
   /** Read a run of list items from `i` into `out`; returns the line after it. */
   private list(lines: string[], i: number, out: MarkdownBlock[]): number {
+    const at = (k: number) => lines[k] ?? ""
     const stack: { indent: number; list: MarkdownList }[] = []
+    /** The innermost open list (the stack is never empty where this is called). */
+    const peek = () => {
+      const top = stack[stack.length - 1]
+      if (!top) throw new Error("markdown-parse: no open list")
+      return top
+    }
+    const lastItem = (list: MarkdownList) => list.items[list.items.length - 1]
     const newList = (ordered: boolean, marker: string): MarkdownList =>
       ordered ? { kind: "ol", start: Number.parseInt(marker, 10), items: [] } : { kind: "ul", items: [] }
     while (i < lines.length) {
-      const line = lines[i]
+      const line = at(i)
       if (blank(line)) {
         let k = i + 1
-        while (k < lines.length && blank(lines[k])) k++
-        if (k < lines.length && LIST_ITEM.test(lines[k])) {
+        while (k < lines.length && blank(at(k))) k++
+        if (k < lines.length && LIST_ITEM.test(at(k))) {
           i = k
           continue
         }
@@ -652,42 +663,41 @@ class BlockParser {
       const m = LIST_ITEM.exec(line)
       if (!m) {
         const top = stack[stack.length - 1]
-        const item = top?.list.items[top.list.items.length - 1]
+        const item = top ? lastItem(top.list) : undefined
         const rest = line.replace(/^ */, "")
-        if (item && line.length - rest.length >= 2 && rest !== "" && !isWs(rest[0]) && !startsBlock(lines, i)) {
+        if (item && line.length - rest.length >= 2 && rest !== "" && !isWs(rest.charAt(0)) && !startsBlock(lines, i)) {
           item.lines.push(this.inl(trimWs(line)))
           i++
           continue
         }
         break
       }
-      const indent = m[1].length
-      const ordered = /\d/.test(m[2])
+      const indent = (m[1] ?? "").length
+      const marker = m[2] ?? ""
+      const ordered = /\d/.test(marker)
       const kind = ordered ? "ol" : "ul"
-      const item: MarkdownListItem = { lines: [this.inl(trimWs(m[3]))], children: [] }
+      const item: MarkdownListItem = { lines: [this.inl(trimWs(m[3] ?? ""))], children: [] }
       if (stack.length === 0) {
-        const list = newList(ordered, m[2])
+        const list = newList(ordered, marker)
         out.push(list)
         stack.push({ indent, list })
       } else {
-        while (stack.length > 1 && indent < stack[stack.length - 1].indent) stack.pop()
-        const top = stack[stack.length - 1]
-        const last = top.list.items[top.list.items.length - 1]
+        while (stack.length > 1 && indent < peek().indent) stack.pop()
+        const top = peek()
+        const last = lastItem(top.list)
         if (indent >= top.indent + 2 && last && stack.length < MAX_NESTING) {
-          const list = newList(ordered, m[2])
+          const list = newList(ordered, marker)
           last.children.push(list)
           stack.push({ indent, list })
         } else if (top.list.kind !== kind) {
-          const list = newList(ordered, m[2])
-          if (stack.length === 1) out.push(list)
-          else {
-            const parent = stack[stack.length - 2].list
-            parent.items[parent.items.length - 1].children.push(list)
-          }
+          const list = newList(ordered, marker)
+          const parent = stack.length === 1 ? undefined : stack[stack.length - 2]
+          if (!parent) out.push(list)
+          else lastItem(parent.list)?.children.push(list)
           stack[stack.length - 1] = { indent: top.indent, list }
         }
       }
-      stack[stack.length - 1].list.items.push(item)
+      peek().list.items.push(item)
       i++
     }
     return i
@@ -746,7 +756,7 @@ const asciiLower = (s: string) => s.replace(/[A-Z]/g, (c) => c.toLowerCase())
 function readHtml(html: string): RichElement {
   const root: RichElement = { tag: "#root", attrs: {}, children: [] }
   const stack: RichElement[] = [root]
-  const top = () => stack[stack.length - 1]
+  const top = () => stack[stack.length - 1] ?? root
   let i = 0
   let text = ""
   const flushText = () => {
@@ -769,7 +779,7 @@ function readHtml(html: string): RichElement {
       const end = html.indexOf(">", j)
       i = end < 0 ? html.length : end + 1
       for (let k = stack.length - 1; k > 0; k--) {
-        if (stack[k].tag === name) {
+        if (stack[k]?.tag === name) {
           stack.length = k
           break
         }
@@ -825,7 +835,7 @@ function readHtml(html: string): RichElement {
       if (CLOSES_P.has(name) && top().tag === "p") stack.pop()
       if (name === "li") {
         for (let k = stack.length - 1; k > 0; k--) {
-          const t = stack[k].tag
+          const t = stack[k]?.tag
           if (t === "ul" || t === "ol") break
           if (t === "li") {
             stack.length = k
@@ -946,8 +956,7 @@ function normalize(items: MarkdownInline[], state: { space: boolean }): Markdown
 
 /** Drop trailing whitespace from the end of a line, into its marks. */
 function trimEnd(items: MarkdownInline[]): MarkdownInline[] {
-  while (items.length > 0) {
-    const last = items[items.length - 1]
+  for (let last = items[items.length - 1]; last; last = items[items.length - 1]) {
     if (last.t === "text") {
       last.v = last.v.replace(/ $/, "")
       if (last.v !== "") break
