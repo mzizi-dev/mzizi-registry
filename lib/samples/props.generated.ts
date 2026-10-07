@@ -5698,6 +5698,21 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "content",
       "type": "string",
       "required": true
+    },
+    {
+      "name": "links",
+      "type": "MarkdownLinkPolicy",
+      "required": false
+    },
+    {
+      "name": "from",
+      "type": "MarkdownSource",
+      "required": false
+    },
+    {
+      "name": "headingBase",
+      "type": "number",
+      "required": false
     }
   ],
   "marketplace-page": [
