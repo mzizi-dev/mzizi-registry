@@ -15,10 +15,25 @@
 // evolves. Pass live counts (GET https://api.mzizi.dev/v1/stats, or
 // mzizi_get_architecture on the MCP) into generateAIContext().
 
+/**
+ * Live totals, supplied by the caller. There is no stable count: the registry
+ * has no per-component status, and `/v1/stats` reports none.
+ */
 export interface EcosystemCounts {
+  /** Every component in the registry (`meta.registryTotal` on `/v1/ui`). */
   totalComponents: number
-  totalStable: number
+  /** How many nodes exist. Uncapped. */
   totalNodes: number
+}
+
+/** One row of the node map. Same shape as `NodeEntry` in the Rust build. */
+export interface NodeEntry {
+  /** Node number. No upper bound. */
+  number: number
+  /** Short name, e.g. `Primitives`. */
+  label: string
+  /** What the node is for, one line. */
+  role: string
 }
 
 export interface AIContextOptions {
@@ -34,9 +49,9 @@ const MCP_SERVER = "https://mcp.mzizi.dev/mcp"
 
 /**
  * The node set as it stands. A default, not a definition: the authority is
- * `GET /v1/architecture`. Same rows as `current_nodes()` in the Rust build.
+ * `GET https://api.mzizi.dev/v1/architecture`. Same rows as `current_nodes()` in the Rust build.
  */
-const CURRENT_NODES: ReadonlyArray<{ number: number; label: string; role: string }> = [
+const CURRENT_NODES: ReadonlyArray<NodeEntry> = [
   { number: 1, label: "Tokens", role: "CSS substrate. The only node that defines CSS values." },
   { number: 2, label: "Primitives", role: "Headless and accessible. Radix + CVA." },
   { number: 3, label: "Brand", role: "N2 plus Ubuntu. Uses mzizi-harness." },
@@ -52,7 +67,7 @@ const CURRENT_NODES: ReadonlyArray<{ number: number; label: string; role: string
 ]
 
 /** The node map as text, each label padded to the widest so it aligns at any node count. */
-function renderNodeMap(nodes: ReadonlyArray<{ number: number; label: string; role: string }>): string {
+function renderNodeMap(nodes: ReadonlyArray<NodeEntry>): string {
   const widest = nodes.reduce((w, n) => Math.max(w, n.label.length), 0)
   let out = "## Node map\n\n"
   out +=
@@ -95,8 +110,7 @@ export function generateAIContext(options: AIContextOptions = {}): string {
 
     if (counts) {
       parts.push(
-        `Live counts: ${counts.totalComponents} components total, ` +
-          `${counts.totalStable} stable, across ${counts.totalNodes} nodes.`
+        `Live counts: ${counts.totalComponents} components total, across ${counts.totalNodes} nodes.`
       )
     }
     parts.push(`Source: ${SITE} | GitHub: ${GITHUB_REPO}`)

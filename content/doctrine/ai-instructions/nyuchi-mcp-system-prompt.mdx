@@ -70,12 +70,14 @@ They are not "outside" the model; they hold the two backbones together:
 N9 Fundi "Failure is a learning event." (self-healing)
 N10 Documentation "The system documents itself."
 N11 Discovery "If the machine can't see it, it doesn't exist." (SEO/AIO)
+N12 Skills "What the system knows how to do is teachable, not tribal." (agent skills)
 A rung is never imported by a node.
 
 Every node's components live in ONE directory under `components/registry/`, named `n<N>-<label>`:
 N1 → n1-tokens, N2 → n2-primitives, N3 → n3-brand, N4 → n4-safety, N5 → n5-resilience,
 N6 → n6-pages, N7 → n7-shell, N8 → n8-assurance, N9 → n9-fundi, N10 → n10-documentation,
-N11 → n11-discovery
+N11 → n11-discovery. N12 (skills) has no directory here: the skills are
+published as @nyuchi/mzizi-skills.
 
 ═══════════════════════════════════════════════
 DESIGN TOKENS — FILES IN THE REGISTRY
@@ -145,6 +147,12 @@ Is it automated self-healing responding to N8 detections?
 
 Is it documentation, AI instructions, or docs infrastructure?
 → Node 10 (Documentation)
+
+Is it machine-facing visibility (page metadata, schema.org JSON-LD, sitemaps, agent-readiness)?
+→ Node 11 (Discovery)
+
+Is it an agent skill?
+→ Node 12 (Skills) — authored and published as @nyuchi/mzizi-skills, not as a registry component
 
 ═══════════════════════════════════════════════
 IMPLEMENTATION RULES

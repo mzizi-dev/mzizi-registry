@@ -43,7 +43,9 @@ When generating code in this repository:
 
 # Tokens
 
-11. Tokens are files in the registry: lib/tokens/palette.source.ts (the 21 colour families) and lib/tokens/brand.source.ts (semantic colours, typography, spacing). Never copy a value; reference the generated CSS variable
+Tokens are files in the registry: lib/tokens/palette.source.ts (the 21 colour families) and lib/tokens/brand.source.ts (semantic colours, typography, spacing). Never copy a value; reference the generated CSS variable.
+
+11. Icons: size them with the mzizi-icons presets (`ICON_SIZES`, through `<Icon size="…">`): xs 12px, sm 16px, md 20px (the default), lg 24px, xl 32px. There are no `--icon-*` CSS variables
 12. Touch targets: 56px by default, never below 48px (the accessibility block of brandMeta in lib/tokens/brand.source.ts)
 13. Spacing: the 17-step spacing scale in brand.source.ts. Default component padding is base (16px), not md (12px, which is compact)
 14. Density: density-aware components follow the density in their contract — do not hardcode tier behaviour

@@ -19,7 +19,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use mzizi_docs::mzizi_ai_context::{
-    AiContextOptions, Endpoints, current_nodes, generate_ai_context,
+    AiContextOptions, EcosystemCounts, Preset, generate_ai_context,
 };
 use mzizi_docs::mzizi_changelog_renderer::{NodeAccent, default_node_styles};
 use mzizi_docs::mzizi_docs_engine::{category_label, default_node_labels, node_label};
@@ -220,66 +220,45 @@ fn the_locale_dependent_date_is_not_reproduced() {
 
 // ── mzizi-ai-context ─────────────────────────────────────────────────────────
 
-/// Read a registry component's plain TypeScript source.
-fn ts(name: &str) -> String {
-    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../components/registry/n10-documentation")
-        .join(format!("{name}.ts"));
-    fs::read_to_string(&path)
-        .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
+/// The golden outputs both builds are held to, one file per case, committed at
+/// `__tests__/fixtures/ai-context/`. `__tests__/lib/ai-context.test.ts` compares
+/// the `.ts`'s `generateAIContext()` against the same files, so the two builds
+/// render byte-identical text. Set `MZIZI_UPDATE_GOLDEN=1` to rewrite them from
+/// the Rust build after a deliberate change, then review the diff.
+fn golden_cases() -> Vec<(&'static str, String)> {
+    vec![
+        ("default", generate_ai_context(&AiContextOptions::default())),
+        (
+            "with-counts",
+            generate_ai_context(&AiContextOptions {
+                counts: Some(EcosystemCounts {
+                    total_components: 575,
+                    total_nodes: 12,
+                }),
+                ..AiContextOptions::default()
+            }),
+        ),
+        ("copilot", Preset::Copilot.render(None)),
+    ]
 }
 
 #[test]
-fn ai_context_node_map_matches_the_typescript() {
-    // The .ts used to carry the retired four-axis model, stopping at N10 (#323).
-    let ts = ts("mzizi-ai-context");
-    for n in current_nodes() {
-        let row = format!(
-            "{{ number: {}, label: \"{}\", role: \"{}\" }}",
-            n.number, n.label, n.role
-        );
-        assert!(ts.contains(&row), "the TypeScript lost node row {row}");
-    }
-}
-
-#[test]
-fn ai_context_rules_and_endpoints_match_the_typescript() {
-    let ts = ts("mzizi-ai-context");
-    let rules = generate_ai_context(&AiContextOptions {
-        include_architecture: false,
-        include_node_map: false,
-        ..AiContextOptions::default()
-    });
-    for line in rules
-        .lines()
-        .filter(|l| !l.is_empty() && !l.starts_with("MCP server"))
-    {
-        assert!(ts.contains(line), "the TypeScript lost rule line {line:?}");
-    }
-    let e = Endpoints::default();
-    for value in [&e.site, &e.repo, &e.mcp] {
-        assert!(
-            ts.contains(&format!("\"{value}\"")),
-            "the TypeScript does not use {value}"
-        );
-    }
-    assert!(ts.contains("\"# Mzizi Design System\""));
-}
-
-#[test]
-fn ai_context_typescript_drops_the_retired_names() {
-    let ts = ts("mzizi-ai-context");
-    for retired in [
-        "# Nyuchi Design System",
-        "Database: Supabase",
-        "\"nyuchi/mzizi\"",
-        "GitHub: nyuchi/mzizi",
-        "get_system_counts",
-        "| horizontal |",
-    ] {
-        assert!(
-            !ts.contains(retired),
-            "the TypeScript still says {retired:?}"
+fn ai_context_matches_the_golden_output_both_builds_share() {
+    let dir =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../__tests__/fixtures/ai-context");
+    let update = std::env::var_os("MZIZI_UPDATE_GOLDEN").is_some();
+    for (name, rendered) in golden_cases() {
+        let path = dir.join(format!("{name}.txt"));
+        if update {
+            fs::create_dir_all(&dir).expect("create the golden directory");
+            fs::write(&path, &rendered).expect("write the golden file");
+            continue;
+        }
+        let golden = fs::read_to_string(&path)
+            .unwrap_or_else(|e| panic!("cannot read the golden file {path:?}: {e}"));
+        assert_eq!(
+            rendered, golden,
+            "the Rust build's {name} output differs from {path:?}; the .ts is held to the same file"
         );
     }
 }

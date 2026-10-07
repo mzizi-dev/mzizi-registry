@@ -26,7 +26,7 @@
 //! So the node map here is **data**, not a literal. [`NodeEntry`] rows are passed
 //! in, the same way counts are, and [`current_nodes`] is a documented default for
 //! a caller with nothing better — not a truth buried in a string. A caller that
-//! reads `/api/v1/architecture` gets a map that cannot go stale at all.
+//! reads `https://api.mzizi.dev/v1/architecture` gets a map that cannot go stale at all.
 //!
 //! # Preserved rather than "fixed"
 //!
@@ -50,10 +50,11 @@
 /// find the numbers than given numbers that have drifted.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct EcosystemCounts {
-    /// Every component in the registry.
+    /// Every component in the registry (`meta.registryTotal` on `/v1/ui`).
+    ///
+    /// There is no stable count: the registry has no per-component status, and
+    /// `/v1/stats` reports none, so the old `total_stable` was removed (#479).
     pub total_components: usize,
-    /// Those marked stable.
-    pub total_stable: usize,
     /// How many nodes exist. Uncapped — see §9.
     pub total_nodes: usize,
 }
@@ -83,7 +84,7 @@ impl NodeEntry {
 
 /// The node set as it stands, for a caller with no live source.
 ///
-/// A DEFAULT, not a definition. The authority is `/api/v1/architecture`, and a
+/// A DEFAULT, not a definition. The authority is `https://api.mzizi.dev/v1/architecture`, and a
 /// caller that can reach it should pass those rows instead — that is the whole
 /// point of the node map being a parameter. Kept here so the component still
 /// produces something useful offline, and so the staleness is visible in a list
@@ -249,8 +250,8 @@ pub fn generate_ai_context(options: &AiContextOptions) -> String {
         parts.push(String::new());
         if let Some(c) = options.counts {
             parts.push(format!(
-                "Live counts: {} components total, {} stable, across {} nodes.",
-                c.total_components, c.total_stable, c.total_nodes
+                "Live counts: {} components total, across {} nodes.",
+                c.total_components, c.total_nodes
             ));
         }
         parts.push(format!(
@@ -380,12 +381,12 @@ mod tests {
         let with = generate_ai_context(&AiContextOptions {
             counts: Some(EcosystemCounts {
                 total_components: 575,
-                total_stable: 500,
                 total_nodes: 12,
             }),
             ..AiContextOptions::default()
         });
-        assert!(with.contains("575 components total, 500 stable, across 12 nodes"));
+        assert!(with.contains("575 components total, across 12 nodes."));
+        assert!(!with.contains("stable"));
         assert!(!with.contains("For live counts"));
     }
 
