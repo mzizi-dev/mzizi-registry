@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — `mzizi-fundi-reporter` files its issues at `mzizi-dev/mzizi-registry` (2026-10-07, #PRNUM)
+### Fixed — `mzizi-fundi-reporter` files its issues at `mzizi-dev/mzizi-registry` (2026-10-07, #476)
 
 The reporter's GitHub destination was still the hardcoded `nyuchi/mzizi`, the registry's name before the rename, which reached the right tracker only through GitHub's rename redirect (#321). Installed copies now POST to `https://api.github.com/repos/mzizi-dev/mzizi-registry/issues`. The `.ts` exports the destination as `GITHUB_REPO`, and the Rust build (`mzizi-fundi`'s `mzizi_fundi_reporter::GITHUB_REPO`) exports the same value for hosts that file the issue themselves. The Rust contract test, which had pinned the stale value, now holds both builds to `mzizi-dev/mzizi-registry` and fails on `nyuchi/mzizi`, `nyuchi/design-portal` or `mzizi-dev/mzizi` (the Mzizi language). `docs/n8-telemetry.md` says the same.
 
