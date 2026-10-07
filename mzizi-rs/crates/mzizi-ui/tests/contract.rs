@@ -599,3 +599,227 @@ mod markdown {
         }
     }
 }
+
+// ─── device-code ────────────────────────────────────────────────────────────────────────────
+//
+// The React and Astro builds share `device-code-format.ts` and `qr-code.ts`; this build has its
+// own formatting and draws its QR code with the `qrcode` crate. They are held together by the
+// same class strings and words, and by `__tests__/fixtures/device-code.cases.json` (which the
+// TypeScript suite runs too): every QR version at every error-correction level must give the
+// same matrix, and every code, countdown, address, status and time the same text.
+
+mod device_code {
+    use super::*;
+    use mzizi_ui::device_code::{
+        DeviceCodeStatus, QrEcc, classes, display_uri, effective_status, format_remaining,
+        format_user_code, qr_matrix, qr_path, qr_view_box, rfc3339_to_unix_ms, spoken_user_code,
+        status_message, text,
+    };
+    use serde_json::Value;
+
+    fn source(file: &str) -> String {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n2-primitives")
+            .join(file);
+        fs::read_to_string(&path).unwrap_or_else(|e| panic!("cannot read {path:?}: {e}"))
+    }
+
+    fn fixture() -> Value {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../__tests__/fixtures/device-code.cases.json");
+        serde_json::from_str(&fs::read_to_string(path).unwrap()).unwrap()
+    }
+
+    fn ecc(v: &Value) -> QrEcc {
+        match v.as_str().unwrap() {
+            "L" => QrEcc::L,
+            "M" => QrEcc::M,
+            "Q" => QrEcc::Q,
+            "H" => QrEcc::H,
+            other => panic!("unknown level {other}"),
+        }
+    }
+
+    fn bits(dark: &[bool]) -> String {
+        dark.iter().map(|d| if *d { '1' } else { '0' }).collect()
+    }
+
+    fn fnv1a64(s: &str) -> String {
+        let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+        for b in s.bytes() {
+            h ^= u64::from(b);
+            h = h.wrapping_mul(0x0100_0000_01b3);
+        }
+        format!("{h:016x}")
+    }
+
+    #[test]
+    fn classes_and_words_are_the_typescript_ones() {
+        let ts = source("device-code-format.ts");
+        let mut all = vec![
+            classes::ROOT,
+            classes::STEPS,
+            classes::TIMER,
+            classes::FIGURE,
+            classes::ENDED,
+        ];
+        for pair in [
+            classes::ROOT_SIZE,
+            classes::PENDING,
+            classes::STEP,
+            classes::URI,
+            classes::CODE,
+            classes::COUNTDOWN,
+            classes::QR,
+            classes::CAPTION,
+            classes::STATUS,
+            classes::DOT,
+            classes::REFRESH,
+        ] {
+            all.extend(pair);
+        }
+        all.extend([
+            text::LABEL,
+            text::GO_TO,
+            text::ENTER,
+            text::SPOKEN_PREFIX,
+            text::EXPIRES_IN,
+            text::SCAN,
+            text::REFRESH,
+            text::LAST_MINUTE,
+        ]);
+        for s in all {
+            assert!(
+                ts.contains(&format!("\"{s}\"")),
+                "device-code.rs has the string `{s}`, which device-code-format.ts does not: the \
+                 builds have drifted"
+            );
+        }
+    }
+
+    #[test]
+    fn every_data_slot_the_rust_emits_exists_in_the_other_builds() {
+        let rs = source("device-code.rs");
+        for other in ["device-code.tsx", "device-code.astro"] {
+            let src = source(other);
+            for slot in rs
+                .match_indices("\"data-slot\": \"")
+                .map(|(i, m)| &rs[i + m.len()..])
+                .map(|rest| &rest[..rest.find('"').unwrap()])
+            {
+                assert!(
+                    src.contains(&format!("data-slot=\"{slot}\"")),
+                    "device-code.rs emits data-slot=\"{slot}\", which {other} does not"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn the_qr_matrix_matches_the_typescript_at_every_version_and_level() {
+        let f = fixture();
+        let seed = f["seed"].as_str().unwrap();
+        let cases = f["qr"].as_array().unwrap();
+        assert_eq!(
+            cases.len(),
+            4 * 41,
+            "40 versions and one too-long case per level"
+        );
+        for c in cases {
+            let n = usize::try_from(c["length"].as_u64().unwrap()).unwrap();
+            let text: String = seed.repeat(n / seed.len() + 2)[..n].to_owned();
+            let got = qr_matrix(&text, ecc(&c["ecc"]));
+            match c["version"].as_i64() {
+                None => assert!(got.is_none(), "{c}: should be too long for version 40"),
+                Some(v) => {
+                    let m = got.unwrap_or_else(|| panic!("{c}: no matrix"));
+                    assert_eq!(i64::from(m.version), v, "{c}");
+                    assert_eq!(m.size, usize::try_from(v * 4 + 17).unwrap(), "{c}");
+                    assert_eq!(
+                        fnv1a64(&bits(&m.dark)),
+                        c["fnv1a64"].as_str().unwrap(),
+                        "{c}"
+                    );
+                }
+            }
+        }
+        for c in f["qrLiteral"].as_array().unwrap() {
+            let m = qr_matrix(c["text"].as_str().unwrap(), ecc(&c["ecc"])).unwrap();
+            assert_eq!(i64::from(m.version), c["version"].as_i64().unwrap());
+            let rows: Vec<String> = m.dark.chunks(m.size).map(bits).collect();
+            let want: Vec<String> = c["rows"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|r| r.as_str().unwrap().to_owned())
+                .collect();
+            assert_eq!(rows, want, "whole matrix of {}", c["text"]);
+        }
+    }
+
+    #[test]
+    fn the_path_is_one_subpath_per_run() {
+        let m = mzizi_ui::QrMatrix {
+            size: 3,
+            version: 1,
+            dark: vec![true, true, false, false, false, false, false, true, true],
+        };
+        assert_eq!(qr_path(&m, 4), "M4 4h2v1h-2zM5 6h2v1h-2z");
+        assert_eq!(qr_view_box(21, 4), "0 0 29 29");
+    }
+
+    #[test]
+    fn the_words_match_the_typescript_case_for_case() {
+        let f = fixture();
+        for c in f["userCode"].as_array().unwrap() {
+            let input = c["in"].as_str().unwrap();
+            assert_eq!(
+                format_user_code(input),
+                c["display"].as_str().unwrap(),
+                "{c}"
+            );
+            assert_eq!(
+                spoken_user_code(input),
+                c["spoken"].as_str().unwrap(),
+                "{c}"
+            );
+        }
+        for c in f["remaining"].as_array().unwrap() {
+            assert_eq!(
+                format_remaining(c["ms"].as_i64().unwrap()),
+                c["text"].as_str().unwrap(),
+                "{c}"
+            );
+        }
+        for c in f["uri"].as_array().unwrap() {
+            assert_eq!(
+                display_uri(c["in"].as_str().unwrap()),
+                c["out"].as_str().unwrap()
+            );
+        }
+        for c in f["status"].as_array().unwrap() {
+            let status = match c["status"].as_str().unwrap() {
+                "pending" => DeviceCodeStatus::Pending,
+                "approved" => DeviceCodeStatus::Approved,
+                "expired" => DeviceCodeStatus::Expired,
+                "denied" => DeviceCodeStatus::Denied,
+                _ => DeviceCodeStatus::Error,
+            };
+            let ms = c["ms"].as_i64().unwrap();
+            let shown = effective_status(status, ms);
+            assert_eq!(shown.slug(), c["shown"].as_str().unwrap(), "{c}");
+            assert_eq!(
+                status_message(shown, ms),
+                c["message"].as_str().unwrap(),
+                "{c}"
+            );
+        }
+        for c in f["time"].as_array().unwrap() {
+            assert_eq!(
+                rfc3339_to_unix_ms(c["in"].as_str().unwrap()),
+                c["ms"].as_i64(),
+                "{c}"
+            );
+        }
+    }
+}

@@ -1,0 +1,1295 @@
+{
+  "$comment": "Shared by __tests__/components/device-code.test.tsx (qr-code.ts, device-code-format.ts) and mzizi-rs/crates/mzizi-ui/tests/contract.rs (device-code.rs). qr: for each level, the longest text each version 1-40 holds (the first `length` characters of `seed` repeated) and the FNV-1a 64 hash of its matrix as row-major '0'/'1'; version null is one byte too long for version 40. qrLiteral: whole matrices, rows top to bottom, 1 = dark.",
+  "seed": "https://mukoko.com/link?code=KTQB4RMX&device=kitchen-display-0123456789-abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ/",
+  "qr": [
+    {
+      "ecc": "L",
+      "length": 17,
+      "version": 1,
+      "fnv1a64": "fcb2bab808224b2f"
+    },
+    {
+      "ecc": "L",
+      "length": 32,
+      "version": 2,
+      "fnv1a64": "3ffeb571b5dac8f5"
+    },
+    {
+      "ecc": "L",
+      "length": 53,
+      "version": 3,
+      "fnv1a64": "bf801da2308cba4f"
+    },
+    {
+      "ecc": "L",
+      "length": 78,
+      "version": 4,
+      "fnv1a64": "e74c9a81da3dfb6e"
+    },
+    {
+      "ecc": "L",
+      "length": 106,
+      "version": 5,
+      "fnv1a64": "8c7a2407f63b578f"
+    },
+    {
+      "ecc": "L",
+      "length": 134,
+      "version": 6,
+      "fnv1a64": "9098730b175a9eb3"
+    },
+    {
+      "ecc": "L",
+      "length": 154,
+      "version": 7,
+      "fnv1a64": "1f3336bf69ec965f"
+    },
+    {
+      "ecc": "L",
+      "length": 192,
+      "version": 8,
+      "fnv1a64": "097121cbe167a4d3"
+    },
+    {
+      "ecc": "L",
+      "length": 230,
+      "version": 9,
+      "fnv1a64": "1bb3874ee4b5643a"
+    },
+    {
+      "ecc": "L",
+      "length": 271,
+      "version": 10,
+      "fnv1a64": "2a370b982a4de77b"
+    },
+    {
+      "ecc": "L",
+      "length": 321,
+      "version": 11,
+      "fnv1a64": "ef0ac05e96562907"
+    },
+    {
+      "ecc": "L",
+      "length": 367,
+      "version": 12,
+      "fnv1a64": "9e9eec4840f14083"
+    },
+    {
+      "ecc": "L",
+      "length": 425,
+      "version": 13,
+      "fnv1a64": "b4615c55987e146f"
+    },
+    {
+      "ecc": "L",
+      "length": 458,
+      "version": 14,
+      "fnv1a64": "80d25bb5a381eddf"
+    },
+    {
+      "ecc": "L",
+      "length": 520,
+      "version": 15,
+      "fnv1a64": "2702bc2e0ee759e6"
+    },
+    {
+      "ecc": "L",
+      "length": 586,
+      "version": 16,
+      "fnv1a64": "181131e097a821ea"
+    },
+    {
+      "ecc": "L",
+      "length": 644,
+      "version": 17,
+      "fnv1a64": "c2500e2aea9ea375"
+    },
+    {
+      "ecc": "L",
+      "length": 718,
+      "version": 18,
+      "fnv1a64": "c5becd77b9cbd3ca"
+    },
+    {
+      "ecc": "L",
+      "length": 792,
+      "version": 19,
+      "fnv1a64": "e9b02bc9ea9293c5"
+    },
+    {
+      "ecc": "L",
+      "length": 858,
+      "version": 20,
+      "fnv1a64": "87ac0ca2e7f88b1f"
+    },
+    {
+      "ecc": "L",
+      "length": 929,
+      "version": 21,
+      "fnv1a64": "30f0cfab5103b8d5"
+    },
+    {
+      "ecc": "L",
+      "length": 1003,
+      "version": 22,
+      "fnv1a64": "da3deafdd08953dd"
+    },
+    {
+      "ecc": "L",
+      "length": 1091,
+      "version": 23,
+      "fnv1a64": "71557b992c485beb"
+    },
+    {
+      "ecc": "L",
+      "length": 1171,
+      "version": 24,
+      "fnv1a64": "e3c03e7a13fe7898"
+    },
+    {
+      "ecc": "L",
+      "length": 1273,
+      "version": 25,
+      "fnv1a64": "51f868349b23b2c7"
+    },
+    {
+      "ecc": "L",
+      "length": 1367,
+      "version": 26,
+      "fnv1a64": "030f68bc23d44257"
+    },
+    {
+      "ecc": "L",
+      "length": 1465,
+      "version": 27,
+      "fnv1a64": "d36754fffde186dd"
+    },
+    {
+      "ecc": "L",
+      "length": 1528,
+      "version": 28,
+      "fnv1a64": "aec23d59ad41dc84"
+    },
+    {
+      "ecc": "L",
+      "length": 1628,
+      "version": 29,
+      "fnv1a64": "f51e7c670ec727d3"
+    },
+    {
+      "ecc": "L",
+      "length": 1732,
+      "version": 30,
+      "fnv1a64": "b85117de31cce745"
+    },
+    {
+      "ecc": "L",
+      "length": 1840,
+      "version": 31,
+      "fnv1a64": "db9545ebc6985830"
+    },
+    {
+      "ecc": "L",
+      "length": 1952,
+      "version": 32,
+      "fnv1a64": "a0a35be8f9e5fc1c"
+    },
+    {
+      "ecc": "L",
+      "length": 2068,
+      "version": 33,
+      "fnv1a64": "8c829481280d67dc"
+    },
+    {
+      "ecc": "L",
+      "length": 2188,
+      "version": 34,
+      "fnv1a64": "fd5725336097e719"
+    },
+    {
+      "ecc": "L",
+      "length": 2303,
+      "version": 35,
+      "fnv1a64": "6ee920edb5e21fff"
+    },
+    {
+      "ecc": "L",
+      "length": 2431,
+      "version": 36,
+      "fnv1a64": "6ce36878a1612ca3"
+    },
+    {
+      "ecc": "L",
+      "length": 2563,
+      "version": 37,
+      "fnv1a64": "f367c4889243b8f3"
+    },
+    {
+      "ecc": "L",
+      "length": 2699,
+      "version": 38,
+      "fnv1a64": "f599e4f91395ff77"
+    },
+    {
+      "ecc": "L",
+      "length": 2809,
+      "version": 39,
+      "fnv1a64": "02241ebcfff0e6b4"
+    },
+    {
+      "ecc": "L",
+      "length": 2953,
+      "version": 40,
+      "fnv1a64": "35e9351cc91e8ba9"
+    },
+    {
+      "ecc": "L",
+      "length": 2954,
+      "version": null
+    },
+    {
+      "ecc": "M",
+      "length": 14,
+      "version": 1,
+      "fnv1a64": "c7bd3554f0f0ff35"
+    },
+    {
+      "ecc": "M",
+      "length": 26,
+      "version": 2,
+      "fnv1a64": "74198a93aa92d990"
+    },
+    {
+      "ecc": "M",
+      "length": 42,
+      "version": 3,
+      "fnv1a64": "48e2883db7501637"
+    },
+    {
+      "ecc": "M",
+      "length": 62,
+      "version": 4,
+      "fnv1a64": "58ed9eb40b5a126a"
+    },
+    {
+      "ecc": "M",
+      "length": 84,
+      "version": 5,
+      "fnv1a64": "7503fdcf26bbf9ba"
+    },
+    {
+      "ecc": "M",
+      "length": 106,
+      "version": 6,
+      "fnv1a64": "8f8c02a867f09a56"
+    },
+    {
+      "ecc": "M",
+      "length": 122,
+      "version": 7,
+      "fnv1a64": "576caab67198cfa3"
+    },
+    {
+      "ecc": "M",
+      "length": 152,
+      "version": 8,
+      "fnv1a64": "ec38117a40cc69b5"
+    },
+    {
+      "ecc": "M",
+      "length": 180,
+      "version": 9,
+      "fnv1a64": "71322ff3a2aaaf6e"
+    },
+    {
+      "ecc": "M",
+      "length": 213,
+      "version": 10,
+      "fnv1a64": "a9af88eb09dcbf19"
+    },
+    {
+      "ecc": "M",
+      "length": 251,
+      "version": 11,
+      "fnv1a64": "a1833f259eddbcf1"
+    },
+    {
+      "ecc": "M",
+      "length": 287,
+      "version": 12,
+      "fnv1a64": "c0ae0ed68e03c0c7"
+    },
+    {
+      "ecc": "M",
+      "length": 331,
+      "version": 13,
+      "fnv1a64": "daad18e2b3fec8b7"
+    },
+    {
+      "ecc": "M",
+      "length": 362,
+      "version": 14,
+      "fnv1a64": "6e32e43c04f5ecd7"
+    },
+    {
+      "ecc": "M",
+      "length": 412,
+      "version": 15,
+      "fnv1a64": "8fcb272b42dc3b91"
+    },
+    {
+      "ecc": "M",
+      "length": 450,
+      "version": 16,
+      "fnv1a64": "88d6d9978b80ba46"
+    },
+    {
+      "ecc": "M",
+      "length": 504,
+      "version": 17,
+      "fnv1a64": "ae9cf2f275bfb9b9"
+    },
+    {
+      "ecc": "M",
+      "length": 560,
+      "version": 18,
+      "fnv1a64": "5a5b1ff0889bbdc8"
+    },
+    {
+      "ecc": "M",
+      "length": 624,
+      "version": 19,
+      "fnv1a64": "49e3883dfc45aedd"
+    },
+    {
+      "ecc": "M",
+      "length": 666,
+      "version": 20,
+      "fnv1a64": "978828cbc258f055"
+    },
+    {
+      "ecc": "M",
+      "length": 711,
+      "version": 21,
+      "fnv1a64": "f1987170acdc6b10"
+    },
+    {
+      "ecc": "M",
+      "length": 779,
+      "version": 22,
+      "fnv1a64": "f5c65ab0b9179a07"
+    },
+    {
+      "ecc": "M",
+      "length": 857,
+      "version": 23,
+      "fnv1a64": "29dbaef2e544f268"
+    },
+    {
+      "ecc": "M",
+      "length": 911,
+      "version": 24,
+      "fnv1a64": "a8e6d9ebf9a3f4c9"
+    },
+    {
+      "ecc": "M",
+      "length": 997,
+      "version": 25,
+      "fnv1a64": "e54eda315e3ebaba"
+    },
+    {
+      "ecc": "M",
+      "length": 1059,
+      "version": 26,
+      "fnv1a64": "f02d1f7bfcc29f15"
+    },
+    {
+      "ecc": "M",
+      "length": 1125,
+      "version": 27,
+      "fnv1a64": "b0f437a15c5b27a5"
+    },
+    {
+      "ecc": "M",
+      "length": 1190,
+      "version": 28,
+      "fnv1a64": "11540a5eef09efbc"
+    },
+    {
+      "ecc": "M",
+      "length": 1264,
+      "version": 29,
+      "fnv1a64": "c63f087bb39ffa27"
+    },
+    {
+      "ecc": "M",
+      "length": 1370,
+      "version": 30,
+      "fnv1a64": "853ca8df1d831018"
+    },
+    {
+      "ecc": "M",
+      "length": 1452,
+      "version": 31,
+      "fnv1a64": "ae7286a464d4ee70"
+    },
+    {
+      "ecc": "M",
+      "length": 1538,
+      "version": 32,
+      "fnv1a64": "79c7d8353e314a0c"
+    },
+    {
+      "ecc": "M",
+      "length": 1628,
+      "version": 33,
+      "fnv1a64": "5b97b67d81787b21"
+    },
+    {
+      "ecc": "M",
+      "length": 1722,
+      "version": 34,
+      "fnv1a64": "4e17f85644142139"
+    },
+    {
+      "ecc": "M",
+      "length": 1809,
+      "version": 35,
+      "fnv1a64": "8261ac6173998e36"
+    },
+    {
+      "ecc": "M",
+      "length": 1911,
+      "version": 36,
+      "fnv1a64": "48f8bc3f315bf123"
+    },
+    {
+      "ecc": "M",
+      "length": 1989,
+      "version": 37,
+      "fnv1a64": "fb8b1d332e776ae7"
+    },
+    {
+      "ecc": "M",
+      "length": 2099,
+      "version": 38,
+      "fnv1a64": "7e9949a61d4ce725"
+    },
+    {
+      "ecc": "M",
+      "length": 2213,
+      "version": 39,
+      "fnv1a64": "a73ab49a58bbe74a"
+    },
+    {
+      "ecc": "M",
+      "length": 2331,
+      "version": 40,
+      "fnv1a64": "a65bb5098bb42973"
+    },
+    {
+      "ecc": "M",
+      "length": 2332,
+      "version": null
+    },
+    {
+      "ecc": "Q",
+      "length": 11,
+      "version": 1,
+      "fnv1a64": "cd59cf430bedda59"
+    },
+    {
+      "ecc": "Q",
+      "length": 20,
+      "version": 2,
+      "fnv1a64": "62bb5907d2d3a58f"
+    },
+    {
+      "ecc": "Q",
+      "length": 32,
+      "version": 3,
+      "fnv1a64": "a603b82cb018fbdf"
+    },
+    {
+      "ecc": "Q",
+      "length": 46,
+      "version": 4,
+      "fnv1a64": "524c406bc29bb931"
+    },
+    {
+      "ecc": "Q",
+      "length": 60,
+      "version": 5,
+      "fnv1a64": "1f946456eed3a22f"
+    },
+    {
+      "ecc": "Q",
+      "length": 74,
+      "version": 6,
+      "fnv1a64": "8942b2ed5d04141b"
+    },
+    {
+      "ecc": "Q",
+      "length": 86,
+      "version": 7,
+      "fnv1a64": "3c89a7f971bbc0c3"
+    },
+    {
+      "ecc": "Q",
+      "length": 108,
+      "version": 8,
+      "fnv1a64": "78f0739dd7c9093f"
+    },
+    {
+      "ecc": "Q",
+      "length": 130,
+      "version": 9,
+      "fnv1a64": "dc9009f6d5151450"
+    },
+    {
+      "ecc": "Q",
+      "length": 151,
+      "version": 10,
+      "fnv1a64": "651041b14b103aab"
+    },
+    {
+      "ecc": "Q",
+      "length": 177,
+      "version": 11,
+      "fnv1a64": "d75b857ef13fa451"
+    },
+    {
+      "ecc": "Q",
+      "length": 203,
+      "version": 12,
+      "fnv1a64": "3b8ef43a18354d99"
+    },
+    {
+      "ecc": "Q",
+      "length": 241,
+      "version": 13,
+      "fnv1a64": "4277439a3ee7da69"
+    },
+    {
+      "ecc": "Q",
+      "length": 258,
+      "version": 14,
+      "fnv1a64": "72fa7c87f6eb1a4b"
+    },
+    {
+      "ecc": "Q",
+      "length": 292,
+      "version": 15,
+      "fnv1a64": "3dc1fd6019a07234"
+    },
+    {
+      "ecc": "Q",
+      "length": 322,
+      "version": 16,
+      "fnv1a64": "3559e77040f3fbf2"
+    },
+    {
+      "ecc": "Q",
+      "length": 364,
+      "version": 17,
+      "fnv1a64": "188d583b78e35997"
+    },
+    {
+      "ecc": "Q",
+      "length": 394,
+      "version": 18,
+      "fnv1a64": "56224c8d237767f8"
+    },
+    {
+      "ecc": "Q",
+      "length": 442,
+      "version": 19,
+      "fnv1a64": "25975180c0f3efc5"
+    },
+    {
+      "ecc": "Q",
+      "length": 482,
+      "version": 20,
+      "fnv1a64": "cfbd3b70813e08c5"
+    },
+    {
+      "ecc": "Q",
+      "length": 509,
+      "version": 21,
+      "fnv1a64": "a548683f33d59979"
+    },
+    {
+      "ecc": "Q",
+      "length": 565,
+      "version": 22,
+      "fnv1a64": "534b1c6203e027e1"
+    },
+    {
+      "ecc": "Q",
+      "length": 611,
+      "version": 23,
+      "fnv1a64": "f75c3d04e65f5584"
+    },
+    {
+      "ecc": "Q",
+      "length": 661,
+      "version": 24,
+      "fnv1a64": "636e75d84cdf5ab3"
+    },
+    {
+      "ecc": "Q",
+      "length": 715,
+      "version": 25,
+      "fnv1a64": "acea5976cea12da7"
+    },
+    {
+      "ecc": "Q",
+      "length": 751,
+      "version": 26,
+      "fnv1a64": "1c2c7ab96359d8ea"
+    },
+    {
+      "ecc": "Q",
+      "length": 805,
+      "version": 27,
+      "fnv1a64": "9e73b223d666a821"
+    },
+    {
+      "ecc": "Q",
+      "length": 868,
+      "version": 28,
+      "fnv1a64": "fed7b4d560912bf8"
+    },
+    {
+      "ecc": "Q",
+      "length": 908,
+      "version": 29,
+      "fnv1a64": "77aef70f9183ea2d"
+    },
+    {
+      "ecc": "Q",
+      "length": 982,
+      "version": 30,
+      "fnv1a64": "10ef7c44f8460be0"
+    },
+    {
+      "ecc": "Q",
+      "length": 1030,
+      "version": 31,
+      "fnv1a64": "d7f0fcdeeea42626"
+    },
+    {
+      "ecc": "Q",
+      "length": 1112,
+      "version": 32,
+      "fnv1a64": "d365aed1b132fb6c"
+    },
+    {
+      "ecc": "Q",
+      "length": 1168,
+      "version": 33,
+      "fnv1a64": "9d5b4bbc98bc3876"
+    },
+    {
+      "ecc": "Q",
+      "length": 1228,
+      "version": 34,
+      "fnv1a64": "dc97c064897d055b"
+    },
+    {
+      "ecc": "Q",
+      "length": 1283,
+      "version": 35,
+      "fnv1a64": "d86cc4c90c83860b"
+    },
+    {
+      "ecc": "Q",
+      "length": 1351,
+      "version": 36,
+      "fnv1a64": "dfb0ab8510c32486"
+    },
+    {
+      "ecc": "Q",
+      "length": 1423,
+      "version": 37,
+      "fnv1a64": "90ea8a5e5f14b00b"
+    },
+    {
+      "ecc": "Q",
+      "length": 1499,
+      "version": 38,
+      "fnv1a64": "691d198a22c66503"
+    },
+    {
+      "ecc": "Q",
+      "length": 1579,
+      "version": 39,
+      "fnv1a64": "43aa1ec6fc671053"
+    },
+    {
+      "ecc": "Q",
+      "length": 1663,
+      "version": 40,
+      "fnv1a64": "9f2914bba540c1e7"
+    },
+    {
+      "ecc": "Q",
+      "length": 1664,
+      "version": null
+    },
+    {
+      "ecc": "H",
+      "length": 7,
+      "version": 1,
+      "fnv1a64": "20f709d071fa87f3"
+    },
+    {
+      "ecc": "H",
+      "length": 14,
+      "version": 2,
+      "fnv1a64": "56cf7e8ce7f89a96"
+    },
+    {
+      "ecc": "H",
+      "length": 24,
+      "version": 3,
+      "fnv1a64": "3c724747458161ba"
+    },
+    {
+      "ecc": "H",
+      "length": 34,
+      "version": 4,
+      "fnv1a64": "7561406aa2f3cdbe"
+    },
+    {
+      "ecc": "H",
+      "length": 44,
+      "version": 5,
+      "fnv1a64": "b108d4d2cb160f08"
+    },
+    {
+      "ecc": "H",
+      "length": 58,
+      "version": 6,
+      "fnv1a64": "81dd95782febb7d6"
+    },
+    {
+      "ecc": "H",
+      "length": 64,
+      "version": 7,
+      "fnv1a64": "3c60957a343428a9"
+    },
+    {
+      "ecc": "H",
+      "length": 84,
+      "version": 8,
+      "fnv1a64": "ece2655e64adf580"
+    },
+    {
+      "ecc": "H",
+      "length": 98,
+      "version": 9,
+      "fnv1a64": "488f367c60357bab"
+    },
+    {
+      "ecc": "H",
+      "length": 119,
+      "version": 10,
+      "fnv1a64": "c14a775098ae30ff"
+    },
+    {
+      "ecc": "H",
+      "length": 137,
+      "version": 11,
+      "fnv1a64": "43962f1197d51d45"
+    },
+    {
+      "ecc": "H",
+      "length": 155,
+      "version": 12,
+      "fnv1a64": "b1f25256d7a668d9"
+    },
+    {
+      "ecc": "H",
+      "length": 177,
+      "version": 13,
+      "fnv1a64": "2c0cd7606caa3077"
+    },
+    {
+      "ecc": "H",
+      "length": 194,
+      "version": 14,
+      "fnv1a64": "86e60c99e41459d4"
+    },
+    {
+      "ecc": "H",
+      "length": 220,
+      "version": 15,
+      "fnv1a64": "8d82d1c1905d2b6f"
+    },
+    {
+      "ecc": "H",
+      "length": 250,
+      "version": 16,
+      "fnv1a64": "ebeb7377f61cb112"
+    },
+    {
+      "ecc": "H",
+      "length": 280,
+      "version": 17,
+      "fnv1a64": "c0d7773df3c9c885"
+    },
+    {
+      "ecc": "H",
+      "length": 310,
+      "version": 18,
+      "fnv1a64": "f357c555f33421a0"
+    },
+    {
+      "ecc": "H",
+      "length": 338,
+      "version": 19,
+      "fnv1a64": "1fdd55ce014d5517"
+    },
+    {
+      "ecc": "H",
+      "length": 382,
+      "version": 20,
+      "fnv1a64": "ed3c6c56890d419e"
+    },
+    {
+      "ecc": "H",
+      "length": 403,
+      "version": 21,
+      "fnv1a64": "6f3c1ec9de037788"
+    },
+    {
+      "ecc": "H",
+      "length": 439,
+      "version": 22,
+      "fnv1a64": "10f6256dfa5d8ce9"
+    },
+    {
+      "ecc": "H",
+      "length": 461,
+      "version": 23,
+      "fnv1a64": "e7b03fe26af23cdd"
+    },
+    {
+      "ecc": "H",
+      "length": 511,
+      "version": 24,
+      "fnv1a64": "471043659ac8ef86"
+    },
+    {
+      "ecc": "H",
+      "length": 535,
+      "version": 25,
+      "fnv1a64": "d403cb7167a667e6"
+    },
+    {
+      "ecc": "H",
+      "length": 593,
+      "version": 26,
+      "fnv1a64": "07de92956f1c72a7"
+    },
+    {
+      "ecc": "H",
+      "length": 625,
+      "version": 27,
+      "fnv1a64": "7dc5566ea89e0b47"
+    },
+    {
+      "ecc": "H",
+      "length": 658,
+      "version": 28,
+      "fnv1a64": "e4639262d6ea5160"
+    },
+    {
+      "ecc": "H",
+      "length": 698,
+      "version": 29,
+      "fnv1a64": "e46ec8174b1e37e5"
+    },
+    {
+      "ecc": "H",
+      "length": 742,
+      "version": 30,
+      "fnv1a64": "83f6c1ee0ddce8e1"
+    },
+    {
+      "ecc": "H",
+      "length": 790,
+      "version": 31,
+      "fnv1a64": "7e56357c4e9825ec"
+    },
+    {
+      "ecc": "H",
+      "length": 842,
+      "version": 32,
+      "fnv1a64": "b083e64b46c4bae4"
+    },
+    {
+      "ecc": "H",
+      "length": 898,
+      "version": 33,
+      "fnv1a64": "8d1c1b4d197986ce"
+    },
+    {
+      "ecc": "H",
+      "length": 958,
+      "version": 34,
+      "fnv1a64": "9ebc2e53359787a3"
+    },
+    {
+      "ecc": "H",
+      "length": 983,
+      "version": 35,
+      "fnv1a64": "688275a39e7a9c99"
+    },
+    {
+      "ecc": "H",
+      "length": 1051,
+      "version": 36,
+      "fnv1a64": "8e96bf00450afbe5"
+    },
+    {
+      "ecc": "H",
+      "length": 1093,
+      "version": 37,
+      "fnv1a64": "982c0709581427ff"
+    },
+    {
+      "ecc": "H",
+      "length": 1139,
+      "version": 38,
+      "fnv1a64": "7bce8fc841c1d60c"
+    },
+    {
+      "ecc": "H",
+      "length": 1219,
+      "version": 39,
+      "fnv1a64": "be1c9aea35906431"
+    },
+    {
+      "ecc": "H",
+      "length": 1273,
+      "version": 40,
+      "fnv1a64": "b161ce209c4ccef5"
+    },
+    {
+      "ecc": "H",
+      "length": 1274,
+      "version": null
+    }
+  ],
+  "qrLiteral": [
+    {
+      "ecc": "M",
+      "text": "https://mukoko.com/link?code=KTQB4RMX",
+      "version": 3,
+      "rows": [
+        "11111110010011000111001111111",
+        "10000010101001011001001000001",
+        "10111010001010100001001011101",
+        "10111010010011000000001011101",
+        "10111010110111100101001011101",
+        "10000010010100110011101000001",
+        "11111110101010101010101111111",
+        "00000000001110000111000000000",
+        "10101010011110000101100010010",
+        "01111100101111011100111001001",
+        "00000010000100101110100100111",
+        "11010001111001111111101010010",
+        "01111011001100100101111001011",
+        "01001000110110100000111001001",
+        "10001011100001001100010101011",
+        "11111000000010000110101111010",
+        "01100111111110001101101001011",
+        "00010000111111011100011001101",
+        "10000111100000100000010110011",
+        "01010101101011110101111001010",
+        "10101010010110100101111110000",
+        "00000000100000111101100010111",
+        "11111110011011001001101011011",
+        "10000010011110011110100011000",
+        "10111010101000000110111110011",
+        "10111010010100011010100010111",
+        "10111010100111100001000111001",
+        "10000010011110100111110000010",
+        "11111110110010111001110100011"
+      ]
+    },
+    {
+      "ecc": "M",
+      "text": "https://home.mukoko.com/link?code=BCDF-GHJK",
+      "version": 4,
+      "rows": [
+        "111111100110000010111101001111111",
+        "100000100010100110101100101000001",
+        "101110101010101010010111001011101",
+        "101110101101100000100101101011101",
+        "101110101110101111001010001011101",
+        "100000101010110001010111101000001",
+        "111111101010101010101010101111111",
+        "000000001100101010011111000000000",
+        "101111100111111011010011101111100",
+        "011110000010010001111011101101111",
+        "010011110010111111000010011010100",
+        "110010010111010001111000010011110",
+        "101001101000001010011110110111010",
+        "011000010110100101100100100101011",
+        "100101100101100110001110011111110",
+        "011011001001001100000111111001100",
+        "100100100101110101100011110110101",
+        "000110010101000010110101001101101",
+        "101000110010111100101100010110110",
+        "101110010101111010011110011111100",
+        "110001100110000000110101110101010",
+        "100000001010000111001010000000101",
+        "100010101100001001010000101100010",
+        "101111011111000010011111100001111",
+        "101111100110011001010011111110101",
+        "000000001100000011111000100010101",
+        "111111100001110111001011101010110",
+        "100000101001111101110001100011111",
+        "101110101110110010011110111111011",
+        "101110101000001101100001010010101",
+        "101110101101111110001011001101000",
+        "100000100000010100100110101011100",
+        "111111101100000101000011100100110"
+      ]
+    },
+    {
+      "ecc": "L",
+      "text": "KTQB-4RMX ñ 日本 🙂",
+      "version": 2,
+      "rows": [
+        "1111111000100100101111111",
+        "1000001011100010101000001",
+        "1011101010000101001011101",
+        "1011101001001001001011101",
+        "1011101011101011101011101",
+        "1000001010101100101000001",
+        "1111111010101010101111111",
+        "0000000010110001000000000",
+        "1101001100011100101110110",
+        "1100000001011100011101000",
+        "0011011010011111101111011",
+        "0000100011111010100100000",
+        "0110001100110100010110111",
+        "0100010110010011110101100",
+        "1001101000110001111100001",
+        "0111010000110000101011001",
+        "1111111101101110111110100",
+        "0000000011001001100010100",
+        "1111111011111101101011111",
+        "1000001000001110100011110",
+        "1011101001001001111111010",
+        "1011101010110011011100000",
+        "1011101001001110010010001",
+        "1000001011110001100100000",
+        "1111111010101010111011111"
+      ]
+    },
+    {
+      "ecc": "H",
+      "text": "",
+      "version": 1,
+      "rows": [
+        "111111101110001111111",
+        "100000101000101000001",
+        "101110100001101011101",
+        "101110101001101011101",
+        "101110101011001011101",
+        "100000101101001000001",
+        "111111101010101111111",
+        "000000000101100000000",
+        "000100100000100111011",
+        "001101011001000101010",
+        "010111111110010111100",
+        "000111011100100110010",
+        "110111100001111101110",
+        "000000001101101010100",
+        "111111100001010011000",
+        "100000100111011000110",
+        "101110100011101000111",
+        "101110101111000100011",
+        "101110100001110101101",
+        "100000100111101101000",
+        "111111100100000100110"
+      ]
+    }
+  ],
+  "userCode": [
+    {
+      "in": "KTQB4RMX",
+      "display": "KTQB-4RMX",
+      "spoken": "K T Q B, 4 R M X"
+    },
+    {
+      "in": "ktqb-4rmx",
+      "display": "KTQB-4RMX",
+      "spoken": "K T Q B, 4 R M X"
+    },
+    {
+      "in": " kt qb\t4r–mx ",
+      "display": "KTQB-4RMX",
+      "spoken": "K T Q B, 4 R M X"
+    },
+    {
+      "in": "BCDFGHJKLM",
+      "display": "BCDF-GHJK-LM",
+      "spoken": "B C D F, G H J K, L M"
+    },
+    {
+      "in": "WDJB",
+      "display": "WDJB",
+      "spoken": "W D J B"
+    },
+    {
+      "in": "straße-ıx9",
+      "display": "STRA-EX9",
+      "spoken": "S T R A, E X 9"
+    },
+    {
+      "in": "",
+      "display": "",
+      "spoken": ""
+    }
+  ],
+  "remaining": [
+    {
+      "ms": 600000,
+      "text": "10:00"
+    },
+    {
+      "ms": 582000,
+      "text": "9:42"
+    },
+    {
+      "ms": 581001,
+      "text": "9:42"
+    },
+    {
+      "ms": 60000,
+      "text": "1:00"
+    },
+    {
+      "ms": 59001,
+      "text": "1:00"
+    },
+    {
+      "ms": 45000,
+      "text": "0:45"
+    },
+    {
+      "ms": 1,
+      "text": "0:01"
+    },
+    {
+      "ms": 0,
+      "text": "0:00"
+    },
+    {
+      "ms": -5000,
+      "text": "0:00"
+    },
+    {
+      "ms": 3725000,
+      "text": "62:05"
+    }
+  ],
+  "uri": [
+    {
+      "in": "https://mukoko.com/link",
+      "out": "mukoko.com/link"
+    },
+    {
+      "in": "HTTP://mukoko.com/link/",
+      "out": "mukoko.com/link"
+    },
+    {
+      "in": "home.mukoko.com/link",
+      "out": "home.mukoko.com/link"
+    }
+  ],
+  "status": [
+    {
+      "status": "pending",
+      "ms": 582000,
+      "shown": "pending",
+      "message": "Waiting for approval on your phone."
+    },
+    {
+      "status": "pending",
+      "ms": 60000,
+      "shown": "pending",
+      "message": "Less than a minute left to enter the code."
+    },
+    {
+      "status": "pending",
+      "ms": 0,
+      "shown": "expired",
+      "message": "This code has expired."
+    },
+    {
+      "status": "approved",
+      "ms": -1,
+      "shown": "approved",
+      "message": "This device is linked."
+    },
+    {
+      "status": "expired",
+      "ms": 582000,
+      "shown": "expired",
+      "message": "This code has expired."
+    },
+    {
+      "status": "denied",
+      "ms": 582000,
+      "shown": "denied",
+      "message": "The request was declined."
+    },
+    {
+      "status": "error",
+      "ms": 582000,
+      "shown": "error",
+      "message": "Something went wrong."
+    }
+  ],
+  "time": [
+    {
+      "in": "2026-10-07T12:10:00Z",
+      "ms": 1791375000000
+    },
+    {
+      "in": "2026-10-07T12:10:00.250Z",
+      "ms": 1791375000250
+    },
+    {
+      "in": "2026-10-07T14:10:00+02:00",
+      "ms": 1791375000000
+    },
+    {
+      "in": "2026-10-07T07:40:00-04:30",
+      "ms": 1791375000000
+    },
+    {
+      "in": "1970-01-01T00:00:00Z",
+      "ms": 0
+    },
+    {
+      "in": "2000-02-29T23:59:59.9Z",
+      "ms": 951868799900
+    },
+    {
+      "in": "2026-10-07",
+      "ms": null
+    },
+    {
+      "in": "not a time",
+      "ms": null
+    }
+  ]
+}

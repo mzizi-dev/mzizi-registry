@@ -7,7 +7,7 @@ Four families, all in one format. Astro is the default web UI, so every contract
 - `app/`: the 31 server-rendered app components. Together they are the **Mzizi Dashboard Standard**, the one dashboard design for every product in the Bundu ecosystem, with each brand's mineral as an overlay ([docs.mzizi.dev/patterns/dashboard-standard](https://docs.mzizi.dev/patterns/dashboard-standard)).
 - `discover/`: the **Mzizi Discover Standard** ([below](#the-discover-standard-discover)), with its detail pattern.
 - `site/`: the marketing-site components (hero, sections, container, breadcrumb, icons, the mineral strip).
-- `ui/`: registry primitives in every format (button, card, input, label, alert, skeleton, status badge, native select, segmented control, toaster, safe-area frame, markdown renderer). Where a Dashboard Standard build of the same primitive exists, it is `app-<name>` (`app-button.astro` / `app-button.tsx`) and keeps `app/<name>`; the registry primitive `<name>` keeps `ui/<name>`, and each lists the other under `related`.
+- `ui/`: registry primitives in every format (button, card, input, label, alert, skeleton, status badge, native select, segmented control, toaster, safe-area frame, markdown renderer, device code). Where a Dashboard Standard build of the same primitive exists, it is `app-<name>` (`app-button.astro` / `app-button.tsx`) and keeps `app/<name>`; the registry primitive `<name>` keeps `ui/<name>`, and each lists the other under `related`.
 
 **One contract per component, whatever the language** (owner, 2026-10-05; [#427](https://github.com/mzizi-dev/mzizi-registry/issues/427)). The contract is the only place a component's clauses, checks and density are written, and every format is held to that one file. Where a `contract`-identity `.rs` needs the clauses inline (`pub const CONTRACT`, which its crate exports), `pnpm contracts:sync` writes them from here and `pnpm contracts:sync:check` fails CI if the copy drifts; the `.rs` never carries contract text of its own.
 
@@ -130,6 +130,7 @@ Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Wher
 | `ui/alert`             | Alert            | N2   | 1.0.0   | `alert`             | `alert` (contract)             | `alert` (contract)             |
 | `ui/button`            | Button           | N2   | 1.0.0   | `button`            | `button` (contract)            | `button` (contract)            |
 | `ui/card`              | Card             | N2   | 1.0.0   | `card`              | `card` (contract)              | `card` (contract)              |
+| `ui/device-code`       | DeviceCode       | N2   | 1.0.0   | `device-code`       | `device-code` (contract)       | `device-code` (contract)       |
 | `ui/input`             | Input            | N2   | 1.0.0   | `input`             | `input` (contract)             | `input` (contract)             |
 | `ui/label`             | Label            | N2   | 1.0.0   | `label`             | `label` (contract)             | `label` (contract)             |
 | `ui/markdown-renderer` | MarkdownRenderer | N2   | 1.1.0   | `markdown-renderer` | `markdown-renderer` (contract) | `markdown-renderer` (contract) |

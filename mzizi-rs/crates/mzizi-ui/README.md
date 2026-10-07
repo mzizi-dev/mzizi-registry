@@ -4,8 +4,8 @@ Dioxus primitives from the [Mzizi](https://mzizi.dev) component registry — **n
 primitives** — the second node of the DNA-helix architecture.
 
 The primitives ported so far: `Alert`, `Avatar`, `Badge`, `Button`, `Card`, `Chart`,
-`Input`, `Label`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame`, `Separator`, `Skeleton`
-and `StatusBadge`. That is the whole of this crate; N2 has many more components, and the
+`DeviceCode`, `Input`, `Label`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame`, `Separator`,
+`Skeleton` and `StatusBadge`. That is the whole of this crate; N2 has many more components, and the
 rest exist only as React and Astro today.
 
 `MarkdownRenderer` is safe by construction: it parses Markdown into a typed tree
@@ -17,6 +17,25 @@ allow-list (`MarkdownLinks::Https` keeps https only).
 use mzizi_ui::{MarkdownLinks, MarkdownRenderer};
 
 rsx! { MarkdownRenderer { content: "**Hi** [docs](https://mzizi.dev)", links: MarkdownLinks::Https } }
+```
+
+`DeviceCode` is the device side of an RFC 8628 pairing: the user code, the short address, a
+QR code drawn on the device (the `qrcode` crate, encoder only) and the time left. It renders
+one frame from `now` (Unix ms), so the app re-renders it each second to tick the countdown.
+
+```rust
+use mzizi_ui::{DeviceCode, DeviceCodeSize, rfc3339_to_unix_ms};
+
+let expires_at = rfc3339_to_unix_ms("2026-10-07T12:10:00Z").unwrap();
+rsx! {
+    DeviceCode {
+        user_code: "KTQB4RMX",
+        verification_uri: "https://mukoko.com/link",
+        verification_uri_complete: "https://mukoko.com/link?code=KTQB4RMX",
+        expires_at,
+        size: DeviceCodeSize::Tv,
+    }
+}
 ```
 
 ```toml

@@ -16,8 +16,9 @@ use std::path::PathBuf;
 use dioxus::prelude::*;
 use mzizi_ui::card::CardSize;
 use mzizi_ui::{
-    Alert, AlertVariant, Button, ButtonSize, ButtonVariant, Card, Input, Label, MarkdownLinks,
-    MarkdownRenderer, MarkdownSource, SafeAreaFrame, Skeleton, StatusBadge, StatusBadgeStatus,
+    Alert, AlertVariant, Button, ButtonSize, ButtonVariant, Card, DeviceCode, DeviceCodeSize,
+    DeviceCodeStatus, Input, Label, MarkdownLinks, MarkdownRenderer, MarkdownSource, SafeAreaFrame,
+    Skeleton, StatusBadge, StatusBadgeStatus, rfc3339_to_unix_ms,
 };
 use serde_json::Value;
 
@@ -182,6 +183,42 @@ fn markdown_renderer_state() -> Element {
     rsx! { MarkdownRenderer { content, links, from, heading_base, class } }
 }
 
+fn device_code_state() -> Element {
+    let time = |name: &str| {
+        prop(name).map(|t| {
+            rfc3339_to_unix_ms(&t)
+                .unwrap_or_else(|| panic!("device-code: `{name}` is not RFC 3339: {t}"))
+        })
+    };
+    let status = match prop("status").as_deref() {
+        None | Some("pending") => DeviceCodeStatus::Pending,
+        Some("approved") => DeviceCodeStatus::Approved,
+        Some("expired") => DeviceCodeStatus::Expired,
+        Some("denied") => DeviceCodeStatus::Denied,
+        Some("error") => DeviceCodeStatus::Error,
+        Some(other) => panic!("device-code: the contract names an unknown status `{other}`"),
+    };
+    let size = match prop("size").as_deref() {
+        None | Some("phone") => DeviceCodeSize::Phone,
+        Some("tv") => DeviceCodeSize::Tv,
+        Some(other) => panic!("device-code: the contract names an unknown size `{other}`"),
+    };
+    rsx! {
+        DeviceCode {
+            user_code: prop("userCode").expect("device-code: userCode"),
+            verification_uri: prop("verificationUri").expect("device-code: verificationUri"),
+            verification_uri_complete: prop("verificationUriComplete")
+                .expect("device-code: verificationUriComplete"),
+            expires_at: time("expiresAt").expect("device-code: expiresAt"),
+            now: time("now"),
+            status,
+            size,
+            refresh_href: prop("refreshHref"),
+            class: prop("class").unwrap_or_default(),
+        }
+    }
+}
+
 fn skeleton_state() -> Element {
     let class = prop("class").unwrap_or_default();
     rsx! { Skeleton { class } }
@@ -208,6 +245,7 @@ fn renderer(registry: &str) -> fn() -> Element {
         "alert" => alert_state,
         "button" => button_state,
         "card" => card_state,
+        "device-code" => device_code_state,
         "input" => input_state,
         "label" => label_state,
         "markdown-renderer" => markdown_renderer_state,

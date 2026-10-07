@@ -74,6 +74,9 @@ pub mod safe_area_frame;
 #[path = "generated/markdown-renderer.rs"]
 pub mod markdown_renderer;
 
+#[path = "generated/device-code.rs"]
+pub mod device_code;
+
 // ── wave 1 · batch A · modules ──
 // ── end wave 1 · batch A · modules ──
 
@@ -111,6 +114,11 @@ pub use badge::{Badge, BadgeProps, BadgeVariant, badge_variants};
 pub use button::{Button, ButtonProps, ButtonSize, ButtonVariant, button_variants};
 pub use card::{Card, CardContent, CardFooter, CardHeader, CardTitle};
 pub use chart::{Chart, ChartProps, chart_loading_variants, chart_variants};
+pub use device_code::{
+    DeviceCode, DeviceCodeProps, DeviceCodeSize, DeviceCodeStatus, QrEcc, QrMatrix,
+    effective_status as device_code_effective_status, format_remaining as device_code_remaining,
+    format_user_code, qr_matrix, qr_path, qr_view_box, rfc3339_to_unix_ms, spoken_user_code,
+};
 pub use input::{Input, InputProps, input_variants};
 pub use label::{Label, LabelProps, label_variants};
 pub use markdown_renderer::{
@@ -155,6 +163,7 @@ pub const CONTRACTS: &[(&str, &str)] = &[
     ("alert", alert::CONTRACT),
     ("button", button::CONTRACT),
     ("card", card::CONTRACT),
+    ("device-code", device_code::CONTRACT),
     ("input", input::CONTRACT),
     ("label", label::CONTRACT),
     ("markdown-renderer", markdown_renderer::CONTRACT),

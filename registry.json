@@ -6797,6 +6797,90 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The device side of OAuth 2.0 Device Authorization (RFC 8628): the user code large and monospace (KTQB-4RMX), the short verification address, a QR code of the complete address drawn on the device (no network service), an expiry countdown with an expired state that invites a new code, and a live status line (pending, approved, expired, denied, error). phone and tv sizes for 10-foot UIs; the brand's primary colour from tokens. Ships in three builds under one contract: Astro (.astro), React (.tsx) and Mzizi Roots (.rs, mzizi-ui).",
+      "docs": "Use it for: Pairing a TV, display or kiosk from a phone (RFC 8628), Signing in a desktop or CLI app on another device, Any device flow that shows a user code and a verification address.\nVariants: phone, tv.\nIncludes: cn() for className composition, data-slot attribute, QR code drawn on the device (qr-code), byte mode, level M, The same QR matrix in the Astro, React and Rust builds, Countdown with a no-JS server render, phone and tv sizes, Rust (mzizi-ui) and Astro siblings with one contract.\nAccessibility: The code is read to screen readers one character at a time, The QR code is an image named with the full address, Status changes are announced through a polite status line; the countdown is a timer that is not live, Motion only under prefers-reduced-motion: no-preference, 48px refresh control (56px on touch, 64px on tv) with a visible focus ring.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/device-code",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/device-code.tsx",
+          "target": "components/ui/device-code.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The code is read to screen readers one character at a time",
+          "The QR code is an image named with the full address",
+          "Status changes are announced through a polite status line; the countdown is a timer that is not live",
+          "Motion only under prefers-reduced-motion: no-preference",
+          "48px refresh control (56px on touch, 64px on tv) with a visible focus ring"
+        ],
+        "collection": "primitives",
+        "contract": "ui/device-code",
+        "features": [
+          "cn() for className composition",
+          "data-slot attribute",
+          "QR code drawn on the device (qr-code), byte mode, level M",
+          "The same QR matrix in the Astro, React and Rust builds",
+          "Countdown with a no-JS server render",
+          "phone and tv sizes",
+          "Rust (mzizi-ui) and Astro siblings with one contract"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Pairing a TV, display or kiosk from a phone (RFC 8628)",
+          "Signing in a desktop or CLI app on another device",
+          "Any device flow that shows a user code and a verification address"
+        ],
+        "variants": ["phone", "tv"]
+      },
+      "name": "device-code",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/device-code-format",
+        "https://api.mzizi.dev/v1/ui/qr-code"
+      ],
+      "title": "Device Code",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": [],
+      "description": "The framework-free half of device-code: the user code's display and spoken forms, the countdown text, the status messages and the class strings the Astro and React builds share.",
+      "docs": "Use it for: Formatting an RFC 8628 user code for display and for screen readers, Status and countdown text for device-code.\nIncludes: User code in groups of four, Spoken form, one character at a time, m:ss countdown text.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/device-code-format",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/device-code-format.ts",
+          "target": "lib/device-code-format.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "User code in groups of four",
+          "Spoken form, one character at a time",
+          "m:ss countdown text"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Formatting an RFC 8628 user code for display and for screen readers",
+          "Status and countdown text for device-code"
+        ]
+      },
+      "name": "device-code-format",
+      "registryDependencies": [],
+      "title": "Device Code Format",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["components", "primitives"],
       "dependencies": ["radix-ui"],
       "description": "A window overlaid on the primary window, rendering content underneath inert.",
@@ -18334,6 +18418,43 @@
       "registryDependencies": [],
       "title": "Pull To Refresh",
       "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": [],
+      "description": "A framework-free QR Code encoder (ISO/IEC 18004): byte mode, versions 1 to 40, error correction L/M/Q/H, and SVG path data to draw it with one path in currentColor. No dependencies and no network: the code is made on the device. Chooses masks as the qrcode Rust crate does, so Rust and TypeScript builds draw the same matrix.",
+      "docs": "Use it for: Drawing a sign-in or pairing address as a QR code without a network service, Invite and share links as QR codes.\nIncludes: Byte mode (UTF-8), versions 1 to 40, Error correction L, M, Q, H, SVG path output, no inline style, Same matrix as the qrcode Rust crate.\nAccessibility: Non-visual helper - the component drawing it names the image.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/qr-code",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/qr-code.ts",
+          "target": "lib/qr-code.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Non-visual helper - the component drawing it names the image"
+        ],
+        "collection": "lib",
+        "features": [
+          "Byte mode (UTF-8), versions 1 to 40",
+          "Error correction L, M, Q, H",
+          "SVG path output, no inline style",
+          "Same matrix as the qrcode Rust crate"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Drawing a sign-in or pairing address as a QR code without a network service",
+          "Invite and share links as QR codes"
+        ]
+      },
+      "name": "qr-code",
+      "registryDependencies": [],
+      "title": "QR Code",
+      "type": "registry:lib"
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",

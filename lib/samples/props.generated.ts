@@ -3592,6 +3592,53 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "device-code": [
+    {
+      "name": "userCode",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "verificationUri",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "verificationUriComplete",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "expiresAt",
+      "type": "DeviceCodeTime",
+      "required": true
+    },
+    {
+      "name": "status",
+      "type": "DeviceCodeStatus",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "DeviceCodeSize",
+      "required": false
+    },
+    {
+      "name": "now",
+      "type": "DeviceCodeTime",
+      "required": false
+    },
+    {
+      "name": "refreshHref",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onRefresh",
+      "type": "() => void",
+      "required": false
+    }
+  ],
   "dialog": [
     {
       "name": "showCloseButton",
