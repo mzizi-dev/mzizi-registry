@@ -14,7 +14,7 @@
     "changelog:generate:check": "node scripts/generate-changelog.mjs --check",
     "contracts:sync": "node scripts/sync-contracts.mjs",
     "contracts:sync:check": "node scripts/sync-contracts.mjs --check",
-    "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm contracts:sync:check && pnpm design-system:generate:check && pnpm changelog:generate:check && pnpm node-map:generate:check && pnpm rust:generate:check && pnpm build",
+    "check": "pnpm format:check && pnpm lint && pnpm lint:colors && pnpm lint:md && pnpm lint:json && pnpm typecheck && pnpm test && pnpm audit:check && pnpm registry:validate && pnpm registry:verify && pnpm tokens:verify && pnpm contracts:sync:check && pnpm design-system:generate:check && pnpm changelog:generate:check && pnpm node-map:generate:check && pnpm rust:generate:check && pnpm py:generate:check && pnpm build",
     "ci:check": "pnpm lint && pnpm typecheck",
     "doctrine:generate": "node scripts/generate-doctrine.mjs",
     "doctrine:generate:check": "node scripts/generate-doctrine.mjs --check",
@@ -48,6 +48,8 @@
     "registry:verify": "tsx scripts/normalize-registry.ts --check",
     "rust:generate": "node scripts/generate-rust-components.mjs",
     "rust:generate:check": "node scripts/generate-rust-components.mjs --check",
+    "py:generate": "node scripts/generate-python-package.mjs",
+    "py:generate:check": "node scripts/generate-python-package.mjs --check",
     "samples:push": "tsx scripts/push-samples.ts",
     "skills:generate": "node scripts/generate-skills.mjs",
     "skills:generate:check": "node scripts/generate-skills.mjs --check",
@@ -65,7 +67,7 @@
     "typecheck": "tsc --noEmit && tsc -p tsconfig.consumer-strict.json",
     "typecheck:packages": "pnpm --filter \"./packages/*\" typecheck",
     "ui:dev": "wrangler dev --config mzizi-ui/wrangler.jsonc --local",
-    "generate": "pnpm skills:generate && pnpm plugin:skills && pnpm changelog:generate && pnpm doctrine:generate && pnpm contracts:sync && pnpm tokens:sync && pnpm design-system:generate && pnpm tokens:registry && pnpm registry:normalize && pnpm registry:metadata && pnpm registry:paths && pnpm registry:index && pnpm registry:source && pnpm props:extract && pnpm openapi:generate && pnpm node-map:generate && pnpm rust:generate && prettier --write --log-level warn registry.json",
+    "generate": "pnpm skills:generate && pnpm plugin:skills && pnpm changelog:generate && pnpm doctrine:generate && pnpm contracts:sync && pnpm tokens:sync && pnpm design-system:generate && pnpm tokens:registry && pnpm registry:normalize && pnpm registry:metadata && pnpm registry:paths && pnpm registry:index && pnpm registry:source && pnpm props:extract && pnpm openapi:generate && pnpm node-map:generate && pnpm rust:generate && pnpm py:generate && prettier --write --log-level warn registry.json",
     "test:astro": "vitest run --config vitest.astro.config.ts"
   },
   "dependencies": {
