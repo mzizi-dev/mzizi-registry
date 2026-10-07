@@ -41,7 +41,7 @@ To take only what you use:
 
 ```toml
 [dependencies]
-mzizi-roots-server = { version = "0.2", default-features = false, features = ["assurance", "discovery"] }
+mzizi-roots-server = { version = "0.3", default-features = false, features = ["assurance", "discovery"] }
 ```
 
 ```rust

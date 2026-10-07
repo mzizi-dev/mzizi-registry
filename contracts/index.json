@@ -599,7 +599,7 @@
     {
       "name": "ui/markdown-renderer",
       "title": "MarkdownRenderer",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "ui/markdown-renderer.contract.json",
       "astro": "markdown-renderer",
       "tsx": "markdown-renderer",

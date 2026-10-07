@@ -390,7 +390,7 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 Releases follow the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)), from 2026-10-04:
 
 - A merge into `staging` is a **patch** (x.y.z → x.y.z+1), tagged automatically by `staging-version.yml`.
-- A release to `main` is a **minor** (x.y.z → x.y+1.0) **above the highest existing tag**. The highest `v` tag is v4.1.8, so the next registry release is **4.2.0**, even though `package.json` still reads 1.0.0. The Mzizi Roots crates follow the same rule against their own `mzizi-rs-v` tags (next: 0.2.0).
+- A release to `main` is a **minor** (x.y.z → x.y+1.0) **above the highest existing tag**. For example, after v4.6.0 the next registry release is **4.7.0**, whatever patch tags `staging` has added since. The Mzizi Roots crates follow the same rule against their own `mzizi-rs-v` tags (after `mzizi-rs-v0.3.0`, the next is 0.4.0); a crates release is a version bump in `mzizi-rs/Cargo.toml`, merged through `staging`. On `staging`, `package.json` may only take the next patch (the org release-version check), so a registry release's `package.json`, `README.md` and `content/changelog/releases.json` move in the staging-to-main release pull request.
 - A **major** is only released by hand: run the Release (or Publish crates) workflow with `bump: major`. Each segment holds 0–999.
 - `release.yml` and `publish-crates.yml` check the version with the shared `next-version` action before tagging or uploading, and name the version they expect. Released versions are never renumbered.
 
