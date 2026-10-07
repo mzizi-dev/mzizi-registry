@@ -167,11 +167,13 @@ export interface MarkdownHref {
  * Browsers drop tabs and newlines anywhere in a URL and C0 controls and spaces at either
  * end, so `\tjavascript:` and `java\nscript:` are `javascript:` to them: those characters
  * are removed first. An address with other whitespace still in it is refused, and so is a web
- * address with no host, with credentials (`https://bank.example@evil.example`) or with a host
- * the URL parser rejects. Then the scheme is checked against an allow-list, never a deny-list
- * (`javascript:`, `vbscript:`, `data:` and the next one are refused alike). Under `safe` an
- * address with no scheme (relative, root-relative, `#anchor`, `?query`) is kept; under
- * `https` only `https:` is.
+ * address with no host, with credentials (`https://bank.example@evil.example`), with a host
+ * the URL parser rejects or with a port that is not a number up to 65535. Then the scheme is
+ * checked against an allow-list, never a deny-list (`javascript:`, `vbscript:`, `data:` and
+ * the next one are refused alike). Under `safe` an address with no scheme (relative,
+ * root-relative, `#anchor`, `?query`) is kept; under `https` only `https:` is. A `mailto:`
+ * address's domains are shown as web hosts are (an IDN as punycode), and one the URL parser
+ * rejects is refused.
  */
 export function safeLink(
   raw: string,
@@ -209,8 +211,11 @@ export function safeLink(
       : name === null && SCHEME_RELATIVE.test(url)
         ? url
         : null;
-  if (rest === null)
-    return { href: url, title: shown + url.slice(shown.length) };
+  if (rest === null) {
+    const after = url.slice(shown.length);
+    const title = name === "mailto" ? mailtoTitle(after) : after;
+    return title === null ? null : { href: url, title: shown + title };
+  }
   const authority = webAuthority(rest);
   if (authority === null) return null;
   const host = asciiHost(authority.host);
@@ -234,8 +239,10 @@ export function safeHref(
 const SCHEME_RELATIVE = /^[/\\]{2}/;
 
 /**
- * `//host[:port]…`: the host, when there is one and no `user@` before it. The host ends at the
- * first `:` outside `[…]` (an IPv6 address), as the URL parser reads it.
+ * `//host[:port]…`: the host, when there is one, with no `user@` before it and no port the URL
+ * parser rejects (anything but ASCII digits, or a number above 65535; an empty port is
+ * allowed, as the parser allows it). The host ends at the first `:` outside `[…]` (an IPv6
+ * address), as the URL parser reads it.
  */
 function webAuthority(rest: string): { host: string } | null {
   if (!SCHEME_RELATIVE.test(rest)) return null;
@@ -251,25 +258,81 @@ function webAuthority(rest: string): { host: string } | null {
     else if (c === "]") bracket = false;
     else if (c === ":" && !bracket) break;
   }
+  const port = authority.slice(k + 1);
+  if (!/^[0-9]*$/.test(port) || Number(port) > 0xffff) return null;
   return { host: authority.slice(0, k) };
+}
+
+/**
+ * A `mailto:` address as a reader is shown it: the domain of each address (after its last
+ * `@`, up to `,`, `?` or `#`) as the URL parser writes a host, so `help@аpple.com` (a Cyrillic
+ * `а`) shows as `help@xn--pple-43d.com`. The rest is as written. Null when a domain is
+ * rejected.
+ */
+function mailtoTitle(after: string): string | null {
+  const stop = after.search(/[?#]/);
+  const end = stop < 0 ? after.length : stop;
+  const to: string[] = [];
+  for (const address of after.slice(0, end).split(",")) {
+    const at = address.lastIndexOf("@");
+    if (at < 0) {
+      to.push(address);
+      continue;
+    }
+    const host = asciiHost(address.slice(at + 1));
+    if (host === null) return null;
+    to.push(address.slice(0, at + 1) + host);
+  }
+  return to.join(",") + after.slice(end);
 }
 
 /**
  * A host as the URL parser serialises it (the WHATWG URL `hostname`): lower-cased, an
  * internationalised name as punycode, an IPv4 address in dotted decimal. Null when the parser
  * rejects it (empty, a forbidden character, a bad IP address), since no browser could follow
- * the link either. Without a `URL` global (every browser, Node, Deno and Workers has one) only
- * a plain ASCII name is kept, lower-cased.
+ * the link either. A character that would end the host inside `http://…/` (`/ ? # \ @`, a `:`
+ * outside `[…]`, a space or a control character) is refused first, so the answer is the host
+ * step's alone, as `url::Host::parse` gives it in the Rust build.
+ *
+ * Without a `URL` global (every browser, Node, Deno and Workers has one), `plainHost` keeps
+ * only the hosts whose serialisation it can write exactly, so a kept link has the same title
+ * in every runtime.
  */
 function asciiHost(host: string): string | null {
   if (host === "") return null;
-  if (typeof URL !== "function")
-    return /^[A-Za-z0-9.-]+$/.test(host) ? host.toLowerCase() : null;
+  for (const c of host) {
+    const code = c.charCodeAt(0);
+    if (code <= 0x20 || code === 0x7f || "/?#\\@".includes(c)) return null;
+  }
+  if (host.includes(":") && !(host.startsWith("[") && host.endsWith("]")))
+    return null;
+  if (typeof URL !== "function") return plainHost(host);
   try {
     return new URL(`http://${host}/`).hostname;
   } catch {
     return null;
   }
+}
+
+/**
+ * The URL parser's answer for a host made only of ASCII letters, digits and `-` in non-empty
+ * dot-separated labels (and at most one trailing dot), or null for any other host. Such a name
+ * is only lower-cased, except that a name ending in a number is an IPv4 address (kept only in
+ * canonical dotted decimal, `1.2.3.4`) and an `xn--` label must decode as punycode (refused).
+ */
+function plainHost(host: string): string | null {
+  const name = host.toLowerCase();
+  if (!/^[a-z0-9-]+(?:\.[a-z0-9-]+)*\.?$/.test(name)) return null;
+  const labels = name.split(".");
+  if (labels[labels.length - 1] === "") labels.pop();
+  if (labels.some((l) => l.startsWith("xn--"))) return null;
+  if (!/^(?:[0-9]+|0x[0-9a-f]*)$/.test(labels[labels.length - 1] ?? ""))
+    return name;
+  const canonical =
+    labels.length === 4 &&
+    !name.endsWith(".") &&
+    labels.every((l) => /^(?:0|[1-9][0-9]{0,2})$/.test(l) && Number(l) <= 255);
+  return canonical ? name : null;
 }
 
 /** Whether a kept address leaves the site (it opens in a new tab). */
@@ -594,21 +657,35 @@ class InlineParser {
       }
     }
     if (k >= destTo) return null;
-    // The address: `<…>`, or everything up to the first whitespace (a tab ends it as a space
-    // does; what follows is a title, which is dropped). Then backslash escapes of ASCII
-    // punctuation are undone, as CommonMark reads them: `\(` is `(` and `\\` is `\`.
+    // The address: `<…>`, or everything up to the first space or ASCII control character, as
+    // CommonMark ends it (a tab or a line break ends it as a space does; what follows is a
+    // title, which is dropped). Other whitespace, such as a no-break space, is part of the
+    // address, and an address that runs into another control character is kept whole, so
+    // `safeLink` refuses either rather than the link going to the part before it. Then
+    // backslash escapes of ASCII punctuation are undone, as CommonMark reads them: `\(` is `(`
+    // and `\\` is `\`.
     const inside = s.slice(labelEnd + 2, k).join("");
     let from = 0;
-    while (from < inside.length && WS.has(inside.charAt(from))) from++;
+    while (from < inside.length && isDestSpace(inside.charAt(from))) from++;
     let dest = /^<[^>]*>/.exec(inside.slice(from))?.[0];
     if (dest === undefined) {
       let end = from;
-      while (end < inside.length && !WS.has(inside.charAt(end))) end++;
-      dest = inside.slice(from, end);
+      while (end < inside.length && !endsDest(inside.charCodeAt(end))) end++;
+      dest =
+        end === inside.length || isDestSpace(inside.charAt(end))
+          ? inside.slice(from, end)
+          : inside.slice(from);
     }
     return { labelEnd, dest: unescapePunct(dest), end: k + 1 };
   }
 }
+
+/** A space or an ASCII control character: what ends a link's address in CommonMark. */
+const endsDest = (code: number): boolean => code <= 0x20 || code === 0x7f;
+
+/** A space, a tab or a line break: what may come between a link's address and its title. */
+const isDestSpace = (c: string): boolean =>
+  c === " " || c === "\t" || c === "\n" || c === "\r";
 
 /** Backslash escapes of ASCII punctuation undone (`\)` is `)`); any other backslash stays. */
 function unescapePunct(text: string): string {
@@ -1094,9 +1171,377 @@ export function decodeEntities(text: string): string {
 
 const isAsciiLetter = (c: string | undefined) =>
   c !== undefined && /[A-Za-z]/.test(c);
-const isAsciiAlnum = (c: string | undefined) =>
-  c !== undefined && /[A-Za-z0-9]/.test(c);
 const asciiLower = (s: string) => s.replace(/[A-Z]/g, (c) => c.toLowerCase());
+
+/** Elements whose content a browser reads as text, ending only at their own end tag. */
+const RAW_TEXT = new Set([
+  "script",
+  "style",
+  "textarea",
+  "title",
+  "xmp",
+  "iframe",
+  "noscript",
+  "noembed",
+  "noframes",
+  "plaintext",
+]);
+
+/** Whether `html` at `k` is `name` (any case) followed by whitespace, `/` or `>`. */
+function tagNameAt(html: string, k: number, name: string): boolean {
+  return (
+    asciiLower(html.slice(k, k + name.length)) === name &&
+    /[\t\n\f\r />]/.test(html.charAt(k + name.length))
+  );
+}
+
+const isHtmlWs = (c: string | undefined) => c !== undefined && HTML_WS.has(c);
+
+/** Where a tag name that starts at `j` ends, as the tokenizer reads it: at whitespace, `/` or `>`. */
+function tagNameEnd(html: string, j: number): number {
+  while (
+    j < html.length &&
+    !isHtmlWs(html[j]) &&
+    html[j] !== "/" &&
+    html[j] !== ">"
+  )
+    j++;
+  return j;
+}
+
+/**
+ * The rest of a tag from `j` (just after its name), read as the HTML tokenizer reads it, with
+ * only HTML whitespace between attributes, so a `>` ends the tag exactly where it ends it for
+ * a browser: `end` is the index of that `>` (the length when none does), `selfClosing` whether
+ * it ends `/>`, and `attrs` the attribute names (lower-cased) with their raw values, the first
+ * of each name.
+ */
+function scanTag(
+  html: string,
+  j: number,
+): { end: number; selfClosing: boolean; attrs: Record<string, string> } {
+  const attrs: Record<string, string> = Object.create(null) as Record<
+    string,
+    string
+  >;
+  const n = html.length;
+  for (;;) {
+    while (j < n && isHtmlWs(html[j])) j++;
+    if (j >= n) return { end: n, selfClosing: false, attrs };
+    if (html[j] === ">") return { end: j, selfClosing: false, attrs };
+    if (html[j] === "/") {
+      if (html[j + 1] === ">") return { end: j + 1, selfClosing: true, attrs };
+      j++;
+      continue;
+    }
+    // A name: its first character may be `=`; it ends at whitespace, `/`, `>` or `=`.
+    const from = j++;
+    while (j < n && !isHtmlWs(html[j]) && !"/>=".includes(html[j] ?? "")) j++;
+    const key = asciiLower(html.slice(from, j));
+    while (j < n && isHtmlWs(html[j])) j++;
+    let value = "";
+    if (html[j] === "=") {
+      j++;
+      while (j < n && isHtmlWs(html[j])) j++;
+      const q = html[j];
+      if (q === '"' || q === "'") {
+        const close = html.indexOf(q, j + 1);
+        if (close < 0) return { end: n, selfClosing: false, attrs };
+        value = html.slice(j + 1, close);
+        j = close + 1;
+      } else {
+        const v = j;
+        while (j < n && !isHtmlWs(html[j]) && html[j] !== ">") j++;
+        value = html.slice(v, j);
+      }
+    }
+    if (!(key in attrs)) attrs[key] = value;
+  }
+}
+
+/** Just after the end tag `</name…>` that starts at `k` (a quoted `>` does not end it). */
+const afterEndTag = (html: string, k: number, name: string): number =>
+  Math.min(scanTag(html, k + 2 + name.length).end + 1, html.length);
+
+/**
+ * Just after a comment that starts at `k` (`<!--`): at `-->` or `--!>`, or at once for the
+ * empty `<!-->` and `<!--->`, as the HTML tokenizer ends it; the length when it has no end.
+ */
+function commentEnd(html: string, k: number): number {
+  if (html.startsWith(">", k + 4)) return k + 5;
+  if (html.startsWith("->", k + 4)) return k + 6;
+  for (
+    let d = html.indexOf("--", k + 4);
+    d >= 0;
+    d = html.indexOf("--", d + 1)
+  ) {
+    if (html[d + 2] === ">") return d + 3;
+    if (html[d + 2] === "!" && html[d + 3] === ">") return d + 4;
+  }
+  return html.length;
+}
+
+/**
+ * Just after a bogus comment that starts at `k` (`<!…>` other than a comment, `<?…>`, or `</`
+ * not followed by a letter): at the first `>`, as the HTML tokenizer ends it. `</>` is nothing.
+ * The length when it has no end; `k` itself when there is none at `k`.
+ */
+function bogusCommentEnd(html: string, k: number): number {
+  const next = html[k + 1];
+  const bogus =
+    next === "!" ||
+    next === "?" ||
+    (next === "/" && k + 2 < html.length && !isAsciiLetter(html[k + 2]));
+  if (!bogus) return k;
+  const end = html.indexOf(">", k + 2);
+  return end < 0 ? html.length : end + 1;
+}
+
+/** Dropped elements that can nest, and `<table>`, inside which `</object>` is ignored. */
+const NESTING = new Set(["template", "svg", "math", "object", "head", "table"]);
+
+/** Start tags that end SVG or MathML content (back to HTML), as the HTML parser lists them. */
+const BREAKOUT = new Set(
+  (
+    "b big blockquote body br center code dd div dl dt em embed h1 h2 h3 h4 h5 h6 head hr i img " +
+    "li listing menu meta nobr ol p pre ruby s small span strong strike sub sup table tt u ul var"
+  ).split(" "),
+);
+
+/** An element open while a dropped element is skipped, and how its content is read. */
+interface Open {
+  tag: string;
+  /** Its namespace: "svg" or "math" for SVG and MathML elements, else "html". */
+  ns: string;
+  /**
+   * Whether its content is HTML: an HTML element, an SVG or MathML element whose content is
+   * HTML (`<foreignObject>`, `<mi>`, …), or one a tag such as `<p>` has closed for a browser.
+   */
+  html: boolean;
+  /** Whether it is one of those SVG or MathML elements whose content is HTML. */
+  point: boolean;
+  /** Whether it or an element around it is one. */
+  inPoint: boolean;
+}
+
+/** HTML elements that cannot have content. */
+const EMPTY = new Set([...VOID, "basefont", "bgsound", "frame", "keygen"]);
+
+/**
+ * Where a dropped element `name` that started before `i` ends: just after its end tag, or the
+ * length when it has none, the way a browser ends it.
+ *
+ * - A text element (`<style>`, `<textarea>`, …) ends at the first `</name` followed by
+ *   whitespace, `/` or `>`, so `</scripts>` inside it is still text.
+ * - `<script>` too, except inside `<!--`, where a nested `<script>` needs its own `</script>`
+ *   first (the HTML tokenizer's escaped and double-escaped script states).
+ * - Any other (`<template>`, `<svg>`, …) ends at the end tag that matches it. The elements in
+ *   it that can hide its end tag are followed: another of these (a nested `<name>` needs its
+ *   own `</name>` first), a `<table>`, every SVG and MathML element (closed as a browser closes
+ *   them, `/>` included), and the HTML elements inside an SVG or MathML element whose content
+ *   is HTML (`<foreignObject>`, `<mi>`, …). An end tag inside a comment, a CDATA section, an
+ *   attribute value or a nested text element is not one, and inside SVG or MathML a `<script>`
+ *   or `<style>` is not a text element until a tag such as `<p>` or `<b>` returns to HTML.
+ *
+ * Where a browser would end it sooner (an HTML tag inside `<svg>`, a `<head>` it ignores, an end
+ * tag across an element still open), it is dropped to the later end, and an end tag inside SVG
+ * or MathML that could close an element around it drops the rest of the text: never the
+ * earlier end.
+ */
+function droppedEnd(html: string, i: number, name: string): number {
+  if (name === "script") return scriptEnd(html, i);
+  if (name === "plaintext") return html.length;
+  if (RAW_TEXT.has(name)) {
+    for (let k = html.indexOf("</", i); k >= 0; k = html.indexOf("</", k + 2))
+      if (tagNameAt(html, k + 2, name)) return afterEndTag(html, k, name);
+    return html.length;
+  }
+  const foreign = name === "svg" || name === "math";
+  const open: Open[] = [
+    {
+      tag: name,
+      ns: foreign ? name : "html",
+      html: !foreign,
+      point: false,
+      inPoint: false,
+    },
+  ];
+  const top = (): Open =>
+    open[open.length - 1] ?? {
+      tag: "",
+      ns: "html",
+      html: true,
+      point: false,
+      inPoint: false,
+    };
+  // A tag that returns to HTML: the SVG and MathML elements still open are closed to a browser,
+  // so what follows them is HTML (they stay here, so the drop still ends only at their end tag).
+  const breakOut = () => {
+    for (let k = open.length - 1; k >= 0; k--) {
+      const o = open[k];
+      if (!o || o.html) break;
+      o.html = true;
+    }
+  };
+  let j = i;
+  while (j < html.length) {
+    const k = html.indexOf("<", j);
+    if (k < 0) return html.length;
+    if (html.startsWith("<!--", k)) {
+      j = commentEnd(html, k);
+      continue;
+    }
+    // CDATA is text in SVG and MathML; in HTML it is a bogus comment, ended by `>`.
+    if (!top().html && html.startsWith("<![CDATA[", k)) {
+      const end = html.indexOf("]]>", k + 9);
+      if (end < 0) return html.length;
+      j = end + 3;
+      continue;
+    }
+    const bogus = bogusCommentEnd(html, k);
+    if (bogus > k) {
+      j = bogus;
+      continue;
+    }
+    const close = html[k + 1] === "/";
+    const from = close ? k + 2 : k + 1;
+    if (!isAsciiLetter(html[from])) {
+      j = k + 1;
+      continue;
+    }
+    const e = tagNameEnd(html, from);
+    const tag = asciiLower(html.slice(from, e));
+    const rest = scanTag(html, e);
+    if (rest.end >= html.length) return html.length;
+    j = rest.end + 1;
+    if (close) {
+      const current = top();
+      if (!current.html && !current.point && (tag === "br" || tag === "p"))
+        breakOut();
+      if (!top().html) {
+        // SVG or MathML: the innermost open element of that name, as a browser closes it,
+        // passing only SVG and MathML elements still open.
+        let at = open.length - 1;
+        while (at >= 0 && open[at]?.html === false && open[at]?.tag !== tag)
+          at--;
+        // None, and nothing in between: the end tag could close an element around it.
+        if (at < 0) return html.length;
+        if (open[at]?.html) continue;
+        open.length = at;
+      } else if (current.tag === tag) open.pop();
+      else continue;
+      if (open.length === 0) return j;
+      continue;
+    }
+    const current = top();
+    if (
+      !current.html &&
+      !current.point &&
+      (BREAKOUT.has(tag) ||
+        (tag === "font" &&
+          ["color", "face", "size"].some((a) => a in rest.attrs)))
+    )
+      breakOut();
+    const parent = top();
+    if (tag === "svg" || tag === "math") {
+      if (!rest.selfClosing)
+        open.push({
+          tag,
+          ns: tag,
+          html: false,
+          point: false,
+          inPoint: parent.inPoint,
+        });
+    } else if (!parent.html && !parent.point) {
+      // SVG or MathML: every element is followed; those whose content is HTML are marked.
+      if (rest.selfClosing) continue;
+      const encoding = asciiLower(decodeEntities(rest.attrs.encoding ?? ""));
+      const point =
+        parent.ns === "svg"
+          ? tag === "foreignobject" || tag === "desc" || tag === "title"
+          : ["mi", "mo", "mn", "ms", "mtext"].includes(tag) ||
+            (tag === "annotation-xml" &&
+              (encoding === "text/html" ||
+                encoding === "application/xhtml+xml"));
+      open.push({
+        tag,
+        ns: parent.ns,
+        html: false,
+        point,
+        inPoint: parent.inPoint || point,
+      });
+    } else if (RAW_TEXT.has(tag)) j = droppedEnd(html, j, tag);
+    else if (NESTING.has(tag) || (!EMPTY.has(tag) && parent.inPoint))
+      // Inside `<foreignObject>` and the like, an open HTML element hides its end tag.
+      open.push({
+        tag,
+        ns: "html",
+        html: true,
+        point: false,
+        inPoint: parent.inPoint,
+      });
+  }
+  return html.length;
+}
+
+/**
+ * Where a `<script>` that started before `i` ends. Its text ends at the first `</script`
+ * followed by whitespace, `/` or `>`, except that after `<!--` (until `-->`) a `<script>` opens
+ * a part that the next `</script>` only closes, as the HTML tokenizer's script states read it:
+ * `<script><!--<script></script>x</script>` is one script.
+ */
+function scriptEnd(html: string, i: number): number {
+  /** 0: script data; 1: escaped (after `<!--`); 2: double escaped (after `<script>` there). */
+  let state = 0;
+  let dashes = 0;
+  let j = i;
+  while (j < html.length) {
+    const c = html[j];
+    if (state === 0) {
+      if (c === "<" && html[j + 1] === "/" && tagNameAt(html, j + 2, "script"))
+        return afterEndTag(html, j, "script");
+      if (html.startsWith("<!--", j)) {
+        state = 1;
+        dashes = 2;
+        j += 4;
+      } else j++;
+      continue;
+    }
+    if (c === "-") {
+      dashes++;
+      j++;
+      continue;
+    }
+    if (c === ">" && dashes >= 2) {
+      state = 0;
+      dashes = 0;
+      j++;
+      continue;
+    }
+    dashes = 0;
+    if (c !== "<") {
+      j++;
+      continue;
+    }
+    const close = html[j + 1] === "/";
+    if (state === 1 && close && tagNameAt(html, j + 2, "script"))
+      return afterEndTag(html, j, "script");
+    const from = close ? j + 2 : j + 1;
+    // `<script` (escaped) or `</script` (double escaped), then whitespace, `/` or `>`, moves
+    // between the two; the letters and that character are text either way.
+    if (state === 1 ? !close : close) {
+      let e = from;
+      while (e < html.length && isAsciiLetter(html[e])) e++;
+      if (e > from && /[\t\n\f\r />]/.test(html.charAt(e))) {
+        if (asciiLower(html.slice(from, e)) === "script") state = 3 - state;
+        j = e + 1;
+      } else j = e;
+      continue;
+    }
+    j = from;
+  }
+  return html.length;
+}
 
 /** Read HTML into a tree of plain objects (never a DOM). */
 function readHtml(html: string): RichElement {
@@ -1113,17 +1558,21 @@ function readHtml(html: string): RichElement {
     const c = html[i];
     if (c === "<" && html.startsWith("<!--", i)) {
       flushText();
-      const end = html.indexOf("-->", i + 4);
-      i = end < 0 ? html.length : end + 3;
+      i = commentEnd(html, i);
+      continue;
+    }
+    // `<!DOCTYPE …>`, `<?…>`, `</ …>`: bogus comments a browser does not show.
+    const bogus = c === "<" ? bogusCommentEnd(html, i) : i;
+    if (bogus > i) {
+      flushText();
+      i = bogus;
       continue;
     }
     if (c === "<" && html[i + 1] === "/" && isAsciiLetter(html[i + 2])) {
       flushText();
-      let j = i + 2;
-      while (j < html.length && isAsciiAlnum(html[j])) j++;
+      const j = tagNameEnd(html, i + 2);
       const name = asciiLower(html.slice(i + 2, j));
-      const end = html.indexOf(">", j);
-      i = end < 0 ? html.length : end + 1;
+      i = Math.min(scanTag(html, j).end + 1, html.length);
       for (let k = stack.length - 1; k > 0; k--) {
         if (stack[k]?.tag === name) {
           stack.length = k;
@@ -1134,64 +1583,20 @@ function readHtml(html: string): RichElement {
     }
     if (c === "<" && isAsciiLetter(html[i + 1])) {
       flushText();
-      let j = i + 1;
-      while (j < html.length && isAsciiAlnum(html[j])) j++;
+      const j = tagNameEnd(html, i + 1);
       const name = asciiLower(html.slice(i + 1, j));
-      const attrs: Record<string, string> = Object.create(null) as Record<
-        string,
-        string
-      >;
-      // Attributes: name, name=value, name="value", name='value', until `>`.
-      while (j < html.length && html[j] !== ">") {
-        if (isWs(html[j]) || html[j] === "/") {
-          j++;
-          continue;
-        }
-        let k = j;
-        while (
-          k < html.length &&
-          !(
-            isWs(html[k]) ||
-            html[k] === "/" ||
-            html[k] === ">" ||
-            html[k] === "="
-          )
-        )
-          k++;
-        const key = asciiLower(html.slice(j, k));
-        let value = "";
-        while (k < html.length && isWs(html[k])) k++;
-        if (html[k] === "=") {
-          k++;
-          while (k < html.length && isWs(html[k])) k++;
-          const q = html[k];
-          if (q === '"' || q === "'") {
-            const close = html.indexOf(q, k + 1);
-            const stop = close < 0 ? html.length : close;
-            value = html.slice(k + 1, stop);
-            k = stop + 1;
-          } else {
-            const from = k;
-            while (k < html.length && !(isWs(html[k]) || html[k] === ">")) k++;
-            value = html.slice(from, k);
-          }
-        }
-        if (key && !(key in attrs)) attrs[key] = decodeEntities(value);
-        j = Math.max(k, j + 1);
-      }
-      i = j + 1;
+      const tag = scanTag(html, j);
+      // A tag cut off by the end of the text is not a tag, as in a browser.
+      if (tag.end >= html.length) break;
+      i = tag.end + 1;
       if (DROP.has(name)) {
-        if (!VOID.has(name)) {
-          // The end tag a browser ends it at: `</name` then whitespace, `/` or `>`, so
-          // `</scripts>` inside a script is still script.
-          const closing = new RegExp(`</${name}(?=[\\t\\n\\f\\r />])`, "gi");
-          closing.lastIndex = i;
-          const close = closing.exec(html)?.index ?? -1;
-          const end = close < 0 ? -1 : html.indexOf(">", close);
-          i = end < 0 ? html.length : end + 1;
-        }
+        // `<svg/>` and `<math/>` are empty; any other dropped element runs to its end tag.
+        if (!((name === "svg" || name === "math") && tag.selfClosing))
+          i = droppedEnd(html, i, name);
         continue;
       }
+      const attrs = tag.attrs;
+      for (const k in attrs) attrs[k] = decodeEntities(attrs[k] ?? "");
       if (CLOSES_P.has(name) && top().tag === "p") stack.pop();
       if (name === "li") {
         for (let k = stack.length - 1; k > 0; k--) {

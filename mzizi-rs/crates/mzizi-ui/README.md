@@ -13,7 +13,8 @@ rest exist only as React and Astro today.
 string anywhere. Raw HTML in the text shows as text, and links pass `safe_link`, a scheme
 allow-list (`MarkdownLinks::Https` keeps https only). Each kept link shows its address on
 hover (`title`), normalised the way the URL parser writes it: the scheme and host lower-cased
-and an internationalised host as punycode, so a look-alike host shows for what it is.
+and an internationalised host as punycode (a `mailto:` address's domain too), so a look-alike
+host shows for what it is.
 
 ```rust
 use mzizi_ui::{MarkdownLinks, MarkdownRenderer};
