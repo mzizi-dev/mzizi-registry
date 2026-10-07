@@ -518,15 +518,297 @@ const MINERAL_CLASS = new RegExp(
 );
 
 /**
+ * CSP rule: no element carries an inline `style` attribute, in any state.
+ * Custom properties and sizes go through classes, data attributes or SVG
+ * geometry, so a page's Content-Security-Policy keeps `style-src 'self'` with
+ * no `style-src-attr 'unsafe-inline'` (#444: a strip coloured by `style=`
+ * rendered colourless under such a CSP).
+ *
+ * This rendered check is the rule: it reads the markup a build actually
+ * emits, so it sees every way of writing one (React's `style={{…}}`, a spread
+ * props object, `createElement(…, { style })`, Astro's `{style}` shorthand
+ * and `<style define:vars>`). `evaluateTheming` applies it.
+ */
+export interface InlineStyle {
+  state: string;
+  tag: string;
+  /** The attribute's value, as rendered. */
+  style: string;
+}
+
+/**
+ * The message `evaluateTheming` gives for an inline style. Its text is a
+ * contract with @bundu/ui's synced copy of this runner, whose tests match it
+ * exactly; the style's value is in `inlineStyles`, not in the message.
+ */
+const inlineStyleMessage = (state: string, tag: string) =>
+  `[${state}] an inline style attribute on <${tag}> (needs style-src-attr 'unsafe-inline')`;
+
+/** Every element, in every state, that carries a `style` attribute. */
+export function inlineStyles(rendered: Rendered): InlineStyle[] {
+  const out: InlineStyle[] = [];
+  for (const [state, html] of Object.entries(rendered))
+    for (const el of elements(doc(html)))
+      if (el.attribs.style !== undefined)
+        out.push({ state, tag: el.name, style: el.attribs.style });
+  return out;
+}
+
+/** The CSP rule alone, with `evaluateTheming`'s messages. */
+export function evaluateInlineStyles(rendered: Rendered): string[] {
+  return inlineStyles(rendered).map((s) => inlineStyleMessage(s.state, s.tag));
+}
+
+// ─── The source scan: best effort, a backstop for the rendered check ────────
+//
+// It reports only what is unambiguous, so it never fails a build for a style
+// that is not one: in .astro and .tsx a `style` attribute inside a tag's
+// attribute list, or a `style` key in a call that makes an element; in .rs a
+// `style` attribute of a lowercase element inside `rsx! { … }`. It catches an
+// empty React `style={{}}`, which renders nothing, and a style no contract
+// state renders. Anything it misses, the rendered check catches when a state
+// renders it.
+
+/** Skip a quoted string or template literal opening at `i`; returns the index after it. */
+function skipJsString(src: string, i: number): number {
+  const q = src.charAt(i);
+  let j = i + 1;
+  while (j < src.length && src.charAt(j) !== q) {
+    if (src.charAt(j) === "\\") j += 1;
+    j += 1;
+  }
+  return j + 1;
+}
+
+/** The end (exclusive) of a bracketed JS expression opening at `i`, strings respected. */
+function skipJsBalanced(src: string, i: number): number {
+  const open = src.charAt(i);
+  const close = open === "(" ? ")" : open === "[" ? "]" : "}";
+  let depth = 0;
+  let j = i;
+  while (j < src.length) {
+    const c = src.charAt(j);
+    if (c === '"' || c === "'" || c === "`") {
+      j = skipJsString(src, j);
+      continue;
+    }
+    if (c === open) depth += 1;
+    else if (c === close) {
+      depth -= 1;
+      if (depth === 0) return j + 1;
+    }
+    j += 1;
+  }
+  return src.length;
+}
+
+/** A `style` key of an object literal, quoted or not, in key position (`{ style`, `, "style":`). */
+const STYLE_KEY = /[{,]\s*(["']?)style\1\s*[:,}]/;
+
+/** Offsets of `style` attributes in the attribute lists of the tags in `src`. */
+function markupStyleOffsets(src: string): number[] {
+  const out: number[] = [];
+  const tag = /<([A-Za-z][\w.:-]*)/g;
+  for (let m = tag.exec(src); m; m = tag.exec(src)) {
+    // A tag opens after a non-identifier: `Record<string, X>` and `a<b` are not tags.
+    if (m.index > 0 && /[\w$)\]]/.test(src.charAt(m.index - 1))) continue;
+    const name = m[1] ?? "";
+    let i = m.index + m[0].length;
+    while (i < src.length) {
+      const c = src.charAt(i);
+      if (c === ">" || src.startsWith("/>", i)) break;
+      if (/\s/.test(c)) {
+        i += 1;
+        continue;
+      }
+      const at = i;
+      if (c === "{") {
+        // `{style}` shorthand, or `{...{ style: s }}` / `{...{ "style": s }}`.
+        const end = skipJsBalanced(src, i);
+        const inner = src.slice(i + 1, end - 1).trim();
+        if (
+          inner === "style" ||
+          (/^\.\.\.\s*\{/.test(inner) && STYLE_KEY.test(inner.slice(3).trim()))
+        )
+          out.push(at);
+        i = end;
+        continue;
+      }
+      if (c === '"' || c === "'") {
+        i = skipJsString(src, i);
+        continue;
+      }
+      let j = i;
+      while (j < src.length && !/[\s=>{"'`]/.test(src.charAt(j)) && !src.startsWith("/>", j))
+        j += 1;
+      if (j === i) j += 1;
+      const attr = src.slice(i, j);
+      let k = j;
+      while (/\s/.test(src.charAt(k))) k += 1;
+      let valued = false;
+      if (src.charAt(k) === "=") {
+        k += 1;
+        while (/\s/.test(src.charAt(k))) k += 1;
+        const v = src.charAt(k);
+        valued = true;
+        if (v === '"' || v === "'" || v === "`") k = skipJsString(src, k);
+        else if (v === "{") k = skipJsBalanced(src, k);
+        else while (k < src.length && !/[\s>]/.test(src.charAt(k))) k += 1;
+        i = k;
+      } else i = j;
+      if (attr === "style" && valued) out.push(at);
+      if (name === "style" && attr === "define:vars") out.push(at);
+    }
+  }
+  return out;
+}
+
+/** Offsets of calls that make an element with a `style` prop, and of `setAttribute("style", …)`. */
+function callStyleOffsets(src: string): number[] {
+  const out: number[] = [];
+  const call = /\b(?:createElement|cloneElement|jsxs?|jsxDEV|_jsxs?)\s*\(/g;
+  for (let m = call.exec(src); m; m = call.exec(src)) {
+    const open = m.index + m[0].length - 1;
+    const args = src.slice(open, skipJsBalanced(src, open));
+    if (STYLE_KEY.test(args)) out.push(m.index);
+  }
+  for (const m of src.matchAll(/\bsetAttribute\(\s*["'`]style["'`]/g)) out.push(m.index);
+  return out;
+}
+
+/**
+ * Rust source with comments blanked and every string literal's contents
+ * blanked, at the same length (so an offset in it is an offset in `src`). A
+ * string that is exactly `"style"` is kept, so the quoted attribute form
+ * stays visible; raw strings are blanked whole.
+ */
+function rustCode(src: string): string {
+  let out = "";
+  let i = 0;
+  const blank = (s: string) => s.replace(/[^\n]/g, " ");
+  while (i < src.length) {
+    if (src.startsWith("//", i)) {
+      const end = src.indexOf("\n", i);
+      const j = end === -1 ? src.length : end;
+      out += blank(src.slice(i, j));
+      i = j;
+    } else if (src.startsWith("/*", i)) {
+      const end = src.indexOf("*/", i + 2);
+      const j = end === -1 ? src.length : end + 2;
+      out += blank(src.slice(i, j));
+      i = j;
+    } else if (/^r#*"/.test(src.slice(i, i + 8)) && !/\w/.test(src.charAt(i - 1))) {
+      const hashes = /^r(#*)"/.exec(src.slice(i))?.[1] ?? "";
+      const close = `"${hashes}`;
+      const end = src.indexOf(close, i + 2 + hashes.length);
+      const j = end === -1 ? src.length : end + close.length;
+      out += blank(src.slice(i, j));
+      i = j;
+    } else if (src.charAt(i) === '"') {
+      let j = i + 1;
+      while (j < src.length && src.charAt(j) !== '"') {
+        if (src.charAt(j) === "\\") j += 1;
+        j += 1;
+      }
+      j += 1;
+      const lit = src.slice(i, j);
+      out += lit === '"style"' ? lit : `"${blank(lit.slice(1, -1))}"`;
+      i = j;
+    } else if (/^'(?:\\.|[^\\'])'/.test(src.slice(i, i + 4))) {
+      const lit = /^'(?:\\.|[^\\'])'/.exec(src.slice(i))?.[0] ?? "''";
+      out += blank(lit);
+      i += lit.length;
+    } else {
+      out += src.charAt(i);
+      i += 1;
+    }
+  }
+  return out;
+}
+
+/** The index of the last non-whitespace character before `i`, not before `floor`. */
+function lastNonSpace(code: string, i: number, floor: number): number {
+  let j = i - 1;
+  while (j > floor && /\s/.test(code.charAt(j))) j -= 1;
+  return j;
+}
+
+/** The identifier that ends right before `i` (skipping whitespace), if any. */
+function identBefore(code: string, i: number, floor: number): string | undefined {
+  const end = lastNonSpace(code, i, floor) + 1;
+  let start = end;
+  while (start > floor + 1 && /[\w-]/.test(code.charAt(start - 1))) start -= 1;
+  const ident = code.slice(start, end);
+  return /^[A-Za-z_][\w-]*$/.test(ident) ? ident : undefined;
+}
+
+const RUST_KEYWORDS = new Set(["if", "else", "for", "in", "match", "move", "while", "loop", "async", "unsafe"]);
+
+/**
+ * Offsets of `style:` / `"style":` attributes on lowercase elements inside
+ * `rsx! { … }`. A field (`pub style: …`), a binding, a parameter, a struct
+ * literal (`Props { style: x }`), a component prop (`Card { style: x }`) and
+ * a comment are not element attributes.
+ */
+function rsxStyleOffsets(src: string): number[] {
+  const code = rustCode(src);
+  const out: number[] = [];
+  for (const m of code.matchAll(/\brsx!\s*[{([]/g)) {
+    const open = (m.index ?? 0) + m[0].length - 1;
+    const end = skipJsBalanced(code, open);
+    // A stack of the element each `{` opens (null for an expression block).
+    const stack: (string | null)[] = [];
+    for (let i = open; i < end; i += 1) {
+      const c = code.charAt(i);
+      if (c === "{" || c === "(" || c === "[") {
+        const ident = c === "{" ? identBefore(code, i, open) : undefined;
+        stack.push(ident && !RUST_KEYWORDS.has(ident) ? ident : null);
+      } else if (c === "}" || c === ")" || c === "]") stack.pop();
+      else if (c === "s" || c === '"') {
+        const hit = /^(?:style|"style")\s*:(?!:)/.exec(code.slice(i, i + 16));
+        if (!hit || /[\w.]/.test(code.charAt(i - 1))) continue;
+        const element = stack.at(-1);
+        // An attribute starts an element's body or follows a `,`.
+        const prev = code.charAt(lastNonSpace(code, i, open));
+        if (element && /^[a-z]/.test(element) && (prev === "{" || prev === ","))
+          out.push(i);
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * The source scan, best effort (the rendered check is the rule): `line N: …`
+ * for each line of an implementation's source (`.astro`, `.tsx` or `.rs`)
+ * that writes an inline `style` unambiguously.
+ */
+export function inlineStylesInSource(
+  source: string,
+  kind: "astro" | "tsx" | "rs",
+): string[] {
+  const offsets =
+    kind === "rs"
+      ? rsxStyleOffsets(source)
+      : [...markupStyleOffsets(source), ...callStyleOffsets(source)];
+  const lines = source.split("\n");
+  const seen = new Set<number>();
+  for (const at of offsets) seen.add(source.slice(0, at).split("\n").length);
+  return [...seen]
+    .sort((a, b) => a - b)
+    .map((n) => `line ${n}: an inline style (${(lines[n - 1] ?? "").trim()})`);
+}
+
+/**
  * Brand overlay rule: a component names no colour value and no brand
  * mineral. Colour comes from semantic tokens (`--primary`, `--ring`, …), so
  * the brand overlay is the only thing that changes it; minerals appear only
  * as declared status colours.
  *
- * CSP rule: no element carries an inline `style` attribute. Custom
- * properties and sizes go through classes, data attributes or SVG geometry,
- * so a page's Content-Security-Policy keeps `style-src 'self'` with no
- * `style-src-attr 'unsafe-inline'`.
+ * CSP rule (see `inlineStyles`), in the same pass: no element carries an
+ * inline `style` attribute. A colour value inside one fails as a colour too.
+ * The messages are a contract with @bundu/ui's synced copy of this runner;
+ * `__tests__/contracts/runner-theming.test.ts` pins them.
  */
 export function evaluateTheming(
   contract: Contract,
@@ -538,9 +820,7 @@ export function evaluateTheming(
       const cls = el.attribs.class ?? "";
       const style = el.attribs.style ?? "";
       if (el.attribs.style !== undefined)
-        failures.push(
-          `[${state}] an inline style attribute on <${el.name}> (needs style-src-attr 'unsafe-inline')`,
-        );
+        failures.push(inlineStyleMessage(state, el.name));
       if (/#[0-9a-fA-F]{3,8}\b/.test(cls) || /#[0-9a-fA-F]{3,8}\b/.test(style))
         failures.push(`[${state}] a literal hex colour on <${el.name}>`);
       if (

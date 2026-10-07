@@ -1,0 +1,26 @@
+---
+/**
+ * Fixture for the CSP rule (#444): an Astro component that puts an inline
+ * style on elements in each way Astro allows. Not a registry component;
+ * `__tests__/astro/no-inline-style.test.ts` proves the contract runner fails
+ * on every one when rendered, and the source scan on the forms it can read.
+ */
+const style = "--shorthand: var(--ring)";
+const attrs = { "data-x": "1", style: "--spread: var(--muted)" };
+const edge = "var(--border)";
+const accent = "var(--accent)";
+---
+
+<div data-slot="tinted-strip" class="vars">
+  <span style="--tint: var(--primary)">string</span>
+  <span style={{ "--edge": "var(--border)" }}>object</span>
+  <span {style}>shorthand</span>
+  <span {...attrs}>spread props</span>
+  <span style=`--template: ${accent}`>template</span>
+</div>
+
+<style define:vars={{ edge }}>
+  .vars {
+    border-color: var(--edge);
+  }
+</style>

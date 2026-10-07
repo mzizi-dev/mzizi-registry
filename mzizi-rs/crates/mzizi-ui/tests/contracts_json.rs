@@ -4,8 +4,8 @@
 //! One contract per component, whatever the language (owner, 2026-10-05; #427). For every
 //! contract whose `.rs` implementation has `identity: "contract"` and lives in this crate, this
 //! suite renders every state the contract declares with `dioxus-ssr` and evaluates, on the
-//! markup, every clause (through the shared evaluator in `mzizi-rs/contract-eval/`), every check
-//! and every density row. The `.astro` and `.tsx` are held to the same file by `__tests__/astro`
+//! markup, every clause (through the shared evaluator in `mzizi-rs/contract-eval/`), every check,
+//! every density row and the CSP rule (no inline `style` attribute, #444). The `.astro` and `.tsx` are held to the same file by `__tests__/astro`
 //! and `__tests__/contracts`. A clause, check or selector this suite cannot evaluate fails
 //! (RFC-0006, FM-12).
 
@@ -16,14 +16,17 @@ use std::path::PathBuf;
 use dioxus::prelude::*;
 use mzizi_ui::card::CardSize;
 use mzizi_ui::{
-    Alert, AlertVariant, Button, ButtonSize, ButtonVariant, Card, Input, Label, MarkdownLinks,
-    MarkdownRenderer, MarkdownSource, SafeAreaFrame, Skeleton, StatusBadge, StatusBadgeStatus,
+    Alert, AlertVariant, Badge, BadgeVariant, Button, ButtonSize, ButtonVariant, Card, Input,
+    Label, MarkdownLinks, MarkdownRenderer, MarkdownSource, SafeAreaFrame, Skeleton, StatusBadge,
+    StatusBadgeStatus,
 };
 use serde_json::Value;
 
 #[path = "../../../contract-eval/contract_eval.rs"]
 mod contract_eval;
-use contract_eval::{Case, Node, declared_height, holds, parse, render, select, tokens};
+use contract_eval::{
+    Case, Rendered, declared_height, holds, inline_styles, render, select, tokens,
+};
 
 fn repo() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..")
@@ -31,6 +34,24 @@ fn repo() -> PathBuf {
 
 /// Every contract file whose Rust build implements the whole contract.
 fn contract_identity_contracts() -> Vec<(String, Value)> {
+    rust_contracts()
+        .into_iter()
+        .filter(|(_, json)| json["implementations"]["rs"]["identity"] == "contract")
+        .collect()
+}
+
+/// Whether a registry item's `.rs` is one of this crate's components (`src/generated/`). A
+/// contract's Rust build in another crate is that crate's suite's to evaluate.
+fn in_this_crate(registry: &str) -> bool {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("src/generated")
+        .join(format!("{registry}.rs"))
+        .is_file()
+}
+
+/// Every contract file that declares a Rust build in this crate, whatever its identity. Builds
+/// in other crates are left to their own crate's suite.
+fn rust_contracts() -> Vec<(String, Value)> {
     let dir = repo().join("contracts");
     let mut out = Vec::new();
     let mut families: Vec<_> = fs::read_dir(&dir)
@@ -49,7 +70,10 @@ fn contract_identity_contracts() -> Vec<(String, Value)> {
         for f in files {
             let json: Value = serde_json::from_str(&fs::read_to_string(f.path()).unwrap())
                 .unwrap_or_else(|e| panic!("{:?} is not JSON: {e}", f.path()));
-            if json["implementations"]["rs"]["identity"] == "contract" {
+            if json["implementations"]["rs"]["registry"]
+                .as_str()
+                .is_some_and(in_this_crate)
+            {
                 out.push((json["name"].as_str().unwrap().to_owned(), json));
             }
         }
@@ -94,6 +118,21 @@ fn flag(name: &str) -> bool {
 
 fn text(name: &str) -> String {
     slot(name).unwrap_or_default()
+}
+
+/// `app/badge`: the registry badge, held to that contract by identity (`slot+variants`).
+fn badge_state() -> Element {
+    let variant = match prop("variant").as_deref() {
+        None | Some("default") => BadgeVariant::Default,
+        Some("secondary") => BadgeVariant::Secondary,
+        Some("destructive") => BadgeVariant::Destructive,
+        Some("outline") => BadgeVariant::Outline,
+        Some("ghost") => BadgeVariant::Ghost,
+        Some("link") => BadgeVariant::Link,
+        Some(other) => panic!("badge: the contract names an unknown variant `{other}`"),
+    };
+    let label = text("default");
+    rsx! { Badge { variant, "{label}" } }
 }
 
 fn button_state() -> Element {
@@ -201,11 +240,11 @@ fn safe_area_frame_state() -> Element {
     rsx! { SafeAreaFrame { width, height, safe, box_px, class } }
 }
 
-/// The renderer for each registry item this crate implements a contract for. A contract whose
-/// `.rs` claims `identity: "contract"` with no renderer here fails, so none goes unevaluated.
-fn renderer(registry: &str) -> fn() -> Element {
-    match registry {
+/// The renderer for each registry item of this crate that a contract declares.
+fn renderer(registry: &str) -> Option<fn() -> Element> {
+    Some(match registry {
         "alert" => alert_state,
+        "badge" => badge_state,
         "button" => button_state,
         "card" => card_state,
         "input" => input_state,
@@ -214,16 +253,34 @@ fn renderer(registry: &str) -> fn() -> Element {
         "safe-area-frame" => safe_area_frame_state,
         "skeleton" => skeleton_state,
         "status-badge" => status_badge_state,
-        other => panic!(
-            "contracts name `{other}.rs` with identity \"contract\", and tests/contracts_json.rs has \
-             no renderer for it: add one, so its contract is evaluated"
-        ),
-    }
+        _ => return None,
+    })
 }
 
-fn render_state(registry: &str, state: &Value) -> Node {
+/// Every Rust build of this crate that a contract declares has a renderer here, so none goes
+/// unevaluated (its clauses when its identity is `contract`, and the CSP rule always).
+#[test]
+fn every_rust_build_of_this_crate_a_contract_declares_has_a_renderer() {
+    let contracts = rust_contracts();
+    assert!(!contracts.is_empty());
+    let missing: Vec<String> = contracts
+        .iter()
+        .filter_map(|(name, c)| {
+            let registry = c["implementations"]["rs"]["registry"].as_str()?;
+            renderer(registry)
+                .is_none()
+                .then(|| format!("{name} ({registry}.rs)"))
+        })
+        .collect();
+    assert!(
+        missing.is_empty(),
+        "tests/contracts_json.rs has no renderer for {missing:?}: add one"
+    );
+}
+
+fn render_state(registry: &str, state: &Value) -> Rendered {
     PROPS.with(|p| *p.borrow_mut() = state.clone());
-    render(renderer(registry))
+    render(renderer(registry).unwrap_or_else(|| panic!("no renderer for `{registry}.rs`")))
 }
 
 fn leak(s: &str) -> &'static str {
@@ -361,6 +418,7 @@ fn every_contract_identity_rust_build_keeps_its_contract() {
             states,
             defaults,
             columns: Vec::new(),
+            allowed_styles: &[],
         };
         case.check();
         for check in c["checks"].as_array().unwrap() {
@@ -432,7 +490,7 @@ fn every_predicate_case_gets_the_verdict_the_typescript_runner_gives() {
 /// component's classes.
 #[test]
 fn a_when_clause_with_not_holds_fails_or_cannot_be_evaluated() {
-    let node = |html: &str| parse(html).into_iter().next().expect("one root");
+    let node = Rendered::from_html;
     let case = Case {
         name: "fixture",
         contract: "contract\n  slot is \"x\"\nend",
@@ -451,6 +509,7 @@ fn a_when_clause_with_not_holds_fails_or_cannot_be_evaluated() {
         ],
         defaults: Vec::new(),
         columns: Vec::new(),
+        allowed_styles: &[],
     };
     assert_eq!(
         case.evaluate(r#"when default class not has "line-through""#),
@@ -479,4 +538,97 @@ fn a_when_clause_with_not_holds_fails_or_cannot_be_evaluated() {
         case.evaluate(r#"when default class not is "a" "b""#)
             .is_err()
     );
+}
+
+// ─── The CSP rule (#444) ────────────────────────────────────────────────────────────────────
+//
+// `Case::check` fails any rendered element with a `style` attribute, in every state, so every
+// identity-`contract` build above is held to it. This holds the other Rust builds a contract
+// declares (identity `slot+variants`, as `badge`) in every state, and proves the rule fails on
+// each way Dioxus writes an inline style.
+
+#[test]
+fn every_other_rust_build_a_contract_declares_renders_no_inline_style() {
+    for (name, c) in rust_contracts() {
+        if c["implementations"]["rs"]["identity"] == "contract" {
+            continue;
+        }
+        let registry = c["implementations"]["rs"]["registry"].as_str().unwrap();
+        for (state, fixture) in c["states"].as_object().unwrap() {
+            let found = inline_styles(&render_state(registry, fixture));
+            assert!(
+                found.is_empty(),
+                "{name} ({registry}.rs) [{state}]: an inline style attribute (#444): {found:?}"
+            );
+        }
+    }
+}
+
+/// `style: "…"`, as `MineralStrip` did before #444.
+#[component]
+fn StyleAttribute() -> Element {
+    rsx! {
+        div { "data-slot": "tinted-strip",
+            span { style: "--tint: var(--primary)", "tint" }
+            span { class: "text-foreground", "plain" }
+        }
+    }
+}
+
+/// A Dioxus CSS-property attribute, which `dioxus-ssr` merges into `style`.
+#[component]
+fn CssProperty() -> Element {
+    rsx! {
+        div { "data-slot": "tinted-strip",
+            span { background_color: "var(--primary)", width: "6px", "tint" }
+        }
+    }
+}
+
+/// A clean first root and a styled second one: the rule reads every top-level node.
+#[component]
+fn SecondRoot() -> Element {
+    rsx! {
+        div { "data-slot": "tinted-strip", "first" }
+        span { style: "--tint: var(--primary)", "second" }
+    }
+}
+
+#[test]
+fn the_inline_style_rule_fails_on_each_way_dioxus_writes_one() {
+    assert_eq!(
+        inline_styles(&render(|| rsx! { StyleAttribute {} })),
+        vec![r#"<span> style="--tint: var(--primary)""#.to_owned()]
+    );
+    let property = inline_styles(&render(|| rsx! { CssProperty {} }));
+    assert_eq!(property.len(), 1, "{property:?}");
+    assert!(
+        property[0].contains("background-color:var(--primary)")
+            && property[0].contains("width:6px"),
+        "{property:?}"
+    );
+    let second = render(|| rsx! { SecondRoot {} });
+    assert!(second.root().attr("style").is_none());
+    assert_eq!(
+        inline_styles(&second),
+        vec![r#"<span> style="--tint: var(--primary)""#.to_owned()]
+    );
+    let clean = render(|| rsx! { StatusBadge { status: StatusBadgeStatus::Beta } });
+    assert!(inline_styles(&clean).is_empty());
+}
+
+#[test]
+#[should_panic(
+    expected = "an inline style attribute, which a strict Content-Security-Policy blocks"
+)]
+fn case_check_fails_a_component_that_renders_an_inline_style() {
+    Case {
+        name: "fixture-second-root",
+        contract: "contract\n  slot is \"tinted-strip\"\nend",
+        states: vec![("default", render(|| rsx! { SecondRoot {} }))],
+        defaults: Vec::new(),
+        columns: Vec::new(),
+        allowed_styles: &[],
+    }
+    .check();
 }
