@@ -98,7 +98,7 @@
     "without": "Everything: the component is markup with no script."
   },
   "responsive": ["Inline; never wraps."],
-  "contract": "contract\n  slot is \"status-badge\"\n  portal is \"https://mzizi.dev/components/status-badge\"\n  class has \"rounded-full\"\n  class has \"uppercase\"\n  when default shows span \"stable\"\n  when default class not contains \"line-through\"\n  when beta shows span \"beta\"\n  when beta class not contains \"line-through\"\n  when alpha shows span \"alpha\"\n  when alpha class not contains \"line-through\"\n  when deprecated shows span \"deprecated\"\n  when deprecated class has \"line-through\"\nend",
+  "contract": "contract\n  slot is \"status-badge\"\n  portal is \"https://mzizi.dev/components/status-badge\"\n  when default class has \"rounded-full\"\n  when default class has \"uppercase\"\n  when beta class has \"rounded-full\"\n  when beta class has \"uppercase\"\n  when alpha class has \"rounded-full\"\n  when alpha class has \"uppercase\"\n  when deprecated class has \"rounded-full\"\n  when deprecated class has \"uppercase\"\n  when default shows span \"stable\"\n  when default class not contains \"line-through\"\n  when beta shows span \"beta\"\n  when beta class not contains \"line-through\"\n  when alpha shows span \"alpha\"\n  when alpha class not contains \"line-through\"\n  when deprecated shows span \"deprecated\"\n  when deprecated class has \"line-through\"\nend",
   "checks": [
     {
       "say": "data-status names the default.",
@@ -134,13 +134,9 @@
       "attr": {
         "data-status": "alpha"
       }
-    },
-    {
-      "say": "The status is written out.",
-      "state": "beta",
-      "select": "[data-slot=\"status-badge\"]",
-      "count": 1,
-      "text": "beta"
     }
+  ],
+  "gaps": [
+    "The pill shape is asserted as the `rounded-full` class the builds carry today. Under #484 contracts assert token roles, never palette or scale names, and `rounded-full` becomes the radius-control role; this clause moves to that role then. Colour is not asserted until the status token roles exist (#440, #484)."
   ]
 }

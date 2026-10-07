@@ -33,7 +33,7 @@ pub const CONTRACT: &str = r#"contract
   slot is "mzizi-avatar-stack"
   role is "group"
   label not_empty
-  max is 4
+  max is "4"
   every avatar_stack_size class contains "rounded-full"
 end"#;
 
