@@ -242,7 +242,9 @@ pub struct MarkdownHref {
 /// (browsers ignore them, so `\tjavascript:` is `javascript:` to them). An address with other
 /// whitespace still in it is refused. Then the scheme is checked against an allow-list. Under
 /// [`MarkdownLinks::Safe`] an address with no scheme is kept; under [`MarkdownLinks::Https`]
-/// only `https:` is. A web address needs a host the URL parser accepts and no credentials.
+/// only `https:` is. A web address needs a host the URL parser accepts, no credentials and no
+/// port but a number up to 65535. A `mailto:` address's domains are shown as web hosts are (an
+/// IDN as punycode), and one the URL parser rejects is refused.
 #[must_use]
 pub fn safe_link(raw: &str, policy: MarkdownLinks) -> Option<MarkdownHref> {
     let cleaned: String = raw
@@ -281,9 +283,15 @@ pub fn safe_link(raw: &str, policy: MarkdownLinks) -> Option<MarkdownHref> {
         _ => None,
     };
     let Some(rest) = rest else {
+        let after = &url[shown.len()..];
+        let title = if scheme.as_deref() == Some("mailto") {
+            mailto_title(after)?
+        } else {
+            after.to_owned()
+        };
         return Some(MarkdownHref {
             href: url.to_owned(),
-            title: format!("{shown}{}", &url[shown.len()..]),
+            title: format!("{shown}{title}"),
         });
     };
     let host = web_host(rest)?;
@@ -306,8 +314,10 @@ fn scheme_relative(url: &str) -> bool {
     b.len() >= 2 && matches!(b[0], b'/' | b'\\') && matches!(b[1], b'/' | b'\\')
 }
 
-/// `//host[:port]…`: the host, when there is one and no `user@` before it. The host ends at the
-/// first `:` outside `[…]` (an IPv6 address), as the URL parser reads it.
+/// `//host[:port]…`: the host, when there is one, with no `user@` before it and no port the
+/// URL parser rejects (anything but ASCII digits, or a number above 65535; an empty port is
+/// allowed, as the parser allows it). The host ends at the first `:` outside `[…]` (an IPv6
+/// address), as the URL parser reads it.
 fn web_host(rest: &str) -> Option<&str> {
     if !scheme_relative(rest) {
         return None;
@@ -318,22 +328,52 @@ fn web_host(rest: &str) -> Option<&str> {
         return None;
     }
     let mut bracket = false;
+    let mut end = authority.len();
     for (k, c) in authority.char_indices() {
         match c {
             '[' => bracket = true,
             ']' => bracket = false,
-            ':' if !bracket => return Some(&authority[..k]),
+            ':' if !bracket => {
+                end = k;
+                break;
+            }
             _ => {}
         }
     }
-    Some(authority)
+    let port = authority.get(end + 1..).unwrap_or("");
+    let digits = port.trim_start_matches('0');
+    let port_ok = port.bytes().all(|b| b.is_ascii_digit())
+        && (digits.is_empty()
+            || digits.len() <= 5 && digits.parse::<u32>().is_ok_and(|p| p <= 0xffff));
+    port_ok.then(|| &authority[..end])
+}
+
+/// A `mailto:` address as a reader is shown it: the domain of each address (after its last
+/// `@`, up to `,`, `?` or `#`) as the URL parser writes a host, so `help@аpple.com` (a Cyrillic
+/// `а`) shows as `help@xn--pple-43d.com`. The rest is as written. `None` when a domain is
+/// rejected.
+fn mailto_title(after: &str) -> Option<String> {
+    let end = after.find(['?', '#']).unwrap_or(after.len());
+    let mut to = Vec::new();
+    for address in after[..end].split(',') {
+        match address.rfind('@') {
+            None => to.push(address.to_owned()),
+            Some(at) => to.push(format!(
+                "{}{}",
+                &address[..=at],
+                ascii_host(&address[at + 1..])?
+            )),
+        }
+    }
+    Some(format!("{}{}", to.join(","), &after[end..]))
 }
 
 /// A host as the URL parser serialises it (the WHATWG URL `hostname`, which `markdown-parse.ts`
 /// reads from `new URL()`): lower-cased, an internationalised name as punycode (the `idna`
 /// crate, through `url`'s host parser), an IPv4 address in dotted decimal. `None` when the
 /// parser rejects it (empty, a forbidden character, a bad IP address), since no browser could
-/// follow the link either.
+/// follow the link either. A character that would end the host in a URL (`/ ? # \ @ :`, a space
+/// or a control character) is one the host step rejects, as `markdown-parse.ts` refuses it.
 fn ascii_host(host: &str) -> Option<String> {
     url::Host::parse(host).ok().map(|h| h.to_string())
 }
@@ -422,7 +462,7 @@ struct InlineParser<'a> {
     /// Per delimiter, the earliest position a search to the end of the text started from and
     /// found no partner (as `noCloserFrom` in `markdown-parse.ts`): a later search to the end
     /// that starts at or after it finds none either. A bounded search is never answered here.
-    no_closer_from: Vec<((char, usize), usize)>,
+    no_closer_from: std::collections::HashMap<(char, usize), usize>,
     code_ends: std::collections::HashMap<usize, Option<usize>>,
     unpaired: std::collections::HashSet<usize>,
     budget: isize,
@@ -439,7 +479,7 @@ impl<'a> InlineParser<'a> {
         Self {
             s,
             policy,
-            no_closer_from: Vec::new(),
+            no_closer_from: std::collections::HashMap::new(),
             code_ends: std::collections::HashMap::new(),
             unpaired: std::collections::HashSet::new(),
             budget: isize::try_from(BUDGET_BASE + BUDGET_PER_CHAR * s.len()).unwrap_or(isize::MAX),
@@ -509,11 +549,7 @@ impl<'a> InlineParser<'a> {
 
     fn closer(&mut self, c: char, n: usize, from: usize, to: usize) -> Option<usize> {
         let to_end = to == self.s.len();
-        let known = self
-            .no_closer_from
-            .iter()
-            .find(|(key, _)| *key == (c, n))
-            .map(|&(_, at)| at);
+        let known = self.no_closer_from.get(&(c, n)).copied();
         if to_end && known.is_some_and(|at| from >= at) {
             return None;
         }
@@ -550,14 +586,10 @@ impl<'a> InlineParser<'a> {
             j += 1;
         }
         if to_end {
-            match self
-                .no_closer_from
-                .iter_mut()
-                .find(|(key, _)| *key == (c, n))
-            {
-                Some((_, at)) => *at = (*at).min(from),
-                None => self.no_closer_from.push(((c, n), from)),
-            }
+            self.no_closer_from
+                .entry((c, n))
+                .and_modify(|at| *at = (*at).min(from))
+                .or_insert(from);
         }
         None
     }
@@ -739,15 +771,22 @@ impl<'a> InlineParser<'a> {
         if k >= dest_to {
             return None;
         }
-        // The address: `<…>`, or everything up to the first whitespace (a tab ends it as a
-        // space does; what follows is a title, which is dropped). Then backslash escapes of
-        // ASCII punctuation are undone, as CommonMark reads them.
+        // The address: `<…>`, or everything up to the first space or ASCII control character,
+        // as CommonMark ends it (a tab or a line break ends it as a space does; what follows
+        // is a title, which is dropped). Other whitespace, such as a no-break space, is part
+        // of the address, and an address that runs into another control character is kept
+        // whole, so `safe_link` refuses either rather than the link going to the part before
+        // it. Then backslash escapes of ASCII punctuation are undone, as CommonMark reads them.
         let inside: String = self.s[label_end + 2..k].iter().collect();
-        let inside = inside.trim_start_matches(is_ws);
+        let inside = inside.trim_start_matches(is_dest_space);
         let dest = if inside.starts_with('<') && inside.contains('>') {
             &inside[..=inside.find('>').unwrap_or(0)]
         } else {
-            inside.split(is_ws).next().unwrap_or("")
+            match inside.find(ends_dest) {
+                Some(end) if !inside[end..].starts_with(is_dest_space) => inside,
+                Some(end) => &inside[..end],
+                None => inside,
+            }
         };
         Some(LinkAt {
             label_end,
@@ -755,6 +794,16 @@ impl<'a> InlineParser<'a> {
             end: k + 1,
         })
     }
+}
+
+/// A space or an ASCII control character: what ends a link's address in CommonMark.
+fn ends_dest(c: char) -> bool {
+    c <= ' ' || c == '\u{7f}'
+}
+
+/// A space, a tab or a line break: what may come between a link's address and its title.
+fn is_dest_space(c: char) -> bool {
+    matches!(c, ' ' | '\t' | '\n' | '\r')
 }
 
 /// Backslash escapes of ASCII punctuation undone (`\)` is `)`); any other backslash stays.
@@ -1335,10 +1384,525 @@ fn close_to(stack: &mut Vec<Open>, k: usize) {
     }
 }
 
+/// HTML whitespace: tab, newline, form feed, carriage return, space.
+fn is_html_ws(c: char) -> bool {
+    matches!(c, '\t' | '\n' | '\u{c}' | '\r' | ' ')
+}
+
+/// Where a tag name that starts at `j` ends, as the tokenizer reads it: at whitespace, `/` or
+/// `>`.
+fn tag_name_end(h: &[char], mut j: usize) -> usize {
+    while j < h.len() && !is_html_ws(h[j]) && h[j] != '/' && h[j] != '>' {
+        j += 1;
+    }
+    j
+}
+
+/// The rest of a tag, read as the HTML tokenizer reads it (as `scanTag` in `markdown-parse.ts`).
+struct TagRest {
+    /// The index of the `>` that ends it (the length when none does).
+    end: usize,
+    /// Whether it ends `/>`.
+    self_closing: bool,
+    /// The attribute names (lower-cased) with their raw values, the first of each name.
+    attrs: Vec<(String, String)>,
+}
+
+/// The rest of a tag from `j` (just after its name), read as the HTML tokenizer reads it, with
+/// only HTML whitespace between attributes, so a `>` ends the tag exactly where it ends it for
+/// a browser.
+fn scan_tag(h: &[char], mut j: usize) -> TagRest {
+    let n = h.len();
+    let mut attrs: Vec<(String, String)> = Vec::new();
+    let cut = |attrs| TagRest {
+        end: n,
+        self_closing: false,
+        attrs,
+    };
+    loop {
+        while j < n && is_html_ws(h[j]) {
+            j += 1;
+        }
+        if j >= n {
+            return cut(attrs);
+        }
+        if h[j] == '>' {
+            return TagRest {
+                end: j,
+                self_closing: false,
+                attrs,
+            };
+        }
+        if h[j] == '/' {
+            if h.get(j + 1) == Some(&'>') {
+                return TagRest {
+                    end: j + 1,
+                    self_closing: true,
+                    attrs,
+                };
+            }
+            j += 1;
+            continue;
+        }
+        // A name: its first character may be `=`; it ends at whitespace, `/`, `>` or `=`.
+        let from = j;
+        j += 1;
+        while j < n && !is_html_ws(h[j]) && !matches!(h[j], '/' | '>' | '=') {
+            j += 1;
+        }
+        let key: String = h[from..j].iter().map(char::to_ascii_lowercase).collect();
+        while j < n && is_html_ws(h[j]) {
+            j += 1;
+        }
+        let mut value = String::new();
+        if h.get(j) == Some(&'=') {
+            j += 1;
+            while j < n && is_html_ws(h[j]) {
+                j += 1;
+            }
+            match h.get(j) {
+                Some(&q) if q == '"' || q == '\'' => {
+                    let Some(close) = (j + 1..n).find(|&e| h[e] == q) else {
+                        return cut(attrs);
+                    };
+                    value = h[j + 1..close].iter().collect();
+                    j = close + 1;
+                }
+                _ => {
+                    let v = j;
+                    while j < n && !is_html_ws(h[j]) && h[j] != '>' {
+                        j += 1;
+                    }
+                    value = h[v..j].iter().collect();
+                }
+            }
+        }
+        if !attrs.iter().any(|(a, _)| *a == key) {
+            attrs.push((key, value));
+        }
+    }
+}
+
+/// Elements whose content a browser reads as text, ending only at their own end tag.
+const RAW_TEXT: &[&str] = &[
+    "script",
+    "style",
+    "textarea",
+    "title",
+    "xmp",
+    "iframe",
+    "noscript",
+    "noembed",
+    "noframes",
+    "plaintext",
+];
+
+/// Whether `h` at `k` is `name` (any case) followed by whitespace, `/` or `>`.
+fn tag_name_at(h: &[char], k: usize, name: &str) -> bool {
+    let n = name.chars().count();
+    k + n < h.len()
+        && h[k..k + n]
+            .iter()
+            .zip(name.chars())
+            .all(|(a, b)| a.to_ascii_lowercase() == b)
+        && matches!(h[k + n], '\t' | '\n' | '\u{c}' | '\r' | ' ' | '/' | '>')
+}
+
+/// Where `pat` next starts in `h`, at or after `from`.
+fn find_at(h: &[char], from: usize, pat: &str) -> Option<usize> {
+    let p: Vec<char> = pat.chars().collect();
+    (from..h.len()).find(|&k| h[k..].starts_with(&p))
+}
+
+/// Just after the end tag `</name…>` that starts at `k` (a quoted `>` does not end it).
+fn after_end_tag(h: &[char], k: usize, name: &str) -> usize {
+    (scan_tag(h, k + 2 + name.chars().count()).end + 1).min(h.len())
+}
+
+/// Just after a comment that starts at `k` (`<!--`): at `-->` or `--!>`, or at once for the
+/// empty `<!-->` and `<!--->`, as the HTML tokenizer ends it; the length when it has no end.
+fn comment_end(h: &[char], k: usize) -> usize {
+    if h.get(k + 4) == Some(&'>') {
+        return k + 5;
+    }
+    if h.get(k + 4) == Some(&'-') && h.get(k + 5) == Some(&'>') {
+        return k + 6;
+    }
+    let mut d = k + 4;
+    while d + 1 < h.len() {
+        if h[d] == '-' && h[d + 1] == '-' {
+            if h.get(d + 2) == Some(&'>') {
+                return d + 3;
+            }
+            if h.get(d + 2) == Some(&'!') && h.get(d + 3) == Some(&'>') {
+                return d + 4;
+            }
+        }
+        d += 1;
+    }
+    h.len()
+}
+
+/// Just after a bogus comment that starts at `k` (`<!…>` other than a comment, `<?…>`, or `</`
+/// not followed by a letter): at the first `>`, as the HTML tokenizer ends it. `</>` is nothing.
+/// The length when it has no end; `k` itself when there is none at `k`.
+fn bogus_comment_end(h: &[char], k: usize) -> usize {
+    let bogus = match h.get(k + 1) {
+        Some('!' | '?') => true,
+        Some('/') => h.get(k + 2).is_some_and(|c| !c.is_ascii_alphabetic()),
+        _ => false,
+    };
+    if !bogus {
+        return k;
+    }
+    (k + 2..h.len())
+        .find(|&e| h[e] == '>')
+        .map_or(h.len(), |e| e + 1)
+}
+
+/// Dropped elements that can nest, and `<table>`, inside which `</object>` is ignored.
+const NESTING: &[&str] = &["template", "svg", "math", "object", "head", "table"];
+
+/// Start tags that end SVG or MathML content (back to HTML), as the HTML parser lists them.
+const BREAKOUT: &[&str] = &[
+    "b",
+    "big",
+    "blockquote",
+    "body",
+    "br",
+    "center",
+    "code",
+    "dd",
+    "div",
+    "dl",
+    "dt",
+    "em",
+    "embed",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "head",
+    "hr",
+    "i",
+    "img",
+    "li",
+    "listing",
+    "menu",
+    "meta",
+    "nobr",
+    "ol",
+    "p",
+    "pre",
+    "ruby",
+    "s",
+    "small",
+    "span",
+    "strong",
+    "strike",
+    "sub",
+    "sup",
+    "table",
+    "tt",
+    "u",
+    "ul",
+    "var",
+];
+
+/// HTML elements that cannot have content (beyond [`VOID`]).
+const EMPTY_TOO: &[&str] = &["basefont", "bgsound", "frame", "keygen"];
+
+/// An element open while a dropped element is skipped, and how its content is read (as `Open`
+/// in `markdown-parse.ts`).
+struct OpenEl {
+    tag: String,
+    /// Its namespace: "svg" or "math" for SVG and MathML elements, else "html".
+    ns: &'static str,
+    /// Whether its content is HTML: an HTML element, an SVG or MathML element whose content is
+    /// HTML (`<foreignObject>`, `<mi>`, …), or one a tag such as `<p>` has closed for a browser.
+    html: bool,
+    /// Whether it is one of those SVG or MathML elements whose content is HTML.
+    point: bool,
+    /// Whether it or an element around it is one.
+    in_point: bool,
+}
+
+/// Where a dropped element `name` that started before `i` ends: just after its end tag, or the
+/// length when it has none, the way a browser ends it (as `droppedEnd` in `markdown-parse.ts`).
+///
+/// - A text element (`<style>`, `<textarea>`, …) ends at the first `</name` followed by
+///   whitespace, `/` or `>`, so `</scripts>` inside it is still text.
+/// - `<script>` too, except inside `<!--`, where a nested `<script>` needs its own `</script>`
+///   first (the HTML tokenizer's escaped and double-escaped script states).
+/// - Any other (`<template>`, `<svg>`, …) ends at the end tag that matches it. The elements in
+///   it that can hide its end tag are followed: another of these (a nested `<name>` needs its
+///   own `</name>` first), a `<table>`, every SVG and MathML element (closed as a browser
+///   closes them, `/>` included), and the HTML elements inside an SVG or MathML element whose
+///   content is HTML (`<foreignObject>`, `<mi>`, …). An end tag inside a comment, a CDATA
+///   section, an attribute value or a nested text element is not one, and inside SVG or MathML
+///   a `<script>` or `<style>` is not a text element until a tag such as `<p>` or `<b>` returns
+///   to HTML.
+///
+/// Where a browser would end it sooner (an HTML tag inside `<svg>`, a `<head>` it ignores, an
+/// end tag across an element still open), it is dropped to the later end, and an end tag inside
+/// SVG or MathML that could close an element around it drops the rest of the text: never the
+/// earlier end.
+fn dropped_end(h: &[char], i: usize, name: &str) -> usize {
+    let len = h.len();
+    if name == "script" {
+        return script_end(h, i);
+    }
+    if name == "plaintext" {
+        return len;
+    }
+    if RAW_TEXT.contains(&name) {
+        let mut from = i;
+        while let Some(k) = find_at(h, from, "</") {
+            if tag_name_at(h, k + 2, name) {
+                return after_end_tag(h, k, name);
+            }
+            from = k + 2;
+        }
+        return len;
+    }
+    let ns_of = |tag: &str| if tag == "svg" { "svg" } else { "math" };
+    let foreign = name == "svg" || name == "math";
+    let mut open: Vec<OpenEl> = vec![OpenEl {
+        tag: name.to_owned(),
+        ns: if foreign { ns_of(name) } else { "html" },
+        html: !foreign,
+        point: false,
+        in_point: false,
+    }];
+    // A tag that returns to HTML: the SVG and MathML elements still open are closed to a
+    // browser, so what follows them is HTML (they stay here, so the drop still ends only at
+    // their end tag).
+    let break_out = |open: &mut Vec<OpenEl>| {
+        for o in open.iter_mut().rev() {
+            if o.html {
+                break;
+            }
+            o.html = true;
+        }
+    };
+    let letter = |k: usize| h.get(k).is_some_and(char::is_ascii_alphabetic);
+    let mut j = i;
+    while j < len {
+        let Some(k) = (j..len).find(|&k| h[k] == '<') else {
+            return len;
+        };
+        let top_html = open.last().is_none_or(|o| o.html);
+        if h[k..].starts_with(&['<', '!', '-', '-']) {
+            j = comment_end(h, k);
+            continue;
+        }
+        // CDATA is text in SVG and MathML; in HTML it is a bogus comment, ended by `>`.
+        if !top_html && h[k..].starts_with(&['<', '!', '[', 'C', 'D', 'A', 'T', 'A', '[']) {
+            let Some(end) = find_at(h, k + 9, "]]>") else {
+                return len;
+            };
+            j = end + 3;
+            continue;
+        }
+        let bogus = bogus_comment_end(h, k);
+        if bogus > k {
+            j = bogus;
+            continue;
+        }
+        let close = h.get(k + 1) == Some(&'/');
+        let from = if close { k + 2 } else { k + 1 };
+        if !letter(from) {
+            j = k + 1;
+            continue;
+        }
+        let e = tag_name_end(h, from);
+        let tag: String = h[from..e].iter().map(char::to_ascii_lowercase).collect();
+        let rest = scan_tag(h, e);
+        if rest.end >= len {
+            return len;
+        }
+        j = rest.end + 1;
+        let (cur_html, cur_point, cur_tag_matches) = open
+            .last()
+            .map_or((true, false, false), |o| (o.html, o.point, o.tag == tag));
+        if close {
+            if !cur_html && !cur_point && (tag == "br" || tag == "p") {
+                break_out(&mut open);
+            }
+            if open.last().is_some_and(|o| !o.html) {
+                // SVG or MathML: the innermost open element of that name, as a browser closes
+                // it, passing only SVG and MathML elements still open.
+                let at = open.iter().rposition(|o| o.html || o.tag == tag);
+                // None, and nothing in between: the end tag could close an element around it.
+                let Some(at) = at else {
+                    return len;
+                };
+                if open[at].html {
+                    continue;
+                }
+                open.truncate(at);
+            } else if cur_tag_matches {
+                open.pop();
+            } else {
+                continue;
+            }
+            if open.is_empty() {
+                return j;
+            }
+            continue;
+        }
+        if !cur_html
+            && !cur_point
+            && (BREAKOUT.contains(&tag.as_str())
+                || (tag == "font"
+                    && rest
+                        .attrs
+                        .iter()
+                        .any(|(a, _)| matches!(a.as_str(), "color" | "face" | "size"))))
+        {
+            break_out(&mut open);
+        }
+        let (parent_html, parent_point, parent_ns, parent_in_point) =
+            open.last().map_or((true, false, "html", false), |o| {
+                (o.html, o.point, o.ns, o.in_point)
+            });
+        if tag == "svg" || tag == "math" {
+            if !rest.self_closing {
+                open.push(OpenEl {
+                    ns: ns_of(&tag),
+                    tag,
+                    html: false,
+                    point: false,
+                    in_point: parent_in_point,
+                });
+            }
+        } else if !parent_html && !parent_point {
+            // SVG or MathML: every element is followed; those whose content is HTML are marked.
+            if rest.self_closing {
+                continue;
+            }
+            let encoding = rest
+                .attrs
+                .iter()
+                .find(|(a, _)| a == "encoding")
+                .map(|(_, v)| decode_entities(v).to_ascii_lowercase())
+                .unwrap_or_default();
+            let point = if parent_ns == "svg" {
+                matches!(tag.as_str(), "foreignobject" | "desc" | "title")
+            } else {
+                matches!(tag.as_str(), "mi" | "mo" | "mn" | "ms" | "mtext")
+                    || (tag == "annotation-xml"
+                        && (encoding == "text/html" || encoding == "application/xhtml+xml"))
+            };
+            open.push(OpenEl {
+                tag,
+                ns: parent_ns,
+                html: false,
+                point,
+                in_point: parent_in_point || point,
+            });
+        } else if RAW_TEXT.contains(&tag.as_str()) {
+            j = dropped_end(h, j, &tag);
+        } else if NESTING.contains(&tag.as_str())
+            || (!VOID.contains(&tag.as_str())
+                && !EMPTY_TOO.contains(&tag.as_str())
+                && parent_in_point)
+        {
+            // Inside `<foreignObject>` and the like, an open HTML element hides its end tag.
+            open.push(OpenEl {
+                tag,
+                ns: "html",
+                html: true,
+                point: false,
+                in_point: parent_in_point,
+            });
+        }
+    }
+    len
+}
+
+/// Where a `<script>` that started before `i` ends. Its text ends at the first `</script`
+/// followed by whitespace, `/` or `>`, except that after `<!--` (until `-->`) a `<script>`
+/// opens a part that the next `</script>` only closes, as the HTML tokenizer's script states
+/// read it: `<script><!--<script></script>x</script>` is one script.
+fn script_end(h: &[char], i: usize) -> usize {
+    let len = h.len();
+    // 0: script data; 1: escaped (after `<!--`); 2: double escaped (after `<script>` there).
+    let mut state = 0u8;
+    let mut dashes = 0usize;
+    let mut j = i;
+    while j < len {
+        let c = h[j];
+        if state == 0 {
+            if c == '<' && h.get(j + 1) == Some(&'/') && tag_name_at(h, j + 2, "script") {
+                return after_end_tag(h, j, "script");
+            }
+            if h[j..].starts_with(&['<', '!', '-', '-']) {
+                state = 1;
+                dashes = 2;
+                j += 4;
+            } else {
+                j += 1;
+            }
+            continue;
+        }
+        if c == '-' {
+            dashes += 1;
+            j += 1;
+            continue;
+        }
+        if c == '>' && dashes >= 2 {
+            state = 0;
+            dashes = 0;
+            j += 1;
+            continue;
+        }
+        dashes = 0;
+        if c != '<' {
+            j += 1;
+            continue;
+        }
+        let close = h.get(j + 1) == Some(&'/');
+        if state == 1 && close && tag_name_at(h, j + 2, "script") {
+            return after_end_tag(h, j, "script");
+        }
+        let from = if close { j + 2 } else { j + 1 };
+        // `<script` (escaped) or `</script` (double escaped), then whitespace, `/` or `>`,
+        // moves between the two; the letters and that character are text either way.
+        if (state == 1) != close {
+            let mut e = from;
+            while e < len && h[e].is_ascii_alphabetic() {
+                e += 1;
+            }
+            if e > from
+                && matches!(
+                    h.get(e),
+                    Some('\t' | '\n' | '\u{c}' | '\r' | ' ' | '/' | '>')
+                )
+            {
+                if h[from..e]
+                    .iter()
+                    .map(char::to_ascii_lowercase)
+                    .eq("script".chars())
+                {
+                    state = 3 - state;
+                }
+                j = e + 1;
+            } else {
+                j = e;
+            }
+            continue;
+        }
+        j = from;
+    }
+    len
+}
+
 fn read_html(html: &str) -> Vec<RichNode> {
     let h: Vec<char> = html.chars().collect();
     let len = h.len();
-    let find = |from: usize, pat: char| (from..len).find(|&k| h[k] == pat);
     let lower =
         |a: usize, b: usize| -> String { h[a..b].iter().map(char::to_ascii_lowercase).collect() };
     let letter = |k: usize| h.get(k).is_some_and(char::is_ascii_alphabetic);
@@ -1360,19 +1924,20 @@ fn read_html(html: &str) -> Vec<RichNode> {
         let c = h[i];
         if c == '<' && h[i..].starts_with(&['<', '!', '-', '-']) {
             flush(&mut stack, &mut text);
-            i = (i + 4..len)
-                .find(|&k| h[k..].starts_with(&['-', '-', '>']))
-                .map_or(len, |e| e + 3);
+            i = comment_end(&h, i);
+            continue;
+        }
+        // `<!DOCTYPE …>`, `<?…>`, `</ …>`: bogus comments a browser does not show.
+        if c == '<' && bogus_comment_end(&h, i) > i {
+            flush(&mut stack, &mut text);
+            i = bogus_comment_end(&h, i);
             continue;
         }
         if c == '<' && h.get(i + 1) == Some(&'/') && letter(i + 2) {
             flush(&mut stack, &mut text);
-            let mut j = i + 2;
-            while j < len && h[j].is_ascii_alphanumeric() {
-                j += 1;
-            }
+            let j = tag_name_end(&h, i + 2);
             let name = lower(i + 2, j);
-            i = find(j, '>').map_or(len, |e| e + 1);
+            i = (scan_tag(&h, j).end + 1).min(len);
             if let Some(k) = (1..stack.len()).rev().find(|&k| stack[k].0 == name) {
                 close_to(&mut stack, k);
             }
@@ -1380,72 +1945,26 @@ fn read_html(html: &str) -> Vec<RichNode> {
         }
         if c == '<' && letter(i + 1) {
             flush(&mut stack, &mut text);
-            let mut j = i + 1;
-            while j < len && h[j].is_ascii_alphanumeric() {
-                j += 1;
-            }
+            let j = tag_name_end(&h, i + 1);
             let name = lower(i + 1, j);
-            let mut attrs: Vec<(String, String)> = Vec::new();
-            while j < len && h[j] != '>' {
-                if is_ws(h[j]) || h[j] == '/' {
-                    j += 1;
-                    continue;
-                }
-                let mut k = j;
-                while k < len && !(is_ws(h[k]) || matches!(h[k], '/' | '>' | '=')) {
-                    k += 1;
-                }
-                let key = lower(j, k);
-                let mut value = String::new();
-                while k < len && is_ws(h[k]) {
-                    k += 1;
-                }
-                if h.get(k) == Some(&'=') {
-                    k += 1;
-                    while k < len && is_ws(h[k]) {
-                        k += 1;
-                    }
-                    match h.get(k) {
-                        Some(&q) if q == '"' || q == '\'' => {
-                            let stop = find(k + 1, q).unwrap_or(len);
-                            value = h[k + 1..stop].iter().collect();
-                            k = stop + 1;
-                        }
-                        _ => {
-                            let from = k;
-                            while k < len && !(is_ws(h[k]) || h[k] == '>') {
-                                k += 1;
-                            }
-                            value = h[from..k].iter().collect();
-                        }
-                    }
-                }
-                if !key.is_empty() && !attrs.iter().any(|(a, _)| *a == key) {
-                    attrs.push((key, decode_entities(&value)));
-                }
-                j = k.max(j + 1);
+            let tag = scan_tag(&h, j);
+            // A tag cut off by the end of the text is not a tag, as in a browser.
+            if tag.end >= len {
+                break;
             }
-            i = j + 1;
+            i = tag.end + 1;
             if DROP.contains(&name.as_str()) {
-                if !VOID.contains(&name.as_str()) {
-                    // The end tag a browser ends it at: `</name`, in any case, then whitespace,
-                    // `/` or `>`, so `</scripts>` inside a script is still script.
-                    let pat: Vec<char> = format!("</{name}").chars().collect();
-                    let close = (i..len).find(|&k| {
-                        k + pat.len() < len
-                            && h[k..k + pat.len()]
-                                .iter()
-                                .zip(&pat)
-                                .all(|(a, b)| a.to_ascii_lowercase() == *b)
-                            && matches!(
-                                h[k + pat.len()],
-                                '\t' | '\n' | '\u{c}' | '\r' | ' ' | '/' | '>'
-                            )
-                    });
-                    i = close.and_then(|c| find(c, '>')).map_or(len, |e| e + 1);
+                // `<svg/>` and `<math/>` are empty; any other dropped element runs to its end tag.
+                if !((name == "svg" || name == "math") && tag.self_closing) {
+                    i = dropped_end(&h, i, &name);
                 }
                 continue;
             }
+            let attrs: Vec<(String, String)> = tag
+                .attrs
+                .into_iter()
+                .map(|(k, v)| (k, decode_entities(&v)))
+                .collect();
             if CLOSES_P.contains(&name.as_str())
                 && stack.len() > 1
                 && stack[stack.len() - 1].0 == "p"
@@ -2180,7 +2699,7 @@ pub const CONTRACT: &str = r#"contract
   when base shows h6 "Deep"
   when rich shows strong "now"
   when rich shows p "Plan now"
-  when titles shows p "look-alike loud notes"
+  when titles shows p "look-alike loud notes mail"
 end"#;
 
 #[cfg(test)]
@@ -2440,6 +2959,22 @@ mod tests {
             "took {:?}",
             started.elapsed()
         );
+        let started = std::time::Instant::now();
+        // Dropped elements: nested, full of comments, tags and attributes, or never closed.
+        for s in [
+            "<template>".to_owned() + &"<template><!-- x --><a title='>'>".repeat(20_000),
+            "<p>".to_owned() + &"<!--x-->".repeat(50_000) + "</p>",
+            "<svg><foreignObject>".to_owned() + &"<b>".repeat(50_000) + &"</svg>".repeat(1_000),
+            "<svg>".to_owned() + &"<g>".repeat(50_000) + &"</g>".repeat(50_000) + "</svg>x",
+            "<script><!--<script>".to_owned() + &"</script>-".repeat(50_000),
+        ] {
+            let _ = rich_text_blocks(&s, MarkdownLinks::Safe);
+        }
+        assert!(
+            started.elapsed().as_secs() < 2,
+            "took {:?}",
+            started.elapsed()
+        );
     }
 
     #[test]
@@ -2475,7 +3010,21 @@ mod tests {
             ("//B\u{fc}cher.example/x", "//xn--bcher-kva.example/x"),
             ("https://EXAMPLE.org:8443/a", "https://example.org:8443/a"),
             ("https://0x7f.1/", "https://127.0.0.1/"),
-            ("MAILTO:a@B.c", "mailto:a@B.c"),
+            ("MAILTO:a@B.c", "mailto:a@b.c"),
+            (
+                "mailto:help@\u{430}pple.com",
+                "mailto:help@xn--pple-43d.com",
+            ),
+            (
+                "mailto:a@x.org,b@\u{430}.com?cc=c@\u{430}.com#x",
+                "mailto:a@x.org,b@xn--80a.com?cc=c@\u{430}.com#x",
+            ),
+            ("mailto:Someone", "mailto:Someone"),
+            ("tel:+263-77-000", "tel:+263-77-000"),
+            ("https://example.com:65535/a", "https://example.com:65535/a"),
+            ("https://example.com:/a", "https://example.com:/a"),
+            ("//Example.com:0443/", "//example.com:0443/"),
+            ("https://[::1]:8080/", "https://[::1]:8080/"),
             ("/Rel/Path", "/Rel/Path"),
         ] {
             assert_eq!(
@@ -2492,6 +3041,36 @@ mod tests {
             "https://1.2.3.999/",
             "//:80/x",
             "https://ex%2Fa/",
+        ] {
+            assert_eq!(safe_link(raw, MarkdownLinks::Safe), None, "{raw:?}");
+        }
+    }
+
+    #[test]
+    fn a_port_must_be_a_number_up_to_65535() {
+        for raw in [
+            "https://example.com:abc/",
+            "https://example.com:99999/",
+            "https://example.com:65536/",
+            "https://example.com:-1/",
+            "https://example.com:1e3/",
+            "//example.com:8a/",
+        ] {
+            // The url crate refuses them, as new URL() does.
+            if !raw.starts_with("//") {
+                assert!(url::Url::parse(raw).is_err(), "{raw:?}");
+            }
+            assert_eq!(safe_link(raw, MarkdownLinks::Safe), None, "{raw:?}");
+        }
+    }
+
+    #[test]
+    fn a_mailto_domain_the_url_parser_rejects_is_refused() {
+        for raw in [
+            "mailto:a@",
+            "mailto:a@b<c.com",
+            "mailto:a@1.2.3.999",
+            "mailto:x@b.com,y@[1.2.3.4]",
         ] {
             assert_eq!(safe_link(raw, MarkdownLinks::Safe), None, "{raw:?}");
         }
@@ -2529,6 +3108,25 @@ mod tests {
     }
 
     #[test]
+    fn a_link_address_is_not_cut_at_other_whitespace_or_a_control_character() {
+        // CommonMark keeps a no-break space in the address; an address with whitespace in it
+        // is refused, as before, rather than linked to the part before the space.
+        for ws in [
+            "\u{a0}", "\u{2000}", "\u{200a}", "\u{3000}", "\u{1}", "\u{b}", "\u{7f}",
+        ] {
+            assert_eq!(
+                parse_inlines(&format!("[a](https://x.com/a{ws}b)"), MarkdownLinks::Safe),
+                vec![t("a")],
+                "{ws:?}"
+            );
+        }
+        assert_eq!(
+            parse_inlines("[a](\u{a0}https://x.com)", MarkdownLinks::Safe),
+            vec![t("a")]
+        );
+    }
+
+    #[test]
     fn a_link_address_ends_at_whitespace_and_its_escapes_are_undone() {
         let link = |href: &str| {
             vec![Inline::Link {
@@ -2555,6 +3153,45 @@ mod tests {
                 MarkdownLinks::Safe
             ),
             vec![p(vec![vec![t("a")]]), p(vec![vec![t("b")]])]
+        );
+    }
+
+    #[test]
+    fn a_dropped_element_ends_where_a_browser_ends_it() {
+        for dropped in [
+            "<template><template></template>secret</template>",
+            "<svg><svg></svg>secret</svg>",
+            "<math><math></math>secret</math>",
+            "<template><!-- </template> -->secret</template>",
+            "<template><a title=\"</template>\">secret</template>",
+            "<template><script>\"</template>\"</script>secret</template>",
+            "<template></ x </template>secret</template>",
+            "<svg><![CDATA[</svg>]]>secret</svg>",
+            "<svg><foreignObject><b></svg>secret</b></foreignObject></svg>",
+            "<svg><b><iframe></svg>secret</iframe></svg>",
+            "<script><!--<script></script>secret</script>",
+            "<script>x</script a=\">secret\">",
+            "<!-- --!><script>x-->secret</script>",
+        ] {
+            assert_eq!(
+                rich_text_blocks(&format!("<p>a</p>{dropped}<p>b</p>"), MarkdownLinks::Safe),
+                vec![p(vec![vec![t("a")]]), p(vec![vec![t("b")]])],
+                "{dropped:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn comments_a_doctype_and_tags_are_read_as_a_browser_reads_them() {
+        assert_eq!(
+            rich_text_blocks(
+                "<!DOCTYPE html><p>a</p><!--><p>b</p><?xml x?><p>c</p><svg/><p>d</p><p><svg-x>e</svg-x></p>",
+                MarkdownLinks::Safe
+            ),
+            ["a", "b", "c", "d", "e"]
+                .iter()
+                .map(|v| p(vec![vec![t(v)]]))
+                .collect::<Vec<_>>()
         );
     }
 
