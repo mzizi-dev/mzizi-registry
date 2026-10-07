@@ -10,6 +10,17 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `device-code`: RFC 8628 device pairing, with a QR code drawn on the device, in Astro, React and Rust under one contract (2026-10-07, #475)
+
+For pairing a TV, display or desktop app from a phone (OAuth 2.0 Device Authorization, RFC 8628 §3.3), first for Mukoko Home ([mukoko-dev/mukoko-home#24](https://github.com/mukoko-dev/mukoko-home/issues/24)).
+
+- **`device-code`** (N2, `contracts/ui/device-code` 1.0.0): the user code large and monospace in groups of four (`KTQB-4RMX`), the verification address without its scheme, a QR code of `verificationUriComplete`, "Expires in m:ss", and a status line for `pending`, `approved`, `expired`, `denied` and `error`. A pending code past `expiresAt` shows as expired with a "Get a new code" control (a button, or a link with `refreshHref`). `size` is `phone` or `tv` (a 10-foot UI: 7xl code, 320px QR code, 64px control). Colour comes from tokens only: `--primary` borders the code and fills the control, so Mukoko's overlay makes it tanzanite; the QR code is black on white in every theme.
+- **Accessible:** the root is a named group; the visible code is `aria-hidden` and a screen-reader line reads it one character at a time ("Code: K T Q B, 4 R M X"); the QR code is `role=img` named with the full address; status changes and the last minute are announced through `role=status`, while the countdown is a `timer` that is not live; the only motion (the pending dot) is `motion-safe:`.
+- **Builds:** `device-code.astro` (pure Astro; one enhancement script ticks the countdown, lapses the code and dispatches a bubbling `device-code:refresh` event), `device-code.tsx` (ticks once mounted; `onRefresh`), and `device-code.rs` in `mzizi-ui` (renders one frame from `now`; `on_refresh`; `rfc3339_to_unix_ms`). Server renders work with no script.
+- **QR codes, no network:** the new `qr-code` (registry:lib, no dependencies) encodes byte mode, versions 1 to 40, levels L/M/Q/H, and writes one SVG path. The Rust build uses the `qrcode` crate (0.14, default features off: no image renderers, no transitive dependencies), and `qr-code.ts` scores masks the way that crate does, so all three builds draw the same matrix. `device-code-format` (registry:lib) holds the shared words and classes.
+- **Tests:** the contract's ten states run in all three runners; `__tests__/fixtures/device-code.cases.json` (every version at every level, whole matrices, codes, countdowns, statuses, RFC 3339 times) runs in the TypeScript suite and in `mzizi-ui`'s `tests/contract.rs`; `__tests__/components/device-code.test.tsx` adds accessibility checks for every status and size and the live countdown in React.
+- **Crate:** `mzizi-ui` gains the `qrcode` dependency, and `js-sys` on `wasm32-unknown-unknown` only (to read the clock where `SystemTime` panics).
+
 ### Fixed — `markdown-parse` compiles under `noUncheckedIndexedAccess` (2026-10-07, #468)
 
 `markdown-parse.ts` (installed with `markdown-renderer`) had 80 type errors in a project with `noUncheckedIndexedAccess`, as the Toddle extension is (#460). Every array, string and match index is now checked, with no behaviour change (the 55 shared cases still give the same trees). `tsconfig.consumer-strict.json` type-checks the installable markdown files with that setting, and `pnpm typecheck` runs it. The whitespace set no longer spreads a string, which consumers' `no-misused-spread` lint flags.
