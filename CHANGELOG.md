@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.6.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.5.5 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.6.0, and the Mzizi Roots crates move to 0.2.0 (the next minor above `mzizi-rs-v0.1.0`), so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer`.
+
 ### Security — `markdown-renderer` is safe by construction, in React, Astro and Rust under one contract (2026-10-07, #462)
 
 `markdown-renderer` built an HTML string with regular expressions and injected it with `dangerouslySetInnerHTML`. Each hole found in it was patched (a `javascript:` link, an unescaped table cell), but the design kept an HTML sink fed by untrusted text, which is not acceptable where it shows text written by others on pages that hold personal data (the Toddle extension's student flags). It is rebuilt so that there is no sink to get wrong (#460).
