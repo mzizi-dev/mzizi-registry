@@ -126,6 +126,19 @@ Slice 1 of #484 ("switchable N1"). It adds roles and changes no component and no
 
 Light `--text-secondary` (`--muted-foreground`) was walked to Lc 75 on `--base` only, so it measured Lc 72.5 on `--surface`, the card colour (#399, as the registry ships it). It is now `#575655`: Lc 78.2 on base and 75.3 on surface. Light `--text-tertiary` moves the same way, to `#797877`. The dark values already cleared both and are unchanged.
 
+### Added — every contract runner fails an inline `style` attribute, in Astro, React and Rust (2026-10-07, #478)
+
+`MineralStrip` in `@bundu/ui` 0.2.0 coloured its segments with an inline `style=`, so it rendered colourless under an app CSP without `'unsafe-inline'` (#444). `@bundu/ui` 0.3.0 fixed the strip. The registry now enforces the rule on everything a contract holds.
+
+- **Rendered.** This is the guarantee. Every state of every build a contract declares is rendered, and any element with a `style` attribute fails, however the style was written.
+  - **Astro and React:** `evaluateInlineStyles` in `contracts/runner.ts`, applied by `evaluateTheming` in the same pass as the colour checks. `@bundu/ui`'s copy keeps calling it the same way. The React `badge`, which its contract holds by identity only, is now rendered in every state too.
+  - **Rust:** `inline_styles` in `mzizi-rs/contract-eval/` reads every top-level node of the SSR output, so it also sees Dioxus CSS-property attributes such as `background_color:`. `Case::check` applies it, so every Case-based suite has it: `mzizi-ui`'s `contracts_json.rs`, which also renders `badge.rs`, and `mzizi-brand`'s.
+  - **Recorded gap.** Eleven `mzizi-brand` components still render inline styles. They are listed in `INLINE_STYLE_GAPS`, a ratchet tracked on #481: any other component fails, and a listed component that stops rendering a `style` fails until its name is removed.
+- **Source, a backstop.** The new `inlineStylesInSource` scans every implementation a contract declares (`.astro`, `.tsx` and `.rs`). It looks for `style` only in attribute position: `style="…"`, `style={…}` including an empty `style={{}}`, `{style}`, `{...{ style }}`, `createElement(…, { style })`, `<style define:vars>`, `setAttribute("style", …)`, and Dioxus `style: …`. Bindings, parameters and fields named `style` do not match.
+- **Fixtures.** In React, Astro and Rust, each way of writing an inline style fails, and the source scan's false-positive cases pass.
+- **No component changed.** Today none of the 144 implementations behind the 67 contracts renders or writes one: 67 `.astro`, 67 `.tsx` and 10 `.rs`.
+- **Shared test helpers.** The contract test suites share one loader, `__tests__/contracts/contract-files.ts`, and one React renderer, `render-tsx.ts`.
+
 ### Added — `has` and `not` in the contract grammar; `ui/status-badge` 1.1.0 covers all four statuses (2026-10-07, #477)
 
 - **Two new predicates in the contract grammar.**

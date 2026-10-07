@@ -474,6 +474,19 @@ fn every_component_keeps_its_own_contract() {
 }
 
 #[test]
+fn every_inline_style_gap_is_a_case_here() {
+    // INLINE_STYLE_GAPS (contract-eval) names the components still allowed an inline `style`
+    // (#481); `Case::check` fails a listed one that no longer renders one, so the list shrinks.
+    let names: Vec<&str> = cases().iter().map(|c| c.name).collect();
+    for gap in INLINE_STYLE_GAPS {
+        assert!(
+            names.contains(gap),
+            "INLINE_STYLE_GAPS names `{gap}`, which is not a case here"
+        );
+    }
+}
+
+#[test]
 fn every_component_in_the_crate_is_under_contract_here() {
     // A component added to `CONTRACTS` but not to `cases()` would ship a contract nothing
     // evaluates — FM-12 at the level of the whole file.
