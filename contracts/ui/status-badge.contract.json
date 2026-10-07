@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/status-badge",
   "title": "StatusBadge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 2,
   "kind": "primitive",
   "summary": "A pill-shaped lifecycle label (stable, beta, alpha or deprecated), each status tinted with one of the Seven Minerals at 10% behind the mineral itself. One contract for the Astro, React and Mzizi Roots builds.",
@@ -60,6 +60,11 @@
         "status": "beta"
       }
     },
+    "alpha": {
+      "props": {
+        "status": "alpha"
+      }
+    },
     "deprecated": {
       "props": {
         "status": "deprecated"
@@ -93,7 +98,7 @@
     "without": "Everything: the component is markup with no script."
   },
   "responsive": ["Inline; never wraps."],
-  "contract": "contract\n  slot is \"status-badge\"\n  portal is \"https://mzizi.dev/components/status-badge\"\n  class contains \"rounded-full\"\n  class contains \"uppercase\"\n  when default shows span \"stable\"\n  when beta class contains \"text-cobalt\"\n  when deprecated class contains \"line-through\"\n  when deprecated shows span \"deprecated\"\nend",
+  "contract": "contract\n  slot is \"status-badge\"\n  portal is \"https://mzizi.dev/components/status-badge\"\n  class contains \"rounded-full\"\n  class contains \"uppercase\"\n  when default shows span \"stable\"\n  when default class contains \"bg-malachite/10\"\n  when default class contains \"text-malachite\"\n  when beta class contains \"bg-cobalt/10\"\n  when beta class contains \"text-cobalt\"\n  when alpha class contains \"bg-gold/10\"\n  when alpha class contains \"text-gold\"\n  when alpha shows span \"alpha\"\n  when deprecated class contains \"bg-terracotta/10\"\n  when deprecated class contains \"text-terracotta\"\n  when deprecated class contains \"line-through\"\n  when deprecated shows span \"deprecated\"\nend",
   "checks": [
     {
       "say": "data-status names the default.",
