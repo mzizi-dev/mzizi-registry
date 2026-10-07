@@ -1,8 +1,8 @@
 ---
 _schemaVersion: "v1"
 covenant: "Nothing harmful reaches the user."
-currentVersion: 2
-description: "Validation, sanitisation and AI guardrails. TypeScript today — Zod schemas at the entry point and the ai-safety lib wrapping completions. Target: the gate logic (permission evaluation, content moderation, wallet state, trust-score validation) compiles to WebAssembly via wasm-bindgen for the browser and to a native binary for server-side API validation, with a thin framework shell rendering the visual gate — verification-required screens, blocked states — by reading state from the module. This is Rust-as-shared-core, not Rust-as-UI: one of the two nodes with a genuine Rust implementation, because a safety gate is logic and logic does not need rewriting per target."
+currentVersion: 3
+description: "Validation, sanitisation and AI guardrails. TypeScript today — Zod schemas at the entry point and the ai-safety lib wrapping completions. Target: the gate logic (permission evaluation, content moderation, wallet state, trust-score validation) is one Rust crate, used natively by Rust backends (Workers via workers-rs, Axum) for server-side validation and built for wasm32 for the browser, with a thin shell — Astro by default, React kept at parity — rendering the visual gate (verification-required screens, blocked states) from its verdict. This is Rust-as-shared-core, not Rust-as-UI: one of the two nodes with a genuine Rust implementation, because a safety gate is logic and logic does not need rewriting per target."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
 helix_model: "double-helix"
@@ -21,8 +21,8 @@ rust:
   kind: "shared-core"
   note: "N4 is a Rust IMPLEMENTATION, not an alternative. This is what makes Swift, Kotlin, ArkTS and React Native viable as first-class targets: they each keep an idiomatic UI while sharing one implementation of what is allowed through. A safety rule reimplemented per target is a safety rule that will eventually disagree with itself."
   state: "target"
-  today: "No Rust ships. Validation is Zod at the entry point and the ai-safety lib (a registry:lib item) for AI completions, both TypeScript. There is no wasm-bindgen build in either repo."
-  target: "The gate logic compiles to WASM via wasm-bindgen for the browser and to a native binary for the API layer, so one implementation of the rules serves every target. A thin framework shell renders the visual gate by reading state from the module; the shell varies by target, the verdict never does."
+  today: "No Rust ships for N4. Validation is Zod at the entry point and the ai-safety lib (a registry:lib item) for AI completions, both TypeScript. No Rust crate for the gate logic exists yet."
+  target: "The gate logic is one Rust crate: native in Rust hosts (Workers, Axum) and built for wasm32 in the browser, with a plain TypeScript build held to it by shared fixtures where a JavaScript host needs one. A thin Astro shell (React at parity) renders the visual gate from the verdict; the shell varies by target, the verdict never does."
   position: "implementation"
   descriptors: []
 sort_order: 4

@@ -1,8 +1,8 @@
 ---
 _schemaVersion: "v1"
 covenant: "The shell holds the product."
-currentVersion: 2
-description: "The app chrome — navigation, routing, theme provision and global overlays, mounted once per app. N7 is the one node that is both things at once: as UI it is framework-specific and has a Rust alternative (Dioxus on the Rust path, Svelte optional, SwiftUI / Jetpack Compose / ArkTS / React Native native), and as the mount point it is where the shared Rust WASM core is initialised once per app and its state — N4's gates, N5's resilience — made available to the component tree. TypeScript today (app/layout.tsx plus next-themes), initialising nothing from WASM."
+currentVersion: 3
+description: "The app chrome — navigation, routing, theme provision and global overlays, mounted once per app. N7 is the one node that is both things at once: as UI it is framework-specific — Astro by default (app-shell, discover-shell and their parts), Dioxus in the mzizi-shell crate, React kept at parity, SwiftUI / Jetpack Compose / ArkTS / React Native idiomatic on native — and as the mount point it is where shared Rust state (N4's gates, N5's resilience) is set up once per app and handed to the component tree. No shell mounts a shared Rust core yet, because N4 and N5 do not ship one."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
 helix_model: "double-helix"
@@ -20,14 +20,15 @@ role: "N7 — the app chrome: header, footer, navigation, theme"
 rust:
   kind: "ui-framework"
   note: "N7 is where the two Rusts meet, and the one place they can be confused with consequences. Rust-as-UI replaces the shell; Rust-as-shared-core is what the shell loads. Initialise the core per component instead of per app and every component gets its own circuit breaker — which is not a circuit breaker. The shell surfaces core state; it never implements the rules the core holds."
-  state: "target"
-  today: "No Rust ships. The shell is app/layout.tsx plus next-themes in mzizi-dev/mzizi-registry — TypeScript — and nothing is initialised from WASM."
-  target: "As UI: Dioxus on the Rust path, Svelte optional, the native targets idiomatic. As mount point: the shell instantiates the shared Rust core once per app and hands its state down. Whatever the framework, the shell is the only place that initialisation happens."
+  state: "shipped"
+  today: "The mzizi-shell crate (Mzizi Roots, on crates.io) ships Dioxus shell components — bottom nav, footer, command palette, connectivity, theme, toasts, deep links and lifecycle — generated from the registry's .rs siblings. The Astro shell components are the default web build, with React siblings at parity. No shell initialises a shared Rust core yet."
+  target: "As UI: Astro by default, Dioxus on the Rust path, React at parity, the native targets idiomatic. As mount point: the shell instantiates the shared Rust state once per app (the N5 resilience core first, from mzizi-registry#472) and hands it down. Whatever the framework, the shell is the only place that initialisation happens."
   position: "alternative"
   dual_role: "shared-core mount point"
   descriptors:
+  - "astro"
   - "dioxus"
-  - "svelte"
+  - "react"
   - "swift"
   - "kotlin"
   - "arkts"

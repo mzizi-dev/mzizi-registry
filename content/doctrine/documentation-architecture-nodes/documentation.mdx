@@ -1,7 +1,7 @@
 ---
 _schemaVersion: "v1"
 covenant: "Every document lives here. Documents, instructions, docs, documentation — one rung, no exceptions."
-currentVersion: 2
+currentVersion: 3
 description: "The doctrine rung, and the single home for everything document-shaped: documents, instructions (including ai_instructions), docs and documentation. Conventions, covenants, guides and reference all belong to N10 — held as MDX in the repo so a document referencing something that no longer exists fails the build rather than rotting unnoticed. If an artifact is prose meant to be read, it is N10; nothing else claims it and no other rung should."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
@@ -20,12 +20,12 @@ node_number: 10
 owner: "nyuchi"
 role: "N10 — the ecosystem documents itself in code"
 rust:
-  kind: null
-  note: "Stated deliberately. The guarantee this node provides is that a page referencing a component that no longer exists fails the build — and that comes from the page being compiled, not from the compiler's language. If the web target moves to Dioxus the docs toolchain follows the framework, but that is the framework's story, not a Rust implementation of N10. A node with no Rust role is a better answer than a fabricated one, and inventing one here would be doctrine drift of exactly the kind this node exists to prevent."
-  state: "not-applicable"
-  today: "Doctrine and node/rung definitions are .mdx in mzizi-dev/mzizi-registry compiled by @next/mdx, which is what makes a page referencing a deleted component fail the build. Long-form documentation is Mintlify MDX in mzizi-dev/mzizi-docs. Structured data is served from Supabase over /api/v1/*."
-  target: "None. N10 has no Rust implementation and no Rust alternative."
-  position: "none"
+  kind: "ui-framework"
+  note: "N10's guarantee — doctrine is checked against what it names — comes from the doctrine living beside the components in one repository, not from any compiler's language. What Rust adds is a build of N10's own components: the mzizi-docs crate carries AI context, the docs API core, the changelog renderer and portal rendering for Dioxus. That is a Rust alternative for consumers on Rust, not a Rust implementation of the doctrine pipeline."
+  state: "shipped"
+  today: "Doctrine and node/rung definitions are .mdx in mzizi-dev/mzizi-registry, inlined into lib/doctrine.generated.ts by `pnpm doctrine:generate` (with a --check gate in CI) and served by api.mzizi.dev and mcp.mzizi.dev at a pinned registry commit. Long-form documentation is Mintlify MDX in mzizi-dev/mzizi-docs. The mzizi-docs crate (re-exported by mzizi-roots-server) ships the N10 components in Rust beside their TypeScript."
+  target: "The doctrine pipeline stays where it is. N10's components keep their Rust and TypeScript builds under one contract each."
+  position: "alternative"
   descriptors: []
 sort_order: 10
 stakeholder: "Docs maintainer"

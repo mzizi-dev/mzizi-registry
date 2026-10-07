@@ -2,7 +2,7 @@
 _bodyField: "rationale"
 _schemaVersion: "v1"
 approach: "web-first"
-currentVersion: 2
+currentVersion: 3
 dnaRole: "documentation"
 doctrineVersion: "4.2.0"
 framework: "Astro + Vite+ (Capacitor shell)"
@@ -46,9 +46,11 @@ logic, anything hot, anything that should outlive a JavaScript runtime —
 compiled to WebAssembly for the browser and to native for workers and servers.
 TypeScript is the fallback, for glue, integration, and work that is genuinely
 web-shaped. Reach for TypeScript because Rust does not fit, not because it is
-quicker to start.
+quicker to start. Python is a further target for the logic nodes, planned first
+for N5 resilience (mzizi-registry#472); none ships yet beyond the N1 token file.
 
-**There is no third UI framework.** Not Svelte, not React, not Vue. Astro
+**Mzizi's own surfaces have no third UI framework.** Not Svelte, not Vue, and
+no React underneath an Astro page by default. Astro
 renders the markup and hosts islands; a component framework underneath it is a
 second way to build the same thing, and the cost of a second way is not the
 bundle — it is that every future component now has a choice to make and a
@@ -56,6 +58,12 @@ convention to look up. Two surfaces still carry Svelte, and both are the thing
 being removed rather than the standard: `@nyuchi/mzizi-console-app` (moving to a
 Rust UI) and `@nyuchi/nyuchi-docs-search` (Astro plus TypeScript). Neither is a
 precedent to copy.
+
+**Consumers are a different matter.** Apps across the bundu ecosystem may not
+use Astro, so the registry keeps a React build and a Rust (Dioxus) build of each
+component at parity with its Astro build: the same component under one
+contract, never a fallback or a second design (see `AGENTS.md`). React is kept
+for them; it is not a framework Mzizi's own surfaces add.
 
 **Under both is Vite+.** One toolchain — Rolldown to bundle, Vitest to test,
 oxlint to lint, oxfmt to format, tsgolint to type check — invoked as `vp build`,
@@ -79,6 +87,6 @@ code and cannot be true of CI configuration, and pretending otherwise would mean
 dropping the linter that catches script injection in workflows.
 
 **What this supersedes.** The previous version of this document named Next.js +
-Capacitor as the framework. Next.js remains in the tree at mzizi.dev while that
-site is migrated to Astro; it is the thing being removed, not the standard. No
-new surface starts on it.
+Capacitor as the framework. mzizi.dev has since moved to Astro
+(`mzizi-dev/mzizi-site`) and the Next.js app in `mzizi-dev/mzizi-registry` has
+been removed. No new surface starts on Next.js.

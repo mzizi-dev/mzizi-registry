@@ -10,6 +10,17 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — the architecture doctrine describes the stack as it is: Astro by default, Rust, plain TypeScript, React at parity, Python planned (2026-10-07, #PRNUM)
+
+The node, rung and strand doctrine that `mzizi_get_architecture` and `/v1/architecture` serve still described the React-and-Svelte era (#472, N10). Rewritten against the repository:
+
+- **N2 primitives:** React is no longer "the verified Mzizi baseline", and Svelte (shadcn-svelte) is gone. Astro is the default build; the Dioxus primitives in `mzizi-ui` ship (they were described as "metadata_only… zero Dioxus primitives wired"); React is kept at parity. The Radix, CVA and `asChild` rules now say which build they apply to.
+- **N3 brand, N6 pages, N7 shell:** "Svelte optional", `app/layout.tsx` plus `next-themes` and "Next.js App Router routes" are replaced by the Astro builds, the `mzizi-brand` and `mzizi-shell` crates, and React at parity. The harness is a React context in React and props in Astro and Rust (the Mzizi Roots RFC).
+- **N4 safety, N5 resilience:** no wasm-bindgen-to-SvelteKit. N5 describes the target being built in #472: one Rust state machine, `mzizi-resilience`, used natively by Rust hosts, with a plain TypeScript build held to it by shared fixtures, thin Astro shells and React at parity, and Python planned. Chaos and observability belong to N8.
+- **N8 assurance, N9 fundi:** `mzizi-assurance` and `mzizi-fundi` ship; `lib/metrics.ts` (which does not exist) and the Supabase REST reads are gone. Telemetry leaves over OTLP; fundi keeps its logs in Cloudflare D1.
+- **N1, N10, N11:** the token source is `lib/tokens/palette.source.ts`, not Supabase; doctrine is inlined by `pnpm doctrine:generate`, not `@next/mdx`; the `mzizi-docs` and `mzizi-discovery` crates ship.
+- **Swappable strand, the Astro + Vite+ framework, Next.js, mobile-first, ownership and installation:** "SvelteKit the declared migration target" and "Next.js remains at mzizi.dev" are gone; installation shows the Astro, Rust and React install paths.
+
 ### Fixed — `markdown-parse` compiles under `noUncheckedIndexedAccess` (2026-10-07, #468)
 
 `markdown-parse.ts` (installed with `markdown-renderer`) had 80 type errors in a project with `noUncheckedIndexedAccess`, as the Toddle extension is (#460). Every array, string and match index is now checked, with no behaviour change (the 55 shared cases still give the same trees). `tsconfig.consumer-strict.json` type-checks the installable markdown files with that setting, and `pnpm typecheck` runs it. The whitespace set no longer spreads a string, which consumers' `no-misused-spread` lint flags.
