@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
 
 /**
- * Tailwind-merge configured for the Nyuchi Design System's custom type
+ * Tailwind-merge configured for Mzizi's custom type
  * scale. Without this, merge treats the named font sizes (`text-body`,
  * `text-h2`, …) as *colours* and drops a legitimately co-existing
  * `text-primary-foreground`. Declaring them in the `font-size` group
@@ -34,7 +34,7 @@ const twMerge = extendTailwindMerge({
 });
 
 /**
- * `cn` — the shadcn class-merge helper the Nyuchi Design System is built
+ * `cn` — the shadcn class-merge helper Mzizi is built
  * on. Merges conditional class lists (clsx) and resolves Tailwind
  * conflicts last-wins (tailwind-merge). Every UI component composes its
  * variant classes through this.
