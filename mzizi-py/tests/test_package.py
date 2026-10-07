@@ -20,3 +20,14 @@ def test_imports_the_installed_package_not_the_source_tree() -> None:
     # CI installs the wheel and runs with --import-mode=importlib, so a module that is in
     # src/ but missing from the wheel fails here rather than passing from the checkout.
     assert "site-packages" in (mzizi_resilience.__file__ or "")
+
+
+def test_every_module_is_re_exported() -> None:
+    import importlib
+    import pkgutil
+
+    for info in pkgutil.iter_modules(mzizi_resilience.__path__):
+        module = importlib.import_module(f"mzizi_resilience.{info.name}")
+        for name in getattr(module, "__all__", []):
+            assert name in mzizi_resilience.__all__, f"{info.name}.{name} is not re-exported"
+            assert getattr(mzizi_resilience, name) is getattr(module, name)
