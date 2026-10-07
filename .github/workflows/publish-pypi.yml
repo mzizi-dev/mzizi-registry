@@ -213,15 +213,23 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.RELEASE_BUMP_TOKEN }}
           VERSION: ${{ needs.build.outputs.version }}
+          PUBLISHED: ${{ needs.publish.result }}
         run: |
           set -euo pipefail
           tag="mzizi-py-v$VERSION"
-          # Only tag a version that is really on PyPI.
-          status=$(curl -sS -o /dev/null -w '%{http_code}' \
-            "https://pypi.org/pypi/mzizi-resilience/$VERSION/json")
-          if [ "$status" != "200" ]; then
-            echo "mzizi-resilience $VERSION is not on PyPI (status $status); nothing to tag."
-            exit 0
+          # Only tag a version that is really on PyPI. After this run's own upload it is,
+          # and PyPI's JSON API is not asked: it is CDN-cached and can still answer 404
+          # for a while after a fresh upload, which would leave the release untagged and
+          # the next-version policy stuck on the previous tag. Without an upload this
+          # run (a re-run, or a push that did not change the version), the lookup above
+          # has already found it there, or found nothing to tag.
+          if [ "$PUBLISHED" != "success" ]; then
+            status=$(curl -sS -o /dev/null -w '%{http_code}' \
+              "https://pypi.org/pypi/mzizi-resilience/$VERSION/json")
+            if [ "$status" != "200" ]; then
+              echo "mzizi-resilience $VERSION is not on PyPI (status $status); nothing to tag."
+              exit 0
+            fi
           fi
           if git ls-remote --tags --refs origin "refs/tags/$tag" | grep -q .; then
             echo "$tag already exists; nothing to tag."
