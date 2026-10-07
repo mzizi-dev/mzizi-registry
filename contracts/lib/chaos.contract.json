@@ -1,0 +1,131 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/chaos",
+  "title": "chaos",
+  "version": "1.0.0",
+  "node": 8,
+  "kind": "lib",
+  "summary": "Seeded, scheduled fault injection that cannot run in production. ChaosEngine decides, per invocation, whether an operation gets a fault (error, latency, timeout, drop, truncate, malformed); it is the FaultInjector the N5 resilience pipeline takes.",
+  "implementations": {
+    "ts": "components/registry/n8-assurance/chaos.ts",
+    "rs": {
+      "crate": "mzizi-assurance",
+      "module": "chaos",
+      "file": "components/registry/n8-assurance/chaos.rs"
+    },
+    "py": null
+  },
+  "fixtures": ["__tests__/fixtures/resilience/chaos.cases.json"],
+  "exports": {
+    "ts": [
+      "ChaosEngine",
+      "createChaos",
+      "ChaosError",
+      "ChaosForbiddenError",
+      "ResilienceConfigError",
+      "isProductionEnvironment",
+      "validateChaosOptions",
+      "resolveFaults",
+      "applyFault",
+      "truncateString",
+      "MALFORMED_MARKER",
+      "withChaos",
+      "chaosMiddleware",
+      "chaosWrap",
+      "type ChaosOptions",
+      "type ChaosConfig",
+      "type FaultSpec",
+      "type Fault",
+      "type FaultInjector"
+    ],
+    "rs": [
+      "ChaosEngine",
+      "ChaosConfig",
+      "FaultSpec",
+      "FaultKind",
+      "Environment",
+      "is_production_environment",
+      "ChaosBuildError",
+      "ChaosForbiddenError",
+      "ChaosError",
+      "ConfigError",
+      "truncate_str",
+      "truncate_slice",
+      "MALFORMED_MARKER",
+      "LEGACY_ERROR_RATE",
+      "LEGACY_LATENCY_MS"
+    ]
+  },
+  "config": {
+    "enabled": {
+      "type": "boolean",
+      "default": false,
+      "rule": "Off: decide() returns null without drawing; the n2 wrappers run the function untouched and validate nothing."
+    },
+    "seed": {
+      "type": "u32",
+      "default": 0,
+      "rule": "mulberry32 seed. The n2 wrappers (withChaos, chaosMiddleware, chaosWrap) use a random seed when none is given, as they used Math.random before."
+    },
+    "faults": {
+      "type": "FaultSpec[]",
+      "default": "the n2 mapping",
+      "rule": "In order; each rate in [0, 1]; rates sum to at most 1 (1e-9 tolerance). latency carries integer minMs <= maxMs."
+    },
+    "schedule": {
+      "type": "(Fault | null)[]",
+      "default": [],
+      "rule": "Entry i is invocation i's decision. Used up first; a schedule entry draws nothing from the generator."
+    },
+    "environment": {
+      "type": "string (TS) / Environment (Rust)",
+      "default": "unset",
+      "rule": "production or prod (any case) forbids enabled chaos."
+    },
+    "errorRate, latencyMs": {
+      "type": "n2 config",
+      "default": "0.3, [100, 500]",
+      "rule": "When faults is absent: faults = [{error, rate: errorRate}, {latency, rate: 1 - errorRate, minMs, maxMs}]. Giving faults and either of these is a config error."
+    }
+  },
+  "behaviour": [
+    "decide(): if disabled → null. If production now → null (checked on every call). If a schedule entry remains → it. Else u = nextU32(); walk faults in order with cumulative thresholds floor(cumRate * 2^32), capped at 2^32 so a cumulative rate of 1 always fires; the first with u < threshold wins. latency draws once more: ms = minMs + nextU32() % (maxMs - minMs + 1). No fault, no second draw.",
+    "mulberry32 is the spec's exact generator (state += 0x6D2B79F5; imul mixing); the same seed gives the same decisions in every build.",
+    "applyFault (TS): error and drop reject ChaosError without running the operation; latency waits then runs; timeout never settles until the signal aborts; truncate halves a string (by code point), array, Uint8Array or ArrayBuffer, else hands the value to mutate or rejects ChaosError{kind: truncate}; malformed replaces the result with mutate's output or the marker {\"mzizi-chaos\":.",
+    "Rust is sans-IO: the host applies the decision (waits, drops the future, truncates with truncate_str / truncate_slice)."
+  ],
+  "productionGuard": {
+    "rule": "Hard, no override. Enabling chaos where the environment is production fails at construction with ChaosForbiddenError (code chaos-forbidden), before the rest of the config is read.",
+    "ts": "Production when environment is production/prod, or process.env.NODE_ENV === \"production\", or import.meta.env.PROD === true. An explicit non-production environment does not override the other two.",
+    "rs": "Production when the host passes Environment::Production, or passes no environment and this is a release build (cfg!(not(debug_assertions))). A host that runs chaos in an optimised staging build passes a non-production Environment.",
+    "throws": [
+      "new ChaosEngine / createChaos with enabled: true in production",
+      "withChaos(fn, { enabled: true, ... }) in production: the returned promise rejects, fn is not called",
+      "chaosMiddleware({ enabled: true, ... }) and chaosWrap(fn, { enabled: true, ... }) in production: at creation"
+    ],
+    "allowed": "enabled: false in production: no error, nothing injected, fn runs untouched."
+  },
+  "errors": [
+    {
+      "name": "ChaosError",
+      "code": "chaos",
+      "when": "An injected error, drop or untruncatable truncate. TS keeps injected: true and chaosType (= kind)."
+    },
+    {
+      "name": "ChaosForbiddenError",
+      "code": "chaos-forbidden",
+      "when": "Enabled in production."
+    },
+    {
+      "name": "ResilienceConfigError",
+      "code": "config",
+      "when": "Invalid config (TS: a RangeError subclass; Rust: ConfigError inside ChaosBuildError::Config)."
+    }
+  ],
+  "covenant": "Injection is logged under [mzizi:chaos] with the fault kind (and latency ms) only.",
+  "gaps": [
+    "Python build: phase 2 of #472.",
+    "The fault interface (Fault, FaultInjector, mulberry32) is defined here until the N5 core (mzizi-resilience) lands; then it is imported from there.",
+    "mzizi-chaos (the blast-radius diagnostics) still draws Math.random for its own injection helpers; moving it onto ChaosEngine is a follow-up."
+  ]
+}

@@ -3089,31 +3089,37 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["primitives"],
+      "categories": ["lib", "assurance"],
       "dependencies": [],
-      "description": "Chaos testing utilities for injecting random errors and latency to test resilience.",
-      "docs": "Use it for: Injecting chaos in test environments to verify resilience, Validating error handling during Layer 8 assurance runs, Failure-mode testing in dev before production, Conformity check stress testing, Synthetic probe fault injection.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/chaos",
+      "description": "Seeded, scheduled fault injection for resilience tests: error, latency, timeout (hang), drop, truncate and malformed faults decided by mulberry32 or an explicit schedule, so a run replays exactly. A hard production guard: enabling chaos in production throws ChaosForbiddenError, with no override. The FaultInjector the N5 resilience pipeline takes. Rust sibling in mzizi-assurance, one contract, shared fixtures.",
+      "docs": "Use it for: Driving the N5 resilience pipeline with seeded faults in tests, Replaying a failure sequence in development or CI, Proving that a circuit breaker opens and a fallback serves, Fault injection in staging, never in production.\nIncludes: Deterministic: mulberry32 seed or an explicit schedule, Six fault kinds: error, latency, timeout, drop, truncate, malformed, Hard production guard (ChaosForbiddenError), no override, Config validated at construction (ResilienceConfigError), withChaos, chaosMiddleware, chaosWrap and the errorRate/latencyMs config kept, Rust (mzizi-assurance) sibling with one contract and shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/chaos",
       "files": [
         {
-          "path": "components/registry/n2-primitives/chaos.ts",
+          "path": "components/registry/n8-assurance/chaos.ts",
           "target": "lib/chaos.ts",
           "type": "registry:lib"
         }
       ],
       "meta": {
-        "a11y": ["Semantic HTML"],
-        "collection": "primitives",
-        "features": ["cn() for className composition", "data-slot attribute"],
-        "hasDemo": true,
-        "owner": "mzizi",
-        "useCases": [
-          "Injecting chaos in test environments to verify resilience",
-          "Validating error handling during Layer 8 assurance runs",
-          "Failure-mode testing in dev before production",
-          "Conformity check stress testing",
-          "Synthetic probe fault injection"
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Deterministic: mulberry32 seed or an explicit schedule",
+          "Six fault kinds: error, latency, timeout, drop, truncate, malformed",
+          "Hard production guard (ChaosForbiddenError), no override",
+          "Config validated at construction (ResilienceConfigError)",
+          "withChaos, chaosMiddleware, chaosWrap and the errorRate/latencyMs config kept",
+          "Rust (mzizi-assurance) sibling with one contract and shared fixtures"
         ],
-        "variants": ["default"]
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Driving the N5 resilience pipeline with seeded faults in tests",
+          "Replaying a failure sequence in development or CI",
+          "Proving that a circuit breaker opens and a fallback serves",
+          "Fault injection in staging, never in production"
+        ]
       },
       "name": "chaos",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/observability"],
@@ -17392,31 +17398,37 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["primitives"],
+      "categories": ["lib", "assurance"],
       "dependencies": [],
-      "description": "Structured logging, performance measurement, and error tracking with the [mukoko] prefix.",
-      "docs": "Use it for: Structured logging across all layers, Performance measurement in critical paths, Error tracking with context enrichment, Distributed trace context propagation, Metric collection for dashboards.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/observability",
+      "description": "Structured log events ({ts, level, module, msg, traceId?, data?}) with injectable sinks, the [mzizi:<module>] console prefix, and PII redaction built in: sensitive keys become [redacted] and errors become {name, code}, never their message. log, measure, trackError and createLogger. Rust sibling in mzizi-assurance, one contract, shared fixtures.",
+      "docs": "Use it for: Structured logging in any Mzizi component or service, Timing critical paths with measure, Recording errors without leaking personal data, Feeding a log drain one JSON line per event.\nIncludes: Structured JSON events with injectable sinks (console, JSON line, memory), Redaction of sensitive keys at any depth, Errors reduced to {name, code}, never the message, [mzizi:<module>] console prefix, No dependencies: Node, Workers, Deno, Astro, the browser, Rust (mzizi-assurance) sibling with one contract and shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/observability",
       "files": [
         {
-          "path": "components/registry/n2-primitives/observability.ts",
+          "path": "components/registry/n8-assurance/observability.ts",
           "target": "lib/observability.ts",
           "type": "registry:lib"
         }
       ],
       "meta": {
-        "a11y": ["Semantic HTML"],
-        "collection": "primitives",
-        "features": ["cn() for className composition", "data-slot attribute"],
-        "hasDemo": true,
-        "owner": "mzizi",
-        "useCases": [
-          "Structured logging across all layers",
-          "Performance measurement in critical paths",
-          "Error tracking with context enrichment",
-          "Distributed trace context propagation",
-          "Metric collection for dashboards"
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Structured JSON events with injectable sinks (console, JSON line, memory)",
+          "Redaction of sensitive keys at any depth",
+          "Errors reduced to {name, code}, never the message",
+          "[mzizi:<module>] console prefix",
+          "No dependencies: Node, Workers, Deno, Astro, the browser",
+          "Rust (mzizi-assurance) sibling with one contract and shared fixtures"
         ],
-        "variants": ["default"]
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Structured logging in any Mzizi component or service",
+          "Timing critical paths with measure",
+          "Recording errors without leaking personal data",
+          "Feeding a log drain one JSON line per event"
+        ]
       },
       "name": "observability",
       "registryDependencies": [],

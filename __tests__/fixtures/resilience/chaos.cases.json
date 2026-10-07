@@ -1,0 +1,1004 @@
+{
+  "$comment": "Shared chaos fixture (mzizi-registry#472). Run by __tests__/lib/chaos.test.ts (vitest) and mzizi-rs/crates/mzizi-assurance/tests/resilience_fixtures.rs (cargo). A fault is {kind} or {kind:\"latency\", ms}; null is no fault. Every build must produce exactly these decisions.",
+  "version": 1,
+  "malformedMarker": "{\"mzizi-chaos\":",
+  "decisions": [
+    {
+      "name": "legacy shape, seed 0: error 30%, latency 100-500 otherwise",
+      "config": {
+        "enabled": true,
+        "seed": 0,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 0.3
+          },
+          {
+            "kind": "latency",
+            "rate": 0.7,
+            "minMs": 100,
+            "maxMs": 500
+          }
+        ]
+      },
+      "invocations": 12,
+      "expected": [
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "latency",
+          "ms": 260
+        },
+        {
+          "kind": "latency",
+          "ms": 433
+        },
+        {
+          "kind": "latency",
+          "ms": 130
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "latency",
+          "ms": 416
+        },
+        {
+          "kind": "latency",
+          "ms": 274
+        },
+        {
+          "kind": "latency",
+          "ms": 202
+        }
+      ]
+    },
+    {
+      "name": "every kind at 10%, seed 42",
+      "config": {
+        "enabled": true,
+        "seed": 42,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 0.1
+          },
+          {
+            "kind": "latency",
+            "rate": 0.1,
+            "minMs": 50,
+            "maxMs": 150
+          },
+          {
+            "kind": "timeout",
+            "rate": 0.1
+          },
+          {
+            "kind": "drop",
+            "rate": 0.1
+          },
+          {
+            "kind": "truncate",
+            "rate": 0.1
+          },
+          {
+            "kind": "malformed",
+            "rate": 0.1
+          }
+        ]
+      },
+      "invocations": 24,
+      "expected": [
+        null,
+        {
+          "kind": "truncate"
+        },
+        null,
+        null,
+        {
+          "kind": "latency",
+          "ms": 50
+        },
+        {
+          "kind": "timeout"
+        },
+        null,
+        null,
+        {
+          "kind": "truncate"
+        },
+        {
+          "kind": "timeout"
+        },
+        null,
+        null,
+        {
+          "kind": "drop"
+        },
+        {
+          "kind": "latency",
+          "ms": 89
+        },
+        null,
+        null,
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "truncate"
+        },
+        null,
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "malformed"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "timeout"
+        },
+        {
+          "kind": "error"
+        }
+      ]
+    },
+    {
+      "name": "error 50%, seed 4294967295",
+      "config": {
+        "enabled": true,
+        "seed": 4294967295,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 0.5
+          }
+        ]
+      },
+      "invocations": 12,
+      "expected": [
+        null,
+        {
+          "kind": "error"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        null,
+        null,
+        {
+          "kind": "error"
+        }
+      ]
+    },
+    {
+      "name": "drop at rate 1 fires every time, seed 1",
+      "config": {
+        "enabled": true,
+        "seed": 1,
+        "faults": [
+          {
+            "kind": "drop",
+            "rate": 1
+          }
+        ]
+      },
+      "invocations": 5,
+      "expected": [
+        {
+          "kind": "drop"
+        },
+        {
+          "kind": "drop"
+        },
+        {
+          "kind": "drop"
+        },
+        {
+          "kind": "drop"
+        },
+        {
+          "kind": "drop"
+        }
+      ]
+    },
+    {
+      "name": "rates of 0 never fire, seed 7",
+      "config": {
+        "enabled": true,
+        "seed": 7,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 0
+          },
+          {
+            "kind": "timeout",
+            "rate": 0
+          }
+        ]
+      },
+      "invocations": 5,
+      "expected": [null, null, null, null, null]
+    },
+    {
+      "name": "rates summing to exactly 1 always pick one, seed 11",
+      "config": {
+        "enabled": true,
+        "seed": 11,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 0.5
+          },
+          {
+            "kind": "malformed",
+            "rate": 0.25
+          },
+          {
+            "kind": "truncate",
+            "rate": 0.25
+          }
+        ]
+      },
+      "invocations": 10,
+      "expected": [
+        {
+          "kind": "malformed"
+        },
+        {
+          "kind": "malformed"
+        },
+        {
+          "kind": "malformed"
+        },
+        {
+          "kind": "malformed"
+        },
+        {
+          "kind": "truncate"
+        },
+        {
+          "kind": "malformed"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "malformed"
+        },
+        {
+          "kind": "malformed"
+        },
+        {
+          "kind": "error"
+        }
+      ]
+    },
+    {
+      "name": "a fixed latency (minMs = maxMs) still draws twice, seed 5",
+      "config": {
+        "enabled": true,
+        "seed": 5,
+        "faults": [
+          {
+            "kind": "latency",
+            "rate": 0.5,
+            "minMs": 200,
+            "maxMs": 200
+          },
+          {
+            "kind": "error",
+            "rate": 0.5
+          }
+        ]
+      },
+      "invocations": 8,
+      "expected": [
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "latency",
+          "ms": 200
+        },
+        {
+          "kind": "latency",
+          "ms": 200
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "latency",
+          "ms": 200
+        },
+        {
+          "kind": "latency",
+          "ms": 200
+        },
+        {
+          "kind": "error"
+        }
+      ]
+    },
+    {
+      "name": "a schedule only, then nothing",
+      "config": {
+        "enabled": true,
+        "seed": 0,
+        "faults": [],
+        "schedule": [
+          {
+            "kind": "error"
+          },
+          null,
+          {
+            "kind": "latency",
+            "ms": 250
+          },
+          {
+            "kind": "timeout"
+          },
+          {
+            "kind": "truncate"
+          },
+          {
+            "kind": "malformed"
+          },
+          {
+            "kind": "drop"
+          }
+        ]
+      },
+      "invocations": 9,
+      "expected": [
+        {
+          "kind": "error"
+        },
+        null,
+        {
+          "kind": "latency",
+          "ms": 250
+        },
+        {
+          "kind": "timeout"
+        },
+        {
+          "kind": "truncate"
+        },
+        {
+          "kind": "malformed"
+        },
+        {
+          "kind": "drop"
+        },
+        null,
+        null
+      ]
+    },
+    {
+      "name": "a schedule is used up first and draws nothing; then the rates, seed 3",
+      "config": {
+        "enabled": true,
+        "seed": 3,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 0.5
+          }
+        ],
+        "schedule": [
+          {
+            "kind": "drop"
+          },
+          {
+            "kind": "drop"
+          }
+        ]
+      },
+      "invocations": 8,
+      "expected": [
+        {
+          "kind": "drop"
+        },
+        {
+          "kind": "drop"
+        },
+        null,
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        null,
+        {
+          "kind": "error"
+        }
+      ]
+    },
+    {
+      "name": "the same seed and faults without the schedule (compare: the draws start the same)",
+      "config": {
+        "enabled": true,
+        "seed": 3,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 0.5
+          }
+        ]
+      },
+      "invocations": 6,
+      "expected": [
+        null,
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        null,
+        {
+          "kind": "error"
+        }
+      ]
+    },
+    {
+      "name": "disabled decides nothing, even at rate 1",
+      "config": {
+        "enabled": false,
+        "seed": 0,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 1
+          }
+        ]
+      },
+      "invocations": 4,
+      "expected": [null, null, null, null]
+    },
+    {
+      "name": "n2 config errorRate/latencyMs, seed 9",
+      "config": {
+        "enabled": true,
+        "seed": 9,
+        "errorRate": 0.25,
+        "latencyMs": [10, 20]
+      },
+      "invocations": 10,
+      "expected": [
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "latency",
+          "ms": 13
+        },
+        {
+          "kind": "latency",
+          "ms": 13
+        },
+        {
+          "kind": "latency",
+          "ms": 15
+        },
+        {
+          "kind": "latency",
+          "ms": 17
+        },
+        {
+          "kind": "latency",
+          "ms": 12
+        },
+        {
+          "kind": "latency",
+          "ms": 19
+        },
+        {
+          "kind": "latency",
+          "ms": 17
+        },
+        {
+          "kind": "latency",
+          "ms": 18
+        },
+        {
+          "kind": "latency",
+          "ms": 13
+        }
+      ]
+    },
+    {
+      "name": "n2 config with its defaults (0.3, [100, 500]), seed 0",
+      "config": {
+        "enabled": true
+      },
+      "invocations": 10,
+      "expected": [
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "latency",
+          "ms": 260
+        },
+        {
+          "kind": "latency",
+          "ms": 433
+        },
+        {
+          "kind": "latency",
+          "ms": 130
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "error"
+        },
+        {
+          "kind": "latency",
+          "ms": 416
+        }
+      ]
+    }
+  ],
+  "legacyMapping": [
+    {
+      "name": "defaults",
+      "config": {
+        "enabled": true
+      },
+      "faults": [
+        {
+          "kind": "error",
+          "rate": 0.3
+        },
+        {
+          "kind": "latency",
+          "rate": 0.7,
+          "minMs": 100,
+          "maxMs": 500
+        }
+      ]
+    },
+    {
+      "name": "errorRate only",
+      "config": {
+        "enabled": true,
+        "errorRate": 0.1
+      },
+      "faults": [
+        {
+          "kind": "error",
+          "rate": 0.1
+        },
+        {
+          "kind": "latency",
+          "rate": 0.9,
+          "minMs": 100,
+          "maxMs": 500
+        }
+      ]
+    },
+    {
+      "name": "both",
+      "config": {
+        "enabled": true,
+        "errorRate": 0.4,
+        "latencyMs": [0, 50]
+      },
+      "faults": [
+        {
+          "kind": "error",
+          "rate": 0.4
+        },
+        {
+          "kind": "latency",
+          "rate": 0.6,
+          "minMs": 0,
+          "maxMs": 50
+        }
+      ]
+    },
+    {
+      "name": "errorRate 1 leaves latency at rate 0",
+      "config": {
+        "enabled": true,
+        "errorRate": 1,
+        "latencyMs": [5, 5]
+      },
+      "faults": [
+        {
+          "kind": "error",
+          "rate": 1
+        },
+        {
+          "kind": "latency",
+          "rate": 0,
+          "minMs": 5,
+          "maxMs": 5
+        }
+      ]
+    }
+  ],
+  "validation": [
+    {
+      "name": "negative rate",
+      "config": {
+        "enabled": true,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": -0.1
+          }
+        ]
+      },
+      "error": "config"
+    },
+    {
+      "name": "rate above 1",
+      "config": {
+        "enabled": true,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 1.5
+          }
+        ]
+      },
+      "error": "config"
+    },
+    {
+      "name": "rates sum above 1",
+      "config": {
+        "enabled": true,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 0.6
+          },
+          {
+            "kind": "drop",
+            "rate": 0.6
+          }
+        ]
+      },
+      "error": "config"
+    },
+    {
+      "name": "latency minMs above maxMs",
+      "config": {
+        "enabled": true,
+        "faults": [
+          {
+            "kind": "latency",
+            "rate": 0.5,
+            "minMs": 500,
+            "maxMs": 100
+          }
+        ]
+      },
+      "error": "config"
+    },
+    {
+      "name": "negative latency",
+      "config": {
+        "enabled": true,
+        "faults": [
+          {
+            "kind": "latency",
+            "rate": 0.5,
+            "minMs": -1,
+            "maxMs": 100
+          }
+        ]
+      },
+      "error": "config"
+    },
+    {
+      "name": "non-integer latency",
+      "config": {
+        "enabled": true,
+        "faults": [
+          {
+            "kind": "latency",
+            "rate": 0.5,
+            "minMs": 1.5,
+            "maxMs": 100
+          }
+        ]
+      },
+      "error": "config"
+    },
+    {
+      "name": "unknown kind",
+      "config": {
+        "enabled": true,
+        "faults": [
+          {
+            "kind": "explode",
+            "rate": 0.5
+          }
+        ]
+      },
+      "error": "config"
+    },
+    {
+      "name": "seed below 0",
+      "config": {
+        "enabled": true,
+        "seed": -1
+      },
+      "error": "config"
+    },
+    {
+      "name": "seed above u32",
+      "config": {
+        "enabled": true,
+        "seed": 4294967296
+      },
+      "error": "config"
+    },
+    {
+      "name": "non-integer seed",
+      "config": {
+        "enabled": true,
+        "seed": 1.5
+      },
+      "error": "config"
+    },
+    {
+      "name": "faults and errorRate together",
+      "config": {
+        "enabled": true,
+        "faults": [],
+        "errorRate": 0.1
+      },
+      "error": "config"
+    },
+    {
+      "name": "n2 errorRate above 1",
+      "config": {
+        "enabled": true,
+        "errorRate": 2
+      },
+      "error": "config"
+    },
+    {
+      "name": "n2 latencyMs reversed",
+      "config": {
+        "enabled": true,
+        "latencyMs": [500, 100]
+      },
+      "error": "config"
+    },
+    {
+      "name": "schedule entry of an unknown kind",
+      "config": {
+        "enabled": true,
+        "schedule": [
+          {
+            "kind": "explode"
+          }
+        ]
+      },
+      "error": "config"
+    },
+    {
+      "name": "schedule latency with negative ms",
+      "config": {
+        "enabled": true,
+        "schedule": [
+          {
+            "kind": "latency",
+            "ms": -5
+          }
+        ]
+      },
+      "error": "config"
+    },
+    {
+      "name": "validated even while disabled (the engine)",
+      "config": {
+        "enabled": false,
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 2
+          }
+        ]
+      },
+      "error": "config"
+    }
+  ],
+  "productionGuard": [
+    {
+      "name": "enabled in production",
+      "config": {
+        "enabled": true,
+        "environment": "production"
+      },
+      "error": "chaos-forbidden"
+    },
+    {
+      "name": "enabled in prod",
+      "config": {
+        "enabled": true,
+        "environment": "prod"
+      },
+      "error": "chaos-forbidden"
+    },
+    {
+      "name": "any case",
+      "config": {
+        "enabled": true,
+        "environment": "PRODUCTION"
+      },
+      "error": "chaos-forbidden"
+    },
+    {
+      "name": "the guard comes before validation",
+      "config": {
+        "enabled": true,
+        "environment": "production",
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 5
+          }
+        ]
+      },
+      "error": "chaos-forbidden"
+    },
+    {
+      "name": "disabled in production is allowed and inert",
+      "config": {
+        "enabled": false,
+        "environment": "production",
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 1
+          }
+        ]
+      },
+      "error": "none",
+      "first": null
+    },
+    {
+      "name": "enabled in staging",
+      "config": {
+        "enabled": true,
+        "environment": "staging",
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 1
+          }
+        ]
+      },
+      "error": "none",
+      "first": {
+        "kind": "error"
+      }
+    },
+    {
+      "name": "enabled in development",
+      "config": {
+        "enabled": true,
+        "environment": "development",
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 1
+          }
+        ]
+      },
+      "error": "none",
+      "first": {
+        "kind": "error"
+      }
+    },
+    {
+      "name": "enabled in test",
+      "config": {
+        "enabled": true,
+        "environment": "test",
+        "faults": [
+          {
+            "kind": "error",
+            "rate": 1
+          }
+        ]
+      },
+      "error": "none",
+      "first": {
+        "kind": "error"
+      }
+    }
+  ],
+  "truncate": [
+    {
+      "input": "abcdef",
+      "expected": "abc"
+    },
+    {
+      "input": "abcde",
+      "expected": "ab"
+    },
+    {
+      "input": "",
+      "expected": ""
+    },
+    {
+      "input": "a",
+      "expected": ""
+    },
+    {
+      "input": "a😀b😀",
+      "expected": "a😀"
+    },
+    {
+      "input": "ŋoma🥁",
+      "expected": "ŋo"
+    },
+    {
+      "input": [1, 2, 3, 4, 5],
+      "expected": [1, 2]
+    },
+    {
+      "input": [1, 2, 3, 4],
+      "expected": [1, 2]
+    },
+    {
+      "input": [],
+      "expected": []
+    }
+  ]
+}
