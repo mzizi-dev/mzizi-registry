@@ -32,7 +32,7 @@ exclude = ["tests/"]
 workspace = true
 
 [dependencies]
-mzizi-tokens = { path = "../mzizi-tokens", version = "0.2.0" }
+mzizi-tokens = { path = "../mzizi-tokens", version = "0.3.0" }
 # A component LIBRARY, so no `launch`, no `devtools`, no renderer. Those belong to
 # the app that mounts these primitives — pulling a renderer in here would pick the
 # consumer's target for them, and Dioxus's whole point is that one codebase serves

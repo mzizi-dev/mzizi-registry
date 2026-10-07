@@ -9,7 +9,7 @@ shapes the issue, and `mzizi_fundi_learning` tracks which fixes have worked befo
 
 ```toml
 [dependencies]
-mzizi-fundi = "0.2"
+mzizi-fundi = "0.3"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before

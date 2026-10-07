@@ -14,7 +14,7 @@ which is the App Router's job rather than a portable component's — a Dioxus ap
 
 ```toml
 [dependencies]
-mzizi-shell = "0.2"
+mzizi-shell = "0.3"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before
