@@ -2247,6 +2247,51 @@
           ]
         }
       ]
+    },
+    {
+      "say": "control characters inside <…> or anywhere refuse the address",
+      "input": "[a](<\u0001javascript:alert(1)>) [b](<\u0001//bank@evil.example>) [c](https://x.org/\u0000a) [d](https://x.org/a) [e](<https://x.org/ok>)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a b c d "
+              },
+              {
+                "t": "link",
+                "href": "https://x.org/ok",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "e"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a control character in an href refuses it",
+      "from": "html",
+      "input": "<p><a href=\"<&#1;javascript:alert(1)>\">x</a> <a href=\"&#1;javascript:alert(2)\">y</a></p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "x y"
+              }
+            ]
+          ]
+        }
+      ]
     }
   ]
 }

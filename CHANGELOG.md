@@ -14,9 +14,9 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 Upstreamed from the Toddle extension's flag text, which `markdown-renderer` replaces there (#460).
 
-- **Links:** an address with whitespace still inside is refused (it is not one address), and a web address (`http:`, `https:` or scheme-relative `//host`) needs a host and no credentials. `https://bank.example@evil.example` shows one site and goes to another, so it now keeps its words and loses its address, like a refused scheme.
+- **Links:** an address with whitespace or a control character still inside is refused (it is not one address; this closes `<\u0001javascript:…>`, which v4.6.0 kept as a scheme-less address that a browser reads as `javascript:`), and a web address (`http:`, `https:` or scheme-relative `//host`) needs a host and no credentials. `https://bank.example@evil.example` shows one site and goes to another, so it now keeps its words and loses its address, like a refused scheme.
 - **Rich text (`from="html"` / `"auto"`):** a list inside a list item stays a nested list (up to 8 deep), where it was joined into the item's line, and `<ol start="n">` keeps its first number.
-- `contracts/ui/markdown-renderer` 1.1.0 adds a nested list with a start to the `rich` state and a credentials link to the `xss` state. A scheme-less `\\host` or `/\host` is scheme-relative too (browsers read `\` as `/`), so it gets the same host and credentials check and opens in a new tab. The shared fixture has 53 cases, identical in TypeScript and Rust.
+- `contracts/ui/markdown-renderer` 1.1.0 adds a nested list with a start to the `rich` state and a credentials link to the `xss` state. A scheme-less `\\host` or `/\host` is scheme-relative too (browsers read `\` as `/`), so it gets the same host and credentials check and opens in a new tab. The shared fixture has 55 cases, identical in TypeScript and Rust.
 
 ### Changed — the Mzizi Roots crates move to 0.2.0 (2026-10-07, #463)
 

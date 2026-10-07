@@ -236,8 +236,9 @@ pub fn safe_href(raw: &str, policy: MarkdownLinks) -> Option<String> {
     if url.starts_with('<') && url.ends_with('>') && url.len() >= 2 {
         url = &url[1..url.len() - 1];
     }
-    if url.is_empty() || url.chars().any(is_ws) {
-        // Empty, or whitespace left inside: not one address.
+    // Empty, or whitespace or a control character left inside (even just inside `<…>`, where
+    // `<\u{1}javascript:…>` would otherwise read as scheme-less): not one address.
+    if url.is_empty() || url.chars().any(|c| is_ws(c) || c < ' ' || c == '\u{7f}') {
         return None;
     }
     let scheme = scheme_of(url).map(str::to_ascii_lowercase);

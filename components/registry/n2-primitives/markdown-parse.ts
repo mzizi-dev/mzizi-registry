@@ -151,8 +151,9 @@ export function safeHref(raw: string, policy: MarkdownLinkPolicy = "safe"): stri
   url = url.slice(start, end)
   if (url.startsWith("<") && url.endsWith(">")) url = url.slice(1, -1)
   if (url === "") return null
-  // An address with whitespace left in it is not one address.
-  for (const c of url) if (isWs(c)) return null
+  // An address with whitespace or a control character left in it (even just inside `<…>`,
+  // where `<\u0001javascript:…>` would otherwise read as scheme-less) is not one address.
+  for (const c of url) if (isWs(c) || c.charCodeAt(0) < 0x20 || c.charCodeAt(0) === 0x7f) return null
   const scheme = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(url)
   const name = scheme ? scheme[1].toLowerCase() : null
   if (policy === "https" ? name !== "https" : name !== null && !SAFE_SCHEMES.includes(name)) return null
