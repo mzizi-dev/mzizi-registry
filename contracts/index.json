@@ -605,5 +605,89 @@
       "tsx": "markdown-renderer",
       "rs": "markdown-renderer"
     }
+  ],
+  "libSchema": "schema/lib-contract.schema.json",
+  "libraries": [
+    {
+      "name": "lib/rng",
+      "title": "RNG",
+      "version": "1.0.0",
+      "file": "lib/rng.contract.json",
+      "ts": "rng",
+      "rs": "rng",
+      "py": null
+    },
+    {
+      "name": "lib/resilience-core",
+      "title": "Resilience core",
+      "version": "1.0.0",
+      "file": "lib/resilience-core.contract.json",
+      "ts": "resilience-core",
+      "rs": "resilience-core",
+      "py": null
+    },
+    {
+      "name": "lib/timeout",
+      "title": "Timeout",
+      "version": "1.0.0",
+      "file": "lib/timeout.contract.json",
+      "ts": "timeout",
+      "rs": "timeout",
+      "py": null
+    },
+    {
+      "name": "lib/circuit-breaker",
+      "title": "Circuit breaker",
+      "version": "1.0.0",
+      "file": "lib/circuit-breaker.contract.json",
+      "ts": "circuit-breaker",
+      "rs": "circuit-breaker",
+      "py": null
+    },
+    {
+      "name": "lib/retry",
+      "title": "Retry",
+      "version": "1.0.0",
+      "file": "lib/retry.contract.json",
+      "ts": "retry",
+      "rs": "retry",
+      "py": null
+    },
+    {
+      "name": "lib/rate-limiter",
+      "title": "Rate limiter",
+      "version": "1.0.0",
+      "file": "lib/rate-limiter.contract.json",
+      "ts": "rate-limiter",
+      "rs": "rate-limiter",
+      "py": null
+    },
+    {
+      "name": "lib/bulkhead",
+      "title": "Bulkhead",
+      "version": "1.0.0",
+      "file": "lib/bulkhead.contract.json",
+      "ts": "bulkhead",
+      "rs": "bulkhead",
+      "py": null
+    },
+    {
+      "name": "lib/fallback-chain",
+      "title": "Fallback chain",
+      "version": "1.0.0",
+      "file": "lib/fallback-chain.contract.json",
+      "ts": "fallback-chain",
+      "rs": "fallback-chain",
+      "py": null
+    },
+    {
+      "name": "lib/mzizi-resilience",
+      "title": "mzizi Resilience",
+      "version": "1.0.0",
+      "file": "lib/mzizi-resilience.contract.json",
+      "ts": "mzizi-resilience",
+      "rs": "mzizi-resilience",
+      "py": null
+    }
   ]
 }

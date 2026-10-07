@@ -124,7 +124,7 @@ jobs:
           # alone. The two umbrellas re-export node crates, so they go last.
           order=(
             mzizi-tokens mzizi-ui mzizi-brand mzizi-shell
-            mzizi-assurance mzizi-fundi mzizi-docs mzizi-discovery
+            mzizi-resilience mzizi-assurance mzizi-fundi mzizi-docs mzizi-discovery
             mzizi-activitypub mzizi-roots mzizi-roots-server
           )
 

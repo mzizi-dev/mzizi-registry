@@ -1,0 +1,182 @@
+{
+  "$comment": "circuit-breaker (resilience spec v1). Each case drives the sans-IO core with explicit times: acquire → {ok:true} | {ok:false, retryAfterMs}; success / failure / ignored report an admitted call's outcome; state → closed | open | half_open; failureCount → failures inside the window; reset. `transitions` is every recorded transition {from, to, at} after the last step. `configErrors` must be rejected at construction (code config).",
+  "cases": [
+    {
+      "name": "opens at the threshold; cooldown to half-open; a probe success closes",
+      "config": {
+        "name": "tomorrow-io",
+        "failureThreshold": 3,
+        "windowMs": 1000,
+        "cooldownMs": 500,
+        "halfOpenMaxCalls": 1
+      },
+      "steps": [
+        { "op": "acquire", "at": 0, "expect": { "ok": true } },
+        { "op": "failure", "at": 0 },
+        { "op": "acquire", "at": 10, "expect": { "ok": true } },
+        { "op": "failure", "at": 10 },
+        { "op": "failureCount", "at": 10, "expect": 2 },
+        { "op": "state", "at": 10, "expect": "closed" },
+        { "op": "acquire", "at": 20, "expect": { "ok": true } },
+        { "op": "failure", "at": 20 },
+        { "op": "state", "at": 20, "expect": "open" },
+        {
+          "op": "acquire",
+          "at": 100,
+          "expect": { "ok": false, "retryAfterMs": 420 }
+        },
+        { "op": "state", "at": 519, "expect": "open" },
+        { "op": "acquire", "at": 520, "expect": { "ok": true } },
+        {
+          "op": "acquire",
+          "at": 521,
+          "expect": { "ok": false, "retryAfterMs": 0 }
+        },
+        { "op": "success", "at": 530 },
+        { "op": "state", "at": 530, "expect": "closed" },
+        { "op": "failureCount", "at": 530, "expect": 0 }
+      ],
+      "transitions": [
+        { "from": "closed", "to": "open", "at": 20 },
+        { "from": "open", "to": "half_open", "at": 520 },
+        { "from": "half_open", "to": "closed", "at": 530 }
+      ]
+    },
+    {
+      "name": "a failed probe reopens",
+      "config": {
+        "name": "p",
+        "failureThreshold": 1,
+        "windowMs": 1000,
+        "cooldownMs": 100,
+        "halfOpenMaxCalls": 1
+      },
+      "steps": [
+        { "op": "acquire", "at": 0, "expect": { "ok": true } },
+        { "op": "failure", "at": 0 },
+        { "op": "acquire", "at": 100, "expect": { "ok": true } },
+        { "op": "failure", "at": 150 },
+        {
+          "op": "acquire",
+          "at": 200,
+          "expect": { "ok": false, "retryAfterMs": 50 }
+        },
+        { "op": "state", "at": 250, "expect": "half_open" }
+      ],
+      "transitions": [
+        { "from": "closed", "to": "open", "at": 0 },
+        { "from": "open", "to": "half_open", "at": 100 },
+        { "from": "half_open", "to": "open", "at": 150 },
+        { "from": "open", "to": "half_open", "at": 250 }
+      ]
+    },
+    {
+      "name": "failures slide out of the window",
+      "config": {
+        "name": "p",
+        "failureThreshold": 3,
+        "windowMs": 100,
+        "cooldownMs": 1000,
+        "halfOpenMaxCalls": 1
+      },
+      "steps": [
+        { "op": "failure", "at": 0 },
+        { "op": "failure", "at": 50 },
+        { "op": "failure", "at": 100 },
+        { "op": "state", "at": 100, "expect": "closed" },
+        { "op": "failureCount", "at": 149, "expect": 2 },
+        { "op": "failureCount", "at": 150, "expect": 1 },
+        { "op": "failure", "at": 150 },
+        { "op": "state", "at": 150, "expect": "closed" },
+        { "op": "failure", "at": 160 },
+        { "op": "state", "at": 160, "expect": "open" }
+      ],
+      "transitions": [{ "from": "closed", "to": "open", "at": 160 }]
+    },
+    {
+      "name": "an outcome reported while open is ignored",
+      "config": {
+        "name": "p",
+        "failureThreshold": 2,
+        "windowMs": 1000,
+        "cooldownMs": 1000,
+        "halfOpenMaxCalls": 1
+      },
+      "steps": [
+        { "op": "acquire", "at": 0, "expect": { "ok": true } },
+        { "op": "acquire", "at": 1, "expect": { "ok": true } },
+        { "op": "acquire", "at": 2, "expect": { "ok": true } },
+        { "op": "failure", "at": 10 },
+        { "op": "failure", "at": 11 },
+        { "op": "success", "at": 12 },
+        { "op": "failure", "at": 13 },
+        { "op": "state", "at": 500, "expect": "open" },
+        { "op": "acquire", "at": 1011, "expect": { "ok": true } }
+      ],
+      "transitions": [
+        { "from": "closed", "to": "open", "at": 11 },
+        { "from": "open", "to": "half_open", "at": 1011 }
+      ]
+    },
+    {
+      "name": "half-open admits halfOpenMaxCalls probes; an ignored outcome frees a slot",
+      "config": {
+        "name": "p",
+        "failureThreshold": 1,
+        "windowMs": 1000,
+        "cooldownMs": 10,
+        "halfOpenMaxCalls": 2
+      },
+      "steps": [
+        { "op": "failure", "at": 0 },
+        { "op": "acquire", "at": 10, "expect": { "ok": true } },
+        { "op": "acquire", "at": 10, "expect": { "ok": true } },
+        {
+          "op": "acquire",
+          "at": 10,
+          "expect": { "ok": false, "retryAfterMs": 0 }
+        },
+        { "op": "ignored", "at": 11 },
+        { "op": "state", "at": 11, "expect": "half_open" },
+        { "op": "acquire", "at": 12, "expect": { "ok": true } },
+        { "op": "success", "at": 13 },
+        { "op": "acquire", "at": 14, "expect": { "ok": true } }
+      ],
+      "transitions": [
+        { "from": "closed", "to": "open", "at": 0 },
+        { "from": "open", "to": "half_open", "at": 10 },
+        { "from": "half_open", "to": "closed", "at": 13 }
+      ]
+    },
+    {
+      "name": "reset closes and clears",
+      "config": {
+        "name": "p",
+        "failureThreshold": 1,
+        "windowMs": 1000,
+        "cooldownMs": 1000,
+        "halfOpenMaxCalls": 1
+      },
+      "steps": [
+        { "op": "failure", "at": 0 },
+        { "op": "state", "at": 1, "expect": "open" },
+        { "op": "reset", "at": 5 },
+        { "op": "state", "at": 5, "expect": "closed" },
+        { "op": "acquire", "at": 5, "expect": { "ok": true } },
+        { "op": "failureCount", "at": 5, "expect": 0 }
+      ],
+      "transitions": [
+        { "from": "closed", "to": "open", "at": 0 },
+        { "from": "open", "to": "closed", "at": 5 }
+      ]
+    }
+  ],
+  "configErrors": [
+    { "name": "p", "failureThreshold": 0 },
+    { "name": "p", "failureThreshold": 1.5 },
+    { "name": "p", "windowMs": 0 },
+    { "name": "p", "cooldownMs": -1 },
+    { "name": "p", "halfOpenMaxCalls": 0 },
+    { "name": "" }
+  ]
+}

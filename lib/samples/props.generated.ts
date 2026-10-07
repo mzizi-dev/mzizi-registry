@@ -7967,6 +7967,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "mzizi-health-panel": [
+    {
+      "name": "monitor",
+      "type": "HealthMonitor",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    }
+  ],
   "mzizi-hero-stat": [
     {
       "name": "loading",
@@ -9659,43 +9671,6 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
-  "mzizi-resilience": [
-    {
-      "name": "name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "skeleton",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "fallback",
-      "type": "React.ReactNode",
-      "required": false
-    },
-    {
-      "name": "critical",
-      "type": "boolean",
-      "required": false
-    },
-    {
-      "name": "onError",
-      "type": "(error: Error) => void",
-      "required": false
-    },
-    {
-      "name": "onRecovery",
-      "type": "() => void",
-      "required": false
-    }
-  ],
   "mzizi-review-card": [
     {
       "name": "loading",
@@ -9990,8 +9965,33 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "fallback",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
       "name": "errorFallback",
       "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "critical",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onError",
+      "type": "(error: Error) => void",
+      "required": false
+    },
+    {
+      "name": "onRecovery",
+      "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "monitor",
+      "type": "HealthMonitor",
       "required": false
     }
   ],

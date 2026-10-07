@@ -69,10 +69,9 @@ export default tseslint.config(
   {
     // N1 substrate — this is the layer that IMPLEMENTS logging, so it cannot
     // route through it. `mzizi-harness-prewire`'s `createScopedLogger` is the
-    // `[nyuchi:<component>]` logger every other node consumes, and
-    // `mzizi-resilience` emits the structured `[nyuchi:resilience]` lifecycle
-    // records (section recovered, fetch timing, fallback taken) that the
-    // observability rung reads.
+    // `[nyuchi:<component>]` logger every other node consumes. (`mzizi-resilience`
+    // used to log from here too; it moved to N5 and logs nothing itself now: it
+    // takes an `onEvent` hook, mzizi-registry#472.)
     //
     // `debug` and `info` are added to the allow-list rather than the rule being
     // switched off: these are deliberate severities, and rewriting a successful

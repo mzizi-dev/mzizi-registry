@@ -1,0 +1,146 @@
+{
+  "$comment": "rate-limiter (resilience spec v1), the integer token bucket. The core is created at `start`; acquire → {ok:true, waitMs} | {ok:false, retryAfterMs}; remaining → whole tokens; retryAfter → ms until a whole token; reset. Every step carries its time. `configErrors` must be rejected at construction (code config).",
+  "cases": [
+    {
+      "name": "limit per window, partial refill counted",
+      "config": {
+        "name": "api",
+        "limit": 2,
+        "windowMs": 1000,
+        "burstAllowance": 0,
+        "queueExcess": false,
+        "maxWaitMs": 5000
+      },
+      "start": 0,
+      "steps": [
+        { "op": "acquire", "at": 0, "expect": { "ok": true, "waitMs": 0 } },
+        { "op": "acquire", "at": 0, "expect": { "ok": true, "waitMs": 0 } },
+        {
+          "op": "acquire",
+          "at": 0,
+          "expect": { "ok": false, "retryAfterMs": 500 }
+        },
+        {
+          "op": "acquire",
+          "at": 250,
+          "expect": { "ok": false, "retryAfterMs": 250 }
+        },
+        { "op": "acquire", "at": 500, "expect": { "ok": true, "waitMs": 0 } },
+        { "op": "remaining", "at": 500, "expect": 0 },
+        { "op": "remaining", "at": 1500, "expect": 2 }
+      ]
+    },
+    {
+      "name": "burst raises the ceiling, not the sustained rate",
+      "config": {
+        "name": "api",
+        "limit": 1,
+        "windowMs": 1000,
+        "burstAllowance": 2,
+        "queueExcess": false,
+        "maxWaitMs": 5000
+      },
+      "start": 0,
+      "steps": [
+        { "op": "remaining", "at": 0, "expect": 3 },
+        { "op": "acquire", "at": 0, "expect": { "ok": true, "waitMs": 0 } },
+        { "op": "acquire", "at": 0, "expect": { "ok": true, "waitMs": 0 } },
+        { "op": "acquire", "at": 0, "expect": { "ok": true, "waitMs": 0 } },
+        {
+          "op": "acquire",
+          "at": 0,
+          "expect": { "ok": false, "retryAfterMs": 1000 }
+        },
+        { "op": "acquire", "at": 1000, "expect": { "ok": true, "waitMs": 0 } },
+        {
+          "op": "acquire",
+          "at": 1000,
+          "expect": { "ok": false, "retryAfterMs": 1000 }
+        },
+        { "op": "remaining", "at": 2000, "expect": 1 },
+        { "op": "remaining", "at": 10000, "expect": 3 }
+      ]
+    },
+    {
+      "name": "queued callers reserve their token; too long a wait is rejected",
+      "config": {
+        "name": "api",
+        "limit": 1,
+        "windowMs": 100,
+        "burstAllowance": 0,
+        "queueExcess": true,
+        "maxWaitMs": 150
+      },
+      "start": 0,
+      "steps": [
+        { "op": "acquire", "at": 0, "expect": { "ok": true, "waitMs": 0 } },
+        { "op": "acquire", "at": 0, "expect": { "ok": true, "waitMs": 100 } },
+        {
+          "op": "acquire",
+          "at": 0,
+          "expect": { "ok": false, "retryAfterMs": 200 }
+        },
+        { "op": "acquire", "at": 50, "expect": { "ok": true, "waitMs": 150 } },
+        { "op": "remaining", "at": 50, "expect": 0 },
+        { "op": "retryAfter", "at": 50, "expect": 250 }
+      ]
+    },
+    {
+      "name": "retryAfter counts partial refill",
+      "config": {
+        "name": "api",
+        "limit": 10,
+        "windowMs": 1000,
+        "burstAllowance": 0,
+        "queueExcess": false,
+        "maxWaitMs": 5000
+      },
+      "start": 0,
+      "steps": [
+        {
+          "op": "acquire",
+          "at": 0,
+          "repeat": 10,
+          "expect": { "ok": true, "waitMs": 0 }
+        },
+        {
+          "op": "acquire",
+          "at": 50,
+          "expect": { "ok": false, "retryAfterMs": 50 }
+        },
+        { "op": "retryAfter", "at": 60, "expect": 40 },
+        { "op": "retryAfter", "at": 100, "expect": 0 },
+        { "op": "reset", "at": 100 },
+        { "op": "remaining", "at": 100, "expect": 10 }
+      ]
+    },
+    {
+      "name": "a clock that steps back changes nothing",
+      "config": {
+        "name": "api",
+        "limit": 1,
+        "windowMs": 1000,
+        "burstAllowance": 0,
+        "queueExcess": false,
+        "maxWaitMs": 5000
+      },
+      "start": 5000,
+      "steps": [
+        { "op": "acquire", "at": 5000, "expect": { "ok": true, "waitMs": 0 } },
+        {
+          "op": "acquire",
+          "at": 4000,
+          "expect": { "ok": false, "retryAfterMs": 1000 }
+        },
+        { "op": "acquire", "at": 6000, "expect": { "ok": true, "waitMs": 0 } }
+      ]
+    }
+  ],
+  "configErrors": [
+    { "name": "api", "limit": 0 },
+    { "name": "api", "windowMs": 0 },
+    { "name": "api", "burstAllowance": -1 },
+    { "name": "api", "maxWaitMs": 1.5 },
+    { "name": "" }
+  ]
+}

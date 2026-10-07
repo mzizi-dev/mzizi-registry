@@ -1,217 +1,347 @@
 /**
- * Netflix Hystrix-inspired circuit breaker for the Nyuchi ecosystem.
+ * Circuit breaker for the Mzizi resilience node (N5), Resilience4j-style: CLOSED → OPEN →
+ * HALF_OPEN → CLOSED (probe succeeded) or OPEN (probe failed).
  *
- * Prevents cascading failures by tracking error rates per external dependency
- * and short-circuiting calls when a provider is unhealthy. Ported from
- * mukoko-weather's production Python implementation.
+ * Harvested from mukoko-weather's production breaker (`weather-core/src/breaker.rs`): a
+ * pure sliding-window core with the time passed in. `CircuitBreakerCore` is that core
+ * (sans-IO, every method takes `now`); `CircuitBreaker` wraps it for async calls with an
+ * injected clock. The Rust build is `mzizi_resilience::circuit_breaker`.
  *
- * State machine: CLOSED → OPEN → HALF_OPEN → CLOSED (success) or OPEN (failure)
+ * - CLOSED: calls go through. A failure is recorded at `now`; failures older than
+ *   `windowMs` are dropped; at `failureThreshold` failures the circuit opens.
+ * - OPEN: calls are rejected with `CircuitOpenError` (code `circuit-open`) and a
+ *   `retryAfterMs`, until `cooldownMs` has passed since it opened.
+ * - HALF_OPEN: at most `halfOpenMaxCalls` probes are admitted at once; a success closes
+ *   the circuit, a failure opens it again.
+ * - An outcome reported while OPEN (a call admitted before it opened) is ignored.
+ * - Rejections from inner guards (rate limited, bulkhead full) and errors `isFailure`
+ *   declines are not dependency failures: they release a half-open probe slot and change
+ *   nothing else.
  *
+ * Per-provider configuration is a pattern, not a preset list: give each dependency its own
+ * breaker with numbers that fit it. mukoko-weather's, for example:
+ *
+ * ```ts
+ * // Tomorrow.io: 3 failures in 5 min open it for 2 min.
+ * const TOMORROW = { failureThreshold: 3, windowMs: 300_000, cooldownMs: 120_000 }
+ * // Open-Meteo: 5 failures in 5 min open it for 5 min.
+ * const OPEN_METEO = { failureThreshold: 5, windowMs: 300_000, cooldownMs: 300_000 }
+ * const tomorrow = new CircuitBreaker({ name: "tomorrow-io", ...TOMORROW })
+ * ```
+ *
+ * The breaker applies no timeout of its own: compose `withTimeout` inside it (or use
+ * `createResilience`, which does).
+ *
+ * Framework-free: usable from Astro, React, Workers and Node alike.
+ *
+ * Contract: contracts/lib/circuit-breaker.contract.json
  * Install via: npx shadcn@latest add https://api.mzizi.dev/v1/ui/circuit-breaker
  */
 
-import { withTimeout } from "@/lib/timeout"
-import { createLogger } from "@/lib/observability"
+import {
+  withDefaults,
+  checkInt,
+  checkMs,
+  checkName,
+  emit,
+  isRejection,
+  ResilienceConfigError,
+  systemClock,
+  type Clock,
+  type OnResilienceEvent,
+} from "./resilience-core"
 
-const logger = createLogger("circuit-breaker")
-
+/** How a state serialises in every build. */
 export type CircuitState = "closed" | "open" | "half_open"
 
-export interface CircuitBreakerConfig {
-  /** Identifier for this breaker (e.g., "tomorrow-io", "mongodb") */
-  name: string
-  /** Number of failures within windowMs before opening the circuit (default: 3) */
-  failureThreshold: number
-  /** Time in ms to stay OPEN before transitioning to HALF_OPEN (default: 30000) */
-  cooldownMs: number
-  /** Sliding window in ms for counting failures (default: 60000) */
-  windowMs: number
-  /** Per-call timeout in ms — calls exceeding this are treated as failures (default: 5000) */
-  timeoutMs: number
-  /** Optional callback when the circuit changes state */
-  onStateChange?: (from: CircuitState, to: CircuitState, name: string) => void
+/** A state change, recorded when it is first observed. */
+export interface CircuitTransition {
+  from: CircuitState
+  to: CircuitState
+  /** The `now` at which it was observed, in ms. */
+  at: number
 }
 
-const DEFAULT_CONFIG: Omit<CircuitBreakerConfig, "name"> = {
-  failureThreshold: 3,
-  cooldownMs: 30_000,
-  windowMs: 60_000,
-  timeoutMs: 5_000,
+export interface CircuitBreakerConfig {
+  /** Identifier for this breaker, e.g. the dependency it protects (`tomorrow-io`). */
+  name: string
+  /** Failures within `windowMs` that open the circuit (>= 1, default 3). */
+  failureThreshold: number
+  /** Sliding window for counting failures, in ms (>= 1, default 60000). */
+  windowMs: number
+  /** How long the circuit stays OPEN before admitting probes, in ms (default 30000). */
+  cooldownMs: number
+  /** Probes admitted at once while HALF_OPEN (>= 1, default 1). */
+  halfOpenMaxCalls: number
+  /** Which errors count as a dependency failure (default: every error except rejections). */
+  isFailure?: (error: unknown) => boolean
+  /** Called on every state change. */
+  onStateChange?: (from: CircuitState, to: CircuitState, name: string) => void
+  /** Optional event hook (`transition`, `rejected`). */
+  onEvent?: OnResilienceEvent
+  /** The clock the async wrapper reads (default `Date.now`). */
+  clock?: Clock
 }
+
+export const CIRCUIT_BREAKER_DEFAULTS = {
+  failureThreshold: 3,
+  windowMs: 60_000,
+  cooldownMs: 30_000,
+  halfOpenMaxCalls: 1,
+} as const
 
 /**
- * Pre-configured breaker settings for common Nyuchi providers.
- * Based on production tuning from mukoko-weather.
+ * @deprecated Per-provider configuration is a documented pattern (see the module header),
+ * not a preset list. These two entries are mukoko-weather's tuning, kept so existing
+ * imports compile; define your own constants instead. The other vendor presets and
+ * every `timeoutMs` were removed (mzizi-registry#472).
  */
 export const PROVIDER_CONFIGS = {
-  /** Tomorrow.io: aggressive — fails fast, recovers quickly */
-  "tomorrow-io": { failureThreshold: 3, cooldownMs: 120_000, windowMs: 300_000, timeoutMs: 5_000 },
-  /** Open-Meteo: lenient — tolerates more failures, longer cooldown */
-  "open-meteo": { failureThreshold: 5, cooldownMs: 300_000, windowMs: 300_000, timeoutMs: 8_000 },
-  /** Anthropic Claude: conservative — protect AI budget */
-  anthropic: { failureThreshold: 3, cooldownMs: 300_000, windowMs: 600_000, timeoutMs: 15_000 },
-  /** MongoDB: very lenient — database should be highly available */
-  mongodb: { failureThreshold: 5, cooldownMs: 60_000, windowMs: 120_000, timeoutMs: 10_000 },
-} as const satisfies Record<string, Omit<CircuitBreakerConfig, "name">>
+  /** Tomorrow.io: 3 failures in 5 min open it for 2 min. */
+  "tomorrow-io": { failureThreshold: 3, windowMs: 300_000, cooldownMs: 120_000 },
+  /** Open-Meteo: 5 failures in 5 min open it for 5 min. */
+  "open-meteo": { failureThreshold: 5, windowMs: 300_000, cooldownMs: 300_000 },
+} as const
 
-/**
- * Error thrown when a call is rejected because the circuit is open.
- */
+/** The call was rejected because the circuit is open (or half-open with every probe slot taken). */
 export class CircuitOpenError extends Error {
+  readonly code = "circuit-open" as const
   readonly breakerName: string
   readonly state: CircuitState
+  /** How long until the breaker may admit a call, in ms (0: a probe slot may free up any time). */
+  readonly retryAfterMs: number
 
-  constructor(name: string) {
-    super(`Circuit breaker "${name}" is open — call rejected`)
+  constructor(name: string, retryAfterMs = 0, state: CircuitState = "open") {
+    super(`Circuit breaker "${name}" is ${state} — call rejected`)
     this.name = "CircuitOpenError"
     this.breakerName = name
-    this.state = "open"
+    this.state = state
+    this.retryAfterMs = retryAfterMs
+  }
+}
+
+export type CircuitAcquire = { ok: true } | { ok: false; retryAfterMs: number }
+
+/** How many transitions a breaker remembers (the most recent). */
+export const TRANSITION_HISTORY = 64
+
+type CoreConfig = Pick<CircuitBreakerConfig, "name" | "failureThreshold" | "windowMs" | "cooldownMs" | "halfOpenMaxCalls">
+
+function validate(config: Partial<CoreConfig> & { name: string }): CoreConfig {
+  if ((config as { timeoutMs?: unknown }).timeoutMs !== undefined) {
+    throw new ResilienceConfigError(
+      "timeoutMs",
+      "is no longer applied by the circuit breaker: wrap the call in withTimeout (or use createResilience)",
+    )
+  }
+  const c = withDefaults(CIRCUIT_BREAKER_DEFAULTS, config)
+  return {
+    name: checkName("name", c.name),
+    failureThreshold: checkInt("failureThreshold", c.failureThreshold, 1),
+    windowMs: checkInt("windowMs", c.windowMs, 1),
+    cooldownMs: checkMs("cooldownMs", c.cooldownMs),
+    halfOpenMaxCalls: checkInt("halfOpenMaxCalls", c.halfOpenMaxCalls, 1),
   }
 }
 
 /**
- * Circuit breaker that wraps async operations with failure tracking and
- * automatic short-circuiting.
+ * The sans-IO breaker. Every method takes `now` (integer ms); nothing reads a clock.
+ */
+export class CircuitBreakerCore {
+  readonly config: CoreConfig
+  private current: CircuitState = "closed"
+  private failures: number[] = []
+  private openedAt = 0
+  private probes = 0
+  private readonly history: CircuitTransition[] = []
+  private readonly onTransition?: (t: CircuitTransition) => void
+
+  constructor(config: Partial<CoreConfig> & { name: string }, onTransition?: (t: CircuitTransition) => void) {
+    this.config = validate(config)
+    this.onTransition = onTransition
+  }
+
+  /** The state at `now`. An open circuit whose cooldown has passed is observed as HALF_OPEN. */
+  state(now: number): CircuitState {
+    if (this.current === "open" && now - this.openedAt >= this.config.cooldownMs) {
+      this.probes = 0
+      this.move("half_open", now)
+    }
+    return this.current
+  }
+
+  /** Ask to make a call at `now`. */
+  tryAcquire(now: number): CircuitAcquire {
+    switch (this.state(now)) {
+      case "closed":
+        return { ok: true }
+      case "open":
+        return { ok: false, retryAfterMs: Math.max(0, this.config.cooldownMs - (now - this.openedAt)) }
+      case "half_open":
+        if (this.probes < this.config.halfOpenMaxCalls) {
+          this.probes++
+          return { ok: true }
+        }
+        return { ok: false, retryAfterMs: 0 }
+    }
+  }
+
+  /** An admitted call succeeded. */
+  onSuccess(now: number): void {
+    if (this.state(now) === "half_open") {
+      this.failures = []
+      this.probes = 0
+      this.move("closed", now)
+    }
+  }
+
+  /** An admitted call failed. */
+  onFailure(now: number): void {
+    const s = this.state(now)
+    if (s === "closed") {
+      this.failures = this.failures.filter((t) => now - t < this.config.windowMs)
+      this.failures.push(now)
+      if (this.failures.length >= this.config.failureThreshold) this.open(now)
+    } else if (s === "half_open") {
+      this.open(now)
+    }
+    // OPEN: a call admitted before the circuit opened reports late; ignored.
+  }
+
+  /**
+   * An admitted call ended in a way that says nothing about the dependency (an inner
+   * rejection, or an error `isFailure` declines): a half-open probe slot is released.
+   */
+  onIgnored(now: number): void {
+    if (this.state(now) === "half_open" && this.probes > 0) this.probes--
+  }
+
+  /** Back to CLOSED with no failures. */
+  reset(now = 0): void {
+    this.failures = []
+    this.probes = 0
+    this.openedAt = 0
+    if (this.current !== "closed") this.move("closed", now)
+  }
+
+  /** Failures inside the window at `now`. */
+  failureCount(now: number): number {
+    return this.failures.filter((t) => now - t < this.config.windowMs).length
+  }
+
+  /** Probes admitted and not yet reported while HALF_OPEN. */
+  get probesInFlight(): number {
+    return this.probes
+  }
+
+  /** The most recent transitions (up to `TRANSITION_HISTORY`), oldest first. */
+  get transitions(): readonly CircuitTransition[] {
+    return this.history
+  }
+
+  private open(now: number): void {
+    this.openedAt = now
+    this.failures = []
+    this.probes = 0
+    this.move("open", now)
+  }
+
+  private move(to: CircuitState, at: number): void {
+    if (this.current === to) return
+    const t: CircuitTransition = { from: this.current, to, at }
+    this.current = to
+    this.history.push(t)
+    if (this.history.length > TRANSITION_HISTORY) this.history.shift()
+    this.onTransition?.(t)
+  }
+}
+
+/**
+ * A circuit breaker for async calls.
  *
  * @example
  * ```ts
- * import { CircuitBreaker, PROVIDER_CONFIGS } from "@/lib/circuit-breaker"
+ * import { CircuitBreaker, CircuitOpenError } from "./circuit-breaker"
+ * import { withTimeout } from "./timeout"
  *
- * const weatherBreaker = new CircuitBreaker({
- *   name: "tomorrow-io",
- *   ...PROVIDER_CONFIGS["tomorrow-io"],
- * })
- *
+ * const breaker = new CircuitBreaker({ name: "tomorrow-io", failureThreshold: 3, windowMs: 300_000, cooldownMs: 120_000 })
  * try {
- *   const data = await weatherBreaker.execute(() =>
- *     fetch("https://api.tomorrow.io/v4/weather/forecast")
- *   )
+ *   const res = await breaker.execute(() => withTimeout((signal) => fetch(url, { signal }), 5000))
  * } catch (error) {
- *   if (error instanceof CircuitOpenError) {
- *     // Circuit is open — use fallback
- *     return getCachedWeather()
- *   }
+ *   if (error instanceof CircuitOpenError) return cached()
+ *   throw error
  * }
  * ```
  */
 export class CircuitBreaker {
-  private _state: CircuitState = "closed"
-  private failures: number[] = [] // timestamps of recent failures
-  private lastFailureTime = 0
-  private readonly config: CircuitBreakerConfig
+  readonly core: CircuitBreakerCore
+  private readonly clock: Clock
+  private readonly isFailure: (error: unknown) => boolean
+  private readonly onEvent?: OnResilienceEvent
 
   constructor(config: Partial<CircuitBreakerConfig> & { name: string }) {
-    this.config = { ...DEFAULT_CONFIG, ...config }
+    const { isFailure, onStateChange, onEvent, clock, ...core } = config
+    this.clock = clock ?? systemClock
+    this.isFailure = isFailure ?? ((e) => !isRejection(e))
+    this.onEvent = onEvent
+    this.core = new CircuitBreakerCore(core, (t) => {
+      emit(onEvent, { module: "circuit-breaker", type: "transition", name: core.name, data: { from: t.from, to: t.to, at: t.at } })
+      onStateChange?.(t.from, t.to, core.name)
+    })
   }
 
-  /** Current circuit state */
+  get name(): string {
+    return this.core.config.name
+  }
+
+  /** The current state. */
   get state(): CircuitState {
-    this.evaluateState()
-    return this._state
+    return this.core.state(this.clock.nowMs())
   }
 
-  /** Whether the circuit will allow the next call through */
+  /** Whether the next call would be admitted (a half-open breaker with free probe slots admits). */
   get isAllowed(): boolean {
-    this.evaluateState()
-    return this._state !== "open"
+    const s = this.state
+    return s === "closed" || (s === "half_open" && this.core.probesInFlight < this.core.config.halfOpenMaxCalls)
   }
 
-  /** Number of failures in the current sliding window */
+  /** Failures in the current window. */
   get failureCount(): number {
-    this.pruneOldFailures()
-    return this.failures.length
+    return this.core.failureCount(this.clock.nowMs())
   }
 
-  /**
-   * Execute an async function through the circuit breaker.
-   *
-   * - If CLOSED: executes normally, tracks failures
-   * - If OPEN: rejects immediately with CircuitOpenError
-   * - If HALF_OPEN: allows one probe call — success closes, failure re-opens
-   */
+  /** Transitions so far (most recent `TRANSITION_HISTORY`). */
+  get transitions(): readonly CircuitTransition[] {
+    return this.core.transitions
+  }
+
+  /** Run `fn` through the breaker. Rejects with `CircuitOpenError` without calling `fn` while open. */
   async execute<T>(fn: () => Promise<T>): Promise<T> {
-    this.evaluateState()
-
-    if (this._state === "open") {
-      logger.warn(`Call rejected — circuit open`, {
-        data: { name: this.config.name, failureCount: this.failures.length },
-      })
-      throw new CircuitOpenError(this.config.name)
+    const acquired = this.core.tryAcquire(this.clock.nowMs())
+    if (!acquired.ok) {
+      emit(this.onEvent, { module: "circuit-breaker", type: "rejected", name: this.name, data: { retryAfterMs: acquired.retryAfterMs } })
+      throw new CircuitOpenError(this.name, acquired.retryAfterMs, this.core.state(this.clock.nowMs()))
     }
-
+    let value: T
     try {
-      const result = await withTimeout(fn, this.config.timeoutMs, this.config.name)
-      this.recordSuccess()
-      return result
+      value = await fn()
     } catch (error) {
-      this.recordFailure()
+      let counts: boolean
+      try {
+        counts = this.isFailure(error)
+      } catch {
+        counts = true
+      }
+      if (counts) this.core.onFailure(this.clock.nowMs())
+      else this.core.onIgnored(this.clock.nowMs())
       throw error
     }
+    this.core.onSuccess(this.clock.nowMs())
+    return value
   }
 
-  /** Manually reset the circuit to CLOSED state */
+  /** Back to CLOSED. */
   reset(): void {
-    const prev = this._state
-    this._state = "closed"
-    this.failures = []
-    this.lastFailureTime = 0
-    if (prev !== "closed") {
-      this.transition(prev, "closed")
-    }
-  }
-
-  private evaluateState(): void {
-    const now = Date.now()
-    this.pruneOldFailures()
-
-    if (this._state === "closed") {
-      if (this.failures.length >= this.config.failureThreshold) {
-        this.transition("closed", "open")
-        this._state = "open"
-      }
-    } else if (this._state === "open") {
-      if (now - this.lastFailureTime >= this.config.cooldownMs) {
-        this.transition("open", "half_open")
-        this._state = "half_open"
-      }
-    }
-    // half_open stays until success (→ closed) or failure (→ open)
-  }
-
-  private recordSuccess(): void {
-    if (this._state === "half_open") {
-      this.transition("half_open", "closed")
-      this._state = "closed"
-      this.failures = []
-    }
-  }
-
-  private recordFailure(): void {
-    const now = Date.now()
-    this.failures.push(now)
-    this.lastFailureTime = now
-
-    if (this._state === "half_open") {
-      this.transition("half_open", "open")
-      this._state = "open"
-    }
-  }
-
-  private pruneOldFailures(): void {
-    const cutoff = Date.now() - this.config.windowMs
-    this.failures = this.failures.filter((t) => t > cutoff)
-  }
-
-  private transition(from: CircuitState, to: CircuitState): void {
-    logger.info(`State transition: ${from} → ${to}`, {
-      data: {
-        name: this.config.name,
-        from,
-        to,
-        failureCount: this.failures.length,
-        threshold: this.config.failureThreshold,
-      },
-    })
-    this.config.onStateChange?.(from, to, this.config.name)
+    this.core.reset(this.clock.nowMs())
   }
 }

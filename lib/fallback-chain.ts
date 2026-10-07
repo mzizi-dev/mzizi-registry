@@ -1,119 +1,115 @@
 /**
- * Fallback chain for the Nyuchi ecosystem.
+ * Fallback chain for the Mzizi resilience node (N5): try stages in order and return the
+ * first success.
  *
- * Implements the sequential fallback strategy from mukoko-weather:
- * try stages in order, return the first success. Each stage has an
- * independent timeout. If all stages fail, throw with all collected errors.
+ * Each stage may carry its own timeout. `withFallbackResult` reports which stage served
+ * (`{ value, stage, index }`), which is what tells a health monitor "degraded"; `withFallback`
+ * returns the bare value. When every stage fails, `AllStagesFailedError` (code
+ * `all-stages-failed`) lists each stage with its error CODE, never its message, so the
+ * error is safe to log.
  *
- * Production example from mukoko-weather:
- *   MongoDB cache (15min TTL) → Tomorrow.io → Open-Meteo → seasonal estimates
+ * The production shape this came from (mukoko-weather): cache → primary provider →
+ * secondary provider → seasonal estimate.
  *
+ * Framework-free: usable from Astro, React, Workers and Node alike. The Rust build is
+ * `mzizi_resilience::fallback_chain`.
+ *
+ * Contract: contracts/lib/fallback-chain.contract.json
  * Install via: npx shadcn@latest add https://api.mzizi.dev/v1/ui/fallback-chain
  */
 
-import { withTimeout, TimeoutError } from "@/lib/timeout"
-import { createLogger } from "@/lib/observability"
-
-const logger = createLogger("fallback")
+import { abortReason, checkName, emit, errorCode, ResilienceConfigError, type OnResilienceEvent, type Sleep } from "./resilience-core"
+import { withTimeout } from "./timeout"
 
 export interface FallbackStage<T> {
-  /** Human-readable name for logging (e.g., "mongodb-cache", "tomorrow-io") */
+  /** A name for results and events, e.g. `cache` or `open-meteo`. */
   name: string
-  /** The async operation to attempt */
-  execute: () => Promise<T>
-  /** Per-stage timeout in ms (default: no timeout) */
+  /** The operation. It receives a signal that aborts at the stage's timeout. */
+  execute: (signal?: AbortSignal) => Promise<T>
+  /** A per-stage timeout in ms (default: none). */
   timeoutMs?: number
 }
 
-/**
- * Error thrown when all fallback stages fail.
- */
-export class AllStagesFailedError extends Error {
-  readonly stageErrors: Array<{ stage: string; error: unknown }>
+export interface FallbackOptions {
+  /** The timer for stage timeouts (default `setTimeout`). */
+  sleep?: Sleep
+  /** Aborts the stage in flight. */
+  signal?: AbortSignal
+  /** Optional event hook (`stage-failed`, `served`). */
+  onEvent?: OnResilienceEvent
+}
 
-  constructor(stageErrors: Array<{ stage: string; error: unknown }>) {
-    const names = stageErrors.map((s) => s.stage).join(" → ")
-    super(`All fallback stages failed: ${names}`)
+/** Which stage served, and its value. */
+export interface FallbackResult<T> {
+  value: T
+  stage: string
+  index: number
+}
+
+/** One stage's failure: its name and its error code. */
+export interface StageError {
+  stage: string
+  code: string
+}
+
+/** Every stage failed. */
+export class AllStagesFailedError extends Error {
+  readonly code = "all-stages-failed" as const
+  readonly stageErrors: StageError[]
+
+  constructor(stageErrors: StageError[]) {
+    super(`All fallback stages failed: ${stageErrors.map((s) => `${s.stage} (${s.code})`).join(" → ")}`)
     this.name = "AllStagesFailedError"
     this.stageErrors = stageErrors
   }
 }
 
 /**
- * Execute stages in order, returning the first successful result.
+ * Run the stages in order; resolve with the first success and the stage that served it.
  *
  * @example
  * ```ts
- * import { withFallback } from "@/lib/fallback-chain"
+ * import { withFallbackResult } from "./fallback-chain"
  *
- * // Weather data fallback (from mukoko-weather production)
- * const weather = await withFallback([
- *   {
- *     name: "mongodb-cache",
- *     execute: () => getCachedWeather(slug),
- *     timeoutMs: 2000,
- *   },
- *   {
- *     name: "tomorrow-io",
- *     execute: () => fetchTomorrowIO(lat, lon),
- *     timeoutMs: 5000,
- *   },
- *   {
- *     name: "open-meteo",
- *     execute: () => fetchOpenMeteo(lat, lon),
- *     timeoutMs: 8000,
- *   },
- *   {
- *     name: "seasonal-estimate",
- *     execute: () => getSeasonalEstimate(lat, lon, month),
- *   },
+ * const { value, stage } = await withFallbackResult([
+ *   { name: "cache", execute: () => cached(slug), timeoutMs: 2000 },
+ *   { name: "primary", execute: (signal) => fetchPrimary(slug, signal), timeoutMs: 5000 },
+ *   { name: "estimate", execute: () => seasonalEstimate(slug) },
  * ])
  * ```
  */
-export async function withFallback<T>(stages: FallbackStage<T>[]): Promise<T> {
-  if (stages.length === 0) {
-    throw new Error("withFallback requires at least one stage")
+export async function withFallbackResult<T>(stages: FallbackStage<T>[], options?: FallbackOptions): Promise<FallbackResult<T>> {
+  if (!Array.isArray(stages) || stages.length === 0) {
+    throw new ResilienceConfigError("stages", "must hold at least one stage")
   }
+  for (const s of stages) checkName("stage.name", s?.name)
 
-  const errors: Array<{ stage: string; error: unknown }> = []
-
-  for (const stage of stages) {
+  const errors: StageError[] = []
+  for (let index = 0; index < stages.length; index++) {
+    const stage = stages[index] as FallbackStage<T>
     try {
-      const result = stage.timeoutMs
-        ? await withTimeout(stage.execute, stage.timeoutMs, stage.name)
-        : await stage.execute()
-
-      logger.info(`Stage "${stage.name}" succeeded`, {
-        data: {
-          stage: stage.name,
-          attemptNumber: errors.length + 1,
-          totalStages: stages.length,
-        },
-      })
-
-      return result
+      const value =
+        stage.timeoutMs !== undefined
+          ? await withTimeout((signal) => stage.execute(signal), stage.timeoutMs, {
+              label: stage.name,
+              sleep: options?.sleep,
+              signal: options?.signal,
+            })
+          : await stage.execute(options?.signal)
+      emit(options?.onEvent, { module: "fallback-chain", type: "served", name: stage.name, data: { index } })
+      return { value, stage: stage.name, index }
     } catch (error) {
-      const isTimeout = error instanceof TimeoutError
-      errors.push({ stage: stage.name, error })
-
-      logger.warn(`Stage "${stage.name}" failed${isTimeout ? " (timeout)" : ""}`, {
-        data: {
-          stage: stage.name,
-          attemptNumber: errors.length,
-          totalStages: stages.length,
-          isTimeout,
-        },
-        error: error instanceof Error ? error : new Error(String(error)),
-      })
+      // The caller gave up: stop here rather than run the next stage for nobody.
+      if (options?.signal?.aborted) throw abortReason(options.signal)
+      const code = errorCode(error)
+      errors.push({ stage: stage.name, code })
+      emit(options?.onEvent, { module: "fallback-chain", type: "stage-failed", name: stage.name, data: { index, code } })
     }
   }
-
-  logger.error("All fallback stages exhausted", {
-    data: {
-      stages: errors.map((e) => e.stage),
-      totalStages: stages.length,
-    },
-  })
-
   throw new AllStagesFailedError(errors)
+}
+
+/** Run the stages in order; resolve with the first success's value. */
+export async function withFallback<T>(stages: FallbackStage<T>[], options?: FallbackOptions): Promise<T> {
+  return (await withFallbackResult(stages, options)).value
 }

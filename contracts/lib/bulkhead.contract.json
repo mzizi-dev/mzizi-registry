@@ -1,0 +1,143 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/bulkhead",
+  "title": "Bulkhead",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "library",
+  "summary": "Concurrency isolation: at most maxConcurrent calls run, up to maxQueue wait in FIFO order, and a queue wait that runs out is its own error.",
+  "api": {
+    "ts": [
+      {
+        "name": "BulkheadCore",
+        "kind": "class",
+        "summary": "tryEnter(), release(), expire(ticket), metrics()."
+      },
+      {
+        "name": "Bulkhead",
+        "kind": "class",
+        "summary": "execute(fn, signal?), concurrent, queued, isAvailable, metrics."
+      },
+      {
+        "name": "BulkheadFullError",
+        "kind": "class",
+        "summary": "code bulkhead-full; bulkheadName, concurrent, queued."
+      },
+      {
+        "name": "BulkheadQueueTimeoutError",
+        "kind": "class",
+        "summary": "code bulkhead-queue-timeout; bulkheadName, waitedMs."
+      },
+      {
+        "name": "BULKHEAD_DEFAULTS",
+        "kind": "const",
+        "summary": "The defaults."
+      }
+    ],
+    "rs": [
+      {
+        "name": "BulkheadCore",
+        "kind": "struct",
+        "summary": "The sans-IO state (same methods)."
+      },
+      {
+        "name": "Bulkhead",
+        "kind": "struct",
+        "summary": "execute(rt, op), metrics()."
+      },
+      {
+        "name": "BulkheadConfig",
+        "kind": "struct",
+        "summary": "The numbers, with new(name) defaults."
+      },
+      {
+        "name": "Entry",
+        "kind": "enum",
+        "summary": "Admitted, Queued(ticket) or Rejected."
+      },
+      {
+        "name": "BulkheadMetrics",
+        "kind": "struct",
+        "summary": "{concurrent, queued, max_concurrent, max_queue}."
+      }
+    ],
+    "py": null
+  },
+  "config": [
+    {
+      "name": "maxConcurrent",
+      "default": 10,
+      "rule": "An integer >= 1."
+    },
+    {
+      "name": "maxQueue",
+      "default": 0,
+      "rule": "A non-negative integer (0: reject at once)."
+    },
+    {
+      "name": "maxQueueWaitMs",
+      "default": 5000,
+      "rule": "A non-negative integer."
+    }
+  ],
+  "behaviour": [
+    {
+      "id": "enter",
+      "rule": "tryEnter admits (counted active) under maxConcurrent, else queues a ticket (from 1) while the queue has room, else rejects."
+    },
+    {
+      "id": "release",
+      "rule": "release() admits the oldest ticket in the ended call's place (active unchanged) or, with no queue, decrements active."
+    },
+    {
+      "id": "expire",
+      "rule": "expire(ticket) removes a still-queued ticket (true) and is false once it was admitted; the caller gets BulkheadQueueTimeoutError, distinct from BulkheadFullError."
+    },
+    {
+      "id": "metrics",
+      "rule": "metrics() reports {concurrent, queued, maxConcurrent, maxQueue}; utilisation is the caller's division (maxConcurrent >= 1)."
+    },
+    {
+      "id": "cancel",
+      "rule": "A cancelled call gives back its slot or its queue place (TS: an aborted signal while queued; Rust: a dropped future)."
+    }
+  ],
+  "errors": [
+    {
+      "code": "bulkhead-full",
+      "ts": "BulkheadFullError",
+      "rs": "Error::BulkheadFull",
+      "py": null
+    },
+    {
+      "code": "bulkhead-queue-timeout",
+      "ts": "BulkheadQueueTimeoutError",
+      "rs": "Error::BulkheadQueueTimeout",
+      "py": null
+    },
+    {
+      "code": "config",
+      "ts": "ResilienceConfigError",
+      "rs": "Error::Config / ConfigError",
+      "py": null
+    }
+  ],
+  "fixtures": ["__tests__/fixtures/resilience/bulkhead.cases.json"],
+  "implementations": {
+    "ts": {
+      "registry": "bulkhead",
+      "file": "components/registry/n5-resilience/bulkhead.ts"
+    },
+    "rs": {
+      "registry": "bulkhead",
+      "file": "components/registry/n5-resilience/bulkhead.rs",
+      "crate": "mzizi-resilience",
+      "module": "bulkhead"
+    },
+    "py": null
+  },
+  "related": ["lib/mzizi-resilience"],
+  "gaps": [
+    "Python lands in phase 2 (mzizi-registry#472): a .py sibling, the /v1/py/{name} route in mzizi-api-gateway and a PyPI package."
+  ]
+}

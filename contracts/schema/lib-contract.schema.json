@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mzizi.dev/contracts/schema/lib-contract.schema.json",
+  "title": "Mzizi library contract",
+  "description": "One contract for a NON-VISUAL registry library (no rendered markup): the API every build exposes, the behaviour clauses every build keeps, the error codes, and the shared fixtures that arbitrate between builds. component-contract.schema.json is the format for rendered UI; this is its sibling for libraries (mzizi-registry#472). Versioned like a component contract: major when a clause, symbol or error code is removed or narrowed; minor when one is added; patch for prose.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "title",
+    "version",
+    "node",
+    "kind",
+    "summary",
+    "api",
+    "behaviour",
+    "errors",
+    "fixtures",
+    "implementations"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": {
+      "description": "`lib/<registry name>`; the file is contracts/<name>.contract.json.",
+      "type": "string",
+      "pattern": "^lib/[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "title": { "type": "string" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "node": {
+      "description": "The DNA-helix node the library belongs to.",
+      "type": "integer"
+    },
+    "kind": { "type": "string", "enum": ["library"] },
+    "summary": {
+      "description": "What the library is for, in a sentence or two.",
+      "type": "string"
+    },
+    "api": {
+      "description": "The public surface per build. Each symbol must exist in that build's source.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ts", "rs", "py"],
+      "properties": {
+        "ts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/symbol" }
+        },
+        "rs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/symbol" }
+        },
+        "py": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/symbol" }
+        }
+      }
+    },
+    "config": {
+      "description": "Configuration values, with their defaults and the rule a build must enforce at construction.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "default", "rule"],
+        "properties": {
+          "name": {
+            "description": "The TypeScript (camelCase) name; Rust uses the snake_case form.",
+            "type": "string"
+          },
+          "default": { "type": ["string", "number", "boolean", "null"] },
+          "rule": { "type": "string" }
+        }
+      }
+    },
+    "behaviour": {
+      "description": "Numbered clauses every build keeps. The fixtures and each build's unit tests check them.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "rule"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "rule": { "type": "string" }
+        }
+      }
+    },
+    "errors": {
+      "description": "Every error code the library raises, with its name in each build.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "ts", "rs"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "ts": { "type": "string" },
+          "rs": { "type": "string" },
+          "py": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "fixtures": {
+      "description": "Shared fixtures every build runs; paths from the repository root.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^__tests__/fixtures/.+\\.cases\\.json$"
+      }
+    },
+    "implementations": {
+      "description": "Each build's registry item, or null with a `gaps` entry saying when it lands.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ts", "rs", "py"],
+      "properties": {
+        "ts": { "type": ["object", "null"], "$ref": "#/$defs/tsImpl" },
+        "rs": { "type": ["object", "null"], "$ref": "#/$defs/rsImpl" },
+        "py": { "type": ["object", "null"], "$ref": "#/$defs/pyImpl" }
+      }
+    },
+    "related": { "type": "array", "items": { "type": "string" } },
+    "gaps": {
+      "description": "Where a build falls short, recorded rather than hidden.",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "symbol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind", "summary"],
+      "properties": {
+        "name": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "class",
+            "function",
+            "const",
+            "type",
+            "interface",
+            "struct",
+            "enum",
+            "trait",
+            "module"
+          ]
+        },
+        "summary": { "type": "string" }
+      }
+    },
+    "tsImpl": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["registry", "file"],
+      "properties": {
+        "registry": { "type": "string" },
+        "file": {
+          "type": "string",
+          "pattern": "^components/registry/n[0-9]+-[a-z-]+/[a-z0-9-]+\\.ts$"
+        }
+      }
+    },
+    "rsImpl": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["registry", "file", "crate", "module"],
+      "properties": {
+        "registry": { "type": "string" },
+        "file": {
+          "type": "string",
+          "pattern": "^components/registry/n[0-9]+-[a-z-]+/[a-z0-9-]+\\.rs$"
+        },
+        "crate": { "type": "string" },
+        "module": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+      }
+    },
+    "pyImpl": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["registry", "file", "package"],
+      "properties": {
+        "registry": { "type": "string" },
+        "file": { "type": "string" },
+        "package": { "type": "string" }
+      }
+    }
+  }
+}

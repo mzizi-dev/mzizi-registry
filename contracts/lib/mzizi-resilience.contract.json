@@ -1,0 +1,289 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/mzizi-resilience",
+  "title": "mzizi Resilience",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "library",
+  "summary": "The N5 primitives composed into one pipeline, FallbackChain(Retry(CircuitBreaker(RateLimiter(Timeout(Bulkhead(Fault(op))))))), a health monitor that records codes only, and the Fault / FaultInjector hook the N8 chaos engine implements. resilientFetch is kept, built on the primitives.",
+  "api": {
+    "ts": [
+      {
+        "name": "createResilience",
+        "kind": "function",
+        "summary": "createResilience(config): {execute(op), run(op), breaker, limiter, bulkhead}."
+      },
+      {
+        "name": "withResilience",
+        "kind": "function",
+        "summary": "Wrap a function in one shared pipeline."
+      },
+      {
+        "name": "resilientFetch",
+        "kind": "function",
+        "summary": "Timeout, retries, a per-section breaker and a fallback, reporting health; never throws."
+      },
+      {
+        "name": "HealthMonitor",
+        "kind": "class",
+        "summary": "report, recordError, recordRecovery, get, getAll, snapshot, systemHealth, subscribe, remove."
+      },
+      {
+        "name": "healthMonitor",
+        "kind": "const",
+        "summary": "The shared monitor."
+      },
+      {
+        "name": "worstHealth",
+        "kind": "function",
+        "summary": "error > degraded > loading > healthy; none → loading."
+      },
+      {
+        "name": "Fault",
+        "kind": "type",
+        "summary": "{kind: error | latency(ms) | timeout | drop | truncate | malformed}."
+      },
+      {
+        "name": "FaultInjector",
+        "kind": "interface",
+        "summary": "decide(): Fault | null."
+      },
+      {
+        "name": "applyFault",
+        "kind": "function",
+        "summary": "Apply one fault to one invocation."
+      },
+      {
+        "name": "FaultSchedule",
+        "kind": "class",
+        "summary": "A fixed fault schedule for tests."
+      },
+      {
+        "name": "ChaosError",
+        "kind": "class",
+        "summary": "code chaos; kind. The N8 chaos module re-exports it."
+      },
+      {
+        "name": "MalformedPayloadError",
+        "kind": "class",
+        "summary": "code malformed."
+      },
+      {
+        "name": "MALFORMED_MARKER",
+        "kind": "const",
+        "summary": "The value a malformed fault returns with no mutate hook."
+      }
+    ],
+    "rs": [
+      {
+        "name": "Resilience",
+        "kind": "struct",
+        "summary": "Resilience::new(config) with with_fallback, with_validate, with_mutate, with_faults, with_random, with_health; execute(rt, op), run(rt, op), last_call()."
+      },
+      {
+        "name": "ResilienceConfig",
+        "kind": "struct",
+        "summary": "Which layers, with new(name) defaults."
+      },
+      {
+        "name": "Outcome",
+        "kind": "struct",
+        "summary": "{value, source, attempts, circuit_state}."
+      },
+      {
+        "name": "HealthMonitor",
+        "kind": "struct",
+        "summary": "report, record_error, record_recovery, get, reports, system_health, remove."
+      },
+      {
+        "name": "HealthStatus",
+        "kind": "enum",
+        "summary": "Healthy, Degraded, Error, Loading."
+      },
+      {
+        "name": "worst_health",
+        "kind": "function",
+        "summary": "The worst status."
+      },
+      {
+        "name": "Fault",
+        "kind": "enum",
+        "summary": "Error, Latency { ms }, Timeout, Drop, Truncate, Malformed."
+      },
+      {
+        "name": "FaultInjector",
+        "kind": "trait",
+        "summary": "fn decide(&mut self) -> Option<Fault>."
+      },
+      {
+        "name": "FaultSchedule",
+        "kind": "struct",
+        "summary": "A fixed fault schedule for tests."
+      },
+      {
+        "name": "apply_fault",
+        "kind": "function",
+        "summary": "Apply one fault to one invocation."
+      },
+      {
+        "name": "MALFORMED_MARKER",
+        "kind": "const",
+        "summary": "The TypeScript default for a malformed string."
+      }
+    ],
+    "py": null
+  },
+  "config": [
+    {
+      "name": "timeoutMs",
+      "default": 10000,
+      "rule": "An integer >= 1, or false/None for no timeout layer."
+    },
+    {
+      "name": "retry",
+      "default": "the retry defaults",
+      "rule": "false/None for no retry layer."
+    },
+    {
+      "name": "circuitBreaker",
+      "default": "the breaker defaults",
+      "rule": "false/None for no breaker; TS also takes a shared instance."
+    },
+    {
+      "name": "rateLimiter",
+      "default": null,
+      "rule": "Off unless given."
+    },
+    {
+      "name": "bulkhead",
+      "default": null,
+      "rule": "Off unless given."
+    },
+    {
+      "name": "fallbacks",
+      "default": "[]",
+      "rule": "Stage names primary and none are reserved."
+    }
+  ],
+  "behaviour": [
+    {
+      "id": "order",
+      "rule": "FallbackChain( Retry( CircuitBreaker( RateLimiter( Timeout( Bulkhead( Fault( operation ))))))): the primary stage is the whole inner pipeline; fallback stages run plain with their own optional timeout."
+    },
+    {
+      "id": "rejections",
+      "rule": "Retry does not retry rejections, so an open circuit goes straight to the fallback; a rejection inside the breaker does not count against it."
+    },
+    {
+      "id": "validate",
+      "rule": "validate(value) runs inside the pipeline; a failing (or throwing) check is MalformedPayloadError, counted by the breaker and retried."
+    },
+    {
+      "id": "faults",
+      "rule": "Each invocation of the operation asks the FaultInjector for one fault. error/drop throw ChaosError; latency sleeps then runs; timeout hangs until the Timeout layer cancels; truncate halves strings, arrays and bytes (else mutate, else ChaosError); malformed returns mutate's output or MALFORMED_MARKER (Rust: mutate, else MalformedPayload)."
+    },
+    {
+      "id": "no-fallback",
+      "rule": "With no fallbacks the primary's error is returned as is; with fallbacks that all fail, AllStagesFailedError lists primary first."
+    },
+    {
+      "id": "health",
+      "rule": "After each call the pipeline's report is: healthy when the primary served and the circuit is closed; degraded when a fallback served or the circuit is not closed; error when nothing served. errorCount counts calls whose primary failed; lastErrorCode is the primary error's code; source is primary, the stage, or none."
+    },
+    {
+      "id": "system",
+      "rule": "System health is the worst report: error > degraded > loading > healthy; none → loading."
+    },
+    {
+      "id": "pii",
+      "rule": "Reports and events carry codes and numbers only: no error messages, URLs or payloads."
+    },
+    {
+      "id": "composed-fixture",
+      "rule": "mzizi-resilience.cases.json drives the pipeline on a virtual clock with an explicit fault schedule: faults open the breaker, the fallback serves, health is degraded, the cooldown passes, a half-open probe succeeds, health is healthy again."
+    }
+  ],
+  "errors": [
+    {
+      "code": "chaos",
+      "ts": "ChaosError",
+      "rs": "Error::Chaos",
+      "py": null
+    },
+    {
+      "code": "malformed",
+      "ts": "MalformedPayloadError",
+      "rs": "Error::Malformed",
+      "py": null
+    },
+    {
+      "code": "all-stages-failed",
+      "ts": "AllStagesFailedError",
+      "rs": "Error::AllStagesFailed",
+      "py": null
+    },
+    {
+      "code": "retries-exhausted",
+      "ts": "RetriesExhaustedError",
+      "rs": "Error::RetriesExhausted",
+      "py": null
+    },
+    {
+      "code": "circuit-open",
+      "ts": "CircuitOpenError",
+      "rs": "Error::CircuitOpen",
+      "py": null
+    },
+    {
+      "code": "rate-limited",
+      "ts": "RateLimitExceededError",
+      "rs": "Error::RateLimited",
+      "py": null
+    },
+    {
+      "code": "bulkhead-full",
+      "ts": "BulkheadFullError",
+      "rs": "Error::BulkheadFull",
+      "py": null
+    },
+    {
+      "code": "bulkhead-queue-timeout",
+      "ts": "BulkheadQueueTimeoutError",
+      "rs": "Error::BulkheadQueueTimeout",
+      "py": null
+    },
+    {
+      "code": "timeout",
+      "ts": "TimeoutError",
+      "rs": "Error::Timeout",
+      "py": null
+    },
+    {
+      "code": "config",
+      "ts": "ResilienceConfigError",
+      "rs": "Error::Config / ConfigError",
+      "py": null
+    }
+  ],
+  "fixtures": ["__tests__/fixtures/resilience/mzizi-resilience.cases.json"],
+  "implementations": {
+    "ts": {
+      "registry": "mzizi-resilience",
+      "file": "components/registry/n5-resilience/mzizi-resilience.ts"
+    },
+    "rs": {
+      "registry": "mzizi-resilience",
+      "file": "components/registry/n5-resilience/mzizi-resilience.rs",
+      "crate": "mzizi-resilience",
+      "module": "mzizi_resilience"
+    },
+    "py": null
+  },
+  "related": ["ui/mzizi-section", "ui/mzizi-health-panel", "lib/chaos (N8)"],
+  "gaps": [
+    "Python lands in phase 2 (mzizi-registry#472): a .py sibling, the /v1/py/{name} route in mzizi-api-gateway and a PyPI package.",
+    "The React health panel is the registry item mzizi-health-panel and the section wrapper is mzizi-section (both .tsx); their Astro shells land in phase 3.",
+    "Rust has no shared global monitor or subscriptions: a pipeline reports to its own HealthMonitor or an Rc<RefCell<HealthMonitor>> you share; the TS build defaults to the shared healthMonitor.",
+    "Seeded random chaos (ChaosEngine) is N8's; this contract defines only the hook it implements."
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/rng",
+  "title": "RNG",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "library",
+  "summary": "Injected randomness: the Random interface and Mulberry32, the seeded generator every build reproduces bit for bit, plus integer probability thresholds. Retry jitter and the N8 chaos engine draw from it; no core reads ambient randomness.",
+  "api": {
+    "ts": [
+      {
+        "name": "Random",
+        "kind": "interface",
+        "summary": "nextU32(): an integer in [0, 2^32)."
+      },
+      {
+        "name": "Mulberry32",
+        "kind": "class",
+        "summary": "The seeded generator (new Mulberry32(seed))."
+      },
+      {
+        "name": "mulberry32",
+        "kind": "function",
+        "summary": "new Mulberry32(seed)."
+      },
+      {
+        "name": "mathRandom",
+        "kind": "const",
+        "summary": "Unseeded Math.random-backed Random, for production jitter only."
+      },
+      {
+        "name": "probabilityThreshold",
+        "kind": "function",
+        "summary": "floor(p * 2^32), p = 1 as 4294967295."
+      },
+      {
+        "name": "hits",
+        "kind": "function",
+        "summary": "Whether a draw hits probability p (p = 1 always)."
+      }
+    ],
+    "rs": [
+      {
+        "name": "Random",
+        "kind": "trait",
+        "summary": "next_u32(&mut self) -> u32."
+      },
+      {
+        "name": "Mulberry32",
+        "kind": "struct",
+        "summary": "The seeded generator (Mulberry32::new(seed))."
+      },
+      {
+        "name": "probability_threshold",
+        "kind": "function",
+        "summary": "floor(p * 2^32), p = 1 as u32::MAX."
+      },
+      {
+        "name": "hits",
+        "kind": "function",
+        "summary": "Whether a draw hits probability p."
+      }
+    ],
+    "py": null
+  },
+  "behaviour": [
+    {
+      "id": "mulberry32",
+      "rule": "next = mulberry32 exactly as the spec writes it: state += 0x6D2B79F5 (mod 2^32); t = imul(t ^ t>>>15, t|1); t = (t + imul(t ^ t>>>7, t|61)) ^ t; return (t ^ t>>>14) >>> 0."
+    },
+    {
+      "id": "pinned",
+      "rule": "The first 8 outputs for seeds 0, 1, 42 and 4294967295 equal prng.cases.json in every build."
+    },
+    {
+      "id": "threshold",
+      "rule": "A probability p in [0, 1] becomes floor(p * 2^32); a draw u hits when u < threshold; p = 1 always hits; p outside [0, 1] or not finite is rejected."
+    },
+    {
+      "id": "injected",
+      "rule": "No core reads ambient randomness; tests and chaos use Mulberry32."
+    }
+  ],
+  "errors": [
+    {
+      "code": "config",
+      "ts": "ResilienceConfigError",
+      "rs": "ConfigError",
+      "py": null
+    }
+  ],
+  "fixtures": ["__tests__/fixtures/resilience/prng.cases.json"],
+  "implementations": {
+    "ts": {
+      "registry": "rng",
+      "file": "components/registry/n5-resilience/rng.ts"
+    },
+    "rs": {
+      "registry": "rng",
+      "file": "components/registry/n5-resilience/rng.rs",
+      "crate": "mzizi-resilience",
+      "module": "rng"
+    },
+    "py": null
+  },
+  "related": ["lib/retry", "lib/mzizi-resilience"],
+  "gaps": [
+    "Python lands in phase 2 (mzizi-registry#472): a .py sibling, the /v1/py/{name} route in mzizi-api-gateway and a PyPI package."
+  ]
+}

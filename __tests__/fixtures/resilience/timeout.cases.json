@@ -1,0 +1,69 @@
+{
+  "$comment": "timeout (resilience spec v1). Run on a virtual clock starting at 0: the operation waits durationMs, then resolves \"ok\" (result \"ok\"), rejects with an error whose code is <code> (result \"fail:<code>\"), or throws <code> before returning anything (result \"throw-sync:<code>\", duration 0). Rule: d >= t times out; the clock then reads t, else d. outcome is \"ok\" or \"error:<code>\"; a config case has no durationMs.",
+  "cases": [
+    {
+      "name": "finishes before the deadline",
+      "timeoutMs": 100,
+      "durationMs": 10,
+      "result": "ok",
+      "expect": { "outcome": "ok", "now": 10 }
+    },
+    {
+      "name": "a tie times out (d >= t)",
+      "timeoutMs": 100,
+      "durationMs": 100,
+      "result": "ok",
+      "expect": { "outcome": "error:timeout", "now": 100 }
+    },
+    {
+      "name": "too slow",
+      "timeoutMs": 100,
+      "durationMs": 150,
+      "result": "ok",
+      "expect": { "outcome": "error:timeout", "now": 100 }
+    },
+    {
+      "name": "instant under the smallest deadline",
+      "timeoutMs": 1,
+      "durationMs": 0,
+      "result": "ok",
+      "expect": { "outcome": "ok", "now": 0 }
+    },
+    {
+      "name": "fails before the deadline",
+      "timeoutMs": 100,
+      "durationMs": 20,
+      "result": "fail:boom",
+      "expect": { "outcome": "error:boom", "now": 20 }
+    },
+    {
+      "name": "fails after the deadline: the timeout wins",
+      "timeoutMs": 100,
+      "durationMs": 200,
+      "result": "fail:boom",
+      "expect": { "outcome": "error:timeout", "now": 100 }
+    },
+    {
+      "name": "throws synchronously: rethrown, timer cleared",
+      "timeoutMs": 100,
+      "durationMs": 0,
+      "result": "throw-sync:boom",
+      "expect": { "outcome": "error:boom", "now": 0 }
+    },
+    {
+      "name": "zero deadline is a config error",
+      "timeoutMs": 0,
+      "expect": { "outcome": "error:config" }
+    },
+    {
+      "name": "negative deadline is a config error",
+      "timeoutMs": -5,
+      "expect": { "outcome": "error:config" }
+    },
+    {
+      "name": "fractional deadline is a config error",
+      "timeoutMs": 1.5,
+      "expect": { "outcome": "error:config" }
+    }
+  ]
+}

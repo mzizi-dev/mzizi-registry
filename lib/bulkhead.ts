@@ -1,45 +1,64 @@
 /**
- * Bulkhead pattern for the Nyuchi ecosystem.
- * Inspired by Resilience4j Bulkhead — limits concurrent calls to a dependency
- * so one slow service cannot starve all available connections.
+ * Bulkhead for the Mzizi resilience node (N5), Resilience4j-style: a cap on concurrent
+ * calls to one dependency, so a slow service cannot take every connection.
  *
- * Named after ship bulkheads: isolated compartments that prevent a single
- * breach from flooding the entire vessel.
+ * Named after a ship's bulkheads, which keep one breach from flooding the hull.
  *
- * Two modes:
- * - Semaphore: limits max concurrent executions (default)
- * - Queue: limits max concurrent + max waiting in queue
+ * - Under `maxConcurrent`, a call is admitted.
+ * - At capacity, it waits in a FIFO queue of up to `maxQueue` calls (default 0: no queue);
+ *   when a running call ends, the oldest waiter is admitted in its place.
+ * - With the queue full it is rejected with `BulkheadFullError` (code `bulkhead-full`).
+ * - A waiter that is not admitted within `maxQueueWaitMs` is removed and rejected with
+ *   `BulkheadQueueTimeoutError` (code `bulkhead-queue-timeout`), so a caller can tell a
+ *   full bulkhead from a slow one.
  *
+ * `BulkheadCore` is the sans-IO state; `Bulkhead` runs async calls through it. The Rust
+ * build is `mzizi_resilience::bulkhead`.
+ *
+ * Framework-free: usable from Astro, React, Workers and Node alike.
+ *
+ * Contract: contracts/lib/bulkhead.contract.json
  * Install via: npx shadcn@latest add https://api.mzizi.dev/v1/ui/bulkhead
  */
 
-import { createLogger } from "@/lib/observability"
-
-const logger = createLogger("bulkhead")
+import {
+  withDefaults,
+  abortReason,
+  checkInt,
+  checkMs,
+  checkName,
+  emit,
+  timerSleep,
+  type OnResilienceEvent,
+  type Sleep,
+} from "./resilience-core"
 
 export interface BulkheadConfig {
-  /** Identifier for this bulkhead (e.g., "supabase-queries", "api-calls") */
+  /** Identifier for this bulkhead, e.g. the dependency it isolates. */
   name: string
-  /** Maximum number of concurrent executions allowed (default: 10) */
+  /** Concurrent calls allowed (>= 1, default 10). */
   maxConcurrent: number
-  /** Maximum number of calls waiting in queue when at capacity (default: 0 = no queue, reject immediately) */
+  /** Calls allowed to wait when at capacity (>= 0, default 0: reject at once). */
   maxQueue: number
-  /** Maximum time in ms a call can wait in the queue before being rejected (default: 5000) */
+  /** The longest a call may wait in the queue, in ms (default 5000). */
   maxQueueWaitMs: number
-  /** Called when a call is rejected due to bulkhead full */
+  /** Called when a call is rejected because the bulkhead and its queue are full. */
   onReject?: (name: string, concurrent: number, queued: number) => void
+  /** Optional event hook (`queued`, `rejected`, `queue-timeout`). */
+  onEvent?: OnResilienceEvent
+  /** The timer for the queue wait (default `setTimeout`). */
+  sleep?: Sleep
 }
 
-const DEFAULT_CONFIG: Omit<BulkheadConfig, "name"> = {
+export const BULKHEAD_DEFAULTS = {
   maxConcurrent: 10,
   maxQueue: 0,
   maxQueueWaitMs: 5_000,
-}
+} as const
 
-/**
- * Error thrown when the bulkhead rejects a call because it is at capacity.
- */
+/** Rejected: every slot and every queue place is taken. */
 export class BulkheadFullError extends Error {
+  readonly code = "bulkhead-full" as const
   readonly bulkheadName: string
   readonly concurrent: number
   readonly queued: number
@@ -53,144 +72,201 @@ export class BulkheadFullError extends Error {
   }
 }
 
-/**
- * Bulkhead that limits concurrent access to a resource.
- *
- * @example
- * ```ts
- * import { Bulkhead } from "@/lib/bulkhead"
- *
- * // Allow max 5 concurrent Supabase queries
- * const dbBulkhead = new Bulkhead({ name: "supabase", maxConcurrent: 5 })
- *
- * // With queue: allow 5 concurrent, 10 waiting
- * const apiBulkhead = new Bulkhead({ name: "external-api", maxConcurrent: 5, maxQueue: 10 })
- *
- * try {
- *   const data = await dbBulkhead.execute(() => supabase.from("events").select("*"))
- * } catch (error) {
- *   if (error instanceof BulkheadFullError) {
- *     // All slots occupied — show cached data or queue message
- *   }
- * }
- * ```
- */
-export class Bulkhead {
-  private activeCalls = 0
-  private waitingQueue: Array<{
-    resolve: () => void
-    reject: (err: Error) => void
-    timer: ReturnType<typeof setTimeout>
-  }> = []
-  private readonly config: BulkheadConfig
+/** Rejected: the call waited in the queue for `maxQueueWaitMs` without being admitted. */
+export class BulkheadQueueTimeoutError extends Error {
+  readonly code = "bulkhead-queue-timeout" as const
+  readonly bulkheadName: string
+  readonly waitedMs: number
 
-  constructor(config: Partial<BulkheadConfig> & { name: string }) {
-    this.config = { ...DEFAULT_CONFIG, ...config }
+  constructor(name: string, waitedMs: number) {
+    super(`Bulkhead "${name}" queue wait exceeded ${waitedMs}ms`)
+    this.name = "BulkheadQueueTimeoutError"
+    this.bulkheadName = name
+    this.waitedMs = waitedMs
+  }
+}
+
+export type BulkheadEntry = { kind: "admitted" } | { kind: "queued"; ticket: number } | { kind: "rejected" }
+
+export interface BulkheadMetrics {
+  concurrent: number
+  queued: number
+  maxConcurrent: number
+  maxQueue: number
+}
+
+type CoreConfig = Pick<BulkheadConfig, "name" | "maxConcurrent" | "maxQueue" | "maxQueueWaitMs">
+
+function validate(config: Partial<CoreConfig> & { name: string }): CoreConfig {
+  const c = withDefaults(BULKHEAD_DEFAULTS, config)
+  return {
+    name: checkName("name", c.name),
+    maxConcurrent: checkInt("maxConcurrent", c.maxConcurrent, 1),
+    maxQueue: checkInt("maxQueue", c.maxQueue, 0),
+    maxQueueWaitMs: checkMs("maxQueueWaitMs", c.maxQueueWaitMs),
+  }
+}
+
+/** The sans-IO bulkhead: counts and a FIFO of tickets. */
+export class BulkheadCore {
+  readonly config: CoreConfig
+  private active = 0
+  private readonly queue: number[] = []
+  private nextTicket = 1
+
+  constructor(config: Partial<CoreConfig> & { name: string }) {
+    this.config = validate(config)
   }
 
-  /** Current number of active concurrent executions */
-  get concurrent(): number {
-    return this.activeCalls
-  }
-
-  /** Current number of calls waiting in queue */
-  get queued(): number {
-    return this.waitingQueue.length
-  }
-
-  /** Whether the bulkhead can accept another call */
-  get isAvailable(): boolean {
-    return (
-      this.activeCalls < this.config.maxConcurrent ||
-      this.waitingQueue.length < this.config.maxQueue
-    )
-  }
-
-  /** Metrics snapshot */
-  get metrics() {
-    return {
-      name: this.config.name,
-      concurrent: this.activeCalls,
-      queued: this.waitingQueue.length,
-      maxConcurrent: this.config.maxConcurrent,
-      maxQueue: this.config.maxQueue,
-      utilization: this.activeCalls / this.config.maxConcurrent,
+  /** Enter: admitted (counted active), queued with a ticket, or rejected. */
+  tryEnter(): BulkheadEntry {
+    if (this.active < this.config.maxConcurrent) {
+      this.active++
+      return { kind: "admitted" }
     }
+    if (this.queue.length < this.config.maxQueue) {
+      const ticket = this.nextTicket++
+      this.queue.push(ticket)
+      return { kind: "queued", ticket }
+    }
+    return { kind: "rejected" }
   }
 
   /**
-   * Execute a function within the bulkhead.
-   * If at capacity, either queues (if maxQueue > 0) or rejects immediately.
+   * An active call ended. Returns the ticket admitted in its place (it is now counted
+   * active), or null when the queue is empty.
    */
-  async execute<T>(fn: () => Promise<T>): Promise<T> {
-    // If under capacity, execute immediately
-    if (this.activeCalls < this.config.maxConcurrent) {
-      return this.executeProtected(fn)
-    }
-
-    // If no queue configured or queue full, reject
-    if (this.config.maxQueue <= 0 || this.waitingQueue.length >= this.config.maxQueue) {
-      const error = new BulkheadFullError(
-        this.config.name,
-        this.activeCalls,
-        this.waitingQueue.length
-      )
-      logger.warn("Call rejected — bulkhead full", {
-        data: {
-          name: this.config.name,
-          concurrent: this.activeCalls,
-          queued: this.waitingQueue.length,
-        },
-      })
-      this.config.onReject?.(this.config.name, this.activeCalls, this.waitingQueue.length)
-      throw error
-    }
-
-    // Queue the call
-    return new Promise<T>((resolve, reject) => {
-      const timer = setTimeout(() => {
-        // Remove from queue on timeout
-        this.waitingQueue = this.waitingQueue.filter((w) => w.timer !== timer)
-        reject(new BulkheadFullError(this.config.name, this.activeCalls, this.waitingQueue.length))
-      }, this.config.maxQueueWaitMs)
-
-      this.waitingQueue.push({
-        resolve: () => {
-          clearTimeout(timer)
-          this.executeProtected(fn).then(resolve, reject)
-        },
-        reject: (err: Error) => {
-          clearTimeout(timer)
-          reject(err)
-        },
-        timer,
-      })
-
-      logger.info("Call queued", {
-        data: {
-          name: this.config.name,
-          queuePosition: this.waitingQueue.length,
-          concurrent: this.activeCalls,
-        },
-      })
-    })
+  release(): number | null {
+    const next = this.queue.shift()
+    if (next !== undefined) return next
+    if (this.active > 0) this.active--
+    return null
   }
 
-  private async executeProtected<T>(fn: () => Promise<T>): Promise<T> {
-    this.activeCalls++
+  /** A queued ticket's wait ran out: remove it. False if it was already admitted (or unknown). */
+  expire(ticket: number): boolean {
+    const i = this.queue.indexOf(ticket)
+    if (i === -1) return false
+    this.queue.splice(i, 1)
+    return true
+  }
+
+  metrics(): BulkheadMetrics {
+    return {
+      concurrent: this.active,
+      queued: this.queue.length,
+      maxConcurrent: this.config.maxConcurrent,
+      maxQueue: this.config.maxQueue,
+    }
+  }
+}
+
+/**
+ * A bulkhead for async calls.
+ *
+ * @example
+ * ```ts
+ * import { Bulkhead, BulkheadFullError } from "./bulkhead"
+ *
+ * const db = new Bulkhead({ name: "database", maxConcurrent: 5, maxQueue: 10 })
+ * const rows = await db.execute(() => query("select 1"))
+ * ```
+ */
+export class Bulkhead {
+  readonly core: BulkheadCore
+  private readonly sleep: Sleep
+  private readonly onReject?: (name: string, concurrent: number, queued: number) => void
+  private readonly onEvent?: OnResilienceEvent
+  private readonly waiters = new Map<number, () => void>()
+
+  constructor(config: Partial<BulkheadConfig> & { name: string }) {
+    const { onReject, onEvent, sleep, ...core } = config
+    this.core = new BulkheadCore(core)
+    this.sleep = sleep ?? timerSleep
+    this.onReject = onReject
+    this.onEvent = onEvent
+  }
+
+  get name(): string {
+    return this.core.config.name
+  }
+
+  /** Calls running now. */
+  get concurrent(): number {
+    return this.core.metrics().concurrent
+  }
+
+  /** Calls waiting now. */
+  get queued(): number {
+    return this.core.metrics().queued
+  }
+
+  /** Whether a call now would be admitted or queued. */
+  get isAvailable(): boolean {
+    const m = this.core.metrics()
+    return m.concurrent < m.maxConcurrent || m.queued < m.maxQueue
+  }
+
+  /** A snapshot for dashboards; `utilization` is concurrent / maxConcurrent (maxConcurrent >= 1). */
+  get metrics() {
+    const m = this.core.metrics()
+    return { name: this.name, ...m, utilization: m.concurrent / m.maxConcurrent }
+  }
+
+  /** Run `fn` inside the bulkhead, waiting in the queue if allowed. */
+  async execute<T>(fn: () => Promise<T>, signal?: AbortSignal): Promise<T> {
+    if (signal?.aborted) throw abortReason(signal)
+    const entry = this.core.tryEnter()
+    if (entry.kind === "rejected") {
+      const m = this.core.metrics()
+      emit(this.onEvent, { module: "bulkhead", type: "rejected", name: this.name, data: { concurrent: m.concurrent, queued: m.queued } })
+      this.onReject?.(this.name, m.concurrent, m.queued)
+      throw new BulkheadFullError(this.name, m.concurrent, m.queued)
+    }
+    if (entry.kind === "queued") {
+      emit(this.onEvent, { module: "bulkhead", type: "queued", name: this.name, data: { ticket: entry.ticket } })
+      await this.waitForTurn(entry.ticket, signal)
+    }
     try {
-      const result = await fn()
-      return result
+      return await fn()
     } finally {
-      this.activeCalls--
-      this.dequeueNext()
+      const next = this.core.release()
+      if (next !== null) this.waiters.get(next)?.()
     }
   }
 
-  private dequeueNext(): void {
-    if (this.waitingQueue.length > 0 && this.activeCalls < this.config.maxConcurrent) {
-      const next = this.waitingQueue.shift()
-      next?.resolve()
-    }
+  private waitForTurn(ticket: number, signal?: AbortSignal): Promise<void> {
+    const wait = this.core.config.maxQueueWaitMs
+    return new Promise<void>((resolve, reject) => {
+      const timer = new AbortController()
+      const done = () => {
+        this.waiters.delete(ticket)
+        timer.abort()
+        signal?.removeEventListener("abort", onAbort)
+      }
+      const onAbort = () => {
+        if (this.core.expire(ticket)) {
+          done()
+          reject(abortReason(signal as AbortSignal))
+        }
+      }
+      this.waiters.set(ticket, () => {
+        done()
+        resolve()
+      })
+      signal?.addEventListener("abort", onAbort, { once: true })
+      this.sleep.sleep(wait, timer.signal).then(
+        () => {
+          if (this.core.expire(ticket)) {
+            done()
+            emit(this.onEvent, { module: "bulkhead", type: "queue-timeout", name: this.name, data: { waitedMs: wait } })
+            reject(new BulkheadQueueTimeoutError(this.name, wait))
+          }
+        },
+        () => {
+          // Cleared: the ticket was admitted or the caller aborted.
+        },
+      )
+    })
   }
 }

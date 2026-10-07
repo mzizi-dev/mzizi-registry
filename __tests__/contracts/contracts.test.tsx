@@ -166,8 +166,9 @@ describe("contracts are well formed", () => {
   })
 
   test("no directory under contracts/ is a family the tests do not read", () => {
+    // `lib/` holds the non-visual library contracts, read by lib-contracts.test.ts.
     const dirs = readdirSync(DIR, { withFileTypes: true })
-      .filter((d) => d.isDirectory() && d.name !== "schema")
+      .filter((d) => d.isDirectory() && d.name !== "schema" && d.name !== "lib")
       .map((d) => d.name)
       .sort()
     expect(dirs).toEqual(Object.keys(FAMILIES).sort())

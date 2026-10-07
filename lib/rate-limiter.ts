@@ -1,78 +1,83 @@
 /**
- * Token bucket rate limiter for the Nyuchi ecosystem.
- * Inspired by Resilience4j RateLimiter.
+ * Rate limiter for the Mzizi resilience node (N5): an integer token bucket,
+ * Resilience4j-style.
  *
- * Controls how many operations can execute within a time window.
- * Critical for protecting external API quotas (Tomorrow.io has 500/day,
- * Anthropic has token limits, government registries have strict throttles).
+ * The bucket counts in units of 1/windowMs of a token, so all arithmetic is integer and
+ * every build agrees exactly:
  *
- * Uses the token bucket algorithm:
- * - Bucket starts full (capacity = limit)
- * - Each call consumes one token
- * - Tokens refill at a fixed rate (limit per window)
- * - When empty, calls either wait or are rejected
+ * - one token = `windowMs` units; capacity `C = (limit + burstAllowance) * windowMs`;
+ *   the bucket starts full.
+ * - refill adds `elapsed * limit` units, capped at C. The sustained rate is `limit` per
+ *   window; `burstAllowance` only raises the ceiling.
+ * - `tryAcquire(now)`: with a whole token, take it. Otherwise the wait for one is
+ *   `ceil((windowMs - level) / limit)`; with `queueExcess` and a wait <= `maxWaitMs`, the
+ *   token is reserved now (the level may go negative, so concurrent waiters queue behind
+ *   each other instead of racing for one token) and the caller sleeps the wait; else the
+ *   call is rejected with `RateLimitExceededError` (code `rate-limited`) and the wait as
+ *   `retryAfterMs`.
  *
+ * Framework-free: usable from Astro, React, Workers and Node alike. The Rust build is
+ * `mzizi_resilience::rate_limiter`.
+ *
+ * Contract: contracts/lib/rate-limiter.contract.json
  * Install via: npx shadcn@latest add https://api.mzizi.dev/v1/ui/rate-limiter
  */
 
-import { createLogger } from "@/lib/observability"
-
-const logger = createLogger("rate-limiter")
+import {
+  withDefaults,
+  checkInt,
+  checkMs,
+  checkName,
+  emit,
+  systemClock,
+  timerSleep,
+  type Clock,
+  type OnResilienceEvent,
+  type Sleep,
+} from "./resilience-core"
 
 export interface RateLimiterConfig {
-  /** Identifier for this limiter (e.g., "tomorrow-io", "anthropic") */
+  /** Identifier for this limiter, e.g. the API it protects. */
   name: string
-  /** Maximum number of calls allowed per window (default: 100) */
+  /** Calls allowed per window, sustained (>= 1, default 100). */
   limit: number
-  /** Time window in ms (default: 60000 = 1 minute) */
+  /** The window, in ms (>= 1, default 60000). */
   windowMs: number
-  /** Maximum burst above the limit (default: 0 = no burst) */
+  /** Extra calls the bucket may hold above `limit` for bursts (>= 0, default 0). */
   burstAllowance: number
-  /** Whether to queue calls that exceed the limit instead of rejecting (default: false) */
+  /** Wait for a token instead of rejecting, when the wait is at most `maxWaitMs` (default false). */
   queueExcess: boolean
-  /** Maximum time in ms to wait in queue (default: 5000) */
+  /** The longest wait `queueExcess` accepts, in ms (default 5000). */
   maxWaitMs: number
-  /** Called when a call is rate-limited */
+  /** Called when a call is rejected, with the whole tokens left (0). */
   onLimit?: (name: string, remainingTokens: number) => void
+  /** Optional event hook (`queued`, `rejected`). */
+  onEvent?: OnResilienceEvent
+  /** Default `Date.now`. */
+  clock?: Clock
+  /** The timer a queued call sleeps on (default `setTimeout`). */
+  sleep?: Sleep
 }
 
-const DEFAULT_CONFIG: Omit<RateLimiterConfig, "name"> = {
+export const RATE_LIMITER_DEFAULTS = {
   limit: 100,
   windowMs: 60_000,
   burstAllowance: 0,
   queueExcess: false,
   maxWaitMs: 5_000,
-}
+} as const
 
-/** Pre-configured limiter settings for known Nyuchi API providers */
-export const API_RATE_CONFIGS = {
-  /** Tomorrow.io: 500 calls/day, 25 per hour */
-  "tomorrow-io": { limit: 25, windowMs: 3_600_000, burstAllowance: 5 },
-  /** Open-Meteo: generous free tier, 10K/day */
-  "open-meteo": { limit: 600, windowMs: 3_600_000, burstAllowance: 50 },
-  /** Anthropic Claude: token-limited, rate varies by plan */
-  anthropic: { limit: 60, windowMs: 60_000, burstAllowance: 10 },
-  /** Government registries (ZIMRA, CIPC): very strict */
-  "government-api": { limit: 10, windowMs: 60_000, burstAllowance: 0 },
-  /** Supabase: generous but protect connection pool */
-  supabase: { limit: 200, windowMs: 60_000, burstAllowance: 50 },
-  /** Stytch auth: protect auth endpoints */
-  stytch: { limit: 30, windowMs: 60_000, burstAllowance: 10 },
-} as const satisfies Record<string, Partial<Omit<RateLimiterConfig, "name">>>
-
-/**
- * Error thrown when a call is rejected by the rate limiter.
- */
+/** The call was rejected: no token, and waiting for one was not allowed or would take too long. */
 export class RateLimitExceededError extends Error {
+  readonly code = "rate-limited" as const
   readonly limiterName: string
   readonly limit: number
   readonly windowMs: number
+  /** When a token will be available, in ms. */
   readonly retryAfterMs: number
 
   constructor(name: string, limit: number, windowMs: number, retryAfterMs: number) {
-    super(
-      `Rate limit exceeded for "${name}" — ${limit} calls per ${windowMs}ms. Retry after ${retryAfterMs}ms`
-    )
+    super(`Rate limit exceeded for "${name}" — ${limit} calls per ${windowMs}ms. Retry after ${retryAfterMs}ms`)
     this.name = "RateLimitExceededError"
     this.limiterName = name
     this.limit = limit
@@ -81,149 +86,166 @@ export class RateLimitExceededError extends Error {
   }
 }
 
+export type RateAcquire = { ok: true; waitMs: number } | { ok: false; retryAfterMs: number }
+
+type CoreConfig = Pick<RateLimiterConfig, "name" | "limit" | "windowMs" | "burstAllowance" | "queueExcess" | "maxWaitMs">
+
+function validate(config: Partial<CoreConfig> & { name: string }): CoreConfig {
+  const c = withDefaults(RATE_LIMITER_DEFAULTS, config)
+  return {
+    name: checkName("name", c.name),
+    limit: checkInt("limit", c.limit, 1),
+    windowMs: checkInt("windowMs", c.windowMs, 1),
+    burstAllowance: checkInt("burstAllowance", c.burstAllowance, 0),
+    queueExcess: Boolean(c.queueExcess),
+    maxWaitMs: checkMs("maxWaitMs", c.maxWaitMs),
+  }
+}
+
+/** The sans-IO token bucket. Every method takes `now` (integer ms). */
+export class RateLimiterCore {
+  readonly config: CoreConfig
+  /** Units of 1/windowMs token; may be negative while calls are queued. */
+  private level: number
+  private lastRefill: number
+  private readonly capacity: number
+
+  constructor(config: Partial<CoreConfig> & { name: string }, now: number) {
+    this.config = validate(config)
+    this.capacity = (this.config.limit + this.config.burstAllowance) * this.config.windowMs
+    this.level = this.capacity
+    this.lastRefill = now
+  }
+
+  /** Ask for a token at `now`. */
+  tryAcquire(now: number): RateAcquire {
+    this.refill(now)
+    const { windowMs, limit, queueExcess, maxWaitMs } = this.config
+    if (this.level >= windowMs) {
+      this.level -= windowMs
+      return { ok: true, waitMs: 0 }
+    }
+    const waitMs = Math.ceil((windowMs - this.level) / limit)
+    if (queueExcess && waitMs <= maxWaitMs) {
+      this.level -= windowMs
+      return { ok: true, waitMs }
+    }
+    return { ok: false, retryAfterMs: waitMs }
+  }
+
+  /** Whole tokens available at `now`. */
+  remaining(now: number): number {
+    this.refill(now)
+    return Math.floor(Math.max(this.level, 0) / this.config.windowMs)
+  }
+
+  /** How long until a whole token is available at `now`, in ms (0 if one is). */
+  retryAfterMs(now: number): number {
+    this.refill(now)
+    if (this.level >= this.config.windowMs) return 0
+    return Math.ceil((this.config.windowMs - this.level) / this.config.limit)
+  }
+
+  /** Refill to capacity. */
+  reset(now: number): void {
+    this.level = this.capacity
+    this.lastRefill = now
+  }
+
+  private refill(now: number): void {
+    if (now <= this.lastRefill) return
+    const add = (now - this.lastRefill) * this.config.limit
+    this.level = add >= this.capacity - this.level ? this.capacity : this.level + add
+    this.lastRefill = now
+  }
+}
+
 /**
- * Token bucket rate limiter.
+ * A rate limiter for async calls.
+ *
+ * Per-provider limits are a pattern: one limiter per API, with that API's quota (for
+ * example a provider allowing 25 calls an hour: `{ name: "tomorrow-io", limit: 25, windowMs: 3_600_000 }`).
  *
  * @example
  * ```ts
- * import { RateLimiter, API_RATE_CONFIGS } from "@/lib/rate-limiter"
+ * import { RateLimiter, RateLimitExceededError } from "./rate-limiter"
  *
- * // Protect Tomorrow.io API quota
- * const weatherLimiter = new RateLimiter({
- *   name: "tomorrow-io",
- *   ...API_RATE_CONFIGS["tomorrow-io"],
- * })
- *
+ * const limiter = new RateLimiter({ name: "tomorrow-io", limit: 25, windowMs: 3_600_000 })
  * try {
- *   const data = await weatherLimiter.execute(() =>
- *     fetch("https://api.tomorrow.io/v4/weather/forecast")
- *   )
+ *   return await limiter.execute(() => fetchForecast())
  * } catch (error) {
- *   if (error instanceof RateLimitExceededError) {
- *     // Use cached weather data instead
- *     return getCachedWeather()
- *   }
- * }
- *
- * // Check before calling
- * if (weatherLimiter.isAllowed) {
- *   await weatherLimiter.execute(() => fetchWeather())
+ *   if (error instanceof RateLimitExceededError) return cachedForecast()
+ *   throw error
  * }
  * ```
  */
 export class RateLimiter {
-  private tokens: number
-  private lastRefill: number
-  private readonly config: RateLimiterConfig
+  readonly core: RateLimiterCore
+  private readonly clock: Clock
+  private readonly sleep: Sleep
+  private readonly onLimit?: (name: string, remainingTokens: number) => void
+  private readonly onEvent?: OnResilienceEvent
 
   constructor(config: Partial<RateLimiterConfig> & { name: string }) {
-    this.config = { ...DEFAULT_CONFIG, ...config }
-    this.tokens = this.config.limit + this.config.burstAllowance
-    this.lastRefill = Date.now()
+    const { onLimit, onEvent, clock, sleep, ...core } = config
+    this.clock = clock ?? systemClock
+    this.sleep = sleep ?? timerSleep
+    this.onLimit = onLimit
+    this.onEvent = onEvent
+    this.core = new RateLimiterCore(core, this.clock.nowMs())
   }
 
-  /** Whether a call is currently allowed */
+  get name(): string {
+    return this.core.config.name
+  }
+
+  /** Whether a whole token is available now. */
   get isAllowed(): boolean {
-    this.refill()
-    return this.tokens > 0
+    return this.core.remaining(this.clock.nowMs()) >= 1
   }
 
-  /** Number of remaining tokens in the bucket */
+  /** Whole tokens available now. */
   get remaining(): number {
-    this.refill()
-    return Math.max(0, Math.floor(this.tokens))
+    return this.core.remaining(this.clock.nowMs())
   }
 
-  /** Metrics snapshot */
-  get metrics() {
-    this.refill()
-    return {
-      name: this.config.name,
-      remaining: Math.floor(this.tokens),
-      limit: this.config.limit,
-      burstAllowance: this.config.burstAllowance,
-      windowMs: this.config.windowMs,
-      utilization: 1 - this.tokens / (this.config.limit + this.config.burstAllowance),
-    }
-  }
-
-  /** Time in ms until the next token is available */
+  /** How long until a whole token is available, in ms. */
   get retryAfterMs(): number {
-    if (this.tokens > 0) return 0
-    const refillRate = (this.config.limit + this.config.burstAllowance) / this.config.windowMs
-    return Math.ceil(1 / refillRate)
+    return this.core.retryAfterMs(this.clock.nowMs())
   }
 
-  /**
-   * Execute a function through the rate limiter.
-   * Consumes one token. If no tokens available, either waits or rejects.
-   */
-  async execute<T>(fn: () => Promise<T>): Promise<T> {
-    this.refill()
-
-    if (this.tokens >= 1) {
-      this.tokens--
-      return fn()
+  /** A snapshot for dashboards. */
+  get metrics() {
+    const remaining = this.remaining
+    const { limit, burstAllowance, windowMs } = this.core.config
+    return {
+      name: this.name,
+      remaining,
+      limit,
+      burstAllowance,
+      windowMs,
+      utilization: 1 - remaining / (limit + burstAllowance),
     }
-
-    // No tokens available
-    if (this.config.queueExcess) {
-      // Wait for a token to become available
-      const waitMs = Math.min(this.retryAfterMs, this.config.maxWaitMs)
-      if (waitMs > this.config.maxWaitMs) {
-        throw new RateLimitExceededError(
-          this.config.name,
-          this.config.limit,
-          this.config.windowMs,
-          waitMs
-        )
-      }
-
-      logger.info(`Rate limited — waiting ${waitMs}ms for token`, {
-        data: { name: this.config.name, remaining: Math.floor(this.tokens), waitMs },
-      })
-      await new Promise((r) => setTimeout(r, waitMs))
-
-      this.refill()
-      if (this.tokens >= 1) {
-        this.tokens--
-        return fn()
-      }
-    }
-
-    const retryAfter = this.retryAfterMs
-    logger.warn("Rate limit exceeded", {
-      data: {
-        name: this.config.name,
-        limit: this.config.limit,
-        windowMs: this.config.windowMs,
-        retryAfterMs: retryAfter,
-      },
-    })
-    this.config.onLimit?.(this.config.name, Math.floor(this.tokens))
-    throw new RateLimitExceededError(
-      this.config.name,
-      this.config.limit,
-      this.config.windowMs,
-      retryAfter
-    )
   }
 
-  /** Manually reset the limiter (refills all tokens) */
+  /** Take a token (waiting if `queueExcess` allows) and run `fn`, or reject with `RateLimitExceededError`. */
+  async execute<T>(fn: () => Promise<T>, signal?: AbortSignal): Promise<T> {
+    const r = this.core.tryAcquire(this.clock.nowMs())
+    if (!r.ok) {
+      const { limit, windowMs } = this.core.config
+      emit(this.onEvent, { module: "rate-limiter", type: "rejected", name: this.name, data: { retryAfterMs: r.retryAfterMs } })
+      this.onLimit?.(this.name, 0)
+      throw new RateLimitExceededError(this.name, limit, windowMs, r.retryAfterMs)
+    }
+    if (r.waitMs > 0) {
+      emit(this.onEvent, { module: "rate-limiter", type: "queued", name: this.name, data: { waitMs: r.waitMs } })
+      await this.sleep.sleep(r.waitMs, signal)
+    }
+    return fn()
+  }
+
+  /** Refill the bucket. */
   reset(): void {
-    this.tokens = this.config.limit + this.config.burstAllowance
-    this.lastRefill = Date.now()
-  }
-
-  /** Refill tokens based on elapsed time */
-  private refill(): void {
-    const now = Date.now()
-    const elapsed = now - this.lastRefill
-    const maxTokens = this.config.limit + this.config.burstAllowance
-    const refillRate = maxTokens / this.config.windowMs // tokens per ms
-    const tokensToAdd = elapsed * refillRate
-
-    this.tokens = Math.min(maxTokens, this.tokens + tokensToAdd)
-    this.lastRefill = now
+    this.core.reset(this.clock.nowMs())
   }
 }

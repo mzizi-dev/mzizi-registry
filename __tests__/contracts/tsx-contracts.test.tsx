@@ -42,7 +42,8 @@ export const REQUEST_URL = "https://console.example/content/news"
 
 /** Every contract file, read from disk (contracts.test.tsx keeps index.json in step). */
 const contracts = readdirSync(CONTRACTS, { withFileTypes: true })
-  .filter((d) => d.isDirectory() && d.name !== "schema")
+  // `lib/` is the non-visual library family (lib-contract.schema.json): nothing to render.
+  .filter((d) => d.isDirectory() && d.name !== "schema" && d.name !== "lib")
   .flatMap((d) =>
     readdirSync(path.join(CONTRACTS, d.name))
       .filter((f) => f.endsWith(".contract.json"))

@@ -1,0 +1,163 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/retry",
+  "title": "Retry",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "library",
+  "summary": "Retry with exponential backoff; jitter draws once per retry from an injected Random so seeded runs agree across builds, and never exceeds maxDelayMs.",
+  "api": {
+    "ts": [
+      {
+        "name": "withRetry",
+        "kind": "function",
+        "summary": "withRetry(fn(attempt), {maxAttempts, baseDelayMs, maxDelayMs, jitter, retryIf, onRetry, random, sleep, signal, onEvent})."
+      },
+      {
+        "name": "retryDelay",
+        "kind": "function",
+        "summary": "The sans-IO delay before retry k."
+      },
+      {
+        "name": "retryPolicy",
+        "kind": "function",
+        "summary": "Validate and normalise the numbers."
+      },
+      {
+        "name": "defaultRetryIf",
+        "kind": "function",
+        "summary": "Everything but rejections and config errors."
+      },
+      {
+        "name": "RetriesExhaustedError",
+        "kind": "class",
+        "summary": "code retries-exhausted; attempts, lastError, lastErrorCode."
+      },
+      {
+        "name": "RETRY_DEFAULTS",
+        "kind": "const",
+        "summary": "The defaults."
+      }
+    ],
+    "rs": [
+      {
+        "name": "with_retry",
+        "kind": "function",
+        "summary": "with_retry(rt, policy, random, op(attempt))."
+      },
+      {
+        "name": "with_retry_if",
+        "kind": "function",
+        "summary": "With a retry predicate."
+      },
+      {
+        "name": "retry_delay",
+        "kind": "function",
+        "summary": "The sans-IO delay before retry k."
+      },
+      {
+        "name": "default_retry_if",
+        "kind": "function",
+        "summary": "Everything but rejections and config errors."
+      },
+      {
+        "name": "RetryPolicy",
+        "kind": "struct",
+        "summary": "The numbers, Default = the defaults."
+      },
+      {
+        "name": "Jitter",
+        "kind": "enum",
+        "summary": "None or Half."
+      }
+    ],
+    "py": null
+  },
+  "config": [
+    {
+      "name": "maxAttempts",
+      "default": 3,
+      "rule": "An integer >= 1 (attempts including the first)."
+    },
+    {
+      "name": "baseDelayMs",
+      "default": 1000,
+      "rule": "A non-negative integer."
+    },
+    {
+      "name": "maxDelayMs",
+      "default": 30000,
+      "rule": "A non-negative integer."
+    },
+    {
+      "name": "jitter",
+      "default": "half",
+      "rule": "none or half (TS also accepts true/false)."
+    }
+  ],
+  "behaviour": [
+    {
+      "id": "delay",
+      "rule": "Before retry k (k = 1 first): capped = min(baseDelayMs * 2^(k-1), maxDelayMs); half: min(maxDelayMs, capped + random.nextU32() % (floor(capped/2) + 1)); none: capped. Saturates rather than overflows."
+    },
+    {
+      "id": "one-draw",
+      "rule": "One draw per retry, and only when jitter is half."
+    },
+    {
+      "id": "attempts",
+      "rule": "fn is called at most maxAttempts times, with the 1-based attempt number."
+    },
+    {
+      "id": "predicate-first",
+      "rule": "retryIf(error, attempt) is asked first: a non-retryable error is rethrown as is, even on the last attempt."
+    },
+    {
+      "id": "exhausted",
+      "rule": "A retryable error on the last attempt is RetriesExhaustedError {attempts, lastError}; its message carries the last error's code, not its message."
+    },
+    {
+      "id": "defaults",
+      "rule": "Rejections and config errors are not retried by default."
+    },
+    {
+      "id": "abort",
+      "rule": "Aborting the signal (TS) stops the retries; dropping the future (Rust) does the same."
+    }
+  ],
+  "errors": [
+    {
+      "code": "retries-exhausted",
+      "ts": "RetriesExhaustedError",
+      "rs": "Error::RetriesExhausted",
+      "py": null
+    },
+    {
+      "code": "config",
+      "ts": "ResilienceConfigError",
+      "rs": "Error::Config / ConfigError",
+      "py": null
+    }
+  ],
+  "fixtures": [
+    "__tests__/fixtures/resilience/retry.cases.json",
+    "__tests__/fixtures/resilience/prng.cases.json"
+  ],
+  "implementations": {
+    "ts": {
+      "registry": "retry",
+      "file": "components/registry/n5-resilience/retry.ts"
+    },
+    "rs": {
+      "registry": "retry",
+      "file": "components/registry/n5-resilience/retry.rs",
+      "crate": "mzizi-resilience",
+      "module": "retry"
+    },
+    "py": null
+  },
+  "related": ["lib/rng", "lib/mzizi-resilience"],
+  "gaps": [
+    "Python lands in phase 2 (mzizi-registry#472): a .py sibling, the /v1/py/{name} route in mzizi-api-gateway and a PyPI package."
+  ]
+}
