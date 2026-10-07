@@ -12700,7 +12700,7 @@
       "categories": ["fundi"],
       "dependencies": [],
       "description": "Bridge from N8 Assurance to N9 Fundi. When N8 components detect failures, the reporter pushes a structured signal to the Cloudflare Queue that triggers Fundi. Signal payload: component name, ecosystem node, error type, severity, diagnostic data. The Queue decouples N8 (detection) from N9 (healing) — N8 never waits for Fundi to respond. Also creates a fundi_issues row in Supabase as the append-only audit trail.",
-      "docs": "Use it for: Bridge L8 failures to GitHub, Create structured GitHub issues, Trigger fundi-webhook edge function, Rate limit to prevent spam.\nIncludes: Structured issue body with portal links, fundi: label system, Cooldown rate limiting (5 min default), Two modes: direct GitHub API or edge function, Blast radius in issue body.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-fundi-reporter",
+      "docs": "Use it for: Bridge L8 failures to GitHub, Create structured GitHub issues, Trigger fundi-webhook edge function, Rate limit to prevent spam.\nIncludes: Structured issue body with portal links, fundi: label system, Cooldown per component and error type (5 min default), started only after a successful filing, Two modes: a fundi endpoint from the browser, or the GitHub API from a server (never a token in the browser), Blast radius in issue body.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-fundi-reporter",
       "files": [
         {
           "path": "components/registry/n9-fundi/mzizi-fundi-reporter.ts",
@@ -12713,8 +12713,8 @@
         "features": [
           "Structured issue body with portal links",
           "fundi: label system",
-          "Cooldown rate limiting (5 min default)",
-          "Two modes: direct GitHub API or edge function",
+          "Cooldown per component and error type (5 min default), started only after a successful filing",
+          "Two modes: a fundi endpoint from the browser, or the GitHub API from a server (never a token in the browser)",
           "Blast radius in issue body"
         ],
         "hasDemo": true,
