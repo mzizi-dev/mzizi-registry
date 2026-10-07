@@ -15,14 +15,20 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 - **Two new predicates in the contract grammar.**
   - `has "<token>"` matches one whole whitespace-separated class token, where `contains` matches any substring. So `has "line-through"` is not satisfied by `hover:line-through`.
   - `not <predicate>` negates any one predicate, as in `class not contains "line-through"`.
-  - `contracts/runner.ts` (the Astro and React builds) and `mzizi-rs/contract-eval/` (the Rust builds) evaluate them the same way. As with every clause, `not` of a predicate a runner cannot evaluate fails rather than passes.
-  - Existing contracts are unchanged. `contracts/README.md` documents the grammar.
+  - `contracts/schema/component-contract.schema.json` and `contracts/README.md` document both. Existing contracts are unchanged.
+- **Both runners give every predicate the same verdict.** `contracts/runner.ts` (the Astro and React builds) and `mzizi-rs/contract-eval/` (the Rust builds) had disagreed on malformed operands, so `not` could pass in one and fail in the other.
+  - Every operand is quoted, and a predicate takes exactly the operands it names. An unquoted operand (`is a`), an extra one (`is "a" "b"`), a quote left open, or `in` with no quoted operand cannot be evaluated, in either runner.
+  - A predicate that cannot be evaluated fails its clause, and `not` of it fails too: it never passes. Before, `class not in foo` passed in `runner.ts`.
+  - In `runner.ts` a predicate's verdict is now held / not held / cannot be evaluated, the shape of the Rust evaluator's `Result<bool, String>`, rather than a failure with an optional flag. A root attribute the element does not carry cannot be evaluated in both.
+  - `__tests__/contracts/fixtures/predicates.json` is one table of predicates and verdicts, and both runners' tests evaluate every row.
+  - `mzizi-avatar-stack.rs`'s inline contract quotes its operand (`max is "4"`). The component is unchanged.
 - **`ui/status-badge` 1.1.0.** The contract gains an `alpha` state, so all four statuses are rendered and checked.
-  - Each state writes its status out.
+  - Each state writes its status out, and has the `rounded-full` and `uppercase` classes.
   - `data-status` is checked in every state.
   - `deprecated` must have `line-through`; `stable`, `beta` and `alpha` must not.
+  - A `gaps` note records that the pill shape becomes the radius-control role under #484.
   - `pnpm contracts:sync` wrote the clauses into `status-badge.rs`'s `CONTRACT` and the `mzizi-ui` copy. The Astro, React and Rust builds pass them unchanged.
-- **Colour is not asserted yet (#440).** By owner direction, contracts reference token roles and never name a mineral or another colour value, so a brand that switches N1 tokens keeps passing them. The status colour checks #440 asks for wait on the token-roles design.
+- **Colour is not asserted yet (#440).** By owner direction (#484), contracts reference token roles and never name a mineral or another colour value, so a brand that switches N1 tokens keeps passing them. The status colour checks #440 asks for wait on the token-roles design.
 
 ### Fixed — `openapi.yaml` describes the colour families and ecosystem rows `/v1/brand` serves, and a test keeps it that way (2026-10-07, #480)
 
