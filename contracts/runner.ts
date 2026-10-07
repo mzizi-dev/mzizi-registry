@@ -18,8 +18,14 @@
  *     uses <data-slot>                                     (default state)
  *     when <state> shows <element> "<text>"
  *     when <state> <root subject> <predicate>
- *   Predicates: is "<s>", contains "<s>", not_empty, in "<a>" "<b>" …,
- *   uses "--token" (the class reads var(--token…)).
+ *   Predicates: is "<s>", contains "<s>" (a substring), has "<token>" (one
+ *   whole whitespace-separated token: `has "text-gold"` is not satisfied by
+ *   `dark:text-gold` or `text-gold/50`), not_empty, in "<a>" "<b>" …,
+ *   uses "--token" (the class reads var(--token…)), and `not <predicate>`,
+ *   which negates any one of them (`not contains "cobalt"`, `not has
+ *   "line-through"`). `not` of a predicate the runner cannot evaluate, or of
+ *   an attribute the element does not carry, fails: it never passes by
+ *   default.
  * - `checks`: CSS-selector assertions (count, min, absent, attr, text).
  * - `density`: heights in px read from classes by the spacing scale, for a
  *   fine pointer (no prefix) and a coarse one (`pointer-coarse:`).
@@ -158,9 +164,17 @@ export function heightOf(classes: string, prefix = ""): number | null {
   return null;
 }
 
-type Outcome = { ok: true } | { ok: false; say: string };
+type Outcome =
+  | { ok: true }
+  | { ok: false; say: string; unevaluable?: boolean };
 const pass: Outcome = { ok: true };
 const fail = (say: string): Outcome => ({ ok: false, say });
+/** A clause the runner cannot apply: a failure that `not` must not turn into a pass. */
+const unevaluable = (say: string): Outcome => ({
+  ok: false,
+  say,
+  unevaluable: true,
+});
 
 function stringsAfter(rest: string): string[] {
   return [...rest.matchAll(/"([^"]*)"/g)].map((m) => m[1] ?? "");
@@ -172,10 +186,22 @@ function predicate(
   what: string,
 ): Outcome {
   const v = value ?? "";
+  if (pred.startsWith("not ")) {
+    const inner = pred.slice(4).trim();
+    if (inner.startsWith("not "))
+      return unevaluable(`${what}: \`${pred}\` is not evaluable (one \`not\`)`);
+    if (value === undefined)
+      return unevaluable(
+        `${what}: \`${pred}\` is not evaluable (the attribute is absent)`,
+      );
+    const out = predicate(value, inner, what);
+    if (!out.ok) return out.unevaluable ? out : pass;
+    return fail(`${what} satisfies \`${inner}\`, and the contract says \`not\``);
+  }
   if (pred.startsWith("is ")) {
     const [want] = stringsAfter(pred);
     if (want === undefined)
-      return fail(
+      return unevaluable(
         `${what}: \`${pred}\` is not evaluable (is takes a quoted string)`,
       );
     return value === want
@@ -185,8 +211,18 @@ function predicate(
   if (pred.startsWith("contains ")) {
     const [want] = stringsAfter(pred);
     if (want === undefined)
-      return fail(`${what}: \`${pred}\` is not evaluable`);
+      return unevaluable(`${what}: \`${pred}\` is not evaluable`);
     return v.includes(want) ? pass : fail(`${what} does not contain "${want}"`);
+  }
+  if (pred.startsWith("has ")) {
+    const [want] = stringsAfter(pred);
+    if (!want || /\s/.test(want))
+      return unevaluable(
+        `${what}: \`${pred}\` is not evaluable (has takes one quoted token)`,
+      );
+    return v.split(/\s+/).includes(want)
+      ? pass
+      : fail(`${what} has no token "${want}"`);
   }
   if (pred === "not_empty")
     return v.trim() !== "" ? pass : fail(`${what} is empty`);
@@ -199,14 +235,14 @@ function predicate(
   if (pred.startsWith("uses ")) {
     const [token] = stringsAfter(pred);
     if (!token?.startsWith("--"))
-      return fail(
+      return unevaluable(
         `${what}: \`${pred}\` is not evaluable (uses takes "--token")`,
       );
     return v.includes(`var(${token}`)
       ? pass
       : fail(`${what} does not read var(${token})`);
   }
-  return fail(
+  return unevaluable(
     `${what}: predicate \`${pred}\` is not one this runner evaluates`,
   );
 }
