@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `markdown-parse` compiles under `noUncheckedIndexedAccess` (2026-10-07, #468)
+
+`markdown-parse.ts` (installed with `markdown-renderer`) had 80 type errors in a project with `noUncheckedIndexedAccess`, as the Toddle extension is (#460). Every array, string and match index is now checked, with no behaviour change (the 55 shared cases still give the same trees). `tsconfig.consumer-strict.json` type-checks the installable markdown files with that setting, and `pnpm typecheck` runs it. The whitespace set no longer spreads a string, which consumers' `no-misused-spread` lint flags.
+
 ### Changed — the Mzizi Roots crates move to 0.3.0 (2026-10-07, #466)
 
 The next minor above `mzizi-rs-v0.2.0`, so `mzizi-ui` 0.3.0 on crates.io carries `markdown-renderer` 1.1.0 (#465): link addresses with a control character, whitespace or credentials are refused, and rich-text lists keep their nesting and start. The crate READMEs and the `mzizi-roots` crate docs install `"0.3"`.
