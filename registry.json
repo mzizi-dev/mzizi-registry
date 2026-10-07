@@ -10440,8 +10440,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["documentation-engine", "documentation"],
       "dependencies": [],
-      "description": "AI context provider for N10. Generates context windows for AI assistants (Claude, Cursor, Copilot, Windsurf) with current ecosystem model, node architecture, and coding rules. No hardcoded counts — always accepts live values from get_system_counts(). Used by the MCP server and IDE integrations.",
-      "docs": "Use it for: Documentation, AI context generation, Changelog display.\nVariants: default.\nIncludes: Layer 10 documentation infrastructure, Reads from documentation_pages + ai_instructions tables.\nAccessibility: Semantic HTML, Keyboard navigation, Screen reader compatible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-ai-context",
+      "description": "AI context provider for N10. Generates context windows for AI assistants (Claude, Cursor, Copilot, Windsurf) with the uncapped DNA-helix node map and the coding rules. No hardcoded counts: the caller passes live values from GET https://api.mzizi.dev/v1/stats or mzizi_get_architecture. Pure string assembly; the TypeScript and Rust builds render the same text.",
+      "docs": "Use it for: AI context generation, MCP and IDE system prompts.\nVariants: default.\nIncludes: Uncapped DNA-helix node map, through N12, Coding rules for AI assistants, Live counts passed in, never hardcoded, Same output from the TypeScript and Rust builds.\nAccessibility: Semantic HTML, Keyboard navigation, Screen reader compatible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-ai-context",
       "files": [
         {
           "path": "components/registry/n10-documentation/mzizi-ai-context.ts",
@@ -10457,16 +10457,14 @@
         ],
         "collection": "documentation-engine",
         "features": [
-          "Layer 10 documentation infrastructure",
-          "Reads from documentation_pages + ai_instructions tables"
+          "Uncapped DNA-helix node map, through N12",
+          "Coding rules for AI assistants",
+          "Live counts passed in, never hardcoded",
+          "Same output from the TypeScript and Rust builds"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": [
-          "Documentation",
-          "AI context generation",
-          "Changelog display"
-        ],
+        "useCases": ["AI context generation", "MCP and IDE system prompts"],
         "variants": ["default"]
       },
       "name": "mzizi-ai-context",
@@ -12067,7 +12065,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Developer experience infrastructure for the Nyuchi Design System. Exports component status definitions (alpha/beta/stable/deprecated with visual indicators), component documentation schema (usage guidelines, do/dont examples, accessibility notes, keyboard interactions, screen reader behavior stored in component_docs table), contribution guidelines (how to propose, build, review, and ship new brand components), migration utilities (deprecation warnings, codemod helpers), and usage analytics types (which components are used, by which apps, how frequently). Also exports a ComponentPlayground wrapper for interactive component previews. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Developer experience infrastructure for Mzizi. Exports component status definitions (alpha/beta/stable/deprecated with visual indicators), component documentation schema (usage guidelines, do/dont examples, accessibility notes, keyboard interactions, screen reader behavior), contribution guidelines (how to propose, build, review, and ship new brand components), migration utilities (deprecation warnings, codemod helpers), and usage analytics types (which components are used, by which apps, how frequently). Also exports a ComponentPlayground wrapper for interactive component previews. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-dx",
       "files": [
         {
@@ -13090,7 +13088,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Central icon registry for the Nyuchi Design System. Maps semantic icon names to Lucide React icons. All components should import icons from this registry, not directly from lucide-react. Provides: consistent sizing (16/20/24/32), brand icon overrides, semantic naming (icon-success vs CheckCircle), tree-shaking optimization, and custom Nyuchi icons. N1 infrastructure — consumed by all layers above. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Central icon registry for Mzizi. Maps semantic icon names to Lucide React icons. All components should import icons from this registry, not directly from lucide-react. Provides: consistent sizing (16/20/24/32), brand icon overrides, semantic naming (icon-success vs CheckCircle), tree-shaking optimization, and custom Nyuchi icons. N1 infrastructure — consumed by all layers above. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
       "docs": "Use it for: Central icon registry for all components, Semantic icon naming (icon-success vs CheckCircle), Custom brand icons (MukokoLogo, MineralStrip), Size system: xs(16), sm(20), md(24), lg(32), xl(40).\nSizes: xs, sm, md, lg, xl.\nIncludes: 120+ Lucide re-exports, Semantic aliases, Icon component with name prop, MukokoLogo brand mark, MineralStrip color bar, Tree-shaking optimized.\nAccessibility: aria-hidden on decorative icons, role=img with aria-label on meaningful icons.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-icons",
       "files": [
         {
