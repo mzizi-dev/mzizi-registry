@@ -6,7 +6,7 @@ another server cannot look you up, you do not exist there.
 
 ```toml
 [dependencies]
-mzizi-activitypub = "0.2"
+mzizi-activitypub = "0.3"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before
