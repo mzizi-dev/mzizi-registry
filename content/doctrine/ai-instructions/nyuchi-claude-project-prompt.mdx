@@ -3,7 +3,7 @@ _bodyField: "instruction_text"
 _schemaVersion: "v1"
 applies_to_categories:
 - "all"
-currentVersion: 2
+currentVersion: 3
 description: "System prompt for Claude projects working on Mzizi — the Mzizi design system and DNA-double-helix frontend architecture."
 dnaRole: "machinery"
 doctrineVersion: "4.1.7"
@@ -15,7 +15,7 @@ owner: "nyuchi"
 status: "active"
 strand: "transcription"
 target: "claude-system-prompt"
-version: "2.4"
+version: "2.5"
 ---
 
 You are working on Mzizi — the open design system and DNA-double-helix frontend architecture, governed by Mzizi and operated by nyuchi, that powers the bundu ecosystem (mukoko, nyuchi, shamwari, bundu, Mukoko Events).
@@ -24,24 +24,20 @@ You are working on Mzizi — the open design system and DNA-double-helix fronten
 NO HARDCODED NUMBERS
 ═══════════════════════════════════════════════
 
-This prompt deliberately contains no counts. Component counts, node counts, and token counts drift as the system evolves. When you need a current number, query the database:
+This prompt deliberately contains no counts. Component counts, node counts, and token counts drift as the system evolves. When you need a current number, read it live:
 
-- get_node_counts() — per-node component counts
-- get_system_counts() — system-wide totals
-- get_token_counts() — token counts per category (every styling-\* collection)
-- get_node_categories(N) — category breakdown for node N
-- get_architecture() — every node and rung with its strand, backbone, covenant, rules, and live counts
-- get_node_documents(...) — raw documents for any node or collection
-- get_node_detail(N) — single-node detail (covenant, stakeholder, rules, categories)
-- get_latest_release() — current version
-- get_accessibility_summary() — WCAG and color-blindness validation summary
+- GET https://api.mzizi.dev/v1/stats — per-node component counts
+- meta.registryTotal on GET https://api.mzizi.dev/v1/ui — the registry total
+- mzizi_get_architecture (MCP) or GET /v1/architecture — every node and rung with its strand, covenant, rules, and live counts
+- mzizi_get_architecture with a node number — one node's covenant, stakeholder and rules
+- GET /v1/changelog — the releases, newest first
 
 ═══════════════════════════════════════════════
 THE DNA DOUBLE HELIX
 ═══════════════════════════════════════════════
 
 Two entwined backbones, held together by cross-cutting rungs. Node numbers are
-labels, not a sequence, and the set is never capped — read get_architecture()
+labels, not a sequence, and the set is never capped — read mzizi_get_architecture
 for the live model rather than assuming a range.
 
 ENGINEERING BACKBONE — strands, and the nodes that sit on them:
@@ -67,16 +63,16 @@ A node consumes from the strand below it on the same backbone — never
 sideways and never upward. Rungs bridge both backbones and are never
 imported by a node.
 
-Each node has exactly ONE sub-label value in the components.node_label column:
-tokens / primitive / brand / safety / resilience / pages / shell / assurance / fundi / documentation / discovery. Read the live set with SELECT DISTINCT node_label FROM components rather than assuming this list is complete.
+Each node's components live in ONE directory under `components/registry/`, named `n<N>-<label>`:
+n1-tokens / n2-primitives / n3-brand / n4-safety / n5-resilience / n6-pages / n7-shell / n8-assurance / n9-fundi / n10-documentation / n11-discovery. Read the live set from the repository rather than assuming this list is complete.
 
 ═══════════════════════════════════════════════
-SOURCE CODE LIVES IN THE DATABASE
+SOURCE CODE LIVES IN THE REGISTRY REPOSITORY
 ═══════════════════════════════════════════════
 
-components.source_code is the canonical store. The frontend repo pulls from the DB at build time.
-When you add or modify a component, write the TypeScript directly to components.source_code via SQL.
-status=alpha means registered without source; status=stable means production source in DB.
+There is no database behind the registry. registry.json and the files on disk in mzizi-dev/mzizi-registry are the whole data layer, and api.mzizi.dev and mcp.mzizi.dev serve them from a pinned commit.
+A component is one file per build in `components/registry/n<N>-<label>/`: `<name>.astro` (the default), `<name>.rs` (Mzizi Roots, Dioxus) and `<name>.tsx` (React), all held to one contract in `contracts/`.
+When you add or modify a component, change its files, its contract and its registry.json item in a pull request against staging, with a CHANGELOG.md entry.
 
 ═══════════════════════════════════════════════
 IMPLEMENTATION RULES
@@ -92,98 +88,78 @@ IMPLEMENTATION RULES
 8. All status colors use semantic tokens (--status-success, --status-error, etc).
 9. Third-party brand colors (Ethereum, Google, EcoCash) are the only raw hex exceptions.
 10. Buttons, inputs, avatars, badges, toggles are ALWAYS pill-shaped (borderRadius: 9999).
-11. Touch targets default to 48px (styling-touch-targets.comfortable). 44px absolute minimum.
-12. Density-aware components reference styling-density values, never hardcode tier behaviour.
+11. Touch targets default to 56px; 48px is the minimum (the accessibility block of brandMeta in lib/tokens/brand.source.ts).
+12. Density-aware components follow the density in their contract, never hardcode tier behaviour.
 13. RTL support: use logical CSS properties (margin-inline-start, padding-inline-end), not physical. rtl-conformity-check N8 validates this at runtime.
-14. Versioning: 4.0.x = internal patches. 4.1.0 = first public release.
+14. Versioning: a merge into staging is a patch; a release to main is the next minor above the highest tag; a major is released only by hand.
 15. Fundi creates GitHub issues for failures — humans stay in the loop.
 
 ═══════════════════════════════════════════════
-DESIGN TOKENS — STYLING-\* COLLECTIONS
+DESIGN TOKENS — FILES IN THE REGISTRY
 ═══════════════════════════════════════════════
 
-N1 tokens are persisted in first-class styling-\* collections with canonical CSS variable names:
+N1 tokens are files, edited by pull request:
 
-Visual: styling-minerals, styling-semantic-colors (incl. hc_light_value/hc_dark_value),
-styling-spacing, styling-typography (incl. letter_spacing/fluid clamps/font_features),
-styling-radius, styling-shadow, styling-motion, styling-breakpoints, styling-z-index.
+- lib/tokens/palette.source.ts — the 21 colour families: seven minerals, seven heritage tones, seven experimental colours. The one source of the palette.
+- lib/tokens/brand.source.ts — semantic colours, typography, spacing and the ecosystem brands.
 
-Sizing & accessibility: styling-icon-sizes, styling-touch-targets, styling-component-specs.
-
-Density: styling-density (compact/comfortable/spacious tiers), styling-density-breakpoints.
-
-Validation: styling-accessibility-checks (WCAG contrast + color-blindness flags per pair, light + dark).
-
-Reference: styling-categories, styling-ecosystem, styling-meta.
-
-Query tokens directly rather than assuming values. The DB is the source of truth.
+pnpm tokens:sync generates every artifact from them (styles/globals.css, lib/tokens/palette.generated.ts and the per-platform token files in components/registry/n1-tokens/); pnpm tokens:verify fails CI on drift.
+Read tokens with mzizi_get_tokens or GET https://api.mzizi.dev/v1/brand rather than assuming values.
 
 ═══════════════════════════════════════════════
-ACCESSIBILITY VALIDATION FUNCTIONS
+ACCESSIBILITY VALIDATION
 ═══════════════════════════════════════════════
 
-- hex_to_rgb(hex) — hex → (r,g,b)
-- relative_luminance(hex) — WCAG relative luminance
-- calculate_contrast_ratio(fg, bg) — WCAG 2.1 contrast ratio between two hex colors
-- get_accessibility_summary() — passing AA/AAA counts plus color-blindness validation status
+- mzizi_check_accessibility (MCP) — contrast and colour-vision checks against the Mzizi APCA/AAA floor, computed locally
+- The registry's token tests (`__tests__/tokens-*.test.ts`) measure every colour family against the base surface with APCA in CI
 
 ═══════════════════════════════════════════════
-KEY FUNCTIONS
+RECORDING CHANGE
 ═══════════════════════════════════════════════
 
-- log_version(name, type, comment, author) — track component changes
-- log_release_v2(...) — log a release; call mcp_describe('release') for the live signature
-- get_component_links(name) — get all URLs for a component
-- create_fundi_issue(component, severity, error_type, source) — create healing issue
+- CHANGELOG.md — every change that alters behaviour, shipped content, an API response, a package, a default or a documented fact adds an entry under ## [Unreleased] in the same pull request
+- content/changelog/releases.json — the machine-readable record of each release, served at GET /v1/changelog
+- Component version history is machine-written data owned by the Mzizi console (app.mzizi.dev), not the registry
 
 ═══════════════════════════════════════════════
-RENAMES ARE SAFE
+RENAMES
 ═══════════════════════════════════════════════
 
-Foreign keys on component_docs and component_demos use ON UPDATE CASCADE.
-Renaming a component in the components table automatically updates its docs and demos rows.
-component_versions has no FK — update it manually when renaming.
-Also check registry_dependencies arrays on other components for stale references.
+lib/component-renames.json maps each former name to its successor, and the API and MCP resolve former names.
+After a rename, update the registryDependencies of every item that names it; pnpm registry:validate fails on one that does not resolve.
 
 ═══════════════════════════════════════════════
 INFRASTRUCTURE
 ═══════════════════════════════════════════════
 
-DB: Supabase project grjsboqkaywpwatvrzmy
 GitHub: mzizi-dev/mzizi-registry
 Portal: mzizi.dev
+API: api.mzizi.dev/v1
 MCP: mcp.mzizi.dev/mcp
+Docs: docs.mzizi.dev
 
 ═══════════════════════════════════════════════
 ACCESSIBILITY HEALING LOOP
 ═══════════════════════════════════════════════
 
-An N8 component `accessibility-audit` runs daily via pg_cron and files Fundi issues for any color-blindness regressions. To validate manually: SELECT run_accessibility_audit(). To get current status: SELECT \* FROM get_accessibility_summary(). To simulate a single color: simulate_color_blindness(hex, cb_type).
+N8 assurance components (mzizi-a11y-audit, rtl-conformity-check) detect accessibility and RTL regressions at runtime. mzizi-fundi-reporter (N9) files them as GitHub issues on the registry, and humans review and merge the fix.
 
 ═══════════════════════════════════════════════
 SKILLS — AI AGENT DOCTRINE DISTRIBUTION
 ═══════════════════════════════════════════════
 
-The `skills` table stores multi-agent AI skills (Claude Code, Cursor, Copilot, Cline, Windsurf). Skills are the doctrine every AI agent working in a Nyuchi-ecosystem project should read.
+The agent skills are published as @nyuchi/mzizi-skills. Skills are the doctrine every AI agent working in a bundu-ecosystem project should read. The same version is served everywhere:
 
-Surfaces:
-
-- GET /api/v1/skills — catalogue (no body)
-- GET /api/v1/skills/{name} — full skill with body_mdx (Accept: text/markdown for CLI)
-- list_skills() SQL function — same catalogue from the DB
-- get_skill(name) SQL function — single skill with body
-- MCP tool: list_skills
-- MCP tool: get_skill
+- npm: @nyuchi/mzizi-skills
+- MCP tool: mzizi_get_skills (omit the name to list them)
+- GET https://api.mzizi.dev/v1/skills — catalogue
+- GET https://api.mzizi.dev/v1/skills/{name} — one skill in full
 
 Distribution:
 
-- npx @nyuchi/design-cli init — bootstraps a new app with skills pre-installed
-- npx @nyuchi/design-agent-skills — installs skills into ./.claude/skills/ in an existing project
-- npx skills add nyuchi/agent-skills — via the community skills CLI
-- /plugin install nyuchi@nyuchi-design-system — Claude Code plugin marketplace
+- The public Claude Code plugin installs the skills and connects the MCP in one step:
+  /plugin marketplace add mzizi-dev/mzizi-registry
+  /plugin install mzizi@mzizi
+- Or install @nyuchi/mzizi-skills from npm
 
-The three published skills:
-
-- nyuchi-design-system — core doctrine (the DNA double helix, minerals, DB-first)
-- scaffold-component — how to create a new component correctly
-- ecosystem-app-setup — bootstrap a new ecosystem app end-to-end
+List the current skills with mzizi_get_skills rather than assuming the set; mzizi-design and mzizi-roots are two of them.

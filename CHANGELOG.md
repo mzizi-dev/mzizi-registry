@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — the doctrine calls the system Mzizi, and no longer describes a database as its source (2026-10-07, #PRNUM)
+
+Eight `documentation/` doctrine pages, `mzizi-ai-context` and `ui-utils` still called the system "the Nyuchi Design System" (#323). Several of the same pages, and the three AI instruction sets, also described Supabase as the source of truth, the follow-up #474 left (#472). This entry covers both:
+
+- **The name:** `introduction` (its title, description and H1), `contributing`, `changelog-system`, `installation`, `ai-agent-instructions`, `semantic-tokens`, `component-catalogue` and `ubuntu-pillars-and-principles` now say Mzizi. `introduction` keeps one sentence noting the old name. The `mzizi-dx` and `mzizi-icons` descriptions in `registry.json` change the same way.
+- **No database:** `introduction`, `contributing`, `changelog-system`, `ai-agent-instructions`, `component-catalogue` and `architecture-overview` describe the registry as it is: files in `mzizi-dev/mzizi-registry`, changed by pull request. That means components in `components/registry/` held to `contracts/`, tokens in `lib/tokens/*.source.ts`, the changelog in `CHANGELOG.md` and `content/changelog/releases.json`, and component version history with the Mzizi console. SQL functions, `components.source_code`, `public.changelog` and the Supabase project ref are gone.
+- **The AI instruction sets** (`/v1/ai/instructions`, `mzizi_get_doctrine`): the Claude project, Copilot and MCP prompts point at the live API and the `mzizi_*` MCP tools instead of SQL functions and `styling-*` collections, describe the token source files, and give the skills as `@nyuchi/mzizi-skills` and the public plugin. Touch targets are 56px by default and 48px at minimum, as `brandMeta` says, where the prompts said 48 and 44.
+- **`mzizi-ai-context`:** the `.ts` renders what the Rust build does: "# Mzizi Design System", the uncapped node map through N12 in place of the retired four-axis model, and `mzizi-dev/mzizi-registry` and `https://mcp.mzizi.dev/mcp` in place of `nyuchi/mzizi` and the Supabase footer. Both builds' rule 10 takes Shona terms from the Ubuntu doctrine, not "the database". New Rust contract tests hold the `.ts` to the Rust node map, rules and endpoints.
+- **Retired vocabulary:** `ubuntu-pillars-and-principles` and `semantic-tokens` say DNA helix and nodes where they said 3D architecture and layers.
+
 ### Fixed — the architecture doctrine describes the stack as it is: Astro by default, Rust, plain TypeScript, React at parity, Python planned (2026-10-07, #474)
 
 The node, rung and strand doctrine that `mzizi_get_architecture` and `/v1/architecture` serve still described the React-and-Svelte era (#472, N10). Rewritten against the repository:

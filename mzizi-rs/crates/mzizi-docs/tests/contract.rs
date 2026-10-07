@@ -18,6 +18,9 @@
 use std::fs;
 use std::path::PathBuf;
 
+use mzizi_docs::mzizi_ai_context::{
+    AiContextOptions, Endpoints, current_nodes, generate_ai_context,
+};
 use mzizi_docs::mzizi_changelog_renderer::{NodeAccent, default_node_styles};
 use mzizi_docs::mzizi_docs_engine::{category_label, default_node_labels, node_label};
 
@@ -213,4 +216,70 @@ fn the_locale_dependent_date_is_not_reproduced() {
         ts.contains("toLocaleDateString"),
         "the .tsx no longer formats dates itself — remove this test"
     );
+}
+
+// ── mzizi-ai-context ─────────────────────────────────────────────────────────
+
+/// Read a registry component's plain TypeScript source.
+fn ts(name: &str) -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../components/registry/n10-documentation")
+        .join(format!("{name}.ts"));
+    fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("cannot read the TypeScript sibling at {path:?}: {e}"))
+}
+
+#[test]
+fn ai_context_node_map_matches_the_typescript() {
+    // The .ts used to carry the retired four-axis model, stopping at N10 (#323).
+    let ts = ts("mzizi-ai-context");
+    for n in current_nodes() {
+        let row = format!(
+            "{{ number: {}, label: \"{}\", role: \"{}\" }}",
+            n.number, n.label, n.role
+        );
+        assert!(ts.contains(&row), "the TypeScript lost node row {row}");
+    }
+}
+
+#[test]
+fn ai_context_rules_and_endpoints_match_the_typescript() {
+    let ts = ts("mzizi-ai-context");
+    let rules = generate_ai_context(&AiContextOptions {
+        include_architecture: false,
+        include_node_map: false,
+        ..AiContextOptions::default()
+    });
+    for line in rules
+        .lines()
+        .filter(|l| !l.is_empty() && !l.starts_with("MCP server"))
+    {
+        assert!(ts.contains(line), "the TypeScript lost rule line {line:?}");
+    }
+    let e = Endpoints::default();
+    for value in [&e.site, &e.repo, &e.mcp] {
+        assert!(
+            ts.contains(&format!("\"{value}\"")),
+            "the TypeScript does not use {value}"
+        );
+    }
+    assert!(ts.contains("\"# Mzizi Design System\""));
+}
+
+#[test]
+fn ai_context_typescript_drops_the_retired_names() {
+    let ts = ts("mzizi-ai-context");
+    for retired in [
+        "# Nyuchi Design System",
+        "Database: Supabase",
+        "\"nyuchi/mzizi\"",
+        "GitHub: nyuchi/mzizi",
+        "get_system_counts",
+        "| horizontal |",
+    ] {
+        assert!(
+            !ts.contains(retired),
+            "the TypeScript still says {retired:?}"
+        );
+    }
 }

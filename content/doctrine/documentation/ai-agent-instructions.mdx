@@ -4,8 +4,8 @@ _schemaVersion: "v1"
 author: "nyuchi-team"
 category: "ai-instructions"
 createdAt: "2026-04-28T16:55:26.349194+00:00"
-currentVersion: 2
-description: "How AI agents (Claude, Cursor, Copilot, Windsurf) are wired into the design system: the ai_instructions table, the skills table, the MCP server, and the doctrine every agent must hold."
+currentVersion: 3
+description: "How AI agents (Claude, Cursor, Copilot, Windsurf) are wired into Mzizi: the AI instruction sets, the agent skills, the MCP server, and the doctrine every agent must hold."
 dnaRole: "documentation"
 doctrineVersion: "4.1.7"
 keywords:
@@ -47,51 +47,50 @@ version: "4.0.34"
 
 # AI Agent Instructions — How AI Builds With This System
 
-The Nyuchi Design System is designed to be built _with_ AI agents — Claude, Cursor, GitHub Copilot, Windsurf, and others — not just by humans alone. This page explains how AI agents are wired into the system, where their instructions live, and what guardrails are in place.
+Mzizi is designed to be built _with_ AI agents — Claude, Cursor, GitHub Copilot, Windsurf, and others — not just by humans alone. This page explains how AI agents are wired into the system, where their instructions live, and what guardrails are in place.
 
 ## Where AI instructions live
 
-Three places, in order of authority:
+Three places, all published from files in the registry repository (`mzizi-dev/mzizi-registry`) or beside it:
 
-1. **`public.ai_instructions` table** — the canonical doctrine. Each row targets a specific AI surface (`mcp-server`, `claude-system-prompt`, `github-copilot`, `cursor`, `windsurf`, `generic`). The `instruction_text` field is what the agent reads.
-2. **`public.skills` table** — distributable MDX skill packs. Each skill is a self-contained instruction module that ships via the skills CLI (`npx skills add nyuchi/design-agent-skills`), the Claude Code plugin marketplace, or `/api/v1/skills`. The `body_mdx` field is served raw to the agent's skill loader.
-3. **The MCP server** — `mcp.mzizi.dev/mcp` exposes the live database (components, nodes, tokens, brand, Ubuntu) as MCP tools. Agents that connect to the MCP get authoritative answers without copying any of the doctrine into their own context.
+1. **The AI instruction sets** — `content/doctrine/ai-instructions/`, one file per AI surface, keyed by `target` (`mcp-server`, `claude-system-prompt`, `github-copilot`). Served by `GET https://api.mzizi.dev/v1/ai/instructions` and the `mzizi_get_doctrine` MCP tool (topic `ai-instructions`).
+2. **The agent skills** — published as `@nyuchi/mzizi-skills` on npm. The same version is served by the `mzizi_get_skills` MCP tool and `GET https://api.mzizi.dev/v1/skills`, and bundled in the public Mzizi Claude Code plugin.
+3. **The MCP server** — `mcp.mzizi.dev/mcp` serves the registry (components, nodes, tokens, brand, Ubuntu) as MCP tools, from the registry's files at a pinned commit. Agents that connect to it get current answers without copying any of the doctrine into their own context.
 
-The ordering matters. Database content beats MDX content beats anything an agent thinks it remembers.
+The ordering matters. What the registry serves beats anything an agent thinks it remembers.
 
 ## The doctrine an AI must hold
 
 Whatever agent is writing code against this system must know:
 
 - **Ubuntu** is the substrate. Every decision passes the Five Questions. See `/brand/ubuntu-pillars-and-principles`.
-- **Nodes are not suggestions.** A component belongs to exactly one of the ten nodes, and the node determines what it can do. See `/architecture/architecture-overview`.
-- **No hardcoded numbers.** Counts come from `get_*_counts()` functions or live queries. The number of nodes, components, mini-apps, principles is data, not a constant.
-- **No hardcoded labels.** Axis names, node titles, principle names live in tables. The agent reads them, never invents them.
+- **Nodes are not suggestions.** A component belongs to exactly one node, and the node determines what it can do. See `/architecture/architecture-overview`.
+- **No hardcoded numbers.** Counts come from the live API (`GET /v1/stats`, `meta.registryTotal` on `GET /v1/ui`) or the MCP tools. The number of nodes, components, mini-apps, principles is data, not a constant.
+- **No hardcoded labels.** Node titles, strand names and principle names live in the doctrine. The agent reads them, never invents them.
 - **CSS values live only in N1.** All other nodes consume via `var(--token-name)`. An agent that writes hex codes outside N1 has broken the doctrine.
 
 ## What the MCP tools do
 
-Agents connected to `mcp.mzizi.dev/mcp` have direct access to live tools. The most important ones:
+Agents connected to `mcp.mzizi.dev/mcp` have these tools. `mzizi_mcp_describe` lists every live tool.
 
-- `get_component` — metadata for a named component (source is served via the registry/API)
-- `get_node_documents` — fetch documents for any node/collection (components, primitives, brand, pages, shell, styling-\*, docs); the generic resolver
-- `list_components` — filter by node, status, platform, mini-app
-- `get_brand_tokens` / `list_brand_token_categories` — design tokens by category
-- `list_ecosystem_brands` — ecosystem brands with their primary mineral resolved against the palette
-- `get_architecture` / `get_axes_summary` — the 3D node model (four axes, ten nodes, covenants, rules)
-- `get_node_counts` / `get_system_counts` / `get_token_counts` — live counts; never hardcode
-- `get_ubuntu_pillars` / `get_ubuntu_principles` / `get_ubuntu_doctrine` — Ubuntu doctrine (separate tools; no aspect parameter)
-- `calculate_contrast_ratio` / `get_accessibility_summary` — accessibility validation
-- `get_skill` / `list_skills` — published agent skills (component scaffolding guidance lives in a skill, not a tool)
-- `mcp_describe` — self-describing list of every live tool with stability and TTL
+- `mzizi_search` — search components, conventions, AI instruction sets and releases by words, when you do not know a name
+- `mzizi_get_component` — a component in full in one read: the Rust build first where one exists, then the Astro and React builds
+- `mzizi_list_components` — the registry index, filtered by node, owner, collection, type or Rust
+- `mzizi_get_tokens` — the brand system: the 21 colour families, semantic colours, typography, spacing, radii and the ecosystem brands
+- `mzizi_get_architecture` — the DNA helix: nodes, rungs, strands, covenants and rules
+- `mzizi_get_doctrine` — the Ubuntu pillars and principles, the conventions and the AI instruction sets
+- `mzizi_get_skills` — the published agent skills
+- `mzizi_check_accessibility` — contrast and colour-vision checks against the Mzizi APCA/AAA floor
+- `mzizi_fundi` / `mzizi_report_issue` — Fundi and issue reporting (these two need sign-in)
+- `docs_search_mzizi` — search docs.mzizi.dev
 
-When an agent calls these tools, it gets the truth as of right now. When it relies on its training data, it gets snapshots that may be wrong.
+When an agent calls these tools, it gets the registry as of its pinned commit. When it relies on its training data, it gets snapshots that may be wrong.
 
 ## Skill distribution
 
-The `public.skills` table is the source of truth for `.claude/skills/` content across every Mukoko ecosystem app. Each skill is hand-written, not generated. The `requires_mcp` flag tells Claude Code whether to recommend connecting to the MCP server when the skill is loaded.
+The skills are written by hand in the Mzizi agent tooling, not generated, and published as `@nyuchi/mzizi-skills`. The npm package, `mzizi_get_skills` and `/v1/skills` always serve the same version, and the skills must never lag the registry: an outdated skill makes an agent fail immediately.
 
-Developers install skills with the skills CLI, which writes the MDX body to `./.claude/skills/{name}.md` in the target project. From there, Claude Code surfaces the skill as part of its working context.
+Developers get the skills through the public Mzizi Claude Code plugin (which also connects the MCP server) or from npm. From there, the agent surfaces the skill as part of its working context.
 
 ## What AI agents must NOT do
 
@@ -99,20 +98,19 @@ These are doctrinal violations that should be caught in PR review:
 
 - Inventing a sixth pillar or sixth principle. Five is the locked count.
 - Adding "restorative justice" to the principles. Explicitly excluded as non-African.
-- Hardcoding the number of nodes, axes, components, or mini-apps in code or copy.
-- Translating Shona terms out of the database. The Shona carries meaning the English cannot.
-- Reading Ubuntu pillars/principles from `styling-meta`/`styling-meta` — the canonical source is the `genetic-code-ubuntu-pillars` and `genetic-code-ubuntu-principles` collections (or the `get_ubuntu_pillars` / `get_ubuntu_principles` tools).
+- Hardcoding the number of nodes, components, or mini-apps in code or copy.
+- Translating Shona terms out of the doctrine. The Shona carries meaning the English cannot.
+- Reading Ubuntu pillars and principles from anywhere but the `genetic-code-ubuntu-pillars` and `genetic-code-ubuntu-principles` doctrine (or `mzizi_get_doctrine`, `GET /v1/ubuntu/pillars` and `GET /v1/ubuntu/principles`).
 - Auto-merging Fundi healing actions without human review. N9 is autonomous in detection but not in resolution.
-- Writing PII to `observability_events.metadata`. The CHECK constraint will reject it; the agent should never try.
+- Writing PII into telemetry or logs. Health and telemetry record error codes and names, never messages or payloads.
 
 ## How to ask the system for help
 
 An AI agent unsure about doctrine should:
 
-1. Query the relevant table (`SELECT … FROM ubuntu_pillars`)
-2. Call the relevant MCP tool (`get_ubuntu_principles`)
-3. Read the relevant documentation page (`SELECT content FROM documentation_pages WHERE slug = 'ubuntu-pillars-and-principles'`)
-4. Only then reason from training-data priors
+1. Call the relevant MCP tool (`mzizi_get_doctrine`, `mzizi_get_architecture`)
+2. Read the relevant doctrine file in `content/doctrine/` or page on docs.mzizi.dev (`docs_search_mzizi`)
+3. Only then reason from training-data priors
 
 The order is enforced by humility, not code. An agent that follows this order gets the right answer; an agent that skips it produces drift.
 

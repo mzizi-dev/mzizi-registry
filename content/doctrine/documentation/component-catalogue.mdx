@@ -4,18 +4,16 @@ _schemaVersion: "v1"
 author: "nyuchi-team"
 category: "component"
 createdAt: "2026-04-28T16:55:26.349194+00:00"
-currentVersion: 2
-description: "How to navigate the component catalogue: lifecycle (alpha → beta → stable → deprecated), ecosystem node, mini-app association, platforms, and finding the right component for the job."
+currentVersion: 3
+description: "How to navigate the component catalogue: what a registry item says, its node, its builds and owner, how change is recorded, and finding the right component for the job."
 dnaRole: "documentation"
 doctrineVersion: "4.1.7"
 keywords:
 - "components"
 - "catalogue"
-- "lifecycle"
-- "status"
-- "ecosystem-node"
-- "mini-apps"
-- "platforms"
+- "registry"
+- "node"
+- "builds"
 kind: "doc_page"
 model: "mzizi-dna-helix"
 node: 10
@@ -41,34 +39,31 @@ version: "4.0.34"
 
 # The Component Catalogue — How to Read a Component
 
-The Nyuchi Design System contains hundreds of components. This page explains how to navigate them, what each piece of metadata means, and how to find the right component for the right job.
+Mzizi contains hundreds of components. This page explains how to navigate them, what each piece of metadata means, and how to find the right component for the right job.
 
-Live counts: query `SELECT * FROM get_system_counts();` rather than relying on numbers in this page. The catalogue grows; this page does not need to.
+Live counts: read `meta.registryTotal` on `GET https://api.mzizi.dev/v1/ui`, or the per-node counts on `GET https://api.mzizi.dev/v1/stats`, rather than relying on numbers in this page. The catalogue grows; this page does not need to.
 
 ## How a component is described
 
-Every component has a row in `public.components` and a paired row in `public.component_docs`. The first row holds identity and metadata; the second holds usage documentation. Together they answer five questions a developer asks:
+Every component is an item in `registry.json`, beside its files under `components/registry/n<N>-<node>/`. There is no database behind it. The item answers five questions a developer asks:
 
-1. **What is this for?** — `description` field in `components`
-2. **Where does it live in the architecture?** — `ecosystem_node` (1–10) and `node_label` sub-label
-3. **Is it ready to use?** — `status` (alpha / beta / stable / deprecated)
-4. **How do I install it?** — `dependencies`, `registry_dependencies`, `files`
-5. **How do I use it well?** — `use_cases`, `variants`, `sizes`, `features`, `a11y`, `examples` from `component_docs`
+1. **What is this for?** — `title` and `description`
+2. **Where does it live in the architecture?** — the `n<N>-<node>` directory its files are in; `meta.collection` and `categories` group it further
+3. **Who owns it?** — `meta.owner`: `mzizi`, `nyuchi` or `framework`
+4. **How do I install it?** — `dependencies`, `registryDependencies`, `files`
+5. **How do I use it well?** — `docs`, and `meta.useCases`, `meta.variants`, `meta.sizes`, `meta.features` and `meta.a11y`; where it has one, `meta.contract` names its contract under `contracts/`
 
-## Component lifecycle
+## Builds
 
-The `status` field tracks where a component is in its journey:
+A component's builds are sibling files in its directory: `.astro` (the default), `.rs` (Mzizi Roots, Dioxus, shipped in a node crate on crates.io) and `.tsx` (React). Each is the same component, held to the one contract. Not every component has every build yet: `GET https://api.mzizi.dev/v1/astro` lists the Astro ones, and `mzizi_get_component` returns every build of one component. The N1 tokens also ship per-platform files (Swift, Kotlin, ArkTS, React Native, Python, Rust).
 
-| Status       | Meaning                         | Stability promise                         |
-| ------------ | ------------------------------- | ----------------------------------------- |
-| `alpha`      | Recently added, experimental    | API may change without notice             |
-| `beta`       | Stabilising, real-world testing | Breaking changes only with warning        |
-| `stable`     | Production-ready                | API is locked; only additive changes      |
-| `deprecated` | Replaced by something better    | Will be removed in a future major version |
+## Change and renames
+
+The registry carries no per-component status field: an item in `registry.json` is published. Breaking changes, deprecations and removals are announced in `CHANGELOG.md`, and a renamed component's former name keeps resolving to its successor (`lib/component-renames.json`).
 
 ## Architecture node
 
-Every component belongs to exactly one of the ten nodes. See `/architecture/architecture-overview` for the full node definitions. The node determines what the component can do, what it must not do, and what it can depend on.
+Every component belongs to exactly one node. See `/architecture/architecture-overview` for the full node definitions. The node determines what the component can do, what it must not do, and what it can depend on.
 
 The rule of thumb:
 
@@ -79,37 +74,29 @@ The rule of thumb:
 
 If a component crosses a node boundary, it is wrong. The N4 Safety, N5 Resilience, and N8 Assurance nodes are special — they wrap components rather than render them.
 
-## Mini-app association
-
-The `mini_apps` array on each component lists which of the Mukoko mini-apps primarily use it. A component used by every mini-app sits at N2 or N3; a component used by only one (e.g. `bushtrade-listing-card`) sits at N6.
-
-## Platforms
-
-The `platforms` array names the runtimes a component targets. Web is the default. Some components also support `ios`, `android`, `harmonyos`, `react-native`, `rust`, `python`, `postgres`, or `edge-function`. Cross-platform components are rare and intentional.
-
 ## How to find the right component
 
 Four ways:
 
-1. **By node** — `SELECT name FROM components WHERE ecosystem_node = 3 ORDER BY name;`
-2. **By keyword** — `SELECT name FROM components WHERE name ILIKE '%form%' OR '%form%' = ANY(tags);`
-3. **By mini-app** — `SELECT name FROM components WHERE 'bushtrade' = ANY(mini_apps);`
-4. **By MCP tool** — call `list_components` to filter by node, status, platform, or mini-app, or `get_node_documents` to pull a whole collection.
+1. **By node** — `GET https://api.mzizi.dev/v1/search?node=3`, or `mzizi_list_components` with `node`
+2. **By keyword** — `GET https://api.mzizi.dev/v1/search?q=form`, or `mzizi_search`
+3. **By category** — `GET https://api.mzizi.dev/v1/search?category=<category>`
+4. **By browsing** — the visual catalogue at `mzizi.dev`
 
-The portal at `mzizi.dev` provides a visual catalogue with filters, but the database is always the source of truth.
+Whichever you use, `registry.json` and the files on disk are the source of truth.
 
 ## Versioning
 
-Every change to a component writes a row to `public.component_versions`. The `change_type` enum tells you what kind of change it was: `created`, `source_updated`, `metadata_updated`, `status_changed`, `node_moved`, `dependencies_changed`, `promoted`, `deprecated`, `breaking_change`, `bugfix`, `enhancement`, `refactor`, `tokens_wired`, `enterprise_upgrade`. Reading the version history of a component tells you the story of how it grew up.
+The registry records a component change in `CHANGELOG.md`, in the pull request that makes it; see `documentation/changelog-system`. A component's version history is machine-written data that belongs to the Mzizi console, so `GET /v1/ui/{name}/versions` answers `503` and names the console.
 
 ## When to write your own
 
-Don't. Almost always, the answer is a primitive or brand component already exists. If you cannot find one, search by tag, ask the MCP, or check the node-decision-guide. Only after exhausting those options should you scaffold a new one.
+Don't. Almost always, the answer is a primitive or brand component already exists. If you cannot find one, search by category, ask the MCP, or check the node-decision-guide. Only after exhausting those options should you scaffold a new one.
 
 When you do scaffold a new component, follow `/contributor/contributing` and read the relevant node's `implementation_rules` from `documentation-architecture-nodes` first.
 
 ## Related
 
-- `/architecture/architecture-overview` — The ten nodes a component can belong to
-- `/architecture/layer-decision-guide` — How to choose the right node
+- `/architecture/architecture-overview` — The nodes a component can belong to
+- `/architecture/node-decision-guide` — How to choose the right node
 - `/contributor/contributing` — How to contribute a new component

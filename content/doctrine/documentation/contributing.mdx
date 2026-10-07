@@ -4,8 +4,8 @@ _schemaVersion: "v1"
 author: "nyuchi-team"
 category: "contributor"
 createdAt: "2026-04-14T04:33:18.859813+00:00"
-currentVersion: 2
-description: "How to contribute components to the Nyuchi Design System."
+currentVersion: 3
+description: "How to contribute components to Mzizi."
 dnaRole: "documentation"
 doctrineVersion: "4.1.7"
 keywords:
@@ -36,35 +36,33 @@ sortOrder: 20
 status: "published"
 strand: "transcription"
 subcategory: "guide"
-title: "Contributing to the Nyuchi Design System"
+title: "Contributing to Mzizi"
 updatedAt: "2026-04-24T14:31:16.717282+00:00"
 version: "4.0.34"
 ---
 
 # Contributing
 
-The Nyuchi Design System is open source and built by the community. Ubuntu — I am because we are.
+Mzizi is open source and built by the community. Ubuntu — I am because we are.
 
 ## Repository
 
-github.com/mzizi-dev/mzizi-registry
+github.com/mzizi-dev/mzizi-registry. Its `CONTRIBUTING.md` and `AGENTS.md` are the full process; this page is the summary.
 
-## Source code lives in the database
+## Source code lives in the repository
 
-Production source for every stable component is stored in `components.source_code` in Supabase (project `grjsboqkaywpwatvrzmy`). The frontend repo pulls from the database at build time — it does not maintain a separate source-of-truth in the file system. To add or modify a component, write the source directly to `components.source_code` via SQL.
+Every component's source is a file in the registry, `components/registry/n<N>-<node>/<name>.<ext>`, with one sibling file per build: `.astro` (the default), `.rs` (Mzizi Roots, Dioxus) and `.tsx` (React). There is no database copy. `registry.json` indexes the files, and api.mzizi.dev serves them from a pinned registry commit. To add or change a component, change its files and open a pull request.
 
 ## Adding a New Component
 
-1. Decide which node it belongs to (see Node Decision Guide)
-2. Create the component following the node enterprise criteria
-3. Insert into the components table with status=alpha (registered, no source yet)
-4. Write the production TypeScript into components.source_code
-5. Flip status to stable when source is production-ready
-6. Add component_docs entry with use_cases, variants, features, a11y notes
-7. Insert a component_demos manifest row (has_demo=true, demo_type=interactive or code-example)
-8. Ensure data-slot and data-portal attributes are present in the source
-9. Log the version with log_version(name, type, comment, author)
-10. Submit a PR
+1. Decide which node it belongs to (see Node Decision Guide).
+2. Write its contract first, `contracts/<family>/<name>.contract.json`: the props, states, clauses, checks and density every build is tested against.
+3. Write the builds under `components/registry/n<N>-<node>/`: the `.astro` first, then the `.tsx` and the `.rs`, each the same component. A `.rs` held to a contract carries a `pub const CONTRACT` that `pnpm contracts:sync` fills.
+4. Add its item to `registry.json` (name, type, description, dependencies, files and the `meta` block), then run `pnpm registry:normalize && pnpm registry:validate`.
+5. Meet the node's enterprise criteria below, including the `data-slot` and `data-portal` attributes.
+6. Add an entry under `## [Unreleased]` in `CHANGELOG.md`.
+7. Run `pnpm check`, which runs every gate CI runs; for a `.rs`, also the `mzizi-rs` gate (`cargo fmt`, `cargo clippy`, `cargo test`).
+8. Open a pull request against `staging`, with a `Site/docs/skills impact` section in its body.
 
 ## Enterprise Criteria Checklist
 
@@ -76,7 +74,7 @@ Production source for every stable component is stored in `components.source_cod
 - [ ] cn() for className composition
 - [ ] Zero raw Tailwind colors
 - [ ] Import icons from @/lib/icons
-- [ ] Touch targets follow styling-touch-targets (48px minimum)
+- [ ] Touch targets 56px by default, 48px minimum
 - [ ] If pill-shaped category (button, input, avatar, badge, toggle), use borderRadius 9999
 
 ### N3 (Brand)
@@ -87,7 +85,7 @@ Production source for every stable component is stored in `components.source_cod
 - [ ] ARIA role or aria-label
 - [ ] data-slot and data-portal attributes
 - [ ] focus-visible ring on interactive elements
-- [ ] min-h-[48px] touch targets on buttons (styling-touch-targets.comfortable)
+- [ ] Touch targets on buttons at least 48px (`min-h-[48px]`), 56px by default
 - [ ] I18N (Intl formatters for dates, numbers, currency)
 - [ ] Semantic tokens for status-bearing colors
 
@@ -110,14 +108,7 @@ Production source for every stable component is stored in `components.source_cod
 
 ## Accessibility Validation
 
-Before shipping a new component, validate text-on-background color combinations:
-
-```sql
-SELECT calculate_contrast_ratio('#FFFFFF', '#0047AB');
--- Returns the WCAG 2.1 contrast ratio. AA needs 4.5, AAA needs 7.0.
-```
-
-For systematic pair tracking, look at `styling-accessibility-checks`. Every critical pair already has a row with computed ratio and color-blindness flags.
+Before shipping a new colour pair, check it against the Mzizi floor (APCA, AAA) with the `mzizi_check_accessibility` MCP tool on mcp.mzizi.dev, which computes contrast and colour-vision results locally. The palette's own pairs are checked in CI by the registry's token tests (`__tests__/tokens-*.test.ts`), which measure every family against the base surface with APCA.
 
 ## RTL Support
 
@@ -125,13 +116,9 @@ Use logical CSS properties (margin-inline-start, padding-inline-end, inset-inlin
 
 ## Versioning
 
-Use the log_version function:
+Record the change in the same pull request: an entry under `## [Unreleased]` in `CHANGELOG.md`, headed `### <Kind> — <what changed> (<date>, #<PR>)`. The `changelog / entry required` check fails a pull request without one. See `documentation/changelog-system`.
 
-```sql
-SELECT log_version('button', 'fix', 'Fixed focus ring on disabled state', 'your-github-handle');
-```
-
-Change types: created, fix, enhancement, tokens_wired, node_moved, breaking, deprecated, docs.
+Releases follow the org versioning policy: a merge into `staging` is a patch, a release to `main` is the next minor above the highest tag, and a major is only released by hand. Component version history is machine-written data that belongs to the Mzizi console, not to the registry.
 
 ## Fundi Integration
 

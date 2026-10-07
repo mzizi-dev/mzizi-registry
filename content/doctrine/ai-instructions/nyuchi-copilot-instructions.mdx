@@ -11,7 +11,7 @@ applies_to_nodes:
 - 5
 - 6
 - 7
-currentVersion: 2
+currentVersion: 3
 description: "Instructions for GitHub Copilot when working in the mzizi repository."
 dnaRole: "machinery"
 doctrineVersion: "4.1.7"
@@ -23,7 +23,7 @@ owner: "nyuchi"
 status: "active"
 strand: "transcription"
 target: "github-copilot"
-version: "1.3"
+version: "1.4"
 ---
 
 # Mzizi — Copilot Instructions
@@ -35,7 +35,7 @@ When generating code in this repository:
 3. Use CSS vars from N1 tokens: var(--color-cobalt), var(--radius-lg), etc.
 4. Never use raw Tailwind colors (bg-red-500). Use semantic tokens.
 5. Brand components (N3) must use useMziziHarness hook
-6. All interactive elements need focus-visible:outline-2 and min-h-[48px]
+6. All interactive elements need focus-visible:outline-2 and min-h-[48px] (48px is the minimum touch target; 56px is the default)
 7. Add data-slot="component-name" to the root element
 8. Add data-portal="https://mzizi.dev/components/{name}" next to data-slot
 9. Status colors: var(--status-success), var(--status-error), var(--status-warning)
@@ -43,18 +43,18 @@ When generating code in this repository:
 
 # Tokens
 
-11. Icons: use styling-icon-sizes (var(--icon-xs) 12px through var(--icon-xl) 40px, default 20px)
-12. Touch targets: styling-touch-targets — comfortable (48px) is the default, never go below 44px (WCAG 2.5.5)
-13. Spacing: styling-spacing 17-step scale. Default component padding is base (16px), not md (12px which is now compact)
-14. Density: density-aware components reference styling-density tiers (compact, comfortable, spacious) — do not hardcode tier behaviour
-15. High contrast: when an HC theme is active, components read styling-semantic-colors.hc_light_value/hc_dark_value
-16. Typography: use styling-typography rows (Display, Display Small, H1-H6, Body Large/Body/Body Small, Caption, Code) plus letter_spacing and fluid_min_px/fluid_max_px for responsive type
+11. Tokens are files in the registry: lib/tokens/palette.source.ts (the 21 colour families) and lib/tokens/brand.source.ts (semantic colours, typography, spacing). Never copy a value; reference the generated CSS variable
+12. Touch targets: 56px by default, never below 48px (the accessibility block of brandMeta in lib/tokens/brand.source.ts)
+13. Spacing: the 17-step spacing scale in brand.source.ts. Default component padding is base (16px), not md (12px, which is compact)
+14. Density: density-aware components follow the density in their contract — do not hardcode tier behaviour
+15. High contrast: when an HC theme is active, components use the semantic colours' hcLightValue/hcDarkValue overrides in brand.source.ts (null where none is defined)
+16. Typography: use the type scale in brand.source.ts (Display, Display Small, H1-H6, Body Large/Body/Body Small, Caption, Code)
 
 # Source location
 
-17. Production source for every stable component lives in components.source_code in Supabase
-18. The frontend repo pulls from the DB at build time — do not maintain a separate copy of component source
-19. To add a new component: write the source via SQL into components.source_code and flip status to stable
+17. Every component's source is a file in this repository: `components/registry/n<N>-<label>/<name>.astro`, `.rs` and `.tsx`, one file per build, all held to one contract in contracts/
+18. There is no database copy of component source; registry.json indexes the files and api.mzizi.dev serves them from a pinned commit
+19. To add a new component: write its contract, its builds and its registry.json item, run pnpm registry:normalize && pnpm registry:validate, add a CHANGELOG.md entry and open a pull request against staging
 
 # RTL
 
@@ -65,11 +65,11 @@ When generating code in this repository:
 
 # Accessibility validation
 
-24. Before shipping a new color pair, validate via SELECT calculate_contrast_ratio(fg_hex, bg_hex) — must hit 4.5 for normal text, 7.0 for AAA
-25. Pairs are tracked in styling-accessibility-checks — query before assuming a combination is safe
+24. Before shipping a new colour pair, check it with the mzizi_check_accessibility MCP tool against the Mzizi floor (APCA, AAA)
+25. The palette's own pairs are measured with APCA by the registry's token tests (`__tests__/tokens-*.test.ts`) in CI
 
 # Accessibility healing loop
 
-26. An N8 accessibility-audit component runs daily via pg_cron validating every color pair against protanopia/deuteranopia/tritanopia/achromatopsia simulations. Regressions auto-file Fundi issues.
-27. Use simulate_color_blindness(hex, cb_type) to preview how a color appears under each condition.
-28. Use run_accessibility_audit() to trigger a manual audit (e.g. in CI).
+26. The N8 assurance components mzizi-a11y-audit and rtl-conformity-check detect accessibility and RTL regressions at runtime.
+27. mzizi-fundi-reporter (N9) files each regression as a GitHub issue on the registry.
+28. Humans review and merge the fix; healing is never auto-merged.

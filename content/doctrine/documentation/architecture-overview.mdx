@@ -1,7 +1,7 @@
 ---
 _bodyField: "content"
 _schemaVersion: "v1"
-currentVersion: 1
+currentVersion: 2
 dnaRole: "documentation"
 doctrineVersion: "4.1.7"
 kind: "overview"
@@ -22,10 +22,12 @@ Mzizi defines two distinct architectures, governed by different rules, joined at
 
 | Architecture                 | Governs                                                  | Canonical model                               | Where it lives                                                                                                                          |
 | ---------------------------- | -------------------------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Application architecture** | How UI / app components are built, composed, and shipped | **Mzizi DNA Helix**                           | `component_documents/{primitives,brand,pages,shell,styling-*,accessibility,resilience,observability,fundi,...}`                         |
+| **Application architecture** | How UI / app components are built, composed, and shipped | **Mzizi DNA Helix**                           | `components/registry/n<N>-*/`, `contracts/` and `registry.json`, with the doctrine in `documentation-architecture-{nodes,strands}`      |
 | **Data architecture**        | How data is stored, owned, moved, and contributed        | **Substrate model + four-category ownership** | `documentation-architecture-{cloud,data,data-ownership,pipeline,sovereignty,removed}` and `genetic-code-conventions/substrate-decision` |
 
 These are not layers of one stack. They are two architectures, intersecting at one defined point (see "the seam" below).
+
+Both are described by files, not a database: the components, contracts and doctrine are in the registry repository (`mzizi-dev/mzizi-registry`), and every change to them is a pull request.
 
 ## Application architecture — the Mzizi DNA Helix
 
@@ -40,7 +42,7 @@ The application architecture describes how user-facing software is structured. M
 | Genetic code                             | `ubuntu` · `conventions` (the readable sequence under the helix)                              | mzizi             |
 | Documentation / transcription            | `documentation*` collections                                                                  | mzizi             |
 
-The locked model lives in `changelog/4.1.0`. The full per-node detail is in `documentation-architecture-nodes/*`. The classification (`dnaRole`) is stamped on every document in the store.
+The locked model lives in `changelog/4.1.0`. The full per-node detail is in `documentation-architecture-nodes/*`. The classification (`dnaRole`) is stamped in the frontmatter of every doctrine file in `content/doctrine/`.
 
 ## Data architecture — substrate and lifecycle
 
@@ -62,7 +64,7 @@ The data architecture describes how the platform stores, owns, and moves data. I
 | Role                                         | Technology                                                                         | Notes                                                        |
 | -------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------ |
 | Operational primary (non-relational)         | **MongoDB**                                                                        | medium-risk sovereignty assessment; tiered, not disqualified |
-| Operational primary (relational)             | **PostgreSQL** (via Supabase for Mzizi DB; self-managed for product data)          | low-risk                                                     |
+| Operational primary (relational)             | **PostgreSQL** (via Supabase for the Mzizi console; self-managed for product data) | low-risk                                                     |
 | Connective fabric / service mesh / event bus | **NATS**                                                                           | edge-native                                                  |
 | Event streaming → analytics                  | **Redpanda**                                                                       | Kafka-compatible, feeds Flink                                |
 | Analytical engine + open data commons        | **Apache Doris**                                                                   | the Nhaka tier                                               |
