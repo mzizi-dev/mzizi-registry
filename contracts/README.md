@@ -137,7 +137,7 @@ Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Wher
 | `ui/safe-area-frame`   | SafeAreaFrame    | N2   | 1.0.0   | `safe-area-frame`   | `safe-area-frame` (contract)   | `safe-area-frame` (contract)   |
 | `ui/segmented-control` | SegmentedControl | N2   | 1.1.0   | `segmented-control` | `segmented-control` (contract) | —                              |
 | `ui/skeleton`          | Skeleton         | N2   | 1.0.0   | `skeleton`          | `skeleton` (contract)          | `skeleton` (contract)          |
-| `ui/status-badge`      | StatusBadge      | N2   | 1.0.0   | `status-badge`      | `status-badge` (contract)      | `status-badge` (contract)      |
+| `ui/status-badge`      | StatusBadge      | N2   | 1.1.0   | `status-badge`      | `status-badge` (contract)      | `status-badge` (contract)      |
 | `ui/toaster`           | Toaster          | N2   | 1.1.0   | `toaster`           | `toaster` (contract)           | —                              |
 
 **Follow-ups.** Rust ports of the app, discover and site components ([#401](https://github.com/mzizi-dev/mzizi-registry/issues/401)); each is done when it passes its contract. `button`, `card` and `input` share only their slot with their `.tsx` and `.rs`, which keep the registry's own variants, parts or height (each divergence is listed in the contract).
