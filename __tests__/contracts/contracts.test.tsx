@@ -136,7 +136,9 @@ function validate(value: Json, s: Record<string, Json>, at: string, out: string[
 
 // ─── The clause grammar the runners evaluate (RFC-0006 subset) ────────────
 
-const PRED = String.raw`(?:is "[^"]*"|contains "[^"]*"|not_empty|in(?: "[^"]*")+|uses "--[a-z0-9-]+")`
+const BASE_PRED = String.raw`(?:is "[^"]*"|contains "[^"]*"|has "[^"\s]+"|not_empty|in(?: "[^"]*")+|uses "--[a-z0-9-]+")`
+/** `not` negates one predicate (`not contains "cobalt"`, `not has "line-through"`). */
+const PRED = String.raw`(?:not )?${BASE_PRED}`
 const CLAUSE = [
   new RegExp(String.raw`^(?:slot|role|label|class|portal) ${PRED}$`),
   new RegExp(String.raw`^when [a-z][a-z0-9_-]* (?:slot|role|label|class|portal) ${PRED}$`),

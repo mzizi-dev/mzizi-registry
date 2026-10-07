@@ -23,7 +23,7 @@ use serde_json::Value;
 
 #[path = "../../../contract-eval/contract_eval.rs"]
 mod contract_eval;
-use contract_eval::{Case, Node, declared_height, render, select};
+use contract_eval::{Case, Node, declared_height, holds, render, select, tokens};
 
 fn repo() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..")
@@ -387,4 +387,97 @@ fn every_rust_contract_const_is_the_contract_file() {
             "{name}: {registry}.rs's CONTRACT differs from its contract file — run `pnpm contracts:sync`"
         );
     }
+}
+
+// ─── The class-token predicates ─────────────────────────────────────────────────────────────
+//
+// `has "<token>"` is one whole whitespace-separated token and `not <predicate>` negates one
+// predicate; `contains` stays a substring. The same cases as `__tests__/contracts/
+// runner-grammar.test.ts` for contracts/runner.ts.
+
+fn eval(pred: &str, class: &str) -> Result<bool, String> {
+    holds(class, &tokens(pred))
+}
+
+#[test]
+fn has_is_one_whole_class_token() {
+    assert_eq!(
+        eval(r#"has "text-malachite""#, "bg-malachite/10 text-malachite"),
+        Ok(true)
+    );
+    for class in ["dark:text-malachite", "text-malachite/50"] {
+        assert_eq!(eval(r#"has "text-malachite""#, class), Ok(false), "{class}");
+    }
+    for class in ["hover:bg-malachite/10", "bg-malachite/100"] {
+        assert_eq!(
+            eval(r#"has "bg-malachite/10""#, class),
+            Ok(false),
+            "{class}"
+        );
+        assert_eq!(
+            eval(r#"contains "bg-malachite/10""#, class),
+            Ok(true),
+            "{class}"
+        );
+    }
+    assert!(eval(r#"has "a b""#, "a b").is_err());
+}
+
+#[test]
+fn not_negates_one_predicate_and_never_passes_an_unevaluable_one() {
+    assert_eq!(eval(r#"not contains "cobalt""#, "text-malachite"), Ok(true));
+    assert_eq!(
+        eval(
+            r#"not contains "cobalt""#,
+            "text-malachite dark:text-cobalt"
+        ),
+        Ok(false)
+    );
+    assert_eq!(
+        eval(r#"not has "line-through""#, "hover:line-through"),
+        Ok(true)
+    );
+    assert_eq!(
+        eval(r#"not has "line-through""#, "text-malachite line-through"),
+        Ok(false)
+    );
+    assert_eq!(eval(r#"not is "y""#, "x"), Ok(true));
+    for pred in [
+        r#"not frobs "x""#,
+        r#"not uses "primary""#,
+        r#"not has "a b""#,
+        r#"not not contains "a""#,
+    ] {
+        assert!(eval(pred, "a").is_err(), "{pred}");
+    }
+}
+
+#[test]
+fn a_when_clause_with_not_fails_on_the_wrong_mineral() {
+    let case = Case {
+        name: "fixture",
+        contract: "contract\n  slot is \"status-badge\"\nend",
+        states: vec![(
+            "default",
+            render(|| rsx! { StatusBadge { status: StatusBadgeStatus::Stable } }),
+        )],
+        defaults: Vec::new(),
+        columns: Vec::new(),
+    };
+    assert_eq!(
+        case.evaluate(r#"when default class has "text-malachite""#),
+        Ok(true)
+    );
+    assert_eq!(
+        case.evaluate(r#"when default class not contains "cobalt""#),
+        Ok(true)
+    );
+    assert_eq!(
+        case.evaluate(r#"when default class not contains "malachite""#),
+        Ok(false)
+    );
+    assert_eq!(
+        case.evaluate(r#"when default class has "line-through""#),
+        Ok(false)
+    );
 }
