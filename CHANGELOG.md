@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `markdown-renderer` 1.2.0: a link shows its address on hover, normalised, with an IDN host as punycode (2026-10-07, #PRNUM)
+### Added — `markdown-renderer` 1.2.0: a link shows its address on hover, normalised, with an IDN host as punycode (2026-10-07, #483)
 
 Closes #470, a follow-up from the Toddle extension's review (#460): its old flag renderer showed each link's address on hover, and `markdown-renderer` 1.1.0 did not.
 
@@ -19,7 +19,7 @@ Closes #470, a follow-up from the Toddle extension's review (#460): its old flag
 - **The tree.** A link node now carries `title` (`{ t: "link", href, title, c }`; Rust `Inline::Link { href, title, children }`), and `markdown-parse` exports `safeLink` (`mzizi_ui::safe_link`), which returns both. `safeHref` and `safe_href` are kept. **Breaking** for code that builds or matches link nodes or list items itself (see the next entry).
 - `contracts/ui/markdown-renderer` 1.2.0 adds a `titles` state (an IDN look-alike, a loud scheme and host, a relative link) with checks on each title, and a check that every kept link has one. The Astro, React and Rust builds pass it.
 
-### Fixed — `markdown-renderer`: five parser bugs in `markdown-parse` and the Rust parser (2026-10-07, #PRNUM)
+### Fixed — `markdown-renderer`: five parser bugs in `markdown-parse` and the Rust parser (2026-10-07, #483)
 
 Found by a code review and confirmed by running the code. Each has a shared fixture case that TypeScript and Rust both run (63 cases in all) and a unit test in each language.
 
@@ -31,7 +31,7 @@ Found by a code review and confirmed by running the code. Each has a shared fixt
 
 Also: `markdown-parse.ts` is formatted with the repo's Prettier config (packages-npm syncs it byte for byte and had to exempt it from `vp fmt`), and `markdown-renderer.astro` draws the tree with plain recursive template functions and one dynamic heading tag instead of an `Astro.self` instance per node and a six-way ternary. Its output is byte for byte the same.
 
-### Changed — the Mzizi Roots crates move to 0.4.0 (2026-10-07, #PRNUM)
+### Changed — the Mzizi Roots crates move to 0.4.0 (2026-10-07, #483)
 
 The next minor above `mzizi-rs-v0.3.0`, so `mzizi-ui` 0.4.0 on crates.io carries `markdown-renderer` 1.2.0. **Breaking** for code that builds or matches `Inline::Link` or `ListItem::children` (now `Vec<ListChild>`). The crate READMEs and the `mzizi-roots` crate docs install `"0.4"`.
 
