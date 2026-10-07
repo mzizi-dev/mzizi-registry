@@ -309,10 +309,29 @@ pub fn clauses(contract: &str) -> Vec<&str> {
 }
 
 /// Evaluate a value predicate. `Err` is a clause this evaluator cannot apply.
+///
+/// `contains "<s>"` is a substring; `has "<token>"` is one whole whitespace-separated token
+/// (`has "text-gold"` is not satisfied by `dark:text-gold` or `text-gold/50`). `not
+/// <predicate>` negates any one predicate (`not contains "cobalt"`, `not has "line-through"`);
+/// `not` of a predicate this evaluator cannot apply stays an `Err`, never a pass. The same
+/// grammar as `contracts/runner.ts`.
 pub fn holds(value: &str, pred: &[String]) -> Result<bool, String> {
     match pred.first().map(String::as_str) {
+        Some("not") if pred.len() >= 2 => {
+            if pred[1] == "not" {
+                return Err("`not not` is not evaluated: one `not`".into());
+            }
+            holds(value, &pred[1..]).map(|b| !b)
+        }
         Some("is") if pred.len() == 2 => Ok(value == unquote(&pred[1])),
         Some("contains") if pred.len() == 2 => Ok(value.contains(unquote(&pred[1]))),
+        Some("has") if pred.len() == 2 => {
+            let want = unquote(&pred[1]);
+            if want.is_empty() || want.contains(char::is_whitespace) {
+                return Err("`has` takes one quoted token".into());
+            }
+            Ok(value.split_whitespace().any(|c| c == want))
+        }
         Some("not_empty") if pred.len() == 1 => Ok(!value.trim().is_empty()),
         Some("at_least") if pred.len() == 2 => {
             let n: f64 = pred[1].parse().map_err(|_| "at_least needs a number")?;

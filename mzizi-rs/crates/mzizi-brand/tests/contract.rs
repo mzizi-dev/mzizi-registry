@@ -18,9 +18,11 @@
 //!
 //! Subjects: `<name>` (a root attribute — `slot`, `portal`, `role`, `label`, `class` — else a
 //! prop default), `every <enum> <column>`, `<enum>.<variant> <column>`, `<variant>.<column>`,
-//! `<element> "<text>"`, and `when <state>`. Predicates: `is`, `contains`, `not_empty`,
-//! `at_least`, `in`, `uses "--token"`, `min_height` and `shows`. An element "carries" a text in
-//! its content or as its `aria-label`, so an icon-only control is named by what it announces.
+//! `<element> "<text>"`, and `when <state>`. Predicates: `is`, `contains` (a substring), `has`
+//! (one whole class token), `not_empty`, `at_least`, `in`, `uses "--token"`, `min_height`,
+//! `shows`, and `not <predicate>`, which negates one value predicate. An element "carries" a
+//! text in its content or as its `aria-label`, so an icon-only control is named by what it
+//! announces.
 //! Unguarded clauses are
 //! evaluated in the `default` state; `when <state>` clauses in that state; an
 //! `<element> "<text>"` subject in every state where that element appears, and it must
