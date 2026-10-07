@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — the doctrine calls the system Mzizi, and no longer describes a database as its source (2026-10-07, #PRNUM)
+### Fixed — the doctrine calls the system Mzizi, and no longer describes a database as its source (2026-10-07, #479)
 
 Eight `documentation/` doctrine pages, `mzizi-ai-context` and `ui-utils` still called the system "the Nyuchi Design System" (#323). Several of the same pages, and the three AI instruction sets, also described Supabase as the source of truth, the follow-up #474 left (#472). This entry covers both:
 
