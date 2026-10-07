@@ -16,8 +16,8 @@ use std::path::PathBuf;
 use dioxus::prelude::*;
 use mzizi_ui::card::CardSize;
 use mzizi_ui::{
-    Alert, AlertVariant, Button, ButtonSize, ButtonVariant, Card, Input, Label, SafeAreaFrame,
-    Skeleton, StatusBadge, StatusBadgeStatus,
+    Alert, AlertVariant, Button, ButtonSize, ButtonVariant, Card, Input, Label, MarkdownLinks,
+    MarkdownRenderer, MarkdownSource, SafeAreaFrame, Skeleton, StatusBadge, StatusBadgeStatus,
 };
 use serde_json::Value;
 
@@ -163,6 +163,25 @@ fn alert_state() -> Element {
     rsx! { Alert { variant, "{body}" } }
 }
 
+fn markdown_renderer_state() -> Element {
+    let content = prop("content").expect("markdown-renderer: content");
+    let links = match prop("links").as_deref() {
+        None | Some("safe") => MarkdownLinks::Safe,
+        Some("https") => MarkdownLinks::Https,
+        Some(other) => panic!("markdown-renderer: the contract names an unknown links `{other}`"),
+    };
+    let from = match prop("from").as_deref() {
+        None | Some("markdown") => MarkdownSource::Markdown,
+        Some("html") => MarkdownSource::Html,
+        Some("auto") => MarkdownSource::Auto,
+        Some(other) => panic!("markdown-renderer: the contract names an unknown from `{other}`"),
+    };
+    let heading_base =
+        num("headingBase").map_or(1, |n| u8::try_from(n).expect("headingBase fits u8"));
+    let class = prop("class").unwrap_or_default();
+    rsx! { MarkdownRenderer { content, links, from, heading_base, class } }
+}
+
 fn skeleton_state() -> Element {
     let class = prop("class").unwrap_or_default();
     rsx! { Skeleton { class } }
@@ -191,6 +210,7 @@ fn renderer(registry: &str) -> fn() -> Element {
         "card" => card_state,
         "input" => input_state,
         "label" => label_state,
+        "markdown-renderer" => markdown_renderer_state,
         "safe-area-frame" => safe_area_frame_state,
         "skeleton" => skeleton_state,
         "status-badge" => status_badge_state,

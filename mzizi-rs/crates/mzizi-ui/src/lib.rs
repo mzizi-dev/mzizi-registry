@@ -71,6 +71,9 @@ pub mod status_badge;
 #[path = "generated/safe-area-frame.rs"]
 pub mod safe_area_frame;
 
+#[path = "generated/markdown-renderer.rs"]
+pub mod markdown_renderer;
+
 // ── wave 1 · batch A · modules ──
 // ── end wave 1 · batch A · modules ──
 
@@ -110,6 +113,11 @@ pub use card::{Card, CardContent, CardFooter, CardHeader, CardTitle};
 pub use chart::{Chart, ChartProps, chart_loading_variants, chart_variants};
 pub use input::{Input, InputProps, input_variants};
 pub use label::{Label, LabelProps, label_variants};
+pub use markdown_renderer::{
+    Align as MarkdownAlign, Block as MarkdownBlock, Inline as MarkdownInline, List as MarkdownList,
+    ListItem as MarkdownListItem, MarkdownLinks, MarkdownRenderer, MarkdownRendererProps,
+    MarkdownSource, parse_inlines as parse_markdown_inlines, parse_markdown, safe_href,
+};
 pub use progress::{Progress, ProgressProps, progress_variants};
 pub use safe_area_frame::{SafeAreaBands, SafeAreaFrame, SafeAreaFrameProps, safe_area_bands};
 pub use separator::{Separator, SeparatorOrientation, SeparatorProps, separator_variants};
@@ -149,6 +157,7 @@ pub const CONTRACTS: &[(&str, &str)] = &[
     ("card", card::CONTRACT),
     ("input", input::CONTRACT),
     ("label", label::CONTRACT),
+    ("markdown-renderer", markdown_renderer::CONTRACT),
     ("safe-area-frame", safe_area_frame::CONTRACT),
     ("skeleton", skeleton::CONTRACT),
     ("status-badge", status_badge::CONTRACT),

@@ -1,6 +1,6 @@
 [package]
 name = "mzizi-ui"
-description = "Mzizi N2 primitives for Dioxus: avatar, badge, button, card, chart, input, label, progress and separator, the Rust path for the component registry."
+description = "Mzizi N2 primitives for Dioxus: alert, avatar, badge, button, card, chart, input, label, a safe markdown renderer, progress, separator, skeleton and status badge, the Rust path for the component registry."
 # crates.io renders `readme`, `keywords` and `categories` on the package page, and a
 # published version is permanent — 0.1.0 can be yanked but never re-uploaded. All three
 # were unset on this crate, so the page would have rendered bare.
@@ -32,7 +32,7 @@ exclude = ["tests/"]
 workspace = true
 
 [dependencies]
-mzizi-tokens = { path = "../mzizi-tokens", version = "0.1.0" }
+mzizi-tokens = { path = "../mzizi-tokens", version = "0.2.0" }
 # A component LIBRARY, so no `launch`, no `devtools`, no renderer. Those belong to
 # the app that mounts these primitives — pulling a renderer in here would pick the
 # consumer's target for them, and Dioxus's whole point is that one codebase serves

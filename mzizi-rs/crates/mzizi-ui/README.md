@@ -3,13 +3,25 @@
 Dioxus primitives from the [Mzizi](https://mzizi.dev) component registry — **node N2,
 primitives** — the second node of the DNA-helix architecture.
 
-Nine primitives are ported so far: `Avatar`, `Badge`, `Button`, `Card`, `Chart`, `Input`,
-`Label`, `Progress` and `Separator`. That is the whole of this crate; N2 has many more
-components, and the rest exist only as React today.
+The primitives ported so far: `Alert`, `Avatar`, `Badge`, `Button`, `Card`, `Chart`,
+`Input`, `Label`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame`, `Separator`, `Skeleton`
+and `StatusBadge`. That is the whole of this crate; N2 has many more components, and the
+rest exist only as React and Astro today.
+
+`MarkdownRenderer` is safe by construction: it parses Markdown into a typed tree
+(`parse_markdown`, `MarkdownBlock`, `MarkdownInline`) and renders elements, with no HTML
+string anywhere. Raw HTML in the text shows as text, and links pass `safe_href`, a scheme
+allow-list (`MarkdownLinks::Https` keeps https only).
+
+```rust
+use mzizi_ui::{MarkdownLinks, MarkdownRenderer};
+
+rsx! { MarkdownRenderer { content: "**Hi** [docs](https://mzizi.dev)", links: MarkdownLinks::Https } }
+```
 
 ```toml
 [dependencies]
-mzizi-ui = "0.1"
+mzizi-ui = "0.2"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before

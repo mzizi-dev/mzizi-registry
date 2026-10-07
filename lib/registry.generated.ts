@@ -15,6 +15,8 @@
 export const REGISTRY_FILES: readonly string[] = [
   "assets/bundu-mark-dark.png",
   "assets/bundu-mark-light.png",
+  "assets/mukoko-icon-dark.png",
+  "assets/mukoko-icon-light.png",
   "assets/mukoko-mark-dark.png",
   "assets/mukoko-mark-light.png",
   "assets/mzizi-mark-dark.png",
@@ -298,6 +300,9 @@ export const REGISTRY_FILES: readonly string[] = [
   "n2-primitives/map-marker.tsx",
   "n2-primitives/map-route.tsx",
   "n2-primitives/map-view.tsx",
+  "n2-primitives/markdown-parse.ts",
+  "n2-primitives/markdown-renderer.astro",
+  "n2-primitives/markdown-renderer.rs",
   "n2-primitives/markdown-renderer.tsx",
   "n2-primitives/masonry-grid.tsx",
   "n2-primitives/media-filter-strip.tsx",

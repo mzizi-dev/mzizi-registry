@@ -122,7 +122,7 @@
     {
       "name": "app/brand-mark",
       "title": "BrandMark",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "app/brand-mark.contract.json",
       "astro": "app-brand-mark",
       "tsx": "app-brand-mark",
@@ -437,7 +437,7 @@
     {
       "name": "site/container",
       "title": "Container",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "file": "site/container.contract.json",
       "astro": "site-container",
       "tsx": "site-container",
@@ -446,7 +446,7 @@
     {
       "name": "site/hero",
       "title": "Hero",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "file": "site/hero.contract.json",
       "astro": "site-hero",
       "tsx": "site-hero",
@@ -473,7 +473,7 @@
     {
       "name": "site/section",
       "title": "Section",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "file": "site/section.contract.json",
       "astro": "site-section",
       "tsx": "site-section",
@@ -595,6 +595,15 @@
       "astro": "label",
       "tsx": "label",
       "rs": "label"
+    },
+    {
+      "name": "ui/markdown-renderer",
+      "title": "MarkdownRenderer",
+      "version": "1.0.0",
+      "file": "ui/markdown-renderer.contract.json",
+      "astro": "markdown-renderer",
+      "tsx": "markdown-renderer",
+      "rs": "markdown-renderer"
     }
   ]
 }
