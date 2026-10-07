@@ -136,9 +136,10 @@ const SAFE_SCHEMES = ["http", "https", "mailto", "tel"]
  *
  * Browsers drop tabs and newlines anywhere in a URL and C0 controls and spaces at either
  * end, so `\tjavascript:` and `java\nscript:` are `javascript:` to them: those characters
- * are removed first. Then the scheme is checked against an allow-list, never a deny-list
- * (`javascript:`, `vbscript:`, `data:` and the next one are refused alike). Under `safe` an
- * address with no scheme (relative, root-relative, `#anchor`, `?query`) is kept; under
+ * are removed first. An address with other whitespace still in it is refused, and so is a web
+ * address with no host or with credentials (`https://bank.example@evil.example`). Then the
+ * scheme is checked against an allow-list, never a deny-list (`javascript:`, `vbscript:`,
+ * `data:` and the next one are refused alike). Under `safe` an address with no scheme (relative, root-relative, `#anchor`, `?query`) is kept; under
  * `https` only `https:` is.
  */
 export function safeHref(raw: string, policy: MarkdownLinkPolicy = "safe"): string | null {
@@ -150,15 +151,35 @@ export function safeHref(raw: string, policy: MarkdownLinkPolicy = "safe"): stri
   url = url.slice(start, end)
   if (url.startsWith("<") && url.endsWith(">")) url = url.slice(1, -1)
   if (url === "") return null
+  // An address with whitespace or a control character left in it (even just inside `<…>`,
+  // where `<\u0001javascript:…>` would otherwise read as scheme-less) is not one address.
+  for (const c of url) if (isWs(c) || c.charCodeAt(0) < 0x20 || c.charCodeAt(0) === 0x7f) return null
   const scheme = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(url)
-  if (policy === "https") return scheme && scheme[1].toLowerCase() === "https" ? url : null
-  if (!scheme) return url
-  return SAFE_SCHEMES.includes(scheme[1].toLowerCase()) ? url : null
+  const name = scheme ? scheme[1].toLowerCase() : null
+  if (policy === "https" ? name !== "https" : name !== null && !SAFE_SCHEMES.includes(name)) return null
+  // A web address needs a host and no credentials: `https://bank.example@evil.example` shows
+  // one site and goes to another. The same holds for a scheme-relative `//host` address.
+  // Browsers read `\` as `/` here, so `\\host` and `/\host` are scheme-relative too.
+  const rest = name === "http" || name === "https" ? url.slice(name.length + 1) : name === null && SCHEME_RELATIVE.test(url) ? url : null
+  if (rest !== null && !webAuthorityOk(rest)) return null
+  return url
+}
+
+/** Two slashes, either way round: a browser reads `\\host`, `/\host` and `//host` alike. */
+const SCHEME_RELATIVE = /^[/\\]{2}/
+
+/** `//host…`: a host is there, and no `user@` before it. */
+function webAuthorityOk(rest: string): boolean {
+  if (!SCHEME_RELATIVE.test(rest)) return false
+  let end = 2
+  while (end < rest.length && !"/?#\\".includes(rest[end])) end++
+  const authority = rest.slice(2, end)
+  return authority !== "" && !authority.includes("@")
 }
 
 /** Whether a kept address leaves the site (it opens in a new tab). */
 export function isExternal(href: string): boolean {
-  return /^https?:/i.test(href)
+  return /^https?:/i.test(href) || SCHEME_RELATIVE.test(href)
 }
 
 // ─── Whitespace ───────────────────────────────────────────────────────────────────────────
@@ -960,6 +981,35 @@ function toLines(items: (MarkdownInline | null)[]): MarkdownInline[][] {
 /** One line of rich inlines (breaks are spaces), or null when it is empty. */
 const toLine = (nodes: RichNode[], policy: MarkdownLinkPolicy) => toLines(richInlines(nodes, policy, ONE_LINE))[0] ?? null
 
+/** `<ol start>`, when it is a plain number (as a Markdown list's first number is). */
+function listStart(el: RichElement): number {
+  const raw = trimWs(el.attrs.start ?? "")
+  return /^[0-9]{1,9}$/.test(raw) ? Number(raw) : 1
+}
+
+/**
+ * A rich-text `<ul>` or `<ol>`: each `<li>` is one line (its paragraphs joined), and a list
+ * directly inside it stays a nested list, up to `MAX_NESTING` deep (deeper ones join the line).
+ */
+function richList(el: RichElement, policy: MarkdownLinkPolicy, depth: number): MarkdownList | null {
+  const items: MarkdownListItem[] = []
+  for (const li of el.children) {
+    if ("text" in li || li.tag !== "li") continue
+    const inline: RichNode[] = []
+    const children: MarkdownList[] = []
+    for (const c of li.children) {
+      if (!("text" in c) && (c.tag === "ul" || c.tag === "ol") && depth + 1 < MAX_NESTING) {
+        const sub = richList(c, policy, depth + 1)
+        if (sub) children.push(sub)
+      } else inline.push(c)
+    }
+    const line = toLine(inline, policy)
+    if (line || children.length > 0) items.push({ lines: line ? [line] : [], children })
+  }
+  if (items.length === 0) return null
+  return el.tag === "ol" ? { kind: "ol", start: listStart(el), items } : { kind: "ul", items }
+}
+
 function richBlocks(nodes: RichNode[], policy: MarkdownLinkPolicy, out: MarkdownBlock[]): void {
   let pending: RichNode[] = []
   const flush = () => {
@@ -975,13 +1025,8 @@ function richBlocks(nodes: RichNode[], policy: MarkdownLinkPolicy, out: Markdown
     const tag = n.tag
     if (tag === "ul" || tag === "ol") {
       flush()
-      const items: MarkdownListItem[] = []
-      for (const li of n.children)
-        if (!("text" in li) && li.tag === "li") {
-          const line = toLine(li.children, policy)
-          if (line) items.push({ lines: [line], children: [] })
-        }
-      if (items.length > 0) out.push(tag === "ol" ? { kind: "ol", start: 1, items } : { kind: "ul", items })
+      const list = richList(n, policy, 0)
+      if (list) out.push(list)
     } else if (/^h[1-6]$/.test(tag)) {
       flush()
       const line = toLine(n.children, policy)
@@ -1015,7 +1060,7 @@ function richBlocks(nodes: RichNode[], policy: MarkdownLinkPolicy, out: Markdown
 /**
  * Rich text (an editor's HTML) as blocks. Block elements and `<br>` end a line and source
  * newlines are spaces; a list item is one line (its own paragraphs joined, as editors such as
- * ProseMirror wrap them); bold, italic and code keep their meaning, links their checked
+ * ProseMirror wrap them) with its nested lists kept, and `<ol start>` is kept; bold, italic and code keep their meaning, links their checked
  * address (a refused one keeps its words). Text is text: Markdown typed into an editor is shown
  * as typed.
  */

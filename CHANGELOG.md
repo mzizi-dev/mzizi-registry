@@ -10,6 +10,22 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.7.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.6.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.7.0, and the Mzizi Roots crates are published at 0.3.0.
+
+### Changed — the Mzizi Roots crates move to 0.3.0 (2026-10-07, #466)
+
+The next minor above `mzizi-rs-v0.2.0`, so `mzizi-ui` 0.3.0 on crates.io carries `markdown-renderer` 1.1.0 (#465): link addresses with a control character, whitespace or credentials are refused, and rich-text lists keep their nesting and start. The crate READMEs and the `mzizi-roots` crate docs install `"0.3"`.
+
+### Security — `markdown-renderer` 1.1.0: links need a host and no credentials; rich-text lists keep their nesting and start (2026-10-07, #465)
+
+Upstreamed from the Toddle extension's flag text, which `markdown-renderer` replaces there (#460).
+
+- **Links:** an address with whitespace or a control character still inside is refused (it is not one address; this closes `<\u0001javascript:…>`, which v4.6.0 kept as a scheme-less address that a browser reads as `javascript:`), and a web address (`http:`, `https:` or scheme-relative `//host`) needs a host and no credentials. `https://bank.example@evil.example` shows one site and goes to another, so it now keeps its words and loses its address, like a refused scheme.
+- **Rich text (`from="html"` / `"auto"`):** a list inside a list item stays a nested list (up to 8 deep), where it was joined into the item's line, and `<ol start="n">` keeps its first number.
+- `contracts/ui/markdown-renderer` 1.1.0 adds a nested list with a start to the `rich` state and a credentials link to the `xss` state. A scheme-less `\\host` or `/\host` is scheme-relative too (browsers read `\` as `/`), so it gets the same host and credentials check and opens in a new tab. The shared fixture has 55 cases, identical in TypeScript and Rust.
+
 ## [4.6.0] - 2026-10-07
 
 Releases `staging` to `main` as the next minor above v4.5.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.6.0, and the Mzizi Roots crates are published at 0.2.0, so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer`.
