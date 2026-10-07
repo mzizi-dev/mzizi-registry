@@ -45,6 +45,12 @@ describe("safeHref", () => {
     "data:text/html;base64,PHNjcmlwdD4=",
     "vbscript:msgbox(1)",
     "<javascript:alert(1)>",
+    "https://bank.example@evil.example/x",
+    "//user@evil.example",
+    "https://",
+    "http:/x.org",
+    "https://x.org/a b",
+    "https://x.org/a\u00a0b",
     "",
     "   ",
   ])("refuses %j", (raw) => {

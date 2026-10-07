@@ -132,7 +132,7 @@ Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Wher
 | `ui/card`              | Card             | N2   | 1.0.0   | `card`              | `card` (contract)              | `card` (contract)              |
 | `ui/input`             | Input            | N2   | 1.0.0   | `input`             | `input` (contract)             | `input` (contract)             |
 | `ui/label`             | Label            | N2   | 1.0.0   | `label`             | `label` (contract)             | `label` (contract)             |
-| `ui/markdown-renderer` | MarkdownRenderer | N2   | 1.0.0   | `markdown-renderer` | `markdown-renderer` (contract) | `markdown-renderer` (contract) |
+| `ui/markdown-renderer` | MarkdownRenderer | N2   | 1.1.0   | `markdown-renderer` | `markdown-renderer` (contract) | `markdown-renderer` (contract) |
 | `ui/native-select`     | NativeSelect     | N2   | 2.0.0   | `native-select`     | `native-select` (contract)     | —                              |
 | `ui/safe-area-frame`   | SafeAreaFrame    | N2   | 1.0.0   | `safe-area-frame`   | `safe-area-frame` (contract)   | `safe-area-frame` (contract)   |
 | `ui/segmented-control` | SegmentedControl | N2   | 1.1.0   | `segmented-control` | `segmented-control` (contract) | —                              |

@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — `markdown-renderer` 1.1.0: links need a host and no credentials; rich-text lists keep their nesting and start (2026-10-07, #465)
+
+Upstreamed from the Toddle extension's flag text, which `markdown-renderer` replaces there (#460).
+
+- **Links:** an address with whitespace still inside is refused (it is not one address), and a web address (`http:`, `https:` or scheme-relative `//host`) needs a host and no credentials. `https://bank.example@evil.example` shows one site and goes to another, so it now keeps its words and loses its address, like a refused scheme.
+- **Rich text (`from="html"` / `"auto"`):** a list inside a list item stays a nested list (up to 8 deep), where it was joined into the item's line, and `<ol start="n">` keeps its first number.
+- `contracts/ui/markdown-renderer` 1.1.0 adds a nested list with a start to the `rich` state and a credentials link to the `xss` state. The shared fixture has 52 cases, identical in TypeScript and Rust.
+
 ### Changed — the Mzizi Roots crates move to 0.2.0 (2026-10-07, #463)
 
 The next minor above `mzizi-rs-v0.1.0` (nyuchi/.github#80): the workspace version, every internal path dependency and `Cargo.lock` move to 0.2.0, and the crate READMEs and the `mzizi-roots` crate docs install `"0.2"`. On the next release to `main`, `publish-crates.yml` uploads them, so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer` (#462). `cargo package --workspace` verifies all eleven.

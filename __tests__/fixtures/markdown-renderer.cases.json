@@ -1075,17 +1075,7 @@
               },
               {
                 "t": "text",
-                "v": " and "
-              },
-              {
-                "t": "link",
-                "href": "https://x.org/c d",
-                "c": [
-                  {
-                    "t": "text",
-                    "v": "u"
-                  }
-                ]
+                "v": " and u"
               }
             ]
           ]
@@ -1795,29 +1785,6 @@
       ]
     },
     {
-      "say": "rich text: nested lists flatten into their item",
-      "from": "html",
-      "input": "<ul><li>one<ul><li>two</li></ul></li></ul>",
-      "expect": [
-        {
-          "kind": "ul",
-          "items": [
-            {
-              "lines": [
-                [
-                  {
-                    "t": "text",
-                    "v": "one two"
-                  }
-                ]
-              ],
-              "children": []
-            }
-          ]
-        }
-      ]
-    },
-    {
       "say": "line and paragraph separators (U+2028, U+2029) are characters inside a line",
       "input": "> a b\n\n- c d\n\n# e f\n\n```x y\nz\n```",
       "expect": [
@@ -2013,6 +1980,199 @@
                     ]
                   }
                 ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: nested lists stay nested, <ol start> is kept",
+      "from": "html",
+      "input": "<ul><li>Parent<ul><li>child1</li><li>child2</li></ul></li></ul><ol start=\"3\"><li>c</li><li>d</li></ol><ol start=\"x\"><li>e</li></ol><ul><li><p>pm</p><ol><li><p>deep</p></li></ol></li></ul>",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "Parent"
+                  }
+                ]
+              ],
+              "children": [
+                {
+                  "kind": "ul",
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "child1"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    },
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "child2"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "ol",
+          "start": 3,
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "c"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "d"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "ol",
+          "start": 1,
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "e"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "pm"
+                  }
+                ]
+              ],
+              "children": [
+                {
+                  "kind": "ol",
+                  "start": 1,
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "deep"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a link with no usable address keeps its words only",
+      "from": "html",
+      "input": "<p>Ask <a>Ms Moyo</a> or <a href=\"https://x.org/a b\">doc</a> today</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Ask Ms Moyo or doc today"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "links need a host and no credentials; whitespace inside refuses them",
+      "input": "[a](https://bank.example@evil.example/x) [b](//user@evil.example) [c](https://) [d](http:/x.org) [e](<https://x.org/c d>) [f](https://x.org/ok?q=a@b) [g](//cdn.example/x) [h](https:\\\\evil.example)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a b c d e "
+              },
+              {
+                "t": "link",
+                "href": "https://x.org/ok?q=a@b",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "f"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "//cdn.example/x",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "g"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " h"
               }
             ]
           ]

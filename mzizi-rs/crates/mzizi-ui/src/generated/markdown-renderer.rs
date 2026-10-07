@@ -236,18 +236,42 @@ pub fn safe_href(raw: &str, policy: MarkdownLinks) -> Option<String> {
     if url.starts_with('<') && url.ends_with('>') && url.len() >= 2 {
         url = &url[1..url.len() - 1];
     }
-    if url.is_empty() {
+    if url.is_empty() || url.chars().any(is_ws) {
+        // Empty, or whitespace left inside: not one address.
         return None;
     }
     let scheme = scheme_of(url).map(str::to_ascii_lowercase);
-    match policy {
-        MarkdownLinks::Https => (scheme.as_deref() == Some("https")).then(|| url.to_owned()),
-        MarkdownLinks::Safe => match scheme.as_deref() {
-            None => Some(url.to_owned()),
-            Some("http" | "https" | "mailto" | "tel") => Some(url.to_owned()),
-            Some(_) => None,
-        },
+    let allowed = match (policy, scheme.as_deref()) {
+        (MarkdownLinks::Https, Some("https")) => true,
+        (MarkdownLinks::Https, _) => false,
+        (MarkdownLinks::Safe, None | Some("http" | "https" | "mailto" | "tel")) => true,
+        (MarkdownLinks::Safe, Some(_)) => false,
+    };
+    if !allowed {
+        return None;
     }
+    // A web address needs a host and no credentials (`https://bank.example@evil.example`
+    // shows one site and goes to another); so does a scheme-relative `//host` address.
+    let rest = match scheme.as_deref() {
+        Some(name @ ("http" | "https")) => Some(&url[name.len() + 1..]),
+        None if url.starts_with("//") => Some(url),
+        _ => None,
+    };
+    if let Some(rest) = rest {
+        if !web_authority_ok(rest) {
+            return None;
+        }
+    }
+    Some(url.to_owned())
+}
+
+/// `//host…`: a host is there, and no `user@` before it.
+fn web_authority_ok(rest: &str) -> bool {
+    let Some(after) = rest.strip_prefix("//") else {
+        return false;
+    };
+    let authority = after.split(['/', '?', '#', '\\']).next().unwrap_or("");
+    !authority.is_empty() && !authority.contains('@')
 }
 
 /// `^[a-zA-Z][a-zA-Z0-9+.-]*:`
@@ -1579,6 +1603,74 @@ fn to_line(nodes: &[RichNode], policy: MarkdownLinks) -> Option<Vec<Inline>> {
         .next()
 }
 
+/// `<ol start>`, when it is a plain number (as a Markdown list's first number is).
+fn list_start(attrs: &[(String, String)]) -> u32 {
+    let raw = attrs
+        .iter()
+        .find(|(k, _)| k == "start")
+        .map_or("", |(_, v)| trim_ws(v));
+    if (1..=9).contains(&raw.len()) && raw.chars().all(|c| c.is_ascii_digit()) {
+        raw.parse().unwrap_or(1)
+    } else {
+        1
+    }
+}
+
+/// A rich-text `<ul>` or `<ol>`: each `<li>` is one line (its paragraphs joined), and a list
+/// directly inside it stays a nested list, up to `MAX_NESTING` deep (deeper ones join the line).
+fn rich_list(el: &RichNode, policy: MarkdownLinks, depth: usize) -> Option<List> {
+    let RichNode::El {
+        tag,
+        attrs,
+        children,
+    } = el
+    else {
+        return None;
+    };
+    let mut items = Vec::new();
+    for li in children {
+        let RichNode::El {
+            tag: t,
+            children: c,
+            ..
+        } = li
+        else {
+            continue;
+        };
+        if t != "li" {
+            continue;
+        }
+        let mut pieces = Vec::new();
+        let mut subs = Vec::new();
+        for node in c {
+            let nested = matches!(node, RichNode::El { tag, .. } if tag == "ul" || tag == "ol");
+            if nested && depth + 1 < MAX_NESTING {
+                if let Some(sub) = rich_list(node, policy, depth + 1) {
+                    subs.push(sub);
+                }
+            } else {
+                pieces.extend(rich_inlines(std::slice::from_ref(node), policy, ONE_LINE));
+            }
+        }
+        let line = to_lines(pieces).into_iter().next();
+        if line.is_some() || !subs.is_empty() {
+            items.push(ListItem {
+                lines: line.into_iter().collect(),
+                children: subs,
+            });
+        }
+    }
+    if items.is_empty() {
+        return None;
+    }
+    let ordered = tag == "ol";
+    Some(List {
+        ordered,
+        start: if ordered { list_start(attrs) } else { 1 },
+        items,
+    })
+}
+
 fn rich_blocks(nodes: &[RichNode], policy: MarkdownLinks, out: &mut Vec<Block>) {
     let mut pending: Vec<&RichNode> = Vec::new();
     let flush = |pending: &mut Vec<&RichNode>, out: &mut Vec<Block>| {
@@ -1599,30 +1691,8 @@ fn rich_blocks(nodes: &[RichNode], policy: MarkdownLinks, out: &mut Vec<Block>) 
         let tag = tag.as_str();
         if tag == "ul" || tag == "ol" {
             flush(&mut pending, out);
-            let mut items = Vec::new();
-            for li in children {
-                if let RichNode::El {
-                    tag: t,
-                    children: c,
-                    ..
-                } = li
-                {
-                    if t == "li" {
-                        if let Some(line) = to_line(c, policy) {
-                            items.push(ListItem {
-                                lines: vec![line],
-                                children: Vec::new(),
-                            });
-                        }
-                    }
-                }
-            }
-            if !items.is_empty() {
-                out.push(Block::List(List {
-                    ordered: tag == "ol",
-                    start: 1,
-                    items,
-                }));
+            if let Some(list) = rich_list(n, policy, 0) {
+                out.push(Block::List(list));
             }
         } else if tag.len() == 2 && tag.starts_with('h') && matches!(tag.as_bytes()[1], b'1'..=b'6')
         {
