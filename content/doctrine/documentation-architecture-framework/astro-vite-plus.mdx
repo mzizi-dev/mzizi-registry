@@ -60,9 +60,10 @@ Rust UI) and `@nyuchi/nyuchi-docs-search` (Astro plus TypeScript). Neither is a
 precedent to copy.
 
 **Consumers are a different matter.** Apps across the bundu ecosystem may not
-use Astro, so the registry keeps a React build and a Rust (Dioxus) build of each
-component at parity with its Astro build: the same component under one
-contract, never a fallback or a second design (see `AGENTS.md`). React is kept
+use Astro, so the registry builds React and Rust (Dioxus) versions of its
+components to parity with the Astro build: the same component under one
+contract, never a fallback or a second design (see `AGENTS.md`). Coverage is not
+yet complete in every build; the registry files say which builds exist. React is kept
 for them; it is not a framework Mzizi's own surfaces add.
 
 **Under both is Vite+.** One toolchain — Rolldown to bundle, Vitest to test,

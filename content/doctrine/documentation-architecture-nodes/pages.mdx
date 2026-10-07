@@ -21,14 +21,13 @@ rust:
   kind: "ui-framework"
   note: "N6 has a Rust ALTERNATIVE and deliberately no Rust implementation. The covenant — a page is a composition, not an implementation — is what makes multi-target viable at all: every node that keeps logic out of its pages is a node that ports cheaply. A page that inlined a spinner instead of pulling it from N2 is a page that now has to be rewritten rather than rearranged."
   state: "target"
-  today: "No Rust ships for N6. The registry's page compositions are Astro, the default build, under components/registry/n6-pages/, with React siblings; no Dioxus page compositions exist yet. The Next.js app that used to host pages in this repository has been removed."
+  today: "No Rust ships for N6. The Dashboard Standard and Discover Standard parts under components/registry/n6-pages/ have Astro builds, the default, with React siblings; most full pages and layouts (login, signup, admin, wallet, checkout and others) are still React only and are owed Astro builds. No Dioxus page compositions exist yet. The Next.js app that used to host pages in this repository has been removed."
   target: "Astro first, React at parity, Dioxus on the Rust path; native targets compose their own. Nothing about a page's contract changes, because a page has no contract beyond the components it arranges."
   position: "alternative"
   descriptors:
   - "astro"
   - "dioxus"
   - "react"
-  - "mzizi-react-legacy"
 sort_order: 6
 stakeholder: "Product engineer"
 strand: "shipped"

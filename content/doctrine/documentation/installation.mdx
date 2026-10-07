@@ -75,22 +75,9 @@ your installed CLI lists `astro` under `--target`.
 Every install carries the canonical typography (Noto Sans / Noto Serif / JetBrains
 Mono) and the Mzizi palette.
 
-## Project structure
+## Where files land
 
-```
-src/
-├── components/
-│   ├── ui/          # N2 — Primitives
-│   ├── brand/       # N3 — Brand Components
-│   ├── safety/      # N4 — Safety Gates
-│   ├── resilience/  # N5 — Resilience
-│   ├── pages/       # N6 — Page Compositions
-│   └── shell/       # N7 — App Shell
-├── lib/
-│   ├── tokens/      # N1 — Design Tokens
-│   ├── icons/       # N1 — Icon Registry
-│   ├── harness/     # Harness — Cross-cutting
-│   ├── assurance/   # N8 — Assurance
-│   └── fundi/       # N9 — Fundi
-└── docs/            # N10 — Documentation
-```
+- **Astro:** flat, in `src/components/mzizi/`, so a component's relative imports
+  resolve beside it.
+- **React:** where your `components.json` aliases point, as with any shadcn registry.
+- **Rust:** nothing is copied; the components come from the crate you add.
