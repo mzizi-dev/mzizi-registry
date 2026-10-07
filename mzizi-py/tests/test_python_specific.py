@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import builtins
 import functools
+import itertools
 import logging
 from collections.abc import Awaitable, Callable
 from typing import Any
@@ -103,11 +104,9 @@ def test_error_code_never_uses_the_message() -> None:
         lambda: mr.BulkheadConfig(max_concurrent=0),
         lambda: mr.BulkheadConfig(max_queue=-1),
         lambda: mr.BulkheadConfig(max_queue_wait_ms=True),
-        lambda: mr.Fault("error", 1.5),
-        lambda: mr.Fault("latency", 0.5, 10, 5),
-        lambda: mr.Fault("explode", 0.1),  # type: ignore[arg-type]
-        lambda: mr.ChaosConfig(faults=[mr.Fault("error", 0.6), mr.Fault("drop", 0.6)]),
-        lambda: mr.ChaosConfig(seed=-1),
+        lambda: mr.ChaosEngine(mr.ChaosConfig(faults=[mr.FaultSpec("error", 1.5)])),
+        lambda: mr.ChaosEngine(mr.ChaosConfig(faults=[mr.FaultSpec("latency", 0.5, 10, 5)])),
+        lambda: mr.ChaosEngine(mr.ChaosConfig(seed=-1)),
         lambda: mr.Stage("", ok),
     ],
 )
@@ -438,7 +437,7 @@ def test_rate_limiter_queues_within_max_wait_on_a_virtual_clock() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Chaos: production guard
+# Chaos: production guard, applying faults
 # ---------------------------------------------------------------------------
 
 
@@ -447,164 +446,209 @@ def test_rate_limiter_queues_within_max_wait_on_a_virtual_clock() -> None:
 def test_chaos_is_forbidden_in_production(
     monkeypatch: pytest.MonkeyPatch, var: str, value: str
 ) -> None:
-    for name in ("MZIZI_ENV", "ENVIRONMENT", "ENV"):
-        monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv(var, value)
     assert mr.is_production_environment()
+    always = [mr.FaultSpec("error", 1)]
     with pytest.raises(mr.ChaosForbiddenError):
-        mr.create_chaos(mr.ChaosConfig(enabled=True, faults=[mr.Fault("error", 1)]))
+        mr.create_chaos(mr.ChaosConfig(enabled=True, faults=always))
     # No override: an explicit non-production environment does not lift the guard.
     with pytest.raises(mr.ChaosForbiddenError):
-        mr.ChaosEngine(mr.ChaosConfig(enabled=True), environment="development")
-    # Disabled chaos may be constructed anywhere.
-    mr.create_chaos(mr.ChaosConfig(enabled=False))
+        mr.ChaosEngine(mr.ChaosConfig(enabled=True, environment="development"))
+    # The wrappers: with_chaos raises without calling fn; middleware and wrap at creation.
+    called = False
 
+    async def fn() -> str:
+        nonlocal called
+        called = True
+        return "ran"
 
-def test_chaos_explicit_production(monkeypatch: pytest.MonkeyPatch) -> None:
-    for name in ("MZIZI_ENV", "ENVIRONMENT", "ENV"):
-        monkeypatch.delenv(name, raising=False)
-    assert not mr.is_production_environment()
-    assert mr.is_production_environment("production")
     with pytest.raises(mr.ChaosForbiddenError):
-        mr.create_chaos(mr.ChaosConfig(enabled=True), environment="prod")
+        run(mr.with_chaos(fn, mr.ChaosConfig(enabled=True, faults=always)))
+    assert not called
+    with pytest.raises(mr.ChaosForbiddenError):
+        mr.chaos_middleware(mr.ChaosConfig(enabled=True))
+    with pytest.raises(mr.ChaosForbiddenError):
+        mr.chaos_wrap(fn, mr.ChaosConfig(enabled=True))
+    # Disabled chaos is allowed and inert in production.
+    assert mr.create_chaos(mr.ChaosConfig(enabled=False, faults=always)).decide() is None
+    assert run(mr.with_chaos(fn, mr.ChaosConfig(enabled=False, faults=always))) == "ran"
 
 
 def test_chaos_entry_points_are_a_pass_through_once_production(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    for name in ("MZIZI_ENV", "ENVIRONMENT", "ENV"):
-        monkeypatch.delenv(name, raising=False)
-    engine = mr.create_chaos(mr.ChaosConfig(enabled=True, faults=[mr.Fault("error", 1)]))
-    with pytest.raises(mr.ChaosError):
+    engine = mr.create_chaos(mr.ChaosConfig(enabled=True, faults=[mr.FaultSpec("error", 1)]))
+    with pytest.raises(mr.ChaosError) as info:
         run(mr.with_chaos(ok, engine))
+    assert info.value.injected is True
+    assert info.value.chaos_type == "error"
     monkeypatch.setenv("MZIZI_ENV", "production")
     assert engine.decide() is None
     assert run(mr.with_chaos(ok, engine)) == "ok"
-    assert run(mr.chaos_middleware(engine)(ok)) == "ok"
-    assert run(mr.chaos_wrap(ok, engine)("v")) == "v"
+
+
+def test_a_seeded_middleware_replays_one_sequence() -> None:
+    config = mr.ChaosConfig(enabled=True, seed=3, faults=[mr.FaultSpec("error", 0.5)])
+    middleware = mr.chaos_middleware(config)
+
+    async def outcomes() -> list[str]:
+        out = []
+        for _ in range(6):
+            try:
+                out.append(await middleware(ok))
+            except mr.ChaosError:
+                out.append("error")
+        return out
+
+    # chaos.cases.json: seed 3, error 50% → [none, error, error, error, none, error]
+    assert run(outcomes()) == ["ok", "error", "error", "error", "ok", "error"]
+
+
+def test_an_unseeded_wrapper_draws_a_random_seed() -> None:
+    config = mr.ChaosConfig(enabled=True, faults=[mr.FaultSpec("error", 0.5)])
+    wrapped = mr.chaos_wrap(lambda v: ok(v), config)
+    for _ in range(4):
+        try:
+            assert run(wrapped("v")) == "v"
+        except mr.ChaosError:
+            pass
 
 
 def test_chaos_hang_is_cancelled_by_a_timeout() -> None:
-    engine = mr.create_chaos(mr.ChaosConfig(enabled=True, faults=[mr.Fault("timeout", 1)]))
+    engine = mr.create_chaos(mr.ChaosConfig(enabled=True, faults=[mr.FaultSpec("timeout", 1)]))
     with pytest.raises(mr.TimeoutError):
         run(mr.with_timeout(lambda: mr.with_chaos(ok, engine), 20))
 
 
-def test_chaos_truncate_and_malformed() -> None:
-    def engine(kind: mr.FaultKind, mutate: Callable[[Any], Any] | None = None) -> mr.ChaosEngine:
-        return mr.create_chaos(
-            mr.ChaosConfig(enabled=True, faults=[mr.Fault(kind, 1, mutate=mutate)])
-        )
+def test_latency_waits_on_the_injected_sleep() -> None:
+    clock = mr.VirtualClock()
+    engine = mr.create_chaos(
+        mr.ChaosConfig(enabled=True, schedule=[mr.Fault("latency", 250)], faults=[])
+    )
+    assert run(mr.with_chaos(ok, engine, sleep=clock)) == "ok"
+    assert clock.now == 250
 
-    assert run(mr.with_chaos(lambda: ok("abcdef"), engine("truncate"))) == "abc"
-    assert run(mr.with_chaos(lambda: ok(b"abcde"), engine("truncate"))) == b"ab"
-    assert run(mr.with_chaos(lambda: ok([1, 2, 3]), engine("truncate"))) == [1]
+
+def test_apply_fault() -> None:
+    assert run(mr.apply_fault(None, ok)) == "ok"
+    for kind in ("error", "drop"):
+        with pytest.raises(mr.ChaosError) as info:
+            run(mr.apply_fault(mr.Fault(kind), ok))
+        assert info.value.kind == kind
+    assert run(mr.apply_fault(mr.Fault("truncate"), lambda: ok("abcdef"))) == "abc"
+    assert run(mr.apply_fault(mr.Fault("truncate"), lambda: ok(b"abcde"))) == b"ab"
     with pytest.raises(mr.ChaosError) as info:
-        run(mr.with_chaos(lambda: ok({"a": 1}), engine("truncate")))
+        run(mr.apply_fault(mr.Fault("truncate"), lambda: ok({"a": 1})))
     assert info.value.kind == "truncate"
-    assert run(mr.with_chaos(lambda: ok({"a": 1}), engine("truncate", lambda v: {}))) == {}
-    assert run(mr.with_chaos(lambda: ok("x"), engine("malformed"))) == mr.MALFORMED_MARKER
-    assert run(mr.with_chaos(lambda: ok("x"), engine("malformed", str.upper))) == "X"
-
-
-def test_legacy_chaos_config_maps_to_faults() -> None:
-    cfg = mr.ChaosConfig(enabled=True, error_rate=0.25, latency_ms=(10, 20))
-    assert cfg.faults == (mr.Fault("error", 0.25), mr.Fault("latency", 0.75, 10, 20))
+    mutated = run(
+        mr.apply_fault(mr.Fault("truncate"), lambda: ok({"a": 1}), mutate=lambda v, k: {"k": k})
+    )
+    assert mutated == {"k": "truncate"}
+    assert run(mr.apply_fault(mr.Fault("malformed"), lambda: ok("x"))) == mr.MALFORMED_MARKER
+    assert run(mr.apply_fault(mr.Fault("malformed"), lambda: ok("x"), mutate=lambda v, k: k)) == (
+        "malformed"
+    )
 
 
 def test_disabled_chaos_draws_nothing() -> None:
     rng = mr.mulberry32(1)
-    engine = mr.ChaosEngine(mr.ChaosConfig(faults=[mr.Fault("error", 1)]), random=rng)
+    engine = mr.ChaosEngine(mr.ChaosConfig(faults=[mr.FaultSpec("error", 1)]), random=rng)
     assert engine.decide() is None
+    assert engine.invocations == 0
     assert rng.state == 1
 
 
 # ---------------------------------------------------------------------------
-# Observability
+# Observability (Python-specific: logging integration, Python values)
 # ---------------------------------------------------------------------------
-
-
-def test_redaction_masks_keys_at_any_depth_and_reduces_errors() -> None:
-    sink, events = mr.memory_sink()
-    logger = mr.create_logger("auth", sinks=[sink], now=lambda: 42)
-    logger.info(
-        "signed in",
-        data={
-            "user": {"email": "a@b.c", "Phone": "1", "id": 7},
-            "headers": [{"Authorization": "Bearer x", "Cookie": "c"}],
-            "api_key": "k",
-            "apiKey": "k",
-            "password": "p",
-            "card_number": "4111",
-            "ok": True,
-            "cause": ValueError("alice@example.com"),
-        },
-        error=mr.TimeoutError(5),
-        trace_id="req-1",
-    )
-    (event,) = events
-    assert event == {
-        "ts": 42,
-        "level": "info",
-        "module": "auth",
-        "msg": "signed in",
-        "traceId": "req-1",
-        "data": {
-            "user": {"email": "[redacted]", "Phone": "[redacted]", "id": 7},
-            "headers": [{"Authorization": "[redacted]", "Cookie": "[redacted]"}],
-            "api_key": "[redacted]",
-            "apiKey": "[redacted]",
-            "password": "[redacted]",
-            "card_number": "[redacted]",
-            "ok": True,
-            "cause": {"name": "ValueError", "code": "ValueError"},
-            "error": {"name": "TimeoutError", "code": "timeout"},
-        },
-    }
-
-
-def test_default_sinks_are_resolved_at_emit_time() -> None:
-    logger = mr.create_logger("late")
-    sink, events = mr.memory_sink()
-    saved = mr.default_sinks()
-    mr.set_default_sinks([sink])
-    try:
-        logger.warn("seen")
-    finally:
-        mr.set_default_sinks(saved)
-    assert [e["msg"] for e in events] == ["seen"]
 
 
 def test_logging_sink_uses_the_mzizi_prefix(caplog: pytest.LogCaptureFixture) -> None:
     caplog.set_level(logging.DEBUG, logger="mzizi")
-    mr.create_logger("registry", sinks=[mr.logging_sink]).info("served", data={"name": "button"})
-    (record,) = caplog.records
-    assert record.name == "mzizi.registry"
-    assert record.getMessage() == '[mzizi:registry] INFO served {"name": "button"}'
+    mr.create_logger("registry").info("served", data={"name": "button", "token": "t"})
+    mr.log.warn("bare")
+    first, second = caplog.records
+    assert first.name == "mzizi.registry"
+    assert first.getMessage() == '[mzizi:registry] INFO served {"name":"button","token":"[redacted]"}'
+    assert getattr(first, "mzizi_event")["module"] == "registry"
+    assert (second.name, second.levelno, second.getMessage()) == (
+        "mzizi",
+        logging.WARNING,
+        "[mzizi] WARN bare",
+    )
 
 
-def test_a_broken_sink_never_breaks_the_caller() -> None:
+def test_sinks_are_resolved_at_emit_time_and_min_level_applies() -> None:
+    logger = mr.create_logger("late")
+    sink = mr.memory_sink()
+    mr.configure_observability(sinks=[sink], now=lambda: 0, min_level="info")
+    logger.debug("dropped")
+    logger.warn("seen")
+    remove = mr.add_sink(lambda _e: None)
+    remove()
+    assert [e["msg"] for e in sink.events] == ["seen"]
+
+
+def test_a_broken_sink_never_breaks_the_caller_or_starves_the_others() -> None:
     def broken(_event: mr.LogEvent) -> None:
         raise RuntimeError("sink down")
 
-    mr.create_logger("x", sinks=[broken]).error("still fine")
+    sink = mr.memory_sink()
+    mr.configure_observability(sinks=[broken, sink])
+    mr.create_logger("x").error("still fine")
+    assert len(sink.events) == 1
 
 
-def test_track_error_logs_the_code_not_the_message() -> None:
-    sink, events = mr.memory_sink()
-    mr.track_error(ValueError("alice@example.com"), logger=mr.create_logger("c", sinks=[sink]))
-    assert events[0]["msg"] == "ValueError"
-    assert "alice" not in repr(events)
+def test_redact_python_values() -> None:
+    import datetime as dt
+    from dataclasses import dataclass
+
+    @dataclass
+    class Point:
+        x: int
+
+    cyclic: dict[str, Any] = {"a": 1}
+    cyclic["self"] = cyclic
+    out = mr.redact(
+        {
+            "when": dt.datetime(2025, 10, 7, tzinfo=dt.timezone.utc),
+            "point": Point(1),
+            "fn": len,
+            "items": (1, print, float("nan")),
+            "cyclic": cyclic,
+            7: "int key",
+        }
+    )
+    assert out == {
+        "when": "2025-10-07T00:00:00.000Z",
+        "point": "[Point]",
+        "items": [1, None, None],
+        "cyclic": {"a": 1, "self": "[circular]"},
+        "7": "int key",
+    }
+
+
+def test_track_error_logs_the_name_and_code_not_the_message() -> None:
+    sink = mr.memory_sink()
+    mr.configure_observability(sinks=[sink])
+    mr.track_error(ValueError("alice@example.com"), module="c")
+    mr.track_error(mr.TimeoutError(5))
+    assert [e["msg"] for e in sink.events] == ["ValueError", "TimeoutError (timeout)"]
+    assert "alice" not in repr(sink.events)
 
 
 def test_measure_logs_duration_and_reraises() -> None:
-    sink, events = mr.memory_sink()
-    logger = mr.create_logger("perf", sinks=[sink])
-    assert run(mr.measure("sync", lambda: 3, logger=logger)) == 3
+    sink = mr.memory_sink()
+    ticks = itertools.count(0, 5)  # every clock read (start, end, the event's ts) moves 5ms
+    mr.configure_observability(sinks=[sink], now=lambda: next(ticks))
+    assert run(mr.measure("sync", lambda: 3)) == 3
     with pytest.raises(KeyError):
-        run(mr.measure("boom", failing(KeyError("secret")), logger=logger))
-    assert [e["level"] for e in events] == ["info", "error"]
-    assert events[1]["data"]["error"] == {"name": "KeyError", "code": "KeyError"}
+        run(mr.measure("boom", failing(KeyError("secret"))))
+    assert [(e["level"], e["msg"], e["module"]) for e in sink.events] == [
+        ("info", "sync completed in 5ms", "perf"),
+        ("error", "boom failed after 5ms", "perf"),
+    ]
+    assert sink.events[1]["data"] == {"duration": 5, "label": "boom", "error": {"name": "KeyError"}}
 
 
 # ---------------------------------------------------------------------------
