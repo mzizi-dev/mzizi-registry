@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — a test run no longer leaves its module copies in the temp directory: Vitest 5.0.3 (2026-10-07, #482)
+
+Every `vitest run` left one folder behind in the system temp directory (`$TMPDIR`, else `/tmp`): a 21-character random name holding `client/` and `ssr/` copies of every transformed module, about 57 MB for the main suite and 4 MB for the Astro suite (`vitest.astro.config.ts`, which `__tests__/astro/contracts.test.ts` runs under). On an agent host running the suites many times a day they reached 4.8 GB (about 600 folders). The cause is Vitest 5.0.0 to 5.0.2: the root project writes its copies to a temp folder that nothing removes on close. Vitest 5.0.3 removes it when the run closes.
+
+- `vitest` moves from `^5.0.2` to `^5.0.3` (with `@vitest/mocker` and `@vitest/spy` in the lockfile). No test or config changes.
+- Verified: `pnpm test` (760 and 472 tests) with `TMPDIR` set to an empty folder leaves no such folder; on 5.0.2 the same run left two (57 MB and 4 MB).
+- Folders already left behind are not removed by this change. Delete them by hand, or with the `digital-hygiene` skill's `hygiene.sh tmp` prune once it ships (mzizi-dev/agent-tools).
+
 ### Fixed — the doctrine calls the system Mzizi, and no longer describes a database as its source (2026-10-07, #479)
 
 Eight `documentation/` doctrine pages, `mzizi-ai-context` and `ui-utils` still called the system "the Nyuchi Design System" (#323). Several of the same pages, and the three AI instruction sets, also described Supabase as the source of truth, the follow-up #474 left (#472). This entry covers both:
