@@ -2172,7 +2172,76 @@
               },
               {
                 "t": "text",
-                "v": " h"
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "https:\\\\evil.example",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "h"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "backslash forms are scheme-relative: host and credentials checked",
+      "input": "[a](\\\\bank.example@evil.example) [b](/\\bank.example@evil.example) [c](/\\evil.example) [d](\\/cdn.example/x) [e](\\path) [f](/\\) [g](\\\\)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a b "
+              },
+              {
+                "t": "link",
+                "href": "/\\evil.example",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "c"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "\\/cdn.example/x",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "d"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "\\path",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "e"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " [f](/) g"
               }
             ]
           ]

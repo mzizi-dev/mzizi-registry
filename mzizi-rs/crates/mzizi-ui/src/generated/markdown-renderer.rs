@@ -254,7 +254,8 @@ pub fn safe_href(raw: &str, policy: MarkdownLinks) -> Option<String> {
     // shows one site and goes to another); so does a scheme-relative `//host` address.
     let rest = match scheme.as_deref() {
         Some(name @ ("http" | "https")) => Some(&url[name.len() + 1..]),
-        None if url.starts_with("//") => Some(url),
+        // Browsers read `\` as `/` here, so `\\host` and `/\host` are scheme-relative too.
+        None if scheme_relative(url) => Some(url),
         _ => None,
     };
     if let Some(rest) = rest {
@@ -265,11 +266,18 @@ pub fn safe_href(raw: &str, policy: MarkdownLinks) -> Option<String> {
     Some(url.to_owned())
 }
 
+/// Two slashes, either way round: a browser reads `\\host`, `/\host` and `//host` alike.
+fn scheme_relative(url: &str) -> bool {
+    let b = url.as_bytes();
+    b.len() >= 2 && matches!(b[0], b'/' | b'\\') && matches!(b[1], b'/' | b'\\')
+}
+
 /// `//host…`: a host is there, and no `user@` before it.
 fn web_authority_ok(rest: &str) -> bool {
-    let Some(after) = rest.strip_prefix("//") else {
+    if !scheme_relative(rest) {
         return false;
-    };
+    }
+    let after = &rest[2..];
     let authority = after.split(['/', '?', '#', '\\']).next().unwrap_or("");
     !authority.is_empty() && !authority.contains('@')
 }
@@ -298,7 +306,7 @@ pub fn is_external(href: &str) -> bool {
     matches!(
         scheme_of(href).map(str::to_ascii_lowercase).as_deref(),
         Some("http" | "https")
-    )
+    ) || scheme_relative(href)
 }
 
 // ─── Inlines ────────────────────────────────────────────────────────────────────────────────

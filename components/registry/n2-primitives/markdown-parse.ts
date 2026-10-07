@@ -158,14 +158,18 @@ export function safeHref(raw: string, policy: MarkdownLinkPolicy = "safe"): stri
   if (policy === "https" ? name !== "https" : name !== null && !SAFE_SCHEMES.includes(name)) return null
   // A web address needs a host and no credentials: `https://bank.example@evil.example` shows
   // one site and goes to another. The same holds for a scheme-relative `//host` address.
-  const rest = name === "http" || name === "https" ? url.slice(name.length + 1) : name === null && url.startsWith("//") ? url : null
+  // Browsers read `\` as `/` here, so `\\host` and `/\host` are scheme-relative too.
+  const rest = name === "http" || name === "https" ? url.slice(name.length + 1) : name === null && SCHEME_RELATIVE.test(url) ? url : null
   if (rest !== null && !webAuthorityOk(rest)) return null
   return url
 }
 
+/** Two slashes, either way round: a browser reads `\\host`, `/\host` and `//host` alike. */
+const SCHEME_RELATIVE = /^[/\\]{2}/
+
 /** `//host…`: a host is there, and no `user@` before it. */
 function webAuthorityOk(rest: string): boolean {
-  if (!rest.startsWith("//")) return false
+  if (!SCHEME_RELATIVE.test(rest)) return false
   let end = 2
   while (end < rest.length && !"/?#\\".includes(rest[end])) end++
   const authority = rest.slice(2, end)
@@ -174,7 +178,7 @@ function webAuthorityOk(rest: string): boolean {
 
 /** Whether a kept address leaves the site (it opens in a new tab). */
 export function isExternal(href: string): boolean {
-  return /^https?:/i.test(href)
+  return /^https?:/i.test(href) || SCHEME_RELATIVE.test(href)
 }
 
 // ─── Whitespace ───────────────────────────────────────────────────────────────────────────
