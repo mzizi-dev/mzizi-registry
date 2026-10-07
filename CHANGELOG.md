@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the Mzizi Roots crates move to 0.3.0 (2026-10-07, #466)
+
+The next minor above `mzizi-rs-v0.2.0`, so `mzizi-ui` 0.3.0 on crates.io carries `markdown-renderer` 1.1.0 (#465): link addresses with a control character, whitespace or credentials are refused, and rich-text lists keep their nesting and start. The crate READMEs and the `mzizi-roots` crate docs install `"0.3"`.
+
 ### Security — `markdown-renderer` 1.1.0: links need a host and no credentials; rich-text lists keep their nesting and start (2026-10-07, #465)
 
 Upstreamed from the Toddle extension's flag text, which `markdown-renderer` replaces there (#460).

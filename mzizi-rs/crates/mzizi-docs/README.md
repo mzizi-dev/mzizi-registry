@@ -8,7 +8,7 @@ Four modules: `mzizi_ai_context` and `mzizi_docs_api` are string assembly and ro
 
 ```toml
 [dependencies]
-mzizi-docs = "0.2"
+mzizi-docs = "0.3"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before
