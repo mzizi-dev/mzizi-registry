@@ -2511,8 +2511,8 @@
       ]
     },
     {
-      "say": "a link's address ends at any whitespace (the title is dropped) and escapes are undone",
-      "input": "[a](http://x.com\t\"title\") [b](http://x.com/\\(y\\)) [c](a.html junk) [d](https://x.org/a\\_b \"t\") [e](\\<javascript:alert(1)\\>)",
+      "say": "a link's address ends at a space or a tab (the title is dropped) and escapes are undone",
+      "input": "[a](http://x.com\t\"title\") [b](http://x.com/\\(y\\)) [c](a.html junk) [d](https://x.org/a\\_b \"t\") [e](\\<javascript:alert(1)\\>)",
       "expect": [
         {
           "kind": "p",
@@ -2669,7 +2669,7 @@
               {
                 "t": "link",
                 "href": "MAILTO:Hello@Example.org",
-                "title": "mailto:Hello@Example.org",
+                "title": "mailto:Hello@example.org",
                 "c": [
                   {
                     "t": "text",
@@ -3023,6 +3023,553 @@
                 }
               ]
             }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a dropped element nested in itself ends at its own end tag, not the inner one",
+      "from": "html",
+      "input": "<p>a</p><template><template></template>secret</template><p>b</p><svg><svg></svg>secret2</svg><p>c</p><MATH><math></Math>s3</math><p>d</p><object><object></object>s4</object><p>e</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "b"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "c"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "d"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "e"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: an end tag inside a comment, an attribute value, a bogus comment, CDATA or a nested text element does not end a dropped element",
+      "from": "html",
+      "input": "<p>a</p><template><!-- </template> -->s1</template><p>b</p><template><a title=\"</template>\">s2</template><p>c</p><template></ x </template>s3</template><p>d</p><svg><![CDATA[</svg>]]>s4</svg><p>e</p><template><script>\"</template>\"</script>s5</template><p>f</p><template><textarea></template></textarea>s6</template><p>g</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "b"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "c"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "d"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "e"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "f"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "g"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: inside <!-- a nested <script> needs its own </script>, and a quoted > does not end an end tag",
+      "from": "html",
+      "input": "<p>a</p><script><!--<script></script>s1</script><p>b</p><script><!--<script></script>--></script><p>c</p><script>x</script a=\">s2\"><p>d</p><script><!-- x --></script><p>e</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "b"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "c"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "d"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "e"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "a link's address ends at a space, a tab or a line break (CommonMark); other whitespace is part of it and another control character spoils it, so the link is refused, not cut short",
+      "input": "[a](https://x.com/a b) [b](https://x.com/a　b) [c](https://x.com/a b) [d]( https://x.com) [e](http://x.com\t\"t\") [f](http://x.comy) [g](http://x.com\u000b\"t\")",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a b c d "
+              },
+              {
+                "t": "link",
+                "href": "http://x.com",
+                "title": "http://x.com",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "e"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " f g"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "a mailto link's title shows each domain as a web host is shown (an IDN look-alike as punycode); a domain the URL parser rejects is refused; tel is as written",
+      "input": "[m](mailto:help@аpple.com) [n](MAILTO:a@B.c,b@а.com?subject=Hi@а) [o](mailto:Someone) [t](tel:+1-555-0100) [x](mailto:a@) [y](mailto:a@b<c.com) [z](mailto:a@1.2.3.999)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "link",
+                "href": "mailto:help@аpple.com",
+                "title": "mailto:help@xn--pple-43d.com",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "m"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "MAILTO:a@B.c,b@а.com?subject=Hi@а",
+                "title": "mailto:a@b.c,b@xn--80a.com?subject=Hi@а",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "n"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "mailto:Someone",
+                "title": "mailto:Someone",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "o"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "tel:+1-555-0100",
+                "title": "tel:+1-555-0100",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "t"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " x y z"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "a web address's port must be a number up to 65535 (an empty port is allowed); anything else is refused",
+      "input": "[a](https://example.com:abc/) [b](https://example.com:99999/) [c](https://example.com:65535/x) [d](https://example.com:/x) [e](//Example.com:0443/) [f](https://[::1]:8080/) [g](https://example.com:-1/) [h](https://example.com:1e3/)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a b "
+              },
+              {
+                "t": "link",
+                "href": "https://example.com:65535/x",
+                "title": "https://example.com:65535/x",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "c"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "https://example.com:/x",
+                "title": "https://example.com:/x",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "d"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "//Example.com:0443/",
+                "title": "//example.com:0443/",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "e"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "https://[::1]:8080/",
+                "title": "https://[::1]:8080/",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "f"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " g h"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: comments, a doctype and other bogus comments are read as a browser reads them, so none shows and none hides what follows",
+      "from": "html",
+      "input": "<!DOCTYPE html><p>a</p><!-- x --!><p>b</p><!--><p>c</p><!---><p>d</p><?xml version=\"1.0\"?><p>e</p></ x><p>f</p><!x><p>g</p><!-- --!><script>s1--></script><p>h</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "b"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "c"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "d"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "e"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "f"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "g"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "h"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a tag name and a tag's end are read as a browser reads them: <svg-x> is not <svg>, <svg/> is empty, and only HTML whitespace separates attributes",
+      "from": "html",
+      "input": "<p>a</p><b title= \"x><script>\">s1</script></b><p>b</p><p><svg-x>c</svg-x></p><svg/><p>d</p><p title=\"x>y\">e</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "b"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "c"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "d"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "e"
+              }
+            ]
           ]
         }
       ]
