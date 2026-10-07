@@ -1,0 +1,247 @@
+name: Publish to PyPI
+
+# Publishes mzizi-py/ (the `mzizi-resilience` distribution, #472) to PyPI.
+#
+# Runs on every merge to main that touches the Python, and on manual dispatch. A run
+# that finds nothing new is a no-op: the version in mzizi-py/pyproject.toml is looked up
+# on PyPI first, and a version that is already there is skipped. So a release is a
+# version bump in mzizi-py/pyproject.toml, merged to main.
+#
+# NO TOKEN. Uploads use PyPI trusted publishing: the `publish` job gets a short-lived
+# OIDC token (`id-token: write`) that PyPI exchanges for an upload credential scoped to
+# this project, and only because a trusted publisher is registered on pypi.org for
+# project `mzizi-resilience`, owner `mzizi-dev`, repository `mzizi-registry`, workflow
+# `publish-pypi.yml`, environment `pypi`. No PyPI API token exists or is stored anywhere.
+#
+# A published version is permanent: PyPI never accepts the same version (or file name)
+# twice, even after a deletion. That is why the `build` job runs the generated-copy check,
+# the whole Python test suite and mypy again, on the exact commit and the exact wheel it
+# publishes, rather than trusting that CI passed on the pull request. The `publish` job
+# runs no project code at all: it downloads the built files and uploads them.
+#
+# The version follows the org versioning policy (nyuchi/.github#80): a release is the
+# next MINOR above the highest `mzizi-py-v` tag (x.y.z -> x.y+1.0; the first release is
+# 0.1.0), and a MAJOR is only released by hand (dispatch with bump: major). The shared
+# next-version action refuses any other version before anything is uploaded.
+#
+# Once the version is on PyPI, the `tag` job tags it `mzizi-py-vX.Y.Z` and creates a
+# GitHub release, unless the tag already exists. That uses RELEASE_BUMP_TOKEN (mzizi-dev
+# org secret), so the tag and release can start other workflows; nobody pushes a tag by
+# hand.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "mzizi-py/**"
+      - "components/registry/**/*.py"
+      - "scripts/generate-python-package.mjs"
+      - ".github/workflows/publish-pypi.yml"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build and test the sdist and wheel, but upload nothing"
+        type: boolean
+        default: true
+      bump:
+        description: "Override the release bump (major is manual only)"
+        type: choice
+        options: [minor, patch, major]
+        default: minor
+
+concurrency:
+  group: publish-pypi
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      version: ${{ steps.project.outputs.version }}
+      upload: ${{ steps.pypi.outputs.upload }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+
+      # The package ships committed copies of the registry's .py files. A copy that has
+      # drifted from its source would publish a component the registry does not serve.
+      # The generator has no npm dependencies, so no install is needed.
+      - name: Verify the generated copies match the registry
+        run: node scripts/generate-python-package.mjs --check
+
+      - name: Read the package name and version
+        id: project
+        run: |
+          set -euo pipefail
+          name=$(grep -m1 '^name = ' mzizi-py/pyproject.toml | cut -d'"' -f2)
+          version=$(grep -m1 '^version = ' mzizi-py/pyproject.toml | cut -d'"' -f2)
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Check the version against the versioning policy
+        uses: nyuchi/.github/.github/actions/next-version@de909ab7468d998ba2cf87416ac2042616eba75d  # main, 2026-10-04
+        with:
+          channel: main
+          bump: ${{ inputs.bump || '' }}
+          manual: ${{ github.event_name == 'workflow_dispatch' }}
+          proposed: ${{ steps.project.outputs.version }}
+          tag-prefix: mzizi-py-v
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Install the pinned test and build tools
+        run: python -m pip install -r mzizi-py/requirements-dev.txt
+
+      - name: Build the sdist and wheel
+        run: python -m build mzizi-py
+
+      # The package must hold at least one generated module: an empty package published
+      # once would hold its version number forever. Until the registry has packaged Python,
+      # a run builds and tests but uploads nothing.
+      - name: Does the wheel carry modules?
+        id: modules
+        run: |
+          set -euo pipefail
+          count=$(python -m zipfile -l mzizi-py/dist/*.whl | grep -cE 'mzizi_resilience/[a-z][a-z0-9_]*\.py ' || true)
+          echo "The wheel holds $count generated modules."
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+
+      - name: Install the wheel
+        run: python -m pip install mzizi-py/dist/*.whl
+
+      - name: Tests (shared fixtures + Python-specific) against the wheel
+        working-directory: mzizi-py
+        run: python -m pytest -p no:cacheprovider --import-mode=importlib
+
+      - name: Type check (mypy --strict)
+        working-directory: mzizi-py
+        run: python -m mypy
+
+      - name: Is this version already on PyPI?
+        id: pypi
+        env:
+          NAME: ${{ steps.project.outputs.name }}
+          VERSION: ${{ steps.project.outputs.version }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+          MODULES: ${{ steps.modules.outputs.count }}
+        run: |
+          set -euo pipefail
+          if [ "$MODULES" -lt 1 ]; then
+            echo "::notice::The package has no modules yet; nothing to publish."
+            echo "upload=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          agent="mzizi-registry publish-pypi workflow (https://github.com/mzizi-dev/mzizi-registry)"
+          status=$(curl -sS -o /dev/null -w '%{http_code}' -A "$agent" \
+            "https://pypi.org/pypi/$NAME/$VERSION/json")
+          if [ "$status" = "200" ]; then
+            echo "$NAME $VERSION is already on PyPI, skipping."
+            echo "upload=false" >> "$GITHUB_OUTPUT"
+          elif [ "$status" = "404" ]; then
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "Dry run: $NAME $VERSION would be published."
+              echo "upload=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "upload=true" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "::error::PyPI answered $status for $NAME $VERSION; not publishing blind."
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mzizi-py-dist
+          path: mzizi-py/dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish to PyPI (trusted publishing)
+    needs: build
+    if: ${{ needs.build.outputs.upload == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # The environment the trusted publisher on pypi.org names. Protection rules
+    # (reviewers, branch filters) on it apply to this job only.
+    environment:
+      name: pypi
+      url: https://pypi.org/project/mzizi-resilience/${{ needs.build.outputs.version }}/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: mzizi-py-dist
+          path: dist/
+
+      # No `password:` input: the action exchanges this job's OIDC token with PyPI.
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: dist/
+
+  tag:
+    name: Tag and release the version
+    needs: [build, publish]
+    # Runs after a real upload, and also on a later push whose version PyPI already has
+    # (a re-run after a failed tag step), but never on a dry run.
+    if: >-
+      ${{ always() && needs.build.result == 'success'
+      && (needs.publish.result == 'success'
+          || (needs.publish.result == 'skipped' && needs.build.outputs.upload == 'false'))
+      && !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Tag and release
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_BUMP_TOKEN }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          set -euo pipefail
+          tag="mzizi-py-v$VERSION"
+          # Only tag a version that is really on PyPI.
+          status=$(curl -sS -o /dev/null -w '%{http_code}' \
+            "https://pypi.org/pypi/mzizi-resilience/$VERSION/json")
+          if [ "$status" != "200" ]; then
+            echo "mzizi-resilience $VERSION is not on PyPI (status $status); nothing to tag."
+            exit 0
+          fi
+          if git ls-remote --tags --refs origin "refs/tags/$tag" | grep -q .; then
+            echo "$tag already exists; nothing to tag."
+            exit 0
+          fi
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::RELEASE_BUMP_TOKEN is not visible to this repository; cannot tag $tag."
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$tag" -m "mzizi-resilience $VERSION (Python)"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag"
+          {
+            echo "[\`mzizi-resilience\` $VERSION](https://pypi.org/project/mzizi-resilience/$VERSION/) on PyPI:"
+            echo
+            echo '```'
+            echo "pip install mzizi-resilience==$VERSION"
+            echo '```'
+            echo
+            echo "Changes are in [CHANGELOG.md](https://github.com/$GITHUB_REPOSITORY/blob/$tag/CHANGELOG.md)."
+          } > notes.md
+          gh release create "$tag" --verify-tag --title "mzizi-resilience $VERSION (Python)" --notes-file notes.md --latest=false
