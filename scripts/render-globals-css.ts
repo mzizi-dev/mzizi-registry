@@ -24,7 +24,10 @@
  *
  * The non-colour ladders and the surface ladder are declared as constants
  * below, for the same reason `SCALE` is declared in `sync-tokens.ts`: colour is
- * palette data, these are doctrine. `scripts/check-tokens-upstream.mjs` checks
+ * palette data, these are doctrine. The status colours, the radius ladder and
+ * the touch and control heights are not: they are canon, read through the role
+ * manifest (`lib/tokens/roles.source.ts`), which also drives every role this
+ * file declares and the contrast gate (`roleGate()`) that measures them. `scripts/check-tokens-upstream.mjs` checks
  * them against `/v1/brand` in CI — never at build or runtime.
  *
  * Structure is lifted from the Mukoko Events app's `src/app/globals.css` (then `nyuchi/nhimbe`), which two
@@ -37,7 +40,27 @@
  */
 
 import type { ExperimentalToken, HeritageToken, MineralToken } from "../lib/tokens/palette.source"
-import { ecosystem, ecosystemAliases } from "../lib/tokens/brand.source"
+import { backgroundColors as BACKGROUNDS, ecosystem, ecosystemAliases, semanticColors as SEMANTIC } from "../lib/tokens/brand.source"
+import {
+  colorKey,
+  FONT_ALIASES,
+  FONTS,
+  isColorKind,
+  RADIUS,
+  ROLES,
+  SIZING,
+  STATUS,
+  type Role,
+  type RoleValue,
+} from "../lib/tokens/roles.source"
+
+/**
+ * The status colours, the radius ladder and the touch and control heights are
+ * read from canon through the role manifest (`lib/tokens/roles.source.ts`). They
+ * used to be second copies declared in this file; re-exported under the same
+ * names so nothing that imports them changes.
+ */
+export { RADIUS, SIZING, STATUS }
 
 type Mineral = MineralToken
 type Heritage = HeritageToken
@@ -117,6 +140,44 @@ function walk(start: string, end: string, ok: (hex: string) => boolean): string 
   return end
 }
 
+/**
+ * `color-mix(in oklab, <a> <pct>%, <b>)`, resolved to a hex, for the roles the
+ * stylesheet derives with `color-mix` (`--accent`, `--wash`). The platform files
+ * have no `color-mix`, and the contrast gate has to measure what a browser paints.
+ */
+export function mixOklab(a: string, b: string, pct: number): string {
+  const lin = (c: number) => {
+    const s = c / 255
+    return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)
+  }
+  const gam = (c: number) => {
+    const s = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055
+    return Math.min(255, Math.max(0, s * 255))
+  }
+  const toLab = (hex: string) => {
+    const [r, g, bl] = hexToRgb(hex).map(lin)
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * bl)
+    const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * bl)
+    const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * bl)
+    return [
+      0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+      1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+      0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+    ]
+  }
+  const t = pct / 100
+  const [x, y] = [toLab(a), toLab(b)]
+  const [L, A, B] = x.map((v, i) => v * t + y[i] * (1 - t))
+  const l = Math.pow(L + 0.3963377774 * A + 0.2158037573 * B, 3)
+  const m = Math.pow(L - 0.1055613458 * A - 0.0638541728 * B, 3)
+  const s = Math.pow(L - 0.0894841775 * A - 1.291485548 * B, 3)
+  return toHex([
+    gam(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+    gam(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+    gam(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
+  ])
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 // DOCTRINE CONSTANTS — not palette data, so declared here like `SCALE`
 // ════════════════════════════════════════════════════════════════════════════
@@ -152,18 +213,6 @@ export const LADDER = [
 
 /** The tenth background — deepest inset fill, not a ladder rung. */
 export const MUTED = ["#FAF9F5", "#050504"] as const
-
-/** `/v1/brand` `semanticColors`, status subset — brand-neutral, not disputed. */
-export const STATUS = [
-  ["success", "#004D40", "#64FFDA", "Success states, positive actions"],
-  ["warning", "#7A5C00", "#FFD866", "Warning states, caution"],
-  ["error", "#B3261E", "#F2B8B5", "Error states, destructive actions"],
-  ["info", "#0047AB", "#00B0FF", "Informational states"],
-  ["neutral", "#55514B", "#A09C93", "Neutral / inactive status, secondary data series"],
-  ["offline", "#674C32", "#BA9570", "Offline / disconnected state"],
-  ["syncing", "#1C5962", "#36ABBA", "In-progress sync / pending state"],
-  ["destructive-container", "#FDEDED", "#3E1818", "Soft background behind destructive content"],
-] as const
 
 /** Spacing — 17 rungs, `/v1/brand` `spacing`. */
 export const SPACING = [
@@ -210,19 +259,6 @@ export const LEADING = [
   ["h5", "1.4"], ["h6", "1.4"], ["body", "1.6"], ["small", "1.5"],
 ] as const
 
-/**
- * Radius — CLAUDE.md §7.5 and `/v1/brand` `radii`: every radius derives from a
- * 7px unit, giving the ecosystem numbers 7 / 12 / 14 / 17.
- *
- * This is the ladder several apps get wrong. A `--radius` of 10px or 12px with
- * a `calc()` scale hung off it puts every derived rung off the system — the
- * unit is SEVEN, and `--radius` is two units.
- */
-export const RADIUS = [
-  ["sm", "7px"], ["md", "12px"], ["base", "14px"], ["lg", "14px"],
-  ["xl", "17px"], ["2xl", "17px"], ["full", "9999px"],
-] as const
-
 /** Elevation — eight rungs. */
 export const SHADOW = [
   ["none", "none"],
@@ -246,23 +282,6 @@ export const EASING = [
   ["spring", "cubic-bezier(0.34, 1.56, 0.64, 1)"],
 ] as const
 export const STAGGER = [["tight", "30ms"], ["base", "50ms"], ["loose", "80ms"]] as const
-
-/**
- * Touch targets and control heights — `/v1/brand` `accessibility` and
- * `componentSpecs`: minimum 48px, default 56px, buttons always pill.
- *
- * Mukoko Events (formerly nhimbe) runs a compact 36/32 scale and says so in a comment naming the
- * doctrine values and the single knob that would adopt them. That is a
- * consumer's deliberate divergence; the default file ships the doctrine.
- */
-export const SIZING = [
-  ["touch-target-lg", "56px", "Default touch target — /v1/brand defaultTouchTarget"],
-  ["touch-target", "48px", "Minimum touch target — /v1/brand minTouchTarget"],
-  ["touch-target-sm", "40px", "Dense secondary actions; below the 48px floor, so not for primary controls"],
-  ["h-button-default", "3.5rem", "56px — componentSpecs.button.heights.default"],
-  ["h-button-sm", "3rem", "48px — componentSpecs.button.heights.sm"],
-  ["h-input", "3.5rem", "56px — inputs match the default button"],
-] as const
 
 export const ZINDEX = [
   ["base", "0"], ["dropdown", "10"], ["sticky", "20"], ["overlay", "30"],
@@ -503,15 +522,23 @@ export function onContainerMeasure(m: Mineral) {
  * enters the file, and the warm-neutral axis is the ladder's own. It is the
  * same derivation `shamwari-ai/docs` and `mzizi-dev/mzizi-docs` each wrote out
  * by hand for their neutral ramps.
+ *
+ * Secondary and tertiary clear their bar on `--surface` as well as `--base`
+ * (#399). Both are walked to the bar exactly, and `--surface` (cards, panels)
+ * is one step deeper than `--base` in both themes, so a value measured on base
+ * alone fell under the bar on every card: light `--text-secondary`, which is
+ * `--muted-foreground`, measured Lc 72.5 there. Primary is walked on base to
+ * Lc 90 and keeps more than Lc 85 on surface, so it is not moved.
  */
 export function textRamp() {
-  const ramp = (bg: string, toward: string, bar: number) =>
-    walk(mix(bg, toward, 0.01), toward, (c) => Math.abs(apca(c, bg)) >= bar)
-  const build = (bg: string, toward: string) => {
+  const surface = (mode: "light" | "dark") => LADDER.find(([n]) => n === "surface")![mode === "light" ? 1 : 2]
+  const ramp = (bg: string, toward: string, bar: number, also: string[] = []) =>
+    walk(mix(bg, toward, 0.01), toward, (c) => [bg, ...also].every((b) => Math.abs(apca(c, b)) >= bar))
+  const build = (bg: string, toward: string, surf: string) => {
     const t = {
       primary: ramp(bg, toward, 90),
-      secondary: ramp(bg, toward, 75),
-      tertiary: ramp(bg, toward, 60),
+      secondary: ramp(bg, toward, 75, [surf]),
+      tertiary: ramp(bg, toward, 60, [surf]),
     }
     return {
       ...t,
@@ -520,9 +547,268 @@ export function textRamp() {
         secondary: +apca(t.secondary, bg).toFixed(1),
         tertiary: +apca(t.tertiary, bg).toFixed(1),
       },
+      onSurface: {
+        primary: +apca(t.primary, surf).toFixed(1),
+        secondary: +apca(t.secondary, surf).toFixed(1),
+        tertiary: +apca(t.tertiary, surf).toFixed(1),
+      },
     }
   }
-  return { light: build(BASE_LIGHT, BASE_DARK), dark: build(BASE_DARK, BASE_LIGHT) }
+  return {
+    light: build(BASE_LIGHT, BASE_DARK, surface("light")),
+    dark: build(BASE_DARK, BASE_LIGHT, surface("dark")),
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ROLES — the manifest resolved, and the contrast gate
+// ════════════════════════════════════════════════════════════════════════════
+
+export type Mode = "light" | "dark"
+const MODES: readonly Mode[] = ["light", "dark"]
+
+/** One role, resolved for the Mzizi pack. */
+export interface ResolvedRole {
+  role: Role
+  /** What the stylesheet declares, per theme. */
+  css: Record<Mode, string>
+  /** What a browser paints: a hex for a colour, a length for a size or radius, a stack for a font. */
+  value: Record<Mode, string>
+  /** Set where the value was derived to meet the role's contrast rule. */
+  derived: Partial<Record<Mode, string>>
+}
+
+/** The bare custom property a role is declared as. */
+export function roleVar(r: Role): string {
+  if (r.kind === "radius") return `--r-${r.name.replace(/^radius-/, "")}`
+  if (r.kind === "size") return `--size-${r.name.replace(/^spacing-/, "")}`
+  return `--${r.name}`
+}
+
+/** The custom-property prefix a palette family is emitted under. */
+function familyPrefix(
+  family: string,
+  heritage: ReadonlyArray<{ name: string }>,
+  experimental: ReadonlyArray<{ name: string }>
+): "mineral" | "heritage" | "exp" {
+  if (heritage.some((h) => h.name === family)) return "heritage"
+  if (experimental.some((e) => e.name === family)) return "exp"
+  return "mineral"
+}
+
+const themed = (v: Role["default"], mode: Mode): RoleValue =>
+  "light" in v && "dark" in v ? v[mode] : (v as RoleValue)
+
+/**
+ * Resolve every role in `lib/tokens/roles.source.ts` to what the Mzizi default
+ * stylesheet declares and what it paints, in both themes.
+ *
+ * A role marked `derive` whose default misses its contrast rule gets a measured
+ * value walked from the default with `walk()`, the way the `-aa` tier is made:
+ * the family's own variable is untouched, and the role carries the safe value
+ * with the measurement beside it.
+ */
+export function resolveRoles(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]): Map<string, ResolvedRole> {
+  const families = [
+    ...minerals.map((m) => ({ ...m, group: "mineral" as const })),
+    ...heritage.map((h) => ({ ...h, group: "heritage" as const })),
+    ...experimental.map((e) => ({ ...e, group: "exp" as const })),
+  ]
+  const tier = a11yTier(families.map(({ name, lightHex, darkHex }) => ({ name, lightHex, darkHex })))
+  const textTier = textOnBaseTier(families.map(({ name, lightHex, darkHex }) => ({ name, lightHex, darkHex })), tier)
+  const ramp = textRamp()
+  const byName = new Map(ROLES.map((r) => [r.name, r]))
+  const out = new Map<string, ResolvedRole>()
+  const resolving = new Set<string>()
+
+  const familyValue = (family: string, t: string, mode: Mode): string => {
+    const f = families.find((x) => x.name === family)
+    if (!f) throw new Error(`role default names unknown palette family "${family}"`)
+    const L = mode === "light"
+    switch (t) {
+      case "base":
+        return (L ? f.lightHex : f.darkHex).toUpperCase()
+      case "aa":
+        return (tier.get(family)?.[mode]?.hex ?? (L ? f.lightHex : f.darkHex)).toUpperCase()
+      case "text":
+        return textTier.get(family)![mode].hex.toUpperCase()
+      case "container":
+      case "on-container": {
+        if (f.group === "heritage") throw new Error(`heritage family "${family}" has no ${t} tier`)
+        const x = f as unknown as Record<string, string>
+        const key = t === "container" ? (L ? "containerLight" : "containerDark") : L ? "onContainerLight" : "onContainerDark"
+        return x[key].toUpperCase()
+      }
+    }
+    throw new Error(`unknown family tier "${t}"`)
+  }
+
+  /** One theme's declaration and painted value for a role default, before any derivation. */
+  const one = (v: RoleValue, mode: Mode, r: Role): { css: string; value: string } => {
+    if ("family" in v) {
+      const prefix = familyPrefix(v.family, heritage, experimental)
+      const suffix = v.tier === "base" ? "" : `-${v.tier}`
+      return { css: `var(--${prefix}-${v.family}${suffix})`, value: familyValue(v.family, v.tier, mode) }
+    }
+    if ("role" in v) {
+      const target = byName.get(v.role)
+      if (!target) throw new Error(`role "${r.name}" aliases unknown role "${v.role}"`)
+      return { css: `var(${roleVar(target)})`, value: resolve(v.role).value[mode] }
+    }
+    if ("ramp" in v) {
+      const hex = ramp[mode][v.ramp].toUpperCase()
+      return { css: lo(hex), value: hex }
+    }
+    if ("semantic" in v || "background" in v) {
+      const value = canonicalColor("semantic" in v ? STATUS_OR_SEMANTIC(v.semantic, mode) : BACKGROUND(v.background, mode))
+      return { css: lo(value), value }
+    }
+    if ("literal" in v) return { css: lo(v.literal), value: v.literal.startsWith("#") ? v.literal.toUpperCase() : v.literal }
+    if ("mix" in v) {
+      const [a, pct, b] = v.mix
+      const ra = byName.get(a)
+      const rb = byName.get(b)
+      if (!ra || !rb) throw new Error(`role "${r.name}" mixes an unknown role`)
+      return {
+        css: `color-mix(in oklab, var(${roleVar(ra)}) ${pct}%, var(${roleVar(rb)}))`,
+        value: mixOklab(resolve(a).value[mode], resolve(b).value[mode], pct),
+      }
+    }
+    if ("px" in v) {
+      const css = r.kind === "size" ? `${v.px / 16}rem` : `${v.px}px`
+      return { css, value: `${v.px}px` }
+    }
+    if ("font" in v) return { css: v.font, value: v.font }
+    throw new Error(`role "${r.name}" has an unreadable default`)
+  }
+
+  const passes = (hex: string, rule: { against: readonly string[]; min: number }, mode: Mode) =>
+    rule.against.every((bg) => Math.abs(apca(hex, resolve(bg).value[mode])) >= rule.min)
+
+  function resolve(name: string): ResolvedRole {
+    const done = out.get(name)
+    if (done) return done
+    const r = byName.get(name)
+    if (!r) throw new Error(`unknown role "${name}"`)
+    if (resolving.has(name)) throw new Error(`role "${name}" resolves through itself`)
+    resolving.add(name)
+    const css = {} as Record<Mode, string>
+    const value = {} as Record<Mode, string>
+    const derived: Partial<Record<Mode, string>> = {}
+    for (const mode of MODES) {
+      const base = one(themed(r.default, mode), mode, r)
+      css[mode] = base.css
+      value[mode] = base.value
+      if (r.derive === "text" && r.contrast && "against" in r.contrast && !passes(base.value, r.contrast, mode)) {
+        const rule = r.contrast
+        const hex = walk(base.value, mode === "light" ? "#000000" : "#FFFFFF", (c) => passes(c, rule, mode))
+        const worst = Math.min(...rule.against.map((bg) => Math.abs(apca(base.value, resolve(bg).value[mode]))))
+        derived[mode] = `derived: ${base.value} measures Lc ${worst.toFixed(1)} against ${rule.against.join(" / ")}; walked toward ${mode === "light" ? "#000000" : "#FFFFFF"} to Lc ${rule.min}`
+        css[mode] = lo(hex)
+        value[mode] = hex
+      }
+      if (r.derive === "fill") {
+        // Every role measured ON this fill must clear its bar on it.
+        const fgs = ROLES.filter((x) => x.contrast && "against" in x.contrast && x.contrast.against.includes(name))
+        const ok = (fill: string) =>
+          fgs.every((x) => Math.abs(apca(resolve(x.name).value[mode], fill)) >= (x.contrast as { min: number }).min)
+        if (fgs.length && !ok(base.value)) {
+          const fgHex = resolve(fgs[0].name).value[mode]
+          const toward = apca(fgHex, base.value) < 0 ? "#000000" : "#FFFFFF"
+          const hex = walk(base.value, toward, ok)
+          const lc = Math.abs(apca(fgHex, base.value)).toFixed(1)
+          derived[mode] = `derived: ${fgs[0].name} measures Lc ${lc} on ${base.value}; fill walked toward ${toward} to Lc ${(fgs[0].contrast as { min: number }).min}`
+          css[mode] = lo(hex)
+          value[mode] = hex
+        }
+      }
+    }
+    resolving.delete(name)
+    const res = { role: r, css, value, derived }
+    out.set(name, res)
+    return res
+  }
+
+  for (const r of ROLES) resolve(r.name)
+  return out
+}
+
+/** `#e7e5e0` → `#E7E5E0`; `rgba(0,0,0,0.40)` → `rgba(0, 0, 0, 0.4)`, the form the stylesheet writes. */
+function canonicalColor(v: string): string {
+  if (v.startsWith("#")) return v.toUpperCase()
+  const m = v.match(/^rgba\(([^)]+)\)$/)
+  return m ? `rgba(${m[1].split(",").map((x) => Number(x.trim())).join(", ")})` : v
+}
+
+function STATUS_OR_SEMANTIC(name: string, mode: Mode): string {
+  const row = SEMANTIC.find((c) => c.name === name)
+  if (!row) throw new Error(`brand.source.ts semanticColors has no "${name}"`)
+  return mode === "light" ? row.lightValue : row.darkValue
+}
+
+function BACKGROUND(name: string, mode: Mode): string {
+  const row = BACKGROUNDS.find((c) => c.name === name)
+  if (!row) throw new Error(`brand.source.ts backgroundColors has no "${name}"`)
+  return mode === "light" ? row.lightValue : row.darkValue
+}
+
+/** One measurement the gate made. */
+export interface GateResult {
+  role: string
+  mode: Mode | "both"
+  against: string
+  measure: number
+  min: number
+  pass: boolean
+  pending?: string
+}
+
+/**
+ * THE CONTRAST GATE (#484 §2b). Run on every `pnpm tokens:sync` and
+ * `pnpm tokens:verify`; a violation fails the build.
+ *
+ *   - every `kind: text` role: |Lc| >= 75 on `base` and `surface` (or on the
+ *     fill it is declared against), both themes
+ *   - every `kind: ui` role: |Lc| >= 30 on what it is declared against
+ *   - `spacing-touch` and every size marked `floor` >= `spacing-touch-min`
+ *   - every `required` role resolves in both themes
+ *
+ * The manifest cannot loosen it: a text role that declares a bar under 75, or a
+ * ui role under 30, is itself a violation unless the rule carries `pending`, an
+ * owner decision named in the rule (and pinned by the role tests).
+ */
+export function roleGate(resolved: Map<string, ResolvedRole>): { results: GateResult[]; violations: string[]; pending: GateResult[] } {
+  const results: GateResult[] = []
+  const violations: string[] = []
+  for (const { role: r, value } of resolved.values()) {
+    if (r.required && MODES.some((m) => !value[m])) violations.push(`${r.name}: required, but does not resolve in both themes`)
+    if (!r.contrast || "exempt" in r.contrast) {
+      if ((r.kind === "text" || r.kind === "ui") && !r.contrast) violations.push(`${r.name}: a ${r.kind} role with no contrast rule`)
+      continue
+    }
+    const floor = r.kind === "text" ? 75 : r.kind === "ui" ? 30 : 0
+    if (r.contrast.min < floor && !r.contrast.pending) violations.push(`${r.name}: declares Lc ${r.contrast.min}, under the ${r.kind} bar of ${floor}`)
+    for (const mode of MODES) {
+      for (const bg of r.contrast.against) {
+        const raw = Math.abs(apca(value[mode], resolved.get(bg)!.value[mode]))
+        const measure = +raw.toFixed(1)
+        const min = Math.max(r.contrast.min, floor)
+        const res: GateResult = { role: r.name, mode, against: bg, measure, min, pass: raw >= min }
+        if (!res.pass && r.contrast.pending) res.pending = r.contrast.pending
+        results.push(res)
+        if (!res.pass && !res.pending) violations.push(`${r.name} (${mode}): Lc ${measure} on ${bg}, needs ${min}`)
+      }
+    }
+  }
+  const px = (name: string) => parseFloat(resolved.get(name)!.value.light)
+  const touchMin = px("spacing-touch-min")
+  for (const { role: r } of resolved.values()) {
+    if (!r.floor) continue
+    const measure = px(r.name)
+    results.push({ role: r.name, mode: "both", against: "spacing-touch-min", measure, min: touchMin, pass: measure >= touchMin })
+    if (measure < touchMin) violations.push(`${r.name}: ${measure}px, under the ${touchMin}px touch floor`)
+  }
+  return { results, violations, pending: results.filter((x) => x.pending) }
 }
 
 /**
@@ -644,6 +930,7 @@ export function renderGlobalsCss(
   const tier = a11yTier(families)
   const textTier = textOnBaseTier(families, tier)
   const text = textRamp()
+  const resolved = resolveRoles(minerals, heritage, experimental)
 
   /** The `-text` value, and the measurement behind it, for one family in one theme. */
   const tx = (name: string, mode: "light" | "dark") => {
@@ -716,56 +1003,54 @@ export function renderGlobalsCss(
     out.push("")
     out.push(box("TEXT RAMP — three tiers, APCA-measured on --base"))
     const t = pick(text.light, text.dark)
-    out.push(`  --text-primary: ${lo(t.primary)}; /* APCA Lc ${t.measure.primary} on --base */`)
-    out.push(`  --text-secondary: ${lo(t.secondary)}; /* APCA Lc ${t.measure.secondary} on --base */`)
-    out.push(`  --text-tertiary: ${lo(t.tertiary)}; /* APCA Lc ${t.measure.tertiary} on --base */`)
+    out.push(`  --text-primary: ${lo(t.primary)}; /* APCA Lc ${t.measure.primary} on --base, ${t.onSurface.primary} on --surface */`)
+    out.push(`  --text-secondary: ${lo(t.secondary)}; /* APCA Lc ${t.measure.secondary} on --base, ${t.onSurface.secondary} on --surface */`)
+    out.push(`  --text-tertiary: ${lo(t.tertiary)}; /* APCA Lc ${t.measure.tertiary} on --base, ${t.onSurface.tertiary} on --surface */`)
     out.push(`  --hero-text: #ffffff; /* Text over photography — pair with --hero-text-shadow, never bare */`)
     out.push(`  --hero-text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.4);`)
     out.push(`  --muted-foreground: var(--text-secondary);`)
 
     out.push("")
-    out.push(box("STATUS"))
-    for (const [name, l, d, usage] of STATUS) {
-      out.push(`  --${name}: ${lo(pick(l, d))}; /* ${usage} */`)
+    /** The declaration for one role in this theme, with the measurement where it was derived. */
+    const decl = (r: ResolvedRole, comment?: string) => {
+      const note = r.derived[mode] ?? comment
+      return `  ${roleVar(r.role)}: ${r.css[mode]};${note ? ` /* ${note} */` : ""}`
     }
+    const block = (b: Role["block"]) => [...resolved.values()].filter((r) => r.role.block === b)
+
+    out.push(box("STATUS"))
+    for (const r of block("status")) out.push(decl(r, r.role.description))
 
     out.push("")
     out.push(box("CHART — the seven minerals, in palette order"))
-    minerals.forEach((m, i) => out.push(`  --chart-${i + 1}: var(--mineral-${m.name});`))
-    out.push(`  /* Semantic series. These must NOT change hue between themes — a negative`)
-    out.push(`     series that is orange in light and rose in dark is the defect found in`)
-    out.push(`     mukoko-news, where all twelve chart values were raw Tailwind palette. */`)
-    out.push(`  --chart-positive: var(--success);`)
-    out.push(`  --chart-negative: var(--error);`)
-    out.push(`  --chart-neutral: var(--neutral);`)
+    for (const r of block("chart")) {
+      if (r.role.name === "chart-positive") {
+        out.push(`  /* Semantic series. These must NOT change hue between themes — a negative`)
+        out.push(`     series that is orange in light and rose in dark is the defect found in`)
+        out.push(`     mukoko-news, where all twelve chart values were raw Tailwind palette. */`)
+      }
+      out.push(decl(r))
+    }
 
     out.push("")
     out.push(box("SHADCN SEMANTIC SET"))
-    out.push(`  --background: var(--base); /* ALIAS. /v1/brand calls this step \`base\`; shadcn calls it \`background\`. */`)
-    out.push(`  --foreground: var(--text-primary);`)
-    out.push(`  --card: var(--surface);`)
-    out.push(`  --card-foreground: var(--text-primary);`)
-    out.push(`  --popover: var(--overlay);`)
-    out.push(`  --popover-foreground: var(--text-primary);`)
-    out.push(`  --primary-foreground: ${lo(pick("#ffffff", "#0e0d0c"))};`)
-    out.push(`  --secondary: var(--container);`)
-    out.push(`  --secondary-foreground: var(--text-primary);`)
-    out.push(`  --destructive: var(--error);`)
-    out.push(`  --destructive-foreground: ${lo(pick("#ffffff", "#0e0d0c"))};`)
-    out.push(`  --overlay-foreground: var(--text-primary);`)
-    out.push(`  --accent-foreground: var(--text-primary);`)
-    out.push(`  --brand-accent-foreground: ${lo(pick("#ffffff", "#0e0d0c"))};`)
+    for (const r of block("shadcn")) {
+      out.push(decl(r, r.role.name === "background" ? "ALIAS. /v1/brand calls this step `base`; shadcn calls it `background`." : undefined))
+    }
 
     out.push("")
     out.push(box("SIDEBAR"))
-    out.push(`  --sidebar: var(--surface);`)
-    out.push(`  --sidebar-foreground: var(--text-primary);`)
-    out.push(`  --sidebar-primary: var(--primary);`)
-    out.push(`  --sidebar-primary-foreground: var(--primary-foreground);`)
-    out.push(`  --sidebar-accent: var(--container);`)
-    out.push(`  --sidebar-accent-foreground: var(--text-primary);`)
-    out.push(`  --sidebar-border: var(--border);`)
-    out.push(`  --sidebar-ring: var(--ring);`)
+    for (const r of block("sidebar")) out.push(decl(r))
+
+    // The role layer (#484). Every role the blocks above do not already declare.
+    // Declared again under `.dark` only where the theme changes what it paints,
+    // so a nested `.dark` scope re-resolves it.
+    const own = block("roles").filter((r) => mode === "light" || r.value.dark !== r.value.light || r.css.dark !== r.css.light)
+    if (own.length) {
+      out.push("")
+      out.push(box("ROLES — identity, status tones, lifecycle, destructive, categories (#484)"))
+      for (const r of own) out.push(decl(r))
+    }
 
     return out.join("\n")
   }
@@ -775,8 +1060,9 @@ export function renderGlobalsCss(
   return [
     header(),
     themeBlock(minerals, heritage, experimental),
+    fontTheme(resolved),
     containerTheme(),
-    rootBlock(vars("light"), defaultPrimary),
+    rootBlock(vars("light"), defaultPrimary, resolved),
     darkBlock(vars("dark"), defaultPrimary),
     containerUtilities(),
     brandSection(heritage, experimental),
@@ -807,6 +1093,13 @@ function header(): string {
  *   surface ladder       9 steps, pitch → wash, plus \`muted\`
  *   text ramp            3 tiers, measured on \`--base\`, plus \`--hero-text\`
  *   status / chart / sidebar / the shadcn semantic set
+ *   roles                every role in \`lib/tokens/roles.source.ts\` as a
+ *                        bare var and a Tailwind key: identity, status tones
+ *                        (\`text-status-success-text\`), lifecycle, destructive,
+ *                        categories, sizes (\`h-touch\`), radii
+ *                        (\`rounded-control\`) and fonts (\`font-body\`). A brand
+ *                        moves a role by redeclaring its var; the APCA gate
+ *                        holds the Mzizi mapping to Lc 75 text, Lc 30 UI
  *   non-colour ladders   spacing 17, motion 4+4+3, type 13+9, shadow 8,
  *                        radius 7, touch targets, control heights, z-index
  *   containers           3 widths (narrow, prose, wide) and the
@@ -835,13 +1128,16 @@ function header(): string {
  * the variable at runtime instead of baking in whichever value was current at
  * build. Every entry here is a \`var()\` — there is no hex in this block, by
  * construction, because the definitions live in \`:root\` and \`.dark\` below.
+ * The one literal is the touch floor, \`--spacing-touch-min\`, inlined on purpose
+ * so no brand can lower it, and \`--spacing-touch\` is clamped to it.
+ *
+ * Every role in \`lib/tokens/roles.source.ts\` registers here
+ * (\`--color-<role>\`, \`--radius-<role>\`, \`--spacing-<role>\`), so a brand that
+ * moves a role's bare variable moves every utility that names it with no
+ * Tailwind rebuild. The fonts are not here: see \`fontTheme()\`.
  */
 function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]): string {
   const out: string[] = ["@theme inline {"]
-  out.push("  --font-sans: \"Noto Sans\", ui-sans-serif, system-ui, sans-serif;")
-  out.push("  --font-serif: \"Noto Serif\", ui-serif, Georgia, serif;")
-  out.push("  --font-mono: \"JetBrains Mono\", ui-monospace, Menlo, monospace;")
-  out.push("")
   out.push(box("FAMILIES"))
   for (const m of minerals) {
     out.push(`  --color-${m.name}: var(--mineral-${m.name});`)
@@ -864,22 +1160,19 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
     out.push(`  --color-${e.name}-text: var(--exp-${e.name}-text);`)
   }
   out.push("")
-  out.push(box("SURFACES, TEXT, STATUS, SEMANTICS"))
-  const roles = [
-    ...LADDER.map(([n]) => n as string),
-    "muted",
-    "text-primary", "text-secondary", "text-tertiary", "hero-text",
-    ...STATUS.map(([n]) => n as string),
-    "background", "foreground", "card", "card-foreground", "popover", "popover-foreground",
-    "primary", "primary-foreground", "secondary", "secondary-foreground",
-    "muted-foreground", "accent", "accent-foreground", "destructive", "destructive-foreground",
-    "overlay-foreground", "border", "input", "ring", "brand-accent", "brand-accent-foreground",
-    "chart-1", "chart-2", "chart-3", "chart-4", "chart-5", "chart-6", "chart-7",
-    "chart-positive", "chart-negative", "chart-neutral",
-    "sidebar", "sidebar-foreground", "sidebar-primary", "sidebar-primary-foreground",
-    "sidebar-accent", "sidebar-accent-foreground", "sidebar-border", "sidebar-ring",
-  ]
-  for (const r of roles) out.push(`  --color-${r}: var(--${r});`)
+  out.push(box("ROLES — colour (lib/tokens/roles.source.ts)"))
+  for (const r of ROLES.filter((x) => isColorKind(x.kind))) out.push(`  --color-${colorKey(r)}: var(${roleVar(r)});`)
+  out.push("")
+  out.push(box("ROLES — size and radius"))
+  for (const r of ROLES.filter((x) => x.kind === "size")) {
+    const key = r.name
+    const touchMin = ROLES.find((x) => x.name === "spacing-touch-min")!
+    const floor = `${(touchMin.default as { px: number }).px / 16}rem`
+    if (r.fixed) out.push(`  --${key}: ${floor}; /* a literal: the touch floor no brand can lower */`)
+    else if (r.name === "spacing-touch") out.push(`  --${key}: max(var(${roleVar(r)}), ${floor}); /* never under the touch floor */`)
+    else out.push(`  --${key}: var(${roleVar(r)});`)
+  }
+  for (const r of ROLES.filter((x) => x.kind === "radius")) out.push(`  --${r.name}: var(${roleVar(r)});`)
   out.push("")
   out.push(box("SPACING / RADIUS / TYPE / SHADOW / EASING"))
   for (const [n] of SPACING) out.push(`  --spacing-${n}: var(--space-${n});`)
@@ -888,6 +1181,24 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
   for (const [alias, size] of TYPE_ALIASES) out.push(`  --text-${alias}: var(--fs-${size});`)
   for (const [n] of SHADOW) out.push(`  --shadow-${n}: var(--elevation-${n});`)
   for (const [n] of EASING) out.push(`  --ease-${n}: var(--easing-${n});`)
+  out.push("}")
+  return out.join("\n")
+}
+
+/**
+ * The font roles, in a plain \`@theme\` (not \`inline\`).
+ *
+ * Under \`@theme inline\` Tailwind compiled the literal "Noto Sans" into
+ * \`.font-sans\`, so a brand could not move the type without rebuilding. A
+ * non-inline key compiles \`.font-body\` to \`font-family: var(--font-body)\`
+ * and declares \`--font-body\` on \`:root\`, where a brand overrides it at runtime.
+ * \`font-sans\`, \`font-serif\` and \`font-mono\` stay, as aliases of the roles.
+ */
+function fontTheme(resolved: Map<string, ResolvedRole>): string {
+  const out: string[] = ["@theme {"]
+  out.push(box("FONT ROLES"))
+  for (const r of ROLES.filter((x) => x.kind === "font")) out.push(`  ${roleVar(r)}: ${resolved.get(r.name)!.css.light};`)
+  for (const [alias, of] of FONT_ALIASES) out.push(`  --font-${alias}: var(--${of});`)
   out.push("}")
   return out.join("\n")
 }
@@ -936,8 +1247,13 @@ ${blocks.join("\n\n")}`
 }
 
 /** The ladders and the unresolved block — theme-invariant, so `:root` only. */
-function invariants(): string {
+function invariants(resolved: Map<string, ResolvedRole>): string {
   const out: string[] = []
+  const decl = (r: Role) => {
+    const v = resolved.get(r.name)!
+    const px = r.kind === "size" ? ` /* ${v.value.light} — ${r.description} */` : ` /* ${r.description} */`
+    return `  ${roleVar(r)}: ${v.css.light};${px}`
+  }
   out.push("")
   out.push(box("SPACING — 17 rungs"))
   for (const [n, rem, px] of SPACING) out.push(`  --space-${n}: ${rem}; /* ${px}px */`)
@@ -952,9 +1268,7 @@ function invariants(): string {
 
   out.push("")
   out.push(box("TYPOGRAPHY — 13 sizes, 9 line-heights"))
-  out.push(`  --font-family-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;`)
-  out.push(`  --font-family-serif: "Noto Serif", ui-serif, Georgia, serif;`)
-  out.push(`  --font-family-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;`)
+  for (const [alias, of] of FONT_ALIASES) out.push(`  --font-family-${alias}: ${resolved.get(of)!.css.light};`)
   for (const [n, rem, px, lh, w, f] of TYPE) {
     out.push(`  --fs-${n}: ${rem}; /* ${px} — ${f} ${w}, line-height ${lh} */`)
   }
@@ -967,11 +1281,12 @@ function invariants(): string {
   for (const [n, v] of RADIUS) out.push(`  --r-${n}: ${v};`)
   out.push(`  --radius: calc(var(--radius-unit) * 2); /* 14px */`)
   out.push(`  --r-circle: 50%;`)
-  out.push(`  /* Semantic aliases — /v1/brand componentSpecs: buttons and inputs are ALWAYS pill. */`)
-  out.push(`  --r-button: var(--r-full);`)
-  out.push(`  --r-input: var(--r-full);`)
-  out.push(`  --r-badge: var(--r-full);`)
-  out.push(`  --r-card: var(--r-base);`)
+  out.push(`  /* Radius roles (#484) — brandMeta.componentSpecs. Mzizi keeps controls pill (owner`)
+  out.push(`     decision 2026-10-07); a brand switches them here, not in a component. */`)
+  for (const r of ROLES.filter((x) => x.kind === "radius")) out.push(`${decl(r)}`)
+  out.push(`  /* Deprecated names of the radius roles, kept for one minor: */`)
+  out.push(`  --r-button: var(--r-control);`)
+  out.push(`  --r-input: var(--r-field);`)
 
   out.push("")
   out.push(box("ELEVATION — 8 rungs"))
@@ -980,6 +1295,9 @@ function invariants(): string {
   out.push("")
   out.push(box("TOUCH TARGETS AND CONTROL HEIGHTS"))
   for (const [n, v, why] of SIZING) out.push(`  --${n}: ${v}; /* ${why} */`)
+  out.push(`  /* Size roles (#484) — \`h-touch\`, \`min-h-touch-min\`, \`h-control\`… The touch floor is`)
+  out.push(`     fixed in @theme; moving --size-touch-min does not lower min-h-touch-min. */`)
+  for (const r of ROLES.filter((x) => x.kind === "size")) out.push(`${decl(r)}`)
 
   out.push("")
   out.push(box("Z-INDEX"))
@@ -1048,12 +1366,12 @@ function disputed(mode: "light" | "dark", defaultPrimary: string): string {
   return out.join("\n")
 }
 
-function rootBlock(body: string, defaultPrimary: string): string {
+function rootBlock(body: string, defaultPrimary: string, resolved: Map<string, ResolvedRole>): string {
   return `/* ════ LIGHT — the default theme ════ */
 :root {
 ${body}
 ${disputed("light", defaultPrimary)}
-${invariants()}
+${invariants(resolved)}
 }`
 }
 
@@ -1211,6 +1529,22 @@ export function renderGlobalsJson(
       hero: { hex: "#FFFFFF", shadow: "0 1px 3px rgba(0,0,0,0.6), 0 2px 12px rgba(0,0,0,0.4)", usage: "Text over photography — never bare" },
     },
     status: Object.fromEntries(STATUS.map(([n, l, d, usage]) => [n, { light: l, dark: d, usage }])),
+    roles: Object.fromEntries(
+      [...resolveRoles(minerals, heritage, experimental).values()].map(({ role: r, value, derived }) => [
+        r.name,
+        {
+          kind: r.kind,
+          group: r.group,
+          required: r.required,
+          cssVar: roleVar(r),
+          light: value.light,
+          dark: value.dark,
+          contrast: r.contrast ?? null,
+          ...(Object.keys(derived).length ? { derived } : {}),
+          description: r.description,
+        },
+      ])
+    ),
     chart: {
       series: minerals.map((m) => ({ name: m.name, light: m.lightHex.toUpperCase(), dark: m.darkHex.toUpperCase() })),
       positive: "status.success", negative: "status.error", neutral: "status.neutral",
@@ -1256,7 +1590,7 @@ export function renderGlobalsJson(
       },
       sizing: Object.fromEntries(SIZING.map(([n, v, why]) => [n, { value: v, usage: why }])),
       zIndex: Object.fromEntries(ZINDEX),
-      fonts: { sans: "Noto Sans", serif: "Noto Serif", mono: "JetBrains Mono" },
+      fonts: { ...FONTS },
     },
   }
   return JSON.stringify(doc, null, 2) + "\n"
