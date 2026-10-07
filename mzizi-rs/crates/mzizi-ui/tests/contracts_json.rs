@@ -23,7 +23,7 @@ use serde_json::Value;
 
 #[path = "../../../contract-eval/contract_eval.rs"]
 mod contract_eval;
-use contract_eval::{Case, Node, declared_height, holds, render, select, tokens};
+use contract_eval::{Case, Node, declared_height, holds, parse, render, select, tokens};
 
 fn repo() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..")
@@ -389,95 +389,94 @@ fn every_rust_contract_const_is_the_contract_file() {
     }
 }
 
-// ─── The class-token predicates ─────────────────────────────────────────────────────────────
+// ─── The value predicates, against the TypeScript runner ───────────────────────────────────
 //
-// `has "<token>"` is one whole whitespace-separated token and `not <predicate>` negates one
-// predicate; `contains` stays a substring. The same cases as `__tests__/contracts/
-// runner-grammar.test.ts` for contracts/runner.ts.
+// `__tests__/contracts/fixtures/predicates.json` is one table of predicates, malformed operands
+// included, and the verdict both runners give each: `true`, `false` or `"unevaluable"` (an
+// `Err` here). `__tests__/contracts/runner-grammar.test.ts` holds `contracts/runner.ts` to the
+// same rows, so the Rust and TypeScript runners cannot disagree on one, and `not` never turns
+// an unevaluable predicate into a pass in either.
 
-fn eval(pred: &str, class: &str) -> Result<bool, String> {
-    holds(class, &tokens(pred))
+fn verdict(r: &Result<bool, String>) -> Value {
+    match r {
+        Ok(b) => Value::Bool(*b),
+        Err(_) => Value::String("unevaluable".into()),
+    }
 }
 
 #[test]
-fn has_is_one_whole_class_token() {
-    assert_eq!(
-        eval(r#"has "text-malachite""#, "bg-malachite/10 text-malachite"),
-        Ok(true)
-    );
-    for class in ["dark:text-malachite", "text-malachite/50"] {
-        assert_eq!(eval(r#"has "text-malachite""#, class), Ok(false), "{class}");
-    }
-    for class in ["hover:bg-malachite/10", "bg-malachite/100"] {
+fn every_predicate_case_gets_the_verdict_the_typescript_runner_gives() {
+    let path = repo().join("__tests__/contracts/fixtures/predicates.json");
+    let table: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+    let cases = table["cases"].as_array().expect("a `cases` array");
+    assert!(!cases.is_empty());
+    for case in cases {
+        let pred = case["pred"].as_str().unwrap();
+        let value = case["value"].as_str().unwrap();
+        let got = holds(value, &tokens(pred));
         assert_eq!(
-            eval(r#"has "bg-malachite/10""#, class),
-            Ok(false),
-            "{class}"
+            verdict(&got),
+            case["verdict"],
+            "`{pred}` on {value:?} gave {got:?}"
         );
-        assert_eq!(
-            eval(r#"contains "bg-malachite/10""#, class),
-            Ok(true),
-            "{class}"
-        );
-    }
-    assert!(eval(r#"has "a b""#, "a b").is_err());
-}
-
-#[test]
-fn not_negates_one_predicate_and_never_passes_an_unevaluable_one() {
-    assert_eq!(eval(r#"not contains "cobalt""#, "text-malachite"), Ok(true));
-    assert_eq!(
-        eval(
-            r#"not contains "cobalt""#,
-            "text-malachite dark:text-cobalt"
-        ),
-        Ok(false)
-    );
-    assert_eq!(
-        eval(r#"not has "line-through""#, "hover:line-through"),
-        Ok(true)
-    );
-    assert_eq!(
-        eval(r#"not has "line-through""#, "text-malachite line-through"),
-        Ok(false)
-    );
-    assert_eq!(eval(r#"not is "y""#, "x"), Ok(true));
-    for pred in [
-        r#"not frobs "x""#,
-        r#"not uses "primary""#,
-        r#"not has "a b""#,
-        r#"not not contains "a""#,
-    ] {
-        assert!(eval(pred, "a").is_err(), "{pred}");
+        if got.is_err() && !pred.is_empty() && !pred.starts_with("not ") {
+            assert!(
+                holds(value, &tokens(&format!("not {pred}"))).is_err(),
+                "`not {pred}` must stay unevaluable"
+            );
+        }
     }
 }
 
+/// A `when` clause with `not`, on a node parsed from fixed markup, so the test depends on no
+/// component's classes.
 #[test]
-fn a_when_clause_with_not_fails_on_the_wrong_mineral() {
+fn a_when_clause_with_not_holds_fails_or_cannot_be_evaluated() {
+    let node = |html: &str| parse(html).into_iter().next().expect("one root");
     let case = Case {
         name: "fixture",
-        contract: "contract\n  slot is \"status-badge\"\nend",
-        states: vec![(
-            "default",
-            render(|| rsx! { StatusBadge { status: StatusBadgeStatus::Stable } }),
-        )],
+        contract: "contract\n  slot is \"x\"\nend",
+        states: vec![
+            (
+                "default",
+                node(
+                    r#"<span data-slot="x" class="rounded-full uppercase hover:line-through">x</span>"#,
+                ),
+            ),
+            (
+                "struck",
+                node(r#"<span data-slot="x" class="rounded-full uppercase line-through">x</span>"#),
+            ),
+            ("bare", node(r#"<span data-slot="x">x</span>"#)),
+        ],
         defaults: Vec::new(),
         columns: Vec::new(),
     };
     assert_eq!(
-        case.evaluate(r#"when default class has "text-malachite""#),
+        case.evaluate(r#"when default class not has "line-through""#),
         Ok(true)
     );
     assert_eq!(
-        case.evaluate(r#"when default class not contains "cobalt""#),
+        case.evaluate(r#"when default class not contains "line-through""#),
+        Ok(false)
+    );
+    assert_eq!(
+        case.evaluate(r#"when struck class not has "line-through""#),
+        Ok(false)
+    );
+    assert_eq!(
+        case.evaluate(r#"when struck class has "uppercase""#),
         Ok(true)
     );
-    assert_eq!(
-        case.evaluate(r#"when default class not contains "malachite""#),
-        Ok(false)
+    // An attribute the root does not carry, or a malformed operand, is unevaluable with `not`
+    // as without it.
+    assert!(
+        case.evaluate(r#"when bare class not contains "line-through""#)
+            .is_err()
     );
-    assert_eq!(
-        case.evaluate(r#"when default class has "line-through""#),
-        Ok(false)
+    assert!(case.evaluate(r#"when default class not in foo"#).is_err());
+    assert!(
+        case.evaluate(r#"when default class not is "a" "b""#)
+            .is_err()
     );
 }

@@ -261,15 +261,16 @@ pub fn tokens(line: &str) -> Vec<String> {
         if c.is_whitespace() {
             chars.next();
         } else if c == '"' {
+            // A quoted string is one token, quotes kept. A quote left open runs to the end of
+            // the line and stays open, so `quoted` does not take it for a quoted operand.
             chars.next();
             let mut s = String::from("\"");
             for c in chars.by_ref() {
+                s.push(c);
                 if c == '"' {
                     break;
                 }
-                s.push(c);
             }
-            s.push('"');
             out.push(s);
         } else {
             let mut s = String::new();
@@ -308,43 +309,80 @@ pub fn clauses(contract: &str) -> Vec<&str> {
         .collect()
 }
 
+/// The text inside a quoted token, or `None` when the token is not quoted.
+pub fn quoted(t: &str) -> Option<&str> {
+    t.strip_prefix('"')?.strip_suffix('"')
+}
+
+/// The one quoted operand a predicate takes; any other shape is an `Err`.
+fn one_quoted<'a>(name: &str, operands: &'a [String]) -> Result<&'a str, String> {
+    match operands {
+        [only] => quoted(only),
+        _ => None,
+    }
+    .ok_or_else(|| format!("`{name}` takes exactly one quoted operand"))
+}
+
 /// Evaluate a value predicate. `Err` is a clause this evaluator cannot apply.
 ///
 /// `contains "<s>"` is a substring; `has "<token>"` is one whole whitespace-separated token
 /// (`has "line-through"` is not satisfied by `hover:line-through`). `not <predicate>` negates
-/// any one predicate (`not contains "line-through"`, `not has "uppercase"`);
-/// `not` of a predicate this evaluator cannot apply stays an `Err`, never a pass. The same
-/// grammar as `contracts/runner.ts`.
+/// any one predicate (`not contains "line-through"`, `not has "uppercase"`).
+///
+/// Every operand is quoted, and a predicate takes exactly the operands it names: an unquoted
+/// operand, an extra one, or (for `in`) none at all is an `Err`, and `not` of an `Err` stays an
+/// `Err`, never a pass. The grammar and every verdict match `evaluatePredicate` in
+/// `contracts/runner.ts`; `__tests__/contracts/fixtures/predicates.json` holds both to the same
+/// cases. `at_least <n>` (an unquoted number) is evaluated here only, for prop defaults and
+/// variant columns, which only the Rust suites have.
 pub fn holds(value: &str, pred: &[String]) -> Result<bool, String> {
-    match pred.first().map(String::as_str) {
-        Some("not") if pred.len() >= 2 => {
-            if pred[1] == "not" {
-                return Err("`not not` is not evaluated: one `not`".into());
-            }
-            holds(value, &pred[1..]).map(|b| !b)
-        }
-        Some("is") if pred.len() == 2 => Ok(value == unquote(&pred[1])),
-        Some("contains") if pred.len() == 2 => Ok(value.contains(unquote(&pred[1]))),
-        Some("has") if pred.len() == 2 => {
-            let want = unquote(&pred[1]);
+    let Some((head, operands)) = pred.split_first() else {
+        return Err("an empty predicate".into());
+    };
+    match head.as_str() {
+        "not" => match operands.first().map(String::as_str) {
+            None => Err("`not` needs a predicate".into()),
+            Some("not") => Err("`not not`: one `not` only".into()),
+            Some(_) => holds(value, operands).map(|b| !b),
+        },
+        "is" => Ok(value == one_quoted(head, operands)?),
+        "contains" => Ok(value.contains(one_quoted(head, operands)?)),
+        "has" => {
+            let want = one_quoted(head, operands)?;
             if want.is_empty() || want.contains(char::is_whitespace) {
-                return Err("`has` takes one quoted token".into());
+                return Err("`has` takes one class token, with no whitespace".into());
             }
             Ok(value.split_whitespace().any(|c| c == want))
         }
-        Some("not_empty") if pred.len() == 1 => Ok(!value.trim().is_empty()),
-        Some("at_least") if pred.len() == 2 => {
-            let n: f64 = pred[1].parse().map_err(|_| "at_least needs a number")?;
+        "not_empty" if operands.is_empty() => Ok(!value.trim().is_empty()),
+        "not_empty" => Err("`not_empty` takes no operand".into()),
+        "at_least" => {
+            let [n] = operands else {
+                return Err("`at_least` takes one number".into());
+            };
+            let n: f64 = n.parse().map_err(|_| "at_least needs a number")?;
             let v: f64 = value
                 .parse()
                 .map_err(|_| format!("`{value}` is not a number"))?;
             Ok(v >= n)
         }
-        Some("in") if pred.len() >= 2 => Ok(pred[1..].iter().any(|p| value == unquote(p))),
-        Some("uses") if pred.len() == 2 && pred[1].starts_with("\"--") => {
-            Ok(value.contains(&format!("var({}", unquote(&pred[1]))))
+        "in" => {
+            let set: Option<Vec<&str>> = operands.iter().map(|p| quoted(p)).collect();
+            match set {
+                Some(set) if !set.is_empty() => Ok(set.contains(&value)),
+                _ => Err("`in` takes one or more quoted operands, and only those".into()),
+            }
         }
-        _ => Err(format!("unknown predicate {pred:?}")),
+        "uses" => {
+            let token = one_quoted(head, operands)?;
+            if !token.starts_with("--") {
+                return Err("`uses` takes \"--token\"".into());
+            }
+            Ok(value.contains(&format!("var({token}")))
+        }
+        _ => Err(format!(
+            "`{head}` is not a predicate this evaluator evaluates"
+        )),
     }
 }
 
