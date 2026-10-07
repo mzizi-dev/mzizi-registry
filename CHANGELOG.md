@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `ui/status-badge` 1.1.0 holds every build to its status's mineral again (2026-10-07, #476)
+
+When the status badge's clauses moved into `contracts/ui/status-badge.contract.json` (#428), the mineral checks were dropped: the contract held only `beta` → `text-cobalt` and `deprecated` → `line-through`, so a build that tinted `stable` with the wrong mineral still passed CI (#440). Nothing served was wrong. The contract now checks each status's mineral, as the fill at 10% and as the text: `stable` (the default) is malachite, `beta` cobalt, `alpha` gold and `deprecated` terracotta, struck through. It gains an `alpha` state, so all four statuses are rendered and checked. `pnpm contracts:sync` wrote the clauses into `status-badge.rs`'s `CONTRACT` (and the `mzizi-ui` copy); the Astro, React and Rust builds already pass them, unchanged.
+
 ### Fixed — `openapi.yaml` describes the colour families and ecosystem rows `/v1/brand` serves, and a test keeps it that way (2026-10-07, #480)
 
 The brand schemas in the OpenAPI document that api.mzizi.dev serves at `/openapi` had drifted from the payload. `minerals` was pinned at five items, the heritage and experimental tones were missing, and no text value was described. The result was the #316 failure: a client that couldn't find a text value reached for `darkHex`, an accent.
