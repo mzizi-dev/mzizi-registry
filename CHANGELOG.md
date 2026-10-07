@@ -21,7 +21,7 @@ The node, rung and strand doctrine that `mzizi_get_architecture` and `/v1/archit
 - **N1, N10, N11:** the token source is `lib/tokens/palette.source.ts`, not Supabase; doctrine is inlined by `pnpm doctrine:generate`, not `@next/mdx`; the `mzizi-docs` and `mzizi-discovery` crates ship.
 - **Swappable strand, the Astro + Vite+ framework, Next.js, mobile-first, ownership and installation:** "SvelteKit the declared migration target" and "Next.js remains at mzizi.dev" are gone; installation shows the Astro, Rust and React install paths.
 
-### Added — the Python distribution path: `mzizi-py/`, `pnpm py:generate`, `lib/python-packages.ts` and `publish-pypi.yml` (2026-10-07, #PR)
+### Added — the Python distribution path: `mzizi-py/`, `pnpm py:generate`, `lib/python-packages.ts` and `publish-pypi.yml` (2026-10-07, #473)
 
 Phase 2 of #472 starts with the infrastructure the Python build of the resilience node ships through, before its modules land.
 
