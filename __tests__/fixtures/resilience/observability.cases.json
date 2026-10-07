@@ -1,0 +1,561 @@
+{
+  "$comment": "Shared observability fixture (mzizi-registry#472). Run by __tests__/lib/observability.test.ts (vitest) and mzizi-rs/crates/mzizi-assurance/tests/resilience_fixtures.rs (cargo). {\"$error\": {name, code?, message?}} stands for an error object; the message must never appear in any output.",
+  "version": 1,
+  "sensitiveKeys": [
+    {
+      "key": "password",
+      "sensitive": true
+    },
+    {
+      "key": "Passcode",
+      "sensitive": true
+    },
+    {
+      "key": "secretSauce",
+      "sensitive": true
+    },
+    {
+      "key": "x-auth-token",
+      "sensitive": true
+    },
+    {
+      "key": "AUTHORIZATION",
+      "sensitive": true
+    },
+    {
+      "key": "authorisation",
+      "sensitive": true
+    },
+    {
+      "key": "cookies",
+      "sensitive": true
+    },
+    {
+      "key": "apikey",
+      "sensitive": true
+    },
+    {
+      "key": "Api-Key",
+      "sensitive": true
+    },
+    {
+      "key": "api_key",
+      "sensitive": true
+    },
+    {
+      "key": "email",
+      "sensitive": true
+    },
+    {
+      "key": "Phone",
+      "sensitive": true
+    },
+    {
+      "key": "ssn",
+      "sensitive": true
+    },
+    {
+      "key": "cardNumber",
+      "sensitive": true
+    },
+    {
+      "key": "name",
+      "sensitive": false
+    },
+    {
+      "key": "id",
+      "sensitive": false
+    },
+    {
+      "key": "api",
+      "sensitive": false
+    },
+    {
+      "key": "key",
+      "sensitive": false
+    },
+    {
+      "key": "auth",
+      "sensitive": false
+    },
+    {
+      "key": "author",
+      "sensitive": false
+    },
+    {
+      "key": "mail",
+      "sensitive": false
+    },
+    {
+      "key": "phony",
+      "sensitive": false
+    },
+    {
+      "key": "e-mail",
+      "sensitive": false
+    },
+    {
+      "key": "api.key",
+      "sensitive": false
+    }
+  ],
+  "redaction": [
+    {
+      "name": "flat keys",
+      "input": {
+        "user": "tendai",
+        "password": "hunter2",
+        "Email": "a@b.zw",
+        "count": 3
+      },
+      "expected": {
+        "user": "tendai",
+        "password": "[redacted]",
+        "Email": "[redacted]",
+        "count": 3
+      }
+    },
+    {
+      "name": "every pattern, any case, anywhere in the key",
+      "input": {
+        "pass": 1,
+        "PASSWORD": 1,
+        "passphrase": 1,
+        "client_secret": 1,
+        "accessToken": 1,
+        "authorization": 1,
+        "Authorisation": 1,
+        "set-cookie": 1,
+        "apiKey": 1,
+        "api-key": 1,
+        "api_key": 1,
+        "APIKEY": 1,
+        "userEmail": 1,
+        "phoneNumber": 1,
+        "ssn": 1,
+        "creditCard": 1,
+        "cardholder": 1
+      },
+      "expected": {
+        "pass": "[redacted]",
+        "PASSWORD": "[redacted]",
+        "passphrase": "[redacted]",
+        "client_secret": "[redacted]",
+        "accessToken": "[redacted]",
+        "authorization": "[redacted]",
+        "Authorisation": "[redacted]",
+        "set-cookie": "[redacted]",
+        "apiKey": "[redacted]",
+        "api-key": "[redacted]",
+        "api_key": "[redacted]",
+        "APIKEY": "[redacted]",
+        "userEmail": "[redacted]",
+        "phoneNumber": "[redacted]",
+        "ssn": "[redacted]",
+        "creditCard": "[redacted]",
+        "cardholder": "[redacted]"
+      }
+    },
+    {
+      "name": "keys that are not sensitive stay",
+      "input": {
+        "name": "Rudo",
+        "city": "Harare",
+        "api": "v1",
+        "keyId": "k1",
+        "authority": "x",
+        "phony": 1,
+        "e-mail": "no hyphen form",
+        "tok": "short"
+      },
+      "expected": {
+        "name": "Rudo",
+        "city": "Harare",
+        "api": "v1",
+        "keyId": "k1",
+        "authority": "x",
+        "phony": 1,
+        "e-mail": "no hyphen form",
+        "tok": "short"
+      }
+    },
+    {
+      "name": "nested objects and arrays",
+      "input": {
+        "req": {
+          "headers": {
+            "Authorization": "Bearer abc",
+            "accept": "json"
+          },
+          "body": [
+            {
+              "email": "x"
+            },
+            {
+              "ok": true
+            }
+          ]
+        }
+      },
+      "expected": {
+        "req": {
+          "headers": {
+            "Authorization": "[redacted]",
+            "accept": "json"
+          },
+          "body": [
+            {
+              "email": "[redacted]"
+            },
+            {
+              "ok": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "a redacted key hides objects too",
+      "input": {
+        "secret": {
+          "a": 1,
+          "b": [1, 2]
+        },
+        "tokens": ["a", "b"]
+      },
+      "expected": {
+        "secret": "[redacted]",
+        "tokens": "[redacted]"
+      }
+    },
+    {
+      "name": "errors become name and code, never the message",
+      "input": {
+        "failure": {
+          "$error": {
+            "name": "TimeoutError",
+            "code": "timeout",
+            "message": "GET https://x.example/?email=a@b.zw timed out"
+          }
+        },
+        "plain": {
+          "$error": {
+            "name": "TypeError",
+            "message": "secret stuff"
+          }
+        }
+      },
+      "expected": {
+        "failure": {
+          "name": "TimeoutError",
+          "code": "timeout"
+        },
+        "plain": {
+          "name": "TypeError"
+        }
+      }
+    },
+    {
+      "name": "errors in arrays",
+      "input": {
+        "list": [
+          {
+            "$error": {
+              "name": "ChaosError",
+              "code": "chaos",
+              "message": "boom"
+            }
+          },
+          2
+        ]
+      },
+      "expected": {
+        "list": [
+          {
+            "name": "ChaosError",
+            "code": "chaos"
+          },
+          2
+        ]
+      }
+    },
+    {
+      "name": "scalars pass through",
+      "input": {
+        "s": "text",
+        "n": 42,
+        "f": 1.5,
+        "b": false,
+        "z": null,
+        "neg": -7
+      },
+      "expected": {
+        "s": "text",
+        "n": 42,
+        "f": 1.5,
+        "b": false,
+        "z": null,
+        "neg": -7
+      }
+    },
+    {
+      "name": "deeper than 8 levels is cut",
+      "input": {
+        "level": 9,
+        "next": {
+          "level": 8,
+          "next": {
+            "level": 7,
+            "next": {
+              "level": 6,
+              "next": {
+                "level": 5,
+                "next": {
+                  "level": 4,
+                  "next": {
+                    "level": 3,
+                    "next": {
+                      "level": 2,
+                      "next": {
+                        "level": 1,
+                        "next": {
+                          "level": 0,
+                          "next": {
+                            "leaf": "bottom",
+                            "password": "x"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "level": 9,
+        "next": {
+          "level": 8,
+          "next": {
+            "level": 7,
+            "next": {
+              "level": 6,
+              "next": {
+                "level": 5,
+                "next": {
+                  "level": 4,
+                  "next": {
+                    "level": 3,
+                    "next": {
+                      "level": 2,
+                      "next": "[depth]"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "a bare message has the default module",
+      "level": "info",
+      "msg": "Server started",
+      "at": 0,
+      "expected": {
+        "ts": "1970-01-01T00:00:00.000Z",
+        "level": "info",
+        "module": "mzizi",
+        "msg": "Server started"
+      },
+      "json": "{\"ts\":\"1970-01-01T00:00:00.000Z\",\"level\":\"info\",\"module\":\"mzizi\",\"msg\":\"Server started\"}",
+      "line": "[mzizi] INFO Server started"
+    },
+    {
+      "name": "module, trace and data",
+      "level": "warn",
+      "msg": "Cache miss",
+      "ctx": {
+        "module": "registry",
+        "traceId": "req-123",
+        "data": {
+          "key": "button",
+          "hits": 0
+        }
+      },
+      "at": 1759795200123,
+      "expected": {
+        "ts": "2025-10-07T00:00:00.123Z",
+        "level": "warn",
+        "module": "registry",
+        "msg": "Cache miss",
+        "traceId": "req-123",
+        "data": {
+          "key": "button",
+          "hits": 0
+        }
+      },
+      "json": "{\"ts\":\"2025-10-07T00:00:00.123Z\",\"level\":\"warn\",\"module\":\"registry\",\"msg\":\"Cache miss\",\"traceId\":\"req-123\",\"data\":{\"key\":\"button\",\"hits\":0}}",
+      "line": "[mzizi:registry] WARN Cache miss [trace:req-123]"
+    },
+    {
+      "name": "data is redacted",
+      "level": "debug",
+      "msg": "Login attempt",
+      "ctx": {
+        "module": "auth",
+        "data": {
+          "user": "rudo",
+          "password": "hunter2",
+          "session": {
+            "cookie": "abc"
+          }
+        }
+      },
+      "at": 1759795200000,
+      "expected": {
+        "ts": "2025-10-07T00:00:00.000Z",
+        "level": "debug",
+        "module": "auth",
+        "msg": "Login attempt",
+        "data": {
+          "user": "rudo",
+          "password": "[redacted]",
+          "session": {
+            "cookie": "[redacted]"
+          }
+        }
+      },
+      "json": "{\"ts\":\"2025-10-07T00:00:00.000Z\",\"level\":\"debug\",\"module\":\"auth\",\"msg\":\"Login attempt\",\"data\":{\"user\":\"rudo\",\"password\":\"[redacted]\",\"session\":{\"cookie\":\"[redacted]\"}}}",
+      "line": "[mzizi:auth] DEBUG Login attempt"
+    },
+    {
+      "name": "an error lands in data.error as name and code",
+      "level": "error",
+      "msg": "Failed to fetch",
+      "ctx": {
+        "module": "weather",
+        "error": {
+          "$error": {
+            "name": "TimeoutError",
+            "code": "timeout",
+            "message": "lat=-17.83"
+          }
+        }
+      },
+      "at": 1700000000999,
+      "expected": {
+        "ts": "2023-11-14T22:13:20.999Z",
+        "level": "error",
+        "module": "weather",
+        "msg": "Failed to fetch",
+        "data": {
+          "error": {
+            "name": "TimeoutError",
+            "code": "timeout"
+          }
+        }
+      },
+      "json": "{\"ts\":\"2023-11-14T22:13:20.999Z\",\"level\":\"error\",\"module\":\"weather\",\"msg\":\"Failed to fetch\",\"data\":{\"error\":{\"name\":\"TimeoutError\",\"code\":\"timeout\"}}}",
+      "line": "[mzizi:weather] ERROR Failed to fetch"
+    },
+    {
+      "name": "an error replaces a data.error key in place",
+      "level": "error",
+      "msg": "x",
+      "ctx": {
+        "module": "m",
+        "data": {
+          "a": 1,
+          "error": "raw",
+          "b": 2
+        },
+        "error": {
+          "$error": {
+            "name": "Error",
+            "message": "m"
+          }
+        }
+      },
+      "at": 86400000,
+      "expected": {
+        "ts": "1970-01-02T00:00:00.000Z",
+        "level": "error",
+        "module": "m",
+        "msg": "x",
+        "data": {
+          "a": 1,
+          "error": {
+            "name": "Error"
+          },
+          "b": 2
+        }
+      },
+      "json": "{\"ts\":\"1970-01-02T00:00:00.000Z\",\"level\":\"error\",\"module\":\"m\",\"msg\":\"x\",\"data\":{\"a\":1,\"error\":{\"name\":\"Error\"},\"b\":2}}",
+      "line": "[mzizi:m] ERROR x"
+    },
+    {
+      "name": "an empty module and trace are dropped",
+      "level": "info",
+      "msg": "y",
+      "ctx": {
+        "module": "",
+        "traceId": ""
+      },
+      "at": 951782400000,
+      "expected": {
+        "ts": "2000-02-29T00:00:00.000Z",
+        "level": "info",
+        "module": "mzizi",
+        "msg": "y"
+      },
+      "json": "{\"ts\":\"2000-02-29T00:00:00.000Z\",\"level\":\"info\",\"module\":\"mzizi\",\"msg\":\"y\"}",
+      "line": "[mzizi] INFO y"
+    },
+    {
+      "name": "strings are escaped as JSON.stringify does",
+      "level": "info",
+      "msg": "line\nbreak \"quoted\" tab\t \u0001 ü",
+      "ctx": {
+        "module": "esc",
+        "data": {
+          "path": "C:\\dir"
+        }
+      },
+      "at": 1000,
+      "expected": {
+        "ts": "1970-01-01T00:00:01.000Z",
+        "level": "info",
+        "module": "esc",
+        "msg": "line\nbreak \"quoted\" tab\t \u0001 ü",
+        "data": {
+          "path": "C:\\dir"
+        }
+      },
+      "json": "{\"ts\":\"1970-01-01T00:00:01.000Z\",\"level\":\"info\",\"module\":\"esc\",\"msg\":\"line\\nbreak \\\"quoted\\\" tab\\t \\u0001 ü\",\"data\":{\"path\":\"C:\\\\dir\"}}",
+      "line": "[mzizi:esc] INFO line\nbreak \"quoted\" tab\t \u0001 ü"
+    },
+    {
+      "name": "dates before 1970",
+      "level": "info",
+      "msg": "old",
+      "ctx": {
+        "module": "time"
+      },
+      "at": -1,
+      "expected": {
+        "ts": "1969-12-31T23:59:59.999Z",
+        "level": "info",
+        "module": "time",
+        "msg": "old"
+      },
+      "json": "{\"ts\":\"1969-12-31T23:59:59.999Z\",\"level\":\"info\",\"module\":\"time\",\"msg\":\"old\"}",
+      "line": "[mzizi:time] INFO old"
+    }
+  ]
+}
