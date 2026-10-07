@@ -203,19 +203,76 @@ pub fn parse(html: &str) -> Vec<Node> {
     parse_nodes(html, &mut i, None)
 }
 
-/// Render a component and return its root element.
+/// A rendered component: its root element (what every clause reads, and what this derefs to)
+/// and every top-level node `dioxus-ssr` emitted, the root included, so a rule that must see
+/// the whole output (the CSP rule) does not stop at the first element.
+#[derive(Debug, Clone)]
+pub struct Rendered {
+    pub root: Node,
+    pub roots: Vec<Node>,
+}
+
+impl std::ops::Deref for Rendered {
+    type Target = Node;
+    fn deref(&self) -> &Node {
+        &self.root
+    }
+}
+
+/// Render a component: its root element and every top-level node.
 ///
 /// Takes a function rather than an `Element` because props holding an [`EventHandler`] can
 /// only be built inside a Dioxus runtime, which the `VirtualDom` provides while it runs `app`.
-pub fn render(app: fn() -> Element) -> Node {
+pub fn render(app: fn() -> Element) -> Rendered {
     let mut dom = VirtualDom::new(app);
     dom.rebuild_in_place();
     let html = dioxus_ssr::render(&dom);
-    parse(&html)
-        .into_iter()
+    let roots = parse(&html);
+    let root = roots
+        .iter()
         .find(|n| matches!(n, Node::Element { .. }))
-        .unwrap_or_else(|| panic!("rendered no element: {html}"))
+        .cloned()
+        .unwrap_or_else(|| panic!("rendered no element: {html}"));
+    Rendered { root, roots }
 }
+
+/// The CSP rule (#444): every element in the whole rendered output, every top-level node and
+/// everything under it, that carries an inline `style` attribute, as `<tag> style="…"`. A
+/// build held to a contract must have none, so an app's Content-Security-Policy keeps
+/// `style-src 'self'` with no `'unsafe-inline'`; custom properties and sizes go through
+/// classes, data attributes or SVG geometry. It reads the final markup, so it also sees Dioxus
+/// CSS-property attributes (`background_color: …`, `width: …`), which `dioxus-ssr` merges into
+/// `style`. The same rule as `evaluateInlineStyles` in `contracts/runner.ts`, which holds the
+/// Astro and React builds. [`Case::check`] applies it to every state.
+pub fn inline_styles(rendered: &Rendered) -> Vec<String> {
+    rendered
+        .roots
+        .iter()
+        .flat_map(Node::elements)
+        .filter_map(|e| {
+            e.attr("style")
+                .map(|s| format!("<{}> style=\"{s}\"", e.tag()))
+        })
+        .collect()
+}
+
+/// Case-based components that still render an inline `style`, a recorded gap rather than a
+/// hidden one (tracked on #481). [`Case::check`] fails any other component that renders one,
+/// and fails a listed component that no longer does, so the list only shrinks: remove a name
+/// when its component is ported to classes or data attributes.
+pub const INLINE_STYLE_GAPS: &[&str] = &[
+    "mzizi-alert-banner",
+    "mzizi-cover-header",
+    "mzizi-empty-state",
+    "mzizi-escalation-card",
+    "mzizi-gauge-card",
+    "mzizi-hero-stat",
+    "mzizi-meta-tile",
+    "mzizi-stats-row",
+    "mzizi-success-screen",
+    "mzizi-suitability-card",
+    "mzizi-user-card",
+];
 
 /// The largest height, in px, an element's classes declare: `h-N`, `min-h-N`, `size-N` on the
 /// 4px Tailwind scale, or their `[Npx]` arbitrary forms.
@@ -247,7 +304,7 @@ pub struct Case {
     pub name: &'static str,
     pub contract: &'static str,
     /// Named render states. `default` is required.
-    pub states: Vec<(&'static str, Node)>,
+    pub states: Vec<(&'static str, Rendered)>,
     /// Prop defaults a `<name>` subject can resolve to.
     pub defaults: Vec<(&'static str, String)>,
     /// Variant tables: (enum, column, [(variant, value)]).
@@ -402,7 +459,7 @@ impl Case {
         self.states
             .iter()
             .find(|(n, _)| *n == name)
-            .map(|(_, node)| node)
+            .map(|(_, rendered)| &rendered.root)
             .ok_or_else(|| format!("no `{name}` state is rendered for {}", self.name))
     }
 
@@ -542,6 +599,30 @@ impl Case {
                 root.attr("data-slot").map(str::to_owned),
                 slot,
                 "{}: the `{state}` state renders a different data-slot",
+                self.name
+            );
+        }
+        let gap = INLINE_STYLE_GAPS.contains(&self.name);
+        let styled: Vec<String> = self
+            .states
+            .iter()
+            .flat_map(|(state, r)| {
+                inline_styles(r)
+                    .into_iter()
+                    .map(move |s| format!("[{state}] {s}"))
+            })
+            .collect();
+        if gap {
+            assert!(
+                !styled.is_empty(),
+                "{} renders no inline style any more: remove it from INLINE_STYLE_GAPS",
+                self.name
+            );
+        } else {
+            assert!(
+                styled.is_empty(),
+                "{}: an inline style attribute, which a strict Content-Security-Policy blocks \
+                 (#444): {styled:?}",
                 self.name
             );
         }

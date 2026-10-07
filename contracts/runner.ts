@@ -518,15 +518,88 @@ const MINERAL_CLASS = new RegExp(
 );
 
 /**
+ * CSP rule: no element carries an inline `style` attribute, in any state.
+ * Custom properties and sizes go through classes, data attributes or SVG
+ * geometry, so a page's Content-Security-Policy keeps `style-src 'self'` with
+ * no `style-src-attr 'unsafe-inline'` (#444: a strip coloured by `style=`
+ * rendered colourless under such a CSP).
+ *
+ * This is the authoritative check: it reads the markup a build actually
+ * emits, so it sees every way of writing one (React's `style={{…}}`, Astro's
+ * `style`, `{style}` shorthand and `<style define:vars>`, a spread props
+ * object, `createElement(…, { style })`). `evaluateTheming` applies it.
+ */
+function inlineStyle(state: string, el: Element): string | null {
+  const style = el.attribs.style;
+  return style === undefined
+    ? null
+    : `[${state}] an inline style attribute on <${el.name}> (style="${style}"; needs style-src-attr 'unsafe-inline')`;
+}
+
+/** The CSP rule alone: one line per element with a `style` attribute. */
+export function evaluateInlineStyles(rendered: Rendered): string[] {
+  const failures: string[] = [];
+  for (const [state, html] of Object.entries(rendered))
+    for (const el of elements(doc(html))) {
+      const found = inlineStyle(state, el);
+      if (found) failures.push(found);
+    }
+  return failures;
+}
+
+/**
+ * Inline `style` written in source, in element-attribute positions only, so
+ * `const style = {…}`, `let style: String` or `fn Foo(style: Option<String>)`
+ * do not match. A backstop for what no contract state renders (and for an
+ * empty React `style={{}}`, which renders nothing); the rendered rule is the
+ * guarantee. Comments are not stripped (stripping them without a real
+ * tokenizer blanks code): a commented-out `style="…"` must go too, and prose
+ * names the attribute without a value (`style=`).
+ */
+const MARKUP_STYLE: RegExp[] = [
+  // `style="…"`, `style='…'`, `style={…}` (React's `style={{…}}`, Astro's object form).
+  /(?<![\w$.:-])(?<!\b(?:const|let|var)\s+)style=(?=["'{])/,
+  // Astro's shorthand attribute `<span {style}>` (not `const { style } = …`).
+  /(?:^|\s)\{\s*style\s*\}(?=\s*\/?>|\s*$|\s+[\w{])/,
+  // A spread object literal: `{...{ style: s }}`, `{...{ style }}`.
+  /\{\s*\.\.\.\s*\{[^}]*(?<![\w$])style\s*[:,}]/,
+  // `createElement("span", { style })` or `{ style: … }`.
+  /createElement\([^;]*[{,]\s*style\s*[:,}]/,
+  // `<style define:vars={…}>` compiles to a style attribute on every element.
+  /<style\b[^>]*\bdefine:vars\b/,
+  /setAttribute\(\s*["'`]style["'`]/,
+];
+const RSX_STYLE: RegExp[] = [
+  // Dioxus rsx! `style: "…"`, `style: {…}`, `style: f(…)`, `style: format!(…)`,
+  // `style: if …`, `style: value,`; not a binding, a parameter or a field type.
+  /(?<![\w.])(?<!\blet\s+(?:mut\s+)?)style\s*:\s*(?:["{]|(?:if|match)\b|[a-z_][\w:]*!?\s*\(|(?!(?:[iu](?:8|16|32|64|128|size)|f32|f64|bool|char|str)\b)[a-z_]\w*\s*(?:,|\}|$))/,
+  // The quoted attribute form `"style": …`.
+  /"style"\s*:/,
+];
+
+/**
+ * The CSP rule on an implementation's source (`.astro`, `.tsx` or `.rs`):
+ * `line N: …` for each line that writes an inline `style`.
+ */
+export function inlineStylesInSource(
+  source: string,
+  kind: "astro" | "tsx" | "rs",
+): string[] {
+  const patterns = kind === "rs" ? RSX_STYLE : MARKUP_STYLE;
+  const failures: string[] = [];
+  source.split("\n").forEach((line, i) => {
+    if (patterns.some((re) => re.test(line)))
+      failures.push(`line ${i + 1}: an inline style (${line.trim()})`);
+  });
+  return failures;
+}
+
+/**
  * Brand overlay rule: a component names no colour value and no brand
  * mineral. Colour comes from semantic tokens (`--primary`, `--ring`, …), so
  * the brand overlay is the only thing that changes it; minerals appear only
- * as declared status colours.
- *
- * CSP rule: no element carries an inline `style` attribute. Custom
- * properties and sizes go through classes, data attributes or SVG geometry,
- * so a page's Content-Security-Policy keeps `style-src 'self'` with no
- * `style-src-attr 'unsafe-inline'`.
+ * as declared status colours. Applies the CSP rule (`evaluateInlineStyles`)
+ * in the same pass, so a colour in a `style` attribute fails there.
  */
 export function evaluateTheming(
   contract: Contract,
@@ -535,18 +608,12 @@ export function evaluateTheming(
   const failures: string[] = [];
   for (const [state, html] of Object.entries(rendered)) {
     for (const el of elements(doc(html))) {
+      const style = inlineStyle(state, el);
+      if (style) failures.push(style);
       const cls = el.attribs.class ?? "";
-      const style = el.attribs.style ?? "";
-      if (el.attribs.style !== undefined)
-        failures.push(
-          `[${state}] an inline style attribute on <${el.name}> (needs style-src-attr 'unsafe-inline')`,
-        );
-      if (/#[0-9a-fA-F]{3,8}\b/.test(cls) || /#[0-9a-fA-F]{3,8}\b/.test(style))
+      if (/#[0-9a-fA-F]{3,8}\b/.test(cls))
         failures.push(`[${state}] a literal hex colour on <${el.name}>`);
-      if (
-        /\b(?:rgb|rgba|hsl|hsla|oklch|oklab)\(/.test(style) ||
-        /\b(?:rgb|hsl|oklch)\(/.test(cls)
-      )
+      if (/\b(?:rgb|hsl|oklch)\(/.test(cls))
         failures.push(`[${state}] a literal colour function on <${el.name}>`);
       for (const m of cls.matchAll(MINERAL_CLASS)) {
         if (!contract.theming.statusColours.includes(m[1] ?? ""))
