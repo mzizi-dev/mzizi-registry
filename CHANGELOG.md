@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — `sharp` 0.35.5 and `@modelcontextprotocol/sdk` 1.31+ through overrides (2026-10-07)
+
+`pnpm audit` (the CI `audit` job) began failing on two new high advisories in dev-only transitive dependencies: `sharp` below 0.35.5 under `astro` (GHSA-wq5f-xc86-pv6w) and `@modelcontextprotocol/sdk` 1.12 to 1.30 under `shadcn` (GHSA-6qxp-vccf-f47h). The `pnpm.overrides` floor for `sharp` moves from `^0.35.4` to `^0.35.5`, and `@modelcontextprotocol/sdk` gets a `^1.31.0` floor. Nothing the registry ships changes: both are build and test tooling.
+
 ### Added — `app/brand-mark` 1.1.0: `brand="mukoko"` renders the Mukoko mark (2026-10-06, #459)
 
 `BrandMark` knew only Nyuchi, so a Mukoko app (verify.mukoko.com, the Mukoko dashboards) had no way to show its own logo through the Dashboard Standard. `brand` now also takes `mukoko`, in the `.astro` and the `.tsx`.
