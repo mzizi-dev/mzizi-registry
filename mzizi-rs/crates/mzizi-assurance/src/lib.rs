@@ -70,3 +70,9 @@ pub mod mzizi_incident_manager;
 
 #[path = "generated/mzizi-otel.rs"]
 pub mod mzizi_otel;
+
+#[path = "generated/chaos.rs"]
+pub mod chaos;
+
+#[path = "generated/observability.rs"]
+pub mod observability;

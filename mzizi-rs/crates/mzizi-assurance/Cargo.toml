@@ -1,6 +1,6 @@
 [package]
 name = "mzizi-assurance"
-description = "Mzizi N8 assurance — the shared core: probes, telemetry and the OTLP exporter."
+description = "Mzizi N8 assurance — the shared core: probes, telemetry, structured logging, seeded chaos and the OTLP exporter."
 # crates.io renders `readme`, `keywords` and `categories` on the package page, and a
 # published version is permanent — 0.1.0 can be yanked but never re-uploaded. All three
 # were unset on this crate, so the page would have rendered bare.
@@ -48,3 +48,9 @@ workspace = true
 # `crypto.getRandomValues`, a native shell uses the OS, and no target needs a
 # `getrandom` backend configured — a footgun that surfaces as a link error.
 [dependencies]
+
+[dev-dependencies]
+# Reads the shared fixtures under `__tests__/fixtures/resilience/` in the
+# contract suite; a dev-dependency is never paid for by a consumer. Key order
+# is preserved so the JSON lines compare byte for byte with the `.ts`.
+serde_json = { version = "1", features = ["preserve_order"] }

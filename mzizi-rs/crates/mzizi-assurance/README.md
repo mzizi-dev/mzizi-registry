@@ -3,9 +3,11 @@
 The shared assurance core from the [Mzizi](https://mzizi.dev) component registry — **node
 N8, assurance** — the node whose claim is that what breaks is seen before users feel it.
 
-Thirteen modules: conformity and RTL checks, an accessibility audit, API / synthetic /
-performance probes, RUM, error tracking, alert evaluation, incident management, chaos, a
-platform-health roll-up, and an OpenTelemetry OTLP/HTTP encoder.
+Fifteen modules: conformity and RTL checks, an accessibility audit, API / synthetic /
+performance probes, RUM, error tracking, alert evaluation, incident management, blast-radius
+diagnosis (`mzizi_chaos`), a platform-health roll-up, an OpenTelemetry OTLP/HTTP encoder,
+structured logging with redaction built in (`observability`), and seeded fault injection
+with a hard production guard (`chaos`).
 
 ```toml
 [dependencies]
