@@ -10,6 +10,54 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.6.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.5.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.6.0, and the Mzizi Roots crates are published at 0.2.0, so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer`.
+
+### Changed — the Mzizi Roots crates move to 0.2.0 (2026-10-07, #463)
+
+The next minor above `mzizi-rs-v0.1.0` (nyuchi/.github#80): the workspace version, every internal path dependency and `Cargo.lock` move to 0.2.0, and the crate READMEs and the `mzizi-roots` crate docs install `"0.2"`. On the next release to `main`, `publish-crates.yml` uploads them, so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer` (#462). `cargo package --workspace` verifies all eleven.
+
+### Security — `markdown-renderer` is safe by construction, in React, Astro and Rust under one contract (2026-10-07, #462)
+
+`markdown-renderer` built an HTML string with regular expressions and injected it with `dangerouslySetInnerHTML`. Each hole found in it was patched (a `javascript:` link, an unescaped table cell), but the design kept an HTML sink fed by untrusted text, which is not acceptable where it shows text written by others on pages that hold personal data (the Toddle extension's student flags). It is rebuilt so that there is no sink to get wrong (#460).
+
+- **A typed tree, then elements.** The new `markdown-parse` (registry:lib, `lib/markdown-parse.ts`) reads Markdown into blocks and inlines; the React build draws them as React elements, the new Astro build (`markdown-renderer.astro`, pure Astro, `@bundu/ui/MarkdownRenderer.astro` from its next pin) as Astro elements, and the new Rust build (`mzizi_ui::MarkdownRenderer`, Mzizi Roots) as Dioxus elements, with its own parser that matches the TypeScript case for case. No build has `dangerouslySetInnerHTML`, `set:html` or `dangerous_inner_html`, and a test fails if one appears.
+- **Raw HTML is text.** `<script>`, `<img onerror>` and `<a href>` in the source show as written, in paragraphs and in table cells.
+- **Links pass an allow-list.** http, https, mailto, tel and relative addresses; `links="https"` keeps https only. Tabs, newlines and controls are removed first, so `\tjavascript:` is refused like `javascript:`; `data:` and `vbscript:` are refused. A refused link keeps its words and loses its address. http(s) links open in a new tab with `rel="noopener noreferrer"`.
+- **Supported:** paragraphs with every line break kept, headings (`headingBase` shifts them under a page's own headings), bulleted and numbered lists nested by indentation (a numbered list keeps its first number), blockquotes, fenced code (its language as `data-language`), code spans, bold, italic, links, rules and GFM tables with alignment.
+- **Rich text:** `from="html"` (or `"auto"`) reads an editor's HTML with a small reader of its own (`richTextBlocks`, `rich_text_blocks` in Rust) that builds plain data, never a DOM, and turns it straight into the same tree: nothing in it runs or loads, and the result is the same on a server, in a browser (no hydration mismatch) and in Rust. Text in it is text (Markdown typed into an editor stays as typed), source newlines are spaces and non-breaking spaces stay, marks keep their edges, a `<br>` inside bold, italic or a link splits the mark across lines (a mark inside the same mark adds nothing, so this stays linear), empty marks vanish, and elements nest at most 32 deep.
+- **Hostile text stays linear:** each inline parse has a scanning budget that every scan and marker run is charged to, so unmatched markers cannot make rendering quadratic.
+- **Theming** reads tokens only: links are `--primary` with a `--ring` focus outline (the old build named `cobalt`); the blockquote rule is `--border`.
+- **Breaking** for the React build's output, not its props: a paragraph's lines are now one `<p>` with `<br>`s (each line was its own `<p>`), and the root no longer accepts `children` or `dangerouslySetInnerHTML`. `content` is unchanged. Re-install with `npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-renderer` (it now also installs `markdown-parse`).
+- `contracts/ui/markdown-renderer` 1.0.0 holds all three builds to the same states, including a hostile one. `__tests__/fixtures/markdown-renderer.cases.json` holds 50 cases (Markdown and rich text) that the TypeScript and Rust suites both run. The shared Rust contract evaluator now decodes numeric character references, which `dioxus-ssr` writes for `<`, `>` and `&`.
+
+### Security — `sharp` 0.35.5 and `@modelcontextprotocol/sdk` 1.31+ through overrides (2026-10-07)
+
+`pnpm audit` (the CI `audit` job) began failing on two new high advisories in dev-only transitive dependencies: `sharp` below 0.35.5 under `astro` (GHSA-wq5f-xc86-pv6w) and `@modelcontextprotocol/sdk` 1.12 to 1.30 under `shadcn` (GHSA-6qxp-vccf-f47h). The `pnpm.overrides` floor for `sharp` moves from `^0.35.4` to `^0.35.5`, and `@modelcontextprotocol/sdk` gets a `^1.31.0` floor. Nothing the registry ships changes: both are build and test tooling.
+
+### Added — `app/brand-mark` 1.1.0: `brand="mukoko"` renders the Mukoko mark (2026-10-06, #459)
+
+`BrandMark` knew only Nyuchi, so a Mukoko app (verify.mukoko.com, the Mukoko dashboards) had no way to show its own logo through the Dashboard Standard. `brand` now also takes `mukoko`, in the `.astro` and the `.tsx`.
+
+- The images are the bundu-ecosystem-icons pair `mukoko-icon-{light,dark}.png` (the honeycomb, as vendored in nyuchi/workspace-tools), scaled to 128px with the same `sips -z 128 128` step that made `nyuchi-mark-*.png` (byte-identical for Nyuchi), never redrawn. They ship as `components/registry/assets/mukoko-icon-{light,dark}.png`, transparent like the Nyuchi pair.
+- `assets/mukoko-mark-{light,dark}.png` is not used: it is the design system's 500px tile on an opaque cream or near-black ground, which shows as a square behind the mark in a header.
+- The contract adds the `mukoko` and `mukoko-lockup` states and five checks (alt text, the right image in each theme, `data-brand`, the wordmark). The `/v1/astro/app-brand-mark` document now carries four assets.
+- `@bundu/ui` picks this up when its registry pin moves past this change (mzizi-dev/packages-npm).
+
+### Added — `AGENTS.md` loads the Mzizi dev skills (2026-10-06)
+
+- **`AGENTS.md` gains "Dev skills, progress reports and the merge gate"**, the canonical rule block from nyuchi/.github#87, after "Track big work in GitHub issues": load the Mzizi dev skills (`digital-hygiene` and `progress-report`), clone only into a directory unique to the agent, run dev work on a 10-minute progress-report loop whose ticks never publish, release, merge or deploy without the owner's approval, and merge only through the merge gate. Docs only: no behaviour changes, and CI is unchanged.
+
+### Added — the shipped `globals.css` carries the container utilities (2026-10-06, #455)
+
+`site-container`, `site-section`, `site-hero` and the Discover pages render through `.container-custom`, `.container-narrow` and `.container-prose`, which lived only in each consuming site's `globals.css`. A repo that copied `mzizi-tokens-globals.css` and installed those components got a full-width div with no gutters. The generator (`scripts/render-globals-css.ts`) now emits them in the generated part of the file.
+
+- `@theme { --container-narrow: 42rem; --container-prose: 48rem; --container-wide: 80rem }`: the widths `@bundu/ui` 0.5.0 renders (`max-w-narrow`, `max-w-3xl`, `max-w-7xl`). `max-w-narrow` and `max-w-wide` are new utilities. Tailwind's `max-w-prose` keeps its 65ch: it is a static utility and wins over the theme key.
+- `@utility container-custom`, `container-narrow` and `container-prose`: `@bundu/ui`'s boxes on the spacing ladder (`--space-lg`, then `--space-xl` from `sm`, and `--space-xl-plus` from `lg` for `container-custom`).
+- `site/container` 1.0.1 has no gaps left. `site/section` 1.0.1 and `site/hero` 1.0.1 no longer list `.container-custom` as missing.
+- A site that defines its own unlayered `.container-*` rules keeps them (unlayered CSS wins); drop the local copy to take the registry's.
+
 ## [4.5.0] - 2026-10-06
 
 Releases `staging` to `main` as the next minor above v4.4.5 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.5.0.

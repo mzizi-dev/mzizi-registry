@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.6.0",
+    title:
+      "v4.6.0 — markdown-renderer, safe by construction in Rust, Astro and React",
+    description:
+      "Releases staging to main as the next minor above v4.5.x (nyuchi/.github#80). markdown-renderer parses Markdown (or an editor's rich text) into a typed tree and renders elements in all three builds, with no HTML string sink, raw HTML shown as text and a link scheme allow-list (contracts/ui/markdown-renderer 1.0.0, markdown-parse, mzizi_ui::MarkdownRenderer) (#460, #462); the Mzizi Roots crates move to 0.2.0 (#463); app/brand-mark 1.1.0 renders the Mukoko mark (#459); the shipped globals.css carries the container utilities (#455); sharp and @modelcontextprotocol/sdk overrides (#461). CHANGELOG.md section [4.6.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 6,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-10-07T06:00:00.000+00:00",
+    created_at: "2026-10-07T06:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.5.0",
     title: "v4.5.0 — Discover error and empty states, Circles tanzanite",
     description:

@@ -299,6 +299,7 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "map-page": "n6",
   "map-route": "n2",
   "map-view": "n2",
+  "markdown-parse": "n2",
   "markdown-renderer": "n2",
   "marketplace-page": "n6",
   "masonry-grid": "n2",
