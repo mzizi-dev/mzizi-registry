@@ -259,7 +259,10 @@ jobs:
               # end. Until that tag exists the next-version policy keeps expecting this
               # version, so a bump would be refused too: fail loudly rather than go green.
               if ! git ls-remote --tags --refs origin "refs/tags/$tag" | grep -q .; then
-                echo "::error::mzizi-resilience $VERSION is on PyPI but untagged, and its wheel (sha256 $theirs) is not this commit's ($ours). Re-run the failed jobs of the publish-pypi run that uploaded $VERSION; that tags the commit PyPI was built from, and later releases can then bump."
+                echo "::error::mzizi-resilience $VERSION is on PyPI but untagged, and PyPI's wheel" \
+                  "(sha256 $theirs) is not this commit's ($ours). Re-run the failed jobs of the" \
+                  "publish-pypi run that uploaded $VERSION: that tags the commit PyPI was built" \
+                  "from, and later releases can then bump."
                 exit 1
               fi
             fi
