@@ -1,20 +1,23 @@
 "use client"
 
 /**
- * Where a fundi report becomes an issue.
+ * Where a fundi report becomes an issue: `mzizi-dev/mzizi-registry`.
  *
- * This said `nyuchi/mzizi`, the repo's name before the Mzizi rename —
- * it is `nyuchi/mzizi` now. GitHub redirects API calls for a renamed repo, so
- * this kept working and had no symptom, which is exactly why it survived: a
- * stale constant that still functions is invisible until the redirect is
- * retired, and then every consumer's reporter breaks at once.
+ * This said `nyuchi/design-portal`, then `nyuchi/mzizi`: each the registry's
+ * name before a rename. GitHub redirects API calls for a renamed repo, so each
+ * kept working and had no symptom, which is exactly why it survived: a stale
+ * constant that still functions is invisible until the redirect is retired (or
+ * the old name is claimed), and then every consumer's reporter breaks at once.
+ *
+ * Not `mzizi-dev/mzizi`: that is the Mzizi language, a different repository.
  *
  * Mzizi's own tracker is the right destination and that is deliberate: a
  * consumer installs these components, so a defect they hit is a defect in this
  * registry, and it belongs where the fix will be made rather than in their
- * backlog.
+ * backlog. The Rust build exports the same value as `GITHUB_REPO`, and the
+ * fundi Worker falls back to it when its `GITHUB_REPO` var is unset.
  */
-const GITHUB_REPO = "nyuchi/mzizi"
+export const GITHUB_REPO = "mzizi-dev/mzizi-registry"
 
 export interface FundiReport {
   component: string

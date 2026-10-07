@@ -16,7 +16,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use mzizi_fundi::mzizi_fundi_reporter::{
-    CooldownLog, ErrorType, FundiReport, NotFiled, ReportSeverity, escape_code_span,
+    CooldownLog, ErrorType, FundiReport, GITHUB_REPO, NotFiled, ReportSeverity, escape_code_span,
     escape_markdown_cell, issue_body, issue_title, labels_for,
 };
 
@@ -286,15 +286,23 @@ fn the_body_keeps_the_typescript_section_headings() {
 }
 
 #[test]
-fn the_typescript_still_files_against_the_renamed_repo() {
-    // It said nyuchi/design-portal and worked only because GitHub redirects a
-    // renamed repo — which will break every consumer at once when that retires.
+fn both_builds_file_against_the_registry() {
+    // It said nyuchi/design-portal, then nyuchi/mzizi, and each worked only
+    // because GitHub redirects a renamed repo — which breaks every consumer at
+    // once when the redirect retires or the old name is claimed (#321).
+    assert_eq!(GITHUB_REPO, "mzizi-dev/mzizi-registry");
     let ts = ts_sibling();
-    assert!(ts.contains("nyuchi/mzizi"), "the repo constant regressed");
     assert!(
-        !ts.contains("\"nyuchi/design-portal\""),
-        "the stale repo name returned"
+        ts.contains(&format!("const GITHUB_REPO = \"{GITHUB_REPO}\"")),
+        "the TypeScript files somewhere other than {GITHUB_REPO}"
     );
+    // The two retired names, and the Mzizi language's repo (a near miss).
+    for wrong in ["nyuchi/mzizi", "nyuchi/design-portal", "mzizi-dev/mzizi"] {
+        assert!(
+            !ts.contains(&format!("\"{wrong}\"")),
+            "the TypeScript names the wrong repo {wrong}"
+        );
+    }
 }
 
 // ── learning ───────────────────────────────────────────────────────────────

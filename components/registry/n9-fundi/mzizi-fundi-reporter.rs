@@ -38,6 +38,16 @@
 
 use std::collections::BTreeMap;
 
+/// The repository a fundi report is filed against: Mzizi's own tracker.
+///
+/// The host does the HTTP POST (to `https://api.github.com/repos/{GITHUB_REPO}/issues`),
+/// but the destination is part of the contract, so it lives here beside the
+/// `.ts`'s constant of the same name, and the contract tests hold the two equal.
+/// Not `mzizi-dev/mzizi`: that is the Mzizi language, a different repository.
+/// The `.ts` said `nyuchi/mzizi` (and before that `nyuchi/design-portal`), which
+/// worked only through GitHub's rename redirect.
+pub const GITHUB_REPO: &str = "mzizi-dev/mzizi-registry";
+
 /// How bad the reported failure is.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ReportSeverity {

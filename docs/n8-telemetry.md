@@ -172,20 +172,23 @@ attached it can tell the two apart without re-running anything.
 A signal leaving a component has two destinations, and wiring only one is a
 failure mode in both directions:
 
-| Exit            | Component                   | What it is for                                                                                                                     |
-| --------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **Healing**     | `mzizi-fundi-reporter` (N9) | Files a GitHub issue against `nyuchi/mzizi`, deduplicated by a per-component cooldown. A named defect a human can merge a fix for. |
-| **Observation** | `mzizi-otel` (N8)           | Emits an OTLP span. Every event, not just the critical ones, readable by any agent or service rather than by fundi alone.          |
+| Exit            | Component                   | What it is for                                                                                                                                 |
+| --------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Healing**     | `mzizi-fundi-reporter` (N9) | Files a GitHub issue against `mzizi-dev/mzizi-registry`, deduplicated by a per-component cooldown. A named defect a human can merge a fix for. |
+| **Observation** | `mzizi-otel` (N8)           | Emits an OTLP span. Every event, not just the critical ones, readable by any agent or service rather than by fundi alone.                      |
 
 Route `onCritical` to N9 and `onError` to OTLP. Sending every error to N9 opens
 an issue per render failure; emitting only to OTLP means nothing gets fixed
 unless somebody happens to be watching a dashboard.
 
-The reporter's issue destination was a hardcoded `nyuchi/mzizi` — this
-repo's name before the Mzizi rename. GitHub redirects API calls for a renamed
-repo, so it kept working and had no symptom, which is exactly why it survived.
-A stale constant that still functions is invisible until the redirect is
-retired, and then every consumer's reporter breaks at once.
+The reporter's issue destination was a hardcoded `nyuchi/mzizi` (and before
+that `nyuchi/design-portal`) — this repo's name before a rename. GitHub
+redirects API calls for a renamed repo, so it kept working and had no symptom,
+which is exactly why it survived. A stale constant that still functions is
+invisible until the redirect is retired, and then every consumer's reporter
+breaks at once. It is `mzizi-dev/mzizi-registry` now (#321), exported as
+`GITHUB_REPO` from both the `.ts` and the `.rs`, and the contract tests forbid
+the old names and `mzizi-dev/mzizi` (the Mzizi language, a different repo).
 
 ## Still not wired — stated plainly
 
