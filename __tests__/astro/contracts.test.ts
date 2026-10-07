@@ -30,21 +30,9 @@ import {
   evaluateTheming,
   hydrate,
 } from "../../contracts/runner"
+import { REGISTRY, REQUEST_URL, loadContracts } from "../contracts/contract-files"
 
-const ROOT = path.resolve(__dirname, "../..")
-const REGISTRY = path.join(ROOT, "components/registry")
-const CONTRACTS = path.join(ROOT, "contracts")
-
-/** Every contract file, read from disk (contracts.test.tsx keeps index.json in step). */
-const contracts = readdirSync(CONTRACTS, { withFileTypes: true })
-  .filter((d) => d.isDirectory() && d.name !== "schema")
-  .flatMap((d) =>
-    readdirSync(path.join(CONTRACTS, d.name))
-      .filter((f) => f.endsWith(".contract.json"))
-      .map((f) => `${d.name}/${f}`)
-  )
-  .sort()
-  .map((f) => JSON.parse(readFileSync(path.join(CONTRACTS, f), "utf8")) as Contract)
+const contracts: Contract[] = loadContracts()
 
 /** Every `.astro` in the registry, by component name → path under components/registry/. */
 const astroFiles = new Map<string, string>()
@@ -77,7 +65,7 @@ async function renderStates(c: Contract): Promise<Rendered> {
     const html = await container.renderToString(mod.default as Component, {
       props: hydrate(state.props),
       slots: state.slots ?? {},
-      request: new Request("https://console.example/content/news"),
+      request: new Request(REQUEST_URL),
     })
     out[name] = html.replace(/ data-astro-source-(?:file|loc)="[^"]*"/g, "")
   }
@@ -139,7 +127,7 @@ describe.each(contracts.map((c) => [c.name, c] as const))("%s (.astro) keeps its
     expect(evaluateDensity(c, rendered)).toEqual([])
   })
 
-  test("brand overlay: no colour values, minerals only as status colours", () => {
+  test("brand overlay and CSP: no colour values, minerals only as status colours, no inline style", () => {
     expect(evaluateTheming(c, rendered)).toEqual([])
   })
 
