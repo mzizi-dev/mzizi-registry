@@ -5,7 +5,8 @@
  * Safe by construction: `./markdown-parse` reads the Markdown into a typed tree and this
  * file draws it as elements, so text is always a text node Astro escapes and an address is
  * always an escaped attribute. No `set:html` anywhere. Raw HTML in the source shows as text;
- * links pass an allow-list of schemes, and a refused link keeps its words. `markdown-renderer.tsx`
+ * links pass an allow-list of schemes, a refused link keeps its words, and a kept one shows its
+ * address on hover (`title`), normalised so an IDN look-alike host reads as punycode. `markdown-renderer.tsx`
  * (React) and `markdown-renderer.rs` (Rust) draw the same tree with the same classes.
  *
  * The tree is drawn by plain recursive template functions (`inlines`, `lines`, `list`,
@@ -57,13 +58,13 @@ const tree = markdownBlocks(content, { links, from });
         : x.t === "code" ? <code class={C.code}>{x.v}</code>
         : x.t === "strong" ? <strong>{inlines(x.c)}</strong>
         : x.t === "em" ? <em>{inlines(x.c)}</em>
-        : isExternal(x.href) ? <a href={x.href} class={C.a} target="_blank" rel="noopener noreferrer">{inlines(x.c)}</a>
-        : <a href={x.href} class={C.a}>{inlines(x.c)}</a>
+        : isExternal(x.href) ? <a href={x.href} title={x.title} class={C.a} target="_blank" rel="noopener noreferrer">{inlines(x.c)}</a>
+        : <a href={x.href} title={x.title} class={C.a}>{inlines(x.c)}</a>
       );
     const lines = (ls: MarkdownInline[][]): unknown[] =>
       ls.map((l, j) => <Fragment>{j > 0 && <br />}{inlines(l)}</Fragment>);
     const list = (l: MarkdownList, nested: boolean): unknown => {
-      const items = l.items.map((it) => <li>{lines(it.lines)}{it.children.map((sub) => list(sub, true))}</li>);
+      const items = l.items.map((it) => <li>{lines(it.lines)}{it.children.map((sub) => (sub.kind === "lines" ? lines(sub.lines) : list(sub, true)))}</li>);
       return l.kind === "ol"
         ? <ol class={cn(C.ol, nested && C.nested)} start={l.start === 1 ? undefined : l.start}>{items}</ol>
         : <ul class={cn(C.ul, nested && C.nested)}>{items}</ul>;

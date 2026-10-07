@@ -28,7 +28,7 @@ From crates.io, once the first release is out:
 
 ```toml
 [dependencies]
-mzizi-brand = "0.3"
+mzizi-brand = "0.4"
 ```
 
 Until then, and at any commit, from git:

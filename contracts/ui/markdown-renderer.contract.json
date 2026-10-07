@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/markdown-renderer",
   "title": "MarkdownRenderer",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "node": 2,
   "kind": "primitive",
   "summary": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list. One contract for the Astro, React and Mzizi Roots builds.",
@@ -63,14 +63,16 @@
   "slots": [],
   "behaviour": [
     "The Markdown is parsed into a typed tree (blocks and inlines) and the tree is rendered as elements. No build has an HTML string sink: no dangerouslySetInnerHTML, no set:html, no dangerous_inner_html.",
-    "Blocks: paragraphs (every line break is a hard break), ATX headings, bulleted and numbered lists nested by indentation (a numbered list keeps its first number), blockquotes, fenced code (``` or ~~~, the info word as data-language), horizontal rules and GFM tables with column alignment.",
+    "Blocks: paragraphs (every line break is a hard break; a backslash at the end of a line is dropped only when another line follows, so on the last line it is text), ATX headings, bulleted and numbered lists nested by indentation (a numbered list keeps its first number), blockquotes, fenced code (``` or ~~~, the info word as data-language), horizontal rules and GFM tables with column alignment.",
     "Inlines: code spans, links, bold (** or __), italic (* or _), bold italic (***), backslash escapes. A marker with no partner, and an underscore inside a word, stay text.",
     "Raw HTML in the source is text: <script>, <img onerror> and <a href> show as written.",
-    "Links: tabs and newlines anywhere, and controls and spaces at either end, are removed first (browsers ignore them), then an address with whitespace still inside is refused, the scheme is checked against an allow-list, and a web address (http, https or //host) needs a host and no credentials (https://bank.example@evil.example is refused). A refused link renders its words with no element around them. http and https links open in a new tab with rel=\"noopener noreferrer\".",
+    "Links: tabs and newlines anywhere, and controls and spaces at either end, are removed first (browsers ignore them), then an address with whitespace still inside is refused, the scheme is checked against an allow-list, and a web address (http, https or //host) needs a host the URL parser accepts and no credentials (https://bank.example@evil.example is refused). A refused link renders its words with no element around them. http and https links open in a new tab with rel=\"noopener noreferrer\".",
+    "A kept link shows its address on hover: its title is the address normalised for reading, with the scheme and host lower-cased and the host in ASCII as the WHATWG URL parser serialises it (an internationalised host as punycode, so https://аpple.com shows as https://xn--pple-43d.com), and the rest as written. Its href stays as written. Every build gives the same title (TypeScript: the URL parser's hostname; Rust: the url crate's host parser, through idna).",
+    "A link's address ends at the first whitespace (a title after it is dropped), and backslash escapes of ASCII punctuation in it are undone, as in CommonMark: [a](x.org/\\(y\\)) goes to x.org/(y).",
     "A link inside a link's words renders as its words.",
     "Nesting is bounded: lists and blockquotes 8 deep, inline marks 16 deep; deeper markers read as text.",
     "Hostile text stays linear: each inline parse has a scanning budget (100000 steps plus 32 per character); when it runs out, markers still looking for a partner read as text.",
-    "Rich text (from=html or auto): block elements and <br> end lines, source newlines are spaces, list items are one line each with their nested lists kept (to 8 deep) and <ol start> kept, bold, italic, code and links keep their meaning, script-like elements are dropped with their content, and every other tag is a plain container."
+    "Rich text (from=html or auto): block elements and <br> end lines, source newlines are spaces, list items are one line each with their nested lists kept (to 8 deep) and <ol start> kept, and text after a nested list follows it in order, bold, italic, code and links keep their meaning, script-like elements are dropped with their content up to their own end tag (</script followed by whitespace, / or >, so </scripts> does not end a script), and every other tag is a plain container."
   ],
   "states": {
     "default": {
@@ -81,7 +83,7 @@
     "xss": {
       "description": "Hostile input: every payload shows as text or loses its address.",
       "props": {
-        "content": "<img src=x onerror=alert(1)>\n\n[js](javascript:alert(1)) [tab](\tjavascript:alert(2)) [split](java\tscript:alert(3)) [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==) [vb](VBScript:msgbox(1)) [ok](https://example.org/a)\n\n| a | b |\n| - | - |\n| <script>alert(4)</script> | <img src=x onerror=alert(5)> |\n\n<script>alert(6)</script>\n\n<a href=\"javascript:alert(7)\">raw</a>\n\n[cred](https://bank.example@evil.example/x)"
+        "content": "<img src=x onerror=alert(1)>\n\n[js](javascript:alert(1)) [tab](\tjavascript:alert(2)) [split](<java\tscript:alert(3)>) [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==) [vb](VBScript:msgbox(1)) [ok](https://example.org/a)\n\n| a | b |\n| - | - |\n| <script>alert(4)</script> | <img src=x onerror=alert(5)> |\n\n<script>alert(6)</script>\n\n<a href=\"javascript:alert(7)\">raw</a>\n\n[cred](https://bank.example@evil.example/x)"
       }
     },
     "https": {
@@ -108,6 +110,12 @@
       "props": {
         "content": "<p># Plan <strong>now</strong></p><ul><li><p>pen</p><ol start=\"4\"><li>refill</li></ol></li></ul><script>alert(1)</script><p><a href=\"javascript:alert(2)\">bad</a> <a href=\"https://example.org/r\">good</a></p>",
         "from": "html"
+      }
+    },
+    "titles": {
+      "description": "Each kept link carries its address normalised as its title: an IDN look-alike host shows as punycode, a loud scheme and host are lower-cased.",
+      "props": {
+        "content": "[look-alike](https://аpple.com/login) [loud](HTTPS://Example.ORG/Docs) [notes](/Notes)"
       }
     }
   },
@@ -143,7 +151,7 @@
     "Fills its container.",
     "A wide table or code block scrolls inside itself, not the page."
   ],
-  "contract": "contract\n  slot is \"markdown-renderer\"\n  portal is \"https://mzizi.dev/components/markdown-renderer\"\n  class contains \"text-foreground\"\n  when default shows h1 \"Field notes\"\n  when default shows strong \"mzizi\"\n  when default shows em \"one\"\n  when default shows blockquote \"A quote with\"\n  when default shows th \"Name\"\n  when default shows pre \"const ok = 1 < 2\"\n  when xss shows p \"<img src=x onerror=alert(1)>\"\n  when xss shows td \"<script>alert(4)</script>\"\n  when xss shows p \"<script>alert(6)</script>\"\n  when xss shows p \"js tab split data vb\"\n  when base shows h3 \"Section\"\n  when base shows h6 \"Deep\"\n  when rich shows strong \"now\"\n  when rich shows p \"Plan now\"\nend",
+  "contract": "contract\n  slot is \"markdown-renderer\"\n  portal is \"https://mzizi.dev/components/markdown-renderer\"\n  class contains \"text-foreground\"\n  when default shows h1 \"Field notes\"\n  when default shows strong \"mzizi\"\n  when default shows em \"one\"\n  when default shows blockquote \"A quote with\"\n  when default shows th \"Name\"\n  when default shows pre \"const ok = 1 < 2\"\n  when xss shows p \"<img src=x onerror=alert(1)>\"\n  when xss shows td \"<script>alert(4)</script>\"\n  when xss shows p \"<script>alert(6)</script>\"\n  when xss shows p \"js tab split data vb\"\n  when base shows h3 \"Section\"\n  when base shows h6 \"Deep\"\n  when rich shows strong \"now\"\n  when rich shows p \"Plan now\"\n  when titles shows p \"look-alike loud notes\"\nend",
   "checks": [
     {
       "say": "One h1.",
@@ -302,10 +310,49 @@
       "state": "xss",
       "select": "a[href=\"https://bank.example@evil.example/x\"]",
       "absent": true
+    },
+    {
+      "say": "A look-alike host shows as punycode on hover; the href stays as written.",
+      "state": "titles",
+      "select": "a[href=\"https://аpple.com/login\"]",
+      "attr": {
+        "title": "https://xn--pple-43d.com/login"
+      }
+    },
+    {
+      "say": "A loud scheme and host are lower-cased in the title; the path is kept.",
+      "state": "titles",
+      "select": "a[href=\"HTTPS://Example.ORG/Docs\"]",
+      "attr": {
+        "title": "https://example.org/Docs"
+      }
+    },
+    {
+      "say": "A relative link's title is its address as written.",
+      "state": "titles",
+      "select": "a[href=\"/Notes\"]",
+      "attr": {
+        "title": "/Notes"
+      }
+    },
+    {
+      "say": "Every kept link has a title.",
+      "select": "a",
+      "attr": {
+        "title": true
+      }
+    },
+    {
+      "say": "Every kept rich-text link has a title.",
+      "state": "rich",
+      "select": "a[href=\"https://example.org/r\"]",
+      "attr": {
+        "title": "https://example.org/r"
+      }
     }
   ],
   "gaps": [
     "Not CommonMark-complete: no setext headings, indented code blocks, reference links, autolinks, footnotes, task lists or strikethrough.",
-    "Rich text: tables, images and nested lists in an editor's HTML are read as text (cells and items flattened to lines), not rebuilt."
+    "Rich text: tables and images in an editor's HTML are read as text (cells flattened to lines), not rebuilt, and a list item's own paragraphs are joined into one line."
   ]
 }

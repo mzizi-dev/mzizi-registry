@@ -115,8 +115,9 @@ pub use input::{Input, InputProps, input_variants};
 pub use label::{Label, LabelProps, label_variants};
 pub use markdown_renderer::{
     Align as MarkdownAlign, Block as MarkdownBlock, Inline as MarkdownInline, List as MarkdownList,
-    ListItem as MarkdownListItem, MarkdownLinks, MarkdownRenderer, MarkdownRendererProps,
-    MarkdownSource, parse_inlines as parse_markdown_inlines, parse_markdown, safe_href,
+    ListChild as MarkdownListChild, ListItem as MarkdownListItem, MarkdownHref, MarkdownLinks,
+    MarkdownRenderer, MarkdownRendererProps, MarkdownSource,
+    parse_inlines as parse_markdown_inlines, parse_markdown, safe_href, safe_link,
 };
 pub use progress::{Progress, ProgressProps, progress_variants};
 pub use safe_area_frame::{SafeAreaBands, SafeAreaFrame, SafeAreaFrameProps, safe_area_bands};

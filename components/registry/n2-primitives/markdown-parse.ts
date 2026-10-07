@@ -12,8 +12,9 @@
  * - Inlines: code spans, links, **bold**, *italic* / _italic_, backslash escapes. A marker
  *   with no partner stays text, and so does `snake_case`.
  * - Raw HTML is text. A `<script>` in the source is shown, never parsed.
- * - Links pass `safeHref`: an allow-list of schemes. A refused link keeps its words and loses
- *   its address.
+ * - Links pass `safeLink`: an allow-list of schemes, a host and no credentials. A refused link
+ *   keeps its words and loses its address; a kept one carries the address normalised for a
+ *   reader (scheme and host lower-cased, the host as punycode) for its `title`.
  * - Rich-text HTML (from editors that store HTML) is read into the same tree by
  *   `richTextBlocks`, a reader that builds plain data and never a DOM, so nothing in it runs.
  */
@@ -24,16 +25,23 @@ export type MarkdownInline =
   | { t: "strong"; c: MarkdownInline[] }
   | { t: "em"; c: MarkdownInline[] }
   | { t: "code"; v: string }
-  | { t: "link"; href: string; c: MarkdownInline[] };
+  | { t: "link"; href: string; title: string; c: MarkdownInline[] };
 
 /** A table column's alignment, from its delimiter row. */
 export type MarkdownAlign = "left" | "center" | "right" | null;
 
-/** A list item: its lines (each a hard break apart) and any lists nested under it. */
+/**
+ * A list item: its lines (each a hard break apart), then what follows them inside the item:
+ * nested lists and, in rich text, lines after a nested list, in document order.
+ */
 export interface MarkdownListItem {
   lines: MarkdownInline[][];
-  children: MarkdownList[];
+  children: MarkdownListChild[];
 }
+
+/** What sits inside a list item after its lines: a nested list, or more lines. */
+export type MarkdownListChild =
+  MarkdownList | { kind: "lines"; lines: MarkdownInline[][] };
 
 /** A bulleted or numbered list. */
 export type MarkdownList =
@@ -141,21 +149,34 @@ export function headingTag(
 
 const SAFE_SCHEMES = ["http", "https", "mailto", "tel"];
 
+/** A kept link address: its `href`, and the address a reader is shown (its `title`). */
+export interface MarkdownHref {
+  /** The address as written (tabs, newlines and outer `<…>` removed). */
+  href: string;
+  /**
+   * The address normalised for reading: scheme and host lower-cased and the host in ASCII, so
+   * an internationalised host shows as punycode (`https://аpple.com` → `https://xn--pple-43d.com`)
+   * and a look-alike cannot pass for the site it imitates. The rest is as written.
+   */
+  title: string;
+}
+
 /**
- * The address to put in an `href`, or null when it is refused.
+ * The address to put in an `href` and the one to show on hover, or null when it is refused.
  *
  * Browsers drop tabs and newlines anywhere in a URL and C0 controls and spaces at either
  * end, so `\tjavascript:` and `java\nscript:` are `javascript:` to them: those characters
  * are removed first. An address with other whitespace still in it is refused, and so is a web
- * address with no host or with credentials (`https://bank.example@evil.example`). Then the
- * scheme is checked against an allow-list, never a deny-list (`javascript:`, `vbscript:`,
- * `data:` and the next one are refused alike). Under `safe` an address with no scheme (relative, root-relative, `#anchor`, `?query`) is kept; under
+ * address with no host, with credentials (`https://bank.example@evil.example`) or with a host
+ * the URL parser rejects. Then the scheme is checked against an allow-list, never a deny-list
+ * (`javascript:`, `vbscript:`, `data:` and the next one are refused alike). Under `safe` an
+ * address with no scheme (relative, root-relative, `#anchor`, `?query`) is kept; under
  * `https` only `https:` is.
  */
-export function safeHref(
+export function safeLink(
   raw: string,
   policy: MarkdownLinkPolicy = "safe",
-): string | null {
+): MarkdownHref | null {
   let url = raw.replace(/[\t\n\r]/g, "");
   let start = 0;
   let end = url.length;
@@ -177,6 +198,8 @@ export function safeHref(
       : name !== null && !SAFE_SCHEMES.includes(name)
   )
     return null;
+  // The scheme, lower-cased, starts what a reader is shown.
+  const shown = name === null ? "" : `${name}:`;
   // A web address needs a host and no credentials: `https://bank.example@evil.example` shows
   // one site and goes to another. The same holds for a scheme-relative `//host` address.
   // Browsers read `\` as `/` here, so `\\host` and `/\host` are scheme-relative too.
@@ -186,20 +209,67 @@ export function safeHref(
       : name === null && SCHEME_RELATIVE.test(url)
         ? url
         : null;
-  if (rest !== null && !webAuthorityOk(rest)) return null;
-  return url;
+  if (rest === null)
+    return { href: url, title: shown + url.slice(shown.length) };
+  const authority = webAuthority(rest);
+  if (authority === null) return null;
+  const host = asciiHost(authority.host);
+  if (host === null) return null;
+  return {
+    href: url,
+    title:
+      shown + rest.slice(0, 2) + host + rest.slice(2 + authority.host.length),
+  };
+}
+
+/** The address to put in an `href`, or null when it is refused (`safeLink`'s `href`). */
+export function safeHref(
+  raw: string,
+  policy: MarkdownLinkPolicy = "safe",
+): string | null {
+  return safeLink(raw, policy)?.href ?? null;
 }
 
 /** Two slashes, either way round: a browser reads `\\host`, `/\host` and `//host` alike. */
 const SCHEME_RELATIVE = /^[/\\]{2}/;
 
-/** `//host…`: a host is there, and no `user@` before it. */
-function webAuthorityOk(rest: string): boolean {
-  if (!SCHEME_RELATIVE.test(rest)) return false;
+/**
+ * `//host[:port]…`: the host, when there is one and no `user@` before it. The host ends at the
+ * first `:` outside `[…]` (an IPv6 address), as the URL parser reads it.
+ */
+function webAuthority(rest: string): { host: string } | null {
+  if (!SCHEME_RELATIVE.test(rest)) return null;
   let end = 2;
   while (end < rest.length && !"/?#\\".includes(rest.charAt(end))) end++;
   const authority = rest.slice(2, end);
-  return authority !== "" && !authority.includes("@");
+  if (authority === "" || authority.includes("@")) return null;
+  let bracket = false;
+  let k = 0;
+  for (; k < authority.length; k++) {
+    const c = authority.charAt(k);
+    if (c === "[") bracket = true;
+    else if (c === "]") bracket = false;
+    else if (c === ":" && !bracket) break;
+  }
+  return { host: authority.slice(0, k) };
+}
+
+/**
+ * A host as the URL parser serialises it (the WHATWG URL `hostname`): lower-cased, an
+ * internationalised name as punycode, an IPv4 address in dotted decimal. Null when the parser
+ * rejects it (empty, a forbidden character, a bad IP address), since no browser could follow
+ * the link either. Without a `URL` global (every browser, Node, Deno and Workers has one) only
+ * a plain ASCII name is kept, lower-cased.
+ */
+function asciiHost(host: string): string | null {
+  if (host === "") return null;
+  if (typeof URL !== "function")
+    return /^[A-Za-z0-9.-]+$/.test(host) ? host.toLowerCase() : null;
+  try {
+    return new URL(`http://${host}/`).hostname;
+  } catch {
+    return null;
+  }
 }
 
 /** Whether a kept address leaves the site (it opens in a new tab). */
@@ -271,8 +341,15 @@ const isWord = (c: string | undefined) =>
 class InlineParser {
   private readonly s: string[];
   private readonly policy: MarkdownLinkPolicy;
-  /** Delimiters known to have no partner from some position on (keeps scans linear). */
-  private readonly noCloser = new Set<string>();
+  /**
+   * Per delimiter (`*` × 1, `_` × 2, …), the earliest position a search to the end of the text
+   * started from and found no partner (keeps scans linear). A later search to the end that
+   * starts at or after it finds none either: it walks the same runs, escapes and code spans
+   * from there on, with fewer candidates. A search that stops short of the end (inside a mark
+   * or a link's words) is never answered from here, since its closer can sit where a longer
+   * run was measured before.
+   */
+  private readonly noCloserFrom = new Map<string, number>();
   private readonly codeEnds = new Map<number, number | null>();
   /** Backtick run lengths with no partner after some run start (none after a later one). */
   private readonly unpaired = new Set<number>();
@@ -327,9 +404,11 @@ class InlineParser {
     from: number,
     to: number,
   ): number | null {
-    const key = `${c}${n}`;
-    if (this.noCloser.has(key)) return null;
     const s = this.s;
+    const key = `${c}${n}`;
+    const toEnd = to === s.length;
+    const known = this.noCloserFrom.get(key);
+    if (toEnd && known !== undefined && from >= known) return null;
     for (let j = from; j < to;) {
       if (--this.budget < 0) return null;
       const ch = s[j];
@@ -357,7 +436,8 @@ class InlineParser {
       }
       j++;
     }
-    if (to === s.length) this.noCloser.add(key);
+    if (toEnd && (known === undefined || from < known))
+      this.noCloserFrom.set(key, from);
     return null;
   }
 
@@ -419,10 +499,15 @@ class InlineParser {
         const link = this.link(i, to);
         if (link) {
           const label = this.parse(i + 1, link.labelEnd, depth + 1, true);
-          const href = inLink ? null : safeHref(link.dest, this.policy);
-          if (href !== null) {
+          const kept = inLink ? null : safeLink(link.dest, this.policy);
+          if (kept !== null) {
             flush();
-            out.push({ t: "link", href, c: label });
+            out.push({
+              t: "link",
+              href: kept.href,
+              title: kept.title,
+              c: label,
+            });
           } else pushAll(label);
           i = link.end;
           continue;
@@ -509,13 +594,34 @@ class InlineParser {
       }
     }
     if (k >= destTo) return null;
-    const inside = s
-      .slice(labelEnd + 2, k)
-      .join("")
-      .replace(/^[ \t\n]+/, "");
-    const dest = /^<[^>]*>/.exec(inside)?.[0] ?? inside.split(/[ \n]/)[0] ?? "";
-    return { labelEnd, dest, end: k + 1 };
+    // The address: `<…>`, or everything up to the first whitespace (a tab ends it as a space
+    // does; what follows is a title, which is dropped). Then backslash escapes of ASCII
+    // punctuation are undone, as CommonMark reads them: `\(` is `(` and `\\` is `\`.
+    const inside = s.slice(labelEnd + 2, k).join("");
+    let from = 0;
+    while (from < inside.length && WS.has(inside.charAt(from))) from++;
+    let dest = /^<[^>]*>/.exec(inside.slice(from))?.[0];
+    if (dest === undefined) {
+      let end = from;
+      while (end < inside.length && !WS.has(inside.charAt(end))) end++;
+      dest = inside.slice(from, end);
+    }
+    return { labelEnd, dest: unescapePunct(dest), end: k + 1 };
   }
+}
+
+/** Backslash escapes of ASCII punctuation undone (`\)` is `)`); any other backslash stays. */
+function unescapePunct(text: string): string {
+  let out = "";
+  for (let i = 0; i < text.length; i++) {
+    const c = text.charAt(i);
+    const next = text.charAt(i + 1);
+    if (c === "\\" && PUNCT.has(next)) {
+      out += next;
+      i++;
+    } else out += c;
+  }
+  return out;
 }
 
 /** Inline Markdown as data. */
@@ -717,16 +823,23 @@ class BlockParser {
         out.push({ kind: "table", align, head, rows });
         continue;
       }
-      const para: MarkdownInline[][] = [];
+      const para: string[] = [];
       while (
         i < lines.length &&
         !blank(at(i)) &&
         (para.length === 0 || !startsBlock(lines, i))
       ) {
-        para.push(this.inl(trimWs(at(i)).replace(/\\$/, "")));
+        para.push(trimWs(at(i)));
         i++;
       }
-      out.push({ kind: "p", lines: para });
+      // A backslash at the end of a line is a hard break only when another line follows
+      // (every line break is one already, so it goes); on the last line it is text.
+      out.push({
+        kind: "p",
+        lines: para.map((l, k) =>
+          this.inl(k < para.length - 1 ? l.replace(/\\$/, "") : l),
+        ),
+      });
     }
     return out;
   }
@@ -1047,7 +1160,9 @@ function readHtml(html: string): RichElement {
       i = j + 1;
       if (DROP.has(name)) {
         if (!VOID.has(name)) {
-          const closing = new RegExp(`</${name}`, "gi");
+          // The end tag a browser ends it at: `</name` then whitespace, `/` or `>`, so
+          // `</scripts>` inside a script is still script.
+          const closing = new RegExp(`</${name}(?=[\\t\\n\\f\\r />])`, "gi");
           closing.lastIndex = i;
           const close = closing.exec(html)?.index ?? -1;
           const end = close < 0 ? -1 : html.indexOf(">", close);
@@ -1147,9 +1262,10 @@ function richInlines(
     } else if (tag === "code")
       out.push({ t: "code", v: collapseHtmlWs(textOf(n)) });
     else if (tag === "a") {
-      const href = ctx.link ? null : safeHref(n.attrs.href ?? "", policy);
+      const kept = ctx.link ? null : safeLink(n.attrs.href ?? "", policy);
       const pieces = richInlines(n.children, policy, { ...ctx, link: true });
-      if (href !== null) wrapRuns(pieces, (c) => ({ t: "link", href, c }), out);
+      if (kept !== null)
+        wrapRuns(pieces, (c) => ({ t: "link", ...kept, c }), out);
       else pushAll(out, pieces);
     } else if (BLOCKISH.has(tag)) {
       out.push({ t: "text", v: " " });
@@ -1255,8 +1371,18 @@ function richList(
   const items: MarkdownListItem[] = [];
   for (const li of el.children) {
     if ("text" in li || li.tag !== "li") continue;
-    const inline: RichNode[] = [];
-    const children: MarkdownList[] = [];
+    // The item's text up to its first nested list is its line; a nested list and any text
+    // after it follow in document order, so `a<ul>…</ul>c` keeps `c` after the list.
+    let inline: RichNode[] = [];
+    let line: MarkdownInline[] | null = null;
+    let nestedYet = false;
+    const children: MarkdownListChild[] = [];
+    const endRun = () => {
+      const l = toLine(inline, policy);
+      inline = [];
+      if (!nestedYet) line = l;
+      else if (l) children.push({ kind: "lines", lines: [l] });
+    };
     for (const c of li.children) {
       if (
         !("text" in c) &&
@@ -1264,10 +1390,14 @@ function richList(
         depth + 1 < MAX_NESTING
       ) {
         const sub = richList(c, policy, depth + 1);
-        if (sub) children.push(sub);
+        if (sub) {
+          endRun();
+          nestedYet = true;
+          children.push(sub);
+        }
       } else inline.push(c);
     }
-    const line = toLine(inline, policy);
+    endRun();
     if (line || children.length > 0)
       items.push({ lines: line ? [line] : [], children });
   }
