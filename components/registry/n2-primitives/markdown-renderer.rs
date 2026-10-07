@@ -1369,12 +1369,29 @@ fn text_piece(v: &str) -> Piece {
     Piece::Inline(Inline::Text(v.to_owned()))
 }
 
-fn rich_inlines(
-    nodes: &[RichNode],
-    policy: MarkdownLinks,
-    in_link: bool,
+/// Where rich inlines are read: whether `<br>` breaks the line, and the marks already open.
+#[derive(Clone, Copy)]
+struct RichContext {
     breaks: bool,
-) -> Vec<Piece> {
+    strong: bool,
+    em: bool,
+    link: bool,
+}
+
+const LINE: RichContext = RichContext {
+    breaks: true,
+    strong: false,
+    em: false,
+    link: false,
+};
+const ONE_LINE: RichContext = RichContext {
+    breaks: false,
+    ..LINE
+};
+
+/// A mark nested in a mark of the same kind adds nothing (bold inside bold is bold), so a
+/// `<br>` splitting marks stays linear in the input.
+fn rich_inlines(nodes: &[RichNode], policy: MarkdownLinks, ctx: RichContext) -> Vec<Piece> {
     let mut out = Vec::new();
     for n in nodes {
         let RichNode::El {
@@ -1389,24 +1406,37 @@ fn rich_inlines(
             continue;
         };
         match tag.as_str() {
-            "br" => out.push(if breaks {
+            "br" => out.push(if ctx.breaks {
                 Piece::Break
             } else {
                 text_piece(" ")
             }),
-            "strong" | "b" => wrap_runs(
-                rich_inlines(children, policy, in_link, breaks),
-                &Inline::Strong,
-                &mut out,
-            ),
-            "em" | "i" => wrap_runs(
-                rich_inlines(children, policy, in_link, breaks),
-                &Inline::Em,
-                &mut out,
-            ),
+            "strong" | "b" => {
+                let pieces = rich_inlines(
+                    children,
+                    policy,
+                    RichContext {
+                        strong: true,
+                        ..ctx
+                    },
+                );
+                if ctx.strong {
+                    out.extend(pieces);
+                } else {
+                    wrap_runs(pieces, &Inline::Strong, &mut out);
+                }
+            }
+            "em" | "i" => {
+                let pieces = rich_inlines(children, policy, RichContext { em: true, ..ctx });
+                if ctx.em {
+                    out.extend(pieces);
+                } else {
+                    wrap_runs(pieces, &Inline::Em, &mut out);
+                }
+            }
             "code" => out.push(Piece::Inline(Inline::Code(collapse_html_ws(&text_of(n))))),
             "a" => {
-                let href = if in_link {
+                let href = if ctx.link {
                     None
                 } else {
                     let raw = attrs
@@ -1415,7 +1445,7 @@ fn rich_inlines(
                         .map_or("", |(_, v)| v.as_str());
                     safe_href(raw, policy)
                 };
-                let pieces = rich_inlines(children, policy, true, breaks);
+                let pieces = rich_inlines(children, policy, RichContext { link: true, ..ctx });
                 match href {
                     Some(href) => wrap_runs(
                         pieces,
@@ -1430,10 +1460,10 @@ fn rich_inlines(
             }
             t if BLOCKISH.contains(&t) => {
                 out.push(text_piece(" "));
-                out.extend(rich_inlines(children, policy, in_link, breaks));
+                out.extend(rich_inlines(children, policy, ctx));
                 out.push(text_piece(" "));
             }
-            _ => out.extend(rich_inlines(children, policy, in_link, breaks)),
+            _ => out.extend(rich_inlines(children, policy, ctx)),
         }
     }
     out
@@ -1535,7 +1565,7 @@ fn to_lines(pieces: Vec<Piece>) -> Vec<Vec<Inline>> {
 }
 
 fn to_line(nodes: &[RichNode], policy: MarkdownLinks) -> Option<Vec<Inline>> {
-    to_lines(rich_inlines(nodes, policy, false, false))
+    to_lines(rich_inlines(nodes, policy, ONE_LINE))
         .into_iter()
         .next()
 }
@@ -1545,7 +1575,7 @@ fn rich_blocks(nodes: &[RichNode], policy: MarkdownLinks, out: &mut Vec<Block>) 
     let flush = |pending: &mut Vec<&RichNode>, out: &mut Vec<Block>| {
         let mut pieces = Vec::new();
         for n in pending.drain(..) {
-            pieces.extend(rich_inlines(std::slice::from_ref(n), policy, false, true));
+            pieces.extend(rich_inlines(std::slice::from_ref(n), policy, LINE));
         }
         let lines = to_lines(pieces);
         if !lines.is_empty() {
@@ -1610,7 +1640,7 @@ fn rich_blocks(nodes: &[RichNode], policy: MarkdownLinks, out: &mut Vec<Block>) 
             out.push(Block::Rule);
         } else if tag == "p" {
             flush(&mut pending, out);
-            let lines = to_lines(rich_inlines(children, policy, false, true));
+            let lines = to_lines(rich_inlines(children, policy, LINE));
             if !lines.is_empty() {
                 out.push(Block::Paragraph(lines));
             }
@@ -2152,6 +2182,12 @@ mod tests {
         let started = std::time::Instant::now();
         let _ = rich_text_blocks(&"<a <b <p>x<!--".repeat(20_000), MarkdownLinks::Safe);
         let _ = rich_text_blocks(&("<b>".repeat(5_000) + "x"), MarkdownLinks::Safe);
+        let nested = "<b><i><a href=\"https://x.org\">".repeat(11) + &"x<br>".repeat(100_000);
+        let blocks = rich_text_blocks(&nested, MarkdownLinks::Safe);
+        let Block::Paragraph(lines) = &blocks[0] else {
+            panic!("not a paragraph")
+        };
+        assert_eq!(lines.len(), 100_000);
         let _ = rich_text_blocks(
             &("<span>".repeat(20_000) + &"</div>".repeat(20_000)),
             MarkdownLinks::Safe,

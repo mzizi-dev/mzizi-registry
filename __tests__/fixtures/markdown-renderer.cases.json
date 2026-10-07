@@ -1732,163 +1732,8 @@
                 "t": "strong",
                 "c": [
                   {
-                    "t": "strong",
-                    "c": [
-                      {
-                        "t": "strong",
-                        "c": [
-                          {
-                            "t": "strong",
-                            "c": [
-                              {
-                                "t": "strong",
-                                "c": [
-                                  {
-                                    "t": "strong",
-                                    "c": [
-                                      {
-                                        "t": "strong",
-                                        "c": [
-                                          {
-                                            "t": "strong",
-                                            "c": [
-                                              {
-                                                "t": "strong",
-                                                "c": [
-                                                  {
-                                                    "t": "strong",
-                                                    "c": [
-                                                      {
-                                                        "t": "strong",
-                                                        "c": [
-                                                          {
-                                                            "t": "strong",
-                                                            "c": [
-                                                              {
-                                                                "t": "strong",
-                                                                "c": [
-                                                                  {
-                                                                    "t": "strong",
-                                                                    "c": [
-                                                                      {
-                                                                        "t": "strong",
-                                                                        "c": [
-                                                                          {
-                                                                            "t": "strong",
-                                                                            "c": [
-                                                                              {
-                                                                                "t": "strong",
-                                                                                "c": [
-                                                                                  {
-                                                                                    "t": "strong",
-                                                                                    "c": [
-                                                                                      {
-                                                                                        "t": "strong",
-                                                                                        "c": [
-                                                                                          {
-                                                                                            "t": "strong",
-                                                                                            "c": [
-                                                                                              {
-                                                                                                "t": "strong",
-                                                                                                "c": [
-                                                                                                  {
-                                                                                                    "t": "strong",
-                                                                                                    "c": [
-                                                                                                      {
-                                                                                                        "t": "strong",
-                                                                                                        "c": [
-                                                                                                          {
-                                                                                                            "t": "strong",
-                                                                                                            "c": [
-                                                                                                              {
-                                                                                                                "t": "strong",
-                                                                                                                "c": [
-                                                                                                                  {
-                                                                                                                    "t": "strong",
-                                                                                                                    "c": [
-                                                                                                                      {
-                                                                                                                        "t": "strong",
-                                                                                                                        "c": [
-                                                                                                                          {
-                                                                                                                            "t": "strong",
-                                                                                                                            "c": [
-                                                                                                                              {
-                                                                                                                                "t": "strong",
-                                                                                                                                "c": [
-                                                                                                                                  {
-                                                                                                                                    "t": "strong",
-                                                                                                                                    "c": [
-                                                                                                                                      {
-                                                                                                                                        "t": "strong",
-                                                                                                                                        "c": [
-                                                                                                                                          {
-                                                                                                                                            "t": "strong",
-                                                                                                                                            "c": [
-                                                                                                                                              {
-                                                                                                                                                "t": "text",
-                                                                                                                                                "v": "deep"
-                                                                                                                                              }
-                                                                                                                                            ]
-                                                                                                                                          }
-                                                                                                                                        ]
-                                                                                                                                      }
-                                                                                                                                    ]
-                                                                                                                                  }
-                                                                                                                                ]
-                                                                                                                              }
-                                                                                                                            ]
-                                                                                                                          }
-                                                                                                                        ]
-                                                                                                                      }
-                                                                                                                    ]
-                                                                                                                  }
-                                                                                                                ]
-                                                                                                              }
-                                                                                                            ]
-                                                                                                          }
-                                                                                                        ]
-                                                                                                      }
-                                                                                                    ]
-                                                                                                  }
-                                                                                                ]
-                                                                                              }
-                                                                                            ]
-                                                                                          }
-                                                                                        ]
-                                                                                      }
-                                                                                    ]
-                                                                                  }
-                                                                                ]
-                                                                              }
-                                                                            ]
-                                                                          }
-                                                                        ]
-                                                                      }
-                                                                    ]
-                                                                  }
-                                                                ]
-                                                              }
-                                                            ]
-                                                          }
-                                                        ]
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
+                    "t": "text",
+                    "v": "deep"
                   }
                 ]
               }
@@ -2125,6 +1970,49 @@
               {
                 "t": "code",
                 "v": "a  b"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a mark inside the same mark adds nothing",
+      "from": "html",
+      "input": "<b>a <strong>b<br>c</strong> <i>d <em>e</em></i></b>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a b"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "c "
+                  },
+                  {
+                    "t": "em",
+                    "c": [
+                      {
+                        "t": "text",
+                        "v": "d e"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           ]

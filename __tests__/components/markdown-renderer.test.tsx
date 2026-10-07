@@ -183,6 +183,9 @@ describe("MarkdownRenderer (React)", () => {
     expect(html("<span>" + "<br>".repeat(150_000) + "x</span>", { from: "html" })).toContain("x")
     expect(html("<p><span>" + "a<i></i>".repeat(150_000) + "</span></p>", { from: "html" })).toContain("aaa")
     expect(looksLikeRichText("<p ".repeat(40_000))).toBe(false)
+    // Marks nested in marks of the same kind add nothing, so a <br> split stays linear.
+    const nested = richTextBlocks('<b><i><a href="https://x.org">'.repeat(11) + "x<br>".repeat(100_000))
+    expect(JSON.stringify(nested).length).toBeLessThan(25_000_000)
     expect(performance.now() - started).toBeLessThan(3000)
   })
 

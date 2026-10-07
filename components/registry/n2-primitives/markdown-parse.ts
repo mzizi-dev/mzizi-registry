@@ -849,11 +849,20 @@ function pushAll<T>(out: T[], items: T[]): void {
   for (const x of items) out.push(x)
 }
 
+/** Where rich inlines are read: whether `<br>` breaks the line, and the marks already open. */
+interface RichContext {
+  breaks: boolean
+  strong: boolean
+  em: boolean
+  link: boolean
+}
+
 /**
  * Rich text's inline content as data: marks kept, links checked, `<br>` a break where `breaks`.
  * A break inside a mark splits the mark, so bold text with a Shift+Enter keeps its two lines.
+ * A mark nested in a mark of the same kind adds nothing, so splitting stays linear in the input.
  */
-function richInlines(nodes: RichNode[], policy: MarkdownLinkPolicy, inLink: boolean, breaks: boolean): (MarkdownInline | null)[] {
+function richInlines(nodes: RichNode[], policy: MarkdownLinkPolicy, ctx: RichContext): (MarkdownInline | null)[] {
   const out: (MarkdownInline | null)[] = []
   for (const n of nodes) {
     if ("text" in n) {
@@ -861,23 +870,33 @@ function richInlines(nodes: RichNode[], policy: MarkdownLinkPolicy, inLink: bool
       continue
     }
     const tag = n.tag
-    if (tag === "br") out.push(breaks ? BREAK : { t: "text", v: " " })
-    else if (tag === "strong" || tag === "b") wrapRuns(richInlines(n.children, policy, inLink, breaks), (c) => ({ t: "strong", c }), out)
-    else if (tag === "em" || tag === "i") wrapRuns(richInlines(n.children, policy, inLink, breaks), (c) => ({ t: "em", c }), out)
-    else if (tag === "code") out.push({ t: "code", v: collapseHtmlWs(textOf(n)) })
+    if (tag === "br") out.push(ctx.breaks ? BREAK : { t: "text", v: " " })
+    else if (tag === "strong" || tag === "b") {
+      const pieces = richInlines(n.children, policy, { ...ctx, strong: true })
+      // Bold inside bold is bold: no second wrapper, so a mark wraps at most once per kind.
+      if (ctx.strong) pushAll(out, pieces)
+      else wrapRuns(pieces, (c) => ({ t: "strong", c }), out)
+    } else if (tag === "em" || tag === "i") {
+      const pieces = richInlines(n.children, policy, { ...ctx, em: true })
+      if (ctx.em) pushAll(out, pieces)
+      else wrapRuns(pieces, (c) => ({ t: "em", c }), out)
+    } else if (tag === "code") out.push({ t: "code", v: collapseHtmlWs(textOf(n)) })
     else if (tag === "a") {
-      const href = inLink ? null : safeHref(n.attrs.href ?? "", policy)
-      const pieces = richInlines(n.children, policy, true, breaks)
+      const href = ctx.link ? null : safeHref(n.attrs.href ?? "", policy)
+      const pieces = richInlines(n.children, policy, { ...ctx, link: true })
       if (href !== null) wrapRuns(pieces, (c) => ({ t: "link", href, c }), out)
       else pushAll(out, pieces)
     } else if (BLOCKISH.has(tag)) {
       out.push({ t: "text", v: " " })
-      pushAll(out, richInlines(n.children, policy, inLink, breaks))
+      pushAll(out, richInlines(n.children, policy, ctx))
       out.push({ t: "text", v: " " })
-    } else pushAll(out, richInlines(n.children, policy, inLink, breaks))
+    } else pushAll(out, richInlines(n.children, policy, ctx))
   }
   return out
 }
+
+const LINE: RichContext = { breaks: true, strong: false, em: false, link: false }
+const ONE_LINE: RichContext = { ...LINE, breaks: false }
 
 /** Whitespace as a browser shows it: HTML whitespace runs as one space, none after a space,
     none at the start; non-breaking spaces kept. */
@@ -939,12 +958,12 @@ function toLines(items: (MarkdownInline | null)[]): MarkdownInline[][] {
 }
 
 /** One line of rich inlines (breaks are spaces), or null when it is empty. */
-const toLine = (nodes: RichNode[], policy: MarkdownLinkPolicy) => toLines(richInlines(nodes, policy, false, false))[0] ?? null
+const toLine = (nodes: RichNode[], policy: MarkdownLinkPolicy) => toLines(richInlines(nodes, policy, ONE_LINE))[0] ?? null
 
 function richBlocks(nodes: RichNode[], policy: MarkdownLinkPolicy, out: MarkdownBlock[]): void {
   let pending: RichNode[] = []
   const flush = () => {
-    const lines = toLines(richInlines(pending, policy, false, true))
+    const lines = toLines(richInlines(pending, policy, LINE))
     if (lines.length > 0) out.push({ kind: "p", lines })
     pending = []
   }
@@ -978,7 +997,7 @@ function richBlocks(nodes: RichNode[], policy: MarkdownLinkPolicy, out: Markdown
       out.push({ kind: "hr" })
     } else if (tag === "p") {
       flush()
-      const lines = toLines(richInlines(n.children, policy, false, true))
+      const lines = toLines(richInlines(n.children, policy, LINE))
       if (lines.length > 0) out.push({ kind: "p", lines })
     } else if (tag === "blockquote") {
       flush()
