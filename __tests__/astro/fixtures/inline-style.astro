@@ -8,6 +8,7 @@
 const style = "--shorthand: var(--ring)";
 const attrs = { "data-x": "1", style: "--spread: var(--muted)" };
 const edge = "var(--border)";
+const accent = "var(--accent)";
 ---
 
 <div data-slot="tinted-strip" class="vars">
@@ -15,6 +16,7 @@ const edge = "var(--border)";
   <span style={{ "--edge": "var(--border)" }}>object</span>
   <span {style}>shorthand</span>
   <span {...attrs}>spread props</span>
+  <span style=`--template: ${accent}`>template</span>
 </div>
 
 <style define:vars={{ edge }}>

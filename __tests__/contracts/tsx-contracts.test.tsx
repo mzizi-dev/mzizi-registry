@@ -32,7 +32,7 @@ import {
   evaluateTheming,
 } from "../../contracts/runner"
 import { loadContracts, registryFile } from "./contract-files"
-import { renderTsx } from "./render-tsx"
+import { renderTsx, wantsRequestUrl } from "./render-tsx"
 
 const contracts = loadContracts()
 const full = contracts.filter((c) => c.implementations.tsx?.identity === "contract")
@@ -57,7 +57,7 @@ describe.each(full.map((c) => [c.name, c] as const))("%s (.tsx) keeps its contra
     if (!Comp) throw new Error(`${file}: no export named ${c.title}`)
     const out: Rendered = {}
     for (const [name, state] of Object.entries(c.states)) {
-      out[name] = renderTsx(Comp, state, source.includes("requestUrl"))
+      out[name] = renderTsx(Comp, state, wantsRequestUrl(source))
     }
     return out
   }

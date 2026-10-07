@@ -73,6 +73,8 @@ fn meta_tile() -> Case {
         ],
         defaults: vec![("tint", mzizi_meta_tile::DEFAULT_TINT.to_owned())],
         columns: vec![],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["border-color", "background-color", "color"],
     }
 }
 
@@ -109,6 +111,7 @@ fn avatar_stack() -> Case {
                 AvatarStackSize::bubble_classes,
             ),
         )],
+        allowed_styles: &[],
     }
 }
 
@@ -148,6 +151,13 @@ fn alert_banner() -> Case {
                 }),
             ),
         ],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &[
+            "border-left-color",
+            "background-color",
+            "color",
+            "font-family",
+        ],
     }
 }
 
@@ -169,6 +179,8 @@ fn hero_stat() -> Case {
         ],
         defaults: vec![],
         columns: vec![],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["animation"],
     }
 }
 
@@ -210,6 +222,8 @@ fn empty_state() -> Case {
                 |d| d.padding().to_owned(),
             ),
         )],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["animation", "font-family"],
     }
 }
 
@@ -240,6 +254,8 @@ fn cover_header() -> Case {
                 }),
             ),
         ],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["animation", "background-image", "font-family"],
     }
 }
 
@@ -262,6 +278,8 @@ fn success_screen() -> Case {
         )],
         defaults: vec![("title", "Success".to_owned())],
         columns: vec![],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["animation", "font-family"],
     }
 }
 
@@ -289,6 +307,8 @@ fn gauge_card() -> Case {
                 m.stroke().to_owned()
             }),
         )],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["animation", "stroke"],
     }
 }
 
@@ -347,6 +367,8 @@ fn stats_row() -> Case {
                 ),
             ),
         ],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["animation", "background-color", "color"],
     }
 }
 
@@ -385,6 +407,8 @@ fn escalation_card() -> Case {
         ],
         defaults: vec![],
         columns: vec![],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["animation"],
     }
 }
 
@@ -423,6 +447,8 @@ fn suitability_card() -> Case {
                 }),
             ),
         ],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["animation", "background-color", "color"],
     }
 }
 
@@ -444,6 +470,8 @@ fn user_card() -> Case {
         ],
         defaults: vec![],
         columns: vec![],
+        // A recorded CSP gap (#481): only these inline style properties.
+        allowed_styles: &["animation"],
     }
 }
 
@@ -473,17 +501,33 @@ fn every_component_keeps_its_own_contract() {
     }
 }
 
+// The CSP gap list (#481) is per component and per property: a listed component that renders
+// any other inline style property fails, and so does an allowed property no state renders any
+// more, so each list only shrinks.
+
 #[test]
-fn every_inline_style_gap_is_a_case_here() {
-    // INLINE_STYLE_GAPS (contract-eval) names the components still allowed an inline `style`
-    // (#481); `Case::check` fails a listed one that no longer renders one, so the list shrinks.
-    let names: Vec<&str> = cases().iter().map(|c| c.name).collect();
-    for gap in INLINE_STYLE_GAPS {
-        assert!(
-            names.contains(gap),
-            "INLINE_STYLE_GAPS names `{gap}`, which is not a case here"
-        );
-    }
+#[should_panic(expected = "with a property outside its allowed")]
+fn a_style_property_outside_a_components_allowed_list_fails() {
+    let mut case = gauge_card();
+    case.allowed_styles = &["animation"];
+    case.check();
+}
+
+#[test]
+#[should_panic(expected = "remove it from its allowed_styles")]
+fn an_allowed_style_property_no_state_renders_fails() {
+    let mut case = gauge_card();
+    case.allowed_styles = &["animation", "stroke", "background-color"];
+    case.check();
+}
+
+#[test]
+fn style_properties_reads_each_declaration() {
+    assert_eq!(
+        style_properties("color: red; --Tint: x;background-image:url(\"a;b\") ; "),
+        ["color", "--tint", "background-image"]
+    );
+    assert!(style_properties("").is_empty());
 }
 
 #[test]
