@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — the architecture doctrine describes the stack as it is: Astro by default, Rust, plain TypeScript, React at parity, Python planned (2026-10-07, #PRNUM)
+### Fixed — the architecture doctrine describes the stack as it is: Astro by default, Rust, plain TypeScript, React at parity, Python planned (2026-10-07, #474)
 
 The node, rung and strand doctrine that `mzizi_get_architecture` and `/v1/architecture` serve still described the React-and-Svelte era (#472, N10). Rewritten against the repository:
 
