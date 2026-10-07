@@ -44,7 +44,7 @@
       "required": false,
       "default": "markdown",
       "values": ["markdown", "html", "auto"],
-      "description": "What content is. html reads rich text through the platform's DOMParser into Markdown first; auto does so when the text holds an editor's tags. Where there is no DOMParser (server rendering, Rust) the text is read as Markdown, so its tags show as text."
+      "description": "What content is. html reads an editor's rich text into Markdown first (a reader of its own that builds plain data, never a DOM, so nothing in it runs; the same on a server, in a browser and in Rust); auto does so when the text holds an editor's tags. Text in rich text stays text: Markdown typed into an editor is not read as Markdown."
     },
     {
       "name": "headingBase",
@@ -68,7 +68,9 @@
     "Raw HTML in the source is text: <script>, <img onerror> and <a href> show as written.",
     "Links: tabs and newlines anywhere, and controls and spaces at either end, are removed first (browsers ignore them), then the scheme is checked against an allow-list. A refused link renders its words with no element around them. http and https links open in a new tab with rel=\"noopener noreferrer\".",
     "A link inside a link's words renders as its words.",
-    "Nesting is bounded: lists and blockquotes 8 deep, inline marks 16 deep; deeper markers read as text."
+    "Nesting is bounded: lists and blockquotes 8 deep, inline marks 16 deep; deeper markers read as text.",
+    "Hostile text stays linear: each inline parse has a scanning budget (100000 steps plus 32 per character); when it runs out, markers still looking for a partner read as text.",
+    "Rich text (from=html or auto): block elements and <br> end lines, source newlines are spaces, list items are one line each, bold, italic, code and links keep their meaning, script-like elements are dropped with their content, and every other tag is a plain container."
   ],
   "states": {
     "default": {
@@ -99,6 +101,13 @@
     "empty": {
       "props": {
         "content": ""
+      }
+    },
+    "rich": {
+      "description": "from=html: an editor's HTML, with Markdown typed into it and a script.",
+      "props": {
+        "content": "<p># Plan <strong>now</strong></p><ul><li><p>pen</p></li></ul><script>alert(1)</script><p><a href=\"javascript:alert(2)\">bad</a> <a href=\"https://example.org/r\">good</a></p>",
+        "from": "html"
       }
     }
   },
@@ -134,7 +143,7 @@
     "Fills its container.",
     "A wide table or code block scrolls inside itself, not the page."
   ],
-  "contract": "contract\n  slot is \"markdown-renderer\"\n  portal is \"https://mzizi.dev/components/markdown-renderer\"\n  class contains \"text-foreground\"\n  when default shows h1 \"Field notes\"\n  when default shows strong \"mzizi\"\n  when default shows em \"one\"\n  when default shows blockquote \"A quote with\"\n  when default shows th \"Name\"\n  when default shows pre \"const ok = 1 < 2\"\n  when xss shows p \"<img src=x onerror=alert(1)>\"\n  when xss shows td \"<script>alert(4)</script>\"\n  when xss shows p \"<script>alert(6)</script>\"\n  when xss shows p \"js tab split data vb\"\n  when base shows h3 \"Section\"\n  when base shows h6 \"Deep\"\nend",
+  "contract": "contract\n  slot is \"markdown-renderer\"\n  portal is \"https://mzizi.dev/components/markdown-renderer\"\n  class contains \"text-foreground\"\n  when default shows h1 \"Field notes\"\n  when default shows strong \"mzizi\"\n  when default shows em \"one\"\n  when default shows blockquote \"A quote with\"\n  when default shows th \"Name\"\n  when default shows pre \"const ok = 1 < 2\"\n  when xss shows p \"<img src=x onerror=alert(1)>\"\n  when xss shows td \"<script>alert(4)</script>\"\n  when xss shows p \"<script>alert(6)</script>\"\n  when xss shows p \"js tab split data vb\"\n  when base shows h3 \"Section\"\n  when base shows h6 \"Deep\"\n  when rich shows strong \"now\"\n  when rich shows p \"Plan now\"\nend",
   "checks": [
     {
       "say": "One h1.",
@@ -257,10 +266,34 @@
       "state": "empty",
       "select": "p",
       "absent": true
+    },
+    {
+      "say": "Markdown typed into rich text is not a heading.",
+      "state": "rich",
+      "select": "h1",
+      "absent": true
+    },
+    {
+      "say": "Rich text keeps its list.",
+      "state": "rich",
+      "select": "ul > li",
+      "count": 1
+    },
+    {
+      "say": "Rich text keeps only its https link.",
+      "state": "rich",
+      "select": "a[href=\"https://example.org/r\"]",
+      "count": 1
+    },
+    {
+      "say": "and no other.",
+      "state": "rich",
+      "select": "a",
+      "count": 1
     }
   ],
   "gaps": [
-    "from=\"html\" needs a DOMParser: the React build has one in the browser (and jsdom); the Astro build only where its server provides one; the Rust build has none, so rich-text HTML shows as text there.",
-    "Not CommonMark-complete: no setext headings, indented code blocks, reference links, autolinks, footnotes, task lists or strikethrough."
+    "Not CommonMark-complete: no setext headings, indented code blocks, reference links, autolinks, footnotes, task lists or strikethrough.",
+    "Rich text: tables, images and nested lists in an editor's HTML are read as text (cells and items flattened to lines), not rebuilt."
   ]
 }

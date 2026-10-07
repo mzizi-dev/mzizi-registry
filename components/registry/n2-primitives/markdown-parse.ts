@@ -14,8 +14,8 @@
  * - Raw HTML is text. A `<script>` in the source is shown, never parsed.
  * - Links pass `safeHref`: an allow-list of schemes. A refused link keeps its words and loses
  *   its address.
- * - Rich-text HTML (from editors that store HTML) can be read through a `DOMParser`, which
- *   runs nothing, into the same Markdown (`htmlToMarkdown`).
+ * - Rich-text HTML (from editors that store HTML) can be read into the same Markdown by
+ *   `htmlToMarkdown`, a reader that builds plain data and never a DOM, so nothing in it runs.
  */
 
 /** Inline content, as data. */
@@ -57,16 +57,14 @@ export type MarkdownBlock =
 export type MarkdownLinkPolicy = "safe" | "https"
 
 /**
- * What `content` is. `markdown`; `html`, rich text read through a `DOMParser`; `auto`,
- * rich text when it holds block or inline HTML tags, Markdown otherwise.
+ * What `content` is. `markdown`; `html`, rich text read by `htmlToMarkdown`; `auto`, rich
+ * text when it holds an editor's block or inline tags, Markdown otherwise.
  */
 export type MarkdownSource = "markdown" | "html" | "auto"
 
 export interface MarkdownOptions {
   links?: MarkdownLinkPolicy
   from?: MarkdownSource
-  /** A DOMParser constructor for `html` / `auto`; defaults to the global one, if any. */
-  Parser?: (new () => DOMParser) | undefined
 }
 
 /** How deep blockquotes and lists nest before deeper ones are read flat. */
@@ -76,6 +74,15 @@ const MAX_INLINE_DEPTH = 16
 /** How far a link's label and address are looked for (keeps a line of `[` linear). */
 const MAX_LABEL = 1000
 const MAX_DEST = 2048
+/**
+ * The scanning budget of one inline parse: steps spent looking for a closing marker or a
+ * link's end, at most `BUDGET_BASE + BUDGET_PER_CHAR` × the text's length. Ordinary text uses
+ * a small fraction; hostile text (thousands of unmatched markers inside one bold run) would
+ * otherwise rescan its range once per marker. When it runs out, every marker still looking
+ * for its partner reads as text, so the work stays linear in the input.
+ */
+const BUDGET_BASE = 100_000
+const BUDGET_PER_CHAR = 32
 
 // ─── Classes ──────────────────────────────────────────────────────────────────────────────
 //
@@ -188,10 +195,12 @@ class InlineParser {
   private readonly codeEnds = new Map<number, number | null>()
   /** Backtick run lengths with no partner after some run start (none after a later one). */
   private readonly unpaired = new Set<number>()
+  private budget: number
 
   constructor(s: string[], policy: MarkdownLinkPolicy) {
     this.s = s
     this.policy = policy
+    this.budget = BUDGET_BASE + BUDGET_PER_CHAR * s.length
   }
 
   /** `codeSpanEnd`, remembered per position, so no backtick run is measured twice. */
@@ -213,6 +222,7 @@ class InlineParser {
     if (this.noCloser.has(key)) return null
     const s = this.s
     for (let j = from; j < to; ) {
+      if (--this.budget < 0) return null
       const ch = s[j]
       if (ch === "\\") {
         j += 2
@@ -336,6 +346,7 @@ class InlineParser {
     let j = i
     const labelTo = Math.min(to, i + MAX_LABEL)
     for (; j < labelTo; j++) {
+      if (--this.budget < 0) return null
       const ch = s[j]
       if (ch === "\\") {
         j++
@@ -358,6 +369,7 @@ class InlineParser {
     let k = j + 2
     const destTo = Math.min(to, k + MAX_DEST)
     for (; k < destTo; k++) {
+      if (--this.budget < 0) return null
       const ch = s[k]
       if (ch === "\\") {
         k++
@@ -601,6 +613,242 @@ export function parseMarkdown(text: string, policy: MarkdownLinkPolicy = "safe")
 }
 
 // ─── Rich text ────────────────────────────────────────────────────────────────────────────
+//
+// Rich text from editors that store HTML is read into Markdown by a small reader of its own,
+// not the platform's DOMParser: it builds a tree of plain objects and never touches a DOM, so
+// nothing in the HTML can run or load, and the result is the same on a server, in a browser
+// and in the Rust build (which has the same reader). Only the tags an editor writes carry
+// meaning; every other tag is a plain container, and script-like elements are dropped whole.
+
+/** A node of rich text as data. */
+type RichNode = { tag: string; attrs: Record<string, string>; children: RichNode[] } | { text: string }
+
+const VOID = new Set(["br", "hr", "img", "input", "meta", "link", "wbr", "area", "base", "col", "embed", "source", "track", "param"])
+/** Elements dropped with their content. */
+const DROP = new Set(["script", "style", "template", "noscript", "iframe", "object", "textarea", "title", "xmp", "head", "svg", "math"])
+/** Elements that close an open paragraph. */
+const CLOSES_P = new Set(["p", "div", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "pre", "hr", "table"])
+/** Elements read as a container of blocks. */
+const CONTAINERS = new Set(["div", "html", "body", "main", "section", "article", "header", "footer", "aside", "nav", "figure", "center", "form", "table", "thead", "tbody", "tfoot", "tr", "td", "th"])
+
+const NAMED: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: "\u00a0" }
+
+/** Decode the character references editors write: the common named ones and numeric ones. */
+export function decodeEntities(text: string): string {
+  return text.replace(/&(#[xX][0-9a-fA-F]{1,6}|#[0-9]{1,7}|[a-zA-Z]{2,6});/g, (whole, ref: string) => {
+    if (ref[0] !== "#") return NAMED[ref] ?? whole
+    const code = ref[1] === "x" || ref[1] === "X" ? Number.parseInt(ref.slice(2), 16) : Number.parseInt(ref.slice(1), 10)
+    return code > 0 && code <= 0x10ffff && (code < 0xd800 || code > 0xdfff) ? String.fromCodePoint(code) : "\ufffd"
+  })
+}
+
+const isAsciiLetter = (c: string | undefined) => c !== undefined && /[A-Za-z]/.test(c)
+
+/** Read HTML into a tree of plain objects (never a DOM). */
+function readHtml(html: string): RichNode {
+  const root = { tag: "#root", attrs: {}, children: [] as RichNode[] }
+  const stack: { tag: string; attrs: Record<string, string>; children: RichNode[] }[] = [root]
+  const top = () => stack[stack.length - 1]
+  let i = 0
+  let text = ""
+  const flushText = () => {
+    if (text) top().children.push({ text: decodeEntities(text) })
+    text = ""
+  }
+  while (i < html.length) {
+    const c = html[i]
+    if (c === "<" && html.startsWith("<!--", i)) {
+      flushText()
+      const end = html.indexOf("-->", i + 4)
+      i = end < 0 ? html.length : end + 3
+      continue
+    }
+    if (c === "<" && html[i + 1] === "/" && isAsciiLetter(html[i + 2])) {
+      flushText()
+      let j = i + 2
+      while (j < html.length && /[A-Za-z0-9]/.test(html[j])) j++
+      const name = html.slice(i + 2, j).toLowerCase()
+      const end = html.indexOf(">", j)
+      i = end < 0 ? html.length : end + 1
+      for (let k = stack.length - 1; k > 0; k--) {
+        if (stack[k].tag === name) {
+          stack.length = k
+          break
+        }
+      }
+      continue
+    }
+    if (c === "<" && isAsciiLetter(html[i + 1])) {
+      flushText()
+      let j = i + 1
+      while (j < html.length && /[A-Za-z0-9]/.test(html[j])) j++
+      const name = html.slice(i + 1, j).toLowerCase()
+      const attrs: Record<string, string> = {}
+      // Attributes: name, name=value, name="value", name='value', until `>`.
+      while (j < html.length && html[j] !== ">") {
+        if (/[\s/]/.test(html[j])) {
+          j++
+          continue
+        }
+        let k = j
+        while (k < html.length && !/[\s/>=]/.test(html[k])) k++
+        const key = html.slice(j, k).toLowerCase()
+        let value = ""
+        while (k < html.length && /\s/.test(html[k])) k++
+        if (html[k] === "=") {
+          k++
+          while (k < html.length && /\s/.test(html[k])) k++
+          const q = html[k]
+          if (q === '"' || q === "'") {
+            const close = html.indexOf(q, k + 1)
+            const stop = close < 0 ? html.length : close
+            value = html.slice(k + 1, stop)
+            k = stop + 1
+          } else {
+            const from = k
+            while (k < html.length && !/[\s>]/.test(html[k])) k++
+            value = html.slice(from, k)
+          }
+        }
+        if (key && !(key in attrs)) attrs[key] = decodeEntities(value)
+        j = Math.max(k, j + 1)
+      }
+      i = j + 1
+      if (DROP.has(name)) {
+        if (!VOID.has(name)) {
+          const closing = new RegExp(`</${name}`, "gi")
+          closing.lastIndex = i
+          const close = closing.exec(html)?.index ?? -1
+          const end = close < 0 ? -1 : html.indexOf(">", close)
+          i = end < 0 ? html.length : end + 1
+        }
+        continue
+      }
+      if (CLOSES_P.has(name) && top().tag === "p") stack.pop()
+      if (name === "li") {
+        for (let k = stack.length - 1; k > 0; k--) {
+          const t = stack[k].tag
+          if (t === "ul" || t === "ol") break
+          if (t === "li") {
+            stack.length = k
+            break
+          }
+        }
+      }
+      const el = { tag: name, attrs, children: [] as RichNode[] }
+      top().children.push(el)
+      if (!VOID.has(name)) stack.push(el)
+      continue
+    }
+    text += c
+    i++
+  }
+  flushText()
+  return root
+}
+
+const textOf = (n: RichNode): string => ("text" in n ? n.text : n.children.map(textOf).join(""))
+
+/** Escape the characters inline Markdown reads, so text from HTML stays text. */
+const escapeInline = (text: string) => text.replace(/[\\`*_[\]|<]/g, (c) => `\\${c}`)
+
+/** Escape what would start a block at the start of a line (`#`, `>`, `-`, `+`, `~`, `1.`). */
+const escapeLines = (text: string) =>
+  text
+    .split("\n")
+    .map((l) => l.replace(/^([#>+~-])/, "\\$1").replace(/^(\d{1,9})([.)])/, "$1\\$2"))
+    .join("\n")
+
+/**
+ * Rich text to Markdown. Block elements and `<br>` end a line; a list item is one line with its
+ * marker (its own paragraphs joined, as editors such as ProseMirror wrap them); bold, italic and
+ * code keep their marks, links their address (still checked by `safeHref` when the Markdown is
+ * read). Text is escaped, so `# x` or `**x**` typed into an editor stays text. Script-like
+ * elements are dropped with their content.
+ */
+export function htmlToMarkdown(html: string): string {
+  const inline = (node: RichNode): string => {
+    if ("text" in node) return escapeInline(node.text.replace(/\s+/g, " "))
+    let s = ""
+    for (const child of node.children) {
+      if ("text" in child) {
+        s += inline(child)
+        continue
+      }
+      const tag = child.tag
+      if (tag === "br") s += "\n"
+      else if (tag === "strong" || tag === "b") s += `**${inline(child).trim()}**`
+      else if (tag === "em" || tag === "i") s += `*${inline(child).trim()}*`
+      else if (tag === "code") s += `\`${textOf(child).replace(/`/g, "").replace(/\s+/g, " ")}\``
+      else if (tag === "a") s += `[${inline(child).trim()}](<${(child.attrs.href ?? "").replace(/[<>\s]/g, "")}>)`
+      else if (/^(p|div|h[1-6]|blockquote|li|ul|ol|pre|tr|td|th)$/.test(tag)) s += " " + inline(child) + " "
+      else s += inline(child)
+    }
+    return s
+  }
+  /** One block's text: spaces collapsed per line, line starts escaped. */
+  const lines = (s: string) =>
+    escapeLines(
+      s
+        .split("\n")
+        .map((l) => l.replace(/\s+/g, " ").trim())
+        .join("\n")
+        .trim()
+    )
+  const blocks: string[] = []
+  const walk = (node: RichNode) => {
+    if ("text" in node) return
+    let loose = ""
+    const flush = () => {
+      const t = lines(loose)
+      if (t) blocks.push(t)
+      loose = ""
+    }
+    for (const child of node.children) {
+      if ("text" in child) {
+        loose += inline(child)
+        continue
+      }
+      const tag = child.tag
+      if (tag === "ul" || tag === "ol") {
+        flush()
+        let n = 0
+        const items: string[] = []
+        for (const li of child.children)
+          if (!("text" in li) && li.tag === "li") {
+            n += 1
+            const t = inline(li).replace(/\s+/g, " ").trim()
+            if (t) items.push((tag === "ol" ? `${n}. ` : "- ") + t)
+          }
+        if (items.length) blocks.push(items.join("\n"))
+      } else if (/^h[1-6]$/.test(tag)) {
+        flush()
+        const t = inline(child).replace(/\s+/g, " ").trim()
+        if (t) blocks.push("#".repeat(Number(tag[1])) + " " + t)
+      } else if (tag === "pre") {
+        flush()
+        const t = textOf(child).replace(/^\n|\n$/g, "")
+        // A fence longer than any run of `~` inside, so no line of the code can close it.
+        const longest = (t.match(/~+/g) ?? []).reduce((n, m) => Math.max(n, m.length), 0)
+        const fence = "~".repeat(Math.max(3, longest + 1))
+        if (t.trim()) blocks.push(`${fence}\n${t}\n${fence}`)
+      } else if (tag === "hr") {
+        flush()
+        blocks.push("---")
+      } else if (tag === "p" || tag === "blockquote") {
+        flush()
+        const t = lines(inline(child))
+        if (t) blocks.push(tag === "blockquote" ? t.replace(/^/gm, "> ") : t)
+      } else if (CONTAINERS.has(tag)) {
+        flush()
+        walk(child)
+      } else loose += inline({ tag: "#span", attrs: {}, children: [child] })
+    }
+    flush()
+  }
+  walk(readHtml(html))
+  return blocks.join("\n\n")
+}
 
 const LOOKS_HTML = /<\/?(?:p|br|div|ul|ol|li|h[1-6]|strong|em|b|i|u|span|a|blockquote|pre|code)\b[^>]*>/i
 
@@ -609,105 +857,14 @@ export function looksLikeRichText(text: string): boolean {
   return LOOKS_HTML.test(text)
 }
 
-/** Escape the characters inline Markdown reads, so text from HTML stays text. */
-const escapeInline = (text: string) => text.replace(/[\\`*_[\]]/g, (c) => `\\${c}`)
-
 /**
- * Rich text to Markdown, through a `DOMParser` (which parses without running anything: no
- * scripts, no event handlers, no image loads). Block elements and `<br>` end a line; a list
- * item is one line with its marker (its own paragraphs joined, as editors such as ProseMirror
- * wrap them); bold, italic and code keep their marks, links their address (still checked by
- * `safeHref` when the Markdown is read). Scripts, styles and templates are dropped.
- */
-export function htmlToMarkdown(html: string, Parser: new () => DOMParser): string {
-  const doc = new Parser().parseFromString(html, "text/html")
-  const DROP = new Set(["script", "style", "template", "noscript", "iframe", "object"])
-  const inline = (node: Node): string => {
-    let s = ""
-    for (const child of Array.from(node.childNodes)) {
-      if (child.nodeType === 3) {
-        s += escapeInline((child.textContent ?? "").replace(/\s+/g, " "))
-        continue
-      }
-      if (child.nodeType !== 1) continue
-      const el = child as Element
-      const tag = el.tagName.toLowerCase()
-      if (DROP.has(tag)) continue
-      if (tag === "br") s += "\n"
-      else if (tag === "strong" || tag === "b") s += `**${inline(el).trim()}**`
-      else if (tag === "em" || tag === "i") s += `*${inline(el).trim()}*`
-      else if (tag === "code") s += `\`${(el.textContent ?? "").replace(/`/g, "")}\``
-      else if (tag === "a") s += `[${inline(el).trim()}](<${(el.getAttribute("href") ?? "").replace(/[<>\s]/g, "")}>)`
-      else if (/^(p|div|h[1-6]|blockquote|li)$/.test(tag)) s += " " + inline(el) + " "
-      else s += inline(el)
-    }
-    return s
-  }
-  const blocks: string[] = []
-  const walk = (node: Node) => {
-    let loose = ""
-    const flush = () => {
-      if (loose.trim()) blocks.push(loose.trim())
-      loose = ""
-    }
-    for (const child of Array.from(node.childNodes)) {
-      if (child.nodeType !== 1) {
-        if (child.nodeType === 3) loose += escapeInline(child.textContent ?? "")
-        continue
-      }
-      const el = child as Element
-      const tag = el.tagName.toLowerCase()
-      if (DROP.has(tag)) continue
-      if (tag === "ul" || tag === "ol") {
-        flush()
-        let n = 0
-        const items: string[] = []
-        for (const li of Array.from(el.children))
-          if (li.tagName.toLowerCase() === "li") {
-            n += 1
-            const t = inline(li).replace(/\s+/g, " ").trim()
-            if (t) items.push((tag === "ol" ? `${n}. ` : "- ") + t)
-          }
-        if (items.length) blocks.push(items.join("\n"))
-      } else if (/^h[1-6]$/.test(tag)) {
-        flush()
-        const t = inline(el).replace(/\s+/g, " ").trim()
-        if (t) blocks.push("#".repeat(Number(tag[1])) + " " + t)
-      } else if (tag === "pre") {
-        flush()
-        const t = (el.textContent ?? "").replace(/^\n|\n$/g, "")
-        if (t.trim()) blocks.push("~~~\n" + t.replace(/^~~~/gm, " ~~~") + "\n~~~")
-      } else if (tag === "hr") {
-        flush()
-        blocks.push("---")
-      } else if (/^(p|blockquote)$/.test(tag)) {
-        flush()
-        const t = inline(el)
-          .split("\n")
-          .map((l) => l.replace(/\s+/g, " ").trim())
-          .join("\n")
-          .trim()
-        if (t) blocks.push(tag === "blockquote" ? t.replace(/^/gm, "> ") : t)
-      } else if (tag === "div") {
-        flush()
-        walk(el)
-      } else loose += inline({ childNodes: [el] } as unknown as Node)
-    }
-    flush()
-  }
-  walk(doc.body)
-  return blocks.join("\n\n")
-}
-
-/**
- * The tree for a `markdown-renderer`'s props: rich text first read into Markdown where
- * `from` asks for it and a `DOMParser` exists (in a browser, or jsdom). Without one (server
- * rendering) the text is read as Markdown, so its tags show as text and are never parsed.
+ * The tree for a `markdown-renderer`'s props: rich text first read into Markdown where `from`
+ * asks for it (`html`, or `auto` when the text holds an editor's tags). The same on every
+ * platform, so a server render and a browser hydration agree.
  */
 export function markdownBlocks(content: string, options: MarkdownOptions = {}): MarkdownBlock[] {
   const { links = "safe", from = "markdown" } = options
-  const Parser = "Parser" in options ? options.Parser : (globalThis as { DOMParser?: new () => DOMParser }).DOMParser
   const text = typeof content === "string" ? content : ""
   const rich = from === "html" || (from === "auto" && looksLikeRichText(text))
-  return parseMarkdown(rich && Parser ? htmlToMarkdown(text, Parser) : text, links)
+  return parseMarkdown(rich ? htmlToMarkdown(text) : text, links)
 }

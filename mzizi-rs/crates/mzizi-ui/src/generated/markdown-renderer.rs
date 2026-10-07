@@ -21,8 +21,8 @@
 //! The parser is the same, rule for rule, as `markdown-parse.ts`: paragraphs with every line
 //! break kept, ATX headings, nested bulleted and numbered lists, blockquotes, fenced code,
 //! rules and GFM tables; code spans, links, bold, italic and backslash escapes. Rich-text HTML
-//! (`from: Html`) needs a DOMParser, which this build does not have: it reads such text as
-//! Markdown, so its tags show as text (the contract records the gap).
+//! (`from: Html`) is read into Markdown by the same small reader (`html_to_markdown`), which
+//! builds plain values and never a DOM.
 //!
 //! Written against the contract, NOT machine-translated from the `.tsx` (registry issue #222,
 //! rule 1). Self-contained, like every file in this crate.
@@ -134,9 +134,9 @@ pub enum MarkdownSource {
     /// Markdown.
     #[default]
     Markdown,
-    /// Rich-text HTML. Without a DOMParser in this build it is read as Markdown, as text.
+    /// Rich-text HTML (an editor's), read into Markdown by [`html_to_markdown`].
     Html,
-    /// Rich text when it holds an editor's tags, Markdown otherwise. Read as Markdown here.
+    /// Rich text when it holds an editor's tags ([`looks_like_rich_text`]), Markdown otherwise.
     Auto,
 }
 
@@ -145,6 +145,11 @@ pub const MAX_NESTING: usize = 8;
 const MAX_INLINE_DEPTH: usize = 16;
 const MAX_LABEL: usize = 1000;
 const MAX_DEST: usize = 2048;
+/// The scanning budget of one inline parse (`BUDGET_BASE + BUDGET_PER_CHAR` × its length): when
+/// it runs out, markers still looking for a partner read as text, so hostile text cannot make
+/// the work quadratic. The same numbers as `markdown-parse.ts`.
+const BUDGET_BASE: usize = 100_000;
+const BUDGET_PER_CHAR: usize = 32;
 
 // ─── Classes (the same strings as `MARKDOWN_CLASSES` in markdown-parse.ts) ──────────────────
 
@@ -309,6 +314,7 @@ struct InlineParser<'a> {
     no_closer: Vec<(char, usize)>,
     code_ends: std::collections::HashMap<usize, Option<usize>>,
     unpaired: std::collections::HashSet<usize>,
+    budget: usize,
 }
 
 struct LinkAt {
@@ -325,7 +331,17 @@ impl<'a> InlineParser<'a> {
             no_closer: Vec::new(),
             code_ends: std::collections::HashMap::new(),
             unpaired: std::collections::HashSet::new(),
+            budget: BUDGET_BASE + BUDGET_PER_CHAR * s.len(),
         }
+    }
+
+    /// Spend one scanning step; false when the budget is gone.
+    fn step(&mut self) -> bool {
+        if self.budget == 0 {
+            return false;
+        }
+        self.budget -= 1;
+        true
     }
 
     fn at(&self, i: usize) -> Option<char> {
@@ -356,6 +372,9 @@ impl<'a> InlineParser<'a> {
         }
         let mut j = from;
         while j < to {
+            if !self.step() {
+                return None;
+            }
             let ch = self.s[j];
             if ch == '\\' {
                 j += 2;
@@ -511,6 +530,9 @@ impl<'a> InlineParser<'a> {
         let mut j = i;
         let label_to = to.min(i + MAX_LABEL);
         while j < label_to {
+            if !self.step() {
+                return None;
+            }
             let ch = self.s[j];
             if ch == '\\' {
                 j += 2;
@@ -541,6 +563,9 @@ impl<'a> InlineParser<'a> {
         let mut k = j + 2;
         let dest_to = to.min(k + MAX_DEST);
         while k < dest_to {
+            if !self.step() {
+                return None;
+            }
             let ch = self.s[k];
             if ch == '\\' {
                 k += 2;
@@ -981,6 +1006,543 @@ pub fn parse_markdown(text: &str, policy: MarkdownLinks) -> Vec<Block> {
     BlockParser { policy }.parse(&lines, 0)
 }
 
+// ─── Rich text ──────────────────────────────────────────────────────────────────────────────
+//
+// The same reader as `markdown-parse.ts`: HTML into a tree of plain values (never a DOM, so
+// nothing in it runs or loads), then into Markdown with its text escaped.
+
+enum RichNode {
+    Text(String),
+    El {
+        tag: String,
+        attrs: Vec<(String, String)>,
+        children: Vec<RichNode>,
+    },
+}
+
+const VOID: &[&str] = &[
+    "br", "hr", "img", "input", "meta", "link", "wbr", "area", "base", "col", "embed", "source",
+    "track", "param",
+];
+const DROP: &[&str] = &[
+    "script", "style", "template", "noscript", "iframe", "object", "textarea", "title", "xmp",
+    "head", "svg", "math",
+];
+const CLOSES_P: &[&str] = &[
+    "p",
+    "div",
+    "ul",
+    "ol",
+    "li",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "blockquote",
+    "pre",
+    "hr",
+    "table",
+];
+const CONTAINERS: &[&str] = &[
+    "div", "html", "body", "main", "section", "article", "header", "footer", "aside", "nav",
+    "figure", "center", "form", "table", "thead", "tbody", "tfoot", "tr", "td", "th",
+];
+
+/// Decode the character references editors write: `&amp; &lt; &gt; &quot; &apos; &nbsp;` and
+/// numeric ones. Anything else stays as written.
+#[must_use]
+pub fn decode_entities(text: &str) -> String {
+    let c: Vec<char> = text.chars().collect();
+    let mut out = String::with_capacity(text.len());
+    let mut i = 0;
+    while i < c.len() {
+        if c[i] == '&' {
+            if let Some((decoded, len)) = entity_at(&c[i + 1..]) {
+                out.push_str(&decoded);
+                i += 1 + len;
+                continue;
+            }
+        }
+        out.push(c[i]);
+        i += 1;
+    }
+    out
+}
+
+/// The reference after a `&`: its text and the characters it spans (including the `;`).
+fn entity_at(c: &[char]) -> Option<(String, usize)> {
+    let run = |from: usize, ok: fn(&char) -> bool| {
+        c[from.min(c.len())..].iter().take_while(|x| ok(x)).count()
+    };
+    if c.first() == Some(&'#') {
+        let (from, radix, max) = if matches!(c.get(1), Some('x' | 'X')) {
+            (2, 16, 6)
+        } else {
+            (1, 10, 7)
+        };
+        let n = if radix == 16 {
+            run(from, char::is_ascii_hexdigit)
+        } else {
+            run(from, char::is_ascii_digit)
+        };
+        if n == 0 || n > max || c.get(from + n) != Some(&';') {
+            return None;
+        }
+        let digits: String = c[from..from + n].iter().collect();
+        let code = u32::from_str_radix(&digits, radix).ok()?;
+        let ch = if code > 0 { char::from_u32(code) } else { None }.unwrap_or('\u{fffd}');
+        return Some((ch.to_string(), from + n + 1));
+    }
+    let n = run(0, char::is_ascii_alphabetic);
+    if !(2..=6).contains(&n) || c.get(n) != Some(&';') {
+        return None;
+    }
+    let name: String = c[..n].iter().collect();
+    let v = match name.as_str() {
+        "amp" => "&",
+        "lt" => "<",
+        "gt" => ">",
+        "quot" => "\"",
+        "apos" => "'",
+        "nbsp" => "\u{a0}",
+        _ => return Some((format!("&{name};"), n + 1)),
+    };
+    Some((v.to_owned(), n + 1))
+}
+
+/// An open element while reading: tag, attributes, children.
+type Open = (String, Vec<(String, String)>, Vec<RichNode>);
+
+fn read_html(html: &str) -> Vec<RichNode> {
+    let h: Vec<char> = html.chars().collect();
+    let len = h.len();
+    let find = |from: usize, pat: &str| -> Option<usize> {
+        let p: Vec<char> = pat.chars().collect();
+        (from..len).find(|&k| k + p.len() <= len && h[k..k + p.len()] == p[..])
+    };
+    let lower_slice =
+        |a: usize, b: usize| -> String { h[a..b].iter().collect::<String>().to_lowercase() };
+    // The open elements; index 0 is the root.
+    let mut stack: Vec<Open> = vec![("#root".into(), Vec::new(), Vec::new())];
+    fn close_to(stack: &mut Vec<Open>, k: usize) {
+        while stack.len() > k {
+            let (tag, attrs, children) = stack.pop().expect("an open element");
+            stack.last_mut().expect("the root").2.push(RichNode::El {
+                tag,
+                attrs,
+                children,
+            });
+        }
+    }
+    let mut text = String::new();
+    let flush = |stack: &mut Vec<Open>, text: &mut String| {
+        if !text.is_empty() {
+            let t = decode_entities(text);
+            stack
+                .last_mut()
+                .expect("the root")
+                .2
+                .push(RichNode::Text(t));
+            text.clear();
+        }
+    };
+    let letter = |k: usize| h.get(k).is_some_and(char::is_ascii_alphabetic);
+    let mut i = 0;
+    while i < len {
+        let c = h[i];
+        if c == '<' && h[i..].starts_with(&['<', '!', '-', '-']) {
+            flush(&mut stack, &mut text);
+            i = find(i + 4, "-->").map_or(len, |e| e + 3);
+            continue;
+        }
+        if c == '<' && h.get(i + 1) == Some(&'/') && letter(i + 2) {
+            flush(&mut stack, &mut text);
+            let mut j = i + 2;
+            while j < len && h[j].is_ascii_alphanumeric() {
+                j += 1;
+            }
+            let name = lower_slice(i + 2, j);
+            i = find(j, ">").map_or(len, |e| e + 1);
+            if let Some(k) = (1..stack.len()).rev().find(|&k| stack[k].0 == name) {
+                close_to(&mut stack, k);
+            }
+            continue;
+        }
+        if c == '<' && letter(i + 1) {
+            flush(&mut stack, &mut text);
+            let mut j = i + 1;
+            while j < len && h[j].is_ascii_alphanumeric() {
+                j += 1;
+            }
+            let name = lower_slice(i + 1, j);
+            let mut attrs: Vec<(String, String)> = Vec::new();
+            while j < len && h[j] != '>' {
+                if h[j].is_whitespace() || h[j] == '/' {
+                    j += 1;
+                    continue;
+                }
+                let mut k = j;
+                while k < len && !(h[k].is_whitespace() || matches!(h[k], '/' | '>' | '=')) {
+                    k += 1;
+                }
+                let key = lower_slice(j, k);
+                let mut value = String::new();
+                while k < len && h[k].is_whitespace() {
+                    k += 1;
+                }
+                if h.get(k) == Some(&'=') {
+                    k += 1;
+                    while k < len && h[k].is_whitespace() {
+                        k += 1;
+                    }
+                    match h.get(k) {
+                        Some(&q) if q == '"' || q == '\'' => {
+                            let stop = (k + 1..len).find(|&x| h[x] == q).unwrap_or(len);
+                            value = h[k + 1..stop].iter().collect();
+                            k = stop + 1;
+                        }
+                        _ => {
+                            let from = k;
+                            while k < len && !(h[k].is_whitespace() || h[k] == '>') {
+                                k += 1;
+                            }
+                            value = h[from..k].iter().collect();
+                        }
+                    }
+                }
+                if !key.is_empty() && !attrs.iter().any(|(a, _)| *a == key) {
+                    attrs.push((key, decode_entities(&value)));
+                }
+                j = k.max(j + 1);
+            }
+            i = j + 1;
+            if DROP.contains(&name.as_str()) {
+                if !VOID.contains(&name.as_str()) {
+                    // `</name`, in any case.
+                    let pat: Vec<char> = format!("</{name}").chars().collect();
+                    let close = (i..len).find(|&k| {
+                        k + pat.len() <= len
+                            && h[k..k + pat.len()]
+                                .iter()
+                                .zip(&pat)
+                                .all(|(a, b)| a.to_ascii_lowercase() == *b)
+                    });
+                    i = close.and_then(|c| find(c, ">")).map_or(len, |e| e + 1);
+                }
+                continue;
+            }
+            if CLOSES_P.contains(&name.as_str())
+                && stack.len() > 1
+                && stack[stack.len() - 1].0 == "p"
+            {
+                let top = stack.len() - 1;
+                close_to(&mut stack, top);
+            }
+            if name == "li" {
+                for k in (1..stack.len()).rev() {
+                    let t = stack[k].0.as_str();
+                    if t == "ul" || t == "ol" {
+                        break;
+                    }
+                    if t == "li" {
+                        close_to(&mut stack, k);
+                        break;
+                    }
+                }
+            }
+            if VOID.contains(&name.as_str()) {
+                stack.last_mut().expect("the root").2.push(RichNode::El {
+                    tag: name,
+                    attrs,
+                    children: Vec::new(),
+                });
+            } else {
+                stack.push((name, attrs, Vec::new()));
+            }
+            continue;
+        }
+        text.push(c);
+        i += 1;
+    }
+    flush(&mut stack, &mut text);
+    close_to(&mut stack, 1);
+    stack
+        .pop()
+        .map(|(_, _, children)| children)
+        .unwrap_or_default()
+}
+
+fn text_of(n: &RichNode) -> String {
+    match n {
+        RichNode::Text(t) => t.clone(),
+        RichNode::El { children, .. } => children.iter().map(text_of).collect(),
+    }
+}
+
+fn collapse(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    let mut space = false;
+    for c in s.chars() {
+        if c.is_whitespace() {
+            if !space {
+                out.push(' ');
+            }
+            space = true;
+        } else {
+            out.push(c);
+            space = false;
+        }
+    }
+    out
+}
+
+fn escape_inline(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    for c in text.chars() {
+        if matches!(c, '\\' | '`' | '*' | '_' | '[' | ']' | '|' | '<') {
+            out.push('\\');
+        }
+        out.push(c);
+    }
+    out
+}
+
+fn escape_lines(text: &str) -> String {
+    text.split('\n')
+        .map(|l| {
+            if l.starts_with(['#', '>', '+', '~', '-']) {
+                return format!("\\{l}");
+            }
+            let digits = l.chars().take_while(char::is_ascii_digit).count();
+            if (1..=9).contains(&digits) && l[digits..].starts_with(['.', ')']) {
+                return format!("{}\\{}", &l[..digits], &l[digits..]);
+            }
+            l.to_owned()
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+fn rich_inline(nodes: &[RichNode]) -> String {
+    let mut s = String::new();
+    for child in nodes {
+        match child {
+            RichNode::Text(t) => s.push_str(&escape_inline(&collapse(t))),
+            RichNode::El {
+                tag,
+                attrs,
+                children,
+            } => match tag.as_str() {
+                "br" => s.push('\n'),
+                "strong" | "b" => s.push_str(&format!("**{}**", rich_inline(children).trim())),
+                "em" | "i" => s.push_str(&format!("*{}*", rich_inline(children).trim())),
+                "code" => s.push_str(&format!("`{}`", collapse(&text_of(child).replace('`', "")))),
+                "a" => {
+                    let href: String = attrs
+                        .iter()
+                        .find(|(k, _)| k == "href")
+                        .map(|(_, v)| {
+                            v.chars()
+                                .filter(|c| !(matches!(c, '<' | '>') || c.is_whitespace()))
+                                .collect()
+                        })
+                        .unwrap_or_default();
+                    s.push_str(&format!("[{}](<{href}>)", rich_inline(children).trim()));
+                }
+                "p" | "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote" | "li"
+                | "ul" | "ol" | "pre" | "tr" | "td" | "th" => {
+                    s.push(' ');
+                    s.push_str(&rich_inline(children));
+                    s.push(' ');
+                }
+                _ => s.push_str(&rich_inline(children)),
+            },
+        }
+    }
+    s
+}
+
+/// One block's text: whitespace collapsed per line, line starts escaped.
+fn rich_lines(s: &str) -> String {
+    let joined = s
+        .split('\n')
+        .map(|l| collapse(l).trim().to_owned())
+        .collect::<Vec<_>>()
+        .join("\n");
+    escape_lines(joined.trim())
+}
+
+fn rich_walk(nodes: &[RichNode], blocks: &mut Vec<String>) {
+    let mut loose = String::new();
+    let flush = |loose: &mut String, blocks: &mut Vec<String>| {
+        let t = rich_lines(loose);
+        if !t.is_empty() {
+            blocks.push(t);
+        }
+        loose.clear();
+    };
+    for child in nodes {
+        let RichNode::El { tag, children, .. } = child else {
+            loose.push_str(&rich_inline(std::slice::from_ref(child)));
+            continue;
+        };
+        let tag = tag.as_str();
+        if tag == "ul" || tag == "ol" {
+            flush(&mut loose, blocks);
+            let mut n = 0;
+            let mut items = Vec::new();
+            for li in children {
+                if let RichNode::El {
+                    tag: t,
+                    children: c,
+                    ..
+                } = li
+                {
+                    if t == "li" {
+                        n += 1;
+                        let text = collapse(&rich_inline(c)).trim().to_owned();
+                        if !text.is_empty() {
+                            items.push(if tag == "ol" {
+                                format!("{n}. {text}")
+                            } else {
+                                format!("- {text}")
+                            });
+                        }
+                    }
+                }
+            }
+            if !items.is_empty() {
+                blocks.push(items.join("\n"));
+            }
+        } else if tag.len() == 2 && tag.starts_with('h') && matches!(tag.as_bytes()[1], b'1'..=b'6')
+        {
+            flush(&mut loose, blocks);
+            let text = collapse(&rich_inline(children)).trim().to_owned();
+            if !text.is_empty() {
+                let level = usize::from(tag.as_bytes()[1] - b'0');
+                blocks.push(format!("{} {text}", "#".repeat(level)));
+            }
+        } else if tag == "pre" {
+            flush(&mut loose, blocks);
+            let all = text_of(child);
+            let t = all.strip_prefix('\n').unwrap_or(&all);
+            let t = t.strip_suffix('\n').unwrap_or(t);
+            if !t.trim().is_empty() {
+                let mut longest = 0;
+                let mut run = 0;
+                for c in t.chars() {
+                    run = if c == '~' { run + 1 } else { 0 };
+                    longest = longest.max(run);
+                }
+                let fence = "~".repeat((longest + 1).max(3));
+                blocks.push(format!("{fence}\n{t}\n{fence}"));
+            }
+        } else if tag == "hr" {
+            flush(&mut loose, blocks);
+            blocks.push("---".to_owned());
+        } else if tag == "p" || tag == "blockquote" {
+            flush(&mut loose, blocks);
+            let t = rich_lines(&rich_inline(children));
+            if !t.is_empty() {
+                blocks.push(if tag == "blockquote" {
+                    t.split('\n')
+                        .map(|l| format!("> {l}"))
+                        .collect::<Vec<_>>()
+                        .join("\n")
+                } else {
+                    t
+                });
+            }
+        } else if CONTAINERS.contains(&tag) {
+            flush(&mut loose, blocks);
+            rich_walk(children, blocks);
+        } else {
+            loose.push_str(&rich_inline(std::slice::from_ref(child)));
+        }
+    }
+    flush(&mut loose, blocks);
+}
+
+/// Rich text (an editor's HTML) to Markdown, as `htmlToMarkdown` in `markdown-parse.ts` does.
+#[must_use]
+pub fn html_to_markdown(html: &str) -> String {
+    let mut blocks = Vec::new();
+    rich_walk(&read_html(html), &mut blocks);
+    blocks.join("\n\n")
+}
+
+/// Whether text reads as rich text: it holds an editor's block or inline tags.
+#[must_use]
+pub fn looks_like_rich_text(text: &str) -> bool {
+    const TAGS: &[&str] = &[
+        "p",
+        "br",
+        "div",
+        "ul",
+        "ol",
+        "li",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "strong",
+        "em",
+        "b",
+        "i",
+        "u",
+        "span",
+        "a",
+        "blockquote",
+        "pre",
+        "code",
+    ];
+    let c: Vec<char> = text.chars().collect();
+    let Some(last_gt) = c.iter().rposition(|&x| x == '>') else {
+        return false;
+    };
+    (0..c.len()).any(|i| {
+        if c[i] != '<' {
+            return false;
+        }
+        let from = if c.get(i + 1) == Some(&'/') {
+            i + 2
+        } else {
+            i + 1
+        };
+        let n = c[from.min(c.len())..]
+            .iter()
+            .take_while(|x| x.is_ascii_alphanumeric())
+            .count();
+        let name: String = c[from..from + n]
+            .iter()
+            .collect::<String>()
+            .to_ascii_lowercase();
+        n > 0
+            && TAGS.contains(&name.as_str())
+            && c.get(from + n) != Some(&'_')
+            && last_gt >= from + n
+    })
+}
+
+/// The tree for a renderer's props: rich text read into Markdown first where `from` asks.
+#[must_use]
+pub fn markdown_blocks(content: &str, links: MarkdownLinks, from: MarkdownSource) -> Vec<Block> {
+    let rich = match from {
+        MarkdownSource::Markdown => false,
+        MarkdownSource::Html => true,
+        MarkdownSource::Auto => looks_like_rich_text(content),
+    };
+    if rich {
+        parse_markdown(&html_to_markdown(content), links)
+    } else {
+        parse_markdown(content, links)
+    }
+}
+
 // ─── Rendering ──────────────────────────────────────────────────────────────────────────────
 
 fn render_inlines(c: &[Inline]) -> Element {
@@ -1137,7 +1699,7 @@ pub struct MarkdownRendererProps {
     /// Which link addresses are kept.
     #[props(default)]
     pub links: MarkdownLinks,
-    /// What `content` is (rich-text HTML is read as Markdown in this build).
+    /// What `content` is: Markdown, or an editor's HTML read into Markdown first.
     #[props(default)]
     pub from: MarkdownSource,
     /// The heading level a `#` heading renders at (1–6).
@@ -1154,7 +1716,7 @@ pub struct MarkdownRendererProps {
 /// Markdown, parsed into a typed tree and rendered as elements.
 #[component]
 pub fn MarkdownRenderer(props: MarkdownRendererProps) -> Element {
-    let blocks = parse_markdown(&props.content, props.links);
+    let blocks = markdown_blocks(&props.content, props.links, props.from);
     rsx! {
         div {
             "data-slot": "markdown-renderer",
@@ -1185,6 +1747,8 @@ pub const CONTRACT: &str = r#"contract
   when xss shows p "js tab split data vb"
   when base shows h3 "Section"
   when base shows h6 "Deep"
+  when rich shows strong "now"
+  when rich shows p "Plan now"
 end"#;
 
 #[cfg(test)]
@@ -1401,9 +1965,27 @@ mod tests {
 
     #[test]
     fn pathological_input_stays_fast() {
-        let s = "*a ".repeat(20_000) + &"[".repeat(20_000) + &"`".repeat(5_000);
+        // Unmatched markers inside a bold run, a line of `[`, a long backtick run, and
+        // rich text full of unclosed tags: each would be quadratic without the scan budget.
+        let inputs = [
+            "*a ".repeat(20_000) + &"[".repeat(20_000) + &"`".repeat(5_000),
+            "**".to_owned() + &"*x ".repeat(32_000) + "y**",
+            "**".to_owned() + &"_x ".repeat(32_000) + "y**",
+            "*".to_owned() + &"**x ".repeat(32_000) + "y*",
+            "[".to_owned() + &"*x ".repeat(32_000) + "](https://x.org)",
+        ];
+        for s in &inputs {
+            let started = std::time::Instant::now();
+            let _ = parse_inlines(s, MarkdownLinks::Safe);
+            assert!(
+                started.elapsed().as_secs() < 2,
+                "took {:?}",
+                started.elapsed()
+            );
+        }
         let started = std::time::Instant::now();
-        let _ = parse_inlines(&s, MarkdownLinks::Safe);
+        let _ = html_to_markdown(&"<a <b <p>x<!--".repeat(20_000));
+        let _ = looks_like_rich_text(&"<".repeat(50_000));
         assert!(
             started.elapsed().as_secs() < 2,
             "took {:?}",

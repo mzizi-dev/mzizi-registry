@@ -11,24 +11,26 @@ import { describe, expect, it } from "vitest"
 
 import { MarkdownRenderer } from "@/components/registry/n2-primitives/markdown-renderer"
 import {
+  decodeEntities,
   htmlToMarkdown,
   looksLikeRichText,
   markdownBlocks,
   parseInlines,
-  parseMarkdown,
   safeHref,
 } from "@/components/registry/n2-primitives/markdown-parse"
 
 const fixture = JSON.parse(
   readFileSync(path.resolve(__dirname, "../fixtures/markdown-renderer.cases.json"), "utf8")
-) as { cases: { say: string; links?: "safe" | "https"; input: string; expect: unknown }[] }
+) as {
+  cases: { say: string; links?: "safe" | "https"; from?: "markdown" | "html" | "auto"; input: string; expect: unknown }[]
+}
 
 const html = (content: string, props: Record<string, unknown> = {}) =>
   renderToStaticMarkup(<MarkdownRenderer content={content} {...props} />)
 
-describe("parseMarkdown: the cases the Rust build also runs", () => {
+describe("markdownBlocks: the cases the Rust build also runs", () => {
   it.each(fixture.cases.map((c) => [c.say, c] as const))("%s", (_say, c) => {
-    expect(parseMarkdown(c.input, c.links ?? "safe")).toEqual(c.expect)
+    expect(markdownBlocks(c.input, { links: c.links ?? "safe", from: c.from ?? "markdown" })).toEqual(c.expect)
   })
 })
 
@@ -72,57 +74,41 @@ describe("parseInlines", () => {
   })
 })
 
-describe("rich text (DOMParser)", () => {
-  // The Toddle extension's case: an editor's paragraphs, breaks, marks and list items wrapped in paragraphs.
-  it("reads paragraphs, breaks, marks and list items, and drops scripts", () => {
-    expect(
-      markdownBlocks(
-        "<p>Allergy <strong>nuts</strong></p><p>Line a<br>Line b</p><ul><li><p>pen</p></li><li><p>card</p></li></ul><ol><li>call</li></ol><script>x()</script>",
-        { from: "auto" }
-      )
-    ).toEqual([
-      { kind: "p", lines: [[{ t: "text", v: "Allergy " }, { t: "strong", c: [{ t: "text", v: "nuts" }] }]] },
-      { kind: "p", lines: [[{ t: "text", v: "Line a" }], [{ t: "text", v: "Line b" }]] },
-      { kind: "ul", items: [{ lines: [[{ t: "text", v: "pen" }]], children: [] }, { lines: [[{ t: "text", v: "card" }]], children: [] }] },
-      { kind: "ol", start: 1, items: [{ lines: [[{ t: "text", v: "call" }]], children: [] }] },
-    ])
-  })
-
-  it("text in rich text stays text: markers are escaped, links are still checked", () => {
-    const md = htmlToMarkdown(
-      '<p>2 * 3 and [x](javascript:y)</p><p><a href="javascript:alert(1)">bad</a> <a href="https://x.org">good</a></p><pre>a < b</pre><h2>Head</h2><blockquote>Said</blockquote><hr>',
-      DOMParser
-    )
-    expect(parseMarkdown(md)).toEqual([
-      { kind: "p", lines: [[{ t: "text", v: "2 * 3 and [x](javascript:y)" }]] },
-      {
-        kind: "p",
-        lines: [[{ t: "text", v: "bad " }, { t: "link", href: "https://x.org", c: [{ t: "text", v: "good" }] }]],
-      },
-      { kind: "code", lang: "", v: "a < b" },
-      { kind: "h", level: 2, c: [{ t: "text", v: "Head" }] },
-      { kind: "quote", children: [{ kind: "p", lines: [[{ t: "text", v: "Said" }]] }] },
-      { kind: "hr" },
-    ])
-  })
-
-  it("an image's handler never runs: DOMParser parses without loading or running anything", () => {
+describe("rich text", () => {
+  it("is read without a DOM: nothing in it runs, loads or touches the document", () => {
     const w = window as unknown as { __mdr?: number }
     w.__mdr = 0
-    markdownBlocks('<p><img src="x" onerror="window.__mdr = 1"></p>', { from: "html" })
+    const before = document.documentElement.outerHTML.length
+    const md = htmlToMarkdown('<p>x<img src="x" onerror="window.__mdr = 1"><script>window.__mdr = 2</script></p>')
+    expect(md).toBe("x")
     expect(w.__mdr).toBe(0)
+    expect(document.documentElement.outerHTML.length).toBe(before)
+  })
+
+  it("gives the same tree with or without a browser (no hydration mismatch)", () => {
+    const g = globalThis as { DOMParser?: unknown }
+    const saved = g.DOMParser
+    const html = "<p>Hello <b>x</b></p>"
+    const inBrowser = markdownBlocks(html, { from: "html" })
+    g.DOMParser = undefined
+    try {
+      expect(markdownBlocks(html, { from: "html" })).toEqual(inBrowser)
+    } finally {
+      g.DOMParser = saved
+    }
+    expect(inBrowser).toEqual([{ kind: "p", lines: [[{ t: "text", v: "Hello " }, { t: "strong", c: [{ t: "text", v: "x" }] }]] }])
   })
 
   it("auto: only an editor's tags mark text as rich text", () => {
     expect(looksLikeRichText("<p>x</p>")).toBe(true)
+    expect(looksLikeRichText("<BR/>")).toBe(true)
     expect(looksLikeRichText("Score < 5 or > 9")).toBe(false)
     expect(looksLikeRichText("<img src=x onerror=alert(1)>")).toBe(false)
+    expect(looksLikeRichText("<b_x>")).toBe(false)
   })
 
-  it("without a DOMParser, rich text is read as Markdown: its tags are text", () => {
-    expect(markdownBlocks("<p>x</p>", { from: "html", Parser: undefined })).toEqual([
-      { kind: "p", lines: [[{ t: "text", v: "<p>x</p>" }]] },
-    ])
+  it("decodes character references", () => {
+    expect(decodeEntities("&lt;&amp;&#65;&#x42;&nbsp;&copy;&#0;")).toBe("<&AB\u00a0&copy;\ufffd")
   })
 })
 
@@ -170,9 +156,30 @@ describe("MarkdownRenderer (React)", () => {
     expect(out).toContain('aria-label="Notes"')
   })
 
-  it("renders large hostile input in reasonable time", () => {
+  it.each([
+    ["markers, brackets and backticks", "*a ".repeat(20_000) + "[".repeat(20_000) + "`".repeat(5_000)],
+    ["unmatched italics inside bold", "**" + "*x ".repeat(32_000) + "y**"],
+    ["unmatched underscores inside bold", "**" + "_x ".repeat(32_000) + "y**"],
+    ["unmatched bolds inside italic", "*" + "**x ".repeat(32_000) + "y*"],
+    ["unmatched italics inside a link", "[" + "*x ".repeat(32_000) + "](https://x.org)"],
+    ["deep quotes and lists", "> ".repeat(500) + "x\n" + "  ".repeat(500) + "- y"],
+  ])("renders hostile input in linear time: %s", (_say, input) => {
     const started = performance.now()
-    html("*a ".repeat(20_000) + "[".repeat(20_000) + "`".repeat(5_000) + "\n" + "> ".repeat(500) + "x\n" + "  ".repeat(500) + "- y")
-    expect(performance.now() - started).toBeLessThan(3000)
+    html(input)
+    expect(performance.now() - started).toBeLessThan(1500)
+  })
+
+  it("renders hostile rich text in linear time", () => {
+    const started = performance.now()
+    html("<a <b <p>x<!--".repeat(20_000), { from: "html" })
+    html("<".repeat(50_000), { from: "auto" })
+    expect(performance.now() - started).toBeLessThan(1500)
+  })
+
+  it("from=html renders an editor's text, with its markup as elements and its Markdown as text", () => {
+    const out = html("<p># Plan <strong>now</strong></p><script>alert(1)</script>", { from: "html" })
+    expect(out).not.toContain("<h1")
+    expect(out).not.toContain("<script")
+    expect(out).toContain("# Plan <strong>now</strong>")
   })
 })

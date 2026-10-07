@@ -1,5 +1,5 @@
 {
-  "$comment": "Markdown → tree cases shared by markdown-parse.ts (__tests__/components/markdown-renderer.test.tsx) and markdown-renderer.rs (mzizi-ui tests/contract.rs). The two parsers must produce exactly these trees.",
+  "$comment": "Markdown (or rich text, with `from`) → tree cases shared by markdown-parse.ts (__tests__/components/markdown-renderer.test.tsx) and markdown-renderer.rs (mzizi-ui tests/contract.rs). Both builds must produce exactly these trees.",
   "cases": [
     {
       "say": "one line, one paragraph",
@@ -1184,6 +1184,439 @@
                 }
               ]
             }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: paragraphs, breaks, marks, list items wrapped in paragraphs, scripts dropped",
+      "from": "html",
+      "input": "<p>Allergy <strong>nuts</strong></p><p>Line a<br>Line b</p><ul><li><p>pen</p></li><li><p>card</p></li></ul><ol><li>call</li></ol><script>x()</script>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Allergy "
+              },
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "nuts"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Line a"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "Line b"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "pen"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "card"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "ol",
+          "start": 1,
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "call"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: source newlines are spaces, not breaks",
+      "from": "html",
+      "input": "<div>\n  Hello\n  world <b>x</b>\n</div>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Hello world "
+              },
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "x"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: Markdown typed into an editor stays text",
+      "from": "html",
+      "input": "<p># not a heading</p><p>1. Intro</p><p>&gt; x</p><p>- dash</p><p>a | b</p><p>2 * 3 and [x](javascript:y) and **no**</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "# not a heading"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "1. Intro"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "> x"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "- dash"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a | b"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "2 * 3 and [x](javascript:y) and **no**"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: links keep their address and are still checked",
+      "from": "html",
+      "input": "<p><a href=\"javascript:alert(1)\">bad</a> <a href=' https://x.org/a?b=1&amp;c=2 '>good</a> <a href=\"&#106;avascript:alert(2)\">enc</a></p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "bad "
+              },
+              {
+                "t": "link",
+                "href": "https://x.org/a?b=1&c=2",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "good"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " enc"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: code, pre with fences inside, headings, quotes, rules",
+      "from": "html",
+      "input": "<p>run <code>a `b` c</code></p><pre>\nx &lt; 1\n~~~\n~~~~ y\n</pre><h3>Head <em>it</em></h3><blockquote><p>Said</p></blockquote><hr>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "run "
+              },
+              {
+                "t": "code",
+                "v": "a b c"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "code",
+          "lang": "",
+          "v": "x < 1\n~~~\n~~~~ y"
+        },
+        {
+          "kind": "h",
+          "level": 3,
+          "c": [
+            {
+              "t": "text",
+              "v": "Head "
+            },
+            {
+              "t": "em",
+              "c": [
+                {
+                  "t": "text",
+                  "v": "it"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "quote",
+          "children": [
+            {
+              "kind": "p",
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "Said"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "hr"
+        }
+      ]
+    },
+    {
+      "say": "rich text: documents, implied closes, comments, unknown and dropped tags",
+      "from": "html",
+      "input": "<html><head><title>t</title><style>p{}</style></head><body><!-- c --><p>one<p>two<span>three</span><ul><li>a<li>b</ul><iframe src=x>ignored</iframe><svg><text>gone</text></svg><custom-el>kept</custom-el></body></html>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "one"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "twothree"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "b"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "kept"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: entities, non-breaking spaces, unknown entities",
+      "from": "html",
+      "input": "<p>a&nbsp;&nbsp;b &copy; &#169; &#x1F600; &#0; &#xD800; &bogus;</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a b &copy; © 😀 � � &bogus;"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: images and handlers vanish",
+      "from": "html",
+      "input": "<p>x<img src=x onerror=alert(1)> y</p><img src=y onerror=alert(2)>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "x y"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "auto: an editor's tags mean rich text",
+      "from": "auto",
+      "input": "<p>Hi <em>there</em></p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Hi "
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "there"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "auto: angle brackets alone mean Markdown",
+      "from": "auto",
+      "input": "Score < 5 or > 9 <img src=x onerror=alert(1)>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Score < 5 or > 9 <img src=x onerror=alert(1)>"
+              }
+            ]
           ]
         }
       ]

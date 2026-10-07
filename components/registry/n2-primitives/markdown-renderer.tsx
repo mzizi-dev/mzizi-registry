@@ -29,7 +29,7 @@ interface MarkdownRendererProps extends Omit<React.ComponentProps<"div">, "child
   content: string
   /** `safe` keeps http, https, mailto, tel and relative links; `https` keeps https only. */
   links?: MarkdownLinkPolicy
-  /** `markdown`; `html` reads rich text through DOMParser; `auto` decides by its tags. */
+  /** `markdown`; `html` reads rich text (an editor's HTML) into Markdown first; `auto` decides by its tags. */
   from?: MarkdownSource
   /** The heading level a `#` heading renders at (1–6); deeper levels follow, capped at 6. */
   headingBase?: number

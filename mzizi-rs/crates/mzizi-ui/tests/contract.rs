@@ -428,7 +428,7 @@ fn safe_area_frame_classes_and_geometry_match_the_typescript() {
 mod markdown {
     use super::*;
     use mzizi_ui::markdown_renderer::{
-        Align, Block, Inline, List, MarkdownLinks, classes, parse_markdown,
+        Align, Block, Inline, List, MarkdownLinks, MarkdownSource, classes, markdown_blocks,
     };
     use serde_json::{Value, json};
 
@@ -574,13 +574,22 @@ mod markdown {
             .join("../../../__tests__/fixtures/markdown-renderer.cases.json");
         let fixture: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
         let cases = fixture["cases"].as_array().unwrap();
-        assert!(cases.len() >= 20, "the shared fixture has too few cases");
+        assert!(cases.len() >= 40, "the shared fixture has too few cases");
         for case in cases {
             let policy = match case["links"].as_str() {
                 Some("https") => MarkdownLinks::Https,
                 _ => MarkdownLinks::Safe,
             };
-            let got = blocks(&parse_markdown(case["input"].as_str().unwrap(), policy));
+            let from = match case["from"].as_str() {
+                Some("html") => MarkdownSource::Html,
+                Some("auto") => MarkdownSource::Auto,
+                _ => MarkdownSource::Markdown,
+            };
+            let got = blocks(&markdown_blocks(
+                case["input"].as_str().unwrap(),
+                policy,
+                from,
+            ));
             assert_eq!(
                 got,
                 case["expect"],
