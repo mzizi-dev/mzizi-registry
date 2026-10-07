@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/markdown-renderer",
   "title": "MarkdownRenderer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 2,
   "kind": "primitive",
   "summary": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list. One contract for the Astro, React and Mzizi Roots builds.",
@@ -66,11 +66,11 @@
     "Blocks: paragraphs (every line break is a hard break), ATX headings, bulleted and numbered lists nested by indentation (a numbered list keeps its first number), blockquotes, fenced code (``` or ~~~, the info word as data-language), horizontal rules and GFM tables with column alignment.",
     "Inlines: code spans, links, bold (** or __), italic (* or _), bold italic (***), backslash escapes. A marker with no partner, and an underscore inside a word, stay text.",
     "Raw HTML in the source is text: <script>, <img onerror> and <a href> show as written.",
-    "Links: tabs and newlines anywhere, and controls and spaces at either end, are removed first (browsers ignore them), then the scheme is checked against an allow-list. A refused link renders its words with no element around them. http and https links open in a new tab with rel=\"noopener noreferrer\".",
+    "Links: tabs and newlines anywhere, and controls and spaces at either end, are removed first (browsers ignore them), then an address with whitespace still inside is refused, the scheme is checked against an allow-list, and a web address (http, https or //host) needs a host and no credentials (https://bank.example@evil.example is refused). A refused link renders its words with no element around them. http and https links open in a new tab with rel=\"noopener noreferrer\".",
     "A link inside a link's words renders as its words.",
     "Nesting is bounded: lists and blockquotes 8 deep, inline marks 16 deep; deeper markers read as text.",
     "Hostile text stays linear: each inline parse has a scanning budget (100000 steps plus 32 per character); when it runs out, markers still looking for a partner read as text.",
-    "Rich text (from=html or auto): block elements and <br> end lines, source newlines are spaces, list items are one line each, bold, italic, code and links keep their meaning, script-like elements are dropped with their content, and every other tag is a plain container."
+    "Rich text (from=html or auto): block elements and <br> end lines, source newlines are spaces, list items are one line each with their nested lists kept (to 8 deep) and <ol start> kept, bold, italic, code and links keep their meaning, script-like elements are dropped with their content, and every other tag is a plain container."
   ],
   "states": {
     "default": {
@@ -81,7 +81,7 @@
     "xss": {
       "description": "Hostile input: every payload shows as text or loses its address.",
       "props": {
-        "content": "<img src=x onerror=alert(1)>\n\n[js](javascript:alert(1)) [tab](\tjavascript:alert(2)) [split](java\tscript:alert(3)) [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==) [vb](VBScript:msgbox(1)) [ok](https://example.org/a)\n\n| a | b |\n| - | - |\n| <script>alert(4)</script> | <img src=x onerror=alert(5)> |\n\n<script>alert(6)</script>\n\n<a href=\"javascript:alert(7)\">raw</a>"
+        "content": "<img src=x onerror=alert(1)>\n\n[js](javascript:alert(1)) [tab](\tjavascript:alert(2)) [split](java\tscript:alert(3)) [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==) [vb](VBScript:msgbox(1)) [ok](https://example.org/a)\n\n| a | b |\n| - | - |\n| <script>alert(4)</script> | <img src=x onerror=alert(5)> |\n\n<script>alert(6)</script>\n\n<a href=\"javascript:alert(7)\">raw</a>\n\n[cred](https://bank.example@evil.example/x)"
       }
     },
     "https": {
@@ -106,7 +106,7 @@
     "rich": {
       "description": "from=html: an editor's HTML, with Markdown typed into it and a script.",
       "props": {
-        "content": "<p># Plan <strong>now</strong></p><ul><li><p>pen</p></li></ul><script>alert(1)</script><p><a href=\"javascript:alert(2)\">bad</a> <a href=\"https://example.org/r\">good</a></p>",
+        "content": "<p># Plan <strong>now</strong></p><ul><li><p>pen</p><ol start=\"4\"><li>refill</li></ol></li></ul><script>alert(1)</script><p><a href=\"javascript:alert(2)\">bad</a> <a href=\"https://example.org/r\">good</a></p>",
         "from": "html"
       }
     }
@@ -290,6 +290,18 @@
       "state": "rich",
       "select": "a",
       "count": 1
+    },
+    {
+      "say": "Rich text keeps a nested list and its start.",
+      "state": "rich",
+      "select": "ul > li > ol[start=\"4\"] > li",
+      "count": 1
+    },
+    {
+      "say": "A link with credentials is refused.",
+      "state": "xss",
+      "select": "a[href=\"https://bank.example@evil.example/x\"]",
+      "absent": true
     }
   ],
   "gaps": [
