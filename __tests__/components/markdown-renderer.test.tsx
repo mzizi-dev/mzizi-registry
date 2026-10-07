@@ -178,6 +178,14 @@ describe("MarkdownRenderer (React)", () => {
     expect(performance.now() - started).toBeLessThan(1500)
   })
 
+  it("reads huge rich text without a stack overflow, and decides `auto` in linear time", () => {
+    const started = performance.now()
+    expect(html("<span>" + "<br>".repeat(150_000) + "x</span>", { from: "html" })).toContain("x")
+    expect(html("<p><span>" + "a<i></i>".repeat(150_000) + "</span></p>", { from: "html" })).toContain("aaa")
+    expect(looksLikeRichText("<p ".repeat(40_000))).toBe(false)
+    expect(performance.now() - started).toBeLessThan(3000)
+  })
+
   it("charges every marker run to the budget (no K×L work)", () => {
     const started = performance.now()
     html("**" + "*a ".repeat(2_000) + "a" + "*".repeat(1_000_000))

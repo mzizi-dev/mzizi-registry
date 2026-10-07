@@ -1551,7 +1551,7 @@
             [
               {
                 "t": "text",
-                "v": "a b &copy; © 😀 � � &bogus;"
+                "v": "a  b &copy; © 😀 � � &bogus;"
               }
             ]
           ]
@@ -1715,51 +1715,6 @@
                 "v": "y"
               }
             ]
-          ]
-        }
-      ]
-    },
-    {
-      "say": "rich text: breaks inside marks are spaces; nested lists flatten",
-      "from": "html",
-      "input": "<p><b>a<br>b</b><br>c</p><ul><li>one<ul><li>two</li></ul></li></ul>",
-      "expect": [
-        {
-          "kind": "p",
-          "lines": [
-            [
-              {
-                "t": "strong",
-                "c": [
-                  {
-                    "t": "text",
-                    "v": "a b"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "t": "text",
-                "v": "c"
-              }
-            ]
-          ]
-        },
-        {
-          "kind": "ul",
-          "items": [
-            {
-              "lines": [
-                [
-                  {
-                    "t": "text",
-                    "v": "one two"
-                  }
-                ]
-              ],
-              "children": []
-            }
           ]
         }
       ]
@@ -1988,6 +1943,188 @@
                     "v": "y"
                   }
                 ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: nested lists flatten into their item",
+      "from": "html",
+      "input": "<ul><li>one<ul><li>two</li></ul></li></ul>",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "one two"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "line and paragraph separators (U+2028, U+2029) are characters inside a line",
+      "input": "> a b\n\n- c d\n\n# e f\n\n```x y\nz\n```",
+      "expect": [
+        {
+          "kind": "quote",
+          "children": [
+            {
+              "kind": "p",
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "a b"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "c d"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "h",
+          "level": 1,
+          "c": [
+            {
+              "t": "text",
+              "v": "e f"
+            }
+          ]
+        },
+        {
+          "kind": "code",
+          "lang": "x",
+          "v": "z"
+        }
+      ]
+    },
+    {
+      "say": "rich text: a break inside bold, italic or a link splits the mark",
+      "from": "html",
+      "input": "<p><strong>a<br>b</strong> <em>c<br>d</em> <a href=\"https://x.org\">e<br>f</a></p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "b"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "c"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "d"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "https://x.org",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "e"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "t": "link",
+                "href": "https://x.org",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "f"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: non-breaking spaces are kept",
+      "from": "html",
+      "input": "<p>10&nbsp;km&nbsp;&nbsp;away  and <code>a&nbsp; b</code></p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "10 km  away and "
+              },
+              {
+                "t": "code",
+                "v": "a  b"
               }
             ]
           ]

@@ -291,12 +291,13 @@ fn trim_ws(s: &str) -> &str {
     s.trim_matches(is_ws)
 }
 
-/// Every run of whitespace as one space.
-fn collapse_ws(s: &str) -> String {
+/// Every run of HTML whitespace (tab, newline, form feed, carriage return, space) as one
+/// space. A non-breaking space is not collapsible, as in a browser.
+fn collapse_html_ws(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     let mut space = false;
     for c in s.chars() {
-        if is_ws(c) {
+        if matches!(c, '\t' | '\n' | '\u{c}' | '\r' | ' ') {
             if !space {
                 out.push(' ');
             }
@@ -1348,14 +1349,20 @@ enum Piece {
     Break,
 }
 
-fn only_inlines(pieces: Vec<Piece>) -> Vec<Inline> {
-    pieces
-        .into_iter()
-        .filter_map(|p| match p {
-            Piece::Inline(x) => Some(x),
-            Piece::Break => None,
-        })
-        .collect()
+/// Wrap each break-separated run of `pieces` in a mark, keeping the breaks between them: a
+/// break inside bold text splits the bold, so both lines stay bold.
+fn wrap_runs(pieces: Vec<Piece>, wrap: &dyn Fn(Vec<Inline>) -> Inline, out: &mut Vec<Piece>) {
+    let mut run = Vec::new();
+    for p in pieces {
+        match p {
+            Piece::Break => {
+                out.push(Piece::Inline(wrap(std::mem::take(&mut run))));
+                out.push(Piece::Break);
+            }
+            Piece::Inline(x) => run.push(x),
+        }
+    }
+    out.push(Piece::Inline(wrap(run)));
 }
 
 fn text_piece(v: &str) -> Piece {
@@ -1387,13 +1394,17 @@ fn rich_inlines(
             } else {
                 text_piece(" ")
             }),
-            "strong" | "b" => out.push(Piece::Inline(Inline::Strong(only_inlines(rich_inlines(
-                children, policy, in_link, false,
-            ))))),
-            "em" | "i" => out.push(Piece::Inline(Inline::Em(only_inlines(rich_inlines(
-                children, policy, in_link, false,
-            ))))),
-            "code" => out.push(Piece::Inline(Inline::Code(collapse_ws(&text_of(n))))),
+            "strong" | "b" => wrap_runs(
+                rich_inlines(children, policy, in_link, breaks),
+                &Inline::Strong,
+                &mut out,
+            ),
+            "em" | "i" => wrap_runs(
+                rich_inlines(children, policy, in_link, breaks),
+                &Inline::Em,
+                &mut out,
+            ),
+            "code" => out.push(Piece::Inline(Inline::Code(collapse_html_ws(&text_of(n))))),
             "a" => {
                 let href = if in_link {
                     None
@@ -1404,10 +1415,17 @@ fn rich_inlines(
                         .map_or("", |(_, v)| v.as_str());
                     safe_href(raw, policy)
                 };
-                let c = only_inlines(rich_inlines(children, policy, true, false));
+                let pieces = rich_inlines(children, policy, true, breaks);
                 match href {
-                    Some(href) => out.push(Piece::Inline(Inline::Link { href, children: c })),
-                    None => out.extend(c.into_iter().map(Piece::Inline)),
+                    Some(href) => wrap_runs(
+                        pieces,
+                        &|c| Inline::Link {
+                            href: href.clone(),
+                            children: c,
+                        },
+                        &mut out,
+                    ),
+                    None => out.extend(pieces),
                 }
             }
             t if BLOCKISH.contains(&t) => {
@@ -1421,13 +1439,14 @@ fn rich_inlines(
     out
 }
 
-/// Whitespace as a browser shows it: runs as one space, none after a space, none at the start.
+/// Whitespace as a browser shows it: HTML whitespace runs as one space, none after a space,
+/// none at the start; non-breaking spaces kept.
 fn normalize(items: Vec<Inline>, space: &mut bool) -> Vec<Inline> {
     let mut out: Vec<Inline> = Vec::new();
     for x in items {
         match x {
             Inline::Text(v) => {
-                let mut v = collapse_ws(&v);
+                let mut v = collapse_html_ws(&v);
                 if *space && v.starts_with(' ') {
                     v.remove(0);
                 }

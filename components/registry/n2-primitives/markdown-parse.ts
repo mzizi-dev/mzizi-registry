@@ -190,12 +190,16 @@ const leadingWs = (s: string): number => {
   return n
 }
 
-/** Every run of whitespace as one space. */
-export function collapseWs(s: string): string {
+/** HTML's collapsible whitespace (tab, newline, form feed, carriage return, space); a
+    non-breaking space is not collapsible, as in a browser. */
+const HTML_WS = new Set(["\t", "\n", "\f", "\r", " "])
+
+/** Every run of HTML whitespace as one space. */
+export function collapseHtmlWs(s: string): string {
   let out = ""
   let space = false
   for (const c of s) {
-    if (WS.has(c)) {
+    if (HTML_WS.has(c)) {
       if (!space) out += " "
       space = true
     } else {
@@ -447,7 +451,7 @@ export function parseInlines(text: string, policy: MarkdownLinkPolicy = "safe"):
 
 /** A fence line: its marker and its info word, or null. */
 function fence(line: string): { mark: string; word: string } | null {
-  const m = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line)
+  const m = /^ {0,3}(`{3,}|~{3,})([^]*)$/.exec(line)
   if (!m || m[2].includes("`")) return null
   const info = m[2].replace(/^[ \t]*/, "")
   let word = ""
@@ -457,10 +461,12 @@ function fence(line: string): { mark: string; word: string } | null {
   }
   return { mark: m[1], word }
 }
-const HEADING = /^ {0,3}(#{1,6})[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*$/
+// `[^]` rather than `.`, which in JavaScript skips U+2028 and U+2029 (the Rust build reads any
+// character, and lines only ever split on \n).
+const HEADING = /^ {0,3}(#{1,6})[ \t]+([^]*?)(?:[ \t]+#+)?[ \t]*$/
 const HR = /^ {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$/
-const QUOTE = /^ {0,3}> ?(.*)$/
-const LIST_ITEM = /^( *)([-*+•‣◦]|\d{1,9}[.)])[ \t]+(.*)$/
+const QUOTE = /^ {0,3}> ?([^]*)$/
+const LIST_ITEM = /^( *)([-*+•‣◦]|\d{1,9}[.)])[ \t]+([^]*)$/
 const DELIM_CELL = /^:?-+:?$/
 
 const blank = (line: string) => trimWs(line) === ""
@@ -826,7 +832,27 @@ const textOf = (n: RichNode): string => ("text" in n ? n.text : n.children.map(t
 /** A line break inside rich text, before lines are split. */
 const BREAK = null
 
-/** Rich text's inline content as data: marks kept, links checked, `<br>` a break where `breaks`. */
+/** Wrap each break-separated run of `pieces` in a mark, keeping the breaks between them. */
+function wrapRuns(pieces: (MarkdownInline | null)[], wrap: (c: MarkdownInline[]) => MarkdownInline, out: (MarkdownInline | null)[]): void {
+  let run: MarkdownInline[] = []
+  for (const p of pieces) {
+    if (p === BREAK) {
+      out.push(wrap(run), BREAK)
+      run = []
+    } else run.push(p)
+  }
+  out.push(wrap(run))
+}
+
+/** Push every item (no spread: a long child list must not become a long argument list). */
+function pushAll<T>(out: T[], items: T[]): void {
+  for (const x of items) out.push(x)
+}
+
+/**
+ * Rich text's inline content as data: marks kept, links checked, `<br>` a break where `breaks`.
+ * A break inside a mark splits the mark, so bold text with a Shift+Enter keeps its two lines.
+ */
 function richInlines(nodes: RichNode[], policy: MarkdownLinkPolicy, inLink: boolean, breaks: boolean): (MarkdownInline | null)[] {
   const out: (MarkdownInline | null)[] = []
   for (const n of nodes) {
@@ -836,26 +862,30 @@ function richInlines(nodes: RichNode[], policy: MarkdownLinkPolicy, inLink: bool
     }
     const tag = n.tag
     if (tag === "br") out.push(breaks ? BREAK : { t: "text", v: " " })
-    else if (tag === "strong" || tag === "b") out.push({ t: "strong", c: richInlines(n.children, policy, inLink, false) as MarkdownInline[] })
-    else if (tag === "em" || tag === "i") out.push({ t: "em", c: richInlines(n.children, policy, inLink, false) as MarkdownInline[] })
-    else if (tag === "code") out.push({ t: "code", v: collapseWs(textOf(n)) })
+    else if (tag === "strong" || tag === "b") wrapRuns(richInlines(n.children, policy, inLink, breaks), (c) => ({ t: "strong", c }), out)
+    else if (tag === "em" || tag === "i") wrapRuns(richInlines(n.children, policy, inLink, breaks), (c) => ({ t: "em", c }), out)
+    else if (tag === "code") out.push({ t: "code", v: collapseHtmlWs(textOf(n)) })
     else if (tag === "a") {
       const href = inLink ? null : safeHref(n.attrs.href ?? "", policy)
-      const c = richInlines(n.children, policy, true, false) as MarkdownInline[]
-      if (href !== null) out.push({ t: "link", href, c })
-      else out.push(...c)
-    } else if (BLOCKISH.has(tag)) out.push({ t: "text", v: " " }, ...richInlines(n.children, policy, inLink, breaks), { t: "text", v: " " })
-    else out.push(...richInlines(n.children, policy, inLink, breaks))
+      const pieces = richInlines(n.children, policy, true, breaks)
+      if (href !== null) wrapRuns(pieces, (c) => ({ t: "link", href, c }), out)
+      else pushAll(out, pieces)
+    } else if (BLOCKISH.has(tag)) {
+      out.push({ t: "text", v: " " })
+      pushAll(out, richInlines(n.children, policy, inLink, breaks))
+      out.push({ t: "text", v: " " })
+    } else pushAll(out, richInlines(n.children, policy, inLink, breaks))
   }
   return out
 }
 
-/** Whitespace as a browser shows it: runs as one space, none after a space, none at the start. */
+/** Whitespace as a browser shows it: HTML whitespace runs as one space, none after a space,
+    none at the start; non-breaking spaces kept. */
 function normalize(items: MarkdownInline[], state: { space: boolean }): MarkdownInline[] {
   const out: MarkdownInline[] = []
   for (const x of items) {
     if (x.t === "text") {
-      let v = collapseWs(x.v)
+      let v = collapseHtmlWs(x.v)
       if (state.space && v.startsWith(" ")) v = v.slice(1)
       if (v === "") continue
       state.space = v.endsWith(" ")
@@ -976,11 +1006,19 @@ export function richTextBlocks(html: string, policy: MarkdownLinkPolicy = "safe"
   return out
 }
 
-const LOOKS_HTML = /<\/?(?:p|br|div|ul|ol|li|h[1-6]|strong|em|b|i|u|span|a|blockquote|pre|code)\b[^>]*>/i
+const RICH_TAG = /<\/?(?:p|br|div|ul|ol|li|h[1-6]|strong|em|b|i|u|span|a|blockquote|pre|code)\b/gi
 
 /** Whether text reads as rich-text HTML: it holds an editor's block or inline tags. */
 export function looksLikeRichText(text: string): boolean {
-  return LOOKS_HTML.test(text)
+  // An editor's tag with a `>` somewhere after it. The last `>` is found once, so the check
+  // stays linear (a `[^>]*>` per candidate rescans the text when no `>` follows).
+  const lastGt = text.lastIndexOf(">")
+  if (lastGt < 0) return false
+  RICH_TAG.lastIndex = 0
+  for (let m = RICH_TAG.exec(text); m; m = RICH_TAG.exec(text)) {
+    if (m.index + m[0].length <= lastGt) return true
+  }
+  return false
 }
 
 /**
