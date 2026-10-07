@@ -10,15 +10,19 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — `ui/status-badge` 1.1.0 holds every build to its status's mineral again (2026-10-07, #477)
+### Added — `has` and `not` in the contract grammar; `ui/status-badge` 1.1.0 covers all four statuses (2026-10-07, #477)
 
-When the status badge's clauses moved into `contracts/ui/status-badge.contract.json` (#428), the mineral checks were dropped. The contract held only `beta` → `text-cobalt` and `deprecated` → `line-through`, so a build that tinted `stable` with the wrong mineral still passed CI (#440). Nothing served was wrong.
-
-- **Two new predicates in the contract grammar.** `has "<token>"` matches one whole whitespace-separated class token, where `contains` matches any substring. `not <predicate>` negates any one predicate (`class not contains "cobalt"`, `class not has "line-through"`). `contracts/runner.ts` (Astro and React) and `mzizi-rs/contract-eval/` (Rust) evaluate both the same way. As with every clause, `not` of a predicate a runner cannot evaluate fails instead of passing. Existing contracts are unchanged, and `contracts/README.md` documents the grammar.
-- **`ui/status-badge` 1.1.0 uses them.** Each status must have its own mineral's fill and text as whole tokens: `stable` (the default) `bg-malachite/10` and `text-malachite`, `beta` cobalt, `alpha` gold, `deprecated` terracotta. Its class must not contain the other three minerals anywhere. `deprecated` must have `line-through`, and the other three statuses must not contain it.
-- The contract gains an `alpha` state, and `data-status` is checked in all four states.
-- So a second mineral, a variant-only colour (`dark:text-malachite`, `hover:bg-malachite/10`), a different opacity (`bg-malachite/100`) or a strike-through on `stable` now fails all three builds.
-- `pnpm contracts:sync` wrote the clauses into `status-badge.rs`'s `CONTRACT` and the `mzizi-ui` copy. The Astro, React and Rust builds pass them unchanged.
+- **Two new predicates in the contract grammar.**
+  - `has "<token>"` matches one whole whitespace-separated class token, where `contains` matches any substring. So `has "line-through"` is not satisfied by `hover:line-through`.
+  - `not <predicate>` negates any one predicate, as in `class not contains "line-through"`.
+  - `contracts/runner.ts` (the Astro and React builds) and `mzizi-rs/contract-eval/` (the Rust builds) evaluate them the same way. As with every clause, `not` of a predicate a runner cannot evaluate fails rather than passes.
+  - Existing contracts are unchanged. `contracts/README.md` documents the grammar.
+- **`ui/status-badge` 1.1.0.** The contract gains an `alpha` state, so all four statuses are rendered and checked.
+  - Each state writes its status out.
+  - `data-status` is checked in every state.
+  - `deprecated` must have `line-through`; `stable`, `beta` and `alpha` must not.
+  - `pnpm contracts:sync` wrote the clauses into `status-badge.rs`'s `CONTRACT` and the `mzizi-ui` copy. The Astro, React and Rust builds pass them unchanged.
+- **Colour is not asserted yet (#440).** By owner direction, contracts reference token roles and never name a mineral or another colour value, so a brand that switches N1 tokens keeps passing them. The status colour checks #440 asks for wait on the token-roles design.
 
 ### Fixed — `openapi.yaml` describes the colour families and ecosystem rows `/v1/brand` serves, and a test keeps it that way (2026-10-07, #480)
 

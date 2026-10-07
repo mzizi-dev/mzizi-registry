@@ -311,8 +311,8 @@ pub fn clauses(contract: &str) -> Vec<&str> {
 /// Evaluate a value predicate. `Err` is a clause this evaluator cannot apply.
 ///
 /// `contains "<s>"` is a substring; `has "<token>"` is one whole whitespace-separated token
-/// (`has "text-gold"` is not satisfied by `dark:text-gold` or `text-gold/50`). `not
-/// <predicate>` negates any one predicate (`not contains "cobalt"`, `not has "line-through"`);
+/// (`has "line-through"` is not satisfied by `hover:line-through`). `not <predicate>` negates
+/// any one predicate (`not contains "line-through"`, `not has "uppercase"`);
 /// `not` of a predicate this evaluator cannot apply stays an `Err`, never a pass. The same
 /// grammar as `contracts/runner.ts`.
 pub fn holds(value: &str, pred: &[String]) -> Result<bool, String> {

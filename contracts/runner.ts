@@ -19,11 +19,11 @@
  *     when <state> shows <element> "<text>"
  *     when <state> <root subject> <predicate>
  *   Predicates: is "<s>", contains "<s>" (a substring), has "<token>" (one
- *   whole whitespace-separated token: `has "text-gold"` is not satisfied by
- *   `dark:text-gold` or `text-gold/50`), not_empty, in "<a>" "<b>" …,
+ *   whole whitespace-separated token: `has "line-through"` is not satisfied
+ *   by `hover:line-through`), not_empty, in "<a>" "<b>" …,
  *   uses "--token" (the class reads var(--token…)), and `not <predicate>`,
- *   which negates any one of them (`not contains "cobalt"`, `not has
- *   "line-through"`). `not` of a predicate the runner cannot evaluate, or of
+ *   which negates any one of them (`not contains "line-through"`, `not has
+ *   "uppercase"`). `not` of a predicate the runner cannot evaluate, or of
  *   an attribute the element does not carry, fails: it never passes by
  *   default.
  * - `checks`: CSS-selector assertions (count, min, absent, attr, text).
