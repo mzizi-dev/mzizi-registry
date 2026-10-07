@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — the role layer: N1 tokens components can name, switchable per brand (2026-10-07, #PRNUM)
+### Added — the role layer: N1 tokens components can name, switchable per brand (2026-10-07, #485)
 
 Slice 1 of #484 ("switchable N1"). It adds roles and changes no component and no contract. A role is a name with a job (`status-success-text`, `rounded-control`, `h-touch`). The Mzizi palette is now the default pack that maps onto the roles, so a later slice can let a brand bring its own pack.
 
@@ -44,11 +44,11 @@ Slice 1 of #484 ("switchable N1"). It adds roles and changes no component and no
   - JSON twin: `roles` in `renderGlobalsJson`;
   - Rust: `mzizi-tokens` gains `RoleColors`, `Roles { light, dark }`, `Roles::mzizi()`, and the size, radius and font roles as consts.
 
-### Fixed — `text-base` is Tailwind's 16px font size again, not the page colour (2026-10-07, #PRNUM)
+### Fixed — `text-base` is Tailwind's 16px font size again, not the page colour (2026-10-07, #485)
 
 `mzizi-tokens-globals.css` registered `--color-base`, so Tailwind compiled `text-base` to `color: var(--color-base)`. That is the page background, which made input text invisible and dropped the 16px size (#456). The ladder step now registers as `--color-surface-base` (`bg-surface-base`), and nothing in the registry used `bg-base`. A test compiles the stylesheet with the repo's Tailwind and checks that `.text-base` is a font size, and that no role key collides with a Tailwind keyword.
 
-### Fixed — `--muted-foreground` clears APCA Lc 75 on cards, not only on the page (2026-10-07, #PRNUM)
+### Fixed — `--muted-foreground` clears APCA Lc 75 on cards, not only on the page (2026-10-07, #485)
 
 Light `--text-secondary` (`--muted-foreground`) was walked to Lc 75 on `--base` only, so it measured Lc 72.5 on `--surface`, the card colour (#399, as the registry ships it). It is now `#575655`: Lc 78.2 on base and 75.3 on surface. Light `--text-tertiary` moves the same way, to `#797877`. The dark values already cleared both and are unchanged.
 
