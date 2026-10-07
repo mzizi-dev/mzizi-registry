@@ -1,70 +1,83 @@
 /**
- * The class-token predicates of the contract grammar, in contracts/runner.ts:
- * `has "<token>"` (one whole whitespace-separated token) and `not <predicate>`
- * (the negation of any one predicate). `contains` stays a substring.
- * `mzizi-ui`'s `tests/contracts_json.rs` holds the Rust evaluator
- * (`mzizi-rs/contract-eval/`) to the same cases.
+ * The value predicates of the contract grammar, in contracts/runner.ts:
+ * `is`, `contains` (a substring), `has "<token>"` (one whole
+ * whitespace-separated token), `not_empty`, `in`, `uses "--token"`, and
+ * `not <predicate>`, the negation of any one of them.
+ *
+ * Every row of `fixtures/predicates.json`, malformed operands included, gets
+ * the same verdict here as `holds` in mzizi-rs/contract-eval/contract_eval.rs
+ * gives it in mzizi-ui's `tests/contracts_json.rs`. "Unevaluable" is a verdict
+ * of its own, and `not` never turns it into a pass.
  */
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
+
 import { describe, expect, test } from "vitest"
 
-import { type Contract, evaluateClauses } from "../../contracts/runner"
+import { type Contract, evaluateClauses, evaluatePredicate, type Verdict } from "../../contracts/runner"
+
+interface Case {
+  pred: string
+  value: string
+  verdict: boolean | "unevaluable"
+}
+
+const { cases } = JSON.parse(readFileSync(join(__dirname, "fixtures/predicates.json"), "utf8")) as {
+  cases: Case[]
+}
+
+const verdictOf = (v: Verdict): Case["verdict"] => ("ok" in v ? v.ok : "unevaluable")
+
+describe("every predicate case gets the verdict both runners agree on", () => {
+  test("the table covers holds, fails and unevaluable, with and without not", () => {
+    for (const want of [true, false, "unevaluable"] as const) {
+      expect(cases.some((c) => c.verdict === want && c.pred.startsWith("not "))).toBe(true)
+      expect(cases.some((c) => c.verdict === want && !c.pred.startsWith("not "))).toBe(true)
+    }
+  })
+
+  test.each(cases)("$pred on $value → $verdict", ({ pred, value, verdict }) => {
+    expect(verdictOf(evaluatePredicate(value, pred))).toBe(verdict)
+  })
+
+  test("not of an unevaluable predicate stays unevaluable", () => {
+    for (const c of cases.filter((c) => c.verdict === "unevaluable" && !c.pred.startsWith("not "))) {
+      if (c.pred === "") continue
+      expect(verdictOf(evaluatePredicate(c.value, `not ${c.pred}`)), `not ${c.pred}`).toBe("unevaluable")
+    }
+  })
+})
 
 /** Evaluate one clause against a root element carrying `class`. */
 function clause(line: string, cls: string | null): string[] {
   const contract = { contract: `contract\n  ${line}\nend` } as Contract
   const attr = cls === null ? "" : ` class="${cls}"`
-  return evaluateClauses(contract, { default: `<span data-slot="x"${attr}>x</span>` })
+  return evaluateClauses(contract, {
+    default: `<span data-slot="x"${attr}>x</span>`,
+  })
 }
 
 const holds = (line: string, cls: string | null) => expect(clause(line, cls), `${line} on "${cls}"`).toEqual([])
 const fails = (line: string, cls: string | null) => expect(clause(line, cls), `${line} on "${cls}"`).toHaveLength(1)
 
-describe("has: one whole class token", () => {
-  test("the token itself", () => {
-    holds('class has "text-malachite"', "bg-malachite/10 text-malachite uppercase")
+describe("a value predicate in a clause", () => {
+  test("holds or fails on the root attribute", () => {
+    holds('class has "uppercase"', "rounded-full uppercase")
+    fails('class has "uppercase"', "hover:uppercase")
+    holds('class not has "line-through"', "hover:line-through")
+    fails('class not contains "line-through"', "hover:line-through")
   })
 
-  test("a variant, an opacity or a longer token is not the token", () => {
-    fails('class has "text-malachite"', "dark:text-malachite")
-    fails('class has "text-malachite"', "text-malachite/50")
-    fails('class has "bg-malachite/10"', "hover:bg-malachite/10")
-    fails('class has "bg-malachite/10"', "bg-malachite/100")
+  test("an unevaluable predicate fails the clause, with or without not", () => {
+    fails("class not in foo", "a")
+    fails("class in", "a")
+    fails('class not is "a" "b"', "c")
+    fails("class not is a", "c")
   })
 
-  test("where contains, a substring, still passes", () => {
-    holds('class contains "text-malachite"', "dark:text-malachite")
-    holds('class contains "bg-malachite/10"', "bg-malachite/100")
-  })
-
-  test("a token with whitespace in it cannot be evaluated, so it fails", () => {
-    fails('class has "a b"', "a b")
-  })
-})
-
-describe("not: the negation of one predicate", () => {
-  test("not contains", () => {
-    holds('class not contains "cobalt"', "bg-malachite/10 text-malachite")
-    fails('class not contains "cobalt"', "bg-malachite/10 text-malachite dark:text-cobalt")
-  })
-
-  test("not has", () => {
-    holds('class not has "line-through"', "text-malachite hover:line-through")
-    fails('class not has "line-through"', "text-malachite line-through")
-  })
-
-  test("not is", () => {
-    holds('slot not is "y"', "a")
-    fails('slot not is "x"', "a")
-  })
-
-  test("not of an unevaluable predicate fails, never passes", () => {
-    fails('class not frobs "x"', "a")
-    fails('class not uses "primary"', "a")
-    fails('class not has "a b"', "a")
-    fails('class not not contains "a"', "a")
-  })
-
-  test("not on an attribute the root does not carry fails", () => {
-    fails('class not contains "cobalt"', null)
+  test("an attribute the root does not carry fails the clause, with or without not", () => {
+    fails('class not contains "line-through"', null)
+    fails('class in ""', null)
+    fails('class not is "x"', null)
   })
 })
