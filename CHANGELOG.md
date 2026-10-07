@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the Python distribution path: `mzizi-py/`, `pnpm py:generate`, `lib/python-packages.ts` and `publish-pypi.yml` (2026-10-07, #473)
+
+Phase 2 of #472 starts with the infrastructure the Python build of the resilience node ships through, before its modules land.
+
+- **`.py` siblings are packaged.** A component's `.py` beside its `.ts` and `.rs` (`components/registry/n5-resilience/<name>.py`, `n8-assurance/{chaos,observability}.py`) is copied into `mzizi-py/src/mzizi_resilience/<module>.py` (dashes become underscores) by `scripts/generate-python-package.mjs`, the Python twin of `rust:generate`: `pnpm py:generate` writes the copies, `pnpm py:generate:check` fails on drift, an orphan, or a hand-written module in the package, and both run in `pnpm generate`, `pnpm check` and CI's `Registry Snapshot` job.
+- **`mzizi-py/`** is the `mzizi-resilience` distribution (import `mzizi_resilience`): hatchling, `requires-python >=3.11`, no runtime dependencies, typed (`py.typed`), version 0.1.0 (the first release under the versioning policy, tag prefix `mzizi-py-v`).
+- **`mzizi-py/package-for-node.json`** says which package a node's Python ships in (`null`: not packaged, such as N1's single-file `mzizi-tokens-python.py`). **`lib/python-packages.ts`** (`pythonPackageFor`, `PYTHON_GIT`) reads it, the mirror of `lib/rust-crates.ts`, so the coming `/v1/py/{name}` route on api.mzizi.dev names the package, the `pip install` line and the module.
+- **CI** gains a `Python` job (3.11, 3.12, 3.13): it builds the sdist and wheel, installs the wheel, and runs pytest and `mypy --strict` against it. `Build` needs it.
+- **`.github/workflows/publish-pypi.yml`** publishes a version not yet on PyPI on merge to `main` (or by dispatch, dry run by default) with **PyPI trusted publishing**: OIDC in a `pypi` environment, no API token anywhere. It re-runs the generated-copy check, the tests and mypy on the exact wheel it uploads, refuses a version the org next-version action does not allow, never publishes an empty package, then tags `mzizi-py-vX.Y.Z` and creates a release with `RELEASE_BUMP_TOKEN`.
+
 ### Fixed — the architecture doctrine describes the stack as it is: Astro by default, Rust, plain TypeScript, React at parity, Python planned (2026-10-07, #474)
 
 The node, rung and strand doctrine that `mzizi_get_architecture` and `/v1/architecture` serve still described the React-and-Svelte era (#472, N10). Rewritten against the repository:

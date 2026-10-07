@@ -1,0 +1,59 @@
+# The Python build of Mzizi's resilience node (N5) and chaos + observability (N8),
+# mzizi-dev/mzizi-registry#472. The modules under src/mzizi_resilience/ are GENERATED
+# copies of components/registry/n5-resilience/*.py and n8-assurance/*.py
+# (scripts/generate-python-package.mjs); edit those, never the copies.
+#
+# The version follows the org versioning policy (nyuchi/.github#80): a release is the
+# next MINOR above the highest `mzizi-py-v` tag; publish-pypi.yml refuses any other
+# version before uploading, because a PyPI version can never be re-uploaded.
+
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mzizi-resilience"
+version = "0.1.0"
+description = "Mzizi resilience: circuit breaker, retry, timeout, bulkhead, rate limiter, fallback chain, health monitor, seeded chaos and redacting logs. Async-first, zero dependencies."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Mzizi" }]
+keywords = ["resilience", "circuit-breaker", "retry", "rate-limiter", "bulkhead", "chaos", "asyncio", "mzizi"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Framework :: AsyncIO",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://mzizi.dev"
+Documentation = "https://docs.mzizi.dev"
+Source = "https://github.com/mzizi-dev/mzizi-registry/tree/main/mzizi-py"
+Changelog = "https://github.com/mzizi-dev/mzizi-registry/blob/main/CHANGELOG.md"
+Issues = "https://github.com/mzizi-dev/mzizi-registry/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mzizi_resilience"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/mzizi_resilience", "README.md", "LICENSE", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+filterwarnings = ["error"]
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+files = ["src/mzizi_resilience", "tests"]
