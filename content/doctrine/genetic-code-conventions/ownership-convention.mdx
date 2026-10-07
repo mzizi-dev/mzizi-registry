@@ -2,7 +2,7 @@
 _bodyField: "body"
 _schemaVersion: "v1"
 baseLayer: true
-currentVersion: 1
+currentVersion: 2
 dnaRole: "genetic-code"
 doctrineVersion: "4.1.0"
 kind: "convention"
@@ -26,7 +26,7 @@ version: "1.0.0"
 ## Node ownership in the 3D + 2 model
 
 - Node 1 (tokens) — Mzizi canonical
-- Node 2 (primitive) — Upstream (React, Svelte, Angular, Material, crates.io, Swift, Kotlin, ArkTS) resolved via Mzizi hybrid resolver, not stored
+- Node 2 (primitive) — Mzizi registry: one contract per primitive, with the Astro build (the default), the Rust (Dioxus) build and the React build kept as files in `mzizi-dev/mzizi-registry`; Swift, Kotlin and ArkTS get the contract and the tokens, not source
 - Node 3 (brand) — Nyuchi, Mukoko, or any ecosystem brand
 - Node 4 (safety) — Mzizi
 - Node 5 (resilience) — Mzizi

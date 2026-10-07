@@ -1,7 +1,7 @@
 ---
 _bodyField: "rationale"
 _schemaVersion: "v1"
-currentVersion: 1
+currentVersion: 2
 dnaRole: "documentation"
 doctrineVersion: "4.2.0"
 forkable: true
@@ -11,7 +11,7 @@ license: "MIT"
 model: "mzizi-dna-helix"
 node: 0
 owner: "nyuchi"
-role: "UI framework — being removed"
+role: "UI framework — removed from Mzizi's own surfaces"
 self_hostable: true
 sort_order: 0
 sovereignty_risk: "medium"
@@ -21,17 +21,19 @@ technology: "Next.js"
 
 Vercel-maintained but MIT licensed with open community.
 
-**Being removed.** The UI is Astro (see
-`documentation-architecture-framework/astro-vite-plus`), and no new surface
-starts on Next.js. It remains in the tree at mzizi.dev until that site is
-migrated.
+**Removed from Mzizi's own surfaces.** The UI is Astro (see
+`documentation-architecture-framework/astro-vite-plus`): mzizi.dev is served
+by `mzizi-dev/mzizi-site` in Astro, and the Next.js app that used to live in
+`mzizi-dev/mzizi-registry` has been removed. No new surface starts on Next.js.
+It remains a stack some ecosystem consumers use, and the registry's React
+builds, kept at parity with Astro, serve them.
 
 The licence was never the concern, which is why this entry read `low` for so
 long and why that reading was too narrow. Sovereignty risk in a framework is
 not only "can we fork it" — it is **how much of the application only runs on
 one vendor's platform**. Next.js is MIT and forkable, but its App Router,
 image optimisation, ISR and middleware are tuned for Vercel's runtime, and the
-production build of this portal is served by Vercel today. That is a
+production build of the old portal was served by Vercel. That is a
 deployment dependency a fork does not dissolve, so the risk is `medium`, not
 `low`.
 
