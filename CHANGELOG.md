@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the Mzizi Roots crates move to 0.2.0 (2026-10-07, #463)
+
+The next minor above `mzizi-rs-v0.1.0` (nyuchi/.github#80): the workspace version, every internal path dependency and `Cargo.lock` move to 0.2.0, and the crate READMEs and the `mzizi-roots` crate docs install `"0.2"`. On the next release to `main`, `publish-crates.yml` uploads them, so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer` (#462). `cargo package --workspace` verifies all eleven.
+
 ### Security — `markdown-renderer` is safe by construction, in React, Astro and Rust under one contract (2026-10-07, #462)
 
 `markdown-renderer` built an HTML string with regular expressions and injected it with `dangerouslySetInnerHTML`. Each hole found in it was patched (a `javascript:` link, an unescaped table cell), but the design kept an HTML sink fed by untrusted text, which is not acceptable where it shows text written by others on pages that hold personal data (the Toddle extension's student flags). It is rebuilt so that there is no sink to get wrong (#460).
