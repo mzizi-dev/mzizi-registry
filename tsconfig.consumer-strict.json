@@ -7,6 +7,8 @@
   },
   "include": [
     "components/registry/n2-primitives/markdown-parse.ts",
-    "components/registry/n2-primitives/markdown-renderer.tsx"
+    "components/registry/n2-primitives/markdown-renderer.tsx",
+    "components/registry/n8-assurance/chaos.ts",
+    "components/registry/n8-assurance/observability.ts"
   ]
 }

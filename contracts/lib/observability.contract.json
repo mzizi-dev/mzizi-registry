@@ -1,0 +1,98 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/observability",
+  "title": "observability",
+  "version": "1.0.0",
+  "node": 8,
+  "kind": "lib",
+  "summary": "Structured log events with injectable sinks and the N8 covenant built in: sensitive keys are redacted and errors are reduced to { name, code } before any sink sees them.",
+  "implementations": {
+    "ts": "components/registry/n8-assurance/observability.ts",
+    "rs": {
+      "crate": "mzizi-assurance",
+      "module": "observability",
+      "file": "components/registry/n8-assurance/observability.rs"
+    },
+    "py": null
+  },
+  "fixtures": ["__tests__/fixtures/resilience/observability.cases.json"],
+  "exports": {
+    "ts": [
+      "log",
+      "measure",
+      "trackError",
+      "createLogger",
+      "redact",
+      "isSensitiveKey",
+      "errorSummary",
+      "buildEvent",
+      "toJson",
+      "formatLine",
+      "formatPrefix",
+      "consoleSink",
+      "jsonSink",
+      "memorySink",
+      "configureObservability",
+      "addSink",
+      "resetObservability",
+      "REDACTED",
+      "REDACT_KEY",
+      "DEFAULT_MODULE",
+      "MAX_DEPTH",
+      "type LogEvent",
+      "type LogContext",
+      "type LogLevel",
+      "type LogSink",
+      "type ErrorSummary"
+    ],
+    "rs": [
+      "Logger",
+      "LogEvent",
+      "LogContext",
+      "Level",
+      "Value",
+      "ErrorSummary",
+      "Sink",
+      "MemorySink",
+      "redact",
+      "is_sensitive_key",
+      "format_prefix",
+      "iso8601",
+      "REDACTED",
+      "DEFAULT_MODULE",
+      "MAX_DEPTH"
+    ]
+  },
+  "event": {
+    "shape": "{ ts, level, module, msg, traceId?, data? }",
+    "ts": "ISO-8601 UTC with milliseconds, as Date.prototype.toISOString writes it.",
+    "level": "debug | info | warn | error",
+    "module": "The caller's module; \"mzizi\" when none (or empty).",
+    "traceId": "Omitted when absent or empty.",
+    "data": "The caller's data, redacted. An error in the context is added as data.error = { name, code } (an existing error key keeps its place).",
+    "json": "One line, keys in the order ts, level, module, msg, traceId, data, escaped as JSON.stringify escapes."
+  },
+  "redaction": {
+    "keys": "A key matching /pass(word)?|secret|token|authori[sz]ation|cookie|api[-_]?key|email|phone|ssn|card/i anywhere in it (ASCII case-insensitive) has its value replaced with \"[redacted]\", at any depth, whatever the value is.",
+    "errors": "An error anywhere in data becomes { name, code } (code omitted when absent). Its message and stack never reach a sink.",
+    "depth": "Objects and arrays nested 8 deep become \"[depth]\".",
+    "ts-only": "Cycles become \"[circular]\", dates ISO strings, class instances \"[ClassName]\", functions and symbols are dropped (null in arrays), bigints strings, non-finite numbers null.",
+    "input": "Never mutated."
+  },
+  "console": {
+    "prefix": "[mzizi:<module>] LEVEL, or [mzizi] LEVEL for the default module.",
+    "line": "<prefix> <msg>, then ' [trace:<id>]' when there is a trace id; the TS console sink passes the redacted data as a second argument.",
+    "lookup": "TS looks the console method up on every call, so spies and hosts that replace console see every line."
+  },
+  "behaviour": [
+    "Sinks are injectable (TS: configureObservability({ sinks, now, minLevel }), addSink, resetObservability; Rust: Logger::new(module, clock).with_sink(..)). A sink that throws is skipped; logging never throws to its caller.",
+    "log.debug/info/warn/error(message, ctx?), createLogger(module), measure(label, fn, ctx?) and trackError(error, ctx?) keep their n2 signatures; LogContext.error widens from Error to unknown.",
+    "trackError's message is the error's name (and \"(code)\"), never its message.",
+    "measure logs \"<label> completed in <n>ms\" (info) or \"<label> failed after <n>ms\" (error) under module perf unless given, with duration and label in data, and returns or rethrows what the function did."
+  ],
+  "signals": "The N9 fundi signal (N8Signal in agent-tools fundi/src/store.ts) is produced by the N8 probes, not by this module; nothing here changes its shape.",
+  "gaps": [
+    "Python build: phase 2 of #472.",
+    "Severity classification stays in mzizi-error-tracker and span export in mzizi-otel; this module does not duplicate them."
+  ]
+}
