@@ -1,0 +1,104 @@
+---
+/**
+ * MarkdownRenderer — the registry primitive (`contracts/ui/markdown-renderer`), pure Astro.
+ *
+ * Safe by construction: `./markdown-parse` reads the Markdown into a typed tree and this
+ * file draws it as elements, so text is always a text node Astro escapes and an address is
+ * always an escaped attribute. No `set:html` anywhere. Raw HTML in the source shows as text;
+ * links pass an allow-list of schemes, and a refused link keeps its words. `markdown-renderer.tsx`
+ * (React) and `markdown-renderer.rs` (Rust) draw the same tree with the same classes.
+ *
+ * Nested parts (inline marks, list items, blockquotes) render through `Astro.self` with the
+ * internal `__part` prop, never through an HTML string.
+ */
+import { cn } from "./ui-utils";
+import {
+  MARKDOWN_CLASSES as C,
+  cellClass,
+  headingTag,
+  isExternal,
+  markdownBlocks,
+  type MarkdownBlock,
+  type MarkdownInline,
+  type MarkdownLinkPolicy,
+  type MarkdownList,
+  type MarkdownSource,
+} from "./markdown-parse";
+
+interface Props {
+  content: string;
+  links?: MarkdownLinkPolicy;
+  from?: MarkdownSource;
+  headingBase?: number;
+  class?: string;
+}
+
+/** One nested part, drawn by this same component (internal; not part of the contract). */
+type Part =
+  | { kind: "blocks"; blocks: MarkdownBlock[] }
+  | { kind: "inlines"; c: MarkdownInline[] }
+  | { kind: "lines"; lines: MarkdownInline[][] }
+  | { kind: "list"; list: MarkdownList; nested: boolean };
+
+const {
+  content = "",
+  links = "safe",
+  from = "markdown",
+  headingBase = 1,
+  class: extra,
+  __part: part,
+} = Astro.props as Props & { __part?: Part };
+
+const blocks = part ? [] : markdownBlocks(content, { links, from });
+const heading = (level: number) => headingTag(level, headingBase);
+---
+
+{
+  !part && (
+    <div
+      data-slot="markdown-renderer"
+      data-portal="https://mzizi.dev/components/markdown-renderer"
+      class={cn(C.root, extra)}
+    ><Astro.self headingBase={headingBase} __part={{ kind: "blocks", blocks }} /></div>
+  )
+}{
+  part?.kind === "inlines" &&
+    part.c.map((x) =>
+      x.t === "text" ? x.v
+      : x.t === "code" ? <code class={C.code}>{x.v}</code>
+      : x.t === "strong" ? <strong><Astro.self __part={{ kind: "inlines", c: x.c }} /></strong>
+      : x.t === "em" ? <em><Astro.self __part={{ kind: "inlines", c: x.c }} /></em>
+      : isExternal(x.href) ? <a href={x.href} class={C.a} target="_blank" rel="noopener noreferrer"><Astro.self __part={{ kind: "inlines", c: x.c }} /></a>
+      : <a href={x.href} class={C.a}><Astro.self __part={{ kind: "inlines", c: x.c }} /></a>
+    )
+}{
+  part?.kind === "lines" &&
+    part.lines.map((l, j) => (<Fragment>{j > 0 && <br />}<Astro.self __part={{ kind: "inlines", c: l }} /></Fragment>))
+}{
+  part?.kind === "list" &&
+    (part.list.kind === "ol" ? (
+      <ol class={cn(C.ol, part.nested && C.nested)} start={part.list.start === 1 ? undefined : part.list.start}>{part.list.items.map((it) => (<li><Astro.self __part={{ kind: "lines", lines: it.lines }} />{it.children.map((sub) => (<Astro.self headingBase={headingBase} __part={{ kind: "list", list: sub, nested: true }} />))}</li>))}</ol>
+    ) : (
+      <ul class={cn(C.ul, part.nested && C.nested)}>{part.list.items.map((it) => (<li><Astro.self __part={{ kind: "lines", lines: it.lines }} />{it.children.map((sub) => (<Astro.self headingBase={headingBase} __part={{ kind: "list", list: sub, nested: true }} />))}</li>))}</ul>
+    ))
+}{
+  part?.kind === "blocks" &&
+    part.blocks.map((b) =>
+      b.kind === "p" ? <p class={C.p}><Astro.self __part={{ kind: "lines", lines: b.lines }} /></p>
+      : b.kind === "h" ? (
+        heading(b.level) === "h1" ? <h1 class={C.h1}><Astro.self __part={{ kind: "inlines", c: b.c }} /></h1>
+        : heading(b.level) === "h2" ? <h2 class={C.h2}><Astro.self __part={{ kind: "inlines", c: b.c }} /></h2>
+        : heading(b.level) === "h3" ? <h3 class={C.h3}><Astro.self __part={{ kind: "inlines", c: b.c }} /></h3>
+        : heading(b.level) === "h4" ? <h4 class={C.h4}><Astro.self __part={{ kind: "inlines", c: b.c }} /></h4>
+        : heading(b.level) === "h5" ? <h5 class={C.h5}><Astro.self __part={{ kind: "inlines", c: b.c }} /></h5>
+        : <h6 class={C.h6}><Astro.self __part={{ kind: "inlines", c: b.c }} /></h6>
+      )
+      : b.kind === "ul" || b.kind === "ol" ? <Astro.self headingBase={headingBase} __part={{ kind: "list", list: b, nested: false }} />
+      : b.kind === "quote" ? <blockquote class={C.quote}><Astro.self headingBase={headingBase} __part={{ kind: "blocks", blocks: b.children }} /></blockquote>
+      : b.kind === "code" ? <pre class={C.pre}><code data-language={b.lang || undefined}>{b.v}</code></pre>
+      : b.kind === "hr" ? <hr class={C.hr} />
+      : (
+        <div class={C.tableWrap}><table class={C.table}><thead><tr>{b.head.map((cell, k) => (<th scope="col" class={cellClass("th", b.align[k] ?? null)}><Astro.self __part={{ kind: "inlines", c: cell }} /></th>))}</tr></thead><tbody>{b.rows.map((row) => (<tr>{row.map((cell, k) => (<td class={cellClass("td", b.align[k] ?? null)}><Astro.self __part={{ kind: "inlines", c: cell }} /></td>))}</tr>))}</tbody></table></div>
+      )
+    )
+}

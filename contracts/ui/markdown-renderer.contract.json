@@ -1,0 +1,299 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/markdown-renderer",
+  "title": "MarkdownRenderer",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list. One contract for the Astro, React and Mzizi Roots builds.",
+  "implementations": {
+    "astro": {
+      "registry": "markdown-renderer",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/MarkdownRenderer.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "markdown-renderer",
+      "identity": "contract"
+    },
+    "rs": {
+      "registry": "markdown-renderer",
+      "identity": "contract"
+    },
+    "related": ["markdown-parse"]
+  },
+  "props": [
+    {
+      "name": "content",
+      "type": "string",
+      "required": true,
+      "description": "The Markdown to show (or, with `from`, rich-text HTML). Untrusted text is fine: it is never parsed as HTML."
+    },
+    {
+      "name": "links",
+      "type": "\"safe\" | \"https\"",
+      "required": false,
+      "default": "safe",
+      "values": ["safe", "https"],
+      "description": "safe keeps http, https, mailto, tel and relative addresses; https keeps https only. A refused link keeps its words and loses its address."
+    },
+    {
+      "name": "from",
+      "type": "\"markdown\" | \"html\" | \"auto\"",
+      "required": false,
+      "default": "markdown",
+      "values": ["markdown", "html", "auto"],
+      "description": "What content is. html reads an editor's rich text into Markdown first (a reader of its own that builds plain data, never a DOM, so nothing in it runs; the same on a server, in a browser and in Rust); auto does so when the text holds an editor's tags. Text in rich text stays text: Markdown typed into an editor is not read as Markdown."
+    },
+    {
+      "name": "headingBase",
+      "type": "number",
+      "required": false,
+      "default": 1,
+      "description": "The heading level a `#` heading renders at (1 to 6); deeper levels follow and stop at h6. Lets the text sit under a page's own headings."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The Markdown is parsed into a typed tree (blocks and inlines) and the tree is rendered as elements. No build has an HTML string sink: no dangerouslySetInnerHTML, no set:html, no dangerous_inner_html.",
+    "Blocks: paragraphs (every line break is a hard break), ATX headings, bulleted and numbered lists nested by indentation (a numbered list keeps its first number), blockquotes, fenced code (``` or ~~~, the info word as data-language), horizontal rules and GFM tables with column alignment.",
+    "Inlines: code spans, links, bold (** or __), italic (* or _), bold italic (***), backslash escapes. A marker with no partner, and an underscore inside a word, stay text.",
+    "Raw HTML in the source is text: <script>, <img onerror> and <a href> show as written.",
+    "Links: tabs and newlines anywhere, and controls and spaces at either end, are removed first (browsers ignore them), then the scheme is checked against an allow-list. A refused link renders its words with no element around them. http and https links open in a new tab with rel=\"noopener noreferrer\".",
+    "A link inside a link's words renders as its words.",
+    "Nesting is bounded: lists and blockquotes 8 deep, inline marks 16 deep; deeper markers read as text.",
+    "Hostile text stays linear: each inline parse has a scanning budget (100000 steps plus 32 per character); when it runs out, markers still looking for a partner read as text.",
+    "Rich text (from=html or auto): block elements and <br> end lines, source newlines are spaces, list items are one line each, bold, italic, code and links keep their meaning, script-like elements are dropped with their content, and every other tag is a plain container."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "content": "# Field notes\n\nThe **mzizi** registry keeps *one* contract.\nA second line, kept as a break.\n\n- water bottle\n  - nested item\n- extra time\n\n3. third\n4. fourth\n\n> A quote with `code`\n\nRead [the docs](https://mzizi.dev/docs) or [write](mailto:hello@example.org).\n\n```ts\nconst ok = 1 < 2\n```\n\n---\n\n| Name | Value |\n| :--- | ---: |\n| a | **b** |"
+      }
+    },
+    "xss": {
+      "description": "Hostile input: every payload shows as text or loses its address.",
+      "props": {
+        "content": "<img src=x onerror=alert(1)>\n\n[js](javascript:alert(1)) [tab](\tjavascript:alert(2)) [split](java\tscript:alert(3)) [data](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==) [vb](VBScript:msgbox(1)) [ok](https://example.org/a)\n\n| a | b |\n| - | - |\n| <script>alert(4)</script> | <img src=x onerror=alert(5)> |\n\n<script>alert(6)</script>\n\n<a href=\"javascript:alert(7)\">raw</a>"
+      }
+    },
+    "https": {
+      "description": "links=https keeps https addresses only.",
+      "props": {
+        "content": "[a](https://example.org) [b](http://example.org) [c](/relative) [d](mailto:x@example.org) [e](#top)",
+        "links": "https"
+      }
+    },
+    "base": {
+      "description": "headingBase=3 renders # as h3.",
+      "props": {
+        "content": "# Section\n\n###### Deep",
+        "headingBase": 3
+      }
+    },
+    "empty": {
+      "props": {
+        "content": ""
+      }
+    },
+    "rich": {
+      "description": "from=html: an editor's HTML, with Markdown typed into it and a script.",
+      "props": {
+        "content": "<p># Plan <strong>now</strong></p><ul><li><p>pen</p></li></ul><script>alert(1)</script><p><a href=\"javascript:alert(2)\">bad</a> <a href=\"https://example.org/r\">good</a></p>",
+        "from": "html"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [
+      "None of its own: the semantic elements (headings, lists, blockquote, table with th scope=col, code) carry the structure."
+    ],
+    "keyboard": ["Links are native anchors in reading order."],
+    "focus": ["Links show a focus-visible outline in the ring token."],
+    "aria": ["None needed: the markup is native HTML."],
+    "wcag": ["1.3.1", "1.4.3", "2.4.4", "2.4.7", "4.1.2"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--foreground",
+      "--muted",
+      "--muted-foreground",
+      "--border",
+      "--primary",
+      "--ring",
+      "--radius-md",
+      "--radius-xl"
+    ],
+    "brandOverlay": "Links read --primary and their focus outline --ring, so a brand overlay recolours them; nothing else changes.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "Fills its container.",
+    "A wide table or code block scrolls inside itself, not the page."
+  ],
+  "contract": "contract\n  slot is \"markdown-renderer\"\n  portal is \"https://mzizi.dev/components/markdown-renderer\"\n  class contains \"text-foreground\"\n  when default shows h1 \"Field notes\"\n  when default shows strong \"mzizi\"\n  when default shows em \"one\"\n  when default shows blockquote \"A quote with\"\n  when default shows th \"Name\"\n  when default shows pre \"const ok = 1 < 2\"\n  when xss shows p \"<img src=x onerror=alert(1)>\"\n  when xss shows td \"<script>alert(4)</script>\"\n  when xss shows p \"<script>alert(6)</script>\"\n  when xss shows p \"js tab split data vb\"\n  when base shows h3 \"Section\"\n  when base shows h6 \"Deep\"\n  when rich shows strong \"now\"\n  when rich shows p \"Plan now\"\nend",
+  "checks": [
+    {
+      "say": "One h1.",
+      "select": "h1",
+      "count": 1
+    },
+    {
+      "say": "Line breaks are kept in a paragraph.",
+      "select": "p br",
+      "count": 1
+    },
+    {
+      "say": "A nested list sits inside its item.",
+      "select": "ul > li > ul > li",
+      "count": 1
+    },
+    {
+      "say": "A numbered list keeps its first number.",
+      "select": "ol[start=\"3\"]",
+      "count": 1
+    },
+    {
+      "say": "Inline code in the quote.",
+      "select": "blockquote code",
+      "count": 1
+    },
+    {
+      "say": "Fenced code keeps its language.",
+      "select": "pre > code[data-language=\"ts\"]",
+      "count": 1
+    },
+    {
+      "say": "An https link opens in a new tab, safely.",
+      "select": "a[href=\"https://mzizi.dev/docs\"]",
+      "attr": {
+        "target": "_blank",
+        "rel": "noopener noreferrer"
+      }
+    },
+    {
+      "say": "A mailto link stays in place.",
+      "select": "a[href=\"mailto:hello@example.org\"]",
+      "attr": {
+        "target": false
+      }
+    },
+    {
+      "say": "Header cells are column headers.",
+      "select": "th",
+      "attr": {
+        "scope": "col"
+      }
+    },
+    {
+      "say": "Column alignment is kept.",
+      "select": "td.text-right",
+      "count": 1
+    },
+    {
+      "say": "One rule.",
+      "select": "hr",
+      "count": 1
+    },
+    {
+      "say": "No image from the source.",
+      "state": "*",
+      "select": "img",
+      "absent": true
+    },
+    {
+      "say": "No script from the source.",
+      "state": "*",
+      "select": "script",
+      "absent": true
+    },
+    {
+      "say": "No iframe, object or embed.",
+      "state": "*",
+      "select": "iframe",
+      "absent": true
+    },
+    {
+      "say": "No inline event handler.",
+      "state": "*",
+      "select": "[onerror]",
+      "absent": true
+    },
+    {
+      "say": "Only the https link survives the hostile input.",
+      "state": "xss",
+      "select": "a",
+      "count": 1
+    },
+    {
+      "say": "and it is the https one.",
+      "state": "xss",
+      "select": "a[href=\"https://example.org/a\"]",
+      "count": 1
+    },
+    {
+      "say": "Raw HTML in a table cell is text.",
+      "state": "xss",
+      "select": "td",
+      "count": 2
+    },
+    {
+      "say": "links=https keeps only https.",
+      "state": "https",
+      "select": "a",
+      "count": 1
+    },
+    {
+      "say": "and it is the https one.",
+      "state": "https",
+      "select": "a[href=\"https://example.org\"]",
+      "count": 1
+    },
+    {
+      "say": "Empty content renders nothing inside the root.",
+      "state": "empty",
+      "select": "p",
+      "absent": true
+    },
+    {
+      "say": "Markdown typed into rich text is not a heading.",
+      "state": "rich",
+      "select": "h1",
+      "absent": true
+    },
+    {
+      "say": "Rich text keeps its list.",
+      "state": "rich",
+      "select": "ul > li",
+      "count": 1
+    },
+    {
+      "say": "Rich text keeps only its https link.",
+      "state": "rich",
+      "select": "a[href=\"https://example.org/r\"]",
+      "count": 1
+    },
+    {
+      "say": "and no other.",
+      "state": "rich",
+      "select": "a",
+      "count": 1
+    }
+  ],
+  "gaps": [
+    "Not CommonMark-complete: no setext headings, indented code blocks, reference links, autolinks, footnotes, task lists or strikethrough.",
+    "Rich text: tables, images and nested lists in an editor's HTML are read as text (cells and items flattened to lines), not rebuilt."
+  ]
+}

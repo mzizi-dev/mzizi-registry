@@ -595,6 +595,15 @@
       "astro": "label",
       "tsx": "label",
       "rs": "label"
+    },
+    {
+      "name": "ui/markdown-renderer",
+      "title": "MarkdownRenderer",
+      "version": "1.0.0",
+      "file": "ui/markdown-renderer.contract.json",
+      "astro": "markdown-renderer",
+      "tsx": "markdown-renderer",
+      "rs": "markdown-renderer"
     }
   ]
 }
