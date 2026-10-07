@@ -10,6 +10,23 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `openapi.yaml` describes the colour families and ecosystem rows `/v1/brand` serves, and a test keeps it that way (2026-10-07, #480)
+
+The brand schemas in the OpenAPI document that api.mzizi.dev serves at `/openapi` had drifted from the payload. `minerals` was pinned at five items, the heritage and experimental tones were missing, and no text value was described. The result was the #316 failure: a client that couldn't find a text value reached for `darkHex`, an accent.
+
+- **`BrandSystem`** lists and requires `minerals`, `heritage` and `experimental`, with no item counts (the spec's own rule: counts are never hardcoded).
+- **A shared `ColorFamily` base** (via `allOf`) holds `name`, `hex`, `lightHex`, `darkHex`, `textLight`, `textDark` and `cssVar`. It feeds three schemas:
+  - **`Mineral`** adds `role`, `family` (the shared `MineralFamily` enum), `containerLight` / `containerDark`, `onContainerLight` / `onContainerDark`, `sortOrder`, `origin`, `symbolism` and `usage`;
+  - **`HeritageColor`** is new;
+  - **`ExperimentalColor`** is new.
+- **Colour values** all use one `Hex` schema.
+- **Text values:** each colour schema says `lightHex` / `darkHex` are accents. `textLight` / `textDark`, the value of `--color-<name>-text`, are the text values, and they equal the canonical value where that already clears APCA Lc 75.
+- **`EcosystemBrand`** gains `displayName`, `accent` and `aliases`, which the API has served since #411 and #449.
+- **The `/brand` operation and the Brand tag** describe the 21 colour families and their `-text` values. The "Seven African Minerals" phrasing is retired.
+- **The new text fields are optional** in the schema until mzizi-dev/mzizi-api-gateway#74 is in production.
+- **Added: `__tests__/openapi-brand-schemas.test.ts`.** It reads the spec from `lib/openapi.generated.ts` (the bytes the gateway serves) with a small reader for the YAML subset the file uses, so no dependency and no lockfile change. The reader is held to the whole document: every referenced schema must be read. It fails if `Mineral`, `HeritageColor`, `ExperimentalColor` or `EcosystemBrand` (through `allOf`) differ from the keys `/v1/brand` serves. Those keys are the token objects' own keys from `palette.generated.ts` and `brand.source.ts`, plus the keys the API adds, minus a listed few it leaves out, each with its reason. It also fails if the spec states a family count.
+- `lib/openapi.generated.ts` is regenerated (`pnpm openapi:generate`).
+
 ### Fixed — the doctrine calls the system Mzizi, and no longer describes a database as its source (2026-10-07, #479)
 
 Eight `documentation/` doctrine pages, `mzizi-ai-context` and `ui-utils` still called the system "the Nyuchi Design System" (#323). Several of the same pages, and the three AI instruction sets, also described Supabase as the source of truth, the follow-up #474 left (#472). This entry covers both:
