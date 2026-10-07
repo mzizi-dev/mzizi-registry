@@ -10,7 +10,7 @@ fern, lagoon, storm, dusk, protea). Plus the spacing, radius and type scales.
 
 ```toml
 [dependencies]
-mzizi-tokens = "0.2"
+mzizi-tokens = "0.3"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before
