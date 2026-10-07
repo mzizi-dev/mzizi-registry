@@ -10,8 +10,10 @@ rest exist only as React and Astro today.
 
 `MarkdownRenderer` is safe by construction: it parses Markdown into a typed tree
 (`parse_markdown`, `MarkdownBlock`, `MarkdownInline`) and renders elements, with no HTML
-string anywhere. Raw HTML in the text shows as text, and links pass `safe_href`, a scheme
-allow-list (`MarkdownLinks::Https` keeps https only).
+string anywhere. Raw HTML in the text shows as text, and links pass `safe_link`, a scheme
+allow-list (`MarkdownLinks::Https` keeps https only). Each kept link shows its address on
+hover (`title`), normalised the way the URL parser writes it: the scheme and host lower-cased
+and an internationalised host as punycode, so a look-alike host shows for what it is.
 
 ```rust
 use mzizi_ui::{MarkdownLinks, MarkdownRenderer};
@@ -21,7 +23,7 @@ rsx! { MarkdownRenderer { content: "**Hi** [docs](https://mzizi.dev)", links: Ma
 
 ```toml
 [dependencies]
-mzizi-ui = "0.3"
+mzizi-ui = "0.4"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before

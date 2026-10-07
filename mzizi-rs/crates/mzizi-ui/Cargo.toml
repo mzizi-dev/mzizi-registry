@@ -32,12 +32,17 @@ exclude = ["tests/"]
 workspace = true
 
 [dependencies]
-mzizi-tokens = { path = "../mzizi-tokens", version = "0.3.0" }
+mzizi-tokens = { path = "../mzizi-tokens", version = "0.4.0" }
 # A component LIBRARY, so no `launch`, no `devtools`, no renderer. Those belong to
 # the app that mounts these primitives — pulling a renderer in here would pick the
 # consumer's target for them, and Dioxus's whole point is that one codebase serves
 # web, desktop, iOS and Android.
 dioxus = { version = "0.7", default-features = false, features = ["macro", "signals", "hooks", "html"] }
+# `markdown-renderer` shows a link's host the way the WHATWG URL parser serialises it (an
+# internationalised host as punycode), as `markdown-parse.ts` does with `new URL().hostname`.
+# `url::Host::parse` is that parser's host step: `idna` for the punycode, plus the percent-
+# decoding and IPv4/IPv6 handling `idna` alone leaves out. Already in this workspace's lock.
+url = "2"
 
 [dev-dependencies]
 # The contract suite renders components to HTML and evaluates their `CONTRACT` clauses

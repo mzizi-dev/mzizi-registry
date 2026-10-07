@@ -14,7 +14,7 @@
 //! Take only what you use with `default-features = false`:
 //!
 //! ```toml
-//! mzizi-roots = { version = "0.3", default-features = false, features = ["brand"] }
+//! mzizi-roots = { version = "0.4", default-features = false, features = ["brand"] }
 //! ```
 //!
 //! The server-side components are in `mzizi-roots-server`.

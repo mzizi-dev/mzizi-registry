@@ -6,8 +6,9 @@
 //! Safe by construction. The Markdown is parsed into a typed tree ([`Block`], [`Inline`]) and
 //! the tree is rendered as Dioxus elements, so every piece of text is a text node and every
 //! address an attribute, both escaped by the renderer. There is no HTML string and no
-//! `dangerous_inner_html`. Raw HTML in the source is text. Links pass [`safe_href`], an
-//! allow-list of schemes; a refused link keeps its words and loses its address.
+//! `dangerous_inner_html`. Raw HTML in the source is text. Links pass [`safe_link`], an
+//! allow-list of schemes; a refused link keeps its words and loses its address, and a kept one
+//! shows its address on hover (`title`), normalised so an IDN look-alike host reads as punycode.
 //!
 //! The parser is the same, rule for rule, as `markdown-parse.ts`: paragraphs with every line
 //! break kept, ATX headings, nested bulleted and numbered lists, blockquotes, fenced code,
@@ -33,10 +34,13 @@ pub enum Inline {
     Em(Vec<Inline>),
     /// `` `code` ``.
     Code(String),
-    /// `[words](address)`, the address already checked by [`safe_href`].
+    /// `[words](address)`, the address already checked by [`safe_link`].
     Link {
-        /// The kept address.
+        /// The kept address, as written.
         href: String,
+        /// The address a reader is shown on hover: scheme and host lower-cased, the host in
+        /// ASCII (an internationalised host as punycode), the rest as written.
+        title: String,
         /// The link's words.
         children: Vec<Inline>,
     },
@@ -53,13 +57,22 @@ pub enum Align {
     Right,
 }
 
-/// A list item: its lines (a hard break apart) and the lists nested under it.
+/// A list item: its lines (a hard break apart), then what follows them inside the item.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ListItem {
     /// The item's lines.
     pub lines: Vec<Vec<Inline>>,
-    /// Lists nested under the item.
-    pub children: Vec<List>,
+    /// Nested lists and, in rich text, lines after a nested list, in document order.
+    pub children: Vec<ListChild>,
+}
+
+/// What sits inside a list item after its lines.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ListChild {
+    /// A nested list.
+    List(List),
+    /// Lines after a nested list (rich text's `<li>a<ul>…</ul>c</li>`), each a hard break apart.
+    Lines(Vec<Vec<Inline>>),
 }
 
 /// A bulleted (`ordered: false`) or numbered list.
@@ -211,14 +224,27 @@ pub fn heading_level(level: u8, heading_base: u8) -> u8 {
 
 // ─── Links ──────────────────────────────────────────────────────────────────────────────────
 
-/// The address to put in an `href`, or `None` when it is refused.
+/// A kept link address: its `href`, and the address a reader is shown (its `title`).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MarkdownHref {
+    /// The address as written (tabs, newlines and outer `<…>` removed).
+    pub href: String,
+    /// The address normalised for reading: scheme and host lower-cased and the host in ASCII,
+    /// so an internationalised host shows as punycode (`https://аpple.com` →
+    /// `https://xn--pple-43d.com`) and a look-alike cannot pass for the site it imitates. The
+    /// rest is as written.
+    pub title: String,
+}
+
+/// The address to put in an `href` and the one to show on hover, or `None` when it is refused.
 ///
 /// Tabs and newlines anywhere, and C0 controls and spaces at either end, are removed first
-/// (browsers ignore them, so `\tjavascript:` is `javascript:` to them). Then the scheme is
-/// checked against an allow-list. Under [`MarkdownLinks::Safe`] an address with no scheme is
-/// kept; under [`MarkdownLinks::Https`] only `https:` is.
+/// (browsers ignore them, so `\tjavascript:` is `javascript:` to them). An address with other
+/// whitespace still in it is refused. Then the scheme is checked against an allow-list. Under
+/// [`MarkdownLinks::Safe`] an address with no scheme is kept; under [`MarkdownLinks::Https`]
+/// only `https:` is. A web address needs a host the URL parser accepts and no credentials.
 #[must_use]
-pub fn safe_href(raw: &str, policy: MarkdownLinks) -> Option<String> {
+pub fn safe_link(raw: &str, policy: MarkdownLinks) -> Option<MarkdownHref> {
     let cleaned: String = raw
         .chars()
         .filter(|c| !matches!(c, '\t' | '\n' | '\r'))
@@ -242,6 +268,10 @@ pub fn safe_href(raw: &str, policy: MarkdownLinks) -> Option<String> {
     if !allowed {
         return None;
     }
+    // The scheme, lower-cased, starts what a reader is shown.
+    let shown = scheme
+        .as_deref()
+        .map_or(String::new(), |name| format!("{name}:"));
     // A web address needs a host and no credentials (`https://bank.example@evil.example`
     // shows one site and goes to another); so does a scheme-relative `//host` address.
     let rest = match scheme.as_deref() {
@@ -250,12 +280,24 @@ pub fn safe_href(raw: &str, policy: MarkdownLinks) -> Option<String> {
         None if scheme_relative(url) => Some(url),
         _ => None,
     };
-    if let Some(rest) = rest {
-        if !web_authority_ok(rest) {
-            return None;
-        }
-    }
-    Some(url.to_owned())
+    let Some(rest) = rest else {
+        return Some(MarkdownHref {
+            href: url.to_owned(),
+            title: format!("{shown}{}", &url[shown.len()..]),
+        });
+    };
+    let host = web_host(rest)?;
+    let ascii = ascii_host(host)?;
+    Some(MarkdownHref {
+        href: url.to_owned(),
+        title: format!("{shown}{}{ascii}{}", &rest[..2], &rest[2 + host.len()..]),
+    })
+}
+
+/// The address to put in an `href`, or `None` when it is refused ([`safe_link`]'s `href`).
+#[must_use]
+pub fn safe_href(raw: &str, policy: MarkdownLinks) -> Option<String> {
+    safe_link(raw, policy).map(|l| l.href)
 }
 
 /// Two slashes, either way round: a browser reads `\\host`, `/\host` and `//host` alike.
@@ -264,14 +306,36 @@ fn scheme_relative(url: &str) -> bool {
     b.len() >= 2 && matches!(b[0], b'/' | b'\\') && matches!(b[1], b'/' | b'\\')
 }
 
-/// `//host…`: a host is there, and no `user@` before it.
-fn web_authority_ok(rest: &str) -> bool {
+/// `//host[:port]…`: the host, when there is one and no `user@` before it. The host ends at the
+/// first `:` outside `[…]` (an IPv6 address), as the URL parser reads it.
+fn web_host(rest: &str) -> Option<&str> {
     if !scheme_relative(rest) {
-        return false;
+        return None;
     }
     let after = &rest[2..];
     let authority = after.split(['/', '?', '#', '\\']).next().unwrap_or("");
-    !authority.is_empty() && !authority.contains('@')
+    if authority.is_empty() || authority.contains('@') {
+        return None;
+    }
+    let mut bracket = false;
+    for (k, c) in authority.char_indices() {
+        match c {
+            '[' => bracket = true,
+            ']' => bracket = false,
+            ':' if !bracket => return Some(&authority[..k]),
+            _ => {}
+        }
+    }
+    Some(authority)
+}
+
+/// A host as the URL parser serialises it (the WHATWG URL `hostname`, which `markdown-parse.ts`
+/// reads from `new URL()`): lower-cased, an internationalised name as punycode (the `idna`
+/// crate, through `url`'s host parser), an IPv4 address in dotted decimal. `None` when the
+/// parser rejects it (empty, a forbidden character, a bad IP address), since no browser could
+/// follow the link either.
+fn ascii_host(host: &str) -> Option<String> {
+    url::Host::parse(host).ok().map(|h| h.to_string())
 }
 
 /// `^[a-zA-Z][a-zA-Z0-9+.-]*:`
@@ -355,7 +419,10 @@ fn is_word(c: Option<char>) -> bool {
 struct InlineParser<'a> {
     s: &'a [char],
     policy: MarkdownLinks,
-    no_closer: Vec<(char, usize)>,
+    /// Per delimiter, the earliest position a search to the end of the text started from and
+    /// found no partner (as `noCloserFrom` in `markdown-parse.ts`): a later search to the end
+    /// that starts at or after it finds none either. A bounded search is never answered here.
+    no_closer_from: Vec<((char, usize), usize)>,
     code_ends: std::collections::HashMap<usize, Option<usize>>,
     unpaired: std::collections::HashSet<usize>,
     budget: isize,
@@ -372,7 +439,7 @@ impl<'a> InlineParser<'a> {
         Self {
             s,
             policy,
-            no_closer: Vec::new(),
+            no_closer_from: Vec::new(),
             code_ends: std::collections::HashMap::new(),
             unpaired: std::collections::HashSet::new(),
             budget: isize::try_from(BUDGET_BASE + BUDGET_PER_CHAR * s.len()).unwrap_or(isize::MAX),
@@ -441,7 +508,13 @@ impl<'a> InlineParser<'a> {
     }
 
     fn closer(&mut self, c: char, n: usize, from: usize, to: usize) -> Option<usize> {
-        if self.no_closer.contains(&(c, n)) {
+        let to_end = to == self.s.len();
+        let known = self
+            .no_closer_from
+            .iter()
+            .find(|(key, _)| *key == (c, n))
+            .map(|&(_, at)| at);
+        if to_end && known.is_some_and(|at| from >= at) {
             return None;
         }
         let mut j = from;
@@ -476,8 +549,15 @@ impl<'a> InlineParser<'a> {
             }
             j += 1;
         }
-        if to == self.s.len() {
-            self.no_closer.push((c, n));
+        if to_end {
+            match self
+                .no_closer_from
+                .iter_mut()
+                .find(|(key, _)| *key == (c, n))
+            {
+                Some((_, at)) => *at = (*at).min(from),
+                None => self.no_closer_from.push(((c, n), from)),
+            }
         }
         None
     }
@@ -530,16 +610,17 @@ impl<'a> InlineParser<'a> {
             if ch == '[' && depth < MAX_INLINE_DEPTH {
                 if let Some(link) = self.link(i, to) {
                     let label = self.parse(i + 1, link.label_end, depth + 1, true);
-                    let href = if in_link {
+                    let kept = if in_link {
                         None
                     } else {
-                        safe_href(&link.dest, self.policy)
+                        safe_link(&link.dest, self.policy)
                     };
-                    match href {
-                        Some(href) => {
+                    match kept {
+                        Some(MarkdownHref { href, title }) => {
                             flush(&mut out, &mut buf);
                             out.push(Inline::Link {
                                 href,
+                                title,
                                 children: label,
                             });
                         }
@@ -658,19 +739,38 @@ impl<'a> InlineParser<'a> {
         if k >= dest_to {
             return None;
         }
+        // The address: `<…>`, or everything up to the first whitespace (a tab ends it as a
+        // space does; what follows is a title, which is dropped). Then backslash escapes of
+        // ASCII punctuation are undone, as CommonMark reads them.
         let inside: String = self.s[label_end + 2..k].iter().collect();
-        let inside = inside.trim_start_matches([' ', '\t', '\n']);
+        let inside = inside.trim_start_matches(is_ws);
         let dest = if inside.starts_with('<') && inside.contains('>') {
-            inside[..=inside.find('>').unwrap_or(0)].to_owned()
+            &inside[..=inside.find('>').unwrap_or(0)]
         } else {
-            inside.split([' ', '\n']).next().unwrap_or("").to_owned()
+            inside.split(is_ws).next().unwrap_or("")
         };
         Some(LinkAt {
             label_end,
-            dest,
+            dest: unescape_punct(dest),
             end: k + 1,
         })
     }
+}
+
+/// Backslash escapes of ASCII punctuation undone (`\)` is `)`); any other backslash stays.
+fn unescape_punct(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    let mut chars = text.chars().peekable();
+    while let Some(c) = chars.next() {
+        match chars.peek() {
+            Some(&next) if c == '\\' && next.is_ascii_punctuation() => {
+                out.push(next);
+                chars.next();
+            }
+            _ => out.push(c),
+        }
+    }
+    out
 }
 
 /// Inline Markdown as data.
@@ -968,16 +1068,29 @@ impl BlockParser {
                 out.push(Block::Table { align, head, rows });
                 continue;
             }
-            let mut para = Vec::new();
+            let mut para: Vec<&str> = Vec::new();
             while i < lines.len()
                 && !blank(&lines[i])
                 && (para.is_empty() || !starts_block(lines, i))
             {
-                let t = trim_ws(&lines[i]);
-                para.push(self.inl(t.strip_suffix('\\').unwrap_or(t)));
+                para.push(trim_ws(&lines[i]));
                 i += 1;
             }
-            out.push(Block::Paragraph(para));
+            // A backslash at the end of a line is a hard break only when another line follows
+            // (every line break is one already, so it goes); on the last line it is text.
+            let last = para.len() - 1;
+            out.push(Block::Paragraph(
+                para.iter()
+                    .enumerate()
+                    .map(|(k, t)| {
+                        self.inl(if k < last {
+                            t.strip_suffix('\\').unwrap_or(t)
+                        } else {
+                            t
+                        })
+                    })
+                    .collect(),
+            ));
         }
         out
     }
@@ -1003,7 +1116,7 @@ impl BlockParser {
                     .last_mut()
                     .expect("a nested list sits under an item")
                     .children
-                    .push(list),
+                    .push(ListChild::List(list)),
                 None => out.push(Block::List(list)),
             }
         }
@@ -1315,14 +1428,19 @@ fn read_html(html: &str) -> Vec<RichNode> {
             i = j + 1;
             if DROP.contains(&name.as_str()) {
                 if !VOID.contains(&name.as_str()) {
-                    // `</name`, in any case.
+                    // The end tag a browser ends it at: `</name`, in any case, then whitespace,
+                    // `/` or `>`, so `</scripts>` inside a script is still script.
                     let pat: Vec<char> = format!("</{name}").chars().collect();
                     let close = (i..len).find(|&k| {
-                        k + pat.len() <= len
+                        k + pat.len() < len
                             && h[k..k + pat.len()]
                                 .iter()
                                 .zip(&pat)
                                 .all(|(a, b)| a.to_ascii_lowercase() == *b)
+                            && matches!(
+                                h[k + pat.len()],
+                                '\t' | '\n' | '\u{c}' | '\r' | ' ' | '/' | '>'
+                            )
                     });
                     i = close.and_then(|c| find(c, '>')).map_or(len, |e| e + 1);
                 }
@@ -1476,14 +1594,15 @@ fn rich_inlines(nodes: &[RichNode], policy: MarkdownLinks, ctx: RichContext) -> 
                         .iter()
                         .find(|(k, _)| k == "href")
                         .map_or("", |(_, v)| v.as_str());
-                    safe_href(raw, policy)
+                    safe_link(raw, policy)
                 };
                 let pieces = rich_inlines(children, policy, RichContext { link: true, ..ctx });
                 match href {
-                    Some(href) => wrap_runs(
+                    Some(MarkdownHref { href, title }) => wrap_runs(
                         pieces,
                         &|c| Inline::Link {
                             href: href.clone(),
+                            title: title.clone(),
                             children: c,
                         },
                         &mut out,
@@ -1542,10 +1661,18 @@ fn normalize(items: Vec<Inline>, space: &mut bool) -> Vec<Inline> {
                     out.push(Inline::Em(c));
                 }
             }
-            Inline::Link { href, children } => {
+            Inline::Link {
+                href,
+                title,
+                children,
+            } => {
                 let c = normalize(children, space);
                 if !c.is_empty() {
-                    out.push(Inline::Link { href, children: c });
+                    out.push(Inline::Link {
+                        href,
+                        title,
+                        children: c,
+                    });
                 }
             }
         }
@@ -1640,19 +1767,36 @@ fn rich_list(el: &RichNode, policy: MarkdownLinks, depth: usize) -> Option<List>
         if t != "li" {
             continue;
         }
+        // The item's text up to its first nested list is its line; a nested list and any text
+        // after it follow in document order, so `a<ul>…</ul>c` keeps `c` after the list.
         let mut pieces = Vec::new();
-        let mut subs = Vec::new();
+        let mut line: Option<Vec<Inline>> = None;
+        let mut nested_yet = false;
+        let mut subs: Vec<ListChild> = Vec::new();
+        let end_run = |pieces: &mut Vec<Piece>,
+                       nested_yet: bool,
+                       line: &mut Option<Vec<Inline>>,
+                       subs: &mut Vec<ListChild>| {
+            let l = to_lines(std::mem::take(pieces)).into_iter().next();
+            if !nested_yet {
+                *line = l;
+            } else if let Some(l) = l {
+                subs.push(ListChild::Lines(vec![l]));
+            }
+        };
         for node in c {
             let nested = matches!(node, RichNode::El { tag, .. } if tag == "ul" || tag == "ol");
             if nested && depth + 1 < MAX_NESTING {
                 if let Some(sub) = rich_list(node, policy, depth + 1) {
-                    subs.push(sub);
+                    end_run(&mut pieces, nested_yet, &mut line, &mut subs);
+                    nested_yet = true;
+                    subs.push(ListChild::List(sub));
                 }
             } else {
                 pieces.extend(rich_inlines(std::slice::from_ref(node), policy, ONE_LINE));
             }
         }
-        let line = to_lines(pieces).into_iter().next();
+        end_run(&mut pieces, nested_yet, &mut line, &mut subs);
         if line.is_some() || !subs.is_empty() {
             items.push(ListItem {
                 lines: line.into_iter().collect(),
@@ -1834,11 +1978,16 @@ fn render_inline(x: &Inline) -> Element {
         Inline::Code(v) => rsx! { code { class: classes::CODE, "{v}" } },
         Inline::Strong(c) => rsx! { strong { {render_inlines(c)} } },
         Inline::Em(c) => rsx! { em { {render_inlines(c)} } },
-        Inline::Link { href, children } => {
+        Inline::Link {
+            href,
+            title,
+            children,
+        } => {
             if is_external(href) {
                 rsx! {
                     a {
                         href: "{href}",
+                        title: "{title}",
                         class: classes::A,
                         target: "_blank",
                         rel: "noopener noreferrer",
@@ -1846,7 +1995,7 @@ fn render_inline(x: &Inline) -> Element {
                     }
                 }
             } else {
-                rsx! { a { href: "{href}", class: classes::A, {render_inlines(children)} } }
+                rsx! { a { href: "{href}", title: "{title}", class: classes::A, {render_inlines(children)} } }
             }
         }
     }
@@ -1863,6 +2012,13 @@ fn render_lines(lines: &[Vec<Inline>]) -> Element {
     }
 }
 
+fn render_list_child(child: &ListChild) -> Element {
+    match child {
+        ListChild::List(sub) => render_list(sub, true),
+        ListChild::Lines(lines) => render_lines(lines),
+    }
+}
+
 fn render_list(list: &List, nested: bool) -> Element {
     let class = match (list.ordered, nested) {
         (true, false) => classes::OL.to_owned(),
@@ -1875,7 +2031,7 @@ fn render_list(list: &List, nested: bool) -> Element {
             li {
                 {render_lines(&it.lines)}
                 for sub in it.children.iter() {
-                    {render_list(sub, true)}
+                    {render_list_child(sub)}
                 }
             }
         }
@@ -2024,6 +2180,7 @@ pub const CONTRACT: &str = r#"contract
   when base shows h6 "Deep"
   when rich shows strong "now"
   when rich shows p "Plan now"
+  when titles shows p "look-alike loud notes"
 end"#;
 
 #[cfg(test)]
@@ -2148,6 +2305,7 @@ mod tests {
             vec![
                 Inline::Link {
                     href: "https://example.org/p".into(),
+                    title: "https://example.org/p".into(),
                     children: vec![t("plan")]
                 },
                 t(" and x and y"),
@@ -2223,7 +2381,10 @@ mod tests {
             panic!()
         };
         assert_eq!(list.items.len(), 2);
-        assert!(list.items[0].children[0].items[0].children[0].ordered);
+        let ListChild::List(b) = &list.items[0].children[0] else {
+            panic!("not a list: {list:?}")
+        };
+        assert!(matches!(&b.items[0].children[0], ListChild::List(c) if c.ordered));
         assert!(matches!(&blocks[1], Block::Quote(children) if children.len() == 2));
         assert_eq!(
             blocks[2],
@@ -2298,5 +2459,141 @@ mod tests {
         assert!(!html.contains("javascript:"), "{html}");
         // The text is there, escaped (dioxus-ssr writes numeric references).
         assert!(html.contains("&#60;script&#62;alert(1)"), "{html}");
+    }
+
+    #[test]
+    fn a_link_title_is_its_address_normalised() {
+        for (raw, title) in [
+            (
+                "https://\u{430}pple.com/login",
+                "https://xn--pple-43d.com/login",
+            ),
+            (
+                "HTTPS://Example.ORG/Docs?Q=A#X",
+                "https://example.org/Docs?Q=A#X",
+            ),
+            ("//B\u{fc}cher.example/x", "//xn--bcher-kva.example/x"),
+            ("https://EXAMPLE.org:8443/a", "https://example.org:8443/a"),
+            ("https://0x7f.1/", "https://127.0.0.1/"),
+            ("MAILTO:a@B.c", "mailto:a@B.c"),
+            ("/Rel/Path", "/Rel/Path"),
+        ] {
+            assert_eq!(
+                safe_link(raw, MarkdownLinks::Safe),
+                Some(MarkdownHref {
+                    href: raw.to_owned(),
+                    title: title.to_owned()
+                }),
+                "{raw:?}"
+            );
+        }
+        for raw in [
+            "https://a<b/",
+            "https://1.2.3.999/",
+            "//:80/x",
+            "https://ex%2Fa/",
+        ] {
+            assert_eq!(safe_link(raw, MarkdownLinks::Safe), None, "{raw:?}");
+        }
+    }
+
+    #[test]
+    fn a_closer_inside_a_mark_is_found_after_a_full_search_found_none() {
+        assert_eq!(
+            parse_inlines("*x **a *b***", MarkdownLinks::Safe),
+            vec![
+                t("*x "),
+                Inline::Strong(vec![t("a "), Inline::Em(vec![t("b")])])
+            ]
+        );
+        assert_eq!(
+            parse_inlines("*a* b *c **d *e***", MarkdownLinks::Safe),
+            vec![
+                Inline::Em(vec![t("a")]),
+                t(" b *c "),
+                Inline::Strong(vec![t("d "), Inline::Em(vec![t("e")])])
+            ]
+        );
+    }
+
+    #[test]
+    fn a_trailing_backslash_on_the_last_line_is_text() {
+        assert_eq!(
+            parse_markdown("Save it to C:\\", MarkdownLinks::Safe),
+            vec![p(vec![vec![t("Save it to C:\\")]])]
+        );
+        assert_eq!(
+            parse_markdown("a\\\nb", MarkdownLinks::Safe),
+            vec![p(vec![vec![t("a")], vec![t("b")]])]
+        );
+    }
+
+    #[test]
+    fn a_link_address_ends_at_whitespace_and_its_escapes_are_undone() {
+        let link = |href: &str| {
+            vec![Inline::Link {
+                href: href.into(),
+                title: href.into(),
+                children: vec![t("a")],
+            }]
+        };
+        assert_eq!(
+            parse_inlines("[a](http://x.com\t\"title\")", MarkdownLinks::Safe),
+            link("http://x.com")
+        );
+        assert_eq!(
+            parse_inlines("[a](http://x.com/\\(y\\))", MarkdownLinks::Safe),
+            link("http://x.com/(y)")
+        );
+    }
+
+    #[test]
+    fn a_dropped_element_ends_only_at_its_own_end_tag() {
+        assert_eq!(
+            rich_text_blocks(
+                "<p>a</p><script>var s=\"</scripts>\"; secret()</script><p>b</p>",
+                MarkdownLinks::Safe
+            ),
+            vec![p(vec![vec![t("a")]]), p(vec![vec![t("b")]])]
+        );
+    }
+
+    #[test]
+    fn text_after_a_nested_list_stays_after_it() {
+        assert_eq!(
+            rich_text_blocks(
+                "<ul><li>a<ul><li>b</li></ul>c</li></ul>",
+                MarkdownLinks::Safe
+            ),
+            vec![Block::List(List {
+                ordered: false,
+                start: 1,
+                items: vec![ListItem {
+                    lines: vec![vec![t("a")]],
+                    children: vec![
+                        ListChild::List(List {
+                            ordered: false,
+                            start: 1,
+                            items: items(&["b"]),
+                        }),
+                        ListChild::Lines(vec![vec![t("c")]]),
+                    ],
+                }],
+            })]
+        );
+    }
+
+    #[test]
+    fn a_link_shows_its_normalised_address_on_hover() {
+        fn app() -> Element {
+            rsx! { MarkdownRenderer { content: "[look-alike](https://\u{430}pple.com/login)" } }
+        }
+        let mut dom = VirtualDom::new(app);
+        dom.rebuild_in_place();
+        let html = dioxus_ssr::render(&dom);
+        assert!(
+            html.contains("title=\"https://xn--pple-43d.com/login\""),
+            "{html}"
+        );
     }
 }
