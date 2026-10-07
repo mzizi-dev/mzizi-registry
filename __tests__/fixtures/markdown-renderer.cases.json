@@ -1423,7 +1423,7 @@
               },
               {
                 "t": "code",
-                "v": "a b c"
+                "v": "a `b` c"
               }
             ]
           ]
@@ -1615,6 +1615,379 @@
               {
                 "t": "text",
                 "v": "Score < 5 or > 9 <img src=x onerror=alert(1)>"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: marks next to marks keep their edges and spaces",
+      "from": "html",
+      "input": "<p><strong>Note:</strong><em>important</em> <em>a</em><strong>b</strong> Hello<strong> world</strong></p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "Note:"
+                  }
+                ]
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "important"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              },
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "b"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " Hello"
+              },
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": " world"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: empty marks vanish, and are never a rule",
+      "from": "html",
+      "input": "<p><b></b></p><p><b><i></i></b>x<em> </em>y</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "x"
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": " "
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": "y"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: breaks inside marks are spaces; nested lists flatten",
+      "from": "html",
+      "input": "<p><b>a<br>b</b><br>c</p><ul><li>one<ul><li>two</li></ul></li></ul>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a b"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "c"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "one two"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: deep nesting stops at the cap, text kept",
+      "from": "html",
+      "input": "<b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b><b>deep</b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b></b>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "strong",
+                    "c": [
+                      {
+                        "t": "strong",
+                        "c": [
+                          {
+                            "t": "strong",
+                            "c": [
+                              {
+                                "t": "strong",
+                                "c": [
+                                  {
+                                    "t": "strong",
+                                    "c": [
+                                      {
+                                        "t": "strong",
+                                        "c": [
+                                          {
+                                            "t": "strong",
+                                            "c": [
+                                              {
+                                                "t": "strong",
+                                                "c": [
+                                                  {
+                                                    "t": "strong",
+                                                    "c": [
+                                                      {
+                                                        "t": "strong",
+                                                        "c": [
+                                                          {
+                                                            "t": "strong",
+                                                            "c": [
+                                                              {
+                                                                "t": "strong",
+                                                                "c": [
+                                                                  {
+                                                                    "t": "strong",
+                                                                    "c": [
+                                                                      {
+                                                                        "t": "strong",
+                                                                        "c": [
+                                                                          {
+                                                                            "t": "strong",
+                                                                            "c": [
+                                                                              {
+                                                                                "t": "strong",
+                                                                                "c": [
+                                                                                  {
+                                                                                    "t": "strong",
+                                                                                    "c": [
+                                                                                      {
+                                                                                        "t": "strong",
+                                                                                        "c": [
+                                                                                          {
+                                                                                            "t": "strong",
+                                                                                            "c": [
+                                                                                              {
+                                                                                                "t": "strong",
+                                                                                                "c": [
+                                                                                                  {
+                                                                                                    "t": "strong",
+                                                                                                    "c": [
+                                                                                                      {
+                                                                                                        "t": "strong",
+                                                                                                        "c": [
+                                                                                                          {
+                                                                                                            "t": "strong",
+                                                                                                            "c": [
+                                                                                                              {
+                                                                                                                "t": "strong",
+                                                                                                                "c": [
+                                                                                                                  {
+                                                                                                                    "t": "strong",
+                                                                                                                    "c": [
+                                                                                                                      {
+                                                                                                                        "t": "strong",
+                                                                                                                        "c": [
+                                                                                                                          {
+                                                                                                                            "t": "strong",
+                                                                                                                            "c": [
+                                                                                                                              {
+                                                                                                                                "t": "strong",
+                                                                                                                                "c": [
+                                                                                                                                  {
+                                                                                                                                    "t": "strong",
+                                                                                                                                    "c": [
+                                                                                                                                      {
+                                                                                                                                        "t": "strong",
+                                                                                                                                        "c": [
+                                                                                                                                          {
+                                                                                                                                            "t": "strong",
+                                                                                                                                            "c": [
+                                                                                                                                              {
+                                                                                                                                                "t": "text",
+                                                                                                                                                "v": "deep"
+                                                                                                                                              }
+                                                                                                                                            ]
+                                                                                                                                          }
+                                                                                                                                        ]
+                                                                                                                                      }
+                                                                                                                                    ]
+                                                                                                                                  }
+                                                                                                                                ]
+                                                                                                                              }
+                                                                                                                            ]
+                                                                                                                          }
+                                                                                                                        ]
+                                                                                                                      }
+                                                                                                                    ]
+                                                                                                                  }
+                                                                                                                ]
+                                                                                                              }
+                                                                                                            ]
+                                                                                                          }
+                                                                                                        ]
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "whitespace is one fixed set (NEL and BOM)",
+      "input": "a*b*﻿\n﻿",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a"
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "b"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "a word character includes combining vowel signs",
+      "input": "कि_x_ and _y_",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "कि_x_ and "
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "y"
+                  }
+                ]
               }
             ]
           ]

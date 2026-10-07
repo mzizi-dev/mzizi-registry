@@ -9733,8 +9733,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["lib", "primitives"],
       "dependencies": [],
-      "description": "The framework-free half of markdown-renderer: Markdown in, a typed tree out (blocks and inlines), with the link scheme allow-list (safeHref) and a rich-text-to-Markdown reader that never builds a DOM. Builds no HTML.",
-      "docs": "Use it for: Parsing Markdown into data for markdown-renderer, Checking a link address against a scheme allow-list.\nIncludes: Typed Markdown tree, Link scheme allow-list, Rich text to Markdown without a DOM.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-parse",
+      "description": "The framework-free half of markdown-renderer: Markdown in, a typed tree out (blocks and inlines), with the link scheme allow-list (safeHref) and a rich-text reader (richTextBlocks) that never builds a DOM. Builds no HTML.",
+      "docs": "Use it for: Parsing Markdown into data for markdown-renderer, Checking a link address against a scheme allow-list.\nIncludes: Typed Markdown tree, Link scheme allow-list, Rich text read without a DOM.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-parse",
       "files": [
         {
           "path": "components/registry/n2-primitives/markdown-parse.ts",
@@ -9748,7 +9748,7 @@
         "features": [
           "Typed Markdown tree",
           "Link scheme allow-list",
-          "Rich text to Markdown without a DOM"
+          "Rich text read without a DOM"
         ],
         "hasDemo": false,
         "owner": "mzizi",

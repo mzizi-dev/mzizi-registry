@@ -12,8 +12,8 @@
 //! The parser is the same, rule for rule, as `markdown-parse.ts`: paragraphs with every line
 //! break kept, ATX headings, nested bulleted and numbered lists, blockquotes, fenced code,
 //! rules and GFM tables; code spans, links, bold, italic and backslash escapes. Rich-text HTML
-//! (`from: Html`) is read into Markdown by the same small reader (`html_to_markdown`), which
-//! builds plain values and never a DOM.
+//! (`from: Html`) is read by the same small reader (`rich_text_blocks`), which builds plain
+//! values and never a DOM.
 //!
 //! Written against the contract, NOT machine-translated from the `.tsx` (registry issue #222,
 //! rule 1). Self-contained, like every file in this crate.
@@ -125,7 +125,7 @@ pub enum MarkdownSource {
     /// Markdown.
     #[default]
     Markdown,
-    /// Rich-text HTML (an editor's), read into Markdown by [`html_to_markdown`].
+    /// Rich-text HTML (an editor's), read by [`rich_text_blocks`].
     Html,
     /// Rich text when it holds an editor's tags ([`looks_like_rich_text`]), Markdown otherwise.
     Auto,
@@ -270,33 +270,52 @@ pub fn is_external(href: &str) -> bool {
 
 // ─── Inlines ────────────────────────────────────────────────────────────────────────────────
 
-fn is_space(c: Option<char>) -> bool {
-    c.is_none_or(char::is_whitespace)
+/// Whitespace, as a fixed set shared with `markdown-parse.ts` (Rust's `char::is_whitespace`
+/// and JavaScript's `\s` disagree on U+0085 and U+FEFF).
+#[must_use]
+pub fn is_ws(c: char) -> bool {
+    matches!(
+        c,
+        '\t' | '\n' | '\u{b}' | '\u{c}' | '\r' | ' ' | '\u{85}' | '\u{a0}' | '\u{1680}' | '\u{2000}'
+            ..='\u{200a}'
+                | '\u{2028}'
+                | '\u{2029}'
+                | '\u{202f}'
+                | '\u{205f}'
+                | '\u{3000}'
+                | '\u{feff}'
+    )
 }
 
-fn is_word(c: Option<char>) -> bool {
-    c.is_some_and(char::is_alphanumeric)
+fn trim_ws(s: &str) -> &str {
+    s.trim_matches(is_ws)
 }
 
-fn run_at(s: &[char], i: usize, c: char) -> usize {
-    s[i.min(s.len())..].iter().take_while(|&&x| x == c).count()
-}
-
-fn code_span_end(s: &[char], j: usize) -> Option<usize> {
-    let n = run_at(s, j, '`');
-    let mut k = j + n;
-    while k < s.len() {
-        if s[k] == '`' {
-            let m = run_at(s, k, '`');
-            if m == n {
-                return Some(k + m);
+/// Every run of whitespace as one space.
+fn collapse_ws(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    let mut space = false;
+    for c in s.chars() {
+        if is_ws(c) {
+            if !space {
+                out.push(' ');
             }
-            k += m;
+            space = true;
         } else {
-            k += 1;
+            out.push(c);
+            space = false;
         }
     }
-    None
+    out
+}
+
+fn is_space(c: Option<char>) -> bool {
+    c.is_none_or(is_ws)
+}
+
+/// Alphabetic or numeric, as `[\p{Alphabetic}\p{N}]` in `markdown-parse.ts`.
+fn is_word(c: Option<char>) -> bool {
+    c.is_some_and(char::is_alphanumeric)
 }
 
 struct InlineParser<'a> {
@@ -305,7 +324,7 @@ struct InlineParser<'a> {
     no_closer: Vec<(char, usize)>,
     code_ends: std::collections::HashMap<usize, Option<usize>>,
     unpaired: std::collections::HashSet<usize>,
-    budget: usize,
+    budget: isize,
 }
 
 struct LinkAt {
@@ -322,17 +341,47 @@ impl<'a> InlineParser<'a> {
             no_closer: Vec::new(),
             code_ends: std::collections::HashMap::new(),
             unpaired: std::collections::HashSet::new(),
-            budget: BUDGET_BASE + BUDGET_PER_CHAR * s.len(),
+            budget: isize::try_from(BUDGET_BASE + BUDGET_PER_CHAR * s.len()).unwrap_or(isize::MAX),
         }
     }
 
     /// Spend one scanning step; false when the budget is gone.
     fn step(&mut self) -> bool {
-        if self.budget == 0 {
-            return false;
-        }
         self.budget -= 1;
-        true
+        self.budget >= 0
+    }
+
+    /// The run of `c` at `i`, stopping at `to`; its length is charged to the budget.
+    fn run(&mut self, i: usize, c: char, to: usize) -> usize {
+        let to = to.min(self.s.len());
+        let n = self.s[i.min(to)..to]
+            .iter()
+            .take_while(|&&x| x == c)
+            .count();
+        self.budget -= isize::try_from(n).unwrap_or(isize::MAX);
+        n
+    }
+
+    /// Past a code span opening at `j` (a backtick run with a partner), or `None`.
+    fn span_end(&mut self, j: usize) -> Option<usize> {
+        let len = self.s.len();
+        let n = self.run(j, '`', len);
+        let mut k = j + n;
+        while k < len {
+            if !self.step() {
+                return None;
+            }
+            if self.s[k] == '`' {
+                let m = self.run(k, '`', len);
+                if m == n {
+                    return Some(k + m);
+                }
+                k += m;
+            } else {
+                k += 1;
+            }
+        }
+        None
     }
 
     fn at(&self, i: usize) -> Option<char> {
@@ -344,11 +393,11 @@ impl<'a> InlineParser<'a> {
             return end;
         }
         let at_start = j == 0 || self.s[j - 1] != '`';
-        let n = run_at(self.s, j, '`');
+        let n = self.run(j, '`', self.s.len());
         let end = if at_start && self.unpaired.contains(&n) {
             None
         } else {
-            code_span_end(self.s, j)
+            self.span_end(j)
         };
         if end.is_none() && at_start {
             self.unpaired.insert(n);
@@ -374,12 +423,12 @@ impl<'a> InlineParser<'a> {
             if ch == '`' {
                 j = match self.code_end(j) {
                     Some(end) => end,
-                    None => j + run_at(self.s, j, '`'),
+                    None => j + self.run(j, '`', to),
                 };
                 continue;
             }
             if ch == c {
-                let run = run_at(self.s, j, c);
+                let run = self.run(j, c, to);
                 if run >= n && (n > 1 || run == 1) {
                     let at = if run == n { j } else { j + run - n };
                     let before = if at == 0 { None } else { self.at(at - 1) };
@@ -422,7 +471,7 @@ impl<'a> InlineParser<'a> {
                 continue;
             }
             if ch == '`' {
-                let n = run_at(self.s, i, '`');
+                let n = self.run(i, '`', self.s.len());
                 match self.code_end(i) {
                     Some(end) if end <= to => {
                         flush(&mut out, &mut buf);
@@ -430,7 +479,7 @@ impl<'a> InlineParser<'a> {
                         if v.chars().count() > 1
                             && v.starts_with(' ')
                             && v.ends_with(' ')
-                            && !v.trim().is_empty()
+                            && !trim_ws(&v).is_empty()
                         {
                             v = v[1..v.len() - 1].to_owned();
                         }
@@ -477,7 +526,7 @@ impl<'a> InlineParser<'a> {
                 }
             }
             if (ch == '*' || ch == '_') && depth < MAX_INLINE_DEPTH {
-                let run = run_at(self.s, i, ch);
+                let run = self.run(i, ch, to);
                 let before = if i == 0 { None } else { self.at(i - 1) };
                 let opens = !is_space(self.at(i + run)) && !(ch == '_' && is_word(before));
                 if opens {
@@ -532,7 +581,7 @@ impl<'a> InlineParser<'a> {
             if ch == '`' {
                 j = match self.code_end(j) {
                     Some(end) if end <= label_to => end,
-                    _ => j + run_at(self.s, j, '`'),
+                    _ => j + self.run(j, '`', label_to),
                 };
                 continue;
             }
@@ -600,7 +649,7 @@ pub fn parse_inlines(text: &str, policy: MarkdownLinks) -> Vec<Inline> {
 // ─── Blocks ─────────────────────────────────────────────────────────────────────────────────
 
 fn blank(line: &str) -> bool {
-    line.trim().is_empty()
+    trim_ws(line).is_empty()
 }
 
 /// Up to three leading spaces off, or `None` when there are four or more.
@@ -610,7 +659,7 @@ fn up_to_three(line: &str) -> Option<&str> {
 }
 
 fn leading_ws(line: &str) -> usize {
-    line.chars().take_while(|c| c.is_whitespace()).count()
+    line.chars().take_while(|&c| is_ws(c)).count()
 }
 
 /// `^ {0,3}(`{3,}|~{3,})[ \t]*([^\s`]*)[^`]*$` → (marker char, marker length, info word).
@@ -631,7 +680,7 @@ fn fence(line: &str) -> Option<(char, usize, String)> {
     let word: String = info
         .trim_start_matches([' ', '\t'])
         .chars()
-        .take_while(|c| !c.is_whitespace())
+        .take_while(|&c| !is_ws(c))
         .collect();
     Some((c, n, word))
 }
@@ -706,7 +755,7 @@ fn list_item(line: &str) -> Option<(usize, bool, u32, &str)> {
 }
 
 fn cells(line: &str) -> Vec<String> {
-    let mut row = line.trim();
+    let mut row = trim_ws(line);
     row = row.strip_prefix('|').unwrap_or(row);
     if row.ends_with('|') && !row.ends_with("\\|") {
         row = &row[..row.len() - 1];
@@ -719,13 +768,13 @@ fn cells(line: &str) -> Vec<String> {
             cur.push('|');
             chars.next();
         } else if c == '|' {
-            out.push(cur.trim().to_owned());
+            out.push(trim_ws(&cur).to_owned());
             cur.clear();
         } else {
             cur.push(c);
         }
     }
-    out.push(cur.trim().to_owned());
+    out.push(trim_ws(&cur).to_owned());
     out
 }
 
@@ -802,7 +851,7 @@ impl BlockParser {
                 i += 1;
                 while i < lines.len() {
                     let l = &lines[i];
-                    let t = l.trim();
+                    let t = trim_ws(l);
                     if t.chars().count() >= len
                         && t.chars().all(|c| c == mark)
                         && leading_ws(l) <= 3
@@ -852,7 +901,7 @@ impl BlockParser {
                         inner
                             .iter()
                             .filter(|l| !blank(l))
-                            .map(|l| self.inl(l.trim()))
+                            .map(|l| self.inl(trim_ws(l)))
                             .collect(),
                     ));
                 } else {
@@ -890,7 +939,7 @@ impl BlockParser {
                 && !blank(&lines[i])
                 && (para.is_empty() || !starts_block(lines, i))
             {
-                let t = lines[i].trim();
+                let t = trim_ws(&lines[i]);
                 para.push(self.inl(t.strip_suffix('\\').unwrap_or(t)));
                 i += 1;
             }
@@ -943,13 +992,13 @@ impl BlockParser {
                         .trim_start_matches(' ')
                         .chars()
                         .next()
-                        .is_some_and(|c| !c.is_whitespace())
+                        .is_some_and(|c| !is_ws(c))
                     && !starts_block(lines, i);
                 // (No let chains: the workspace's rust-version is 1.85.)
                 let item = stack.last_mut().and_then(|(_, top)| top.items.last_mut());
                 match item {
                     Some(item) if continues => {
-                        item.lines.push(self.inl(line.trim()));
+                        item.lines.push(self.inl(trim_ws(line)));
                         i += 1;
                         continue;
                     }
@@ -957,7 +1006,7 @@ impl BlockParser {
                 }
             };
             let item = ListItem {
-                lines: vec![self.inl(text.trim())],
+                lines: vec![self.inl(trim_ws(text))],
                 children: Vec::new(),
             };
             if stack.is_empty() {
@@ -1000,7 +1049,11 @@ pub fn parse_markdown(text: &str, policy: MarkdownLinks) -> Vec<Block> {
 // ─── Rich text ──────────────────────────────────────────────────────────────────────────────
 //
 // The same reader as `markdown-parse.ts`: HTML into a tree of plain values (never a DOM, so
-// nothing in it runs or loads), then into Markdown with its text escaped.
+// nothing in it runs or loads), then straight into blocks and inlines, never into Markdown
+// text, so text in rich text is always text. Elements nest at most `MAX_HTML_DEPTH` deep.
+
+/// How deep rich-text elements nest; deeper start tags are ignored (their text is kept).
+pub const MAX_HTML_DEPTH: usize = 32;
 
 enum RichNode {
     Text(String),
@@ -1039,6 +1092,24 @@ const CLOSES_P: &[&str] = &[
 const CONTAINERS: &[&str] = &[
     "div", "html", "body", "main", "section", "article", "header", "footer", "aside", "nav",
     "figure", "center", "form", "table", "thead", "tbody", "tfoot", "tr", "td", "th",
+];
+const BLOCKISH: &[&str] = &[
+    "p",
+    "div",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "blockquote",
+    "li",
+    "ul",
+    "ol",
+    "pre",
+    "tr",
+    "td",
+    "th",
 ];
 
 /// Decode the character references editors write: `&amp; &lt; &gt; &quot; &apos; &nbsp;` and
@@ -1106,27 +1177,25 @@ fn entity_at(c: &[char]) -> Option<(String, usize)> {
 /// An open element while reading: tag, attributes, children.
 type Open = (String, Vec<(String, String)>, Vec<RichNode>);
 
+fn close_to(stack: &mut Vec<Open>, k: usize) {
+    while stack.len() > k {
+        let (tag, attrs, children) = stack.pop().expect("an open element");
+        stack.last_mut().expect("the root").2.push(RichNode::El {
+            tag,
+            attrs,
+            children,
+        });
+    }
+}
+
 fn read_html(html: &str) -> Vec<RichNode> {
     let h: Vec<char> = html.chars().collect();
     let len = h.len();
-    let find = |from: usize, pat: &str| -> Option<usize> {
-        let p: Vec<char> = pat.chars().collect();
-        (from..len).find(|&k| k + p.len() <= len && h[k..k + p.len()] == p[..])
-    };
-    let lower_slice =
-        |a: usize, b: usize| -> String { h[a..b].iter().collect::<String>().to_lowercase() };
-    // The open elements; index 0 is the root.
+    let find = |from: usize, pat: char| (from..len).find(|&k| h[k] == pat);
+    let lower =
+        |a: usize, b: usize| -> String { h[a..b].iter().map(char::to_ascii_lowercase).collect() };
+    let letter = |k: usize| h.get(k).is_some_and(char::is_ascii_alphabetic);
     let mut stack: Vec<Open> = vec![("#root".into(), Vec::new(), Vec::new())];
-    fn close_to(stack: &mut Vec<Open>, k: usize) {
-        while stack.len() > k {
-            let (tag, attrs, children) = stack.pop().expect("an open element");
-            stack.last_mut().expect("the root").2.push(RichNode::El {
-                tag,
-                attrs,
-                children,
-            });
-        }
-    }
     let mut text = String::new();
     let flush = |stack: &mut Vec<Open>, text: &mut String| {
         if !text.is_empty() {
@@ -1139,13 +1208,14 @@ fn read_html(html: &str) -> Vec<RichNode> {
             text.clear();
         }
     };
-    let letter = |k: usize| h.get(k).is_some_and(char::is_ascii_alphabetic);
     let mut i = 0;
     while i < len {
         let c = h[i];
         if c == '<' && h[i..].starts_with(&['<', '!', '-', '-']) {
             flush(&mut stack, &mut text);
-            i = find(i + 4, "-->").map_or(len, |e| e + 3);
+            i = (i + 4..len)
+                .find(|&k| h[k..].starts_with(&['-', '-', '>']))
+                .map_or(len, |e| e + 3);
             continue;
         }
         if c == '<' && h.get(i + 1) == Some(&'/') && letter(i + 2) {
@@ -1154,8 +1224,8 @@ fn read_html(html: &str) -> Vec<RichNode> {
             while j < len && h[j].is_ascii_alphanumeric() {
                 j += 1;
             }
-            let name = lower_slice(i + 2, j);
-            i = find(j, ">").map_or(len, |e| e + 1);
+            let name = lower(i + 2, j);
+            i = find(j, '>').map_or(len, |e| e + 1);
             if let Some(k) = (1..stack.len()).rev().find(|&k| stack[k].0 == name) {
                 close_to(&mut stack, k);
             }
@@ -1167,36 +1237,36 @@ fn read_html(html: &str) -> Vec<RichNode> {
             while j < len && h[j].is_ascii_alphanumeric() {
                 j += 1;
             }
-            let name = lower_slice(i + 1, j);
+            let name = lower(i + 1, j);
             let mut attrs: Vec<(String, String)> = Vec::new();
             while j < len && h[j] != '>' {
-                if h[j].is_whitespace() || h[j] == '/' {
+                if is_ws(h[j]) || h[j] == '/' {
                     j += 1;
                     continue;
                 }
                 let mut k = j;
-                while k < len && !(h[k].is_whitespace() || matches!(h[k], '/' | '>' | '=')) {
+                while k < len && !(is_ws(h[k]) || matches!(h[k], '/' | '>' | '=')) {
                     k += 1;
                 }
-                let key = lower_slice(j, k);
+                let key = lower(j, k);
                 let mut value = String::new();
-                while k < len && h[k].is_whitespace() {
+                while k < len && is_ws(h[k]) {
                     k += 1;
                 }
                 if h.get(k) == Some(&'=') {
                     k += 1;
-                    while k < len && h[k].is_whitespace() {
+                    while k < len && is_ws(h[k]) {
                         k += 1;
                     }
                     match h.get(k) {
                         Some(&q) if q == '"' || q == '\'' => {
-                            let stop = (k + 1..len).find(|&x| h[x] == q).unwrap_or(len);
+                            let stop = find(k + 1, q).unwrap_or(len);
                             value = h[k + 1..stop].iter().collect();
                             k = stop + 1;
                         }
                         _ => {
                             let from = k;
-                            while k < len && !(h[k].is_whitespace() || h[k] == '>') {
+                            while k < len && !(is_ws(h[k]) || h[k] == '>') {
                                 k += 1;
                             }
                             value = h[from..k].iter().collect();
@@ -1220,7 +1290,7 @@ fn read_html(html: &str) -> Vec<RichNode> {
                                 .zip(&pat)
                                 .all(|(a, b)| a.to_ascii_lowercase() == *b)
                     });
-                    i = close.and_then(|c| find(c, ">")).map_or(len, |e| e + 1);
+                    i = close.and_then(|c| find(c, '>')).map_or(len, |e| e + 1);
                 }
                 continue;
             }
@@ -1249,7 +1319,7 @@ fn read_html(html: &str) -> Vec<RichNode> {
                     attrs,
                     children: Vec::new(),
                 });
-            } else {
+            } else if stack.len() <= MAX_HTML_DEPTH {
                 stack.push((name, attrs, Vec::new()));
             }
             continue;
@@ -1272,117 +1342,205 @@ fn text_of(n: &RichNode) -> String {
     }
 }
 
-fn collapse(s: &str) -> String {
-    let mut out = String::with_capacity(s.len());
-    let mut space = false;
-    for c in s.chars() {
-        if c.is_whitespace() {
-            if !space {
-                out.push(' ');
-            }
-            space = true;
-        } else {
-            out.push(c);
-            space = false;
-        }
-    }
-    out
+/// An inline of rich text, or a line break before lines are split.
+enum Piece {
+    Inline(Inline),
+    Break,
 }
 
-fn escape_inline(text: &str) -> String {
-    let mut out = String::with_capacity(text.len());
-    for c in text.chars() {
-        if matches!(c, '\\' | '`' | '*' | '_' | '[' | ']' | '|' | '<') {
-            out.push('\\');
-        }
-        out.push(c);
-    }
-    out
-}
-
-fn escape_lines(text: &str) -> String {
-    text.split('\n')
-        .map(|l| {
-            if l.starts_with(['#', '>', '+', '~', '-']) {
-                return format!("\\{l}");
-            }
-            let digits = l.chars().take_while(char::is_ascii_digit).count();
-            if (1..=9).contains(&digits) && l[digits..].starts_with(['.', ')']) {
-                return format!("{}\\{}", &l[..digits], &l[digits..]);
-            }
-            l.to_owned()
+fn only_inlines(pieces: Vec<Piece>) -> Vec<Inline> {
+    pieces
+        .into_iter()
+        .filter_map(|p| match p {
+            Piece::Inline(x) => Some(x),
+            Piece::Break => None,
         })
-        .collect::<Vec<_>>()
-        .join("\n")
+        .collect()
 }
 
-fn rich_inline(nodes: &[RichNode]) -> String {
-    let mut s = String::new();
-    for child in nodes {
-        match child {
-            RichNode::Text(t) => s.push_str(&escape_inline(&collapse(t))),
-            RichNode::El {
-                tag,
-                attrs,
-                children,
-            } => match tag.as_str() {
-                "br" => s.push('\n'),
-                "strong" | "b" => s.push_str(&format!("**{}**", rich_inline(children).trim())),
-                "em" | "i" => s.push_str(&format!("*{}*", rich_inline(children).trim())),
-                "code" => s.push_str(&format!("`{}`", collapse(&text_of(child).replace('`', "")))),
-                "a" => {
-                    let href: String = attrs
+fn text_piece(v: &str) -> Piece {
+    Piece::Inline(Inline::Text(v.to_owned()))
+}
+
+fn rich_inlines(
+    nodes: &[RichNode],
+    policy: MarkdownLinks,
+    in_link: bool,
+    breaks: bool,
+) -> Vec<Piece> {
+    let mut out = Vec::new();
+    for n in nodes {
+        let RichNode::El {
+            tag,
+            attrs,
+            children,
+        } = n
+        else {
+            if let RichNode::Text(t) = n {
+                out.push(text_piece(t));
+            }
+            continue;
+        };
+        match tag.as_str() {
+            "br" => out.push(if breaks {
+                Piece::Break
+            } else {
+                text_piece(" ")
+            }),
+            "strong" | "b" => out.push(Piece::Inline(Inline::Strong(only_inlines(rich_inlines(
+                children, policy, in_link, false,
+            ))))),
+            "em" | "i" => out.push(Piece::Inline(Inline::Em(only_inlines(rich_inlines(
+                children, policy, in_link, false,
+            ))))),
+            "code" => out.push(Piece::Inline(Inline::Code(collapse_ws(&text_of(n))))),
+            "a" => {
+                let href = if in_link {
+                    None
+                } else {
+                    let raw = attrs
                         .iter()
                         .find(|(k, _)| k == "href")
-                        .map(|(_, v)| {
-                            v.chars()
-                                .filter(|c| !(matches!(c, '<' | '>') || c.is_whitespace()))
-                                .collect()
-                        })
-                        .unwrap_or_default();
-                    s.push_str(&format!("[{}](<{href}>)", rich_inline(children).trim()));
+                        .map_or("", |(_, v)| v.as_str());
+                    safe_href(raw, policy)
+                };
+                let c = only_inlines(rich_inlines(children, policy, true, false));
+                match href {
+                    Some(href) => out.push(Piece::Inline(Inline::Link { href, children: c })),
+                    None => out.extend(c.into_iter().map(Piece::Inline)),
                 }
-                "p" | "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote" | "li"
-                | "ul" | "ol" | "pre" | "tr" | "td" | "th" => {
-                    s.push(' ');
-                    s.push_str(&rich_inline(children));
-                    s.push(' ');
-                }
-                _ => s.push_str(&rich_inline(children)),
-            },
+            }
+            t if BLOCKISH.contains(&t) => {
+                out.push(text_piece(" "));
+                out.extend(rich_inlines(children, policy, in_link, breaks));
+                out.push(text_piece(" "));
+            }
+            _ => out.extend(rich_inlines(children, policy, in_link, breaks)),
         }
     }
-    s
+    out
 }
 
-/// One block's text: whitespace collapsed per line, line starts escaped.
-fn rich_lines(s: &str) -> String {
-    let joined = s
-        .split('\n')
-        .map(|l| collapse(l).trim().to_owned())
-        .collect::<Vec<_>>()
-        .join("\n");
-    escape_lines(joined.trim())
-}
-
-fn rich_walk(nodes: &[RichNode], blocks: &mut Vec<String>) {
-    let mut loose = String::new();
-    let flush = |loose: &mut String, blocks: &mut Vec<String>| {
-        let t = rich_lines(loose);
-        if !t.is_empty() {
-            blocks.push(t);
+/// Whitespace as a browser shows it: runs as one space, none after a space, none at the start.
+fn normalize(items: Vec<Inline>, space: &mut bool) -> Vec<Inline> {
+    let mut out: Vec<Inline> = Vec::new();
+    for x in items {
+        match x {
+            Inline::Text(v) => {
+                let mut v = collapse_ws(&v);
+                if *space && v.starts_with(' ') {
+                    v.remove(0);
+                }
+                if v.is_empty() {
+                    continue;
+                }
+                *space = v.ends_with(' ');
+                if let Some(Inline::Text(last)) = out.last_mut() {
+                    last.push_str(&v);
+                } else {
+                    out.push(Inline::Text(v));
+                }
+            }
+            Inline::Code(v) => {
+                if v.is_empty() {
+                    continue;
+                }
+                *space = false;
+                out.push(Inline::Code(v));
+            }
+            Inline::Strong(c) => {
+                let c = normalize(c, space);
+                if !c.is_empty() {
+                    out.push(Inline::Strong(c));
+                }
+            }
+            Inline::Em(c) => {
+                let c = normalize(c, space);
+                if !c.is_empty() {
+                    out.push(Inline::Em(c));
+                }
+            }
+            Inline::Link { href, children } => {
+                let c = normalize(children, space);
+                if !c.is_empty() {
+                    out.push(Inline::Link { href, children: c });
+                }
+            }
         }
-        loose.clear();
+    }
+    out
+}
+
+/// Drop trailing whitespace from the end of a line, into its marks.
+fn trim_end(mut items: Vec<Inline>) -> Vec<Inline> {
+    while let Some(last) = items.last_mut() {
+        let keep = match last {
+            Inline::Text(v) => {
+                if v.ends_with(' ') {
+                    v.pop();
+                }
+                !v.is_empty()
+            }
+            Inline::Code(_) => true,
+            Inline::Strong(c) | Inline::Em(c) | Inline::Link { children: c, .. } => {
+                *c = trim_end(std::mem::take(c));
+                !c.is_empty()
+            }
+        };
+        if keep {
+            break;
+        }
+        items.pop();
+    }
+    items
+}
+
+fn to_lines(pieces: Vec<Piece>) -> Vec<Vec<Inline>> {
+    let mut lines = Vec::new();
+    let mut cur = Vec::new();
+    let mut end = |cur: &mut Vec<Inline>| {
+        let mut space = true;
+        let line = trim_end(normalize(std::mem::take(cur), &mut space));
+        if !line.is_empty() {
+            lines.push(line);
+        }
     };
-    for child in nodes {
-        let RichNode::El { tag, children, .. } = child else {
-            loose.push_str(&rich_inline(std::slice::from_ref(child)));
+    for p in pieces {
+        match p {
+            Piece::Break => end(&mut cur),
+            Piece::Inline(x) => cur.push(x),
+        }
+    }
+    end(&mut cur);
+    lines
+}
+
+fn to_line(nodes: &[RichNode], policy: MarkdownLinks) -> Option<Vec<Inline>> {
+    to_lines(rich_inlines(nodes, policy, false, false))
+        .into_iter()
+        .next()
+}
+
+fn rich_blocks(nodes: &[RichNode], policy: MarkdownLinks, out: &mut Vec<Block>) {
+    let mut pending: Vec<&RichNode> = Vec::new();
+    let flush = |pending: &mut Vec<&RichNode>, out: &mut Vec<Block>| {
+        let mut pieces = Vec::new();
+        for n in pending.drain(..) {
+            pieces.extend(rich_inlines(std::slice::from_ref(n), policy, false, true));
+        }
+        let lines = to_lines(pieces);
+        if !lines.is_empty() {
+            out.push(Block::Paragraph(lines));
+        }
+    };
+    for n in nodes {
+        let RichNode::El { tag, children, .. } = n else {
+            pending.push(n);
             continue;
         };
         let tag = tag.as_str();
         if tag == "ul" || tag == "ol" {
-            flush(&mut loose, blocks);
-            let mut n = 0;
+            flush(&mut pending, out);
             let mut items = Vec::new();
             for li in children {
                 if let RichNode::El {
@@ -1392,76 +1550,74 @@ fn rich_walk(nodes: &[RichNode], blocks: &mut Vec<String>) {
                 } = li
                 {
                     if t == "li" {
-                        n += 1;
-                        let text = collapse(&rich_inline(c)).trim().to_owned();
-                        if !text.is_empty() {
-                            items.push(if tag == "ol" {
-                                format!("{n}. {text}")
-                            } else {
-                                format!("- {text}")
+                        if let Some(line) = to_line(c, policy) {
+                            items.push(ListItem {
+                                lines: vec![line],
+                                children: Vec::new(),
                             });
                         }
                     }
                 }
             }
             if !items.is_empty() {
-                blocks.push(items.join("\n"));
+                out.push(Block::List(List {
+                    ordered: tag == "ol",
+                    start: 1,
+                    items,
+                }));
             }
         } else if tag.len() == 2 && tag.starts_with('h') && matches!(tag.as_bytes()[1], b'1'..=b'6')
         {
-            flush(&mut loose, blocks);
-            let text = collapse(&rich_inline(children)).trim().to_owned();
-            if !text.is_empty() {
-                let level = usize::from(tag.as_bytes()[1] - b'0');
-                blocks.push(format!("{} {text}", "#".repeat(level)));
-            }
-        } else if tag == "pre" {
-            flush(&mut loose, blocks);
-            let all = text_of(child);
-            let t = all.strip_prefix('\n').unwrap_or(&all);
-            let t = t.strip_suffix('\n').unwrap_or(t);
-            if !t.trim().is_empty() {
-                let mut longest = 0;
-                let mut run = 0;
-                for c in t.chars() {
-                    run = if c == '~' { run + 1 } else { 0 };
-                    longest = longest.max(run);
-                }
-                let fence = "~".repeat((longest + 1).max(3));
-                blocks.push(format!("{fence}\n{t}\n{fence}"));
-            }
-        } else if tag == "hr" {
-            flush(&mut loose, blocks);
-            blocks.push("---".to_owned());
-        } else if tag == "p" || tag == "blockquote" {
-            flush(&mut loose, blocks);
-            let t = rich_lines(&rich_inline(children));
-            if !t.is_empty() {
-                blocks.push(if tag == "blockquote" {
-                    t.split('\n')
-                        .map(|l| format!("> {l}"))
-                        .collect::<Vec<_>>()
-                        .join("\n")
-                } else {
-                    t
+            flush(&mut pending, out);
+            if let Some(line) = to_line(children, policy) {
+                out.push(Block::Heading {
+                    level: tag.as_bytes()[1] - b'0',
+                    children: line,
                 });
             }
+        } else if tag == "pre" {
+            flush(&mut pending, out);
+            let all = text_of(n);
+            let t = all.strip_prefix('\n').unwrap_or(&all);
+            let t = t.strip_suffix('\n').unwrap_or(t);
+            if !trim_ws(t).is_empty() {
+                out.push(Block::Code {
+                    lang: String::new(),
+                    text: t.to_owned(),
+                });
+            }
+        } else if tag == "hr" {
+            flush(&mut pending, out);
+            out.push(Block::Rule);
+        } else if tag == "p" {
+            flush(&mut pending, out);
+            let lines = to_lines(rich_inlines(children, policy, false, true));
+            if !lines.is_empty() {
+                out.push(Block::Paragraph(lines));
+            }
+        } else if tag == "blockquote" {
+            flush(&mut pending, out);
+            let mut inner = Vec::new();
+            rich_blocks(children, policy, &mut inner);
+            if !inner.is_empty() {
+                out.push(Block::Quote(inner));
+            }
         } else if CONTAINERS.contains(&tag) {
-            flush(&mut loose, blocks);
-            rich_walk(children, blocks);
+            flush(&mut pending, out);
+            rich_blocks(children, policy, out);
         } else {
-            loose.push_str(&rich_inline(std::slice::from_ref(child)));
+            pending.push(n);
         }
     }
-    flush(&mut loose, blocks);
+    flush(&mut pending, out);
 }
 
-/// Rich text (an editor's HTML) to Markdown, as `htmlToMarkdown` in `markdown-parse.ts` does.
+/// Rich text (an editor's HTML) as blocks, as `richTextBlocks` in `markdown-parse.ts` reads it.
 #[must_use]
-pub fn html_to_markdown(html: &str) -> String {
-    let mut blocks = Vec::new();
-    rich_walk(&read_html(html), &mut blocks);
-    blocks.join("\n\n")
+pub fn rich_text_blocks(html: &str, policy: MarkdownLinks) -> Vec<Block> {
+    let mut out = Vec::new();
+    rich_blocks(&read_html(html), policy, &mut out);
+    out
 }
 
 /// Whether text reads as rich text: it holds an editor's block or inline tags.
@@ -1519,7 +1675,7 @@ pub fn looks_like_rich_text(text: &str) -> bool {
     })
 }
 
-/// The tree for a renderer's props: rich text read into Markdown first where `from` asks.
+/// The tree for a renderer's props: rich text read as rich text where `from` asks.
 #[must_use]
 pub fn markdown_blocks(content: &str, links: MarkdownLinks, from: MarkdownSource) -> Vec<Block> {
     let rich = match from {
@@ -1528,7 +1684,7 @@ pub fn markdown_blocks(content: &str, links: MarkdownLinks, from: MarkdownSource
         MarkdownSource::Auto => looks_like_rich_text(content),
     };
     if rich {
-        parse_markdown(&html_to_markdown(content), links)
+        rich_text_blocks(content, links)
     } else {
         parse_markdown(content, links)
     }
@@ -1975,7 +2131,14 @@ mod tests {
             );
         }
         let started = std::time::Instant::now();
-        let _ = html_to_markdown(&"<a <b <p>x<!--".repeat(20_000));
+        let _ = rich_text_blocks(&"<a <b <p>x<!--".repeat(20_000), MarkdownLinks::Safe);
+        let _ = rich_text_blocks(&("<b>".repeat(5_000) + "x"), MarkdownLinks::Safe);
+        let _ = rich_text_blocks(
+            &("<span>".repeat(20_000) + &"</div>".repeat(20_000)),
+            MarkdownLinks::Safe,
+        );
+        let k_by_l = "**".to_owned() + &"*a ".repeat(2_000) + "a" + &"*".repeat(1_000_000);
+        let _ = parse_inlines(&k_by_l, MarkdownLinks::Safe);
         let _ = looks_like_rich_text(&"<".repeat(50_000));
         assert!(
             started.elapsed().as_secs() < 2,

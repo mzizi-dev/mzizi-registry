@@ -14,8 +14,8 @@
  * - Raw HTML is text. A `<script>` in the source is shown, never parsed.
  * - Links pass `safeHref`: an allow-list of schemes. A refused link keeps its words and loses
  *   its address.
- * - Rich-text HTML (from editors that store HTML) can be read into the same Markdown by
- *   `htmlToMarkdown`, a reader that builds plain data and never a DOM, so nothing in it runs.
+ * - Rich-text HTML (from editors that store HTML) is read into the same tree by
+ *   `richTextBlocks`, a reader that builds plain data and never a DOM, so nothing in it runs.
  */
 
 /** Inline content, as data. */
@@ -57,7 +57,7 @@ export type MarkdownBlock =
 export type MarkdownLinkPolicy = "safe" | "https"
 
 /**
- * What `content` is. `markdown`; `html`, rich text read by `htmlToMarkdown`; `auto`, rich
+ * What `content` is. `markdown`; `html`, rich text read by `richTextBlocks`; `auto`, rich
  * text when it holds an editor's block or inline tags, Markdown otherwise.
  */
 export type MarkdownSource = "markdown" | "html" | "auto"
@@ -161,31 +161,57 @@ export function isExternal(href: string): boolean {
   return /^https?:/i.test(href)
 }
 
-// ─── Inlines ──────────────────────────────────────────────────────────────────────────────
+// ─── Whitespace ───────────────────────────────────────────────────────────────────────────
+//
+// Defined once, as a fixed set, so the TypeScript and Rust builds agree on every character
+// (JavaScript's `\s` and Rust's `char::is_whitespace` differ on U+0085 and U+FEFF).
 
-const PUNCT = new Set(Array.from("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"))
-const isSpace = (c: string | undefined) => c === undefined || /\s/u.test(c)
-const isWord = (c: string | undefined) => c !== undefined && /[\p{L}\p{N}]/u.test(c)
+const WS = new Set([
+  ..."\t\n\v\f\r \u0085\u00a0\u1680\u2028\u2029\u202f\u205f\u3000\ufeff",
+  ...Array.from({ length: 11 }, (_, k) => String.fromCharCode(0x2000 + k)),
+])
 
-/** The length of the run of `c` starting at `i`. */
-function runAt(s: string[], i: number, c: string): number {
+/** Whether a character is whitespace. */
+export const isWs = (c: string | undefined): boolean => c !== undefined && WS.has(c)
+
+/** Whitespace off both ends. */
+export function trimWs(s: string): string {
+  let a = 0
+  let b = s.length
+  while (a < b && WS.has(s[a])) a++
+  while (b > a && WS.has(s[b - 1])) b--
+  return s.slice(a, b)
+}
+
+/** How many whitespace characters a line starts with. */
+const leadingWs = (s: string): number => {
   let n = 0
-  while (s[i + n] === c) n++
+  while (n < s.length && WS.has(s[n])) n++
   return n
 }
 
-/** Past a code span opening at `j` (a backtick run with a partner), or null if it has none. */
-function codeSpanEnd(s: string[], j: number): number | null {
-  const n = runAt(s, j, "`")
-  for (let k = j + n; k < s.length; ) {
-    if (s[k] === "`") {
-      const m = runAt(s, k, "`")
-      if (m === n) return k + m
-      k += m
-    } else k++
+/** Every run of whitespace as one space. */
+export function collapseWs(s: string): string {
+  let out = ""
+  let space = false
+  for (const c of s) {
+    if (WS.has(c)) {
+      if (!space) out += " "
+      space = true
+    } else {
+      out += c
+      space = false
+    }
   }
-  return null
+  return out
 }
+
+// ─── Inlines ──────────────────────────────────────────────────────────────────────────────
+
+const PUNCT = new Set(Array.from("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"))
+const isSpace = (c: string | undefined) => c === undefined || isWs(c)
+/** A word character: Unicode Alphabetic or Number, as Rust's `char::is_alphanumeric`. */
+const isWord = (c: string | undefined) => c !== undefined && /[\p{Alphabetic}\p{N}]/u.test(c)
 
 class InlineParser {
   private readonly s: string[]
@@ -203,13 +229,36 @@ class InlineParser {
     this.budget = BUDGET_BASE + BUDGET_PER_CHAR * s.length
   }
 
+  /** The run of `c` at `i`, stopping at `to`; its length is charged to the budget. */
+  private run(i: number, c: string, to: number): number {
+    let n = 0
+    while (i + n < to && this.s[i + n] === c) n++
+    this.budget -= n
+    return n
+  }
+
+  /** Past a code span opening at `j` (a backtick run with a partner), or null. */
+  private spanEnd(j: number): number | null {
+    const s = this.s
+    const n = this.run(j, "`", s.length)
+    for (let k = j + n; k < s.length; ) {
+      if (--this.budget < 0) return null
+      if (s[k] === "`") {
+        const m = this.run(k, "`", s.length)
+        if (m === n) return k + m
+        k += m
+      } else k++
+    }
+    return null
+  }
+
   /** `codeSpanEnd`, remembered per position, so no backtick run is measured twice. */
   private codeEnd(j: number): number | null {
     let end = this.codeEnds.get(j)
     if (end === undefined) {
       const atStart = this.s[j - 1] !== "`"
-      const n = runAt(this.s, j, "`")
-      end = atStart && this.unpaired.has(n) ? null : codeSpanEnd(this.s, j)
+      const n = this.run(j, "`", this.s.length)
+      end = atStart && this.unpaired.has(n) ? null : this.spanEnd(j)
       if (end === null && atStart) this.unpaired.add(n)
       this.codeEnds.set(j, end)
     }
@@ -229,11 +278,11 @@ class InlineParser {
         continue
       }
       if (ch === "`") {
-        j = this.codeEnd(j) ?? j + runAt(s, j, "`")
+        j = this.codeEnd(j) ?? j + this.run(j, "`", to)
         continue
       }
       if (ch === c) {
-        const run = runAt(s, j, c)
+        const run = this.run(j, c, to)
         // A single marker closes only on a single marker: `**` inside `*…*` is a nested bold.
         if (run >= n && (n > 1 || run === 1)) {
           // The closer: `n` markers, not after whitespace, not before a word for `_`.
@@ -280,12 +329,12 @@ class InlineParser {
         continue
       }
       if (ch === "`") {
-        const n = runAt(s, i, "`")
+        const n = this.run(i, "`", s.length)
         const end = this.codeEnd(i)
         if (end !== null && end <= to) {
           flush()
           let v = s.slice(i + n, end - n).join("")
-          if (v.length > 1 && v.startsWith(" ") && v.endsWith(" ") && v.trim() !== "") v = v.slice(1, -1)
+          if (v.length > 1 && v.startsWith(" ") && v.endsWith(" ") && trimWs(v) !== "") v = v.slice(1, -1)
           out.push({ t: "code", v })
           i = end
         } else {
@@ -308,7 +357,7 @@ class InlineParser {
         }
       }
       if ((ch === "*" || ch === "_") && depth < MAX_INLINE_DEPTH) {
-        const run = runAt(s, i, ch)
+        const run = this.run(i, ch, to)
         const opens = !isSpace(s[i + run]) && !(ch === "_" && isWord(s[i - 1]))
         if (opens) {
           let done = false
@@ -354,7 +403,7 @@ class InlineParser {
       }
       if (ch === "`") {
         const end = this.codeEnd(j)
-        j = (end !== null && end <= labelTo ? end : j + runAt(s, j, "`")) - 1
+        j = (end !== null && end <= labelTo ? end : j + this.run(j, "`", labelTo)) - 1
         continue
       }
       if (ch === "[") depth++
@@ -396,18 +445,29 @@ export function parseInlines(text: string, policy: MarkdownLinkPolicy = "safe"):
 
 // ─── Blocks ───────────────────────────────────────────────────────────────────────────────
 
-const FENCE = /^ {0,3}(`{3,}|~{3,})[ \t]*([^\s`]*)[^`]*$/
+/** A fence line: its marker and its info word, or null. */
+function fence(line: string): { mark: string; word: string } | null {
+  const m = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line)
+  if (!m || m[2].includes("`")) return null
+  const info = m[2].replace(/^[ \t]*/, "")
+  let word = ""
+  for (const c of info) {
+    if (WS.has(c)) break
+    word += c
+  }
+  return { mark: m[1], word }
+}
 const HEADING = /^ {0,3}(#{1,6})[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*$/
 const HR = /^ {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$/
 const QUOTE = /^ {0,3}> ?(.*)$/
 const LIST_ITEM = /^( *)([-*+•‣◦]|\d{1,9}[.)])[ \t]+(.*)$/
 const DELIM_CELL = /^:?-+:?$/
 
-const blank = (line: string) => line.trim() === ""
+const blank = (line: string) => trimWs(line) === ""
 
 /** Split a table row into its cells: outer pipes dropped, `\|` kept as a pipe. */
 function cells(line: string): string[] {
-  let row = line.trim()
+  let row = trimWs(line)
   if (row.startsWith("|")) row = row.slice(1)
   if (row.endsWith("|") && !row.endsWith("\\|")) row = row.slice(0, -1)
   const out: string[] = []
@@ -417,11 +477,11 @@ function cells(line: string): string[] {
       cur += "|"
       i++
     } else if (row[i] === "|") {
-      out.push(cur.trim())
+      out.push(trimWs(cur))
       cur = ""
     } else cur += row[i]
   }
-  out.push(cur.trim())
+  out.push(trimWs(cur))
   return out
 }
 
@@ -449,7 +509,7 @@ function untab(line: string): string {
 function startsBlock(lines: string[], i: number): boolean {
   const line = lines[i]
   return (
-    FENCE.test(line) ||
+    fence(line) !== null ||
     HEADING.test(line) ||
     HR.test(line) ||
     QUOTE.test(line) ||
@@ -478,23 +538,23 @@ class BlockParser {
         i++
         continue
       }
-      const fence = FENCE.exec(line)
-      if (fence) {
-        const mark = fence[1]
-        const indent = line.length - line.trimStart().length
+      const f = fence(line)
+      if (f) {
+        const mark = f.mark
+        const indent = leadingWs(line)
         const body: string[] = []
         i++
         while (i < lines.length) {
           const l = lines[i]
-          const t = l.trim()
-          if (t.length >= mark.length && t === mark[0].repeat(t.length) && l.length - l.trimStart().length <= 3) {
+          const t = trimWs(l)
+          if (t.length >= mark.length && t === mark[0].repeat(t.length) && leadingWs(l) <= 3) {
             i++
             break
           }
           body.push(l.replace(new RegExp(`^ {0,${indent}}`), ""))
           i++
         }
-        out.push({ kind: "code", lang: fence[2].replace(/[^A-Za-z0-9_+#.-]/g, "").slice(0, 32), v: body.join("\n") })
+        out.push({ kind: "code", lang: f.word.replace(/[^A-Za-z0-9_+#.-]/g, "").slice(0, 32), v: body.join("\n") })
         continue
       }
       const heading = HEADING.exec(line)
@@ -514,7 +574,7 @@ class BlockParser {
           inner.push(QUOTE.exec(lines[i])?.[1] ?? "")
           i++
         }
-        if (depth + 1 >= MAX_NESTING) out.push({ kind: "p", lines: inner.filter((l) => !blank(l)).map((l) => this.inl(l.trim())) })
+        if (depth + 1 >= MAX_NESTING) out.push({ kind: "p", lines: inner.filter((l) => !blank(l)).map((l) => this.inl(trimWs(l))) })
         else out.push({ kind: "quote", children: this.parse(inner, depth + 1) })
         continue
       }
@@ -538,7 +598,7 @@ class BlockParser {
       }
       const para: MarkdownInline[][] = []
       while (i < lines.length && !blank(lines[i]) && (para.length === 0 || !startsBlock(lines, i))) {
-        para.push(this.inl(lines[i].trim().replace(/\\$/, "")))
+        para.push(this.inl(trimWs(lines[i]).replace(/\\$/, "")))
         i++
       }
       out.push({ kind: "p", lines: para })
@@ -566,8 +626,9 @@ class BlockParser {
       if (!m) {
         const top = stack[stack.length - 1]
         const item = top?.list.items[top.list.items.length - 1]
-        if (item && /^ {2,}\S/.test(line) && !startsBlock(lines, i)) {
-          item.lines.push(this.inl(line.trim()))
+        const rest = line.replace(/^ */, "")
+        if (item && line.length - rest.length >= 2 && rest !== "" && !isWs(rest[0]) && !startsBlock(lines, i)) {
+          item.lines.push(this.inl(trimWs(line)))
           i++
           continue
         }
@@ -576,7 +637,7 @@ class BlockParser {
       const indent = m[1].length
       const ordered = /\d/.test(m[2])
       const kind = ordered ? "ol" : "ul"
-      const item: MarkdownListItem = { lines: [this.inl(m[3].trim())], children: [] }
+      const item: MarkdownListItem = { lines: [this.inl(trimWs(m[3]))], children: [] }
       if (stack.length === 0) {
         const list = newList(ordered, m[2])
         out.push(list)
@@ -614,14 +675,20 @@ export function parseMarkdown(text: string, policy: MarkdownLinkPolicy = "safe")
 
 // ─── Rich text ────────────────────────────────────────────────────────────────────────────
 //
-// Rich text from editors that store HTML is read into Markdown by a small reader of its own,
-// not the platform's DOMParser: it builds a tree of plain objects and never touches a DOM, so
-// nothing in the HTML can run or load, and the result is the same on a server, in a browser
-// and in the Rust build (which has the same reader). Only the tags an editor writes carry
-// meaning; every other tag is a plain container, and script-like elements are dropped whole.
+// Rich text from editors that store HTML is read by a small reader of its own, not the
+// platform's DOMParser: it builds a tree of plain objects and never touches a DOM, so nothing
+// in the HTML can run or load, and the result is the same on a server, in a browser and in the
+// Rust build (which has the same reader). The tree is turned straight into blocks and inlines,
+// never into Markdown text, so text in rich text is always text. Only the tags an editor writes
+// carry meaning; every other tag is a plain container, and script-like elements are dropped
+// whole. Elements nest at most `MAX_HTML_DEPTH` deep; deeper start tags are ignored.
 
 /** A node of rich text as data. */
 type RichNode = { tag: string; attrs: Record<string, string>; children: RichNode[] } | { text: string }
+type RichElement = Extract<RichNode, { tag: string }>
+
+/** How deep rich-text elements nest; deeper start tags are ignored (their text is kept). */
+export const MAX_HTML_DEPTH = 32
 
 const VOID = new Set(["br", "hr", "img", "input", "meta", "link", "wbr", "area", "base", "col", "embed", "source", "track", "param"])
 /** Elements dropped with their content. */
@@ -630,24 +697,28 @@ const DROP = new Set(["script", "style", "template", "noscript", "iframe", "obje
 const CLOSES_P = new Set(["p", "div", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "pre", "hr", "table"])
 /** Elements read as a container of blocks. */
 const CONTAINERS = new Set(["div", "html", "body", "main", "section", "article", "header", "footer", "aside", "nav", "figure", "center", "form", "table", "thead", "tbody", "tfoot", "tr", "td", "th"])
+/** Block elements met inside a line: their content, a space either side. */
+const BLOCKISH = new Set(["p", "div", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "li", "ul", "ol", "pre", "tr", "td", "th"])
 
-const NAMED: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: "\u00a0" }
+const NAMED: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " }
 
 /** Decode the character references editors write: the common named ones and numeric ones. */
 export function decodeEntities(text: string): string {
   return text.replace(/&(#[xX][0-9a-fA-F]{1,6}|#[0-9]{1,7}|[a-zA-Z]{2,6});/g, (whole, ref: string) => {
     if (ref[0] !== "#") return NAMED[ref] ?? whole
     const code = ref[1] === "x" || ref[1] === "X" ? Number.parseInt(ref.slice(2), 16) : Number.parseInt(ref.slice(1), 10)
-    return code > 0 && code <= 0x10ffff && (code < 0xd800 || code > 0xdfff) ? String.fromCodePoint(code) : "\ufffd"
+    return code > 0 && code <= 0x10ffff && (code < 0xd800 || code > 0xdfff) ? String.fromCodePoint(code) : "�"
   })
 }
 
 const isAsciiLetter = (c: string | undefined) => c !== undefined && /[A-Za-z]/.test(c)
+const isAsciiAlnum = (c: string | undefined) => c !== undefined && /[A-Za-z0-9]/.test(c)
+const asciiLower = (s: string) => s.replace(/[A-Z]/g, (c) => c.toLowerCase())
 
 /** Read HTML into a tree of plain objects (never a DOM). */
-function readHtml(html: string): RichNode {
-  const root = { tag: "#root", attrs: {}, children: [] as RichNode[] }
-  const stack: { tag: string; attrs: Record<string, string>; children: RichNode[] }[] = [root]
+function readHtml(html: string): RichElement {
+  const root: RichElement = { tag: "#root", attrs: {}, children: [] }
+  const stack: RichElement[] = [root]
   const top = () => stack[stack.length - 1]
   let i = 0
   let text = ""
@@ -666,8 +737,8 @@ function readHtml(html: string): RichNode {
     if (c === "<" && html[i + 1] === "/" && isAsciiLetter(html[i + 2])) {
       flushText()
       let j = i + 2
-      while (j < html.length && /[A-Za-z0-9]/.test(html[j])) j++
-      const name = html.slice(i + 2, j).toLowerCase()
+      while (j < html.length && isAsciiAlnum(html[j])) j++
+      const name = asciiLower(html.slice(i + 2, j))
       const end = html.indexOf(">", j)
       i = end < 0 ? html.length : end + 1
       for (let k = stack.length - 1; k > 0; k--) {
@@ -681,23 +752,23 @@ function readHtml(html: string): RichNode {
     if (c === "<" && isAsciiLetter(html[i + 1])) {
       flushText()
       let j = i + 1
-      while (j < html.length && /[A-Za-z0-9]/.test(html[j])) j++
-      const name = html.slice(i + 1, j).toLowerCase()
-      const attrs: Record<string, string> = {}
+      while (j < html.length && isAsciiAlnum(html[j])) j++
+      const name = asciiLower(html.slice(i + 1, j))
+      const attrs: Record<string, string> = Object.create(null) as Record<string, string>
       // Attributes: name, name=value, name="value", name='value', until `>`.
       while (j < html.length && html[j] !== ">") {
-        if (/[\s/]/.test(html[j])) {
+        if (isWs(html[j]) || html[j] === "/") {
           j++
           continue
         }
         let k = j
-        while (k < html.length && !/[\s/>=]/.test(html[k])) k++
-        const key = html.slice(j, k).toLowerCase()
+        while (k < html.length && !(isWs(html[k]) || html[k] === "/" || html[k] === ">" || html[k] === "=")) k++
+        const key = asciiLower(html.slice(j, k))
         let value = ""
-        while (k < html.length && /\s/.test(html[k])) k++
+        while (k < html.length && isWs(html[k])) k++
         if (html[k] === "=") {
           k++
-          while (k < html.length && /\s/.test(html[k])) k++
+          while (k < html.length && isWs(html[k])) k++
           const q = html[k]
           if (q === '"' || q === "'") {
             const close = html.indexOf(q, k + 1)
@@ -706,7 +777,7 @@ function readHtml(html: string): RichNode {
             k = stop + 1
           } else {
             const from = k
-            while (k < html.length && !/[\s>]/.test(html[k])) k++
+            while (k < html.length && !(isWs(html[k]) || html[k] === ">")) k++
             value = html.slice(from, k)
           }
         }
@@ -735,9 +806,12 @@ function readHtml(html: string): RichNode {
           }
         }
       }
-      const el = { tag: name, attrs, children: [] as RichNode[] }
-      top().children.push(el)
-      if (!VOID.has(name)) stack.push(el)
+      if (VOID.has(name)) top().children.push({ tag: name, attrs, children: [] })
+      else if (stack.length <= MAX_HTML_DEPTH) {
+        const el: RichElement = { tag: name, attrs, children: [] }
+        top().children.push(el)
+        stack.push(el)
+      }
       continue
     }
     text += c
@@ -749,105 +823,157 @@ function readHtml(html: string): RichNode {
 
 const textOf = (n: RichNode): string => ("text" in n ? n.text : n.children.map(textOf).join(""))
 
-/** Escape the characters inline Markdown reads, so text from HTML stays text. */
-const escapeInline = (text: string) => text.replace(/[\\`*_[\]|<]/g, (c) => `\\${c}`)
+/** A line break inside rich text, before lines are split. */
+const BREAK = null
 
-/** Escape what would start a block at the start of a line (`#`, `>`, `-`, `+`, `~`, `1.`). */
-const escapeLines = (text: string) =>
-  text
-    .split("\n")
-    .map((l) => l.replace(/^([#>+~-])/, "\\$1").replace(/^(\d{1,9})([.)])/, "$1\\$2"))
-    .join("\n")
+/** Rich text's inline content as data: marks kept, links checked, `<br>` a break where `breaks`. */
+function richInlines(nodes: RichNode[], policy: MarkdownLinkPolicy, inLink: boolean, breaks: boolean): (MarkdownInline | null)[] {
+  const out: (MarkdownInline | null)[] = []
+  for (const n of nodes) {
+    if ("text" in n) {
+      out.push({ t: "text", v: n.text })
+      continue
+    }
+    const tag = n.tag
+    if (tag === "br") out.push(breaks ? BREAK : { t: "text", v: " " })
+    else if (tag === "strong" || tag === "b") out.push({ t: "strong", c: richInlines(n.children, policy, inLink, false) as MarkdownInline[] })
+    else if (tag === "em" || tag === "i") out.push({ t: "em", c: richInlines(n.children, policy, inLink, false) as MarkdownInline[] })
+    else if (tag === "code") out.push({ t: "code", v: collapseWs(textOf(n)) })
+    else if (tag === "a") {
+      const href = inLink ? null : safeHref(n.attrs.href ?? "", policy)
+      const c = richInlines(n.children, policy, true, false) as MarkdownInline[]
+      if (href !== null) out.push({ t: "link", href, c })
+      else out.push(...c)
+    } else if (BLOCKISH.has(tag)) out.push({ t: "text", v: " " }, ...richInlines(n.children, policy, inLink, breaks), { t: "text", v: " " })
+    else out.push(...richInlines(n.children, policy, inLink, breaks))
+  }
+  return out
+}
+
+/** Whitespace as a browser shows it: runs as one space, none after a space, none at the start. */
+function normalize(items: MarkdownInline[], state: { space: boolean }): MarkdownInline[] {
+  const out: MarkdownInline[] = []
+  for (const x of items) {
+    if (x.t === "text") {
+      let v = collapseWs(x.v)
+      if (state.space && v.startsWith(" ")) v = v.slice(1)
+      if (v === "") continue
+      state.space = v.endsWith(" ")
+      const last = out[out.length - 1]
+      if (last?.t === "text") last.v += v
+      else out.push({ t: "text", v })
+    } else if (x.t === "code") {
+      if (x.v === "") continue
+      state.space = false
+      out.push(x)
+    } else {
+      const c = normalize(x.c, state)
+      if (c.length > 0) out.push({ ...x, c })
+    }
+  }
+  return out
+}
+
+/** Drop trailing whitespace from the end of a line, into its marks. */
+function trimEnd(items: MarkdownInline[]): MarkdownInline[] {
+  while (items.length > 0) {
+    const last = items[items.length - 1]
+    if (last.t === "text") {
+      last.v = last.v.replace(/ $/, "")
+      if (last.v !== "") break
+    } else if (last.t === "code") break
+    else {
+      last.c = trimEnd(last.c)
+      if (last.c.length > 0) break
+    }
+    items.pop()
+  }
+  return items
+}
+
+/** Split rich inlines at breaks into lines; empty lines are dropped. */
+function toLines(items: (MarkdownInline | null)[]): MarkdownInline[][] {
+  const lines: MarkdownInline[][] = []
+  let cur: MarkdownInline[] = []
+  const end = () => {
+    const line = trimEnd(normalize(cur, { space: true }))
+    if (line.length > 0) lines.push(line)
+    cur = []
+  }
+  for (const x of items) {
+    if (x === BREAK) end()
+    else cur.push(x)
+  }
+  end()
+  return lines
+}
+
+/** One line of rich inlines (breaks are spaces), or null when it is empty. */
+const toLine = (nodes: RichNode[], policy: MarkdownLinkPolicy) => toLines(richInlines(nodes, policy, false, false))[0] ?? null
+
+function richBlocks(nodes: RichNode[], policy: MarkdownLinkPolicy, out: MarkdownBlock[]): void {
+  let pending: RichNode[] = []
+  const flush = () => {
+    const lines = toLines(richInlines(pending, policy, false, true))
+    if (lines.length > 0) out.push({ kind: "p", lines })
+    pending = []
+  }
+  for (const n of nodes) {
+    if ("text" in n) {
+      pending.push(n)
+      continue
+    }
+    const tag = n.tag
+    if (tag === "ul" || tag === "ol") {
+      flush()
+      const items: MarkdownListItem[] = []
+      for (const li of n.children)
+        if (!("text" in li) && li.tag === "li") {
+          const line = toLine(li.children, policy)
+          if (line) items.push({ lines: [line], children: [] })
+        }
+      if (items.length > 0) out.push(tag === "ol" ? { kind: "ol", start: 1, items } : { kind: "ul", items })
+    } else if (/^h[1-6]$/.test(tag)) {
+      flush()
+      const line = toLine(n.children, policy)
+      if (line) out.push({ kind: "h", level: Number(tag[1]) as 1 | 2 | 3 | 4 | 5 | 6, c: line })
+    } else if (tag === "pre") {
+      flush()
+      let t = textOf(n)
+      if (t.startsWith("\n")) t = t.slice(1)
+      if (t.endsWith("\n")) t = t.slice(0, -1)
+      if (trimWs(t) !== "") out.push({ kind: "code", lang: "", v: t })
+    } else if (tag === "hr") {
+      flush()
+      out.push({ kind: "hr" })
+    } else if (tag === "p") {
+      flush()
+      const lines = toLines(richInlines(n.children, policy, false, true))
+      if (lines.length > 0) out.push({ kind: "p", lines })
+    } else if (tag === "blockquote") {
+      flush()
+      const inner: MarkdownBlock[] = []
+      richBlocks(n.children, policy, inner)
+      if (inner.length > 0) out.push({ kind: "quote", children: inner })
+    } else if (CONTAINERS.has(tag)) {
+      flush()
+      richBlocks(n.children, policy, out)
+    } else pending.push(n)
+  }
+  flush()
+}
 
 /**
- * Rich text to Markdown. Block elements and `<br>` end a line; a list item is one line with its
- * marker (its own paragraphs joined, as editors such as ProseMirror wrap them); bold, italic and
- * code keep their marks, links their address (still checked by `safeHref` when the Markdown is
- * read). Text is escaped, so `# x` or `**x**` typed into an editor stays text. Script-like
- * elements are dropped with their content.
+ * Rich text (an editor's HTML) as blocks. Block elements and `<br>` end a line and source
+ * newlines are spaces; a list item is one line (its own paragraphs joined, as editors such as
+ * ProseMirror wrap them); bold, italic and code keep their meaning, links their checked
+ * address (a refused one keeps its words). Text is text: Markdown typed into an editor is shown
+ * as typed.
  */
-export function htmlToMarkdown(html: string): string {
-  const inline = (node: RichNode): string => {
-    if ("text" in node) return escapeInline(node.text.replace(/\s+/g, " "))
-    let s = ""
-    for (const child of node.children) {
-      if ("text" in child) {
-        s += inline(child)
-        continue
-      }
-      const tag = child.tag
-      if (tag === "br") s += "\n"
-      else if (tag === "strong" || tag === "b") s += `**${inline(child).trim()}**`
-      else if (tag === "em" || tag === "i") s += `*${inline(child).trim()}*`
-      else if (tag === "code") s += `\`${textOf(child).replace(/`/g, "").replace(/\s+/g, " ")}\``
-      else if (tag === "a") s += `[${inline(child).trim()}](<${(child.attrs.href ?? "").replace(/[<>\s]/g, "")}>)`
-      else if (/^(p|div|h[1-6]|blockquote|li|ul|ol|pre|tr|td|th)$/.test(tag)) s += " " + inline(child) + " "
-      else s += inline(child)
-    }
-    return s
-  }
-  /** One block's text: spaces collapsed per line, line starts escaped. */
-  const lines = (s: string) =>
-    escapeLines(
-      s
-        .split("\n")
-        .map((l) => l.replace(/\s+/g, " ").trim())
-        .join("\n")
-        .trim()
-    )
-  const blocks: string[] = []
-  const walk = (node: RichNode) => {
-    if ("text" in node) return
-    let loose = ""
-    const flush = () => {
-      const t = lines(loose)
-      if (t) blocks.push(t)
-      loose = ""
-    }
-    for (const child of node.children) {
-      if ("text" in child) {
-        loose += inline(child)
-        continue
-      }
-      const tag = child.tag
-      if (tag === "ul" || tag === "ol") {
-        flush()
-        let n = 0
-        const items: string[] = []
-        for (const li of child.children)
-          if (!("text" in li) && li.tag === "li") {
-            n += 1
-            const t = inline(li).replace(/\s+/g, " ").trim()
-            if (t) items.push((tag === "ol" ? `${n}. ` : "- ") + t)
-          }
-        if (items.length) blocks.push(items.join("\n"))
-      } else if (/^h[1-6]$/.test(tag)) {
-        flush()
-        const t = inline(child).replace(/\s+/g, " ").trim()
-        if (t) blocks.push("#".repeat(Number(tag[1])) + " " + t)
-      } else if (tag === "pre") {
-        flush()
-        const t = textOf(child).replace(/^\n|\n$/g, "")
-        // A fence longer than any run of `~` inside, so no line of the code can close it.
-        const longest = (t.match(/~+/g) ?? []).reduce((n, m) => Math.max(n, m.length), 0)
-        const fence = "~".repeat(Math.max(3, longest + 1))
-        if (t.trim()) blocks.push(`${fence}\n${t}\n${fence}`)
-      } else if (tag === "hr") {
-        flush()
-        blocks.push("---")
-      } else if (tag === "p" || tag === "blockquote") {
-        flush()
-        const t = lines(inline(child))
-        if (t) blocks.push(tag === "blockquote" ? t.replace(/^/gm, "> ") : t)
-      } else if (CONTAINERS.has(tag)) {
-        flush()
-        walk(child)
-      } else loose += inline({ tag: "#span", attrs: {}, children: [child] })
-    }
-    flush()
-  }
-  walk(readHtml(html))
-  return blocks.join("\n\n")
+export function richTextBlocks(html: string, policy: MarkdownLinkPolicy = "safe"): MarkdownBlock[] {
+  const out: MarkdownBlock[] = []
+  richBlocks(readHtml(html).children, policy, out)
+  return out
 }
 
 const LOOKS_HTML = /<\/?(?:p|br|div|ul|ol|li|h[1-6]|strong|em|b|i|u|span|a|blockquote|pre|code)\b[^>]*>/i
@@ -866,5 +992,5 @@ export function markdownBlocks(content: string, options: MarkdownOptions = {}): 
   const { links = "safe", from = "markdown" } = options
   const text = typeof content === "string" ? content : ""
   const rich = from === "html" || (from === "auto" && looksLikeRichText(text))
-  return parseMarkdown(rich ? htmlToMarkdown(text) : text, links)
+  return rich ? richTextBlocks(text, links) : parseMarkdown(text, links)
 }

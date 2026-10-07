@@ -12,10 +12,10 @@ import { describe, expect, it } from "vitest"
 import { MarkdownRenderer } from "@/components/registry/n2-primitives/markdown-renderer"
 import {
   decodeEntities,
-  htmlToMarkdown,
   looksLikeRichText,
   markdownBlocks,
   parseInlines,
+  richTextBlocks,
   safeHref,
 } from "@/components/registry/n2-primitives/markdown-parse"
 
@@ -79,8 +79,8 @@ describe("rich text", () => {
     const w = window as unknown as { __mdr?: number }
     w.__mdr = 0
     const before = document.documentElement.outerHTML.length
-    const md = htmlToMarkdown('<p>x<img src="x" onerror="window.__mdr = 1"><script>window.__mdr = 2</script></p>')
-    expect(md).toBe("x")
+    const blocks = richTextBlocks('<p>x<img src="x" onerror="window.__mdr = 1"><script>window.__mdr = 2</script></p>')
+    expect(blocks).toEqual([{ kind: "p", lines: [[{ t: "text", v: "x" }]] }])
     expect(w.__mdr).toBe(0)
     expect(document.documentElement.outerHTML.length).toBe(before)
   })
@@ -169,10 +169,18 @@ describe("MarkdownRenderer (React)", () => {
     expect(performance.now() - started).toBeLessThan(1500)
   })
 
-  it("renders hostile rich text in linear time", () => {
+  it("renders hostile rich text in linear time, and deep nesting without a stack overflow", () => {
     const started = performance.now()
     html("<a <b <p>x<!--".repeat(20_000), { from: "html" })
     html("<".repeat(50_000), { from: "auto" })
+    expect(html("<b>".repeat(5_000) + "x", { from: "html" })).toContain("x")
+    html("<span>".repeat(20_000) + "</div>".repeat(20_000), { from: "html" })
+    expect(performance.now() - started).toBeLessThan(1500)
+  })
+
+  it("charges every marker run to the budget (no K×L work)", () => {
+    const started = performance.now()
+    html("**" + "*a ".repeat(2_000) + "a" + "*".repeat(1_000_000))
     expect(performance.now() - started).toBeLessThan(1500)
   })
 
