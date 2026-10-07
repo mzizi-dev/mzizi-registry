@@ -38,7 +38,7 @@ from dataclasses import dataclass, field, replace
 from typing import Any, Generic, Literal, TypeVar
 
 from .bulkhead import Bulkhead, BulkheadConfig
-from .chaos import ChaosConfig, ChaosEngine
+from .chaos import ChaosConfig, ChaosEngine, apply_fault
 from .circuit_breaker import CircuitBreaker, CircuitBreakerConfig, CircuitState
 from .fallback_chain import Stage, with_fallback_result
 from .rate_limiter import RateLimiter, RateLimiterConfig
@@ -257,7 +257,12 @@ class Resilience(Generic[T]):
         chaos = self.chaos
 
         async def validated() -> T:
-            value = await (chaos.run(operation, sleep=self.sleep) if chaos else operation())
+            if chaos is None:
+                value = await operation()
+            else:
+                value = await apply_fault(
+                    chaos.decide(), operation, sleep=self.sleep, mutate=chaos.config.mutate
+                )
             if validate is not None and not validate(value):
                 raise MalformedPayloadError()
             return value

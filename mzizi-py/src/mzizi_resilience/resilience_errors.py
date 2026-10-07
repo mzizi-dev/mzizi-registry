@@ -191,10 +191,17 @@ class ChaosError(ResilienceError):
     """A fault injected by chaos testing (N8). ``kind`` names the fault."""
 
     code: ClassVar[str] = "chaos"
+    #: Always true: an injected failure, never a real one.
+    injected: ClassVar[bool] = True
 
     def __init__(self, kind: str, detail: str | None = None) -> None:
         self.kind = kind
-        super().__init__(detail or f"chaos {kind} injected")
+        super().__init__(detail or f"Chaos {kind} injected")
+
+    @property
+    def chaos_type(self) -> str:
+        """The n2 name for ``kind``."""
+        return self.kind
 
 
 class ChaosForbiddenError(ResilienceError):
@@ -203,7 +210,7 @@ class ChaosForbiddenError(ResilienceError):
     code: ClassVar[str] = "chaos-forbidden"
 
     def __init__(self) -> None:
-        super().__init__("chaos cannot be enabled in production")
+        super().__init__("Chaos is forbidden in production; there is no override")
 
 
 _REJECTIONS = (CircuitOpenError, BulkheadFullError, BulkheadQueueTimeoutError, RateLimitExceededError)

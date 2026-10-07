@@ -26,6 +26,11 @@ def test_every_module_is_re_exported() -> None:
     import importlib
     import pkgutil
 
+    modules = [m.name for m in pkgutil.iter_modules(mzizi_resilience.__path__)]
+    imported = {
+        name.lstrip("_") for name in vars(mzizi_resilience) if name.startswith("_") and not name.startswith("__")
+    }
+    assert set(modules) <= imported, f"not re-exported: {set(modules) - imported}"
     for info in pkgutil.iter_modules(mzizi_resilience.__path__):
         module = importlib.import_module(f"mzizi_resilience.{info.name}")
         for name in getattr(module, "__all__", []):
