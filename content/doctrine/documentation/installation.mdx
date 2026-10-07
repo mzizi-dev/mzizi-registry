@@ -4,7 +4,7 @@ _schemaVersion: "v1"
 author: "nyuchi-team"
 category: "getting-started"
 createdAt: "2026-04-14T04:32:02.311034+00:00"
-currentVersion: 2
+currentVersion: 3
 description: "How to install and set up the Nyuchi Design System in your project."
 dnaRole: "documentation"
 doctrineVersion: "4.1.7"
@@ -13,7 +13,7 @@ keywords:
 - "setup"
 - "cli"
 - "getting-started"
-- "next-js"
+- "astro"
 - "tailwind"
 kind: "doc_page"
 model: "mzizi-dna-helix"
@@ -40,61 +40,45 @@ version: "4.0.34-reviewed"
 
 # Installation
 
-## Prerequisites
+## Pick a build
 
-- Node.js 18+
-- Next.js 14+ (App Router)
-- Tailwind CSS 3.4+
+Every component has one contract and up to three builds. Astro is the default; the
+others are the same component for projects that are not on Astro.
 
-## Install the CLI
+| Build           | For                        | Served at                                 |
+| --------------- | -------------------------- | ----------------------------------------- |
+| Astro (default) | Astro sites and apps       | `https://api.mzizi.dev/v1/astro/<name>`   |
+| Rust (Dioxus)   | Rust apps, via Mzizi Roots | crates.io (`mzizi-roots` and node crates) |
+| React           | React and Next.js projects | `https://api.mzizi.dev/v1/ui/<name>`      |
 
-```bash
-npm install -g @nyuchi/design-cli@latest
-```
-
-## Initialize in your project
-
-```bash
-npx @nyuchi/design-cli@latest init
-```
-
-This will:
-
-1. Create `components.json` configuration
-2. Set up the `@/lib/utils` helper with `cn()` function
-3. Configure Tailwind with Nyuchi design tokens
-4. Install the seven African minerals color palette
-5. Set up the Noto Serif / Noto Sans / JetBrains Mono font stack
+Web builds use Tailwind CSS 4 and the Mzizi tokens. Not every component has every
+build yet: `GET https://api.mzizi.dev/v1/astro` lists the Astro ones.
 
 ## Add components
 
 ```bash
-# Add individual components
-npx @nyuchi/design-cli@latest add button card dialog
+# Rust (Mzizi Roots): the UI side, or one node crate
+cargo add mzizi-roots
 
-# Add a full node
-npx @nyuchi/design-cli@latest add --node 3
+# React, with the shadcn CLI
+npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 
-# Add all components for a mini-app
-npx @nyuchi/design-cli@latest add --mini-app wallet
+# The Mzizi installer resolves a component and its dependencies
+npx @nyuchi/mzizi-cli add button --target rust
 ```
 
-## Project structure
+For Astro, fetch the document at `/v1/astro/<name>`: it lists the `.astro` file, its
+flat imports as further `/v1/astro/` dependencies and its npm dependencies, written
+into `src/components/mzizi/`. Use `@nyuchi/mzizi-cli add <name> --target astro` once
+your installed CLI lists `astro` under `--target`.
 
-```
-src/
-├── components/
-│   ├── ui/          # N2 — Primitives
-│   ├── brand/       # N3 — Brand Components
-│   ├── safety/      # N4 — Safety Gates
-│   ├── resilience/  # N5 — Resilience
-│   ├── pages/       # N6 — Page Compositions
-│   └── shell/       # N7 — App Shell
-├── lib/
-│   ├── tokens/      # N1 — Design Tokens
-│   ├── icons/       # N1 — Icon Registry
-│   ├── harness/     # Harness — Cross-cutting
-│   ├── assurance/   # N8 — Assurance
-│   └── fundi/       # N9 — Fundi
-└── docs/            # N10 — Documentation
-```
+Every install carries the canonical typography (Noto Sans / Noto Serif / JetBrains
+Mono) and the Mzizi palette.
+
+## Where files land
+
+- **Astro:** flat, in `src/components/mzizi/`, so a component's relative imports
+  resolve beside it.
+- **React:** where your `components.json` aliases point, as with any shadcn registry.
+- **Rust:** components come from the crate you add, not copied files; the Mzizi
+  installer writes only the N1 token files into the project.

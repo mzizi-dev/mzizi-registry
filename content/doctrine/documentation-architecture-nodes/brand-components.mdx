@@ -1,13 +1,13 @@
 ---
 _schemaVersion: "v1"
 covenant: "A brand component is a primitive with Ubuntu in it."
-currentVersion: 2
-description: "Primitives wrapped in Ubuntu philosophy. Brand components consume the harness for observability, motion and accessibility — every one destructures { log, motion, LiveRegion } from it, and N2 primitives never do. The harness is TypeScript today (lib/harness in mzizi-dev/mzizi-registry); the target is one shared Rust WASM core behind that same interface, so the harness is implemented once instead of once per framework. The component shell stays framework-specific either way: Dioxus on the Rust path, Svelte optional, Swift / Kotlin / ArkTS / React Native idiomatic native."
+currentVersion: 3
+description: "Primitives wrapped in Ubuntu philosophy. Brand components consume the harness for observability, motion and accessibility, and N2 primitives never do. In the React build every one destructures { log, motion, LiveRegion } from useMziziHarness (lib/harness in mzizi-dev/mzizi-registry); the Rust build (Dioxus, in the mzizi-brand crate) and the Astro build take the facility they branch on, usually reduced motion, as a prop (docs/roots/RFC-roots.md). The component stays framework-specific: Astro by default, Dioxus on the Rust path, React kept at parity, Swift / Kotlin / ArkTS / React Native idiomatic native."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
 helix_model: "double-helix"
 implementation_rules:
-- "Always destructure { log, motion, LiveRegion } from useMziziHarness."
+- "In the React build, always destructure { log, motion, LiveRegion } from useMziziHarness; the Astro and Rust builds take the facility they need as a prop."
 - "N2 primitives never import useMziziHarness directly."
 - "Every brand component carries a data-slot attribute for stable targeting."
 - "Use mineral palette tokens, not raw colour values."
@@ -19,16 +19,15 @@ owner: "nyuchi"
 role: "N3 — primitives wrapped in Ubuntu"
 rust:
   kind: "ui-framework"
-  note: "The N2/N3 boundary is unchanged by any of this: N3 takes the harness, N2 never does, whatever language the harness is written in. Rust changes who implements the harness, not who is allowed to hold it."
-  state: "target"
-  today: "No Rust ships. The harness is lib/harness/index.tsx in mzizi-dev/mzizi-registry — a TypeScript React context, not a WASM module — and the brand inventory is React with a production Svelte surface. Zero Dioxus brand components exist."
-  target: "Two things move, and they move separately. The HARNESS becomes part of the shared Rust core compiled to WASM, so { log, motion, LiveRegion } is one implementation every target consumes. The SHELL stays framework-specific — Dioxus is the Rust path, Svelte remains a supported option, the native targets keep their own idiomatic components. Consumers on native targets get the contract and the tokens, not source."
+  note: "The N2/N3 boundary is unchanged by any of this: N3 takes the harness, N2 never does, whatever language the build is written in. In Rust and Astro the harness is props rather than a context, which keeps the boundary visible in every component signature."
+  state: "shipped"
+  today: "The mzizi-brand crate (Mzizi Roots, on crates.io) ships Dioxus brand components — cards, stats, alerts and states — each generated from a registry .rs sibling with a checkable contract, taking harness facilities as props. The React harness is lib/harness/index.tsx, a TypeScript React context. Astro brand builds exist for some components and are growing; the registry files are the inventory."
+  target: "Every brand component in Astro (the default), Dioxus and React, each the same component under one contract. The harness stays per build — a React context, props in Astro and Rust — rather than one WASM module, because what it carries is browser facilities, not shared logic. Native targets get the contract and the tokens, not source."
   position: "alternative"
   descriptors:
+  - "astro"
   - "dioxus"
-  - "svelte"
   - "react"
-  - "mzizi-react-legacy"
 sort_order: 3
 stakeholder: "Brand system steward"
 strand: "shipped"
