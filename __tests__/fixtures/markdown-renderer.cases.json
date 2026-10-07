@@ -1,0 +1,1192 @@
+{
+  "$comment": "Markdown → tree cases shared by markdown-parse.ts (__tests__/components/markdown-renderer.test.tsx) and markdown-renderer.rs (mzizi-ui tests/contract.rs). The two parsers must produce exactly these trees.",
+  "cases": [
+    {
+      "say": "one line, one paragraph",
+      "input": "Sits at the front.",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Sits at the front."
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "line breaks kept, blank lines split paragraphs",
+      "input": "First line\r\nSecond line\n\n  \nNew paragraph",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "First line"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "Second line"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "New paragraph"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "headings, bulleted and numbered lists",
+      "input": "## Plan\n- water bottle\n* extra time\n1. step one\n2) step two\nAfter",
+      "expect": [
+        {
+          "kind": "h",
+          "level": 2,
+          "c": [
+            {
+              "t": "text",
+              "v": "Plan"
+            }
+          ]
+        },
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "water bottle"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "extra time"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "ol",
+          "start": 1,
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "step one"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "step two"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "After"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "text that only mentions < and > is text",
+      "input": "Score < 5 or > 9",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Score < 5 or > 9"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "raw HTML is text",
+      "input": "<img src=x onerror=alert(1)>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "<img src=x onerror=alert(1)>"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "whitespace only is nothing",
+      "input": "  \n \n",
+      "expect": []
+    },
+    {
+      "say": "bold, italic, code",
+      "input": "**Epi-pen** in *bag*, code `B12`, _quiet_",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "Epi-pen"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " in "
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "bag"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": ", code "
+              },
+              {
+                "t": "code",
+                "v": "B12"
+              },
+              {
+                "t": "text",
+                "v": ", "
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "quiet"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "https policy keeps https links only, and the words of the rest",
+      "links": "https",
+      "input": "[plan](https://example.org/p) and [x](javascript:alert`1`) and [y](http://plain.example) and [z](/rel)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "link",
+                "href": "https://example.org/p",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "plan"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " and x and y and z"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "unclosed marks and snake_case stay text",
+      "input": "2 * 3 and file_name_here and **open",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "2 * 3 and file_name_here and **open"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "hostile links lose their address",
+      "input": "[js](javascript:alert(1)) [tab](\tjavascript:alert(2)) [split](java\tscript:alert(3)) [nl](java\nscript:x) [data](data:text/html;base64,PHNjcmlwdD4=) [vb](VBScript:msgbox(1)) [angle](<javascript:alert(4)>) [ok](https://example.org/a) [mail](mailto:a@example.org) [tel](tel:+263) [rel](/a/b) [hash](#top)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "js tab split [nl](java"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "script:x) data vb angle "
+              },
+              {
+                "t": "link",
+                "href": "https://example.org/a",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "ok"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "mailto:a@example.org",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "mail"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "tel:+263",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "tel"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "/a/b",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "rel"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " "
+              },
+              {
+                "t": "link",
+                "href": "#top",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "hash"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "HTML in table cells is text",
+      "input": "| a | b |\n| - | - |\n| <script>alert(1)</script> | <img src=x onerror=alert(2)> |",
+      "expect": [
+        {
+          "kind": "table",
+          "align": [null, null],
+          "head": [
+            [
+              {
+                "t": "text",
+                "v": "a"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "b"
+              }
+            ]
+          ],
+          "rows": [
+            [
+              [
+                {
+                  "t": "text",
+                  "v": "<script>alert(1)</script>"
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "v": "<img src=x onerror=alert(2)>"
+                }
+              ]
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "raw anchors and scripts are text",
+      "input": "<a href=\"javascript:alert(1)\">raw</a>\n\n<script>alert(2)</script>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "<a href=\"javascript:alert(1)\">raw</a>"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "<script>alert(2)</script>"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "nested lists, quotes, code, tables, rules",
+      "input": "- a\n  - b\n    1. c\n- d\n\n> q1\n> - li\n\n```js\nx < 1\n```\n\n| A | B | C |\n|:-|-:|:-:|\n| x | **y** |\n\n---",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              ],
+              "children": [
+                {
+                  "kind": "ul",
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "b"
+                          }
+                        ]
+                      ],
+                      "children": [
+                        {
+                          "kind": "ol",
+                          "start": 1,
+                          "items": [
+                            {
+                              "lines": [
+                                [
+                                  {
+                                    "t": "text",
+                                    "v": "c"
+                                  }
+                                ]
+                              ],
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "d"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "quote",
+          "children": [
+            {
+              "kind": "p",
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "q1"
+                  }
+                ]
+              ]
+            },
+            {
+              "kind": "ul",
+              "items": [
+                {
+                  "lines": [
+                    [
+                      {
+                        "t": "text",
+                        "v": "li"
+                      }
+                    ]
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "code",
+          "lang": "js",
+          "v": "x < 1"
+        },
+        {
+          "kind": "table",
+          "align": ["left", "right", "center"],
+          "head": [
+            [
+              {
+                "t": "text",
+                "v": "A"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "B"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "C"
+              }
+            ]
+          ],
+          "rows": [
+            [
+              [
+                {
+                  "t": "text",
+                  "v": "x"
+                }
+              ],
+              [
+                {
+                  "t": "strong",
+                  "c": [
+                    {
+                      "t": "text",
+                      "v": "y"
+                    }
+                  ]
+                }
+              ],
+              []
+            ]
+          ]
+        },
+        {
+          "kind": "hr"
+        }
+      ]
+    },
+    {
+      "say": "a numbered list keeps its first number; kinds switch",
+      "input": "3. three\n4. four\n- dash",
+      "expect": [
+        {
+          "kind": "ol",
+          "start": 3,
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "three"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "four"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "dash"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "bold italic, nested marks, escapes",
+      "input": "***both*** and *a **b** c* and \\*lit\\* and \\_x\\_",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "strong",
+                "c": [
+                  {
+                    "t": "em",
+                    "c": [
+                      {
+                        "t": "text",
+                        "v": "both"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " and "
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a "
+                  },
+                  {
+                    "t": "strong",
+                    "c": [
+                      {
+                        "t": "text",
+                        "v": "b"
+                      }
+                    ]
+                  },
+                  {
+                    "t": "text",
+                    "v": " c"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " and *lit* and _x_"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "a link in a link's words is words",
+      "input": "[a [b](https://x.org/b) c](https://x.org/a)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "link",
+                "href": "https://x.org/a",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "a b c"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "marks inside link words",
+      "input": "[**bold** link](https://x.org)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "link",
+                "href": "https://x.org",
+                "c": [
+                  {
+                    "t": "strong",
+                    "c": [
+                      {
+                        "t": "text",
+                        "v": "bold"
+                      }
+                    ]
+                  },
+                  {
+                    "t": "text",
+                    "v": " link"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "code spans hold markers and HTML",
+      "input": "`<b>*x*</b>` and `` a`b `` and ` ` and `unclosed",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "code",
+                "v": "<b>*x*</b>"
+              },
+              {
+                "t": "text",
+                "v": " and "
+              },
+              {
+                "t": "code",
+                "v": "a`b"
+              },
+              {
+                "t": "text",
+                "v": " and "
+              },
+              {
+                "t": "code",
+                "v": " "
+              },
+              {
+                "t": "text",
+                "v": " and `unclosed"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "fences: tilde, longer closers, unclosed",
+      "input": "~~~\n# not a heading\n~~~~\n\n````py extra\nprint(1)",
+      "expect": [
+        {
+          "kind": "code",
+          "lang": "",
+          "v": "# not a heading"
+        },
+        {
+          "kind": "code",
+          "lang": "py",
+          "v": "print(1)"
+        }
+      ]
+    },
+    {
+      "say": "heading closers and levels",
+      "input": "# Title #\n###### Six\n####### seven\n#nospace",
+      "expect": [
+        {
+          "kind": "h",
+          "level": 1,
+          "c": [
+            {
+              "t": "text",
+              "v": "Title"
+            }
+          ]
+        },
+        {
+          "kind": "h",
+          "level": 6,
+          "c": [
+            {
+              "t": "text",
+              "v": "Six"
+            }
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "####### seven"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "#nospace"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rules and list-like rules",
+      "input": "***\n- - -\n___",
+      "expect": [
+        {
+          "kind": "hr"
+        },
+        {
+          "kind": "hr"
+        },
+        {
+          "kind": "hr"
+        }
+      ]
+    },
+    {
+      "say": "list continuation lines",
+      "input": "- first\n  more of first\n- second",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "first"
+                  }
+                ],
+                [
+                  {
+                    "t": "text",
+                    "v": "more of first"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "second"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "loose list across a blank line",
+      "input": "- a\n\n- b",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "b"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "trailing backslash hard break",
+      "input": "line one\\\nline two",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "line one"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "line two"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "escaped pipes in cells, ragged rows",
+      "input": "| a \\| b | c |\n|---|---|\n| 1 |\n| 2 | 3 | 4 |",
+      "expect": [
+        {
+          "kind": "table",
+          "align": [null, null],
+          "head": [
+            [
+              {
+                "t": "text",
+                "v": "a | b"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "c"
+              }
+            ]
+          ],
+          "rows": [
+            [
+              [
+                {
+                  "t": "text",
+                  "v": "1"
+                }
+              ],
+              []
+            ],
+            [
+              [
+                {
+                  "t": "text",
+                  "v": "2"
+                }
+              ],
+              [
+                {
+                  "t": "text",
+                  "v": "3"
+                }
+              ]
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "a pipe line with no delimiter row is a paragraph",
+      "input": "a | b\nc | d",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "a | b"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "c | d"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "unicode text and underscores",
+      "input": "Ndatenda _zvikuru_ — naïve_word and 日本_語",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Ndatenda "
+              },
+              {
+                "t": "em",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "zvikuru"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " — naïve_word and 日本_語"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "link titles are dropped, parentheses balance",
+      "input": "[t](https://x.org/a_(b) \"title\") and [u](<https://x.org/c d>)",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "link",
+                "href": "https://x.org/a_(b)",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "t"
+                  }
+                ]
+              },
+              {
+                "t": "text",
+                "v": " and "
+              },
+              {
+                "t": "link",
+                "href": "https://x.org/c d",
+                "c": [
+                  {
+                    "t": "text",
+                    "v": "u"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "bullets editors paste",
+      "input": "• one\n◦ two\n‣ three",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "one"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "two"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "three"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "deep quote nesting is bounded",
+      "input": "> > > > > > > > > > deep",
+      "expect": [
+        {
+          "kind": "quote",
+          "children": [
+            {
+              "kind": "quote",
+              "children": [
+                {
+                  "kind": "quote",
+                  "children": [
+                    {
+                      "kind": "quote",
+                      "children": [
+                        {
+                          "kind": "quote",
+                          "children": [
+                            {
+                              "kind": "quote",
+                              "children": [
+                                {
+                                  "kind": "quote",
+                                  "children": [
+                                    {
+                                      "kind": "p",
+                                      "lines": [
+                                        [
+                                          {
+                                            "t": "text",
+                                            "v": "> > deep"
+                                          }
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

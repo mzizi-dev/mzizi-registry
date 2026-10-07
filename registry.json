@@ -9731,10 +9731,44 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": [],
+      "description": "The framework-free half of markdown-renderer: Markdown in, a typed tree out (blocks and inlines), with the link scheme allow-list (safeHref) and a DOMParser-based rich-text-to-Markdown reader. Builds no HTML.",
+      "docs": "Use it for: Parsing Markdown into data for markdown-renderer, Checking a link address against a scheme allow-list.\nIncludes: Typed Markdown tree, Link scheme allow-list, Rich text to Markdown through DOMParser.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-parse",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/markdown-parse.ts",
+          "target": "lib/markdown-parse.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Typed Markdown tree",
+          "Link scheme allow-list",
+          "Rich text to Markdown through DOMParser"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Parsing Markdown into data for markdown-renderer",
+          "Checking a link address against a scheme allow-list"
+        ]
+      },
+      "name": "markdown-parse",
+      "registryDependencies": [],
+      "title": "Markdown Parse",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "Themed markdown-to-HTML renderer with design system typography and colors.",
-      "docs": "Use it for: Rendering LLM markdown output with Nyuchi typography, Documentation pages rendered from markdown source, AI-generated articles with themed code blocks, User-composed rich text in chat and comments, Knowledge base articles with consistent styling.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-renderer",
+      "description": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list (https-only on request). Ships in three builds under one contract: React (.tsx), Astro (.astro) and Mzizi Roots (.rs, mzizi-ui).",
+      "docs": "Use it for: Untrusted user text (notes, comments, flags) on pages that hold personal data, Rendering LLM markdown output with Nyuchi typography, Documentation pages rendered from markdown source, Rich text from editors that store HTML (from=\"html\").\nVariants: safe, https.\nIncludes: cn() for className composition, data-slot attribute, Typed Markdown tree (markdown-parse), No HTML string sink in any build, Scheme allow-list for links, GFM tables, nested lists, fenced code, Rust (mzizi-ui) and Astro siblings with one contract.\nAccessibility: Semantic HTML: headings, lists, blockquote, tables with th scope=col, Links keep a focus-visible outline in the ring token, headingBase fits the text under the page's own headings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-renderer",
       "files": [
         {
           "path": "components/registry/n2-primitives/markdown-renderer.tsx",
@@ -9743,22 +9777,33 @@
         }
       ],
       "meta": {
-        "a11y": ["Semantic HTML"],
+        "a11y": [
+          "Semantic HTML: headings, lists, blockquote, tables with th scope=col",
+          "Links keep a focus-visible outline in the ring token",
+          "headingBase fits the text under the page's own headings"
+        ],
         "collection": "primitives",
-        "features": ["cn() for className composition", "data-slot attribute"],
+        "features": [
+          "cn() for className composition",
+          "data-slot attribute",
+          "Typed Markdown tree (markdown-parse)",
+          "No HTML string sink in any build",
+          "Scheme allow-list for links",
+          "GFM tables, nested lists, fenced code",
+          "Rust (mzizi-ui) and Astro siblings with one contract"
+        ],
         "hasDemo": true,
         "owner": "mzizi",
         "useCases": [
+          "Untrusted user text (notes, comments, flags) on pages that hold personal data",
           "Rendering LLM markdown output with Nyuchi typography",
           "Documentation pages rendered from markdown source",
-          "AI-generated articles with themed code blocks",
-          "User-composed rich text in chat and comments",
-          "Knowledge base articles with consistent styling"
+          "Rich text from editors that store HTML (from=\"html\")"
         ],
-        "variants": ["default"]
+        "variants": ["safe", "https"]
       },
       "name": "markdown-renderer",
-      "registryDependencies": [],
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/markdown-parse"],
       "title": "Markdown Renderer",
       "type": "registry:ui"
     },

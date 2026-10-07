@@ -417,3 +417,176 @@ fn safe_area_frame_classes_and_geometry_match_the_typescript() {
     let f = mzizi_ui::safe_area_bands(32, 4, [0, 0, 0, 0], 56);
     assert_eq!((f.width, f.height), (56, 7));
 }
+
+// ─── markdown-renderer ──────────────────────────────────────────────────────────────────────
+//
+// The React and Astro builds share `markdown-parse.ts`; this build has its own parser. They are
+// held together three ways: the same class strings, the same trees for every case in
+// `__tests__/fixtures/markdown-renderer.cases.json` (which the TypeScript suite runs too), and
+// no HTML string sink in any of the three files.
+
+mod markdown {
+    use super::*;
+    use mzizi_ui::markdown_renderer::{
+        Align, Block, Inline, List, MarkdownLinks, classes, parse_markdown,
+    };
+    use serde_json::{Value, json};
+
+    fn source(file: &str) -> String {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n2-primitives")
+            .join(file);
+        fs::read_to_string(&path).unwrap_or_else(|e| panic!("cannot read {path:?}: {e}"))
+    }
+
+    #[test]
+    fn classes_are_the_typescript_classes() {
+        let ts = source("markdown-parse.ts");
+        let mut all = vec![
+            classes::ROOT,
+            classes::P,
+            classes::UL,
+            classes::OL,
+            classes::NESTED,
+            classes::QUOTE,
+            classes::PRE,
+            classes::CODE,
+            classes::A,
+            classes::HR,
+            classes::TABLE_WRAP,
+            classes::TABLE,
+            classes::TH,
+            classes::TD,
+            classes::LEFT,
+            classes::CENTER,
+            classes::RIGHT,
+        ];
+        all.extend(classes::H);
+        for class in all {
+            assert!(
+                ts.contains(&format!("\"{class}\"")),
+                "markdown-renderer.rs has the class string `{class}`, which MARKDOWN_CLASSES in \
+                 markdown-parse.ts does not: the builds have drifted"
+            );
+        }
+    }
+
+    #[test]
+    fn no_build_has_an_html_string_sink() {
+        for file in [
+            "markdown-renderer.rs",
+            "markdown-renderer.tsx",
+            "markdown-renderer.astro",
+            "markdown-parse.ts",
+        ] {
+            let code: String = source(file)
+                .lines()
+                .filter(|l| {
+                    let t = l.trim_start();
+                    !(t.starts_with("//") || t.starts_with('*') || t.starts_with("/*"))
+                })
+                .collect::<Vec<_>>()
+                .join("\n");
+            for sink in [
+                "dangerouslySetInnerHTML",
+                "set:html",
+                "dangerous_inner_html",
+                "innerHTML",
+                "outerHTML",
+                "insertAdjacentHTML",
+                "document.write",
+            ] {
+                assert!(
+                    !code.contains(sink),
+                    "{file} uses the HTML string sink `{sink}`"
+                );
+            }
+        }
+    }
+
+    fn inlines(c: &[Inline]) -> Value {
+        Value::Array(
+            c.iter()
+                .map(|x| match x {
+                    Inline::Text(v) => json!({ "t": "text", "v": v }),
+                    Inline::Code(v) => json!({ "t": "code", "v": v }),
+                    Inline::Strong(c) => json!({ "t": "strong", "c": inlines(c) }),
+                    Inline::Em(c) => json!({ "t": "em", "c": inlines(c) }),
+                    Inline::Link { href, children } => {
+                        json!({ "t": "link", "href": href, "c": inlines(children) })
+                    }
+                })
+                .collect(),
+        )
+    }
+
+    fn lines(ls: &[Vec<Inline>]) -> Value {
+        Value::Array(ls.iter().map(|l| inlines(l)).collect())
+    }
+
+    fn list(l: &List) -> Value {
+        let items: Vec<Value> = l
+            .items
+            .iter()
+            .map(|it| {
+                json!({ "lines": lines(&it.lines), "children": it.children.iter().map(list).collect::<Vec<_>>() })
+            })
+            .collect();
+        if l.ordered {
+            json!({ "kind": "ol", "start": l.start, "items": items })
+        } else {
+            json!({ "kind": "ul", "items": items })
+        }
+    }
+
+    /// The tree in `markdown-parse.ts`'s JSON shape.
+    fn blocks(bs: &[Block]) -> Value {
+        Value::Array(
+            bs.iter()
+                .map(|b| match b {
+                    Block::Paragraph(ls) => json!({ "kind": "p", "lines": lines(ls) }),
+                    Block::Heading { level, children } => {
+                        json!({ "kind": "h", "level": level, "c": inlines(children) })
+                    }
+                    Block::List(l) => list(l),
+                    Block::Quote(children) => json!({ "kind": "quote", "children": blocks(children) }),
+                    Block::Code { lang, text } => json!({ "kind": "code", "lang": lang, "v": text }),
+                    Block::Rule => json!({ "kind": "hr" }),
+                    Block::Table { align, head, rows } => json!({
+                        "kind": "table",
+                        "align": align.iter().map(|a| match a {
+                            None => Value::Null,
+                            Some(Align::Left) => json!("left"),
+                            Some(Align::Center) => json!("center"),
+                            Some(Align::Right) => json!("right"),
+                        }).collect::<Vec<_>>(),
+                        "head": head.iter().map(|c| inlines(c)).collect::<Vec<_>>(),
+                        "rows": rows.iter().map(|r| r.iter().map(|c| inlines(c)).collect::<Vec<_>>()).collect::<Vec<_>>(),
+                    }),
+                })
+                .collect(),
+        )
+    }
+
+    #[test]
+    fn the_parser_matches_the_typescript_case_for_case() {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../__tests__/fixtures/markdown-renderer.cases.json");
+        let fixture: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+        let cases = fixture["cases"].as_array().unwrap();
+        assert!(cases.len() >= 20, "the shared fixture has too few cases");
+        for case in cases {
+            let policy = match case["links"].as_str() {
+                Some("https") => MarkdownLinks::Https,
+                _ => MarkdownLinks::Safe,
+            };
+            let got = blocks(&parse_markdown(case["input"].as_str().unwrap(), policy));
+            assert_eq!(
+                got,
+                case["expect"],
+                "case `{}`",
+                case["say"].as_str().unwrap()
+            );
+        }
+    }
+}
