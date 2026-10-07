@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — the Python distribution path: `mzizi-py/`, `pnpm py:generate`, `lib/python-packages.ts` and `publish-pypi.yml` (2026-10-07, #PR)
+### Added — the Python distribution path: `mzizi-py/`, `pnpm py:generate`, `lib/python-packages.ts` and `publish-pypi.yml` (2026-10-07, #473)
 
 Phase 2 of #472 starts with the infrastructure the Python build of the resilience node ships through, before its modules land.
 
