@@ -1,0 +1,168 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/circuit-breaker",
+  "title": "Circuit breaker",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "library",
+  "summary": "Resilience4j-style breaker (CLOSED, OPEN, HALF_OPEN) harvested from mukoko-weather: a sans-IO sliding-window core with the time passed in, and an async wrapper. Per-provider tuning is a documented pattern (Tomorrow.io 3 failures / 5 min opens for 2 min; Open-Meteo 5 / 5 min opens for 5 min), not a preset list.",
+  "api": {
+    "ts": [
+      {
+        "name": "CircuitBreakerCore",
+        "kind": "class",
+        "summary": "state(now), tryAcquire(now), onSuccess(now), onFailure(now), onIgnored(now), reset(now), failureCount(now), probesInFlight, transitions."
+      },
+      {
+        "name": "CircuitBreaker",
+        "kind": "class",
+        "summary": "execute(fn), state, isAllowed, failureCount, transitions, reset(); config isFailure, onStateChange, onEvent, clock."
+      },
+      {
+        "name": "CircuitOpenError",
+        "kind": "class",
+        "summary": "code circuit-open; breakerName, state, retryAfterMs."
+      },
+      {
+        "name": "CircuitState",
+        "kind": "type",
+        "summary": "closed | open | half_open."
+      },
+      {
+        "name": "CIRCUIT_BREAKER_DEFAULTS",
+        "kind": "const",
+        "summary": "The defaults."
+      },
+      {
+        "name": "PROVIDER_CONFIGS",
+        "kind": "const",
+        "summary": "Deprecated: the documented pattern's two examples."
+      }
+    ],
+    "rs": [
+      {
+        "name": "CircuitBreakerCore",
+        "kind": "struct",
+        "summary": "The sans-IO core (same methods, snake_case)."
+      },
+      {
+        "name": "CircuitBreaker",
+        "kind": "struct",
+        "summary": "execute(rt, op) and execute_with(rt, is_failure, op)."
+      },
+      {
+        "name": "CircuitBreakerConfig",
+        "kind": "struct",
+        "summary": "The numbers, with new(name) defaults."
+      },
+      {
+        "name": "CircuitState",
+        "kind": "enum",
+        "summary": "Closed, Open, HalfOpen (as_str: closed, open, half_open)."
+      },
+      {
+        "name": "Acquire",
+        "kind": "enum",
+        "summary": "Ok or Rejected { retry_after_ms }."
+      },
+      {
+        "name": "Transition",
+        "kind": "struct",
+        "summary": "{from, to, at}."
+      }
+    ],
+    "py": null
+  },
+  "config": [
+    {
+      "name": "failureThreshold",
+      "default": 3,
+      "rule": "An integer >= 1."
+    },
+    {
+      "name": "windowMs",
+      "default": 60000,
+      "rule": "An integer >= 1."
+    },
+    {
+      "name": "cooldownMs",
+      "default": 30000,
+      "rule": "A non-negative integer."
+    },
+    {
+      "name": "halfOpenMaxCalls",
+      "default": 1,
+      "rule": "An integer >= 1."
+    },
+    {
+      "name": "isFailure",
+      "default": "every error except rejections",
+      "rule": "A predicate; a declined error releases a half-open probe slot and changes nothing else."
+    }
+  ],
+  "behaviour": [
+    {
+      "id": "closed",
+      "rule": "CLOSED admits. onFailure drops failures with now - t >= windowMs, records now, and opens (openedAt = now, failures cleared) when the count reaches failureThreshold: on that failure, not on the next call."
+    },
+    {
+      "id": "open",
+      "rule": "OPEN is observed as HALF_OPEN once now - openedAt >= cooldownMs (the transition is recorded at that first observation). Until then tryAcquire is rejected with retryAfterMs = cooldownMs - (now - openedAt)."
+    },
+    {
+      "id": "half-open",
+      "rule": "HALF_OPEN admits while probesInFlight < halfOpenMaxCalls, else rejects with retryAfterMs 0. onSuccess closes (failures cleared); onFailure reopens (openedAt = now)."
+    },
+    {
+      "id": "late-outcome",
+      "rule": "An outcome reported while OPEN (a call admitted before it opened) is ignored."
+    },
+    {
+      "id": "ignored",
+      "rule": "A rejection from an inner guard, or an error isFailure declines, releases a half-open probe slot and changes nothing else (onIgnored). A cancelled Rust call does the same."
+    },
+    {
+      "id": "no-timeout",
+      "rule": "The breaker applies no timeout of its own; passing timeoutMs is a config error (compose withTimeout)."
+    },
+    {
+      "id": "history",
+      "rule": "Transitions {from, to, at} are kept, the most recent 64."
+    }
+  ],
+  "errors": [
+    {
+      "code": "circuit-open",
+      "ts": "CircuitOpenError",
+      "rs": "Error::CircuitOpen",
+      "py": null
+    },
+    {
+      "code": "config",
+      "ts": "ResilienceConfigError",
+      "rs": "Error::Config / ConfigError",
+      "py": null
+    }
+  ],
+  "fixtures": [
+    "__tests__/fixtures/resilience/circuit-breaker.cases.json",
+    "__tests__/fixtures/resilience/mzizi-resilience.cases.json"
+  ],
+  "implementations": {
+    "ts": {
+      "registry": "circuit-breaker",
+      "file": "components/registry/n5-resilience/circuit-breaker.ts"
+    },
+    "rs": {
+      "registry": "circuit-breaker",
+      "file": "components/registry/n5-resilience/circuit-breaker.rs",
+      "crate": "mzizi-resilience",
+      "module": "circuit_breaker"
+    },
+    "py": null
+  },
+  "related": ["lib/mzizi-resilience"],
+  "gaps": [
+    "Python lands in phase 2 (mzizi-registry#472): a .py sibling, the /v1/py/{name} route in mzizi-api-gateway and a PyPI package."
+  ]
+}

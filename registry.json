@@ -2572,34 +2572,37 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["primitives"],
+      "categories": ["lib", "resilience"],
       "dependencies": [],
-      "description": "Concurrency isolation pattern inspired by Resilience4j Bulkhead. Limits how many concurrent calls can hit a single dependency so one slow service cannot consume all available connections and starve other operations. Named after ship bulkheads that prevent a single hull breach from sinking the whole vessel. Supports both semaphore-style (max concurrent) and queue-style (max waiting) isolation. Integrates with observability for tracking concurrent call counts and rejection rates.",
-      "docs": "Use it for: Isolating slow external API calls (Tomorrow.io, Anthropic), Preventing connection exhaustion to payment providers, Limiting concurrent database queries per service, Protecting AI service calls during traffic spikes, Third-party registry lookups with concurrency caps.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/bulkhead",
+      "description": "Concurrency isolation, Resilience4j-style: at most maxConcurrent calls run, up to maxQueue wait in FIFO order, and a waiter that is not admitted in time gets BulkheadQueueTimeoutError (code bulkhead-queue-timeout), distinct from BulkheadFullError (code bulkhead-full). Framework-free; the Rust build is mzizi_resilience::bulkhead.",
+      "docs": "Use it for: Isolating a slow dependency, Capping concurrent database queries, Protecting a connection pool during spikes.\nIncludes: Sans-IO core with FIFO tickets, Queue timeout distinct from full, Config validated (no division by zero), Rust sibling in the mzizi-resilience crate, one contract, shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/bulkhead",
       "files": [
         {
-          "path": "components/registry/n2-primitives/bulkhead.ts",
+          "path": "components/registry/n5-resilience/bulkhead.ts",
           "target": "lib/bulkhead.ts",
           "type": "registry:lib"
         }
       ],
       "meta": {
-        "a11y": ["Semantic HTML"],
-        "collection": "primitives",
-        "features": ["cn() for className composition", "data-slot attribute"],
-        "hasDemo": true,
-        "owner": "mzizi",
-        "useCases": [
-          "Isolating slow external API calls (Tomorrow.io, Anthropic)",
-          "Preventing connection exhaustion to payment providers",
-          "Limiting concurrent database queries per service",
-          "Protecting AI service calls during traffic spikes",
-          "Third-party registry lookups with concurrency caps"
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Sans-IO core with FIFO tickets",
+          "Queue timeout distinct from full",
+          "Config validated (no division by zero)",
+          "Rust sibling in the mzizi-resilience crate, one contract, shared fixtures"
         ],
-        "variants": ["default"]
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Isolating a slow dependency",
+          "Capping concurrent database queries",
+          "Protecting a connection pool during spikes"
+        ]
       },
       "name": "bulkhead",
-      "registryDependencies": ["https://api.mzizi.dev/v1/ui/observability"],
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/resilience-core"],
       "title": "Bulkhead",
       "type": "registry:lib"
     },
@@ -5795,37 +5798,38 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["primitives"],
+      "categories": ["lib", "resilience"],
       "dependencies": [],
-      "description": "Netflix Hystrix-inspired circuit breaker with CLOSED/OPEN/HALF_OPEN state machine.",
-      "docs": "Use it for: Protecting calls to third-party APIs that may fail, Guarding payment gateway calls during outages, Preventing cascade failures when a service is degraded, AI service call protection during model outages, Fallback coordination during dependency failures.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/circuit-breaker",
+      "description": "Resilience4j-style circuit breaker (CLOSED, OPEN, HALF_OPEN) harvested from mukoko-weather's production breaker: a sans-IO sliding-window core with time passed in, plus an async wrapper. Half-open admits at most halfOpenMaxCalls probes; late outcomes from calls admitted before the circuit opened are ignored; rejections are not counted as failures; per-provider tuning is a documented pattern. Framework-free; the Rust build is mzizi_resilience::circuit_breaker.",
+      "docs": "Use it for: Protecting calls to third-party APIs that may fail, Failing fast to a fallback during an outage, Per-provider breakers with their own thresholds.\nIncludes: Sans-IO core (state, tryAcquire, onSuccess, onFailure), Bounded half-open probes, isFailure predicate, CircuitOpenError with retryAfterMs, Rust sibling in the mzizi-resilience crate, one contract, shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/circuit-breaker",
       "files": [
         {
-          "path": "components/registry/n2-primitives/circuit-breaker.ts",
+          "path": "components/registry/n5-resilience/circuit-breaker.ts",
           "target": "lib/circuit-breaker.ts",
           "type": "registry:lib"
         }
       ],
       "meta": {
-        "a11y": ["Semantic HTML"],
-        "collection": "primitives",
-        "features": ["cn() for className composition", "data-slot attribute"],
-        "hasDemo": true,
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Sans-IO core (state, tryAcquire, onSuccess, onFailure)",
+          "Bounded half-open probes",
+          "isFailure predicate",
+          "CircuitOpenError with retryAfterMs",
+          "Rust sibling in the mzizi-resilience crate, one contract, shared fixtures"
+        ],
+        "hasDemo": false,
         "owner": "mzizi",
+        "targets": ["astro", "tsx"],
         "useCases": [
           "Protecting calls to third-party APIs that may fail",
-          "Guarding payment gateway calls during outages",
-          "Preventing cascade failures when a service is degraded",
-          "AI service call protection during model outages",
-          "Fallback coordination during dependency failures"
-        ],
-        "variants": ["default"]
+          "Failing fast to a fallback during an outage",
+          "Per-provider breakers with their own thresholds"
+        ]
       },
       "name": "circuit-breaker",
-      "registryDependencies": [
-        "https://api.mzizi.dev/v1/ui/timeout",
-        "https://api.mzizi.dev/v1/ui/observability"
-      ],
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/resilience-core"],
       "title": "Circuit Breaker",
       "type": "registry:lib"
     },
@@ -7957,36 +7961,39 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["primitives"],
+      "categories": ["lib", "resilience"],
       "dependencies": [],
-      "description": "Sequential fallback strategy — try stages in order, return first success.",
-      "docs": "Use it for: Degraded-mode content delivery (full → cache → placeholder), Multi-source data retrieval with fallbacks, Weather data with primary and backup providers, Payment processing with backup gateway, Translation with fallback language models.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/fallback-chain",
+      "description": "Sequential fallback: try stages in order (each with an optional timeout) and return the first success; withFallbackResult also reports which stage served, for degraded health. When every stage fails, AllStagesFailedError (code all-stages-failed) lists each stage with its error code, never its message. Framework-free; the Rust build is mzizi_resilience::fallback_chain.",
+      "docs": "Use it for: Cache, then primary provider, then secondary, then an estimate, Degraded-mode content delivery, Reporting which source served.\nIncludes: Per-stage timeouts, Which stage served, Codes, not messages, on failure, Rust sibling in the mzizi-resilience crate, one contract, shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/fallback-chain",
       "files": [
         {
-          "path": "components/registry/n2-primitives/fallback-chain.ts",
+          "path": "components/registry/n5-resilience/fallback-chain.ts",
           "target": "lib/fallback-chain.ts",
           "type": "registry:lib"
         }
       ],
       "meta": {
-        "a11y": ["Semantic HTML"],
-        "collection": "primitives",
-        "features": ["cn() for className composition", "data-slot attribute"],
-        "hasDemo": true,
-        "owner": "mzizi",
-        "useCases": [
-          "Degraded-mode content delivery (full → cache → placeholder)",
-          "Multi-source data retrieval with fallbacks",
-          "Weather data with primary and backup providers",
-          "Payment processing with backup gateway",
-          "Translation with fallback language models"
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Per-stage timeouts",
+          "Which stage served",
+          "Codes, not messages, on failure",
+          "Rust sibling in the mzizi-resilience crate, one contract, shared fixtures"
         ],
-        "variants": ["default"]
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Cache, then primary provider, then secondary, then an estimate",
+          "Degraded-mode content delivery",
+          "Reporting which source served"
+        ]
       },
       "name": "fallback-chain",
       "registryDependencies": [
-        "https://api.mzizi.dev/v1/ui/timeout",
-        "https://api.mzizi.dev/v1/ui/observability"
+        "https://api.mzizi.dev/v1/ui/resilience-core",
+        "https://api.mzizi.dev/v1/ui/timeout"
       ],
       "title": "Fallback Chain",
       "type": "registry:lib"
@@ -13048,6 +13055,48 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["resilience"],
+      "dependencies": [],
+      "description": "Admin and debug panel listing the health of every section and dependency reporting to a HealthMonitor (mzizi-resilience): status, the source that served, the circuit state and an error count, with the last error's code (never its message). Exports MziziHealthPanel and the useHealthMonitor hook. Moved out of mzizi-resilience, which is framework-free now.",
+      "docs": "Use it for: Admin health views, Debugging degraded sections, Watching circuits open and close.\nVariants: default.\nIncludes: useHealthMonitor (useSyncExternalStore), System health is the worst status, data-slot attribute.\nAccessibility: Labelled region with a heading, Status as text, not colour alone, Codes only, no personal data.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-health-panel",
+      "files": [
+        {
+          "path": "components/registry/n5-resilience/mzizi-health-panel.tsx",
+          "target": "components/ui/mzizi-health-panel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Labelled region with a heading",
+          "Status as text, not colour alone",
+          "Codes only, no personal data"
+        ],
+        "collection": "resilience",
+        "features": [
+          "useHealthMonitor (useSyncExternalStore)",
+          "System health is the worst status",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "useCases": [
+          "Admin health views",
+          "Debugging degraded sections",
+          "Watching circuits open and close"
+        ],
+        "variants": ["default"]
+      },
+      "name": "mzizi-health-panel",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/utils",
+        "https://api.mzizi.dev/v1/ui/mzizi-resilience"
+      ],
+      "title": "mzizi Health Panel",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded large primary value display with condition label, secondary stats, icon, and share button. The universal pattern extracted from mukoko-weather CurrentConditions. Used for: temperature (Weather), portfolio value (Wallet), trust score (ID), daily steps (Health), total revenue (BushTrade). Any screen that needs a single large number as its hero.",
@@ -14942,47 +14991,46 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["styling-libs", "tokens"],
+      "categories": ["lib", "resilience"],
       "dependencies": [],
-      "description": "Self-monitoring, self-healing resilience node that wires observability, circuit-breaker, bulkhead, rate-limiter, retry, timeout, fallback-chain, and chaos testing into a single composition for brand components. Implements all 7 Resilience4j patterns (Netflix Hystrix successor): CircuitBreaker, Retry, RateLimiter, Bulkhead, TimeLimiter, FallbackChain, and ChaosInjection. Exports MziziSection (wraps any UI section with error boundary + skeleton + observability + health tracking), useResilientFetch (data fetching with full resilience stack), MziziHealthMonitor (singleton aggregating health across all sections), MziziHealthPanel (admin health visualization), and the withResilience decorator that composes all patterns in the correct order. Every brand component renders inside a MziziSection so the infrastructure permanently monitors itself. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
-      "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-resilience",
+      "description": "The resilience node composed: createResilience / withResilience run an operation through FallbackChain(Retry(CircuitBreaker(RateLimiter(Timeout(Bulkhead(Fault(op))))))), report each call to a HealthMonitor (healthy, degraded, error, loading; codes only, no personal data), and expose the Fault / FaultInjector / applyFault hook the N8 chaos engine implements. resilientFetch is kept and now uses the primitives. Framework-free: the React health panel is mzizi-health-panel and the section wrapper is mzizi-section. The Rust build is the mzizi-resilience crate.",
+      "docs": "Use it for: Wrapping a dependency in the full resilience stack, Reporting section and dependency health, Testing resilience under injected faults (with N8 chaos).\nIncludes: createResilience / withResilience, HealthMonitor (codes only), Fault hook for the chaos engine, resilientFetch, Rust sibling in the mzizi-resilience crate, one contract, shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-resilience",
       "files": [
         {
-          "path": "components/registry/n1-tokens/mzizi-resilience.tsx",
-          "target": "lib/resilience/index.tsx",
+          "path": "components/registry/n5-resilience/mzizi-resilience.ts",
+          "target": "lib/mzizi-resilience.ts",
           "type": "registry:lib"
         }
       ],
       "meta": {
-        "a11y": [
-          "Defines focus ring tokens",
-          "Touch target minimums",
-          "Contrast-safe pairings"
-        ],
-        "collection": "styling-libs",
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
         "features": [
-          "Y-axis vertical spine",
-          "CSS custom properties",
-          "Multi-platform generators"
+          "createResilience / withResilience",
+          "HealthMonitor (codes only)",
+          "Fault hook for the chaos engine",
+          "resilientFetch",
+          "Rust sibling in the mzizi-resilience crate, one contract, shared fixtures"
         ],
-        "hasDemo": true,
+        "hasDemo": false,
         "owner": "mzizi",
-        "useCases": ["Design token infrastructure", "All layers consume L1"],
-        "variants": ["default"]
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Wrapping a dependency in the full resilience stack",
+          "Reporting section and dependency health",
+          "Testing resilience under injected faults (with N8 chaos)"
+        ]
       },
       "name": "mzizi-resilience",
       "registryDependencies": [
-        "https://api.mzizi.dev/v1/ui/observability",
-        "https://api.mzizi.dev/v1/ui/circuit-breaker",
-        "https://api.mzizi.dev/v1/ui/retry",
+        "https://api.mzizi.dev/v1/ui/resilience-core",
+        "https://api.mzizi.dev/v1/ui/rng",
         "https://api.mzizi.dev/v1/ui/timeout",
-        "https://api.mzizi.dev/v1/ui/fallback-chain",
-        "https://api.mzizi.dev/v1/ui/bulkhead",
+        "https://api.mzizi.dev/v1/ui/retry",
+        "https://api.mzizi.dev/v1/ui/circuit-breaker",
         "https://api.mzizi.dev/v1/ui/rate-limiter",
-        "https://api.mzizi.dev/v1/ui/chaos",
-        "https://api.mzizi.dev/v1/ui/section-error-boundary",
-        "https://api.mzizi.dev/v1/ui/mzizi-skeleton-set",
-        "https://api.mzizi.dev/v1/ui/mzizi-error-set"
+        "https://api.mzizi.dev/v1/ui/bulkhead",
+        "https://api.mzizi.dev/v1/ui/fallback-chain"
       ],
       "title": "mzizi Resilience",
       "type": "registry:lib"
@@ -15266,8 +15314,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["resilience"],
       "dependencies": [],
-      "description": "The workhorse section wrapper for every page. Combines error boundary, loading skeleton, health reporting, and optional lazy mounting into a single component. Every section of every page is wrapped in MziziSection. If one section fails, the rest keep working. Reports health status (healthy/degraded/error/loading) to the global health monitor. The architecture doc says: \"Every section of every page is wrapped in resilience.\"",
-      "docs": "Use it for: Wrap every page section in resilience, Isolate failures to individual sections, Report section health to global monitor, Lazy mount heavy sections.\nVariants: default, lazy, critical.\nIncludes: Error boundary integration, Loading skeleton, Health reporting (healthy/degraded/error/loading), Optional lazy mounting, data-slot attribute, data-portal backlink.\nAccessibility: aria-busy during loading, Error state announced to screen reader, Retry button keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-section",
+      "description": "The workhorse section wrapper for every page: error boundary, loading skeleton and health reporting to the shared HealthMonitor (mzizi-resilience). If one section fails, the rest keep working. Reports loading, healthy and error (with the error's code, never its message); a critical section rethrows to the boundary above; onError and onRecovery hooks; a custom fallback. The one MziziSection: the copy that lived in mzizi-resilience was folded in here.",
+      "docs": "Use it for: Wrap every page section in resilience, Isolate failures to individual sections, Report section health to the health monitor.\nVariants: default, critical.\nIncludes: Error boundary integration, Loading skeleton, Health reporting (healthy/degraded/error/loading) to the HealthMonitor, critical, onError, onRecovery, fallback, data-slot attribute, data-portal backlink.\nAccessibility: aria-busy during loading, Error state announced to screen reader, Retry button keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-section",
       "files": [
         {
           "path": "components/registry/n5-resilience/mzizi-section.tsx",
@@ -15285,8 +15333,8 @@
         "features": [
           "Error boundary integration",
           "Loading skeleton",
-          "Health reporting (healthy/degraded/error/loading)",
-          "Optional lazy mounting",
+          "Health reporting (healthy/degraded/error/loading) to the HealthMonitor",
+          "critical, onError, onRecovery, fallback",
           "data-slot attribute",
           "data-portal backlink"
         ],
@@ -15295,17 +15343,17 @@
         "useCases": [
           "Wrap every page section in resilience",
           "Isolate failures to individual sections",
-          "Report section health to global monitor",
-          "Lazy mount heavy sections"
+          "Report section health to the health monitor"
         ],
-        "variants": ["default", "lazy", "critical"]
+        "variants": ["default", "critical"]
       },
       "name": "mzizi-section",
       "registryDependencies": [
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/utils",
         "https://api.mzizi.dev/v1/ui/error-boundary",
-        "https://api.mzizi.dev/v1/ui/section-error-boundary"
+        "https://api.mzizi.dev/v1/ui/section-error-boundary",
+        "https://api.mzizi.dev/v1/ui/mzizi-resilience"
       ],
       "title": "mzizi Section",
       "type": "registry:ui"
@@ -18401,34 +18449,37 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["primitives"],
+      "categories": ["lib", "resilience"],
       "dependencies": [],
-      "description": "Token bucket rate limiter inspired by Resilience4j RateLimiter. Controls request frequency to protect API quotas (Tomorrow.io, Anthropic, government registries) and prevent thundering herd problems. Supports configurable limits per time window, burst allowance, and queue-based waiting. Integrates with observability for tracking request rates, rejections, and quota utilization. Critical for the Nyuchi 7-layer architecture where multiple data sources have different rate limits.",
-      "docs": "Use it for: Protecting API quotas (Tomorrow.io, Anthropic, government registries), User-side rate limiting to prevent abuse, Preventing thundering herd on popular endpoints, Burst-allowing limits for legitimate spikes, Quota tracking for multi-tenant services.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/rate-limiter",
+      "description": "Integer token bucket, Resilience4j-style: sustained rate exactly limit per window, burstAllowance only raises the ceiling, retryAfterMs accounts for partial refill, and queued callers reserve their token so concurrent waiters never race. Rejects with RateLimitExceededError (code rate-limited). Framework-free; the Rust build is mzizi_resilience::rate_limiter.",
+      "docs": "Use it for: Protecting an API quota, Smoothing bursts to a strict upstream, Per-provider limits.\nIncludes: Integer arithmetic, identical in every build, Reservation-based queueing, Sans-IO core, Rust sibling in the mzizi-resilience crate, one contract, shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/rate-limiter",
       "files": [
         {
-          "path": "components/registry/n2-primitives/rate-limiter.ts",
+          "path": "components/registry/n5-resilience/rate-limiter.ts",
           "target": "lib/rate-limiter.ts",
           "type": "registry:lib"
         }
       ],
       "meta": {
-        "a11y": ["Semantic HTML"],
-        "collection": "primitives",
-        "features": ["cn() for className composition", "data-slot attribute"],
-        "hasDemo": true,
-        "owner": "mzizi",
-        "useCases": [
-          "Protecting API quotas (Tomorrow.io, Anthropic, government registries)",
-          "User-side rate limiting to prevent abuse",
-          "Preventing thundering herd on popular endpoints",
-          "Burst-allowing limits for legitimate spikes",
-          "Quota tracking for multi-tenant services"
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Integer arithmetic, identical in every build",
+          "Reservation-based queueing",
+          "Sans-IO core",
+          "Rust sibling in the mzizi-resilience crate, one contract, shared fixtures"
         ],
-        "variants": ["default"]
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Protecting an API quota",
+          "Smoothing bursts to a strict upstream",
+          "Per-provider limits"
+        ]
       },
       "name": "rate-limiter",
-      "registryDependencies": ["https://api.mzizi.dev/v1/ui/observability"],
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/resilience-core"],
       "title": "Rate Limiter",
       "type": "registry:lib"
     },
@@ -18684,6 +18735,43 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "resilience"],
+      "dependencies": [],
+      "description": "The shared ground of the resilience node: injected Clock and Sleep (abortable timers), ResilienceConfigError and config validation, stable error codes (errorCode, isRejection, REJECTION_CODES) and the optional onEvent hook every N5 primitive takes instead of importing a logger. Framework-free; the Rust build is mzizi_resilience::resilience_core.",
+      "docs": "Use it for: Injecting a virtual clock and timers in tests, Logging resilience events without personal data (codes only), Telling rejections from dependency failures.\nIncludes: Clock / Sleep injection, ResilienceConfigError (code config), errorCode: codes, never messages, onEvent hook instead of a logger import, Rust sibling in the mzizi-resilience crate, one contract, shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/resilience-core",
+      "files": [
+        {
+          "path": "components/registry/n5-resilience/resilience-core.ts",
+          "target": "lib/resilience-core.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Clock / Sleep injection",
+          "ResilienceConfigError (code config)",
+          "errorCode: codes, never messages",
+          "onEvent hook instead of a logger import",
+          "Rust sibling in the mzizi-resilience crate, one contract, shared fixtures"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Injecting a virtual clock and timers in tests",
+          "Logging resilience events without personal data (codes only)",
+          "Telling rejections from dependency failures"
+        ]
+      },
+      "name": "resilience-core",
+      "registryDependencies": [],
+      "title": "Resilience Core",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["components", "primitives"],
       "dependencies": ["react-resizable-panels"],
       "description": "Accessible resizable panel groups and layouts with keyboard support.",
@@ -18717,34 +18805,40 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["primitives"],
+      "categories": ["lib", "resilience"],
       "dependencies": [],
-      "description": "Retry with exponential backoff, jitter, and configurable retry predicates.",
-      "docs": "Use it for: Transient network failure recovery, Retrying flaky third-party API calls, Database query retry on deadlock, Upload retry with exponential backoff, Idempotent operation retry after timeout.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/retry",
+      "description": "Retry with exponential backoff: delay = min(maxDelayMs, capped + jitter) where jitter draws once from an injected Random, so a seeded Mulberry32 gives identical delays in every build. Rejections and config errors are not retried by default; exhausted retries throw RetriesExhaustedError (code retries-exhausted). Framework-free; the Rust build is mzizi_resilience::retry.",
+      "docs": "Use it for: Transient network failure recovery, Retrying flaky third-party API calls, Idempotent operation retry after timeout.\nIncludes: Jitter never exceeds maxDelayMs, Injectable Random and timer, Rejections not retried by default, Rust sibling in the mzizi-resilience crate, one contract, shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/retry",
       "files": [
         {
-          "path": "components/registry/n2-primitives/retry.ts",
+          "path": "components/registry/n5-resilience/retry.ts",
           "target": "lib/retry.ts",
           "type": "registry:lib"
         }
       ],
       "meta": {
-        "a11y": ["Semantic HTML"],
-        "collection": "primitives",
-        "features": ["cn() for className composition", "data-slot attribute"],
-        "hasDemo": true,
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Jitter never exceeds maxDelayMs",
+          "Injectable Random and timer",
+          "Rejections not retried by default",
+          "Rust sibling in the mzizi-resilience crate, one contract, shared fixtures"
+        ],
+        "hasDemo": false,
         "owner": "mzizi",
+        "targets": ["astro", "tsx"],
         "useCases": [
           "Transient network failure recovery",
           "Retrying flaky third-party API calls",
-          "Database query retry on deadlock",
-          "Upload retry with exponential backoff",
           "Idempotent operation retry after timeout"
-        ],
-        "variants": ["default"]
+        ]
       },
       "name": "retry",
-      "registryDependencies": ["https://api.mzizi.dev/v1/ui/observability"],
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/resilience-core",
+        "https://api.mzizi.dev/v1/ui/rng"
+      ],
       "title": "Retry",
       "type": "registry:lib"
     },
@@ -18843,6 +18937,42 @@
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/button"],
       "title": "Rich Text Editor",
       "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "resilience"],
+      "dependencies": [],
+      "description": "Injected randomness for the resilience node and the chaos engine: the Random interface, Mulberry32 (a seeded generator whose outputs every build reproduces bit for bit, pinned in shared fixtures), Math.random-backed randomness for production jitter, and integer probability thresholds. Framework-free; the Rust build is mzizi_resilience::rng.",
+      "docs": "Use it for: Seeded, reproducible retry jitter in tests, Deterministic chaos decisions (N8), Probability thresholds in integer math.\nIncludes: Mulberry32, identical in TypeScript and Rust, Random interface for injection, probabilityThreshold / hits, Rust sibling in the mzizi-resilience crate, one contract, shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/rng",
+      "files": [
+        {
+          "path": "components/registry/n5-resilience/rng.ts",
+          "target": "lib/rng.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Mulberry32, identical in TypeScript and Rust",
+          "Random interface for injection",
+          "probabilityThreshold / hits",
+          "Rust sibling in the mzizi-resilience crate, one contract, shared fixtures"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Seeded, reproducible retry jitter in tests",
+          "Deterministic chaos decisions (N8)",
+          "Probability thresholds in integer math"
+        ]
+      },
+      "name": "rng",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/resilience-core"],
+      "title": "Rng",
+      "type": "registry:lib"
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
@@ -22240,34 +22370,37 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["primitives"],
+      "categories": ["lib", "resilience"],
       "dependencies": [],
-      "description": "Promise timeout wrapper. Rejects with TimeoutError if an async operation exceeds the specified duration.",
-      "docs": "Use it for: Bounding slow third-party API calls, User-experience guardrails on async operations, Preventing hung requests from blocking UI, Circuit-breaker companion for time-based failure, Worker task time-boxing.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/timeout",
+      "description": "Deadline for any async operation: withTimeout(fn, ms) passes fn an AbortSignal that aborts at the deadline and rejects with TimeoutError (code timeout); the timer is always cleared, also when fn throws synchronously. An operation of duration d under timeout t times out iff d >= t. Framework-free; the Rust build is mzizi_resilience::timeout.",
+      "docs": "Use it for: Bounding slow third-party API calls, Cancelling a fetch at its deadline, Worker task time-boxing.\nIncludes: AbortSignal passed to the operation, Timer always cleared, Injectable timer, Rust sibling in the mzizi-resilience crate, one contract, shared fixtures.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/timeout",
       "files": [
         {
-          "path": "components/registry/n2-primitives/timeout.ts",
+          "path": "components/registry/n5-resilience/timeout.ts",
           "target": "lib/timeout.ts",
           "type": "registry:lib"
         }
       ],
       "meta": {
-        "a11y": ["Semantic HTML"],
-        "collection": "primitives",
-        "features": ["cn() for className composition", "data-slot attribute"],
-        "hasDemo": true,
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "AbortSignal passed to the operation",
+          "Timer always cleared",
+          "Injectable timer",
+          "Rust sibling in the mzizi-resilience crate, one contract, shared fixtures"
+        ],
+        "hasDemo": false,
         "owner": "mzizi",
+        "targets": ["astro", "tsx"],
         "useCases": [
           "Bounding slow third-party API calls",
-          "User-experience guardrails on async operations",
-          "Preventing hung requests from blocking UI",
-          "Circuit-breaker companion for time-based failure",
+          "Cancelling a fetch at its deadline",
           "Worker task time-boxing"
-        ],
-        "variants": ["default"]
+        ]
       },
       "name": "timeout",
-      "registryDependencies": [],
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/resilience-core"],
       "title": "Timeout",
       "type": "registry:lib"
     },

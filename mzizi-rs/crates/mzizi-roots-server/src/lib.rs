@@ -11,15 +11,16 @@
 //!
 //! | Module      | Crate             | Node               | Feature                 |
 //! | ----------- | ----------------- | ------------------ | ----------------------- |
+//! | `resilience` | `mzizi-resilience` | N5 resilience    | `resilience` (default)  |
 //! | `assurance` | `mzizi-assurance` | N8 assurance       | `assurance` (default)   |
 //! | `fundi`     | `mzizi-fundi`     | N9 fundi           | `fundi` (default)       |
 //! | `docs`      | `mzizi-docs`      | N10 documentation  | `docs` (default)        |
 //! | `discovery` | `mzizi-discovery` | N11 discovery      | `discovery` (default)   |
 //! | `activitypub` | `mzizi-activitypub` | N11 discovery (fediverse) | `activitypub`  |
 //!
-//! `assurance`, `fundi` and `discovery` have no dependencies. `docs` brings in `dioxus`,
-//! because `mzizi-docs` also carries the two documentation renderers. Leave it out with
-//! `default-features = false` if you only need the other three.
+//! `resilience`, `assurance`, `fundi` and `discovery` have no dependencies. `docs` brings in
+//! `dioxus`, because `mzizi-docs` also carries the two documentation renderers. Leave it out
+//! with `default-features = false` if you only need the other four.
 //!
 //! The UI-side components are in `mzizi-roots`.
 //!
@@ -31,6 +32,11 @@
 //! assert!(headers.contains(&("Access-Control-Allow-Origin", "*")));
 //! # }
 //! ```
+
+/// N5 resilience: timeout, retry, circuit breaker, rate limiter, bulkhead, fallback chain,
+/// the composed pipeline and its health monitor (`mzizi-resilience`).
+#[cfg(feature = "resilience")]
+pub use mzizi_resilience as resilience;
 
 /// N8 assurance: probes, telemetry, alerting and the OTLP exporter (`mzizi-assurance`).
 #[cfg(feature = "assurance")]

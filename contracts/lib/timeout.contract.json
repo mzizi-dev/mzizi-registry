@@ -1,0 +1,103 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/timeout",
+  "title": "Timeout",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "library",
+  "summary": "A deadline on any async operation, with cancellation: the TS operation receives an AbortSignal that aborts at the deadline; the Rust future is dropped.",
+  "api": {
+    "ts": [
+      {
+        "name": "withTimeout",
+        "kind": "function",
+        "summary": "withTimeout(fn(signal), ms, label | {label, signal, sleep, onEvent})."
+      },
+      {
+        "name": "TimeoutError",
+        "kind": "class",
+        "summary": "code timeout; durationMs, label."
+      },
+      {
+        "name": "timeoutOutcome",
+        "kind": "function",
+        "summary": "The sans-IO d >= t rule."
+      }
+    ],
+    "rs": [
+      {
+        "name": "with_timeout",
+        "kind": "function",
+        "summary": "with_timeout(rt, ms, future)."
+      },
+      {
+        "name": "timeout_outcome",
+        "kind": "function",
+        "summary": "The sans-IO d >= t rule."
+      },
+      {
+        "name": "TimeoutOutcome",
+        "kind": "struct",
+        "summary": "{timed_out, elapsed_ms}."
+      }
+    ],
+    "py": null
+  },
+  "config": [
+    {
+      "name": "ms",
+      "default": null,
+      "rule": "An integer >= 1 (a zero deadline is meaningless)."
+    }
+  ],
+  "behaviour": [
+    {
+      "id": "rule",
+      "rule": "An operation of duration d under timeout t times out iff d >= t; the clock then reads t, else d. The deadline is armed (TS) or polled (Rust) first, so a tie goes to the deadline."
+    },
+    {
+      "id": "cancel",
+      "rule": "At the deadline the operation is cancelled: its AbortSignal aborts with the TimeoutError (TS); its future is dropped (Rust)."
+    },
+    {
+      "id": "cleared",
+      "rule": "The deadline timer is always cleared: on success, on failure and when fn throws synchronously."
+    },
+    {
+      "id": "outer-signal",
+      "rule": "An outer signal (TS) aborts the operation and rejects with its reason."
+    }
+  ],
+  "errors": [
+    {
+      "code": "timeout",
+      "ts": "TimeoutError",
+      "rs": "Error::Timeout",
+      "py": null
+    },
+    {
+      "code": "config",
+      "ts": "ResilienceConfigError",
+      "rs": "Error::Config / ConfigError",
+      "py": null
+    }
+  ],
+  "fixtures": ["__tests__/fixtures/resilience/timeout.cases.json"],
+  "implementations": {
+    "ts": {
+      "registry": "timeout",
+      "file": "components/registry/n5-resilience/timeout.ts"
+    },
+    "rs": {
+      "registry": "timeout",
+      "file": "components/registry/n5-resilience/timeout.rs",
+      "crate": "mzizi-resilience",
+      "module": "timeout"
+    },
+    "py": null
+  },
+  "related": ["lib/mzizi-resilience", "lib/fallback-chain"],
+  "gaps": [
+    "Python lands in phase 2 (mzizi-registry#472): a .py sibling, the /v1/py/{name} route in mzizi-api-gateway and a PyPI package."
+  ]
+}

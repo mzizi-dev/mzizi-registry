@@ -1,0 +1,34 @@
+{
+  "$comment": "mulberry32 (resilience spec v1, mzizi-registry#472): the first 8 outputs of a generator seeded with each seed, computed with the spec's JS reference algorithm. Every build's rng must reproduce them exactly. Read by __tests__/lib/resilience-fixtures.test.ts and mzizi-rs/crates/mzizi-resilience/tests/fixtures.rs.",
+  "algorithm": "mulberry32",
+  "cases": [
+    {
+      "seed": 0,
+      "outputs": [
+        1144304738, 1416247, 958946056, 627933444, 2007157716, 2340967985,
+        2642484575, 2787370982
+      ]
+    },
+    {
+      "seed": 1,
+      "outputs": [
+        2693262067, 11749833, 2265367787, 4213581821, 4159151403, 1207330352,
+        2632122864, 3095568220
+      ]
+    },
+    {
+      "seed": 42,
+      "outputs": [
+        2581720956, 1925393290, 3661312704, 2876485805, 750819978, 2261697747,
+        1173505300, 2683257857
+      ]
+    },
+    {
+      "seed": 4294967295,
+      "outputs": [
+        3850105811, 813802916, 3073704848, 4054706436, 3630262831, 2315588663,
+        2922715533, 2042566601
+      ]
+    }
+  ]
+}

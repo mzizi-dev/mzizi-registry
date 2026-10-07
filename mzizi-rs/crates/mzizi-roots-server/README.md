@@ -13,13 +13,14 @@ This crate has no code of its own. It re-exports the node crates, each behind a 
 
 | Module        | Crate               | What it holds                                          | Feature                |
 | ------------- | ------------------- | ------------------------------------------------------ | ---------------------- |
+| `resilience`  | `mzizi-resilience`  | N5 timeout, retry, breaker, limiter, bulkhead, health  | `resilience` (default) |
 | `assurance`   | `mzizi-assurance`   | N8 probes, telemetry, alerting and the OTLP exporter   | `assurance` (default)  |
 | `fundi`       | `mzizi-fundi`       | N9 Fundi reporter and learning loop                    | `fundi` (default)      |
 | `docs`        | `mzizi-docs`        | N10 docs API, AI context and the docs renderers        | `docs` (default)       |
 | `discovery`   | `mzizi-discovery`   | N11 page metadata and Schema.org JSON-LD               | `discovery` (default)  |
 | `activitypub` | `mzizi-activitypub` | N11 on the fediverse: ActivityPub, WebFinger, NodeInfo | `activitypub` (opt-in) |
 
-`assurance`, `fundi` and `discovery` have no dependencies. `activitypub` is opt-in, because
+`resilience`, `assurance`, `fundi` and `discovery` have no dependencies. `activitypub` is opt-in, because
 it brings in `serde_json` and `url`. `docs` brings in `dioxus`,
 because `mzizi-docs` also carries the two documentation renderers.
 

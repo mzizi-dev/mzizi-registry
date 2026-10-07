@@ -1,0 +1,110 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/fallback-chain",
+  "title": "Fallback chain",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "library",
+  "summary": "Try stages in order (each with an optional timeout) and return the first success, reporting which stage served; when all fail, the error lists stage codes, never messages.",
+  "api": {
+    "ts": [
+      {
+        "name": "withFallback",
+        "kind": "function",
+        "summary": "withFallback(stages, options?): the value."
+      },
+      {
+        "name": "withFallbackResult",
+        "kind": "function",
+        "summary": "withFallbackResult(stages, options?): {value, stage, index}."
+      },
+      {
+        "name": "FallbackStage",
+        "kind": "interface",
+        "summary": "{name, execute(signal?), timeoutMs?}."
+      },
+      {
+        "name": "AllStagesFailedError",
+        "kind": "class",
+        "summary": "code all-stages-failed; stageErrors [{stage, code}]."
+      }
+    ],
+    "rs": [
+      {
+        "name": "with_fallback",
+        "kind": "function",
+        "summary": "with_fallback(rt, stages): the value."
+      },
+      {
+        "name": "with_fallback_result",
+        "kind": "function",
+        "summary": "with_fallback_result(rt, stages): Served."
+      },
+      {
+        "name": "Stage",
+        "kind": "struct",
+        "summary": "Stage::new(name, run).with_timeout(ms)."
+      },
+      {
+        "name": "Served",
+        "kind": "struct",
+        "summary": "{value, stage, index}."
+      }
+    ],
+    "py": null
+  },
+  "behaviour": [
+    {
+      "id": "order",
+      "rule": "Stages run in order; the first success is returned with its stage name and index."
+    },
+    {
+      "id": "timeout",
+      "rule": "A stage with timeoutMs runs under the timeout rule."
+    },
+    {
+      "id": "codes",
+      "rule": "All stages failed: AllStagesFailedError {stageErrors: [{stage, code}]} in stage order; codes, never messages."
+    },
+    {
+      "id": "empty",
+      "rule": "No stages is a config error."
+    },
+    {
+      "id": "abort",
+      "rule": "An aborted caller signal (TS) stops the chain rather than running the next stage."
+    }
+  ],
+  "errors": [
+    {
+      "code": "all-stages-failed",
+      "ts": "AllStagesFailedError",
+      "rs": "Error::AllStagesFailed",
+      "py": null
+    },
+    {
+      "code": "config",
+      "ts": "ResilienceConfigError",
+      "rs": "Error::Config / ConfigError",
+      "py": null
+    }
+  ],
+  "fixtures": ["__tests__/fixtures/resilience/fallback-chain.cases.json"],
+  "implementations": {
+    "ts": {
+      "registry": "fallback-chain",
+      "file": "components/registry/n5-resilience/fallback-chain.ts"
+    },
+    "rs": {
+      "registry": "fallback-chain",
+      "file": "components/registry/n5-resilience/fallback-chain.rs",
+      "crate": "mzizi-resilience",
+      "module": "fallback_chain"
+    },
+    "py": null
+  },
+  "related": ["lib/timeout", "lib/mzizi-resilience"],
+  "gaps": [
+    "Python lands in phase 2 (mzizi-registry#472): a .py sibling, the /v1/py/{name} route in mzizi-api-gateway and a PyPI package."
+  ]
+}

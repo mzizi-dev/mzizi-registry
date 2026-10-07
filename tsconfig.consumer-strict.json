@@ -7,6 +7,16 @@
   },
   "include": [
     "components/registry/n2-primitives/markdown-parse.ts",
-    "components/registry/n2-primitives/markdown-renderer.tsx"
+    "components/registry/n2-primitives/markdown-renderer.tsx",
+    "components/registry/n5-resilience/rng.ts",
+    "components/registry/n5-resilience/resilience-core.ts",
+    "components/registry/n5-resilience/timeout.ts",
+    "components/registry/n5-resilience/circuit-breaker.ts",
+    "components/registry/n5-resilience/retry.ts",
+    "components/registry/n5-resilience/rate-limiter.ts",
+    "components/registry/n5-resilience/bulkhead.ts",
+    "components/registry/n5-resilience/fallback-chain.ts",
+    "components/registry/n5-resilience/mzizi-resilience.ts",
+    "components/registry/n5-resilience/mzizi-health-panel.tsx"
   ]
 }

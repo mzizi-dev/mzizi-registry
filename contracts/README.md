@@ -2,7 +2,7 @@
 
 Owner decision, 2026-10-04: "the components should also be updated, same as the mzizi language — every component should have a contract." This directory holds those contracts, one machine-readable file per component. Tracking: [#404](https://github.com/mzizi-dev/mzizi-registry/issues/404).
 
-Four families, all in one format. Astro is the default web UI, so every contract has an Astro build in this registry, and where builds disagree, the Astro design is the contract unless the owner decides otherwise. React and Rust builds are the same component for consumers that do not use Astro. Each contract's Astro build sits beside its React build (`components/registry/n<N>-*/<name>.astro` and `.tsx`), and some have a Rust build too:
+Four families of rendered components, all in one format, and a fifth for non-visual libraries ([`lib/`](#libraries-lib)). Astro is the default web UI, so every contract has an Astro build in this registry, and where builds disagree, the Astro design is the contract unless the owner decides otherwise. React and Rust builds are the same component for consumers that do not use Astro. Each contract's Astro build sits beside its React build (`components/registry/n<N>-*/<name>.astro` and `.tsx`), and some have a Rust build too:
 
 - `app/`: the 31 server-rendered app components. Together they are the **Mzizi Dashboard Standard**, the one dashboard design for every product in the Bundu ecosystem, with each brand's mineral as an overlay ([docs.mzizi.dev/patterns/dashboard-standard](https://docs.mzizi.dev/patterns/dashboard-standard)).
 - `discover/`: the **Mzizi Discover Standard** ([below](#the-discover-standard-discover)), with its detail pattern.
@@ -141,6 +141,23 @@ Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Wher
 | `ui/toaster`           | Toaster          | N2   | 1.1.0   | `toaster`           | `toaster` (contract)           | —                              |
 
 **Follow-ups.** Rust ports of the app, discover and site components ([#401](https://github.com/mzizi-dev/mzizi-registry/issues/401)); each is done when it passes its contract. `button`, `card` and `input` share only their slot with their `.tsx` and `.rs`, which keep the registry's own variants, parts or height (each divergence is listed in the contract).
+
+### Libraries (`lib/`)
+
+The non-visual libraries have no markup to render, so they use a sibling format,
+`schema/lib-contract.schema.json` ([#472](https://github.com/mzizi-dev/mzizi-registry/issues/472)): the API each build exposes, numbered behaviour clauses, the error codes, and the shared fixtures that arbitrate between builds (`__tests__/fixtures/resilience/*.cases.json`, run by `__tests__/lib/resilience-fixtures.test.ts` and by `mzizi-rs/crates/mzizi-resilience/tests/fixtures.rs`; both must produce identical results). `index.json` lists them under `libraries`. `__tests__/contracts/lib-contracts.test.ts` validates each one, checks every listed symbol and error code exists in its `.ts` and `.rs`, and keeps this table honest. Python lands in phase 2.
+
+| Contract               | Library          | Node | Version | TypeScript `.ts`   | Rust `.rs` (crate::module)                                | Python `.py` |
+| ---------------------- | ---------------- | ---- | ------- | ------------------ | --------------------------------------------------------- | ------------ |
+| `lib/rng`              | RNG              | N5   | 1.0.0   | `rng`              | `rng` (`mzizi_resilience::rng`)                           | —            |
+| `lib/resilience-core`  | Resilience core  | N5   | 1.0.0   | `resilience-core`  | `resilience-core` (`mzizi_resilience::resilience_core`)   | —            |
+| `lib/timeout`          | Timeout          | N5   | 1.0.0   | `timeout`          | `timeout` (`mzizi_resilience::timeout`)                   | —            |
+| `lib/circuit-breaker`  | Circuit breaker  | N5   | 1.0.0   | `circuit-breaker`  | `circuit-breaker` (`mzizi_resilience::circuit_breaker`)   | —            |
+| `lib/retry`            | Retry            | N5   | 1.0.0   | `retry`            | `retry` (`mzizi_resilience::retry`)                       | —            |
+| `lib/rate-limiter`     | Rate limiter     | N5   | 1.0.0   | `rate-limiter`     | `rate-limiter` (`mzizi_resilience::rate_limiter`)         | —            |
+| `lib/bulkhead`         | Bulkhead         | N5   | 1.0.0   | `bulkhead`         | `bulkhead` (`mzizi_resilience::bulkhead`)                 | —            |
+| `lib/fallback-chain`   | Fallback chain   | N5   | 1.0.0   | `fallback-chain`   | `fallback-chain` (`mzizi_resilience::fallback_chain`)     | —            |
+| `lib/mzizi-resilience` | mzizi Resilience | N5   | 1.0.0   | `mzizi-resilience` | `mzizi-resilience` (`mzizi_resilience::mzizi_resilience`) | —            |
 
 ## Rules every contract's tests enforce
 

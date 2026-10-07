@@ -1,0 +1,136 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/rate-limiter",
+  "title": "Rate limiter",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "library",
+  "summary": "An integer token bucket (units of 1/windowMs token): sustained rate exactly limit per window, burst only raises the ceiling, and queued callers reserve their token.",
+  "api": {
+    "ts": [
+      {
+        "name": "RateLimiterCore",
+        "kind": "class",
+        "summary": "tryAcquire(now), remaining(now), retryAfterMs(now), reset(now)."
+      },
+      {
+        "name": "RateLimiter",
+        "kind": "class",
+        "summary": "execute(fn, signal?), isAllowed, remaining, retryAfterMs, metrics, reset()."
+      },
+      {
+        "name": "RateLimitExceededError",
+        "kind": "class",
+        "summary": "code rate-limited; limiterName, limit, windowMs, retryAfterMs."
+      },
+      {
+        "name": "RATE_LIMITER_DEFAULTS",
+        "kind": "const",
+        "summary": "The defaults."
+      }
+    ],
+    "rs": [
+      {
+        "name": "RateLimiterCore",
+        "kind": "struct",
+        "summary": "The sans-IO bucket (same methods)."
+      },
+      {
+        "name": "RateLimiter",
+        "kind": "struct",
+        "summary": "execute(rt, op); the bucket starts full at first use."
+      },
+      {
+        "name": "RateLimiterConfig",
+        "kind": "struct",
+        "summary": "The numbers, with new(name) defaults."
+      },
+      {
+        "name": "RateAcquire",
+        "kind": "enum",
+        "summary": "Ok { wait_ms } or Rejected { retry_after_ms }."
+      }
+    ],
+    "py": null
+  },
+  "config": [
+    {
+      "name": "limit",
+      "default": 100,
+      "rule": "An integer >= 1."
+    },
+    {
+      "name": "windowMs",
+      "default": 60000,
+      "rule": "An integer >= 1."
+    },
+    {
+      "name": "burstAllowance",
+      "default": 0,
+      "rule": "A non-negative integer."
+    },
+    {
+      "name": "queueExcess",
+      "default": false,
+      "rule": "Wait instead of rejecting when the wait is at most maxWaitMs."
+    },
+    {
+      "name": "maxWaitMs",
+      "default": 5000,
+      "rule": "A non-negative integer."
+    }
+  ],
+  "behaviour": [
+    {
+      "id": "units",
+      "rule": "One token = windowMs units; capacity C = (limit + burstAllowance) * windowMs; the bucket starts full."
+    },
+    {
+      "id": "refill",
+      "rule": "Refill adds (now - lastRefill) * limit units, capped at C; a clock that steps back adds nothing."
+    },
+    {
+      "id": "acquire",
+      "rule": "With level >= windowMs: take a token, wait 0. Else wait = ceil((windowMs - level) / limit); with queueExcess and wait <= maxWaitMs the token is reserved now (level may go negative) and the caller sleeps wait; else rejected with retryAfterMs = wait."
+    },
+    {
+      "id": "remaining",
+      "rule": "remaining(now) = floor(max(level, 0) / windowMs); isAllowed agrees with execute."
+    }
+  ],
+  "errors": [
+    {
+      "code": "rate-limited",
+      "ts": "RateLimitExceededError",
+      "rs": "Error::RateLimited",
+      "py": null
+    },
+    {
+      "code": "config",
+      "ts": "ResilienceConfigError",
+      "rs": "Error::Config / ConfigError",
+      "py": null
+    }
+  ],
+  "fixtures": [
+    "__tests__/fixtures/resilience/rate-limiter.cases.json",
+    "__tests__/fixtures/resilience/mzizi-resilience.cases.json"
+  ],
+  "implementations": {
+    "ts": {
+      "registry": "rate-limiter",
+      "file": "components/registry/n5-resilience/rate-limiter.ts"
+    },
+    "rs": {
+      "registry": "rate-limiter",
+      "file": "components/registry/n5-resilience/rate-limiter.rs",
+      "crate": "mzizi-resilience",
+      "module": "rate_limiter"
+    },
+    "py": null
+  },
+  "related": ["lib/mzizi-resilience"],
+  "gaps": [
+    "Python lands in phase 2 (mzizi-registry#472): a .py sibling, the /v1/py/{name} route in mzizi-api-gateway and a PyPI package."
+  ]
+}

@@ -1,0 +1,321 @@
+{
+  "$comment": "mzizi-resilience (resilience spec v1): the composed pipeline FallbackChain(Retry(CircuitBreaker(RateLimiter(Timeout(Bulkhead(Fault(op))))))) on a virtual clock from 0, with an explicit fault SCHEDULE (entry i is the fault for the i-th invocation of the operation; null none; past the end, none; seeded random chaos is N8's). The operation waits operation.durationMs, then resolves operation.value. A truncate fault halves a string; a malformed fault replaces it with the marker {\"mzizi-chaos\":. `validate.equals`, when present, accepts only that value. Fallback stages wait durationMs and resolve value. Before each call the clock advances to `at`. Each call expects: served (\"primary\", a stage name, or \"error:<code>\" of what the call threw), attempts (the primary's), circuitState and health (the pipeline's report) after the call, the report's errorCount and lastErrorCode, and now.",
+  "scenarios": [
+    {
+      "name": "faults open the breaker, the fallback serves, cooldown, the half-open probe heals",
+      "config": {
+        "name": "forecast",
+        "timeoutMs": 100,
+        "retry": {
+          "maxAttempts": 2,
+          "baseDelayMs": 10,
+          "maxDelayMs": 10,
+          "jitter": "none"
+        },
+        "circuitBreaker": {
+          "failureThreshold": 3,
+          "windowMs": 10000,
+          "cooldownMs": 1000,
+          "halfOpenMaxCalls": 1
+        },
+        "fallbacks": [{ "name": "cache", "durationMs": 5, "value": "cached" }]
+      },
+      "operation": { "durationMs": 20, "value": "fresh" },
+      "schedule": [
+        null,
+        { "kind": "error" },
+        { "kind": "error" },
+        { "kind": "timeout" },
+        { "kind": "latency", "ms": 30 }
+      ],
+      "calls": [
+        {
+          "at": 0,
+          "expect": {
+            "served": "primary",
+            "value": "fresh",
+            "attempts": 1,
+            "circuitState": "closed",
+            "health": "healthy",
+            "errorCount": 0,
+            "lastErrorCode": null,
+            "now": 20
+          }
+        },
+        {
+          "at": 1000,
+          "expect": {
+            "served": "cache",
+            "value": "cached",
+            "attempts": 2,
+            "circuitState": "closed",
+            "health": "degraded",
+            "errorCount": 1,
+            "lastErrorCode": "retries-exhausted",
+            "now": 1015
+          }
+        },
+        {
+          "at": 2000,
+          "expect": {
+            "served": "cache",
+            "value": "cached",
+            "attempts": 2,
+            "circuitState": "open",
+            "health": "degraded",
+            "errorCount": 2,
+            "lastErrorCode": "circuit-open",
+            "now": 2115
+          }
+        },
+        {
+          "at": 2500,
+          "expect": {
+            "served": "cache",
+            "value": "cached",
+            "attempts": 1,
+            "circuitState": "open",
+            "health": "degraded",
+            "errorCount": 3,
+            "lastErrorCode": "circuit-open",
+            "now": 2505
+          }
+        },
+        {
+          "at": 3100,
+          "expect": {
+            "served": "primary",
+            "value": "fresh",
+            "attempts": 1,
+            "circuitState": "closed",
+            "health": "healthy",
+            "errorCount": 3,
+            "lastErrorCode": "circuit-open",
+            "now": 3150
+          }
+        },
+        {
+          "at": 3200,
+          "expect": {
+            "served": "primary",
+            "value": "fresh",
+            "attempts": 1,
+            "circuitState": "closed",
+            "health": "healthy",
+            "errorCount": 3,
+            "lastErrorCode": "circuit-open",
+            "now": 3220
+          }
+        }
+      ]
+    },
+    {
+      "name": "malformed, dropped and truncated payloads are failures; a failed probe reopens",
+      "config": {
+        "name": "feed",
+        "timeoutMs": 100,
+        "retry": {
+          "maxAttempts": 2,
+          "baseDelayMs": 10,
+          "maxDelayMs": 10,
+          "jitter": "none"
+        },
+        "circuitBreaker": {
+          "failureThreshold": 2,
+          "windowMs": 10000,
+          "cooldownMs": 1000,
+          "halfOpenMaxCalls": 1
+        },
+        "fallbacks": [{ "name": "cache", "durationMs": 5, "value": "cached" }],
+        "validate": { "equals": "fresh" }
+      },
+      "operation": { "durationMs": 20, "value": "fresh" },
+      "schedule": [
+        { "kind": "malformed" },
+        { "kind": "drop" },
+        { "kind": "truncate" }
+      ],
+      "calls": [
+        {
+          "at": 0,
+          "expect": {
+            "served": "cache",
+            "value": "cached",
+            "attempts": 2,
+            "circuitState": "open",
+            "health": "degraded",
+            "errorCount": 1,
+            "lastErrorCode": "retries-exhausted",
+            "now": 35
+          }
+        },
+        {
+          "at": 1030,
+          "expect": {
+            "served": "cache",
+            "value": "cached",
+            "attempts": 2,
+            "circuitState": "open",
+            "health": "degraded",
+            "errorCount": 2,
+            "lastErrorCode": "circuit-open",
+            "now": 1065
+          }
+        },
+        {
+          "at": 2050,
+          "expect": {
+            "served": "primary",
+            "value": "fresh",
+            "attempts": 1,
+            "circuitState": "closed",
+            "health": "healthy",
+            "errorCount": 2,
+            "lastErrorCode": "circuit-open",
+            "now": 2070
+          }
+        }
+      ]
+    },
+    {
+      "name": "no fallback: the error surfaces and health is error",
+      "config": {
+        "name": "ledger",
+        "timeoutMs": 100,
+        "retry": {
+          "maxAttempts": 1,
+          "baseDelayMs": 10,
+          "maxDelayMs": 10,
+          "jitter": "none"
+        },
+        "circuitBreaker": {
+          "failureThreshold": 1,
+          "windowMs": 10000,
+          "cooldownMs": 1000,
+          "halfOpenMaxCalls": 1
+        },
+        "fallbacks": []
+      },
+      "operation": { "durationMs": 20, "value": "fresh" },
+      "schedule": [{ "kind": "error" }],
+      "calls": [
+        {
+          "at": 0,
+          "expect": {
+            "served": "error:retries-exhausted",
+            "attempts": 1,
+            "circuitState": "open",
+            "health": "error",
+            "errorCount": 1,
+            "lastErrorCode": "retries-exhausted",
+            "now": 0
+          }
+        },
+        {
+          "at": 10,
+          "expect": {
+            "served": "error:circuit-open",
+            "attempts": 1,
+            "circuitState": "open",
+            "health": "error",
+            "errorCount": 2,
+            "lastErrorCode": "circuit-open",
+            "now": 10
+          }
+        },
+        {
+          "at": 1000,
+          "expect": {
+            "served": "primary",
+            "value": "fresh",
+            "attempts": 1,
+            "circuitState": "closed",
+            "health": "healthy",
+            "errorCount": 2,
+            "lastErrorCode": "circuit-open",
+            "now": 1020
+          }
+        }
+      ]
+    },
+    {
+      "name": "rate limited goes to the fallback without counting against the breaker",
+      "config": {
+        "name": "quota",
+        "timeoutMs": 100,
+        "retry": {
+          "maxAttempts": 3,
+          "baseDelayMs": 10,
+          "maxDelayMs": 10,
+          "jitter": "none"
+        },
+        "circuitBreaker": {
+          "failureThreshold": 1,
+          "windowMs": 10000,
+          "cooldownMs": 1000,
+          "halfOpenMaxCalls": 1
+        },
+        "rateLimiter": {
+          "limit": 1,
+          "windowMs": 1000,
+          "burstAllowance": 0,
+          "queueExcess": false,
+          "maxWaitMs": 0
+        },
+        "fallbacks": [{ "name": "cache", "durationMs": 5, "value": "cached" }]
+      },
+      "operation": { "durationMs": 20, "value": "fresh" },
+      "schedule": [],
+      "calls": [
+        {
+          "at": 0,
+          "expect": {
+            "served": "primary",
+            "value": "fresh",
+            "attempts": 1,
+            "circuitState": "closed",
+            "health": "healthy",
+            "errorCount": 0,
+            "lastErrorCode": null,
+            "now": 20
+          }
+        },
+        {
+          "at": 20,
+          "expect": {
+            "served": "cache",
+            "value": "cached",
+            "attempts": 1,
+            "circuitState": "closed",
+            "health": "degraded",
+            "errorCount": 1,
+            "lastErrorCode": "rate-limited",
+            "now": 25
+          }
+        },
+        {
+          "at": 1000,
+          "expect": {
+            "served": "primary",
+            "value": "fresh",
+            "attempts": 1,
+            "circuitState": "closed",
+            "health": "healthy",
+            "errorCount": 1,
+            "lastErrorCode": "rate-limited",
+            "now": 1020
+          }
+        }
+      ]
+    }
+  ],
+  "configErrors": [
+    { "name": "" },
+    { "name": "x", "timeoutMs": 0 },
+    { "name": "x", "retry": { "maxAttempts": 0 } },
+    {
+      "name": "x",
+      "fallbacks": [{ "name": "primary", "durationMs": 0, "value": "v" }]
+    }
+  ]
+}

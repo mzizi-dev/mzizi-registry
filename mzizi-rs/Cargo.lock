@@ -675,6 +675,14 @@ name = "mzizi-fundi"
 version = "0.3.0"
 
 [[package]]
+name = "mzizi-resilience"
+version = "0.3.0"
+dependencies = [
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "mzizi-roots"
 version = "0.3.0"
 dependencies = [
@@ -693,6 +701,7 @@ dependencies = [
  "mzizi-discovery",
  "mzizi-docs",
  "mzizi-fundi",
+ "mzizi-resilience",
 ]
 
 [[package]]
@@ -1055,6 +1064,15 @@ checksum = "b1e27c91459209c2986af3dcf603a5a74a4368754ce37414f59acc971167f643"
 dependencies = [
  "displaydoc",
  "zerovec",
+]
+
+[[package]]
+name = "tokio"
+version = "1.53.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e95f91fcc7a621e8b030f6aa23c71fe9838ae2fb4d8118b75602a328f5144044"
+dependencies = [
+ "pin-project-lite",
 ]
 
 [[package]]

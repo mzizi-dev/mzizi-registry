@@ -1,6 +1,6 @@
 [package]
 name = "mzizi-roots-server"
-description = "Mzizi Roots, the server side: one dependency for Mzizi's host-agnostic server components (mzizi-assurance, mzizi-fundi, mzizi-docs, mzizi-discovery), each behind a feature."
+description = "Mzizi Roots, the server side: one dependency for Mzizi's host-agnostic server components (mzizi-resilience, mzizi-assurance, mzizi-fundi, mzizi-docs, mzizi-discovery), each behind a feature."
 readme = "README.md"
 keywords = ["server", "cloudflare-workers", "observability", "wasm", "mzizi"]
 categories = ["web-programming", "wasm"]
@@ -18,6 +18,7 @@ workspace = true
 # (typed request in, typed response out, I/O behind traits), so they build for native hosts
 # and for `wasm32-unknown-unknown` Workers alike.
 [dependencies]
+mzizi-resilience = { path = "../mzizi-resilience", version = "0.3.0", optional = true }
 mzizi-assurance = { path = "../mzizi-assurance", version = "0.3.0", optional = true }
 mzizi-fundi = { path = "../mzizi-fundi", version = "0.3.0", optional = true }
 mzizi-docs = { path = "../mzizi-docs", version = "0.3.0", optional = true }
@@ -25,9 +26,12 @@ mzizi-discovery = { path = "../mzizi-discovery", version = "0.3.0", optional = t
 mzizi-activitypub = { path = "../mzizi-activitypub", version = "0.3.0", optional = true }
 
 [features]
-# All four by default. `assurance`, `fundi` and `discovery` have no dependencies at all;
-# `docs` brings `dioxus` in, because `mzizi-docs` also carries the two docs renderers.
-default = ["assurance", "fundi", "docs", "discovery"]
+# All five by default. `resilience`, `assurance`, `fundi` and `discovery` have no dependencies
+# at all; `docs` brings `dioxus` in, because `mzizi-docs` also carries the two docs renderers.
+default = ["resilience", "assurance", "fundi", "docs", "discovery"]
+# N5 timeout, retry, circuit breaker, rate limiter, bulkhead, fallback chain, the composed
+# pipeline and its health monitor.
+resilience = ["dep:mzizi-resilience"]
 # N8 probes, telemetry and the OTLP exporter.
 assurance = ["dep:mzizi-assurance"]
 # N9 Fundi reporter and learning loop.

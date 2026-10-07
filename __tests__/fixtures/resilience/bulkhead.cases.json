@@ -1,0 +1,153 @@
+{
+  "$comment": "bulkhead (resilience spec v1). `cases` drive the sans-IO core: enter → \"admitted\" | \"rejected\" | {\"queued\": ticket}; release → the ticket admitted in its place, or null; expire(ticket) → whether it was still queued; metrics → the counts. Tickets start at 1. `runs` drive the async wrapper on a virtual clock: every call starts at `start` (all concurrently), holds its slot for durationMs and resolves \"ok\"; expect gives each call's outcome and the clock when it settled. `configErrors` must be rejected at construction (code config).",
+  "cases": [
+    {
+      "name": "admit, queue, reject, then hand the slot to the queue",
+      "config": {
+        "name": "db",
+        "maxConcurrent": 2,
+        "maxQueue": 1,
+        "maxQueueWaitMs": 1000
+      },
+      "steps": [
+        { "op": "enter", "expect": "admitted" },
+        { "op": "enter", "expect": "admitted" },
+        { "op": "enter", "expect": { "queued": 1 } },
+        { "op": "enter", "expect": "rejected" },
+        {
+          "op": "metrics",
+          "expect": {
+            "concurrent": 2,
+            "queued": 1,
+            "maxConcurrent": 2,
+            "maxQueue": 1
+          }
+        },
+        { "op": "release", "expect": 1 },
+        {
+          "op": "metrics",
+          "expect": {
+            "concurrent": 2,
+            "queued": 0,
+            "maxConcurrent": 2,
+            "maxQueue": 1
+          }
+        },
+        { "op": "release", "expect": null },
+        {
+          "op": "metrics",
+          "expect": {
+            "concurrent": 1,
+            "queued": 0,
+            "maxConcurrent": 2,
+            "maxQueue": 1
+          }
+        },
+        { "op": "expire", "ticket": 1, "expect": false }
+      ]
+    },
+    {
+      "name": "an expired ticket leaves the queue; FIFO for the rest",
+      "config": {
+        "name": "api",
+        "maxConcurrent": 1,
+        "maxQueue": 2,
+        "maxQueueWaitMs": 1000
+      },
+      "steps": [
+        { "op": "enter", "expect": "admitted" },
+        { "op": "enter", "expect": { "queued": 1 } },
+        { "op": "enter", "expect": { "queued": 2 } },
+        { "op": "expire", "ticket": 1, "expect": true },
+        {
+          "op": "metrics",
+          "expect": {
+            "concurrent": 1,
+            "queued": 1,
+            "maxConcurrent": 1,
+            "maxQueue": 2
+          }
+        },
+        { "op": "release", "expect": 2 },
+        { "op": "release", "expect": null },
+        {
+          "op": "metrics",
+          "expect": {
+            "concurrent": 0,
+            "queued": 0,
+            "maxConcurrent": 1,
+            "maxQueue": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "no queue: reject at once; release on empty is harmless",
+      "config": {
+        "name": "solo",
+        "maxConcurrent": 1,
+        "maxQueue": 0,
+        "maxQueueWaitMs": 0
+      },
+      "steps": [
+        { "op": "release", "expect": null },
+        { "op": "enter", "expect": "admitted" },
+        { "op": "enter", "expect": "rejected" },
+        {
+          "op": "metrics",
+          "expect": {
+            "concurrent": 1,
+            "queued": 0,
+            "maxConcurrent": 1,
+            "maxQueue": 0
+          }
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "name": "queue wait runs out: a timeout, distinct from full",
+      "config": {
+        "name": "db",
+        "maxConcurrent": 1,
+        "maxQueue": 1,
+        "maxQueueWaitMs": 50
+      },
+      "calls": [
+        { "start": 0, "durationMs": 100 },
+        { "start": 0, "durationMs": 10 },
+        { "start": 0, "durationMs": 10 }
+      ],
+      "expect": [
+        { "outcome": "ok", "end": 100 },
+        { "outcome": "error:bulkhead-queue-timeout", "end": 50 },
+        { "outcome": "error:bulkhead-full", "end": 0 }
+      ]
+    },
+    {
+      "name": "a queued call is admitted when the slot frees",
+      "config": {
+        "name": "db",
+        "maxConcurrent": 1,
+        "maxQueue": 1,
+        "maxQueueWaitMs": 200
+      },
+      "calls": [
+        { "start": 0, "durationMs": 100 },
+        { "start": 0, "durationMs": 10 }
+      ],
+      "expect": [
+        { "outcome": "ok", "end": 100 },
+        { "outcome": "ok", "end": 110 }
+      ]
+    }
+  ],
+  "configErrors": [
+    { "name": "db", "maxConcurrent": 0 },
+    { "name": "db", "maxQueue": -1 },
+    { "name": "db", "maxQueueWaitMs": -1 },
+    { "name": "db", "maxConcurrent": 1.5 },
+    { "name": "" }
+  ]
+}

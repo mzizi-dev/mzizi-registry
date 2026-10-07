@@ -1,0 +1,37 @@
+[package]
+name = "mzizi-resilience"
+description = "Mzizi N5 resilience: timeout, retry, circuit breaker, rate limiter, bulkhead and fallback chain as sans-IO cores with runtime-generic async wrappers, composed with a health monitor and a chaos fault hook."
+readme = "README.md"
+keywords = ["resilience", "circuit-breaker", "retry", "rate-limiter", "mzizi"]
+categories = ["asynchronous", "network-programming", "wasm"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+# The fixture suite does not ship: `tests/fixtures.rs` reads the shared JSON fixtures out of
+# `__tests__/fixtures/resilience/`, three levels above this crate, which are never in the
+# tarball. `cargo package` prints an "ignoring test fixtures" warning for this line; that is
+# the intended outcome.
+exclude = ["tests/"]
+
+[lints]
+workspace = true
+
+# NO DEPENDENCIES BY DEFAULT. The cores are sans-IO and the async wrappers are generic over
+# `resilience_core::Runtime` (a clock and a sleep), so the crate builds for
+# `wasm32-unknown-unknown` Workers and native hosts alike without choosing an executor.
+# `tokio` is opt-in, for hosts that already run it.
+[dependencies]
+tokio = { version = "1", default-features = false, features = ["time"], optional = true }
+
+[features]
+default = []
+# `resilience_core::TokioRuntime`: tokio's timer and the system clock.
+tokio = ["dep:tokio"]
+
+[dev-dependencies]
+# Reads the shared fixtures in `tests/fixtures.rs`.
+serde_json = "1"

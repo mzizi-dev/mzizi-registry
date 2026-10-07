@@ -1,0 +1,61 @@
+{
+  "$comment": "fallback-chain (resilience spec v1). Run on a virtual clock starting at 0. Each stage waits durationMs then succeeds with <value> (\"ok:<value>\") or fails with code <code> (\"fail:<code>\"); timeoutMs, when present, is the stage's own timeout. expect is the served value, the stage and its index, or the AllStagesFailedError's code and stageErrors; now is the clock after the call.",
+  "cases": [
+    {
+      "name": "the first stage serves",
+      "stages": [{ "name": "cache", "durationMs": 5, "outcome": "ok:cached" }],
+      "expect": { "value": "cached", "stage": "cache", "index": 0, "now": 5 }
+    },
+    {
+      "name": "a failure falls through to the next stage",
+      "stages": [
+        { "name": "cache", "durationMs": 5, "outcome": "fail:miss" },
+        { "name": "primary", "durationMs": 20, "outcome": "ok:fresh" }
+      ],
+      "expect": { "value": "fresh", "stage": "primary", "index": 1, "now": 25 }
+    },
+    {
+      "name": "a stage timeout falls through",
+      "stages": [
+        {
+          "name": "slow",
+          "durationMs": 100,
+          "timeoutMs": 50,
+          "outcome": "ok:late"
+        },
+        { "name": "estimate", "durationMs": 0, "outcome": "ok:estimate" }
+      ],
+      "expect": {
+        "value": "estimate",
+        "stage": "estimate",
+        "index": 1,
+        "now": 50
+      }
+    },
+    {
+      "name": "every stage fails: codes, not messages",
+      "stages": [
+        { "name": "a", "durationMs": 0, "outcome": "fail:boom" },
+        {
+          "name": "b",
+          "durationMs": 100,
+          "timeoutMs": 10,
+          "outcome": "ok:late"
+        }
+      ],
+      "expect": {
+        "error": "all-stages-failed",
+        "stageErrors": [
+          { "stage": "a", "code": "boom" },
+          { "stage": "b", "code": "timeout" }
+        ],
+        "now": 10
+      }
+    },
+    {
+      "name": "no stages is a config error",
+      "stages": [],
+      "expect": { "error": "config" }
+    }
+  ]
+}

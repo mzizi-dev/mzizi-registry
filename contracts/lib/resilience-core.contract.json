@@ -1,0 +1,157 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/resilience-core",
+  "title": "Resilience core",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "library",
+  "summary": "The shared ground of N5: injected time (Clock/Sleep in TS, Runtime in Rust), the config error and validation, stable error codes and the rejection set, and the onEvent hook every primitive takes instead of importing a logger.",
+  "api": {
+    "ts": [
+      {
+        "name": "Clock",
+        "kind": "interface",
+        "summary": "nowMs(): integer ms."
+      },
+      {
+        "name": "Sleep",
+        "kind": "interface",
+        "summary": "sleep(ms, signal?): rejects with the signal's reason on abort."
+      },
+      {
+        "name": "systemClock",
+        "kind": "const",
+        "summary": "Date.now."
+      },
+      {
+        "name": "timerSleep",
+        "kind": "const",
+        "summary": "setTimeout, cleared on abort."
+      },
+      {
+        "name": "ResilienceConfigError",
+        "kind": "class",
+        "summary": "RangeError subclass, code config."
+      },
+      {
+        "name": "errorCode",
+        "kind": "function",
+        "summary": "The safe code of any thrown value: its code, else its name, else error; never the message."
+      },
+      {
+        "name": "isRejection",
+        "kind": "function",
+        "summary": "Whether a value's code is a rejection code."
+      },
+      {
+        "name": "REJECTION_CODES",
+        "kind": "const",
+        "summary": "circuit-open, bulkhead-full, bulkhead-queue-timeout, rate-limited."
+      },
+      {
+        "name": "ResilienceEvent",
+        "kind": "interface",
+        "summary": "{module, type, name?, data?}: codes and numbers only."
+      },
+      {
+        "name": "emit",
+        "kind": "function",
+        "summary": "Calls an onEvent hook; a throwing hook never changes the call."
+      }
+    ],
+    "rs": [
+      {
+        "name": "Runtime",
+        "kind": "trait",
+        "summary": "now_ms() and sleep(ms): the host's clock and timer."
+      },
+      {
+        "name": "TokioRuntime",
+        "kind": "struct",
+        "summary": "A Runtime on tokio (feature tokio)."
+      },
+      {
+        "name": "ConfigError",
+        "kind": "struct",
+        "summary": "option + requirement; code config."
+      },
+      {
+        "name": "Error",
+        "kind": "enum",
+        "summary": "Every way a resilient call fails; Op(E) is the operation's own error."
+      },
+      {
+        "name": "ErrorCode",
+        "kind": "trait",
+        "summary": "The operation error's stable code."
+      },
+      {
+        "name": "safe_code",
+        "kind": "function",
+        "summary": "A code in the shared alphabet, else error."
+      },
+      {
+        "name": "StageError",
+        "kind": "struct",
+        "summary": "{stage, code} in AllStagesFailed."
+      },
+      {
+        "name": "REJECTION_CODES",
+        "kind": "const",
+        "summary": "The four rejection codes."
+      }
+    ],
+    "py": null
+  },
+  "behaviour": [
+    {
+      "id": "integer-ms",
+      "rule": "Time is integer milliseconds; cores take now explicitly; wrappers read an injected clock and sleep."
+    },
+    {
+      "id": "validated",
+      "rule": "Config is validated at construction: negative, non-integer or non-finite ms, counts below their minimum, and rates outside [0, 1] are a config error."
+    },
+    {
+      "id": "codes-only",
+      "rule": "An error's code is its stable kebab name; a code that is not in [A-Za-z0-9][A-Za-z0-9_.:-]{0,63} becomes error. Messages, URLs and payloads are never recorded (no PII)."
+    },
+    {
+      "id": "rejections",
+      "rule": "circuit-open, bulkhead-full, bulkhead-queue-timeout and rate-limited are rejections: a guard refused the call without running it."
+    },
+    {
+      "id": "no-logger",
+      "rule": "N5 modules import no logger: they take an optional onEvent hook (TS) and return typed errors (Rust)."
+    }
+  ],
+  "errors": [
+    {
+      "code": "config",
+      "ts": "ResilienceConfigError",
+      "rs": "Error::Config / ConfigError",
+      "py": null
+    }
+  ],
+  "fixtures": [
+    "__tests__/fixtures/resilience/timeout.cases.json",
+    "__tests__/fixtures/resilience/circuit-breaker.cases.json"
+  ],
+  "implementations": {
+    "ts": {
+      "registry": "resilience-core",
+      "file": "components/registry/n5-resilience/resilience-core.ts"
+    },
+    "rs": {
+      "registry": "resilience-core",
+      "file": "components/registry/n5-resilience/resilience-core.rs",
+      "crate": "mzizi-resilience",
+      "module": "resilience_core"
+    },
+    "py": null
+  },
+  "related": ["lib/mzizi-resilience"],
+  "gaps": [
+    "Python lands in phase 2 (mzizi-registry#472): a .py sibling, the /v1/py/{name} route in mzizi-api-gateway and a PyPI package."
+  ]
+}

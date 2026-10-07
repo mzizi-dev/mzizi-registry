@@ -1,0 +1,148 @@
+{
+  "$comment": "retry (resilience spec v1). `delays`: the delay before each retry number in ks, drawing from mulberry32(seed) in order when jitter is \"half\" (seed null: no draws). `runs`: the async wrapper on a virtual clock from 0 with mulberry32(seed); attempt i (1-based) does outcomes[i-1] instantly: \"ok\" resolves, \"fail:<code>\" rejects with a retryable error of that code, \"reject:<code>\" with a rejection (or config) error of that code; past the list, \"ok\". expect.result is \"ok\" or \"error:<code>\"; lastErrorCode is the RetriesExhaustedError's. `configErrors` must be rejected (code config).",
+  "delays": [
+    {
+      "name": "no jitter doubles to the cap",
+      "policy": { "baseDelayMs": 500, "maxDelayMs": 4000, "jitter": "none" },
+      "seed": null,
+      "ks": [1, 2, 3, 4, 5],
+      "delays": [500, 1000, 2000, 4000, 4000]
+    },
+    {
+      "name": "half jitter never exceeds maxDelayMs",
+      "policy": { "baseDelayMs": 100, "maxDelayMs": 250, "jitter": "half" },
+      "seed": 42,
+      "ks": [1, 2, 3],
+      "delays": [127, 250, 250]
+    },
+    {
+      "name": "half jitter, the defaults' shape",
+      "policy": { "baseDelayMs": 1000, "maxDelayMs": 30000, "jitter": "half" },
+      "seed": 7,
+      "ks": [1, 2, 3, 4, 5, 6],
+      "delays": [1190, 2848, 5490, 11042, 22462, 30000]
+    },
+    {
+      "name": "tiny delays",
+      "policy": { "baseDelayMs": 1, "maxDelayMs": 1000000, "jitter": "half" },
+      "seed": 1,
+      "ks": [1, 2, 3, 4],
+      "delays": [1, 3, 6, 9]
+    },
+    {
+      "name": "huge retry numbers saturate at the cap",
+      "policy": { "baseDelayMs": 1000, "maxDelayMs": 30000, "jitter": "none" },
+      "seed": null,
+      "ks": [63, 64, 65, 200],
+      "delays": [30000, 30000, 30000, 30000]
+    }
+  ],
+  "runs": [
+    {
+      "name": "succeeds on the third attempt",
+      "config": {
+        "maxAttempts": 3,
+        "baseDelayMs": 100,
+        "maxDelayMs": 1000,
+        "jitter": "none"
+      },
+      "seed": 0,
+      "outcomes": ["fail:boom", "fail:boom", "ok"],
+      "expect": { "result": "ok", "attempts": 3, "now": 300 }
+    },
+    {
+      "name": "exhausted",
+      "config": {
+        "maxAttempts": 3,
+        "baseDelayMs": 100,
+        "maxDelayMs": 1000,
+        "jitter": "none"
+      },
+      "seed": 0,
+      "outcomes": ["fail:boom", "fail:boom", "fail:boom"],
+      "expect": {
+        "result": "error:retries-exhausted",
+        "attempts": 3,
+        "now": 300,
+        "lastErrorCode": "boom"
+      }
+    },
+    {
+      "name": "a rejection is not retried",
+      "config": {
+        "maxAttempts": 3,
+        "baseDelayMs": 100,
+        "maxDelayMs": 1000,
+        "jitter": "none"
+      },
+      "seed": 0,
+      "outcomes": ["reject:circuit-open"],
+      "expect": { "result": "error:circuit-open", "attempts": 1, "now": 0 }
+    },
+    {
+      "name": "rate limited is not retried",
+      "config": {
+        "maxAttempts": 3,
+        "baseDelayMs": 100,
+        "maxDelayMs": 1000,
+        "jitter": "none"
+      },
+      "seed": 0,
+      "outcomes": ["fail:boom", "reject:rate-limited"],
+      "expect": { "result": "error:rate-limited", "attempts": 2, "now": 100 }
+    },
+    {
+      "name": "a config error is not retried",
+      "config": {
+        "maxAttempts": 3,
+        "baseDelayMs": 100,
+        "maxDelayMs": 1000,
+        "jitter": "none"
+      },
+      "seed": 0,
+      "outcomes": ["reject:config"],
+      "expect": { "result": "error:config", "attempts": 1, "now": 0 }
+    },
+    {
+      "name": "seeded jitter",
+      "config": {
+        "maxAttempts": 4,
+        "baseDelayMs": 100,
+        "maxDelayMs": 250,
+        "jitter": "half"
+      },
+      "seed": 42,
+      "outcomes": ["fail:boom", "fail:boom", "fail:boom", "fail:boom"],
+      "expect": {
+        "result": "error:retries-exhausted",
+        "attempts": 4,
+        "now": 627,
+        "lastErrorCode": "boom"
+      }
+    },
+    {
+      "name": "one attempt calls once",
+      "config": {
+        "maxAttempts": 1,
+        "baseDelayMs": 100,
+        "maxDelayMs": 1000,
+        "jitter": "none"
+      },
+      "seed": 0,
+      "outcomes": ["fail:boom"],
+      "expect": {
+        "result": "error:retries-exhausted",
+        "attempts": 1,
+        "now": 0,
+        "lastErrorCode": "boom"
+      }
+    }
+  ],
+  "configErrors": [
+    { "maxAttempts": 0 },
+    { "maxAttempts": 1.5 },
+    { "baseDelayMs": -1 },
+    { "maxDelayMs": 0.5 },
+    { "jitter": "full" }
+  ]
+}
