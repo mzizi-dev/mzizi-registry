@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.8.0",
+    title: "v4.8.0 — markdown-parse compiles under noUncheckedIndexedAccess",
+    description:
+      "Releases staging to main as the next minor above v4.7.x (nyuchi/.github#80). markdown-parse (installed with markdown-renderer) compiles in projects with noUncheckedIndexedAccess, checked by tsconfig.consumer-strict.json in pnpm typecheck, with no behaviour change (#468). CHANGELOG.md section [4.8.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 8,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-10-07T11:00:00.000+00:00",
+    created_at: "2026-10-07T11:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.7.0",
     title:
       "v4.7.0 — markdown-renderer 1.1.0: stricter links, nested rich-text lists",

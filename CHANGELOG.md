@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.8.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.7.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.8.0. The Mzizi Roots crates are unchanged (0.3.0).
+
+### Fixed — `markdown-parse` compiles under `noUncheckedIndexedAccess` (2026-10-07, #468)
+
+`markdown-parse.ts` (installed with `markdown-renderer`) had 80 type errors in a project with `noUncheckedIndexedAccess`, as the Toddle extension is (#460). Every array, string and match index is now checked, with no behaviour change (the 55 shared cases still give the same trees). `tsconfig.consumer-strict.json` type-checks the installable markdown files with that setting, and `pnpm typecheck` runs it. The whitespace set no longer spreads a string, which consumers' `no-misused-spread` lint flags.
+
 ## [4.7.0] - 2026-10-07
 
 Releases `staging` to `main` as the next minor above v4.6.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.7.0, and the Mzizi Roots crates are published at 0.3.0.
