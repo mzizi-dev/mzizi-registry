@@ -98,7 +98,7 @@
     "without": "Everything: the component is markup with no script."
   },
   "responsive": ["Inline; never wraps."],
-  "contract": "contract\n  slot is \"status-badge\"\n  portal is \"https://mzizi.dev/components/status-badge\"\n  class contains \"rounded-full\"\n  class contains \"uppercase\"\n  when default shows span \"stable\"\n  when default class contains \"bg-malachite/10\"\n  when default class contains \"text-malachite\"\n  when beta class contains \"bg-cobalt/10\"\n  when beta class contains \"text-cobalt\"\n  when alpha class contains \"bg-gold/10\"\n  when alpha class contains \"text-gold\"\n  when alpha shows span \"alpha\"\n  when deprecated class contains \"bg-terracotta/10\"\n  when deprecated class contains \"text-terracotta\"\n  when deprecated class contains \"line-through\"\n  when deprecated shows span \"deprecated\"\nend",
+  "contract": "contract\n  slot is \"status-badge\"\n  portal is \"https://mzizi.dev/components/status-badge\"\n  class has \"rounded-full\"\n  class has \"uppercase\"\n  when default shows span \"stable\"\n  when default class has \"bg-malachite/10\"\n  when default class has \"text-malachite\"\n  when default class not contains \"cobalt\"\n  when default class not contains \"gold\"\n  when default class not contains \"terracotta\"\n  when default class not contains \"line-through\"\n  when beta shows span \"beta\"\n  when beta class has \"bg-cobalt/10\"\n  when beta class has \"text-cobalt\"\n  when beta class not contains \"malachite\"\n  when beta class not contains \"gold\"\n  when beta class not contains \"terracotta\"\n  when beta class not contains \"line-through\"\n  when alpha shows span \"alpha\"\n  when alpha class has \"bg-gold/10\"\n  when alpha class has \"text-gold\"\n  when alpha class not contains \"malachite\"\n  when alpha class not contains \"cobalt\"\n  when alpha class not contains \"terracotta\"\n  when alpha class not contains \"line-through\"\n  when deprecated shows span \"deprecated\"\n  when deprecated class has \"bg-terracotta/10\"\n  when deprecated class has \"text-terracotta\"\n  when deprecated class not contains \"malachite\"\n  when deprecated class not contains \"cobalt\"\n  when deprecated class not contains \"gold\"\n  when deprecated class has \"line-through\"\nend",
   "checks": [
     {
       "say": "data-status names the default.",
@@ -115,6 +115,24 @@
       "count": 1,
       "attr": {
         "data-status": "deprecated"
+      }
+    },
+    {
+      "say": "data-status names the status.",
+      "state": "beta",
+      "select": "[data-slot=\"status-badge\"]",
+      "count": 1,
+      "attr": {
+        "data-status": "beta"
+      }
+    },
+    {
+      "say": "data-status names the status.",
+      "state": "alpha",
+      "select": "[data-slot=\"status-badge\"]",
+      "count": 1,
+      "attr": {
+        "data-status": "alpha"
       }
     },
     {
