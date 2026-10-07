@@ -7,7 +7,7 @@ dnaRole: "documentation"
 doctrineVersion: "4.1.0"
 helix_model: "double-helix"
 implementation_rules:
-- "Every brand component emits render timing + error events via the harness."
+- "Every React brand component emits render timing + error events via the harness; in the Astro and Rust builds logging is the host's, per docs/roots/RFC-roots.md."
 - "Structured logs use the [mzizi] prefix for grep-ability."
 - "Telemetry leaves over OTLP through the mzizi-assurance exporter (docs/n8-telemetry.md); there is no Mzizi-specific sink."
 - "Health signals are exposed at /v1/health on api.mzizi.dev; assurance dashboards read from there."
