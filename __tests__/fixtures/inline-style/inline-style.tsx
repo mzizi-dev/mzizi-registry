@@ -5,7 +5,8 @@
  * contract runner fails on every one of them when rendered, and the source
  * scan on the forms it can read.
  */
-import { createElement, type CSSProperties } from "react"
+import { cloneElement, createElement, type CSSProperties } from "react"
+import { jsx } from "react/jsx-runtime"
 
 const tint = { "--tint": "var(--primary)" } as CSSProperties
 
@@ -33,4 +34,24 @@ export function SpreadProps() {
 /** `createElement` with a style prop. */
 export function CreateElement() {
   return createElement("span", { style: tint }, "createElement")
+}
+
+/** A quoted key in a spread object literal. */
+export function QuotedSpreadKey() {
+  return <span {...{ "style": tint }}>quoted spread key</span>
+}
+
+/** `style = {…}`, with spaces around the `=`. */
+export function SpacedStyle() {
+  return <span style = {tint}>spaced</span>
+}
+
+/** `cloneElement` adding a style prop. */
+export function CloneElement() {
+  return cloneElement(<span>clone</span>, { style: tint })
+}
+
+/** The automatic runtime's `jsx`, with a style prop. */
+export function Jsx() {
+  return jsx("span", { style: tint, children: "jsx" })
 }
