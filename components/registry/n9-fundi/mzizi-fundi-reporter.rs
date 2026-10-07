@@ -6,12 +6,20 @@
 //!
 //! # What this owns
 //!
-//! The cooldown decision, the labels, the issue title and body. Not the HTTP
-//! POST: the host files the issue, as everywhere in the core.
+//! The cooldown decision, the labels, the issue title and body, and the default
+//! destination ([`GITHUB_REPO`], overridable through [`issues_api_url`]). Not the
+//! HTTP POST: the host files the issue, as everywhere in the core.
+//!
+//! A host that files directly holds a GitHub token, so it must be a server. A
+//! browser host (wasm32) posts to a fundi endpoint that holds the credential,
+//! as the `.ts` does: it refuses to send a `githubToken` when there is a `window`.
 //!
 //! # Three defects in the TypeScript, fixed here
 //!
-//! **1. A failed report still started the cooldown.** The `.ts` records
+//! The `.ts` now does the same on all three counts (#476); they are kept here as
+//! the record of why.
+//!
+//! **1. A failed report still started the cooldown.** The `.ts` recorded
 //! `cooldowns.set(component, Date.now())` *before* the `fetch`, so a GitHub
 //! outage — or a 401, or a rate limit — suppressed every retry for the next five
 //! minutes. The signal was consumed without ever producing an issue. Here the
@@ -38,15 +46,27 @@
 
 use std::collections::BTreeMap;
 
-/// The repository a fundi report is filed against: Mzizi's own tracker.
+/// The repository a fundi report is filed against by default: Mzizi's own tracker.
 ///
-/// The host does the HTTP POST (to `https://api.github.com/repos/{GITHUB_REPO}/issues`),
-/// but the destination is part of the contract, so it lives here beside the
-/// `.ts`'s constant of the same name, and the contract tests hold the two equal.
+/// The host does the HTTP POST (to [`issues_api_url`]), but the destination is
+/// part of the contract, so it lives here beside the `.ts`'s constant of the same
+/// name, and the contract tests hold the two equal. The fundi Worker (agent-tools
+/// `fundi/`) does not read it: its fallback is its own literal, kept equal by hand.
 /// Not `mzizi-dev/mzizi`: that is the Mzizi language, a different repository.
 /// The `.ts` said `nyuchi/mzizi` (and before that `nyuchi/design-portal`), which
 /// worked only through GitHub's rename redirect.
 pub const GITHUB_REPO: &str = "mzizi-dev/mzizi-registry";
+
+/// The GitHub REST endpoint issues are created at, for `github_repo` (an
+/// `owner/repo` slug) or, when `None`, [`GITHUB_REPO`]. The `.ts`'s `githubRepo`
+/// config and `issuesApiUrl` do the same.
+#[must_use]
+pub fn issues_api_url(github_repo: Option<&str>) -> String {
+    format!(
+        "https://api.github.com/repos/{}/issues",
+        github_repo.unwrap_or(GITHUB_REPO)
+    )
+}
 
 /// How bad the reported failure is.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -151,7 +171,7 @@ pub struct FundiReport {
 impl FundiReport {
     /// The cooldown key: component AND error type.
     ///
-    /// Keying on the component alone — which the `.ts` does — means a render bug
+    /// Keying on the component alone — which the `.ts` did — means a render bug
     /// and a network bug on one component share a bucket, so the second is
     /// silently dropped for the cooldown window.
     #[must_use]

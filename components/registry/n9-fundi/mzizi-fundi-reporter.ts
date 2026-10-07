@@ -14,10 +14,18 @@
  * Mzizi's own tracker is the right destination and that is deliberate: a
  * consumer installs these components, so a defect they hit is a defect in this
  * registry, and it belongs where the fix will be made rather than in their
- * backlog. The Rust build exports the same value as `GITHUB_REPO`, and the
- * fundi Worker falls back to it when its `GITHUB_REPO` var is unset.
+ * backlog. A caller can still point it elsewhere with `githubRepo`.
+ *
+ * The Rust build exports the same value as `GITHUB_REPO`. The fundi Worker
+ * (agent-tools `fundi/`) does not import either: its fallback is its own literal
+ * (`env.GITHUB_REPO || "mzizi-dev/mzizi-registry"`), kept equal by hand.
  */
 export const GITHUB_REPO = "mzizi-dev/mzizi-registry"
+
+/** The GitHub REST endpoint issues are created at. Same as `issues_api_url` in the Rust build. */
+export function issuesApiUrl(githubRepo: string = GITHUB_REPO): string {
+  return `https://api.github.com/repos/${githubRepo}/issues`
+}
 
 export interface FundiReport {
   component: string
@@ -45,10 +53,40 @@ export interface FundiReport {
 }
 
 export interface ReporterConfig {
-  githubToken?: string
+  /**
+   * Where a browser sends reports: your own server route or the fundi Worker,
+   * which holds the GitHub credential. The supported path in client code.
+   */
   fundiEndpoint?: string
+  /**
+   * @deprecated in client code. A token passed here ships in the bundle to every
+   * visitor, so in a browser the reporter never sends it: it warns, and uses
+   * `fundiEndpoint` instead or files nothing. It is honoured only where there
+   * is no `window` (a server, a Worker, a build script).
+   */
+  githubToken?: string
+  /** The `owner/repo` issues are filed at when filing directly. Defaults to `GITHUB_REPO`. */
+  githubRepo?: string
   cooldownSeconds?: number
   onReported?: (report: FundiReport, issueUrl?: string) => void
+}
+
+/**
+ * What happened to a report. `queued` is true only when the destination
+ * accepted it (a 2xx, and for GitHub a readable issue). Otherwise `reason` says
+ * why, and `status` carries the HTTP status where there was one. Error messages
+ * are never included: they can carry user input.
+ */
+export interface ReportResult {
+  queued: boolean
+  issueUrl?: string
+  reason?: "cooldown" | "no-endpoint" | "token-in-browser" | "http-error" | "network-error" | "invalid-response"
+  status?: number
+}
+
+/** True in a browser, where anything in this module's config is public. */
+function inBrowser(): boolean {
+  return typeof globalThis.window !== "undefined"
 }
 
 /* ─── Markdown neutralisation ───────────────────────────────────────────────
@@ -84,12 +122,24 @@ class FundiReporterCore {
     this.config = { cooldownSeconds: config.cooldownSeconds ?? 300, ...config }
   }
 
-  async report(report: FundiReport): Promise<{ issueUrl?: string; queued: boolean }> {
-    const lastReport = this.cooldowns.get(report.component)
-    if (lastReport && Date.now() - lastReport < (this.config.cooldownSeconds ?? 300) * 1000) {
-      return { queued: false }
+  /**
+   * The cooldown key: component AND error type, as in the Rust build. Keyed on
+   * the component alone, a render bug and a network bug on one component shared
+   * a bucket and the second was silently dropped for the cooldown window.
+   */
+  private cooldownKey(report: FundiReport): string {
+    return `${report.component}:${report.errorType}`
+  }
+
+  async report(report: FundiReport): Promise<ReportResult> {
+    const key = this.cooldownKey(report)
+    const lastReport = this.cooldowns.get(key)
+    if (
+      lastReport !== undefined &&
+      Date.now() - lastReport < (this.config.cooldownSeconds ?? 300) * 1000
+    ) {
+      return { queued: false, reason: "cooldown" }
     }
-    this.cooldowns.set(report.component, Date.now())
 
     const labels = [
       `fundi:severity/${report.severity}`,
@@ -98,35 +148,69 @@ class FundiReporterCore {
       `fundi:source/${report.source}`,
     ]
 
-    const body = this.buildIssueBody(report)
-
-    if (this.config.githubToken) {
-      const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
-        method: "POST",
-        headers: {
-          Authorization: `token ${this.config.githubToken}`,
-          "Content-Type": "application/json",
-          Accept: "application/vnd.github.v3+json",
-        },
-        body: JSON.stringify({ title: `[${report.component}] ${report.title}`, body, labels }),
-      })
-      const data = await res.json()
-      this.config.onReported?.(report, data.html_url)
-      return { issueUrl: data.html_url, queued: true }
+    let githubToken = this.config.githubToken
+    if (githubToken && inBrowser()) {
+      console.warn(
+        "[mzizi:fundi-reporter] githubToken is ignored in a browser: it would ship to every visitor. " +
+          "Send reports to a fundiEndpoint that holds the credential."
+      )
+      githubToken = undefined
+      if (!this.config.fundiEndpoint) return { queued: false, reason: "token-in-browser" }
     }
 
-    if (this.config.fundiEndpoint) {
-      await fetch(this.config.fundiEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ report, labels }),
-      })
-      this.config.onReported?.(report)
-      return { queued: true }
+    // The cooldown starts only once a report is accepted: a failed filing must
+    // not suppress the retry. Every failure resolves to a result, never a
+    // rejection, so a reporter wired into an error handler cannot throw there.
+    let filed: { issueUrl?: string } | undefined
+    try {
+      if (githubToken) {
+        const res = await fetch(issuesApiUrl(this.config.githubRepo), {
+          method: "POST",
+          headers: {
+            Authorization: `token ${githubToken}`,
+            "Content-Type": "application/json",
+            Accept: "application/vnd.github.v3+json",
+          },
+          body: JSON.stringify({
+            title: `[${report.component}] ${report.title}`,
+            body: this.buildIssueBody(report),
+            labels,
+          }),
+        })
+        if (!res.ok) return { queued: false, reason: "http-error", status: res.status }
+        let issueUrl: unknown
+        try {
+          issueUrl = ((await res.json()) as { html_url?: unknown } | null)?.html_url
+        } catch {
+          issueUrl = undefined
+        }
+        // A 2xx without a readable issue URL is not counted as filed; a retry may
+        // duplicate, which is better than consuming a signal nobody can find.
+        if (typeof issueUrl !== "string") {
+          return { queued: false, reason: "invalid-response", status: res.status }
+        }
+        filed = { issueUrl }
+      } else if (this.config.fundiEndpoint) {
+        const res = await fetch(this.config.fundiEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ report, labels }),
+        })
+        if (!res.ok) return { queued: false, reason: "http-error", status: res.status }
+        filed = {}
+      }
+    } catch {
+      return { queued: false, reason: "network-error" }
+    }
+
+    if (filed) {
+      this.cooldowns.set(key, Date.now())
+      this.config.onReported?.(report, filed.issueUrl)
+      return { queued: true, ...filed }
     }
 
     console.warn("[mzizi:fundi-reporter] No endpoint configured.", report)
-    return { queued: false }
+    return { queued: false, reason: "no-endpoint" }
   }
 
   private buildIssueBody(r: FundiReport): string {
@@ -158,5 +242,9 @@ export function getFundiReporter(config?: ReporterConfig): FundiReporterCore {
 export function initFundiReporter(config: ReporterConfig): FundiReporterCore {
   _reporter = new FundiReporterCore(config)
   return _reporter
+}
+/** Drop the shared reporter, so the next get/init starts clean. For tests. */
+export function resetFundiReporter(): void {
+  _reporter = null
 }
 export type { FundiReporterCore }
