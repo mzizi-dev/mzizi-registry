@@ -89,7 +89,8 @@ import type {
   HeritageToken as Heritage,
   MineralToken as Mineral,
 } from "../lib/tokens/palette.source"
-import { renderGlobalsCss } from "./render-globals-css"
+import { FONTS, RADIUS, ROLES, isColorKind, type Role } from "../lib/tokens/roles.source"
+import { renderGlobalsCss, resolveRoles, roleGate, roleVar, type ResolvedRole } from "./render-globals-css"
 
 const CHECK = process.argv.includes("--check")
 
@@ -101,15 +102,21 @@ const TOKENS_TS = join(N1, "mzizi-tokens-typescript.ts")
 /**
  * Scale constants shared by every platform output.
  *
- * Colour comes from the DB; these do not — the radius scale is doctrine
- * (CLAUDE.md §7.5: all radii derive from a 7px unit, giving 7/12/14/17) and the
- * type stack is §7.2. They are declared once here and emitted to all six
- * targets, so there is still exactly one source per concern.
+ * The spacing scale is declared here. The radius ladder and the type stack are
+ * READ from the role manifest (`lib/tokens/roles.source.ts`), which reads them
+ * from canon (`brandMeta.radii`, `typography`); this file used to carry its own
+ * copies of both (CLAUDE.md §7.5: all radii derive from a 7px unit, giving
+ * 7/12/14/17).
  */
+const radiusPx = (n: string) => {
+  const row = RADIUS.find(([k]) => k === n)
+  if (!row) throw new Error(`the radius ladder has no "${n}"`)
+  return parseInt(row[1], 10)
+}
 const SCALE = {
   spacing: { xs: 4, sm: 8, md: 12, base: 16, lg: 24, xl: 32 },
-  radius: { sm: 7, md: 12, lg: 14, xl: 17, full: 9999 },
-  fonts: { sans: "Noto Sans", serif: "Noto Serif", mono: "JetBrains Mono" },
+  radius: { sm: radiusPx("sm"), md: radiusPx("md"), lg: radiusPx("lg"), xl: radiusPx("xl"), full: radiusPx("full") },
+  fonts: FONTS,
 } as const
 
 function fail(msg: string): never {
@@ -382,6 +389,92 @@ const banner = (comment: string, platform: string) =>
     `${comment} fails the build if this file drifts from the source.`,
   ].join("\n")
 
+// ─── Roles (#484) ────────────────────────────────────────────────────────────
+//
+// Every platform file carries the role layer the stylesheet does, resolved for
+// the Mzizi pack: a value per theme for each colour role, and the sizes, radii
+// and fonts. Native targets have no custom properties, so a role arrives as the
+// value it paints; a third-party pack (slice 2) is the same shape with its values.
+
+let rolesCache: Map<string, ResolvedRole> | undefined
+function roles(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]): ResolvedRole[] {
+  rolesCache ??= resolveRoles(minerals, heritage, experimental)
+  return ROLES.map((r) => rolesCache!.get(r.name)!)
+}
+const colorRoles = (rs: ResolvedRole[]) => rs.filter((r) => isColorKind(r.role.kind))
+const byKind = (rs: ResolvedRole[], kind: Role["kind"]) => rs.filter((r) => r.role.kind === kind)
+
+/** `status-success-text` → `statusSuccessText`; `chart-1` → `chart1`. */
+const camel = (name: string) => name.replace(/-([a-z0-9])/g, (_, c: string) => c.toUpperCase())
+/** `status-success-text` → `STATUS_SUCCESS_TEXT`. */
+const snakeUpper = (name: string) => name.replace(/-/g, "_").toUpperCase()
+/** `status-success-text` → `status_success_text`. */
+const snake = (name: string) => name.replace(/-/g, "_")
+/** `"56px"` → `56`. */
+const px = (v: string) => parseFloat(v)
+/** The first family of a font stack: `"Noto Sans", ui-sans-serif` → `Noto Sans`. */
+const family = (stack: string) => stack.split(",")[0].trim().replace(/^"|"$/g, "")
+
+/** `rgba(0, 0, 0, 0.4)` → `[0, 0, 0, 0.4]`, or null for a hex. */
+function rgba(v: string): [number, number, number, number] | null {
+  const m = v.match(/^rgba?\(([^)]+)\)$/)
+  if (!m) return null
+  const [r, g, b, a = "1"] = m[1].split(",").map((x) => x.trim())
+  return [Number(r), Number(g), Number(b), Number(a)]
+}
+/** A role value as ARGB, for Compose. */
+function argb(v: string): string {
+  const c = rgba(v)
+  if (!c) return `0xFF${bare(v)}`
+  const h = (n: number) => Math.round(n).toString(16).padStart(2, "0").toUpperCase()
+  return `0x${h(c[3] * 255)}${h(c[0])}${h(c[1])}${h(c[2])}`
+}
+/** A role value as a SwiftUI `Color`. */
+function swiftColor(v: string): string {
+  const c = rgba(v)
+  if (!c) return `Color(hex: "${v}")`
+  if (c[0] === 0 && c[1] === 0 && c[2] === 0) return `Color.black.opacity(${c[3]})`
+  return `Color(red: ${c[0] / 255}, green: ${c[1] / 255}, blue: ${c[2] / 255}, opacity: ${c[3]})`
+}
+
+/** The ArkTS and React Native role table: both are TypeScript object literals. */
+function jsRoles(rs: ResolvedRole[]): string {
+  const colors = (mode: "light" | "dark") =>
+    colorRoles(rs)
+      .map((r) => `        ${camel(r.role.name)}: ${JSON.stringify(r.value[mode])},`)
+      .join("\n")
+  const nums = (kind: Role["kind"]) =>
+    byKind(rs, kind)
+      .map((r) => `        ${camel(r.role.name)}: ${px(r.value.light)},`)
+      .join("\n")
+  return `${rolesNote("//")}
+export const MziziRoles = {
+    light: {
+${colors("light")}
+    },
+    dark: {
+${colors("dark")}
+    },
+    size: {
+${nums("size")}
+    },
+    radius: {
+${nums("radius")}
+    },
+    font: {
+${byKind(rs, "font")
+  .map((r) => `        ${camel(r.role.name)}: ${JSON.stringify(family(r.value.light))},`)
+  .join("\n")}
+    },
+} as const`
+}
+
+const rolesNote = (comment: string) =>
+  [
+    `${comment} ─── Roles (#484) ─── what a component names; the Mzizi pack's values.`,
+    `${comment} From lib/tokens/roles.source.ts. A brand pack maps the same roles to its own values.`,
+  ].join("\n")
+
 function renderSwift(
   minerals: Mineral[],
   heritage: Heritage[],
@@ -420,6 +513,28 @@ ${Object.entries(SCALE.radius)
 public struct MziziFonts {
 ${Object.entries(SCALE.fonts)
   .map(([k, v]) => `    public static let ${k} = ${JSON.stringify(v)}`)
+  .join("\n")}
+}
+
+${rolesNote("//")}
+public struct MziziRoles {
+    public struct Light {
+${colorRoles(roles(minerals, heritage, experimental))
+  .map((r) => `        public static let ${camel(r.role.name)} = ${swiftColor(r.value.light)}`)
+  .join("\n")}
+    }
+
+    public struct Dark {
+${colorRoles(roles(minerals, heritage, experimental))
+  .map((r) => `        public static let ${camel(r.role.name)} = ${swiftColor(r.value.dark)}`)
+  .join("\n")}
+    }
+
+${[...byKind(roles(minerals, heritage, experimental), "size"), ...byKind(roles(minerals, heritage, experimental), "radius")]
+  .map((r) => `    public static let ${camel(r.role.name)}: CGFloat = ${px(r.value.light)}`)
+  .join("\n")}
+${byKind(roles(minerals, heritage, experimental), "font")
+  .map((r) => `    public static let ${camel(r.role.name)} = ${JSON.stringify(family(r.value.light))}`)
   .join("\n")}
 }
 `
@@ -468,6 +583,28 @@ ${Object.entries(SCALE.fonts)
   .map(([k, v]) => `    const val ${k} = ${JSON.stringify(v)}`)
   .join("\n")}
 }
+
+${rolesNote("//")}
+object MziziRoles {
+    object Light {
+${colorRoles(roles(minerals, heritage, experimental))
+  .map((r) => `        val ${camel(r.role.name)} = Color(${argb(r.value.light)})`)
+  .join("\n")}
+    }
+
+    object Dark {
+${colorRoles(roles(minerals, heritage, experimental))
+  .map((r) => `        val ${camel(r.role.name)} = Color(${argb(r.value.dark)})`)
+  .join("\n")}
+    }
+
+${[...byKind(roles(minerals, heritage, experimental), "size"), ...byKind(roles(minerals, heritage, experimental), "radius")]
+  .map((r) => `    val ${camel(r.role.name)} = ${px(r.value.light)}.dp`)
+  .join("\n")}
+${byKind(roles(minerals, heritage, experimental), "font")
+  .map((r) => `    const val ${camel(r.role.name)} = ${JSON.stringify(family(r.value.light))}`)
+  .join("\n")}
+}
 `
 }
 
@@ -508,6 +645,8 @@ ${Object.entries(SCALE.fonts)
   .map(([k, v]) => `    ${k}: ${JSON.stringify(v)},`)
   .join("\n")}
 } as const
+
+${jsRoles(roles(minerals, heritage, experimental))}
 `
 }
 
@@ -548,6 +687,8 @@ ${Object.entries(SCALE.fonts)
   .map(([k, v]) => `    ${k}: ${JSON.stringify(v)},`)
   .join("\n")}
 } as const
+
+${jsRoles(roles(minerals, heritage, experimental))}
 `
 }
 
@@ -598,11 +739,42 @@ ${Object.entries(SCALE.radius)
   .join("\n")}
 
 
+${rolesNote("#")}
+@dataclass(frozen=True)
+class MziziRolesLight:
+    """Colour roles, light theme."""
+${colorRoles(roles(minerals, heritage, experimental))
+  .map((r) => `    ${snakeUpper(r.role.name)}: str = ${JSON.stringify(r.value.light)}`)
+  .join("\n")}
+
+
+@dataclass(frozen=True)
+class MziziRolesDark:
+    """Colour roles, dark theme."""
+${colorRoles(roles(minerals, heritage, experimental))
+  .map((r) => `    ${snakeUpper(r.role.name)}: str = ${JSON.stringify(r.value.dark)}`)
+  .join("\n")}
+
+
+@dataclass(frozen=True)
+class MziziRoleMetrics:
+    """Size and radius roles in pixels, and the font roles' families."""
+${[...byKind(roles(minerals, heritage, experimental), "size"), ...byKind(roles(minerals, heritage, experimental), "radius")]
+  .map((r) => `    ${snakeUpper(r.role.name)}: int = ${px(r.value.light)}`)
+  .join("\n")}
+${byKind(roles(minerals, heritage, experimental), "font")
+  .map((r) => `    ${snakeUpper(r.role.name)}: str = ${JSON.stringify(family(r.value.light))}`)
+  .join("\n")}
+
+
 minerals = MziziMinerals()
 heritage = MziziHeritage()
 experimental = MziziExperimental()
 spacing = MziziSpacing()
 radius = MziziRadius()
+roles_light = MziziRolesLight()
+roles_dark = MziziRolesDark()
+role_metrics = MziziRoleMetrics()
 
 # Ordered chart series for matplotlib / plotly / altair — dark theme.
 # Minerals then heritage, deliberately: this is a series ordering for plots, not
@@ -708,7 +880,66 @@ ${Object.entries(SCALE.fonts)
   .map(([k, v]) => `    /// ${v}.\n    pub const ${upper(k)}: &'static str = ${JSON.stringify(v)};`)
   .join("\n")}
 }
+
+${rustRoles(roles(minerals, heritage, experimental))}
 `
+}
+
+/**
+ * \`Roles { light, dark }\` and \`Roles::mzizi()\` (#484): every colour role for one
+ * theme, plus the size, radius and font roles as associated consts. A native
+ * target reads a role here; Dioxus on the web needs nothing beyond the CSS,
+ * which already switches by brand.
+ */
+function rustRoles(rs: ResolvedRole[]): string {
+  const doc = (s: string) => s.replace(/\s+/g, " ").trim()
+  const fields = colorRoles(rs)
+    .map((r) => `    /// ${doc(r.role.description)}\n    pub ${snake(r.role.name)}: &'static str,`)
+    .join("\n")
+  const init = (mode: "light" | "dark") =>
+    colorRoles(rs)
+      .map((r) => `                ${snake(r.role.name)}: ${JSON.stringify(r.value[mode])},`)
+      .join("\n")
+  const metrics = [...byKind(rs, "size"), ...byKind(rs, "radius")]
+    .map((r) => `    /// ${px(r.value.light)}px. ${doc(r.role.description)}\n    pub const ${snakeUpper(r.role.name)}: u32 = ${px(r.value.light)};`)
+    .join("\n")
+  const fonts = byKind(rs, "font")
+    .map((r) => `    /// ${doc(r.role.description)}\n    pub const ${snakeUpper(r.role.name)}: &'static str = ${JSON.stringify(family(r.value.light))};`)
+    .join("\n")
+  return `// ─── Roles (#484) ─────────────────────────────────────────────────────────────
+// What a component names, resolved for the Mzizi pack, from lib/tokens/roles.source.ts.
+
+/// Every colour role for one theme: a hex, or \`rgba()\` for the scrim.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RoleColors {
+${fields}
+}
+
+/// The colour roles in both themes. Construct with [\`Roles::mzizi\`], the default pack.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Roles {
+    /// The light theme.
+    pub light: RoleColors,
+    /// The dark theme.
+    pub dark: RoleColors,
+}
+
+impl Roles {
+    /// The Mzizi pack: the default mapping of every role.
+    pub const fn mzizi() -> Self {
+        Self {
+            light: RoleColors {
+${init("light")}
+            },
+            dark: RoleColors {
+${init("dark")}
+            },
+        }
+    }
+
+${metrics}
+${fonts}
+}`
 }
 
 /**
@@ -812,6 +1043,26 @@ function renderTsPalette(
   return lines.join("\n")
 }
 
+/**
+ * The roles region of \`mzizi-tokens-typescript.ts\` (#484): every role in the
+ * manifest with its custom property, its kind and the Mzizi pack's value in both
+ * themes. Generated between \`tokens:generated:ts-roles\` markers, as the palette
+ * region is, so the TypeScript surface cannot disagree with the stylesheet.
+ */
+function renderTsRoles(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]): string {
+  return roles(minerals, heritage, experimental)
+    .map((r) => {
+      const fields = [
+        `kind: ${JSON.stringify(r.role.kind)}`,
+        `cssVar: ${JSON.stringify(roleVar(r.role))}`,
+        `light: ${JSON.stringify(r.value.light)}`,
+        `dark: ${JSON.stringify(r.value.dark)}`,
+      ]
+      return `  ${JSON.stringify(r.role.name)}: { ${fields.join(", ")} },`
+    })
+    .join("\n")
+}
+
 interface PlatformTarget {
   file: string
   render: (minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]) => string
@@ -897,8 +1148,27 @@ async function prettified(filePath: string, source: string): Promise<string> {
 /** Strip whitespace so value drift is caught but formatting differences are not. */
 const norm = (s: string) => s.replace(/\s+/g, "")
 
+/**
+ * The contrast gate (#484 §2b) on the default mapping. It runs in both modes, so
+ * \`pnpm tokens:verify\` in CI fails on a violation exactly as \`pnpm tokens:sync\`
+ * does. A \`pending\` shortfall is an owner decision named in the manifest; it is
+ * printed, never silent.
+ */
+function gate(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]) {
+  const { results, violations, pending } = roleGate(resolveRoles(minerals, heritage, experimental))
+  if (violations.length) {
+    fail(`role contrast gate (lib/tokens/roles.source.ts): ${violations.length} violation(s)\n  ${violations.join("\n  ")}`)
+  }
+  const pendingRoles = [...new Set(pending.map((p) => p.role))]
+  console.log(
+    `✓ role gate: ${results.length - pending.length} of ${results.length} measurements pass` +
+      (pendingRoles.length ? `; pending owner decision: ${pendingRoles.join(", ")}` : "")
+  )
+}
+
 async function main() {
   const { minerals, heritage, experimental } = readPalette()
+  gate(minerals, heritage, experimental)
 
   const paletteModule = await prettified(
     PALETTE_TS,
@@ -920,6 +1190,13 @@ async function main() {
     tokensTs,
     "ts-palette",
     renderTsPalette(minerals, heritage, experimental),
+    TOKENS_TS_LABEL,
+    ""
+  )
+  tokensTs = spliceRegion(
+    tokensTs,
+    "ts-roles",
+    renderTsRoles(minerals, heritage, experimental),
     TOKENS_TS_LABEL,
     ""
   )

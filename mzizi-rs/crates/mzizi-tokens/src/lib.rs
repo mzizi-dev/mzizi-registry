@@ -31,6 +31,11 @@
 //! Authored in the registry rather than here for the same reason: one file, beside every other
 //! target's token artifact.
 //!
+//! [`Roles`] is the role layer (mzizi-registry #484): what a component names, such as
+//! `status_success_text` rather than malachite, resolved for the Mzizi pack in both themes by
+//! [`Roles::mzizi`], with the size, radius and font roles as associated consts. It is generated
+//! from `lib/tokens/roles.source.ts` beside the palette.
+//!
 //! `src/generated/` holds a COMMITTED copy of it, written by `pnpm rust:generate` and checked by
 //! `pnpm rust:generate:check`. The copy is what makes this crate publishable: `cargo package`
 //! collects only files under the package root, so a `#[path]` reaching up into the registry ships
@@ -40,3 +45,36 @@
 mod generated;
 
 pub use generated::*;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn mzizi_pack_maps_status_tones_onto_the_palette() {
+        let roles = Roles::mzizi();
+        assert_eq!(roles.light.status_success, MALACHITE_LIGHT);
+        assert_eq!(roles.dark.status_success, MALACHITE_DARK);
+        assert_eq!(roles.light.status_danger, TERRACOTTA_LIGHT);
+        // Lifecycle stages are aliases of the tones.
+        assert_eq!(
+            roles.light.status_stable_text,
+            roles.light.status_success_text
+        );
+        assert_eq!(roles.dark.status_deprecated, roles.dark.status_danger);
+    }
+
+    #[test]
+    fn destructive_is_red_and_distinct_from_danger() {
+        let roles = Roles::mzizi();
+        assert_eq!(roles.light.destructive, "#B3261E");
+        assert_ne!(roles.light.destructive, roles.light.status_danger);
+    }
+
+    // The touch floor, checked at compile time: no generated size may undercut it.
+    const _: () = assert!(Roles::SPACING_TOUCH_MIN == 48);
+    const _: () = assert!(Roles::SPACING_TOUCH >= Roles::SPACING_TOUCH_MIN);
+    const _: () = assert!(Roles::SPACING_CONTROL >= Roles::SPACING_TOUCH_MIN);
+    const _: () = assert!(Roles::SPACING_FIELD >= Roles::SPACING_TOUCH_MIN);
+    const _: () = assert!(Roles::RADIUS_CONTROL == 9999);
+}

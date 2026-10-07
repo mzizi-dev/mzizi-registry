@@ -21,6 +21,13 @@
  *   surface ladder       9 steps, pitch → wash, plus `muted`
  *   text ramp            3 tiers, measured on `--base`, plus `--hero-text`
  *   status / chart / sidebar / the shadcn semantic set
+ *   roles                every role in `lib/tokens/roles.source.ts` as a
+ *                        bare var and a Tailwind key: identity, status tones
+ *                        (`text-status-success-text`), lifecycle, destructive,
+ *                        categories, sizes (`h-touch`), radii
+ *                        (`rounded-control`) and fonts (`font-body`). A brand
+ *                        moves a role by redeclaring its var; the APCA gate
+ *                        holds the Mzizi mapping to Lc 75 text, Lc 30 UI
  *   non-colour ladders   spacing 17, motion 4+4+3, type 13+9, shadow 8,
  *                        radius 7, touch targets, control heights, z-index
  *   containers           3 widths (narrow, prose, wide) and the
@@ -41,10 +48,6 @@
 @custom-variant dark (&:is(.dark *), &:is([data-theme="dark"] *));
 
 @theme inline {
-  --font-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Noto Serif", ui-serif, Georgia, serif;
-  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
-
   /* ── FAMILIES ────────────────────────────────────────────────────────────── */
   --color-cobalt: var(--mineral-cobalt);
   --color-cobalt-container: var(--mineral-cobalt-container);
@@ -145,10 +148,17 @@
   --color-protea-aa: var(--exp-protea-aa);
   --color-protea-text: var(--exp-protea-text);
 
-  /* ── SURFACES, TEXT, STATUS, SEMANTICS ───────────────────────────────────── */
+  /* ── ROLES — colour (lib/tokens/roles.source.ts) ─────────────────────────── */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-ring: var(--ring);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-foreground: var(--brand-accent-foreground);
+  --color-app-accent: var(--app-accent);
+  --color-app-accent-foreground: var(--app-accent-foreground);
   --color-pitch: var(--pitch);
   --color-void: var(--void);
-  --color-base: var(--base);
+  --color-surface-base: var(--base);
   --color-surface: var(--surface);
   --color-container: var(--container);
   --color-overlay: var(--overlay);
@@ -160,6 +170,7 @@
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
   --color-hero-text: var(--hero-text);
+  --color-muted-foreground: var(--muted-foreground);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
@@ -168,27 +179,46 @@
   --color-offline: var(--offline);
   --color-syncing: var(--syncing);
   --color-destructive-container: var(--destructive-container);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-overlay-foreground: var(--overlay-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-brand-accent: var(--brand-accent);
-  --color-brand-accent-foreground: var(--brand-accent-foreground);
+  --color-status-success: var(--status-success);
+  --color-status-success-container: var(--status-success-container);
+  --color-status-success-on-container: var(--status-success-on-container);
+  --color-status-success-text: var(--status-success-text);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-container: var(--status-warning-container);
+  --color-status-warning-on-container: var(--status-warning-on-container);
+  --color-status-warning-text: var(--status-warning-text);
+  --color-status-info: var(--status-info);
+  --color-status-info-container: var(--status-info-container);
+  --color-status-info-on-container: var(--status-info-on-container);
+  --color-status-info-text: var(--status-info-text);
+  --color-status-danger: var(--status-danger);
+  --color-status-danger-container: var(--status-danger-container);
+  --color-status-danger-on-container: var(--status-danger-on-container);
+  --color-status-danger-text: var(--status-danger-text);
+  --color-status-premium: var(--status-premium);
+  --color-status-premium-container: var(--status-premium-container);
+  --color-status-premium-on-container: var(--status-premium-on-container);
+  --color-status-premium-text: var(--status-premium-text);
+  --color-status-neutral: var(--status-neutral);
+  --color-status-neutral-container: var(--status-neutral-container);
+  --color-status-neutral-on-container: var(--status-neutral-on-container);
+  --color-status-neutral-text: var(--status-neutral-text);
+  --color-status-stable: var(--status-stable);
+  --color-status-stable-container: var(--status-stable-container);
+  --color-status-stable-on-container: var(--status-stable-on-container);
+  --color-status-stable-text: var(--status-stable-text);
+  --color-status-beta: var(--status-beta);
+  --color-status-beta-container: var(--status-beta-container);
+  --color-status-beta-on-container: var(--status-beta-on-container);
+  --color-status-beta-text: var(--status-beta-text);
+  --color-status-alpha: var(--status-alpha);
+  --color-status-alpha-container: var(--status-alpha-container);
+  --color-status-alpha-on-container: var(--status-alpha-on-container);
+  --color-status-alpha-text: var(--status-alpha-text);
+  --color-status-deprecated: var(--status-deprecated);
+  --color-status-deprecated-container: var(--status-deprecated-container);
+  --color-status-deprecated-on-container: var(--status-deprecated-on-container);
+  --color-status-deprecated-text: var(--status-deprecated-text);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -199,6 +229,29 @@
   --color-chart-positive: var(--chart-positive);
   --color-chart-negative: var(--chart-negative);
   --color-chart-neutral: var(--chart-neutral);
+  --color-category-1: var(--category-1);
+  --color-category-2: var(--category-2);
+  --color-category-3: var(--category-3);
+  --color-category-4: var(--category-4);
+  --color-category-5: var(--category-5);
+  --color-category-6: var(--category-6);
+  --color-category-7: var(--category-7);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-text: var(--destructive-text);
+  --color-overlay-foreground: var(--overlay-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -207,6 +260,25 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ── ROLES — size and radius ─────────────────────────────────────────────── */
+  --spacing-touch: max(
+    var(--size-touch),
+    3rem
+  ); /* never under the touch floor */
+  --spacing-touch-min: 3rem; /* a literal: the touch floor no brand can lower */
+  --spacing-control: var(--size-control);
+  --spacing-control-sm: var(--size-control-sm);
+  --spacing-control-lg: var(--size-control-lg);
+  --spacing-control-icon: var(--size-control-icon);
+  --spacing-control-dense: var(--size-control-dense);
+  --spacing-field: var(--size-field);
+  --spacing-field-sm: var(--size-field-sm);
+  --radius-control: var(--r-control);
+  --radius-field: var(--r-field);
+  --radius-badge: var(--r-badge);
+  --radius-card: var(--r-card);
+  --radius-dialog: var(--r-dialog);
 
   /* ── SPACING / RADIUS / TYPE / SHADOW / EASING ───────────────────────────── */
   --spacing-xxs: var(--space-xxs);
@@ -259,6 +331,16 @@
   --ease-exit: var(--easing-exit);
   --ease-standard: var(--easing-standard);
   --ease-spring: var(--easing-spring);
+}
+
+@theme {
+  /* ── FONT ROLES ──────────────────────────────────────────────────────────── */
+  --font-body: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Noto Serif", ui-serif, Georgia, serif;
+  --font-code: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
+  --font-mono: var(--font-code);
 }
 
 @theme {
@@ -405,9 +487,9 @@
   --muted: #faf9f5; /* Deepest inset fill — not a ladder rung */
 
   /* ── TEXT RAMP — three tiers, APCA-measured on --base ────────────────────── */
-  --text-primary: #373635; /* APCA Lc 90.4 on --base */
-  --text-secondary: #5d5d5b; /* APCA Lc 75.4 on --base */
-  --text-tertiary: #7f7f7d; /* APCA Lc 60.2 on --base */
+  --text-primary: #373635; /* APCA Lc 90.4 on --base, 87.4 on --surface */
+  --text-secondary: #575655; /* APCA Lc 78.2 on --base, 75.3 on --surface */
+  --text-tertiary: #797877; /* APCA Lc 63.3 on --base, 60.4 on --surface */
   --hero-text: #ffffff; /* Text over photography — pair with --hero-text-shadow, never bare */
   --hero-text-shadow:
     0 1px 3px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.4);
@@ -421,7 +503,7 @@
   --neutral: #55514b; /* Neutral / inactive status, secondary data series */
   --offline: #674c32; /* Offline / disconnected state */
   --syncing: #1c5962; /* In-progress sync / pending state */
-  --destructive-container: #fdeded; /* Soft background behind destructive content */
+  --destructive-container: #fdeded; /* Soft background behind destructive content. Follows mineral container pattern. */
 
   /* ── CHART — the seven minerals, in palette order ────────────────────────── */
   --chart-1: var(--mineral-cobalt);
@@ -439,6 +521,8 @@
   --chart-neutral: var(--neutral);
 
   /* ── SHADCN SEMANTIC SET ─────────────────────────────────────────────────── */
+  --primary-foreground: #ffffff;
+  --brand-accent-foreground: #ffffff;
   --background: var(
     --base
   ); /* ALIAS. /v1/brand calls this step `base`; shadcn calls it `background`. */
@@ -447,14 +531,12 @@
   --card-foreground: var(--text-primary);
   --popover: var(--overlay);
   --popover-foreground: var(--text-primary);
-  --primary-foreground: #ffffff;
   --secondary: var(--container);
   --secondary-foreground: var(--text-primary);
-  --destructive: var(--error);
   --destructive-foreground: #ffffff;
+  --destructive: var(--error);
   --overlay-foreground: var(--text-primary);
   --accent-foreground: var(--text-primary);
-  --brand-accent-foreground: #ffffff;
 
   /* ── SIDEBAR ─────────────────────────────────────────────────────────────── */
   --sidebar: var(--surface);
@@ -465,6 +547,58 @@
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+
+  /* ── ROLES — identity, status tones, lifecycle, destructive, categories (#484) ── */
+  --app-accent: var(--brand-accent);
+  --app-accent-foreground: var(--brand-accent-foreground);
+  --status-success: var(--mineral-malachite);
+  --status-success-container: var(--mineral-malachite-container);
+  --status-success-on-container: var(--mineral-malachite-on-container);
+  --status-success-text: var(--mineral-malachite-text);
+  --status-warning: var(--mineral-gold);
+  --status-warning-container: var(--mineral-gold-container);
+  --status-warning-on-container: var(--mineral-gold-on-container);
+  --status-warning-text: var(--mineral-gold-text);
+  --status-info: var(--mineral-cobalt);
+  --status-info-container: var(--mineral-cobalt-container);
+  --status-info-on-container: var(--mineral-cobalt-on-container);
+  --status-info-text: var(--mineral-cobalt-text);
+  --status-danger: var(--mineral-terracotta);
+  --status-danger-container: var(--mineral-terracotta-container);
+  --status-danger-on-container: var(--mineral-terracotta-on-container);
+  --status-danger-text: #844425; /* derived: #8E4928 measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
+  --status-premium: var(--mineral-tanzanite);
+  --status-premium-container: var(--mineral-tanzanite-container);
+  --status-premium-on-container: var(--mineral-tanzanite-on-container);
+  --status-premium-text: var(--mineral-tanzanite-text);
+  --status-neutral: var(--neutral);
+  --status-neutral-container: var(--container);
+  --status-neutral-on-container: var(--text-primary);
+  --status-neutral-text: var(--muted-foreground);
+  --status-stable: var(--status-success);
+  --status-stable-container: var(--status-success-container);
+  --status-stable-on-container: var(--status-success-on-container);
+  --status-stable-text: var(--status-success-text);
+  --status-beta: var(--status-info);
+  --status-beta-container: var(--status-info-container);
+  --status-beta-on-container: var(--status-info-on-container);
+  --status-beta-text: var(--status-info-text);
+  --status-alpha: var(--status-warning);
+  --status-alpha-container: var(--status-warning-container);
+  --status-alpha-on-container: var(--status-warning-on-container);
+  --status-alpha-text: var(--status-warning-text);
+  --status-deprecated: var(--status-danger);
+  --status-deprecated-container: var(--status-danger-container);
+  --status-deprecated-on-container: var(--status-danger-on-container);
+  --status-deprecated-text: var(--status-danger-text);
+  --category-1: var(--mineral-cobalt);
+  --category-2: var(--mineral-tanzanite);
+  --category-3: var(--mineral-malachite);
+  --category-4: var(--mineral-gold);
+  --category-5: var(--mineral-terracotta);
+  --category-6: var(--mineral-sodalite);
+  --category-7: var(--mineral-copper);
+  --destructive-text: #9f221b; /* derived: #B3261E measures Lc 70.6 against base / surface; walked toward #000000 to Lc 75 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
   /* --primary  registry: ink #141413 | /v1/brand: tanzanite #4B0082
@@ -598,11 +732,16 @@
   --r-full: 9999px;
   --radius: calc(var(--radius-unit) * 2); /* 14px */
   --r-circle: 50%;
-  /* Semantic aliases — /v1/brand componentSpecs: buttons and inputs are ALWAYS pill. */
-  --r-button: var(--r-full);
-  --r-input: var(--r-full);
-  --r-badge: var(--r-full);
-  --r-card: var(--r-base);
+  /* Radius roles (#484) — brandMeta.componentSpecs. Mzizi keeps controls pill (owner
+     decision 2026-10-07); a brand switches them here, not in a component. */
+  --r-control: 9999px; /* Buttons and controls. Mzizi keeps pill (owner decision 2026-10-07); a pack may switch it. */
+  --r-field: 9999px; /* Inputs. componentSpecs.input.borderRadius. */
+  --r-badge: 9999px; /* Badges. componentSpecs.badge.borderRadius. */
+  --r-card: 14px; /* Cards. componentSpecs.card.borderRadius. */
+  --r-dialog: 17px; /* Dialogs. componentSpecs.dialog.borderRadius. */
+  /* Deprecated names of the radius roles, kept for one minor: */
+  --r-button: var(--r-control);
+  --r-input: var(--r-field);
 
   /* ── ELEVATION — 8 rungs ─────────────────────────────────────────────────── */
   --elevation-none: none;
@@ -621,6 +760,17 @@
   --h-button-default: 3.5rem; /* 56px — componentSpecs.button.heights.default */
   --h-button-sm: 3rem; /* 48px — componentSpecs.button.heights.sm */
   --h-input: 3.5rem; /* 56px — inputs match the default button */
+  /* Size roles (#484) — `h-touch`, `min-h-touch-min`, `h-control`… The touch floor is
+     fixed in @theme; moving --size-touch-min does not lower min-h-touch-min. */
+  --size-touch: 3.5rem; /* 56px — The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget. */
+  --size-touch-min: 3rem; /* 48px — The touch floor (`min-h-touch-min`): 48px, fixed — no pack can lower it (owner decision 2026-10-07). */
+  --size-control: 3.5rem; /* 56px — Default control height. componentSpecs.button.heights.default. */
+  --size-control-sm: 3rem; /* 48px — Small control height. componentSpecs.button.heights.sm. */
+  --size-control-lg: 3.5rem; /* 56px — Large control height. componentSpecs.button.heights.lg. */
+  --size-control-icon: 3rem; /* 48px — Icon-button size. componentSpecs.button.heights.icon. */
+  --size-control-dense: 2rem; /* 32px — Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a). */
+  --size-field: 3.5rem; /* 56px — Input height. componentSpecs.input.heights.default. */
+  --size-field-sm: 3rem; /* 48px — Small input height. componentSpecs.input.heights.sm. */
 
   /* ── Z-INDEX ─────────────────────────────────────────────────────────────── */
   --z-base: 0;
@@ -774,9 +924,9 @@
   --muted: #050504; /* Deepest inset fill — not a ladder rung */
 
   /* ── TEXT RAMP — three tiers, APCA-measured on --base ────────────────────── */
-  --text-primary: #e5e5e3; /* APCA Lc -90.7 on --base */
-  --text-secondary: #ccccca; /* APCA Lc -75.3 on --base */
-  --text-tertiary: #b3b3b1; /* APCA Lc -60.9 on --base */
+  --text-primary: #e5e5e3; /* APCA Lc -90.7 on --base, -90.3 on --surface */
+  --text-secondary: #ccccca; /* APCA Lc -75.3 on --base, -75 on --surface */
+  --text-tertiary: #b3b3b1; /* APCA Lc -60.9 on --base, -60.5 on --surface */
   --hero-text: #ffffff; /* Text over photography — pair with --hero-text-shadow, never bare */
   --hero-text-shadow:
     0 1px 3px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.4);
@@ -790,7 +940,7 @@
   --neutral: #a09c93; /* Neutral / inactive status, secondary data series */
   --offline: #ba9570; /* Offline / disconnected state */
   --syncing: #36abba; /* In-progress sync / pending state */
-  --destructive-container: #3e1818; /* Soft background behind destructive content */
+  --destructive-container: #3e1818; /* Soft background behind destructive content. Follows mineral container pattern. */
 
   /* ── CHART — the seven minerals, in palette order ────────────────────────── */
   --chart-1: var(--mineral-cobalt);
@@ -808,6 +958,8 @@
   --chart-neutral: var(--neutral);
 
   /* ── SHADCN SEMANTIC SET ─────────────────────────────────────────────────── */
+  --primary-foreground: #0e0d0c;
+  --brand-accent-foreground: #0e0d0c;
   --background: var(
     --base
   ); /* ALIAS. /v1/brand calls this step `base`; shadcn calls it `background`. */
@@ -816,14 +968,12 @@
   --card-foreground: var(--text-primary);
   --popover: var(--overlay);
   --popover-foreground: var(--text-primary);
-  --primary-foreground: #0e0d0c;
   --secondary: var(--container);
   --secondary-foreground: var(--text-primary);
-  --destructive: var(--error);
   --destructive-foreground: #0e0d0c;
+  --destructive: #f3bdba; /* derived: destructive-foreground measures Lc 72.9 on #F2B8B5; fill walked toward #FFFFFF to Lc 75 */
   --overlay-foreground: var(--text-primary);
   --accent-foreground: var(--text-primary);
-  --brand-accent-foreground: #0e0d0c;
 
   /* ── SIDEBAR ─────────────────────────────────────────────────────────────── */
   --sidebar: var(--surface);
@@ -834,6 +984,58 @@
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+
+  /* ── ROLES — identity, status tones, lifecycle, destructive, categories (#484) ── */
+  --app-accent: var(--brand-accent);
+  --app-accent-foreground: var(--brand-accent-foreground);
+  --status-success: var(--mineral-malachite);
+  --status-success-container: var(--mineral-malachite-container);
+  --status-success-on-container: var(--mineral-malachite-on-container);
+  --status-success-text: var(--mineral-malachite-text);
+  --status-warning: var(--mineral-gold);
+  --status-warning-container: var(--mineral-gold-container);
+  --status-warning-on-container: var(--mineral-gold-on-container);
+  --status-warning-text: var(--mineral-gold-text);
+  --status-info: var(--mineral-cobalt);
+  --status-info-container: var(--mineral-cobalt-container);
+  --status-info-on-container: var(--mineral-cobalt-on-container);
+  --status-info-text: var(--mineral-cobalt-text);
+  --status-danger: var(--mineral-terracotta);
+  --status-danger-container: var(--mineral-terracotta-container);
+  --status-danger-on-container: var(--mineral-terracotta-on-container);
+  --status-danger-text: var(--mineral-terracotta-text);
+  --status-premium: var(--mineral-tanzanite);
+  --status-premium-container: var(--mineral-tanzanite-container);
+  --status-premium-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against status-premium-container; walked toward #FFFFFF to Lc 75 */
+  --status-premium-text: var(--mineral-tanzanite-text);
+  --status-neutral: var(--neutral);
+  --status-neutral-container: var(--container);
+  --status-neutral-on-container: var(--text-primary);
+  --status-neutral-text: var(--muted-foreground);
+  --status-stable: var(--status-success);
+  --status-stable-container: var(--status-success-container);
+  --status-stable-on-container: var(--status-success-on-container);
+  --status-stable-text: var(--status-success-text);
+  --status-beta: var(--status-info);
+  --status-beta-container: var(--status-info-container);
+  --status-beta-on-container: var(--status-info-on-container);
+  --status-beta-text: var(--status-info-text);
+  --status-alpha: var(--status-warning);
+  --status-alpha-container: var(--status-warning-container);
+  --status-alpha-on-container: var(--status-warning-on-container);
+  --status-alpha-text: var(--status-warning-text);
+  --status-deprecated: var(--status-danger);
+  --status-deprecated-container: var(--status-danger-container);
+  --status-deprecated-on-container: var(--status-danger-on-container);
+  --status-deprecated-text: var(--status-danger-text);
+  --category-1: var(--mineral-cobalt);
+  --category-2: var(--mineral-tanzanite);
+  --category-3: var(--mineral-malachite);
+  --category-4: var(--mineral-gold);
+  --category-5: var(--mineral-terracotta);
+  --category-6: var(--mineral-sodalite);
+  --category-7: var(--mineral-copper);
+  --destructive-text: #f3c0bd; /* derived: #F2B8B5 measures Lc 71.6 against base / surface; walked toward #FFFFFF to Lc 75 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
   /* --border  registry: rgba(10,10,10,0.06) | /v1/brand: #2A2927
