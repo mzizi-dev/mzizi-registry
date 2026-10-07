@@ -72,13 +72,46 @@ impl Node {
 
 pub const VOID: &[&str] = &["img", "input", "br", "hr", "meta", "link"];
 
+/// Decode the character references `dioxus-ssr` writes: the five named ones and numeric ones
+/// (`&#60;`, `&#x3C;`), which it uses for `<`, `>` and `&` in text and attributes. One pass,
+/// left to right, so `&#38;lt;` decodes to `&lt;` and not to `<`.
 pub fn unescape(s: &str) -> String {
-    s.replace("&lt;", "<")
-        .replace("&gt;", ">")
-        .replace("&quot;", "\"")
-        .replace("&#39;", "'")
-        .replace("&#x27;", "'")
-        .replace("&amp;", "&")
+    let mut out = String::with_capacity(s.len());
+    let mut rest = s;
+    while let Some(at) = rest.find('&') {
+        out.push_str(&rest[..at]);
+        rest = &rest[at..];
+        let decoded = rest.find(';').and_then(|end| {
+            let name = &rest[1..end];
+            let c = match name {
+                "lt" => Some('<'),
+                "gt" => Some('>'),
+                "quot" => Some('"'),
+                "amp" => Some('&'),
+                "apos" => Some('\''),
+                _ => name
+                    .strip_prefix("#x")
+                    .or_else(|| name.strip_prefix("#X"))
+                    .map(|h| u32::from_str_radix(h, 16))
+                    .or_else(|| name.strip_prefix('#').map(str::parse::<u32>))
+                    .and_then(Result::ok)
+                    .and_then(char::from_u32),
+            }?;
+            Some((c, end + 1))
+        });
+        match decoded {
+            Some((c, len)) => {
+                out.push(c);
+                rest = &rest[len..];
+            }
+            None => {
+                out.push('&');
+                rest = &rest[1..];
+            }
+        }
+    }
+    out.push_str(rest);
+    out
 }
 
 /// Parse `dioxus-ssr` output. It is well-formed by construction, so this does not need to

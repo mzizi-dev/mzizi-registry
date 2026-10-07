@@ -7,7 +7,7 @@ Four families, all in one format. Astro is the default web UI, so every contract
 - `app/`: the 31 server-rendered app components. Together they are the **Mzizi Dashboard Standard**, the one dashboard design for every product in the Bundu ecosystem, with each brand's mineral as an overlay ([docs.mzizi.dev/patterns/dashboard-standard](https://docs.mzizi.dev/patterns/dashboard-standard)).
 - `discover/`: the **Mzizi Discover Standard** ([below](#the-discover-standard-discover)), with its detail pattern.
 - `site/`: the marketing-site components (hero, sections, container, breadcrumb, icons, the mineral strip).
-- `ui/`: registry primitives in every format (button, card, input, label, alert, skeleton, status badge, native select, segmented control, toaster, safe-area frame). Where a Dashboard Standard build of the same primitive exists, it is `app-<name>` (`app-button.astro` / `app-button.tsx`) and keeps `app/<name>`; the registry primitive `<name>` keeps `ui/<name>`, and each lists the other under `related`.
+- `ui/`: registry primitives in every format (button, card, input, label, alert, skeleton, status badge, native select, segmented control, toaster, safe-area frame, markdown renderer). Where a Dashboard Standard build of the same primitive exists, it is `app-<name>` (`app-button.astro` / `app-button.tsx`) and keeps `app/<name>`; the registry primitive `<name>` keeps `ui/<name>`, and each lists the other under `related`.
 
 **One contract per component, whatever the language** (owner, 2026-10-05; [#427](https://github.com/mzizi-dev/mzizi-registry/issues/427)). The contract is the only place a component's clauses, checks and density are written, and every format is held to that one file. Where a `contract`-identity `.rs` needs the clauses inline (`pub const CONTRACT`, which its crate exports), `pnpm contracts:sync` writes them from here and `pnpm contracts:sync:check` fails CI if the copy drifts; the `.rs` never carries contract text of its own.
 
@@ -62,7 +62,7 @@ Every format that exists is tested against the contract, here:
 | `app/stat-tile`          | StatTile          | N6   | 1.0.0   | `app-stat-tile`          | `app-stat-tile` (contract)          | —                       |
 | `app/info-tip`           | InfoTip           | N6   | 1.0.0   | `app-info-tip`           | `app-info-tip` (contract)           | —                       |
 | `app/empty-state`        | EmptyState        | N6   | 1.0.0   | `app-empty-state`        | `app-empty-state` (contract)        | —                       |
-| `app/brand-mark`         | BrandMark         | N3   | 1.0.0   | `app-brand-mark`         | `app-brand-mark` (contract)         | —                       |
+| `app/brand-mark`         | BrandMark         | N3   | 1.1.0   | `app-brand-mark`         | `app-brand-mark` (contract)         | —                       |
 | `app/data-table`         | DataTable         | N6   | 1.1.0   | `app-data-table`         | `app-data-table` (contract)         | —                       |
 | `app/filter-bar`         | FilterBar         | N6   | 1.1.0   | `app-filter-bar`         | `app-filter-bar` (contract)         | —                       |
 | `app/pagination`         | Pagination        | N6   | 1.0.0   | `app-pagination`         | `app-pagination` (contract)         | —                       |
@@ -113,11 +113,11 @@ Every Discover component also works in a server-filled shell (an Astro page buil
 | Contract              | Component     | Node | Version | Astro `.astro`        | React `.tsx`                     | Rust `.rs` |
 | --------------------- | ------------- | ---- | ------- | --------------------- | -------------------------------- | ---------- |
 | `site/breadcrumb`     | Breadcrumb    | N6   | 1.0.0   | `site-breadcrumb`     | `site-breadcrumb` (contract)     | —          |
-| `site/container`      | Container     | N6   | 1.0.0   | `site-container`      | `site-container` (contract)      | —          |
-| `site/hero`           | Hero          | N6   | 1.0.0   | `site-hero`           | `site-hero` (contract)           | —          |
+| `site/container`      | Container     | N6   | 1.0.1   | `site-container`      | `site-container` (contract)      | —          |
+| `site/hero`           | Hero          | N6   | 1.0.1   | `site-hero`           | `site-hero` (contract)           | —          |
 | `site/icon`           | Icon          | N2   | 1.0.0   | `site-icon`           | `site-icon` (contract)           | —          |
 | `site/mineral-strip`  | MineralStrip  | N3   | 1.0.0   | `site-mineral-strip`  | `site-mineral-strip` (contract)  | —          |
-| `site/section`        | Section       | N6   | 1.0.0   | `site-section`        | `site-section` (contract)        | —          |
+| `site/section`        | Section       | N6   | 1.0.1   | `site-section`        | `site-section` (contract)        | —          |
 | `site/section-header` | SectionHeader | N6   | 1.0.0   | `site-section-header` | `site-section-header` (contract) | —          |
 | `site/social-icon`    | SocialIcon    | N3   | 1.0.0   | `site-social-icon`    | `site-social-icon` (contract)    | —          |
 
@@ -125,19 +125,20 @@ Every Discover component also works in a server-filled shell (an Astro page buil
 
 Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Where a build is marked `contract` it keeps the whole contract; the older ports share only what their `identity` says, or nothing yet (`—`), and their contracts list the divergences and gaps.
 
-| Contract               | Component        | Node | Version | Astro `.astro`      | React `.tsx`                   | Rust `.rs`                   |
-| ---------------------- | ---------------- | ---- | ------- | ------------------- | ------------------------------ | ---------------------------- |
-| `ui/alert`             | Alert            | N2   | 1.0.0   | `alert`             | `alert` (contract)             | `alert` (contract)           |
-| `ui/button`            | Button           | N2   | 1.0.0   | `button`            | `button` (contract)            | `button` (contract)          |
-| `ui/card`              | Card             | N2   | 1.0.0   | `card`              | `card` (contract)              | `card` (contract)            |
-| `ui/input`             | Input            | N2   | 1.0.0   | `input`             | `input` (contract)             | `input` (contract)           |
-| `ui/label`             | Label            | N2   | 1.0.0   | `label`             | `label` (contract)             | `label` (contract)           |
-| `ui/native-select`     | NativeSelect     | N2   | 2.0.0   | `native-select`     | `native-select` (contract)     | —                            |
-| `ui/safe-area-frame`   | SafeAreaFrame    | N2   | 1.0.0   | `safe-area-frame`   | `safe-area-frame` (contract)   | `safe-area-frame` (contract) |
-| `ui/segmented-control` | SegmentedControl | N2   | 1.1.0   | `segmented-control` | `segmented-control` (contract) | —                            |
-| `ui/skeleton`          | Skeleton         | N2   | 1.0.0   | `skeleton`          | `skeleton` (contract)          | `skeleton` (contract)        |
-| `ui/status-badge`      | StatusBadge      | N2   | 1.0.0   | `status-badge`      | `status-badge` (contract)      | `status-badge` (contract)    |
-| `ui/toaster`           | Toaster          | N2   | 1.1.0   | `toaster`           | `toaster` (contract)           | —                            |
+| Contract               | Component        | Node | Version | Astro `.astro`      | React `.tsx`                   | Rust `.rs`                     |
+| ---------------------- | ---------------- | ---- | ------- | ------------------- | ------------------------------ | ------------------------------ |
+| `ui/alert`             | Alert            | N2   | 1.0.0   | `alert`             | `alert` (contract)             | `alert` (contract)             |
+| `ui/button`            | Button           | N2   | 1.0.0   | `button`            | `button` (contract)            | `button` (contract)            |
+| `ui/card`              | Card             | N2   | 1.0.0   | `card`              | `card` (contract)              | `card` (contract)              |
+| `ui/input`             | Input            | N2   | 1.0.0   | `input`             | `input` (contract)             | `input` (contract)             |
+| `ui/label`             | Label            | N2   | 1.0.0   | `label`             | `label` (contract)             | `label` (contract)             |
+| `ui/markdown-renderer` | MarkdownRenderer | N2   | 1.0.0   | `markdown-renderer` | `markdown-renderer` (contract) | `markdown-renderer` (contract) |
+| `ui/native-select`     | NativeSelect     | N2   | 2.0.0   | `native-select`     | `native-select` (contract)     | —                              |
+| `ui/safe-area-frame`   | SafeAreaFrame    | N2   | 1.0.0   | `safe-area-frame`   | `safe-area-frame` (contract)   | `safe-area-frame` (contract)   |
+| `ui/segmented-control` | SegmentedControl | N2   | 1.1.0   | `segmented-control` | `segmented-control` (contract) | —                              |
+| `ui/skeleton`          | Skeleton         | N2   | 1.0.0   | `skeleton`          | `skeleton` (contract)          | `skeleton` (contract)          |
+| `ui/status-badge`      | StatusBadge      | N2   | 1.0.0   | `status-badge`      | `status-badge` (contract)      | `status-badge` (contract)      |
+| `ui/toaster`           | Toaster          | N2   | 1.1.0   | `toaster`           | `toaster` (contract)           | —                              |
 
 **Follow-ups.** Rust ports of the app, discover and site components ([#401](https://github.com/mzizi-dev/mzizi-registry/issues/401)); each is done when it passes its contract. `button`, `card` and `input` share only their slot with their `.tsx` and `.rs`, which keep the registry's own variants, parts or height (each divergence is listed in the contract).
 

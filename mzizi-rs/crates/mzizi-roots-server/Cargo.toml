@@ -18,11 +18,11 @@ workspace = true
 # (typed request in, typed response out, I/O behind traits), so they build for native hosts
 # and for `wasm32-unknown-unknown` Workers alike.
 [dependencies]
-mzizi-assurance = { path = "../mzizi-assurance", version = "0.1.0", optional = true }
-mzizi-fundi = { path = "../mzizi-fundi", version = "0.1.0", optional = true }
-mzizi-docs = { path = "../mzizi-docs", version = "0.1.0", optional = true }
-mzizi-discovery = { path = "../mzizi-discovery", version = "0.1.0", optional = true }
-mzizi-activitypub = { path = "../mzizi-activitypub", version = "0.1.0", optional = true }
+mzizi-assurance = { path = "../mzizi-assurance", version = "0.2.0", optional = true }
+mzizi-fundi = { path = "../mzizi-fundi", version = "0.2.0", optional = true }
+mzizi-docs = { path = "../mzizi-docs", version = "0.2.0", optional = true }
+mzizi-discovery = { path = "../mzizi-discovery", version = "0.2.0", optional = true }
+mzizi-activitypub = { path = "../mzizi-activitypub", version = "0.2.0", optional = true }
 
 [features]
 # All four by default. `assurance`, `fundi` and `discovery` have no dependencies at all;

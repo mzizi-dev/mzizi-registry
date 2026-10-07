@@ -1,7 +1,8 @@
 /**
  * BrandMark (React) — an ecosystem brand's official mark, with its wordmark
  * when asked. The images are the official bundu-ecosystem-icons pair
- * (./assets/<brand>-mark-{light,dark}.png), never redrawn: both marks are in
+ * (./assets/nyuchi-mark-{light,dark}.png, ./assets/mukoko-icon-{light,dark}.png),
+ * scaled to 128px and never redrawn: both marks are in
  * the page and CSS shows the one that fits the theme (`[data-theme="dark"]`,
  * `.dark`, or the system setting), so it needs no script.
  *
@@ -15,6 +16,8 @@
  *
  * Implements contract `app/brand-mark` beside `app-brand-mark.astro`.
  */
+import mukokoDark from "./assets/mukoko-icon-dark.png"
+import mukokoLight from "./assets/mukoko-icon-light.png"
 import nyuchiDark from "./assets/nyuchi-mark-dark.png"
 import nyuchiLight from "./assets/nyuchi-mark-light.png"
 
@@ -22,6 +25,7 @@ type ImageImport = string | { src: string }
 
 const MARKS = {
   nyuchi: { name: "nyuchi", light: nyuchiLight as ImageImport, dark: nyuchiDark as ImageImport },
+  mukoko: { name: "mukoko", light: mukokoLight as ImageImport, dark: mukokoDark as ImageImport },
 } as const
 
 type BrandName = keyof typeof MARKS
