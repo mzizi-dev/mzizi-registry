@@ -14,10 +14,10 @@
 //!
 //! # The defect this port had to confront
 //!
-//! The `.ts` opens with, in capitals: "This lib never hardcodes counts. Counts
-//! drift as the ecosystem evolves." It then hardcodes the entire node set as a
+//! The `.ts` opened with, in capitals: "This lib never hardcodes counts. Counts
+//! drift as the ecosystem evolves." It then hardcoded the entire node set as a
 //! literal string — a ten-row table, N1 through N10, with a four-axis model above
-//! it. Both are stale:
+//! it. Both were stale (the `.ts` now renders this file's node map, #323):
 //!
 //!   * The node set is **uncapped** (§9) and runs past N10. N11 is the discovery
 //!     rung and N12 the skills rung; neither appears. An assistant handed this
@@ -35,20 +35,23 @@
 //! So the node map here is **data**, not a literal. [`NodeEntry`] rows are passed
 //! in, the same way counts are, and [`current_nodes`] is a documented default for
 //! a caller with nothing better — not a truth buried in a string. A caller that
-//! reads `/api/v1/architecture` gets a map that cannot go stale at all.
+//! reads `https://api.mzizi.dev/v1/architecture` gets a map that cannot go stale at all.
 //!
 //! # Preserved rather than "fixed"
 //!
-//! The ten rules are reproduced as written, including rule 8's "48px minimum".
+//! The ten rules are reproduced as written, including rule 8's "48px minimum",
+//! except rule 10, whose Shona terms now come from the Ubuntu doctrine rather
+//! than "the database" (the registry has none).
 //! `scripts/validate-registry.mjs` records at length that the shipped primitives
 //! never honoured the 56px/48px scale and that density won — but the rules block
 //! is doctrine text owned by N10's authors, and silently editing what the system
 //! tells an assistant about itself is not a porting decision. Flagged here, and
 //! left for whoever owns §8.2 to settle.
 //!
-//! Rule 9's "Query get_node_counts()" and the Supabase/MCP footer are likewise
-//! reproduced. They name a specific database and endpoint, which is exactly the
-//! kind of fact that rots — see [`Endpoints`] for how a caller overrides them.
+//! The `.ts`'s Supabase footer and "Query get_node_counts()" named a specific
+//! database and function, which is exactly the kind of fact that rots; neither is
+//! reproduced, in either build. See [`Endpoints`] for how a caller overrides the
+//! site, repo and MCP endpoint.
 
 /// Live ecosystem totals, supplied by the caller.
 ///
@@ -56,10 +59,11 @@
 /// find the numbers than given numbers that have drifted.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct EcosystemCounts {
-    /// Every component in the registry.
+    /// Every component in the registry (`meta.registryTotal` on `/v1/ui`).
+    ///
+    /// There is no stable count: the registry has no per-component status, and
+    /// `/v1/stats` reports none, so the old `total_stable` was removed (#479).
     pub total_components: usize,
-    /// Those marked stable.
-    pub total_stable: usize,
     /// How many nodes exist. Uncapped — see §9.
     pub total_nodes: usize,
 }
@@ -89,7 +93,7 @@ impl NodeEntry {
 
 /// The node set as it stands, for a caller with no live source.
 ///
-/// A DEFAULT, not a definition. The authority is `/api/v1/architecture`, and a
+/// A DEFAULT, not a definition. The authority is `https://api.mzizi.dev/v1/architecture`, and a
 /// caller that can reach it should pass those rows instead — that is the whole
 /// point of the node map being a parameter. Kept here so the component still
 /// produces something useful offline, and so the staleness is visible in a list
@@ -143,9 +147,10 @@ pub fn current_nodes() -> Vec<NodeEntry> {
 /// Where the machine-readable truth lives.
 ///
 /// Parameters rather than literals because the `.ts` hardcoded a Supabase project
-/// ref, an MCP hostname and the repo slug `nyuchi/design-portal` — and the repo is
-/// `nyuchi/mzizi`. An assistant handed a wrong repo slug will look in the wrong
-/// place and report that the code does not exist.
+/// ref, an MCP hostname and the repo slug `nyuchi/design-portal`, then
+/// `nyuchi/mzizi` — and the repo is `mzizi-dev/mzizi-registry`. An assistant
+/// handed a wrong repo slug will look in the wrong place and report that the code
+/// does not exist.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Endpoints {
     /// Human-facing site.
@@ -160,8 +165,8 @@ impl Default for Endpoints {
     fn default() -> Self {
         Self {
             site: "https://mzizi.dev".to_owned(),
-            repo: "nyuchi/mzizi".to_owned(),
-            mcp: "https://mzizi.dev/api/v1/mcp".to_owned(),
+            repo: "mzizi-dev/mzizi-registry".to_owned(),
+            mcp: "https://mcp.mzizi.dev/mcp".to_owned(),
         }
     }
 }
@@ -197,7 +202,7 @@ impl Default for AiContextOptions {
     }
 }
 
-/// The ten rules, reproduced verbatim from the `.ts`.
+/// The ten rules, the same text as the `.ts`.
 ///
 /// See the module docs on rule 8 — reproduced as written rather than silently
 /// reconciled with what the primitives actually ship.
@@ -213,7 +218,7 @@ const ECOSYSTEM_RULES: &str = "\
 7. Status colors use semantic tokens: --status-success, --status-error, --status-warning.
 8. Touch targets: 48px minimum. Focus rings: focus-visible:outline-2.
 9. No hardcoded numbers in code or copy. Query the live counts.
-10. Shona terms come from the database. Never translate or invent them.";
+10. Shona terms come from the Ubuntu doctrine. Never translate or invent them.";
 
 /// Render the node map as a markdown table.
 fn render_node_map(nodes: &[NodeEntry]) -> String {
@@ -254,8 +259,8 @@ pub fn generate_ai_context(options: &AiContextOptions) -> String {
         parts.push(String::new());
         if let Some(c) = options.counts {
             parts.push(format!(
-                "Live counts: {} components total, {} stable, across {} nodes.",
-                c.total_components, c.total_stable, c.total_nodes
+                "Live counts: {} components total, across {} nodes.",
+                c.total_components, c.total_nodes
             ));
         }
         parts.push(format!(
@@ -371,7 +376,8 @@ mod tests {
     #[test]
     fn the_repo_slug_is_the_real_one() {
         let s = generate_ai_context(&AiContextOptions::default());
-        assert!(s.contains("nyuchi/mzizi"));
+        assert!(s.contains("mzizi-dev/mzizi-registry"));
+        assert!(!s.contains("nyuchi/mzizi"));
         assert!(!s.contains("design-portal"));
     }
 
@@ -384,12 +390,12 @@ mod tests {
         let with = generate_ai_context(&AiContextOptions {
             counts: Some(EcosystemCounts {
                 total_components: 575,
-                total_stable: 500,
                 total_nodes: 12,
             }),
             ..AiContextOptions::default()
         });
-        assert!(with.contains("575 components total, 500 stable, across 12 nodes"));
+        assert!(with.contains("575 components total, across 12 nodes."));
+        assert!(!with.contains("stable"));
         assert!(!with.contains("For live counts"));
     }
 
@@ -450,6 +456,6 @@ mod tests {
             ..AiContextOptions::default()
         });
         assert!(s.contains("acme/thing"));
-        assert!(!s.contains("nyuchi/mzizi"));
+        assert!(!s.contains("mzizi-dev/mzizi-registry"));
     }
 }
