@@ -12,7 +12,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [4.6.0] - 2026-10-07
 
-Releases `staging` to `main` as the next minor above v4.5.5 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.6.0, and the Mzizi Roots crates move to 0.2.0 (the next minor above `mzizi-rs-v0.1.0`), so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer`.
+Releases `staging` to `main` as the next minor above v4.5.5 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `README.md` and `content/changelog/releases.json` move to 4.6.0 (and `package.json` in the release pull request to `main`, since staging's version check allows only a patch there), and the Mzizi Roots crates move to 0.2.0 (the next minor above `mzizi-rs-v0.1.0`), so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer`.
 
 ### Security — `markdown-renderer` is safe by construction, in React, Astro and Rust under one contract (2026-10-07, #462)
 
