@@ -31,7 +31,7 @@ To take only what you use:
 
 ```toml
 [dependencies]
-mzizi-roots = { version = "0.2", default-features = false, features = ["brand"] }
+mzizi-roots = { version = "0.3", default-features = false, features = ["brand"] }
 ```
 
 ```rust

@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.7.0",
+    title:
+      "v4.7.0 — markdown-renderer 1.1.0: stricter links, nested rich-text lists",
+    description:
+      "Releases staging to main as the next minor above v4.6.x (nyuchi/.github#80). markdown-renderer 1.1.0 refuses link addresses with a control character, whitespace or credentials, or a web address with no host (closing a <\\u0001javascript:…> bypass in 4.6.0), treats \\\\host and /\\host as scheme-relative, and keeps rich-text lists nested with <ol start> (#465); the Mzizi Roots crates move to 0.3.0 (#466). CHANGELOG.md section [4.7.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 7,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-10-07T09:00:00.000+00:00",
+    created_at: "2026-10-07T09:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.6.0",
     title:
       "v4.6.0 — markdown-renderer, safe by construction in Rust, Astro and React",
