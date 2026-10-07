@@ -189,9 +189,13 @@ jobs:
           path: dist/
 
       # No `password:` input: the action exchanges this job's OIDC token with PyPI.
+      # skip-existing: a re-run after a partial upload (the wheel landed, the sdist did
+      # not) uploads what is missing instead of failing on the file PyPI already has, so
+      # that run can still finish and tag.
       - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
         with:
           packages-dir: dist/
+          skip-existing: true
 
   tag:
     name: Tag and release the version
@@ -254,26 +258,34 @@ jobs:
               # PyPI has this version from an earlier commit whose tag step never ran to the
               # end. Until that tag exists the next-version policy keeps expecting this
               # version, so a bump would be refused too: fail loudly rather than go green.
-              if git ls-remote --tags --refs origin "refs/tags/$tag" | grep -q .; then
-                echo "$tag already exists; nothing to tag."
-                exit 0
+              if ! git ls-remote --tags --refs origin "refs/tags/$tag" | grep -q .; then
+                echo "::error::mzizi-resilience $VERSION is on PyPI but untagged, and its wheel (sha256 $theirs) is not this commit's ($ours). Re-run the failed jobs of the publish-pypi run that uploaded $VERSION; that tags the commit PyPI was built from, and later releases can then bump."
+                exit 1
               fi
-              echo "::error::mzizi-resilience $VERSION is on PyPI but untagged, and its wheel (sha256 $theirs) is not this commit's ($ours). Re-run the 'Tag and release the version' job of the publish-pypi run that uploaded $VERSION; that tags the commit PyPI was built from, and later releases can then bump."
-              exit 1
             fi
           fi
+          # The tag, then its release. Each is skipped when it exists, so a re-run after a
+          # failure between the two still creates the release.
           if git ls-remote --tags --refs origin "refs/tags/$tag" | grep -q .; then
-            echo "$tag already exists; nothing to tag."
-            exit 0
+            if [ -z "${GH_TOKEN:-}" ]; then
+              echo "::warning::$tag exists; without RELEASE_BUMP_TOKEN its release cannot be checked."
+              exit 0
+            fi
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              echo "$tag and its release already exist; nothing to do."
+              exit 0
+            fi
+            echo "$tag exists without its release; creating the release."
+          else
+            if [ -z "${GH_TOKEN:-}" ]; then
+              echo "::error::RELEASE_BUMP_TOKEN is not visible to this repository; cannot tag $tag."
+              exit 1
+            fi
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "$tag" -m "mzizi-resilience $VERSION (Python)"
+            git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag"
           fi
-          if [ -z "${GH_TOKEN:-}" ]; then
-            echo "::error::RELEASE_BUMP_TOKEN is not visible to this repository; cannot tag $tag."
-            exit 1
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "$tag" -m "mzizi-resilience $VERSION (Python)"
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag"
           {
             echo "[\`mzizi-resilience\` $VERSION](https://pypi.org/project/mzizi-resilience/$VERSION/) on PyPI:"
             echo
