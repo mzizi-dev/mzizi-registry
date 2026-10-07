@@ -1,0 +1,12 @@
+{
+  "$comment": "Registry components a consumer may install into a project with the strictest common settings (noUncheckedIndexedAccess, exactOptionalPropertyTypes is not required). `pnpm typecheck` runs this too, so an installed file always compiles there (mzizi-registry#460: the Toddle extension).",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true
+  },
+  "include": [
+    "components/registry/n2-primitives/markdown-parse.ts",
+    "components/registry/n2-primitives/markdown-renderer.tsx"
+  ]
+}
