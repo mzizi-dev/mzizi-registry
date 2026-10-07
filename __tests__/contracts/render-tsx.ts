@@ -13,6 +13,9 @@ const camel = (s: string) => s.replace(/-([a-z])/g, (_m, ch: string) => ch.toUpp
 const RENAME: Record<string, string> = { class: "className", for: "htmlFor" }
 const marker = (slot: string) => `slot:${slot}`
 
+/** Whether a React build takes the request URL: its source reads a `requestUrl` prop. */
+export const wantsRequestUrl = (source: string): boolean => source.includes("requestUrl")
+
 /**
  * Render one contract state of a React implementation to HTML: `class` →
  * `className`, `for` → `htmlFor`, the default slot as `children` and a named
