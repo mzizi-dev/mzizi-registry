@@ -14,8 +14,8 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { ecosystem, ecosystemAliases, resolveEcosystemName } from "@/lib/tokens/brand.source"
 import { brandOverrides, brandIndustryCategories } from "@/lib/tokens"
-import { heritageColors, experimentalColors } from "@/lib/tokens/palette.generated"
-import { BRANDS, BRAND_ALIASES, DEFAULT_BRAND } from "../scripts/render-globals-css"
+import { heritageColors, experimentalColors, minerals } from "@/lib/tokens/palette.generated"
+import { BRANDS, BRAND_ALIASES, DEFAULT_BRAND, resolveRoles } from "../scripts/render-globals-css"
 
 const CSS = readFileSync(
   join(process.cwd(), "components/registry/n1-tokens/mzizi-tokens-globals.css"),
@@ -54,20 +54,25 @@ describe("mzizi-tokens-globals.css brand blocks", () => {
    * The `mzizi-tokens` crate is NOT a copy of this stylesheet. Its
    * `src/generated/mzizi-tokens-rust.rs` is `pnpm rust:generate`'s copy of
    * `components/registry/n1-tokens/mzizi-tokens-rust.rs`, which
-   * `scripts/sync-tokens.ts` `renderRust()` writes from the palette alone
-   * (minerals, heritage, experimental), and `generate-rust-components.mjs`
-   * copies only `.rs` files. So it has no brand default for this change to
-   * move. If one is ever added, this fails and it must follow the brand
-   * record like the CSS does.
+   * `scripts/sync-tokens.ts` `renderRust()` writes from the palette and, since
+   * #484 slice 1, the role manifest. `Roles::mzizi()` carries the default
+   * `primary`, so it has to follow the brand record exactly as the CSS does: the
+   * mzizi row's family, at its -aa tier. It still knows nothing of data-brand.
    */
-  it("leaves no brand default in the mzizi-tokens Rust crate to drift", () => {
+  it("gives the mzizi-tokens Rust crate the brand record's default primary", () => {
+    const roles = resolveRoles(minerals, heritageColors, experimentalColors)
+    const primary = roles.get("primary")!
+    const hematite = ecosystem.find((b) => b.name === DEFAULT_BRAND)!.mineral
+    expect(primary.css.light).toBe(`var(${aaVar(hematite)})`)
     for (const file of [
       "components/registry/n1-tokens/mzizi-tokens-rust.rs",
       "mzizi-rs/crates/mzizi-tokens/src/generated/mzizi-tokens-rust.rs",
     ]) {
       const rust = readFileSync(join(process.cwd(), file), "utf8")
-      expect(rust, file).not.toMatch(/\bprimary\b|DEFAULT_BRAND|data-brand/i)
+      expect(rust, file).not.toMatch(/DEFAULT_BRAND|data-brand/i)
       expect(rust, file).toMatch(/pub const HEMATITE_LIGHT: &str = "#[0-9A-F]{6}";/)
+      const fields = [...rust.matchAll(/^\s+primary: "(#[0-9A-F]{6})",$/gm)].map((m) => m[1])
+      expect(fields, file).toEqual([primary.value.light, primary.value.dark])
     }
   })
 

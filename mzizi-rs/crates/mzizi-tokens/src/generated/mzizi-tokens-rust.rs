@@ -262,3 +262,511 @@ impl Fonts {
     /// JetBrains Mono.
     pub const MONO: &'static str = "JetBrains Mono";
 }
+
+// ─── Roles (#484) ─────────────────────────────────────────────────────────────
+// What a component names, resolved for the Mzizi pack, from lib/tokens/roles.source.ts.
+
+/// Every colour role for one theme: a hex, or `rgba()` for the scrim.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RoleColors {
+    /// The brand's action colour. Mzizi: hematite (-aa), the ecosystem row for mzizi.
+    pub primary: &'static str,
+    /// Text and icons on `primary`.
+    pub primary_foreground: &'static str,
+    /// The focus ring. Cobalt (-aa) in the Mzizi pack, for every ecosystem brand; a custom pack may set it.
+    pub ring: &'static str,
+    /// The saturated brand accent (accent fills, the page wash). Follows `primary` unless a brand names an accent.
+    pub brand_accent: &'static str,
+    /// Text and icons on `brand-accent`.
+    pub brand_accent_foreground: &'static str,
+    /// An app's own accent inside the shell (`app/app-shell` `accent`). Follows `brand-accent`.
+    pub app_accent: &'static str,
+    /// Text and icons on `app-accent`.
+    pub app_accent_foreground: &'static str,
+    /// Deepest surface — media wells, splash (prime step P2)
+    pub pitch: &'static str,
+    /// App shell behind base (prime step P3)
+    pub void: &'static str,
+    /// Page background — ambient base surface (prime step P5)
+    pub base: &'static str,
+    /// Card / panel surface (prime step P7)
+    pub surface: &'static str,
+    /// Neutral containers, grouped content (prime step P11)
+    pub container: &'static str,
+    /// Overlays and dialogs (prime step P13)
+    pub overlay: &'static str,
+    /// Raised elements above overlay — menus, toasts (prime step P17)
+    pub raised: &'static str,
+    /// Semi-transparent backdrop behind overlays
+    pub scrim: &'static str,
+    /// Cover-colour page wash — surface tinted with the active brand accent (~7% light / ~12% dark)
+    pub wash: &'static str,
+    /// Deepest fill — inset sections, metadata rows, maximum text contrast
+    pub muted: &'static str,
+    /// Body and heading text. APCA Lc 90 on `base`.
+    pub text_primary: &'static str,
+    /// Secondary text, descriptions. APCA Lc 75 on `base` and `surface` (#399).
+    pub text_secondary: &'static str,
+    /// Placeholders, metadata and captions that are not body copy. APCA Lc 60 on `base` and `surface`.
+    pub text_tertiary: &'static str,
+    /// Text over photography, always with `--hero-text-shadow`.
+    pub hero_text: &'static str,
+    /// shadcn's secondary text. An alias of `text-secondary`.
+    pub muted_foreground: &'static str,
+    /// Success states, positive actions
+    pub success: &'static str,
+    /// Warning states, caution
+    pub warning: &'static str,
+    /// Error states, destructive actions
+    pub error: &'static str,
+    /// Informational states
+    pub info: &'static str,
+    /// Neutral / inactive status, secondary data series
+    pub neutral: &'static str,
+    /// Offline / disconnected state
+    pub offline: &'static str,
+    /// In-progress sync / pending state
+    pub syncing: &'static str,
+    /// Soft background behind destructive content. Follows mineral container pattern.
+    pub destructive_container: &'static str,
+    /// Success (malachite in the Mzizi pack) — the tone itself: dots, icons, rules, tinted fills (`bg-status-success/10`).
+    pub status_success: &'static str,
+    /// Success (malachite in the Mzizi pack) — a soft fill behind success content (alerts, badges, toasts).
+    pub status_success_container: &'static str,
+    /// Success (malachite in the Mzizi pack) — text and icons on `status-success-container`.
+    pub status_success_on_container: &'static str,
+    /// Success (malachite in the Mzizi pack) — the tone as text on the page (#315's per-role `-text` tier).
+    pub status_success_text: &'static str,
+    /// Warning (gold in the Mzizi pack) — the tone itself: dots, icons, rules, tinted fills (`bg-status-warning/10`).
+    pub status_warning: &'static str,
+    /// Warning (gold in the Mzizi pack) — a soft fill behind warning content (alerts, badges, toasts).
+    pub status_warning_container: &'static str,
+    /// Warning (gold in the Mzizi pack) — text and icons on `status-warning-container`.
+    pub status_warning_on_container: &'static str,
+    /// Warning (gold in the Mzizi pack) — the tone as text on the page (#315's per-role `-text` tier).
+    pub status_warning_text: &'static str,
+    /// Info (cobalt in the Mzizi pack) — the tone itself: dots, icons, rules, tinted fills (`bg-status-info/10`).
+    pub status_info: &'static str,
+    /// Info (cobalt in the Mzizi pack) — a soft fill behind info content (alerts, badges, toasts).
+    pub status_info_container: &'static str,
+    /// Info (cobalt in the Mzizi pack) — text and icons on `status-info-container`.
+    pub status_info_on_container: &'static str,
+    /// Info (cobalt in the Mzizi pack) — the tone as text on the page (#315's per-role `-text` tier).
+    pub status_info_text: &'static str,
+    /// Danger (terracotta in the Mzizi pack) — the tone itself: dots, icons, rules, tinted fills (`bg-status-danger/10`).
+    pub status_danger: &'static str,
+    /// Danger (terracotta in the Mzizi pack) — a soft fill behind danger content (alerts, badges, toasts).
+    pub status_danger_container: &'static str,
+    /// Danger (terracotta in the Mzizi pack) — text and icons on `status-danger-container`.
+    pub status_danger_on_container: &'static str,
+    /// Danger (terracotta in the Mzizi pack) — the tone as text on the page (#315's per-role `-text` tier).
+    pub status_danger_text: &'static str,
+    /// Premium (tanzanite in the Mzizi pack) — the tone itself: dots, icons, rules, tinted fills (`bg-status-premium/10`).
+    pub status_premium: &'static str,
+    /// Premium (tanzanite in the Mzizi pack) — a soft fill behind premium content (alerts, badges, toasts).
+    pub status_premium_container: &'static str,
+    /// Premium (tanzanite in the Mzizi pack) — text and icons on `status-premium-container`.
+    pub status_premium_on_container: &'static str,
+    /// Premium (tanzanite in the Mzizi pack) — the tone as text on the page (#315's per-role `-text` tier).
+    pub status_premium_text: &'static str,
+    /// Neutral (the muted ladder in the Mzizi pack) — the tone itself: dots, icons, rules, tinted fills (`bg-status-neutral/10`).
+    pub status_neutral: &'static str,
+    /// Neutral (the muted ladder in the Mzizi pack) — a soft fill behind neutral content (alerts, badges, toasts).
+    pub status_neutral_container: &'static str,
+    /// Neutral (the muted ladder in the Mzizi pack) — text and icons on `status-neutral-container`.
+    pub status_neutral_on_container: &'static str,
+    /// Neutral (the muted ladder in the Mzizi pack) — the tone as text on the page (#315's per-role `-text` tier).
+    pub status_neutral_text: &'static str,
+    /// Lifecycle `stable`: an alias of `status-success`.
+    pub status_stable: &'static str,
+    /// Lifecycle `stable`: an alias of `status-success-container`.
+    pub status_stable_container: &'static str,
+    /// Lifecycle `stable`: an alias of `status-success-on-container`.
+    pub status_stable_on_container: &'static str,
+    /// Lifecycle `stable`: an alias of `status-success-text`.
+    pub status_stable_text: &'static str,
+    /// Lifecycle `beta`: an alias of `status-info`.
+    pub status_beta: &'static str,
+    /// Lifecycle `beta`: an alias of `status-info-container`.
+    pub status_beta_container: &'static str,
+    /// Lifecycle `beta`: an alias of `status-info-on-container`.
+    pub status_beta_on_container: &'static str,
+    /// Lifecycle `beta`: an alias of `status-info-text`.
+    pub status_beta_text: &'static str,
+    /// Lifecycle `alpha`: an alias of `status-warning`.
+    pub status_alpha: &'static str,
+    /// Lifecycle `alpha`: an alias of `status-warning-container`.
+    pub status_alpha_container: &'static str,
+    /// Lifecycle `alpha`: an alias of `status-warning-on-container`.
+    pub status_alpha_on_container: &'static str,
+    /// Lifecycle `alpha`: an alias of `status-warning-text`.
+    pub status_alpha_text: &'static str,
+    /// Lifecycle `deprecated`: an alias of `status-danger`.
+    pub status_deprecated: &'static str,
+    /// Lifecycle `deprecated`: an alias of `status-danger-container`.
+    pub status_deprecated_container: &'static str,
+    /// Lifecycle `deprecated`: an alias of `status-danger-on-container`.
+    pub status_deprecated_on_container: &'static str,
+    /// Lifecycle `deprecated`: an alias of `status-danger-text`.
+    pub status_deprecated_text: &'static str,
+    /// Chart series 1. Mzizi: cobalt.
+    pub chart_1: &'static str,
+    /// Chart series 2. Mzizi: tanzanite.
+    pub chart_2: &'static str,
+    /// Chart series 3. Mzizi: malachite.
+    pub chart_3: &'static str,
+    /// Chart series 4. Mzizi: gold.
+    pub chart_4: &'static str,
+    /// Chart series 5. Mzizi: terracotta.
+    pub chart_5: &'static str,
+    /// Chart series 6. Mzizi: sodalite.
+    pub chart_6: &'static str,
+    /// Chart series 7. Mzizi: copper.
+    pub chart_7: &'static str,
+    /// Semantic chart series; never changes hue between themes. An alias of `success`.
+    pub chart_positive: &'static str,
+    /// Semantic chart series; never changes hue between themes. An alias of `error`.
+    pub chart_negative: &'static str,
+    /// Semantic chart series; never changes hue between themes. An alias of `neutral`.
+    pub chart_neutral: &'static str,
+    /// Category 1 (the mineral strip, Discover categories). Mzizi: cobalt.
+    pub category_1: &'static str,
+    /// Category 2 (the mineral strip, Discover categories). Mzizi: tanzanite.
+    pub category_2: &'static str,
+    /// Category 3 (the mineral strip, Discover categories). Mzizi: malachite.
+    pub category_3: &'static str,
+    /// Category 4 (the mineral strip, Discover categories). Mzizi: gold.
+    pub category_4: &'static str,
+    /// Category 5 (the mineral strip, Discover categories). Mzizi: terracotta.
+    pub category_5: &'static str,
+    /// Category 6 (the mineral strip, Discover categories). Mzizi: sodalite.
+    pub category_6: &'static str,
+    /// Category 7 (the mineral strip, Discover categories). Mzizi: copper.
+    pub category_7: &'static str,
+    /// shadcn's page background. An alias of `base`.
+    pub background: &'static str,
+    /// shadcn's text colour. An alias of `text-primary`.
+    pub foreground: &'static str,
+    /// Card surface.
+    pub card: &'static str,
+    /// Text on `card`.
+    pub card_foreground: &'static str,
+    /// Popover surface.
+    pub popover: &'static str,
+    /// Text on `popover`.
+    pub popover_foreground: &'static str,
+    /// Secondary button fill.
+    pub secondary: &'static str,
+    /// Text on `secondary`.
+    pub secondary_foreground: &'static str,
+    /// Errors and destructive actions: red, never the terracotta `status-danger` (owner decision 2026-10-07).
+    pub destructive: &'static str,
+    /// Text and icons on `destructive`.
+    pub destructive_foreground: &'static str,
+    /// Error text on the page (form messages).
+    pub destructive_text: &'static str,
+    /// Text on `overlay`.
+    pub overlay_foreground: &'static str,
+    /// Hover and selected fills: `primary` at 12% over `base`.
+    pub accent: &'static str,
+    /// Text on `accent`.
+    pub accent_foreground: &'static str,
+    /// Hairlines: cards, inputs, dividers, tables.
+    pub border: &'static str,
+    /// Form input background — same as surface. Pill-shape provides visual distinction.
+    pub input: &'static str,
+    /// Sidebar surface.
+    pub sidebar: &'static str,
+    /// Text on `sidebar`.
+    pub sidebar_foreground: &'static str,
+    /// The sidebar's active item fill.
+    pub sidebar_primary: &'static str,
+    /// Text on `sidebar-primary`.
+    pub sidebar_primary_foreground: &'static str,
+    /// The sidebar's hover fill.
+    pub sidebar_accent: &'static str,
+    /// Text on `sidebar-accent`.
+    pub sidebar_accent_foreground: &'static str,
+    /// Sidebar hairlines. An alias of `border`.
+    pub sidebar_border: &'static str,
+    /// Focus ring in the sidebar.
+    pub sidebar_ring: &'static str,
+}
+
+/// The colour roles in both themes. Construct with [`Roles::mzizi`], the default pack.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Roles {
+    /// The light theme.
+    pub light: RoleColors,
+    /// The dark theme.
+    pub dark: RoleColors,
+}
+
+impl Roles {
+    /// The Mzizi pack: the default mapping of every role.
+    pub const fn mzizi() -> Self {
+        Self {
+            light: RoleColors {
+                primary: "#546E7A",
+                primary_foreground: "#FFFFFF",
+                ring: "#0047AB",
+                brand_accent: "#546E7A",
+                brand_accent_foreground: "#FFFFFF",
+                app_accent: "#546E7A",
+                app_accent_foreground: "#FFFFFF",
+                pitch: "#FAFAFA",
+                void: "#F8F8F7",
+                base: "#F3F3F1",
+                surface: "#EEEEEC",
+                container: "#E5E4E1",
+                overlay: "#E0DFDC",
+                raised: "#D6D5D1",
+                scrim: "rgba(0, 0, 0, 0.4)",
+                wash: "#E3E5E4",
+                muted: "#FAF9F5",
+                text_primary: "#373635",
+                text_secondary: "#575655",
+                text_tertiary: "#797877",
+                hero_text: "#FFFFFF",
+                muted_foreground: "#575655",
+                success: "#004D40",
+                warning: "#7A5C00",
+                error: "#B3261E",
+                info: "#0047AB",
+                neutral: "#55514B",
+                offline: "#674C32",
+                syncing: "#1C5962",
+                destructive_container: "#FDEDED",
+                status_success: "#004D40",
+                status_success_container: "#E0F2F1",
+                status_success_on_container: "#00332B",
+                status_success_text: "#004D40",
+                status_warning: "#5D4037",
+                status_warning_container: "#FFF8E1",
+                status_warning_on_container: "#3E2723",
+                status_warning_text: "#5D4037",
+                status_info: "#0047AB",
+                status_info_container: "#E3F2FD",
+                status_info_on_container: "#002966",
+                status_info_text: "#0047AB",
+                status_danger: "#A0522D",
+                status_danger_container: "#F5E6D3",
+                status_danger_on_container: "#5D2906",
+                status_danger_text: "#844425",
+                status_premium: "#4B0082",
+                status_premium_container: "#F3E5F5",
+                status_premium_on_container: "#2E004D",
+                status_premium_text: "#4B0082",
+                status_neutral: "#55514B",
+                status_neutral_container: "#E5E4E1",
+                status_neutral_on_container: "#373635",
+                status_neutral_text: "#575655",
+                status_stable: "#004D40",
+                status_stable_container: "#E0F2F1",
+                status_stable_on_container: "#00332B",
+                status_stable_text: "#004D40",
+                status_beta: "#0047AB",
+                status_beta_container: "#E3F2FD",
+                status_beta_on_container: "#002966",
+                status_beta_text: "#0047AB",
+                status_alpha: "#5D4037",
+                status_alpha_container: "#FFF8E1",
+                status_alpha_on_container: "#3E2723",
+                status_alpha_text: "#5D4037",
+                status_deprecated: "#A0522D",
+                status_deprecated_container: "#F5E6D3",
+                status_deprecated_on_container: "#5D2906",
+                status_deprecated_text: "#844425",
+                chart_1: "#0047AB",
+                chart_2: "#4B0082",
+                chart_3: "#004D40",
+                chart_4: "#5D4037",
+                chart_5: "#A0522D",
+                chart_6: "#283593",
+                chart_7: "#BF5A36",
+                chart_positive: "#004D40",
+                chart_negative: "#B3261E",
+                chart_neutral: "#55514B",
+                category_1: "#0047AB",
+                category_2: "#4B0082",
+                category_3: "#004D40",
+                category_4: "#5D4037",
+                category_5: "#A0522D",
+                category_6: "#283593",
+                category_7: "#BF5A36",
+                background: "#F3F3F1",
+                foreground: "#373635",
+                card: "#EEEEEC",
+                card_foreground: "#373635",
+                popover: "#E0DFDC",
+                popover_foreground: "#373635",
+                secondary: "#E5E4E1",
+                secondary_foreground: "#373635",
+                destructive: "#B3261E",
+                destructive_foreground: "#FFFFFF",
+                destructive_text: "#9F221B",
+                overlay_foreground: "#373635",
+                accent: "#DFE2E2",
+                accent_foreground: "#373635",
+                border: "#E7E5E0",
+                input: "#FFFFFF",
+                sidebar: "#EEEEEC",
+                sidebar_foreground: "#373635",
+                sidebar_primary: "#546E7A",
+                sidebar_primary_foreground: "#FFFFFF",
+                sidebar_accent: "#E5E4E1",
+                sidebar_accent_foreground: "#373635",
+                sidebar_border: "#E7E5E0",
+                sidebar_ring: "#0047AB",
+            },
+            dark: RoleColors {
+                primary: "#C9D2D7",
+                primary_foreground: "#0E0D0C",
+                ring: "#86DCFF",
+                brand_accent: "#C9D2D7",
+                brand_accent_foreground: "#0E0D0C",
+                app_accent: "#C9D2D7",
+                app_accent_foreground: "#0E0D0C",
+                pitch: "#050505",
+                void: "#080807",
+                base: "#0E0D0C",
+                surface: "#131211",
+                container: "#1E1D1A",
+                overlay: "#23221F",
+                raised: "#2E2C29",
+                scrim: "rgba(0, 0, 0, 0.6)",
+                wash: "#252524",
+                muted: "#050504",
+                text_primary: "#E5E5E3",
+                text_secondary: "#CCCCCA",
+                text_tertiary: "#B3B3B1",
+                hero_text: "#FFFFFF",
+                muted_foreground: "#CCCCCA",
+                success: "#64FFDA",
+                warning: "#FFD866",
+                error: "#F2B8B5",
+                info: "#00B0FF",
+                neutral: "#A09C93",
+                offline: "#BA9570",
+                syncing: "#36ABBA",
+                destructive_container: "#3E1818",
+                status_success: "#64FFDA",
+                status_success_container: "#00251A",
+                status_success_on_container: "#A7FFEB",
+                status_success_text: "#64FFDA",
+                status_warning: "#FFD740",
+                status_warning_container: "#332200",
+                status_warning_on_container: "#FFECB3",
+                status_warning_text: "#FFD740",
+                status_info: "#00B0FF",
+                status_info_container: "#001F3F",
+                status_info_on_container: "#B3E5FC",
+                status_info_text: "#86DCFF",
+                status_danger: "#E1B07E",
+                status_danger_container: "#3E2817",
+                status_danger_on_container: "#F5E6D3",
+                status_danger_text: "#EBCCA3",
+                status_premium: "#B388FF",
+                status_premium_container: "#1A0033",
+                status_premium_on_container: "#E3C2E8",
+                status_premium_text: "#DCC8FF",
+                status_neutral: "#A09C93",
+                status_neutral_container: "#1E1D1A",
+                status_neutral_on_container: "#E5E5E3",
+                status_neutral_text: "#CCCCCA",
+                status_stable: "#64FFDA",
+                status_stable_container: "#00251A",
+                status_stable_on_container: "#A7FFEB",
+                status_stable_text: "#64FFDA",
+                status_beta: "#00B0FF",
+                status_beta_container: "#001F3F",
+                status_beta_on_container: "#B3E5FC",
+                status_beta_text: "#86DCFF",
+                status_alpha: "#FFD740",
+                status_alpha_container: "#332200",
+                status_alpha_on_container: "#FFECB3",
+                status_alpha_text: "#FFD740",
+                status_deprecated: "#E1B07E",
+                status_deprecated_container: "#3E2817",
+                status_deprecated_on_container: "#F5E6D3",
+                status_deprecated_text: "#EBCCA3",
+                chart_1: "#00B0FF",
+                chart_2: "#B388FF",
+                chart_3: "#64FFDA",
+                chart_4: "#FFD740",
+                chart_5: "#E1B07E",
+                chart_6: "#3D5AFE",
+                chart_7: "#FF8A65",
+                chart_positive: "#64FFDA",
+                chart_negative: "#F2B8B5",
+                chart_neutral: "#A09C93",
+                category_1: "#00B0FF",
+                category_2: "#B388FF",
+                category_3: "#64FFDA",
+                category_4: "#FFD740",
+                category_5: "#E1B07E",
+                category_6: "#3D5AFE",
+                category_7: "#FF8A65",
+                background: "#0E0D0C",
+                foreground: "#E5E5E3",
+                card: "#131211",
+                card_foreground: "#E5E5E3",
+                popover: "#23221F",
+                popover_foreground: "#E5E5E3",
+                secondary: "#1E1D1A",
+                secondary_foreground: "#E5E5E3",
+                destructive: "#F3BDBA",
+                destructive_foreground: "#0E0D0C",
+                destructive_text: "#F3C0BD",
+                overlay_foreground: "#E5E5E3",
+                accent: "#20201F",
+                accent_foreground: "#E5E5E3",
+                border: "#2A2927",
+                input: "#100F0E",
+                sidebar: "#131211",
+                sidebar_foreground: "#E5E5E3",
+                sidebar_primary: "#C9D2D7",
+                sidebar_primary_foreground: "#0E0D0C",
+                sidebar_accent: "#1E1D1A",
+                sidebar_accent_foreground: "#E5E5E3",
+                sidebar_border: "#2A2927",
+                sidebar_ring: "#86DCFF",
+            },
+        }
+    }
+
+    /// 56px. The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.
+    pub const SPACING_TOUCH: u32 = 56;
+    /// 48px. The touch floor (`min-h-touch-min`): 48px, fixed — no pack can lower it (owner decision 2026-10-07).
+    pub const SPACING_TOUCH_MIN: u32 = 48;
+    /// 56px. Default control height. componentSpecs.button.heights.default.
+    pub const SPACING_CONTROL: u32 = 56;
+    /// 48px. Small control height. componentSpecs.button.heights.sm.
+    pub const SPACING_CONTROL_SM: u32 = 48;
+    /// 56px. Large control height. componentSpecs.button.heights.lg.
+    pub const SPACING_CONTROL_LG: u32 = 56;
+    /// 48px. Icon-button size. componentSpecs.button.heights.icon.
+    pub const SPACING_CONTROL_ICON: u32 = 48;
+    /// 32px. Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a).
+    pub const SPACING_CONTROL_DENSE: u32 = 32;
+    /// 56px. Input height. componentSpecs.input.heights.default.
+    pub const SPACING_FIELD: u32 = 56;
+    /// 48px. Small input height. componentSpecs.input.heights.sm.
+    pub const SPACING_FIELD_SM: u32 = 48;
+    /// 9999px. Buttons and controls. Mzizi keeps pill (owner decision 2026-10-07); a pack may switch it.
+    pub const RADIUS_CONTROL: u32 = 9999;
+    /// 9999px. Inputs. componentSpecs.input.borderRadius.
+    pub const RADIUS_FIELD: u32 = 9999;
+    /// 9999px. Badges. componentSpecs.badge.borderRadius.
+    pub const RADIUS_BADGE: u32 = 9999;
+    /// 14px. Cards. componentSpecs.card.borderRadius.
+    pub const RADIUS_CARD: u32 = 14;
+    /// 17px. Dialogs. componentSpecs.dialog.borderRadius.
+    pub const RADIUS_DIALOG: u32 = 17;
+    /// Body and UI text. `font-sans` is an alias.
+    pub const FONT_BODY: &'static str = "Noto Sans";
+    /// Display and headings. `font-serif` is an alias.
+    pub const FONT_DISPLAY: &'static str = "Noto Serif";
+    /// Code. `font-mono` is an alias.
+    pub const FONT_CODE: &'static str = "JetBrains Mono";
+}
