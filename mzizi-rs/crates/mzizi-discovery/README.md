@@ -7,7 +7,7 @@ One module today, `mzizi_seo`: resolved page metadata and Schema.org JSON-LD.
 
 ```toml
 [dependencies]
-mzizi-discovery = "0.1"
+mzizi-discovery = "0.2"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before

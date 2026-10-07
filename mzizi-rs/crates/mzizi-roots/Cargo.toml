@@ -17,10 +17,10 @@ workspace = true
 # An umbrella: no code of its own, only re-exports. The components live in the node crates,
 # which stay the ones `/v1/rs/{name}` names; this crate is the one-line install.
 [dependencies]
-mzizi-tokens = { path = "../mzizi-tokens", version = "0.1.0" }
-mzizi-ui = { path = "../mzizi-ui", version = "0.1.0", optional = true }
-mzizi-brand = { path = "../mzizi-brand", version = "0.1.0", optional = true }
-mzizi-shell = { path = "../mzizi-shell", version = "0.1.0", optional = true }
+mzizi-tokens = { path = "../mzizi-tokens", version = "0.2.0" }
+mzizi-ui = { path = "../mzizi-ui", version = "0.2.0", optional = true }
+mzizi-brand = { path = "../mzizi-brand", version = "0.2.0", optional = true }
+mzizi-shell = { path = "../mzizi-shell", version = "0.2.0", optional = true }
 
 [features]
 # Everything by default: the common case is an app that wants the whole design system.

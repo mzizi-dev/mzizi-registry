@@ -21,7 +21,7 @@ rsx! { MarkdownRenderer { content: "**Hi** [docs](https://mzizi.dev)", links: Ma
 
 ```toml
 [dependencies]
-mzizi-ui = "0.1"
+mzizi-ui = "0.2"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before
