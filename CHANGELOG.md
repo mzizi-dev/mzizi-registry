@@ -10,6 +10,11 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — `markdown-renderer`: more tests for its link and image address allow-list (2026-10-10, #486)
+
+- New cases in `__tests__/components/markdown-renderer.test.tsx` cover more refused address forms, decoded rich-text attributes, scheme-relative external links, refused links rendered as plain text, and images (never emitted).
+- The component and its contract are unchanged.
+
 ### Added — `has` and `not` in the contract grammar; `ui/status-badge` 1.1.0 covers all four statuses (2026-10-07, #477)
 
 - **Two new predicates in the contract grammar.**

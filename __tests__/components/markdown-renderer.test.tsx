@@ -44,6 +44,17 @@ describe("safeHref", () => {
     " \u0001javascript:alert(1)",
     "data:text/html;base64,PHNjcmlwdD4=",
     "vbscript:msgbox(1)",
+    "VbScRiPt:msgbox(1)",
+    "DATA:text/html,x",
+    "file:///etc/passwd",
+    "blob:https://x.org/1",
+    "feed:javascript:alert(1)",
+    "javascript://%0aalert(1)",
+    "javascript\u0000:alert(1)",
+    "\u3000javascript:alert(1)",
+    "\ufeffjavascript:alert(1)",
+    "java\u2028script:alert(1)",
+    "java\rscript:alert(1)",
     "<javascript:alert(1)>",
     "<\u0001javascript:alert(1)>",
     "<\u0001//bank@evil.example>",
@@ -119,6 +130,21 @@ describe("rich text", () => {
     expect(looksLikeRichText("<b_x>")).toBe(false)
   })
 
+  it("refuses an encoded or padded address once its references are decoded, and keeps the words", () => {
+    const blocks = richTextBlocks(
+      '<p><a href="&#x6A;avascript:alert(1)">a</a> <a href=" JAVA&#x09;SCRIPT:alert(1)">b</a> <a href="&#100;ata:text/html,x">c</a> <a href="https://x.org">d</a></p>'
+    )
+    expect(blocks).toEqual([
+      { kind: "p", lines: [[{ t: "text", v: "a b c " }, { t: "link", href: "https://x.org", c: [{ t: "text", v: "d" }] }]] },
+    ])
+  })
+
+  it("never emits an image, whatever its src", () => {
+    const out = html('<p><img src="javascript:alert(1)" alt="a"><img src="https://x.org/i.png" alt="b">ok</p>', { from: "html" })
+    expect(out).not.toMatch(/<img|src=/i)
+    expect(out).toContain("ok")
+  })
+
   it("decodes character references", () => {
     expect(decodeEntities("&lt;&amp;&#65;&#x42;&nbsp;&copy;&#0;")).toBe("<&AB\u00a0&copy;\ufffd")
   })
@@ -147,6 +173,30 @@ describe("MarkdownRenderer (React)", () => {
     expect(out).toMatch(/href="https:\/\/x\.org"[^>]*target="_blank" rel="noopener noreferrer"/)
     expect(out).toMatch(/href="\/here" class="[^"]*">b<\/a>/)
     expect(out).toMatch(/href="mailto:a@b\.c" class="[^"]*">c<\/a>/)
+  })
+
+  it("a scheme-relative link is external too", () => {
+    expect(html("[a](//x.org/p)")).toMatch(/href="\/\/x\.org\/p"[^>]*target="_blank" rel="noopener noreferrer"/)
+  })
+
+  it("a refused link is plain text, with no anchor and no href", () => {
+    for (const dest of ["javascript:alert(1)", "JaVaScRiPt:alert(1)", "vbscript:msgbox(1)", "data:text/html,x", "<java\u0001script:alert(1)>"]) {
+      const out = html(`see [the **words**](${dest}) here`)
+      expect(out).not.toMatch(/<a\b|href=/i)
+      expect(out).toContain("see the <strong>words</strong> here")
+    }
+  })
+
+  it("a Markdown image is never an image, and its address is checked like a link's", () => {
+    const out = html("![x](javascript:alert(1)) ![y](https://x.org/i.png)")
+    expect(out).not.toMatch(/<img|src=|href="javascript:/i)
+  })
+
+  it("a character reference in a Markdown address stays inert text in the attribute", () => {
+    // Not decoded into a scheme: the browser reads the escaped value as a relative path.
+    const out = html("[x](&#106;avascript:alert(1))")
+    expect(out).toContain('href="&amp;#106;avascript:alert(1)"')
+    expect(out).not.toMatch(/href="javascript:/i)
   })
 
   it("links=https keeps https only", () => {
