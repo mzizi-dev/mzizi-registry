@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — `markdown-parse`: a long run of spaces or tabs in a heading no longer freezes the page (2026-10-14, #500)
+
+Upstreamed from the Toddle extension's installed copy of this file (nyuchi/toddle-enhancement-extension#68).
+
+- **The bug (ReDoS).** The ATX heading expression `/^ {0,3}(#{1,6})[ \t]+([^]*?)(?:[ \t]+#+)?[ \t]*$/` backtracked quadratically on a run of spaces or tabs inside a heading: one 160,000-character line such as `# a`, spaces, `b` took about 50 s to parse, so one crafted line of Markdown could freeze the page that renders it, in React and in Astro.
+- **The fix.** `markdown-parse` reads a heading with `atxHeading`, a one-pass function that gives the same level and text as the expression for every line; the same line now parses in milliseconds. `atxHeading` is exported.
+- **Nothing else changes.** It matches the old expression on 20,000 generated lines in the test suite (and on 1,000,000 random lines and every line of up to 10 characters over space, tab, `#`, a letter and U+2028 before merging). A new shared fixture case pins heading closers (tabs, a `#` with no space before it, a text of `#`s), which the Rust build passes unchanged: its `heading` is hand-written and already linear. The fixture has 56 cases, identical in TypeScript and Rust. The contract is unchanged.
+
 ### Changed — `markdown-renderer`: more tests for its link and image address allow-list (2026-10-10, #486)
 
 - New cases in `__tests__/components/markdown-renderer.test.tsx` cover more refused address forms, decoded rich-text attributes, scheme-relative external links, refused links rendered as plain text, and images (never emitted).
