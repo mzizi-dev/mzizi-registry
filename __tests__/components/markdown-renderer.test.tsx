@@ -11,6 +11,7 @@ import { describe, expect, it } from "vitest"
 
 import { MarkdownRenderer } from "@/components/registry/n2-primitives/markdown-renderer"
 import {
+  atxHeading,
   decodeEntities,
   looksLikeRichText,
   markdownBlocks,
@@ -85,6 +86,62 @@ describe("safeHref", () => {
     expect(safeHref("https://x.org", "https")).toBe("https://x.org")
     expect(safeHref("HTTPS://x.org", "https")).toBe("HTTPS://x.org")
     for (const raw of ["http://x.org", "/a", "#b", "mailto:a@b.c", "//x.org"]) expect(safeHref(raw, "https")).toBeNull()
+  })
+})
+
+describe("atxHeading: the heading regex it replaced, without the backtracking", () => {
+  // The expression markdown-parse used before this fix. It backtracked quadratically on a run of
+  // spaces or tabs inside a heading (about 50 s for one 160,000-character line), so one
+  // crafted line could freeze a page. atxHeading must read every line exactly as it did.
+  const OLD_HEADING = /^ {0,3}(#{1,6})[ \t]+([^]*?)(?:[ \t]+#+)?[ \t]*$/
+  const old = (line: string) => {
+    const m = OLD_HEADING.exec(line)
+    return m ? [m[1], m[2]] : null
+  }
+
+  it("matches the old expression on 20,000 generated lines", () => {
+    let seed = 20261014
+    const rnd = () => (seed = (Math.imul(seed, 1103515245) + 12345) >>> 0) / 2 ** 32
+    const pick = (a: string[]) => a[Math.floor(rnd() * a.length)] ?? ""
+    const alphabet = [" ", "\t", "#", "a", "b", "\u2028", "\u2029", " ", "#"]
+    let headings = 0
+    for (let i = 0; i < 20_000; i++) {
+      let line = " ".repeat(Math.floor(rnd() * 5)) + "#".repeat(Math.floor(rnd() * 8))
+      for (let n = Math.floor(rnd() * 14); n > 0; n--) line += pick(alphabet)
+      if (rnd() < 0.5) line += pick([" ", "\t", "", "  \t"]) + "#".repeat(Math.floor(rnd() * 4)) + pick(["", " ", "\t", " \t "])
+      const want = old(line)
+      if (want) headings++
+      expect(atxHeading(line), JSON.stringify(line)).toEqual(want)
+    }
+    expect(headings).toBeGreaterThan(2_000)
+  })
+
+  it.each([
+    "# Title #",
+    "#\tTitle\t##\t",
+    "## a#",
+    "## ###",
+    "#  #  ",
+    "#\t",
+    "####### seven",
+    "    # four spaces",
+    "#nospace",
+    "# a\u2028b #",
+  ])("%j", (line) => {
+    expect(atxHeading(line)).toEqual(old(line))
+  })
+
+  it.each([
+    ["spaces", "# a" + " ".repeat(159_996) + "b"],
+    ["tabs", "# a" + "\t".repeat(159_996) + "b"],
+    ["spaces only", "# " + " ".repeat(159_998)],
+    ["spaces before a closer", "# a" + " ".repeat(159_995) + "#x"],
+  ])("a 160,000-character line of %s parses well under a second", (_name, line) => {
+    expect(line).toHaveLength(160_000)
+    const started = performance.now()
+    const blocks = markdownBlocks(line)
+    expect(performance.now() - started).toBeLessThan(1_000)
+    expect(blocks[0]?.kind).toBe("h")
   })
 })
 
