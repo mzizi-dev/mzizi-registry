@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Security — `markdown-parse`: a long run of spaces or tabs in a heading no longer freezes the page (2026-10-14, #PRNUM)
+### Security — `markdown-parse`: a long run of spaces or tabs in a heading no longer freezes the page (2026-10-14, #500)
 
 Upstreamed from the Toddle extension's installed copy of this file (nyuchi/toddle-enhancement-extension#68).
 
