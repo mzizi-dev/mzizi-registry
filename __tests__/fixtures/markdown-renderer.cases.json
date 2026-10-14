@@ -844,6 +844,67 @@
       ]
     },
     {
+      "say": "heading closers: tabs count as spaces, a # needs a space before it to close, a text of #s stays",
+      "input": "#\tTabbed\t##\t\n## a#\n## ###\n#  #  \n# wide            gap\t \t#\n#\t",
+      "expect": [
+        {
+          "kind": "h",
+          "level": 1,
+          "c": [
+            {
+              "t": "text",
+              "v": "Tabbed"
+            }
+          ]
+        },
+        {
+          "kind": "h",
+          "level": 2,
+          "c": [
+            {
+              "t": "text",
+              "v": "a#"
+            }
+          ]
+        },
+        {
+          "kind": "h",
+          "level": 2,
+          "c": [
+            {
+              "t": "text",
+              "v": "###"
+            }
+          ]
+        },
+        {
+          "kind": "h",
+          "level": 1,
+          "c": [
+            {
+              "t": "text",
+              "v": "#"
+            }
+          ]
+        },
+        {
+          "kind": "h",
+          "level": 1,
+          "c": [
+            {
+              "t": "text",
+              "v": "wide            gap"
+            }
+          ]
+        },
+        {
+          "kind": "h",
+          "level": 1,
+          "c": []
+        }
+      ]
+    },
+    {
       "say": "rules and list-like rules",
       "input": "***\n- - -\n___",
       "expect": [
