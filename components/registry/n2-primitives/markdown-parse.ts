@@ -483,9 +483,31 @@ function fence(line: string): { mark: string; word: string } | null {
   }
   return { mark: m[1] ?? "", word }
 }
-// `[^]` rather than `.`, which in JavaScript skips U+2028 and U+2029 (the Rust build reads any
-// character, and lines only ever split on \n).
-const HEADING = /^ {0,3}(#{1,6})[ \t]+([^]*?)(?:[ \t]+#+)?[ \t]*$/
+const HEADING_OPEN = /^ {0,3}(#{1,6})/
+const isSpaceOrTab = (c: string | undefined) => c === " " || c === "\t"
+/* An ATX heading: [level marks, text], or null. What
+   /^ {0,3}(#{1,6})[ \t]+([^]*?)(?:[ \t]+#+)?[ \t]*$/ matched, read in one pass: that
+   expression backtracks quadratically on a long run of spaces. The text keeps any character
+   (U+2028 and U+2029 too); a closing run of #s is dropped only after a space or tab, and a
+   text of #s alone is kept. */
+export function atxHeading(line: string): [string, string] | null {
+  const open = HEADING_OPEN.exec(line)
+  if (!open) return null
+  const rest = line.slice(open[0].length)
+  let start = 0
+  while (start < rest.length && isSpaceOrTab(rest[start])) start++
+  if (start === 0) return null
+  let end = rest.length
+  while (end > start && isSpaceOrTab(rest[end - 1])) end--
+  let marks = end
+  while (marks > start && rest[marks - 1] === "#") marks--
+  if (marks < end) {
+    let text = marks
+    while (text > start && isSpaceOrTab(rest[text - 1])) text--
+    if (text < marks) end = text
+  }
+  return [open[1] ?? "#", rest.slice(start, end)]
+}
 const HR = /^ {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$/
 const QUOTE = /^ {0,3}> ?([^]*)$/
 const LIST_ITEM = /^( *)([-*+•‣◦]|\d{1,9}[.)])[ \t]+([^]*)$/
@@ -539,7 +561,7 @@ function startsBlock(lines: string[], i: number): boolean {
   const line = lines[i] ?? ""
   return (
     fence(line) !== null ||
-    HEADING.test(line) ||
+    atxHeading(line) !== null ||
     HR.test(line) ||
     QUOTE.test(line) ||
     LIST_ITEM.test(line) ||
@@ -587,9 +609,9 @@ class BlockParser {
         out.push({ kind: "code", lang: f.word.replace(/[^A-Za-z0-9_+#.-]/g, "").slice(0, 32), v: body.join("\n") })
         continue
       }
-      const heading = HEADING.exec(line)
+      const heading = atxHeading(line)
       if (heading) {
-        out.push({ kind: "h", level: (heading[1] ?? "#").length as 1 | 2 | 3 | 4 | 5 | 6, c: this.inl(heading[2] ?? "") })
+        out.push({ kind: "h", level: heading[0].length as 1 | 2 | 3 | 4 | 5 | 6, c: this.inl(heading[1]) })
         i++
         continue
       }
