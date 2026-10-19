@@ -1,0 +1,40 @@
+[package]
+name = "mzizi-db"
+description = "Mzizi database clients for Cloudflare Workers: MongoDB over its wire protocol, sans-IO and read-only."
+readme = "README.md"
+keywords = ["mongodb", "cloudflare-workers", "wasm", "database", "mzizi"]
+categories = ["database", "wasm"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+default = ["mongodb"]
+# The MongoDB protocol core: BSON, OP_MSG, SCRAM-SHA-256, the read-only commands.
+mongodb = ["dep:serde_json", "dep:sha2", "dep:pbkdf2", "dep:hmac", "dep:subtle", "dep:hex", "dep:base64"]
+# The Cloudflare Workers host (a TLS socket and a pooled connection). wasm32 only.
+workers = ["dep:worker", "dep:futures", "dep:js-sys", "dep:tokio"]
+
+[dependencies]
+serde_json = { version = "1", optional = true }
+sha2 = { version = "0.10", optional = true }
+pbkdf2 = { version = "0.12", default-features = false, features = ["hmac"], optional = true }
+hmac = { version = "0.12", optional = true }
+subtle = { version = "2.6", optional = true }
+hex = { version = "0.4", optional = true }
+base64 = { version = "0.22", optional = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+worker = { version = "0.8", optional = true }
+futures = { version = "0.3", default-features = false, optional = true }
+js-sys = { version = "0.3", optional = true }
+tokio = { version = "1.28", default-features = false, features = ["io-util"], optional = true }
+
+[dev-dependencies]
+futures = { version = "0.3", features = ["executor"] }
