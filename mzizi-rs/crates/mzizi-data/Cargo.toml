@@ -1,0 +1,24 @@
+[package]
+name = "mzizi-data"
+description = "Mzizi data: the transport trait, error type and Cloudflare Workers socket shared by Mzizi's sans-IO database clients (mzizi-mongodb)."
+readme = "README.md"
+keywords = ["database", "cloudflare-workers", "wasm", "sans-io", "mzizi"]
+categories = ["database", "wasm"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+# The Cloudflare Workers host (a TLS socket as an `Io`). wasm32 only.
+workers = ["dep:worker", "dep:futures", "dep:tokio"]
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+worker = { version = "0.8", optional = true }
+futures = { version = "0.3", default-features = false, optional = true }
+tokio = { version = "1.28", default-features = false, features = ["io-util"], optional = true }

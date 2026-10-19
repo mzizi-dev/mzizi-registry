@@ -15,12 +15,12 @@ use std::collections::HashMap;
 use serde_json::Value;
 use subtle::ConstantTimeEq;
 
-use super::bson::{Bson, Doc};
-use super::scram;
-use super::uri::Uri;
-use super::wire;
-use crate::io::Io;
+use crate::bson::{Bson, Doc};
+use crate::scram;
+use crate::uri::Uri;
+use crate::wire;
 use crate::{Error, Result};
+use mzizi_data::io::Io;
 
 /// Most documents `find` returns, whatever the caller asks.
 pub const MAX_FIND_DOCS: usize = 1_000;
@@ -442,7 +442,7 @@ fn auth_error(e: Error) -> Error {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::mongodb::bson;
+    use crate::bson;
     use futures::executor::block_on;
     use std::cell::RefCell;
     use std::rc::Rc;
@@ -788,8 +788,7 @@ mod tests {
     }
 
     fn uri(password: &str) -> Uri {
-        crate::mongodb::uri::parse(&format!("mongodb://weather:{password}@h1:27017/weather"))
-            .unwrap()
+        crate::uri::parse(&format!("mongodb://weather:{password}@h1:27017/weather")).unwrap()
     }
 
     #[test]

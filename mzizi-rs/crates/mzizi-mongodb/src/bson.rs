@@ -82,10 +82,13 @@ impl Bson {
                     }
                 } else if let Some(u) = n.as_u64() {
                     Bson::Int64(
-                        i64::try_from(u).map_err(|_| Error::Bson("integer too large".into()))?,
+                        i64::try_from(u).map_err(|_| Error::Codec("integer too large".into()))?,
                     )
                 } else {
-                    Bson::Double(n.as_f64().ok_or_else(|| Error::Bson("bad number".into()))?)
+                    Bson::Double(
+                        n.as_f64()
+                            .ok_or_else(|| Error::Codec("bad number".into()))?,
+                    )
                 }
             }
             Value::String(s) => Bson::Str(s.clone()),
@@ -98,16 +101,17 @@ impl Bson {
                         return Ok(Bson::DateTime(ms));
                     }
                     if let Some(hex) = m.get("$oid").and_then(Value::as_str) {
-                        let bytes = hex::decode(hex).map_err(|_| Error::Bson("bad $oid".into()))?;
+                        let bytes =
+                            hex::decode(hex).map_err(|_| Error::Codec("bad $oid".into()))?;
                         let id: [u8; 12] = bytes
                             .try_into()
-                            .map_err(|_| Error::Bson("$oid must be 12 bytes".into()))?;
+                            .map_err(|_| Error::Codec("$oid must be 12 bytes".into()))?;
                         return Ok(Bson::ObjectId(id));
                     }
                     if let Some(b64) = m.get("$binary").and_then(Value::as_str) {
                         return Ok(Bson::Binary(
                             B64.decode(b64)
-                                .map_err(|_| Error::Bson("bad $binary".into()))?,
+                                .map_err(|_| Error::Codec("bad $binary".into()))?,
                         ));
                     }
                 }
@@ -167,7 +171,7 @@ pub fn doc_to_json(d: &Doc) -> Value {
 
 fn put_cstring(out: &mut Vec<u8>, s: &str) -> Result<(), Error> {
     if s.as_bytes().contains(&0) {
-        return Err(Error::Bson("a key contains a NUL byte".into()));
+        return Err(Error::Codec("a key contains a NUL byte".into()));
     }
     out.extend_from_slice(s.as_bytes());
     out.push(0);
@@ -241,7 +245,7 @@ impl<'a> Reader<'a> {
             .pos
             .checked_add(n)
             .filter(|e| *e <= self.buf.len())
-            .ok_or_else(|| Error::Bson("truncated document".into()))?;
+            .ok_or_else(|| Error::Codec("truncated document".into()))?;
         let s = &self.buf[self.pos..end];
         self.pos = end;
         Ok(s)
@@ -268,9 +272,9 @@ impl<'a> Reader<'a> {
         let nul = rest
             .iter()
             .position(|b| *b == 0)
-            .ok_or_else(|| Error::Bson("unterminated key".into()))?;
+            .ok_or_else(|| Error::Codec("unterminated key".into()))?;
         let s = std::str::from_utf8(&rest[..nul])
-            .map_err(|_| Error::Bson("key is not UTF-8".into()))?
+            .map_err(|_| Error::Codec("key is not UTF-8".into()))?
             .to_owned();
         self.pos += nul + 1;
         Ok(s)
@@ -281,29 +285,29 @@ impl<'a> Reader<'a> {
         let len = usize::try_from(len)
             .ok()
             .filter(|l| *l >= 1)
-            .ok_or_else(|| Error::Bson("bad string length".into()))?;
+            .ok_or_else(|| Error::Codec("bad string length".into()))?;
         let bytes = self.take(len)?;
         if bytes[len - 1] != 0 {
-            return Err(Error::Bson("string is not NUL-terminated".into()));
+            return Err(Error::Codec("string is not NUL-terminated".into()));
         }
         std::str::from_utf8(&bytes[..len - 1])
             .map(str::to_owned)
-            .map_err(|_| Error::Bson("string is not UTF-8".into()))
+            .map_err(|_| Error::Codec("string is not UTF-8".into()))
     }
 
     fn document(&mut self, depth: usize) -> Result<Doc, Error> {
         if depth > MAX_DEPTH {
-            return Err(Error::Bson("document nested too deeply".into()));
+            return Err(Error::Codec("document nested too deeply".into()));
         }
         let start = self.pos;
         let len = usize::try_from(self.i32()?)
             .ok()
             .filter(|l| *l >= 5)
-            .ok_or_else(|| Error::Bson("bad document length".into()))?;
+            .ok_or_else(|| Error::Codec("bad document length".into()))?;
         let end = start
             .checked_add(len)
             .filter(|e| *e <= self.buf.len())
-            .ok_or_else(|| Error::Bson("document longer than its buffer".into()))?;
+            .ok_or_else(|| Error::Codec("document longer than its buffer".into()))?;
         let mut out = Doc::new();
         loop {
             let t = self.byte()?;
@@ -315,7 +319,7 @@ impl<'a> Reader<'a> {
             out.push((key, value));
         }
         if self.pos != end {
-            return Err(Error::Bson(
+            return Err(Error::Codec(
                 "document length does not match its content".into(),
             ));
         }
@@ -335,7 +339,7 @@ impl<'a> Reader<'a> {
             }
             0x05 => {
                 let len = usize::try_from(self.i32()?)
-                    .map_err(|_| Error::Bson("bad binary length".into()))?;
+                    .map_err(|_| Error::Codec("bad binary length".into()))?;
                 let _subtype = self.byte()?;
                 Bson::Binary(self.take(len)?.to_vec())
             }
@@ -348,7 +352,7 @@ impl<'a> Reader<'a> {
                 self.take(8)?.try_into().expect("8 bytes"),
             )),
             0x12 => Bson::Int64(self.i64()?),
-            other => return Err(Error::Bson(format!("unsupported BSON type 0x{other:02x}"))),
+            other => return Err(Error::Codec(format!("unsupported BSON type 0x{other:02x}"))),
         })
     }
 }
@@ -358,7 +362,7 @@ pub fn decode(bytes: &[u8]) -> Result<Doc, Error> {
     let mut r = Reader { buf: bytes, pos: 0 };
     let d = r.document(0)?;
     if r.pos != bytes.len() {
-        return Err(Error::Bson("trailing bytes after the document".into()));
+        return Err(Error::Codec("trailing bytes after the document".into()));
     }
     Ok(d)
 }

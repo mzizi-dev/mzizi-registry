@@ -46,7 +46,8 @@ members = [
   "crates/mzizi-shell",
   "crates/mzizi-roots",
   "crates/mzizi-roots-server",
-  "crates/mzizi-db",
+  "crates/mzizi-data",
+  "crates/mzizi-mongodb",
 ]
 
 [workspace.package]

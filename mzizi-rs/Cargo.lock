@@ -828,18 +828,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "mzizi-db"
+name = "mzizi-data"
 version = "0.3.0"
 dependencies = [
- "base64",
  "futures",
- "hex",
- "hmac",
- "js-sys",
- "pbkdf2",
- "serde_json",
- "sha2",
- "subtle",
  "tokio",
  "worker",
 ]
@@ -858,6 +850,23 @@ dependencies = [
 [[package]]
 name = "mzizi-fundi"
 version = "0.3.0"
+
+[[package]]
+name = "mzizi-mongodb"
+version = "0.3.0"
+dependencies = [
+ "base64",
+ "futures",
+ "hex",
+ "hmac",
+ "js-sys",
+ "mzizi-data",
+ "pbkdf2",
+ "serde_json",
+ "sha2",
+ "subtle",
+ "worker",
+]
 
 [[package]]
 name = "mzizi-roots"

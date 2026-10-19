@@ -3,7 +3,7 @@
 //! client sends one kind-0 section (a single command document) and expects
 //! the same back.
 
-use super::bson::{self, Doc};
+use crate::bson::{self, Doc};
 use crate::{Error, Result};
 
 /// The wire opcode of `OP_MSG`, the only message type this client sends.
@@ -79,7 +79,7 @@ pub fn encode_reply(response_to: i32, doc: &Doc) -> Result<Vec<u8>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::mongodb::bson::Bson;
+    use crate::bson::Bson;
 
     #[test]
     fn a_request_has_the_op_msg_layout() {

@@ -10,13 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `mzizi-db`: a MongoDB client for Cloudflare Workers (2026-10-19, #501)
+### Added — `mzizi-data` and `mzizi-mongodb`: a MongoDB client for Cloudflare Workers (2026-10-19, #501)
 
-- **A new Mzizi Roots crate, `mzizi-db`.** The official `mongodb` crate cannot be built for a Worker: its tokio `net` dependency pulls in `mio`, which refuses `wasm32-unknown-unknown`. `mzizi-db` speaks the wire protocol itself: `OP_MSG`, SCRAM-SHA-256, a small BSON codec, and read-only `find`, `find_one` and `aggregate` (`$out` and `$merge` are refused).
-- **Sans-IO.** The protocol core is generic over `io::Io` and never opens a socket, so the handshake, the authentication and the cursor handling are covered by 33 native tests. The `workers` feature (wasm32 only) adds `workers::SocketIo` and a pooled `workers::Mongo`.
-- **Not a node crate.** It maps to no helix node, so it has no entry in `crate-for-node.json` and no generated component copies. It is the first Roots crate that is a library for hosts rather than a compiled registry component.
-- **Postgres and SQLite are not included.** The crate is shaped to take them as further modules behind their own features; nothing is stubbed.
-- **Publishing.** `publish-crates.yml` lists `mzizi-db` in its publish order (it fails when the list and the workspace members disagree), so the next minor release publishes it with the other crates.
+- **Two new Mzizi Roots crates.** `mzizi-data` holds what every database client shares: the `io::Io` transport trait, the `Error` and `Result` types, and (feature `workers`, wasm32 only) `workers::SocketIo`, a Worker's outbound TLS socket. `mzizi-mongodb` is the first client on it. The official `mongodb` crate cannot be built for a Worker: its tokio `net` dependency pulls in `mio`, which refuses `wasm32-unknown-unknown`. `mzizi-mongodb` speaks the wire protocol itself: `OP_MSG`, SCRAM-SHA-256, a small BSON codec, and read-only `find`, `find_one` and `aggregate` (`$out` and `$merge` are refused). Its `workers` feature adds a pooled `workers::Mongo`.
+- **Sans-IO.** The protocol core is generic over `io::Io` and never opens a socket, so the handshake, the authentication and the cursor handling are covered by 33 native tests.
+- **Naming.** Plain `mzizi-<thing>` names, like `mzizi-activitypub`; the `mzizi-roots-*` names stay for the umbrellas that only re-export. Postgres and SQLite are not included; they would be `mzizi-postgres` and `mzizi-sqlite` on `mzizi-data`, and nothing is stubbed. There is deliberately no query API shared between a document store and a SQL database.
+- **Not node crates.** They map to no helix node, so there is no entry in `crate-for-node.json` and no generated component copies.
+- **Publishing.** `publish-crates.yml` lists `mzizi-data` then `mzizi-mongodb` in its publish order (it fails when the list and the workspace members disagree), so the next minor release publishes them with the other crates.
 - Ported from the `weather-mongo` crate in `mukoko-dev/mukoko-weather` (MIT there); this copy is Apache-2.0 like the rest of the workspace.
 
 ### Security — `markdown-parse`: a long run of spaces or tabs in a heading no longer freezes the page (2026-10-14, #500)

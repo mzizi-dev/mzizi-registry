@@ -10,10 +10,10 @@ use crate::io::Io;
 use crate::{Error, Result};
 
 /// Each read, write and connect gives up after this.
-pub(crate) const IO_TIMEOUT: Duration = Duration::from_secs(6);
+pub const IO_TIMEOUT: Duration = Duration::from_secs(6);
 
 /// Run `fut`, or give up with [`Error::Timeout`] after [`IO_TIMEOUT`].
-pub(crate) async fn within<T>(
+pub async fn within<T>(
     what: &'static str,
     fut: impl std::future::Future<Output = T>,
 ) -> std::result::Result<T, Error> {
@@ -25,7 +25,7 @@ pub(crate) async fn within<T>(
 
 /// A connected [`Socket`] speaking [`Io`], with a timeout on every read and write.
 pub struct SocketIo {
-    pub(crate) socket: Socket,
+    socket: Socket,
 }
 
 impl SocketIo {

@@ -16,10 +16,10 @@ use serde_json::Value;
 use worker::Socket;
 use worker::wasm_bindgen::JsCast;
 
-use super::socket::{SocketIo, within};
-use crate::mongodb::conn::{Connection, FindOptions, SaltCache};
-use crate::mongodb::uri::{self, Uri};
+use crate::conn::{Connection, FindOptions, SaltCache};
+use crate::uri::{self, Uri};
 use crate::{Error, Result};
+use mzizi_data::workers::{SocketIo, within};
 
 type Conn = Connection<SocketIo>;
 
@@ -53,7 +53,7 @@ async fn connect_one(uri: &Uri, host: &str, port: u16) -> Result<Conn> {
     within("connect", socket.opened())
         .await?
         .map_err(|e| Error::Io(e.to_string()))?;
-    let mut conn = Connection::new(SocketIo { socket });
+    let mut conn = Connection::new(SocketIo::new(socket));
     conn.hello().await?;
     let nonce = random_nonce()?;
     // The salted password is cached for the isolate; take the cache out of
@@ -153,7 +153,7 @@ impl Mongo {
     }
 
     /// Documents matching `opts.filter` in `db.coll`, as JSON, capped at
-    /// [`MAX_FIND_DOCS`](crate::mongodb::conn::MAX_FIND_DOCS).
+    /// [`MAX_FIND_DOCS`](crate::conn::MAX_FIND_DOCS).
     pub async fn find(&self, db: &str, coll: &str, opts: &FindOptions) -> Result<Vec<Value>> {
         self.run(Op::Find(db, coll, opts)).await
     }
