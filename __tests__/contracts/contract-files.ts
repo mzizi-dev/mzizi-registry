@@ -39,3 +39,17 @@ export function registryFile(name: string, ext: "astro" | "tsx" | "rs"): string 
   }
   return null
 }
+
+/**
+ * The registry file a contract declares as its `ext` build. Throws, naming
+ * the contract and the path it looked for, when the file is missing, so a
+ * declared implementation is never read as an empty source.
+ */
+export function declaredFile(contract: string, name: string, ext: "astro" | "tsx" | "rs"): string {
+  const file = registryFile(name, ext)
+  if (!file)
+    throw new Error(
+      `declared implementation missing: ${contract} declares ${name}.${ext}, and no components/registry/*/${name}.${ext} exists`
+    )
+  return file
+}
