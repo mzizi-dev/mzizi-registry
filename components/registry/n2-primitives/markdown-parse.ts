@@ -806,14 +806,29 @@ function untab(line: string): string {
     : line;
 }
 
-function startsBlock(lines: string[], i: number): boolean {
+/**
+ * Whether a list item (its marker and its text) may start a list that interrupts a paragraph:
+ * as in CommonMark, only when it has text and, if numbered, is numbered 1, so
+ * "1984. was a year" on a paragraph's second line stays text.
+ */
+const interrupts = (marker: string, text: string): boolean =>
+  !blank(text) && (!/\d/.test(marker) || Number.parseInt(marker, 10) === 1);
+
+/** Whether `line` starts a list (one that interrupts a paragraph, with `paragraph`). */
+function listStarts(line: string, paragraph: boolean): boolean {
+  const m = LIST_ITEM.exec(line);
+  return m !== null && (!paragraph || interrupts(m[2] ?? "", m[3] ?? ""));
+}
+
+/** Whether line `i` starts a block; with `paragraph`, whether it ends the paragraph before it. */
+function startsBlock(lines: string[], i: number, paragraph = false): boolean {
   const line = lines[i] ?? "";
   return (
     fence(line) !== null ||
     atxHeading(line) !== null ||
     HR.test(line) ||
     QUOTE.test(line) ||
-    LIST_ITEM.test(line) ||
+    listStarts(line, paragraph) ||
     tableStarts(lines, i) !== null
   );
 }
@@ -926,7 +941,7 @@ class BlockParser {
       while (
         i < lines.length &&
         !blank(at(i)) &&
-        (para.length === 0 || !startsBlock(lines, i))
+        (para.length === 0 || !startsBlock(lines, i, true))
       ) {
         para.push(trimWs(at(i)));
         i++;
@@ -958,6 +973,7 @@ class BlockParser {
       ordered
         ? { kind: "ol", start: Number.parseInt(marker, 10), items: [] }
         : { kind: "ul", items: [] };
+    let afterBlank = false;
     while (i < lines.length) {
       const line = at(i);
       if (blank(line)) {
@@ -965,10 +981,13 @@ class BlockParser {
         while (k < lines.length && blank(at(k))) k++;
         if (k < lines.length && LIST_ITEM.test(at(k))) {
           i = k;
+          afterBlank = true;
           continue;
         }
         break;
       }
+      const wasAfterBlank = afterBlank;
+      afterBlank = false;
       const m = LIST_ITEM.exec(line);
       if (!m) {
         const top = stack[stack.length - 1];
@@ -1000,14 +1019,48 @@ class BlockParser {
         out.push(list);
         stack.push({ indent, list });
       } else {
-        while (stack.length > 1 && indent < peek().indent) stack.pop();
-        const top = peek();
+        // Where the item goes: the open lists it stays in (`keep`), and whether it joins the
+        // innermost of them at its own indent (an item indented between that list and the one
+        // it sits in, of the same kind), starts a list nested in the last item, or starts a
+        // list of the other kind.
+        let keep = stack.length;
+        let joins = false;
+        while (keep > 1) {
+          const open = stack[keep - 1];
+          const parent = stack[keep - 2];
+          if (!open || !parent || indent >= open.indent) break;
+          if (indent >= parent.indent + 2 && open.list.kind === kind) {
+            joins = true;
+            break;
+          }
+          keep--;
+        }
+        const top = stack[keep - 1] ?? peek();
         const last = lastItem(top.list);
-        if (indent >= top.indent + 2 && last && stack.length < MAX_NESTING) {
+        const nests =
+          !joins &&
+          indent >= top.indent + 2 &&
+          last !== undefined &&
+          keep < MAX_NESTING;
+        const switches = !joins && !nests && top.list.kind !== kind;
+        // A new list right after an item's text (no blank line between) interrupts that text,
+        // so it must be one that may interrupt a paragraph; otherwise the line continues it.
+        if (
+          (nests || switches) &&
+          !wasAfterBlank &&
+          !interrupts(marker, m[3] ?? "")
+        ) {
+          lastItem(peek().list)?.lines.push(this.inl(trimWs(line)));
+          i++;
+          continue;
+        }
+        stack.length = keep;
+        if (joins) peek().indent = indent;
+        else if (nests && last) {
           const list = newList(ordered, marker);
           last.children.push(list);
           stack.push({ indent, list });
-        } else if (top.list.kind !== kind) {
+        } else if (switches) {
           const list = newList(ordered, marker);
           const parent =
             stack.length === 1 ? undefined : stack[stack.length - 2];
@@ -1624,8 +1677,13 @@ function readHtml(html: string): RichElement {
   return root;
 }
 
-const textOf = (n: RichNode): string =>
-  "text" in n ? n.text : n.children.map(textOf).join("");
+/** An element's text, with each `<br>` a line break (so `<pre>` keeps its lines), or nothing. */
+const textOf = (n: RichNode, br = "\n"): string =>
+  "text" in n
+    ? n.text
+    : n.tag === "br"
+      ? br
+      : n.children.map((c) => textOf(c, br)).join("");
 
 /** A line break inside rich text, before lines are split. */
 const BREAK = null;
@@ -1788,16 +1846,27 @@ function listStart(el: RichElement): number {
 
 /**
  * A rich-text `<ul>` or `<ol>`: each `<li>` is one line (its paragraphs joined), and a list
- * directly inside it stays a nested list, up to `MAX_NESTING` deep (deeper ones join the line).
+ * inside it stays a nested list, up to `MAX_NESTING` deep (deeper ones join the line). A list
+ * placed directly in the list, between its items (as Google Docs and Word paste one), belongs
+ * to the item before it, or to an item of its own when it comes first.
  */
 function richList(
   el: RichElement,
   policy: MarkdownLinkPolicy,
   depth: number,
 ): MarkdownList | null {
+  const groups: RichNode[][] = [];
+  for (const c of el.children) {
+    if ("text" in c) continue;
+    if (c.tag === "li") groups.push([...c.children]);
+    else if (c.tag === "ul" || c.tag === "ol") {
+      const last = groups[groups.length - 1];
+      if (last) last.push(c);
+      else groups.push([c]);
+    }
+  }
   const items: MarkdownListItem[] = [];
-  for (const li of el.children) {
-    if ("text" in li || li.tag !== "li") continue;
+  for (const group of groups) {
     // The item's text up to its first nested list is its line; a nested list and any text
     // after it follow in document order, so `a<ul>…</ul>c` keeps `c` after the list.
     let inline: RichNode[] = [];
@@ -1810,7 +1879,7 @@ function richList(
       if (!nestedYet) line = l;
       else if (l) children.push({ kind: "lines", lines: [l] });
     };
-    for (const c of li.children) {
+    for (const c of group) {
       if (
         !("text" in c) &&
         (c.tag === "ul" || c.tag === "ol") &&
@@ -1866,8 +1935,10 @@ function richBlocks(
         });
     } else if (tag === "pre") {
       flush();
+      // One newline in the source after the start tag is dropped, as a browser drops it (a
+      // `<br>` there is a blank first line), and one at the end, as no line follows it.
       let t = textOf(n);
-      if (t.startsWith("\n")) t = t.slice(1);
+      if (t.startsWith("\n") && textOf(n, "").startsWith("\n")) t = t.slice(1);
       if (t.endsWith("\n")) t = t.slice(0, -1);
       if (trimWs(t) !== "") out.push({ kind: "code", lang: "", v: t });
     } else if (tag === "hr") {
