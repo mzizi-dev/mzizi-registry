@@ -10,19 +10,19 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `markdown-renderer` 1.2.0: a link shows its address on hover, normalised, with an IDN host as punycode (2026-10-07, #483)
+### Added — `markdown-renderer` 1.2.0: a link shows its address on hover, normalised, with an IDN host as punycode (2026-10-20, #483)
 
 Closes #470, a follow-up from the Toddle extension's review (#460): its old flag renderer showed each link's address on hover, and `markdown-renderer` 1.1.0 did not.
 
 - **Every kept link has a `title`**: its address as the URL parser writes it, with the scheme and host lower-cased and the host in ASCII. An internationalised host shows as punycode, so a look-alike such as `https://аpple.com` (a Cyrillic `а`) reads `https://xn--pple-43d.com` on hover. A `mailto:` address shows each domain the same way (`mailto:help@аpple.com` reads `mailto:help@xn--pple-43d.com`); a `tel:` address is as written. The `href` stays as written. All three builds give the same title: TypeScript reads the WHATWG URL `hostname`, and Rust uses the `url` crate's host parser (`idna` plus the same percent-decoding and IPv4/IPv6 rules), now a dependency of `mzizi-ui` at 2.5.4 or later (the first `url` releases on `idna` 1.x, which the parity depends on).
 - **Where TypeScript has no `URL` global**, it keeps only the hosts it can write exactly as the parser does (plain ASCII names, lower-cased, and dotted-decimal IPv4 addresses) and refuses the rest (an IDN, `0x7f.1`, `1.2.3.999`, an `xn--` label, percent-encoding, IPv6), so a kept link's title never depends on the runtime. Every browser, Node, Deno and Workers has `URL`.
 - **A web address whose host the URL parser rejects is refused** (`https://a<b/`, `https://1.2.3.999/`, `//:80/x`), and so is one whose port is not a number up to 65535 (`https://example.com:abc/`, `:99999`), as `new URL()` refuses both, since no browser could follow it. A `mailto:` address with a domain the parser rejects (`mailto:a@`, `mailto:a@1.2.3.999`) is refused too. The https-only rule and the host and credentials checks are unchanged.
-- **The tree.** A link node now carries `title` (`{ t: "link", href, title, c }`; Rust `Inline::Link { href, title, children }`), and `markdown-parse` exports `safeLink` (`mzizi_ui::safe_link`), which returns both. `safeHref` and `safe_href` are kept. **Breaking** for code that builds or matches link nodes or list items itself (see the next entry).
+- **The tree.** A link node now carries `title` (`{ t: "link", href, title, c }`; Rust `Inline::Link { href, title, children }`), and `markdown-parse` exports `safeLink` (`mzizi_ui::safe_link`), which returns both. `safeHref` and `safe_href` are kept. **Breaking** for code that builds or matches link nodes or list items itself (see the next entry). The #486 test of a decoded rich-text address now expects the kept link's `title`, and the `markdown-renderer` item's description in `registry.json` names the hover title and `safe_link`.
 - `contracts/ui/markdown-renderer` 1.2.0 adds a `titles` state (an IDN look-alike, a loud scheme and host, a relative link, a `mailto:` look-alike) with checks on each title, and a check that every kept link has one. The Astro, React and Rust builds pass it.
 
-### Fixed — `markdown-renderer`: five parser bugs in `markdown-parse` and the Rust parser (2026-10-07, #483)
+### Fixed — `markdown-renderer`: five parser bugs in `markdown-parse` and the Rust parser (2026-10-20, #483)
 
-Found by code reviews and confirmed by running the code. Each has a shared fixture case that TypeScript and Rust both run (71 cases in all) and a unit test in each language.
+Found by code reviews and confirmed by running the code. Each has a shared fixture case that TypeScript and Rust both run (72 cases in all, with the heading case from #500) and a unit test in each language.
 
 - **Emphasis.** A search for a closing marker that failed over the whole line stopped later searches inside a mark from finding theirs: `*x **a *b***` showed the text `*x` and then a bold `a *b*`. The cache now remembers where the failed search started and answers only searches to the end from there on, so it renders `*x <strong>a <em>b</em></strong>`, as CommonMark does (`_x __a _b___` and `*a* b *c **d *e***` too).
 - **Rich text: dropped elements.** A `<script>`, `<style>`, `<template>`, `<svg>` or other dropped element ended at the first tag that started with its name, so its content could show as text: `<script>var s="</scripts>"; secret()</script>` showed `"; secret()`, and `<template><template></template>secret</template>` and `<svg><svg></svg>secret</svg>` showed `secret`. It now ends where a browser ends it. A text element (`<script>`, `<style>`, `<textarea>`, …) ends at its own end tag (`</script` followed by whitespace, `/` or `>`; inside `<!--` a nested `<script>` needs its own `</script>` first, as the HTML tokenizer reads it). A `<template>`, `<svg>`, `<math>`, `<object>` or `<head>` ends at the end tag that matches it once what is nested in it has closed, the way a browser nests it. An end tag inside a comment, an attribute value, a CDATA section or a nested text element does not end it, and inside SVG or MathML a `<script>` is not a text element until a tag such as `<p>` returns to HTML. Where a browser would end it sooner, it is dropped to the later end.
@@ -33,9 +33,9 @@ Found by code reviews and confirmed by running the code. Each has a shared fixtu
 
 Also: `markdown-parse.ts` is formatted with the repo's Prettier config (packages-npm syncs it byte for byte and had to exempt it from `vp fmt`), and `markdown-renderer.astro` draws the tree with plain recursive template functions and one dynamic heading tag instead of an `Astro.self` instance per node and a six-way ternary. Its output is byte for byte the same.
 
-### Changed — the Mzizi Roots crates move to 0.4.0 (2026-10-07, #483)
+### Changed — the Mzizi Roots crates move to 0.4.0 (2026-10-20, #483)
 
-The next minor above `mzizi-rs-v0.3.0`, so `mzizi-ui` 0.4.0 on crates.io carries `markdown-renderer` 1.2.0. **Breaking** for code that builds or matches `Inline::Link` or `ListItem::children` (now `Vec<ListChild>`). `mzizi-ui` depends on `url` 2.5.4 or later. The crate READMEs and the `mzizi-roots` crate docs install `"0.4"`.
+The next minor above `mzizi-rs-v0.3.0`, so `mzizi-ui` 0.4.0 on crates.io carries `markdown-renderer` 1.2.0. **Breaking** for code that builds or matches `Inline::Link` or `ListItem::children` (now `Vec<ListChild>`). `mzizi-ui` depends on `url` 2.5.4 or later. The crate READMEs and the `mzizi-roots` crate docs install `"0.4"`. `plugin/skills/mzizi-roots/SKILL.md` still installs `"0.1"`: it is a copy of the published `@nyuchi/mzizi-skills` bundle, so it changes when that skill is fixed in `mzizi-dev/agent-tools`, republished, and this repo bumps its pin.
 
 ### Added — `mzizi-ui` gets a render path with no Dioxus for six static primitives, byte-identical to `dioxus-ssr` (2026-10-20, #510)
 
