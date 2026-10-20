@@ -10,16 +10,17 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `mzizi-data`: the data-layer crate (fetch cascade, sync reconciliation, staleness, optimistic updates), not wired into any app (2026-10-20, #505)
+### Added — `mzizi-data`: the data-layer crate (fetch cascade, sync reconciliation, tombstones, staleness, local-first writes with rollback), not wired into any app (2026-10-20, #505)
 
-- **A new Rust crate, `mzizi-rs/crates/mzizi-data`**, the data layer the owner's brief of 2026-10-20 asks for. It has no UI and no dependencies, and it is marked `publish = false`, so nothing ships it by accident.
-- **`Cascade::fetch`** reads local, then edge, then cloud, and stops at the first tier that holds the key. It reports which tier answered (`Source`), writes the record back to the faster tiers it missed, and reports whether the record is stale against a per-key time-to-live.
-- **`Cascade::reconcile`** brings every reachable tier to the record with the highest version. A version tie goes to the more authoritative tier (cloud, then edge, then local), so the same inputs always give the same result.
-- **`Cascade::apply_optimistic`** writes local, then edge, then cloud. If a tier fails, every tier already written is restored, and the error names the failing tier and says whether the restore completed.
-- **Storage is the `Layer` trait.** The crate ships only `MemoryLayer`, the in-memory reference tier that the tests run on. There is no SQLite, IndexedDB, Cloudflare D1 or KV, or Supabase adapter yet; those are later changes.
-- **Tested, on the host target:** 31 integration tests and one doctest, each cascade step, reconciliation and rollback path among them. The `wasm32-unknown-unknown` release build compiles.
+- **A new Rust crate, `mzizi-rs/crates/mzizi-data`**, the data layer the owner's brief of 2026-10-20 asks for. It has no UI and no dependencies. It is a production dependency (decision 6.3) of node N5, resilience, and it is marked `publish = false` until the owner sets the WASM budget (decision 6.2).
+- **`Cascade::fetch`** reads local first. A fresh local record answers alone, within its time-to-live. A stale or missing local record keeps the read going to the edge and then the cloud, and returns the newest fresh record found, written back to the faster tiers. If nothing fresh is found, it returns the newest stale record with `stale = true`. A cloud miss is `Ok(None)`.
+- **Tombstones.** `delete` writes a versioned tombstone through every tier. `fetch` returns `None` for it, and reconciliation propagates a newer delete. Tombstones are retained; there is no garbage collection yet.
+- **`Cascade::reconcile`** brings every reachable tier to the winning record: confirmed before pending, then the highest version, then the more authoritative tier. A tier is in sync only when the whole record matches.
+- **`Cascade::apply_optimistic`** writes pending copies local, then edge, then cloud. A failure restores every tier it attempted to its own previous record, exactly. Once every tier accepts, each is confirmed. A rejected write that cannot be restored stays pending, and reconciliation does not choose it while a confirmed record exists.
+- **Storage is the `Layer` trait.** The crate ships only `MemoryLayer`, the in-memory reference adapter. There is no SQLite, IndexedDB, Cloudflare D1 or KV, or Supabase adapter yet.
+- **Tested, on the host target:** 50 integration tests and one doctest. They cover each read step and error path, stale refresh, write-back that never replaces a newer record, tombstones, every reconciliation rule, and the rollback repros. The `wasm32-unknown-unknown` release build compiles.
 - **Designed, not built:** the storage adapters, and a background timer. The host schedules `reconcile`; the crate spawns nothing.
-- **Decisions (mzizi-registry#503):** 6.3, production. 6.4, node N5 resilience: `mzizi-rs/crate-for-node.json` maps `n5-resilience` to the crate. N5 has no `.rs` component yet, so no `/v1/rs` document changes. The crate stays unpublished until the owner sets the WASM budget (6.2); the registry entry for `mzizi-data.tsx` is unchanged and moves in a separate change.
+- **Decisions (mzizi-registry#503):** 6.3, production. 6.4, node N5 resilience: `mzizi-rs/crate-for-node.json` maps `n5-resilience` to the crate. N5 has no `.rs` component yet, so no `/v1/rs` document changes. The registry entry for `mzizi-data.tsx` is unchanged and moves in a separate change.
 - **`publish-crates.yml`** lists the crate in its publish order, which its membership check requires, and skips it in the upload loop because it is `publish = false`.
 
 ### Security — `markdown-parse`: a long run of spaces or tabs in a heading no longer freezes the page (2026-10-14, #500)
