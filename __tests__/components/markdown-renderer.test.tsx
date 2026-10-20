@@ -9,7 +9,7 @@ import path from "node:path"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it } from "vitest"
 
-import { linearViolations } from "../helpers/linear-scaling"
+import { linearViolations, SCALING_TIMEOUT_MS } from "../helpers/linear-scaling"
 import { MarkdownRenderer } from "@/components/registry/n2-primitives/markdown-renderer"
 import {
   atxHeading,
@@ -142,7 +142,7 @@ describe("atxHeading: the heading regex it replaced, without the backtracking", 
     expect(line(160_000)).toHaveLength(160_000)
     expect(markdownBlocks(line(160_000))[0]?.kind).toBe("h")
     expect(linearViolations(line, (s) => markdownBlocks(s), { n: 40_000 })).toEqual([])
-  }, 30_000)
+  }, SCALING_TIMEOUT_MS)
 })
 
 describe("safeLink: the title a reader sees on hover (#470)", () => {
@@ -489,8 +489,9 @@ describe("MarkdownRenderer (React)", () => {
     expect(out).toContain('aria-label="Notes"')
   })
 
-  // Each input is built at n, 2n and 4n (`linear-scaling.ts`); 4n is the size these tests used
-  // when they had a wall-clock budget. A quadratic path quadruples per doubling and fails.
+  // Each input is built at n and 4n (`linear-scaling.ts`); 4n is the size these tests used when
+  // they had a wall-clock budget, or larger. A quadratic path quadruples per doubling and fails.
+  // One check per test, so `SCALING_TIMEOUT_MS` sits above its whole budget.
   it.each([
     ["markers, brackets and backticks", 5_000, (n: number) => "*a ".repeat(n) + "[".repeat(n) + "`".repeat(n >> 2)],
     ["unmatched italics inside bold", 8_000, (n: number) => "**" + "*x ".repeat(n) + "y**"],
@@ -500,7 +501,7 @@ describe("MarkdownRenderer (React)", () => {
     ["deep quotes and lists", 125, (n: number) => "> ".repeat(n) + "x\n" + "  ".repeat(n) + "- y"],
   ])("renders hostile input in linear time: %s", (_say, n, input) => {
     expect(linearViolations(input, (s) => html(s), { n })).toEqual([])
-  }, 30_000)
+  }, SCALING_TIMEOUT_MS)
 
   it.each([
     ["unclosed tags and comments", 5_000, (n: number) => "<a <b <p>x<!--".repeat(n), "html"],
@@ -515,7 +516,7 @@ describe("MarkdownRenderer (React)", () => {
     ["script look-alikes", 12_500, (n: number) => "<script><!--<script>" + "</script>-".repeat(n), "html"],
   ] as const)("renders hostile rich text in linear time: %s", (_say, n, input, from) => {
     expect(linearViolations(input, (s) => html(s, { from }), { n })).toEqual([])
-  }, 30_000)
+  }, SCALING_TIMEOUT_MS)
 
   it("renders deep nesting without a stack overflow, and drops what a browser drops", () => {
     expect(html("<b>".repeat(5_000) + "x", { from: "html" })).toContain("x")
@@ -531,35 +532,44 @@ describe("MarkdownRenderer (React)", () => {
     expect(JSON.stringify(nested).length).toBeLessThan(25_000_000)
   }, 30_000)
 
+  // 4n is the 150,000 the wall-clock test read; three rounds at each size keep the largest
+  // inputs inside the budget with room for two more attempts.
   it.each([
-    ["line breaks in a span", 25_000, (n: number) => "<span>" + "<br>".repeat(n) + "x</span>"],
-    ["empty marks between letters", 12_500, (n: number) => "<p><span>" + "a<i></i>".repeat(n) + "</span></p>"],
-  ])("reads huge rich text in linear time: %s", (_say, n, input) => {
-    expect(linearViolations(input, (s) => html(s, { from: "html" }), { n })).toEqual([])
-  }, 30_000)
+    ["line breaks in a span", 37_500, (n: number) => "<span>" + "<br>".repeat(n) + "x</span>"],
+    ["empty marks between letters", 37_500, (n: number) => "<p><span>" + "a<i></i>".repeat(n) + "</span></p>"],
+  ])("reads huge rich text in linear time, up to 150,000: %s", (_say, n, input) => {
+    expect(linearViolations(input, (s) => html(s, { from: "html" }), { n, runs: 3 })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
 
-  it("splits nested marks at <br> in linear time", () => {
+  it("splits nested marks at <br> in linear time, up to 100,000 lines", () => {
     const nested = (n: number) => '<b><i><a href="https://x.org">'.repeat(11) + "x<br>".repeat(n)
-    expect(linearViolations(nested, (s) => richTextBlocks(s), { n: 10_000 })).toEqual([])
-  }, 30_000)
+    expect(linearViolations(nested, (s) => richTextBlocks(s), { n: 25_000, runs: 3 })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
 
-  it.each([
-    // No `>` at all: answered from one scan.
+  const auto = [
+    // No `>` at all: answered from one scan, which must stay one scan.
     ["tag openers with no `>`", 40_000, (n: number) => "<p ".repeat(n), false],
     // A `>` first, then only tag openers: every candidate is read, and none may rescan the rest.
     ["tag openers after the only `>`", 40_000, (n: number) => ">" + "<p ".repeat(n), false],
-    ["tag openers before the last `>`", 40_000, (n: number) => "<p ".repeat(n) + ">", true],
-  ])("decides `auto` in linear time: %s", (_say, n, input, rich) => {
+    // Openers that are not an editor's tag (`<px`), then one that is: each is read and refused
+    // before the real tag decides it.
+    ["refused openers before a real tag", 40_000, (n: number) => "<px ".repeat(n) + "<p>", true],
+  ] as const
+
+  it.each(auto)("decides `auto` in linear time: %s", (_say, n, input, rich) => {
     expect(looksLikeRichText(input(n))).toBe(rich)
     expect(linearViolations(input, (s) => looksLikeRichText(s), { n })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
+
+  it.each(auto)("renders `auto` in linear time: %s", (_say, n, input) => {
     expect(linearViolations(input, (s) => html(s, { from: "auto" }), { n: n / 4 })).toEqual([])
-  }, 30_000)
+  }, SCALING_TIMEOUT_MS)
 
   it("charges every marker run to the budget (no K×L work)", () => {
     // K markers inside the bold, then a run of L closers: the work must grow with K + L, not K × L.
     const kByL = (n: number) => "**" + "*a ".repeat(n / 500) + "a" + "*".repeat(n)
     expect(linearViolations(kByL, (s) => html(s), { n: 250_000 })).toEqual([])
-  }, 30_000)
+  }, SCALING_TIMEOUT_MS)
 
   it("from=html renders an editor's text, with its markup as elements and its Markdown as text", () => {
     const out = html("<p># Plan <strong>now</strong></p><script>alert(1)</script>", { from: "html" })

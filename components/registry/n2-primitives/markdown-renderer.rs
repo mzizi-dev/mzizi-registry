@@ -2988,39 +2988,45 @@ mod tests {
     /// A named input and the size it is timed from: (what it is, n, the input at a size).
     type ScalingCase = (&'static str, usize, fn(usize) -> String);
 
-    /// Linear time measured as scaling, not wall-clock (as `__tests__/helpers/linear-scaling.ts`):
-    /// the work is timed at n, 2n and 4n, five rounds each with the order of the sizes rotating,
-    /// and the median at 4n may cost at most 2.5 x 2.5 times the median at n (a quadratic costs
-    /// 16 times). A busy host gets three attempts; a quadratic fails all three. The only absolute
-    /// number is the hang guard: 30 s for one attempt.
+    /// Rounds per size for most checks; the largest inputs take three to stay in the budget.
+    const RUNS: usize = 5;
+
+    /// Linear time measured as scaling, not wall-clock, as `__tests__/helpers/linear-scaling.ts`
+    /// measures it and reports it. The inputs are built once at n and 4n, then timed in `runs`
+    /// rounds with the order of the sizes rotating. The median at 4n may cost at most 2.5 x 2.5
+    /// times the median at n (a quadratic costs 16 times). A busy host gets three attempts; a
+    /// quadratic fails all three. The only absolute number is the budget, 30 s for the whole
+    /// check, checked before each sample with its expected cost. A trip is returned with every
+    /// earlier attempt's violation, never instead of them.
     fn linear_violations(
         build: impl Fn(usize) -> String,
         run: impl Fn(&str),
         n: usize,
+        runs: usize,
     ) -> Vec<String> {
         const LIMIT: f64 = 2.5;
-        const RUNS: usize = 5;
         const SAMPLE: std::time::Duration = std::time::Duration::from_millis(15);
         const SLACK_MS: f64 = 1.0;
-        const CEILING: std::time::Duration = std::time::Duration::from_secs(30);
-        let sizes = [n, 2 * n, 4 * n];
+        const BUDGET: std::time::Duration = std::time::Duration::from_secs(30);
+        let started = std::time::Instant::now();
+        let sizes = [n, 4 * n];
         let inputs: Vec<String> = sizes.iter().map(|&size| build(size)).collect();
+        let over = |next: std::time::Duration| started.elapsed() + next > BUDGET;
         let mut failures = Vec::new();
-        for attempt in 1..=3 {
-            let started = std::time::Instant::now();
-            // Before every run, with that run's expected cost: a quadratic is stopped before the
-            // run that would take it past the ceiling, not minutes after.
-            let over = |next: std::time::Duration| started.elapsed() + next > CEILING;
-            let hang = || {
-                vec![format!(
-                    "hang guard: would still be measuring after {CEILING:?} (sizes {sizes:?})"
-                )]
+        'attempts: for attempt in 1..=3 {
+            let hang = |at: String| {
+                format!(
+                    "attempt {attempt}: hang guard: the budget would run out {at} (sizes {sizes:?})"
+                )
             };
-            // Warm up every size once, smallest first; each run may cost up to 4x the one before.
+            // Warm up each size once, smallest first. A run may cost up to the square of the size
+            // ratio times the one before it, so a quadratic stops before its big run.
             let mut warm: Vec<std::time::Duration> = Vec::new();
-            for input in &inputs {
-                if over(warm.last().map_or(std::time::Duration::ZERO, |&d| d * 4)) {
-                    return hang();
+            for (i, input) in inputs.iter().enumerate() {
+                let next = warm.last().map_or(std::time::Duration::ZERO, |&d| d * 16);
+                if over(next) {
+                    failures.push(hang(format!("warming up n={}", sizes[i])));
+                    break 'attempts;
                 }
                 let t0 = std::time::Instant::now();
                 run(input);
@@ -3028,16 +3034,17 @@ mod tests {
             }
             let reps = (SAMPLE.as_secs_f64() / warm[0].as_secs_f64().max(1e-5))
                 .ceil()
-                .clamp(1.0, 1000.0) as usize;
-            let mut samples = [Vec::new(), Vec::new(), Vec::new()];
-            for round in 0..RUNS {
+                .clamp(1.0, 1000.0) as u32;
+            let mut samples = [Vec::new(), Vec::new()];
+            for round in 0..runs {
                 for k in 0..sizes.len() {
                     let i = (round + k) % sizes.len();
+                    if over(warm[i] * reps) {
+                        failures.push(hang(format!("in round {} at n={}", round + 1, sizes[i])));
+                        break 'attempts;
+                    }
                     let t0 = std::time::Instant::now();
                     for _ in 0..reps {
-                        if over(warm[i]) {
-                            return hang();
-                        }
                         run(&inputs[i]);
                     }
                     samples[i].push(t0.elapsed().as_secs_f64() * 1000.0);
@@ -3050,18 +3057,16 @@ mod tests {
                     v[v.len() / 2]
                 })
                 .collect();
-            if medians[2] <= LIMIT * LIMIT * medians[0] + SLACK_MS {
+            if medians[1] <= LIMIT * LIMIT * medians[0] + SLACK_MS {
                 return Vec::new();
             }
             failures.push(format!(
-                "attempt {attempt}: cost x{:.2} per doubling: n={}: {:.1} ms, n={}: {:.1} ms, n={}: {:.1} ms [{reps} run(s) per sample]",
-                (medians[2] / medians[0].max(f64::EPSILON)).sqrt(),
+                "attempt {attempt}: cost x{:.2} per doubling: n={}: {:.1} ms, n={}: {:.1} ms [{reps} run(s) per sample]",
+                (medians[1] / medians[0].max(f64::EPSILON)).sqrt(),
                 sizes[0],
                 medians[0],
                 sizes[1],
-                medians[1],
-                sizes[2],
-                medians[2]
+                medians[1]
             ));
         }
         failures
@@ -3098,6 +3103,7 @@ mod tests {
                     std::hint::black_box(parse_inlines(s, MarkdownLinks::Safe));
                 },
                 n,
+                RUNS,
             );
             assert!(violations.is_empty(), "{say}: {violations:#?}");
         }
@@ -3113,7 +3119,8 @@ mod tests {
             ("spans closed by divs", 5_000, |n| {
                 "<span>".repeat(n) + &"</div>".repeat(n)
             }),
-            ("nested marks split at <br>", 10_000, |n| {
+            // 4n is the 100,000 lines the wall-clock test read; three rounds keep it in the budget.
+            ("nested marks split at <br>", 25_000, |n| {
                 "<b><i><a href=\"https://x.org\">".repeat(11) + &"x<br>".repeat(n)
             }),
             // Dropped elements: nested, full of comments, tags and attributes, or never closed.
@@ -3140,6 +3147,7 @@ mod tests {
                     std::hint::black_box(rich_text_blocks(s, MarkdownLinks::Safe));
                 },
                 n,
+                if n >= 25_000 { 3 } else { RUNS },
             );
             assert!(violations.is_empty(), "{say}: {violations:#?}");
         }
@@ -3160,9 +3168,11 @@ mod tests {
                 }),
                 false,
             ),
+            // Openers that are not an editor's tag (`<px`), then one that is: each is read and
+            // refused before the real tag decides it.
             (
-                ("tag openers before the last `>`", 40_000, |n| {
-                    "<p ".repeat(n) + ">"
+                ("refused openers before a real tag", 40_000, |n| {
+                    "<px ".repeat(n) + "<p>"
                 }),
                 true,
             ),
@@ -3175,6 +3185,7 @@ mod tests {
                     std::hint::black_box(looks_like_rich_text(s));
                 },
                 n,
+                RUNS,
             );
             assert!(violations.is_empty(), "{say}: {violations:#?}");
         }
