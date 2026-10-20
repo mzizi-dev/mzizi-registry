@@ -26,7 +26,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ### Added — `mzizi-ui` `render` path for `skeleton`, with no Dioxus, byte-identical to `dioxus-ssr` (2026-10-20, #506)
 
-- `mzizi_ui::skeleton::render(&RenderProps)` returns the skeleton's HTML as a `String`. It is the first Mzizi Roots component without a Dioxus dependency on its render path. The Dioxus `Skeleton` is unchanged, and no other component changes yet.
+- `mzizi_ui::skeleton::render(&RenderProps)` returns the skeleton's HTML as a `String`. It is the first `mzizi-ui` component whose render path has no Dioxus dependency. `mzizi-discovery`'s `mzizi-seo` already writes its `<head>` HTML without Dioxus (`Metadata::to_head_html`), so this is not the first Roots HTML writer without Dioxus. The Dioxus `Skeleton` is unchanged, and no other component changes yet.
 - Checked by `mzizi-ui/tests/render_parity.rs`: the output equals `dioxus-ssr`'s output for every state of `contracts/ui/skeleton.contract.json` and for six undeclared cases (quotes, the five escaped characters, a non-ASCII class). A mutation of the quote escape fails it.
 - The escaping writer is crate-internal (`mzizi-ui/src/html.rs`), with no dependencies. It uses the reference table `dioxus-ssr` uses today.
 - Public API: two new items, `skeleton::RenderProps` and `skeleton::render`. Additive only. Nothing is published or version-bumped here.
