@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `mzizi-ui` render path with no Dioxus for `alert`, `card` and `markdown-renderer`, byte-identical to `dioxus-ssr` (2026-10-20, #511)
+
+- `alert` (with its title, description and action parts), `card` (with its seven slots and the loading skeleton) and `markdown-renderer` gain `RenderProps` and `render(&RenderProps) -> String`, beside their Dioxus components, which are unchanged. The second batch of `docs/roots/RFC-roots-renderer.md` §5; button, input, label and avatar wait for PR 2 and the RFC's `attach` path.
+- Their children are HTML the caller has already rendered, written as they are. A caller passes escaped text; `render` does not escape children.
+- Checked by `mzizi-ui/tests/render_parity.rs`, which now has 70 cases, each compared byte-for-byte with `dioxus-ssr`. The alert, card and markdown contract states are read from `contracts/ui/`; the rest are undeclared cases. 30 goldens are committed under `mzizi-ui/tests/goldens/`, captured from `dioxus-ssr`.
+- Public API: the new `RenderProps` and `render` items, plus the part and slot functions, in `alert` and `card`. Additive, unreleased; nothing is published or version-bumped.
+
 ### Added — `mzizi-ui` gets a render path with no Dioxus for six static primitives, byte-identical to `dioxus-ssr` (2026-10-20, #510)
 
 - `separator`, `progress`, `badge`, `status-badge`, `safe-area-frame` and `chart` each gain `RenderProps` and `render(&RenderProps) -> String`, beside their Dioxus component. The Dioxus components are unchanged, and `dioxus` stays a dependency of every `mzizi-rs` crate. This is the first batch of `docs/roots/RFC-roots-renderer.md` §5; alert, card and markdown-renderer follow.
