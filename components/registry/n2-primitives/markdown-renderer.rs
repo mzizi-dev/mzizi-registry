@@ -1000,13 +1000,27 @@ fn untab(line: &str) -> String {
     }
 }
 
-fn starts_block(lines: &[String], i: usize) -> bool {
+/// Whether a list item (numbered or not, its number, its text) may start a list that
+/// interrupts a paragraph: as in CommonMark, only when it has text and, if numbered, is
+/// numbered 1, so "1984. was a year" on a paragraph's second line stays text.
+fn interrupts(ordered: bool, number: u32, text: &str) -> bool {
+    !blank(text) && (!ordered || number == 1)
+}
+
+/// Whether `line` starts a list (one that interrupts a paragraph, with `paragraph`).
+fn list_starts(line: &str, paragraph: bool) -> bool {
+    list_item(line)
+        .is_some_and(|(_, ordered, number, text)| !paragraph || interrupts(ordered, number, text))
+}
+
+/// Whether line `i` starts a block; with `paragraph`, whether it ends the paragraph before it.
+fn starts_block(lines: &[String], i: usize, paragraph: bool) -> bool {
     let line = &lines[i];
     fence(line).is_some()
         || heading(line).is_some()
         || rule(line)
         || quote(line).is_some()
-        || list_item(line).is_some()
+        || list_starts(line, paragraph)
         || table_starts(lines, i).is_some()
 }
 
@@ -1109,7 +1123,7 @@ impl BlockParser {
                 while i < lines.len()
                     && !blank(&lines[i])
                     && lines[i].contains('|')
-                    && !starts_block(lines, i)
+                    && !starts_block(lines, i, false)
                 {
                     rows.push(fit(cells(&lines[i])));
                     i += 1;
@@ -1120,7 +1134,7 @@ impl BlockParser {
             let mut para: Vec<&str> = Vec::new();
             while i < lines.len()
                 && !blank(&lines[i])
-                && (para.is_empty() || !starts_block(lines, i))
+                && (para.is_empty() || !starts_block(lines, i, true))
             {
                 para.push(trim_ws(&lines[i]));
                 i += 1;
@@ -1169,6 +1183,7 @@ impl BlockParser {
                 None => out.push(Block::List(list)),
             }
         }
+        let mut after_blank = false;
         while i < lines.len() {
             let line = &lines[i];
             if blank(line) {
@@ -1178,10 +1193,12 @@ impl BlockParser {
                 }
                 if k < lines.len() && list_item(&lines[k]).is_some() {
                     i = k;
+                    after_blank = true;
                     continue;
                 }
                 break;
             }
+            let was_after_blank = std::mem::take(&mut after_blank);
             let Some((indent, ordered, number, text)) = list_item(line) else {
                 let continues = line.starts_with("  ")
                     && line
@@ -1189,7 +1206,7 @@ impl BlockParser {
                         .chars()
                         .next()
                         .is_some_and(|c| !is_ws(c))
-                    && !starts_block(lines, i);
+                    && !starts_block(lines, i, false);
                 // (No let chains: the workspace's rust-version is 1.85.)
                 let item = stack.last_mut().and_then(|(_, top)| top.items.last_mut());
                 match item {
@@ -1208,14 +1225,44 @@ impl BlockParser {
             if stack.is_empty() {
                 stack.push((indent, new_list(ordered, number)));
             } else {
-                while stack.len() > 1 && indent < stack[stack.len() - 1].0 {
+                // Where the item goes: the open lists it stays in (`keep`), and whether it joins
+                // the innermost of them at its own indent (an item indented between that list
+                // and the one it sits in, of the same kind), starts a list nested in the last
+                // item, or starts a list of the other kind.
+                let mut keep = stack.len();
+                let mut joins = false;
+                while keep > 1 && indent < stack[keep - 1].0 {
+                    if indent >= stack[keep - 2].0 + 2 && stack[keep - 1].1.ordered == ordered {
+                        joins = true;
+                        break;
+                    }
+                    keep -= 1;
+                }
+                let (top_indent, top) = &stack[keep - 1];
+                let top_indent = *top_indent;
+                let nests = !joins
+                    && indent >= top_indent + 2
+                    && !top.items.is_empty()
+                    && keep < MAX_NESTING;
+                let switches = !joins && !nests && top.ordered != ordered;
+                // A new list right after an item's text (no blank line between) interrupts that
+                // text, so it must be one that may interrupt a paragraph; otherwise the line
+                // continues it.
+                if (nests || switches) && !was_after_blank && !interrupts(ordered, number, text) {
+                    if let Some(last) = stack.last_mut().and_then(|(_, l)| l.items.last_mut()) {
+                        last.lines.push(self.inl(trim_ws(line)));
+                    }
+                    i += 1;
+                    continue;
+                }
+                while stack.len() > keep {
                     close_top(&mut stack, out);
                 }
-                let (top_indent, top) = stack.last().expect("an open list");
-                let top_indent = *top_indent;
-                if indent >= top_indent + 2 && !top.items.is_empty() && stack.len() < MAX_NESTING {
+                if joins {
+                    stack.last_mut().expect("an open list").0 = indent;
+                } else if nests {
                     stack.push((indent, new_list(ordered, number)));
-                } else if top.ordered != ordered {
+                } else if switches {
                     close_top(&mut stack, out);
                     stack.push((top_indent, new_list(ordered, number)));
                 }
@@ -2006,10 +2053,12 @@ fn read_html(html: &str) -> Vec<RichNode> {
         .unwrap_or_default()
 }
 
-fn text_of(n: &RichNode) -> String {
+/// An element's text, with each `<br>` as `br` (a line break, so `<pre>` keeps its lines).
+fn text_of(n: &RichNode, br: &str) -> String {
     match n {
         RichNode::Text(t) => t.clone(),
-        RichNode::El { children, .. } => children.iter().map(text_of).collect(),
+        RichNode::El { tag, .. } if tag == "br" => br.to_owned(),
+        RichNode::El { children, .. } => children.iter().map(|c| text_of(c, br)).collect(),
     }
 }
 
@@ -2104,7 +2153,9 @@ fn rich_inlines(nodes: &[RichNode], policy: MarkdownLinks, ctx: RichContext) -> 
                     wrap_runs(pieces, &Inline::Em, &mut out);
                 }
             }
-            "code" => out.push(Piece::Inline(Inline::Code(collapse_html_ws(&text_of(n))))),
+            "code" => out.push(Piece::Inline(Inline::Code(collapse_html_ws(&text_of(
+                n, "\n",
+            ))))),
             "a" => {
                 let href = if ctx.link {
                     None
@@ -2263,7 +2314,9 @@ fn list_start(attrs: &[(String, String)]) -> u32 {
 }
 
 /// A rich-text `<ul>` or `<ol>`: each `<li>` is one line (its paragraphs joined), and a list
-/// directly inside it stays a nested list, up to `MAX_NESTING` deep (deeper ones join the line).
+/// inside it stays a nested list, up to `MAX_NESTING` deep (deeper ones join the line). A list
+/// placed directly in the list, between its items (as Google Docs and Word paste one), belongs
+/// to the item before it, or to an item of its own when it comes first.
 fn rich_list(el: &RichNode, policy: MarkdownLinks, depth: usize) -> Option<List> {
     let RichNode::El {
         tag,
@@ -2273,19 +2326,27 @@ fn rich_list(el: &RichNode, policy: MarkdownLinks, depth: usize) -> Option<List>
     else {
         return None;
     };
-    let mut items = Vec::new();
-    for li in children {
+    let mut groups: Vec<Vec<&RichNode>> = Vec::new();
+    for node in children {
         let RichNode::El {
             tag: t,
             children: c,
             ..
-        } = li
+        } = node
         else {
             continue;
         };
-        if t != "li" {
-            continue;
+        if t == "li" {
+            groups.push(c.iter().collect());
+        } else if t == "ul" || t == "ol" {
+            match groups.last_mut() {
+                Some(last) => last.push(node),
+                None => groups.push(vec![node]),
+            }
         }
+    }
+    let mut items = Vec::new();
+    for group in groups {
         // The item's text up to its first nested list is its line; a nested list and any text
         // after it follow in document order, so `a<ul>…</ul>c` keeps `c` after the list.
         let mut pieces = Vec::new();
@@ -2303,7 +2364,7 @@ fn rich_list(el: &RichNode, policy: MarkdownLinks, depth: usize) -> Option<List>
                 subs.push(ListChild::Lines(vec![l]));
             }
         };
-        for node in c {
+        for node in group {
             let nested = matches!(node, RichNode::El { tag, .. } if tag == "ul" || tag == "ol");
             if nested && depth + 1 < MAX_NESTING {
                 if let Some(sub) = rich_list(node, policy, depth + 1) {
@@ -2368,8 +2429,14 @@ fn rich_blocks(nodes: &[RichNode], policy: MarkdownLinks, out: &mut Vec<Block>) 
             }
         } else if tag == "pre" {
             flush(&mut pending, out);
-            let all = text_of(n);
-            let t = all.strip_prefix('\n').unwrap_or(&all);
+            // One newline in the source after the start tag is dropped, as a browser drops it
+            // (a `<br>` there is a blank first line), and one at the end, as no line follows it.
+            let all = text_of(n, "\n");
+            let t = if text_of(n, "").starts_with('\n') {
+                all.strip_prefix('\n').unwrap_or(&all)
+            } else {
+                &all
+            };
             let t = t.strip_suffix('\n').unwrap_or(t);
             if !trim_ws(t).is_empty() {
                 out.push(Block::Code {

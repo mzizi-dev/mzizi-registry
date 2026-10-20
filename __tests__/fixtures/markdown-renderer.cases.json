@@ -3573,6 +3573,471 @@
           ]
         }
       ]
+    },
+    {
+      "say": "rich text: a self-closing svg or math element is closed, so the text after it shows",
+      "from": "html",
+      "input": "<p>Hello <svg width=\"1\"/> world</p><p>More <math/>text</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Hello world"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "More text"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a self-closing slash on an HTML element is ignored, as a browser ignores it, so an iframe or textarea drops to its end tag",
+      "from": "html",
+      "input": "<p>Hello <iframe/> world</p><p>More text</p><p>Next <textarea/> gone</p>",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Hello"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a list placed directly in a list (as Google Docs and Word paste it) nests under the item before it",
+      "from": "html",
+      "input": "<ul><li>a</li><ul><li>nested</li></ul><li>b</li></ul><ol start=\"3\"><ol><li>x</li></ol><li>y</li></ol>",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              ],
+              "children": [
+                {
+                  "kind": "ul",
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "nested"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "b"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "ol",
+          "start": 3,
+          "items": [
+            {
+              "lines": [],
+              "children": [
+                {
+                  "kind": "ol",
+                  "start": 1,
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "x"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "y"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "rich text: a <br> in <pre> is a line break",
+      "from": "html",
+      "input": "<pre><code>line1<br>line2<br/>line3</code></pre>",
+      "expect": [
+        {
+          "kind": "code",
+          "lang": "",
+          "v": "line1\nline2\nline3"
+        }
+      ]
+    },
+    {
+      "say": "rich text: a <br> at the start of <pre> is a blank first line; only a source newline there is dropped",
+      "from": "html",
+      "input": "<pre><br>x<br></pre><pre>\ny</pre><pre>\n<br>z</pre>",
+      "expect": [
+        {
+          "kind": "code",
+          "lang": "",
+          "v": "\nx"
+        },
+        {
+          "kind": "code",
+          "lang": "",
+          "v": "y"
+        },
+        {
+          "kind": "code",
+          "lang": "",
+          "v": "\nz"
+        }
+      ]
+    },
+    {
+      "say": "only a numbered list starting at 1 interrupts a paragraph, as in CommonMark",
+      "input": "Text\n1984. was a year\n2) or two\n\nText\n1) one\n- dash",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Text"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "1984. was a year"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "2) or two"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Text"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "ol",
+          "start": 1,
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "one"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "dash"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "an empty list item does not interrupt a paragraph, as in CommonMark",
+      "input": "Text\n- \n\nText\n1. ",
+      "expect": [
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Text"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "-"
+              }
+            ]
+          ]
+        },
+        {
+          "kind": "p",
+          "lines": [
+            [
+              {
+                "t": "text",
+                "v": "Text"
+              }
+            ],
+            [
+              {
+                "t": "text",
+                "v": "1."
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "say": "in a list, a new list right after an item's text must be one that may interrupt it; otherwise the line continues the item",
+      "input": "- a\n  2) foo\n- b\n3. c\n\n- d\n\n  2) e\n- f\n  1) g",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ],
+                [
+                  {
+                    "t": "text",
+                    "v": "2) foo"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "b"
+                  }
+                ],
+                [
+                  {
+                    "t": "text",
+                    "v": "3. c"
+                  }
+                ]
+              ],
+              "children": []
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "d"
+                  }
+                ]
+              ],
+              "children": [
+                {
+                  "kind": "ol",
+                  "start": 2,
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "e"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "f"
+                  }
+                ]
+              ],
+              "children": [
+                {
+                  "kind": "ol",
+                  "start": 1,
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "g"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "say": "an item indented between two levels joins the nested list it falls inside",
+      "input": "- a\n    - b\n  - c\n    - d\n- e",
+      "expect": [
+        {
+          "kind": "ul",
+          "items": [
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "a"
+                  }
+                ]
+              ],
+              "children": [
+                {
+                  "kind": "ul",
+                  "items": [
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "b"
+                          }
+                        ]
+                      ],
+                      "children": []
+                    },
+                    {
+                      "lines": [
+                        [
+                          {
+                            "t": "text",
+                            "v": "c"
+                          }
+                        ]
+                      ],
+                      "children": [
+                        {
+                          "kind": "ul",
+                          "items": [
+                            {
+                              "lines": [
+                                [
+                                  {
+                                    "t": "text",
+                                    "v": "d"
+                                  }
+                                ]
+                              ],
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "lines": [
+                [
+                  {
+                    "t": "text",
+                    "v": "e"
+                  }
+                ]
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
     }
   ]
 }
