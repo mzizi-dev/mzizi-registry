@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Security — `hono` 4.13.13 through the override, for GHSA-5r4p-p66f-jhc7 (2026-10-20, #PR)
+### Security — `hono` 4.13.13 through the override, for GHSA-5r4p-p66f-jhc7 (2026-10-20, #521)
 
 `hono` 4.12.4 to 4.13.10 can let a request bypass middleware on static paths (moderate). It reaches the registry only as a dev dependency, through `shadcn` → `@modelcontextprotocol/sdk`. The `hono` override moves from `^4.13.5` to `^4.13.11`, and the lockfile resolves 4.13.13. Without it `pnpm audit --audit-level=moderate` fails, which blocks the pre-commit hook and the Security Audit job on every branch, and it failed CI on `main` for the 4.9.0 release, so `v4.9.0` was not tagged. No published package or API changes.
 
