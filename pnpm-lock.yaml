@@ -50,8 +50,8 @@ importers:
         specifier: ^5.9.1
         version: 5.9.1(@standard-schema/spec@1.1.0)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(react-hook-form@7.83.0(react@19.2.8))(zod@4.6.2)
       '@nyuchi/mzizi-skills':
-        specifier: ^0.8.1
-        version: 0.8.5
+        specifier: ^0.11.0
+        version: 0.11.0
       '@radix-ui/react-accordion':
         specifier: 1.2.20
         version: 1.2.20(@types/react-dom@19.2.7(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1399,8 +1399,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@nyuchi/mzizi-skills@0.8.5':
-    resolution: {integrity: sha512-YPuq/Wg4aEAEGdqeHjeKUMxnNVtHBJ8P1FGzpHixSoP4DzkcoGLBs63044lomQUM2RdgYEqfWn7m/FS04GjLQQ==}
+  '@nyuchi/mzizi-skills@0.11.0':
+    resolution: {integrity: sha512-tq8tpFSXpmopT/ZoySiC4KXP/kxoOLbDwGdNFq1fTeVgic0rZ4PyIpTjcGa+S0O+ifAlVSGCsd3UbPkEx9Pm+w==}
     engines: {node: '>=20'}
 
   '@open-draft/deferred-promise@2.2.0':
@@ -6371,7 +6371,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.3
 
-  '@nyuchi/mzizi-skills@0.8.5': {}
+  '@nyuchi/mzizi-skills@0.11.0': {}
 
   '@open-draft/deferred-promise@2.2.0':
     optional: true

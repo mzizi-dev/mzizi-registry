@@ -100,7 +100,7 @@
   --container-copper: var(--color-copper-container);
   --on-container-copper: var(--color-copper-on-container);
 
-  /* Radius scale (px) — equal to mzizi-registry/app/globals.css; not part of the colour canon. */
+  /* Radius scale (px) — equal to mzizi-registry/styles/globals.css; not part of the colour canon. */
   --radius-sm: 7px;
   --radius-md: 12px;
   --radius-lg: 14px;
