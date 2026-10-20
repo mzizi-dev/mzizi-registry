@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `border-control`, a control's edge at Lc 30 and 3:1; `border` is decorative; `text-tertiary` gets its own Lc 60 floor (2026-10-20)
+### Added — `border-control`, a control's edge at Lc 30 and 3:1; `border` is decorative; `text-tertiary` gets its own Lc 60 floor (2026-10-20, #518)
 
 The owner's decision on the three roles that #485 left pending (#484, 2026-10-20). The contrast gate in `pnpm tokens:sync` and `pnpm tokens:verify` now reports 0 violations and 0 pending, and lists every decorative exemption by name.
 
