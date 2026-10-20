@@ -32,7 +32,10 @@
 //! `/api/v1/rs/{name}` serves the source to READ — for an agent, a reviewer, or someone
 //! porting — never as an install path.
 
-/// The Dioxus-free HTML writer the `render` functions use. Crate-internal.
+/// The reference HTML writer. `render` uses an inline copy of it in each registry file
+/// (`skeleton.rs` carries its own), so this module is only compiled for its tests, which hold
+/// those copies equal to it.
+#[cfg(test)]
 pub(crate) mod html;
 
 #[path = "generated/alert.rs"]
