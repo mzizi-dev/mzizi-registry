@@ -39,7 +39,9 @@ tags:
   - name: Discovery
     description: API metadata, health, search, stats
   - name: Brand
-    description: Seven African Minerals design system
+    description: |
+      The Mzizi brand system: 21 colour families (7 minerals, 7 heritage tones, 7 experimental
+      tones), each with its `-text` values, plus typography, spacing and the ecosystem brands
   - name: Registry
     description: Component registry (shadcn-compatible)
   - name: Architecture
@@ -77,8 +79,14 @@ paths:
     get:
       summary: Brand System
       description: |
-        Returns the complete Mzizi brand system — Seven African Minerals palette,
-        typography, spacing, ecosystem brands, accessibility standards, and voice & tone.
+        Returns the complete Mzizi brand system: the 21 colour families (7 minerals, 7 heritage
+        tones, 7 experimental tones), typography, spacing, ecosystem brands, accessibility
+        standards, and voice & tone.
+
+        Every colour family carries its `-text` values, `textLight` and `textDark`: the colour
+        to use for text in that family on the page (`--color-<name>-text`). `lightHex` and
+        `darkHex` are the canonical accents, not text values. Minerals and experimental tones
+        also carry `onContainerLight` / `onContainerDark`, the text colour on their container.
 
         Includes schema.org JSON-LD metadata (`@context`, `@type: Brand`).
       operationId: getBrandSystem
@@ -1536,7 +1544,18 @@ components:
 
     BrandSystem:
       type: object
-      required: [$schema, version, name, minerals, ecosystem, typography, spacing]
+      required:
+        [
+          $schema,
+          version,
+          name,
+          minerals,
+          heritage,
+          experimental,
+          ecosystem,
+          typography,
+          spacing,
+        ]
       properties:
         $schema:
           type: string
@@ -1563,10 +1582,16 @@ components:
           example: "https://mzizi.dev/brand"
         minerals:
           type: array
-          minItems: 5
-          maxItems: 5
           items:
             $ref: "#/components/schemas/Mineral"
+        heritage:
+          type: array
+          items:
+            $ref: "#/components/schemas/HeritageColor"
+        experimental:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExperimentalColor"
         ecosystem:
           type: array
           items:
@@ -1610,39 +1635,164 @@ components:
         philosophy:
           $ref: "#/components/schemas/Philosophy"
 
-    Mineral:
+    ColorFamily:
       type: object
-      required: [name, hex, lightHex, darkHex, cssVar, origin, symbolism, usage]
+      description: |
+        The fields every colour family carries (minerals, heritage tones and
+        experimental tones), from `lib/tokens/palette.generated.ts`.
+        `lightHex` and `darkHex` are the canonical accents and fills, not text
+        values. For text in this colour on the page use `textLight` /
+        `textDark`, measured as text on `--base` (APCA Lc 75). Where the
+        canonical value already clears that bar, `textLight` equals `lightHex`
+        (and `textDark` equals `darkHex`).
+      required: [name, hex, lightHex, darkHex, cssVar]
       properties:
         name:
           type: string
           example: "cobalt"
         hex:
-          type: string
-          pattern: "^#[0-9A-Fa-f]{6}$"
-          example: "#0047AB"
+          $ref: "#/components/schemas/Hex"
+          description: |
+            The family's single default value. For minerals it is
+            `mineralApiHex` in `lib/tokens/brand.source.ts`; for heritage and
+            experimental tones it is `darkHex`.
         lightHex:
-          type: string
-          pattern: "^#[0-9A-Fa-f]{6}$"
+          $ref: "#/components/schemas/Hex"
         darkHex:
-          type: string
-          pattern: "^#[0-9A-Fa-f]{6}$"
-        containerLight:
-          type: string
-          description: Light theme container background for this mineral
-        containerDark:
-          type: string
-          description: Dark theme container background for this mineral
+          $ref: "#/components/schemas/Hex"
+        textLight:
+          $ref: "#/components/schemas/Hex"
+          description: |
+            The family as text on `--base`, light theme: the light value of
+            `--color-<name>-text` in `mzizi-tokens-globals.css`, from
+            `textOnBaseTier()` in `scripts/render-globals-css.ts`.
+        textDark:
+          $ref: "#/components/schemas/Hex"
+          description: |
+            The family as text on `--base`, dark theme: the dark value of
+            `--color-<name>-text`.
         cssVar:
           type: string
           example: "--color-cobalt"
-        origin:
-          type: string
-          description: African origin of this mineral
-        symbolism:
-          type: string
-        usage:
-          type: string
+
+    Mineral:
+      description: |
+        A mineral: the `MineralToken` in `lib/tokens/palette.generated.ts`,
+        plus `hex` and the `-text` pair. Text on the mineral's container uses
+        `onContainerLight` / `onContainerDark`.
+        `lightHex` and `darkHex` are the canonical accents and fills, not text
+        values. For text in this colour on the page use `textLight` /
+        `textDark`, measured as text on `--base` (APCA Lc 75). Where the
+        canonical value already clears that bar, `textLight` equals `lightHex`
+        (and `textDark` equals `darkHex`).
+      allOf:
+        - $ref: "#/components/schemas/ColorFamily"
+        - type: object
+          required: [origin, symbolism, usage]
+          properties:
+            role:
+              type: string
+              example: "Knowledge"
+            family:
+              $ref: "#/components/schemas/MineralFamily"
+            containerLight:
+              $ref: "#/components/schemas/Hex"
+              description: Light theme container background for this mineral
+            containerDark:
+              $ref: "#/components/schemas/Hex"
+              description: Dark theme container background for this mineral
+            onContainerLight:
+              $ref: "#/components/schemas/Hex"
+              description: Text colour on the light theme container
+            onContainerDark:
+              $ref: "#/components/schemas/Hex"
+              description: Text colour on the dark theme container
+            sortOrder:
+              type: integer
+              minimum: 0
+              description: Position among the minerals
+            origin:
+              type: string
+              description: African origin of this mineral
+            symbolism:
+              type: string
+            usage:
+              type: string
+
+    HeritageColor:
+      description: |
+        A heritage tone (`heritageColors` in `lib/tokens/palette.generated.ts`),
+        plus `hex` (its `darkHex`) and the `-text` pair.
+        `lightHex` and `darkHex` are the canonical accents and fills, not text
+        values. For text in this colour on the page use `textLight` /
+        `textDark`, measured as text on `--base` (APCA Lc 75). Where the
+        canonical value already clears that bar, `textLight` equals `lightHex`
+        (and `textDark` equals `darkHex`).
+      allOf:
+        - $ref: "#/components/schemas/ColorFamily"
+        - type: object
+          required: [origin, symbolism, usage]
+          properties:
+            origin:
+              type: string
+            symbolism:
+              type: string
+            usage:
+              type: string
+
+    ExperimentalColor:
+      description: |
+        An experimental tone (`experimentalColors` in
+        `lib/tokens/palette.generated.ts`), plus `hex` (its `darkHex`), `cssVar`
+        and the `-text` pair. Text on its container uses `onContainerLight` /
+        `onContainerDark`; `uiLight` / `uiDark` are its UI tints.
+        `lightHex` and `darkHex` are the canonical accents and fills, not text
+        values. For text in this colour on the page use `textLight` /
+        `textDark`, measured as text on `--base` (APCA Lc 75). Where the
+        canonical value already clears that bar, `textLight` equals `lightHex`
+        (and `textDark` equals `darkHex`).
+      allOf:
+        - $ref: "#/components/schemas/ColorFamily"
+        - type: object
+          required:
+            [
+              containerLight,
+              containerDark,
+              onContainerLight,
+              onContainerDark,
+              uiLight,
+              uiDark,
+              heptagonIndex,
+            ]
+          properties:
+            containerLight:
+              $ref: "#/components/schemas/Hex"
+            containerDark:
+              $ref: "#/components/schemas/Hex"
+            onContainerLight:
+              $ref: "#/components/schemas/Hex"
+              description: Text colour on the light theme container
+            onContainerDark:
+              $ref: "#/components/schemas/Hex"
+              description: Text colour on the dark theme container
+            uiLight:
+              $ref: "#/components/schemas/Hex"
+            uiDark:
+              $ref: "#/components/schemas/Hex"
+            heptagonIndex:
+              type: integer
+              minimum: 0
+              description: The tone's position on the experimental heptagon
+
+    MineralFamily:
+      type: string
+      enum: ["deep-earth", "hand"]
+      description: The mineral's family
+
+    Hex:
+      type: string
+      pattern: "^#[0-9A-Fa-f]{6}$"
+      example: "#0047AB"
 
     EcosystemBrand:
       type: object
@@ -1664,9 +1814,30 @@ components:
           type: string
         mineral:
           type: string
+          description: The brand's palette family (usually a mineral)
         url:
           type: string
           format: uri
+        displayName:
+          type: string
+          description: |
+            The product name people read, where it is not the wordmark `name`
+            (e.g. "Mukoko Events" for `events`). Present only on the rows that
+            have one.
+        accent:
+          type: string
+          description: |
+            A second palette family for `--brand-accent`, where the brand pairs
+            one with its `mineral` (e.g. `circles`: tanzanite with a terracotta
+            accent). Present only on the rows that have one.
+        aliases:
+          type: array
+          items:
+            type: string
+          description: |
+            Deprecated names that still resolve to this row (e.g. `nhimbe` for
+            `events`). Present only on the rows that have them; never use one in
+            new code.
 
     FontSpec:
       type: object

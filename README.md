@@ -7,7 +7,7 @@
 [![CodeQL](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/security/code-scanning)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-**Version:** 4.8.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Docs:** [docs.mzizi.dev](https://docs.mzizi.dev)
+**Version:** 4.9.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Docs:** [docs.mzizi.dev](https://docs.mzizi.dev)
 
 > **This repo serves no website and no API.** It is the registry's source: `registry.json`, the
 > component files, the token pipeline, the Rust crates and the generators that check them. The
@@ -103,7 +103,7 @@ Resources: `mzizi://components` (component index), `mzizi://nodes` (per-node sum
 Tools: `list_components`, `get_component`, `list_collections`.
 
 The standalone Cloudflare Worker variant, the Fundi self-healing agent, the TypeScript SDK,
-the published `mzizi-skills` bundle, and the Svelte mini-app that surfaces Mzizi inside the
+the published `mzizi-skills` bundle, and the mini-app that surfaces Mzizi inside the
 Nyuchi Console all live in **`mzizi-dev/agent-tools`** — a private repo, not this one.
 
 ---
