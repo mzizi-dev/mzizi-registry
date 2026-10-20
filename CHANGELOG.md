@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — `hono` 4.13.13 through the override, for GHSA-5r4p-p66f-jhc7 (2026-10-20, #516)
+
+`hono` 4.12.4 to 4.13.10 can let a request bypass middleware on static paths (moderate). It reaches the registry only as a dev dependency, through `shadcn` → `@modelcontextprotocol/sdk`. The `hono` override moves from `^4.13.5` to `^4.13.11`, and the lockfile resolves 4.13.13. Without it `pnpm audit --audit-level=moderate` fails, which blocks the pre-commit hook and the Security Audit job on every branch. No published package or API changes.
+
 ### Changed — the `markdown-renderer` linear-time tests measure scaling, not wall-clock (2026-10-20, #516)
 
 Owner decision, 2026-10-20. The parser's "linear time" tests used fixed budgets: 3000 ms for reading huge rich text and deciding `auto`, 1000 to 1500 ms for the hostile-input cases, and 2 s in the Rust build. On a 4-core host the same staging commit took 2.2 to 4.0 s against the 3000 ms budget, so the tests failed on the host and not on the parser. They now assert how the time grows.
