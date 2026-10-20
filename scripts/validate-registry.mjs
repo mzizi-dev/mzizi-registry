@@ -516,7 +516,7 @@ function main() {
   // such import must name a component with an `.astro`, or a framework-free `.ts`, or an
   // asset in `components/registry/assets/`. lib/astro.ts builds `/v1/astro/{name}` from the same
   // rules; a broken edge here is a broken `mzizi add --target astro`.
-  const FRAMEWORK = /^(react|react-dom|next|preact|vue|svelte)(\/|$)/
+  const FRAMEWORK = /^(react|react-dom|next|preact|vue)(\/|$)/
   const specifiersOf = (text) =>
     [...text.matchAll(/(?:\bfrom\s*|\bimport\s*\(?\s*)["']([^"']+)["']/g)].map((m) => m[1])
   const astroUsable = (name) => {

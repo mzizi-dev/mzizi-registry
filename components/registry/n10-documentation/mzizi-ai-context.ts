@@ -2,7 +2,7 @@
 //
 // Generates context windows for AI assistants working on Mzizi. This lib is
 // framework-agnostic — it exports pure TypeScript functions that produce
-// strings. No React, no Svelte.
+// strings. No React.
 //
 // The node map is the DNA helix's node set, which is UNCAPPED: N11 (discovery)
 // and N12 (skills) are rungs past N10, and more may come. It used to be the
