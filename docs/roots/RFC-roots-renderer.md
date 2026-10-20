@@ -14,7 +14,7 @@ from `mzizi-docs`.
   `dioxus` and `dioxus-ssr` from every crate in `mzizi-rs/`, not only from the UI crates.
 - No Dioxus, Leptos, Yew or other Rust UI framework as a dependency (brief §7).
 
-## 1. Survey, as of `origin/staging` 59e93a68
+## 1. Survey, as of `origin/staging` c837dc62 (re-checked at the rebase onto it)
 
 | What                                                                           | Number                                                                                                                                                                                   |
 | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -60,8 +60,9 @@ The owner asked for the `render` path to be built on Mzizi's own primitives. Sea
   implementations (registry#397) and are the contract's Astro build.
 - **`mzizi-ui`'s `markdown-renderer.rs`** parses Markdown into a typed tree and "has no HTML string
   anywhere" (its header). It is the safety model for untrusted text, not an HTML writer.
-- **`mzizi-seo`** has a private `escape_attr` for `<meta>` content. It is not reusable: it is not
-  public, and it covers attributes only.
+- **`mzizi-seo`** (`mzizi-discovery`) already writes its `<head>` HTML without Dioxus (`Metadata::to_head_html`,
+  `generate_schema_ld`). Its `escape_attr` for `<meta>` content is private and covers attributes only, so it is
+  not reusable here.
 
 **Result: no existing Dioxus-free HTML layer exists.** The smallest one that does the job is
 specified in §3.
