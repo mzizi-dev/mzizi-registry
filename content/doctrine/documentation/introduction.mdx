@@ -4,12 +4,12 @@ _schemaVersion: "v1"
 author: "nyuchi-team"
 category: "getting-started"
 createdAt: "2026-04-14T04:32:02.311034+00:00"
-currentVersion: 2
-description: "Introduction to the Nyuchi Design System — the foundation of Mukoko and Nyuchi Africa products."
+currentVersion: 3
+description: "Introduction to Mzizi — the open design system, component registry and DNA-helix frontend architecture of the bundu ecosystem, behind Mukoko and Nyuchi Africa products."
 dnaRole: "documentation"
 doctrineVersion: "4.1.7"
 keywords:
-- "nyuchi"
+- "mzizi"
 - "design-system"
 - "introduction"
 - "mukoko"
@@ -36,14 +36,14 @@ sortOrder: 1
 status: "published"
 strand: "transcription"
 subcategory: "overview"
-title: "Introduction to the Nyuchi Design System"
-updatedAt: "2026-04-24T10:59:05.115107+00:00"
+title: "Introduction to Mzizi"
+updatedAt: "2026-10-07T00:00:00.000+00:00"
 version: "4.0.34"
 ---
 
-# Nyuchi Design System
+# Mzizi
 
-The Nyuchi Design System is the foundation of everything built by Nyuchi Africa. It powers Mukoko (Africa's super app), the Nyuchi Web Services developer platform, and every product in the ecosystem.
+Mzizi (Swahili for _root_) is the open design system, component registry and DNA-helix frontend architecture of the bundu ecosystem. It is governed by Mzizi and operated and developed by Nyuchi. It is the foundation of Mukoko (Africa's super app), the Nyuchi Web Services developer platform and every Nyuchi Africa product, and anyone in the bundu ecosystem can build on it. Earlier versions of this documentation called it the Nyuchi Design System.
 
 ## Philosophy
 
@@ -66,43 +66,40 @@ Hand family (warm, grounded):
 - **Copper** — Stewardship. Central African Copperbelt, Zambia & DRC.
 - **Terracotta** — Community. Pan-African Sahel.
 
-For canonical hex values, container colours, role, and family, query the `styling-minerals` collection — the database is the source of truth and stays current as we refine the palette.
+The minerals are one of three groups of seven: with the seven heritage tones and the seven experimental colours, the palette has 21 colour families. Their canonical hex values, container colours, roles and families are in `lib/tokens/palette.source.ts`, the one source of the palette; `pnpm tokens:sync` generates every token artifact from it. Read them with `GET https://api.mzizi.dev/v1/brand` or the `mzizi_get_tokens` MCP tool rather than copying values from a page.
 
 ## Architecture
 
-The system uses a 3D architecture model:
+Mzizi is a DNA double helix: two entwined backbones, held together by cross-cutting rungs.
 
-- **Horizontal axis:** What users see — Primitives → Brand → Pages → Shell
-- **Vertical axis:** What flows through — Tokens, Safety, Resilience
-- **Depth axis:** What observes — Assurance (N8: a11y audit, RTL conformity, probes, alerts)
-- **Outlier actors:** Fundi (N9) — the self-healing engine
-- **N10:** This documentation node
+- **Engineering backbone.** Its strands carry the nodes: core-guarantee (N2 Primitives, N4 Safety, N5 Resilience, N8 Assurance), shipped (N3 Brand, N6 Pages, N7 Shell) and swappable (N1 Tokens), with the harness as the spine.
+- **Meaning backbone.** The genetic code (the Ubuntu doctrine and the Mzizi conventions) and transcription (doctrine as data).
+- **Rungs.** N9 Fundi (self-healing), N10 Documentation (this node), N11 Discovery and N12 Skills bridge both backbones.
 
-See the 3D Architecture page for the full conceptual model.
+Node numbers are labels, not a sequence. Read the live model with `GET https://api.mzizi.dev/v1/architecture` or the `mzizi_get_architecture` MCP tool; `documentation/dna-helix-overview` explains it in full.
 
-## What's in the database
+## Where everything lives
 
-Everything that defines the design system lives in Supabase, not in scattered config files:
+Mzizi has no database behind it. The registry repository, `mzizi-dev/mzizi-registry`, is the whole data layer, and every change to it is a pull request:
 
-- **Components** — every UI component, with its production TypeScript source code in `components.source_code`. The frontend repo pulls from the DB at build.
-- **Design tokens** — 18 brand\_\* tables covering minerals, semantic colours, spacing, typography, radius, shadow, motion, breakpoints, z-index, icon sizes, touch targets, density, component specs, and accessibility validation.
-- **Documentation** — this page and others in `documentation_pages`.
-- **AI instructions** — prompts for Claude, Cursor, Copilot, and the MCP server in `ai_instructions`.
-- **Changelog** — every release in `changelog`.
+- **Components** — one file per build under `components/registry/n<N>-<node>/`: `.astro` (the default), `.rs` (Mzizi Roots, Dioxus) and `.tsx` (React), each held to the component's one contract under `contracts/`. `registry.json` indexes them.
+- **Design tokens** — `lib/tokens/palette.source.ts` (the palette) and `lib/tokens/brand.source.ts` (semantic colours, typography, spacing, the ecosystem brands).
+- **Doctrine** — `content/doctrine/`, this page included, inlined into `lib/doctrine.generated.ts` by `pnpm doctrine:generate`.
+- **AI instructions and skills** — `content/doctrine/ai-instructions/`; the agent skills are published as `@nyuchi/mzizi-skills`.
+- **Changelog** — `CHANGELOG.md`, with the machine-readable release record in `content/changelog/releases.json`.
 
-To see the live system shape, run:
+api.mzizi.dev and mcp.mzizi.dev serve these files from a pinned registry commit. Machine-written data, such as component version history and usage telemetry, belongs to the Mzizi console (app.mzizi.dev), not to the registry.
 
-```sql
-SELECT * FROM get_system_counts();
-SELECT * FROM get_token_counts();
-SELECT * FROM get_node_counts();
-```
+No page states a count, because counts drift. For the live shape of the system, read `GET https://api.mzizi.dev/v1/stats`, or `meta.registryTotal` on `GET https://api.mzizi.dev/v1/ui`.
 
 ## Quick Start
 
 ```bash
-npx @nyuchi/design-cli@latest init
-npx @nyuchi/design-cli@latest add button card dialog
+# React, with the shadcn CLI
+npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
+
+# Rust (Mzizi Roots)
+cargo add mzizi-roots
 ```
 
-Visit [mzizi.dev](https://mzizi.dev) for the full component library.
+Astro is the default build: see `documentation/installation` for the Astro, Rust and React install paths. Visit [mzizi.dev](https://mzizi.dev) for the full component library.

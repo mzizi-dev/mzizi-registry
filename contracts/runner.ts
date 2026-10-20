@@ -18,8 +18,16 @@
  *     uses <data-slot>                                     (default state)
  *     when <state> shows <element> "<text>"
  *     when <state> <root subject> <predicate>
- *   Predicates: is "<s>", contains "<s>", not_empty, in "<a>" "<b>" …,
- *   uses "--token" (the class reads var(--token…)).
+ *   Predicates: is "<s>", contains "<s>" (a substring), has "<token>" (one
+ *   whole whitespace-separated token: `has "line-through"` is not satisfied
+ *   by `hover:line-through`), not_empty, in "<a>" "<b>" …,
+ *   uses "--token" (the class reads var(--token…)), and `not <predicate>`,
+ *   which negates any one of them (`not contains "line-through"`, `not has
+ *   "uppercase"`). Every operand is quoted and a predicate takes exactly the
+ *   operands it names: an unquoted operand, an extra one, or (for `in`) none
+ *   at all makes the predicate unevaluable. `not` of an unevaluable
+ *   predicate, or of an attribute the element does not carry, fails: it
+ *   never passes by default.
  * - `checks`: CSS-selector assertions (count, min, absent, attr, text).
  * - `density`: heights in px read from classes by the spacing scale, for a
  *   fine pointer (no prefix) and a coarse one (`pointer-coarse:`).
@@ -162,53 +170,116 @@ type Outcome = { ok: true } | { ok: false; say: string };
 const pass: Outcome = { ok: true };
 const fail = (say: string): Outcome => ({ ok: false, say });
 
-function stringsAfter(rest: string): string[] {
-  return [...rest.matchAll(/"([^"]*)"/g)].map((m) => m[1] ?? "");
+/**
+ * A value predicate's verdict, in the shape of `holds` in
+ * mzizi-rs/contract-eval/contract_eval.rs (`Result<bool, String>`): it held,
+ * it did not, or the runner cannot evaluate it. "Cannot evaluate" is its own
+ * variant, not a flag on a failure, so `not` can only negate a verdict and
+ * never turns an unevaluable predicate into a pass.
+ */
+export type Verdict = { ok: boolean } | { unevaluable: string };
+const held = (ok: boolean): Verdict => ({ ok });
+const cannot = (why: string): Verdict => ({ unevaluable: why });
+
+/**
+ * Split a predicate into words and quoted strings, the way `tokens` in
+ * contract_eval.rs splits a clause: a quoted string is one token, quotes
+ * kept; a quote left open runs to the end and is not closed, so it does not
+ * count as quoted.
+ */
+function predicateTokens(pred: string): string[] {
+  const out: string[] = [];
+  let i = 0;
+  while (i < pred.length) {
+    const c = pred.charAt(i);
+    if (/\s/.test(c)) {
+      i += 1;
+    } else if (c === '"') {
+      const close = pred.indexOf('"', i + 1);
+      const end = close === -1 ? pred.length : close + 1;
+      out.push(pred.slice(i, end));
+      i = end;
+    } else {
+      let j = i;
+      while (j < pred.length && !/\s/.test(pred.charAt(j))) j += 1;
+      out.push(pred.slice(i, j));
+      i = j;
+    }
+  }
+  return out;
 }
 
-function predicate(
-  value: string | undefined,
-  pred: string,
-  what: string,
-): Outcome {
-  const v = value ?? "";
-  if (pred.startsWith("is ")) {
-    const [want] = stringsAfter(pred);
-    if (want === undefined)
-      return fail(
-        `${what}: \`${pred}\` is not evaluable (is takes a quoted string)`,
+/** The text inside a quoted token, or undefined when the token is not quoted. */
+function quoted(token: string | undefined): string | undefined {
+  return token !== undefined &&
+    token.length >= 2 &&
+    token.startsWith('"') &&
+    token.endsWith('"')
+    ? token.slice(1, -1)
+    : undefined;
+}
+
+/** The one quoted operand a predicate takes; any other shape is unevaluable. */
+function oneQuoted(name: string, operands: string[]): string | Verdict {
+  const want = operands.length === 1 ? quoted(operands[0]) : undefined;
+  return want ?? cannot(`\`${name}\` takes exactly one quoted operand`);
+}
+
+/**
+ * Evaluate a value predicate against an attribute value. The grammar and
+ * every verdict, malformed operands included, match `holds` in
+ * contract_eval.rs; `__tests__/contracts/fixtures/predicates.json` holds both
+ * runners to the same cases.
+ */
+export function evaluatePredicate(value: string, pred: string): Verdict {
+  return holds(value, predicateTokens(pred));
+}
+
+function holds(value: string, tokens: string[]): Verdict {
+  const [head, ...operands] = tokens;
+  switch (head) {
+    case "not": {
+      if (operands.length === 0) return cannot("`not` needs a predicate");
+      if (operands[0] === "not") return cannot("`not not`: one `not` only");
+      const inner = holds(value, operands);
+      return "ok" in inner ? held(!inner.ok) : inner;
+    }
+    case "is": {
+      const want = oneQuoted(head, operands);
+      return typeof want === "string" ? held(value === want) : want;
+    }
+    case "contains": {
+      const want = oneQuoted(head, operands);
+      return typeof want === "string" ? held(value.includes(want)) : want;
+    }
+    case "has": {
+      const want = oneQuoted(head, operands);
+      if (typeof want !== "string") return want;
+      if (want === "" || /\s/.test(want))
+        return cannot("`has` takes one class token, with no whitespace");
+      return held(value.split(/\s+/).includes(want));
+    }
+    case "not_empty":
+      return operands.length === 0
+        ? held(value.trim() !== "")
+        : cannot("`not_empty` takes no operand");
+    case "in": {
+      const set = operands.map(quoted);
+      if (set.length === 0 || set.some((s) => s === undefined))
+        return cannot("`in` takes one or more quoted operands, and only those");
+      return held(set.includes(value));
+    }
+    case "uses": {
+      const token = oneQuoted(head, operands);
+      if (typeof token !== "string") return token;
+      if (!token.startsWith("--")) return cannot('`uses` takes "--token"');
+      return held(value.includes(`var(${token}`));
+    }
+    default:
+      return cannot(
+        `\`${head ?? ""}\` is not a predicate this runner evaluates`,
       );
-    return value === want
-      ? pass
-      : fail(`${what} is ${JSON.stringify(value ?? null)}, not "${want}"`);
   }
-  if (pred.startsWith("contains ")) {
-    const [want] = stringsAfter(pred);
-    if (want === undefined)
-      return fail(`${what}: \`${pred}\` is not evaluable`);
-    return v.includes(want) ? pass : fail(`${what} does not contain "${want}"`);
-  }
-  if (pred === "not_empty")
-    return v.trim() !== "" ? pass : fail(`${what} is empty`);
-  if (pred.startsWith("in ")) {
-    const set = stringsAfter(pred);
-    return set.includes(v)
-      ? pass
-      : fail(`${what} is "${v}", not one of ${set.join(", ")}`);
-  }
-  if (pred.startsWith("uses ")) {
-    const [token] = stringsAfter(pred);
-    if (!token?.startsWith("--"))
-      return fail(
-        `${what}: \`${pred}\` is not evaluable (uses takes "--token")`,
-      );
-    return v.includes(`var(${token}`)
-      ? pass
-      : fail(`${what} does not read var(${token})`);
-  }
-  return fail(
-    `${what}: predicate \`${pred}\` is not one this runner evaluates`,
-  );
 }
 
 const ROOT_ATTR: Record<string, string> = {
@@ -297,9 +368,24 @@ function evaluateClause(clause: string, rendered: Rendered): Outcome {
   const attr = /^(slot|role|label|class|portal) (.+)$/.exec(body);
   if (attr) {
     const [, subject, pred] = attr;
-    const el = root(html);
-    const value = el.attribs[ROOT_ATTR[subject ?? ""] ?? ""];
-    return predicate(value, pred ?? "", `${subject} (state "${state}")`);
+    const name = ROOT_ATTR[subject ?? ""] ?? "";
+    const value = root(html).attribs[name];
+    const what = `${subject} (state "${state}")`;
+    // An attribute the root does not carry is unevaluable, as in contract_eval.rs.
+    if (value === undefined)
+      return fail(
+        `${what}: \`${pred}\` is not evaluable (the root has no ${name})`,
+      );
+    const verdict = evaluatePredicate(value, pred ?? "");
+    if ("unevaluable" in verdict)
+      return fail(
+        `${what}: \`${pred}\` is not evaluable (${verdict.unevaluable})`,
+      );
+    return verdict.ok
+      ? pass
+      : fail(
+          `${what} is ${JSON.stringify(value)}, which does not satisfy \`${pred}\``,
+        );
   }
 
   return fail("not a clause form this runner evaluates");
@@ -432,15 +518,64 @@ const MINERAL_CLASS = new RegExp(
 );
 
 /**
+ * CSP rule: no element carries an inline `style` attribute, in any state.
+ * Custom properties and sizes go through classes, data attributes or SVG
+ * geometry, so a page's Content-Security-Policy keeps `style-src 'self'` with
+ * no `style-src-attr 'unsafe-inline'` (#444: a strip coloured by `style=`
+ * rendered colourless under such a CSP).
+ *
+ * This rendered check is the rule: it reads the markup a build actually
+ * emits, so it sees every way of writing one (React's `style={{…}}`, a spread
+ * props object, `createElement(…, { style })`, Astro's `{style}` shorthand
+ * and `<style define:vars>`). `evaluateInlineStyles` is the one place it is
+ * applied, and `evaluateTheming` calls it. The registry's source-side
+ * backstop, `contracts/source-scan.ts`, is not part of this runner.
+ */
+export interface InlineStyle {
+  state: string;
+  tag: string;
+  /** The attribute's value, as rendered. */
+  style: string;
+}
+
+/**
+ * The message `evaluateTheming` gives for an inline style. Its text is a
+ * contract with @bundu/ui's synced copy of this runner, whose tests match it
+ * exactly; the style's value is in `inlineStyles`, not in the message.
+ */
+const inlineStyleMessage = (state: string, tag: string) =>
+  `[${state}] an inline style attribute on <${tag}> (needs style-src-attr 'unsafe-inline')`;
+
+/** Every element, in every state, that carries a `style` attribute. */
+export function inlineStyles(rendered: Rendered): InlineStyle[] {
+  const out: InlineStyle[] = [];
+  for (const [state, html] of Object.entries(rendered))
+    for (const el of elements(doc(html)))
+      if (el.attribs.style !== undefined)
+        out.push({ state, tag: el.name, style: el.attribs.style });
+  return out;
+}
+
+/**
+ * The CSP rule: one message per element with a `style` attribute, state by
+ * state. `evaluateTheming` calls this for its CSP failures, so the rule and
+ * its messages live in one place; `runner-theming.test.ts` pins both.
+ */
+export function evaluateInlineStyles(rendered: Rendered): string[] {
+  return inlineStyles(rendered).map((s) => inlineStyleMessage(s.state, s.tag));
+}
+
+/**
  * Brand overlay rule: a component names no colour value and no brand
  * mineral. Colour comes from semantic tokens (`--primary`, `--ring`, …), so
  * the brand overlay is the only thing that changes it; minerals appear only
  * as declared status colours.
  *
- * CSP rule: no element carries an inline `style` attribute. Custom
- * properties and sizes go through classes, data attributes or SVG geometry,
- * so a page's Content-Security-Policy keeps `style-src 'self'` with no
- * `style-src-attr 'unsafe-inline'`.
+ * CSP rule, in the same pass: each state's `evaluateInlineStyles` failures
+ * come first, then its colour failures. A colour value inside a style
+ * attribute fails as a colour too.
+ * The messages are a contract with @bundu/ui's synced copy of this runner;
+ * `__tests__/contracts/runner-theming.test.ts` pins them.
  */
 export function evaluateTheming(
   contract: Contract,
@@ -448,13 +583,10 @@ export function evaluateTheming(
 ): string[] {
   const failures: string[] = [];
   for (const [state, html] of Object.entries(rendered)) {
+    failures.push(...evaluateInlineStyles({ [state]: html }));
     for (const el of elements(doc(html))) {
       const cls = el.attribs.class ?? "";
       const style = el.attribs.style ?? "";
-      if (el.attribs.style !== undefined)
-        failures.push(
-          `[${state}] an inline style attribute on <${el.name}> (needs style-src-attr 'unsafe-inline')`,
-        );
       if (/#[0-9a-fA-F]{3,8}\b/.test(cls) || /#[0-9a-fA-F]{3,8}\b/.test(style))
         failures.push(`[${state}] a literal hex colour on <${el.name}>`);
       if (

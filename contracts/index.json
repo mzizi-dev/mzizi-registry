@@ -122,7 +122,7 @@
     {
       "name": "app/brand-mark",
       "title": "BrandMark",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "file": "app/brand-mark.contract.json",
       "astro": "app-brand-mark",
       "tsx": "app-brand-mark",
@@ -536,7 +536,7 @@
     {
       "name": "ui/status-badge",
       "title": "StatusBadge",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "file": "ui/status-badge.contract.json",
       "astro": "status-badge",
       "tsx": "status-badge",
@@ -599,7 +599,7 @@
     {
       "name": "ui/markdown-renderer",
       "title": "MarkdownRenderer",
-      "version": "1.1.0",
+      "version": "1.2.1",
       "file": "ui/markdown-renderer.contract.json",
       "astro": "markdown-renderer",
       "tsx": "markdown-renderer",

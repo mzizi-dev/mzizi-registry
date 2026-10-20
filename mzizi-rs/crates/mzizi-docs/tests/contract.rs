@@ -18,6 +18,9 @@
 use std::fs;
 use std::path::PathBuf;
 
+use mzizi_docs::mzizi_ai_context::{
+    AiContextOptions, EcosystemCounts, Preset, generate_ai_context,
+};
 use mzizi_docs::mzizi_changelog_renderer::{NodeAccent, default_node_styles};
 use mzizi_docs::mzizi_docs_engine::{category_label, default_node_labels, node_label};
 
@@ -213,4 +216,49 @@ fn the_locale_dependent_date_is_not_reproduced() {
         ts.contains("toLocaleDateString"),
         "the .tsx no longer formats dates itself — remove this test"
     );
+}
+
+// ── mzizi-ai-context ─────────────────────────────────────────────────────────
+
+/// The golden outputs both builds are held to, one file per case, committed at
+/// `__tests__/fixtures/ai-context/`. `__tests__/lib/ai-context.test.ts` compares
+/// the `.ts`'s `generateAIContext()` against the same files, so the two builds
+/// render byte-identical text. Set `MZIZI_UPDATE_GOLDEN=1` to rewrite them from
+/// the Rust build after a deliberate change, then review the diff.
+fn golden_cases() -> Vec<(&'static str, String)> {
+    vec![
+        ("default", generate_ai_context(&AiContextOptions::default())),
+        (
+            "with-counts",
+            generate_ai_context(&AiContextOptions {
+                counts: Some(EcosystemCounts {
+                    total_components: 575,
+                    total_nodes: 12,
+                }),
+                ..AiContextOptions::default()
+            }),
+        ),
+        ("copilot", Preset::Copilot.render(None)),
+    ]
+}
+
+#[test]
+fn ai_context_matches_the_golden_output_both_builds_share() {
+    let dir =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../__tests__/fixtures/ai-context");
+    let update = std::env::var_os("MZIZI_UPDATE_GOLDEN").is_some();
+    for (name, rendered) in golden_cases() {
+        let path = dir.join(format!("{name}.txt"));
+        if update {
+            fs::create_dir_all(&dir).expect("create the golden directory");
+            fs::write(&path, &rendered).expect("write the golden file");
+            continue;
+        }
+        let golden = fs::read_to_string(&path)
+            .unwrap_or_else(|e| panic!("cannot read the golden file {path:?}: {e}"));
+        assert_eq!(
+            rendered, golden,
+            "the Rust build's {name} output differs from {path:?}; the .ts is held to the same file"
+        );
+    }
 }
