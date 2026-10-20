@@ -199,6 +199,10 @@ impl Clock for HostClock {
     fn now_ms(&self) -> u64 {
         self.0
     }
+
+    fn sleep(&self, _ms: u64) -> impl std::future::Future<Output = ()> {
+        std::future::ready(())
+    }
 }
 
 /// Unwraps a write that the test expects to fail at a tier, and returns the tier and whether

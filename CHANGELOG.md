@@ -10,6 +10,19 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the client write path in `mzizi-data`: outbox, request-id mutations, status polling, read-your-own-writes (2026-10-20)
+
+- **`MziziData`**: `get` reads through the cascade with this client's unconfirmed writes applied on top (`QueryResult` with data, source, version, `as_of` in UTC, and pending count). `set`, `update` (requires `base_version`) and `delete` (requires `base_version`) write to the outbox first and return a `MutationHandle` (`status`, `on_settled`, `request_id`).
+- **Outbox.** `Outbox` is a trait the host implements (IndexedDB in the browser, SQLite natively). `MemoryOutbox` ships. Mutations flush in creation order and the flush stops at the first failure to reach the server. An entry leaves only on `applied` or a permanent refusal.
+- **Lifecycle.** QueuedLocal, Accepted, Applied (with the server version), Failed (`conflict`, `invalid` or `forbidden`, with the optimistic change reverted), Unknown.
+- **Status.** `track` polls one write on a backoff of 1 s, 2 s, 4 s, then every 8 s, and at 60 s marks it Unknown. Unknown is checked again on `resume` (start-up) and is never sent again. `sync` checks accepted writes in batches of up to 50.
+- **Request ids.** UUIDv7, generated in the crate from an injected `RandomSource`. The `uuid` crate is not a dependency; the size measurement below is the reason.
+- **Clock.** `Clock` gains `sleep`. `ManualClock` advances on a sleep.
+- **Measured (gzip -9, wasm32 release, probe cdylib outside the repo that calls the public read and write path):** in-crate UUIDv7 with a generic payload, 30,145 bytes (83,142 raw); size-tuned, 23,268 bytes (53,904 raw). With `uuid` and `serde_json::Value` added, 41,575 bytes (120,166 raw); size-tuned, 31,705 bytes (76,755 raw). The generic-payload build is smaller and costs no API clarity, so it is the one chosen. No budget is claimed: owner decision 6.2 is open.
+- **Tests:** 15 write-path tests (`tests/writes.rs`): each cascade step; the same request id sent twice applies once; offline writes flush in order on reconnect; a stale `base_version` reverts and reports a conflict; an Unknown write is re-checked on restart and never re-sent; read-your-own-writes; a malformed id is refused.
+- **Consistency contract (draft).** Documented in `src/client.rs`. The 5-second apply figure is a TARGET TO BE CONFIRMED, not a measured fact. No speed claim is made.
+- **Server contract** moves to 1.2.0 (`mzizi-rs/contracts/server/mzizi-data.contract.json`).
+
 ### Added — the data layer in `mzizi-data`: fetch cascade, sync reconciliation, tombstones, staleness, local-first writes with rollback, not wired into any app (2026-10-20, #505)
 
 - **The data layer, in the crate the transport already lives in.** `mzizi-data` keeps its `io::Io` transport, `Error` and `Result`, and adds the data layer above them: `Cascade::fetch`, `reconcile`, `apply_optimistic`, `delete`, `Record`, `Layer`, `Clock`, `MemoryLayer`. It has no UI, no storage client and no dependencies beyond the transport's optional Worker features.

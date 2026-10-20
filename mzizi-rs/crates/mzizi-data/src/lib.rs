@@ -43,6 +43,15 @@
 //! to a document store and a SQL database: what they share is the transport and the error type,
 //! not a query language.
 //!
+//! # The write path
+//!
+//! [`MziziData`] reads through the cascade with this client's unconfirmed writes applied on top,
+//! and writes through a durable [`Outbox`] to a [`Transport`]. A write is in the outbox before it
+//! is sent, and it leaves the outbox only when the server applies it or refuses it for good. The
+//! consistency contract is in the `client` module's documentation (a draft: its numbers are
+//! targets, not measurements). Its starting point is Coda's published approach to local-first
+//! mutations.
+//!
 //! # Where the data layer sits
 //!
 //! It is a production dependency (owner decision 6.3, mzizi-registry#503) and the data layer of
@@ -87,12 +96,27 @@ pub mod io;
 pub mod workers;
 
 mod cascade;
+mod client;
 mod clock;
 mod layer;
+mod mutation;
+mod outbox;
+mod query;
+mod request_id;
+mod transport;
 
 pub use cascade::{Cascade, CascadeError, Fetched, OptimisticError, SyncReport, WriteOutcome};
+pub use client::{
+    Config, FIRST_POLL_MS, FlushReport, MAX_POLL_INTERVAL_MS, MutationHandle, MziziData, ReadError,
+    SETTLE_TIMEOUT_MS,
+};
 pub use clock::{Clock, ManualClock};
 pub use layer::{Layer, MemoryLayer, Record, Source};
+pub use mutation::{FailReason, Mutation, MutationStatus, Op, Patch};
+pub use outbox::{Entry, EntryState, MemoryOutbox, Outbox};
+pub use query::{QueryResult, UtcTime};
+pub use request_id::{RandomSource, RequestId, SeededRandom};
+pub use transport::{MAX_STATUS_BATCH, StatusReply, Submitted, Transport};
 
 /// What can go wrong. Messages never carry the connection string, a password
 /// or a document's content.
