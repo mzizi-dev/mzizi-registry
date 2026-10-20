@@ -10,6 +10,54 @@
 
 use dioxus::prelude::*;
 
+/// The escaping HTML writer `render` uses, inlined so this file installs on its own.
+///
+/// It is a copy of `mzizi-ui/src/html.rs`, which is the reference and carries the unit tests.
+/// A test in `html.rs` holds the two to the same output on the five escaped characters and on
+/// non-ASCII text, so the copies cannot drift without a test failing.
+mod html {
+    /// Escape `value` for text and double-quoted attribute values: `&`, `<`, `>`, `"` and `'`
+    /// become decimal references; everything else, including non-ASCII, is written unchanged.
+    fn escape_into(out: &mut String, value: &str) {
+        for c in value.chars() {
+            match c {
+                '&' => out.push_str("&#38;"),
+                '<' => out.push_str("&#60;"),
+                '>' => out.push_str("&#62;"),
+                '"' => out.push_str("&#34;"),
+                '\'' => out.push_str("&#39;"),
+                _ => out.push(c),
+            }
+        }
+    }
+
+    /// Write an opening tag with its attributes, in the order given. Values are escaped.
+    pub(super) fn open(out: &mut String, tag: &str, attrs: &[(&str, &str)]) {
+        out.push('<');
+        out.push_str(tag);
+        for (name, value) in attrs {
+            out.push(' ');
+            out.push_str(name);
+            out.push_str("=\"");
+            escape_into(out, value);
+            out.push('"');
+        }
+        out.push('>');
+    }
+
+    /// Write a closing tag.
+    pub(super) fn close(out: &mut String, tag: &str) {
+        out.push_str("</");
+        out.push_str(tag);
+        out.push('>');
+    }
+
+    /// Write text content, escaped.
+    pub(super) fn text(out: &mut String, value: &str) {
+        escape_into(out, value);
+    }
+}
+
 /// Visual treatment. Matches `badgeVariants` in `badge.tsx` exactly.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum BadgeVariant {
@@ -103,4 +151,41 @@ pub fn Badge(props: BadgeProps) -> Element {
             {props.children}
         }
     }
+}
+
+/// The Dioxus-free render path: the props a [`render`] call takes.
+///
+/// `text` is the label, written as escaped text. [`BadgeProps`] takes an `Element` for its
+/// children, which this path cannot take; a registry badge's label is text.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RenderProps {
+    /// Visual treatment.
+    pub variant: BadgeVariant,
+    /// Extra classes, appended last.
+    pub class: String,
+    /// The label text.
+    pub text: String,
+}
+
+/// Render a badge to an HTML string, with no Dioxus and no WASM.
+///
+/// Byte-identical to `dioxus-ssr` rendering [`Badge`] with the same props, for the cases
+/// `mzizi-ui/tests/render_parity.rs` covers.
+#[must_use]
+pub fn render(props: &RenderProps) -> String {
+    let class = badge_variants(props.variant, &props.class);
+    let mut out = String::with_capacity(BASE.len() + 256 + props.text.len());
+    html::open(
+        &mut out,
+        "span",
+        &[
+            ("data-slot", "badge"),
+            ("data-portal", "https://mzizi.dev/components/badge"),
+            ("data-variant", props.variant.slug()),
+            ("class", class.as_str()),
+        ],
+    );
+    html::text(&mut out, &props.text);
+    html::close(&mut out, "span");
+    out
 }
