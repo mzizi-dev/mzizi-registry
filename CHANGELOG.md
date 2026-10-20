@@ -23,7 +23,9 @@ Owner decision, 2026-10-20. The parser's "linear time" tests used fixed budgets:
   - Each size is timed in rotating rounds, five by default and three for the largest inputs. A sample repeats the work until it lasts about 15 ms, and every result goes to a sink, so the optimiser cannot drop the work.
   - The median at 4n may cost at most 2.5 × 2.5 times the median at n: 2.5× per doubling. A quadratic path costs 16× and fails.
   - A busy host gets three attempts. A quadratic fails all three.
-- **Sizes.** 4n is the size each test read before, or larger: 150,000 `<br>`, 150,000 empty marks, 100,000 nested-mark lines, 160,000-character headings and a 1,000,000-closer K×L run. The heading and `auto` inputs are now larger than before.
+- **Sizes.** 4n is the size each test read before, or larger, with two exceptions.
+  - At their old size or larger: 100,000 nested-mark lines, 160,000-character headings, the hostile inline and rich-text inputs, and a 1,000,000-closer K×L run. The `auto` inputs are larger than before.
+  - The exceptions are `<br>` in a span and empty marks between letters. They are timed up to 100,000; their old 150,000 is still checked, untimed, for a stack overflow. At 150,000 the rendered output is large enough that garbage collection sets the curve: under the full parallel suite, `<br>` measured 3.1× per doubling on all three attempts.
 - **The budget.** The only absolute number left is a 30 s budget for the whole check: every attempt, round and size. It is checked before each sample with that sample's expected cost, so a quadratic stops before the sample that would cross it. A budget trip is reported with every earlier attempt, in both TypeScript and Rust. Each test runs one check, under a Vitest timeout (`SCALING_TIMEOUT_MS`, 45 s) that sits above the budget.
 - **Where.**
   - `__tests__/helpers/linear-scaling.ts` holds the check.
