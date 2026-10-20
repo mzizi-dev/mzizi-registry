@@ -52,9 +52,13 @@ Every Bundu Foundation project has three surfaces, on three homes:
 
 ## Deployment
 
-- Everything deploys to **Cloudflare Workers**. Sites, tools, APIs, MCP
+- Everything deploys to **Cloudflare Workers** today. Sites, tools, APIs, MCP
   servers — one platform, one deploy story, one place to look when something
-  is down.
+  is down. This is what ships now. It is not the only target the language and
+  the server crates are meant for: on 2026-10-20 the owner decided that Mzizi
+  builds for Cloudflare Workers, containers and bare metal, and that a backend
+  can connect to Cloudflare-hosted and Fly-hosted stores from either side. That
+  is direction; no container or bare-metal host adapter is built yet.
 - A site is a Worker with **Static Assets**: Astro emits HTML and assets, and
   the Worker serves them. `docs.nyuchi.com` already runs this way.
 - **Vercel is being removed.** It was the rule for sites and is now the

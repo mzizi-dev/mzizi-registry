@@ -1,7 +1,10 @@
 # mzizi-ui
 
-Dioxus primitives from the [Mzizi](https://mzizi.dev) component registry — **node N2,
-primitives** — the second node of the DNA-helix architecture.
+Primitives from the [Mzizi](https://mzizi.dev) component registry — **node N2,
+primitives** — the second node of the DNA-helix architecture. They are Dioxus components today.
+Mzizi is replacing Dioxus with its own `render(props) -> String` path; the `render` functions that
+exist so far are on `skeleton`, `badge`, `progress`, `separator`, `status-badge`, `safe-area-frame`
+and `chart`.
 
 The primitives ported so far: `Alert`, `Avatar`, `Badge`, `Button`, `Card`, `Chart`,
 `Input`, `Label`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame`, `Separator`, `Skeleton`

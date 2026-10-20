@@ -26,12 +26,12 @@ position: the contract exists, the source is yours to write. Do not wait for it.
 
 `readiness` is not the same question as `tier`, and you need both:
 
-| `tier`     | Meaning                                              |
-| ---------- | ---------------------------------------------------- |
-| `primary`  | Where Mzizi is heading — Rust: `dioxus`, `crates-io` |
-| `native`   | First-class native shells — swift, kotlin, arkts, RN |
-| `optional` | Supported, not the destination — none today          |
-| `legacy`   | Still ships, being moved away from — `react`         |
+| `tier`     | Meaning                                                                                        |
+| ---------- | ---------------------------------------------------------------------------------------------- |
+| `primary`  | Where Mzizi is heading — Rust: `dioxus` (Mzizi's own render path is replacing it), `crates-io` |
+| `native`   | First-class native shells — swift, kotlin, arkts, RN                                           |
+| `optional` | Supported, not the destination — none today                                                    |
+| `legacy`   | Still ships, being moved away from — `react`                                                   |
 
 They can point different ways, on purpose: **dioxus is `metadata_only` + `primary`**
 (the direction, source not wired). One field would force a false choice between
@@ -61,7 +61,11 @@ Two things that will bite you if the manifest is wrong, both now gate-checked by
 - Every npm package a component imports must be in its `dependencies`. A missing
   one installs a file that cannot resolve its own import.
 
-### Rust / Dioxus
+### Rust (Mzizi Roots)
+
+The Rust build is Mzizi Roots. Its UI crates still depend on Dioxus until Mzizi's own render path
+replaces it (`docs/roots/RFC-roots-renderer.md`). The crate names stay; the component API changes in the
+breaking release that RFC proposes (0.4.0, not yet published).
 
 Consumed as a **crate**, not via a CLI:
 
@@ -74,7 +78,7 @@ mzizi-tokens = { git = "https://github.com/mzizi-dev/mzizi-registry", package = 
 Check what actually exists before you plan around it:
 
 ```bash
-curl https://api.mzizi.dev/v1/rs/button      # 200 — has a Dioxus implementation
+curl https://api.mzizi.dev/v1/rs/button      # 200 — has a Rust implementation
 curl https://api.mzizi.dev/v1/rs/select      # 404 — TypeScript only, for now
 ```
 
@@ -124,7 +128,7 @@ target:
 
 In order of preference:
 
-1. **Check `/api/v1/rs/{name}`** (Dioxus) or the target's descriptor. It may exist.
+1. **Check `/api/v1/rs/{name}`** (Rust) or the target's descriptor. It may exist.
 2. **Read the contract** — `/api/v1/ui/{name}/docs` gives use cases, variants,
    sizes, features and a11y notes; `/api/v1/ui/{name}` gives dependencies and the
    file layout.

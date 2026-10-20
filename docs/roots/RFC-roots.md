@@ -1,7 +1,10 @@
 # RFC: Mzizi Roots
 
 **Status:** proposed, 2026-09-29. **Amended** 2026-10-05: §2.5, pure `.astro` is a first-class
-implementation beside `.tsx`, `.rs` and `.mz` (the original §2.5 is Appendix B).
+implementation beside `.tsx`, `.rs` and `.mz` (the original §2.5 is Appendix B). **Amended**
+2026-10-20: §2.2 names three build targets (Workers, containers, bare metal), and §2.1 and §3
+note the Dioxus removal decided in [RFC-roots-renderer](./RFC-roots-renderer.md), which is
+proposed and not built.
 **Scope:** Mzizi's own branded components (`mzizi`- and `nyuchi`-owned registry items),
 converted to Rust as UI components and server components for the agentic web.
 **Snapshot:** registry `main` at `f19bb0b`. Every count below is computed from
@@ -11,10 +14,14 @@ converted to Rust as UI components and server components for the agentic web.
 
 ## Summary
 
-Mzizi Roots is the Rust build of Mzizi's own components. UI components are Dioxus
-components. Server components are host-agnostic Rust that a Cloudflare Worker (through
-`workers-rs`) or a container (through an axum-class server) mounts, and they are the
-building blocks Mzizi's backend services are meant to be built from. Every Roots component
+Mzizi Roots is the Rust build of Mzizi's own components. UI components are Rust
+components: Dioxus today, with Mzizi's own `render(props) -> String` path replacing Dioxus
+(see [RFC-roots-renderer](./RFC-roots-renderer.md); Dioxus stays a dependency until that
+migration finishes). Server components are host-agnostic Rust that a Cloudflare Worker
+(through `workers-rs`), a container (through an axum-class server) or bare metal (a native
+binary) mounts. Those are the three build targets, decided by the owner on 2026-10-20, and
+the server components are the building blocks Mzizi's backend services are meant to be built
+from. Every Roots component
 carries a contract: the registry contract it already has (name, slot, variants, tokens), plus
 checkable clauses in the Mzizi language's `contract … end` grammar that its tests evaluate.
 
@@ -122,9 +129,18 @@ the branded set for four reasons.
 
 ### 2.1 UI components are Dioxus
 
+> **Status (2026-10-20).** The owner decided that Mzizi Roots components use Mzizi's own
+> renderer, not Dioxus: "Mzizi components are rust not borrowed from another rust version like
+> dioxus. We build our own completely." Dioxus is still a dependency of `mzizi-ui`,
+> `mzizi-brand`, `mzizi-shell`, `mzizi-docs` and the umbrellas until the migration in
+> [RFC-roots-renderer](./RFC-roots-renderer.md) finishes. Seven files have a `render` path
+> today (the skeleton, badge, progress, separator, status-badge, safe-area-frame and chart),
+> landed in #506 and #510. No new Dioxus, Leptos or Yew work is accepted, and Svelte is out.
+
 A Roots UI component is a Dioxus 0.7 `#[component]` in a `.rs` file beside its `.tsx`
 sibling, in the same node directory, under the same registry name. That is the shape the 34
-existing ports already prove, and this RFC keeps it:
+existing ports already prove. The shape is what this RFC keeps; the Dioxus part is what the
+renderer RFC replaces:
 
 - **Same contract as the React build.** The same `data-slot` and `data-portal` attributes,
   the same variant names (the registry item's `meta.variants`), and the same Tailwind classes
@@ -165,6 +181,17 @@ Workers and Containers first-class: "Workers via `workers-rs` (wasm32) … Conta
 native Rust HTTP server packaged as a container image". Handler code "reaches
 target-specific facilities only through declared capabilities" (§4, Phase 1).
 
+**What the owner decided (2026-10-20).** "We focusing our mzizi build out to only workers.
+Our build out should also contain containers and bare metal." and "wherever a backend may be
+on cloudflare or fly we can connect to both." So Roots and the server crates target three
+hosts: Cloudflare Workers (wasm32), containers (any OCI host, for example Fly machines) and
+bare metal (a native Linux binary). Every backend sits behind a trait with one adapter per
+side, so Cloudflare-hosted stores (D1, KV, R2, Queues) and Fly-hosted stores (MongoDB, the
+self-hosted Postgres ledger, Redpanda) are reachable from either. This is direction. Today
+every Rust crate builds and tests natively, and `mzizi-roots-server`'s dependency-free
+features also pass a `wasm32-unknown-unknown` `cargo check`. No Workers adapter, container
+image or bare-metal adapter is built yet.
+
 **So a Roots server component is:**
 
 1. **A sans-IO core** in a node crate: typed request in, typed response out, every external
@@ -175,8 +202,9 @@ target-specific facilities only through declared capabilities" (§4, Phase 1).
 2. **A host adapter** that mounts the core. The first is a Workers adapter over `workers-rs`
    (the `worker` crate): it turns a `worker::Request` into the core's request, implements the
    traits over Workers bindings (KV, R2, D1, `fetch`, secrets), and turns the response back.
-   An axum adapter does the same for Containers. Adapters live in their own crate so the
-   cores stay dependency-free.
+   An axum adapter does the same for containers and bare metal. Adapters live in their own
+   crate so the cores stay dependency-free. Both adapters are design, not built: the axum
+   adapter crate is planned beside `mzizi-worker`, and neither exists in `mzizi-rs/` today.
 
 **Why not Dioxus server functions as the building block.** Dioxus server functions
 (`#[server]`) belong to Dioxus's fullstack runtime, which serves them from its own axum-based
@@ -188,7 +216,9 @@ Server functions become one more adapter where a Dioxus fullstack app wants them
 
 **The first proof** is an api-gateway-style handler on Workers: the existing
 `mzizi-docs-api` core mounted in a `workers-rs` Worker, answering the same requests with the
-same bodies (batch 4, §5).
+same bodies (batch 4, §5). The same core is then to be mounted in an axum adapter for
+containers and bare metal, so one core answers on all three targets. That second mount is
+planned, not built.
 
 ### 2.3 The contract
 
@@ -249,7 +279,8 @@ A Roots component is done when all of these pass in CI:
 | Served         | vitest, `__tests__/api/v1/`                             | `/v1/rs/{name}` answers 200 with the source and the right crate      |
 
 Server components add a `wasm32-unknown-unknown` build check once the Workers adapter lands,
-so a core that stops building for Workers fails CI rather than a deploy.
+so a core that stops building for Workers fails CI rather than a deploy. A native build check
+for the axum adapter (containers and bare metal) lands with that adapter.
 
 ### 2.5 The four formats and the frontend paths
 
@@ -337,7 +368,7 @@ The Astro implementation is served and installed the same way the Rust and React
   `GET /v1/astro/{name}` returns its document: the `.astro` or framework-free `.ts`, its flat
   imports as absolute `/v1/astro/` dependencies, its npm dependencies and any imported brand
   asset. `lib/astro.ts` builds it, `openapi.yaml` documents it, and the gateway serves it
-  ([mzizi-api-gateway#49](https://github.com/mzizi-dev/mzizi-api-gateway/pull/49)).
+  ([mzizi-api#49](https://github.com/mzizi-dev/mzizi-api-gateway/pull/49), then `mzizi-api-gateway`).
 - **CLI.** `mzizi add <name> --target astro` installs a component and its `/v1/astro/`
   closure flat into one directory (`src/components/mzizi/`), and detects an Astro project
   on its own
@@ -414,7 +445,8 @@ The split follows §1.2 at crate level. `mzizi-docs` goes on the server side: it
 AI context are server components, and its two documentation renderers come with it, which is
 why the `docs` feature brings in `dioxus`. When N4, N5 and N6 get crates (`mzizi-safety`,
 `mzizi-resilience`, `mzizi-pages`), they join `mzizi-roots` as features. When the Workers
-adapter (`mzizi-worker`) lands, it joins `mzizi-roots-server`.
+adapter (`mzizi-worker`) lands, it joins `mzizi-roots-server`, and so does the planned axum
+adapter for containers and bare metal (design, unbuilt).
 
 All of these names were free on crates.io when checked on 2026-09-29. A published name is
 permanent.
@@ -485,7 +517,7 @@ and the site put Rust first and label the TSX "React build".
 
 None of this is implemented by this RFC.
 
-**mzizi-api-gateway** (api.mzizi.dev, Hono on Workers, bundled registry files)
+**mzizi-api** (formerly `mzizi-api-gateway`; api.mzizi.dev, Hono on Workers, bundled registry files)
 
 - Bundle `mzizi-rs/crate-for-node.json` and derive `crate.name` from it in `/v1/rs/{name}`.
   Its handler hard-codes `mzizi-ui` today, as the registry's did.
@@ -516,17 +548,17 @@ None of this is implemented by this RFC.
 
 ## 5. Order of conversion
 
-| Batch | What                                                                                                                                                                                                                                                                              |   Items | Blockers                                                                                                                                                                                                                                                                      |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1** | N3 brand leaf components: alert banner, avatar stack, cover header, empty state, escalation card, gauge card, hero stat, meta tile, stats row, success screen, suitability card, user card. New crate `mzizi-brand`, contract evaluation, publish workflow.                       |      12 | None. In the companion pull request.                                                                                                                                                                                                                                          |
-| **2** | The rest of N3 that composes nothing unported: cards, rows, headers, badges, the agentic payment-mandate and product-results cards, `mzizi-media`. Adds `mzizi-islands` (custom elements).                                                                                        |      52 | 27 of N3's files import Lucide icons, and some icons are part of the contract (a source badge's credibility icon). Needs a decision between icon slots everywhere and a small generated icon module. `mzizi-media` needs an HTML sanitiser (`ammonia`) in place of DOMPurify. |
-| **3** | N4 safety gates and N5 resilience components.                                                                                                                                                                                                                                     |      27 | The gate shape is proven by `mzizi-route-guard.rs` (a pure `evaluate` plus a component). The error boundaries need Dioxus's `ErrorBoundary`, and `mzizi-prefetch-boundary` needs `SuspenseBoundary`.                                                                          |
-| **4** | Server components and libraries: the N2 resilience libraries, `observability` and `architecture`; N4 `ai-safety`; the ten N1 token families (motion, layout, locale, a11y and others); the N8 SQL audit. Adds `mzizi-worker` (`workers-rs` adapter) and the docs API as a Worker. |      21 | Async without a runtime in the cores (traits over `Future`, no tokio). A `wasm32` CI job. The token generator has to emit non-colour families to Rust.                                                                                                                        |
-| **5** | N2 Mzizi-owned primitives, in sub-batches of about 20. 190 import nothing unported; 25 do.                                                                                                                                                                                        |     215 | For the 25: the framework primitives `popover`, `scroll-area`, `dialog`, `tabs`, `calendar`, `textarea`, `dropdown-menu` and `table`, and the libraries `chart.js`, `react-day-picker`, `@tanstack/react-table` and DOMPurify.                                                |
-| **6** | Composition: N6 pages and blocks (52), N3 composites (`mzizi-profile-page`, `mzizi-profile-settings`, `mzizi-user-menu`), N2 blocks (4), and N7's `app-switcher`, `mzizi-header` and `mzizi-sidebar`.                                                                             |      62 | Everything above, plus the framework `sidebar`, `switch` and `dropdown-menu`.                                                                                                                                                                                                 |
-| n/a   | Not converted: seven other-platform token emitters (their Rust counterpart is `mzizi-tokens-rust`), the two CSS data items (`mzizi-base`, `mzizi-tokens`), `mzizi-harness` (replaced by props, §2.1) and `mzizi-root-layout` (a Dioxus app's root is `dioxus::launch`).           |      11 | —                                                                                                                                                                                                                                                                             |
-| done  | Already Rust.                                                                                                                                                                                                                                                                     |      34 | —                                                                                                                                                                                                                                                                             |
-|       | **Total**                                                                                                                                                                                                                                                                         | **434** |                                                                                                                                                                                                                                                                               |
+| Batch | What                                                                                                                                                                                                                                                                                                                                                                |   Items | Blockers                                                                                                                                                                                                                                                                      |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1** | N3 brand leaf components: alert banner, avatar stack, cover header, empty state, escalation card, gauge card, hero stat, meta tile, stats row, success screen, suitability card, user card. New crate `mzizi-brand`, contract evaluation, publish workflow.                                                                                                         |      12 | None. In the companion pull request.                                                                                                                                                                                                                                          |
+| **2** | The rest of N3 that composes nothing unported: cards, rows, headers, badges, the agentic payment-mandate and product-results cards, `mzizi-media`. Adds `mzizi-islands` (custom elements).                                                                                                                                                                          |      52 | 27 of N3's files import Lucide icons, and some icons are part of the contract (a source badge's credibility icon). Needs a decision between icon slots everywhere and a small generated icon module. `mzizi-media` needs an HTML sanitiser (`ammonia`) in place of DOMPurify. |
+| **3** | N4 safety gates and N5 resilience components.                                                                                                                                                                                                                                                                                                                       |      27 | The gate shape is proven by `mzizi-route-guard.rs` (a pure `evaluate` plus a component). The error boundaries need Dioxus's `ErrorBoundary`, and `mzizi-prefetch-boundary` needs `SuspenseBoundary`.                                                                          |
+| **4** | Server components and libraries: the N2 resilience libraries, `observability` and `architecture`; N4 `ai-safety`; the ten N1 token families (motion, layout, locale, a11y and others); the N8 SQL audit. Adds `mzizi-worker` (`workers-rs` adapter), the planned axum adapter for containers and bare metal (design, unbuilt), and the docs API mounted on Workers. |      21 | Async without a runtime in the cores (traits over `Future`, no tokio). A `wasm32` CI job. The token generator has to emit non-colour families to Rust.                                                                                                                        |
+| **5** | N2 Mzizi-owned primitives, in sub-batches of about 20. 190 import nothing unported; 25 do.                                                                                                                                                                                                                                                                          |     215 | For the 25: the framework primitives `popover`, `scroll-area`, `dialog`, `tabs`, `calendar`, `textarea`, `dropdown-menu` and `table`, and the libraries `chart.js`, `react-day-picker`, `@tanstack/react-table` and DOMPurify.                                                |
+| **6** | Composition: N6 pages and blocks (52), N3 composites (`mzizi-profile-page`, `mzizi-profile-settings`, `mzizi-user-menu`), N2 blocks (4), and N7's `app-switcher`, `mzizi-header` and `mzizi-sidebar`.                                                                                                                                                               |      62 | Everything above, plus the framework `sidebar`, `switch` and `dropdown-menu`.                                                                                                                                                                                                 |
+| n/a   | Not converted: seven other-platform token emitters (their Rust counterpart is `mzizi-tokens-rust`), the two CSS data items (`mzizi-base`, `mzizi-tokens`), `mzizi-harness` (replaced by props, §2.1) and `mzizi-root-layout` (a Dioxus app's root is `dioxus::launch`).                                                                                             |      11 | —                                                                                                                                                                                                                                                                             |
+| done  | Already Rust.                                                                                                                                                                                                                                                                                                                                                       |      34 | —                                                                                                                                                                                                                                                                             |
+|       | **Total**                                                                                                                                                                                                                                                                                                                                                           | **434** |                                                                                                                                                                                                                                                                               |
 
 The two `partial` items are counted in batches 5 (`avatar-group`) and 4
 (`accessibility-audit`).
