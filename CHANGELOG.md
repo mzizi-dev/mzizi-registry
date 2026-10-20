@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — `hono` 4.13.13 through the override, for GHSA-5r4p-p66f-jhc7 (2026-10-20, #PR)
+
+`hono` 4.12.4 to 4.13.10 can let a request bypass middleware on static paths (moderate). It reaches the registry only as a dev dependency, through `shadcn` → `@modelcontextprotocol/sdk`. The `hono` override moves from `^4.13.5` to `^4.13.11`, and the lockfile resolves 4.13.13. Without it `pnpm audit --audit-level=moderate` fails, which blocks the pre-commit hook and the Security Audit job on every branch, and it failed CI on `main` for the 4.9.0 release, so `v4.9.0` was not tagged. No published package or API changes.
+
 ### Added — `border-control`, a control's edge at Lc 30 and 3:1; `border` is decorative; `text-tertiary` gets its own Lc 60 floor and 4.5:1; `input` is pending until slice 4 (2026-10-20, #518)
 
 The owner's decision on the three roles that #485 left pending (#484, 2026-10-20). The contrast gate in `pnpm tokens:sync` and `pnpm tokens:verify` reports 0 violations. It lists each decorative exemption by name, and it reports one pending role, `input`, because the controls still draw their edge with it until slice 4.
