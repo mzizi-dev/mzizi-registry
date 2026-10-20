@@ -29,6 +29,68 @@
 
 use dioxus::prelude::*;
 
+/// The escaping HTML writer `render` uses, inlined so this file installs on its own.
+///
+/// It is a copy of `mzizi-ui/src/html.rs`, which is the reference and carries the unit tests.
+/// A test in `html.rs` holds the two to the same output on the five escaped characters and on
+/// non-ASCII text, so the copies cannot drift without a test failing.
+mod html {
+    /// Escape `value` for text and double-quoted attribute values: `&`, `<`, `>`, `"` and `'`
+    /// become decimal references; everything else, including non-ASCII, is written unchanged.
+    fn escape_into(out: &mut String, value: &str) {
+        for c in value.chars() {
+            match c {
+                '&' => out.push_str("&#38;"),
+                '<' => out.push_str("&#60;"),
+                '>' => out.push_str("&#62;"),
+                '"' => out.push_str("&#34;"),
+                '\'' => out.push_str("&#39;"),
+                _ => out.push(c),
+            }
+        }
+    }
+
+    /// Write an opening tag with its attributes, in the order given. Values are escaped.
+    pub(super) fn open(out: &mut String, tag: &str, attrs: &[(&str, &str)]) {
+        out.push('<');
+        out.push_str(tag);
+        for (name, value) in attrs {
+            out.push(' ');
+            out.push_str(name);
+            out.push_str("=\"");
+            escape_into(out, value);
+            out.push('"');
+        }
+        out.push('>');
+    }
+
+    /// Write a closing tag.
+    pub(super) fn close(out: &mut String, tag: &str) {
+        out.push_str("</");
+        out.push_str(tag);
+        out.push('>');
+    }
+
+    /// Write a void element, self-closed as `dioxus-ssr` writes it: `<br/>`, `<hr class="…"/>`.
+    pub(super) fn void(out: &mut String, tag: &str, attrs: &[(&str, &str)]) {
+        out.push('<');
+        out.push_str(tag);
+        for (name, value) in attrs {
+            out.push(' ');
+            out.push_str(name);
+            out.push_str("=\"");
+            escape_into(out, value);
+            out.push('"');
+        }
+        out.push_str("/>");
+    }
+
+    /// Write text content, escaped.
+    pub(super) fn text(out: &mut String, value: &str) {
+        escape_into(out, value);
+    }
+}
+
 // ─── The tree ───────────────────────────────────────────────────────────────────────────────
 
 /// Inline content.
@@ -2008,6 +2070,226 @@ pub fn MarkdownRenderer(props: MarkdownRendererProps) -> Element {
             class: join(classes::ROOT, &props.class),
             ..props.attributes,
             {render_blocks(&blocks, props.heading_base)}
+        }
+    }
+}
+
+/// The Dioxus-free render path: the props a [`render`] call takes, the same as
+/// [`MarkdownRendererProps`] without the free-form attributes.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RenderProps {
+    /// The Markdown to show. Untrusted text is fine: it is never parsed as HTML.
+    pub content: String,
+    /// Which link addresses are kept.
+    pub links: MarkdownLinks,
+    /// What `content` is: Markdown, or an editor's HTML read into Markdown first.
+    pub from: MarkdownSource,
+    /// The heading level a `#` heading renders at (1–6).
+    pub heading_base: u8,
+    /// Extra classes, appended last.
+    pub class: String,
+}
+
+impl Default for RenderProps {
+    fn default() -> Self {
+        Self {
+            content: String::new(),
+            links: MarkdownLinks::default(),
+            from: MarkdownSource::default(),
+            heading_base: 1,
+            class: String::new(),
+        }
+    }
+}
+
+/// Render Markdown to an HTML string, with no Dioxus and no WASM.
+///
+/// Byte-identical to `dioxus-ssr` rendering [`MarkdownRenderer`] with the same props, for the
+/// cases `mzizi-ui/tests/render_parity.rs` covers. The text is parsed by the same
+/// [`markdown_blocks`] both paths use, and every text node and attribute value is escaped.
+#[must_use]
+pub fn render(props: &RenderProps) -> String {
+    let blocks = markdown_blocks(&props.content, props.links, props.from);
+    let class = join(classes::ROOT, &props.class);
+    let mut out = String::with_capacity(props.content.len() * 2 + 256);
+    html::open(
+        &mut out,
+        "div",
+        &[
+            ("data-slot", "markdown-renderer"),
+            (
+                "data-portal",
+                "https://mzizi.dev/components/markdown-renderer",
+            ),
+            ("class", class.as_str()),
+        ],
+    );
+    write_blocks(&mut out, &blocks, props.heading_base);
+    html::close(&mut out, "div");
+    out
+}
+
+fn write_inlines(out: &mut String, c: &[Inline]) {
+    for x in c {
+        write_inline(out, x);
+    }
+}
+
+fn write_inline(out: &mut String, x: &Inline) {
+    match x {
+        Inline::Text(v) => html::text(out, v),
+        Inline::Code(v) => {
+            html::open(out, "code", &[("class", classes::CODE)]);
+            html::text(out, v);
+            html::close(out, "code");
+        }
+        Inline::Strong(c) => {
+            html::open(out, "strong", &[]);
+            write_inlines(out, c);
+            html::close(out, "strong");
+        }
+        Inline::Em(c) => {
+            html::open(out, "em", &[]);
+            write_inlines(out, c);
+            html::close(out, "em");
+        }
+        Inline::Link { href, children } => {
+            if is_external(href) {
+                html::open(
+                    out,
+                    "a",
+                    &[
+                        ("href", href.as_str()),
+                        ("class", classes::A),
+                        ("target", "_blank"),
+                        ("rel", "noopener noreferrer"),
+                    ],
+                );
+            } else {
+                html::open(out, "a", &[("href", href.as_str()), ("class", classes::A)]);
+            }
+            write_inlines(out, children);
+            html::close(out, "a");
+        }
+    }
+}
+
+/// The lines of a paragraph, item or cell, each a hard break apart.
+fn write_lines(out: &mut String, lines: &[Vec<Inline>]) {
+    for (j, l) in lines.iter().enumerate() {
+        if j > 0 {
+            html::void(out, "br", &[]);
+        }
+        write_inlines(out, l);
+    }
+}
+
+fn write_list(out: &mut String, list: &List, nested: bool) {
+    let class = match (list.ordered, nested) {
+        (true, false) => classes::OL.to_owned(),
+        (true, true) => format!("{} {}", classes::OL, classes::NESTED),
+        (false, false) => classes::UL.to_owned(),
+        (false, true) => format!("{} {}", classes::UL, classes::NESTED),
+    };
+    let tag = if list.ordered { "ol" } else { "ul" };
+    let start = list.start.to_string();
+    if list.ordered && list.start != 1 {
+        html::open(
+            out,
+            tag,
+            &[("class", class.as_str()), ("start", start.as_str())],
+        );
+    } else {
+        html::open(out, tag, &[("class", class.as_str())]);
+    }
+    for it in &list.items {
+        html::open(out, "li", &[]);
+        write_lines(out, &it.lines);
+        for sub in &it.children {
+            write_list(out, sub, true);
+        }
+        html::close(out, "li");
+    }
+    html::close(out, tag);
+}
+
+fn write_heading(out: &mut String, level: u8, c: &[Inline]) {
+    let class = classes::H[usize::from(level.clamp(1, 6)) - 1];
+    let tag = match level {
+        1 => "h1",
+        2 => "h2",
+        3 => "h3",
+        4 => "h4",
+        5 => "h5",
+        _ => "h6",
+    };
+    html::open(out, tag, &[("class", class)]);
+    write_inlines(out, c);
+    html::close(out, tag);
+}
+
+fn write_blocks(out: &mut String, blocks: &[Block], heading_base: u8) {
+    for b in blocks {
+        write_block(out, b, heading_base);
+    }
+}
+
+fn write_block(out: &mut String, b: &Block, heading_base: u8) {
+    match b {
+        Block::Paragraph(lines) => {
+            html::open(out, "p", &[("class", classes::P)]);
+            write_lines(out, lines);
+            html::close(out, "p");
+        }
+        Block::Heading { level, children } => {
+            write_heading(out, heading_level(*level, heading_base), children);
+        }
+        Block::List(list) => write_list(out, list, false),
+        Block::Quote(children) => {
+            html::open(out, "blockquote", &[("class", classes::QUOTE)]);
+            write_blocks(out, children, heading_base);
+            html::close(out, "blockquote");
+        }
+        Block::Code { lang, text } => {
+            html::open(out, "pre", &[("class", classes::PRE)]);
+            if lang.is_empty() {
+                html::open(out, "code", &[]);
+            } else {
+                html::open(out, "code", &[("data-language", lang.as_str())]);
+            }
+            html::text(out, text);
+            html::close(out, "code");
+            html::close(out, "pre");
+        }
+        Block::Rule => html::void(out, "hr", &[("class", classes::HR)]),
+        Block::Table { align, head, rows } => {
+            let col = |k: usize| align.get(k).copied().flatten();
+            html::open(out, "div", &[("class", classes::TABLE_WRAP)]);
+            html::open(out, "table", &[("class", classes::TABLE)]);
+            html::open(out, "thead", &[]);
+            html::open(out, "tr", &[]);
+            for (k, cell) in head.iter().enumerate() {
+                let class = cell_class(classes::TH, col(k));
+                html::open(out, "th", &[("scope", "col"), ("class", class.as_str())]);
+                write_inlines(out, cell);
+                html::close(out, "th");
+            }
+            html::close(out, "tr");
+            html::close(out, "thead");
+            html::open(out, "tbody", &[]);
+            for row in rows {
+                html::open(out, "tr", &[]);
+                for (k, cell) in row.iter().enumerate() {
+                    let class = cell_class(classes::TD, col(k));
+                    html::open(out, "td", &[("class", class.as_str())]);
+                    write_inlines(out, cell);
+                    html::close(out, "td");
+                }
+                html::close(out, "tr");
+            }
+            html::close(out, "tbody");
+            html::close(out, "table");
+            html::close(out, "div");
         }
     }
 }

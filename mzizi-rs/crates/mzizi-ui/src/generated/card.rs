@@ -26,6 +26,49 @@
 
 use dioxus::prelude::*;
 
+/// The escaping HTML writer `render` uses, inlined so this file installs on its own.
+///
+/// It is a copy of `mzizi-ui/src/html.rs`, which is the reference and carries the unit tests.
+/// A test in `html.rs` holds the two to the same output on the five escaped characters and on
+/// non-ASCII text, so the copies cannot drift without a test failing.
+mod html {
+    /// Escape `value` for text and double-quoted attribute values: `&`, `<`, `>`, `"` and `'`
+    /// become decimal references; everything else, including non-ASCII, is written unchanged.
+    fn escape_into(out: &mut String, value: &str) {
+        for c in value.chars() {
+            match c {
+                '&' => out.push_str("&#38;"),
+                '<' => out.push_str("&#60;"),
+                '>' => out.push_str("&#62;"),
+                '"' => out.push_str("&#34;"),
+                '\'' => out.push_str("&#39;"),
+                _ => out.push(c),
+            }
+        }
+    }
+
+    /// Write an opening tag with its attributes, in the order given. Values are escaped.
+    pub(super) fn open(out: &mut String, tag: &str, attrs: &[(&str, &str)]) {
+        out.push('<');
+        out.push_str(tag);
+        for (name, value) in attrs {
+            out.push(' ');
+            out.push_str(name);
+            out.push_str("=\"");
+            escape_into(out, value);
+            out.push('"');
+        }
+        out.push('>');
+    }
+
+    /// Write a closing tag.
+    pub(super) fn close(out: &mut String, tag: &str) {
+        out.push_str("</");
+        out.push_str(tag);
+        out.push('>');
+    }
+}
+
 /// Card density.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum CardSize {
@@ -207,6 +250,148 @@ pub fn CardFooter(props: CardSlotProps) -> Element {
             {props.children}
         }
     }
+}
+
+/// The Dioxus-free render path: the props a [`render`] call takes.
+///
+/// `children` is HTML the caller has already rendered, through the slot `render_*` functions. It
+/// is written as it is, not escaped, so it must be built from those functions, never from
+/// untrusted text. With `loading` the children are not written, as in [`Card`].
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RenderProps {
+    /// Density.
+    pub size: CardSize,
+    /// Render the built-in skeleton instead of the children.
+    pub loading: bool,
+    /// Extra classes, appended last.
+    pub class: String,
+    /// The card's slots, already rendered HTML.
+    pub children: String,
+}
+
+/// The Dioxus-free render path for a card slot: the props every `render_*` slot function takes,
+/// the same as [`CardSlotProps`] without the free-form attributes.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SlotProps {
+    /// Extra classes, appended last.
+    pub class: String,
+    /// The slot's content, already rendered HTML.
+    pub children: String,
+}
+
+/// Render a card to an HTML string, with no Dioxus and no WASM.
+///
+/// Byte-identical to `dioxus-ssr` rendering [`Card`] with the same props, for the cases
+/// `mzizi-ui/tests/render_parity.rs` covers.
+#[must_use]
+pub fn render(props: &RenderProps) -> String {
+    if props.loading {
+        let class = join(
+            CARD_LOADING,
+            &if matches!(props.size, CardSize::Sm) {
+                join("gap-3 p-4", &props.class)
+            } else {
+                props.class.clone()
+            },
+        );
+        let mut out = String::with_capacity(CARD_LOADING.len() + 256);
+        html::open(
+            &mut out,
+            "div",
+            &[
+                ("data-slot", "card"),
+                ("data-portal", "https://mzizi.dev/components/card"),
+                ("data-loading", "true"),
+                ("class", class.as_str()),
+            ],
+        );
+        for bar in [
+            "h-4 w-2/3 rounded bg-muted",
+            "h-3 w-full rounded bg-muted",
+            "h-3 w-4/5 rounded bg-muted",
+        ] {
+            html::open(&mut out, "div", &[("class", bar)]);
+            html::close(&mut out, "div");
+        }
+        html::close(&mut out, "div");
+        return out;
+    }
+    let class = join(CARD_BASE, &props.class);
+    let mut out = String::with_capacity(CARD_BASE.len() + props.children.len() + 64);
+    html::open(
+        &mut out,
+        "div",
+        &[
+            ("data-slot", "card"),
+            ("data-size", props.size.slug()),
+            ("class", class.as_str()),
+        ],
+    );
+    out.push_str(&props.children);
+    html::close(&mut out, "div");
+    out
+}
+
+/// One slot `<div>`: a slot name, its base classes with the caller's extra ones, and its children.
+fn slot(name: &str, base: &str, props: &SlotProps) -> String {
+    let class = join(base, &props.class);
+    let mut out = String::with_capacity(props.children.len() + class.len() + 64);
+    html::open(
+        &mut out,
+        "div",
+        &[("data-slot", name), ("class", class.as_str())],
+    );
+    out.push_str(&props.children);
+    html::close(&mut out, "div");
+    out
+}
+
+/// Render a card's header to an HTML string.
+#[must_use]
+pub fn render_header(props: &SlotProps) -> String {
+    slot(
+        "card-header",
+        "group/card-header @container/card-header grid auto-rows-min items-start gap-2 rounded-t-[var(--radius-md,12px)] px-6 group-data-[size=sm]/card:px-4 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-6 group-data-[size=sm]/card:[.border-b]:pb-4",
+        props,
+    )
+}
+
+/// Render a card's title to an HTML string.
+#[must_use]
+pub fn render_title(props: &SlotProps) -> String {
+    slot("card-title", "text-base font-medium", props)
+}
+
+/// Render a card's description to an HTML string.
+#[must_use]
+pub fn render_description(props: &SlotProps) -> String {
+    slot("card-description", "text-sm text-muted-foreground", props)
+}
+
+/// Render a card's action to an HTML string.
+#[must_use]
+pub fn render_action(props: &SlotProps) -> String {
+    slot(
+        "card-action",
+        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+        props,
+    )
+}
+
+/// Render a card's content to an HTML string.
+#[must_use]
+pub fn render_content(props: &SlotProps) -> String {
+    slot("card-content", "px-6 group-data-[size=sm]/card:px-4", props)
+}
+
+/// Render a card's footer to an HTML string.
+#[must_use]
+pub fn render_footer(props: &SlotProps) -> String {
+    slot(
+        "card-footer",
+        "flex items-center rounded-b-[var(--radius-md,12px)] px-6 group-data-[size=sm]/card:px-4 [.border-t]:pt-6 group-data-[size=sm]/card:[.border-t]:pt-4",
+        props,
+    )
 }
 
 /// The contract this build implements, copied by `pnpm contracts:sync` from
