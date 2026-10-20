@@ -46,8 +46,8 @@ async function build(candidates: string[]): Promise<string> {
 
 /** The declarations of a utility's rule in compiled output. */
 function rule(css: string, cls: string): string {
-  // Tailwind escapes `/` and `.` in a class name with a backslash; match that escaped form literally.
-  const esc = escapeRegExp(cls.replace(/[/.]/g, "\\$&"))
+  // Tailwind escapes `\`, `/` and `.` in a class name with a backslash; match that escaped form literally.
+  const esc = escapeRegExp(cls.replace(/[\\/.]/g, "\\$&"))
   const m = css.match(new RegExp(`\\n\\s*\\.${esc} \\{([^}]*)\\}`))
   return m?.[1] ?? ""
 }
