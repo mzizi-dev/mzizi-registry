@@ -1,9 +1,12 @@
 [package]
 name = "mzizi-data"
-description = "Mzizi data: the transport trait, error type and Cloudflare Workers socket shared by Mzizi's sans-IO database clients (mzizi-mongodb)."
+description = "Mzizi data: the transport trait, error type and Cloudflare Workers socket shared by Mzizi's sans-IO database clients (mzizi-mongodb), and the data layer above them (fetch cascade, sync, tombstones, local-first writes). Not published."
 readme = "README.md"
 keywords = ["database", "cloudflare-workers", "wasm", "sans-io", "mzizi"]
 categories = ["database", "wasm"]
+# Not published: owner decision 6.3 is production, but the WASM budget (6.2) is still open, and
+# mzizi-mongodb depends on this crate, so neither is on crates.io until the owner sets it.
+publish = false
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -15,6 +18,8 @@ homepage.workspace = true
 workspace = true
 
 [features]
+# Exposes `MemoryLayer::set_available` and `MemoryLayer::peek`, for a host's own tests.
+test-util = []
 # The Cloudflare Workers host (a TLS socket as an `Io`). wasm32 only.
 workers = ["dep:worker", "dep:futures", "dep:tokio"]
 

@@ -10,6 +10,17 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the data layer in `mzizi-data`: fetch cascade, sync reconciliation, tombstones, staleness, local-first writes with rollback, not wired into any app (2026-10-20, #505)
+
+- **The data layer, in the crate the transport already lives in.** `mzizi-data` keeps its `io::Io` transport, `Error` and `Result`, and adds the data layer above them: `Cascade::fetch`, `reconcile`, `apply_optimistic`, `delete`, `Record`, `Layer`, `Clock`, `MemoryLayer`. It has no UI, no storage client and no dependencies beyond the transport's optional Worker features.
+- **`Cascade::fetch`** reads local first. A fresh local record answers alone within its time-to-live. A stale or missing one keeps the read going to edge and cloud, and returns the newest fresh record found, written back to the faster tiers. A stale local value is returned with `stale = true` when nothing fresher exists. A cloud miss is `Ok(None)`.
+- **Tombstones.** `delete` writes a versioned tombstone through every tier. Tombstones are kept; there is no garbage collection yet.
+- **`reconcile`** brings every reachable tier to the winning record. A confirmed record beats a pending one; then the higher version; then the more authoritative tier. A tier is in sync only when the whole record matches.
+- **Local-first writes.** `apply_optimistic` and `delete` write pending copies local, then edge, then cloud, then confirm them. A failure restores every attempted tier to its own previous record, exactly. A rejected write that cannot be restored stays pending, and reconcile does not choose it while a confirmed record exists.
+- **Not published** (`publish = false`), because owner decision 6.2, the WASM payload budget, is still open. `mzizi-mongodb` depends on this crate, so it is held as well. Decisions 6.3 (production) and 6.4 (node N5) are recorded in `crate-for-node.json`.
+- **Tested on the host target** by 50 integration tests and one doctest, in `tests/cascade.rs`. The server contract (`mzizi-rs/contracts/server/mzizi-data.contract.json`) names the tests that prove each guarantee.
+- **Designed, not built:** storage adapters, a background timer (the host schedules `reconcile`), key enumeration for a full sync.
+
 ### Added — `mzizi-harness`, `mzizi-data` and `mzizi-mongodb`: a MongoDB client for Cloudflare Workers (2026-10-19, #501)
 
 - **Three new Mzizi Roots crates.** `mzizi-harness` is the shared harness (below). `mzizi-data` holds what every database client shares: the `io::Io` transport trait, the `Error` and `Result` types, and (feature `workers`, wasm32 only) `workers::SocketIo`, a Worker's outbound TLS socket. `mzizi-mongodb` is the first client on it. The official `mongodb` crate cannot be built for a Worker: its tokio `net` dependency pulls in `mio`, which refuses `wasm32-unknown-unknown`. `mzizi-mongodb` speaks the wire protocol itself: `OP_MSG`, SCRAM-SHA-256, a small BSON codec, and read-only `find`, `find_one` and `aggregate` (`$out` and `$merge` are refused). Its `workers` feature adds a pooled `workers::Mongo`.
