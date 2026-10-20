@@ -10,6 +10,35 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `border-control`, a control's edge at Lc 30 and 3:1; `border` is decorative; `text-tertiary` gets its own Lc 60 floor and 4.5:1; `input` is pending until slice 4 (2026-10-20, #518)
+
+The owner's decision on the three roles that #485 left pending (#484, 2026-10-20). The contrast gate in `pnpm tokens:sync` and `pnpm tokens:verify` reports 0 violations. It lists each decorative exemption by name, and it reports one pending role, `input`, because the controls still draw their edge with it until slice 4.
+
+- **Added: `border-control`** (`--border-control`, `border-border-control`). It is the edge that identifies a control: inputs, selects, textareas, checkboxes, radios and switch tracks.
+  - **The bars.** APCA Lc 30 **and** WCAG 3:1 (1.4.11, non-text contrast), in both themes, on every surface a control can sit on (`CONTROL_SURFACES`):
+    - the ladder from `pitch` to `raised`;
+    - `muted` and `wash`;
+    - the aliases `background`, `card`, `popover` and `sidebar`.
+  - **How it is made.** The walk starts from the `border` role, so a pack's hairline carries through, and moves toward ink in light and white in dark until both bars clear. No hex is typed by hand.
+    - **Light: `#787774`.** 4.03:1 and Lc 63.9 on base, and 3.05:1 and Lc 46.6 on `raised`, the tightest.
+    - **Dark: `#818180`.** Lc −34.9 and 4.98:1 on base, and Lc −30.9 and 3.57:1 on `raised`.
+  - **Why both bars.** Lc 30 alone stops at `#B4B3AF` in light, which is 1.81:1. A rule's new optional `wcag` field holds the ratio, and both derive walks and the gate measure it with the existing `wcag()`.
+  - Registered in `@theme` like every colour role. No component uses it yet: moving the controls onto it is slice 4.
+- **Changed: `border` and `sidebar-border` are `decorative`.** They are soft hairlines between regions (`#E7E5E0` / `#2A2927`, unchanged, Lc 0 on base), exempt from the Lc 30 ui bar. The reason in the manifest says they are never the only cue. Only a `ui` role can be decorative.
+- **Changed: `input` is measured as the edge controls draw today, and reports pending.** Every control uses `border-input`, and `--input` is the control's own fill (`#FFFFFF` / `#100F0E`, about Lc 0). It is held to the same Lc 30 and 3:1 on the same surfaces. All 26 of its measurements are pending, with a reason that names slice 4, so the gate does not count a control edge as passing before one exists.
+- **Changed: `text-tertiary` is gated at Lc 60 and WCAG 4.5:1.** Lc 60 is APCA's minimum for non-body text (placeholders, captions, timestamps, metadata); it was pending against 75. A text rule that names `nonBody` gets that floor; `nonBody` implies the bar, so the rule sets no `min`. Only a text role can use it.
+  - **4.5:1 too.** The owner's decision on the ratio was "Add 4.5:1 too" (WCAG 1.4.3). `textRamp()` reads the ratio from the rule and walks the tier to both bars, on `base` and `surface`, the surfaces `text-secondary` is held to.
+  - **Light moves from `#797877` to `#6B6A69`.** It was Lc 63.3 and 3.97:1 on base, 60.4 and 3.79:1 on surface. It is now Lc 69.7 and 4.86:1 on base, 66.8 and 4.65:1 on surface: 8.5 Lc under `text-secondary` (`#575655`, 78.2 / 75.3).
+  - **Dark stays `#B3B3B1`.** Lc −60.9 and 9.25:1 on base, −60.5 and 8.91:1 on surface, 14.5 Lc under `text-secondary`.
+- **The bars live in one place.** `BODY` (75), `NON_BODY` (60) and `UI` (30) are exported from `lib/tokens/roles.source.ts`, with `contrastFloor()` and `contrastMin()`. The gate and the text ramp read them from there.
+- **Fixed: `derive: "fill"`.**
+  - It honours a foreground's `wcag` ratio.
+  - It holds a text-derived foreground to what that foreground will paint: a fill moves only where the foreground cannot reach its bar by its own walk.
+  - The Mzizi pack's derived values do not change.
+- **`roleGate()` returns `decorative`** beside `results`, `violations` and `pending`. The report line reads `✓ role gate: 215 of 241 measurements pass, 0 violations, 26 pending`, followed by each pending role with its reason and the decorative list.
+- **`brand.source.ts`:** the `border` usage that `/v1/brand` serves no longer says it is a control's edge.
+- **Regenerated** by `pnpm tokens:sync`: `mzizi-tokens-globals.css`, and the TypeScript, Swift, Kotlin, ArkTS, React Native, Python and Rust token files.
+
 ### Fixed — `markdown-renderer` 1.2.1: four parser bugs from the `@bundu/ui` 0.6.0 review; `brand-mark` 1.1.1: an unknown brand is a clear error (2026-10-20, #517)
 
 Found by the code review of `@bundu/ui` 0.6.0 (mzizi-dev/packages-npm#63), which builds from registry v4.8.0. Each was confirmed by a failing test on `staging` first. The parser fixes are in `markdown-parse.ts` and the Rust parser alike, each with a shared fixture case that both run (81 cases in all).
