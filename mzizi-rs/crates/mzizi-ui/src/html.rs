@@ -85,4 +85,32 @@ mod tests {
         close(&mut out, "span");
         assert_eq!(out, r#"<span data-slot="badge"></span>"#);
     }
+
+    /// The registry's `skeleton.rs` carries its own copy of this writer, so that one file can
+    /// be installed alone. `render` uses that copy. This holds it to the reference written
+    /// here, on the five escaped characters and on non-ASCII text, so the two cannot drift.
+    #[test]
+    fn the_inline_copy_in_skeleton_matches_this_reference() {
+        use crate::skeleton::{RenderProps, render, skeleton_variants};
+
+        let input = "a&b<c>d\"e'f ünï · w-4";
+        let class = skeleton_variants(input);
+        let mut expected = String::new();
+        open(
+            &mut expected,
+            "div",
+            &[
+                ("data-slot", "skeleton"),
+                ("data-portal", "https://mzizi.dev/components/skeleton"),
+                ("class", &class),
+            ],
+        );
+        close(&mut expected, "div");
+        assert_eq!(
+            render(&RenderProps {
+                class: input.to_owned()
+            }),
+            expected
+        );
+    }
 }
