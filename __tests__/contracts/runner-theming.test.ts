@@ -7,7 +7,7 @@
  */
 import { describe, expect, test } from "vitest"
 
-import { type Contract, evaluateTheming } from "../../contracts/runner"
+import { type Contract, evaluateInlineStyles, evaluateTheming } from "../../contracts/runner"
 
 const base = {
   name: "app/x",
@@ -55,5 +55,33 @@ describe("evaluateTheming's output, as @bundu/ui's synced runner tests read it",
   test("a declared status colour passes", () => {
     const status = { default: '<div class="bg-malachite-container"></div>' }
     expect(evaluateTheming({ ...base, theming: { ...base.theming, statusColours: ["malachite"] } }, status)).toEqual([])
+  })
+})
+
+describe("evaluateInlineStyles, the one CSP check evaluateTheming calls", () => {
+  const rendered = {
+    default: '<div><span style="--x: 1"></span><i class="bg-gold"></i><b style="color: #fff"></b></div>',
+    other: '<p style="--y: 2"></p>',
+  }
+
+  test("one message per element with a style attribute, state by state", () => {
+    expect(evaluateInlineStyles(rendered)).toEqual([
+      "[default] an inline style attribute on <span> (needs style-src-attr 'unsafe-inline')",
+      "[default] an inline style attribute on <b> (needs style-src-attr 'unsafe-inline')",
+      "[other] an inline style attribute on <p> (needs style-src-attr 'unsafe-inline')",
+    ])
+    expect(evaluateInlineStyles({ default: '<div class="bg-card"><span>x</span></div>' })).toEqual([])
+  })
+
+  test("evaluateTheming's CSP failures are exactly its output: each state's come first, then its colours", () => {
+    expect(evaluateTheming(base, rendered)).toEqual([
+      "[default] an inline style attribute on <span> (needs style-src-attr 'unsafe-inline')",
+      "[default] an inline style attribute on <b> (needs style-src-attr 'unsafe-inline')",
+      '[default] <i> names the mineral "gold" (bg-gold), which is not one of its declared status colours',
+      "[default] a literal hex colour on <b>",
+      "[other] an inline style attribute on <p> (needs style-src-attr 'unsafe-inline')",
+    ])
+    const csp = evaluateTheming(base, rendered).filter((m) => m.includes("inline style attribute"))
+    expect(csp).toEqual(evaluateInlineStyles(rendered))
   })
 })
