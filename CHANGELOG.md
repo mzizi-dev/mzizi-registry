@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Removed — Svelte from the registry's text, doctrine, validators and tests (2026-10-20, #PR)
+
+- **Doctrine, docs and README.** Svelte is no longer named as a framework or a target. `astro-vite-plus` drops its "two surfaces still carry Svelte" passage; `resolver-deployment-decision` drops `shadcn-svelte` from its verified list; `docs/pulling-in-primitives.md` drops the `svelte` tier example and its "Svelte" install section (the `optional` tier now reads "none today"); `docs/roots/RFC-roots.md` and `README.md` drop Svelte from their framework lists and from the mini-app description.
+- **Components.** The comments in `mzizi-motion.tsx` and `mzizi-ai-context.ts` no longer name Svelte. No component code, token, contract or Rust crate changed. `lib/doctrine.generated.ts` and `lib/registry-source.generated.json` are regenerated from those sources.
+- **Validators and tests.** `scripts/validate-registry.mjs` and `lib/astro.ts` no longer list `svelte` among the frameworks an Astro target may not import (React, React DOM, Next, Preact and Vue remain). `__tests__/astro/contracts.test.ts` no longer asserts against Svelte imports. A `.ts` module that imported `svelte` would now pass the framework-free check; no file in the registry does.
+- **Not changed here.** `plugin/skills/mzizi-roots/SKILL.md` and `lib/skills.generated.ts` still say "no React, Svelte or Vue layer under Astro". Both are copies of the published `@nyuchi/mzizi-skills` bundle, which is generated and must not be hand-edited. The latest published bundle (0.11.0) still carries the sentence, so it clears when that bundle is republished from `mzizi-dev/agent-tools` and this repo bumps its pin. Past `CHANGELOG.md` entries and the generated release history are unchanged.
+
 ### Changed — registry descriptions: SvelteKit becomes Astro as design direction; `mzizi-fundi` says what the crate is; Rust APIs named in Rust-led descriptions (2026-10-20, #504)
 
 - **Ten N1 items (`mzizi-a11y`, `mzizi-data`, `mzizi-dx`, `mzizi-harness-prewire`, `mzizi-icons`, `mzizi-layout`, `mzizi-locale`, `mzizi-motion`, `mzizi-platform`, `mzizi-resilience`).** Their description said `wasm-bindgen` exposes the interface to SvelteKit. It now says that Astro renders the HTML on the server, with WASM sent to the browser only for behaviour through the component's `data-slot` root, and that static components ship zero WASM. It is stated as design direction: no Rust crate or WASM build of these components exists today. The React hook names in these descriptions are unchanged, because these components have no Rust build.

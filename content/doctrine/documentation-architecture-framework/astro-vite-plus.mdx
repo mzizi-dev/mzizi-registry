@@ -49,15 +49,12 @@ web-shaped. Reach for TypeScript because Rust does not fit, not because it is
 quicker to start. Python is a further target for the logic nodes, planned first
 for N5 resilience (mzizi-registry#472); none ships yet beyond the N1 token file.
 
-**Mzizi's own surfaces have no third UI framework.** Not Svelte, not Vue, and
+**Mzizi's own surfaces have no third UI framework.** Not Vue, and
 no React underneath an Astro page by default. Astro
 renders the markup and hosts islands; a component framework underneath it is a
 second way to build the same thing, and the cost of a second way is not the
 bundle — it is that every future component now has a choice to make and a
-convention to look up. Two surfaces still carry Svelte, and both are the thing
-being removed rather than the standard: `@nyuchi/mzizi-console-app` (moving to a
-Rust UI) and `@nyuchi/nyuchi-docs-search` (Astro plus TypeScript). Neither is a
-precedent to copy.
+convention to look up.
 
 **Consumers are a different matter.** Apps across the bundu ecosystem may not
 use Astro, so the registry builds React and Rust (Dioxus) versions of its
