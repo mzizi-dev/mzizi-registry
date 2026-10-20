@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Removed — Svelte from the registry's text, doctrine, validators and tests (2026-10-20, #PR)
+### Removed — Svelte from the registry's text, doctrine, validators and tests (2026-10-20, #507)
 
 - **Doctrine, docs and README.** Svelte is no longer named as a framework or a target. `astro-vite-plus` drops its "two surfaces still carry Svelte" passage; `resolver-deployment-decision` drops `shadcn-svelte` from its verified list; `docs/pulling-in-primitives.md` drops the `svelte` tier example and its "Svelte" install section (the `optional` tier now reads "none today"); `docs/roots/RFC-roots.md` and `README.md` drop Svelte from their framework lists and from the mini-app description.
 - **Components.** The comments in `mzizi-motion.tsx` and `mzizi-ai-context.ts` no longer name Svelte. No component code, token, contract or Rust crate changed. `lib/doctrine.generated.ts` and `lib/registry-source.generated.json` are regenerated from those sources.
