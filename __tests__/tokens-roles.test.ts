@@ -7,6 +7,7 @@
 // repo's Tailwind, so they test what a consumer that copies the file gets.
 
 import { describe, expect, it } from "vitest"
+import { escapeRegExp } from "./helpers/regexp"
 import { readFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { createRequire } from "node:module"
@@ -44,7 +45,8 @@ async function build(candidates: string[]): Promise<string> {
 
 /** The declarations of a utility's rule in compiled output. */
 function rule(css: string, cls: string): string {
-  const esc = cls.replace(/[/.]/g, (c) => `\\\\\\${c}`)
+  // Tailwind escapes `/` and `.` in a class name with a backslash; match that escaped form literally.
+  const esc = escapeRegExp(cls.replace(/[/.]/g, "\\$&"))
   const m = css.match(new RegExp(`\\n\\s*\\.${esc} \\{([^}]*)\\}`))
   return m?.[1] ?? ""
 }
@@ -249,8 +251,8 @@ describe("Tailwind keys (#456)", () => {
     for (const r of colors) {
       const k = colorKey(r)
       const v = `var(${roleVar(r)})`
-      const escaped = v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-      if (!rule(out, `text-${k}`).match(new RegExp(`^\\s*color: ${escaped};\\s*$`))) wrong.push(`text-${k}: ${rule(out, `text-${k}`)}`)
+      const text = rule(out, `text-${k}`)
+      if (text.trim() !== `color: ${v};`) wrong.push(`text-${k}: ${text}`)
       if (!rule(out, `bg-${k}`).includes(`background-color: ${v};`)) wrong.push(`bg-${k}`)
       if (!rule(out, `border-${k}`).includes(`border-color: ${v};`)) wrong.push(`border-${k}`)
     }
@@ -264,8 +266,8 @@ describe("Tailwind keys (#456)", () => {
     const out = await build([...sizes.map((s) => `h-${s}`), ...radii.map((r) => `rounded-${r}`), ...fonts.map((f) => `font-${f}`), "font-sans"])
     for (const s of sizes) expect(rule(out, `h-${s}`), `h-${s}`).toMatch(/^\s*height: /)
     expect(rule(out, "h-touch-min")).toMatch(/height: 3rem;/)
-    for (const r of radii) expect(rule(out, `rounded-${r}`), `rounded-${r}`).toMatch(new RegExp(`border-radius: var\\(--r-${r}\\);`))
-    for (const f of fonts) expect(rule(out, `font-${f}`), `font-${f}`).toMatch(new RegExp(`font-family: var\\(--font-${f}\\);`))
+    for (const r of radii) expect(rule(out, `rounded-${r}`), `rounded-${r}`).toContain(`border-radius: var(--r-${r});`)
+    for (const f of fonts) expect(rule(out, `font-${f}`), `font-${f}`).toContain(`font-family: var(--font-${f});`)
     // Non-inline: the font roles reach :root, where a brand overrides them at runtime.
     expect(out).toMatch(/--font-body: "Noto Sans"/)
     expect(rule(out, "font-sans")).toMatch(/font-family: var\(--font-sans\);/)
@@ -484,7 +486,7 @@ describe("the Rust floor asserts", () => {
       const rust = readFileSync(file, "utf8")
       expect(rust).not.toMatch(/#\[cfg\(test\)\]/)
       for (const r of ROLES.filter((x) => x.floor)) {
-        expect(rust, `${file}: ${r.name}`).toMatch(new RegExp(`^const _: \\(\\) = assert!\\(Roles::${r.name.replace(/-/g, "_").toUpperCase()} >= Roles::SPACING_TOUCH_MIN\\);$`, "m"))
+        expect(rust, `${file}: ${r.name}`).toMatch(new RegExp(`^const _: \\(\\) = assert!\\(Roles::${escapeRegExp(r.name.replace(/-/g, "_").toUpperCase())} >= Roles::SPACING_TOUCH_MIN\\);$`, "m"))
       }
     }
     const lib = readFileSync(join(ROOT, "mzizi-rs/crates/mzizi-tokens/src/lib.rs"), "utf8")
