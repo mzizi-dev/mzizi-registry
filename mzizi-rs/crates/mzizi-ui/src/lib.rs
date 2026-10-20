@@ -32,6 +32,9 @@
 //! `/api/v1/rs/{name}` serves the source to READ — for an agent, a reviewer, or someone
 //! porting — never as an install path.
 
+/// The Dioxus-free HTML writer the `render` functions use. Crate-internal.
+pub(crate) mod html;
+
 #[path = "generated/alert.rs"]
 pub mod alert;
 
