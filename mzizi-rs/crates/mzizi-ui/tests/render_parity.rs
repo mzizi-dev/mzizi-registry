@@ -14,9 +14,11 @@ use std::path::PathBuf;
 use dioxus::prelude::*;
 use mzizi_ui::skeleton::{RenderProps, render};
 use mzizi_ui::{
-    Badge, BadgeVariant, Chart, Progress, SafeAreaFrame, Separator, SeparatorOrientation,
-    StatusBadge, StatusBadgeStatus, badge, chart, progress, safe_area_frame, separator,
-    status_badge,
+    Alert, AlertAction, AlertDescription, AlertTitle, AlertVariant, Badge, BadgeVariant, Card,
+    CardContent, CardFooter, CardHeader, CardTitle, Chart, MarkdownLinks, MarkdownRenderer,
+    MarkdownSource, Progress, SafeAreaFrame, Separator, SeparatorOrientation, StatusBadge,
+    StatusBadgeStatus, alert, badge, card, chart, markdown_renderer, progress, safe_area_frame,
+    separator, status_badge,
 };
 use serde_json::Value;
 
@@ -513,6 +515,7 @@ fn static_cases() -> Vec<Case> {
     all.extend(status_badge_cases());
     all.extend(safe_area_cases());
     all.extend(chart_cases());
+    all.extend(batch_b_cases());
     all
 }
 
@@ -527,10 +530,11 @@ fn golden_path(case: &Case) -> PathBuf {
 #[test]
 fn every_static_state_renders_byte_identically_to_dioxus_ssr() {
     let cases = static_cases();
-    // 5 separator + 7 progress + 9 badge + 7 status-badge + 6 safe-area-frame + 6 chart.
+    // 5 separator + 7 progress + 9 badge + 7 status-badge + 6 safe-area-frame + 6 chart
+    // + 7 alert + 8 card + 15 markdown-renderer.
     assert_eq!(
         cases.len(),
-        40,
+        70,
         "the case count moved; update the pin and the goldens"
     );
     for c in cases {
@@ -613,4 +617,351 @@ fn capture_goldens() {
         fs::create_dir_all(path.parent().expect("parent")).expect("create golden dir");
         fs::write(&path, &c.dioxus).expect("write golden");
     }
+}
+
+// ── PR 1, batch B: alert, card and markdown-renderer ────────────────────────────────────
+//
+// Their children are HTML the caller has rendered, so a case builds the same children on both
+// sides: the render path's `render_*` part functions, and the Dioxus parts. The text a part
+// holds is written escaped on the render side and by Dioxus on the other, and is pinned like
+// every other `escaped-*` case.
+
+/// The `default` slot text of a contract state, as the contract writes it.
+fn contract_slot_text(name: &str, state: &str) -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join(format!("../../../contracts/ui/{name}.contract.json"));
+    let json: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+    json["states"][state]["slots"]["default"]
+        .as_str()
+        .unwrap_or_default()
+        .to_owned()
+}
+
+fn alert_variant(name: &str) -> AlertVariant {
+    match name {
+        "default" => AlertVariant::Default,
+        "destructive" => AlertVariant::Destructive,
+        other => panic!("alert contract names an unknown variant {other:?}"),
+    }
+}
+
+fn alert_cases() -> Vec<Case> {
+    use alert::{PartProps, RenderProps};
+    let mut out = Vec::new();
+    for (state, props) in contract_states("alert") {
+        let variant = alert_variant(props["variant"].as_str().unwrap_or("default"));
+        let text = contract_slot_text("alert", &state);
+        out.push(case(
+            "alert",
+            &state,
+            alert::render(&RenderProps {
+                variant,
+                children: alert::render_title(&PartProps {
+                    children: text.clone(),
+                    ..PartProps::default()
+                }),
+                ..RenderProps::default()
+            }),
+            rsx! { Alert { variant: variant, AlertTitle { "{text}" } } },
+        ));
+    }
+    let title = |class: &str, text: &str| PartProps {
+        class: class.to_owned(),
+        children: text.to_owned(),
+    };
+    out.push(case(
+        "alert",
+        "parts-with-classes",
+        alert::render(&RenderProps {
+            children: [
+                alert::render_title(&title("x-title", "T")),
+                alert::render_description(&title("x-desc", "D")),
+                alert::render_action(&title("x-action", "A")),
+            ]
+            .concat(),
+            ..RenderProps::default()
+        }),
+        rsx! {
+            Alert {
+                AlertTitle { class: "x-title".to_owned(), "T" }
+                AlertDescription { class: "x-desc".to_owned(), "D" }
+                AlertAction { class: "x-action".to_owned(), "A" }
+            }
+        },
+    ));
+    out.push(case(
+        "alert",
+        "escaped-title",
+        alert::render(&RenderProps {
+            children: alert::render_title(&PartProps {
+                children: PROBE_ESCAPED.to_owned(),
+                ..PartProps::default()
+            }),
+            ..RenderProps::default()
+        }),
+        rsx! { Alert { AlertTitle { "{PROBE}" } } },
+    ));
+    out.push(case(
+        "alert",
+        "escaped-class",
+        alert::render(&RenderProps {
+            class: PROBE.to_owned(),
+            children: alert::render_title(&title("", "T")),
+            ..RenderProps::default()
+        }),
+        rsx! { Alert { class: PROBE.to_owned(), AlertTitle { "T" } } },
+    ));
+    out.push(case(
+        "alert",
+        "escaped-part-class",
+        alert::render(&RenderProps {
+            children: alert::render_description(&title(PROBE, "D")),
+            ..RenderProps::default()
+        }),
+        rsx! { Alert { AlertDescription { class: PROBE.to_owned(), "D" } } },
+    ));
+    out.push(case(
+        "alert",
+        "empty-description",
+        alert::render(&RenderProps {
+            children: alert::render_description(&title("", "")),
+            ..RenderProps::default()
+        }),
+        rsx! { Alert { AlertDescription { "" } } },
+    ));
+    out
+}
+
+fn card_cases() -> Vec<Case> {
+    use card::{CardSize, RenderProps, SlotProps};
+    let slot = |text: &str| SlotProps {
+        children: text.to_owned(),
+        ..SlotProps::default()
+    };
+    let mut out = Vec::new();
+    for (state, props) in contract_states("card") {
+        let size = match props["size"].as_str().unwrap_or("default") {
+            "default" => CardSize::Default,
+            "sm" => CardSize::Sm,
+            other => panic!("card contract names an unknown size {other:?}"),
+        };
+        let loading = props["loading"].as_bool().unwrap_or(false);
+        let text = contract_slot_text("card", &state);
+        out.push(case(
+            "card",
+            &state,
+            card::render(&RenderProps {
+                size,
+                loading,
+                children: text.clone(),
+                ..RenderProps::default()
+            }),
+            rsx! { Card { size: size, loading: loading, "{text}" } },
+        ));
+    }
+    out.push(case(
+        "card",
+        "loading-sm",
+        card::render(&RenderProps {
+            size: CardSize::Sm,
+            loading: true,
+            class: "x-loading".to_owned(),
+            ..RenderProps::default()
+        }),
+        rsx! { Card { size: CardSize::Sm, loading: true, class: "x-loading".to_owned() } },
+    ));
+    let header = [
+        card::render_title(&slot("T")),
+        card::render_description(&slot("D")),
+        card::render_action(&slot("A")),
+    ]
+    .concat();
+    out.push(case(
+        "card",
+        "composed",
+        card::render(&RenderProps {
+            children: [
+                card::render_header(&slot(&header)),
+                card::render_content(&slot("C")),
+                card::render_footer(&slot("F")),
+            ]
+            .concat(),
+            ..RenderProps::default()
+        }),
+        rsx! {
+            Card {
+                CardHeader {
+                    CardTitle { "T" }
+                    card::CardDescription { "D" }
+                    card::CardAction { "A" }
+                }
+                CardContent { "C" }
+                CardFooter { "F" }
+            }
+        },
+    ));
+    out.push(case(
+        "card",
+        "escaped-title",
+        card::render(&RenderProps {
+            children: card::render_title(&slot(PROBE_ESCAPED)),
+            ..RenderProps::default()
+        }),
+        rsx! { Card { CardTitle { "{PROBE}" } } },
+    ));
+    out.push(case(
+        "card",
+        "escaped-class",
+        card::render(&RenderProps {
+            class: PROBE.to_owned(),
+            children: card::render_content(&slot("C")),
+            ..RenderProps::default()
+        }),
+        rsx! { Card { class: PROBE.to_owned(), CardContent { "C" } } },
+    ));
+    out.push(case(
+        "card",
+        "empty-content",
+        card::render(&RenderProps {
+            children: card::render_content(&slot("")),
+            ..RenderProps::default()
+        }),
+        rsx! { Card { CardContent { "" } } },
+    ));
+    out
+}
+
+/// The `links` and `from` names a contract writes, as the enums.
+fn markdown_links(name: &str) -> MarkdownLinks {
+    match name {
+        "safe" => MarkdownLinks::Safe,
+        "https" => MarkdownLinks::Https,
+        other => panic!("markdown contract names an unknown link policy {other:?}"),
+    }
+}
+
+fn markdown_source(name: &str) -> MarkdownSource {
+    match name {
+        "markdown" => MarkdownSource::Markdown,
+        "html" => MarkdownSource::Html,
+        "auto" => MarkdownSource::Auto,
+        other => panic!("markdown contract names an unknown source {other:?}"),
+    }
+}
+
+/// One Markdown case: the same content, policy and heading base for both paths.
+fn markdown_case(
+    state: &str,
+    content: &str,
+    links: MarkdownLinks,
+    from: MarkdownSource,
+    heading_base: u8,
+    class: &str,
+) -> Case {
+    let render = markdown_renderer::render(&markdown_renderer::RenderProps {
+        content: content.to_owned(),
+        links,
+        from,
+        heading_base,
+        class: class.to_owned(),
+    });
+    let (content, class) = (content.to_owned(), class.to_owned());
+    case(
+        "markdown-renderer",
+        state,
+        render,
+        rsx! {
+            MarkdownRenderer {
+                content: content,
+                links: links,
+                from: from,
+                heading_base: heading_base,
+                class: class,
+            }
+        },
+    )
+}
+
+fn markdown_cases() -> Vec<Case> {
+    let mut out = Vec::new();
+    for (state, props) in contract_states("markdown-renderer") {
+        out.push(markdown_case(
+            &state,
+            props["content"].as_str().unwrap_or(""),
+            markdown_links(props["links"].as_str().unwrap_or("safe")),
+            markdown_source(props["from"].as_str().unwrap_or("markdown")),
+            u8::try_from(props["headingBase"].as_u64().unwrap_or(1)).expect("heading base"),
+            props["class"].as_str().unwrap_or(""),
+        ));
+    }
+    let md = MarkdownSource::Markdown;
+    let safe = MarkdownLinks::Safe;
+    out.push(markdown_case(
+        "code-language",
+        "```rust\nfn main() {}\n```",
+        safe,
+        md,
+        1,
+        "",
+    ));
+    out.push(markdown_case(
+        "ordered-start",
+        "4. four\n5. five",
+        safe,
+        md,
+        1,
+        "",
+    ));
+    out.push(markdown_case(
+        "table-alignment",
+        "| a | b | c |\n| :-- | :-: | --: |\n| 1 | 2 | 3 |",
+        safe,
+        md,
+        1,
+        "",
+    ));
+    out.push(markdown_case(
+        "all-headings",
+        "# 1\n\n## 2\n\n### 3\n\n#### 4\n\n##### 5\n\n###### 6",
+        safe,
+        md,
+        1,
+        "",
+    ));
+    out.push(markdown_case(
+        "nested-quote-rule-break",
+        "> outer\n>\n> > inner\n\na  \nb\n\n---",
+        safe,
+        md,
+        1,
+        "",
+    ));
+    out.push(markdown_case(
+        "href-query",
+        "[x](https://example.org/?a=1&b=2)",
+        safe,
+        md,
+        1,
+        "",
+    ));
+    out.push(markdown_case("escaped-text", PROBE, safe, md, 1, ""));
+    out.push(markdown_case(
+        "escaped-code",
+        &format!("```\n{PROBE}\n```"),
+        safe,
+        md,
+        1,
+        "",
+    ));
+    out.push(markdown_case("escaped-class", "x", safe, md, 1, PROBE));
+    out
+}
+
+/// Every case of batch B.
+fn batch_b_cases() -> Vec<Case> {
+    let mut all = Vec::new();
+    all.extend(alert_cases());
+    all.extend(card_cases());
+    all.extend(markdown_cases());
+    all
 }
