@@ -44,6 +44,7 @@ Upstreamed from the Toddle extension's installed copy of this file (nyuchi/toddl
 
 - New cases in `__tests__/components/markdown-renderer.test.tsx` cover more refused address forms, decoded rich-text attributes, scheme-relative external links, refused links rendered as plain text, and images (never emitted).
 - The component and its contract are unchanged.
+
 ### Added — the role layer: N1 tokens components can name, switchable per brand (2026-10-07, #485)
 
 Slice 1 of #484 ("switchable N1"). It adds roles and changes no component and no contract. A role is a name with a job (`status-success-text`, `rounded-control`, `h-touch`). The Mzizi palette is now the default pack that maps onto the roles, so a later slice can let a brand bring its own pack.
