@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `mzizi-ui` gets a render path with no Dioxus for six static primitives, byte-identical to `dioxus-ssr` (2026-10-20, #510)
+
+- `separator`, `progress`, `badge`, `status-badge`, `safe-area-frame` and `chart` each gain `RenderProps` and `render(&RenderProps) -> String`, beside their Dioxus component. The Dioxus components are unchanged, and `dioxus` stays a dependency of every `mzizi-rs` crate. This is the first batch of `docs/roots/RFC-roots-renderer.md` §5; alert, card and markdown-renderer follow.
+- Checked by `mzizi-ui/tests/render_parity.rs`: 40 cases, each compared byte-for-byte with `dioxus-ssr`. The `status-badge` and `safe-area-frame` states come from `contracts/ui/*.contract.json`; the rest are undeclared cases (the five escaped characters, non-ASCII text, empty values, chart's loading and container branches).
+- Goldens for those cases are committed under `mzizi-ui/tests/goldens/`, captured from `dioxus-ssr`, so the later PR that removes Dioxus can still check parity.
+- Each registry file carries its own inline escaping writer; `mzizi-ui/src/html.rs` holds the reference and a test that holds every copy to it.
+- Public API: the `RenderProps` and `render` items of those six modules. Additive, unreleased, and nothing is published or version-bumped.
+
 ### Removed — Svelte from the registry's text, doctrine, validators and tests (2026-10-20, #507)
 
 - **Doctrine, docs and README.** Svelte is no longer named as a framework or a target. `astro-vite-plus` drops its "two surfaces still carry Svelte" passage; `resolver-deployment-decision` drops `shadcn-svelte` from its verified list; `docs/pulling-in-primitives.md` drops the `svelte` tier example and its "Svelte" install section (the `optional` tier now reads "none today"); `docs/roots/RFC-roots.md` and `README.md` drop Svelte from their framework lists and from the mini-app description.
