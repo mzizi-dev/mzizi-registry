@@ -28,6 +28,22 @@ let p = Palette::dark();      // every colour resolved for one theme
 let r = Radius::MD;           // 12 — every radius derives from the 7px unit
 ```
 
+## Roles
+
+Components name **roles**, not palette families: `status-success-text`, not malachite.
+`Roles` carries every colour role in both themes for the Mzizi pack, the default brand,
+and the size, radius and font roles as consts. The roles are defined in
+`lib/tokens/roles.source.ts` in the registry repo, where the build holds the Mzizi pack to
+APCA Lc 75 for text and Lc 30 for UI.
+
+```rust
+use mzizi_tokens::Roles;
+
+let roles = Roles::mzizi();
+let ok = roles.light.status_success_text;  // "#004D40"
+let touch = Roles::SPACING_TOUCH_MIN;       // 48, the floor no brand can lower
+```
+
 ## The values are generated, not authored
 
 Not here, and not in any other target either. `lib/tokens/palette.source.ts` in the
