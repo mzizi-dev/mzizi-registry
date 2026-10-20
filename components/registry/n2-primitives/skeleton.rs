@@ -9,6 +9,8 @@
 
 use dioxus::prelude::*;
 
+use crate::html;
+
 /// The classes every skeleton carries.
 const BASE: &str = "animate-pulse rounded-[var(--radius-xl,17px)] bg-muted";
 
@@ -44,6 +46,38 @@ pub fn Skeleton(props: SkeletonProps) -> Element {
             ..props.attributes,
         }
     }
+}
+
+/// The Dioxus-free render path: the props a [`render`] call takes.
+///
+/// `class` is the only prop the contract declares, so it is the only one here. The Dioxus
+/// [`SkeletonProps`] also carries free-form attributes; those have no HTML-string form yet
+/// and are not part of this path.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RenderProps {
+    /// Sizing classes (`h-10 w-full`), appended last, as [`skeleton_variants`] does.
+    pub class: String,
+}
+
+/// Render a skeleton to an HTML string, with no Dioxus and no WASM.
+///
+/// Byte-identical to `dioxus-ssr` rendering [`Skeleton`] with the same `class`: the same
+/// attributes in the same order, the same escaping. `tests/render_parity.rs` holds it to that.
+#[must_use]
+pub fn render(props: &RenderProps) -> String {
+    let class = skeleton_variants(&props.class);
+    let mut out = String::with_capacity(160 + class.len());
+    html::open(
+        &mut out,
+        "div",
+        &[
+            ("data-slot", "skeleton"),
+            ("data-portal", "https://mzizi.dev/components/skeleton"),
+            ("class", &class),
+        ],
+    );
+    html::close(&mut out, "div");
+    out
 }
 
 /// The contract this build implements, copied by `pnpm contracts:sync` from
