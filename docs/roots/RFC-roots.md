@@ -298,7 +298,7 @@ A clause the runner cannot evaluate fails, as in §2.3 (RFC-0006 FM-12).
 #### Rules every Astro implementation keeps
 
 1. **No framework under Astro.** A `.astro` is pure Astro. It imports no React, React DOM,
-   Next, Preact or Vue, and composes only other `.astro` files and framework-free
+   Next, Preact, Vue or Svelte, and composes only other `.astro` files and framework-free
    `.ts` modules (`ui-utils`, `ui-variants`, `app-nav`, `site-icons`, `server-*`). There is no
    React layer: where a React component used to sit inside an Astro one, the registry adds an
    Astro sibling instead (as `site-cta-button` replaced the React button in `site-hero`).
