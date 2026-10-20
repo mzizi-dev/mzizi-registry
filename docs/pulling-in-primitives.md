@@ -30,11 +30,10 @@ position: the contract exists, the source is yours to write. Do not wait for it.
 | ---------- | ---------------------------------------------------- |
 | `primary`  | Where Mzizi is heading — Rust: `dioxus`, `crates-io` |
 | `native`   | First-class native shells — swift, kotlin, arkts, RN |
-| `optional` | Supported, not the destination — `svelte`            |
+| `optional` | Supported, not the destination — none today          |
 | `legacy`   | Still ships, being moved away from — `react`         |
 
-They point opposite ways today on purpose: **svelte is `production` + `optional`**
-(source exists, not the direction) while **dioxus is `metadata_only` + `primary`**
+They can point different ways, on purpose: **dioxus is `metadata_only` + `primary`**
 (the direction, source not wired). One field would force a false choice between
 "has components" and "is the plan", and whichever it answered would mislead you.
 
@@ -61,11 +60,6 @@ Two things that will bite you if the manifest is wrong, both now gate-checked by
   the default registry, where it 404s.
 - Every npm package a component imports must be in its `dependencies`. A missing
   one installs a file that cannot resolve its own import.
-
-### Svelte
-
-Use `shadcn-svelte` against the same registry. Source exists; it is not where the
-system is heading.
 
 ### Rust / Dioxus
 
