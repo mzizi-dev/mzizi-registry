@@ -12,7 +12,11 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [4.9.0] - 2026-10-20
 
-Releases `staging` to `main` as the next minor above v4.8.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.9.0, and the Mzizi Roots crates are published at 0.4.0.
+Releases `staging` to `main` as the next minor above v4.8.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.9.0, and the Mzizi Roots crates are published at 0.4.0. The `v4.9.0` tag is cut on a second merge to `main`: the first (#514) published the crates at 0.4.0, but its CI on `main` failed on a newly published `hono` advisory (GHSA-5r4p-p66f-jhc7), so `release.yml` did not tag it. The second carries the fix (#521).
+
+### Security — `hono` 4.13.13 through the override, for GHSA-5r4p-p66f-jhc7 (2026-10-20, #521)
+
+`hono` 4.12.4 to 4.13.10 can let a request bypass middleware on static paths (moderate). It reaches the registry only as a dev dependency, through `shadcn` → `@modelcontextprotocol/sdk`. The `hono` override moves from `^4.13.5` to `^4.13.11`, and the lockfile resolves 4.13.13. Without it `pnpm audit --audit-level=moderate` fails, which blocks the pre-commit hook and the Security Audit job on every branch, and it failed CI on `main` for the 4.9.0 release, so `v4.9.0` was not tagged. No published package or API changes.
 
 ### Added — `border-control`, a control's edge at Lc 30 and 3:1; `border` is decorative; `text-tertiary` gets its own Lc 60 floor and 4.5:1; `input` is pending until slice 4 (2026-10-20, #518)
 
