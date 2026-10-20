@@ -5,7 +5,7 @@
   "version": "1.1.0",
   "kind": "server",
   "node": "n5-resilience",
-  "summary": "The transport trait, error type and Worker socket every Mzizi database client shares, and the data layer above them: a local, edge and cloud fetch cascade, sync reconciliation, tombstones, staleness, and local-first writes that roll back. Nothing database-specific, and no UI. The server harness is the separate mzizi-harness crate. Not published (owner decision 6.2 is open).",
+  "summary": "The transport trait, error type and Worker socket every Mzizi database client shares, and the data layer above them: a local, edge and cloud fetch cascade, sync reconciliation, tombstones, staleness, and local-first writes that roll back. Nothing database-specific, and no UI. The server harness is the separate mzizi-harness crate. Publishes with the next registry release to main.",
   "implementations": {
     "rs": {
       "crate": "mzizi-data",
@@ -190,6 +190,6 @@
     "No background timer: the host schedules reconcile.",
     "Tombstones are retained; there is no garbage collection.",
     "There is no key enumeration, so a full sync is not provided.",
-    "The crate is not published (owner decision 6.2, the WASM budget, is open), and mzizi-mongodb depends on it."
+    "The data layer is not wired into any app. The WASM payload budget (owner decision 6.2) is still open and gates that."
   ]
 }

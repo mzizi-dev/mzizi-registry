@@ -46,8 +46,8 @@
 //! # Where the data layer sits
 //!
 //! It is a production dependency (owner decision 6.3, mzizi-registry#503) and the data layer of
-//! node N5, resilience. It compiles to `wasm32-unknown-unknown`. It is not published and is not
-//! wired into any app until the owner sets the WASM payload budget (decision 6.2).
+//! node N5, resilience. It compiles to `wasm32-unknown-unknown`. It publishes with the next
+//! registry release to main, and is not wired into any app until the owner sets the WASM payload budget (decision 6.2).
 //!
 //! ```
 //! use mzizi_data::{Cascade, Layer, ManualClock, MemoryLayer, Record, Source};

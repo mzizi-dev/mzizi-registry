@@ -3,17 +3,17 @@
 Mzizi's shared data crate: the transport and error type every database client uses, and the data
 layer above them.
 
-> **Not published, and not wired into any app.** Owner decision 6.3 (production) and 6.4 (node N5
-> resilience) are recorded in [mzizi-registry#503](https://github.com/mzizi-dev/mzizi-registry/issues/503).
-> The WASM payload budget (6.2) is still open, so `publish = false` keeps this crate off crates.io.
-> Because `mzizi-mongodb` depends on it, that crate cannot be published until the owner sets the budget.
+> **Publishes with the next registry release to main, and is not wired into any app.** Owner decision 6.3
+> (production) and 6.4 (node N5 resilience) are recorded in
+> [mzizi-registry#503](https://github.com/mzizi-dev/mzizi-registry/issues/503). The WASM payload budget (6.2)
+> is still open and gates any app that uses this crate.
 
 A Cloudflare Worker has no threads and no `std` sockets, so the official database drivers do
 not build for it (for MongoDB: tokio's `net` feature needs `mio`, which has no backend on
 `wasm32-unknown-unknown`). The Mzizi clients speak each database's wire protocol themselves,
 sans-IO.
 
-Not published yet, so depend on it by path inside the workspace:
+Inside this workspace, depend on it by path. Outside it, depend on the published version:
 
 ```toml
 [dependencies]

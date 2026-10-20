@@ -17,7 +17,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 - **Tombstones.** `delete` writes a versioned tombstone through every tier. Tombstones are kept; there is no garbage collection yet.
 - **`reconcile`** brings every reachable tier to the winning record. A confirmed record beats a pending one; then the higher version; then the more authoritative tier. A tier is in sync only when the whole record matches.
 - **Local-first writes.** `apply_optimistic` and `delete` write pending copies local, then edge, then cloud, then confirm them. A failure restores every attempted tier to its own previous record, exactly. A rejected write that cannot be restored stays pending, and reconcile does not choose it while a confirmed record exists.
-- **Not published** (`publish = false`), because owner decision 6.2, the WASM payload budget, is still open. `mzizi-mongodb` depends on this crate, so it is held as well. Decisions 6.3 (production) and 6.4 (node N5) are recorded in `crate-for-node.json`.
+- **Publishable, not wired into any app.** `mzizi-data`, `mzizi-harness` and `mzizi-mongodb` publish with the next registry release to main (owner, 2026-10-20). The WASM payload budget (owner decision 6.2) is still open and gates any app that uses this crate. Decisions 6.3 (production) and 6.4 (node N5) are recorded in `crate-for-node.json`.
 - **Tested on the host target** by 50 integration tests and one doctest, in `tests/cascade.rs`. The server contract (`mzizi-rs/contracts/server/mzizi-data.contract.json`) names the tests that prove each guarantee.
 - **Designed, not built:** storage adapters, a background timer (the host schedules `reconcile`), key enumeration for a full sync.
 

@@ -4,9 +4,6 @@ description = "Mzizi MongoDB: a read-only MongoDB client over the wire protocol 
 readme = "README.md"
 keywords = ["mongodb", "cloudflare-workers", "wasm", "bson", "mzizi"]
 categories = ["database", "wasm"]
-# Held with mzizi-data, which it depends on: cargo package cannot resolve an unpublished
-# dependency, and owner decision 6.2 (the WASM budget) is still open.
-publish = false
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
