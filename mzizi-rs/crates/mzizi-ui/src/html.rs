@@ -121,7 +121,10 @@ mod tests {
     /// this one holds every component to the escaping table, so a copy that drifts fails here.
     #[test]
     fn every_inline_copy_escapes_like_the_reference() {
-        use crate::{badge, chart, progress, safe_area_frame, separator, skeleton, status_badge};
+        use crate::{
+            alert, badge, card, chart, markdown_renderer, progress, safe_area_frame, separator,
+            skeleton, status_badge,
+        };
 
         const PROBE: &str = "a&b<c>d\"e'f ünï";
         let mut escaped = String::new();
@@ -180,6 +183,36 @@ mod tests {
                     id: PROBE.to_owned(),
                     class: PROBE.to_owned(),
                     ..chart::RenderProps::default()
+                }),
+            ),
+            (
+                "alert",
+                alert::render(&alert::RenderProps {
+                    class: PROBE.to_owned(),
+                    children: alert::render_title(&alert::PartProps {
+                        class: PROBE.to_owned(),
+                        children: escaped.clone(),
+                    }),
+                    ..alert::RenderProps::default()
+                }),
+            ),
+            (
+                "card",
+                card::render(&card::RenderProps {
+                    class: PROBE.to_owned(),
+                    children: card::render_header(&card::SlotProps {
+                        class: PROBE.to_owned(),
+                        children: escaped.clone(),
+                    }),
+                    ..card::RenderProps::default()
+                }),
+            ),
+            (
+                "markdown-renderer",
+                markdown_renderer::render(&markdown_renderer::RenderProps {
+                    content: PROBE.to_owned(),
+                    class: PROBE.to_owned(),
+                    ..markdown_renderer::RenderProps::default()
                 }),
             ),
         ];
