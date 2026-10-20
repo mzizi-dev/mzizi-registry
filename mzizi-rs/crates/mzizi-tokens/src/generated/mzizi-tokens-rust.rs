@@ -307,7 +307,7 @@ pub struct RoleColors {
     pub text_primary: &'static str,
     /// Secondary text, descriptions. APCA Lc 75 on `base` and `surface` (#399).
     pub text_secondary: &'static str,
-    /// Placeholders, metadata and captions that are not body copy. APCA Lc 60 on `base` and `surface`.
+    /// Placeholders, captions, timestamps and metadata that are not body copy. APCA Lc 60 on `base` and `surface`, APCA's minimum for non-body text; lighter than `text-secondary` (Lc 75), which body copy uses.
     pub text_tertiary: &'static str,
     /// Text over photography, always with `--hero-text-shadow`.
     pub hero_text: &'static str,
@@ -471,8 +471,10 @@ pub struct RoleColors {
     pub accent: &'static str,
     /// Text on `accent`.
     pub accent_foreground: &'static str,
-    /// Hairlines: cards, inputs, dividers, tables.
+    /// Decorative hairlines between regions: cards, dividers, tables. Never the only cue, and never a control's edge: that is `border-control`.
     pub border: &'static str,
+    /// The edge that identifies a control: inputs, selects, textareas, checkboxes, radios, switch tracks. APCA Lc 30 and WCAG 3:1 (1.4.11, non-text contrast) on `base`, `surface` and `sidebar`: the `border` hairline walked toward ink in light and toward white in dark until it clears both.
+    pub border_control: &'static str,
     /// Form input background — same as surface. Pill-shape provides visual distinction.
     pub input: &'static str,
     /// Sidebar surface.
@@ -487,7 +489,7 @@ pub struct RoleColors {
     pub sidebar_accent: &'static str,
     /// Text on `sidebar-accent`.
     pub sidebar_accent_foreground: &'static str,
-    /// Sidebar hairlines. An alias of `border`.
+    /// Decorative sidebar hairlines. An alias of `border`; a control in the sidebar uses `border-control`.
     pub sidebar_border: &'static str,
     /// Focus ring in the sidebar.
     pub sidebar_ring: &'static str,
@@ -609,6 +611,7 @@ impl Roles {
                 accent: "#DFE2E2",
                 accent_foreground: "#373635",
                 border: "#E7E5E0",
+                border_control: "#8B8986",
                 input: "#FFFFFF",
                 sidebar: "#EEEEEC",
                 sidebar_foreground: "#373635",
@@ -722,6 +725,7 @@ impl Roles {
                 accent: "#20201F",
                 accent_foreground: "#E5E5E3",
                 border: "#2A2927",
+                border_control: "#797877",
                 input: "#100F0E",
                 sidebar: "#131211",
                 sidebar_foreground: "#E5E5E3",

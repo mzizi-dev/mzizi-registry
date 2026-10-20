@@ -262,6 +262,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-border: var(--border);
+  --color-border-control: var(--border-control);
   --color-input: var(--input);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
@@ -628,6 +629,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #9f221b; /* derived: #B3261E measures Lc 70.6 against base / surface; walked toward #000000 to Lc 75 */
+  --border-control: #8b8986; /* derived: #E7E5E0 measures Lc 0.0 against base / surface / sidebar; walked toward #000000 to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
   /* --primary  registry: ink #141413 | /v1/brand: tanzanite #4B0082
@@ -1069,6 +1071,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #f3c0bd; /* derived: #F2B8B5 measures Lc 71.6 against base / surface; walked toward #FFFFFF to Lc 75 */
+  --border-control: #797877; /* derived: #2A2927 measures Lc 0.0 against base / surface / sidebar; walked toward #FFFFFF to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
   /* --border  registry: rgba(10,10,10,0.06) | /v1/brand: #2A2927

@@ -157,7 +157,7 @@ export const semanticColors: BrandColorToken[] = [
   },
   {
     name: "border",
-    usage: "Canonical border color — cards, inputs, dividers, tables. Warm stone, not cool gray.",
+    usage: "Canonical hairline — cards, dividers, tables. Decorative and never the only cue: the edge of a control (input, select, checkbox, radio, switch) is the `border-control` role, APCA Lc 30 and 3:1. Warm stone, not cool gray.",
     colorType: "semantic",
     darkValue: "#2A2927",
     lightValue: "#E7E5E0",

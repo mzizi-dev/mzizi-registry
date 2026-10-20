@@ -2301,6 +2301,12 @@ export const roles = {
     dark: "#E5E5E3",
   },
   border: { kind: "ui", cssVar: "--border", light: "#E7E5E0", dark: "#2A2927" },
+  "border-control": {
+    kind: "ui",
+    cssVar: "--border-control",
+    light: "#8B8986",
+    dark: "#797877",
+  },
   input: {
     kind: "surface",
     cssVar: "--input",

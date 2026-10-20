@@ -17,6 +17,7 @@ import { colorKey, isColorKind, ROLES, type Role } from "@/lib/tokens/roles.sour
 import {
   apca,
   LADDER,
+  wcag,
   MUTED,
   renderGlobalsCss,
   resolveRoles,
@@ -155,15 +156,51 @@ describe("the role manifest", () => {
 })
 
 describe("the contrast gate on the Mzizi pack", () => {
-  const { results, violations, pending } = roleGate(RESOLVED)
+  const { results, violations, pending, decorative } = roleGate(RESOLVED)
 
   it("finds no violation", () => {
     expect(violations).toEqual([])
     expect(results.length).toBeGreaterThan(150)
   })
 
-  it("leaves exactly the owner decisions pending", () => {
-    expect([...new Set(pending.map((p) => p.role))].sort()).toEqual(["border", "sidebar-border", "text-tertiary"])
+  it("leaves nothing pending: the owner decided all three (#484, 2026-10-20)", () => {
+    expect(pending).toEqual([])
+  })
+
+  it("exempts exactly the decorative hairlines, and says why each is never the only cue", () => {
+    expect(decorative.map((d) => d.role).sort()).toEqual(["border", "sidebar-border"])
+    for (const d of decorative) expect(d.reason, d.role).toMatch(/never the only cue/)
+    expect(results.some((r) => r.role === "border" || r.role === "sidebar-border")).toBe(false)
+  })
+
+  it("puts border-control at Lc 30 and WCAG 3:1 on base, surface and sidebar in both themes", () => {
+    const got: string[] = []
+    for (const mode of ["light", "dark"] as const) {
+      for (const bg of ["base", "surface", "sidebar"]) {
+        const fg = RESOLVED.get("border-control")!.value[mode]
+        const on = RESOLVED.get(bg)!.value[mode]
+        expect(Math.abs(apca(fg, on)), `${mode} on ${bg}`).toBeGreaterThanOrEqual(30)
+        expect(wcag(fg, on), `${mode} on ${bg}`).toBeGreaterThanOrEqual(3)
+        got.push(`${mode}:${bg}`)
+      }
+    }
+    expect(results.filter((r) => r.role === "border-control").map((r) => `${r.mode}:${r.against}`).sort()).toEqual(got.sort())
+    // The hairline it starts from is far under both: border stays decorative, border-control is the control's edge.
+    expect(Math.abs(apca(RESOLVED.get("border")!.value.light, RESOLVED.get("base")!.value.light))).toBeLessThan(15)
+  })
+
+  it("holds text-tertiary to its own Lc 60 floor, and keeps it lighter than text-secondary", () => {
+    for (const mode of ["light", "dark"] as const) {
+      for (const bg of ["base", "surface"]) {
+        const on = RESOLVED.get(bg)!.value[mode]
+        const tertiary = Math.abs(apca(RESOLVED.get("text-tertiary")!.value[mode], on))
+        const secondary = Math.abs(apca(RESOLVED.get("text-secondary")!.value[mode], on))
+        expect(tertiary, `${mode} on ${bg}`).toBeGreaterThanOrEqual(60)
+        expect(tertiary, `${mode} on ${bg}`).toBeLessThan(75)
+        expect(secondary - tertiary, `${mode} on ${bg}: secondary stays a step above tertiary`).toBeGreaterThanOrEqual(10)
+      }
+    }
+    expect(results.filter((r) => r.role === "text-tertiary").every((r) => r.min === 60 && r.pass)).toBe(true)
   })
 
   it("puts --muted-foreground at Lc 75 on base and surface in both themes (#399)", () => {
@@ -180,6 +217,8 @@ describe("the contrast gate on the Mzizi pack", () => {
       .flatMap((r) => Object.keys(r.derived).map((m) => `${r.role.name}:${m}`))
       .sort()
     expect(derived).toEqual([
+      "border-control:dark",
+      "border-control:light",
       "destructive-text:dark",
       "destructive-text:light",
       "destructive:dark",
@@ -188,12 +227,16 @@ describe("the contrast gate on the Mzizi pack", () => {
     ])
   })
 
-  it("holds every text role to Lc 75 unless an owner decision is pending or it is exempt", () => {
+  it("holds every text role to Lc 75 unless it is non-body (Lc 60), pending or exempt", () => {
     for (const r of ROLES.filter((x) => x.kind === "text")) {
       expect(r.contrast, r.name).toBeDefined()
-      if (r.contrast && "against" in r.contrast && !r.contrast.pending) expect(r.contrast.min, r.name).toBeGreaterThanOrEqual(75)
+      if (r.contrast && "against" in r.contrast && !r.contrast.pending) {
+        expect(r.contrast.min, r.name).toBeGreaterThanOrEqual(r.contrast.nonBody ? 60 : 75)
+      }
     }
     expect(ROLES.filter((r) => r.contrast && "exempt" in r.contrast).map((r) => r.name)).toEqual(["hero-text"])
+    expect(ROLES.filter((r) => r.contrast && "against" in r.contrast && r.contrast.nonBody).map((r) => r.name)).toEqual(["text-tertiary"])
+    expect(ROLES.filter((r) => r.contrast && "decorative" in r.contrast).map((r) => r.name).sort()).toEqual(["border", "sidebar-border"])
   })
 })
 
@@ -505,5 +548,29 @@ describe("one resolution, passed down", () => {
     const src = readFileSync(join(ROOT, "scripts/sync-tokens.ts"), "utf8")
     expect(src).not.toMatch(/rolesCache/)
     expect(src.match(/resolveRoles\(/g)).toHaveLength(1)
+  })
+})
+
+describe("the gate's non-body floor and decorative exemption cannot loosen anything else", () => {
+  const gateWith = (patch: Partial<Record<string, Partial<Role>>>) => roleGate(resolveWith(manifest(patch))).violations
+
+  it("fails non-body text under Lc 60, and body text declared at 60 without nonBody", () => {
+    expect(gateWith({ "text-tertiary": { contrast: { against: ["base", "surface"], min: 55, nonBody: "test" } } })).toContain(
+      "text-tertiary: declares Lc 55, under the text bar of 60"
+    )
+    expect(gateWith({ "text-tertiary": { contrast: { against: ["base", "surface"], min: 60 } } })).toEqual(
+      expect.arrayContaining(["text-tertiary: declares Lc 60, under the text bar of 75", expect.stringMatching(/^text-tertiary \(light\): Lc 6\d\.\d on base, needs 75$/)])
+    )
+  })
+
+  it("fails a decorative text role, and a nonBody ui role", () => {
+    expect(gateWith({ "text-secondary": { contrast: { decorative: "test" } } })).toContain("text-secondary: only a ui role can be decorative, not a text role")
+    expect(gateWith({ ring: { contrast: { against: ["base", "surface"], min: 30, nonBody: "test" } } })).toContain("ring: only a text role can be nonBody, not a ui role")
+  })
+
+  it("fails border-control when a pack sets it under 3:1, even where it clears Lc 30", () => {
+    // #B4B3AF is where Lc 30 alone lands in light: Lc 30.9 on surface, but 1.81:1.
+    const violations = gateWith({ "border-control": { default: { literal: "#B4B3AF" }, derive: undefined } })
+    expect(violations).toContain("border-control (light): Lc 30.9 on surface, needs 30; WCAG 1.81:1, needs 3:1")
   })
 })

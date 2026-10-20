@@ -736,8 +736,11 @@ export function resolveRoles(
     return one(themed(r.default, mode), mode, r).value
   }
 
-  const passes = (hex: string, rule: { against: readonly string[]; min: number }, mode: Mode) =>
-    rule.against.every((bg) => Math.abs(apca(hex, resolve(bg).value[mode])) >= rule.min)
+  const passes = (hex: string, rule: { against: readonly string[]; min: number; wcag?: number }, mode: Mode) =>
+    rule.against.every((bg) => {
+      const on = resolve(bg).value[mode]
+      return Math.abs(apca(hex, on)) >= rule.min && (rule.wcag === undefined || wcag(hex, on) >= rule.wcag)
+    })
 
   /** Walk toward `first`, then the other way; the first value that passes, or null. */
   const derive = (start: string, first: string, ok: (hex: string) => boolean) => {
@@ -769,7 +772,8 @@ export function resolveRoles(
         const worst = Math.min(...rule.against.map((bg) => Math.abs(apca(base.value, resolve(bg).value[mode]))))
         const got = derive(base.value, mode === "light" ? BLACK : WHITE, (c) => passes(c, rule, mode))
         if (got) {
-          derived[mode] = `derived: ${base.value} measures Lc ${worst.toFixed(1)} against ${rule.against.join(" / ")}; walked toward ${got.toward} to Lc ${rule.min}`
+          const bars = `Lc ${rule.min}${rule.wcag ? ` and ${rule.wcag}:1` : ""}`
+          derived[mode] = `derived: ${base.value} measures Lc ${worst.toFixed(1)} against ${rule.against.join(" / ")}; walked toward ${got.toward} to ${bars}`
           css[mode] = lo(got.hex)
           value[mode] = got.hex
         } else {
@@ -862,6 +866,8 @@ export interface GateResult {
   min: number
   pass: boolean
   pending?: string
+  /** Set where the rule also carries a WCAG ratio: the measured ratio and its minimum. */
+  wcag?: { measure: number; min: number }
 }
 
 /**
@@ -869,8 +875,11 @@ export interface GateResult {
  * `pnpm tokens:verify`; a violation fails the build.
  *
  *   - every `kind: text` role: |Lc| >= 75 on `base` and `surface` (or on the
- *     fill it is declared against), both themes
- *   - every `kind: ui` role: |Lc| >= 30 on what it is declared against
+ *     fill it is declared against), both themes; >= 60 where its rule names
+ *     `nonBody` (text that is never body copy: APCA's non-body minimum)
+ *   - every `kind: ui` role: |Lc| >= 30 on what it is declared against, unless it
+ *     is marked `decorative`: then it is exempt, and listed in `decorative` so the
+ *     report names every exemption (#484, owner decision 2026-10-20)
  *   - every size marked `floor` >= `spacing-touch-min`
  *   - every `derive` found a compliant value (`unmet` is a violation naming the
  *     roles, never a silent #000/#FFF)
@@ -879,30 +888,53 @@ export interface GateResult {
  * manifest declares resolves or throws in `resolveRoles()`, so there is nothing
  * to check until a pack can leave a role out.
  *
- * The manifest cannot loosen it: a text role that declares a bar under 75, or a
- * ui role under 30, is itself a violation unless the rule carries `pending`, an
- * owner decision named in the rule (and pinned by the role tests).
+ * The manifest cannot loosen it: a text role that declares a bar under its floor
+ * (75, or 60 with `nonBody`), or a ui role under 30, is itself a violation unless
+ * the rule carries `pending`, an owner decision named in the rule; a `decorative`
+ * rule on anything but a ui role is a violation. `nonBody`, `decorative` and
+ * `pending` are each pinned by the role tests.
  */
-export function roleGate(resolved: Map<string, ResolvedRole>): { results: GateResult[]; violations: string[]; pending: GateResult[] } {
+export function roleGate(resolved: Map<string, ResolvedRole>): {
+  results: GateResult[]
+  violations: string[]
+  pending: GateResult[]
+  decorative: { role: string; reason: string }[]
+} {
   const results: GateResult[] = []
   const violations: string[] = []
+  const decorative: { role: string; reason: string }[] = []
   for (const { role: r, value, unmet } of resolved.values()) {
     for (const mode of MODES) if (unmet[mode]) violations.push(unmet[mode]!)
+    if (r.contrast && "decorative" in r.contrast) {
+      if (r.kind !== "ui") violations.push(`${r.name}: only a ui role can be decorative, not a ${r.kind} role`)
+      else decorative.push({ role: r.name, reason: r.contrast.decorative })
+      continue
+    }
     if (!r.contrast || "exempt" in r.contrast) {
       if ((r.kind === "text" || r.kind === "ui") && !r.contrast) violations.push(`${r.name}: a ${r.kind} role with no contrast rule`)
       continue
     }
-    const floor = r.kind === "text" ? 75 : r.kind === "ui" ? 30 : 0
+    if (r.contrast.nonBody && r.kind !== "text") violations.push(`${r.name}: only a text role can be nonBody, not a ${r.kind} role`)
+    const floor = r.kind === "text" ? (r.contrast.nonBody ? 60 : 75) : r.kind === "ui" ? 30 : 0
     if (r.contrast.min < floor && !r.contrast.pending) violations.push(`${r.name}: declares Lc ${r.contrast.min}, under the ${r.kind} bar of ${floor}`)
     for (const mode of MODES) {
       for (const bg of r.contrast.against) {
         const raw = Math.abs(apca(value[mode], resolved.get(bg)!.value[mode]))
         const measure = +raw.toFixed(1)
         const min = Math.max(r.contrast.min, floor)
-        const res: GateResult = { role: r.name, mode, against: bg, measure, min, pass: raw >= min }
+        const on = resolved.get(bg)!.value[mode]
+        const ratio = r.contrast.wcag === undefined ? undefined : wcag(value[mode], on)
+        const wcagOk = ratio === undefined || ratio >= r.contrast.wcag!
+        const res: GateResult = { role: r.name, mode, against: bg, measure, min, pass: raw >= min && wcagOk }
+        if (ratio !== undefined) res.wcag = { measure: +ratio.toFixed(2), min: r.contrast.wcag! }
         if (!res.pass && r.contrast.pending) res.pending = r.contrast.pending
         results.push(res)
-        if (!res.pass && !res.pending) violations.push(`${r.name} (${mode}): Lc ${measure} on ${bg}, needs ${min}`)
+        if (!res.pass && !res.pending) {
+          violations.push(
+            `${r.name} (${mode}): Lc ${measure} on ${bg}, needs ${min}` +
+              (ratio === undefined ? "" : `; WCAG ${ratio.toFixed(2)}:1, needs ${r.contrast.wcag}:1`)
+          )
+        }
       }
     }
   }
@@ -915,7 +947,7 @@ export function roleGate(resolved: Map<string, ResolvedRole>): { results: GateRe
     results.push({ role: r.name, mode: "both", against: "spacing-touch-min", measure, min: touchMin, pass: measure >= touchMin })
     if (measure < touchMin) violations.push(`${r.name}: ${measure}px, under the ${touchMin}px touch floor`)
   }
-  return { results, violations, pending: results.filter((x) => x.pending) }
+  return { results, violations, pending: results.filter((x) => x.pending), decorative }
 }
 
 /**
