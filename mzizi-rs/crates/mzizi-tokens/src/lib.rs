@@ -36,6 +36,11 @@
 //! [`Roles::mzizi`], with the size, radius and font roles as associated consts. It is generated
 //! from `lib/tokens/roles.source.ts` beside the palette.
 //!
+//! The 48px touch floor is checked at compile time, in the generated file: every size role the
+//! manifest marks `floor` gets a `const _: () = assert!(Roles::X >= Roles::SPACING_TOUCH_MIN);`
+//! item outside any test, so a build of this crate (or of a copy of the registry file) fails if a
+//! floored size undercuts it.
+//!
 //! `src/generated/` holds a COMMITTED copy of it, written by `pnpm rust:generate` and checked by
 //! `pnpm rust:generate:check`. The copy is what makes this crate publishable: `cargo package`
 //! collects only files under the package root, so a `#[path]` reaching up into the registry ships
@@ -71,10 +76,8 @@ mod tests {
         assert_ne!(roles.light.destructive, roles.light.status_danger);
     }
 
-    // The touch floor, checked at compile time: no generated size may undercut it.
-    const _: () = assert!(Roles::SPACING_TOUCH_MIN == 48);
-    const _: () = assert!(Roles::SPACING_TOUCH >= Roles::SPACING_TOUCH_MIN);
-    const _: () = assert!(Roles::SPACING_CONTROL >= Roles::SPACING_TOUCH_MIN);
-    const _: () = assert!(Roles::SPACING_FIELD >= Roles::SPACING_TOUCH_MIN);
-    const _: () = assert!(Roles::RADIUS_CONTROL == 9999);
+    #[test]
+    fn mzizi_keeps_controls_pill() {
+        assert_eq!(Roles::RADIUS_CONTROL, 9999);
+    }
 }

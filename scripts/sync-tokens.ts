@@ -396,10 +396,13 @@ const banner = (comment: string, platform: string) =>
 // and fonts. Native targets have no custom properties, so a role arrives as the
 // value it paints; a third-party pack (slice 2) is the same shape with its values.
 
-let rolesCache: Map<string, ResolvedRole> | undefined
-function roles(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]): ResolvedRole[] {
-  rolesCache ??= resolveRoles(minerals, heritage, experimental)
-  return ROLES.map((r) => rolesCache!.get(r.name)!)
+/** The resolved roles in manifest order. `main()` resolves them once and passes the map to every emitter. */
+function roles(resolved: Map<string, ResolvedRole>): ResolvedRole[] {
+  return ROLES.map((r) => {
+    const x = resolved.get(r.name)
+    if (!x) throw new Error(`role "${r.name}" was not resolved`)
+    return x
+  })
 }
 const colorRoles = (rs: ResolvedRole[]) => rs.filter((r) => isColorKind(r.role.kind))
 const byKind = (rs: ResolvedRole[], kind: Role["kind"]) => rs.filter((r) => r.role.kind === kind)
@@ -478,7 +481,8 @@ const rolesNote = (comment: string) =>
 function renderSwift(
   minerals: Mineral[],
   heritage: Heritage[],
-  experimental: Experimental[]
+  experimental: Experimental[],
+  resolved: Map<string, ResolvedRole>
 ): string {
   const pair = (name: string, dark: string, light: string) =>
     `    static let mzizi${cap(name)}Dark  = Color(hex: "${dark}")\n` +
@@ -519,21 +523,21 @@ ${Object.entries(SCALE.fonts)
 ${rolesNote("//")}
 public struct MziziRoles {
     public struct Light {
-${colorRoles(roles(minerals, heritage, experimental))
+${colorRoles(roles(resolved))
   .map((r) => `        public static let ${camel(r.role.name)} = ${swiftColor(r.value.light)}`)
   .join("\n")}
     }
 
     public struct Dark {
-${colorRoles(roles(minerals, heritage, experimental))
+${colorRoles(roles(resolved))
   .map((r) => `        public static let ${camel(r.role.name)} = ${swiftColor(r.value.dark)}`)
   .join("\n")}
     }
 
-${[...byKind(roles(minerals, heritage, experimental), "size"), ...byKind(roles(minerals, heritage, experimental), "radius")]
+${[...byKind(roles(resolved), "size"), ...byKind(roles(resolved), "radius")]
   .map((r) => `    public static let ${camel(r.role.name)}: CGFloat = ${px(r.value.light)}`)
   .join("\n")}
-${byKind(roles(minerals, heritage, experimental), "font")
+${byKind(roles(resolved), "font")
   .map((r) => `    public static let ${camel(r.role.name)} = ${JSON.stringify(family(r.value.light))}`)
   .join("\n")}
 }
@@ -543,7 +547,8 @@ ${byKind(roles(minerals, heritage, experimental), "font")
 function renderKotlin(
   minerals: Mineral[],
   heritage: Heritage[],
-  experimental: Experimental[]
+  experimental: Experimental[],
+  resolved: Map<string, ResolvedRole>
 ): string {
   const pair = (name: string, dark: string, light: string) =>
     `    val ${cap(name)}Dark  = Color(0xFF${bare(dark)})\n` +
@@ -587,21 +592,21 @@ ${Object.entries(SCALE.fonts)
 ${rolesNote("//")}
 object MziziRoles {
     object Light {
-${colorRoles(roles(minerals, heritage, experimental))
+${colorRoles(roles(resolved))
   .map((r) => `        val ${camel(r.role.name)} = Color(${argb(r.value.light)})`)
   .join("\n")}
     }
 
     object Dark {
-${colorRoles(roles(minerals, heritage, experimental))
+${colorRoles(roles(resolved))
   .map((r) => `        val ${camel(r.role.name)} = Color(${argb(r.value.dark)})`)
   .join("\n")}
     }
 
-${[...byKind(roles(minerals, heritage, experimental), "size"), ...byKind(roles(minerals, heritage, experimental), "radius")]
+${[...byKind(roles(resolved), "size"), ...byKind(roles(resolved), "radius")]
   .map((r) => `    val ${camel(r.role.name)} = ${px(r.value.light)}.dp`)
   .join("\n")}
-${byKind(roles(minerals, heritage, experimental), "font")
+${byKind(roles(resolved), "font")
   .map((r) => `    const val ${camel(r.role.name)} = ${JSON.stringify(family(r.value.light))}`)
   .join("\n")}
 }
@@ -611,7 +616,8 @@ ${byKind(roles(minerals, heritage, experimental), "font")
 function renderArkTs(
   minerals: Mineral[],
   heritage: Heritage[],
-  experimental: Experimental[]
+  experimental: Experimental[],
+  resolved: Map<string, ResolvedRole>
 ): string {
   const pair = (name: string, dark: string, light: string) =>
     `    ${name}Dark: ${JSON.stringify(dark)},\n    ${name}Light: ${JSON.stringify(light)},`
@@ -646,14 +652,15 @@ ${Object.entries(SCALE.fonts)
   .join("\n")}
 } as const
 
-${jsRoles(roles(minerals, heritage, experimental))}
+${jsRoles(roles(resolved))}
 `
 }
 
 function renderReactNative(
   minerals: Mineral[],
   heritage: Heritage[],
-  experimental: Experimental[]
+  experimental: Experimental[],
+  resolved: Map<string, ResolvedRole>
 ): string {
   const pair = (name: string, dark: string, light: string) =>
     `    ${name}Dark: ${JSON.stringify(dark)},\n    ${name}Light: ${JSON.stringify(light)},`
@@ -688,14 +695,15 @@ ${Object.entries(SCALE.fonts)
   .join("\n")}
 } as const
 
-${jsRoles(roles(minerals, heritage, experimental))}
+${jsRoles(roles(resolved))}
 `
 }
 
 function renderPython(
   minerals: Mineral[],
   heritage: Heritage[],
-  experimental: Experimental[]
+  experimental: Experimental[],
+  resolved: Map<string, ResolvedRole>
 ): string {
   const pair = (name: string, dark: string, light: string) =>
     `    ${upper(name)}_DARK: str = ${JSON.stringify(dark)}\n` +
@@ -743,7 +751,7 @@ ${rolesNote("#")}
 @dataclass(frozen=True)
 class MziziRolesLight:
     """Colour roles, light theme."""
-${colorRoles(roles(minerals, heritage, experimental))
+${colorRoles(roles(resolved))
   .map((r) => `    ${snakeUpper(r.role.name)}: str = ${JSON.stringify(r.value.light)}`)
   .join("\n")}
 
@@ -751,7 +759,7 @@ ${colorRoles(roles(minerals, heritage, experimental))
 @dataclass(frozen=True)
 class MziziRolesDark:
     """Colour roles, dark theme."""
-${colorRoles(roles(minerals, heritage, experimental))
+${colorRoles(roles(resolved))
   .map((r) => `    ${snakeUpper(r.role.name)}: str = ${JSON.stringify(r.value.dark)}`)
   .join("\n")}
 
@@ -759,10 +767,10 @@ ${colorRoles(roles(minerals, heritage, experimental))
 @dataclass(frozen=True)
 class MziziRoleMetrics:
     """Size and radius roles in pixels, and the font roles' families."""
-${[...byKind(roles(minerals, heritage, experimental), "size"), ...byKind(roles(minerals, heritage, experimental), "radius")]
+${[...byKind(roles(resolved), "size"), ...byKind(roles(resolved), "radius")]
   .map((r) => `    ${snakeUpper(r.role.name)}: int = ${px(r.value.light)}`)
   .join("\n")}
-${byKind(roles(minerals, heritage, experimental), "font")
+${byKind(roles(resolved), "font")
   .map((r) => `    ${snakeUpper(r.role.name)}: str = ${JSON.stringify(family(r.value.light))}`)
   .join("\n")}
 
@@ -791,7 +799,8 @@ ${heritage.map((h) => `    heritage.${upper(h.name)}_DARK,`).join("\n")}
 function renderRust(
   minerals: Mineral[],
   heritage: Heritage[],
-  experimental: Experimental[]
+  experimental: Experimental[],
+  resolved: Map<string, ResolvedRole>
 ): string {
   // Every public item carries a doc comment. `mzizi-rs` sets `missing_docs = "warn"` at the
   // workspace level and CI runs clippy with `-D warnings`, so an undocumented `pub const`
@@ -881,7 +890,7 @@ ${Object.entries(SCALE.fonts)
   .join("\n")}
 }
 
-${rustRoles(roles(minerals, heritage, experimental))}
+${rustRoles(roles(resolved))}
 `
 }
 
@@ -906,6 +915,17 @@ function rustRoles(rs: ResolvedRole[]): string {
   const fonts = byKind(rs, "font")
     .map((r) => `    /// ${doc(r.role.description)}\n    pub const ${snakeUpper(r.role.name)}: &'static str = ${JSON.stringify(family(r.value.light))};`)
     .join("\n")
+  // The touch floor, checked at compile time for every size role the manifest
+  // marks `floor`: these are module items, not tests, so any build of the crate
+  // (and any copy of this file) fails if a generated size undercuts the floor.
+  const touchMin = rs.find((r) => r.role.name === "spacing-touch-min" && r.role.fixed)
+  if (!touchMin) throw new Error(`the manifest has no fixed "spacing-touch-min", the touch floor`)
+  const floors = [
+    "// The touch floor (#484), checked at compile time: no floored size may undercut it.",
+    ...byKind(rs, "size")
+      .filter((r) => r.role.floor)
+      .map((r) => `const _: () = assert!(Roles::${snakeUpper(r.role.name)} >= Roles::${snakeUpper(touchMin.role.name)});`),
+  ].join("\n")
   return `// ─── Roles (#484) ─────────────────────────────────────────────────────────────
 // What a component names, resolved for the Mzizi pack, from lib/tokens/roles.source.ts.
 
@@ -939,7 +959,9 @@ ${init("dark")}
 
 ${metrics}
 ${fonts}
-}`
+}
+
+${floors}`
 }
 
 /**
@@ -1049,8 +1071,8 @@ function renderTsPalette(
  * themes. Generated between \`tokens:generated:ts-roles\` markers, as the palette
  * region is, so the TypeScript surface cannot disagree with the stylesheet.
  */
-function renderTsRoles(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]): string {
-  return roles(minerals, heritage, experimental)
+function renderTsRoles(resolved: Map<string, ResolvedRole>): string {
+  return roles(resolved)
     .map((r) => {
       const fields = [
         `kind: ${JSON.stringify(r.role.kind)}`,
@@ -1065,7 +1087,7 @@ function renderTsRoles(minerals: Mineral[], heritage: Heritage[], experimental: 
 
 interface PlatformTarget {
   file: string
-  render: (minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]) => string
+  render: (minerals: Mineral[], heritage: Heritage[], experimental: Experimental[], resolved: Map<string, ResolvedRole>) => string
 }
 
 const PLATFORM_TARGETS: PlatformTarget[] = [
@@ -1154,8 +1176,8 @@ const norm = (s: string) => s.replace(/\s+/g, "")
  * does. A \`pending\` shortfall is an owner decision named in the manifest; it is
  * printed, never silent.
  */
-function gate(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]) {
-  const { results, violations, pending } = roleGate(resolveRoles(minerals, heritage, experimental))
+function gate(resolved: Map<string, ResolvedRole>) {
+  const { results, violations, pending } = roleGate(resolved)
   if (violations.length) {
     fail(`role contrast gate (lib/tokens/roles.source.ts): ${violations.length} violation(s)\n  ${violations.join("\n  ")}`)
   }
@@ -1168,7 +1190,9 @@ function gate(minerals: Mineral[], heritage: Heritage[], experimental: Experimen
 
 async function main() {
   const { minerals, heritage, experimental } = readPalette()
-  gate(minerals, heritage, experimental)
+  // The role layer is resolved ONCE and handed to the gate and every emitter.
+  const resolved = resolveRoles(minerals, heritage, experimental)
+  gate(resolved)
 
   const paletteModule = await prettified(
     PALETTE_TS,
@@ -1196,7 +1220,7 @@ async function main() {
   tokensTs = spliceRegion(
     tokensTs,
     "ts-roles",
-    renderTsRoles(minerals, heritage, experimental),
+    renderTsRoles(resolved),
     TOKENS_TS_LABEL,
     ""
   )
@@ -1210,7 +1234,7 @@ async function main() {
       return {
         path,
         label: `components/registry/n1-tokens/${t.file}`,
-        body: await prettified(path, t.render(minerals, heritage, experimental)),
+        body: await prettified(path, t.render(minerals, heritage, experimental, resolved)),
       }
     })
   )

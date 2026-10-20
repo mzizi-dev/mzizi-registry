@@ -20,7 +20,8 @@
  *   - `kind: text` roles: |APCA Lc| >= 75 on `base` and `surface`, both themes
  *   - a foreground on its fill: >= 75
  *   - `kind: ui` roles: >= 30 on `base` and `surface`
- *   - `spacing-touch` >= `spacing-touch-min` (48px, a floor no pack can lower)
+ *   - every size marked `floor` >= `spacing-touch-min` (48px, a floor no pack can lower)
+ *   - a `derive` that no walk can satisfy is a violation naming the roles, never #000/#FFF
  * A rule may carry `pending` instead of passing only where the shortfall is a
  * design decision the owner has not made; the gate prints those, and
  * `__tests__/tokens-roles.test.ts` pins the exact set so it cannot grow quietly.
@@ -70,6 +71,8 @@ export type RoleValue =
   | { mix: readonly [string, number, string] }
   /** A length in pixels (sizes and radii). */
   | { px: number }
+  /** A rung of the radius ladder (`brandMeta.radii`): declared as `var(--r-<rung>)`, so it follows the rung. */
+  | { radius: string }
   /** A font stack. */
   | { font: string }
 
@@ -136,9 +139,13 @@ export interface Role {
   derive?: "text" | "fill"
   /** Theme key, where the role's name would collide with a Tailwind keyword. */
   utility?: string
-  /** size: rendered as a literal no pack can override. */
+  /** size: registered with Tailwind as its own literal value, which no pack can override. */
   fixed?: true
-  /** size: must not be smaller than `spacing-touch-min`. */
+  /**
+   * size: must not be smaller than `spacing-touch-min`. The stylesheet registers
+   * it as `max(var(--size-<name>), <floor>)`, so a pack that lowers the bare var
+   * still paints the floor, and the gate fails a default under it.
+   */
   floor?: true
   block: RoleBlock
 }
@@ -165,6 +172,22 @@ function access(key: "minTouchTarget" | "defaultTouchTarget"): number {
   const v = brandMeta.accessibility[key]
   if (typeof v !== "number") throw new Error(`brand.source.ts accessibility.${key} is not a number`)
   return v
+}
+
+/**
+ * A radius role's default: the rung of the radius ladder it follows, so a
+ * consumer that moves `--r-full` or `--r-base` moves the role too. The rung is
+ * named here and checked against the component spec it stands for, so canon
+ * stays the source and a spec that moves off its rung fails loudly.
+ */
+function rung(specName: string, name: string): RoleValue {
+  const v = brandMeta.radii[name]
+  if (typeof v !== "string") throw new Error(`brand.source.ts radii has no "${name}"`)
+  const want = spec(specName).borderRadius
+  if (parseFloat(v) !== want) {
+    throw new Error(`componentSpecs.${specName}.borderRadius is ${want}px, but its radius rung "${name}" is ${v}`)
+  }
+  return { radius: name }
 }
 
 function fontFamily(name: "sans" | "serif" | "mono"): string {
@@ -697,13 +720,13 @@ export const ROLES: readonly Role[] = [
     kind: "radius",
     required: true,
     description: "Buttons and controls. Mzizi keeps pill (owner decision 2026-10-07); a pack may switch it.",
-    default: { px: spec("button").borderRadius },
+    default: rung("button", "full"),
     block: "invariant",
   },
-  { name: "radius-field", group: "radius", kind: "radius", required: true, description: "Inputs. componentSpecs.input.borderRadius.", default: { px: spec("input").borderRadius }, block: "invariant" },
-  { name: "radius-badge", group: "radius", kind: "radius", required: true, description: "Badges. componentSpecs.badge.borderRadius.", default: { px: spec("badge").borderRadius }, block: "invariant" },
-  { name: "radius-card", group: "radius", kind: "radius", required: true, description: "Cards. componentSpecs.card.borderRadius.", default: { px: spec("card").borderRadius }, block: "invariant" },
-  { name: "radius-dialog", group: "radius", kind: "radius", required: true, description: "Dialogs. componentSpecs.dialog.borderRadius.", default: { px: spec("dialog").borderRadius }, block: "invariant" },
+  { name: "radius-field", group: "radius", kind: "radius", required: true, description: "Inputs. componentSpecs.input.borderRadius.", default: rung("input", "full"), block: "invariant" },
+  { name: "radius-badge", group: "radius", kind: "radius", required: true, description: "Badges. componentSpecs.badge.borderRadius.", default: rung("badge", "full"), block: "invariant" },
+  { name: "radius-card", group: "radius", kind: "radius", required: true, description: "Cards. componentSpecs.card.borderRadius.", default: rung("card", "base"), block: "invariant" },
+  { name: "radius-dialog", group: "radius", kind: "radius", required: true, description: "Dialogs. componentSpecs.dialog.borderRadius.", default: rung("dialog", "xl"), block: "invariant" },
 
   // ── Font (brand.source typography) ──
   { name: "font-body", group: "font", kind: "font", required: true, description: "Body and UI text. `font-sans` is an alias.", default: { font: `"${fontFamily("sans")}", ui-sans-serif, system-ui, sans-serif` }, block: "theme" },

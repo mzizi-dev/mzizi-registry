@@ -27,13 +27,24 @@
  *                        categories, sizes (`h-touch`), radii
  *                        (`rounded-control`) and fonts (`font-body`). A brand
  *                        moves a role by redeclaring its var; the APCA gate
- *                        holds the Mzizi mapping to Lc 75 text, Lc 30 UI
+ *                        holds the Mzizi mapping to Lc 75 text, Lc 30 UI.
+ *                        Floored sizes are clamped: `max(var(--size-*), 3rem)`
  *   non-colour ladders   spacing 17, motion 4+4+3, type 13+9, shadow 8,
  *                        radius 7, touch targets, control heights, z-index
  *   containers           3 widths (narrow, prose, wide) and the
  *                        `.container-custom` / `-narrow` / `-prose` utilities
  *   brand blocks         8 `[data-brand]` selectors, each moving `--primary`
  *                        and `--ring` only
+ *
+ * ALIAS CHAINS — what moves when you override a var
+ *   A role that aliases another (`--status-deprecated: var(--status-danger)`)
+ *   or a palette tier (`var(--mineral-cobalt-aa)`) follows it in both themes.
+ *   A role whose value had to be DERIVED to meet its contrast bar is a measured
+ *   literal in BOTH themes, even in the theme where the source already passed
+ *   (`--destructive` light is #b3261e, the value of `--error`, because dark
+ *   is derived). So overriding a source var moves a role in both themes or in
+ *   neither, never in one. To move a derived role, redeclare the role itself.
+ *   Radius roles follow their rung: `--r-control: var(--r-full)`.
  *
  * HOW TO USE IT
  *   Copy it in as your `globals.css`. Set `data-brand` on <html> to pick a
@@ -267,13 +278,31 @@
     3rem
   ); /* never under the touch floor */
   --spacing-touch-min: 3rem; /* a literal: the touch floor no brand can lower */
-  --spacing-control: var(--size-control);
-  --spacing-control-sm: var(--size-control-sm);
-  --spacing-control-lg: var(--size-control-lg);
-  --spacing-control-icon: var(--size-control-icon);
+  --spacing-control: max(
+    var(--size-control),
+    3rem
+  ); /* never under the touch floor */
+  --spacing-control-sm: max(
+    var(--size-control-sm),
+    3rem
+  ); /* never under the touch floor */
+  --spacing-control-lg: max(
+    var(--size-control-lg),
+    3rem
+  ); /* never under the touch floor */
+  --spacing-control-icon: max(
+    var(--size-control-icon),
+    3rem
+  ); /* never under the touch floor */
   --spacing-control-dense: var(--size-control-dense);
-  --spacing-field: var(--size-field);
-  --spacing-field-sm: var(--size-field-sm);
+  --spacing-field: max(
+    var(--size-field),
+    3rem
+  ); /* never under the touch floor */
+  --spacing-field-sm: max(
+    var(--size-field-sm),
+    3rem
+  ); /* never under the touch floor */
   --radius-control: var(--r-control);
   --radius-field: var(--r-field);
   --radius-badge: var(--r-badge);
@@ -483,7 +512,7 @@
     in oklab,
     var(--surface) 93%,
     var(--brand-accent)
-  ); /* Cover-colour page wash — surface tinted with the active brand accent */
+  ); /* Cover-colour page wash — surface tinted with the active brand accent (~7% light / ~12% dark) */
   --muted: #faf9f5; /* Deepest inset fill — not a ladder rung */
 
   /* ── TEXT RAMP — three tiers, APCA-measured on --base ────────────────────── */
@@ -533,8 +562,8 @@
   --popover-foreground: var(--text-primary);
   --secondary: var(--container);
   --secondary-foreground: var(--text-primary);
+  --destructive: #b3261e; /* var(--error), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
   --destructive-foreground: #ffffff;
-  --destructive: var(--error);
   --overlay-foreground: var(--text-primary);
   --accent-foreground: var(--text-primary);
 
@@ -569,7 +598,7 @@
   --status-danger-text: #844425; /* derived: #8E4928 measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
   --status-premium: var(--mineral-tanzanite);
   --status-premium-container: var(--mineral-tanzanite-container);
-  --status-premium-on-container: var(--mineral-tanzanite-on-container);
+  --status-premium-on-container: #2e004d; /* var(--mineral-tanzanite-on-container), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
   --status-premium-text: var(--mineral-tanzanite-text);
   --status-neutral: var(--neutral);
   --status-neutral-container: var(--container);
@@ -734,12 +763,15 @@
   --r-circle: 50%;
   /* Radius roles (#484) — brandMeta.componentSpecs. Mzizi keeps controls pill (owner
      decision 2026-10-07); a brand switches them here, not in a component. */
-  --r-control: 9999px; /* Buttons and controls. Mzizi keeps pill (owner decision 2026-10-07); a pack may switch it. */
-  --r-field: 9999px; /* Inputs. componentSpecs.input.borderRadius. */
-  --r-badge: 9999px; /* Badges. componentSpecs.badge.borderRadius. */
-  --r-card: 14px; /* Cards. componentSpecs.card.borderRadius. */
-  --r-dialog: 17px; /* Dialogs. componentSpecs.dialog.borderRadius. */
-  /* Deprecated names of the radius roles, kept for one minor: */
+  --r-control: var(
+    --r-full
+  ); /* Buttons and controls. Mzizi keeps pill (owner decision 2026-10-07); a pack may switch it. */
+  --r-field: var(--r-full); /* Inputs. componentSpecs.input.borderRadius. */
+  --r-badge: var(--r-full); /* Badges. componentSpecs.badge.borderRadius. */
+  --r-card: var(--r-base); /* Cards. componentSpecs.card.borderRadius. */
+  --r-dialog: var(--r-xl); /* Dialogs. componentSpecs.dialog.borderRadius. */
+  /* Deprecated names of the radius roles, kept for one minor. Each role follows its
+     rung (--r-full, --r-base…), so moving a rung still moves these: */
   --r-button: var(--r-control);
   --r-input: var(--r-field);
 
@@ -761,7 +793,8 @@
   --h-button-sm: 3rem; /* 48px — componentSpecs.button.heights.sm */
   --h-input: 3.5rem; /* 56px — inputs match the default button */
   /* Size roles (#484) — `h-touch`, `min-h-touch-min`, `h-control`… The touch floor is
-     fixed in @theme; moving --size-touch-min does not lower min-h-touch-min. */
+     fixed in @theme; moving --size-touch-min does not lower min-h-touch-min, and every
+     floored role (touch, control, field) is clamped there to max(var(--size-*), 3rem). */
   --size-touch: 3.5rem; /* 56px — The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget. */
   --size-touch-min: 3rem; /* 48px — The touch floor (`min-h-touch-min`): 48px, fixed — no pack can lower it (owner decision 2026-10-07). */
   --size-control: 3.5rem; /* 56px — Default control height. componentSpecs.button.heights.default. */
@@ -920,7 +953,7 @@
     in oklab,
     var(--surface) 88%,
     var(--brand-accent)
-  ); /* Cover-colour page wash — surface tinted with the active brand accent */
+  ); /* Cover-colour page wash — surface tinted with the active brand accent (~7% light / ~12% dark) */
   --muted: #050504; /* Deepest inset fill — not a ladder rung */
 
   /* ── TEXT RAMP — three tiers, APCA-measured on --base ────────────────────── */
@@ -970,8 +1003,8 @@
   --popover-foreground: var(--text-primary);
   --secondary: var(--container);
   --secondary-foreground: var(--text-primary);
-  --destructive-foreground: #0e0d0c;
   --destructive: #f3bdba; /* derived: destructive-foreground measures Lc 72.9 on #F2B8B5; fill walked toward #FFFFFF to Lc 75 */
+  --destructive-foreground: #0e0d0c;
   --overlay-foreground: var(--text-primary);
   --accent-foreground: var(--text-primary);
 
@@ -1003,7 +1036,7 @@
   --status-danger: var(--mineral-terracotta);
   --status-danger-container: var(--mineral-terracotta-container);
   --status-danger-on-container: var(--mineral-terracotta-on-container);
-  --status-danger-text: var(--mineral-terracotta-text);
+  --status-danger-text: #ebcca3; /* var(--mineral-terracotta-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
   --status-premium: var(--mineral-tanzanite);
   --status-premium-container: var(--mineral-tanzanite-container);
   --status-premium-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against status-premium-container; walked toward #FFFFFF to Lc 75 */

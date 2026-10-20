@@ -59,25 +59,29 @@ Slice 1 of #484 ("switchable N1"). It adds roles and changes no component and no
   - **size:** `spacing-touch` (56px) and `spacing-touch-min` (48px), plus `spacing-control`, `-sm`, `-lg`, `-icon`, `-dense` (32px, fine pointer only), `spacing-field` and `-sm`, from `brandMeta.componentSpecs`;
   - **radius:** `radius-control` (pill, 9999px: Mzizi stays pill and a pack may switch it), `-field`, `-badge`, `-card` (14px) and `-dialog` (17px);
   - **font:** `font-body`, `font-display` and `font-code`.
-- **`mzizi-tokens-globals.css` declares every role.** Each one is a bare var in `:root`, redeclared under `.dark` / `[data-theme="dark"]` where the theme changes it. Each one is also registered with Tailwind in `@theme inline`: `--color-<role>`, `--radius-<role>` (bare `--r-<role>`) and `--spacing-<role>` (bare `--size-<role>`). A brand moves a role by redeclaring one var, with no Tailwind rebuild. `--spacing-touch-min` is the literal `3rem`, and `--spacing-touch` is `max(var(--size-touch), 3rem)`, so no brand can go under the 48px floor. `--r-button` and `--r-input` stay as deprecated aliases of `--r-control` and `--r-field`.
+- **`mzizi-tokens-globals.css` declares every role.** Each one is a bare var in `:root`, redeclared under `.dark` / `[data-theme="dark"]` where the theme changes it. Each one is also registered with Tailwind in `@theme inline`: `--color-<role>`, `--radius-<role>` (bare `--r-<role>`) and `--spacing-<role>` (bare `--size-<role>`). A brand moves a role by redeclaring one var, with no Tailwind rebuild.
+  - **The touch floor.** `--spacing-touch-min` is the literal `3rem`. Every size role the manifest marks as a floor (`touch`, `control`, `control-sm`, `-lg`, `-icon`, `field`, `field-sm`) is registered as `max(var(--size-<role>), 3rem)`, so a brand that lowers the bare var still paints 48px. A size role marked `fixed` is registered as its own literal value.
+  - **Radius roles follow their rung.** `--r-control`, `--r-field` and `--r-badge` are `var(--r-full)`, `--r-card` is `var(--r-base)` and `--r-dialog` is `var(--r-xl)`, so a consumer that moves a rung moves the role too, as `--r-badge` and `--r-card` did before. `--r-button` and `--r-input` stay as deprecated aliases of `--r-control` and `--r-field`.
+  - **Alias chains.** A role that had to be derived to meet its contrast bar is a measured literal in both themes. So overriding its source var (`--error` for `--destructive`) moves it in both themes or in neither, never in one. The stylesheet header documents the rule.
 - **Fonts move to a non-inline `@theme`.** `.font-sans` used to compile to the literal "Noto Sans". It now compiles to `var(--font-sans)`, which is `var(--font-body)`, declared on `:root`, so a brand can override the type at runtime. `font-sans`, `font-serif` and `font-mono` stay as aliases.
 - **The contrast gate.** `pnpm tokens:sync` and `pnpm tokens:verify` measure the Mzizi mapping with the existing APCA code and fail on a violation:
   - text roles need |Lc| ≥ 75 on `base` and `surface` in both themes;
   - a foreground needs ≥ 75 on its fill;
   - UI roles need ≥ 30;
-  - every size marked as a floor must be ≥ `spacing-touch-min`.
+  - every size marked as a floor must be ≥ `spacing-touch-min`;
+  - a derived value must exist. A fill is walked the way all of its foregrounds allow, and a foreground on a derived fill is resolved after the fill. When no walk clears the bar, the gate fails and names the roles, and nothing is painted #000 or #FFF.
 - **Where the gate moved a value:**
   - `--text-secondary` and `--text-tertiary` are walked to clear their bar on `--surface` too;
   - `status-danger-text` light, `status-premium-on-container` dark, `destructive-text` and the dark `destructive` fill get measured values derived with `walk()`, beside the untouched palette variables;
   - three roles are left pending an owner decision, listed in the manifest and pinned by a test: `border` and `sidebar-border` (a decorative hairline, about Lc 0 on base) and `text-tertiary` (Lc 60 by design).
-- **The duplicated constants are folded.** `STATUS`, `RADIUS` and `SIZING` in `scripts/render-globals-css.ts`, and the radius and font scale in `scripts/sync-tokens.ts`, are now read from canon (`brand.source.ts`) through the manifest. They keep the same exported names.
+- **The duplicated constants are folded.** `STATUS`, `RADIUS`, `SIZING`, the surface `LADDER` and `MUTED` in `scripts/render-globals-css.ts`, and the radius and font scale in `scripts/sync-tokens.ts`, are now read from canon (`brand.source.ts`). They keep the same exported names, so the text ramp and the gate measure the same surface. `tokens:sync` resolves the roles once and passes them to the gate and every emitter.
 - **Every platform file carries the roles,** resolved for the Mzizi pack in both themes:
   - Swift and Kotlin: `MziziRoles.Light` / `MziziRoles.Dark`;
   - ArkTS and React Native: `MziziRoles`;
   - Python: `MziziRolesLight` / `MziziRolesDark`;
   - TypeScript: a generated `roles` region in `mzizi-tokens-typescript.ts`;
   - JSON twin: `roles` in `renderGlobalsJson`;
-  - Rust: `mzizi-tokens` gains `RoleColors`, `Roles { light, dark }`, `Roles::mzizi()`, and the size, radius and font roles as consts.
+  - Rust: `mzizi-tokens` gains `RoleColors`, `Roles { light, dark }`, `Roles::mzizi()`, and the size, radius and font roles as consts. Every floored size has a compile-time `const _: () = assert!(Roles::X >= Roles::SPACING_TOUCH_MIN)` item outside the tests, so any build fails if one undercuts the floor.
 
 ### Fixed — `text-base` is Tailwind's 16px font size again, not the page colour (2026-10-07, #485)
 

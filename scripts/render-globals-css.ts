@@ -130,14 +130,23 @@ export function wcag(a: string, b: string): number {
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)
 }
 
-/** Walk from `start` toward `end` in 1% steps; return the first step that passes. */
-function walk(start: string, end: string, ok: (hex: string) => boolean): string {
+/**
+ * Walk from `start` toward `end` in 1% steps, then `end` itself; return the
+ * first that passes, or `null` when none does. The role derivations use this
+ * form, so a rule no walk can satisfy is reported, never painted as #000/#FFF.
+ */
+function walkTo(start: string, end: string, ok: (hex: string) => boolean): string | null {
   if (ok(start)) return start
   for (let t = 0.01; t <= 0.97; t += 0.01) {
     const c = mix(start, end, t)
     if (ok(c)) return c
   }
-  return end
+  return ok(end) ? end : null
+}
+
+/** Walk from `start` toward `end` in 1% steps; return the first step that passes, else `end` (the palette tiers). */
+function walk(start: string, end: string, ok: (hex: string) => boolean): string {
+  return walkTo(start, end, ok) ?? end
 }
 
 /**
@@ -193,26 +202,24 @@ export function mixOklab(a: string, b: string, pct: number): string {
  *
  * `muted` is the tenth background `/v1/brand` publishes and is emitted too; it
  * is not a rung of the nine-step ladder, it is the deepest inset fill.
+ *
+ * Both are READ from `brand.source.ts` `backgroundColors`, the same fold as
+ * `STATUS`, `RADIUS` and `SIZING`: the contrast gate measures the roles `base`
+ * and `surface` from that record, so the text ramp and the `-text` tier, which
+ * walk against these, measure the same surface the gate does.
  */
-export const LADDER = [
-  ["pitch", "#FAFAFA", "#050505", "Deepest surface — media wells, splash (prime step P2)"],
-  ["void", "#F8F8F7", "#080807", "App shell behind base (prime step P3)"],
-  ["base", "#F3F3F1", "#0E0D0C", "Page background — ambient base surface (prime step P5)"],
-  ["surface", "#EEEEEC", "#131211", "Card / panel surface (prime step P7)"],
-  ["container", "#E5E4E1", "#1E1D1A", "Neutral containers, grouped content (prime step P11)"],
-  ["overlay", "#E0DFDC", "#23221F", "Overlays and dialogs (prime step P13)"],
-  ["raised", "#D6D5D1", "#2E2C29", "Raised elements above overlay — menus, toasts (prime step P17)"],
-  ["scrim", "rgba(0, 0, 0, 0.4)", "rgba(0, 0, 0, 0.6)", "Semi-transparent backdrop behind overlays"],
-  [
-    "wash",
-    "color-mix(in oklab, var(--surface) 93%, var(--brand-accent))",
-    "color-mix(in oklab, var(--surface) 88%, var(--brand-accent))",
-    "Cover-colour page wash — surface tinted with the active brand accent",
-  ],
-] as const
+export const LADDER: ReadonlyArray<readonly [string, string, string, string]> = (
+  ["pitch", "void", "base", "surface", "container", "overlay", "raised", "scrim", "wash"] as const
+).map((name) => {
+  const row = background(name)
+  return [name, canonicalColor(row.lightValue), canonicalColor(row.darkValue), row.usage] as const
+})
 
 /** The tenth background — deepest inset fill, not a ladder rung. */
-export const MUTED = ["#FAF9F5", "#050504"] as const
+export const MUTED: readonly [string, string] = (() => {
+  const row = background("muted")
+  return [canonicalColor(row.lightValue), canonicalColor(row.darkValue)] as const
+})()
 
 /** Spacing — 17 rungs, `/v1/brand` `spacing`. */
 export const SPACING = [
@@ -329,8 +336,8 @@ export const CONTAINER_UTILITIES = [
 // DERIVED TIERS — computed from the palette, never typed in
 // ════════════════════════════════════════════════════════════════════════════
 
-const BASE_LIGHT = "#F3F3F1"
-const BASE_DARK = "#0E0D0C"
+const BASE_LIGHT = LADDER.find(([n]) => n === "base")![1]
+const BASE_DARK = LADDER.find(([n]) => n === "base")![2]
 const WHITE = "#FFFFFF"
 /** WCAG 2.2 AA for a light fill carrying white text. */
 const AA = 4.5
@@ -576,6 +583,13 @@ export interface ResolvedRole {
   value: Record<Mode, string>
   /** Set where the value was derived to meet the role's contrast rule. */
   derived: Partial<Record<Mode, string>>
+  /**
+   * Set in the theme a derived role was NOT derived in: why it is a literal
+   * there too (the alias-chain rule, in the stylesheet header).
+   */
+  notes: Partial<Record<Mode, string>>
+  /** Set where `derive` found no compliant value; the gate reports it as a violation. */
+  unmet: Partial<Record<Mode, string>>
 }
 
 /** The bare custom property a role is declared as. */
@@ -599,16 +613,44 @@ function familyPrefix(
 const themed = (v: Role["default"], mode: Mode): RoleValue =>
   "light" in v && "dark" in v ? v[mode] : (v as RoleValue)
 
+const BLACK = "#000000"
+const opposite = (toward: string) => (toward === BLACK ? WHITE : BLACK)
+
 /**
  * Resolve every role in `lib/tokens/roles.source.ts` to what the Mzizi default
  * stylesheet declares and what it paints, in both themes.
  *
  * A role marked `derive` whose default misses its contrast rule gets a measured
- * value walked from the default with `walk()`, the way the `-aa` tier is made:
+ * value walked from the default with `walkTo()`, the way the `-aa` tier is made:
  * the family's own variable is untouched, and the role carries the safe value
  * with the measurement beside it.
+ *
+ *   - `derive: "fill"` moves the fill until EVERY role measured on it clears its
+ *     bar. Each foreground pulls the fill away from itself; the walk goes the way
+ *     they agree on (or the first foreground's way when they do not), then the
+ *     other way. A fill is measured against its foregrounds' values BEFORE their
+ *     own derivation, so a text-derived foreground on a fill-derived fill
+ *     resolves fill first, foreground second, in either resolution order,
+ *     without re-entering either.
+ *   - `derive: "text"` moves the role away from its backgrounds: toward black in
+ *     light, toward white in dark, then the other way.
+ *   - When neither direction satisfies the rule, the role keeps its default and
+ *     `unmet` says why, which `roleGate()` reports as a violation naming the
+ *     roles. Nothing is ever painted #000 or #FFF because a walk ran out.
+ *   - A role derived in either theme is a literal in BOTH themes (the alias-chain
+ *     rule): overriding its source var then moves it in neither theme, instead
+ *     of in one.
+ *
+ * `roles` defaults to the manifest; tests pass another to exercise a case the
+ * Mzizi pack does not have. The map is in `roles` order whatever order the
+ * resolution finished in, so the output does not depend on it.
  */
-export function resolveRoles(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]): Map<string, ResolvedRole> {
+export function resolveRoles(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[],
+  roles: readonly Role[] = ROLES
+): Map<string, ResolvedRole> {
   const families = [
     ...minerals.map((m) => ({ ...m, group: "mineral" as const })),
     ...heritage.map((h) => ({ ...h, group: "heritage" as const })),
@@ -617,7 +659,7 @@ export function resolveRoles(minerals: Mineral[], heritage: Heritage[], experime
   const tier = a11yTier(families.map(({ name, lightHex, darkHex }) => ({ name, lightHex, darkHex })))
   const textTier = textOnBaseTier(families.map(({ name, lightHex, darkHex }) => ({ name, lightHex, darkHex })), tier)
   const ramp = textRamp()
-  const byName = new Map(ROLES.map((r) => [r.name, r]))
+  const byName = new Map(roles.map((r) => [r.name, r]))
   const out = new Map<string, ResolvedRole>()
   const resolving = new Set<string>()
 
@@ -678,12 +720,33 @@ export function resolveRoles(minerals: Mineral[], heritage: Heritage[], experime
       const css = r.kind === "size" ? `${v.px / 16}rem` : `${v.px}px`
       return { css, value: `${v.px}px` }
     }
+    if ("radius" in v) {
+      const row = RADIUS.find(([n]) => n === v.radius)
+      if (!row) throw new Error(`role "${r.name}" names unknown radius rung "${v.radius}"`)
+      return { css: `var(--r-${v.radius})`, value: row[1] }
+    }
     if ("font" in v) return { css: v.font, value: v.font }
     throw new Error(`role "${r.name}" has an unreadable default`)
   }
 
+  /** A role's value before its own derivation: what a fill is measured against. */
+  const underived = (name: string, mode: Mode): string => {
+    const r = byName.get(name)
+    if (!r) throw new Error(`unknown role "${name}"`)
+    return one(themed(r.default, mode), mode, r).value
+  }
+
   const passes = (hex: string, rule: { against: readonly string[]; min: number }, mode: Mode) =>
     rule.against.every((bg) => Math.abs(apca(hex, resolve(bg).value[mode])) >= rule.min)
+
+  /** Walk toward `first`, then the other way; the first value that passes, or null. */
+  const derive = (start: string, first: string, ok: (hex: string) => boolean) => {
+    for (const toward of [first, opposite(first)]) {
+      const hex = walkTo(start, toward, ok)
+      if (hex) return { hex, toward }
+    }
+    return null
+  }
 
   function resolve(name: string): ResolvedRole {
     const done = out.get(name)
@@ -695,42 +758,74 @@ export function resolveRoles(minerals: Mineral[], heritage: Heritage[], experime
     const css = {} as Record<Mode, string>
     const value = {} as Record<Mode, string>
     const derived: Partial<Record<Mode, string>> = {}
+    const notes: Partial<Record<Mode, string>> = {}
+    const unmet: Partial<Record<Mode, string>> = {}
     for (const mode of MODES) {
       const base = one(themed(r.default, mode), mode, r)
       css[mode] = base.css
       value[mode] = base.value
       if (r.derive === "text" && r.contrast && "against" in r.contrast && !passes(base.value, r.contrast, mode)) {
         const rule = r.contrast
-        const hex = walk(base.value, mode === "light" ? "#000000" : "#FFFFFF", (c) => passes(c, rule, mode))
         const worst = Math.min(...rule.against.map((bg) => Math.abs(apca(base.value, resolve(bg).value[mode]))))
-        derived[mode] = `derived: ${base.value} measures Lc ${worst.toFixed(1)} against ${rule.against.join(" / ")}; walked toward ${mode === "light" ? "#000000" : "#FFFFFF"} to Lc ${rule.min}`
-        css[mode] = lo(hex)
-        value[mode] = hex
+        const got = derive(base.value, mode === "light" ? BLACK : WHITE, (c) => passes(c, rule, mode))
+        if (got) {
+          derived[mode] = `derived: ${base.value} measures Lc ${worst.toFixed(1)} against ${rule.against.join(" / ")}; walked toward ${got.toward} to Lc ${rule.min}`
+          css[mode] = lo(got.hex)
+          value[mode] = got.hex
+        } else {
+          unmet[mode] =
+            `${r.name} (${mode}): derive "text" found no value between #000000 and #FFFFFF from ${base.value} ` +
+            `that clears Lc ${rule.min} against ${rule.against.join(" / ")} (Lc ${worst.toFixed(1)} now)`
+        }
       }
       if (r.derive === "fill") {
-        // Every role measured ON this fill must clear its bar on it.
-        const fgs = ROLES.filter((x) => x.contrast && "against" in x.contrast && x.contrast.against.includes(name))
-        const ok = (fill: string) =>
-          fgs.every((x) => Math.abs(apca(resolve(x.name).value[mode], fill)) >= (x.contrast as { min: number }).min)
+        // Every role measured ON this fill must clear its bar on it. A foreground
+        // that is itself derived, or is mid-resolution, is measured before its own
+        // derivation: the fill settles first, then the foreground against it.
+        const fgs = roles
+          .filter((x) => x.contrast && "against" in x.contrast && x.contrast.against.includes(name))
+          .map((x) => ({
+            name: x.name,
+            min: (x.contrast as { min: number }).min,
+            hex: x.derive === "text" || resolving.has(x.name) ? underived(x.name, mode) : resolve(x.name).value[mode],
+          }))
+        const ok = (fill: string) => fgs.every((f) => Math.abs(apca(f.hex, fill)) >= f.min)
         if (fgs.length && !ok(base.value)) {
-          const fgHex = resolve(fgs[0].name).value[mode]
-          const toward = apca(fgHex, base.value) < 0 ? "#000000" : "#FFFFFF"
-          const hex = walk(base.value, toward, ok)
-          const lc = Math.abs(apca(fgHex, base.value)).toFixed(1)
-          derived[mode] = `derived: ${fgs[0].name} measures Lc ${lc} on ${base.value}; fill walked toward ${toward} to Lc ${(fgs[0].contrast as { min: number }).min}`
-          css[mode] = lo(hex)
-          value[mode] = hex
+          // Each foreground pulls the fill away from itself: light text on a dark
+          // fill pulls it toward black, dark text toward white.
+          const pulls = fgs.map((f) => (apca(f.hex, base.value) < 0 ? BLACK : WHITE))
+          const toBlack = pulls.filter((p) => p === BLACK).length
+          const first = toBlack * 2 > pulls.length ? BLACK : toBlack * 2 < pulls.length ? WHITE : pulls[0]
+          const measures = fgs.map((f) => `${f.name} measures Lc ${Math.abs(apca(f.hex, base.value)).toFixed(1)}`).join(", ")
+          const got = derive(base.value, first, ok)
+          if (got) {
+            derived[mode] = `derived: ${measures} on ${base.value}; fill walked toward ${got.toward} to Lc ${Math.max(...fgs.map((f) => f.min))}`
+            css[mode] = lo(got.hex)
+            value[mode] = got.hex
+          } else {
+            unmet[mode] =
+              `${r.name} (${mode}): derive "fill" found no fill between #000000 and #FFFFFF from ${base.value} on which ` +
+              `${fgs.map((f) => `${f.name} (needs Lc ${f.min})`).join(", ")} all clear their bars; ${measures} now`
+          }
         }
       }
     }
+    // The alias-chain rule: derived in one theme means a literal in both.
+    if (MODES.some((m) => derived[m])) {
+      for (const mode of MODES) {
+        if (derived[mode] || css[mode] === lo(value[mode])) continue
+        notes[mode] = `${css[mode]}, measured; a literal because the ${mode === "light" ? "dark" : "light"} theme is derived (see ALIAS CHAINS in the header)`
+        css[mode] = lo(value[mode])
+      }
+    }
     resolving.delete(name)
-    const res = { role: r, css, value, derived }
+    const res: ResolvedRole = { role: r, css, value, derived, notes, unmet }
     out.set(name, res)
     return res
   }
 
-  for (const r of ROLES) resolve(r.name)
-  return out
+  for (const r of roles) resolve(r.name)
+  return new Map(roles.map((r) => [r.name, out.get(r.name)!]))
 }
 
 /** `#e7e5e0` → `#E7E5E0`; `rgba(0,0,0,0.40)` → `rgba(0, 0, 0, 0.4)`, the form the stylesheet writes. */
@@ -746,9 +841,15 @@ function STATUS_OR_SEMANTIC(name: string, mode: Mode): string {
   return mode === "light" ? row.lightValue : row.darkValue
 }
 
-function BACKGROUND(name: string, mode: Mode): string {
+/** A `brand.source.ts` background (surface ladder) row, failing loudly when canon lost it. */
+function background(name: string) {
   const row = BACKGROUNDS.find((c) => c.name === name)
   if (!row) throw new Error(`brand.source.ts backgroundColors has no "${name}"`)
+  return row
+}
+
+function BACKGROUND(name: string, mode: Mode): string {
+  const row = background(name)
   return mode === "light" ? row.lightValue : row.darkValue
 }
 
@@ -770,8 +871,13 @@ export interface GateResult {
  *   - every `kind: text` role: |Lc| >= 75 on `base` and `surface` (or on the
  *     fill it is declared against), both themes
  *   - every `kind: ui` role: |Lc| >= 30 on what it is declared against
- *   - `spacing-touch` and every size marked `floor` >= `spacing-touch-min`
- *   - every `required` role resolves in both themes
+ *   - every size marked `floor` >= `spacing-touch-min`
+ *   - every `derive` found a compliant value (`unmet` is a violation naming the
+ *     roles, never a silent #000/#FFF)
+ *
+ * TODO(#484 slice 2): enforce `required` when brand packs land. Every role the
+ * manifest declares resolves or throws in `resolveRoles()`, so there is nothing
+ * to check until a pack can leave a role out.
  *
  * The manifest cannot loosen it: a text role that declares a bar under 75, or a
  * ui role under 30, is itself a violation unless the rule carries `pending`, an
@@ -780,8 +886,8 @@ export interface GateResult {
 export function roleGate(resolved: Map<string, ResolvedRole>): { results: GateResult[]; violations: string[]; pending: GateResult[] } {
   const results: GateResult[] = []
   const violations: string[] = []
-  for (const { role: r, value } of resolved.values()) {
-    if (r.required && MODES.some((m) => !value[m])) violations.push(`${r.name}: required, but does not resolve in both themes`)
+  for (const { role: r, value, unmet } of resolved.values()) {
+    for (const mode of MODES) if (unmet[mode]) violations.push(unmet[mode]!)
     if (!r.contrast || "exempt" in r.contrast) {
       if ((r.kind === "text" || r.kind === "ui") && !r.contrast) violations.push(`${r.name}: a ${r.kind} role with no contrast rule`)
       continue
@@ -801,6 +907,7 @@ export function roleGate(resolved: Map<string, ResolvedRole>): { results: GateRe
     }
   }
   const px = (name: string) => parseFloat(resolved.get(name)!.value.light)
+  if (!resolved.has("spacing-touch-min")) throw new Error(`the manifest has no "spacing-touch-min", the touch floor`)
   const touchMin = px("spacing-touch-min")
   for (const { role: r } of resolved.values()) {
     if (!r.floor) continue
@@ -917,10 +1024,15 @@ ${brandSelectors(brand)} {
   ).join("\n\n")
 }
 
+/**
+ * `resolved` is the role map `scripts/sync-tokens.ts` resolves once in `main()`
+ * and hands to every emitter; a caller without one gets the Mzizi pack.
+ */
 export function renderGlobalsCss(
   minerals: Mineral[],
   heritage: Heritage[],
-  experimental: Experimental[]
+  experimental: Experimental[],
+  resolved: Map<string, ResolvedRole> = resolveRoles(minerals, heritage, experimental)
 ): string {
   const families = [
     ...minerals.map((m) => ({ name: m.name, lightHex: m.lightHex, darkHex: m.darkHex })),
@@ -930,7 +1042,6 @@ export function renderGlobalsCss(
   const tier = a11yTier(families)
   const textTier = textOnBaseTier(families, tier)
   const text = textRamp()
-  const resolved = resolveRoles(minerals, heritage, experimental)
 
   /** The `-text` value, and the measurement behind it, for one family in one theme. */
   const tx = (name: string, mode: "light" | "dark") => {
@@ -1013,7 +1124,7 @@ export function renderGlobalsCss(
     out.push("")
     /** The declaration for one role in this theme, with the measurement where it was derived. */
     const decl = (r: ResolvedRole, comment?: string) => {
-      const note = r.derived[mode] ?? comment
+      const note = r.derived[mode] ?? r.notes[mode] ?? comment
       return `  ${roleVar(r.role)}: ${r.css[mode]};${note ? ` /* ${note} */` : ""}`
     }
     const block = (b: Role["block"]) => [...resolved.values()].filter((r) => r.role.block === b)
@@ -1059,7 +1170,7 @@ export function renderGlobalsCss(
   const defaultPrimary = aaVar(defaultMineral, heritage, experimental)
   return [
     header(),
-    themeBlock(minerals, heritage, experimental),
+    themeBlock(minerals, heritage, experimental, resolved),
     fontTheme(resolved),
     containerTheme(),
     rootBlock(vars("light"), defaultPrimary, resolved),
@@ -1099,13 +1210,24 @@ function header(): string {
  *                        categories, sizes (\`h-touch\`), radii
  *                        (\`rounded-control\`) and fonts (\`font-body\`). A brand
  *                        moves a role by redeclaring its var; the APCA gate
- *                        holds the Mzizi mapping to Lc 75 text, Lc 30 UI
+ *                        holds the Mzizi mapping to Lc 75 text, Lc 30 UI.
+ *                        Floored sizes are clamped: \`max(var(--size-*), 3rem)\`
  *   non-colour ladders   spacing 17, motion 4+4+3, type 13+9, shadow 8,
  *                        radius 7, touch targets, control heights, z-index
  *   containers           3 widths (narrow, prose, wide) and the
  *                        \`.container-custom\` / \`-narrow\` / \`-prose\` utilities
  *   brand blocks         8 \`[data-brand]\` selectors, each moving \`--primary\`
  *                        and \`--ring\` only
+ *
+ * ALIAS CHAINS — what moves when you override a var
+ *   A role that aliases another (\`--status-deprecated: var(--status-danger)\`)
+ *   or a palette tier (\`var(--mineral-cobalt-aa)\`) follows it in both themes.
+ *   A role whose value had to be DERIVED to meet its contrast bar is a measured
+ *   literal in BOTH themes, even in the theme where the source already passed
+ *   (\`--destructive\` light is #b3261e, the value of \`--error\`, because dark
+ *   is derived). So overriding a source var moves a role in both themes or in
+ *   neither, never in one. To move a derived role, redeclare the role itself.
+ *   Radius roles follow their rung: \`--r-control: var(--r-full)\`.
  *
  * HOW TO USE IT
  *   Copy it in as your \`globals.css\`. Set \`data-brand\` on <html> to pick a
@@ -1128,15 +1250,17 @@ function header(): string {
  * the variable at runtime instead of baking in whichever value was current at
  * build. Every entry here is a \`var()\` — there is no hex in this block, by
  * construction, because the definitions live in \`:root\` and \`.dark\` below.
- * The one literal is the touch floor, \`--spacing-touch-min\`, inlined on purpose
- * so no brand can lower it, and \`--spacing-touch\` is clamped to it.
+ * The literals are the \`fixed\` size roles (the touch floor,
+ * \`--spacing-touch-min\`), inlined on purpose so no brand can move them, and
+ * every size role marked \`floor\` is clamped to the floor (see
+ * \`sizeRoleTheme()\`).
  *
  * Every role in \`lib/tokens/roles.source.ts\` registers here
  * (\`--color-<role>\`, \`--radius-<role>\`, \`--spacing-<role>\`), so a brand that
  * moves a role's bare variable moves every utility that names it with no
  * Tailwind rebuild. The fonts are not here: see \`fontTheme()\`.
  */
-function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[]): string {
+function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Experimental[], resolved: Map<string, ResolvedRole>): string {
   const out: string[] = ["@theme inline {"]
   out.push(box("FAMILIES"))
   for (const m of minerals) {
@@ -1164,14 +1288,7 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
   for (const r of ROLES.filter((x) => isColorKind(x.kind))) out.push(`  --color-${colorKey(r)}: var(${roleVar(r)});`)
   out.push("")
   out.push(box("ROLES — size and radius"))
-  for (const r of ROLES.filter((x) => x.kind === "size")) {
-    const key = r.name
-    const touchMin = ROLES.find((x) => x.name === "spacing-touch-min")!
-    const floor = `${(touchMin.default as { px: number }).px / 16}rem`
-    if (r.fixed) out.push(`  --${key}: ${floor}; /* a literal: the touch floor no brand can lower */`)
-    else if (r.name === "spacing-touch") out.push(`  --${key}: max(var(${roleVar(r)}), ${floor}); /* never under the touch floor */`)
-    else out.push(`  --${key}: var(${roleVar(r)});`)
-  }
+  out.push(...sizeRoleTheme(ROLES, resolved))
   for (const r of ROLES.filter((x) => x.kind === "radius")) out.push(`  --${r.name}: var(${roleVar(r)});`)
   out.push("")
   out.push(box("SPACING / RADIUS / TYPE / SHADOW / EASING"))
@@ -1183,6 +1300,35 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
   for (const [n] of EASING) out.push(`  --ease-${n}: var(--easing-${n});`)
   out.push("}")
   return out.join("\n")
+}
+
+/**
+ * The size roles' Tailwind registrations, keyed on the manifest's flags, never
+ * on a role's name:
+ *
+ *   - `fixed`: the role's OWN value, as a literal no brand can override;
+ *   - `floor`: `max(var(--size-<name>), <floor>)`, where the floor is
+ *     `spacing-touch-min`'s literal, so a brand that lowers the bare var still
+ *     paints at least 48px;
+ *   - otherwise: `var(--size-<name>)`, which a brand moves freely
+ *     (`spacing-control-dense`, fine pointer only).
+ */
+export function sizeRoleTheme(roles: readonly Role[], resolved: Map<string, ResolvedRole>): string[] {
+  const touchMin = resolved.get("spacing-touch-min")
+  if (!touchMin?.role.fixed) throw new Error(`"spacing-touch-min" must be a fixed size role: it is the touch floor`)
+  const floor = touchMin.css.light
+  return roles
+    .filter((r) => r.kind === "size")
+    .map((r) => {
+      const own = resolved.get(r.name)
+      if (!own) throw new Error(`size role "${r.name}" was not resolved`)
+      if (r.fixed) {
+        const why = r.name === touchMin.role.name ? "the touch floor no brand can lower" : "fixed, no brand can move it"
+        return `  --${r.name}: ${own.css.light}; /* a literal: ${why} */`
+      }
+      if (r.floor) return `  --${r.name}: max(var(${roleVar(r)}), ${floor}); /* never under the touch floor */`
+      return `  --${r.name}: var(${roleVar(r)});`
+    })
 }
 
 /**
@@ -1284,7 +1430,8 @@ function invariants(resolved: Map<string, ResolvedRole>): string {
   out.push(`  /* Radius roles (#484) — brandMeta.componentSpecs. Mzizi keeps controls pill (owner`)
   out.push(`     decision 2026-10-07); a brand switches them here, not in a component. */`)
   for (const r of ROLES.filter((x) => x.kind === "radius")) out.push(`${decl(r)}`)
-  out.push(`  /* Deprecated names of the radius roles, kept for one minor: */`)
+  out.push(`  /* Deprecated names of the radius roles, kept for one minor. Each role follows its`)
+  out.push(`     rung (--r-full, --r-base…), so moving a rung still moves these: */`)
   out.push(`  --r-button: var(--r-control);`)
   out.push(`  --r-input: var(--r-field);`)
 
@@ -1296,7 +1443,8 @@ function invariants(resolved: Map<string, ResolvedRole>): string {
   out.push(box("TOUCH TARGETS AND CONTROL HEIGHTS"))
   for (const [n, v, why] of SIZING) out.push(`  --${n}: ${v}; /* ${why} */`)
   out.push(`  /* Size roles (#484) — \`h-touch\`, \`min-h-touch-min\`, \`h-control\`… The touch floor is`)
-  out.push(`     fixed in @theme; moving --size-touch-min does not lower min-h-touch-min. */`)
+  out.push(`     fixed in @theme; moving --size-touch-min does not lower min-h-touch-min, and every`)
+  out.push(`     floored role (touch, control, field) is clamped there to max(var(--size-*), 3rem). */`)
   for (const r of ROLES.filter((x) => x.kind === "size")) out.push(`${decl(r)}`)
 
   out.push("")
@@ -1442,7 +1590,8 @@ ${brandBlocks(heritage, experimental)}
 export function renderGlobalsJson(
   minerals: Mineral[],
   heritage: Heritage[],
-  experimental: Experimental[]
+  experimental: Experimental[],
+  resolved: Map<string, ResolvedRole> = resolveRoles(minerals, heritage, experimental)
 ): string {
   const families = [
     ...minerals.map((m) => ({ name: m.name, lightHex: m.lightHex, darkHex: m.darkHex })),
@@ -1530,7 +1679,7 @@ export function renderGlobalsJson(
     },
     status: Object.fromEntries(STATUS.map(([n, l, d, usage]) => [n, { light: l, dark: d, usage }])),
     roles: Object.fromEntries(
-      [...resolveRoles(minerals, heritage, experimental).values()].map(({ role: r, value, derived }) => [
+      [...resolved.values()].map(({ role: r, value, derived }) => [
         r.name,
         {
           kind: r.kind,

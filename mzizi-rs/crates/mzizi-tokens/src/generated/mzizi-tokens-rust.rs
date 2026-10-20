@@ -770,3 +770,12 @@ impl Roles {
     /// Code. `font-mono` is an alias.
     pub const FONT_CODE: &'static str = "JetBrains Mono";
 }
+
+// The touch floor (#484), checked at compile time: no floored size may undercut it.
+const _: () = assert!(Roles::SPACING_TOUCH >= Roles::SPACING_TOUCH_MIN);
+const _: () = assert!(Roles::SPACING_CONTROL >= Roles::SPACING_TOUCH_MIN);
+const _: () = assert!(Roles::SPACING_CONTROL_SM >= Roles::SPACING_TOUCH_MIN);
+const _: () = assert!(Roles::SPACING_CONTROL_LG >= Roles::SPACING_TOUCH_MIN);
+const _: () = assert!(Roles::SPACING_CONTROL_ICON >= Roles::SPACING_TOUCH_MIN);
+const _: () = assert!(Roles::SPACING_FIELD >= Roles::SPACING_TOUCH_MIN);
+const _: () = assert!(Roles::SPACING_FIELD_SM >= Roles::SPACING_TOUCH_MIN);
