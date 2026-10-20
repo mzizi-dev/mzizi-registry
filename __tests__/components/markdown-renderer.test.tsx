@@ -286,6 +286,7 @@ describe("parseInlines", () => {
     const link = (href: string) => [{ t: "link", href, title: href, c: [{ t: "text", v: "a" }] }]
     expect(parseInlines('[a](http://x.com\t"title")')).toEqual(link("http://x.com"))
     expect(parseInlines("[a](http://x.com/\\(y\\))")).toEqual(link("http://x.com/(y)"))
+    expect(parseInlines("[a](foo\\)bar)")).toEqual(link("foo)bar"))
   })
 
   it("does not cut a link's address at other whitespace or a control character: the link is refused", () => {
