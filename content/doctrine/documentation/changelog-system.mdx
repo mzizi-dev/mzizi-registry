@@ -4,8 +4,8 @@ _schemaVersion: "v1"
 author: "nyuchi-team"
 category: "changelog"
 createdAt: "2026-04-28T16:55:26.349194+00:00"
-currentVersion: 2
-description: "Why the Nyuchi Design System changelog is a database table, not a markdown file. How to read it, what each column captures, versioning policy, and what earns an entry."
+currentVersion: 3
+description: "How change to Mzizi is recorded: CHANGELOG.md as the human narrative, content/changelog/releases.json as the machine-readable release record, the versioning policy, and what earns an entry."
 dnaRole: "documentation"
 doctrineVersion: "4.1.7"
 keywords:
@@ -36,121 +36,59 @@ status: "published"
 strand: "transcription"
 subcategory: "overview"
 title: "The Changelog System — How Change Is Recorded"
-updatedAt: "2026-04-28T16:55:26.349194+00:00"
+updatedAt: "2026-10-07T00:00:00.000+00:00"
 version: "4.0.34"
 ---
 
 # The Changelog System — How Change Is Recorded
 
-Every meaningful change to the Nyuchi Design System lands as a row in `public.changelog`. The changelog is not a markdown file; it is a database table. This page explains why, what each column captures, and how to read the history of the system.
+Every meaningful change to Mzizi is recorded in the registry repository, `mzizi-dev/mzizi-registry`, in the same pull request that makes it. There are two records, written for two readers.
 
-## Why the changelog is a table
+## The two records
 
-A markdown CHANGELOG.md file is a snapshot. It accumulates by appending; it does not lend itself to query. Three things become hard with a markdown changelog:
+| Record                            | Reader              | What it holds                                                                                                                               |
+| --------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CHANGELOG.md`                    | People              | The narrative. Every change under `## [Unreleased]`, moved under `## [x.y.z] - YYYY-MM-DD` when it is released                              |
+| `content/changelog/releases.json` | Machines and agents | One structured entry per release, served by `GET https://api.mzizi.dev/v1/changelog` and `GET https://api.mzizi.dev/v1/changelog/{version}` |
 
-1. **"What changed in N8 last quarter?"** — requires reading every entry by hand.
-2. **"Which version added the `nyuchi-trade-status` component?"** — requires text search across versions.
-3. **"What axes have been touched in the last release?"** — impossible to answer without re-tagging every entry manually.
+`CHANGELOG.md` follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Each change is a `### <Kind> — <what changed> (<date>, #<PR>)` subsection, where Kind is Added, Changed, Deprecated, Removed, Fixed or Security, and breaking changes are marked **Breaking**. An entry says what changed for a consumer of the registry or the API, not the commit text.
 
-A database changelog answers all three with SQL. The version, nodes affected, axes affected, and components touched are structured fields. Filtering and aggregation are free.
-
-## The columns
-
-Each `changelog` row carries:
-
-| Column                                              | Purpose                                                                                                 |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `version`                                           | Semver string at the time of the change                                                                 |
-| `title`                                             | One-line summary                                                                                        |
-| `description`                                       | The full prose entry                                                                                    |
-| `nodes_affected`                                    | Array of integers 1–10 — which ecosystem nodes this change touched                                      |
-| `axes_affected`                                     | Array of axis names — `horizontal`, `vertical`, `depth`, `outlier`, or doctrinal axes like `philosophy` |
-| `components_added`                                  | Array of component names introduced                                                                     |
-| `components_modified`                               | Array of component names changed                                                                        |
-| `components_deprecated`                             | Array of component names marked deprecated                                                              |
-| `components_removed`                                | Array of component names removed                                                                        |
-| `total_stable` / `total_deprecated` / `total_alpha` | Snapshot counts at this version                                                                         |
-| `changed_by`                                        | Actor — `system`, `bryan`, or another author                                                            |
-| `created_at`                                        | When the row was written                                                                                |
+A release adds its entry to `content/changelog/releases.json`. Its fields include `version`, `title`, `description`, `release_kind`, `breaking`, `released_at`, `nodes_affected` and the `components_*` and `tools_*` lists. `pnpm changelog:generate` inlines the file into `lib/changelog.generated.ts`, and `pnpm changelog:generate:check` fails CI if the two drift.
 
 ## Versioning policy
 
-- `4.0.x` — internal development patches. Frequent. May land breaking changes during the pre-launch phase.
-- `4.1.0` — first public release milestone. The version contract becomes binding here.
-- `5.0.0` — reserved for major architectural redesign.
+Releases follow the org versioning policy (`nyuchi/.github#80`, from 2026-10-04):
 
-The project started at `4.0.2`. Every internal patch increments the patch number; meaningful milestones get minor or major bumps.
+- A merge into `staging` is a **patch**, tagged automatically.
+- A release to `main` is the next **minor** above the highest existing tag.
+- A **major** is only released by hand.
 
-## Component-level versioning
+The Mzizi Roots crates follow the same rule against their own `mzizi-rs-v` tags. Released versions are never renumbered.
 
-In parallel with the system changelog, every component has its own version history in `public.component_versions`. The `change_type` enum tells you what kind of change it was: `created`, `source_updated`, `metadata_updated`, `status_changed`, `node_moved`, `dependencies_changed`, `promoted`, `deprecated`, `breaking_change`, `bugfix`, `enhancement`, `refactor`, `tokens_wired`, `enterprise_upgrade`.
+## Component-level history
 
-The two changelogs answer different questions:
-
-- `changelog` — what changed in the **system** in this version?
-- `component_versions` — what changed in this **component** across all versions?
+A component's version history is machine-written data. It belongs to the Mzizi console (app.mzizi.dev), not to the registry, so `GET /v1/ui/{name}/versions` answers `503` and names the console as its owner. The registry's record of a component change is its `CHANGELOG.md` entry and the pull request that made it.
 
 ## Reading the history
 
-To see the most recent system changes:
-
-```sql
-SELECT version, title, created_at
-FROM changelog
-ORDER BY created_at DESC
-LIMIT 20;
-```
-
-To find every change that touched N8:
-
-```sql
-SELECT version, title, description
-FROM changelog
-WHERE 8 = ANY(nodes_affected)
-ORDER BY created_at DESC;
-```
-
-To see when a component was first added:
-
-```sql
-SELECT version, created_at
-FROM changelog
-WHERE 'nyuchi-button' = ANY(components_added);
-```
-
-To audit doctrinal changes (changes affecting `philosophy` or `doctrine` axes):
-
-```sql
-SELECT version, title, description
-FROM changelog
-WHERE 'philosophy' = ANY(axes_affected)
-   OR 'doctrine' = ANY(axes_affected)
-ORDER BY created_at DESC;
-```
+- **Recent changes:** the top of `CHANGELOG.md`, or `GET https://api.mzizi.dev/v1/changelog`.
+- **One release:** `GET https://api.mzizi.dev/v1/changelog/{version}`.
+- **What touched a node or a component:** search `CHANGELOG.md`, or filter the release entries on `nodes_affected` and the `components_*` lists.
 
 ## What earns a changelog entry
 
-Not every change. The bar:
+Every pull request that changes behaviour, shipped content, an API response, a published package or crate, a default, a dependency or a documented fact adds an entry, in the same pull request. That includes:
 
-- New tables, columns, or functions in production
-- New components added to the system
-- Component status promotions (alpha → beta → stable)
-- Component deprecations and removals
-- Doctrinal changes — Ubuntu, the nodes, the axes, the covenants, the manifesto
+- New, changed, deprecated and removed components
+- Doctrinal changes — Ubuntu, the nodes, the strands, the covenants
 - API surface changes — REST endpoints, MCP tools
 - Token additions or renames
-- Migration applications that affect schema
 
-What does NOT earn an entry:
-
-- Typo fixes in component descriptions
-- Internal refactors that do not change behaviour
-- Test additions
-- CI configuration changes
+The `changelog / entry required` check fails a pull request without one. Pull requests that touch only `.github/`, lockfiles or lint config pass without one, and pure CI, lint or typo pull requests can carry the `no-changelog` label instead.
 
 ## Public visibility
 
-The changelog table is publicly readable (RLS allows `SELECT` to `anon`). The portal renders it at `/changelog` for anyone to read. This transparency is doctrinal — the platform is open source and community-based; its history is public.
+The history is public: `CHANGELOG.md` is in the open repository and `/v1/changelog` needs no account. This transparency is doctrinal — the platform is open source and community-based; its history is public.
 
 ## Related
 

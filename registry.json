@@ -9733,7 +9733,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["lib", "primitives"],
       "dependencies": [],
-      "description": "The framework-free half of markdown-renderer: Markdown in, a typed tree out (blocks and inlines), with the link scheme allow-list (safeHref) and a rich-text reader (richTextBlocks) that never builds a DOM. Builds no HTML.",
+      "description": "The framework-free half of markdown-renderer: Markdown in, a typed tree out (blocks and inlines), with the link allow-list (safeLink: the kept href, and the address normalised for its hover title, an IDN host as punycode) and a rich-text reader (richTextBlocks) that never builds a DOM. Builds no HTML.",
       "docs": "Use it for: Parsing Markdown into data for markdown-renderer, Checking a link address against a scheme allow-list.\nIncludes: Typed Markdown tree, Link scheme allow-list, Rich text read without a DOM.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-parse",
       "files": [
         {
@@ -9767,8 +9767,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list (https-only on request). Ships in three builds under one contract: React (.tsx), Astro (.astro) and Mzizi Roots (.rs, mzizi-ui).",
-      "docs": "Use it for: Untrusted user text (notes, comments, flags) on pages that hold personal data, Rendering LLM markdown output with Nyuchi typography, Documentation pages rendered from markdown source, Rich text from editors that store HTML (from=\"html\").\nVariants: safe, https.\nIncludes: cn() for className composition, data-slot attribute, Typed Markdown tree (markdown-parse), No HTML string sink in any build, Scheme allow-list for links, GFM tables, nested lists, fenced code, Rust (mzizi-ui) and Astro siblings with one contract.\nAccessibility: Semantic HTML: headings, lists, blockquote, tables with th scope=col, Links keep a focus-visible outline in the ring token, headingBase fits the text under the page's own headings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-renderer",
+      "description": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list (https-only on request) and show their address on hover, normalised (an IDN host as punycode). Ships in three builds under one contract: Mzizi Roots (.rs, mzizi-ui; Rust API: MarkdownRenderer, MarkdownRendererProps, parse_markdown, safe_href, safe_link and the Block tree), Astro (.astro) and React (.tsx).",
+      "docs": "Use it for: Untrusted user text (notes, comments, flags) on pages that hold personal data, Rendering LLM markdown output with Nyuchi typography, Documentation pages rendered from markdown source, Rich text from editors that store HTML (from=\"html\").\nVariants: safe, https.\nIncludes: cn() for className composition, data-slot attribute, Typed Markdown tree (markdown-parse), No HTML string sink in any build, Scheme allow-list for links, Link titles: the address normalised, an IDN host as punycode, GFM tables, nested lists, fenced code, Rust (mzizi-ui) and Astro siblings with one contract.\nAccessibility: Semantic HTML: headings, lists, blockquote, tables with th scope=col, Links keep a focus-visible outline in the ring token, headingBase fits the text under the page's own headings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-renderer",
       "files": [
         {
           "path": "components/registry/n2-primitives/markdown-renderer.tsx",
@@ -9789,6 +9789,7 @@
           "Typed Markdown tree (markdown-parse)",
           "No HTML string sink in any build",
           "Scheme allow-list for links",
+          "Link titles: the address normalised, an IDN host as punycode",
           "GFM tables, nested lists, fenced code",
           "Rust (mzizi-ui) and Astro siblings with one contract"
         ],
@@ -10300,7 +10301,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Accessibility infrastructure for the Nyuchi ecosystem. Exports FocusTrap (modal/overlay focus containment), LiveRegion (screen reader announcements for dynamic content), SkipNav (keyboard skip-to-content link), VisuallyHidden (screen-reader-only text), and a11y token definitions (focus ring styles, minimum touch targets, contrast-safe mineral pairings). Also exports useAnnounce hook for imperatively announcing trust score changes, notification arrivals, loading completions, and other dynamic updates to screen readers. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Accessibility infrastructure for the Nyuchi ecosystem. Exports FocusTrap (modal/overlay focus containment), LiveRegion (screen reader announcements for dynamic content), SkipNav (keyboard skip-to-content link), VisuallyHidden (screen-reader-only text), and a11y token definitions (focus ring styles, minimum touch targets, contrast-safe mineral pairings). Also exports useAnnounce hook for imperatively announcing trust score changes, notification arrivals, loading completions, and other dynamic updates to screen readers. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-a11y",
       "files": [
         {
@@ -10440,8 +10441,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["documentation-engine", "documentation"],
       "dependencies": [],
-      "description": "AI context provider for N10. Generates context windows for AI assistants (Claude, Cursor, Copilot, Windsurf) with current ecosystem model, node architecture, and coding rules. No hardcoded counts — always accepts live values from get_system_counts(). Used by the MCP server and IDE integrations.",
-      "docs": "Use it for: Documentation, AI context generation, Changelog display.\nVariants: default.\nIncludes: Layer 10 documentation infrastructure, Reads from documentation_pages + ai_instructions tables.\nAccessibility: Semantic HTML, Keyboard navigation, Screen reader compatible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-ai-context",
+      "description": "AI context provider for N10. Generates context windows for AI assistants (Claude, Cursor, Copilot, Windsurf) with the uncapped DNA-helix node map and the coding rules. No hardcoded counts: the caller passes live values from GET https://api.mzizi.dev/v1/stats or mzizi_get_architecture. Pure string assembly; the TypeScript and Rust builds render the same text.",
+      "docs": "Use it for: AI context generation, MCP and IDE system prompts.\nVariants: default.\nIncludes: Uncapped DNA-helix node map, through N12, Coding rules for AI assistants, Live counts passed in, never hardcoded, Same output from the TypeScript and Rust builds.\nAccessibility: Semantic HTML, Keyboard navigation, Screen reader compatible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-ai-context",
       "files": [
         {
           "path": "components/registry/n10-documentation/mzizi-ai-context.ts",
@@ -10457,16 +10458,14 @@
         ],
         "collection": "documentation-engine",
         "features": [
-          "Layer 10 documentation infrastructure",
-          "Reads from documentation_pages + ai_instructions tables"
+          "Uncapped DNA-helix node map, through N12",
+          "Coding rules for AI assistants",
+          "Live counts passed in, never hardcoded",
+          "Same output from the TypeScript and Rust builds"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "useCases": [
-          "Documentation",
-          "AI context generation",
-          "Changelog display"
-        ],
+        "useCases": ["AI context generation", "MCP and IDE system prompts"],
         "variants": ["default"]
       },
       "name": "mzizi-ai-context",
@@ -10751,7 +10750,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Overlapping +N social-proof avatar stack — the going/attendee cue. Ring-separated avatars overlap with negative margin, each an image or an initials fallback, showing up to `max` before a +N overflow bubble, with an optional trailing <total> <label> in 13px muted. Purely presentational and server-safe (no harness, no client directive) so it renders inside React Server Components. The group carries an accessible summary label (e.g. \"128 going\") while the decorative avatars are aria-hidden. sm / md sizes.",
+      "description": "Overlapping +N social-proof avatar stack — the going/attendee cue. Ring-separated avatars overlap with negative margin, each an image or an initials fallback, showing up to `max` before a +N overflow bubble, with an optional trailing <total> <label> in 13px muted. Purely presentational and server-safe (no harness, no client-side code), so it renders on the server as is. Rust API (mzizi-brand): MziziAvatarStack and MziziAvatarStackProps, AvatarPerson, AvatarStackSize, initials and stack_layout. The group carries an accessible summary label (e.g. \"128 going\") while the decorative avatars are aria-hidden. sm / md sizes.",
       "docs": "Use it for: +N going social proof on event cards (Mukoko Events), Attendee stack on listings, Member preview on circles / calendars.\nVariants: sm, md.\nIncludes: Overlapping ring-separated avatar stack (-space-x-2), Image or initials fallback per person, +N overflow bubble past max, Optional trailing total + label (13px muted), Server-safe presentational atom — no harness, no client directive, sm / md size scale.\nAccessibility: Decorative avatars marked aria-hidden, Group carries an accessible summary label (e.g. 128 going), Initials fallback when no image, Trailing count label mirrors the aria summary.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-avatar-stack",
       "files": [
         {
@@ -11760,7 +11759,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Data fetching and state management bridge between the 7-layer architecture and the UI. Exports useMziziQuery hook (local-first fetch: try SQLite/IndexedDB → edge D1 → cloud Supabase, with automatic background sync), MziziListView (declarative feed composition: listing-card + infinite scroll + pull-to-refresh + empty state + skeleton + error card), MziziSearchView (search input + filter bar + results + recent searches), and optimistic update utilities. Every data-driven screen in every Nyuchi app uses these patterns instead of raw fetch calls. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Data fetching and state management bridge between the 7-layer architecture and the UI. Exports useMziziQuery hook (local-first fetch: try SQLite/IndexedDB → edge D1 → cloud Supabase, with automatic background sync), MziziListView (declarative feed composition: listing-card + infinite scroll + pull-to-refresh + empty state + skeleton + error card), MziziSearchView (search input + filter bar + results + recent searches), and optimistic update utilities. Every data-driven screen in every Nyuchi app uses these patterns instead of raw fetch calls. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-data",
       "files": [
         {
@@ -12067,7 +12066,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Developer experience infrastructure for the Nyuchi Design System. Exports component status definitions (alpha/beta/stable/deprecated with visual indicators), component documentation schema (usage guidelines, do/dont examples, accessibility notes, keyboard interactions, screen reader behavior stored in component_docs table), contribution guidelines (how to propose, build, review, and ship new brand components), migration utilities (deprecation warnings, codemod helpers), and usage analytics types (which components are used, by which apps, how frequently). Also exports a ComponentPlayground wrapper for interactive component previews. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Developer experience infrastructure for Mzizi. Exports component status definitions (alpha/beta/stable/deprecated with visual indicators), component documentation schema (usage guidelines, do/dont examples, accessibility notes, keyboard interactions, screen reader behavior), contribution guidelines (how to propose, build, review, and ship new brand components), migration utilities (deprecation warnings, codemod helpers), and usage analytics types (which components are used, by which apps, how frequently). Also exports a ComponentPlayground wrapper for interactive component previews. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-dx",
       "files": [
         {
@@ -12628,7 +12627,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["fundi"],
       "dependencies": [],
-      "description": "Fundi — the self-healing intelligence engine. Swahili for fixer/mechanic/technician. N9 acts on what N8 observes. Built in Rust, deployed as a Cloudflare Worker (workers-rs crate, compiled to WebAssembly). NOT a Cloudflare Worker (Rust/WASM) — Fundi is independent of the database vendor. Reads fundi_issues and observability_events from Supabase via REST API. Classifies failure patterns, deduplicates against open GitHub issues, creates structured remediation tickets. Triggered by Cloudflare Cron Triggers and Cloudflare Queues.",
+      "description": "Fundi — the self-healing rung (N9), client side, in Rust. Swahili for fixer/mechanic/technician. N9 acts on what N8 observes. The mzizi-fundi crate decides whether a failure is worth filing, shapes the issue and learns which fixes have worked before. It builds the issue and leaves sending it to the host, so it makes no network calls. Rust API: the mzizi_fundi, mzizi_fundi_learning and mzizi_fundi_reporter modules. It is not a Worker. The healing loop (a cron pass, a queue ingest and GitHub automation) is a separate TypeScript Worker in agent-tools, and nothing in this crate runs on Cloudflare's edge.",
       "docs": "Use it for: Client-side healing decisions, Wrap app in FundiProvider, Auto-heal or escalate to human, Server-side healing via edge function.\nIncludes: Decision engine with 6 rules, Dual client/server architecture, GitHub issue integration, Healing plan creation, Human-in-the-loop via GitHub.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-fundi",
       "files": [
         {
@@ -12700,7 +12699,7 @@
       "categories": ["fundi"],
       "dependencies": [],
       "description": "Bridge from N8 Assurance to N9 Fundi. When N8 components detect failures, the reporter pushes a structured signal to the Cloudflare Queue that triggers Fundi. Signal payload: component name, ecosystem node, error type, severity, diagnostic data. The Queue decouples N8 (detection) from N9 (healing) — N8 never waits for Fundi to respond. Also creates a fundi_issues row in Supabase as the append-only audit trail.",
-      "docs": "Use it for: Bridge L8 failures to GitHub, Create structured GitHub issues, Trigger fundi-webhook edge function, Rate limit to prevent spam.\nIncludes: Structured issue body with portal links, fundi: label system, Cooldown rate limiting (5 min default), Two modes: direct GitHub API or edge function, Blast radius in issue body.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-fundi-reporter",
+      "docs": "Use it for: Bridge L8 failures to GitHub, Create structured GitHub issues, Trigger fundi-webhook edge function, Rate limit to prevent spam.\nIncludes: Structured issue body with portal links, fundi: label system, Cooldown per component and error type (5 min default), started only after a successful filing, Two modes: a fundi endpoint from the browser, or the GitHub API from a server (never a token in the browser), Blast radius in issue body.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-fundi-reporter",
       "files": [
         {
           "path": "components/registry/n9-fundi/mzizi-fundi-reporter.ts",
@@ -12713,8 +12712,8 @@
         "features": [
           "Structured issue body with portal links",
           "fundi: label system",
-          "Cooldown rate limiting (5 min default)",
-          "Two modes: direct GitHub API or edge function",
+          "Cooldown per component and error type (5 min default), started only after a successful filing",
+          "Two modes: a fundi endpoint from the browser, or the GitHub API from a server (never a token in the browser)",
           "Blast radius in issue body"
         ],
         "hasDemo": true,
@@ -12920,7 +12919,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Pre-wiring node that connects every brand component to the full Nyuchi infrastructure stack. Exports MziziHarness (declarative wrapper providing error boundary + skeleton + observability + motion + a11y) and useMziziHarness hook (imperative access to observability logger, motion config, locale, theme, and health reporting). When a component is wrapped in a harness, it automatically logs render timing, catches errors with branded fallback, applies entry animations, uses the correct focus ring tokens, respects reduced-motion preferences, and reports health to the global monitor. Zero manual configuration required — install the component and it works. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Pre-wiring node that connects every brand component to the full Nyuchi infrastructure stack. Exports MziziHarness (declarative wrapper providing error boundary + skeleton + observability + motion + a11y) and useMziziHarness hook (imperative access to observability logger, motion config, locale, theme, and health reporting). When a component is wrapped in a harness, it automatically logs render timing, catches errors with branded fallback, applies entry animations, uses the correct focus ring tokens, respects reduced-motion preferences, and reports health to the global monitor. Zero manual configuration required — install the component and it works. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-harness-prewire",
       "files": [
         {
@@ -13090,7 +13089,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Central icon registry for the Nyuchi Design System. Maps semantic icon names to Lucide React icons. All components should import icons from this registry, not directly from lucide-react. Provides: consistent sizing (16/20/24/32), brand icon overrides, semantic naming (icon-success vs CheckCircle), tree-shaking optimization, and custom Nyuchi icons. N1 infrastructure — consumed by all layers above. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Central icon registry for Mzizi. Maps semantic icon names to Lucide React icons. All components should import icons from this registry, not directly from lucide-react. Provides: consistent sizing (16/20/24/32), brand icon overrides, semantic naming (icon-success vs CheckCircle), tree-shaking optimization, and custom Nyuchi icons. N1 infrastructure — consumed by all layers above. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Central icon registry for all components, Semantic icon naming (icon-success vs CheckCircle), Custom brand icons (MukokoLogo, MineralStrip), Size system: xs(16), sm(20), md(24), lg(32), xl(40).\nSizes: xs, sm, md, lg, xl.\nIncludes: 120+ Lucide re-exports, Semantic aliases, Icon component with name prop, MukokoLogo brand mark, MineralStrip color bar, Tree-shaking optimized.\nAccessibility: aria-hidden on decorative icons, role=img with aria-label on meaningful icons.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-icons",
       "files": [
         {
@@ -13204,7 +13203,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Responsive and adaptive layout system for Nyuchi. Exports breakpoint tokens (mobile/tablet/desktop/wide), useBreakpoint hook, MziziGrid responsive grid component, canonical layout definitions for the five core page types (feed, detail, create, profile, dashboard), and adaptive density support (comfortable vs compact). Ensures consistent responsive behavior across all Nyuchi apps — same breakpoints, same grid, same content flow patterns. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Responsive and adaptive layout system for Nyuchi. Exports breakpoint tokens (mobile/tablet/desktop/wide), useBreakpoint hook, MziziGrid responsive grid component, canonical layout definitions for the five core page types (feed, detail, create, profile, dashboard), and adaptive density support (comfortable vs compact). Ensures consistent responsive behavior across all Nyuchi apps — same breakpoints, same grid, same content flow patterns. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-layout",
       "files": [
         {
@@ -13409,7 +13408,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Internationalization infrastructure for the Pan-African Nyuchi platform. Exports MziziLocaleProvider (React context for locale, text direction, number/date/currency formatting), useLocale hook (access formatting functions), useDirection hook (RTL/LTR detection), locale-aware formatters for dates (relative and absolute), currencies (multi-currency with ZWL/ZAR/USD/KES support), numbers, and relative time. Supports all 16 Zimbabwean official languages. String token system for UI labels with locale variants so buttons, headings, and system text can be swapped without code changes. Bridges to the lingo schema in nyuchi_platform_db. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Internationalization infrastructure for the Pan-African Nyuchi platform. Exports MziziLocaleProvider (React context for locale, text direction, number/date/currency formatting), useLocale hook (access formatting functions), useDirection hook (RTL/LTR detection), locale-aware formatters for dates (relative and absolute), currencies (multi-currency with ZWL/ZAR/USD/KES support), numbers, and relative time. Supports all 16 Zimbabwean official languages. String token system for UI labels with locale variants so buttons, headings, and system text can be swapped without code changes. Bridges to the lingo schema in nyuchi_platform_db. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-locale",
       "files": [
         {
@@ -13598,7 +13597,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Universal date/location signature tile — the 4.2.0 When/Where unit. A rounded-square chip (an icon tile OR a month-over-day date chip) paired with a bold 16px primary line and a 13px muted secondary line, with an optional caption and trailing action. Purely presentational and server-safe (no client directive, no harness) so it renders inside React Server Components. The chip tint defaults to the brand accent (--brand-accent) so each app swaps its own mineral. Used on event detail When/Where rows, place cards, and any listing that anchors a date or a location.",
+      "description": "Universal date/location signature tile — the 4.2.0 When/Where unit. A rounded-square chip (an icon tile OR a month-over-day date chip) paired with a bold 16px primary line and a 13px muted secondary line, with an optional caption and trailing action. Purely presentational and server-safe (no client-side code, no harness), so it renders on the server as is. Rust API (mzizi-brand): MziziMetaTile and MziziMetaTileProps, MetaDate, month_abbrev and DEFAULT_TINT. The chip tint defaults to the brand accent (--brand-accent) so each app swaps its own mineral. Used on event detail When/Where rows, place cards, and any listing that anchors a date or a location.",
       "docs": "Use it for: Event detail When / Where rows (Mukoko Events), Place card location line (Places), Listing date anchor across the super app.\nVariants: icon, date.\nIncludes: 4.2.0 date/location signature pattern, Server-safe — no client directive, renders in RSC, 13px muted metadata / 16px bold primary, Brand-accent chip tint (--brand-accent), color-mix surface, Icon-chip or month-over-day date-chip modes.\nAccessibility: Decorative chip marked aria-hidden, Truncating single-line primary/secondary, Semantic top-to-bottom reading order.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-meta-tile",
       "files": [
         {
@@ -13756,7 +13755,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Motion token system defining the Nyuchi animation language. Includes four duration tiers (quick/standard/emphasis/dramatic), four easing curves (entrance/exit/spring/bounce), choreography patterns (list stagger, cascade, ripple), and reduced-motion fallbacks. Respects prefers-reduced-motion at the token level. Exports CSS keyframes, React transition presets, and a useMotion hook. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Motion token system defining the Nyuchi animation language. Includes four duration tiers (quick/standard/emphasis/dramatic), four easing curves (entrance/exit/spring/bounce), choreography patterns (list stagger, cascade, ripple), and reduced-motion fallbacks. Respects prefers-reduced-motion at the token level. Exports CSS keyframes, React transition presets, and a useMotion hook. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-motion",
       "files": [
         {
@@ -14349,7 +14348,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Platform-specific utilities for PWA, native integration, and cross-platform behavior. Exports MziziInstallPrompt (branded PWA \"Add to Home Screen\" experience), MziziShareSheet (Web Share API with fallback), usePlatform hook (detect iOS/Android/web/PWA), useHaptics (haptic feedback with graceful degradation), and platform-aware navigation patterns. Makes every Nyuchi app feel native regardless of how it is accessed. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Platform-specific utilities for PWA, native integration, and cross-platform behavior. Exports MziziInstallPrompt (branded PWA \"Add to Home Screen\" experience), MziziShareSheet (Web Share API with fallback), usePlatform hook (detect iOS/Android/web/PWA), useHaptics (haptic feedback with graceful degradation), and platform-aware navigation patterns. Makes every Nyuchi app feel native regardless of how it is accessed. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-platform",
       "files": [
         {
@@ -14944,7 +14943,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Self-monitoring, self-healing resilience node that wires observability, circuit-breaker, bulkhead, rate-limiter, retry, timeout, fallback-chain, and chaos testing into a single composition for brand components. Implements all 7 Resilience4j patterns (Netflix Hystrix successor): CircuitBreaker, Retry, RateLimiter, Bulkhead, TimeLimiter, FallbackChain, and ChaosInjection. Exports MziziSection (wraps any UI section with error boundary + skeleton + observability + health tracking), useResilientFetch (data fetching with full resilience stack), MziziHealthMonitor (singleton aggregating health across all sections), MziziHealthPanel (admin health visualization), and the withResilience decorator that composes all patterns in the correct order. Every brand component renders inside a MziziSection so the infrastructure permanently monitors itself. Target: Rust compiled to WebAssembly. wasm-bindgen exposes the interface to SvelteKit. One Rust codebase compiles to both WASM (browser) and native binary (server).",
+      "description": "Self-monitoring, self-healing resilience node that wires observability, circuit-breaker, bulkhead, rate-limiter, retry, timeout, fallback-chain, and chaos testing into a single composition for brand components. Implements all 7 Resilience4j patterns (Netflix Hystrix successor): CircuitBreaker, Retry, RateLimiter, Bulkhead, TimeLimiter, FallbackChain, and ChaosInjection. Exports MziziSection (wraps any UI section with error boundary + skeleton + observability + health tracking), useResilientFetch (data fetching with full resilience stack), MziziHealthMonitor (singleton aggregating health across all sections), MziziHealthPanel (admin health visualization), and the withResilience decorator that composes all patterns in the correct order. Every brand component renders inside a MziziSection so the infrastructure permanently monitors itself. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Design token infrastructure, All layers consume L1.\nVariants: default.\nIncludes: Y-axis vertical spine, CSS custom properties, Multi-platform generators.\nAccessibility: Defines focus ring tokens, Touch target minimums, Contrast-safe pairings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-resilience",
       "files": [
         {
@@ -15314,7 +15313,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["pages", "discovery"],
       "dependencies": ["next"],
-      "description": "SEO metadata component for Next.js App Router. Generates head metadata, Open Graph tags, Twitter Cards, Schema.org JSON-LD structured data, and canonical URLs. Server component — runs at build/request time. Supports all Schema.org types used by the platform: JobPosting, VideoObject, MedicalWebPage, RentalCarReservation, Product, Event, Article, Recipe, etc.",
+      "description": "SEO metadata for a Rust host (Mzizi Roots, mzizi-discovery; Rust API: generate_metadata(&SeoConfig) returning Metadata, Metadata::to_head_html(), generate_schema_ld, SchemaOrg and Json). Generates head metadata, Open Graph tags, Twitter Cards, Schema.org JSON-LD structured data, and canonical URLs. Runs on the server at build or request time. Supports all Schema.org types used by the platform: JobPosting, VideoObject, MedicalWebPage, RentalCarReservation, Product, Event, Article, Recipe, etc.",
       "docs": "Use it for: pulse, shamwari, campfire, circles, bytes.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-seo",
       "files": [
         {
@@ -15835,7 +15834,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["shell"],
       "dependencies": [],
-      "description": "Theme provider component that wraps the application and distributes design tokens via CSS custom properties and React context. Supports light/dark/high-contrast themes, per-brand accent overrides, system preference detection (prefers-color-scheme, prefers-contrast), and runtime theme switching. Every Nyuchi app wraps its root in this provider.",
+      "description": "Theme provider that wraps the application and distributes design tokens via CSS custom properties. Rust API (mzizi-shell): MziziThemeProvider and MziziThemeProviderProps, ThemeMode, resolve_initial_theme and system_preference. The browser glue (matchMedia, localStorage, the document wiring) stays with the host, which passes in the resolved values. Supports light/dark/high-contrast themes, per-brand accent overrides, system preference detection (prefers-color-scheme, prefers-contrast), and runtime theme switching. Every Nyuchi app wraps its root in this provider.",
       "docs": "Use it for: Root theme provider for every Nyuchi app, Design token distribution via CSS custom properties, Light/dark/high-contrast theme switching, Per-brand accent color overrides, System preference and user override management.\nVariants: default.\nIncludes: App shell infrastructure, Cross-layer wiring (L7→L8→L9), data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-theme-provider",
       "files": [
         {
@@ -21360,7 +21359,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "A pill-shaped lifecycle label — stable, beta, alpha or deprecated — each tinted with one of the Seven Minerals at 10% behind the mineral itself (malachite, cobalt, gold, terracotta). Built on Badge. Ships in three builds that share one contract: React (.tsx), Mzizi Roots (.rs, mzizi-ui) and the Mzizi language (.mz).",
+      "description": "A pill-shaped lifecycle label — stable, beta, alpha or deprecated — each tinted with one of the Seven Minerals at 10% behind the mineral itself (malachite, cobalt, gold, terracotta). Built on Badge. Ships in three builds that share one contract: Mzizi Roots (.rs, mzizi-ui; Rust API: StatusBadge, StatusBadgeProps, StatusBadgeStatus and status_badge_variants), the React build (.tsx) and the Mzizi language (.mz).",
       "docs": "Use it for: Component and API lifecycle labels in docs and registries, Feature maturity next to a setting or a nav item, Release notes and changelogs.\nVariants: stable, beta, alpha, deprecated.\nIncludes: cn() for className composition, data-slot attribute, Mineral tints from the Seven Minerals, Rust (mzizi-ui) and Mzizi (.mz) siblings with one contract.\nAccessibility: The status is always written out, never colour alone, Text clears 4.5:1 on its tint in both themes.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/status-badge",
       "files": [
         {

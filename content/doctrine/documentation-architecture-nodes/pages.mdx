@@ -1,15 +1,15 @@
 ---
 _schemaVersion: "v1"
 covenant: "A page is a composition, not an implementation."
-currentVersion: 2
-description: "Pure composition of N2 and N3 — pages arrange brand components into full-screen experiences and implement nothing. That covenant is exactly what makes N6 the cheapest node in the helix to move across targets: porting a page re-expresses an arrangement, it does not re-derive behaviour. Framework-specific like every UI node — Dioxus on the Rust path, Svelte optional, React shipping — with no Rust implementation of its own, because there is nothing here to implement. Semantic tokens only, no inline primitives."
+currentVersion: 3
+description: "Pure composition of N2 and N3 — pages arrange brand components into full-screen experiences and implement nothing. That covenant is exactly what makes N6 the cheapest node in the helix to move across targets: porting a page re-expresses an arrangement, it does not re-derive behaviour. Framework-specific like every UI node — Astro by default (the Dashboard, Discover and Site Standard compositions), Dioxus on the Rust path, React kept at parity — with no Rust implementation of its own, because there is nothing here to implement. Semantic tokens only, no inline primitives."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
 helix_model: "double-helix"
 implementation_rules:
 - "Pages import from N2 and N3, never define new primitives."
 - "All copy, data, and metadata come from the database or props — not hardcoded."
-- "Pages can be server components by default; promote to client only when hooks are required."
+- "Pages render on the server by default (Astro with no client JavaScript; server components in React); add client code only where the component contract allows it."
 - "A node that renders a spinner or a skeleton pulls it from N2, never inlines one."
 kind: "architecture"
 model: "mzizi-dna-helix"
@@ -21,14 +21,13 @@ rust:
   kind: "ui-framework"
   note: "N6 has a Rust ALTERNATIVE and deliberately no Rust implementation. The covenant — a page is a composition, not an implementation — is what makes multi-target viable at all: every node that keeps logic out of its pages is a node that ports cheaply. A page that inlined a spinner instead of pulling it from N2 is a page that now has to be rewritten rather than rearranged."
   state: "target"
-  today: "No Rust ships. Pages are Next.js App Router routes in mzizi-dev/mzizi-registry and the registry's page inventory is React."
-  target: "Dioxus on the Rust path; Svelte optional; native targets compose their own. Nothing about a page's contract changes, because a page has no contract beyond the components it arranges."
+  today: "No Rust ships for N6. The Dashboard, Discover and Site Standard parts under components/registry/n6-pages/ have Astro builds, the default, with React siblings; most full pages and layouts (login, signup, admin, wallet, checkout and others) are still React only and are owed Astro builds. No Dioxus page compositions exist yet. The Next.js app that used to host pages in this repository has been removed."
+  target: "Astro first, React at parity, Dioxus on the Rust path; native targets compose their own. Nothing about a page's contract changes, because a page has no contract beyond the components it arranges."
   position: "alternative"
   descriptors:
+  - "astro"
   - "dioxus"
-  - "svelte"
   - "react"
-  - "mzizi-react-legacy"
 sort_order: 6
 stakeholder: "Product engineer"
 strand: "shipped"

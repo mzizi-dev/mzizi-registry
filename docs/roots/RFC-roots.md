@@ -376,7 +376,7 @@ fullstack server. This is what the crates are built for, and every batch support
    Rust/Dioxus islands". The wrapper crate (`mzizi-islands`, proposed) is not packaged yet;
    it belongs with batch 2.
 
-Under every Astro path there is no React, Svelte or Vue layer.
+Under every Astro path there is no React or Vue layer.
 
 **What exists today.** All twelve batch-1 components work in a pure-Rust Dioxus app and
 render to static HTML through `dioxus-ssr` (the contract suite does exactly that on every
