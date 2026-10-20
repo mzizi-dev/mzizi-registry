@@ -249,7 +249,8 @@ describe("Tailwind keys (#456)", () => {
     for (const r of colors) {
       const k = colorKey(r)
       const v = `var(${roleVar(r)})`
-      if (!rule(out, `text-${k}`).match(new RegExp(`^\\s*color: ${v.replace(/[()]/g, "\\$&")};\\s*$`))) wrong.push(`text-${k}: ${rule(out, `text-${k}`)}`)
+      const escaped = v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      if (!rule(out, `text-${k}`).match(new RegExp(`^\\s*color: ${escaped};\\s*$`))) wrong.push(`text-${k}: ${rule(out, `text-${k}`)}`)
       if (!rule(out, `bg-${k}`).includes(`background-color: ${v};`)) wrong.push(`bg-${k}`)
       if (!rule(out, `border-${k}`).includes(`border-color: ${v};`)) wrong.push(`border-${k}`)
     }
