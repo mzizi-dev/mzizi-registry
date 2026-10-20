@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the `markdown-renderer` linear-time tests measure scaling, not wall-clock (2026-10-20)
+
+Owner decision, 2026-10-20. The parser's "linear time" tests used fixed budgets: 3000 ms for reading huge rich text and deciding `auto`, 1000 to 1500 ms for the hostile-input cases, 2 s in the Rust build. On a 4-core host the same staging commit took 2.2 to 4.0 s against the 3000 ms budget, so the tests failed on the host and not on the parser. They now assert how the time grows.
+
+- **How.** Each input is built at n, 2n and 4n, where 4n is about the size the test used before, and timed in five rounds with the order of the sizes rotating. A sample repeats the work until it lasts about 15 ms. The median at 4n may cost at most 2.5 × 2.5 times the median at n, which is 2.5× per doubling. A quadratic path costs 4× per doubling (16× over the range) and fails. A busy host gets three attempts, and a quadratic fails all three. The only absolute number left is a 30 s hang guard. It runs before every timed run, so a quadratic stops before the run that would take it past 30 s.
+- **Where.** `__tests__/helpers/linear-scaling.ts` holds the check and `__tests__/helpers/linear-scaling.test.ts` tests it: linear work passes, quadratic work fails every attempt, and the hang guard stops a quadratic early. `__tests__/components/markdown-renderer.test.tsx` uses it for every case that had a budget, each input timed on its own. The Rust build's `pathological_input_stays_fast` becomes `hostile_inlines_parse_in_linear_time`, `hostile_rich_text_reads_in_linear_time`, `deciding_auto_is_linear` and `huge_and_deep_rich_text_has_no_stack_overflow`, with the same check in Rust (`mzizi-rs/crates/mzizi-ui/src/generated/markdown-renderer.rs` regenerated with `pnpm rust:generate`).
+- **What is still checked at full size, untimed:** no stack overflow on 150,000 `<br>` or 5,000 nested `<b>`, the 100,000-line nested-mark split, and the output-size bound.
+- **New cases.** Deciding `auto` is now timed on an input that makes it read every candidate tag: a `>` first, then only tag openers. The old input had no `>`, so it was answered from a single scan.
+- **Verified:** with the inline scan budget removed and `looksLikeRichText` changed to rescan for a `>` from every candidate, the scaling tests fail in both TypeScript and Rust. At small sizes they cost 3 to 4× per doubling on every attempt, and at test sizes they stop at the hang guard. With those changes reverted, every test passes. The main Vitest suite takes about 10 s longer (33 s to 43 s on a 4-core host). No component, parser or API change.
+
 ### Added — `markdown-renderer` 1.2.0: a link shows its address on hover, normalised, with an IDN host as punycode (2026-10-20, #483)
 
 Closes #470, a follow-up from the Toddle extension's review (#460): its old flag renderer showed each link's address on hover, and `markdown-renderer` 1.1.0 did not.
