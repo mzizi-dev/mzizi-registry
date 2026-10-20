@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — `markdown-renderer` 1.2.1: four parser bugs from the `@bundu/ui` 0.6.0 review; `brand-mark` 1.1.1: an unknown brand is a clear error (2026-10-20, #PRNUM)
+### Fixed — `markdown-renderer` 1.2.1: four parser bugs from the `@bundu/ui` 0.6.0 review; `brand-mark` 1.1.1: an unknown brand is a clear error (2026-10-20, #517)
 
 Found by the code review of `@bundu/ui` 0.6.0 (mzizi-dev/packages-npm#63), which builds from registry v4.8.0. Each was confirmed by a failing test on `staging` first. The parser fixes are in `markdown-parse.ts` and the Rust parser alike, each with a shared fixture case that both run (81 cases in all).
 
