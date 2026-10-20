@@ -148,6 +148,6 @@ describe.each(contracts.map((c) => [c.name, c] as const))("%s (.astro) keeps its
     expect(scripts.length).toBe(c.noJs.script === "none" ? 0 : 1)
     for (const html of Object.values(rendered)) expect(html).not.toMatch(/<astro-island/i)
     expect(source).not.toMatch(/client:(load|idle|visible|media|only)/)
-    expect(source).not.toMatch(/from\s+["'](react|react-dom|preact|vue)(\/[^"']*)?["']/)
+    expect(source).not.toMatch(/from\s+["'](react|react-dom|preact|svelte|vue)(\/[^"']*)?["']/)
   })
 })
