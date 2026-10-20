@@ -109,13 +109,7 @@ jobs:
         run: cargo test --manifest-path mzizi-rs/Cargo.toml --workspace
 
       - name: Package every crate
-        # Crates with `publish = false` (owner decision 6.2 is open for mzizi-data, and mzizi-mongodb
-        # depends on it) cannot be packaged against crates.io, so they are excluded here. Cargo
-        # metadata reports their `publish` as []. Every publishable crate is still packaged and verified.
-        run: |
-          excludes=$(cargo metadata --manifest-path mzizi-rs/Cargo.toml --no-deps --format-version 1 \
-            | jq -r '.packages[] | select(.publish == []) | "--exclude \(.name)"')
-          cargo package --manifest-path mzizi-rs/Cargo.toml --workspace $excludes
+        run: cargo package --manifest-path mzizi-rs/Cargo.toml --workspace
 
       - name: Publish new versions in dependency order
         env:
@@ -162,12 +156,6 @@ jobs:
 
           for crate in "${order[@]}"; do
             version=$(jq -r --arg n "$crate" '.packages[] | select(.name == $n) | .version' <<<"$metadata")
-            # A crate that sets `publish = false` stays in the order above so the membership check
-            # holds, and is never uploaded. mzizi-data is one (owner decision 6.2 is open).
-            if [ "$(jq -r --arg n "$crate" '.packages[] | select(.name == $n) | .publish' <<<"$metadata")" = "[]" ]; then
-              echo "$crate sets publish = false; not uploading it."
-              continue
-            fi
             status=$(curl -sS -o /dev/null -w '%{http_code}' -A "$agent" \
               "https://crates.io/api/v1/crates/$crate/$version")
             if [ "$status" = "200" ]; then

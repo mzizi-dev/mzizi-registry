@@ -206,13 +206,7 @@ jobs:
       #
       # NEVER add `--no-verify`. The verify build is the whole assertion.
       - name: Package every crate
-        # Crates with `publish = false` (owner decision 6.2 is open for mzizi-data, and mzizi-mongodb
-        # depends on it) cannot be packaged against crates.io, so they are excluded here. Cargo
-        # metadata reports their `publish` as []. Every publishable crate is still packaged and verified.
-        run: |
-          excludes=$(cargo metadata --manifest-path mzizi-rs/Cargo.toml --no-deps --format-version 1 \
-            | jq -r '.packages[] | select(.publish == []) | "--exclude \(.name)"')
-          cargo package --manifest-path mzizi-rs/Cargo.toml --workspace $excludes
+        run: cargo package --manifest-path mzizi-rs/Cargo.toml --workspace
 
   mzizi:
     name: Mzizi components
