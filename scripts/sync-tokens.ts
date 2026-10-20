@@ -1173,19 +1173,28 @@ const norm = (s: string) => s.replace(/\s+/g, "")
 /**
  * The contrast gate (#484 §2b) on the default mapping. It runs in both modes, so
  * \`pnpm tokens:verify\` in CI fails on a violation exactly as \`pnpm tokens:sync\`
- * does. A \`pending\` shortfall is an owner decision named in the manifest; it is
- * printed, never silent.
+ * does. A \`pending\` shortfall is an owner decision named in the manifest, and a
+ * \`decorative\` ui role is exempt from the Lc 30 bar; both are printed, never silent.
  */
 function gate(resolved: Map<string, ResolvedRole>) {
-  const { results, violations, pending } = roleGate(resolved)
+  const { results, violations, pending, decorative } = roleGate(resolved)
   if (violations.length) {
     fail(`role contrast gate (lib/tokens/roles.source.ts): ${violations.length} violation(s)\n  ${violations.join("\n  ")}`)
   }
   const pendingRoles = [...new Set(pending.map((p) => p.role))]
   console.log(
-    `✓ role gate: ${results.length - pending.length} of ${results.length} measurements pass` +
-      (pendingRoles.length ? `; pending owner decision: ${pendingRoles.join(", ")}` : "")
+    `✓ role gate: ${results.length - pending.length} of ${results.length} measurements pass, 0 violations, ` +
+      `${pending.length} pending`
   )
+  for (const role of pendingRoles) {
+    const rows = pending.filter((p) => p.role === role)
+    console.log(`  pending, ${rows.length} measurements: ${role}: ${rows[0]!.pending}`)
+  }
+  if (decorative.length) {
+    console.log(
+      `  decorative, exempt from the Lc 30 ui bar (never the only cue): ${decorative.map((d) => d.role).join(", ")}`
+    )
+  }
 }
 
 async function main() {
