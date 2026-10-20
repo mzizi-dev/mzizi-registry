@@ -103,7 +103,7 @@ Resources: `mzizi://components` (component index), `mzizi://nodes` (per-node sum
 Tools: `list_components`, `get_component`, `list_collections`.
 
 The standalone Cloudflare Worker variant, the Fundi self-healing agent, the TypeScript SDK,
-the published `mzizi-skills` bundle, and the Svelte mini-app that surfaces Mzizi inside the
+the published `mzizi-skills` bundle, and the mini-app that surfaces Mzizi inside the
 Nyuchi Console all live in **`mzizi-dev/agent-tools`** — a private repo, not this one.
 
 ---
