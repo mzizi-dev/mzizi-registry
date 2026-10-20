@@ -4,8 +4,8 @@
 //! One contract per component, whatever the language (owner, 2026-10-05; #427). For every
 //! contract whose `.rs` implementation has `identity: "contract"` and lives in this crate, this
 //! suite renders every state the contract declares with `dioxus-ssr` and evaluates, on the
-//! markup, every clause (through the shared evaluator in `mzizi-rs/contract-eval/`), every check
-//! and every density row. The `.astro` and `.tsx` are held to the same file by `__tests__/astro`
+//! markup, every clause (through the shared evaluator in `mzizi-rs/contract-eval/`), every check,
+//! every density row and the CSP rule (no inline `style` attribute, #444). The `.astro` and `.tsx` are held to the same file by `__tests__/astro`
 //! and `__tests__/contracts`. A clause, check or selector this suite cannot evaluate fails
 //! (RFC-0006, FM-12).
 
@@ -16,14 +16,17 @@ use std::path::PathBuf;
 use dioxus::prelude::*;
 use mzizi_ui::card::CardSize;
 use mzizi_ui::{
-    Alert, AlertVariant, Button, ButtonSize, ButtonVariant, Card, Input, Label, MarkdownLinks,
-    MarkdownRenderer, MarkdownSource, SafeAreaFrame, Skeleton, StatusBadge, StatusBadgeStatus,
+    Alert, AlertVariant, Badge, BadgeVariant, Button, ButtonSize, ButtonVariant, Card, Input,
+    Label, MarkdownLinks, MarkdownRenderer, MarkdownSource, SafeAreaFrame, Skeleton, StatusBadge,
+    StatusBadgeStatus,
 };
 use serde_json::Value;
 
 #[path = "../../../contract-eval/contract_eval.rs"]
 mod contract_eval;
-use contract_eval::{Case, Node, declared_height, holds, parse, render, select, tokens};
+use contract_eval::{
+    Case, Rendered, declared_height, holds, inline_styles, render, select, tokens,
+};
 
 fn repo() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..")
@@ -31,6 +34,22 @@ fn repo() -> PathBuf {
 
 /// Every contract file whose Rust build implements the whole contract.
 fn contract_identity_contracts() -> Vec<(String, Value)> {
+    rust_contracts()
+        .into_iter()
+        .filter(|(_, json)| json["implementations"]["rs"]["identity"] == "contract")
+        .collect()
+}
+
+/// Whether a registry item's `.rs` has its generated copy in this crate (`src/generated/`).
+fn in_this_crate(registry: &str) -> bool {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("src/generated")
+        .join(format!("{registry}.rs"))
+        .is_file()
+}
+
+/// Every contract file, sorted by family then file name.
+fn contract_files() -> Vec<Value> {
     let dir = repo().join("contracts");
     let mut out = Vec::new();
     let mut families: Vec<_> = fs::read_dir(&dir)
@@ -47,14 +66,120 @@ fn contract_identity_contracts() -> Vec<(String, Value)> {
             .collect();
         files.sort_by_key(|e| e.file_name());
         for f in files {
-            let json: Value = serde_json::from_str(&fs::read_to_string(f.path()).unwrap())
-                .unwrap_or_else(|e| panic!("{:?} is not JSON: {e}", f.path()));
-            if json["implementations"]["rs"]["identity"] == "contract" {
-                out.push((json["name"].as_str().unwrap().to_owned(), json));
-            }
+            out.push(
+                serde_json::from_str(&fs::read_to_string(f.path()).unwrap())
+                    .unwrap_or_else(|e| panic!("{:?} is not JSON: {e}", f.path())),
+            );
         }
     }
     out
+}
+
+/// The crate's contract suite that evaluates a contract-declared `.rs` build.
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum Suite {
+    /// This file: a renderer per build, every state, `Case::check` or the CSP test below.
+    Ui,
+    /// `mzizi-brand/tests/contract.rs`: one `Case` per entry of `mzizi_brand::CONTRACTS`
+    /// (that suite asserts its cases and `CONTRACTS` are the same list).
+    Brand,
+}
+
+/// The names `mzizi_brand::CONTRACTS` lists, read from its `src/lib.rs` (this crate does not
+/// depend on mzizi-brand).
+fn brand_contracts() -> Vec<String> {
+    let lib = fs::read_to_string(repo().join("mzizi-rs/crates/mzizi-brand/src/lib.rs")).unwrap();
+    let start = lib
+        .find("pub const CONTRACTS")
+        .expect("mzizi-brand/src/lib.rs has no `pub const CONTRACTS`");
+    let block = &lib[start..start + lib[start..].find("];").expect("CONTRACTS is not closed")];
+    block
+        .split("(\"")
+        .skip(1)
+        .filter_map(|s| s.split('"').next())
+        .map(str::to_owned)
+        .collect()
+}
+
+/// The one suite that evaluates `<registry>.rs`, the `.rs` build contract `name` declares.
+/// Panics, naming the contract and the path, when the file is missing under
+/// `components/registry/` (a typo), sits in more than one node, compiles in a crate with no
+/// contract suite, or is not in its crate's suite (no renderer here, or not in
+/// `mzizi_brand::CONTRACTS`). So a declared build is never skipped silently.
+fn suite_for(name: &str, registry: &str) -> Suite {
+    let registry_dir = repo().join("components/registry");
+    let file = format!("{registry}.rs");
+    let mut nodes: Vec<String> = fs::read_dir(&registry_dir)
+        .unwrap()
+        .filter_map(Result::ok)
+        .filter(|e| e.path().join(&file).is_file())
+        .map(|e| e.file_name().to_string_lossy().into_owned())
+        .collect();
+    nodes.sort();
+    let node = match nodes.as_slice() {
+        [node] => node.clone(),
+        [] => panic!(
+            "{name} declares `{file}`, but components/registry/*/{file} does not exist \
+             (declared implementation missing)"
+        ),
+        many => panic!("{name} declares `{file}`, which is in more than one node: {many:?}"),
+    };
+    let path = format!("components/registry/{node}/{file}");
+    let map: Value = serde_json::from_str(
+        &fs::read_to_string(repo().join("mzizi-rs/crate-for-node.json")).unwrap(),
+    )
+    .unwrap();
+    let krate = map[&node]
+        .as_str()
+        .unwrap_or_else(|| panic!("{name} ({path}): no crate in mzizi-rs/crate-for-node.json"));
+    match krate {
+        "mzizi-ui" => {
+            assert!(
+                in_this_crate(registry),
+                "{name} ({path}): no generated copy at mzizi-ui/src/generated/{file}; run `pnpm rust:generate`"
+            );
+            assert!(
+                renderer(registry).is_some(),
+                "{name} ({path}): tests/contracts_json.rs has no renderer for it, so no suite evaluates it: add one"
+            );
+            Suite::Ui
+        }
+        "mzizi-brand" => {
+            assert!(
+                brand_contracts().iter().any(|n| n == registry),
+                "{name} ({path}): not in mzizi_brand::CONTRACTS, so mzizi-brand's suite does not evaluate it"
+            );
+            Suite::Brand
+        }
+        other => panic!(
+            "{name} ({path}) compiles in {other}, which has no contract suite: no Rust suite evaluates it"
+        ),
+    }
+}
+
+/// Every contract that declares a `.rs` build, with the suite that evaluates it (see
+/// `suite_for`, which fails on a missing or uncovered build).
+fn declared_rust_builds() -> Vec<(String, Value, Suite)> {
+    contract_files()
+        .into_iter()
+        .filter_map(|json| {
+            let name = json["name"].as_str()?.to_owned();
+            let registry = json["implementations"]["rs"]["registry"]
+                .as_str()?
+                .to_owned();
+            let suite = suite_for(&name, &registry);
+            Some((name, json, suite))
+        })
+        .collect()
+}
+
+/// Every contract whose `.rs` build this crate's suite evaluates, whatever its identity.
+fn rust_contracts() -> Vec<(String, Value)> {
+    declared_rust_builds()
+        .into_iter()
+        .filter(|(_, _, suite)| *suite == Suite::Ui)
+        .map(|(name, json, _)| (name, json))
+        .collect()
 }
 
 // ─── Rendering a contract state ─────────────────────────────────────────────────────────────
@@ -94,6 +219,21 @@ fn flag(name: &str) -> bool {
 
 fn text(name: &str) -> String {
     slot(name).unwrap_or_default()
+}
+
+/// `app/badge`: the registry badge, held to that contract by identity (`slot+variants`).
+fn badge_state() -> Element {
+    let variant = match prop("variant").as_deref() {
+        None | Some("default") => BadgeVariant::Default,
+        Some("secondary") => BadgeVariant::Secondary,
+        Some("destructive") => BadgeVariant::Destructive,
+        Some("outline") => BadgeVariant::Outline,
+        Some("ghost") => BadgeVariant::Ghost,
+        Some("link") => BadgeVariant::Link,
+        Some(other) => panic!("badge: the contract names an unknown variant `{other}`"),
+    };
+    let label = text("default");
+    rsx! { Badge { variant, "{label}" } }
 }
 
 fn button_state() -> Element {
@@ -201,11 +341,11 @@ fn safe_area_frame_state() -> Element {
     rsx! { SafeAreaFrame { width, height, safe, box_px, class } }
 }
 
-/// The renderer for each registry item this crate implements a contract for. A contract whose
-/// `.rs` claims `identity: "contract"` with no renderer here fails, so none goes unevaluated.
-fn renderer(registry: &str) -> fn() -> Element {
-    match registry {
+/// The renderer for each registry item of this crate that a contract declares.
+fn renderer(registry: &str) -> Option<fn() -> Element> {
+    Some(match registry {
         "alert" => alert_state,
+        "badge" => badge_state,
         "button" => button_state,
         "card" => card_state,
         "input" => input_state,
@@ -214,16 +354,62 @@ fn renderer(registry: &str) -> fn() -> Element {
         "safe-area-frame" => safe_area_frame_state,
         "skeleton" => skeleton_state,
         "status-badge" => status_badge_state,
-        other => panic!(
-            "contracts name `{other}.rs` with identity \"contract\", and tests/contracts_json.rs has \
-             no renderer for it: add one, so its contract is evaluated"
-        ),
-    }
+        _ => return None,
+    })
 }
 
-fn render_state(registry: &str, state: &Value) -> Node {
+/// Every `.rs` a contract declares exists under `components/registry/` and is evaluated by
+/// exactly one crate's suite: this file (a renderer here) or mzizi-brand's (`CONTRACTS`).
+#[test]
+fn every_rust_build_a_contract_declares_exists_and_one_suite_evaluates_it() {
+    let declared = contract_files()
+        .iter()
+        .filter(|c| c["implementations"]["rs"]["registry"].is_string())
+        .count();
+    let builds = declared_rust_builds();
+    assert!(declared > 0);
+    assert_eq!(
+        builds.len(),
+        declared,
+        "a declared .rs build has no name or registry"
+    );
+}
+
+#[test]
+fn a_mzizi_brand_build_is_evaluated_by_mzizi_brands_suite() {
+    // No contract file declares one yet; this holds the branch that would take it.
+    assert_eq!(suite_for("app/x", "mzizi-gauge-card"), Suite::Brand);
+    assert_eq!(suite_for("ui/badge", "badge"), Suite::Ui);
+    let brand = brand_contracts();
+    assert!(
+        brand.len() >= 12 && brand.iter().all(|n| n.starts_with("mzizi-")),
+        "{brand:?}"
+    );
+}
+
+#[test]
+#[should_panic(expected = "declared implementation missing")]
+fn a_declared_rust_build_that_does_not_exist_fails() {
+    suite_for("ui/x", "no-such-component");
+}
+
+#[test]
+#[should_panic(expected = "which has no contract suite")]
+fn a_declared_rust_build_no_suite_evaluates_fails() {
+    // A real registry file, in a crate (mzizi-shell) with no contract suite.
+    suite_for("app/x", "mzizi-bottom-nav");
+}
+
+#[test]
+#[should_panic(expected = "has no renderer for it")]
+fn a_declared_rust_build_of_this_crate_without_a_renderer_fails() {
+    // A real mzizi-ui component that no contract declares, so it has no renderer here.
+    suite_for("ui/x", "separator");
+}
+
+fn render_state(registry: &str, state: &Value) -> Rendered {
     PROPS.with(|p| *p.borrow_mut() = state.clone());
-    render(renderer(registry))
+    render(renderer(registry).unwrap_or_else(|| panic!("no renderer for `{registry}.rs`")))
 }
 
 fn leak(s: &str) -> &'static str {
@@ -361,6 +547,7 @@ fn every_contract_identity_rust_build_keeps_its_contract() {
             states,
             defaults,
             columns: Vec::new(),
+            allowed_styles: &[],
         };
         case.check();
         for check in c["checks"].as_array().unwrap() {
@@ -432,7 +619,7 @@ fn every_predicate_case_gets_the_verdict_the_typescript_runner_gives() {
 /// component's classes.
 #[test]
 fn a_when_clause_with_not_holds_fails_or_cannot_be_evaluated() {
-    let node = |html: &str| parse(html).into_iter().next().expect("one root");
+    let node = Rendered::from_html;
     let case = Case {
         name: "fixture",
         contract: "contract\n  slot is \"x\"\nend",
@@ -451,6 +638,7 @@ fn a_when_clause_with_not_holds_fails_or_cannot_be_evaluated() {
         ],
         defaults: Vec::new(),
         columns: Vec::new(),
+        allowed_styles: &[],
     };
     assert_eq!(
         case.evaluate(r#"when default class not has "line-through""#),
@@ -479,4 +667,123 @@ fn a_when_clause_with_not_holds_fails_or_cannot_be_evaluated() {
         case.evaluate(r#"when default class not is "a" "b""#)
             .is_err()
     );
+}
+
+// ─── The CSP rule (#444) ────────────────────────────────────────────────────────────────────
+//
+// `Case::check` fails any rendered element with a `style` attribute, in every state, so every
+// identity-`contract` build above is held to it. This holds the other Rust builds a contract
+// declares (identity `slot+variants`, as `badge`) in every state, and proves the rule fails on
+// each way Dioxus writes an inline style.
+
+#[test]
+fn every_other_rust_build_a_contract_declares_renders_no_inline_style() {
+    for (name, c) in rust_contracts() {
+        if c["implementations"]["rs"]["identity"] == "contract" {
+            continue;
+        }
+        let registry = c["implementations"]["rs"]["registry"].as_str().unwrap();
+        for (state, fixture) in c["states"].as_object().unwrap() {
+            let found = inline_styles(&render_state(registry, fixture));
+            assert!(
+                found.is_empty(),
+                "{name} ({registry}.rs) [{state}]: an inline style attribute (#444): {found:?}"
+            );
+        }
+    }
+}
+
+/// `style: "…"`, as `MineralStrip` did before #444.
+#[component]
+fn StyleAttribute() -> Element {
+    rsx! {
+        div { "data-slot": "tinted-strip",
+            span { style: "--tint: var(--primary)", "tint" }
+            span { class: "text-foreground", "plain" }
+        }
+    }
+}
+
+/// A Dioxus CSS-property attribute, which `dioxus-ssr` merges into `style`.
+#[component]
+fn CssProperty() -> Element {
+    rsx! {
+        div { "data-slot": "tinted-strip",
+            span { background_color: "var(--primary)", width: "6px", "tint" }
+        }
+    }
+}
+
+/// A clean first root and a styled second one: the rule reads every top-level node.
+#[component]
+fn SecondRoot() -> Element {
+    rsx! {
+        div { "data-slot": "tinted-strip", "first" }
+        span { style: "--tint: var(--primary)", "second" }
+    }
+}
+
+/// The forms the removed `.rs` source scan used to read, each rendered: a quoted `"style"`
+/// attribute, a `format!` value, an `if`/`else` value, and a style on a conditional child.
+#[component]
+fn OtherForms(dim: bool) -> Element {
+    let c = "var(--primary)";
+    rsx! {
+        div { "data-slot": "tinted-strip",
+            span { "style": "--tint: red", "quoted" }
+            span { style: format!("color: {c}"), "formatted" }
+            span { style: if dim { "opacity: .5" } else { "" }, "conditional value" }
+            if dim {
+                i { style: "--edge: var(--border)", "conditional child" }
+            }
+        }
+    }
+}
+
+#[test]
+fn the_inline_style_rule_fails_on_each_way_dioxus_writes_one() {
+    assert_eq!(
+        inline_styles(&render(|| rsx! { OtherForms { dim: true } })),
+        vec![
+            r#"<span> style="--tint: red""#.to_owned(),
+            r#"<span> style="color: var(--primary)""#.to_owned(),
+            r#"<span> style="opacity: .5""#.to_owned(),
+            r#"<i> style="--edge: var(--border)""#.to_owned(),
+        ]
+    );
+    assert_eq!(
+        inline_styles(&render(|| rsx! { StyleAttribute {} })),
+        vec![r#"<span> style="--tint: var(--primary)""#.to_owned()]
+    );
+    let property = inline_styles(&render(|| rsx! { CssProperty {} }));
+    assert_eq!(property.len(), 1, "{property:?}");
+    assert!(
+        property[0].contains("background-color:var(--primary)")
+            && property[0].contains("width:6px"),
+        "{property:?}"
+    );
+    let second = render(|| rsx! { SecondRoot {} });
+    assert!(second.root().attr("style").is_none());
+    assert_eq!(
+        inline_styles(&second),
+        vec![r#"<span> style="--tint: var(--primary)""#.to_owned()]
+    );
+    let clean = render(|| rsx! { StatusBadge { status: StatusBadgeStatus::Beta } });
+    assert!(inline_styles(&clean).is_empty());
+}
+
+#[test]
+#[should_panic(
+    expected = "an inline style attribute, which a strict Content-Security-Policy blocks"
+)]
+fn case_check_fails_a_component_that_renders_an_inline_style() {
+    Case {
+        name: "fixture-second-root",
+        contract: "contract\n  slot is \"tinted-strip\"\nend",
+        states: vec![("default", render(|| rsx! { SecondRoot {} }))],
+        defaults: Vec::new(),
+        columns: Vec::new(),
+        allowed_styles: &[],
+    }
+    .check();
 }
