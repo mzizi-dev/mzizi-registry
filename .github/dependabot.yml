@@ -3,6 +3,7 @@ updates:
   # npm / pnpm dependencies
   - package-ecosystem: "npm"
     directory: "/"
+    target-branch: "staging"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -50,6 +51,7 @@ updates:
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "staging"
     schedule:
       interval: "weekly"
       day: "monday"

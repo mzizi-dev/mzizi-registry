@@ -10,6 +10,11 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — Dependabot runs against `staging`, and its version bumps pass the changelog gate (2026-10-20, #508)
+
+- **`.github/dependabot.yml`.** Both update entries (npm and GitHub Actions) set `target-branch: "staging"`, so Dependabot opens its pull requests against `staging`, where this repository merges and releases, not against `main`. Pull requests already open against `main` are not retargeted by this change.
+- **`changelog / entry required` (`scripts/changelog-gate.sh`).** A pull request whose author is `dependabot[bot]` passes without a `CHANGELOG.md` entry, as it already does in `mzizi-dev/mzizi`. GitHub's generated release notes are the record of a version bump. The workflow passes the author login as `PR_AUTHOR`. Any other author still needs an entry. `scripts/changelog-gate.test.sh` gains two cases: a Dependabot bump with no entry passes, and the same change from another author fails.
+
 ### Removed — Svelte from the registry's text, doctrine, validators and tests (2026-10-20, #507)
 
 - **Doctrine, docs and README.** Svelte is no longer named as a framework or a target. `astro-vite-plus` drops its "two surfaces still carry Svelte" passage; `resolver-deployment-decision` drops `shadcn-svelte` from its verified list; `docs/pulling-in-primitives.md` drops the `svelte` tier example and its "Svelte" install section (the `optional` tier now reads "none today"); `docs/roots/RFC-roots.md` and `README.md` drop Svelte from their framework lists and from the mini-app description.

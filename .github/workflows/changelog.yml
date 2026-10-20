@@ -11,6 +11,7 @@ name: Changelog
 #
 # Exempt, and so green without an entry:
 #   - a PR labelled `no-changelog` (pure CI, lint or typo changes);
+#   - a Dependabot version bump (PR_AUTHOR is dependabot[bot]);
 #   - a PR that touches only .github/, lockfiles or lint config.
 #
 # labeled/unlabeled re-run the check when `no-changelog` is added or removed.
@@ -42,4 +43,5 @@ jobs:
         env:
           CHANGELOG_BASE: origin/${{ github.base_ref }}
           NO_CHANGELOG_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'no-changelog') }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
         run: bash scripts/changelog-gate.sh
