@@ -13,9 +13,9 @@ Mzizi is written for machine authorship, so a machine must be able to read what 
 | `harness`    | The server harness: the default (`Noop`), whether it can be removed, every event with its fields, and how secrets are excluded. |
 | `gaps`       | Where the build falls short of the standard, recorded rather than hidden.                                                       |
 
-## The server harness
+## The harness
 
-The UI harness (`useMziziHarness`) gives a component `log`, `motion` and `announce`. A server component has no screen, so only `log` carries over: `mzizi_data::harness::{Harness, Event, Noop}`. A client reports each step to whatever harness it was given. It can be plugged in (`with_harness`), adapted (implement `Harness` to forward to OpenTelemetry, `console.log` or a test recorder) or removed (the default is `Noop`, so there is no cost without one). An `Event` carries only `&'static str` names, keys and string values, so no secret, name or document can be formatted into one.
+There is one Mzizi harness, the same for the UI, the language and every server component: the `mzizi-harness` crate. The UI harness (`useMziziHarness`) gives a component a scoped `log`, a `motion` configuration and `announce`; `mzizi_harness::Harness` is those three as a Rust trait. A server has no screen, so a server component only logs (its `motion` is `Motion::STILL` and it never calls `announce`). Every server component takes a `Shared` harness (`with_harness`) and reports to it. It can be plugged in, adapted (implement `Harness` to forward to OpenTelemetry, `console.log` or a test recorder) or removed (the default is `Noop`, so there is no cost without one). An `Event` carries only `&'static str` names, keys and string values, so no secret, name or document can be formatted into one.
 
 ## How a contract is checked
 
@@ -28,4 +28,4 @@ Each crate's `tests/contract.rs` reads its contract and fails when it and the cr
 | `server/mzizi-data`    | `mzizi-data`    | none | 1.0.0   |
 | `server/mzizi-mongodb` | `mzizi-mongodb` | none | 1.0.0   |
 
-The node crates (`mzizi-assurance`, `mzizi-fundi`, `mzizi-docs`, `mzizi-discovery`) and `mzizi-activitypub` have no server contract yet.
+The node crates (`mzizi-assurance`, `mzizi-fundi`, `mzizi-docs`, `mzizi-discovery`) and `mzizi-activitypub` have no server contract yet, and do not yet plug into the harness.

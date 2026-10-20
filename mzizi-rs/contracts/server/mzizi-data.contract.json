@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "kind": "server",
   "node": null,
-  "summary": "What every Mzizi database client shares: the transport trait, the error type, the server harness and (on a Worker) the TLS socket. Nothing database-specific.",
+  "summary": "What every Mzizi database client shares: the transport trait, the error type and (on a Worker) the TLS socket. Nothing database-specific. The server harness is the separate mzizi-harness crate.",
   "implementations": {
     "rs": {
       "crate": "mzizi-data",
@@ -28,47 +28,17 @@
       "item": "pub type Result",
       "file": "src/lib.rs",
       "summary": "Result with Error."
-    },
-    {
-      "item": "pub trait Harness",
-      "file": "src/harness.rs",
-      "summary": "Receives a client's events. Pluggable, adaptable, removable."
-    },
-    {
-      "item": "pub struct Noop",
-      "file": "src/harness.rs",
-      "summary": "The harness that does nothing; the default."
-    },
-    {
-      "item": "pub struct Event",
-      "file": "src/harness.rs",
-      "summary": "One thing that happened: a static name, a level, static-keyed fields."
-    },
-    {
-      "item": "pub enum Value",
-      "file": "src/harness.rs",
-      "summary": "A field value: a static string, an integer or a flag. Never a runtime string."
-    },
-    {
-      "item": "pub fn noop",
-      "file": "src/harness.rs",
-      "summary": "The shared default harness."
     }
   ],
   "limits": [],
-  "guarantees": [
-    {
-      "id": "harness-receives-events",
-      "statement": "A harness handed to a client receives that client's events; the default harness ignores them.",
-      "tests": ["a_harness_receives_events_and_the_default_ignores_them"]
-    }
-  ],
+  "guarantees": [],
   "refusals": [],
   "harness": {
     "default": "Noop",
     "removable": true,
+    "pluggedInto": "mzizi-harness",
     "events": [],
-    "secrets": "An Event's name and field keys are &'static str, and a string field value is a &'static str, so no connection string, password, collection name or document can be formatted into one. Only integers and flags vary."
+    "secrets": "mzizi-data emits no events. It holds no state a harness could see."
   },
   "gaps": [
     "The Postgres and SQLite clients (mzizi-postgres, mzizi-sqlite) do not exist yet; nothing is stubbed.",

@@ -168,7 +168,7 @@ fn every_harness_event_is_emitted_by_the_source_with_its_fields() {
 #[test]
 fn the_harness_cannot_carry_a_runtime_string() {
     // The contract's secrecy claim rests on the Event type; hold the type to it.
-    let src = std::fs::read_to_string(crate_root().join("../mzizi-data/src/harness.rs"))
+    let src = std::fs::read_to_string(crate_root().join("../mzizi-harness/src/lib.rs"))
         .expect("mzizi-data's harness source");
     assert!(src.contains("pub name: &'static str"));
     assert!(src.contains("Str(&'static str)"));

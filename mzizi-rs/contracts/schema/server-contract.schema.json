@@ -22,16 +22,30 @@
   ],
   "additionalProperties": false,
   "properties": {
-    "$schema": { "type": "string" },
-    "name": { "type": "string", "pattern": "^server/[a-z][a-z0-9-]*$" },
-    "title": { "type": "string" },
-    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
-    "kind": { "const": "server" },
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^server/[a-z][a-z0-9-]*$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "kind": {
+      "const": "server"
+    },
     "node": {
       "type": ["string", "null"],
-      "description": "The helix node (n8-assurance …), or null for a library crate that belongs to none."
+      "description": "The helix node (n8-assurance \u2026), or null for a library crate that belongs to none."
     },
-    "summary": { "type": "string" },
+    "summary": {
+      "type": "string"
+    },
     "implementations": {
       "type": "object",
       "required": ["rs"],
@@ -42,9 +56,18 @@
           "required": ["crate", "path", "features"],
           "additionalProperties": false,
           "properties": {
-            "crate": { "type": "string" },
-            "path": { "type": "string" },
-            "features": { "type": "array", "items": { "type": "string" } }
+            "crate": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "features": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -65,7 +88,9 @@
             "type": "string",
             "description": "Path from the crate root."
           },
-          "summary": { "type": "string" }
+          "summary": {
+            "type": "string"
+          }
         }
       }
     },
@@ -77,10 +102,18 @@
         "required": ["const", "file", "value", "summary"],
         "additionalProperties": false,
         "properties": {
-          "const": { "type": "string" },
-          "file": { "type": "string" },
-          "value": { "type": "integer" },
-          "summary": { "type": "string" }
+          "const": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "value": {
+            "type": "integer"
+          },
+          "summary": {
+            "type": "string"
+          }
         }
       }
     },
@@ -91,12 +124,18 @@
         "required": ["id", "statement", "tests"],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string" },
-          "statement": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
           "tests": {
             "type": "array",
             "minItems": 1,
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "`#[test]` function names that prove it."
           }
         }
@@ -110,13 +149,21 @@
         "required": ["id", "input", "reason", "tests"],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string" },
-          "input": { "type": "string" },
-          "reason": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "input": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
           "tests": {
             "type": "array",
             "minItems": 1,
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -130,7 +177,9 @@
           "type": "string",
           "description": "What runs when no harness is given."
         },
-        "removable": { "type": "boolean" },
+        "removable": {
+          "type": "boolean"
+        },
         "events": {
           "type": "array",
           "items": {
@@ -138,22 +187,37 @@
             "required": ["name", "level", "fields"],
             "additionalProperties": false,
             "properties": {
-              "name": { "type": "string" },
-              "level": { "enum": ["Debug", "Info", "Warn"] },
-              "fields": { "type": "array", "items": { "type": "string" } }
+              "name": {
+                "type": "string"
+              },
+              "level": {
+                "enum": ["Debug", "Info", "Warn"]
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
         "secrets": {
           "type": "string",
           "description": "How the type system keeps secrets out of an event."
+        },
+        "pluggedInto": {
+          "type": "string",
+          "description": "The harness crate this component takes its harness from: always mzizi-harness."
         }
       }
     },
     "gaps": {
       "type": "array",
       "description": "Where the build falls short of the standard, recorded rather than hidden.",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     }
   }
 }

@@ -10,17 +10,18 @@
 //! This crate holds the shared parts and nothing database-specific:
 //!
 //! - [`io::Io`], the transport trait;
-//! - [`harness::Harness`], where a client reports what it did (pluggable, adaptable, removable);
 //! - [`Error`] and [`Result`];
 //! - `workers::SocketIo`, a Worker's outbound TLS socket as an `Io` (feature `workers`,
 //!   `wasm32` only).
+//!
+//! The server harness is a separate crate, `mzizi-harness`, that every server component
+//! plugs into; it is the same harness the UI and the language use.
 //!
 //! The clients are separate crates on top of it: `mzizi-mongodb` today; Postgres and SQLite
 //! would be `mzizi-postgres` and `mzizi-sqlite`. There is deliberately no query API common
 //! to a document store and a SQL database: what they share is the transport and the error
 //! type, not a query language.
 
-pub mod harness;
 pub mod io;
 
 #[cfg(all(feature = "workers", target_arch = "wasm32"))]

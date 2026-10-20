@@ -20,8 +20,8 @@ use crate::scram;
 use crate::uri::Uri;
 use crate::wire;
 use crate::{Error, Result};
-use mzizi_data::harness::{self, Event, Level, Shared, Value as Field};
 use mzizi_data::io::Io;
+use mzizi_harness::{self as harness, Event, Level, Shared, Value as Field};
 
 /// Most documents `find` returns, whatever the caller asks.
 pub const MAX_FIND_DOCS: usize = 1_000;

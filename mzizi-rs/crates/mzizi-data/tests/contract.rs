@@ -144,18 +144,8 @@ fn ids_are_unique() {
 }
 
 #[test]
-fn the_harness_cannot_carry_a_runtime_string() {
-    // The contract's secrecy claim rests on the Event type; hold the type to it.
-    let src = read("src/harness.rs");
-    assert!(src.contains("pub name: &'static str"));
-    assert!(src.contains("Str(&'static str)"));
-    assert!(!src.contains("Str(String)") && !src.contains("Str(&'a str)"));
-}
-
-#[test]
-fn the_default_harness_is_noop_and_removable() {
+fn the_data_crate_plugs_into_the_shared_harness_and_has_none_of_its_own() {
     let c = contract();
-    assert_eq!(c["harness"]["default"], "Noop");
-    assert_eq!(c["harness"]["removable"], true);
-    assert!(read("src/harness.rs").contains("pub struct Noop"));
+    assert_eq!(c["harness"]["pluggedInto"], "mzizi-harness");
+    assert!(!crate_root().join("src/harness.rs").exists());
 }

@@ -120,13 +120,13 @@ jobs:
           manifest=mzizi-rs/Cargo.toml
           agent="mzizi-registry publish-crates workflow (https://github.com/mzizi-dev/mzizi-registry)"
 
-          # Dependencies first. mzizi-ui depends on mzizi-tokens and mzizi-mongodb on
-          # mzizi-data; the other node crates stand alone (mzizi-data and mzizi-activitypub
-          # are not node crates). The two umbrellas re-export node crates, so they go last.
+          # Dependencies first. mzizi-ui depends on mzizi-tokens; mzizi-mongodb on mzizi-data and
+          # mzizi-harness; the other node crates stand alone (mzizi-activitypub, mzizi-harness and
+          # mzizi-data are not node crates). The two umbrellas re-export node crates, so they go last.
           order=(
             mzizi-tokens mzizi-ui mzizi-brand mzizi-shell
             mzizi-assurance mzizi-fundi mzizi-docs mzizi-discovery
-            mzizi-activitypub mzizi-data mzizi-mongodb mzizi-roots mzizi-roots-server
+            mzizi-activitypub mzizi-harness mzizi-data mzizi-mongodb mzizi-roots mzizi-roots-server
           )
 
           metadata=$(cargo metadata --manifest-path "$manifest" --no-deps --format-version 1)

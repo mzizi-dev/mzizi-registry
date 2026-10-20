@@ -187,9 +187,14 @@
         "level": "Debug",
         "fields": ["command", "ok", "code"]
       },
-      { "name": "mongodb.refused", "level": "Warn", "fields": ["reason"] }
+      {
+        "name": "mongodb.refused",
+        "level": "Warn",
+        "fields": ["reason"]
+      }
     ],
-    "secrets": "Events are mzizi_data::harness::Event: static names, static keys and static string values only, so a filter, name or document cannot be formatted into one. The command name is one of a fixed list, else \"other\"."
+    "secrets": "Events are mzizi_harness::Event: static names, static keys and static string values only, so a filter, name or document cannot be formatted into one. The command name is one of a fixed list, else \"other\".",
+    "pluggedInto": "mzizi-harness"
   },
   "gaps": [
     "workers::Mongo (the pooled Worker client) does not yet take a harness; only Connection does.",

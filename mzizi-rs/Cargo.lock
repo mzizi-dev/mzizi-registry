@@ -853,6 +853,13 @@ name = "mzizi-fundi"
 version = "0.3.0"
 
 [[package]]
+name = "mzizi-harness"
+version = "0.3.0"
+dependencies = [
+ "serde_json",
+]
+
+[[package]]
 name = "mzizi-mongodb"
 version = "0.3.0"
 dependencies = [
@@ -862,6 +869,7 @@ dependencies = [
  "hmac",
  "js-sys",
  "mzizi-data",
+ "mzizi-harness",
  "pbkdf2",
  "serde_json",
  "sha2",
