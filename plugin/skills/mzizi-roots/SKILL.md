@@ -1,6 +1,6 @@
 ---
 name: mzizi-roots
-description: Use this skill for anything involving Mzizi's components — using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (Dioxus UI and host-agnostic server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what `mzizi_get_component` returns (Rust first), the node-to-crate map, `pub const CONTRACT` checked against `dioxus-ssr` markup, the two frontend paths (Astro with Roots, or pure Rust) and app setup, reuse before build, adding a component to the registry (the node, the `.rs` and `.tsx`, `registry.json`, the per-node checklists, the 48px floor, `pnpm check` and the cargo gates), and the React/TSX build as the deprioritised secondary. Files are the data layer: there is no database.
+description: Use this skill for anything involving Mzizi's components — using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (Dioxus UI and host-agnostic server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what `mzizi_get_component` returns (Rust first), the node-to-crate map, `pub const CONTRACT` checked against `dioxus-ssr` markup, the component contracts in the registry's `contracts/` for the Mzizi Dashboard Standard (`app/`, 31 components) and the Mzizi Discover Standard (`discover/`, 16 components with the detail pattern and the canonical Open in Mukoko link; public discover pages, no script, the same size on every pointer, server-filled shells): read one before building or changing a `@bundu/ui` component; no-JS fallback, density and brand-overlay rules, the frontend paths (pure `.astro` from the registry via `mzizi add --target astro`, Astro with Roots, or pure Rust; Next.js adopts through the registry's `.tsx`) and app setup, reuse before build, adding a component to the registry (the node, the `.rs` and `.tsx`, `registry.json`, the per-node checklists, the 48px floor, `pnpm check` and the cargo gates), and the React/TSX build as the deprioritised secondary. Files are the data layer: there is no database.
 user-invocable: true
 ---
 
@@ -17,8 +17,10 @@ the crates in its `mzizi-rs/` workspace. The plan is `docs/roots/RFC-roots.md` t
 components are **the React build**: they keep working for existing React apps, and they are
 deprioritised, so no new work goes into them.
 
-This skill describes registry `main` at `6663cb5` (2026-09-29), the crates published to
-crates.io at **0.1.0** on 2026-09-29, and `mzizi-mcp` 0.11.0. It replaces three 0.7.0 skills:
+This skill describes registry `main` at `6663cb5` (2026-09-29) and its `contracts/` at
+`b17bafc` (2026-10-04: the Dashboard Standard from #406, the Discover Standard from #415, and
+every `since` at `@bundu/ui` 0.3.0 from #419), the crates published to crates.io at **0.1.0**
+on 2026-09-29, and `mzizi-mcp` 0.11.0. It replaces three 0.7.0 skills:
 `scaffold-component` (now "Contributing a component"), `simplify` (now "Reuse before build")
 and the frontend half of `ecosystem-app-setup` (now "Starting an app"). Tokens, brand and the
 Ubuntu constraints are in the `mzizi-design` skill.
@@ -158,7 +160,8 @@ What a Roots UI component looks like:
 
 ## The two frontend paths
 
-The frontend is either **Astro with Roots underneath** or **pure Rust end to end**.
+The frontend is either **Astro** (pure `.astro` components, or Roots rendered underneath) or
+**pure Rust end to end**.
 
 - **Pure Rust.** A Dioxus app depends on the crates and mounts the components on web (wasm),
   desktop or mobile. Every component supports this today.
@@ -169,8 +172,29 @@ The frontend is either **Astro with Roots underneath** or **pure Rust end to end
   custom element. **Not packaged yet**: the wrapper crate (`mzizi-islands`) is proposed for
   batch 2 of the RFC.
 
-Astro has no `.astro` components to install. `mzizi add` refuses an Astro target and names the
-gap. There is no React, Svelte or Vue layer under Astro.
+- **Astro, pure `.astro` components** (mzizi-registry #397, owner decision 2026-10-04). The
+  registry is the single source of every component in every format: `.tsx`, `.rs`, `.astro`
+  (and `.mz`, the Mzizi language, as it lands). A component's `.astro` sits beside its `.tsx`
+  and `.rs` (`components/registry/n<N>-*/<name>.astro`), pure Astro with no React, Svelte or
+  Vue under it and no client JavaScript unless its contract allows one enhancement script.
+  Install with `mzizi add <name> --target astro` (inferred in an Astro project, even one with
+  React islands): it reads `api.mzizi.dev/v1/astro/<name>` and writes the component,
+  its flat-imported siblings (`./button.astro`, `./ui-utils`, `./server-table`) and any brand
+  asset into `src/components/mzizi/`. A component with no `.astro` is refused by name, never
+  replaced by its `.tsx`. `mzizi_get_component` returns the Astro block too.
+
+The Mzizi Dashboard Standard's app components (`app-*`, plus the primitives `button`, `badge`,
+`card`, `alert`, `input`, `label`, `skeleton`), the Mzizi Discover Standard's components
+(`discover-*`, including the detail pattern) and the marketing-site components (`site-*`) all
+have an `.astro` AND a `.tsx` in the registry (the `ui/` family's Astro ports keep the
+registry's own `.tsx`, which share only what their contract's `identity` says), each held to
+its contract ("The Dashboard and Discover Standards' contracts" below). `@bundu/ui`
+(`@bundu/ui/app/*`, `@bundu/ui/discover/*`) is BUILT from these files at a pinned registry
+commit, and its CI fails on drift; a Next.js app adopts the same design through the registry's
+`.tsx` (`mzizi add app-data-table --target tsx` or
+`npx shadcn add` of `api.mzizi.dev/v1/ui/<name>`). Use them as they are: do not
+fork, restyle or wrap the shell or a component; fix it upstream in the registry (contract,
+`.astro` and `.tsx` together), in the same change.
 
 ## Starting an app
 
@@ -340,6 +364,184 @@ contracts (`example` and `ensure`, RFC-0011) apply to a Mzizi `service`, not to 
 crates. No component lowers to Rust yet (only a Mzizi `service` does, to a local axum
 package), so `mz contract` does not read a Roots `CONTRACT`.
 
+### The Dashboard and Discover Standards' contracts
+
+The registry's
+[`contracts/`](https://github.com/mzizi-dev/mzizi-registry/tree/main/contracts) holds a
+machine-readable, versioned contract for every component of `@bundu/ui` (built in
+`mzizi-dev/packages-npm`), in two families of one format:
+
+- **`app/`, the Mzizi Dashboard Standard** (since registry `a298a4e`, 2026-10-04,
+  mzizi-registry #404): the one dashboard design for every product in the Bundu ecosystem,
+  with each brand's mineral as an overlay (docs.mzizi.dev/patterns/dashboard-standard). Its 31
+  contracts are the server-rendered app components (`@bundu/ui/app/*.astro`): the shell, the
+  page and data patterns, and seven primitives.
+- **`discover/`, the Mzizi Discover Standard** (since registry `0bea10c`, 2026-10-04,
+  mzizi-registry #415, tracking issue #413): one design for every public discover and browse
+  page in the Mukoko family (docs.mzizi.dev/patterns/discover-standard). Its 11 contracts are
+  the Discover components (`@bundu/ui/discover/*.astro`). "The Discover Standard" below says
+  what is different.
+
+| File                                              | What it is                                                                         |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `contracts/schema/component-contract.schema.json` | the format, one for both families                                                  |
+| `contracts/app/<name>.contract.json`              | one Dashboard Standard component's contract                                        |
+| `contracts/discover/<name>.contract.json`         | one Discover Standard component's contract                                         |
+| `contracts/site/<name>.contract.json`             | one marketing-site component's contract                                            |
+| `contracts/ui/<name>.contract.json`               | one Astro port of a registry primitive (native select, segmented control, …)       |
+| `contracts/index.json`                            | all 59 contracts with their version and their `.astro`, `.tsx` and `.rs` items     |
+| `contracts/README.md`                             | the coverage tables, the recorded gaps, the shared rules, how to change a contract |
+
+**Read the contract before you build or change a `@bundu/ui` component, in any language.** It is
+the specification: `props` and `slots` (types, required, defaults, closed `values`; the
+`.astro` file's props and slots must be exactly these), `behaviour`, `states` (named fixtures,
+`default` required; every runner renders every state), `accessibility` (roles, keyboard,
+focus, ARIA, WCAG 2.2 criteria), `density`, `theming`, `noJs`, `responsive`, the `contract`
+block and `checks` (selector assertions on the rendered markup). `implementations` names the
+Astro export and the `.tsx` and `.rs` siblings, with what they share (`identity`: `slot`,
+`slot+role` or `slot+variants`) and their `divergences`; items under `related` look similar
+and have a different contract, so they are not implementations. `implementations.astro`
+gives the package, the export and `since`, which is `@bundu/ui` **0.3.0 for every contract in
+both families** (mzizi-registry #419): the next `@bundu/ui` release, one minor above 0.2.0 on
+npm. `gaps` records where the current build falls short.
+
+Four fields are requirements. packages-npm's contract test evaluates the first three on the
+rendered Astro build; the responsive rules are prose. The values below are the Dashboard
+Standard's; the Discover Standard's differ (below):
+
+- **No-JS fallback.** `noJs.script` is `none` (no script) or `enhancement` (one script, and
+  everything in `noJs.without` works when it does not run). Only AppShell and CommandPalette
+  are `enhancement`; every other app component ships no script.
+- **Density.** Each row gives a part's height in px for a fine pointer and a coarse one
+  (touch), read from the rendered classes (`h-N`, `min-h-N`, `size-N` = N×4;
+  `pointer-coarse:` for touch). Dashboards are dense on a mouse and 44–48px on touch: the app
+  Button is 36px fine (32 `sm`, 40 `lg`) and 48px coarse (44 `sm`), with the small radius,
+  and nav rows are 32 / 44. That is the contracts' rule for `@bundu/ui/app`, not the registry
+  primitives' 48px floor. A control under 44px on touch is listed in `gaps`, not hidden.
+- **Theming.** A brand overlay changes colour only: `--primary`, `--ring`, AppShell's
+  `--app-accent` and the brand mark. Layout never varies by brand. A mineral may be named only
+  as one of the component's declared `statusColours`; any other mineral class, or any colour
+  value, fails (the `mzizi-design` skill).
+- **Responsive.** Each contract's rules from 320px up.
+
+In both families the tests also fail **any inline `style` attribute** on a rendered element, so
+a page's Content-Security-Policy can keep `style-src 'self'` with no
+`style-src-attr 'unsafe-inline'`: custom properties go through classes or data attributes
+(AppShell's `data-accent`), sizes through classes or SVG geometry (BarChart). JSON-LD
+(`type="application/ld+json"`) is data and does not count as a script.
+
+**How they relate to `CONTRACT` and the language.** The `contract` field is a
+`contract … end` block in the same clause grammar as a Roots `pub const CONTRACT` (RFC-0006
+and RFC-0010), restricted to what applies to rendered markup: subjects `slot`, `role`,
+`label`, `class`, `portal`, `<element> "<text>"`, `uses <data-slot>` and `when <state> …`;
+predicates `is`, `contains`, `not_empty`, `in`, `uses "--token"`, `min_height` and `shows`. As
+in the language, **a clause, check or density row a runner cannot evaluate fails** (FM-12).
+The registry's own suites evaluate them: `__tests__/astro/contracts.test.ts` renders every
+`.astro` in every state (Astro's container, no renderer), `__tests__/contracts/
+tsx-contracts.test.tsx` renders every `contract`-identity `.tsx` with the same runner
+(`contracts/runner.ts`), and `__tests__/contracts/contracts.test.tsx` validates every contract
+against the schema and the grammar and checks each identity-only sibling. packages-npm's
+`src/app/contracts.test.ts` runs the same contracts again on the built package. A crate's own `CONTRACT`
+and `tests/contract.rs` still run as before.
+
+Every contract has an `.astro` (`implementations.astro.registry`). The seven app primitives'
+`.tsx` are the registry's own `button`, `badge`, `card`, `alert`, `input`, `label` and
+`skeleton`, which share only their identity (the contract lists the divergences), as do the
+`ui/` family's; every other `.tsx` (`app-*`, `discover-*`, `site-*`) has
+`identity: "contract"`, held to the whole contract exactly as the Astro build is. A `.rs`
+exists in `mzizi-ui` for `button`, `badge`, `card`, `input`, `label` and `safe-area-frame`;
+mzizi-registry #401 tracks Rust ports of the rest, done when each passes the contract.
+
+### The Discover Standard
+
+The 11 Discover Standard list-page contracts in `discover/` and the node each declares (the detail pattern below adds five more). DiscoverShell's `kind` is `shell`;
+the other ten are `pattern`s.
+
+| Contract                    | Component       | Node | What it is                                                                                    |
+| --------------------------- | --------------- | ---- | --------------------------------------------------------------------------------------------- |
+| `discover/discover-shell`   | DiscoverShell   | N7   | the frame: skip link, mineral strip, header (brand, "Main" nav, one action), `<main>`, footer |
+| `discover/discover-meta`    | DiscoverMeta    | N6   | the `<head>` tags: title, description, robots, canonical, Open Graph, the X card, JSON-LD     |
+| `discover/discover-hero`    | DiscoverHero    | N6   | breadcrumbs, eyebrow, the page's one `<h1>`, lead, the search box and actions                 |
+| `discover/discover-search`  | DiscoverSearch  | N6   | the one search box: a `role="search"` GET form, so every search is a URL                      |
+| `discover/category-chips`   | CategoryChips   | N6   | the category links as a named navigation landmark; chips wrap                                 |
+| `discover/category-chip`    | CategoryChip    | N6   | one category link, with an optional count; a link, never a button                             |
+| `discover/discover-section` | DiscoverSection | N6   | one band: eyebrow, heading, description and "See all" over its content                        |
+| `discover/result-grid`      | ResultGrid      | N6   | a polite status line, the cards, the empty state and "load more"; `grid`, `list` or `rail`    |
+| `discover/discover-card`    | DiscoverCard    | N6   | one card for every page, variants `article`, `event`, `circle`, `place`                       |
+| `discover/load-more`        | LoadMore        | N6   | cursor pagination: one `rel="next"` link to `?cursor=…`                                       |
+| `discover/open-in-app`      | OpenInApp       | N6   | "Open in Mukoko": an https link into the super-app, with one line saying what happens         |
+
+Same format, schema, clause grammar and runners as the Dashboard Standard. What the Discover
+contracts state differently:
+
+- **What it is for.** Public discover and browse pages in the Mukoko family (circles, news,
+  events, weather, and the super-app on the web), not admin or operator dashboards. It reuses
+  the Dashboard Standard where they overlap: ResultGrid's `empty` slot takes `app/empty-state`
+  or `app/state-message`, and `related` names `app/filter-bar` and `app/pagination` as similar
+  components with a different contract.
+- **No script at all.** Every Discover contract's `noJs.script` is `none`; there is no
+  `enhancement` like AppShell's or CommandPalette's. Views are URLs, not client state: search
+  is a GET form (`?q=`, with no `cursor`, so a new search starts at the first page), a category
+  is a link, and paging is LoadMore's `rel="next"` link to `?cursor=`.
+- **The same size on every pointer.** In every Discover density row `fine` equals `coarse`:
+  48px for the search field and its button, "See all", LoadMore, OpenInApp and DiscoverCard's
+  app link; 44px for chips, the navigation links and the home link. Discover pages are not
+  dense on a mouse, unlike the Dashboard Standard (most controls 32–40px on a fine pointer).
+- **Theming.** The brand-overlay rule is the same (colour only, no colour values, a mineral
+  only as a declared status colour), but there is no AppShell `--app-accent`. A brand shows in
+  DiscoverShell's `brand` slot (its mark) and in whatever primary action its `action` slot
+  holds; the frame, header, navigation and footer are identical in every brand. `--primary` reaches only
+  DiscoverHero's wash (`gradient-showcase`), DiscoverCard's monogram and `brand` badge tone,
+  and OpenInApp's `primary` variant. Chips, sections and LoadMore are neutral in every brand,
+  and DiscoverSearch follows the brand only in its focus ring (`--ring`). Only DiscoverCard
+  declares status colours (`cobalt`, `malachite`, `gold`, `terracotta`), for its badge tones.
+- **Server-filled shells.** Every Discover component also works in an Astro page built once
+  with `{{placeholders}}` and filled by a server, as circles.mukoko.com's Rust Worker does:
+  text props are plain strings, text that fills to `""` hides itself, and state switches are
+  attributes styled by classes (ResultGrid, DiscoverSection and LoadMore `state`, DiscoverCard
+  `badgeTone`, CategoryChip `current`). CategoryChip, DiscoverCard, DiscoverHero, LoadMore and
+  ResultGrid have a `template` state with placeholders, rendered like every other state.
+  DiscoverCard and CategoryChip render their own `<li>`, so they repeat as fragments.
+- **One card.** DiscoverCard's `variant` changes emphasis, never structure. Its title is the
+  one primary link, stretched over the card; other actions stay separately focusable.
+- **OpenInApp's `href` is https** (a universal link or a server redirect), never a bare
+  `mukoko://` link, which does nothing without the app.
+- **No siblings and no gaps yet.** No `.tsx` or `.rs` implements a Discover contract, and none
+  records `gaps`. A React or Rust port is done when it passes the same contract.
+
+**Upstream first** (registry `CONTRIBUTING.md`, from #415, for both families): a component an
+app needs that Mzizi does not have, or a change to one it has, goes upstream immediately: its
+contract in the registry, its build in `@bundu/ui` and its page on docs.mzizi.dev. An app keeps
+a local copy only while that upstream pull request is open, marked at the top of the file with
+`TODO(mzizi): <upstream PR URL>`.
+
+### Changing a contract
+
+1. Edit `contracts/<family>/<name>.contract.json` in the registry and bump its `version`:
+   major when a clause, prop, slot or state is removed or narrowed, minor when one is added,
+   patch for prose. A new family also needs its directory in `FAMILIES` in
+   `__tests__/contracts/contracts.test.tsx` and in packages-npm's `scripts/contract-paths.mjs`.
+2. Update `contracts/index.json` and the README's coverage table for that family. The test
+   fails if either disagrees.
+3. Run `pnpm test` in the registry, then `pnpm contracts:fetch <branch>` and `pnpm test` in
+   packages-npm. The Astro build must pass the new contract before either side merges. Never
+   edit the copy in packages-npm.
+
+**The detail pattern** (mzizi-registry #429; docs.mzizi.dev/patterns/discover-detail): the
+page for one item reached from a discover page uses five more `discover/` contracts, each an
+`.astro` and a `.tsx`: `detail-hero` (the page's only `<h1>`, when/where, lead, image or media
+slot), `breadcrumb` (named `<nav>`, `aria-current="page"`, BreadcrumbList JSON-LD), `meta-list`
+(a `<dl>` of facts), `detail-actions` (Open in Mukoko first, then secondary and share links; no
+script) and `related-rail` (DiscoverCards; a scroll-snap row on phones, a grid from 48rem;
+hidden when empty).
+
+**Open in Mukoko** is one canonical https universal link, `mukoko.com/open/<service>/<id>`
+(`openInMukokoUrl` in `discover-open-link.ts`; `@bundu/ui/discover/open`). `open-in-app` 1.1.0
+and `detail-actions` take `service` (`news`, `events`, `weather`, `circles`) and `id`; `href` is
+only an override. The apps claim `mukoko.com/open/*` as universal and app links; on the web a
+resolver (mukoko-dev/super-app-web `/open/*`) sends the reader to the service's page. Never a
+bare `mukoko://` link.
+
 ## Reuse before build
 
 **The simplest change is the one you don't write.** Reuse before you build, compose before you
@@ -355,7 +557,7 @@ a page, and during any refactor.
 2. **Styles are tokens.** Never hardcode a colour, radius, spacing, or motion value —
    consume `var(--…)` (or the `mzizi-tokens` consts in Rust). N1 is the only layer allowed to
    define values, so a rebrand is one edit. A new colour goes in the registry's
-   `lib/tokens/palette.source.ts`, and `pnpm tokens:sync` regenerates `globals.css`, the Rust
+   `lib/tokens/palette.source.ts`, and `pnpm tokens:sync` regenerates `styles/globals.css`, the Rust
    tokens and the other emitters from it.
 3. **Compose, don't implement.** A page (N6) is a composition of N2 primitives and N3 brand
    components — never inline a `<button>`, a card, or an SVG. Pull spinners, skeletons, and
@@ -389,8 +591,11 @@ a page, and during any refactor.
 ## Contributing a component
 
 **A component is a real file.** `components/registry/n<N>-<label>/<name>.rs` (Rust, compiled by
-the node's crate in `mzizi-rs/`) and, for the React build, `<name>.tsx` beside it, which the
-Next.js build compiles and typechecks. An error in either fails CI.
+the node's crate in `mzizi-rs/`) and, for the React build, `<name>.tsx` beside it, which
+`pnpm typecheck` (`tsc --noEmit`) and `pnpm lint` check. An error in either fails CI. The
+registry has no app to build: CI's `Rust` job runs `cargo fmt`, `check`, `clippy` and the
+contract tests, and its `Build` job runs `pnpm build`, which runs every generator in write mode
+and fails if that changes a committed file.
 
 | File                                          | What it is                                                        |
 | --------------------------------------------- | ----------------------------------------------------------------- |
@@ -456,7 +661,8 @@ no helpers shared between components. `.ts` is for a non-rendering module.
 
 That is the authoring step. There is no row to insert and no registration to perform before
 writing code: the file _is_ the component, and `cargo test` (for the `.rs`), `pnpm typecheck`
-and `pnpm build` (for the `.tsx`) are what tell you it is real.
+and `pnpm lint` (for the `.tsx`) and `pnpm build` (every derived artifact regenerated, with no
+diff) are what tell you it is real.
 
 Naming: N3 brand components take a `mzizi-` prefix. (Components formerly named `nyuchi-*` are
 `mzizi-*`, and the old names redirect.) Everything else is the bare name, matching what a
@@ -527,7 +733,7 @@ pnpm registry:metadata     # derive title, categories, docs, author
 pnpm registry:normalize    # canonical ordering
 pnpm registry:validate     # every item resolves on disk; every dependency addressable
 pnpm registry:verify       # the CI drift gate
-pnpm typecheck && pnpm build
+pnpm typecheck && pnpm lint && pnpm build   # build: every generator; commit what it writes
 ```
 
 Follow the criteria for the chosen node.

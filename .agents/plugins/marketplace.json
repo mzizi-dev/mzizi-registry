@@ -1,0 +1,20 @@
+{
+  "name": "mzizi",
+  "interface": {
+    "displayName": "Mzizi"
+  },
+  "plugins": [
+    {
+      "name": "mzizi",
+      "source": {
+        "source": "local",
+        "path": "./plugin"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
