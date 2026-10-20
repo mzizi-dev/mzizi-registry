@@ -1,0 +1,47 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "mzizi",
+  "version": "1.3.0",
+  "description": "Build with Mzizi: the seven Mzizi agent skills (@nyuchi/mzizi-skills 0.11.0) in four categories: dev (digital-hygiene, progress-report), design (mzizi-design), language (mzizi-language) and build (mzizi-roots, mzizi-backend, discoverability), and the Mzizi MCP at mcp.mzizi.dev (free, no account; sign-in only for the Fundi tools). The 21-family palette, Mzizi Roots components in Rust first, the Mzizi language, the Ubuntu doctrine, and how every agent works (disk hygiene and progress reports). Owned and operated by Mzizi; live at mzizi.dev.",
+  "author": {
+    "name": "Mzizi",
+    "email": "support@bundu.org",
+    "url": "https://mzizi.dev"
+  },
+  "homepage": "https://mzizi.dev",
+  "repository": "https://github.com/mzizi-dev/mzizi-registry",
+  "license": "Apache-2.0",
+  "keywords": [
+    "mzizi",
+    "design-system",
+    "skills",
+    "mcp",
+    "rust",
+    "dioxus",
+    "mzizi-roots",
+    "mzizi-language",
+    "registry",
+    "ubuntu",
+    "codex",
+    "chatgpt"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Mzizi",
+        "shortDescription": "Mzizi skills and MCP",
+        "longDescription": "Build with Mzizi, the programming language and the components that support it. The plugin carries the seven Mzizi agent skills (@nyuchi/mzizi-skills 0.11.0) in four categories: dev (digital-hygiene, progress-report), design (mzizi-design), language (mzizi-language) and build (mzizi-roots, mzizi-backend, discoverability), and connects the Mzizi MCP server at https://mcp.mzizi.dev/mcp: the registry (components, Rust first), the brand tokens, the DNA-helix architecture, the Ubuntu doctrine, the skills and the docs. Every tool is free with no account except mzizi_fundi and mzizi_report_issue, which act as your Mzizi console user and need sign-in. The language is a Phase 0 prototype: the mzizi-language skill says what it can and cannot do today.",
+        "developerName": "Mzizi",
+        "category": "Developer Tools",
+        "capabilities": ["Search components", "Read skills, tokens and docs"],
+        "websiteURL": "https://mzizi.dev",
+        "defaultPrompt": [
+          "Load the Mzizi dev skills and check this repository's disk hygiene.",
+          "Find the Mzizi component for a status badge, Rust first.",
+          "Check this colour pair against the Mzizi contrast floor."
+        ],
+        "brandColor": "#4A616B"
+      }
+    }
+  }
+}

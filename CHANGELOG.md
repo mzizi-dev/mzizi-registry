@@ -10,6 +10,20 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the public `mzizi` plugin carries skills 0.11.0 (seven skills) and installs in Codex and ChatGPT too; plugin 1.3.0 (2026-10-20, #PRNUM)
+
+- **The skills catch up with npm.** `@nyuchi/mzizi-skills` moves from `^0.8.1` (0.8.5, five skills) to `^0.11.0`, the latest on npm. A `^0.8.1` range never accepts 0.9 or later, so the plugin, `lib/skills.generated.ts` and, after the gateway re-pins, `api.mzizi.dev/v1/skills` had stayed on 0.8.5 since 0.9.0 shipped on 5 October.
+  - `plugin/skills/` and `lib/skills.generated.ts` are regenerated with `pnpm plugin:skills` and `pnpm skills:generate`; both `--check` gates pass.
+  - **Added skills:** `digital-hygiene` and `progress-report`, the `dev` skills every Mzizi repository's `AGENTS.md` asks an agent to load first.
+  - **Changed skills:** `mzizi-roots`, `mzizi-design` and `discoverability`. `mzizi-language` and `mzizi-backend` are unchanged.
+  - The published 0.11.0 `mzizi-roots` still installs the Roots crates as `version = "0.1"` and names Svelte once. agent-tools `staging` fixes both (`0.3`, and no Svelte), and they reach this copy when `@nyuchi/mzizi-skills` 0.12.0 is published and this dependency is bumped again.
+- **Plugin 1.3.0.** `plugin/.claude-plugin/plugin.json` and the marketplace entry name skills 0.11.0 and the seven skills by category. Claude Code pins a plugin to its `version`, so the bump is what lets an installed copy update.
+- **Added: the same plugin for Codex and ChatGPT**, in OpenAI's portable Agent Plugins layout:
+  - `plugin/plugin.json`, the portable manifest, with an `extensions["com.openai"].interface` listing;
+  - `plugin/mcp.json`, the `mzizi` server at `https://mcp.mzizi.dev/mcp` over `streamable-http`;
+  - `.agents/plugins/marketplace.json`, the repo marketplace: `codex plugin marketplace add mzizi-dev/mzizi-registry`, then install `mzizi` from `/plugins`.
+  - Claude Code reads neither `plugin.json` at the plugin root nor `mcp.json` without a dot, so the Claude plugin is unchanged by them; `__tests__/plugin-manifest.test.ts` keeps the two manifests' name, version, description and MCP URL equal.
+- **README:** the MCP section said the server needed a WorkOS signup and listed three tools by names it never had (`list_components`, `get_component`, `list_collections`) with `"type": "url"`. It now says the server is free except the two Fundi tools, points at `tools/list` and `catalogue.json`, and documents the plugin for Claude Code, Codex and ChatGPT, with a link to the new connection guide on docs.mzizi.dev.
 ### Security — `hono` 4.13.13 through the override, for GHSA-5r4p-p66f-jhc7 (2026-10-20, #521)
 
 `hono` 4.12.4 to 4.13.10 can let a request bypass middleware on static paths (moderate). It reaches the registry only as a dev dependency, through `shadcn` → `@modelcontextprotocol/sdk`. The `hono` override moves from `^4.13.5` to `^4.13.11`, and the lockfile resolves 4.13.13. Without it `pnpm audit --audit-level=moderate` fails, which blocks the pre-commit hook and the Security Audit job on every branch, and it failed CI on `main` for the 4.9.0 release, so `v4.9.0` was not tagged. No published package or API changes.
