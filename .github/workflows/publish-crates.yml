@@ -126,6 +126,7 @@ jobs:
             mzizi-tokens mzizi-ui mzizi-brand mzizi-shell
             mzizi-assurance mzizi-fundi mzizi-docs mzizi-discovery
             mzizi-activitypub mzizi-roots mzizi-roots-server
+            mzizi-data
           )
 
           metadata=$(cargo metadata --manifest-path "$manifest" --no-deps --format-version 1)
@@ -155,6 +156,12 @@ jobs:
 
           for crate in "${order[@]}"; do
             version=$(jq -r --arg n "$crate" '.packages[] | select(.name == $n) | .version' <<<"$metadata")
+            # A crate that sets `publish = false` is listed above so the membership check holds,
+            # and is never uploaded. mzizi-data is one: decision 6.3 is still open.
+            if [ "$(jq -r --arg n "$crate" '.packages[] | select(.name == $n) | .publish' <<<"$metadata")" = "[]" ]; then
+              echo "$crate sets publish = false; not uploading it."
+              continue
+            fi
             status=$(curl -sS -o /dev/null -w '%{http_code}' -A "$agent" \
               "https://crates.io/api/v1/crates/$crate/$version")
             if [ "$status" = "200" ]; then

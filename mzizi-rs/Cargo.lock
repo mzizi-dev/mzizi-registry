@@ -660,6 +660,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "mzizi-data"
+version = "0.3.0"
+
+[[package]]
 name = "mzizi-discovery"
 version = "0.3.0"
 

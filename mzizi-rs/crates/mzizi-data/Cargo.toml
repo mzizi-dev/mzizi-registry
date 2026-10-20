@@ -1,0 +1,28 @@
+[package]
+name = "mzizi-data"
+description = "Mzizi data layer: the local, edge and cloud fetch cascade, sync reconciliation, staleness and optimistic updates. Not published, and not wired into any app yet."
+readme = "README.md"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+# Not published. The owner's brief of 2026-10-20 leaves open whether this is a production
+# or a research dependency (decision 6.3, mzizi-registry#503), so no crate ships it by
+# accident: `publish = false` also keeps it out of `publish-crates.yml`'s upload loop.
+publish = false
+
+[lints]
+workspace = true
+
+# NO DEPENDENCIES, AND THAT IS THE DESIGN.
+#
+# This crate is compiled to `wasm32-unknown-unknown` and loaded by a browser on a metered,
+# low-end connection, so every byte of a dependency is paid for by the user. The core is
+# plain Rust and `std` only. Its async surface is `impl Future` in the traits, not an
+# executor, and its tests drive futures with `std::task::Waker::noop()`, so no dev
+# dependency is needed either. Storage adapters (SQLite, IndexedDB, D1, KV, Supabase) are
+# later crates or modules that implement `Layer`; none of their clients belongs here.
+[dependencies]
