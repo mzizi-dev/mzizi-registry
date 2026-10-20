@@ -14,6 +14,10 @@ homepage.workspace = true
 # accident: `publish = false` also keeps it out of `publish-crates.yml`'s upload loop.
 publish = false
 
+[features]
+# Exposes `MemoryLayer::set_available` and `MemoryLayer::peek`, for a host's own tests.
+test-util = []
+
 [lints]
 workspace = true
 
