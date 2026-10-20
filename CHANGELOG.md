@@ -10,6 +10,19 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `markdown-renderer` 1.2.1: four parser bugs from the `@bundu/ui` 0.6.0 review; `brand-mark` 1.1.1: an unknown brand is a clear error (2026-10-20, #517)
+
+Found by the code review of `@bundu/ui` 0.6.0 (mzizi-dev/packages-npm#63), which builds from registry v4.8.0. Each was confirmed by a failing test on `staging` first. The parser fixes are in `markdown-parse.ts` and the Rust parser alike, each with a shared fixture case that both run (81 cases in all).
+
+- **Rich text: a list placed directly in a list.** Google Docs and Word paste a nested list as a child of the `<ul>` or `<ol>`, between its `<li>`s, not inside one: `<ul><li>a</li><ul><li>nested</li></ul><li>b</li></ul>`. Only `<li>` children were read, so the nested list and its words were lost. It now nests under the item before it, as a browser draws it. One that comes before any item gets an item of its own with no line (the contract's gaps say it shows an empty marker).
+- **Rich text: `<br>` in `<pre>`.** A code block read its text without its `<br>`s, so `<pre><code>line1<br>line2</code></pre>` showed `line1line2`. A `<br>` is now a line break in it, including one at the start (only a source newline right after `<pre>` is dropped, as a browser drops it), and a space in inline `<code>`.
+- **A numbered line in a paragraph.** A line such as `1984. was a year` or `2) or two` ended the paragraph and started a list. As in CommonMark, a list now interrupts a paragraph, or the text of the list item before it, only when its first item has text and, if numbered, is numbered 1. So `Text\n1984. was a year` stays one paragraph of two lines, `- a\n  2) foo` is one item of two lines, and a line that is only a marker, such as `-`, after a paragraph line no longer draws an empty bullet. After a blank line, or numbered 1, it is still a list, and a bullet with text still interrupts.
+- **List indentation.** An item indented between two open levels (`- a\n    - b\n  - c`) started a second nested list under `a`. It now joins the nested list it falls inside, so `a` holds one list of `b` and `c`, and an item two spaces deeper than it nests under it. Nesting is still by indentation, not CommonMark's content columns (a contract gap now says so).
+- **BrandMark.** `<BrandMark brand>` with a brand outside the shipped set (from untyped data, or one whose icon pair has not shipped, such as `"bundu"`) threw `Cannot read properties of undefined` during render, in both the Astro and React builds. It now throws `BrandMark: unknown brand "bundu"; expected one of "nyuchi", "mukoko"`, and a name such as `toString` no longer reaches the object's prototype. It shows no other brand's mark in its place. `contracts/app/brand-mark` 1.1.1 says so.
+- `contracts/ui/markdown-renderer` 1.2.1 states these rules in its behaviour and gaps; no state or check changed. Shared fixture cases also pin, in both languages, that a self-closing `<svg/>` or `<math/>` inside a paragraph is closed (already so on `staging`), and that a self-closing slash on `<iframe/>` or `<textarea/>` is ignored, as a browser ignores it, so they drop to their end tag (per the contract, checked against parse5).
+
+Not changed, because `staging` already has them (#483): a tab between a link's address and its title ends the address (the title is dropped and the hover title is the address, per the contract), and backslash escapes in an address are undone (`[a](foo\)bar)` goes to `foo)bar`, still through the link allow-list).
+
 ### Added — `markdown-renderer` 1.2.0: a link shows its address on hover, normalised, with an IDN host as punycode (2026-10-20, #483)
 
 Closes #470, a follow-up from the Toddle extension's review (#460): its old flag renderer showed each link's address on hover, and `markdown-renderer` 1.1.0 did not.
