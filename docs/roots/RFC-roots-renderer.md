@@ -83,6 +83,15 @@ A module `html` in `mzizi-ui` (crate-internal, `pub(crate)`), written as
 Every `render` builds its markup only through these functions. A `&str` prop can therefore never
 close a quote or start a tag. Each render writes its own `class` and text through `escape_into`.
 
+**Each component carries its own copy of the writer.** A registry file is installed on its own
+(`mzizi-ui`'s `lib.rs` makes that the rule: each file self-contained), so `skeleton.rs` does not
+`use crate::html`. It holds a private inline `mod html` with `escape_into`, `open` and `close`, the
+same code as `html.rs`. `html.rs` is the reference and keeps the unit tests. The test
+`the_inline_copy_in_skeleton_matches_this_reference` in `html.rs` renders the inline copy on the five
+escaped characters and non-ASCII text, and compares it with the reference, so the copies cannot drift
+without a failing test. When the layer is shared (above), the generator could inject this copy into
+each component file from the reference, so there is one source and the copies stay generated.
+
 Once the registry has a second consumer of the layer, it becomes the public `mzizi-html` crate
 (zero dependencies), and the `mzizi-ui` copy is removed. That is a separate, deliberate release
 decision (§6), not part of this RFC's removal.
@@ -252,7 +261,7 @@ in `attach`. It also owes the same decision on the page WASM budget.
 
 ## 9. What this PR does
 
-- Adds `mzizi-ui/src/html.rs` (escaping writer, unit-tested) and `pub(crate) mod html` in `lib.rs`.
+- Adds `mzizi-ui/src/html.rs` (the reference escaping writer, unit-tested) and `#[cfg(test)] pub(crate) mod html` in `lib.rs`. It is compiled for tests only, because `render` uses the inline copy in `skeleton.rs`.
 - Adds `skeleton::RenderProps` and `skeleton::render` to the registry source
   `components/registry/n2-primitives/skeleton.rs`, regenerated into `mzizi-ui/src/generated/`.
   The Dioxus `Skeleton` stays.
