@@ -19,13 +19,17 @@
  * `pnpm tokens:verify`, and fails the build on a violation:
  *   - `kind: text` roles: |APCA Lc| >= 75 on `base` and `surface`, both themes
  *   - a `kind: text` role whose rule names `nonBody` (text that is never body copy:
- *     captions, timestamps, metadata): >= 60, APCA's minimum for non-body text
+ *     captions, timestamps, metadata): >= 60, APCA's minimum for non-body text; `nonBody`
+ *     implies that bar, so the rule sets no `min`
  *   - a foreground on its fill: >= 75
  *   - `kind: ui` roles: >= 30 on `base` and `surface`; a rule may add a WCAG 2.2 ratio
  *     (`wcag`), measured as well: `border-control` carries 3:1 for WCAG 1.4.11
  *   - a `kind: ui` role marked `decorative` is exempt, and the gate lists it: a soft
  *     hairline between regions that is never the only cue. An edge that identifies a
- *     control is `border-control`, which is held to Lc 30 (owner decision 2026-10-20, #484)
+ *     control is `border-control`, held to Lc 30 and 3:1 on every surface a control can
+ *     sit on (owner decision 2026-10-20, #484). `input`, the edge controls draw today, is
+ *     pending until slice 4 moves them
+ * The bars are `BODY`, `NON_BODY` and `UI` below; the gate reads them from here.
  *   - every size marked `floor` >= `spacing-touch-min` (48px, a floor no pack can lower)
  *   - a `derive` that no walk can satisfy is a violation naming the roles, never #000/#FFF
  * A rule may carry `pending` instead of passing only where the shortfall is a
@@ -84,25 +88,37 @@ export type RoleValue =
 
 export type ThemedValue = RoleValue | { light: RoleValue; dark: RoleValue }
 
-export type ContrastRule =
-  | {
-      /** Roles the value is measured on, as text or UI over that background. */
-      against: readonly string[]
+/** What every measured rule carries. */
+interface MeasuredBase {
+  /** Roles the value is measured on, as text or UI over that background. */
+  against: readonly string[]
+  /**
+   * Also a minimum WCAG 2.2 contrast ratio, where a WCAG criterion applies as well as the
+   * APCA bar: `border-control` carries 3 for WCAG 1.4.11 (non-text contrast, 3:1).
+   */
+  wcag?: number
+  /** Set only where the default misses its bar and the fix is an owner decision. */
+  pending?: string
+}
+
+/** A rule that measures the role. `contrastMin()` reads its bar. */
+export type MeasuredRule =
+  | (MeasuredBase & {
       /** Minimum |APCA Lc|. */
       min: number
+      nonBody?: undefined
+    })
+  | (MeasuredBase & {
       /**
-       * Also a minimum WCAG 2.2 contrast ratio, where a WCAG criterion applies as well as the
-       * APCA bar: `border-control` carries 3 for WCAG 1.4.11 (non-text contrast, 3:1).
+       * Text only: why this text is never body copy. It implies the bar: Lc 60 (`NON_BODY`,
+       * APCA's minimum for non-body text) instead of 75. An owner decision, pinned by the role tests.
        */
-      wcag?: number
-      /**
-       * Text only: why this text is never body copy. Its floor is then Lc 60 (APCA's
-       * minimum for non-body text) instead of 75. An owner decision, pinned by the role tests.
-       */
-      nonBody?: string
-      /** Set only where the default misses `min` and the fix is an owner decision. */
-      pending?: string
-    }
+      nonBody: string
+      min?: undefined
+    })
+
+export type ContrastRule =
+  | MeasuredRule
   /** Exempt from every bar, with the reason (text over imagery, for example). */
   | { exempt: string }
   /**
@@ -172,11 +188,47 @@ export interface Role {
   block: RoleBlock
 }
 
-const BODY = 75
+/** APCA Lc 75: body text, and a foreground on its fill. The gate's text floor. */
+export const BODY = 75
 /** APCA's minimum for non-body text: captions, timestamps, metadata (owner decision 2026-10-20, #484). */
-const NON_BODY = 60
-const UI = 30
+export const NON_BODY = 60
+/** APCA Lc 30: the parts of a control or focus indicator a user has to see. The gate's ui floor. */
+export const UI = 30
 const ON_PAGE = ["base", "surface"] as const
+
+/**
+ * Every surface a control can sit on: the neutral ladder from `pitch` to `raised`, the
+ * inset `muted` fill, the brand `wash`, and the shadcn and sidebar aliases of those
+ * (`background`, `card`, `popover`, `sidebar`), which a pack can remap on their own. Not here:
+ * `scrim` (translucent), the hover and selected fills (`accent`, `sidebar-accent`), the status
+ * and destructive containers (an alert's fill, not a form's) and `input` (a control's own fill).
+ */
+export const CONTROL_SURFACES = [
+  "pitch",
+  "void",
+  "base",
+  "surface",
+  "container",
+  "overlay",
+  "raised",
+  "muted",
+  "wash",
+  "background",
+  "card",
+  "popover",
+  "sidebar",
+] as const
+
+/** The floor the gate holds a kind to: 75 for text (60 for `nonBody` text), 30 for ui, none otherwise. */
+export function contrastFloor(kind: RoleKind, rule?: ContrastRule): number {
+  if (kind === "text") return rule && "against" in rule && rule.nonBody ? NON_BODY : BODY
+  return kind === "ui" ? UI : 0
+}
+
+/** The |Lc| a measured rule asks for: its `min`, or for `nonBody` text, `NON_BODY`. */
+export function contrastMin(kind: RoleKind, rule: MeasuredRule): number {
+  return rule.min ?? contrastFloor(kind, rule)
+}
 
 /** A `brand.source.ts` semantic colour, failing loudly when canon lost it. */
 function semantic(name: string) {
@@ -518,14 +570,16 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description:
-      "Placeholders, captions, timestamps and metadata that are not body copy. APCA Lc 60 on `base` and `surface`, " +
-      "APCA's minimum for non-body text; lighter than `text-secondary` (Lc 75), which body copy uses.",
+      "Placeholders, captions, timestamps and metadata that are not body copy. APCA Lc 60 (APCA's minimum for non-body " +
+      "text) and WCAG 4.5:1 (1.4.3) on `base` and `surface`, the surfaces `text-secondary` is held to; lighter than " +
+      "`text-secondary` (Lc 75), which body copy uses.",
     contrast: {
       against: ON_PAGE,
-      min: NON_BODY,
       nonBody:
         "a sub-body tier by design: placeholders, captions, timestamps and metadata, never body copy. " +
         "Its own floor of Lc 60, so it stays lighter than text-secondary (owner decision 2026-10-20, #484).",
+      // Owner decision 2026-10-20 (#484): "Add 4.5:1 too". `textRamp()` walks the tier to it.
+      wcag: 4.5,
     },
     default: { ramp: "tertiary" },
     block: "text",
@@ -671,13 +725,14 @@ export const ROLES: readonly Role[] = [
     kind: "ui",
     required: true,
     description:
-      "Decorative hairlines between regions: cards, dividers, tables. Never the only cue, and never a control's edge: " +
-      "that is `border-control`.",
+      "Decorative hairlines between regions: cards, dividers, tables. Never the only cue, and not for a control's edge: " +
+      "that is `border-control` (controls still draw theirs with `border-input` until slice 4 of #484 moves them).",
     contrast: {
       decorative:
         "a soft hairline (#E7E5E0 / #2A2927, under Lc 15 on base) that is never the only cue: a card also steps the " +
-        "surface, a divider or table rule separates content its spacing already groups, and the edge that identifies a " +
-        "control is border-control, held to Lc 30 (owner decision 2026-10-20, #484).",
+        "surface, and a divider or table rule separates content its spacing already groups. The edge that identifies a " +
+        "control is meant to be border-control (Lc 30 and 3:1); controls draw it with border-input until slice 4, and the " +
+        "gate reports input pending until then (owner decision 2026-10-20, #484).",
     },
     default: { semantic: "border" },
     block: "disputed",
@@ -689,15 +744,35 @@ export const ROLES: readonly Role[] = [
     required: true,
     description:
       "The edge that identifies a control: inputs, selects, textareas, checkboxes, radios, switch tracks. " +
-      "APCA Lc 30 and WCAG 3:1 (1.4.11, non-text contrast) on `base`, `surface` and `sidebar`: the `border` hairline " +
-      "walked toward ink in light and toward white in dark until it clears both.",
+      "APCA Lc 30 and WCAG 3:1 (1.4.11, non-text contrast) on every surface a control can sit on (`CONTROL_SURFACES`): " +
+      "the `border` hairline walked toward ink in light and toward white in dark until it clears both. No component " +
+      "uses it yet; slice 4 of #484 moves the controls onto it from `border-input`.",
     // Lc 30 alone is 1.8:1 in light, under 1.4.11's 3:1, so the role carries both bars.
-    contrast: { against: [...ON_PAGE, "sidebar"], min: UI, wcag: 3 },
-    default: { semantic: "border" },
+    contrast: { against: CONTROL_SURFACES, min: UI, wcag: 3 },
+    // The role, not the brand row: a pack that moves the hairline moves where the walk starts.
+    default: { role: "border" },
     derive: "text",
     block: "roles",
   },
-  { name: "input", group: "shadcn", kind: "surface", required: true, description: semantic("input").usage, default: { semantic: "input" }, block: "disputed" },
+  {
+    name: "input",
+    group: "shadcn",
+    kind: "surface",
+    required: true,
+    description: semantic("input").usage,
+    // Measured in its use as an edge: every control draws its border with `border-input` today.
+    contrast: {
+      against: CONTROL_SURFACES,
+      min: UI,
+      wcag: 3,
+      pending:
+        "controls draw their edge with border-input, and --input is the control's own fill (#FFFFFF / #100F0E, about Lc 0 " +
+        "on base). Slice 4 of #484 moves inputs, selects, textareas, checkboxes, radios, input-otp, combobox, toggle and the " +
+        "switch track onto border-control; until then the control edge is pending, not passing.",
+    },
+    default: { semantic: "input" },
+    block: "disputed",
+  },
 
   // ── Sidebar ──
   { name: "sidebar", group: "sidebar", kind: "surface", required: true, description: "Sidebar surface.", default: { role: "surface" }, block: "sidebar" },
@@ -711,9 +786,11 @@ export const ROLES: readonly Role[] = [
     group: "sidebar",
     kind: "ui",
     required: true,
-    description: "Decorative sidebar hairlines. An alias of `border`; a control in the sidebar uses `border-control`.",
+    description: "Decorative sidebar hairlines. An alias of `border`; a control's edge is `border-control` (from slice 4 of #484).",
     contrast: {
-      decorative: "an alias of border, the sidebar's dividers: never the only cue, and a control in the sidebar uses border-control (#484).",
+      decorative:
+        "an alias of border, the sidebar's dividers: never the only cue. A control's edge in the sidebar is meant to be " +
+        "border-control, which is measured on sidebar (#484).",
     },
     default: { role: "border" },
     block: "sidebar",

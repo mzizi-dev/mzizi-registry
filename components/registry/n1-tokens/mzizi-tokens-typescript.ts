@@ -1821,7 +1821,7 @@ export const roles = {
   "text-tertiary": {
     kind: "text",
     cssVar: "--text-tertiary",
-    light: "#797877",
+    light: "#6B6A69",
     dark: "#B3B3B1",
   },
   "hero-text": {
@@ -2304,8 +2304,8 @@ export const roles = {
   "border-control": {
     kind: "ui",
     cssVar: "--border-control",
-    light: "#8B8986",
-    dark: "#797877",
+    light: "#787774",
+    dark: "#818180",
   },
   input: {
     kind: "surface",

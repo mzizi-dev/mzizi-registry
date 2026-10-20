@@ -1183,10 +1183,13 @@ function gate(resolved: Map<string, ResolvedRole>) {
   }
   const pendingRoles = [...new Set(pending.map((p) => p.role))]
   console.log(
-    `✓ role gate: ${results.length - pending.length} of ${results.length} measurements pass, ` +
-      `${violations.length} violations, ${pendingRoles.length} pending` +
-      (pendingRoles.length ? ` (owner decision: ${pendingRoles.join(", ")})` : "")
+    `✓ role gate: ${results.length - pending.length} of ${results.length} measurements pass, 0 violations, ` +
+      `${pending.length} pending`
   )
+  for (const role of pendingRoles) {
+    const rows = pending.filter((p) => p.role === role)
+    console.log(`  pending, ${rows.length} measurements: ${role}: ${rows[0]!.pending}`)
+  }
   if (decorative.length) {
     console.log(
       `  decorative, exempt from the Lc 30 ui bar (never the only cue): ${decorative.map((d) => d.role).join(", ")}`

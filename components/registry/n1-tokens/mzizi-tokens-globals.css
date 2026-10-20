@@ -519,7 +519,7 @@
   /* ── TEXT RAMP — three tiers, APCA-measured on --base ────────────────────── */
   --text-primary: #373635; /* APCA Lc 90.4 on --base, 87.4 on --surface */
   --text-secondary: #575655; /* APCA Lc 78.2 on --base, 75.3 on --surface */
-  --text-tertiary: #797877; /* APCA Lc 63.3 on --base, 60.4 on --surface */
+  --text-tertiary: #6b6a69; /* APCA Lc 69.7 on --base, 66.8 on --surface; WCAG 4.86:1 and 4.65:1 */
   --hero-text: #ffffff; /* Text over photography — pair with --hero-text-shadow, never bare */
   --hero-text-shadow:
     0 1px 3px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.4);
@@ -629,7 +629,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #9f221b; /* derived: #B3261E measures Lc 70.6 against base / surface; walked toward #000000 to Lc 75 */
-  --border-control: #8b8986; /* derived: #E7E5E0 measures Lc 0.0 against base / surface / sidebar; walked toward #000000 to Lc 30 and 3:1 */
+  --border-control: #787774; /* derived: #E7E5E0 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #000000 to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
   /* --primary  registry: ink #141413 | /v1/brand: tanzanite #4B0082
@@ -961,7 +961,7 @@
   /* ── TEXT RAMP — three tiers, APCA-measured on --base ────────────────────── */
   --text-primary: #e5e5e3; /* APCA Lc -90.7 on --base, -90.3 on --surface */
   --text-secondary: #ccccca; /* APCA Lc -75.3 on --base, -75 on --surface */
-  --text-tertiary: #b3b3b1; /* APCA Lc -60.9 on --base, -60.5 on --surface */
+  --text-tertiary: #b3b3b1; /* APCA Lc -60.9 on --base, -60.5 on --surface; WCAG 9.25:1 and 8.91:1 */
   --hero-text: #ffffff; /* Text over photography — pair with --hero-text-shadow, never bare */
   --hero-text-shadow:
     0 1px 3px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.4);
@@ -1071,7 +1071,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #f3c0bd; /* derived: #F2B8B5 measures Lc 71.6 against base / surface; walked toward #FFFFFF to Lc 75 */
-  --border-control: #797877; /* derived: #2A2927 measures Lc 0.0 against base / surface / sidebar; walked toward #FFFFFF to Lc 30 and 3:1 */
+  --border-control: #818180; /* derived: #2A2927 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #FFFFFF to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
   /* --border  registry: rgba(10,10,10,0.06) | /v1/brand: #2A2927
