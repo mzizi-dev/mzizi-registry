@@ -40,8 +40,7 @@ fn contract_identity_contracts() -> Vec<(String, Value)> {
         .collect()
 }
 
-/// Whether a registry item's `.rs` is one of this crate's components (`src/generated/`). A
-/// contract's Rust build in another crate is that crate's suite's to evaluate.
+/// Whether a registry item's `.rs` has its generated copy in this crate (`src/generated/`).
 fn in_this_crate(registry: &str) -> bool {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("src/generated")
@@ -49,9 +48,8 @@ fn in_this_crate(registry: &str) -> bool {
         .is_file()
 }
 
-/// Every contract file that declares a Rust build in this crate, whatever its identity. Builds
-/// in other crates are left to their own crate's suite.
-fn rust_contracts() -> Vec<(String, Value)> {
+/// Every contract file, sorted by family then file name.
+fn contract_files() -> Vec<Value> {
     let dir = repo().join("contracts");
     let mut out = Vec::new();
     let mut families: Vec<_> = fs::read_dir(&dir)
@@ -68,17 +66,120 @@ fn rust_contracts() -> Vec<(String, Value)> {
             .collect();
         files.sort_by_key(|e| e.file_name());
         for f in files {
-            let json: Value = serde_json::from_str(&fs::read_to_string(f.path()).unwrap())
-                .unwrap_or_else(|e| panic!("{:?} is not JSON: {e}", f.path()));
-            if json["implementations"]["rs"]["registry"]
-                .as_str()
-                .is_some_and(in_this_crate)
-            {
-                out.push((json["name"].as_str().unwrap().to_owned(), json));
-            }
+            out.push(
+                serde_json::from_str(&fs::read_to_string(f.path()).unwrap())
+                    .unwrap_or_else(|e| panic!("{:?} is not JSON: {e}", f.path())),
+            );
         }
     }
     out
+}
+
+/// The crate's contract suite that evaluates a contract-declared `.rs` build.
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum Suite {
+    /// This file: a renderer per build, every state, `Case::check` or the CSP test below.
+    Ui,
+    /// `mzizi-brand/tests/contract.rs`: one `Case` per entry of `mzizi_brand::CONTRACTS`
+    /// (that suite asserts its cases and `CONTRACTS` are the same list).
+    Brand,
+}
+
+/// The names `mzizi_brand::CONTRACTS` lists, read from its `src/lib.rs` (this crate does not
+/// depend on mzizi-brand).
+fn brand_contracts() -> Vec<String> {
+    let lib = fs::read_to_string(repo().join("mzizi-rs/crates/mzizi-brand/src/lib.rs")).unwrap();
+    let start = lib
+        .find("pub const CONTRACTS")
+        .expect("mzizi-brand/src/lib.rs has no `pub const CONTRACTS`");
+    let block = &lib[start..start + lib[start..].find("];").expect("CONTRACTS is not closed")];
+    block
+        .split("(\"")
+        .skip(1)
+        .filter_map(|s| s.split('"').next())
+        .map(str::to_owned)
+        .collect()
+}
+
+/// The one suite that evaluates `<registry>.rs`, the `.rs` build contract `name` declares.
+/// Panics, naming the contract and the path, when the file is missing under
+/// `components/registry/` (a typo), sits in more than one node, compiles in a crate with no
+/// contract suite, or is not in its crate's suite (no renderer here, or not in
+/// `mzizi_brand::CONTRACTS`). So a declared build is never skipped silently.
+fn suite_for(name: &str, registry: &str) -> Suite {
+    let registry_dir = repo().join("components/registry");
+    let file = format!("{registry}.rs");
+    let mut nodes: Vec<String> = fs::read_dir(&registry_dir)
+        .unwrap()
+        .filter_map(Result::ok)
+        .filter(|e| e.path().join(&file).is_file())
+        .map(|e| e.file_name().to_string_lossy().into_owned())
+        .collect();
+    nodes.sort();
+    let node = match nodes.as_slice() {
+        [node] => node.clone(),
+        [] => panic!(
+            "{name} declares `{file}`, but components/registry/*/{file} does not exist \
+             (declared implementation missing)"
+        ),
+        many => panic!("{name} declares `{file}`, which is in more than one node: {many:?}"),
+    };
+    let path = format!("components/registry/{node}/{file}");
+    let map: Value = serde_json::from_str(
+        &fs::read_to_string(repo().join("mzizi-rs/crate-for-node.json")).unwrap(),
+    )
+    .unwrap();
+    let krate = map[&node]
+        .as_str()
+        .unwrap_or_else(|| panic!("{name} ({path}): no crate in mzizi-rs/crate-for-node.json"));
+    match krate {
+        "mzizi-ui" => {
+            assert!(
+                in_this_crate(registry),
+                "{name} ({path}): no generated copy at mzizi-ui/src/generated/{file}; run `pnpm rust:generate`"
+            );
+            assert!(
+                renderer(registry).is_some(),
+                "{name} ({path}): tests/contracts_json.rs has no renderer for it, so no suite evaluates it: add one"
+            );
+            Suite::Ui
+        }
+        "mzizi-brand" => {
+            assert!(
+                brand_contracts().iter().any(|n| n == registry),
+                "{name} ({path}): not in mzizi_brand::CONTRACTS, so mzizi-brand's suite does not evaluate it"
+            );
+            Suite::Brand
+        }
+        other => panic!(
+            "{name} ({path}) compiles in {other}, which has no contract suite: no Rust suite evaluates it"
+        ),
+    }
+}
+
+/// Every contract that declares a `.rs` build, with the suite that evaluates it (see
+/// `suite_for`, which fails on a missing or uncovered build).
+fn declared_rust_builds() -> Vec<(String, Value, Suite)> {
+    contract_files()
+        .into_iter()
+        .filter_map(|json| {
+            let name = json["name"].as_str()?.to_owned();
+            let registry = json["implementations"]["rs"]["registry"]
+                .as_str()?
+                .to_owned();
+            let suite = suite_for(&name, &registry);
+            Some((name, json, suite))
+        })
+        .collect()
+}
+
+/// Every contract whose `.rs` build this crate's suite evaluates, whatever its identity.
+fn rust_contracts() -> Vec<(String, Value)> {
+    declared_rust_builds()
+        .into_iter()
+        .filter(|(_, _, suite)| *suite == Suite::Ui)
+        .map(|(name, json, _)| (name, json))
+        .collect()
 }
 
 // ─── Rendering a contract state ─────────────────────────────────────────────────────────────
@@ -257,25 +358,53 @@ fn renderer(registry: &str) -> Option<fn() -> Element> {
     })
 }
 
-/// Every Rust build of this crate that a contract declares has a renderer here, so none goes
-/// unevaluated (its clauses when its identity is `contract`, and the CSP rule always).
+/// Every `.rs` a contract declares exists under `components/registry/` and is evaluated by
+/// exactly one crate's suite: this file (a renderer here) or mzizi-brand's (`CONTRACTS`).
 #[test]
-fn every_rust_build_of_this_crate_a_contract_declares_has_a_renderer() {
-    let contracts = rust_contracts();
-    assert!(!contracts.is_empty());
-    let missing: Vec<String> = contracts
+fn every_rust_build_a_contract_declares_exists_and_one_suite_evaluates_it() {
+    let declared = contract_files()
         .iter()
-        .filter_map(|(name, c)| {
-            let registry = c["implementations"]["rs"]["registry"].as_str()?;
-            renderer(registry)
-                .is_none()
-                .then(|| format!("{name} ({registry}.rs)"))
-        })
-        .collect();
-    assert!(
-        missing.is_empty(),
-        "tests/contracts_json.rs has no renderer for {missing:?}: add one"
+        .filter(|c| c["implementations"]["rs"]["registry"].is_string())
+        .count();
+    let builds = declared_rust_builds();
+    assert!(declared > 0);
+    assert_eq!(
+        builds.len(),
+        declared,
+        "a declared .rs build has no name or registry"
     );
+}
+
+#[test]
+fn a_mzizi_brand_build_is_evaluated_by_mzizi_brands_suite() {
+    // No contract file declares one yet; this holds the branch that would take it.
+    assert_eq!(suite_for("app/x", "mzizi-gauge-card"), Suite::Brand);
+    assert_eq!(suite_for("ui/badge", "badge"), Suite::Ui);
+    let brand = brand_contracts();
+    assert!(
+        brand.len() >= 12 && brand.iter().all(|n| n.starts_with("mzizi-")),
+        "{brand:?}"
+    );
+}
+
+#[test]
+#[should_panic(expected = "declared implementation missing")]
+fn a_declared_rust_build_that_does_not_exist_fails() {
+    suite_for("ui/x", "no-such-component");
+}
+
+#[test]
+#[should_panic(expected = "which has no contract suite")]
+fn a_declared_rust_build_no_suite_evaluates_fails() {
+    // A real registry file, in a crate (mzizi-shell) with no contract suite.
+    suite_for("app/x", "mzizi-bottom-nav");
+}
+
+#[test]
+#[should_panic(expected = "has no renderer for it")]
+fn a_declared_rust_build_of_this_crate_without_a_renderer_fails() {
+    // A real mzizi-ui component that no contract declares, so it has no renderer here.
+    suite_for("ui/x", "separator");
 }
 
 fn render_state(registry: &str, state: &Value) -> Rendered {
@@ -594,8 +723,34 @@ fn SecondRoot() -> Element {
     }
 }
 
+/// The forms the removed `.rs` source scan used to read, each rendered: a quoted `"style"`
+/// attribute, a `format!` value, an `if`/`else` value, and a style on a conditional child.
+#[component]
+fn OtherForms(dim: bool) -> Element {
+    let c = "var(--primary)";
+    rsx! {
+        div { "data-slot": "tinted-strip",
+            span { "style": "--tint: red", "quoted" }
+            span { style: format!("color: {c}"), "formatted" }
+            span { style: if dim { "opacity: .5" } else { "" }, "conditional value" }
+            if dim {
+                i { style: "--edge: var(--border)", "conditional child" }
+            }
+        }
+    }
+}
+
 #[test]
 fn the_inline_style_rule_fails_on_each_way_dioxus_writes_one() {
+    assert_eq!(
+        inline_styles(&render(|| rsx! { OtherForms { dim: true } })),
+        vec![
+            r#"<span> style="--tint: red""#.to_owned(),
+            r#"<span> style="color: var(--primary)""#.to_owned(),
+            r#"<span> style="opacity: .5""#.to_owned(),
+            r#"<i> style="--edge: var(--border)""#.to_owned(),
+        ]
+    );
     assert_eq!(
         inline_styles(&render(|| rsx! { StyleAttribute {} })),
         vec![r#"<span> style="--tint: var(--primary)""#.to_owned()]

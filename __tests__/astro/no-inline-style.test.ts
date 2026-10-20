@@ -14,7 +14,8 @@ import path from "node:path"
 import { experimental_AstroContainer as AstroContainer } from "astro/container"
 import { expect, test } from "vitest"
 
-import { inlineStyles, inlineStylesInSource } from "../../contracts/runner"
+import { inlineStyles } from "../../contracts/runner"
+import { inlineStylesInSource } from "../../contracts/source-scan"
 
 const fixtures = import.meta.glob<{ default: unknown }>("./fixtures/inline-style.astro", { eager: true })
 type Component = Parameters<AstroContainer["renderToString"]>[0]
