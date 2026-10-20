@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — the public `mzizi` plugin carries skills 0.11.0 (seven skills) and installs in Codex and ChatGPT too; plugin 1.3.0 (2026-10-20, #PRNUM)
+### Changed — the public `mzizi` plugin carries skills 0.11.0 (seven skills) and installs in Codex and ChatGPT too; plugin 1.3.0 (2026-10-20, #520)
 
 - **The skills catch up with npm.** `@nyuchi/mzizi-skills` moves from `^0.8.1` (0.8.5, five skills) to `^0.11.0`, the latest on npm. A `^0.8.1` range never accepts 0.9 or later, so the plugin, `lib/skills.generated.ts` and, after the gateway re-pins, `api.mzizi.dev/v1/skills` had stayed on 0.8.5 since 0.9.0 shipped on 5 October.
   - `plugin/skills/` and `lib/skills.generated.ts` are regenerated with `pnpm plugin:skills` and `pnpm skills:generate`; both `--check` gates pass.
