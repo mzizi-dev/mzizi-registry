@@ -10,6 +10,7 @@
 //! This crate holds the shared parts and nothing database-specific:
 //!
 //! - [`io::Io`], the transport trait;
+//! - [`harness::Harness`], where a client reports what it did (pluggable, adaptable, removable);
 //! - [`Error`] and [`Result`];
 //! - `workers::SocketIo`, a Worker's outbound TLS socket as an `Io` (feature `workers`,
 //!   `wasm32` only).
@@ -19,6 +20,7 @@
 //! to a document store and a SQL database: what they share is the transport and the error
 //! type, not a query language.
 
+pub mod harness;
 pub mod io;
 
 #[cfg(all(feature = "workers", target_arch = "wasm32"))]

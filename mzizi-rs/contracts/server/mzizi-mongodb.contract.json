@@ -1,0 +1,200 @@
+{
+  "$schema": "../schema/server-contract.schema.json",
+  "name": "server/mzizi-mongodb",
+  "title": "mzizi-mongodb",
+  "version": "1.0.0",
+  "kind": "server",
+  "node": null,
+  "summary": "A read-only MongoDB client over the wire protocol (OP_MSG, SCRAM-SHA-256, a small BSON codec), sans-IO, for places the official driver cannot build, such as a Cloudflare Worker.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-mongodb",
+      "path": "crates/mzizi-mongodb",
+      "features": ["workers"]
+    }
+  },
+  "surface": [
+    {
+      "item": "pub struct Connection",
+      "file": "src/conn.rs",
+      "summary": "One authenticated connection over a byte transport."
+    },
+    {
+      "item": "pub async fn find",
+      "file": "src/conn.rs",
+      "summary": "Documents matching a filter, at most MAX_FIND_DOCS."
+    },
+    {
+      "item": "pub async fn find_one",
+      "file": "src/conn.rs",
+      "summary": "The first matching document, if any."
+    },
+    {
+      "item": "pub async fn aggregate",
+      "file": "src/conn.rs",
+      "summary": "A pipeline's results, at most MAX_AGGREGATE_DOCS; $out and $merge refused."
+    },
+    {
+      "item": "pub async fn authenticate",
+      "file": "src/conn.rs",
+      "summary": "SCRAM-SHA-256 with a caller-supplied nonce, so the core stays pure."
+    },
+    {
+      "item": "pub async fn hello",
+      "file": "src/conn.rs",
+      "summary": "The handshake."
+    },
+    {
+      "item": "pub async fn ping",
+      "file": "src/conn.rs",
+      "summary": "A health check."
+    },
+    {
+      "item": "pub fn with_harness",
+      "file": "src/conn.rs",
+      "summary": "Report each command and refusal to a server harness."
+    },
+    {
+      "item": "pub struct FindOptions",
+      "file": "src/conn.rs",
+      "summary": "What find takes."
+    },
+    {
+      "item": "pub fn parse",
+      "file": "src/uri.rs",
+      "summary": "The seed-list connection string."
+    },
+    {
+      "item": "pub fn encode",
+      "file": "src/bson.rs",
+      "summary": "BSON encode."
+    },
+    {
+      "item": "pub fn decode",
+      "file": "src/bson.rs",
+      "summary": "BSON decode."
+    }
+  ],
+  "limits": [
+    {
+      "const": "MAX_FIND_DOCS",
+      "file": "src/conn.rs",
+      "value": 1000,
+      "summary": "The most documents one find returns."
+    },
+    {
+      "const": "MAX_AGGREGATE_DOCS",
+      "file": "src/conn.rs",
+      "value": 5000,
+      "summary": "The most documents one aggregation returns; more is an error, not a silent cut."
+    }
+  ],
+  "guarantees": [
+    {
+      "id": "read-only",
+      "statement": "There is no write path: the client offers find, find_one and aggregate, and aggregate refuses a pipeline containing $out or $merge before anything is sent.",
+      "tests": ["aggregate_refuses_writes_and_follows_the_cursor"]
+    },
+    {
+      "id": "bounded-reads",
+      "statement": "A find is capped at MAX_FIND_DOCS, carries a server-side time limit and read preference secondaryPreferred; an aggregation past MAX_AGGREGATE_DOCS kills its cursor and is refused.",
+      "tests": [
+        "find_sends_a_bounded_read_only_query_and_returns_json",
+        "a_runaway_aggregation_is_cut_off_and_its_cursor_killed"
+      ]
+    },
+    {
+      "id": "validated-names",
+      "statement": "A database or collection name outside [A-Za-z0-9_.-]{1,120} is refused before any bytes are sent.",
+      "tests": ["bad_names_are_refused_before_anything_is_sent"]
+    },
+    {
+      "id": "scram-verifies-the-server",
+      "statement": "Authentication completes only against a real SCRAM-SHA-256 exchange, fails on a wrong password, and refuses a server that cannot prove it knows the password.",
+      "tests": [
+        "the_scram_handshake_completes_against_a_real_exchange",
+        "a_wrong_password_is_an_authentication_error",
+        "a_server_that_cannot_prove_the_password_is_refused"
+      ]
+    },
+    {
+      "id": "hostile-input-is-an-error",
+      "statement": "Malformed BSON, a malformed wire header, a reply to another request and a hostile SCRAM message are errors, never panics.",
+      "tests": [
+        "malformed_input_is_an_error_never_a_panic",
+        "bad_headers_and_replies_are_refused",
+        "a_reply_to_another_request_is_refused",
+        "a_hostile_server_first_message_is_refused"
+      ]
+    },
+    {
+      "id": "no-secrets-in-errors",
+      "statement": "The password never appears in a Debug string or an error message.",
+      "tests": ["the_password_never_appears_in_debug_or_errors"]
+    },
+    {
+      "id": "harness-sees-no-data",
+      "statement": "A harness sees each command's fixed name, outcome and server code, and each refusal's fixed reason, and never a filter, a collection name, a database name or a document. Without a harness nothing is reported and everything works.",
+      "tests": [
+        "a_harness_sees_each_command_and_refusal_and_never_the_data",
+        "without_a_harness_nothing_is_reported_and_everything_works"
+      ]
+    },
+    {
+      "id": "salt-computed-once",
+      "statement": "The salted password is computed once per isolate and reused.",
+      "tests": ["the_salted_password_is_computed_once_per_isolate"]
+    }
+  ],
+  "refusals": [
+    {
+      "id": "write-stages",
+      "input": "an aggregation pipeline with a $out or $merge stage",
+      "reason": "this client is read-only",
+      "tests": ["aggregate_refuses_writes_and_follows_the_cursor"]
+    },
+    {
+      "id": "bad-names",
+      "input": "an empty, over-long or special-character database or collection name",
+      "reason": "names are validated before anything is sent",
+      "tests": ["bad_names_are_refused_before_anything_is_sent"]
+    },
+    {
+      "id": "srv-strings",
+      "input": "a mongodb+srv:// connection string, or a malformed one",
+      "reason": "seed lists only: SRV needs DNS the Worker host does not do; the error says how to proceed",
+      "tests": ["srv_and_bad_strings_are_refused_with_a_way_forward"]
+    },
+    {
+      "id": "runaway-aggregation",
+      "input": "an aggregation returning more than MAX_AGGREGATE_DOCS",
+      "reason": "the cursor is killed and the call refused rather than silently truncated",
+      "tests": ["a_runaway_aggregation_is_cut_off_and_its_cursor_killed"]
+    },
+    {
+      "id": "non-ascii-password",
+      "input": "a password that is not ASCII",
+      "reason": "SASLprep is not implemented, so the client refuses rather than authenticate wrongly",
+      "tests": ["a_non_ascii_password_is_refused"]
+    }
+  ],
+  "harness": {
+    "default": "Noop",
+    "removable": true,
+    "events": [
+      {
+        "name": "mongodb.command",
+        "level": "Debug",
+        "fields": ["command", "ok", "code"]
+      },
+      { "name": "mongodb.refused", "level": "Warn", "fields": ["reason"] }
+    ],
+    "secrets": "Events are mzizi_data::harness::Event: static names, static keys and static string values only, so a filter, name or document cannot be formatted into one. The command name is one of a fixed list, else \"other\"."
+  },
+  "gaps": [
+    "workers::Mongo (the pooled Worker client) does not yet take a harness; only Connection does.",
+    "No timing in events: the sans-IO core has no clock, so durations belong to the host's harness adapter.",
+    "mongodb+srv:// is refused.",
+    "A live connection from a deployed Worker to an Atlas cluster is verified by the consuming application, not by this crate's tests."
+  ]
+}

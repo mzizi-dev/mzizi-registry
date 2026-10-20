@@ -1,0 +1,77 @@
+{
+  "$schema": "../schema/server-contract.schema.json",
+  "name": "server/mzizi-data",
+  "title": "mzizi-data",
+  "version": "1.0.0",
+  "kind": "server",
+  "node": null,
+  "summary": "What every Mzizi database client shares: the transport trait, the error type, the server harness and (on a Worker) the TLS socket. Nothing database-specific.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-data",
+      "path": "crates/mzizi-data",
+      "features": ["workers"]
+    }
+  },
+  "surface": [
+    {
+      "item": "pub trait Io",
+      "file": "src/io.rs",
+      "summary": "The byte transport: write_all and read_exact. A protocol core is generic over it and never opens a socket."
+    },
+    {
+      "item": "pub enum Error",
+      "file": "src/lib.rs",
+      "summary": "Uri, Io, Timeout, Codec, Protocol, Auth, Server, Refused."
+    },
+    {
+      "item": "pub type Result",
+      "file": "src/lib.rs",
+      "summary": "Result with Error."
+    },
+    {
+      "item": "pub trait Harness",
+      "file": "src/harness.rs",
+      "summary": "Receives a client's events. Pluggable, adaptable, removable."
+    },
+    {
+      "item": "pub struct Noop",
+      "file": "src/harness.rs",
+      "summary": "The harness that does nothing; the default."
+    },
+    {
+      "item": "pub struct Event",
+      "file": "src/harness.rs",
+      "summary": "One thing that happened: a static name, a level, static-keyed fields."
+    },
+    {
+      "item": "pub enum Value",
+      "file": "src/harness.rs",
+      "summary": "A field value: a static string, an integer or a flag. Never a runtime string."
+    },
+    {
+      "item": "pub fn noop",
+      "file": "src/harness.rs",
+      "summary": "The shared default harness."
+    }
+  ],
+  "limits": [],
+  "guarantees": [
+    {
+      "id": "harness-receives-events",
+      "statement": "A harness handed to a client receives that client's events; the default harness ignores them.",
+      "tests": ["a_harness_receives_events_and_the_default_ignores_them"]
+    }
+  ],
+  "refusals": [],
+  "harness": {
+    "default": "Noop",
+    "removable": true,
+    "events": [],
+    "secrets": "An Event's name and field keys are &'static str, and a string field value is a &'static str, so no connection string, password, collection name or document can be formatted into one. Only integers and flags vary."
+  },
+  "gaps": [
+    "The Postgres and SQLite clients (mzizi-postgres, mzizi-sqlite) do not exist yet; nothing is stubbed.",
+    "workers::SocketIo is compiled only for wasm32 with the workers feature, so its contract is held by a type check and clippy for wasm32-unknown-unknown, not by a native test."
+  ]
+}

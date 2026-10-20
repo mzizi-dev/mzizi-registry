@@ -832,6 +832,7 @@ name = "mzizi-data"
 version = "0.3.0"
 dependencies = [
  "futures",
+ "serde_json",
  "tokio",
  "worker",
 ]

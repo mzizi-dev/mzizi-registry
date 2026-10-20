@@ -20,6 +20,7 @@ use crate::scram;
 use crate::uri::Uri;
 use crate::wire;
 use crate::{Error, Result};
+use mzizi_data::harness::{self, Event, Level, Shared, Value as Field};
 use mzizi_data::io::Io;
 
 /// Most documents `find` returns, whatever the caller asks.
@@ -109,18 +110,60 @@ fn name_ok(name: &str) -> bool {
 pub struct Connection<T: Io> {
     io: T,
     next_id: i32,
+    harness: Shared,
 }
 
 impl<T: Io> Connection<T> {
     /// A connection over `io`; call [`Connection::hello`] and
     /// [`Connection::authenticate`] before any command.
     pub fn new(io: T) -> Self {
-        Connection { io, next_id: 1 }
+        Connection {
+            io,
+            next_id: 1,
+            harness: harness::noop(),
+        }
+    }
+
+    /// Report each command and refusal to `harness`. Without one, nothing is reported.
+    #[must_use]
+    pub fn with_harness(mut self, harness: Shared) -> Self {
+        self.harness = harness;
+        self
+    }
+
+    /// Report a refusal and return it. `reason` is a fixed word, never caller data.
+    fn refuse(&self, reason: &'static str, message: &str) -> Error {
+        self.harness.event(&Event {
+            name: "mongodb.refused",
+            level: Level::Warn,
+            fields: &[("reason", Field::Str(reason))],
+        });
+        Error::Refused(message.into())
     }
 
     /// Run one command on database `db` and return the reply, or the
     /// server's error.
-    pub async fn command(&mut self, db: &str, mut cmd: Doc) -> Result<Doc> {
+    pub async fn command(&mut self, db: &str, cmd: Doc) -> Result<Doc> {
+        let name = command_name(&cmd);
+        let out = self.run(db, cmd).await;
+        let (ok, code) = match &out {
+            Ok(_) => (true, 0),
+            Err(Error::Server { code, .. }) => (false, *code),
+            Err(_) => (false, -1),
+        };
+        self.harness.event(&Event {
+            name: "mongodb.command",
+            level: if ok { Level::Debug } else { Level::Warn },
+            fields: &[
+                ("command", Field::Str(name)),
+                ("ok", Field::Bool(ok)),
+                ("code", Field::Int(code)),
+            ],
+        });
+        out
+    }
+
+    async fn run(&mut self, db: &str, mut cmd: Doc) -> Result<Doc> {
         cmd.push(("$db".into(), Bson::str(db)));
         let id = self.next_id;
         self.next_id = self.next_id.wrapping_add(1).max(1);
@@ -275,7 +318,7 @@ impl<T: Io> Connection<T> {
     /// [`MAX_FIND_DOCS`]).
     pub async fn find(&mut self, db: &str, coll: &str, opts: &FindOptions) -> Result<Vec<Value>> {
         if !name_ok(db) || !name_ok(coll) {
-            return Err(Error::Refused("bad database or collection name".into()));
+            return Err(self.refuse("bad_name", "bad database or collection name"));
         }
         let limit = if opts.limit == 0 {
             MAX_FIND_DOCS
@@ -331,14 +374,14 @@ impl<T: Io> Connection<T> {
         pipeline: &[Value],
     ) -> Result<Vec<Value>> {
         if !name_ok(db) || !name_ok(coll) {
-            return Err(Error::Refused("bad database or collection name".into()));
+            return Err(self.refuse("bad_name", "bad database or collection name"));
         }
         for stage in pipeline {
             let writes = stage
                 .as_object()
                 .is_some_and(|o| o.contains_key("$out") || o.contains_key("$merge"));
             if writes {
-                return Err(Error::Refused("this client is read-only".into()));
+                return Err(self.refuse("read_only", "this client is read-only"));
             }
         }
         let cmd: Doc = vec![
@@ -377,8 +420,9 @@ impl<T: Io> Connection<T> {
                         ],
                     )
                     .await;
-                return Err(Error::Refused(
-                    "the aggregation returned too many documents".into(),
+                return Err(self.refuse(
+                    "too_many_documents",
+                    "the aggregation returned too many documents",
                 ));
             }
             reply = self
@@ -395,6 +439,23 @@ impl<T: Io> Connection<T> {
             out.extend(batch(&reply, "nextBatch")?);
         }
     }
+}
+
+/// The name a command goes by in an event: one of the fixed words below, never the caller's.
+fn command_name(cmd: &Doc) -> &'static str {
+    const KNOWN: &[&str] = &[
+        "hello",
+        "saslStart",
+        "saslContinue",
+        "find",
+        "aggregate",
+        "getMore",
+        "killCursors",
+        "ping",
+    ];
+    cmd.first()
+        .and_then(|(k, _)| KNOWN.iter().find(|n| **n == k.as_str()).copied())
+        .unwrap_or("other")
 }
 
 /// What `find` takes.
@@ -654,6 +715,51 @@ mod tests {
             assert!(matches!(r, Err(Error::Refused(_))), "{db}/{coll}");
         }
         assert!(seen.borrow().is_empty());
+    }
+
+    /// Records every event as `name` plus the debug text of its fields.
+    struct Recorder(RefCell<Vec<(String, String)>>);
+
+    impl harness::Harness for Recorder {
+        fn event(&self, e: &Event<'_>) {
+            self.0
+                .borrow_mut()
+                .push((e.name.to_owned(), format!("{:?}", e.fields)));
+        }
+    }
+
+    #[test]
+    fn a_harness_sees_each_command_and_refusal_and_never_the_data() {
+        let (mock, _) = Mock::new(|_| cursor(0, "firstBatch", vec![]));
+        let rec = Rc::new(Recorder(RefCell::new(Vec::new())));
+        let mut c = Connection::new(mock).with_harness(rec.clone());
+        let opts = FindOptions {
+            filter: serde_json::json!({"email": "secret@example.com"}),
+            ..FindOptions::default()
+        };
+        block_on(c.find("weather", "personsPrivate", &opts)).unwrap();
+        let _ = block_on(c.aggregate(
+            "weather",
+            "x",
+            &[serde_json::json!({"$out": "personsPrivate"})],
+        ));
+        let events = rec.0.borrow();
+        assert_eq!(events[0].0, "mongodb.command");
+        assert!(events[0].1.contains("\"find\""), "{events:?}");
+        assert_eq!(events[1].0, "mongodb.refused");
+        assert!(events[1].1.contains("read_only"), "{events:?}");
+        for (_, fields) in events.iter() {
+            for secret in ["secret@example.com", "personsPrivate", "weather"] {
+                assert!(!fields.contains(secret), "{secret} leaked: {fields}");
+            }
+        }
+    }
+
+    #[test]
+    fn without_a_harness_nothing_is_reported_and_everything_works() {
+        let (mock, _) = Mock::new(|_| cursor(0, "firstBatch", vec![]));
+        let mut c = Connection::new(mock);
+        assert!(block_on(c.find("weather", "x", &FindOptions::default())).is_ok());
     }
 
     #[test]
