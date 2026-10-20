@@ -70,7 +70,7 @@ function packageOf(spec: string): string {
 function isFrameworkFree(source: string): boolean {
   if (/^\s*["']use client["']/m.test(source)) return false
   return importSpecifiers(source).every(
-    (s) => !s.startsWith("@/") && !/^(react|react-dom|next|preact|vue)(\/|$)/.test(s)
+    (s) => !s.startsWith("@/") && !/^(react|react-dom|next|preact|vue|svelte)(\/|$)/.test(s)
   )
 }
 
