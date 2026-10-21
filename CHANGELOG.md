@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — `mzizi-verified-badge` tier colours, `mzizi-place-card` gaps, the `mzizi-icons` install path and the old harness name (2026-10-21, #PRNUM)
+### Fixed — `mzizi-verified-badge` tier colours, `mzizi-place-card` gaps, the `mzizi-icons` install path and the old harness name (2026-10-21, #533)
 
 Found when Kweli vendored these for its place embed (mukoko-dev/kweli#225; tracked in #532).
 
