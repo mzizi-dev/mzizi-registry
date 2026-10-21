@@ -70,21 +70,43 @@ const registryAssets = {
   },
 }
 
+/** The CSP suite, run after the rest (see `projects`). */
+const CSP_SUITE = "__tests__/contracts/no-inline-style.test.tsx"
+
 export default defineConfig({
   plugins: [react(), registryAssets],
   test: {
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
-    include: ["__tests__/**/*.{test,spec}.{ts,tsx}"],
-    // The Astro implementations run under vitest.astro.config.ts (Astro compiles them).
-    exclude: ["**/node_modules/**", "__tests__/astro/**"],
     // React's CJS files check `process.env.NODE_ENV === "development"` at
     // require-time to pick dev vs prod builds. Vitest defaults NODE_ENV to
     // "test", which falls back to React's production build — that strips
     // `React.act`, breaking @testing-library/react's `render()`. Force
     // "development" for the test runtime so the dev React build loads.
     env: { NODE_ENV: "development" },
+    // The registry-wide CSP suite (#444) parses and renders every contract-held
+    // build, which is CPU-heavy. It runs in its own project, after every other
+    // file, so it never starves a timing-bounded test (markdown-renderer's
+    // linear-time checks) running beside it. `groupOrder` runs groups in turn.
+    // `include` and `exclude` live only here: a project that `extends` the
+    // root would add the root's lists to its own.
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: "unit",
+          include: ["__tests__/**/*.{test,spec}.{ts,tsx}"],
+          // The Astro implementations run under vitest.astro.config.ts (Astro compiles them).
+          exclude: ["**/node_modules/**", "__tests__/astro/**", CSP_SUITE],
+          sequence: { groupOrder: 0 },
+        },
+      },
+      {
+        extends: true,
+        test: { name: "csp", include: [CSP_SUITE], sequence: { groupOrder: 1 } },
+      },
+    ],
   },
   resolve: {
     alias: [...registryUiAliases, ...registryLibAliases, { find: "@", replacement: path.resolve(__dirname, ".") }],

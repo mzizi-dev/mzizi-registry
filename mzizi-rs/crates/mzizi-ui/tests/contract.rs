@@ -428,7 +428,8 @@ fn safe_area_frame_classes_and_geometry_match_the_typescript() {
 mod markdown {
     use super::*;
     use mzizi_ui::markdown_renderer::{
-        Align, Block, Inline, List, MarkdownLinks, MarkdownSource, classes, markdown_blocks,
+        Align, Block, Inline, List, ListChild, MarkdownLinks, MarkdownSource, classes,
+        markdown_blocks,
     };
     use serde_json::{Value, json};
 
@@ -512,8 +513,12 @@ mod markdown {
                     Inline::Code(v) => json!({ "t": "code", "v": v }),
                     Inline::Strong(c) => json!({ "t": "strong", "c": inlines(c) }),
                     Inline::Em(c) => json!({ "t": "em", "c": inlines(c) }),
-                    Inline::Link { href, children } => {
-                        json!({ "t": "link", "href": href, "c": inlines(children) })
+                    Inline::Link {
+                        href,
+                        title,
+                        children,
+                    } => {
+                        json!({ "t": "link", "href": href, "title": title, "c": inlines(children) })
                     }
                 })
                 .collect(),
@@ -529,7 +534,15 @@ mod markdown {
             .items
             .iter()
             .map(|it| {
-                json!({ "lines": lines(&it.lines), "children": it.children.iter().map(list).collect::<Vec<_>>() })
+                let children: Vec<Value> = it
+                    .children
+                    .iter()
+                    .map(|c| match c {
+                        ListChild::List(l) => list(l),
+                        ListChild::Lines(ls) => json!({ "kind": "lines", "lines": lines(ls) }),
+                    })
+                    .collect();
+                json!({ "lines": lines(&it.lines), "children": children })
             })
             .collect();
         if l.ordered {

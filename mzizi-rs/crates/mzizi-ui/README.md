@@ -1,7 +1,10 @@
 # mzizi-ui
 
-Dioxus primitives from the [Mzizi](https://mzizi.dev) component registry — **node N2,
-primitives** — the second node of the DNA-helix architecture.
+Primitives from the [Mzizi](https://mzizi.dev) component registry — **node N2,
+primitives** — the second node of the DNA-helix architecture. They are Dioxus components today.
+Mzizi is replacing Dioxus with its own `render(props) -> String` path; the `render` functions that
+exist so far are on `skeleton`, `badge`, `progress`, `separator`, `status-badge`, `safe-area-frame`
+and `chart`.
 
 The primitives ported so far: `Alert`, `Avatar`, `Badge`, `Button`, `Card`, `Chart`,
 `DeviceCode`, `Input`, `Label`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame`, `Separator`,
@@ -10,8 +13,11 @@ rest exist only as React and Astro today.
 
 `MarkdownRenderer` is safe by construction: it parses Markdown into a typed tree
 (`parse_markdown`, `MarkdownBlock`, `MarkdownInline`) and renders elements, with no HTML
-string anywhere. Raw HTML in the text shows as text, and links pass `safe_href`, a scheme
-allow-list (`MarkdownLinks::Https` keeps https only).
+string anywhere. Raw HTML in the text shows as text, and links pass `safe_link`, a scheme
+allow-list (`MarkdownLinks::Https` keeps https only). Each kept link shows its address on
+hover (`title`), normalised the way the URL parser writes it: the scheme and host lower-cased
+and an internationalised host as punycode (a `mailto:` address's domain too), so a look-alike
+host shows for what it is.
 
 ```rust
 use mzizi_ui::{MarkdownLinks, MarkdownRenderer};
@@ -40,7 +46,7 @@ rsx! {
 
 ```toml
 [dependencies]
-mzizi-ui = "0.3"
+mzizi-ui = "0.4"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before

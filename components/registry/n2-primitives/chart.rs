@@ -31,6 +31,49 @@
 
 use dioxus::prelude::*;
 
+/// The escaping HTML writer `render` uses, inlined so this file installs on its own.
+///
+/// It is a copy of `mzizi-ui/src/html.rs`, which is the reference and carries the unit tests.
+/// A test in `html.rs` holds the two to the same output on the five escaped characters and on
+/// non-ASCII text, so the copies cannot drift without a test failing.
+mod html {
+    /// Escape `value` for text and double-quoted attribute values: `&`, `<`, `>`, `"` and `'`
+    /// become decimal references; everything else, including non-ASCII, is written unchanged.
+    fn escape_into(out: &mut String, value: &str) {
+        for c in value.chars() {
+            match c {
+                '&' => out.push_str("&#38;"),
+                '<' => out.push_str("&#60;"),
+                '>' => out.push_str("&#62;"),
+                '"' => out.push_str("&#34;"),
+                '\'' => out.push_str("&#39;"),
+                _ => out.push(c),
+            }
+        }
+    }
+
+    /// Write an opening tag with its attributes, in the order given. Values are escaped.
+    pub(super) fn open(out: &mut String, tag: &str, attrs: &[(&str, &str)]) {
+        out.push('<');
+        out.push_str(tag);
+        for (name, value) in attrs {
+            out.push(' ');
+            out.push_str(name);
+            out.push_str("=\"");
+            escape_into(out, value);
+            out.push('"');
+        }
+        out.push('>');
+    }
+
+    /// Write a closing tag.
+    pub(super) fn close(out: &mut String, tag: &str) {
+        out.push_str("</");
+        out.push_str(tag);
+        out.push('>');
+    }
+}
+
 /// The wrapper classes for a rendered chart, including the Recharts CSS-selector
 /// overrides — verbatim from the TypeScript even though they target class names
 /// Recharts itself emits at runtime, which this port has no equivalent of. They are
@@ -120,4 +163,72 @@ pub fn Chart(props: ChartProps) -> Element {
             {props.children}
         }
     }
+}
+
+/// The Dioxus-free render path: the props a [`render`] call takes, the same as [`ChartProps`].
+///
+/// `children` is HTML the caller has already rendered, and it is written as it is, not escaped:
+/// it is the one unescaped input here. Build it with the other `render` functions, never from
+/// untrusted text.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RenderProps {
+    /// Renders the loading skeleton instead of the chart container.
+    pub loading: bool,
+    /// The `data-chart` id, written as `chart-<id>`.
+    pub id: String,
+    /// Extra classes, appended last.
+    pub class: String,
+    /// The chart's content, already rendered HTML.
+    pub children: String,
+}
+
+/// Render a chart container to an HTML string, with no Dioxus and no WASM.
+///
+/// Byte-identical to `dioxus-ssr` rendering [`Chart`] with the same props, for the cases
+/// `mzizi-ui/tests/render_parity.rs` covers.
+#[must_use]
+pub fn render(props: &RenderProps) -> String {
+    if props.loading {
+        let class = chart_loading_variants(&props.class);
+        let mut out = String::with_capacity(LOADING_BASE.len() + 512);
+        html::open(
+            &mut out,
+            "div",
+            &[
+                ("data-slot", "chart"),
+                ("data-portal", "https://mzizi.dev/components/chart"),
+                ("data-loading", "true"),
+                ("class", class.as_str()),
+            ],
+        );
+        for height in LOADING_BAR_HEIGHTS {
+            let style = format!("height: {height}%");
+            html::open(
+                &mut out,
+                "div",
+                &[
+                    ("class", "flex-1 rounded-t bg-muted"),
+                    ("style", style.as_str()),
+                ],
+            );
+            html::close(&mut out, "div");
+        }
+        html::close(&mut out, "div");
+        return out;
+    }
+    let class = chart_variants(&props.class);
+    let data_chart = format!("chart-{}", props.id);
+    let mut out = String::with_capacity(BASE.len() + props.children.len() + 128);
+    html::open(
+        &mut out,
+        "div",
+        &[
+            ("data-slot", "chart"),
+            ("data-chart", data_chart.as_str()),
+            ("class", class.as_str()),
+        ],
+    );
+    out.push_str(&props.children);
+    html::close(&mut out, "div");
+    out
 }

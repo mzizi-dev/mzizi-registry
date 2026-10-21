@@ -1,0 +1,39 @@
+# Mzizi Design System
+
+Live counts: 575 components total, across 12 nodes.
+Source: https://mzizi.dev | GitHub: mzizi-dev/mzizi-registry
+
+## Node map
+
+Every component belongs to exactly one node. The node set is UNCAPPED — a
+new node may be added at any time, so never assume the highest number here
+is the last one.
+
+  N1   Tokens         — CSS substrate. The only node that defines CSS values.
+  N2   Primitives     — Headless and accessible. Radix + CVA.
+  N3   Brand          — N2 plus Ubuntu. Uses mzizi-harness.
+  N4   Safety         — Gates. Validates input, guards AI output.
+  N5   Resilience     — Circuit breakers, retries, fallback chains.
+  N6   Pages          — Pure composition. No inline primitives.
+  N7   Shell          — App chrome. Header, nav, theme, lifecycle.
+  N8   Assurance      — Observability, SLO tracking, chaos testing.
+  N9   Fundi          — Self-healing. Turns assurance signals into filed defects.
+  N10  Documentation  — Self-describing. The system explains itself.
+  N11  Discovery      — Machine visibility. Metadata and structured data.
+  N12  Skills         — What the system knows how to do, authored in git.
+
+
+## Rules (non-negotiable)
+
+1. CSS values live only in N1. All other nodes use var(--token-name). Never hex outside N1.
+2. Icons import from @/lib/icons only. Never from lucide-react directly.
+3. N2 primitives never import useMziziHarness.
+4. N3 brand components always destructure { log, motion, LiveRegion } from useMziziHarness.
+5. N6 pages: pure composition, semantic CSS vars only, accept children/slots.
+6. All interactive components: data-slot + data-portal attributes required.
+7. Status colors use semantic tokens: --status-success, --status-error, --status-warning.
+8. Touch targets: 48px minimum. Focus rings: focus-visible:outline-2.
+9. No hardcoded numbers in code or copy. Query the live counts.
+10. Shona terms come from the Ubuntu doctrine. Never translate or invent them.
+
+MCP server: https://mcp.mzizi.dev/mcp

@@ -1,0 +1,131 @@
+{
+  "$comment": "One table of value predicates and the verdict both contract runners must give: true (holds), false (does not hold) or \"unevaluable\" (a failure that `not` must never turn into a pass). __tests__/contracts/runner-grammar.test.ts evaluates every row with contracts/runner.ts, and mzizi-ui's tests/contracts_json.rs with mzizi-rs/contract-eval/contract_eval.rs, so the two cannot drift.",
+  "cases": [
+    { "pred": "is \"a\"", "value": "a", "verdict": true },
+    { "pred": "is \"a\"", "value": "ab", "verdict": false },
+    { "pred": "is \"\"", "value": "", "verdict": true },
+    {
+      "pred": "contains \"text-primary\"",
+      "value": "hover:text-primary",
+      "verdict": true
+    },
+    {
+      "pred": "contains \"bg-primary/10\"",
+      "value": "bg-primary/100",
+      "verdict": true
+    },
+    { "pred": "contains \"x\"", "value": "abc", "verdict": false },
+    {
+      "pred": "has \"text-primary\"",
+      "value": "bg-primary/10 text-primary uppercase",
+      "verdict": true
+    },
+    {
+      "pred": "has \"text-primary\"",
+      "value": "dark:text-primary",
+      "verdict": false
+    },
+    {
+      "pred": "has \"text-primary\"",
+      "value": "text-primary/50",
+      "verdict": false
+    },
+    {
+      "pred": "has \"bg-primary/10\"",
+      "value": "hover:bg-primary/10",
+      "verdict": false
+    },
+    {
+      "pred": "has \"bg-primary/10\"",
+      "value": "bg-primary/100",
+      "verdict": false
+    },
+    { "pred": "not_empty", "value": "a", "verdict": true },
+    { "pred": "not_empty", "value": "  ", "verdict": false },
+    { "pred": "in \"a\" \"b\"", "value": "b", "verdict": true },
+    { "pred": "in \"a\" \"b\"", "value": "c", "verdict": false },
+    { "pred": "in \"a b\" \"c\"", "value": "a b", "verdict": true },
+    {
+      "pred": "uses \"--primary\"",
+      "value": "bg-[var(--primary)]",
+      "verdict": true
+    },
+    { "pred": "uses \"--primary\"", "value": "bg-primary", "verdict": false },
+
+    { "pred": "not is \"y\"", "value": "x", "verdict": true },
+    { "pred": "not is \"x\"", "value": "x", "verdict": false },
+    {
+      "pred": "not contains \"line-through\"",
+      "value": "text-primary",
+      "verdict": true
+    },
+    {
+      "pred": "not contains \"line-through\"",
+      "value": "hover:line-through",
+      "verdict": false
+    },
+    {
+      "pred": "not has \"line-through\"",
+      "value": "text-primary hover:line-through",
+      "verdict": true
+    },
+    {
+      "pred": "not has \"line-through\"",
+      "value": "text-primary line-through",
+      "verdict": false
+    },
+    { "pred": "not not_empty", "value": "", "verdict": true },
+    { "pred": "not in \"a\" \"b\"", "value": "c", "verdict": true },
+    { "pred": "not in \"a\" \"b\"", "value": "a", "verdict": false },
+
+    { "pred": "is \"a\" \"b\"", "value": "a", "verdict": "unevaluable" },
+    { "pred": "contains \"a\" \"b\"", "value": "a", "verdict": "unevaluable" },
+    { "pred": "has \"a\" \"b\"", "value": "a", "verdict": "unevaluable" },
+    {
+      "pred": "uses \"--a\" \"--b\"",
+      "value": "var(--a)",
+      "verdict": "unevaluable"
+    },
+    { "pred": "not_empty \"a\"", "value": "a", "verdict": "unevaluable" },
+    { "pred": "is a", "value": "a", "verdict": "unevaluable" },
+    { "pred": "is 4", "value": "4", "verdict": "unevaluable" },
+    { "pred": "contains a", "value": "a", "verdict": "unevaluable" },
+    { "pred": "has a", "value": "a", "verdict": "unevaluable" },
+    { "pred": "uses --a", "value": "var(--a)", "verdict": "unevaluable" },
+    { "pred": "in a b", "value": "a", "verdict": "unevaluable" },
+    { "pred": "in \"a\" b", "value": "a", "verdict": "unevaluable" },
+    { "pred": "in", "value": "a", "verdict": "unevaluable" },
+    { "pred": "in foo", "value": "a", "verdict": "unevaluable" },
+    { "pred": "is \"a", "value": "\"a", "verdict": "unevaluable" },
+    { "pred": "has \"a b\"", "value": "a b", "verdict": "unevaluable" },
+    { "pred": "has \"\"", "value": "a", "verdict": "unevaluable" },
+    {
+      "pred": "uses \"primary\"",
+      "value": "var(primary)",
+      "verdict": "unevaluable"
+    },
+    { "pred": "frobs \"x\"", "value": "x", "verdict": "unevaluable" },
+    { "pred": "not", "value": "a", "verdict": "unevaluable" },
+    { "pred": "", "value": "a", "verdict": "unevaluable" },
+
+    { "pred": "not is \"a\" \"b\"", "value": "c", "verdict": "unevaluable" },
+    {
+      "pred": "not contains \"a\" \"b\"",
+      "value": "c",
+      "verdict": "unevaluable"
+    },
+    { "pred": "not has \"a\" \"b\"", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not is a", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not contains a", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not has a", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not in a b", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not in", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not in foo", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not is \"a", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not not_empty \"a\"", "value": "", "verdict": "unevaluable" },
+    { "pred": "not has \"a b\"", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not uses \"primary\"", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not frobs \"x\"", "value": "c", "verdict": "unevaluable" },
+    { "pred": "not not contains \"a\"", "value": "a", "verdict": "unevaluable" }
+  ]
+}

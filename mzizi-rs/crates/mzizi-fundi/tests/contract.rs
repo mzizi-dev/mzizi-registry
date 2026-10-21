@@ -16,8 +16,8 @@ use std::fs;
 use std::path::PathBuf;
 
 use mzizi_fundi::mzizi_fundi_reporter::{
-    CooldownLog, ErrorType, FundiReport, NotFiled, ReportSeverity, escape_code_span,
-    escape_markdown_cell, issue_body, issue_title, labels_for,
+    CooldownLog, ErrorType, FundiReport, GITHUB_REPO, NotFiled, ReportSeverity, escape_code_span,
+    escape_markdown_cell, issue_body, issue_title, issues_api_url, labels_for,
 };
 
 fn ts_sibling() -> String {
@@ -285,16 +285,126 @@ fn the_body_keeps_the_typescript_section_headings() {
     assert!(body.contains("*Filed by mzizi-fundi-reporter"));
 }
 
+/// The `.ts` with its comments removed, so a commented-out declaration or a
+/// slug quoted in prose cannot satisfy (or trip) a check. String-aware: `//`
+/// inside `"https://…"` is not a comment.
+fn ts_code() -> String {
+    let src: Vec<char> = ts_sibling().chars().collect();
+    let mut out = String::with_capacity(src.len());
+    let mut i = 0;
+    let mut quote: Option<char> = None;
+    while i < src.len() {
+        let c = src[i];
+        if let Some(q) = quote {
+            out.push(c);
+            if c == '\\' && i + 1 < src.len() {
+                out.push(src[i + 1]);
+                i += 2;
+                continue;
+            }
+            if c == q {
+                quote = None;
+            }
+            i += 1;
+        } else if c == '/' && src.get(i + 1) == Some(&'/') {
+            while i < src.len() && src[i] != '\n' {
+                i += 1;
+            }
+        } else if c == '/' && src.get(i + 1) == Some(&'*') {
+            i += 2;
+            while i + 1 < src.len() && !(src[i] == '*' && src[i + 1] == '/') {
+                i += 1;
+            }
+            i += 2;
+        } else {
+            if matches!(c, '"' | '\'' | '`') {
+                quote = Some(c);
+            }
+            out.push(c);
+            i += 1;
+        }
+    }
+    out
+}
+
+/// Whether `code` names the repo `slug` in any quoting or URL form: the slug
+/// followed by anything that cannot continue a repo name (so
+/// `mzizi-dev/mzizi-registry` does not count as `mzizi-dev/mzizi`).
+fn names_repo(code: &str, slug: &str) -> bool {
+    code.match_indices(slug).any(|(at, _)| {
+        !code[at + slug.len()..]
+            .chars()
+            .next()
+            .is_some_and(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_' || c == '.')
+    })
+}
+
 #[test]
-fn the_typescript_still_files_against_the_renamed_repo() {
-    // It said nyuchi/design-portal and worked only because GitHub redirects a
-    // renamed repo — which will break every consumer at once when that retires.
-    let ts = ts_sibling();
-    assert!(ts.contains("nyuchi/mzizi"), "the repo constant regressed");
+fn both_builds_file_against_the_registry() {
+    // It said nyuchi/design-portal, then nyuchi/mzizi, and each worked only
+    // because GitHub redirects a renamed repo — which breaks every consumer at
+    // once when the redirect retires or the old name is claimed (#321).
+    assert_eq!(GITHUB_REPO, "mzizi-dev/mzizi-registry");
+    let code = ts_code();
     assert!(
-        !ts.contains("\"nyuchi/design-portal\""),
-        "the stale repo name returned"
+        code.contains(&format!("export const GITHUB_REPO = \"{GITHUB_REPO}\"")),
+        "the TypeScript's live GITHUB_REPO is not {GITHUB_REPO}"
     );
+    // The two retired names, and the Mzizi language's repo (a near miss), in
+    // any quote style or inside a URL.
+    for wrong in ["nyuchi/mzizi", "nyuchi/design-portal", "mzizi-dev/mzizi"] {
+        assert!(
+            !names_repo(&code, wrong),
+            "the TypeScript names the wrong repo {wrong}"
+        );
+    }
+}
+
+#[test]
+fn the_slug_check_catches_every_quote_style() {
+    for code in [
+        "const r = 'nyuchi/mzizi'",
+        "fetch(`https://api.github.com/repos/nyuchi/mzizi/issues`)",
+        "const r = \"nyuchi/mzizi\"",
+    ] {
+        assert!(names_repo(code, "nyuchi/mzizi"), "missed {code}");
+    }
+    assert!(!names_repo(
+        "\"mzizi-dev/mzizi-registry\"",
+        "mzizi-dev/mzizi"
+    ));
+}
+
+#[test]
+fn the_destination_is_configurable_in_both_builds() {
+    assert_eq!(
+        issues_api_url(None),
+        "https://api.github.com/repos/mzizi-dev/mzizi-registry/issues"
+    );
+    assert_eq!(
+        issues_api_url(Some("acme/tracker")),
+        "https://api.github.com/repos/acme/tracker/issues"
+    );
+    let code = ts_code();
+    assert!(code.contains("githubRepo?: string"));
+    assert!(code.contains("return `https://api.github.com/repos/${githubRepo}/issues`"));
+    assert!(code.contains("issuesApiUrl(this.config.githubRepo)"));
+}
+
+#[test]
+fn both_builds_key_the_cooldown_on_component_and_error_type() {
+    assert_eq!(report().cooldown_key(), "button:render");
+    assert!(
+        ts_code().contains("return `${report.component}:${report.errorType}`"),
+        "the TypeScript cooldown key is not component:errorType"
+    );
+}
+
+#[test]
+fn the_typescript_never_sends_a_github_token_from_a_browser() {
+    let code = ts_code();
+    assert!(code.contains("if (githubToken && inBrowser())"));
+    assert!(code.contains("reason: \"token-in-browser\""));
 }
 
 // ── learning ───────────────────────────────────────────────────────────────
