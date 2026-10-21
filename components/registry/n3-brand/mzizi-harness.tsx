@@ -104,6 +104,18 @@ export function useMziziHarness(componentName: string): ComponentHarnessResult {
   return { log, motion, announce, announceUrgent, LiveRegion }
 }
 
+/**
+ * @deprecated The harness's name before the nyuchi-* to mzizi-* rename. Use
+ * `useMziziHarness`. Kept so code written against the old name still runs.
+ *
+ * Migration: registry components call `useMziziHarness`. A harness vendored
+ * before the rename exports only `useNyuchiHarness`, so those components fail
+ * to import from it. Reinstall this harness
+ * (`npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-harness`), or add
+ * `export { useNyuchiHarness as useMziziHarness }` to your old copy.
+ */
+export const useNyuchiHarness = useMziziHarness
+
 export interface MziziHarnessProps {
   name: string
   children: React.ReactNode
