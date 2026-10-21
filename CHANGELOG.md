@@ -10,6 +10,11 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — every dependency and override is a minimum version (2026-10-21, #534)
+
+- **`package.json`.** Every `dependencies`, `devDependencies` and `pnpm.overrides` entry is now `>=x.y.z` with no maximum, exact pins included (owner, 2026-10-21: "mark packages with minimum acceptable, latest shouldn't be a blocker on too old of a version"). Each floor is the version the lockfile already resolved; `vite` reads `>=8.3.5`. Four overrides for packages not in the tree (`@xmldom/xmldom`, `lodash-es`, `uuid`, `minimatch@8>brace-expansion`) keep their old floor.
+- **`pnpm-lock.yaml`.** No version moves: only the specifiers and override ranges change. With no upper bound, a resolve without the lockfile may cross majors; the `micromatch>picomatch` and `minimatch@8>brace-expansion` overrides no longer hold their parent's major on such a resolve.
+
 ### Changed — Dependabot runs against `staging`, and its version bumps pass the changelog gate (2026-10-20, #508)
 
 - **`.github/dependabot.yml`.** Both update entries (npm and GitHub Actions) set `target-branch: "staging"`, so Dependabot opens its pull requests against `staging`, where this repository merges and releases, not against `main`. Pull requests already open against `main` are not retargeted by this change.
