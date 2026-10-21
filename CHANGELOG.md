@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — `@nyuchi/mzizi-skills` is a minimum version, `>=0.8.1`, not `^0.8.1` (2026-10-21)
+### Changed — `@nyuchi/mzizi-skills` is a minimum version, `>=0.8.1`, not `^0.8.1` (2026-10-21, #525)
 
 Owner decision, 2026-10-21: first-party packages are pinned to a minimum acceptable version, with no maximum. On a `0.x` version a caret stops below the next minor, so `^0.8.1` could never take 0.9.0 or later without a manifest edit. `pnpm-lock.yaml` still fixes the resolved version, 0.8.5, so nothing installs differently in this pull request, and `plugin/skills/` and `lib/skills.generated.ts` are unchanged. Taking a newer bundle is now `pnpm update @nyuchi/mzizi-skills` and a regenerate, not a `package.json` edit. Third-party dependencies, and the Roots crates' `path` + `version` dependencies on each other in `mzizi-rs/`, are unchanged.
 
