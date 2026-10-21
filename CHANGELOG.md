@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — a test run no longer leaves its module copies in the temp directory: Vitest 5.0.3 (2026-10-07, #482)
+
+Every `vitest run` left one folder behind in the system temp directory (`$TMPDIR`, else `/tmp`): a 21-character random name holding `client/` and `ssr/` copies of every transformed module, about 57 MB for the main suite and 4 MB for the Astro suite (`vitest.astro.config.ts`, which `__tests__/astro/contracts.test.ts` runs under). On an agent host running the suites many times a day they reached 4.8 GB (about 600 folders). The cause is Vitest 5.0.0 to 5.0.2: the root project writes its copies to a temp folder that nothing removes on close. Vitest 5.0.3 removes it when the run closes.
+
+- `vitest` moves from `^5.0.2` to `^5.0.3`; the lockfile resolves 5.0.5, the newest in that range when `staging` was merged in on 2026-10-21. No test or config changes.
+- Verified: `pnpm test` (760 and 472 tests) with `TMPDIR` set to an empty folder leaves no such folder; on 5.0.2 the same run left two (57 MB and 4 MB).
+- Folders already left behind are not removed by this change. Delete them by hand, or with the `digital-hygiene` skill's `hygiene.sh tmp` prune once it ships (mzizi-dev/agent-tools).
+
 ## [4.10.0] - 2026-10-21
 
 Releases `staging` to `main` as the next minor above v4.9.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.10.0. It also carries the 2026-10-20 owner-decision docs pass (#513): repository names, the three build targets (Workers, containers, bare metal), the four gateways and the renderer in the doctrine, `README.md`, `AGENTS.md`, the Roots RFCs and the crate READMEs and keywords. The Mzizi Roots crates stay at 0.4.0; their READMEs and `Cargo.toml` metadata change, but no crate code or version does. `staging` had lost `main`'s 4.6.0 to 4.9.0 release records (these section headings, their `releases.json` entries and the version, which read 4.5.0); they are carried forward here so the release does not take them off `main`.
