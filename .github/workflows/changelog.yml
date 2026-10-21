@@ -15,11 +15,17 @@ name: Changelog
 #   - a PR that touches only .github/, lockfiles or lint config.
 #
 # labeled/unlabeled re-run the check when `no-changelog` is added or removed.
-# The job always runs and decides in the script, rather than skipping on an
-# `if:`, so the check always reports a real result.
+# On a pull request the job always runs and decides in the script, rather than
+# skipping on an `if:`, so the check always reports a real result. On a merge
+# queue run there is no pull request to read (no base_ref, no labels), and the
+# PR's own run already decided, so the job is skipped there; a skipped required
+# check counts as passed.
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
+  # Required checks must also report on a merge queue's gh-readonly-queue/** ref, or a queued PR waits
+  # until the queue times it out. Harmless where no queue is configured.
+  merge_group:
 
 permissions:
   contents: read
@@ -27,6 +33,7 @@ permissions:
 jobs:
   entry:
     name: changelog / entry required
+    if: github.event_name != 'merge_group'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

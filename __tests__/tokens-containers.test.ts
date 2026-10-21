@@ -9,6 +9,7 @@
 // with Tailwind to check what a consumer actually gets.
 
 import { describe, expect, it } from "vitest"
+import { escapeRegExp } from "./helpers/regexp"
 import { readFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { createRequire } from "node:module"
@@ -38,7 +39,7 @@ async function build(candidates: string[]): Promise<string> {
 
 /** The rule body for `.selector { … }` in compiled output (one level of nesting). */
 function rule(css: string, selector: string): string {
-  const m = css.match(new RegExp(`\\n\\s*\\.${selector} \\{((?:[^{}]|\\{[^{}]*\\})*)\\}`))
+  const m = css.match(new RegExp(`\\n\\s*\\.${escapeRegExp(selector)} \\{((?:[^{}]|\\{[^{}]*\\})*)\\}`))
   return m?.[1] ?? ""
 }
 
@@ -52,7 +53,7 @@ describe("mzizi-tokens-globals.css containers", () => {
 
   it("ships the three utilities in the generated part", () => {
     for (const name of ["container-custom", "container-narrow", "container-prose"]) {
-      expect(GENERATED, name).toMatch(new RegExp(`^@utility ${name} \\{`, "m"))
+      expect(GENERATED, name).toMatch(new RegExp(`^@utility ${escapeRegExp(name)} \\{`, "m"))
     }
     expect(CONTAINER_UTILITIES.map(([n]) => n)).toEqual(["container-custom", "container-narrow", "container-prose"])
   })
@@ -69,7 +70,7 @@ describe("mzizi-tokens-globals.css containers", () => {
 
     for (const [name, width] of [["container-narrow", "narrow"], ["container-prose", "prose"]] as const) {
       const body = rule(out, name)
-      expect(body, name).toMatch(new RegExp(`max-width: var\\(--container-${width}\\);`))
+      expect(body, name).toContain(`max-width: var(--container-${width});`)
       expect(body, name).toMatch(/margin-inline: auto;/)
       expect(body, name).toMatch(/^\s*padding-inline: var\(--space-lg\);/m)
       expect(body, name).toMatch(/@media \(width >= 40rem\) \{\s*padding-inline: var\(--space-xl\);/)
