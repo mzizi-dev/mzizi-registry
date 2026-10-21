@@ -5,6 +5,9 @@ on:
     branches: [main, staging]
   pull_request:
     branches: [main, staging]
+  # Required checks must also report on a merge queue's gh-readonly-queue/** ref, or a queued PR waits
+  # until the queue times it out. Harmless where no queue is configured.
+  merge_group:
   # Manual trigger. Added because on 2026-08-26 neither this workflow nor its
   # sibling produced ANY run for PR #265 — zero runs created, both workflows
   # `active`, valid, correctly triggered on `pull_request: [main]`, while the
