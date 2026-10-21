@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/brand-mark",
   "title": "BrandMark",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "node": 3,
   "kind": "primitive",
   "summary": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
@@ -67,7 +67,8 @@
   "behaviour": [
     "The marks are the registry's canonical icon pair, never redrawn.",
     "Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script.",
-    "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"."
+    "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\".",
+    "A brand outside `values` (from untyped data, or one whose icon pair has not shipped) is an error at render that names it and the brands that ship; no other brand's mark is shown in its place."
   ],
   "states": {
     "default": {

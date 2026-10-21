@@ -1,6 +1,9 @@
 # RFC: Mzizi Roots without Dioxus
 
-**Status:** proposed, 2026-10-20. **Tracking:** [#503](https://github.com/mzizi-dev/mzizi-registry/issues/503).
+**Status:** proposed, 2026-10-20; partly built. **Progress on `staging`:** the
+skeleton `render` (#506) and six static primitives (#510) are merged, which is PR 0 and six of the
+thirteen components in PR 1 (§5). Dioxus is still a dependency of `mzizi-ui`, `mzizi-brand`,
+`mzizi-shell`, `mzizi-docs` and the two umbrellas, and nothing is published or version-bumped. **Tracking:** [#503](https://github.com/mzizi-dev/mzizi-registry/issues/503).
 **Amends:** [RFC-roots](./RFC-roots.md) §2.1 ("UI components are Dioxus") and §3 (the Dioxus
 islands). The server half of Roots (`mzizi-roots-server`, `mzizi-assurance`, `mzizi-fundi`,
 `mzizi-discovery`, `mzizi-activitypub`) is not affected, except the `docs` feature it inherits
@@ -259,7 +262,7 @@ in `attach`. It also owes the same decision on the page WASM budget.
    that also changes the API would publish the breaking change at the next release, so bumps belong
    in PR 6 and need owner approval.
 
-## 9. What this PR does
+## 9. What PR 0 did (#506)
 
 - Adds `mzizi-ui/src/html.rs` (the reference escaping writer, unit-tested) and `#[cfg(test)] pub(crate) mod html` in `lib.rs`. It is compiled for tests only, because `render` uses the inline copy in `skeleton.rs`.
 - Adds `skeleton::RenderProps` and `skeleton::render` to the registry source
@@ -268,6 +271,10 @@ in `attach`. It also owes the same decision on the page WASM budget.
 - Adds `mzizi-ui/tests/render_parity.rs`.
 - Adds this document.
 - Removes nothing, bumps no version, publishes nothing.
+
+Section 5 PR 1 is partly done: #510 landed `separator`, `progress`, `badge`, `status-badge`, `safe-area-frame`
+and `chart`. Still to do in PR 1: `alert`, `button`, `card`, `input`, `label`, `avatar`,
+`markdown-renderer`.
 
 **Public API.** `mzizi_ui::skeleton::RenderProps` and `mzizi_ui::skeleton::render` are new public
 items, so this is additive: no existing item changes. It is not a breaking change, and it ships

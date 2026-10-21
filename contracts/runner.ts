@@ -518,15 +518,64 @@ const MINERAL_CLASS = new RegExp(
 );
 
 /**
+ * CSP rule: no element carries an inline `style` attribute, in any state.
+ * Custom properties and sizes go through classes, data attributes or SVG
+ * geometry, so a page's Content-Security-Policy keeps `style-src 'self'` with
+ * no `style-src-attr 'unsafe-inline'` (#444: a strip coloured by `style=`
+ * rendered colourless under such a CSP).
+ *
+ * This rendered check is the rule: it reads the markup a build actually
+ * emits, so it sees every way of writing one (React's `style={{…}}`, a spread
+ * props object, `createElement(…, { style })`, Astro's `{style}` shorthand
+ * and `<style define:vars>`). `evaluateInlineStyles` is the one place it is
+ * applied, and `evaluateTheming` calls it. The registry's source-side
+ * backstop, `contracts/source-scan.ts`, is not part of this runner.
+ */
+export interface InlineStyle {
+  state: string;
+  tag: string;
+  /** The attribute's value, as rendered. */
+  style: string;
+}
+
+/**
+ * The message `evaluateTheming` gives for an inline style. Its text is a
+ * contract with @bundu/ui's synced copy of this runner, whose tests match it
+ * exactly; the style's value is in `inlineStyles`, not in the message.
+ */
+const inlineStyleMessage = (state: string, tag: string) =>
+  `[${state}] an inline style attribute on <${tag}> (needs style-src-attr 'unsafe-inline')`;
+
+/** Every element, in every state, that carries a `style` attribute. */
+export function inlineStyles(rendered: Rendered): InlineStyle[] {
+  const out: InlineStyle[] = [];
+  for (const [state, html] of Object.entries(rendered))
+    for (const el of elements(doc(html)))
+      if (el.attribs.style !== undefined)
+        out.push({ state, tag: el.name, style: el.attribs.style });
+  return out;
+}
+
+/**
+ * The CSP rule: one message per element with a `style` attribute, state by
+ * state. `evaluateTheming` calls this for its CSP failures, so the rule and
+ * its messages live in one place; `runner-theming.test.ts` pins both.
+ */
+export function evaluateInlineStyles(rendered: Rendered): string[] {
+  return inlineStyles(rendered).map((s) => inlineStyleMessage(s.state, s.tag));
+}
+
+/**
  * Brand overlay rule: a component names no colour value and no brand
  * mineral. Colour comes from semantic tokens (`--primary`, `--ring`, …), so
  * the brand overlay is the only thing that changes it; minerals appear only
  * as declared status colours.
  *
- * CSP rule: no element carries an inline `style` attribute. Custom
- * properties and sizes go through classes, data attributes or SVG geometry,
- * so a page's Content-Security-Policy keeps `style-src 'self'` with no
- * `style-src-attr 'unsafe-inline'`.
+ * CSP rule, in the same pass: each state's `evaluateInlineStyles` failures
+ * come first, then its colour failures. A colour value inside a style
+ * attribute fails as a colour too.
+ * The messages are a contract with @bundu/ui's synced copy of this runner;
+ * `__tests__/contracts/runner-theming.test.ts` pins them.
  */
 export function evaluateTheming(
   contract: Contract,
@@ -534,13 +583,10 @@ export function evaluateTheming(
 ): string[] {
   const failures: string[] = [];
   for (const [state, html] of Object.entries(rendered)) {
+    failures.push(...evaluateInlineStyles({ [state]: html }));
     for (const el of elements(doc(html))) {
       const cls = el.attribs.class ?? "";
       const style = el.attribs.style ?? "";
-      if (el.attribs.style !== undefined)
-        failures.push(
-          `[${state}] an inline style attribute on <${el.name}> (needs style-src-attr 'unsafe-inline')`,
-        );
       if (/#[0-9a-fA-F]{3,8}\b/.test(cls) || /#[0-9a-fA-F]{3,8}\b/.test(style))
         failures.push(`[${state}] a literal hex colour on <${el.name}>`);
       if (
