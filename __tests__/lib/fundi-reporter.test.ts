@@ -18,6 +18,7 @@
 import { readFileSync } from "node:fs"
 import path from "node:path"
 import { afterEach, describe, expect, it, vi } from "vitest"
+import { escapeRegExp } from "../helpers/regexp"
 import {
   GITHUB_REPO,
   initFundiReporter,
@@ -209,7 +210,7 @@ describe("mzizi-fundi-reporter source", () => {
   it("names neither a retired repo nor the Mzizi language's, in any quote style", () => {
     const live = code()
     for (const wrong of ["nyuchi/mzizi", "nyuchi/design-portal", "mzizi-dev/mzizi"]) {
-      expect(live).not.toMatch(new RegExp(`${wrong.replace("/", "\\/")}(?![\\w.-])`))
+      expect(live).not.toMatch(new RegExp(`${escapeRegExp(wrong)}(?![\\w.-])`))
     }
   })
 })

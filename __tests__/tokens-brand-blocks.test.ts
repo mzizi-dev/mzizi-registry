@@ -10,6 +10,7 @@
 // record for every brand that has one, including the default.
 
 import { describe, expect, it } from "vitest"
+import { escapeRegExp } from "./helpers/regexp"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { ecosystem, ecosystemAliases, resolveEcosystemName } from "@/lib/tokens/brand.source"
@@ -32,7 +33,7 @@ function blockPrimary(brand: string): string | undefined {
   // `[^{}]*` lets the brand sit anywhere in a selector list, so a block that
   // also carries a deprecated alias (`[data-brand="events"], [data-brand="nhimbe"]`)
   // matches for both names.
-  const m = CSS.match(new RegExp(`\\[data-brand="${brand}"\\][^{}]*\\{[^}]*--primary:\\s*var\\((--[a-z-]+)\\)`))
+  const m = CSS.match(new RegExp(`\\[data-brand="${escapeRegExp(brand)}"\\][^{}]*\\{[^}]*--primary:\\s*var\\((--[a-z-]+)\\)`))
   return m?.[1]
 }
 
@@ -120,7 +121,7 @@ describe("mzizi-tokens-globals.css brand blocks", () => {
   it("sets --brand-accent only in the blocks of brands whose canon row names an accent", () => {
     for (const [brand] of BRANDS) {
       const row = ecosystem.find((b) => b.name === brand)
-      const block = CSS.match(new RegExp(`\\[data-brand="${brand}"\\][^{}]*\\{([^}]*)\\}`))?.[1] ?? ""
+      const block = CSS.match(new RegExp(`\\[data-brand="${escapeRegExp(brand)}"\\][^{}]*\\{([^}]*)\\}`))?.[1] ?? ""
       if (row?.accent) expect(block, brand).toContain(`--brand-accent: var(${aaVar(row.accent)})`)
       else expect(block, brand).not.toContain("--brand-accent")
     }

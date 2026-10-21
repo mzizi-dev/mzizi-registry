@@ -42,10 +42,15 @@
 import type { ExperimentalToken, HeritageToken, MineralToken } from "../lib/tokens/palette.source"
 import { backgroundColors as BACKGROUNDS, ecosystem, ecosystemAliases, semanticColors as SEMANTIC } from "../lib/tokens/brand.source"
 import {
+  BODY,
   colorKey,
+  contrastFloor,
+  contrastMin,
   FONT_ALIASES,
   FONTS,
   isColorKind,
+  type MeasuredRule,
+  NON_BODY,
   RADIUS,
   ROLES,
   SIZING,
@@ -434,8 +439,8 @@ export function a11yTier(
   return out
 }
 
-/** APCA Lc 75, the body-text bar. `textRamp()` walks `--text-secondary` to the same bar. */
-const BODY_TEXT = 75
+/** APCA Lc 75, the body-text bar (`BODY` in the role manifest). `textRamp()` walks `--text-secondary` to the same bar. */
+const BODY_TEXT = BODY
 
 export interface TextVariant {
   hex: string
@@ -539,13 +544,18 @@ export function onContainerMeasure(m: Mineral) {
  */
 export function textRamp() {
   const surface = (mode: "light" | "dark") => LADDER.find(([n]) => n === "surface")![mode === "light" ? 1 : 2]
-  const ramp = (bg: string, toward: string, bar: number, also: string[] = []) =>
-    walk(mix(bg, toward, 0.01), toward, (c) => [bg, ...also].every((b) => Math.abs(apca(c, b)) >= bar))
+  // text-tertiary's rule also carries a WCAG ratio ("Add 4.5:1 too", #484); read it from the manifest.
+  const tertiaryRule = ROLES.find((r) => r.name === "text-tertiary")?.contrast
+  const tertiaryRatio = tertiaryRule && "against" in tertiaryRule ? tertiaryRule.wcag : undefined
+  const ramp = (bg: string, toward: string, bar: number, also: string[] = [], ratio?: number) =>
+    walk(mix(bg, toward, 0.01), toward, (c) =>
+      [bg, ...also].every((b) => Math.abs(apca(c, b)) >= bar && (ratio === undefined || wcag(c, b) >= ratio))
+    )
   const build = (bg: string, toward: string, surf: string) => {
     const t = {
       primary: ramp(bg, toward, 90),
-      secondary: ramp(bg, toward, 75, [surf]),
-      tertiary: ramp(bg, toward, 60, [surf]),
+      secondary: ramp(bg, toward, BODY, [surf]),
+      tertiary: ramp(bg, toward, NON_BODY, [surf], tertiaryRatio),
     }
     return {
       ...t,
@@ -736,8 +746,23 @@ export function resolveRoles(
     return one(themed(r.default, mode), mode, r).value
   }
 
-  const passes = (hex: string, rule: { against: readonly string[]; min: number }, mode: Mode) =>
-    rule.against.every((bg) => Math.abs(apca(hex, resolve(bg).value[mode])) >= rule.min)
+  /** Whether `hex` clears both of a rule's bars (|Lc| `min`, and the WCAG ratio where set) on `on`. */
+  const clears = (hex: string, on: string, min: number, ratio?: number) =>
+    Math.abs(apca(hex, on)) >= min && (ratio === undefined || wcag(hex, on) >= ratio)
+
+  /**
+   * Whether `hex` clears role `x`'s rule on every background, in `mode`. `bgValue` paints a
+   * background: by default its resolved value (the fill walk below passes one with a
+   * candidate fill in place of the fill it is walking).
+   */
+  const passes = (
+    hex: string,
+    x: Role & { contrast: MeasuredRule },
+    mode: Mode,
+    bgValue: (bg: string) => string = (bg) => resolve(bg).value[mode]
+  ) => x.contrast.against.every((bg) => clears(hex, bgValue(bg), contrastMin(x.kind, x.contrast), x.contrast.wcag))
+
+  const measured = (x: Role): x is Role & { contrast: MeasuredRule } => !!x.contrast && "against" in x.contrast
 
   /** Walk toward `first`, then the other way; the first value that passes, or null. */
   const derive = (start: string, first: string, ok: (hex: string) => boolean) => {
@@ -764,32 +789,45 @@ export function resolveRoles(
       const base = one(themed(r.default, mode), mode, r)
       css[mode] = base.css
       value[mode] = base.value
-      if (r.derive === "text" && r.contrast && "against" in r.contrast && !passes(base.value, r.contrast, mode)) {
+      if (r.derive === "text" && measured(r) && !passes(base.value, r, mode)) {
         const rule = r.contrast
+        const min = contrastMin(r.kind, rule)
         const worst = Math.min(...rule.against.map((bg) => Math.abs(apca(base.value, resolve(bg).value[mode]))))
-        const got = derive(base.value, mode === "light" ? BLACK : WHITE, (c) => passes(c, rule, mode))
+        const got = derive(base.value, mode === "light" ? BLACK : WHITE, (c) => passes(c, r, mode))
         if (got) {
-          derived[mode] = `derived: ${base.value} measures Lc ${worst.toFixed(1)} against ${rule.against.join(" / ")}; walked toward ${got.toward} to Lc ${rule.min}`
+          const bars = `Lc ${min}${rule.wcag ? ` and ${rule.wcag}:1` : ""}`
+          derived[mode] = `derived: ${base.value} measures Lc ${worst.toFixed(1)} against ${rule.against.join(" / ")}; walked toward ${got.toward} to ${bars}`
           css[mode] = lo(got.hex)
           value[mode] = got.hex
         } else {
           unmet[mode] =
             `${r.name} (${mode}): derive "text" found no value between #000000 and #FFFFFF from ${base.value} ` +
-            `that clears Lc ${rule.min} against ${rule.against.join(" / ")} (Lc ${worst.toFixed(1)} now)`
+            `that clears Lc ${min}${rule.wcag ? ` and ${rule.wcag}:1` : ""} against ${rule.against.join(" / ")} (Lc ${worst.toFixed(1)} now)`
         }
       }
       if (r.derive === "fill") {
-        // Every role measured ON this fill must clear its bar on it. A foreground
-        // that is itself derived, or is mid-resolution, is measured before its own
-        // derivation: the fill settles first, then the foreground against it.
+        // Every role measured ON this fill must clear its bars on it (|Lc| and, where its
+        // rule sets one, the WCAG ratio). A foreground that is mid-resolution is measured
+        // before its own derivation. A text-derived foreground is held to what it WILL
+        // paint: a candidate fill passes when that foreground clears its rule on it, as it
+        // is or once its own walk has moved it, with the candidate standing in for this
+        // fill. So the fill only moves where the foreground cannot reach its bars by itself.
         const fgs = roles
-          .filter((x) => x.contrast && "against" in x.contrast && x.contrast.against.includes(name))
+          .filter((x): x is Role & { contrast: MeasuredRule } => measured(x) && x.contrast.against.includes(name))
           .map((x) => ({
+            role: x,
             name: x.name,
-            min: (x.contrast as { min: number }).min,
+            min: contrastMin(x.kind, x.contrast),
+            ratio: x.contrast.wcag,
             hex: x.derive === "text" || resolving.has(x.name) ? underived(x.name, mode) : resolve(x.name).value[mode],
           }))
-        const ok = (fill: string) => fgs.every((f) => Math.abs(apca(f.hex, fill)) >= f.min)
+        const reaches = (f: (typeof fgs)[number], fill: string) => {
+          if (f.role.derive !== "text") return clears(f.hex, fill, f.min, f.ratio)
+          const on = (bg: string) => (bg === name ? fill : resolving.has(bg) ? underived(bg, mode) : resolve(bg).value[mode])
+          if (passes(f.hex, f.role, mode, on)) return true
+          return derive(f.hex, mode === "light" ? BLACK : WHITE, (c) => passes(c, f.role, mode, on)) !== null
+        }
+        const ok = (fill: string) => fgs.every((f) => reaches(f, fill))
         if (fgs.length && !ok(base.value)) {
           // Each foreground pulls the fill away from itself: light text on a dark
           // fill pulls it toward black, dark text toward white.
@@ -799,13 +837,13 @@ export function resolveRoles(
           const measures = fgs.map((f) => `${f.name} measures Lc ${Math.abs(apca(f.hex, base.value)).toFixed(1)}`).join(", ")
           const got = derive(base.value, first, ok)
           if (got) {
-            derived[mode] = `derived: ${measures} on ${base.value}; fill walked toward ${got.toward} to Lc ${Math.max(...fgs.map((f) => f.min))}`
+            derived[mode] = `derived: ${measures} on ${base.value}; fill walked toward ${got.toward} to Lc ${Math.max(...fgs.map((f) => f.min))}${fgs.some((f) => f.ratio) ? ` and ${Math.max(...fgs.map((f) => f.ratio ?? 0))}:1` : ""}`
             css[mode] = lo(got.hex)
             value[mode] = got.hex
           } else {
             unmet[mode] =
               `${r.name} (${mode}): derive "fill" found no fill between #000000 and #FFFFFF from ${base.value} on which ` +
-              `${fgs.map((f) => `${f.name} (needs Lc ${f.min})`).join(", ")} all clear their bars; ${measures} now`
+              `${fgs.map((f) => `${f.name} (needs Lc ${f.min}${f.ratio ? ` and ${f.ratio}:1` : ""})`).join(", ")} all clear their bars; ${measures} now`
           }
         }
       }
@@ -862,6 +900,8 @@ export interface GateResult {
   min: number
   pass: boolean
   pending?: string
+  /** Set where the rule also carries a WCAG ratio: the measured ratio and its minimum. */
+  wcag?: { measure: number; min: number }
 }
 
 /**
@@ -869,8 +909,11 @@ export interface GateResult {
  * `pnpm tokens:verify`; a violation fails the build.
  *
  *   - every `kind: text` role: |Lc| >= 75 on `base` and `surface` (or on the
- *     fill it is declared against), both themes
- *   - every `kind: ui` role: |Lc| >= 30 on what it is declared against
+ *     fill it is declared against), both themes; >= 60 where its rule names
+ *     `nonBody` (text that is never body copy: APCA's non-body minimum)
+ *   - every `kind: ui` role: |Lc| >= 30 on what it is declared against, unless it
+ *     is marked `decorative`: then it is exempt, and listed in `decorative` so the
+ *     report names every exemption (#484, owner decision 2026-10-20)
  *   - every size marked `floor` >= `spacing-touch-min`
  *   - every `derive` found a compliant value (`unmet` is a violation naming the
  *     roles, never a silent #000/#FFF)
@@ -879,30 +922,56 @@ export interface GateResult {
  * manifest declares resolves or throws in `resolveRoles()`, so there is nothing
  * to check until a pack can leave a role out.
  *
- * The manifest cannot loosen it: a text role that declares a bar under 75, or a
- * ui role under 30, is itself a violation unless the rule carries `pending`, an
- * owner decision named in the rule (and pinned by the role tests).
+ * The manifest cannot loosen it: a text role that declares a bar under its floor
+ * (`BODY`, or `NON_BODY` with `nonBody`), or a ui role under `UI` (all from
+ * `lib/tokens/roles.source.ts`, read through `contrastFloor()`), is itself a violation unless
+ * the rule carries `pending`, an owner decision named in the rule; a `decorative`
+ * rule on anything but a ui role is a violation. `nonBody`, `decorative` and
+ * `pending` are each pinned by the role tests.
  */
-export function roleGate(resolved: Map<string, ResolvedRole>): { results: GateResult[]; violations: string[]; pending: GateResult[] } {
+export function roleGate(resolved: Map<string, ResolvedRole>): {
+  results: GateResult[]
+  violations: string[]
+  pending: GateResult[]
+  decorative: { role: string; reason: string }[]
+} {
   const results: GateResult[] = []
   const violations: string[] = []
+  const decorative: { role: string; reason: string }[] = []
   for (const { role: r, value, unmet } of resolved.values()) {
     for (const mode of MODES) if (unmet[mode]) violations.push(unmet[mode]!)
+    if (r.contrast && "decorative" in r.contrast) {
+      if (r.kind !== "ui") violations.push(`${r.name}: only a ui role can be decorative, not a ${r.kind} role`)
+      else decorative.push({ role: r.name, reason: r.contrast.decorative })
+      continue
+    }
     if (!r.contrast || "exempt" in r.contrast) {
       if ((r.kind === "text" || r.kind === "ui") && !r.contrast) violations.push(`${r.name}: a ${r.kind} role with no contrast rule`)
       continue
     }
-    const floor = r.kind === "text" ? 75 : r.kind === "ui" ? 30 : 0
-    if (r.contrast.min < floor && !r.contrast.pending) violations.push(`${r.name}: declares Lc ${r.contrast.min}, under the ${r.kind} bar of ${floor}`)
+    const rule = r.contrast
+    if (rule.nonBody && r.kind !== "text") violations.push(`${r.name}: only a text role can be nonBody, not a ${r.kind} role`)
+    const floor = contrastFloor(r.kind, rule)
+    const declared = contrastMin(r.kind, rule)
+    if (declared < floor && !rule.pending) violations.push(`${r.name}: declares Lc ${declared}, under the ${r.kind} bar of ${floor}`)
+    const min = Math.max(declared, floor)
     for (const mode of MODES) {
-      for (const bg of r.contrast.against) {
-        const raw = Math.abs(apca(value[mode], resolved.get(bg)!.value[mode]))
+      for (const bg of rule.against) {
+        const on = resolved.get(bg)!.value[mode]
+        const raw = Math.abs(apca(value[mode], on))
         const measure = +raw.toFixed(1)
-        const min = Math.max(r.contrast.min, floor)
-        const res: GateResult = { role: r.name, mode, against: bg, measure, min, pass: raw >= min }
-        if (!res.pass && r.contrast.pending) res.pending = r.contrast.pending
+        const ratio = rule.wcag === undefined ? undefined : wcag(value[mode], on)
+        const wcagOk = ratio === undefined || ratio >= rule.wcag!
+        const res: GateResult = { role: r.name, mode, against: bg, measure, min, pass: raw >= min && wcagOk }
+        if (ratio !== undefined) res.wcag = { measure: +ratio.toFixed(2), min: rule.wcag! }
+        if (!res.pass && rule.pending) res.pending = rule.pending
         results.push(res)
-        if (!res.pass && !res.pending) violations.push(`${r.name} (${mode}): Lc ${measure} on ${bg}, needs ${min}`)
+        if (!res.pass && !res.pending) {
+          violations.push(
+            `${r.name} (${mode}): Lc ${measure} on ${bg}, needs ${min}` +
+              (ratio === undefined ? "" : `; WCAG ${ratio.toFixed(2)}:1, needs ${rule.wcag}:1`)
+          )
+        }
       }
     }
   }
@@ -915,7 +984,7 @@ export function roleGate(resolved: Map<string, ResolvedRole>): { results: GateRe
     results.push({ role: r.name, mode: "both", against: "spacing-touch-min", measure, min: touchMin, pass: measure >= touchMin })
     if (measure < touchMin) violations.push(`${r.name}: ${measure}px, under the ${touchMin}px touch floor`)
   }
-  return { results, violations, pending: results.filter((x) => x.pending) }
+  return { results, violations, pending: results.filter((x) => x.pending), decorative }
 }
 
 /**
@@ -1116,7 +1185,11 @@ export function renderGlobalsCss(
     const t = pick(text.light, text.dark)
     out.push(`  --text-primary: ${lo(t.primary)}; /* APCA Lc ${t.measure.primary} on --base, ${t.onSurface.primary} on --surface */`)
     out.push(`  --text-secondary: ${lo(t.secondary)}; /* APCA Lc ${t.measure.secondary} on --base, ${t.onSurface.secondary} on --surface */`)
-    out.push(`  --text-tertiary: ${lo(t.tertiary)}; /* APCA Lc ${t.measure.tertiary} on --base, ${t.onSurface.tertiary} on --surface */`)
+    const tr = (on: string) => wcag(t.tertiary, on).toFixed(2)
+    out.push(
+      `  --text-tertiary: ${lo(t.tertiary)}; /* APCA Lc ${t.measure.tertiary} on --base, ${t.onSurface.tertiary} on --surface; ` +
+        `WCAG ${tr(mode === "light" ? BASE_LIGHT : BASE_DARK)}:1 and ${tr(LADDER.find(([n]) => n === "surface")![mode === "light" ? 1 : 2])}:1 */`
+    )
     out.push(`  --hero-text: #ffffff; /* Text over photography — pair with --hero-text-shadow, never bare */`)
     out.push(`  --hero-text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.4);`)
     out.push(`  --muted-foreground: var(--text-secondary);`)
