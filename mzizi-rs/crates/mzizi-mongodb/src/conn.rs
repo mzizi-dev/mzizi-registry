@@ -98,6 +98,21 @@ fn as_i64(v: &Bson) -> Option<i64> {
     }
 }
 
+/// Operators that run JavaScript on the server. A read-only client has no use for them, and a
+/// filter or pipeline built from a request must never be able to run code on the cluster.
+const SERVER_JS: &[&str] = &["$where", "$function", "$accumulator"];
+
+/// Whether `v` uses a [`SERVER_JS`] operator anywhere, at any depth.
+fn runs_server_js(v: &Value) -> bool {
+    match v {
+        Value::Object(m) => m
+            .iter()
+            .any(|(k, v)| SERVER_JS.contains(&k.as_str()) || runs_server_js(v)),
+        Value::Array(a) => a.iter().any(runs_server_js),
+        _ => false,
+    }
+}
+
 fn name_ok(name: &str) -> bool {
     !name.is_empty()
         && name.len() <= 120
@@ -320,6 +335,9 @@ impl<T: Io> Connection<T> {
         if !name_ok(db) || !name_ok(coll) {
             return Err(self.refuse("bad_name", "bad database or collection name"));
         }
+        if runs_server_js(&opts.filter) || opts.projection.as_ref().is_some_and(runs_server_js) {
+            return Err(self.refuse("server_js", "server-side JavaScript is refused"));
+        }
         let limit = if opts.limit == 0 {
             MAX_FIND_DOCS
         } else {
@@ -352,7 +370,10 @@ impl<T: Io> Connection<T> {
         cmd.push(("maxTimeMS".into(), Bson::Int32(MAX_TIME_MS)));
         cmd.push(Self::read_pref());
         let reply = self.command(db, cmd).await?;
-        batch(&reply, "firstBatch")
+        let mut rows = batch(&reply, "firstBatch")?;
+        // The cap holds even against a server that ignores `limit`.
+        rows.truncate(limit);
+        Ok(rows)
     }
 
     /// The first document matching `filter`, if any.
@@ -384,6 +405,9 @@ impl<T: Io> Connection<T> {
                 return Err(self.refuse("read_only", "this client is read-only"));
             }
         }
+        if pipeline.iter().any(runs_server_js) {
+            return Err(self.refuse("server_js", "server-side JavaScript is refused"));
+        }
         let cmd: Doc = vec![
             ("aggregate".into(), Bson::str(coll)),
             (
@@ -406,24 +430,29 @@ impl<T: Io> Connection<T> {
         let mut out = batch(&reply, "firstBatch")?;
         loop {
             let id = cursor_id(&reply);
-            if id == 0 {
-                return Ok(out);
-            }
-            if out.len() >= MAX_AGGREGATE_DOCS {
-                // Release the server-side cursor, then refuse.
-                let _ = self
-                    .command(
-                        db,
-                        vec![
-                            ("killCursors".into(), Bson::str(coll)),
-                            ("cursors".into(), Bson::Array(vec![Bson::Int64(id)])),
-                        ],
-                    )
-                    .await;
+            // More than the cap is refused however it arrived, including in one batch from a
+            // server that ignores `batchSize`; at the cap with the cursor still open, the next
+            // batch could only take it over.
+            if out.len() > MAX_AGGREGATE_DOCS || (id != 0 && out.len() >= MAX_AGGREGATE_DOCS) {
+                if id != 0 {
+                    // Release the server-side cursor, then refuse.
+                    let _ = self
+                        .command(
+                            db,
+                            vec![
+                                ("killCursors".into(), Bson::str(coll)),
+                                ("cursors".into(), Bson::Array(vec![Bson::Int64(id)])),
+                            ],
+                        )
+                        .await;
+                }
                 return Err(self.refuse(
                     "too_many_documents",
                     "the aggregation returned too many documents",
                 ));
+            }
+            if id == 0 {
+                return Ok(out);
             }
             reply = self
                 .command(
@@ -814,6 +843,78 @@ mod tests {
         assert!(matches!(r, Err(Error::Refused(_))));
         let sent = seen.borrow();
         assert_eq!(name(sent.last().unwrap()), "killCursors");
+    }
+
+    #[test]
+    fn server_side_javascript_is_refused_before_anything_is_sent() {
+        let (mock, seen) = Mock::new(|_| cursor(0, "firstBatch", vec![]));
+        let mut c = Connection::new(mock);
+        for filter in [
+            serde_json::json!({"$where": "sleep(10000) || true"}),
+            serde_json::json!({"a": 1, "$or": [{"$where": "true"}]}),
+            serde_json::json!({"$expr": {"$function": {"body": "x", "args": [], "lang": "js"}}}),
+        ] {
+            let opts = FindOptions {
+                filter,
+                ..FindOptions::default()
+            };
+            let r = block_on(c.find("weather", "x", &opts));
+            assert!(matches!(r, Err(Error::Refused(_))), "{r:?}");
+        }
+        let opts = FindOptions {
+            projection: Some(serde_json::json!({"v": {"$function": {"body": "x"}}})),
+            ..FindOptions::default()
+        };
+        assert!(matches!(
+            block_on(c.find("weather", "x", &opts)),
+            Err(Error::Refused(_))
+        ));
+        for stage in [
+            serde_json::json!({"$match": {"$where": "true"}}),
+            serde_json::json!({"$group": {"_id": 1, "v": {"$accumulator": {"init": "x"}}}}),
+        ] {
+            let r = block_on(c.aggregate("weather", "x", &[stage]));
+            assert!(matches!(r, Err(Error::Refused(_))), "{r:?}");
+        }
+        assert!(seen.borrow().is_empty());
+        // A field merely named like an operator's value is fine.
+        let opts = FindOptions {
+            filter: serde_json::json!({"note": "$where"}),
+            ..FindOptions::default()
+        };
+        assert!(block_on(c.find("weather", "x", &opts)).is_ok());
+    }
+
+    #[test]
+    fn find_never_returns_more_than_its_limit_even_from_a_server_that_ignores_it() {
+        let (mock, _) = Mock::new(|_| cursor(0, "firstBatch", (0..10).map(Bson::Int32).collect()));
+        let mut c = Connection::new(mock);
+        let opts = FindOptions {
+            limit: 3,
+            ..FindOptions::default()
+        };
+        assert_eq!(block_on(c.find("weather", "x", &opts)).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn an_aggregation_over_the_cap_in_one_batch_is_refused() {
+        let over = i32::try_from(MAX_AGGREGATE_DOCS).unwrap() + 1;
+        let (mock, _) =
+            Mock::new(move |_| cursor(0, "firstBatch", (0..over).map(Bson::Int32).collect()));
+        let mut c = Connection::new(mock);
+        let r = block_on(c.aggregate("weather", "observations", &[]));
+        assert!(matches!(r, Err(Error::Refused(_))), "{r:?}");
+        // Exactly the cap, with the cursor closed, is fine.
+        let at = i32::try_from(MAX_AGGREGATE_DOCS).unwrap();
+        let (mock, _) =
+            Mock::new(move |_| cursor(0, "firstBatch", (0..at).map(Bson::Int32).collect()));
+        let mut c = Connection::new(mock);
+        assert_eq!(
+            block_on(c.aggregate("weather", "observations", &[]))
+                .unwrap()
+                .len(),
+            MAX_AGGREGATE_DOCS
+        );
     }
 
     // ---- authentication against a server that runs SCRAM itself ----------
