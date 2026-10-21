@@ -97,10 +97,12 @@
     },
     {
       "id": "bounded-reads",
-      "statement": "A find is capped at MAX_FIND_DOCS, carries a server-side time limit and read preference secondaryPreferred; an aggregation past MAX_AGGREGATE_DOCS kills its cursor and is refused.",
+      "statement": "A find is capped at MAX_FIND_DOCS (and at its own limit, even against a server that ignores it), carries a server-side time limit and read preference secondaryPreferred; an aggregation past MAX_AGGREGATE_DOCS, in one batch or many, kills its cursor and is refused.",
       "tests": [
         "find_sends_a_bounded_read_only_query_and_returns_json",
-        "a_runaway_aggregation_is_cut_off_and_its_cursor_killed"
+        "a_runaway_aggregation_is_cut_off_and_its_cursor_killed",
+        "find_never_returns_more_than_its_limit_even_from_a_server_that_ignores_it",
+        "an_aggregation_over_the_cap_in_one_batch_is_refused"
       ]
     },
     {
@@ -133,6 +135,13 @@
       "tests": ["the_password_never_appears_in_debug_or_errors"]
     },
     {
+      "id": "pooled-login-matches",
+      "statement": "A pooled connection is reused only by a client with the same user, password, authSource, hosts and replica set (the password compared in constant time), so a client with a different password or authSource never inherits another login.",
+      "tests": [
+        "a_login_is_the_same_only_with_the_same_user_password_auth_source_and_hosts"
+      ]
+    },
+    {
       "id": "harness-sees-no-data",
       "statement": "A harness sees each command's fixed name, outcome and server code, and each refusal's fixed reason, and never a filter, a collection name, a database name or a document. Without a harness nothing is reported and everything works.",
       "tests": [
@@ -152,6 +161,12 @@
       "input": "an aggregation pipeline with a $out or $merge stage",
       "reason": "this client is read-only",
       "tests": ["aggregate_refuses_writes_and_follows_the_cursor"]
+    },
+    {
+      "id": "server-js",
+      "input": "a filter, projection or pipeline using $where, $function or $accumulator, at any depth",
+      "reason": "those operators run JavaScript on the server; a read-only client refuses them before anything is sent",
+      "tests": ["server_side_javascript_is_refused_before_anything_is_sent"]
     },
     {
       "id": "bad-names",

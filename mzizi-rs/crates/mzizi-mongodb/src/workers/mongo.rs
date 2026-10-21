@@ -24,9 +24,9 @@ use mzizi_data::workers::{SocketIo, within};
 type Conn = Connection<SocketIo>;
 
 thread_local! {
-    /// The connection kept for the next operation, with the user and hosts it
-    /// belongs to.
-    static POOL: RefCell<Option<(String, Conn)>> = const { RefCell::new(None) };
+    /// The connection kept for the next operation, with the login it was
+    /// authenticated with ([`Uri::same_login`] decides whether it may be reused).
+    static POOL: RefCell<Option<(Uri, Conn)>> = const { RefCell::new(None) };
     static SALTS: RefCell<SaltCache> = RefCell::new(SaltCache::new());
 }
 
@@ -100,23 +100,14 @@ fn connection_broke(e: &Error) -> bool {
 /// A read-only MongoDB client.
 pub struct Mongo {
     uri: Uri,
-    id: String,
 }
 
 impl Mongo {
     /// From the seed-list connection string.
     pub fn new(connection_string: &str) -> Result<Mongo> {
-        let uri = uri::parse(connection_string)?;
-        let id = format!(
-            "{}@{}",
-            uri.user,
-            uri.hosts
-                .iter()
-                .map(|(h, p)| format!("{h}:{p}"))
-                .collect::<Vec<_>>()
-                .join(",")
-        );
-        Ok(Mongo { uri, id })
+        Ok(Mongo {
+            uri: uri::parse(connection_string)?,
+        })
     }
 
     /// The database named in the connection string, if any.
@@ -127,7 +118,7 @@ impl Mongo {
     async fn run(&self, op: Op<'_>) -> Result<Vec<Value>> {
         let pooled = POOL.with(|p| p.borrow_mut().take());
         let (mut conn, reused) = match pooled {
-            Some((id, c)) if id == self.id => (c, true),
+            Some((login, c)) if login.same_login(&self.uri) => (c, true),
             _ => (connect(&self.uri).await?, false),
         };
         let first = exec(&mut conn, &op).await;
@@ -141,7 +132,7 @@ impl Mongo {
         };
         // Keep the connection for the next operation unless it is broken.
         if !matches!(&result, Err(e) if connection_broke(e)) {
-            POOL.with(|p| *p.borrow_mut() = Some((self.id.clone(), conn)));
+            POOL.with(|p| *p.borrow_mut() = Some((self.uri.clone(), conn)));
         }
         result
     }

@@ -38,6 +38,23 @@ impl std::fmt::Debug for Uri {
     }
 }
 
+impl Uri {
+    /// Whether a connection authenticated with `self` may serve `other`: the same user, password,
+    /// `authSource` and hosts. A pooled connection is only reused when this holds, so a client
+    /// built from a different password or a different `authSource` (a different user in MongoDB's
+    /// eyes) never inherits another login. The password is compared in constant time.
+    pub fn same_login(&self, other: &Uri) -> bool {
+        use subtle::ConstantTimeEq;
+        let password = self.password.len() == other.password.len()
+            && bool::from(self.password.as_bytes().ct_eq(other.password.as_bytes()));
+        password
+            && self.user == other.user
+            && self.auth_source == other.auth_source
+            && self.hosts == other.hosts
+            && self.replica_set == other.replica_set
+    }
+}
+
 fn bad(m: &str) -> Error {
     Error::Uri(m.to_owned())
 }
@@ -184,6 +201,22 @@ mod tests {
         assert!(parse("mongodb://u:p@[::1]:27017").is_err());
         assert!(parse("mongodb://u:p%zz@h1").is_err());
         assert!(parse("mongodb://u:p@h1/?tls=false").is_err());
+    }
+
+    #[test]
+    fn a_login_is_the_same_only_with_the_same_user_password_auth_source_and_hosts() {
+        let a = parse("mongodb://u:p1@h1,h2/db?authSource=admin").unwrap();
+        // The default database is not part of the login.
+        assert!(a.same_login(&parse("mongodb://u:p1@h1,h2/other").unwrap()));
+        for other in [
+            "mongodb://u:p2@h1,h2/db?authSource=admin", // a rotated or wrong password
+            "mongodb://u:p1@h1,h2/db?authSource=weather", // another user with the same name
+            "mongodb://v:p1@h1,h2/db?authSource=admin",
+            "mongodb://u:p1@h1/db?authSource=admin",
+            "mongodb://u:p1@h1,h2/db?authSource=admin&replicaSet=rs",
+        ] {
+            assert!(!a.same_login(&parse(other).unwrap()), "{other}");
+        }
     }
 
     #[test]
