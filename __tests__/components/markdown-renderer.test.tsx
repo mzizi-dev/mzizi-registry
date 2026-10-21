@@ -9,6 +9,7 @@ import path from "node:path"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it } from "vitest"
 
+import { linearViolations, SCALING_TIMEOUT_MS } from "../helpers/linear-scaling"
 import { MarkdownRenderer } from "@/components/registry/n2-primitives/markdown-renderer"
 import {
   atxHeading,
@@ -133,17 +134,15 @@ describe("atxHeading: the heading regex it replaced, without the backtracking", 
   })
 
   it.each([
-    ["spaces", "# a" + " ".repeat(159_996) + "b"],
-    ["tabs", "# a" + "\t".repeat(159_996) + "b"],
-    ["spaces only", "# " + " ".repeat(159_998)],
-    ["spaces before a closer", "# a" + " ".repeat(159_995) + "#x"],
-  ])("a 160,000-character line of %s parses well under a second", (_name, line) => {
-    expect(line).toHaveLength(160_000)
-    const started = performance.now()
-    const blocks = markdownBlocks(line)
-    expect(performance.now() - started).toBeLessThan(1_000)
-    expect(blocks[0]?.kind).toBe("h")
-  })
+    ["spaces", (n: number) => "# a" + " ".repeat(n - 4) + "b"],
+    ["tabs", (n: number) => "# a" + "\t".repeat(n - 4) + "b"],
+    ["spaces only", (n: number) => "# " + " ".repeat(n - 2)],
+    ["spaces before a closer", (n: number) => "# a" + " ".repeat(n - 5) + "#x"],
+  ])("a line of %s parses in linear time, up to 160,000 characters", (_name, line) => {
+    expect(line(160_000)).toHaveLength(160_000)
+    expect(markdownBlocks(line(160_000))[0]?.kind).toBe("h")
+    expect(linearViolations(line, (s) => markdownBlocks(s), { n: 40_000 })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
 })
 
 describe("safeLink: the title a reader sees on hover (#470)", () => {
@@ -490,50 +489,90 @@ describe("MarkdownRenderer (React)", () => {
     expect(out).toContain('aria-label="Notes"')
   })
 
+  // Each input is built at n and 4n (`linear-scaling.ts`); 4n is the size these tests used when
+  // they had a wall-clock budget, or larger. A quadratic path quadruples per doubling and fails.
+  // One check per test, so `SCALING_TIMEOUT_MS` sits above its whole budget.
   it.each([
-    ["markers, brackets and backticks", "*a ".repeat(20_000) + "[".repeat(20_000) + "`".repeat(5_000)],
-    ["unmatched italics inside bold", "**" + "*x ".repeat(32_000) + "y**"],
-    ["unmatched underscores inside bold", "**" + "_x ".repeat(32_000) + "y**"],
-    ["unmatched bolds inside italic", "*" + "**x ".repeat(32_000) + "y*"],
-    ["unmatched italics inside a link", "[" + "*x ".repeat(32_000) + "](https://x.org)"],
-    ["deep quotes and lists", "> ".repeat(500) + "x\n" + "  ".repeat(500) + "- y"],
-  ])("renders hostile input in linear time: %s", (_say, input) => {
-    const started = performance.now()
-    html(input)
-    expect(performance.now() - started).toBeLessThan(1500)
-  })
+    ["markers, brackets and backticks", 5_000, (n: number) => "*a ".repeat(n) + "[".repeat(n) + "`".repeat(n >> 2)],
+    ["unmatched italics inside bold", 8_000, (n: number) => "**" + "*x ".repeat(n) + "y**"],
+    ["unmatched underscores inside bold", 8_000, (n: number) => "**" + "_x ".repeat(n) + "y**"],
+    ["unmatched bolds inside italic", 8_000, (n: number) => "*" + "**x ".repeat(n) + "y*"],
+    ["unmatched italics inside a link", 8_000, (n: number) => "[" + "*x ".repeat(n) + "](https://x.org)"],
+    ["deep quotes and lists", 125, (n: number) => "> ".repeat(n) + "x\n" + "  ".repeat(n) + "- y"],
+  ])("renders hostile input in linear time: %s", (_say, n, input) => {
+    expect(linearViolations(input, (s) => html(s), { n })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
 
-  it("renders hostile rich text in linear time, and deep nesting without a stack overflow", () => {
-    const started = performance.now()
-    html("<a <b <p>x<!--".repeat(20_000), { from: "html" })
-    html("<".repeat(50_000), { from: "auto" })
-    expect(html("<b>".repeat(5_000) + "x", { from: "html" })).toContain("x")
-    html("<span>".repeat(20_000) + "</div>".repeat(20_000), { from: "html" })
+  it.each([
+    ["unclosed tags and comments", 5_000, (n: number) => "<a <b <p>x<!--".repeat(n), "html"],
+    ["a run of `<` read as auto", 12_500, (n: number) => "<".repeat(n), "auto"],
+    ["deep bold", 1_250, (n: number) => "<b>".repeat(n) + "x", "html"],
+    ["spans closed by divs", 5_000, (n: number) => "<span>".repeat(n) + "</div>".repeat(n), "html"],
     // Dropped elements: nested, full of comments, tags and attributes, or never closed.
-    html("<template>" + "<template><!-- x --><a title='>'>".repeat(20_000), { from: "html" })
-    html("<p>" + "<!--x-->".repeat(50_000) + "</p>", { from: "html" })
-    html("<svg><foreignObject>" + "<b>".repeat(50_000) + "</svg>".repeat(1_000), { from: "html" })
-    expect(html("<svg>" + "<g>".repeat(50_000) + "</g>".repeat(50_000) + "</svg>x", { from: "html" })).toContain("x")
-    html("<script><!--<script>" + "</script>-".repeat(50_000), { from: "html" })
-    expect(performance.now() - started).toBeLessThan(1500)
-  })
+    ["nested templates", 5_000, (n: number) => "<template>" + "<template><!-- x --><a title='>'>".repeat(n), "html"],
+    ["comments in a paragraph", 12_500, (n: number) => "<p>" + "<!--x-->".repeat(n) + "</p>", "html"],
+    ["bold in foreignObject", 12_500, (n: number) => "<svg><foreignObject>" + "<b>".repeat(n) + "</svg>".repeat(n / 50), "html"],
+    ["deep svg groups", 12_500, (n: number) => "<svg>" + "<g>".repeat(n) + "</g>".repeat(n) + "</svg>x", "html"],
+    ["script look-alikes", 12_500, (n: number) => "<script><!--<script>" + "</script>-".repeat(n), "html"],
+  ] as const)("renders hostile rich text in linear time: %s", (_say, n, input, from) => {
+    expect(linearViolations(input, (s) => html(s, { from }), { n })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
 
-  it("reads huge rich text without a stack overflow, and decides `auto` in linear time", () => {
-    const started = performance.now()
+  it("renders deep nesting without a stack overflow, and drops what a browser drops", () => {
+    expect(html("<b>".repeat(5_000) + "x", { from: "html" })).toContain("x")
+    expect(html("<svg>" + "<g>".repeat(50_000) + "</g>".repeat(50_000) + "</svg>x", { from: "html" })).toContain("x")
+  }, 30_000)
+
+  it("reads huge rich text without a stack overflow", () => {
     expect(html("<span>" + "<br>".repeat(150_000) + "x</span>", { from: "html" })).toContain("x")
     expect(html("<p><span>" + "a<i></i>".repeat(150_000) + "</span></p>", { from: "html" })).toContain("aaa")
     expect(looksLikeRichText("<p ".repeat(40_000))).toBe(false)
-    // Marks nested in marks of the same kind add nothing, so a <br> split stays linear.
+    // Marks nested in marks of the same kind add nothing, so a <br> split stays small.
     const nested = richTextBlocks('<b><i><a href="https://x.org">'.repeat(11) + "x<br>".repeat(100_000))
     expect(JSON.stringify(nested).length).toBeLessThan(25_000_000)
-    expect(performance.now() - started).toBeLessThan(3000)
-  })
+  }, 30_000)
+
+  // Timed up to 100,000; the 150,000 the wall-clock test read is checked above, untimed. At
+  // 150,000 the rendered output is large enough that the host's garbage collection, not the
+  // parser, sets the curve: under the full parallel suite `<br>` measured x3.1 per doubling on
+  // all three attempts (74 -> 744 ms), and x2.0-2.5 in quieter runs.
+  it.each([
+    ["line breaks in a span", 25_000, (n: number) => "<span>" + "<br>".repeat(n) + "x</span>"],
+    ["empty marks between letters", 25_000, (n: number) => "<p><span>" + "a<i></i>".repeat(n) + "</span></p>"],
+  ])("reads huge rich text in linear time, up to 100,000: %s", (_say, n, input) => {
+    expect(linearViolations(input, (s) => html(s, { from: "html" }), { n })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
+
+  // 4n is the 100,000 lines the wall-clock test read; three rounds keep it inside the budget.
+  it("splits nested marks at <br> in linear time, up to 100,000 lines", () => {
+    const nested = (n: number) => '<b><i><a href="https://x.org">'.repeat(11) + "x<br>".repeat(n)
+    expect(linearViolations(nested, (s) => richTextBlocks(s), { n: 25_000, runs: 3 })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
+
+  const auto = [
+    // No `>` at all: answered from one scan, which must stay one scan.
+    ["tag openers with no `>`", 40_000, (n: number) => "<p ".repeat(n), false],
+    // A `>` first, then only tag openers: every candidate is read, and none may rescan the rest.
+    ["tag openers after the only `>`", 40_000, (n: number) => ">" + "<p ".repeat(n), false],
+    // Openers that are not an editor's tag (`<px`), then one that is: each is read and refused
+    // before the real tag decides it.
+    ["refused openers before a real tag", 40_000, (n: number) => "<px ".repeat(n) + "<p>", true],
+  ] as const
+
+  it.each(auto)("decides `auto` in linear time: %s", (_say, n, input, rich) => {
+    expect(looksLikeRichText(input(n))).toBe(rich)
+    expect(linearViolations(input, (s) => looksLikeRichText(s), { n })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
+
+  it.each(auto)("renders `auto` in linear time: %s", (_say, n, input) => {
+    expect(linearViolations(input, (s) => html(s, { from: "auto" }), { n: n / 4 })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
 
   it("charges every marker run to the budget (no K×L work)", () => {
-    const started = performance.now()
-    html("**" + "*a ".repeat(2_000) + "a" + "*".repeat(1_000_000))
-    expect(performance.now() - started).toBeLessThan(1500)
-  })
+    // K markers inside the bold, then a run of L closers: the work must grow with K + L, not K × L.
+    const kByL = (n: number) => "**" + "*a ".repeat(n / 500) + "a" + "*".repeat(n)
+    expect(linearViolations(kByL, (s) => html(s), { n: 250_000 })).toEqual([])
+  }, SCALING_TIMEOUT_MS)
 
   it("from=html renders an editor's text, with its markup as elements and its Markdown as text", () => {
     const out = html("<p># Plan <strong>now</strong></p><script>alert(1)</script>", { from: "html" })

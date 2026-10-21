@@ -10,6 +10,37 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the `markdown-renderer` linear-time tests measure scaling, not wall-clock (2026-10-20, #516)
+
+Owner decision, 2026-10-20. The parser's "linear time" tests used fixed budgets: 3000 ms for reading huge rich text and deciding `auto`, 1000 to 1500 ms for the hostile-input cases, and 2 s in the Rust build. On a 4-core host the same staging commit took 2.2 to 4.0 s against the 3000 ms budget, so the tests failed on the host and not on the parser. They now assert how the time grows.
+
+- **How.**
+  - Each input is built once at n and 4n.
+  - Each size is timed in rotating rounds, five by default and three for the largest inputs. A sample repeats the work until it lasts about 15 ms, and every result goes to a sink, so the optimiser cannot drop the work.
+  - The median at 4n may cost at most 2.5 × 2.5 times the median at n: 2.5× per doubling. A quadratic path costs 16× and fails.
+  - A busy host gets three attempts. A quadratic fails all three.
+- **Sizes.** 4n is the size each test read before, or larger, with two exceptions.
+  - At their old size or larger: 100,000 nested-mark lines, 160,000-character headings, the hostile inline and rich-text inputs, and a 1,000,000-closer K×L run. The `auto` inputs are larger than before.
+  - The exceptions are `<br>` in a span and empty marks between letters. They are timed up to 100,000; their old 150,000 is still checked, untimed, for a stack overflow. At 150,000 the rendered output is large enough that garbage collection sets the curve: under the full parallel suite, `<br>` measured 3.1× per doubling on all three attempts.
+- **The budget.** The only absolute number left is a 30 s budget for the whole check: every attempt, round and size. It is checked before each sample with that sample's expected cost, so a quadratic stops before the sample that would cross it. A budget trip is reported with every earlier attempt, in both TypeScript and Rust. Each test runs one check, under a Vitest timeout (`SCALING_TIMEOUT_MS`, 45 s) that sits above the budget.
+- **Where.**
+  - `__tests__/helpers/linear-scaling.ts` holds the check.
+  - `__tests__/helpers/linear-scaling.test.ts` tests it. Linear work passes; quadratic work fails every attempt; the verdict and the budget trip are tested on synthetic measurements, with no timing; and options that would pass anything are refused (fewer than two sizes, sizes that do not double, no medians).
+  - `__tests__/components/markdown-renderer.test.tsx` uses it for every case that had a budget, each input timed on its own.
+  - In the Rust build, `pathological_input_stays_fast` becomes `hostile_inlines_parse_in_linear_time`, `hostile_rich_text_reads_in_linear_time`, `deciding_auto_is_linear` and `huge_and_deep_rich_text_has_no_stack_overflow`, with the same check in Rust (`mzizi-rs/crates/mzizi-ui/src/generated/markdown-renderer.rs`, regenerated with `pnpm rust:generate`).
+- **Still checked at full size, untimed:** no stack overflow on 150,000 `<br>` or 5,000 nested `<b>`, the 100,000-line nested-mark split, and the output-size bound.
+- **`auto` cases now read every candidate.**
+  - A `>` first, then only tag openers.
+  - Refused openers (`<px`) before a real tag.
+
+  The old input had no `>`, so it was answered from one scan. A case that returned at its first candidate is gone.
+
+- **Verified.** I removed the inline scan budget and made `looksLikeRichText` rescan for a `>` from every candidate.
+  - Six TypeScript cases and two Rust tests fail: by ratio at small sizes, by the budget at test sizes.
+  - Every TypeScript case stops inside its 30 s budget, and the Rust run fails in 49 s.
+  - With those changes reverted, every test passes.
+- **Cost.** The main Vitest suite takes about 7 to 10 s longer than on staging: 30 to 34 s there, 40 s here, on a 4-core host. No component, parser or API change.
+
 ## [4.10.0] - 2026-10-21
 
 Releases `staging` to `main` as the next minor above v4.9.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.10.0. It also carries the 2026-10-20 owner-decision docs pass (#513): repository names, the three build targets (Workers, containers, bare metal), the four gateways and the renderer in the doctrine, `README.md`, `AGENTS.md`, the Roots RFCs and the crate READMEs and keywords. The Mzizi Roots crates stay at 0.4.0; their READMEs and `Cargo.toml` metadata change, but no crate code or version does. `staging` had lost `main`'s 4.6.0 to 4.9.0 release records (these section headings, their `releases.json` entries and the version, which read 4.5.0); they are carried forward here so the release does not take them off `main`.
