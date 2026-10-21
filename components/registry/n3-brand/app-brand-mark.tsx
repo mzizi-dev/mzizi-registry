@@ -62,6 +62,10 @@ const CSS = `
 const src = (m: ImageImport) => (typeof m === "string" ? m : m.src)
 
 function BrandMark({ brand = "nyuchi", size = 28, wordmark = false, suffix, decorative = false, className }: BrandMarkProps) {
+  // An unknown brand (from untyped data, or one whose icon pair has not shipped) is an error
+  // that names it, never another brand's mark in its place.
+  if (!Object.prototype.hasOwnProperty.call(MARKS, brand))
+    throw new Error(`BrandMark: unknown brand ${JSON.stringify(brand)}; expected one of ${Object.keys(MARKS).map((b) => JSON.stringify(b)).join(", ")}`)
   const mark = MARKS[brand]
   const alt = decorative || wordmark ? "" : mark.name
   return (

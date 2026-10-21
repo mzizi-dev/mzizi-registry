@@ -531,10 +531,10 @@ fn golden_path(case: &Case) -> PathBuf {
 fn every_static_state_renders_byte_identically_to_dioxus_ssr() {
     let cases = static_cases();
     // 5 separator + 7 progress + 9 badge + 7 status-badge + 6 safe-area-frame + 6 chart
-    // + 7 alert + 8 card + 15 markdown-renderer.
+    // + 7 alert + 8 card + 16 markdown-renderer.
     assert_eq!(
         cases.len(),
-        70,
+        71,
         "the case count moved; update the pin and the goldens"
     );
     for c in cases {

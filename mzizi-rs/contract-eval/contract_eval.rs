@@ -203,18 +203,113 @@ pub fn parse(html: &str) -> Vec<Node> {
     parse_nodes(html, &mut i, None)
 }
 
-/// Render a component and return its root element.
+/// A rendered component: every top-level node `dioxus-ssr` emitted, so a rule that must see
+/// the whole output (the CSP rule) does not stop at the first element. It derefs to
+/// [`Rendered::root`], the first element, which is what every clause reads.
+#[derive(Debug, Clone)]
+pub struct Rendered {
+    pub roots: Vec<Node>,
+}
+
+impl Rendered {
+    /// Parse server-rendered markup. Panics when it holds no element.
+    pub fn from_html(html: &str) -> Self {
+        let rendered = Rendered { roots: parse(html) };
+        assert!(
+            rendered
+                .roots
+                .iter()
+                .any(|n| matches!(n, Node::Element { .. })),
+            "rendered no element: {html}"
+        );
+        rendered
+    }
+
+    /// The component's root: the first top-level element.
+    pub fn root(&self) -> &Node {
+        self.roots
+            .iter()
+            .find(|n| matches!(n, Node::Element { .. }))
+            .expect("a rendered component has an element")
+    }
+
+    /// Every element in the whole output, depth first.
+    pub fn elements(&self) -> Vec<&Node> {
+        self.roots.iter().flat_map(Node::elements).collect()
+    }
+}
+
+impl std::ops::Deref for Rendered {
+    type Target = Node;
+    fn deref(&self) -> &Node {
+        self.root()
+    }
+}
+
+/// Render a component: every top-level node, its root first among the elements.
 ///
 /// Takes a function rather than an `Element` because props holding an [`EventHandler`] can
 /// only be built inside a Dioxus runtime, which the `VirtualDom` provides while it runs `app`.
-pub fn render(app: fn() -> Element) -> Node {
+pub fn render(app: fn() -> Element) -> Rendered {
     let mut dom = VirtualDom::new(app);
     dom.rebuild_in_place();
-    let html = dioxus_ssr::render(&dom);
-    parse(&html)
+    Rendered::from_html(&dioxus_ssr::render(&dom))
+}
+
+/// The CSP rule (#444): every element in the whole rendered output, every top-level node and
+/// everything under it, that carries an inline `style` attribute, as `<tag> style="…"`. A
+/// build held to a contract must have none, so an app's Content-Security-Policy keeps
+/// `style-src 'self'` with no `'unsafe-inline'`; custom properties and sizes go through
+/// classes, data attributes or SVG geometry. It reads the final markup, so it also sees Dioxus
+/// CSS-property attributes (`background_color: …`, `width: …`), which `dioxus-ssr` merges into
+/// `style`. The same rule as `inlineStyles` in `contracts/runner.ts`, which holds the Astro and
+/// React builds. [`Case::check`] applies it to every state.
+pub fn inline_styles(rendered: &Rendered) -> Vec<String> {
+    rendered
+        .elements()
         .into_iter()
-        .find(|n| matches!(n, Node::Element { .. }))
-        .unwrap_or_else(|| panic!("rendered no element: {html}"))
+        .filter_map(|e| {
+            e.attr("style")
+                .map(|s| format!("<{}> style=\"{s}\"", e.tag()))
+        })
+        .collect()
+}
+
+/// The property names a `style` attribute declares, lower-cased, in order: `color: red;
+/// --tint: x` gives `color` and `--tint`. A `;` inside parentheses or quotes does not end a
+/// declaration.
+pub fn style_properties(style: &str) -> Vec<String> {
+    let mut decls = Vec::new();
+    let (mut depth, mut quote, mut start) = (0i32, None, 0);
+    for (i, c) in style.char_indices() {
+        match (quote, c) {
+            (Some(q), c) if c == q => quote = None,
+            (Some(_), _) => {}
+            (None, '"' | '\'') => quote = Some(c),
+            (None, '(') => depth += 1,
+            (None, ')') => depth -= 1,
+            (None, ';') if depth == 0 => {
+                decls.push(&style[start..i]);
+                start = i + 1;
+            }
+            _ => {}
+        }
+    }
+    decls.push(&style[start..]);
+    decls
+        .into_iter()
+        .filter_map(|d| {
+            d.split_once(':')
+                .map(|(p, _)| p.trim().to_ascii_lowercase())
+        })
+        .filter(|p| !p.is_empty())
+        .collect()
+}
+
+/// Whether an allowed-style entry admits a property: the property itself, or `--*` for any
+/// custom property.
+fn allows(allowed: &str, property: &str) -> bool {
+    allowed == property || (allowed == "--*" && property.starts_with("--"))
 }
 
 /// The largest height, in px, an element's classes declare: `h-N`, `min-h-N`, `size-N` on the
@@ -247,11 +342,16 @@ pub struct Case {
     pub name: &'static str,
     pub contract: &'static str,
     /// Named render states. `default` is required.
-    pub states: Vec<(&'static str, Node)>,
+    pub states: Vec<(&'static str, Rendered)>,
     /// Prop defaults a `<name>` subject can resolve to.
     pub defaults: Vec<(&'static str, String)>,
     /// Variant tables: (enum, column, [(variant, value)]).
     pub columns: Vec<(&'static str, &'static str, Rows)>,
+    /// The inline `style` properties this component still renders, a recorded gap rather than
+    /// a hidden one (#481); `--*` admits any custom property. Empty for every component that
+    /// meets the CSP rule. [`Case::check`] fails any other property, and an entry no state
+    /// renders any more, so the list only shrinks.
+    pub allowed_styles: &'static [&'static str],
 }
 
 pub fn tokens(line: &str) -> Vec<String> {
@@ -402,7 +502,7 @@ impl Case {
         self.states
             .iter()
             .find(|(n, _)| *n == name)
-            .map(|(_, node)| node)
+            .map(|(_, rendered)| rendered.root())
             .ok_or_else(|| format!("no `{name}` state is rendered for {}", self.name))
     }
 
@@ -542,6 +642,53 @@ impl Case {
                 root.attr("data-slot").map(str::to_owned),
                 slot,
                 "{}: the `{state}` state renders a different data-slot",
+                self.name
+            );
+        }
+        let mut used: Vec<&str> = Vec::new();
+        let mut styled: Vec<String> = Vec::new();
+        for (state, r) in &self.states {
+            for e in r.elements() {
+                let Some(style) = e.attr("style") else {
+                    continue;
+                };
+                let properties = style_properties(style);
+                let banned: Vec<&String> = properties
+                    .iter()
+                    .filter(
+                        |p| match self.allowed_styles.iter().find(|a| allows(a, p)) {
+                            Some(a) => {
+                                used.push(*a);
+                                false
+                            }
+                            None => true,
+                        },
+                    )
+                    .collect();
+                if properties.is_empty() || !banned.is_empty() {
+                    styled.push(format!("[{state}] <{}> style=\"{style}\"", e.tag()));
+                }
+            }
+        }
+        assert!(
+            styled.is_empty(),
+            "{}: an inline style attribute, which a strict Content-Security-Policy blocks \
+             (#444){}: {styled:?}",
+            self.name,
+            if self.allowed_styles.is_empty() {
+                String::new()
+            } else {
+                format!(
+                    ", with a property outside its allowed {:?}",
+                    self.allowed_styles
+                )
+            }
+        );
+        for allowed in self.allowed_styles {
+            assert!(
+                used.contains(allowed),
+                "{}: no state renders an inline `{allowed}` any more: remove it from its \
+                 allowed_styles (#481)",
                 self.name
             );
         }

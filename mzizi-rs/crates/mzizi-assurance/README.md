@@ -9,7 +9,7 @@ platform-health roll-up, and an OpenTelemetry OTLP/HTTP encoder.
 
 ```toml
 [dependencies]
-mzizi-assurance = "0.3"
+mzizi-assurance = "0.4"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before
