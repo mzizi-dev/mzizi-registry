@@ -134,10 +134,10 @@ gateway's next pin bump.
 Owner decisions, 2026-10-20. These are direction, not built, unless a line says otherwise.
 
 - **Three build targets for Roots and the server crates:** Cloudflare Workers (wasm32),
-  containers (any OCI host, for example Fly machines) and bare metal (a native Linux binary).
+  containers (a standard OCI image, built with Docker by default and run by any OCI runtime, for example on Fly machines) and bare metal (a native Linux binary).
   Today every Rust crate builds and tests natively, and `mzizi-roots-server`'s dependency-free
   features pass a `wasm32-unknown-unknown` `cargo check`. No Workers adapter, container image or
-  axum adapter exists yet; `mzizi-worker` and the axum adapter are planned (`docs/roots/RFC-roots.md` §2.2).
+  axum adapter exists yet; `mzizi-worker` and the axum adapter are designed (`docs/roots/RFC-roots.md` §2.2); the container and bare-metal work waits for the Phase 0 gate (the language's RFC-0016 is approved as design only, owner 2026-10-21).
 - **Four API gateways** across the estate. This registry describes only the first; the others
   are named here so that docs do not present one as the whole:
   - **Mzizi API** (`mzizi-dev/mzizi-api`, formerly `mzizi-api-gateway`; `api.mzizi.dev`): the

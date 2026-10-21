@@ -76,7 +76,8 @@ path, which is in progress and described in [`docs/roots/RFC-roots-renderer.md`]
 
 The server crates are host-agnostic and are meant for three build targets: Cloudflare Workers,
 containers and bare metal (owner decision, 2026-10-20). Every Rust crate builds and tests natively
-today. No Workers, container or bare-metal host adapter is built yet; they are planned (see
+today. No Workers, container or bare-metal host adapter is built yet; the container and bare-metal work is
+designed and waits for the Phase 0 gate (see
 [`docs/roots/RFC-roots.md`](docs/roots/RFC-roots.md) §2.2).
 
 `contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
@@ -219,9 +220,9 @@ agent working in this repo needs to know before pushing.
 | **[mzizi-dev/mzizi-api](https://github.com/mzizi-dev/mzizi-api)** (formerly `mzizi-api-gateway`) | [api.mzizi.dev](https://api.mzizi.dev/v1/health)   | The Mzizi API: the registry API as a Hono (TypeScript) Cloudflare Worker                                    |
 | **[mzizi-dev/mzizi-docs](https://github.com/mzizi-dev/mzizi-docs)**                              | [docs.mzizi.dev](https://docs.mzizi.dev)           | Mzizi's documentation — the one home for Mzizi docs (Mintlify)                                              |
 | **mzizi-dev/agent-tools** (private)                                                              | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
-| **[nyuchi/mukoko-platform](https://github.com/nyuchi/mukoko-platform)** (private)                | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform                                                                               |
-| **[bundu-labs/bundu-docs](https://github.com/bundu-labs/bundu-docs)** (private)                  | [docs.bundu.org](https://docs.bundu.org)           | Bundu's own product documentation (not Mzizi's docs)                                                        |
-| **[nyuchi/nyuchi-docs](https://github.com/nyuchi/nyuchi-docs)**                                  | [docs.nyuchi.com](https://docs.nyuchi.com)         | Nyuchi engineering documentation (not Mzizi's docs)                                                         |
+| **nyuchi/nyuchi-platform** (private)                                                             | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform                                                                               |
+| **bundu-labs/bundu-docs** (private)                                                              | [docs.bundu.org](https://docs.bundu.org)           | Bundu's own product documentation (not Mzizi's docs)                                                        |
+| **nyuchi/nyuchi-docs**                                                                           | [docs.nyuchi.com](https://docs.nyuchi.com)         | Nyuchi engineering documentation (not Mzizi's docs)                                                         |
 | mukoko                                                                                           | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
 | mukoko weather                                                                                   | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
 | mukoko news                                                                                      | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |

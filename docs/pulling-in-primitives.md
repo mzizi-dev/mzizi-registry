@@ -65,7 +65,7 @@ Two things that will bite you if the manifest is wrong, both now gate-checked by
 
 The Rust build is Mzizi Roots. Its UI crates still depend on Dioxus until Mzizi's own render path
 replaces it (`docs/roots/RFC-roots-renderer.md`). The crate names stay; the component API changes in the
-breaking release that RFC proposes (0.4.0, not yet published).
+breaking release that RFC proposes, after the published 0.4.0 (not yet published).
 
 Consumed as a **crate**, not via a CLI:
 
