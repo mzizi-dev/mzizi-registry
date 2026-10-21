@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — `vite` 8.3.3+, `markdown-it` 14.3.3+ and `sanitize-html` 2.18.0+ (2026-10-21, #525)
+
+`pnpm audit` on `staging` reported two high advisories, `vite` 8.3.0–8.3.2 (GHSA-587h-7wmj-h5pm, via `launch-editor`) and `markdown-it` 14.1.0–14.3.2 (GHSA-gfr2-rv44-r23c, through `markdownlint-cli2`), plus moderate `sanitize-html` advisories below 2.18.0. They failed the org's dependency `audit` check on any pull request that touches `pnpm-lock.yaml`, and the pre-commit hook. The direct ranges and overrides now start at the patched versions (`vite` `^8.3.3`, `markdown-it` `^14.3.3`, `sanitize-html` `^2.18.0`). `pnpm audit --audit-level=moderate` passes; one low `katex` advisory (dev only, via `markdownlint`) remains. No published package or API changes.
+
 ### Changed — `@nyuchi/mzizi-skills` is a minimum version, `>=0.8.1`, not `^0.8.1` (2026-10-21, #525)
 
 Owner decision, 2026-10-21: first-party packages are pinned to a minimum acceptable version, with no maximum. On a `0.x` version a caret stops below the next minor, so `^0.8.1` could never take 0.9.0 or later without a manifest edit. `pnpm-lock.yaml` still fixes the resolved version, 0.8.5, so nothing installs differently in this pull request, and `plugin/skills/` and `lib/skills.generated.ts` are unchanged. Taking a newer bundle is now `pnpm update @nyuchi/mzizi-skills` and a regenerate, not a `package.json` edit. Third-party dependencies, and the Roots crates' `path` + `version` dependencies on each other in `mzizi-rs/`, are unchanged.
