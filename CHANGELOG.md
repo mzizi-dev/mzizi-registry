@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.10.0] - 2026-10-21
+
+Releases `staging` to `main` as the next minor above v4.9.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.10.0. The Mzizi Roots crates are unchanged (0.4.0). `staging` had lost `main`'s 4.6.0 to 4.9.0 release records (these section headings, their `releases.json` entries and the version, which read 4.5.0); they are carried forward here so the release does not take them off `main`.
+
 ### Security — `vite` 8.3.3+, `markdown-it` 14.3.3+ and `sanitize-html` 2.18.0+ (2026-10-21, #525)
 
 `pnpm audit` on `staging` reported two high advisories, `vite` 8.3.0–8.3.2 (GHSA-587h-7wmj-h5pm, via `launch-editor`) and `markdown-it` 14.1.0–14.3.2 (GHSA-gfr2-rv44-r23c, through `markdownlint-cli2`), plus moderate `sanitize-html` advisories below 2.18.0. They failed the org's dependency `audit` check on any pull request that touches `pnpm-lock.yaml`, and the pre-commit hook. The direct ranges and overrides now start at the patched versions (`vite` `^8.3.3`, `markdown-it` `^14.3.3`, `sanitize-html` `^2.18.0`). `pnpm audit --audit-level=moderate` passes; one low `katex` advisory (dev only, via `markdownlint`) remains. No published package or API changes.
@@ -17,6 +21,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 ### Changed — `@nyuchi/mzizi-skills` is a minimum version, `>=0.8.1`, not `^0.8.1` (2026-10-21, #525)
 
 Owner decision, 2026-10-21: first-party packages are pinned to a minimum acceptable version, with no maximum. On a `0.x` version a caret stops below the next minor, so `^0.8.1` could never take 0.9.0 or later without a manifest edit. `pnpm-lock.yaml` still fixes the resolved version, 0.8.5, so nothing installs differently in this pull request, and `plugin/skills/` and `lib/skills.generated.ts` are unchanged. Taking a newer bundle is now `pnpm update @nyuchi/mzizi-skills` and a regenerate, not a `package.json` edit. Third-party dependencies, and the Roots crates' `path` + `version` dependencies on each other in `mzizi-rs/`, are unchanged.
+
+## [4.9.0] - 2026-10-20
+
+Releases `staging` to `main` as the next minor above v4.8.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.9.0, and the Mzizi Roots crates are published at 0.4.0. The `v4.9.0` tag is cut on a second merge to `main`: the first (#514) published the crates at 0.4.0, but its CI on `main` failed on a newly published `hono` advisory (GHSA-5r4p-p66f-jhc7), so `release.yml` did not tag it. The second carries the fix (#521).
 
 ### Security — `hono` 4.13.13 through the override, for GHSA-5r4p-p66f-jhc7 (2026-10-20, #521)
 
@@ -268,9 +276,17 @@ The node, rung and strand doctrine that `mzizi_get_architecture` and `/v1/archit
 - **N1, N10, N11:** the token source is `lib/tokens/palette.source.ts`, not Supabase; doctrine is inlined by `pnpm doctrine:generate`, not `@next/mdx`; the `mzizi-docs` and `mzizi-discovery` crates ship.
 - **Swappable strand, the Astro + Vite+ framework, Next.js, mobile-first, ownership and installation:** "SvelteKit the declared migration target" and "Next.js remains at mzizi.dev" are gone; installation shows the Astro, Rust and React install paths.
 
+## [4.8.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.7.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.8.0. The Mzizi Roots crates are unchanged (0.3.0).
+
 ### Fixed — `markdown-parse` compiles under `noUncheckedIndexedAccess` (2026-10-07, #468)
 
 `markdown-parse.ts` (installed with `markdown-renderer`) had 80 type errors in a project with `noUncheckedIndexedAccess`, as the Toddle extension is (#460). Every array, string and match index is now checked, with no behaviour change (the 55 shared cases still give the same trees). `tsconfig.consumer-strict.json` type-checks the installable markdown files with that setting, and `pnpm typecheck` runs it. The whitespace set no longer spreads a string, which consumers' `no-misused-spread` lint flags.
+
+## [4.7.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.6.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.7.0, and the Mzizi Roots crates are published at 0.3.0.
 
 ### Changed — the Mzizi Roots crates move to 0.3.0 (2026-10-07, #466)
 
@@ -283,6 +299,10 @@ Upstreamed from the Toddle extension's flag text, which `markdown-renderer` repl
 - **Links:** an address with whitespace or a control character still inside is refused (it is not one address; this closes `<\u0001javascript:…>`, which v4.6.0 kept as a scheme-less address that a browser reads as `javascript:`), and a web address (`http:`, `https:` or scheme-relative `//host`) needs a host and no credentials. `https://bank.example@evil.example` shows one site and goes to another, so it now keeps its words and loses its address, like a refused scheme.
 - **Rich text (`from="html"` / `"auto"`):** a list inside a list item stays a nested list (up to 8 deep), where it was joined into the item's line, and `<ol start="n">` keeps its first number.
 - `contracts/ui/markdown-renderer` 1.1.0 adds a nested list with a start to the `rich` state and a credentials link to the `xss` state. A scheme-less `\\host` or `/\host` is scheme-relative too (browsers read `\` as `/`), so it gets the same host and credentials check and opens in a new tab. The shared fixture has 55 cases, identical in TypeScript and Rust.
+
+## [4.6.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.5.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.6.0, and the Mzizi Roots crates are published at 0.2.0, so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer`.
 
 ### Changed — the Mzizi Roots crates move to 0.2.0 (2026-10-07, #463)
 
