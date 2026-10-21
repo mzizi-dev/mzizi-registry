@@ -5,9 +5,12 @@
 
 Mzizi Roots server components are sans-IO cores. A typed request goes in and a typed
 response comes out, with every external facility (a store, a clock, an outbound request, a
-secret) behind a trait the host implements. The same core runs in a Cloudflare Worker
-through `workers-rs`, in a container behind an axum-class server, or in a test with an
-in-memory store. They build for `wasm32-unknown-unknown`.
+secret) behind a trait the host implements. The same core is meant to run in three places:
+a Cloudflare Worker through `workers-rs`, a container behind an axum-class server, or bare
+metal as a native binary (the three build targets, decided 2026-10-20). Today the cores build and
+test natively, and the dependency-free features also build for `wasm32-unknown-unknown`. The
+Workers, container and bare-metal host adapters are not built yet; a test runs the core against an
+in-memory store.
 
 This crate has no code of its own. It re-exports the node crates, each behind a feature:
 

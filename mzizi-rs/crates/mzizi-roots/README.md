@@ -1,7 +1,9 @@
 # mzizi-roots
 
-**Mzizi Roots**, the UI side: one dependency for the Dioxus components and design tokens of
-the [Mzizi](https://mzizi.dev) component registry.
+**Mzizi Roots**, the UI side: one dependency for the components and design tokens of the
+[Mzizi](https://mzizi.dev) component registry. The components are Dioxus today, and Mzizi's own
+render path is replacing Dioxus (see the registry's `docs/roots/RFC-roots-renderer.md`); Dioxus
+stays a dependency until that finishes.
 
 Mzizi Roots is the Rust build of Mzizi's own components. This crate has no code of its own.
 It re-exports the node crates, each behind a feature:
