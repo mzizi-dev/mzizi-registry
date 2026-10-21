@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — Dependabot runs against `staging`, and its version bumps pass the changelog gate (2026-10-20, #508)
+
+- **`.github/dependabot.yml`.** Both update entries (npm and GitHub Actions) set `target-branch: "staging"`, so Dependabot opens its pull requests against `staging`, where this repository merges and releases, not against `main`. Pull requests already open against `main` are not retargeted by this change.
+- **Cooldown.** Both update entries set `cooldown: default-days: 7`, so Dependabot waits seven days before proposing a newly published version. Semgrep (`dependabot-missing-cooldown`) blocks a Dependabot configuration without one.
+- **`changelog / entry required` (`scripts/changelog-gate.sh`).** A pull request whose author is `dependabot[bot]` passes without a `CHANGELOG.md` entry, as it already does in `mzizi-dev/mzizi`. GitHub's generated release notes are the record of a version bump. The workflow passes the author login as `PR_AUTHOR`. Any other author still needs an entry. `scripts/changelog-gate.test.sh` gains two cases: a Dependabot bump with no entry passes, and the same change from another author fails.
+
 ## [4.10.0] - 2026-10-21
 
 Releases `staging` to `main` as the next minor above v4.9.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.10.0. It also carries the 2026-10-20 owner-decision docs pass (#513): repository names, the three build targets (Workers, containers, bare metal), the four gateways and the renderer in the doctrine, `README.md`, `AGENTS.md`, the Roots RFCs and the crate READMEs and keywords. The Mzizi Roots crates stay at 0.4.0; their READMEs and `Cargo.toml` metadata change, but no crate code or version does. `staging` had lost `main`'s 4.6.0 to 4.9.0 release records (these section headings, their `releases.json` entries and the version, which read 4.5.0); they are carried forward here so the release does not take them off `main`.
