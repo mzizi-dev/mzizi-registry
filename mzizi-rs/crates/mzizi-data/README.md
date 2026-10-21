@@ -9,8 +9,8 @@ sans-IO.
 
 ```toml
 [dependencies]
-mzizi-data = "0.3"                                        # Io, Error, Result
-mzizi-data = { version = "0.3", features = ["workers"] }  # plus the Worker socket (wasm32)
+mzizi-data = "0.4"                                        # Io, Error, Result
+mzizi-data = { version = "0.4", features = ["workers"] }  # plus the Worker socket (wasm32)
 ```
 
 ## What is here
