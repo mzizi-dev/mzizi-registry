@@ -11,6 +11,49 @@
 
 use dioxus::prelude::*;
 
+/// The escaping HTML writer `render` uses, inlined so this file installs on its own.
+///
+/// It is a copy of `mzizi-ui/src/html.rs`, which is the reference and carries the unit tests.
+/// A test in `html.rs` holds the two to the same output on the five escaped characters and on
+/// non-ASCII text, so the copies cannot drift without a test failing.
+mod html {
+    /// Escape `value` for text and double-quoted attribute values: `&`, `<`, `>`, `"` and `'`
+    /// become decimal references; everything else, including non-ASCII, is written unchanged.
+    fn escape_into(out: &mut String, value: &str) {
+        for c in value.chars() {
+            match c {
+                '&' => out.push_str("&#38;"),
+                '<' => out.push_str("&#60;"),
+                '>' => out.push_str("&#62;"),
+                '"' => out.push_str("&#34;"),
+                '\'' => out.push_str("&#39;"),
+                _ => out.push(c),
+            }
+        }
+    }
+
+    /// Write an opening tag with its attributes, in the order given. Values are escaped.
+    pub(super) fn open(out: &mut String, tag: &str, attrs: &[(&str, &str)]) {
+        out.push('<');
+        out.push_str(tag);
+        for (name, value) in attrs {
+            out.push(' ');
+            out.push_str(name);
+            out.push_str("=\"");
+            escape_into(out, value);
+            out.push('"');
+        }
+        out.push('>');
+    }
+
+    /// Write a closing tag.
+    pub(super) fn close(out: &mut String, tag: &str) {
+        out.push_str("</");
+        out.push_str(tag);
+        out.push('>');
+    }
+}
+
 /// Classes on the outer `<svg>`.
 pub const FRAME: &str = "block shrink-0";
 /// Classes on the canvas `<svg>`.
@@ -161,3 +204,144 @@ pub const CONTRACT: &str = r#"contract
   when rail slot is "safe-area-frame"
   when plain class contains "opacity-80"
 end"#;
+
+/// The Dioxus-free render path: the props a [`render`] call takes, the same as
+/// [`SafeAreaFrameProps`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RenderProps {
+    /// Canvas width in pixels.
+    pub width: u32,
+    /// Canvas height in pixels.
+    pub height: u32,
+    /// Platform-UI insets `[top, right, bottom, left]` in canvas pixels.
+    pub safe: [u32; 4],
+    /// The square the thumbnail fits in, in CSS pixels.
+    pub box_px: u32,
+    /// Extra classes, appended last.
+    pub class: String,
+}
+
+/// An empty `<rect>` with the given attributes, in the order given.
+fn rect(out: &mut String, attrs: &[(&str, &str)]) {
+    html::open(out, "rect", attrs);
+    html::close(out, "rect");
+}
+
+/// Render a safe-area frame to an HTML string, with no Dioxus and no WASM.
+///
+/// Byte-identical to `dioxus-ssr` rendering [`SafeAreaFrame`] with the same props, for the cases
+/// `mzizi-ui/tests/render_parity.rs` covers.
+#[must_use]
+pub fn render(props: &RenderProps) -> String {
+    let b = safe_area_bands(props.width, props.height, props.safe, props.box_px);
+    let class = if props.class.is_empty() {
+        FRAME.to_owned()
+    } else {
+        format!("{FRAME} {}", props.class)
+    };
+    let box_px = props.box_px;
+    let x = (f64::from(box_px.saturating_sub(b.width)) / 2.0).to_string();
+    let y = (f64::from(box_px.saturating_sub(b.height)) / 2.0).to_string();
+    let bottom_y = (100.0 - b.bottom).to_string();
+    let right_x = (100.0 - b.right).to_string();
+    let box_s = box_px.to_string();
+    let view = format!("0 0 {box_s} {box_s}");
+    let (w, h) = (b.width.to_string(), b.height.to_string());
+    let (top, right, bottom, left) = (
+        b.top.to_string(),
+        b.right.to_string(),
+        b.bottom.to_string(),
+        b.left.to_string(),
+    );
+    let mut out = String::with_capacity(1024);
+    html::open(
+        &mut out,
+        "svg",
+        &[
+            ("data-slot", "safe-area-frame"),
+            ("aria-hidden", "true"),
+            ("focusable", "false"),
+            ("class", class.as_str()),
+            ("width", box_s.as_str()),
+            ("height", box_s.as_str()),
+            ("viewBox", view.as_str()),
+        ],
+    );
+    html::open(
+        &mut out,
+        "svg",
+        &[
+            ("data-slot", "safe-area-frame-canvas"),
+            ("x", x.as_str()),
+            ("y", y.as_str()),
+            ("width", w.as_str()),
+            ("height", h.as_str()),
+            ("viewBox", "0 0 100 100"),
+            ("preserveAspectRatio", "none"),
+            ("class", CANVAS),
+        ],
+    );
+    rect(
+        &mut out,
+        &[("width", "100"), ("height", "100"), ("class", CANVAS_FILL)],
+    );
+    if b.top > 0.0 {
+        rect(
+            &mut out,
+            &[
+                ("data-band", "top"),
+                ("width", "100"),
+                ("height", top.as_str()),
+                ("class", BAND_Y),
+            ],
+        );
+    }
+    if b.bottom > 0.0 {
+        rect(
+            &mut out,
+            &[
+                ("data-band", "bottom"),
+                ("y", bottom_y.as_str()),
+                ("width", "100"),
+                ("height", bottom.as_str()),
+                ("class", BAND_Y),
+            ],
+        );
+    }
+    if b.left > 0.0 {
+        rect(
+            &mut out,
+            &[
+                ("data-band", "left"),
+                ("width", left.as_str()),
+                ("height", "100"),
+                ("class", BAND_X),
+            ],
+        );
+    }
+    if b.right > 0.0 {
+        rect(
+            &mut out,
+            &[
+                ("data-band", "right"),
+                ("x", right_x.as_str()),
+                ("width", right.as_str()),
+                ("height", "100"),
+                ("class", BAND_X),
+            ],
+        );
+    }
+    rect(
+        &mut out,
+        &[
+            ("width", "100"),
+            ("height", "100"),
+            ("fill", "none"),
+            ("vector-effect", "non-scaling-stroke"),
+            ("class", OUTLINE),
+        ],
+    );
+    html::close(&mut out, "svg");
+    html::close(&mut out, "svg");
+    out
+}

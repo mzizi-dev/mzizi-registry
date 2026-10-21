@@ -113,4 +113,85 @@ mod tests {
             expected
         );
     }
+
+    /// Every inline copy, the one in each registry file's `mod html` included, must escape the
+    /// probe the way this reference does. Each component is rendered with the probe in every
+    /// attribute and text slot it has; its output must hold the reference escaping of the probe
+    /// and never the probe itself. The skeleton test above holds one component to exact bytes;
+    /// this one holds every component to the escaping table, so a copy that drifts fails here.
+    #[test]
+    fn every_inline_copy_escapes_like_the_reference() {
+        use crate::{badge, chart, progress, safe_area_frame, separator, skeleton, status_badge};
+
+        const PROBE: &str = "a&b<c>d\"e'f ünï";
+        let mut escaped = String::new();
+        escape_into(&mut escaped, PROBE);
+
+        let outputs = [
+            (
+                "skeleton",
+                skeleton::render(&skeleton::RenderProps {
+                    class: PROBE.to_owned(),
+                }),
+            ),
+            (
+                "separator",
+                separator::render(&separator::RenderProps {
+                    class: PROBE.to_owned(),
+                    ..separator::RenderProps::default()
+                }),
+            ),
+            (
+                "progress",
+                progress::render(&progress::RenderProps {
+                    class: PROBE.to_owned(),
+                    ..progress::RenderProps::default()
+                }),
+            ),
+            (
+                "badge",
+                badge::render(&badge::RenderProps {
+                    class: PROBE.to_owned(),
+                    text: PROBE.to_owned(),
+                    ..badge::RenderProps::default()
+                }),
+            ),
+            (
+                "status-badge",
+                status_badge::render(&status_badge::RenderProps {
+                    class: PROBE.to_owned(),
+                    label: Some(PROBE.to_owned()),
+                    ..status_badge::RenderProps::default()
+                }),
+            ),
+            (
+                "safe-area-frame",
+                safe_area_frame::render(&safe_area_frame::RenderProps {
+                    width: 1,
+                    height: 1,
+                    safe: [0; 4],
+                    box_px: 56,
+                    class: PROBE.to_owned(),
+                }),
+            ),
+            (
+                "chart",
+                chart::render(&chart::RenderProps {
+                    id: PROBE.to_owned(),
+                    class: PROBE.to_owned(),
+                    ..chart::RenderProps::default()
+                }),
+            ),
+        ];
+        for (name, output) in outputs {
+            assert!(
+                output.contains(&escaped),
+                "{name} does not escape the probe as the reference does: {output}"
+            );
+            assert!(
+                !output.contains(PROBE),
+                "{name} wrote the probe unescaped: {output}"
+            );
+        }
+    }
 }

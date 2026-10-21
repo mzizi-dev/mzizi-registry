@@ -20,7 +20,8 @@ import {
  * Safe by construction: the Markdown is parsed into a typed tree (`markdown-parse.ts`) and the
  * tree is drawn as React elements. There is no HTML string and no `dangerouslySetInnerHTML`,
  * so text is always a text node and an address is always an escaped attribute. Raw HTML in the
- * source shows as text. Links pass an allow-list of schemes; a refused link keeps its words.
+ * source shows as text. Links pass an allow-list of schemes; a refused link keeps its words, and a
+ * kept one shows its address on hover (`title`), normalised so an IDN look-alike host reads as punycode.
  * The Astro (`markdown-renderer.astro`) and Rust (`markdown-renderer.rs`) builds draw the same
  * tree with the same classes.
  */
@@ -62,11 +63,11 @@ function Inlines({ c }: { c: MarkdownInline[] }) {
             )
           case "link":
             return isExternal(x.href) ? (
-              <a key={i} href={x.href} className={C.a} target="_blank" rel="noopener noreferrer">
+              <a key={i} href={x.href} title={x.title} className={C.a} target="_blank" rel="noopener noreferrer">
                 <Inlines c={x.c} />
               </a>
             ) : (
-              <a key={i} href={x.href} className={C.a}>
+              <a key={i} href={x.href} title={x.title} className={C.a}>
                 <Inlines c={x.c} />
               </a>
             )
@@ -93,9 +94,9 @@ function List({ list, nested }: { list: MarkdownList; nested?: boolean }) {
   const items = list.items.map((it, j) => (
     <li key={j}>
       <Lines lines={it.lines} />
-      {it.children.map((sub, k) => (
-        <List key={k} list={sub} nested />
-      ))}
+      {it.children.map((sub, k) =>
+        sub.kind === "lines" ? <Lines key={k} lines={sub.lines} /> : <List key={k} list={sub} nested />
+      )}
     </li>
   ))
   const className = cn(C[list.kind], nested && C.nested)

@@ -10,6 +10,124 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `app/bar-chart` 1.2.0: nullable values for withheld counts (2026-10-06, #457)
+
+BarChart drew every point as a number, so an app that withholds small counts (k-anonymity: a day with fewer than 5 is returned as `null`) had to draw it as 0 or drop the day, and the total then read as exact. Mukoko Events admin's Insights page needs both to be honest (nyuchi/api-gateway#268). The change is in the `.astro` and `.tsx` builds, with the same markup, and is backwards compatible.
+
+- `data[].value` is now `number | null`. A new optional prop, `missingLabel` (default `"Not available"`), is what a null reads as, e.g. `"Fewer than 5"`.
+- A null draws no bar. In `columns` it leaves a small muted baseline tick (`fill-muted-foreground`) on a column marked `data-missing`, whose title reads `<label>: <missingLabel>`. In `rows` the bar is empty and the value is the `missingLabel` in muted text.
+- The figures table shows the `missingLabel` (muted) for a null. The total sums the known values and reads `At least <n>` when any value is null.
+- Every value null: "No figure in this range can be shown: <missingLabel, lower-cased> for every point." No data, or every value 0 with none null, still reads "Nothing to chart in this range."
+- The contract adds the `suppressed`, `suppressed-rows` and `suppressed-all` states and their checks, which both builds pass.
+
+## [4.10.0] - 2026-10-21
+
+Releases `staging` to `main` as the next minor above v4.9.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.10.0. It also carries the 2026-10-20 owner-decision docs pass (#513): repository names, the three build targets (Workers, containers, bare metal), the four gateways and the renderer in the doctrine, `README.md`, `AGENTS.md`, the Roots RFCs and the crate READMEs and keywords. The Mzizi Roots crates stay at 0.4.0; their READMEs and `Cargo.toml` metadata change, but no crate code or version does. `staging` had lost `main`'s 4.6.0 to 4.9.0 release records (these section headings, their `releases.json` entries and the version, which read 4.5.0); they are carried forward here so the release does not take them off `main`.
+
+### Security — `vite` 8.3.3+, `markdown-it` 14.3.3+ and `sanitize-html` 2.18.0+ (2026-10-21, #525)
+
+`pnpm audit` on `staging` reported two high advisories, `vite` 8.3.0–8.3.2 (GHSA-587h-7wmj-h5pm, via `launch-editor`) and `markdown-it` 14.1.0–14.3.2 (GHSA-gfr2-rv44-r23c, through `markdownlint-cli2`), plus moderate `sanitize-html` advisories below 2.18.0. They failed the org's dependency `audit` check on any pull request that touches `pnpm-lock.yaml`, and the pre-commit hook. The direct ranges and overrides now start at the patched versions (`vite` `^8.3.3`, `markdown-it` `^14.3.3`, `sanitize-html` `^2.18.0`). `pnpm audit --audit-level=moderate` passes; one low `katex` advisory (dev only, via `markdownlint`) remains. No published package or API changes.
+
+### Changed — `@nyuchi/mzizi-skills` is a minimum version, `>=0.8.1`, not `^0.8.1` (2026-10-21, #525)
+
+Owner decision, 2026-10-21: first-party packages are pinned to a minimum acceptable version, with no maximum. On a `0.x` version a caret stops below the next minor, so `^0.8.1` could never take 0.9.0 or later without a manifest edit. `pnpm-lock.yaml` still fixes the resolved version, 0.8.5, so nothing installs differently in this pull request, and `plugin/skills/` and `lib/skills.generated.ts` are unchanged. Taking a newer bundle is now `pnpm update @nyuchi/mzizi-skills` and a regenerate, not a `package.json` edit. Third-party dependencies, and the Roots crates' `path` + `version` dependencies on each other in `mzizi-rs/`, are unchanged.
+
+## [4.9.0] - 2026-10-20
+
+Releases `staging` to `main` as the next minor above v4.8.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.9.0, and the Mzizi Roots crates are published at 0.4.0. The `v4.9.0` tag is cut on a second merge to `main`: the first (#514) published the crates at 0.4.0, but its CI on `main` failed on a newly published `hono` advisory (GHSA-5r4p-p66f-jhc7), so `release.yml` did not tag it. The second carries the fix (#521).
+
+### Security — `hono` 4.13.13 through the override, for GHSA-5r4p-p66f-jhc7 (2026-10-20, #521)
+
+`hono` 4.12.4 to 4.13.10 can let a request bypass middleware on static paths (moderate). It reaches the registry only as a dev dependency, through `shadcn` → `@modelcontextprotocol/sdk`. The `hono` override moves from `^4.13.5` to `^4.13.11`, and the lockfile resolves 4.13.13. Without it `pnpm audit --audit-level=moderate` fails, which blocks the pre-commit hook and the Security Audit job on every branch, and it failed CI on `main` for the 4.9.0 release, so `v4.9.0` was not tagged. No published package or API changes.
+
+### Added — `border-control`, a control's edge at Lc 30 and 3:1; `border` is decorative; `text-tertiary` gets its own Lc 60 floor and 4.5:1; `input` is pending until slice 4 (2026-10-20, #518)
+
+The owner's decision on the three roles that #485 left pending (#484, 2026-10-20). The contrast gate in `pnpm tokens:sync` and `pnpm tokens:verify` reports 0 violations. It lists each decorative exemption by name, and it reports one pending role, `input`, because the controls still draw their edge with it until slice 4.
+
+- **Added: `border-control`** (`--border-control`, `border-border-control`). It is the edge that identifies a control: inputs, selects, textareas, checkboxes, radios and switch tracks.
+  - **The bars.** APCA Lc 30 **and** WCAG 3:1 (1.4.11, non-text contrast), in both themes, on every surface a control can sit on (`CONTROL_SURFACES`):
+    - the ladder from `pitch` to `raised`;
+    - `muted` and `wash`;
+    - the aliases `background`, `card`, `popover` and `sidebar`.
+  - **How it is made.** The walk starts from the `border` role, so a pack's hairline carries through, and moves toward ink in light and white in dark until both bars clear. No hex is typed by hand.
+    - **Light: `#787774`.** 4.03:1 and Lc 63.9 on base, and 3.05:1 and Lc 46.6 on `raised`, the tightest.
+    - **Dark: `#818180`.** Lc −34.9 and 4.98:1 on base, and Lc −30.9 and 3.57:1 on `raised`.
+  - **Why both bars.** Lc 30 alone stops at `#B4B3AF` in light, which is 1.81:1. A rule's new optional `wcag` field holds the ratio, and both derive walks and the gate measure it with the existing `wcag()`.
+  - Registered in `@theme` like every colour role. No component uses it yet: moving the controls onto it is slice 4.
+- **Changed: `border` and `sidebar-border` are `decorative`.** They are soft hairlines between regions (`#E7E5E0` / `#2A2927`, unchanged, Lc 0 on base), exempt from the Lc 30 ui bar. The reason in the manifest says they are never the only cue. Only a `ui` role can be decorative.
+- **Changed: `input` is measured as the edge controls draw today, and reports pending.** Every control uses `border-input`, and `--input` is the control's own fill (`#FFFFFF` / `#100F0E`, about Lc 0). It is held to the same Lc 30 and 3:1 on the same surfaces. All 26 of its measurements are pending, with a reason that names slice 4, so the gate does not count a control edge as passing before one exists.
+- **Changed: `text-tertiary` is gated at Lc 60 and WCAG 4.5:1.** Lc 60 is APCA's minimum for non-body text (placeholders, captions, timestamps, metadata); it was pending against 75. A text rule that names `nonBody` gets that floor; `nonBody` implies the bar, so the rule sets no `min`. Only a text role can use it.
+  - **4.5:1 too.** The owner's decision on the ratio was "Add 4.5:1 too" (WCAG 1.4.3). `textRamp()` reads the ratio from the rule and walks the tier to both bars, on `base` and `surface`, the surfaces `text-secondary` is held to.
+  - **Light moves from `#797877` to `#6B6A69`.** It was Lc 63.3 and 3.97:1 on base, 60.4 and 3.79:1 on surface. It is now Lc 69.7 and 4.86:1 on base, 66.8 and 4.65:1 on surface: 8.5 Lc under `text-secondary` (`#575655`, 78.2 / 75.3).
+  - **Dark stays `#B3B3B1`.** Lc −60.9 and 9.25:1 on base, −60.5 and 8.91:1 on surface, 14.5 Lc under `text-secondary`.
+- **The bars live in one place.** `BODY` (75), `NON_BODY` (60) and `UI` (30) are exported from `lib/tokens/roles.source.ts`, with `contrastFloor()` and `contrastMin()`. The gate and the text ramp read them from there.
+- **Fixed: `derive: "fill"`.**
+  - It honours a foreground's `wcag` ratio.
+  - It holds a text-derived foreground to what that foreground will paint: a fill moves only where the foreground cannot reach its bar by its own walk.
+  - The Mzizi pack's derived values do not change.
+- **`roleGate()` returns `decorative`** beside `results`, `violations` and `pending`. The report line reads `✓ role gate: 215 of 241 measurements pass, 0 violations, 26 pending`, followed by each pending role with its reason and the decorative list.
+- **`brand.source.ts`:** the `border` usage that `/v1/brand` serves no longer says it is a control's edge.
+- **Regenerated** by `pnpm tokens:sync`: `mzizi-tokens-globals.css`, and the TypeScript, Swift, Kotlin, ArkTS, React Native, Python and Rust token files.
+
+### Fixed — `markdown-renderer` 1.2.1: four parser bugs from the `@bundu/ui` 0.6.0 review; `brand-mark` 1.1.1: an unknown brand is a clear error (2026-10-20, #517)
+
+Found by the code review of `@bundu/ui` 0.6.0 (mzizi-dev/packages-npm#63), which builds from registry v4.8.0. Each was confirmed by a failing test on `staging` first. The parser fixes are in `markdown-parse.ts` and the Rust parser alike, each with a shared fixture case that both run (81 cases in all).
+
+- **Rich text: a list placed directly in a list.** Google Docs and Word paste a nested list as a child of the `<ul>` or `<ol>`, between its `<li>`s, not inside one: `<ul><li>a</li><ul><li>nested</li></ul><li>b</li></ul>`. Only `<li>` children were read, so the nested list and its words were lost. It now nests under the item before it, as a browser draws it. One that comes before any item gets an item of its own with no line (the contract's gaps say it shows an empty marker).
+- **Rich text: `<br>` in `<pre>`.** A code block read its text without its `<br>`s, so `<pre><code>line1<br>line2</code></pre>` showed `line1line2`. A `<br>` is now a line break in it, including one at the start (only a source newline right after `<pre>` is dropped, as a browser drops it), and a space in inline `<code>`.
+- **A numbered line in a paragraph.** A line such as `1984. was a year` or `2) or two` ended the paragraph and started a list. As in CommonMark, a list now interrupts a paragraph, or the text of the list item before it, only when its first item has text and, if numbered, is numbered 1. So `Text\n1984. was a year` stays one paragraph of two lines, `- a\n  2) foo` is one item of two lines, and a line that is only a marker, such as `-`, after a paragraph line no longer draws an empty bullet. After a blank line, or numbered 1, it is still a list, and a bullet with text still interrupts.
+- **List indentation.** An item indented between two open levels (`- a\n    - b\n  - c`) started a second nested list under `a`. It now joins the nested list it falls inside, so `a` holds one list of `b` and `c`, and an item two spaces deeper than it nests under it. Nesting is still by indentation, not CommonMark's content columns (a contract gap now says so).
+- **BrandMark.** `<BrandMark brand>` with a brand outside the shipped set (from untyped data, or one whose icon pair has not shipped, such as `"bundu"`) threw `Cannot read properties of undefined` during render, in both the Astro and React builds. It now throws `BrandMark: unknown brand "bundu"; expected one of "nyuchi", "mukoko"`, and a name such as `toString` no longer reaches the object's prototype. It shows no other brand's mark in its place. `contracts/app/brand-mark` 1.1.1 says so.
+- `contracts/ui/markdown-renderer` 1.2.1 states these rules in its behaviour and gaps; no state or check changed. Shared fixture cases also pin, in both languages, that a self-closing `<svg/>` or `<math/>` inside a paragraph is closed (already so on `staging`), and that a self-closing slash on `<iframe/>` or `<textarea/>` is ignored, as a browser ignores it, so they drop to their end tag (per the contract, checked against parse5).
+
+Not changed, because `staging` already has them (#483): a tab between a link's address and its title ends the address (the title is dropped and the hover title is the address, per the contract), and backslash escapes in an address are undone (`[a](foo\)bar)` goes to `foo)bar`, still through the link allow-list).
+
+### Added — `markdown-renderer` 1.2.0: a link shows its address on hover, normalised, with an IDN host as punycode (2026-10-20, #483)
+
+Closes #470, a follow-up from the Toddle extension's review (#460): its old flag renderer showed each link's address on hover, and `markdown-renderer` 1.1.0 did not.
+
+- **Every kept link has a `title`**: its address as the URL parser writes it, with the scheme and host lower-cased and the host in ASCII. An internationalised host shows as punycode, so a look-alike such as `https://аpple.com` (a Cyrillic `а`) reads `https://xn--pple-43d.com` on hover. A `mailto:` address shows each domain the same way (`mailto:help@аpple.com` reads `mailto:help@xn--pple-43d.com`); a `tel:` address is as written. The `href` stays as written. All three builds give the same title: TypeScript reads the WHATWG URL `hostname`, and Rust uses the `url` crate's host parser (`idna` plus the same percent-decoding and IPv4/IPv6 rules), now a dependency of `mzizi-ui` at 2.5.4 or later (the first `url` releases on `idna` 1.x, which the parity depends on).
+- **Where TypeScript has no `URL` global**, it keeps only the hosts it can write exactly as the parser does (plain ASCII names, lower-cased, and dotted-decimal IPv4 addresses) and refuses the rest (an IDN, `0x7f.1`, `1.2.3.999`, an `xn--` label, percent-encoding, IPv6), so a kept link's title never depends on the runtime. Every browser, Node, Deno and Workers has `URL`.
+- **A web address whose host the URL parser rejects is refused** (`https://a<b/`, `https://1.2.3.999/`, `//:80/x`), and so is one whose port is not a number up to 65535 (`https://example.com:abc/`, `:99999`), as `new URL()` refuses both, since no browser could follow it. A `mailto:` address with a domain the parser rejects (`mailto:a@`, `mailto:a@1.2.3.999`) is refused too. The https-only rule and the host and credentials checks are unchanged.
+- **The tree.** A link node now carries `title` (`{ t: "link", href, title, c }`; Rust `Inline::Link { href, title, children }`), and `markdown-parse` exports `safeLink` (`mzizi_ui::safe_link`), which returns both. `safeHref` and `safe_href` are kept. **Breaking** for code that builds or matches link nodes or list items itself (see the next entry). The #486 test of a decoded rich-text address now expects the kept link's `title`, and the `markdown-renderer` item's description in `registry.json` names the hover title and `safe_link`.
+- `contracts/ui/markdown-renderer` 1.2.0 adds a `titles` state (an IDN look-alike, a loud scheme and host, a relative link, a `mailto:` look-alike) with checks on each title, and a check that every kept link has one. The Astro, React and Rust builds pass it.
+
+### Fixed — `markdown-renderer`: five parser bugs in `markdown-parse` and the Rust parser (2026-10-20, #483)
+
+Found by code reviews and confirmed by running the code. Each has a shared fixture case that TypeScript and Rust both run (72 cases in all, with the heading case from #500) and a unit test in each language.
+
+- **Emphasis.** A search for a closing marker that failed over the whole line stopped later searches inside a mark from finding theirs: `*x **a *b***` showed the text `*x` and then a bold `a *b*`. The cache now remembers where the failed search started and answers only searches to the end from there on, so it renders `*x <strong>a <em>b</em></strong>`, as CommonMark does (`_x __a _b___` and `*a* b *c **d *e***` too).
+- **Rich text: dropped elements.** A `<script>`, `<style>`, `<template>`, `<svg>` or other dropped element ended at the first tag that started with its name, so its content could show as text: `<script>var s="</scripts>"; secret()</script>` showed `"; secret()`, and `<template><template></template>secret</template>` and `<svg><svg></svg>secret</svg>` showed `secret`. It now ends where a browser ends it. A text element (`<script>`, `<style>`, `<textarea>`, …) ends at its own end tag (`</script` followed by whitespace, `/` or `>`; inside `<!--` a nested `<script>` needs its own `</script>` first, as the HTML tokenizer reads it). A `<template>`, `<svg>`, `<math>`, `<object>` or `<head>` ends at the end tag that matches it once what is nested in it has closed, the way a browser nests it. An end tag inside a comment, an attribute value, a CDATA section or a nested text element does not end it, and inside SVG or MathML a `<script>` is not a text element until a tag such as `<p>` returns to HTML. Where a browser would end it sooner, it is dropped to the later end.
+- **Rich text: tags and comments are read as the HTML tokenizer reads them.** A tag's name runs to whitespace, `/` or `>` (`<svg-x>` is not `<svg>`), only HTML whitespace separates attributes (so `title=\u00a0"…"` opens no quote), `<svg/>` is empty, a comment also ends at `--!>` (and `<!-->` is empty), and a doctype or other bogus comment (`<!DOCTYPE html>`, `<?xml …?>`, `</ x>`) no longer shows as text. A random cross-check of 240,000 generated documents against parse5, a spec-compliant HTML parser, found no word a browser hides that the reader shows. The contract's gaps name what it still does not model (`<select>` content, which browsers parse differently from one another).
+- **Rich text: lists.** Text after a nested list in an `<li>` was joined to the text before it and the list moved below: `<li>a<ul><li>b</li></ul>c</li>` showed `ac`. It now stays in document order: a list item's `children` can hold `{ kind: "lines", lines }` after a nested list (Rust `ListChild::Lines`).
+- **Trailing backslash.** Every paragraph line lost one trailing backslash, so `Save it to C:\` lost its `\`. A backslash is dropped (as a hard break) only when another line follows.
+- **Link addresses.** The address ended only at a space or a newline, and backslash escapes stayed in it: `[a](http://x.com\t"title")`, with a tab before the title, put the title into the `href`, and `[a](http://x.com/\(y\))` kept the backslashes. It now ends at a space, a tab or a line break, as CommonMark ends it, and escaped ASCII punctuation is unescaped. Other whitespace, such as a no-break space, is part of the address, as in CommonMark, and so is a control character; either way the link is refused, as in 1.1.0, never sent to the part of the address before it (`[a](https://x.com/a\u00a0b)` does not go to `https://x.com/a`).
+
+Also: `markdown-parse.ts` is formatted with the repo's Prettier config (packages-npm syncs it byte for byte and had to exempt it from `vp fmt`), and `markdown-renderer.astro` draws the tree with plain recursive template functions and one dynamic heading tag instead of an `Astro.self` instance per node and a six-way ternary. Its output is byte for byte the same.
+
+### Changed — the Mzizi Roots crates move to 0.4.0 (2026-10-20, #483)
+
+The next minor above `mzizi-rs-v0.3.0`, so `mzizi-ui` 0.4.0 on crates.io carries `markdown-renderer` 1.2.0. **Breaking** for code that builds or matches `Inline::Link` or `ListItem::children` (now `Vec<ListChild>`). `mzizi-ui` depends on `url` 2.5.4 or later. The crate READMEs and the `mzizi-roots` crate docs install `"0.4"`. `plugin/skills/mzizi-roots/SKILL.md` still installs `"0.1"`: it is a copy of the published `@nyuchi/mzizi-skills` bundle, so it changes when that skill is fixed in `mzizi-dev/agent-tools`, republished, and this repo bumps its pin.
+
+### Changed — docs follow the 2026-10-20 owner decisions: repo renames, three build targets, four gateways, Mzizi's own renderer (2026-10-20, #513)
+
+- **Repo renames.** The Mzizi API repository is now `mzizi-dev/mzizi-api` (formerly `mzizi-api-gateway`). `AGENTS.md`, `CONTRIBUTING.md`, `SECURITY.md`, `README.md`, `docs/deploying.md` and `docs/roots/RFC-roots.md` use the new name. The old name is kept once, in brackets, where a reader might look for it. Live hosts do not change: `api.mzizi.dev` is the same. The owner has renamed the repository; GitHub redirects the old name.
+- **README corrected.** The README called the API gateway "a pure-Rust Cloudflare Worker". It is a Hono (TypeScript) Worker. The ecosystem table and the host table now say so.
+- **Four API gateways.** `README.md` (new "The four API gateways" table) and `AGENTS.md` (new "Build targets and the four API gateways" section) name the Mzizi API, the Nyuchi API (B2B), the Mukoko API and the Nyuchi Servers API. Only the Mzizi API is served from this repository. The other three are described as today's state and as decided direction, and their private repositories are named, not linked.
+- **Three build targets.** `docs/roots/RFC-roots.md` §2.2 records the owner's 2026-10-20 decision that Roots and the server crates target Cloudflare Workers, containers and bare metal. It is marked as direction: the Workers, container and bare-metal host adapters are not built, and the container and bare-metal work is designed and waits for the Phase 0 gate (the language's RFC-0016, `mzizi-dev/mzizi#123`, is approved as design only, owner 2026-10-21). The container target is a standard OCI image, built with Docker by default and run by any OCI runtime. The planned axum adapter for containers and bare metal sits beside `mzizi-worker` in the plan. `mzizi-roots-server`'s README and `Cargo.toml` describe the same three targets, and its keyword `observability` becomes `containers` (crates.io keywords are capped at five). Every Rust crate still builds and tests natively; `mzizi-roots-server`'s dependency-free features also pass a `wasm32-unknown-unknown` `cargo check`, run for this entry.
+- **Components.** `RFC-roots.md` §2.1 carries a status note: Mzizi Roots uses Mzizi's own `render(props) -> String` path, not Dioxus, and Dioxus remains a dependency of `mzizi-ui`, `mzizi-brand`, `mzizi-shell`, `mzizi-docs` and the two umbrellas until the migration in `docs/roots/RFC-roots-renderer.md` finishes. Seven files have a `render` path (skeleton, badge, progress, separator, status-badge, safe-area-frame, chart). The renderer RFC's status now says which PRs landed. `AGENTS.md`, the crate READMEs and `docs/pulling-in-primitives.md` say the Dioxus part is in transition. No new Dioxus, Leptos or Yew work is accepted, and Svelte is out.
+- **Doctrine.** `content/doctrine/genetic-code-conventions/domain-and-docs-routing.mdx` says that Workers is what ships today and records the three-target decision as direction. `lib/doctrine.generated.ts` is regenerated from it.
+- **Private repositories unlinked.** The README's ecosystem table named `nyuchi/mukoko-platform`, `bundu-labs/bundu-docs` and `nyuchi/nyuchi-docs` as links; it now names them as text, and the Nyuchi Console row names `nyuchi/nyuchi-platform`. `RFC-roots.md` links `mzizi-api#49` at its new address.
+- **Not changed in this entry.** `registry.json` descriptions for the `mzizi-data` and `mzizi-mongodb` items sit on open pull requests and are not on `staging`. `plugin/skills/` and `lib/skills.generated.ts` are generated from `@nyuchi/mzizi-skills` and still say `mzizi-api-gateway` and "every Worker is TypeScript"; they clear when that bundle is republished. Code comments and `.github/workflows/notify-pin-bots.yml` still name the old repository, which GitHub redirects after the rename.
+
+### Added — `mzizi-ui` gets a render path with no Dioxus for six static primitives, byte-identical to `dioxus-ssr` (2026-10-20, #510)
+
+- `separator`, `progress`, `badge`, `status-badge`, `safe-area-frame` and `chart` each gain `RenderProps` and `render(&RenderProps) -> String`, beside their Dioxus component. The Dioxus components are unchanged, and `dioxus` stays a dependency of every `mzizi-rs` crate. This is the first batch of `docs/roots/RFC-roots-renderer.md` §5; alert, card and markdown-renderer follow.
+- Checked by `mzizi-ui/tests/render_parity.rs`: 40 cases, each compared byte-for-byte with `dioxus-ssr`. The `status-badge` and `safe-area-frame` states come from `contracts/ui/*.contract.json`; the rest are undeclared cases (the five escaped characters, non-ASCII text, empty values, chart's loading and container branches).
+- Goldens for those cases are committed under `mzizi-ui/tests/goldens/`, captured from `dioxus-ssr`, so the later PR that removes Dioxus can still check parity.
+- Each registry file carries its own inline escaping writer; `mzizi-ui/src/html.rs` holds the reference and a test that holds every copy to it.
+- Public API: the `RenderProps` and `render` items of those six modules. Additive, unreleased, and nothing is published or version-bumped.
+
 ### Removed — Svelte from the registry's text, doctrine, validators and tests (2026-10-20, #507)
 
 - **Doctrine, docs and README.** Svelte is no longer named as a framework or a target. `astro-vite-plus` drops its "two surfaces still carry Svelte" passage; `resolver-deployment-decision` drops `shadcn-svelte` from its verified list; `docs/pulling-in-primitives.md` drops the `svelte` tier example and its "Svelte" install section (the `optional` tier now reads "none today"); `docs/roots/RFC-roots.md` and `README.md` drop Svelte from their framework lists and from the mini-app description.
@@ -44,6 +162,70 @@ Upstreamed from the Toddle extension's installed copy of this file (nyuchi/toddl
 
 - New cases in `__tests__/components/markdown-renderer.test.tsx` cover more refused address forms, decoded rich-text attributes, scheme-relative external links, refused links rendered as plain text, and images (never emitted).
 - The component and its contract are unchanged.
+
+### Added — the role layer: N1 tokens components can name, switchable per brand (2026-10-07, #485)
+
+Slice 1 of #484 ("switchable N1"). It adds roles and changes no component and no contract. A role is a name with a job (`status-success-text`, `rounded-control`, `h-touch`). The Mzizi palette is now the default pack that maps onto the roles, so a later slice can let a brand bring its own pack.
+
+- **`lib/tokens/roles.source.ts`, the role manifest.** Each role has a `name`, a `kind` (text, fill, ui, surface, size, radius or font), `required`, a `contrast` rule and the Mzizi default mapping per theme. It covers:
+  - **identity:** `primary`, `ring`, `brand-accent` and the new `app-accent`, each with a foreground;
+  - **surfaces and the shadcn set,** as today;
+  - **status tones:** `status-{success,warning,info,danger,premium,neutral}`, each with `-container`, `-on-container` and `-text` (malachite, gold, cobalt, terracotta, tanzanite and the muted ladder);
+  - **lifecycle:** `status-{stable,beta,alpha,deprecated}`, aliases of the tones;
+  - **destructive:** `destructive`, `-foreground`, `-container` and the new `-text`, red #B3261E. It stays separate from the terracotta `status-danger` (owner decision, 2026-10-07);
+  - **categorical:** `chart-1..7` and the new `category-1..7`;
+  - **size:** `spacing-touch` (56px) and `spacing-touch-min` (48px), plus `spacing-control`, `-sm`, `-lg`, `-icon`, `-dense` (32px, fine pointer only), `spacing-field` and `-sm`, from `brandMeta.componentSpecs`;
+  - **radius:** `radius-control` (pill, 9999px: Mzizi stays pill and a pack may switch it), `-field`, `-badge`, `-card` (14px) and `-dialog` (17px);
+  - **font:** `font-body`, `font-display` and `font-code`.
+- **`mzizi-tokens-globals.css` declares every role.** Each one is a bare var in `:root`, redeclared under `.dark` / `[data-theme="dark"]` where the theme changes it. Each one is also registered with Tailwind in `@theme inline`: `--color-<role>`, `--radius-<role>` (bare `--r-<role>`) and `--spacing-<role>` (bare `--size-<role>`). A brand moves a role by redeclaring one var, with no Tailwind rebuild.
+  - **The touch floor.** `--spacing-touch-min` is the literal `3rem`. Every size role the manifest marks as a floor (`touch`, `control`, `control-sm`, `-lg`, `-icon`, `field`, `field-sm`) is registered as `max(var(--size-<role>), 3rem)`, so a brand that lowers the bare var still paints 48px. A size role marked `fixed` is registered as its own literal value.
+  - **Radius roles follow their rung.** `--r-control`, `--r-field` and `--r-badge` are `var(--r-full)`, `--r-card` is `var(--r-base)` and `--r-dialog` is `var(--r-xl)`, so a consumer that moves a rung moves the role too, as `--r-badge` and `--r-card` did before. `--r-button` and `--r-input` stay as deprecated aliases of `--r-control` and `--r-field`.
+  - **Alias chains.** A role that had to be derived to meet its contrast bar is a measured literal in both themes. So overriding its source var (`--error` for `--destructive`) moves it in both themes or in neither, never in one. The stylesheet header documents the rule.
+- **Fonts move to a non-inline `@theme`.** `.font-sans` used to compile to the literal "Noto Sans". It now compiles to `var(--font-sans)`, which is `var(--font-body)`, declared on `:root`, so a brand can override the type at runtime. `font-sans`, `font-serif` and `font-mono` stay as aliases.
+- **The contrast gate.** `pnpm tokens:sync` and `pnpm tokens:verify` measure the Mzizi mapping with the existing APCA code and fail on a violation:
+  - text roles need |Lc| ≥ 75 on `base` and `surface` in both themes;
+  - a foreground needs ≥ 75 on its fill;
+  - UI roles need ≥ 30;
+  - every size marked as a floor must be ≥ `spacing-touch-min`;
+  - a derived value must exist. A fill is walked the way all of its foregrounds allow, and a foreground on a derived fill is resolved after the fill. When no walk clears the bar, the gate fails and names the roles, and nothing is painted #000 or #FFF.
+- **Where the gate moved a value:**
+  - `--text-secondary` and `--text-tertiary` are walked to clear their bar on `--surface` too;
+  - `status-danger-text` light, `status-premium-on-container` dark, `destructive-text` and the dark `destructive` fill get measured values derived with `walk()`, beside the untouched palette variables;
+  - three roles are left pending an owner decision, listed in the manifest and pinned by a test: `border` and `sidebar-border` (a decorative hairline, about Lc 0 on base) and `text-tertiary` (Lc 60 by design).
+- **The duplicated constants are folded.** `STATUS`, `RADIUS`, `SIZING`, the surface `LADDER` and `MUTED` in `scripts/render-globals-css.ts`, and the radius and font scale in `scripts/sync-tokens.ts`, are now read from canon (`brand.source.ts`). They keep the same exported names, so the text ramp and the gate measure the same surface. `tokens:sync` resolves the roles once and passes them to the gate and every emitter.
+- **Every platform file carries the roles,** resolved for the Mzizi pack in both themes:
+  - Swift and Kotlin: `MziziRoles.Light` / `MziziRoles.Dark`;
+  - ArkTS and React Native: `MziziRoles`;
+  - Python: `MziziRolesLight` / `MziziRolesDark`;
+  - TypeScript: a generated `roles` region in `mzizi-tokens-typescript.ts`;
+  - JSON twin: `roles` in `renderGlobalsJson`;
+  - Rust: `mzizi-tokens` gains `RoleColors`, `Roles { light, dark }`, `Roles::mzizi()`, and the size, radius and font roles as consts. Every floored size has a compile-time `const _: () = assert!(Roles::X >= Roles::SPACING_TOUCH_MIN)` item outside the tests, so any build fails if one undercuts the floor.
+
+### Fixed — `text-base` is Tailwind's 16px font size again, not the page colour (2026-10-07, #485)
+
+`mzizi-tokens-globals.css` registered `--color-base`, so Tailwind compiled `text-base` to `color: var(--color-base)`. That is the page background, which made input text invisible and dropped the 16px size (#456). The ladder step now registers as `--color-surface-base` (`bg-surface-base`), and nothing in the registry used `bg-base`. A test compiles the stylesheet with the repo's Tailwind and checks that `.text-base` is a font size, and that no role key collides with a Tailwind keyword.
+
+### Fixed — `--muted-foreground` clears APCA Lc 75 on cards, not only on the page (2026-10-07, #485)
+
+Light `--text-secondary` (`--muted-foreground`) was walked to Lc 75 on `--base` only, so it measured Lc 72.5 on `--surface`, the card colour (#399, as the registry ships it). It is now `#575655`: Lc 78.2 on base and 75.3 on surface. Light `--text-tertiary` moves the same way, to `#797877`. The dark values already cleared both and are unchanged.
+
+### Added — every contract runner fails an inline `style` attribute, in Astro, React and Rust (2026-10-07, #478)
+
+`MineralStrip` in `@bundu/ui` 0.2.0 coloured its segments with an inline `style=`, so it rendered colourless under an app CSP without `'unsafe-inline'` (#444). `@bundu/ui` 0.3.0 fixed the strip. The registry now enforces the rule on everything a contract holds.
+
+- **Rendered: the rule.** Every state of every build a contract declares is rendered, and any element with a `style` attribute fails, however the style was written.
+  - **Astro and React:** `evaluateInlineStyles` in `contracts/runner.ts` is the one CSP check, and `evaluateTheming` calls it in the same pass as the colour checks. Its messages are unchanged, so `@bundu/ui`'s synced runner and its tests keep working; `__tests__/contracts/runner-theming.test.ts` pins both functions' output. The new `inlineStyles` export lists each style with its value. The React `badge`, which its contract holds by identity only, is now rendered in every state too.
+  - **Rust:** `Case::check` in `mzizi-rs/contract-eval/` applies it to every top-level node of the SSR output, so it also sees Dioxus CSS-property attributes such as `background_color:`. Every Case-based suite has it: `mzizi-ui`'s `contracts_json.rs`, which also renders `badge.rs`, and `mzizi-brand`'s.
+  - **No declared Rust build is skipped.** `contracts_json.rs` fails, naming the contract and the path, when a `.rs` a contract declares does not exist under `components/registry/`, or when no crate's suite evaluates it (a renderer in `mzizi-ui`, or an entry in `mzizi_brand::CONTRACTS`).
+  - **Recorded gaps (#481).** Eleven `mzizi-brand` components still render inline styles. Each names the properties it may render in its `Case`'s `allowed_styles` (for example `animation` and `stroke`). Any other property fails, and so does an allowed property no state renders any more, so each list only shrinks.
+- **Source: a backstop, read with real parsers.** `inlineStylesInSource` in `contracts/source-scan.ts` scans every `.astro` and `.tsx` a contract declares. It walks the TypeScript compiler's syntax tree for a `.tsx`, and `@astrojs/compiler-rs`'s (the parser the installed `astro` compiles with) for an `.astro`, so comments, strings, JSX text, nested objects and component props never read as a style. A source the parser cannot read fails the scan.
+  - It reports a valued `style` attribute on a lowercase element in any form (`style="…"`, `style={…}`, `` style=`…` ``, `{style}`), a spread object literal with a top-level `style` key, `<style define:vars>`, a top-level `style` key in a `createElement`, `cloneElement` or `jsx` call on an element (not a component), and `setAttribute("style", …)`.
+  - It is not part of `contracts/runner.ts`, so `@bundu/ui`'s synced runner gains no parser dependency.
+  - There is no `.rs` source scan: no Rust parser is available from TypeScript. The rendered check holds every Rust build.
+- **Fixtures.** In React, Astro and Rust, each way of writing an inline style fails the rendered rule; in React and Astro each form the scan reads fails it, and comments, JSDoc examples, strings, text, nested objects and component props pass.
+- **Test order.** The CSP suite runs in its own vitest project, after every other file, so its parsing and rendering does not slow a timing-bounded test running beside it.
+- **No component changed.** Today none of the 144 implementations behind the 67 contracts renders or writes one: 67 `.astro`, 67 `.tsx` and 10 `.rs`.
+- **Shared test helpers.** The contract test suites share one loader, `__tests__/contracts/contract-files.ts`, and one React renderer, `render-tsx.ts`.
 
 ### Added — `has` and `not` in the contract grammar; `ui/status-badge` 1.1.0 covers all four statuses (2026-10-07, #477)
 
@@ -115,9 +297,17 @@ The node, rung and strand doctrine that `mzizi_get_architecture` and `/v1/archit
 - **N1, N10, N11:** the token source is `lib/tokens/palette.source.ts`, not Supabase; doctrine is inlined by `pnpm doctrine:generate`, not `@next/mdx`; the `mzizi-docs` and `mzizi-discovery` crates ship.
 - **Swappable strand, the Astro + Vite+ framework, Next.js, mobile-first, ownership and installation:** "SvelteKit the declared migration target" and "Next.js remains at mzizi.dev" are gone; installation shows the Astro, Rust and React install paths.
 
+## [4.8.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.7.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.8.0. The Mzizi Roots crates are unchanged (0.3.0).
+
 ### Fixed — `markdown-parse` compiles under `noUncheckedIndexedAccess` (2026-10-07, #468)
 
 `markdown-parse.ts` (installed with `markdown-renderer`) had 80 type errors in a project with `noUncheckedIndexedAccess`, as the Toddle extension is (#460). Every array, string and match index is now checked, with no behaviour change (the 55 shared cases still give the same trees). `tsconfig.consumer-strict.json` type-checks the installable markdown files with that setting, and `pnpm typecheck` runs it. The whitespace set no longer spreads a string, which consumers' `no-misused-spread` lint flags.
+
+## [4.7.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.6.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.7.0, and the Mzizi Roots crates are published at 0.3.0.
 
 ### Changed — the Mzizi Roots crates move to 0.3.0 (2026-10-07, #466)
 
@@ -130,6 +320,10 @@ Upstreamed from the Toddle extension's flag text, which `markdown-renderer` repl
 - **Links:** an address with whitespace or a control character still inside is refused (it is not one address; this closes `<\u0001javascript:…>`, which v4.6.0 kept as a scheme-less address that a browser reads as `javascript:`), and a web address (`http:`, `https:` or scheme-relative `//host`) needs a host and no credentials. `https://bank.example@evil.example` shows one site and goes to another, so it now keeps its words and loses its address, like a refused scheme.
 - **Rich text (`from="html"` / `"auto"`):** a list inside a list item stays a nested list (up to 8 deep), where it was joined into the item's line, and `<ol start="n">` keeps its first number.
 - `contracts/ui/markdown-renderer` 1.1.0 adds a nested list with a start to the `rich` state and a credentials link to the `xss` state. A scheme-less `\\host` or `/\host` is scheme-relative too (browsers read `\` as `/`), so it gets the same host and credentials check and opens in a new tab. The shared fixture has 55 cases, identical in TypeScript and Rust.
+
+## [4.6.0] - 2026-10-07
+
+Releases `staging` to `main` as the next minor above v4.5.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.6.0, and the Mzizi Roots crates are published at 0.2.0, so `mzizi-ui` 0.2.0 on crates.io carries `MarkdownRenderer`.
 
 ### Changed — the Mzizi Roots crates move to 0.2.0 (2026-10-07, #463)
 
@@ -162,15 +356,6 @@ The next minor above `mzizi-rs-v0.1.0` (nyuchi/.github#80): the workspace versio
 - The contract adds the `mukoko` and `mukoko-lockup` states and five checks (alt text, the right image in each theme, `data-brand`, the wordmark). The `/v1/astro/app-brand-mark` document now carries four assets.
 - `@bundu/ui` picks this up when its registry pin moves past this change (mzizi-dev/packages-npm).
 
-### Added — `app/bar-chart` 1.2.0: nullable values for withheld counts (2026-10-06, #457)
-
-BarChart drew every point as a number, so an app that withholds small counts (k-anonymity: a day with fewer than 5 is returned as `null`) had to draw it as 0 or drop the day, and the total then read as exact. Mukoko Events admin's Insights page needs both to be honest (nyuchi/api-gateway#268). The change is in the `.astro` and `.tsx` builds, with the same markup, and is backwards compatible.
-
-- `data[].value` is now `number | null`. A new optional prop, `missingLabel` (default `"Not available"`), is what a null reads as, e.g. `"Fewer than 5"`.
-- A null draws no bar. In `columns` it leaves a small muted baseline tick (`fill-muted-foreground`) on a column marked `data-missing`, whose title reads `<label>: <missingLabel>`. In `rows` the bar is empty and the value is the `missingLabel` in muted text.
-- The figures table shows the `missingLabel` (muted) for a null. The total sums the known values and reads `At least <n>` when any value is null.
-- Every value null: "No figure in this range can be shown: <missingLabel, lower-cased> for every point." No data, or every value 0 with none null, still reads "Nothing to chart in this range."
-- The contract adds the `suppressed`, `suppressed-rows` and `suppressed-all` states and their checks, which both builds pass.
 ### Added — `AGENTS.md` loads the Mzizi dev skills (2026-10-06)
 
 - **`AGENTS.md` gains "Dev skills, progress reports and the merge gate"**, the canonical rule block from nyuchi/.github#87, after "Track big work in GitHub issues": load the Mzizi dev skills (`digital-hygiene` and `progress-report`), clone only into a directory unique to the agent, run dev work on a 10-minute progress-report loop whose ticks never publish, release, merge or deploy without the owner's approval, and merge only through the merge gate. Docs only: no behaviour changes, and CI is unchanged.

@@ -382,8 +382,12 @@ describe("the generated palette region", () => {
     // seven mineral hexes lived in `brandOverrides`, ten more in the chart
     // fallbacks, and ten in `listingThemes`; `circles` and every chart fallback
     // still named terracotta's pre-Seven `#D4A574` after the palette had moved.
-    const outside =
+    //
+    // The roles region (#484) is generated too, from the role manifest, and
+    // carries each role's resolved value, so it is excluded with this one.
+    const outside = (
       SOURCE.slice(0, SOURCE.indexOf(START)) + SOURCE.slice(SOURCE.indexOf(END) + END.length)
+    ).replace(/\/\* tokens:generated:ts-roles:start \*\/[\s\S]*?\/\* tokens:generated:ts-roles:end \*\//, "")
     // Comments cite retired hexes on purpose, to record what they were, so they
     // are stripped first — the same distinction `generateCSSVariables` needs.
     const code = outside.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "")
