@@ -22,7 +22,7 @@ cd mzizi
 pnpm install
 ```
 
-The repo is a **pnpm workspace** — one `pnpm install` at the root installs everything. Today the workspace contains a single project: the registry at the root. There is no app here — the Next.js portal was removed; `mzizi.dev` is `mzizi-dev/mzizi-site` and `api.mzizi.dev` is `mzizi-dev/mzizi-api-gateway`. The published Mzizi tooling packages (the CLI, the `mzizi-skills` bundle, the standalone MCP worker, and the SDK) live in **`mzizi-dev/agent-tools` (private)**, not here — see [CLAUDE.md §2](CLAUDE.md) for the split.
+The repo is a **pnpm workspace** — one `pnpm install` at the root installs everything. Today the workspace contains a single project: the registry at the root. There is no app here — the Next.js portal was removed; `mzizi.dev` is `mzizi-dev/mzizi-site` and `api.mzizi.dev` is `mzizi-dev/mzizi-api` (formerly `mzizi-api-gateway`). The published Mzizi tooling packages (the CLI, the `mzizi-skills` bundle, the standalone MCP worker, and the SDK) live in **`mzizi-dev/agent-tools` (private)**, not here — see [CLAUDE.md §2](CLAUDE.md) for the split.
 
 Useful root commands:
 
@@ -219,7 +219,7 @@ pnpm registry:validate && pnpm registry:verify
 pnpm build && git status --porcelain   # every generator in write mode; commit what it writes
 ```
 
-Once the change is on `main` and mzizi-api-gateway's pin reaches it, `curl https://api.mzizi.dev/v1/ui/my-component` serves it.
+Once the change is on `main` and mzizi-api's pin reaches it, `curl https://api.mzizi.dev/v1/ui/my-component` serves it.
 
 ---
 
@@ -287,7 +287,7 @@ pnpm test:watch       # Watch mode for development
 __tests__/
 ├── contracts/        Every contract in contracts/ against the schema, the index and the README
 ├── db/               The no-database guarantee
-├── lib/              The readers mzizi-api-gateway bundles, and the generators' outputs
+├── lib/              The readers mzizi-api bundles, and the generators' outputs
 ├── registry/         Registry item checks
 └── tokens-*.test.ts  Token pipeline integrity
 ```

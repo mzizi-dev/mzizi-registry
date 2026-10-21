@@ -7,16 +7,18 @@
 // repo's Tailwind, so they test what a consumer that copies the file gets.
 
 import { describe, expect, it } from "vitest"
+import { escapeRegExp } from "./helpers/regexp"
 import { readFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { createRequire } from "node:module"
 import { compile } from "tailwindcss"
 import { experimentalColors, heritageColors, minerals } from "@/lib/tokens/palette.source"
 import { backgroundColors } from "@/lib/tokens/brand.source"
-import { colorKey, isColorKind, ROLES, type Role } from "@/lib/tokens/roles.source"
+import { BODY, colorKey, CONTROL_SURFACES, contrastMin, isColorKind, NON_BODY, ROLES, UI, type Role } from "@/lib/tokens/roles.source"
 import {
   apca,
   LADDER,
+  wcag,
   MUTED,
   renderGlobalsCss,
   resolveRoles,
@@ -44,7 +46,8 @@ async function build(candidates: string[]): Promise<string> {
 
 /** The declarations of a utility's rule in compiled output. */
 function rule(css: string, cls: string): string {
-  const esc = cls.replace(/[/.]/g, (c) => `\\\\\\${c}`)
+  // Tailwind escapes `\`, `/` and `.` in a class name with a backslash; match that escaped form literally.
+  const esc = escapeRegExp(cls.replace(/[\\/.]/g, "\\$&"))
   const m = css.match(new RegExp(`\\n\\s*\\.${esc} \\{([^}]*)\\}`))
   return m?.[1] ?? ""
 }
@@ -155,15 +158,60 @@ describe("the role manifest", () => {
 })
 
 describe("the contrast gate on the Mzizi pack", () => {
-  const { results, violations, pending } = roleGate(RESOLVED)
+  const { results, violations, pending, decorative } = roleGate(RESOLVED)
 
   it("finds no violation", () => {
     expect(violations).toEqual([])
     expect(results.length).toBeGreaterThan(150)
   })
 
-  it("leaves exactly the owner decisions pending", () => {
-    expect([...new Set(pending.map((p) => p.role))].sort()).toEqual(["border", "sidebar-border", "text-tertiary"])
+  it("leaves only the control edge controls draw today pending: input, until slice 4 (#484)", () => {
+    expect([...new Set(pending.map((p) => p.role))]).toEqual(["input"])
+    // Every one of its measurements: no surface a control sits on lets it pass.
+    expect(pending).toHaveLength(CONTROL_SURFACES.length * 2)
+    expect(pending[0]!.pending).toMatch(/Slice 4 of #484/)
+    expect(results.filter((r) => r.role === "input" && r.pass)).toEqual([])
+  })
+
+  it("exempts exactly the decorative hairlines, and says why each is never the only cue", () => {
+    expect(decorative.map((d) => d.role).sort()).toEqual(["border", "sidebar-border"])
+    for (const d of decorative) expect(d.reason, d.role).toMatch(/never the only cue/)
+    expect(results.some((r) => r.role === "border" || r.role === "sidebar-border")).toBe(false)
+  })
+
+  it("puts border-control at Lc 30 and WCAG 3:1 on every surface a control can sit on, in both themes", () => {
+    expect(CONTROL_SURFACES).toEqual(expect.arrayContaining(["base", "surface", "container", "overlay", "raised", "popover", "card", "sidebar"]))
+    const got: string[] = []
+    for (const mode of ["light", "dark"] as const) {
+      for (const bg of CONTROL_SURFACES) {
+        const fg = RESOLVED.get("border-control")!.value[mode]
+        const on = RESOLVED.get(bg)!.value[mode]
+        expect(Math.abs(apca(fg, on)), `${mode} on ${bg}`).toBeGreaterThanOrEqual(30)
+        expect(wcag(fg, on), `${mode} on ${bg}`).toBeGreaterThanOrEqual(3)
+        got.push(`${mode}:${bg}`)
+      }
+    }
+    expect(results.filter((r) => r.role === "border-control").map((r) => `${r.mode}:${r.against}`).sort()).toEqual(got.sort())
+    // The hairline it starts from is far under both: border stays decorative, border-control is the control's edge.
+    expect(Math.abs(apca(RESOLVED.get("border")!.value.light, RESOLVED.get("base")!.value.light))).toBeLessThan(15)
+  })
+
+  it("holds text-tertiary to its own Lc 60 floor and WCAG 4.5:1, and keeps it lighter than text-secondary", () => {
+    for (const mode of ["light", "dark"] as const) {
+      for (const bg of ["base", "surface"]) {
+        const on = RESOLVED.get(bg)!.value[mode]
+        const hex = RESOLVED.get("text-tertiary")!.value[mode]
+        const tertiary = Math.abs(apca(hex, on))
+        const secondary = Math.abs(apca(RESOLVED.get("text-secondary")!.value[mode], on))
+        expect(tertiary, `${mode} on ${bg}`).toBeGreaterThanOrEqual(60)
+        expect(wcag(hex, on), `${mode} on ${bg}`).toBeGreaterThanOrEqual(4.5)
+        expect(tertiary, `${mode} on ${bg}`).toBeLessThan(75)
+        // "Add 4.5:1 too" (owner, 2026-10-20) moves light tertiary to Lc 66.8-69.7: still 8.5 under secondary.
+        expect(secondary - tertiary, `${mode} on ${bg}: secondary stays a step above tertiary`).toBeGreaterThanOrEqual(8)
+      }
+    }
+    const rows = results.filter((r) => r.role === "text-tertiary")
+    expect(rows.every((r) => r.min === 60 && r.wcag?.min === 4.5 && r.pass)).toBe(true)
   })
 
   it("puts --muted-foreground at Lc 75 on base and surface in both themes (#399)", () => {
@@ -180,6 +228,8 @@ describe("the contrast gate on the Mzizi pack", () => {
       .flatMap((r) => Object.keys(r.derived).map((m) => `${r.role.name}:${m}`))
       .sort()
     expect(derived).toEqual([
+      "border-control:dark",
+      "border-control:light",
       "destructive-text:dark",
       "destructive-text:light",
       "destructive:dark",
@@ -188,12 +238,17 @@ describe("the contrast gate on the Mzizi pack", () => {
     ])
   })
 
-  it("holds every text role to Lc 75 unless an owner decision is pending or it is exempt", () => {
+  it("holds every text role to Lc 75 unless it is non-body (Lc 60), pending or exempt", () => {
     for (const r of ROLES.filter((x) => x.kind === "text")) {
       expect(r.contrast, r.name).toBeDefined()
-      if (r.contrast && "against" in r.contrast && !r.contrast.pending) expect(r.contrast.min, r.name).toBeGreaterThanOrEqual(75)
+      if (r.contrast && "against" in r.contrast && !r.contrast.pending) {
+        expect(contrastMin(r.kind, r.contrast), r.name).toBeGreaterThanOrEqual(r.contrast.nonBody ? NON_BODY : BODY)
+      }
     }
+    expect([BODY, NON_BODY, UI]).toEqual([75, 60, 30])
     expect(ROLES.filter((r) => r.contrast && "exempt" in r.contrast).map((r) => r.name)).toEqual(["hero-text"])
+    expect(ROLES.filter((r) => r.contrast && "against" in r.contrast && r.contrast.nonBody).map((r) => r.name)).toEqual(["text-tertiary"])
+    expect(ROLES.filter((r) => r.contrast && "decorative" in r.contrast).map((r) => r.name).sort()).toEqual(["border", "sidebar-border"])
   })
 })
 
@@ -249,7 +304,8 @@ describe("Tailwind keys (#456)", () => {
     for (const r of colors) {
       const k = colorKey(r)
       const v = `var(${roleVar(r)})`
-      if (!rule(out, `text-${k}`).match(new RegExp(`^\\s*color: ${v.replace(/[()]/g, "\\$&")};\\s*$`))) wrong.push(`text-${k}: ${rule(out, `text-${k}`)}`)
+      const text = rule(out, `text-${k}`)
+      if (text.trim() !== `color: ${v};`) wrong.push(`text-${k}: ${text}`)
       if (!rule(out, `bg-${k}`).includes(`background-color: ${v};`)) wrong.push(`bg-${k}`)
       if (!rule(out, `border-${k}`).includes(`border-color: ${v};`)) wrong.push(`border-${k}`)
     }
@@ -263,8 +319,8 @@ describe("Tailwind keys (#456)", () => {
     const out = await build([...sizes.map((s) => `h-${s}`), ...radii.map((r) => `rounded-${r}`), ...fonts.map((f) => `font-${f}`), "font-sans"])
     for (const s of sizes) expect(rule(out, `h-${s}`), `h-${s}`).toMatch(/^\s*height: /)
     expect(rule(out, "h-touch-min")).toMatch(/height: 3rem;/)
-    for (const r of radii) expect(rule(out, `rounded-${r}`), `rounded-${r}`).toMatch(new RegExp(`border-radius: var\\(--r-${r}\\);`))
-    for (const f of fonts) expect(rule(out, `font-${f}`), `font-${f}`).toMatch(new RegExp(`font-family: var\\(--font-${f}\\);`))
+    for (const r of radii) expect(rule(out, `rounded-${r}`), `rounded-${r}`).toContain(`border-radius: var(--r-${r});`)
+    for (const f of fonts) expect(rule(out, `font-${f}`), `font-${f}`).toContain(`font-family: var(--font-${f});`)
     // Non-inline: the font roles reach :root, where a brand overrides them at runtime.
     expect(out).toMatch(/--font-body: "Noto Sans"/)
     expect(rule(out, "font-sans")).toMatch(/font-family: var\(--font-sans\);/)
@@ -388,9 +444,15 @@ describe("derivation", () => {
     const reverse = resolveWith([...patched].reverse())
     for (const map of [forward, reverse]) {
       expect(roleGate(map).violations).toEqual([])
-      for (const name of ["destructive", "destructive-foreground"]) expect(map.get(name)!.value).toEqual(RESOLVED.get(name)!.value)
+      for (const mode of ["light", "dark"] as const) {
+        const lc = Math.abs(apca(map.get("destructive-foreground")!.value[mode], map.get("destructive")!.value[mode]))
+        expect(lc, mode).toBeGreaterThanOrEqual(75)
+      }
     }
-    expect(forward.get("destructive")!.derived.dark).toBe(RESOLVED.get("destructive")!.derived.dark)
+    // The same answer in either resolution order. The fill is measured against what the
+    // foreground will paint once it walks, so it may move less than with a fixed foreground.
+    for (const name of ["destructive", "destructive-foreground"]) expect(reverse.get(name)!.value).toEqual(forward.get(name)!.value)
+    expect(reverse.get("destructive")!.derived).toEqual(forward.get("destructive")!.derived)
   })
 
   const ui = (name: string, against: string, literal: string): Role => ({
@@ -483,7 +545,7 @@ describe("the Rust floor asserts", () => {
       const rust = readFileSync(file, "utf8")
       expect(rust).not.toMatch(/#\[cfg\(test\)\]/)
       for (const r of ROLES.filter((x) => x.floor)) {
-        expect(rust, `${file}: ${r.name}`).toMatch(new RegExp(`^const _: \\(\\) = assert!\\(Roles::${r.name.replace(/-/g, "_").toUpperCase()} >= Roles::SPACING_TOUCH_MIN\\);$`, "m"))
+        expect(rust, `${file}: ${r.name}`).toMatch(new RegExp(`^const _: \\(\\) = assert!\\(Roles::${escapeRegExp(r.name.replace(/-/g, "_").toUpperCase())} >= Roles::SPACING_TOUCH_MIN\\);$`, "m"))
       }
     }
     const lib = readFileSync(join(ROOT, "mzizi-rs/crates/mzizi-tokens/src/lib.rs"), "utf8")
@@ -505,5 +567,73 @@ describe("one resolution, passed down", () => {
     const src = readFileSync(join(ROOT, "scripts/sync-tokens.ts"), "utf8")
     expect(src).not.toMatch(/rolesCache/)
     expect(src.match(/resolveRoles\(/g)).toHaveLength(1)
+  })
+})
+
+describe("the gate's non-body floor and decorative exemption cannot loosen anything else", () => {
+  const gateWith = (patch: Partial<Record<string, Partial<Role>>>) => roleGate(resolveWith(manifest(patch))).violations
+
+  it("lets nonBody imply Lc 60, and fails body text declared at 60 without nonBody", () => {
+    expect(contrastMin("text", { against: ["base"], nonBody: "test" })).toBe(NON_BODY)
+    expect(gateWith({ "text-tertiary": { contrast: { against: ["base", "surface"], min: 60 } } })).toEqual(
+      expect.arrayContaining(["text-tertiary: declares Lc 60, under the text bar of 75", expect.stringMatching(/^text-tertiary \(light\): Lc 6\d\.\d on base, needs 75$/)])
+    )
+  })
+
+  it("fails a decorative text role, and a nonBody ui role", () => {
+    expect(gateWith({ "text-secondary": { contrast: { decorative: "test" } } })).toContain("text-secondary: only a ui role can be decorative, not a text role")
+    expect(gateWith({ ring: { contrast: { against: ["base", "surface"], nonBody: "test" } } })).toContain("ring: only a text role can be nonBody, not a ui role")
+  })
+
+  it("fails border-control when a pack sets it under 3:1, even where it clears Lc 30", () => {
+    // #B4B3AF is where Lc 30 alone lands in light on base and surface: Lc 30.9 on surface, but 1.81:1.
+    const violations = gateWith({ "border-control": { default: { literal: "#B4B3AF" }, derive: undefined } })
+    expect(violations).toContain("border-control (light): Lc 30.9 on surface, needs 30; WCAG 1.81:1, needs 3:1")
+  })
+
+  it("derives border-control from the border role, so a pack's hairline is where the walk starts", () => {
+    expect(ROLES.find((r) => r.name === "border-control")!.default).toEqual({ role: "border" })
+    const darker = resolveWith(manifest({ border: { default: { literal: "#6E6D6A" } } }))
+    // A hairline that already clears both bars in light is used as it is; dark still walks from it.
+    expect(darker.get("border-control")!.value.light).toBe("#6E6D6A")
+    expect(darker.get("border-control")!.derived.light).toBeUndefined()
+  })
+})
+
+describe('derive "fill" holds every foreground to all of its bars, as it will paint', () => {
+  const fill = (extra: Partial<Role> = {}): Role => ({
+    name: "test-fill",
+    group: "identity",
+    kind: "fill",
+    required: true,
+    description: "test",
+    default: { literal: "#C8C8C8" },
+    derive: "fill",
+    block: "roles",
+    ...extra,
+  })
+
+  it("walks the fill until a foreground's WCAG ratio clears, not only its Lc", () => {
+    // #6B6B6B on #C8C8C8: Lc 44.8 clears 30, but 3.19:1 misses 4.5:1.
+    const edge: Role = { name: "test-edge", group: "identity", kind: "ui", required: true, description: "test", contrast: { against: ["test-fill"], min: 30, wcag: 4.5 }, default: { literal: "#6B6B6B" }, block: "roles" }
+    const got = resolveWith(manifest({}, [fill(), edge])).get("test-fill")!
+    for (const mode of ["light", "dark"] as const) {
+      expect(got.derived[mode], mode).toMatch(/and 4.5:1$/)
+      expect(wcag("#6B6B6B", got.value[mode]), mode).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+
+  it("leaves the fill alone where a text-derived foreground reaches its bar by its own walk", () => {
+    // #9A9A9A on #E0E0E0 is Lc 35.9; walked toward ink it clears 75 there, so the fill need not move.
+    const text: Role = { name: "test-text", group: "identity", kind: "text", required: true, description: "test", contrast: { against: ["test-fill"], min: 75 }, default: { literal: "#9A9A9A" }, derive: "text", block: "roles" }
+    const roles = manifest({}, [fill({ default: { literal: "#E0E0E0" } }), text])
+    const resolved = resolveWith(roles)
+    const f = resolved.get("test-fill")!
+    const t = resolved.get("test-text")!
+    expect(f.derived).toEqual({})
+    expect(f.value.light).toBe("#E0E0E0")
+    expect(Object.keys(t.derived).sort()).toEqual(["dark", "light"])
+    expect(Math.abs(apca(t.value.light, f.value.light))).toBeGreaterThanOrEqual(75)
+    expect(roleGate(resolved).violations).toEqual([])
   })
 })

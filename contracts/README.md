@@ -62,7 +62,7 @@ Every format that exists is tested against the contract, here:
 | `app/stat-tile`          | StatTile          | N6   | 1.0.0   | `app-stat-tile`          | `app-stat-tile` (contract)          | —                       |
 | `app/info-tip`           | InfoTip           | N6   | 1.0.0   | `app-info-tip`           | `app-info-tip` (contract)           | —                       |
 | `app/empty-state`        | EmptyState        | N6   | 1.0.0   | `app-empty-state`        | `app-empty-state` (contract)        | —                       |
-| `app/brand-mark`         | BrandMark         | N3   | 1.1.0   | `app-brand-mark`         | `app-brand-mark` (contract)         | —                       |
+| `app/brand-mark`         | BrandMark         | N3   | 1.1.1   | `app-brand-mark`         | `app-brand-mark` (contract)         | —                       |
 | `app/data-table`         | DataTable         | N6   | 1.1.0   | `app-data-table`         | `app-data-table` (contract)         | —                       |
 | `app/filter-bar`         | FilterBar         | N6   | 1.1.0   | `app-filter-bar`         | `app-filter-bar` (contract)         | —                       |
 | `app/pagination`         | Pagination        | N6   | 1.0.0   | `app-pagination`         | `app-pagination` (contract)         | —                       |
@@ -132,7 +132,7 @@ Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Wher
 | `ui/card`              | Card             | N2   | 1.0.0   | `card`              | `card` (contract)              | `card` (contract)              |
 | `ui/input`             | Input            | N2   | 1.0.0   | `input`             | `input` (contract)             | `input` (contract)             |
 | `ui/label`             | Label            | N2   | 1.0.0   | `label`             | `label` (contract)             | `label` (contract)             |
-| `ui/markdown-renderer` | MarkdownRenderer | N2   | 1.2.0   | `markdown-renderer` | `markdown-renderer` (contract) | `markdown-renderer` (contract) |
+| `ui/markdown-renderer` | MarkdownRenderer | N2   | 1.2.1   | `markdown-renderer` | `markdown-renderer` (contract) | `markdown-renderer` (contract) |
 | `ui/native-select`     | NativeSelect     | N2   | 2.0.0   | `native-select`     | `native-select` (contract)     | —                              |
 | `ui/safe-area-frame`   | SafeAreaFrame    | N2   | 1.0.0   | `safe-area-frame`   | `safe-area-frame` (contract)   | `safe-area-frame` (contract)   |
 | `ui/segmented-control` | SegmentedControl | N2   | 1.1.0   | `segmented-control` | `segmented-control` (contract) | —                              |

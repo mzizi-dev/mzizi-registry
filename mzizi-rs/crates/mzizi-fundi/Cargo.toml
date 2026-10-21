@@ -35,7 +35,9 @@ exclude = ["tests/"]
 workspace = true
 
 # No dependencies, and no HTTP client in particular. N9's Rust position is
-# `edge-worker` (workers-rs), and a Worker already has `fetch` — so this crate
+# `edge-worker` (workers-rs) in the doctrine today; the crate is host-agnostic and
+# is meant for containers and bare metal too (owner decision, 2026-10-20). A Worker
+# already has `fetch` — so this crate
 # builds the issue and the host files it, exactly as N8 builds the OTLP request
 # and the host sends it.
 [dependencies]

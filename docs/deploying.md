@@ -27,7 +27,7 @@ the portal's `app/api/` routes) were removed with the app itself:
 | --------------- | ----------------------------------------------------------- |
 | `mzizi.dev`     | `mzizi-dev/mzizi-site`                                      |
 | `app.mzizi.dev` | `mzizi-dev/mzizi-console`                                   |
-| `api.mzizi.dev` | `mzizi-dev/mzizi-api-gateway`                               |
+| `api.mzizi.dev` | `mzizi-dev/mzizi-api` (formerly `mzizi-api-gateway`)        |
 | `mcp.mzizi.dev` | the `mzizi-mcp` Worker in `mzizi-dev/agent-tools` (private) |
 
 If the Cloudflare dashboard still has a Workers Build connected to this repo
