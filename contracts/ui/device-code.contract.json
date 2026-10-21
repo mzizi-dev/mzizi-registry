@@ -1,0 +1,436 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/device-code",
+  "title": "DeviceCode",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "The device side of OAuth 2.0 Device Authorization (RFC 8628 §3.3): the user code large and monospace, the short verification address, a QR code of the complete address drawn on the device, an expiry countdown and a live status line. For pairing a TV, display or desktop app from a phone. One contract for the Astro, React and Mzizi Roots builds.",
+  "implementations": {
+    "astro": {
+      "registry": "device-code",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/DeviceCode.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "device-code",
+      "identity": "contract",
+      "divergences": [
+        "Takes `onRefresh` (called when the refresh control is pressed) beside `refreshHref`; the Astro build dispatches a bubbling `device-code:refresh` event instead."
+      ]
+    },
+    "rs": {
+      "registry": "device-code",
+      "identity": "contract",
+      "divergences": [
+        "`expiresAt` and `now` are Unix milliseconds (`i64`); `rfc3339_to_unix_ms` reads an RFC 3339 string. Takes `on_refresh` (an `EventHandler<MouseEvent>`) beside `refresh_href`.",
+        "Renders one frame: the app re-renders it each second with a new `now` to tick the countdown."
+      ]
+    },
+    "related": ["qr-code", "device-code-format", "invite-link"]
+  },
+  "props": [
+    {
+      "name": "userCode",
+      "type": "string",
+      "required": true,
+      "description": "RFC 8628 `user_code`. Shown upper case, letters and digits only, in groups of four (`KTQB-4RMX`)."
+    },
+    {
+      "name": "verificationUri",
+      "type": "string",
+      "required": true,
+      "description": "RFC 8628 `verification_uri`: the short address a person types on their phone. Shown without its scheme."
+    },
+    {
+      "name": "verificationUriComplete",
+      "type": "string",
+      "required": true,
+      "description": "RFC 8628 `verification_uri_complete`: the address with the code in it, drawn as the QR code (byte mode, error correction M) on the device, never by a network service."
+    },
+    {
+      "name": "expiresAt",
+      "type": "string | number | Date",
+      "required": true,
+      "description": "When the code lapses: an ISO 8601 / RFC 3339 string, Unix milliseconds or a Date. Compute it on the device from `expires_in` when the code arrives."
+    },
+    {
+      "name": "status",
+      "type": "\"pending\" | \"approved\" | \"expired\" | \"denied\" | \"error\"",
+      "required": false,
+      "default": "pending",
+      "values": ["pending", "approved", "expired", "denied", "error"],
+      "description": "Where the pairing stands, from polling the token endpoint: `authorization_pending` and `slow_down` are pending, `access_denied` is denied, `expired_token` is expired, a token is approved. A pending code past `expiresAt` shows as expired."
+    },
+    {
+      "name": "size",
+      "type": "\"phone\" | \"tv\"",
+      "required": false,
+      "default": "phone",
+      "values": ["phone", "tv"],
+      "description": "phone for a hand-held or windowed screen; tv for a screen read from across a room (a 10-foot UI): larger code, address, QR code and controls."
+    },
+    {
+      "name": "now",
+      "type": "string | number | Date",
+      "required": false,
+      "description": "The clock for the server render (and for tests). The current time when omitted; the enhancement ticks from the device's clock."
+    },
+    {
+      "name": "refreshHref",
+      "type": "string",
+      "required": false,
+      "description": "Makes the refresh control a link to this address, which works with no script. Without it the control is a button."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The root is a group named \"Link this device\" with `data-status` (the status shown) and `data-size`, and `data-expires-at` in Unix milliseconds.",
+    "While pending it shows, in order: \"On your phone, go to\", the address without its scheme, \"and enter this code\", the user code in a box bordered with the brand's primary colour, \"Expires in m:ss\", and the QR code of `verificationUriComplete` with a caption.",
+    "The user code is formatted from whatever the server sent: upper case, letters and digits only, in groups of four joined by a hyphen.",
+    "The countdown rounds up to the second. With one minute or less left the status line says \"Less than a minute left to enter the code.\"",
+    "A pending code past `expiresAt` shows as expired: the code, address and QR code are removed, and the status line and refresh control show.",
+    "approved shows \"This device is linked.\"; expired, denied and error show their message and a \"Get a new code\" control; denied and error colour the message with the destructive token.",
+    "The refresh control is a link when `refreshHref` is given, otherwise a button. React calls `onRefresh`; Rust calls `on_refresh`; the Astro enhancement dispatches a bubbling `device-code:refresh` CustomEvent on the root.",
+    "While pending, the refresh control is rendered `hidden`, so the enhancement can show it the moment the code lapses without a round trip.",
+    "The QR code is dark modules on white with a four-module quiet zone in both themes, drawn as one SVG path in `currentColor`: no image, no network request, no inline style."
+  ],
+  "states": {
+    "default": {
+      "description": "Pending, 9:42 left.",
+      "props": {
+        "userCode": "ktqb4rmx",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:00:18Z"
+      }
+    },
+    "tv": {
+      "description": "Pending, on a TV.",
+      "props": {
+        "userCode": "KTQB-4RMX",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:00:18Z",
+        "size": "tv"
+      }
+    },
+    "last-minute": {
+      "description": "Pending with 45 seconds left.",
+      "props": {
+        "userCode": "KTQB4RMX",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:09:15Z"
+      }
+    },
+    "lapsed": {
+      "description": "Still pending on the server, but past its expiry.",
+      "props": {
+        "userCode": "KTQB4RMX",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:10:05Z"
+      }
+    },
+    "expired": {
+      "props": {
+        "userCode": "KTQB4RMX",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:00:18Z",
+        "status": "expired"
+      }
+    },
+    "tv-expired": {
+      "props": {
+        "userCode": "KTQB4RMX",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:00:18Z",
+        "status": "expired",
+        "size": "tv"
+      }
+    },
+    "refresh-link": {
+      "description": "Expired, with a link to start again (works with no script).",
+      "props": {
+        "userCode": "KTQB4RMX",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:00:18Z",
+        "status": "expired",
+        "refreshHref": "/display?pair=new"
+      }
+    },
+    "approved": {
+      "props": {
+        "userCode": "KTQB4RMX",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:00:18Z",
+        "status": "approved"
+      }
+    },
+    "denied": {
+      "props": {
+        "userCode": "KTQB4RMX",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:00:18Z",
+        "status": "denied"
+      }
+    },
+    "error": {
+      "props": {
+        "userCode": "KTQB4RMX",
+        "verificationUri": "https://mukoko.com/link",
+        "verificationUriComplete": "https://mukoko.com/link?code=KTQB4RMX",
+        "expiresAt": "2026-10-07T12:10:00Z",
+        "now": "2026-10-07T12:00:18Z",
+        "status": "error"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [
+      "group (the root, named \"Link this device\")",
+      "img (the QR code, named \"QR code for <address>\")",
+      "timer (the time left; not announced each second)",
+      "status (the status line, a polite live region)"
+    ],
+    "keyboard": [
+      "The refresh control is the only interactive element: a native button or link, reached with Tab, or with a TV remote's arrows and OK where the platform maps them to focus and Enter."
+    ],
+    "focus": [
+      "A visible focus ring in the ring token on the refresh control (8px on tv, for a screen across a room)."
+    ],
+    "aria": [
+      "The visible code is aria-hidden; a screen-reader-only line reads it one character at a time with a pause between groups (\"Code: K T Q B, 4 R M X\"), so it is never read as a word.",
+      "The QR code is role=img with an aria-label naming the full address, so the address is available without the image.",
+      "Status changes (approved, expired, declined, an error, the last minute) are announced through the role=status line; the countdown itself is a timer, which is not live.",
+      "The pending dot is decorative (aria-hidden) and pulses only under prefers-reduced-motion: no-preference (motion-safe:). Nothing else moves."
+    ],
+    "wcag": [
+      "1.1.1",
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "2.3.3",
+      "2.4.7",
+      "2.5.8",
+      "4.1.3"
+    ]
+  },
+  "density": [
+    {
+      "part": "refresh (phone)",
+      "state": "expired",
+      "select": "[data-device-code-refresh]",
+      "fine": 48,
+      "coarse": 56
+    },
+    {
+      "part": "refresh (tv)",
+      "state": "tv-expired",
+      "select": "[data-device-code-refresh]",
+      "fine": 64,
+      "coarse": 64
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--card-foreground",
+      "--border",
+      "--foreground",
+      "--muted-foreground",
+      "--primary",
+      "--primary-foreground",
+      "--ring",
+      "--destructive",
+      "--radius-lg",
+      "--radius-md"
+    ],
+    "brandOverlay": "--primary (the code's border, the pending dot and the refresh control) and --ring: Mukoko's tanzanite under the Mukoko overlay. The QR code is black on white in every theme and brand, because cameras read dark-on-light most reliably.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "enhancement",
+    "without": "Everything renders from the server's clock: the code, address, QR code, the time left when the page was made, the status and, with `refreshHref`, a working refresh link.",
+    "with": "The countdown ticks each second from the device's clock, the last minute is announced, a lapsed code turns to expired with its refresh control, and the refresh button dispatches `device-code:refresh`."
+  },
+  "responsive": [
+    "From 320px: one centred column (steps and code, then the QR code); the code never wraps and the address breaks anywhere.",
+    "phone caps the width at max-w-sm.",
+    "tv puts the steps and the QR code side by side from md up, with a 7xl code and a 320px QR code."
+  ],
+  "contract": "contract\n  slot is \"device-code\"\n  portal is \"https://mzizi.dev/components/device-code\"\n  role is \"group\"\n  label is \"Link this device\"\n  class contains \"bg-card\"\n  when default shows p \"KTQB-4RMX\"\n  when default shows p \"mukoko.com/link\"\n  when default shows span \"9:42\"\n  when default shows span \"Waiting for approval on your phone.\"\n  when tv class contains \"p-10\"\n  when last-minute shows span \"Less than a minute left to enter the code.\"\n  when lapsed shows button \"Get a new code\"\n  when expired shows span \"This code has expired.\"\n  when expired shows button \"Get a new code\"\n  when refresh-link shows a \"Get a new code\"\n  when approved shows span \"This device is linked.\"\n  when denied shows span \"The request was declined.\"\n  when error shows span \"Something went wrong.\"\n  button \"Get a new code\" min_height 48\nend",
+  "checks": [
+    {
+      "say": "The root names the status and size it shows.",
+      "select": "[data-slot=\"device-code\"]",
+      "count": 1,
+      "attr": {
+        "data-status": "pending",
+        "data-size": "phone",
+        "data-expires-at": "1791375000000"
+      }
+    },
+    {
+      "say": "The tv size is named on the root.",
+      "state": "tv",
+      "select": "[data-slot=\"device-code\"]",
+      "count": 1,
+      "attr": {
+        "data-size": "tv"
+      }
+    },
+    {
+      "say": "The visible code is formatted in groups of four and hidden from screen readers.",
+      "select": "[data-slot=\"device-code-user-code\"]",
+      "count": 1,
+      "attr": {
+        "aria-hidden": "true"
+      },
+      "text": "KTQB-4RMX"
+    },
+    {
+      "say": "The code is spelled out for screen readers, one character at a time.",
+      "select": "p.sr-only[data-slot=\"device-code-spoken\"]",
+      "count": 1,
+      "text": "Code: K T Q B, 4 R M X"
+    },
+    {
+      "say": "The address is shown without its scheme.",
+      "select": "[data-slot=\"device-code-uri\"]",
+      "count": 1,
+      "text": "mukoko.com/link"
+    },
+    {
+      "say": "The QR code is an image named with the full address.",
+      "select": "svg[data-slot=\"device-code-qr\"]",
+      "count": 1,
+      "attr": {
+        "role": "img",
+        "aria-label": "QR code for https://mukoko.com/link?code=KTQB4RMX"
+      }
+    },
+    {
+      "say": "The QR code is one path in currentColor.",
+      "select": "svg[data-slot=\"device-code-qr\"] > path",
+      "count": 1,
+      "attr": {
+        "fill": "currentColor"
+      }
+    },
+    {
+      "say": "The time left is a timer.",
+      "select": "[role=\"timer\"]",
+      "count": 1,
+      "text": "9:42"
+    },
+    {
+      "say": "Every state has one polite status line.",
+      "state": "*",
+      "select": "[role=\"status\"]",
+      "count": 1
+    },
+    {
+      "say": "While pending, the refresh control waits hidden.",
+      "select": "[data-slot=\"device-code-ended\"]",
+      "count": 1,
+      "attr": {
+        "hidden": true
+      }
+    },
+    {
+      "say": "A lapsed code shows as expired.",
+      "state": "lapsed",
+      "select": "[data-slot=\"device-code\"]",
+      "count": 1,
+      "attr": {
+        "data-status": "expired"
+      }
+    },
+    {
+      "say": "A lapsed code no longer shows its QR code.",
+      "state": "lapsed",
+      "select": "svg",
+      "absent": true
+    },
+    {
+      "say": "An expired code is not shown.",
+      "state": "expired",
+      "select": "[data-slot=\"device-code-user-code\"]",
+      "absent": true
+    },
+    {
+      "say": "Once ended, the refresh control is visible.",
+      "state": "expired",
+      "select": "[data-slot=\"device-code-ended\"]",
+      "count": 1,
+      "attr": {
+        "hidden": false
+      }
+    },
+    {
+      "say": "The refresh control is a button by default.",
+      "state": "denied",
+      "select": "button[data-device-code-refresh]",
+      "count": 1,
+      "attr": {
+        "type": "button"
+      }
+    },
+    {
+      "say": "With refreshHref the refresh control is a link.",
+      "state": "refresh-link",
+      "select": "a[data-device-code-refresh]",
+      "count": 1,
+      "attr": {
+        "href": "/display?pair=new"
+      }
+    },
+    {
+      "say": "With refreshHref there is no button.",
+      "state": "refresh-link",
+      "select": "button",
+      "absent": true
+    },
+    {
+      "say": "Approved has nothing to press and no code.",
+      "state": "approved",
+      "select": "[data-device-code-refresh]",
+      "absent": true
+    },
+    {
+      "say": "The status dot is decorative.",
+      "state": "*",
+      "select": "[data-slot=\"device-code-status\"] > span[aria-hidden=\"true\"]",
+      "count": 1
+    }
+  ],
+  "gaps": [
+    "The copy is English only; a locale's words need a text prop or slot in a later minor version.",
+    "The Rust build does not tick on its own (no timer in a component library): the app re-renders it each second with a new `now`."
+  ]
+}

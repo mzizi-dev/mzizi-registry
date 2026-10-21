@@ -1,6 +1,6 @@
 [package]
 name = "mzizi-ui"
-description = "Mzizi N2 primitives for Dioxus: alert, avatar, badge, button, card, chart, input, label, a safe markdown renderer, progress, separator, skeleton and status badge, the Rust path for the component registry."
+description = "Mzizi N2 primitives for Dioxus: alert, avatar, badge, button, card, chart, input, label, a device code (RFC 8628 pairing, with a QR code), a safe markdown renderer, progress, separator, skeleton and status badge, the Rust path for the component registry."
 # crates.io renders `readme`, `keywords` and `categories` on the package page, and a
 # published version is permanent — 0.1.0 can be yanked but never re-uploaded. All three
 # were unset on this crate, so the page would have rendered bare.
@@ -38,6 +38,11 @@ mzizi-tokens = { path = "../mzizi-tokens", version = "0.4.0" }
 # consumer's target for them, and Dioxus's whole point is that one codebase serves
 # web, desktop, iOS and Android.
 dioxus = { version = "0.7", default-features = false, features = ["macro", "signals", "hooks", "html"] }
+# `device-code` draws its QR code on the device, never through a network service. The
+# encoder only: default features off, so no `image`, `svg` or `pic` renderers come along
+# (the component draws its own SVG), and the crate brings in no dependencies of its own.
+qrcode = { version = "0.14", default-features = false }
+
 # `markdown-renderer` shows a link's host the way the WHATWG URL parser serialises it (an
 # internationalised host as punycode), as `markdown-parse.ts` does with `new URL().hostname`.
 # `url::Host::parse` is that parser's host step: `idna` for the punycode, plus the percent-
@@ -46,6 +51,11 @@ dioxus = { version = "0.7", default-features = false, features = ["macro", "sign
 # to `idna` 0.5 in 2.5.2 and moved for good in 2.5.3, so an older `url` can show an IDN host
 # differently. Hence at least 2.5.4; the workspace lock has 2.5.8.
 url = "2.5.4"
+
+# `device-code` reads the clock when the app passes no `now`. `std::time::SystemTime::now()`
+# panics on wasm32-unknown-unknown, so there it reads the browser's clock instead.
+[target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
+js-sys = "0.3"
 
 [dev-dependencies]
 # The contract suite renders components to HTML and evaluates their `CONTRACT` clauses
