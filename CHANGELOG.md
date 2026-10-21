@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `app/bar-chart` 1.2.0: nullable values for withheld counts (2026-10-06, #457)
+
+BarChart drew every point as a number, so an app that withholds small counts (k-anonymity: a day with fewer than 5 is returned as `null`) had to draw it as 0 or drop the day, and the total then read as exact. Mukoko Events admin's Insights page needs both to be honest (nyuchi/api-gateway#268). The change is in the `.astro` and `.tsx` builds, with the same markup, and is backwards compatible.
+
+- `data[].value` is now `number | null`. A new optional prop, `missingLabel` (default `"Not available"`), is what a null reads as, e.g. `"Fewer than 5"`.
+- A null draws no bar. In `columns` it leaves a small muted baseline tick (`fill-muted-foreground`) on a column marked `data-missing`, whose title reads `<label>: <missingLabel>`. In `rows` the bar is empty and the value is the `missingLabel` in muted text.
+- The figures table shows the `missingLabel` (muted) for a null. The total sums the known values and reads `At least <n>` when any value is null.
+- Every value null: "No figure in this range can be shown: <missingLabel, lower-cased> for every point." No data, or every value 0 with none null, still reads "Nothing to chart in this range."
+- The contract adds the `suppressed`, `suppressed-rows` and `suppressed-all` states and their checks, which both builds pass.
+
 ## [4.10.0] - 2026-10-21
 
 Releases `staging` to `main` as the next minor above v4.9.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.10.0. It also carries the 2026-10-20 owner-decision docs pass (#513): repository names, the three build targets (Workers, containers, bare metal), the four gateways and the renderer in the doctrine, `README.md`, `AGENTS.md`, the Roots RFCs and the crate READMEs and keywords. The Mzizi Roots crates stay at 0.4.0; their READMEs and `Cargo.toml` metadata change, but no crate code or version does. `staging` had lost `main`'s 4.6.0 to 4.9.0 release records (these section headings, their `releases.json` entries and the version, which read 4.5.0); they are carried forward here so the release does not take them off `main`.
