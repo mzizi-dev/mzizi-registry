@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.10.0",
+    title:
+      "v4.10.0 — patched vite, markdown-it and sanitize-html; first-party packages by minimum version; required checks on the merge queue",
+    description:
+      "Releases staging to main as the next minor above v4.9.x (nyuchi/.github#80). vite moves to ^8.3.3, markdown-it to ^14.3.3 and sanitize-html to ^2.18.0, clearing two high advisories (GHSA-587h-7wmj-h5pm, GHSA-gfr2-rv44-r23c) and the moderate sanitize-html ones; @nyuchi/mzizi-skills is required as >=0.8.1, a minimum version, and still resolves 0.8.5 (#525). The required checks also run on merge_group, so a queued pull request is not left waiting, and the release workflows' pins are aligned (#523). No component, API or crate changes; the Mzizi Roots crates stay at 0.4.0. This release also carries main's 4.6.0 to 4.9.0 release records forward into staging, which had dropped them. CHANGELOG.md section [4.10.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 10,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-10-21T12:00:00.000+00:00",
+    created_at: "2026-10-21T12:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.9.0",
     title:
       "v4.9.0 — markdown-renderer 1.2.1 with link hover titles, the role layer and its contrast bars, Mzizi Roots 0.4.0",

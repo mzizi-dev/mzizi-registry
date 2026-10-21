@@ -7,7 +7,7 @@
 [![CodeQL](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/security/code-scanning)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-**Version:** 4.9.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Docs:** [docs.mzizi.dev](https://docs.mzizi.dev)
+**Version:** 4.10.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Docs:** [docs.mzizi.dev](https://docs.mzizi.dev)
 
 > **This repo serves no website and no API.** It is the registry's source: `registry.json`, the
 > component files, the token pipeline, the Rust crates and the generators that check them. The
@@ -58,19 +58,27 @@ The Next.js app that used to live here (the `mzizi.dev` portal, the `/api/v1` ro
 `mzizi-api` Worker generated from them) has been removed. Every public host is now served by
 its own repo:
 
-| Host                                           | Served by                                                                                                                                                                         |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`mzizi.dev`](https://mzizi.dev)               | [`mzizi-dev/mzizi-site`](https://github.com/mzizi-dev/mzizi-site) (Astro)                                                                                                         |
-| [`app.mzizi.dev`](https://app.mzizi.dev)       | [`mzizi-dev/mzizi-console`](https://github.com/mzizi-dev/mzizi-console) (Astro)                                                                                                   |
-| [`api.mzizi.dev`](https://api.mzizi.dev/v1/ui) | [`mzizi-dev/mzizi-api-gateway`](https://github.com/mzizi-dev/mzizi-api-gateway) (Cloudflare Worker), built from this repo's `registry.json` and `lib/` readers at a pinned commit |
-| `mcp.mzizi.dev`                                | The `mzizi-mcp` Worker in `mzizi-dev/agent-tools` (private)                                                                                                                       |
-| [`docs.mzizi.dev`](https://docs.mzizi.dev)     | [`mzizi-dev/mzizi-docs`](https://github.com/mzizi-dev/mzizi-docs) (Mintlify)                                                                                                      |
-| [`ui.mzizi.dev`](https://ui.mzizi.dev)         | `mzizi-ui/` in this repo — a domain-proxy Worker in front of `mzizi.dev` for the viewable strand (tokens, primitives, brand, pages, shell)                                        |
-| `plus.mzizi.dev`                               | `mzizi-plus/` in this repo — the same proxy for the toolchain nodes (safety, resilience, assurance, fundi, documentation, discovery)                                              |
+| Host                                           | Served by                                                                                                                                                                                                         |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`mzizi.dev`](https://mzizi.dev)               | [`mzizi-dev/mzizi-site`](https://github.com/mzizi-dev/mzizi-site) (Astro)                                                                                                                                         |
+| [`app.mzizi.dev`](https://app.mzizi.dev)       | [`mzizi-dev/mzizi-console`](https://github.com/mzizi-dev/mzizi-console) (Astro)                                                                                                                                   |
+| [`api.mzizi.dev`](https://api.mzizi.dev/v1/ui) | [`mzizi-dev/mzizi-api`](https://github.com/mzizi-dev/mzizi-api) (formerly `mzizi-api-gateway`; a Hono TypeScript Cloudflare Worker), built from this repo's `registry.json` and `lib/` readers at a pinned commit |
+| `mcp.mzizi.dev`                                | The `mzizi-mcp` Worker in `mzizi-dev/agent-tools` (private)                                                                                                                                                       |
+| [`docs.mzizi.dev`](https://docs.mzizi.dev)     | [`mzizi-dev/mzizi-docs`](https://github.com/mzizi-dev/mzizi-docs) (Mintlify)                                                                                                                                      |
+| [`ui.mzizi.dev`](https://ui.mzizi.dev)         | `mzizi-ui/` in this repo — a domain-proxy Worker in front of `mzizi.dev` for the viewable strand (tokens, primitives, brand, pages, shell)                                                                        |
+| `plus.mzizi.dev`                               | `mzizi-plus/` in this repo — the same proxy for the toolchain nodes (safety, resilience, assurance, fundi, documentation, discovery)                                                                              |
 
 `mzizi-rs/` is the Rust half of the bet above: a Cargo workspace whose `mzizi-ui` crate
-(Dioxus primitives) and `mzizi-tokens` crate (generated from the same palette source as the
+(N2 primitives) and `mzizi-tokens` crate (generated from the same palette source as the
 CSS custom properties) are compiled and contract-tested in CI, not just committed as text.
+The UI crates still depend on Dioxus. Mzizi is replacing that with its own `render(props) -> String`
+path, which is in progress and described in [`docs/roots/RFC-roots-renderer.md`](docs/roots/RFC-roots-renderer.md).
+
+The server crates are host-agnostic and are meant for three build targets: Cloudflare Workers,
+containers and bare metal (owner decision, 2026-10-20). Every Rust crate builds and tests natively
+today. No Workers, container or bare-metal host adapter is built yet; the container and bare-metal work is
+designed and waits for the Phase 0 gate (see
+[`docs/roots/RFC-roots.md`](docs/roots/RFC-roots.md) §2.2).
 
 `contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
 component of the Mzizi Dashboard Standard: 31 in `contracts/app/`, in the format
@@ -184,18 +192,18 @@ portal. Raw data:
 
 ## Tech Stack
 
-| Layer                | Technology                                                              | Version        |
-| -------------------- | ----------------------------------------------------------------------- | -------------- |
-| Language             | TypeScript (strict mode)                                                | 6.0.3          |
-| Styling              | Tailwind CSS 4 + CSS custom properties                                  | 4.2.4          |
-| Component Primitives | Radix UI + Base UI                                                      | radix-ui 1.4.3 |
-| Variant Management   | class-variance-authority (CVA)                                          | 0.7.1          |
-| Charts               | Recharts                                                                | 3.8.1          |
-| Forms                | react-hook-form + zod                                                   | 7.73.1 / 4.3.6 |
-| Registry storage     | `registry.json` + component files on disk — no database                 | —              |
-| Rust                 | `mzizi-rs/` workspace — `mzizi-ui` (Dioxus), `mzizi-tokens` (generated) | —              |
-| Testing              | Vitest, `cargo test` for the Rust half                                  | 5.0.2          |
-| CI/CD                | GitHub Actions — this repo deploys no app                               | —              |
+| Layer                | Technology                                                                                                         | Version        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------- |
+| Language             | TypeScript (strict mode)                                                                                           | 6.0.3          |
+| Styling              | Tailwind CSS 4 + CSS custom properties                                                                             | 4.2.4          |
+| Component Primitives | Radix UI + Base UI                                                                                                 | radix-ui 1.4.3 |
+| Variant Management   | class-variance-authority (CVA)                                                                                     | 0.7.1          |
+| Charts               | Recharts                                                                                                           | 3.8.1          |
+| Forms                | react-hook-form + zod                                                                                              | 7.73.1 / 4.3.6 |
+| Registry storage     | `registry.json` + component files on disk — no database                                                            | —              |
+| Rust                 | `mzizi-rs/` workspace — `mzizi-ui` (Dioxus, being replaced by Mzizi's own render path), `mzizi-tokens` (generated) | —              |
+| Testing              | Vitest, `cargo test` for the Rust half                                                                             | 5.0.2          |
+| CI/CD                | GitHub Actions — this repo deploys no app                                                                          | —              |
 
 See [`AGENTS.md`](./AGENTS.md) for the full command reference, the CI gate list, and what an
 agent working in this repo needs to know before pushing.
@@ -204,24 +212,39 @@ agent working in this repo needs to know before pushing.
 
 ## Ecosystem
 
-| Repository                                                                              | URL                                                | Role                                                                                                        |
-| --------------------------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **[mzizi-dev/mzizi-registry](https://github.com/mzizi-dev/mzizi-registry)** (this repo) | —                                                  | Component registry source, tokens, Rust crates, DNA-helix doctrine                                          |
-| **[mzizi-dev/mzizi](https://github.com/mzizi-dev/mzizi)**                               | —                                                  | Mzizi **the language** — the Rust compiler research project. Not the registry                               |
-| **[mzizi-dev/mzizi-console](https://github.com/mzizi-dev/mzizi-console)**               | [app.mzizi.dev](https://app.mzizi.dev)             | The Mzizi console                                                                                           |
-| **[mzizi-dev/mzizi-api-gateway](https://github.com/mzizi-dev/mzizi-api-gateway)**       | [api.mzizi.dev](https://api.mzizi.dev/v1/health)   | The registry API as a pure-Rust Cloudflare Worker                                                           |
-| **[mzizi-dev/mzizi-docs](https://github.com/mzizi-dev/mzizi-docs)**                     | [docs.mzizi.dev](https://docs.mzizi.dev)           | Mzizi's documentation — the one home for Mzizi docs (Mintlify)                                              |
-| **mzizi-dev/agent-tools** (private)                                                     | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
-| **[nyuchi/mukoko-platform](https://github.com/nyuchi/mukoko-platform)** (private)       | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform                                                                               |
-| **[bundu-labs/bundu-docs](https://github.com/bundu-labs/bundu-docs)** (private)         | [docs.bundu.org](https://docs.bundu.org)           | Bundu's own product documentation (not Mzizi's docs)                                                        |
-| **[nyuchi/nyuchi-docs](https://github.com/nyuchi/nyuchi-docs)**                         | [docs.nyuchi.com](https://docs.nyuchi.com)         | Nyuchi engineering documentation (not Mzizi's docs)                                                         |
-| mukoko                                                                                  | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
-| mukoko weather                                                                          | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
-| mukoko news                                                                             | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
-| mukoko events                                                                           | [events.mukoko.com](https://events.mukoko.com)     | Events and cultural gatherings                                                                              |
-| shamwari                                                                                | [shamwari.ai](https://shamwari.ai)                 | Sovereign AI companion                                                                                      |
-| nyuchi                                                                                  | [nyuchi.com](https://nyuchi.com)                   | Enterprise layer                                                                                            |
-| bundu                                                                                   | [bundu.family](https://bundu.family)               | The ecosystem                                                                                               |
+| Repository                                                                                       | URL                                                | Role                                                                                                        |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **[mzizi-dev/mzizi-registry](https://github.com/mzizi-dev/mzizi-registry)** (this repo)          | —                                                  | Component registry source, tokens, Rust crates, DNA-helix doctrine                                          |
+| **[mzizi-dev/mzizi](https://github.com/mzizi-dev/mzizi)**                                        | —                                                  | Mzizi **the language** — the Rust compiler research project. Not the registry                               |
+| **[mzizi-dev/mzizi-console](https://github.com/mzizi-dev/mzizi-console)**                        | [app.mzizi.dev](https://app.mzizi.dev)             | The Mzizi console                                                                                           |
+| **[mzizi-dev/mzizi-api](https://github.com/mzizi-dev/mzizi-api)** (formerly `mzizi-api-gateway`) | [api.mzizi.dev](https://api.mzizi.dev/v1/health)   | The Mzizi API: the registry API as a Hono (TypeScript) Cloudflare Worker                                    |
+| **[mzizi-dev/mzizi-docs](https://github.com/mzizi-dev/mzizi-docs)**                              | [docs.mzizi.dev](https://docs.mzizi.dev)           | Mzizi's documentation — the one home for Mzizi docs (Mintlify)                                              |
+| **mzizi-dev/agent-tools** (private)                                                              | npm packages                                       | Mzizi tooling — `mzizi-mcp` worker, `mzizi-sdk` (with the Fundi agent), `mzizi-skills`, `mzizi-console-app` |
+| **nyuchi/nyuchi-platform** (private)                                                             | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform                                                                               |
+| **bundu-labs/bundu-docs** (private)                                                              | [docs.bundu.org](https://docs.bundu.org)           | Bundu's own product documentation (not Mzizi's docs)                                                        |
+| **nyuchi/nyuchi-docs**                                                                           | [docs.nyuchi.com](https://docs.nyuchi.com)         | Nyuchi engineering documentation (not Mzizi's docs)                                                         |
+| mukoko                                                                                           | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
+| mukoko weather                                                                                   | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
+| mukoko news                                                                                      | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
+| mukoko events                                                                                    | [events.mukoko.com](https://events.mukoko.com)     | Events and cultural gatherings                                                                              |
+| shamwari                                                                                         | [shamwari.ai](https://shamwari.ai)                 | Sovereign AI companion                                                                                      |
+| nyuchi                                                                                           | [nyuchi.com](https://nyuchi.com)                   | Enterprise layer                                                                                            |
+| bundu                                                                                            | [bundu.family](https://bundu.family)               | The ecosystem                                                                                               |
+
+---
+
+### The four API gateways
+
+There are four API gateways across the bundu ecosystem. This repo describes the registry, and
+only the first is served from it. The other three are named so the picture is complete. Private
+repositories are named, not linked.
+
+| Gateway                           | Repository                                                            | Host                                   | Today                                                       | Decided (owner, 2026-10-20), not built                                                                                                                                            |
+| --------------------------------- | --------------------------------------------------------------------- | -------------------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Mzizi API**                     | `mzizi-dev/mzizi-api` (formerly `mzizi-api-gateway`), public          | `api.mzizi.dev`                        | Free, public registry API. A Hono (TypeScript) Worker.      | No change decided.                                                                                                                                                                |
+| **Nyuchi API (B2B)**              | `nyuchi/nyuchi-api` (formerly `nyuchi/api-gateway`), private          | `api.nyuchi.com`                       | External customers with scoped `nyk_` keys. FastAPI on Fly. | Rebuilt in Rust, with the async-writes data gateway in it.                                                                                                                        |
+| **Mukoko API (consumer)**         | `mukoko-dev/mukoko-api`, private                                      | `api.mukoko.com` (no DNS yet)          | Person-facing app surfaces, being built on Workers.         | Switch to a Rust build.                                                                                                                                                           |
+| **Nyuchi Servers API (internal)** | `nyuchi/nyuchi-servers-api` (formerly `nyuchi/data-gateway`), private | `api.nyuchiservers.com`, internal only | Not built.                                                  | Admin, pay, pipeline, api-keys, agents, entitlements, licences, organization, workspaces and `/internal/*`, behind a private Cloudflare Tunnel on a Fly origin with no public IP. |
 
 ---
 
