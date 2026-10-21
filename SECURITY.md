@@ -51,10 +51,10 @@ Severity is graded using the [CVSS 3.1 calculator](https://www.first.org/cvss/ca
 
 ## Scope
 
-This policy covers anything this repository owns. It serves no website and no API: `mzizi.dev` is `mzizi-dev/mzizi-site`, `api.mzizi.dev` is `mzizi-dev/mzizi-api-gateway` and `mcp.mzizi.dev` is `mzizi-dev/agent-tools` — report issues in those surfaces to those repositories. In scope here:
+This policy covers anything this repository owns. It serves no website and no API: `mzizi.dev` is `mzizi-dev/mzizi-site`, `api.mzizi.dev` is `mzizi-dev/mzizi-api` (formerly `mzizi-api-gateway`) and `mcp.mzizi.dev` is `mzizi-dev/agent-tools` — report issues in those surfaces to those repositories. In scope here:
 
 - Component source code and `registry.json` — what the registry serves through the API; an XSS or RCE-by-scaffold is in scope
-- The `lib/` readers `mzizi-api-gateway` bundles from this repo, and the data they read
+- The `lib/` readers `mzizi-api` bundles from this repo, and the data they read
 - The `mzizi-ui` and `mzizi-plus` domain-proxy Workers (`ui.mzizi.dev`, `plus.mzizi.dev`)
 - The Rust crates in `mzizi-rs/` and the public Claude Code plugin in `plugin/`
 - The absence of a database: any path by which the registry reaches Supabase or another store at runtime (it holds no client or credential by design — the Mzizi console is the only Supabase consumer)
