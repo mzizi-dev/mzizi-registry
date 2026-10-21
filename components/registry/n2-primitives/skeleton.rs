@@ -9,6 +9,49 @@
 
 use dioxus::prelude::*;
 
+/// The escaping HTML writer `render` uses, inlined so this file installs on its own.
+///
+/// It is a copy of `mzizi-ui/src/html.rs`, which is the reference and carries the unit tests.
+/// A test in `html.rs` holds the two to the same output on every character that matters, so
+/// the copies cannot drift without a test failing.
+mod html {
+    /// Escape `value` for text and double-quoted attribute values: `&`, `<`, `>`, `"` and `'`
+    /// become decimal references; everything else, including non-ASCII, is written unchanged.
+    fn escape_into(out: &mut String, value: &str) {
+        for c in value.chars() {
+            match c {
+                '&' => out.push_str("&#38;"),
+                '<' => out.push_str("&#60;"),
+                '>' => out.push_str("&#62;"),
+                '"' => out.push_str("&#34;"),
+                '\'' => out.push_str("&#39;"),
+                _ => out.push(c),
+            }
+        }
+    }
+
+    /// Write an opening tag with its attributes, in the order given. Values are escaped.
+    pub(super) fn open(out: &mut String, tag: &str, attrs: &[(&str, &str)]) {
+        out.push('<');
+        out.push_str(tag);
+        for (name, value) in attrs {
+            out.push(' ');
+            out.push_str(name);
+            out.push_str("=\"");
+            escape_into(out, value);
+            out.push('"');
+        }
+        out.push('>');
+    }
+
+    /// Write a closing tag.
+    pub(super) fn close(out: &mut String, tag: &str) {
+        out.push_str("</");
+        out.push_str(tag);
+        out.push('>');
+    }
+}
+
 /// The classes every skeleton carries.
 const BASE: &str = "animate-pulse rounded-[var(--radius-xl,17px)] bg-muted";
 
@@ -44,6 +87,38 @@ pub fn Skeleton(props: SkeletonProps) -> Element {
             ..props.attributes,
         }
     }
+}
+
+/// The Dioxus-free render path: the props a [`render`] call takes.
+///
+/// `class` is the only prop the contract declares, so it is the only one here. The Dioxus
+/// [`SkeletonProps`] also carries free-form attributes; those have no HTML-string form yet
+/// and are not part of this path.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RenderProps {
+    /// Sizing classes (`h-10 w-full`), appended last, as [`skeleton_variants`] does.
+    pub class: String,
+}
+
+/// Render a skeleton to an HTML string, with no Dioxus and no WASM.
+///
+/// Byte-identical to `dioxus-ssr` rendering [`Skeleton`] with the same `class` for the cases
+/// `tests/render_parity.rs` covers: the same attributes in the same order, the same escaping.
+#[must_use]
+pub fn render(props: &RenderProps) -> String {
+    let class = skeleton_variants(&props.class);
+    let mut out = String::with_capacity(160 + class.len());
+    html::open(
+        &mut out,
+        "div",
+        &[
+            ("data-slot", "skeleton"),
+            ("data-portal", "https://mzizi.dev/components/skeleton"),
+            ("class", &class),
+        ],
+    );
+    html::close(&mut out, "div");
+    out
 }
 
 /// The contract this build implements, copied by `pnpm contracts:sync` from

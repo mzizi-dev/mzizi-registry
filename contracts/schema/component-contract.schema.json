@@ -212,7 +212,7 @@
       "items": { "type": "string" }
     },
     "contract": {
-      "description": "A `contract … end` block, one clause per line, in the clause grammar of RFC-0006. Subjects: `slot`, `role`, `label`, `class` (the root element's attribute), `<element> \"<text>\"` (min_height), `uses <slot>`, and `when <state> …`. Predicates: is, contains, not_empty, in, uses \"--token\", min_height, shows.",
+      "description": "A `contract … end` block, one clause per line, in the clause grammar of RFC-0006. Subjects: `slot`, `role`, `label`, `class` (the root element's attribute), `<element> \"<text>\"` (min_height), `uses <slot>`, and `when <state> …`. Predicates: is, contains (a substring), has (one whole class token), not_empty, in, uses \"--token\", min_height, shows, and `not` before any of is, contains, has, not_empty, in or uses. Every operand is quoted, and a predicate with an unquoted or extra operand cannot be evaluated, so it fails, with `not` or without.",
       "type": "string",
       "pattern": "^contract\\n(  .+\\n)+end$"
     },

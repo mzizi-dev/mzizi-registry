@@ -178,7 +178,7 @@ export function generateMotionCSS(): string {
 
 // useMotion reads browser media query directly.
 // This is intentionally framework-agnostic — no provider needed.
-// Svelte, React, and any other framework can call this safely.
+// React, and any other framework, can call this safely.
 export function useMotion() {
   const prefersReduced =
     typeof window !== "undefined"
