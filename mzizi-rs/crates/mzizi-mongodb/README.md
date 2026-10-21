@@ -6,8 +6,8 @@ purpose. The transport trait, `Error` and `Result` come from [`mzizi-data`](../m
 
 ```toml
 [dependencies]
-mzizi-mongodb = "0.3"                                        # the protocol core
-mzizi-mongodb = { version = "0.3", features = ["workers"] }  # plus the pooled Worker client (wasm32)
+mzizi-mongodb = ">=0.4.0"                                     # the protocol core
+mzizi-mongodb = { version = ">=0.4.0", features = ["workers"] }  # plus the pooled Worker client (wasm32)
 ```
 
 ## What is here
@@ -26,13 +26,17 @@ mzizi-mongodb = { version = "0.3", features = ["workers"] }  # plus the pooled W
 - Reads carry read preference `secondaryPreferred` and a server-side time limit; results are
   capped (`MAX_FIND_DOCS`, `MAX_AGGREGATE_DOCS`); database and collection names are validated.
 - `aggregate` refuses `$out` and `$merge`. There is no write path.
+- `$where`, `$function` and `$accumulator` (server-side JavaScript) are refused at any depth of
+  a filter, projection or pipeline, before anything is sent.
+- The Worker client reuses its pooled connection only for the same user, password,
+  `authSource`, hosts and replica set.
 - `mongodb://` seed lists only; `mongodb+srv://` is refused with a way forward.
 - Error messages are written not to carry the connection string, a password or a document's
   content (the connection-string parser has a test that the password never appears).
 
 ## What is not verified
 
-The protocol core is tested natively (33 tests, including the RFC 7677 exchange and
+The protocol core is tested natively (39 unit tests in this crate, including the RFC 7677 exchange and
 hostile-server cases) and the Worker host type-checks and passes clippy for
 `wasm32-unknown-unknown`. A live connection from a deployed Worker to an Atlas cluster is
 exercised by the application that consumes it, not by this crate's tests.

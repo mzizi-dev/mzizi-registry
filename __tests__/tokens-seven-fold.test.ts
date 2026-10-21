@@ -15,6 +15,7 @@
 // snapshot and `pnpm tokens:verify` is what proves it matches the database.
 
 import { describe, expect, it } from "vitest"
+import { escapeRegExp } from "./helpers/regexp"
 import { execSync } from "node:child_process"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
@@ -26,7 +27,7 @@ const CSS = readFileSync(join(process.cwd(), "styles/globals.css"), "utf8")
 /** Custom properties declared with a literal value, by prefix. */
 function declared(prefix: string): string[] {
   const names = new Set<string>()
-  for (const m of CSS.matchAll(new RegExp(`--${prefix}-([a-z]+)\\s*:\\s*#`, "g"))) {
+  for (const m of CSS.matchAll(new RegExp(`--${escapeRegExp(prefix)}-([a-z]+)\\s*:\\s*#`, "g"))) {
     names.add(m[1])
   }
   return [...names].sort()
@@ -74,7 +75,7 @@ describe("the seven-fold palette", () => {
       { prefix: "exp", names: experimentalColors.map((e) => e.name) },
     ]) {
       for (const name of names) {
-        const decl = new RegExp(`--${prefix}-${name}\\s*:\\s*#`)
+        const decl = new RegExp(`--${escapeRegExp(prefix)}-${escapeRegExp(name)}\\s*:\\s*#`)
         expect(decl.test(light), `--${prefix}-${name} missing from the light block`).toBe(true)
         expect(decl.test(dark), `--${prefix}-${name} missing from the dark block`).toBe(true)
       }

@@ -17,8 +17,12 @@ Inside this workspace, depend on it by path. Outside it, depend on the published
 
 ```toml
 [dependencies]
-mzizi-data = { path = "../mzizi-data" }                   # Io, Error, Result, the data layer
-mzizi-data = { path = "../mzizi-data", features = ["workers"] }  # plus the Worker socket (wasm32)
+# Inside this workspace: by path, with the minimum version it was released at.
+mzizi-data = { path = "../mzizi-data", version = ">=0.4.0" }                       # Io, Error, Result, the data layer
+mzizi-data = { path = "../mzizi-data", version = ">=0.4.0", features = ["workers"] }  # plus the Worker socket (wasm32)
+# Outside it: the published crate, at a minimum version.
+mzizi-data = ">=0.4.0"                                        # Io, Error, Result, the data layer
+mzizi-data = { version = ">=0.4.0", features = ["workers"] }  # plus the Worker socket (wasm32)
 ```
 
 ## What is here
