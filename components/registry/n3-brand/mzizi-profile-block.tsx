@@ -104,12 +104,12 @@ const STATUS_DISPLAY: Record<PlatformStatus, { label: string; color: string; bg:
   },
   presumed_ancestral: {
     label: "Memorial",
-    color: "var(--tier-government, var(--color-tanzanite, #B388FF))",
+    color: "var(--color-tanzanite, #B388FF)",
     bg: "rgba(167,139,250,0.12)",
   },
   verified_ancestral: {
     label: "Ancestral",
-    color: "var(--tier-government, var(--color-tanzanite, #B388FF))",
+    color: "var(--color-tanzanite, #B388FF)",
     bg: "rgba(167,139,250,0.12)",
   },
 }

@@ -24,8 +24,11 @@ import { cn } from "@/lib/utils"
      Level 0: Unverified     — no badge
      Level 1: Community      — Terracotta (var(--color-terracotta,#D4A574)) — +0.10
      Level 2: OTP            — Cobalt (var(--tier-otp,var(--color-cobalt,#00B0FF)))     — +0.10 (cumulative 0.20)
-     Level 3: Government     — Gold (var(--tier-licensed,var(--color-gold,#FFD740)))       — +0.10 (cumulative 0.30)
-     Level 4: Licensed       — Tanzanite (var(--tier-government,var(--color-tanzanite,#B388FF)))  — +0.20 (cumulative 0.50)
+     Level 3: Government     — Gold (var(--tier-government,var(--color-gold,#FFD740)))       — +0.10 (cumulative 0.30)
+     Level 4: Licensed       — Tanzanite (var(--tier-licensed,var(--color-tanzanite,#B388FF)))  — +0.20 (cumulative 0.50)
+
+   Each tier reads the --tier-* variable named after IT (government reads
+   --tier-government), so a consumer that sets one recolours that tier only.
    
    AXIS 3 — TRUST SCORE (computed output)
      trust = sum(tier_increments up to current level) + status_modifier
@@ -91,7 +94,7 @@ const TIER_CONFIG = {
     label: "Government Verified",
     trustIncrement: 0.1,
     cumulativeTrust: 0.3,
-    fg: "var(--tier-licensed,var(--color-gold,#FFD740))",
+    fg: "var(--tier-government,var(--color-gold,#FFD740))",
     bg: "rgba(255,215,64,0.15)",
     fgLight: "var(--color-gold-light,#5D4037)",
     bgLight: "rgba(93,64,55,0.12)",
@@ -103,7 +106,7 @@ const TIER_CONFIG = {
     label: "Licensed Professional",
     trustIncrement: 0.2,
     cumulativeTrust: 0.5,
-    fg: "var(--tier-government,var(--color-tanzanite,#B388FF))",
+    fg: "var(--tier-licensed,var(--color-tanzanite,#B388FF))",
     bg: "rgba(179,136,255,0.15)",
     fgLight: "var(--color-tanzanite-light,#4B0082)",
     bgLight: "rgba(75,0,130,0.12)",
@@ -143,7 +146,7 @@ interface MziziVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants>
   tier: VerificationTier
   /** Platform status (identity.person.mit_status). Affects badge appearance. */
   status?: PlatformStatus
-  /** Show tooltip with tier name on hover */
+  /** Set the native `title` (tier name and trust score, shown on hover). There is no tooltip component. */
   showTooltip?: boolean
   /** Render skeleton placeholder while verification status is loading */
   loading?: boolean
@@ -182,6 +185,7 @@ function MziziVerifiedBadge({
         data-slot="mzizi-verified-badge"
         data-tier={tier}
         data-status="suspended"
+        role="img"
         aria-label="Account Suspended"
         title={showTooltip ? "Account Suspended" : undefined}
         className={cn(badgeSizeVariants({ size }), "opacity-40", className)}
@@ -204,6 +208,7 @@ function MziziVerifiedBadge({
         data-slot="mzizi-verified-badge"
         data-tier={tier}
         data-status={status}
+        role="img"
         aria-label={`${config.label} — Memorial`}
         title={showTooltip ? `${config.label} — Memorial` : undefined}
         className={cn(badgeSizeVariants({ size }), "opacity-60", className)}
@@ -222,6 +227,7 @@ function MziziVerifiedBadge({
       data-tier={tier}
       data-level={config.level}
       data-trust={config.cumulativeTrust}
+      role="img"
       aria-label={config.label}
       title={showTooltip ? `${config.label} · Trust ${config.cumulativeTrust}` : undefined}
       className={cn(badgeSizeVariants({ size }), className)}
