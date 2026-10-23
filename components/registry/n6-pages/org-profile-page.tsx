@@ -111,7 +111,7 @@ export function OrgProfilePage({
                 width="18"
                 height="18"
                 viewBox="0 0 24 24"
-                fill="var(--tier-licensed, var(--status-warning, var(--color-gold, #FFD740)))"
+                fill="var(--status-warning, var(--color-gold, #FFD740))"
                 aria-label="Verified"
               >
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

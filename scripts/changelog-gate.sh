@@ -14,21 +14,25 @@
 #
 # A PR passes when any of these holds:
 #   1. It carries the `no-changelog` label (pure CI, lint or typo PRs).
-#   2. It is the registry-pin bot's own PR: branch EXEMPT_BRANCH, opened from
+#   2. It is a Dependabot version bump: PR_AUTHOR is dependabot[bot]. Its
+#      entry is GitHub's generated release notes, not CHANGELOG.md, as in
+#      mzizi-dev/mzizi's .github/scripts/changelog-entry.sh.
+#   3. It is the registry-pin bot's own PR: branch EXEMPT_BRANCH, opened from
 #      this repository, changing nothing but PIN_FILE. The bot's gate
 #      (scripts/registry-pin-bump.mjs) refuses to merge a bump that touches
 #      any other file, so it cannot add an entry, and its PR body carries the
 #      registry commit list instead. A person who takes a bump over and ports
 #      a handler change is back under the normal rule.
-#   3. Every changed file is exempt: anything under .github/, a lockfile, or
+#   4. Every changed file is exempt: anything under .github/, a lockfile, or
 #      lint/format config.
-#   4. CHANGELOG.md is still present and the diff adds at least one
+#   5. CHANGELOG.md is still present and the diff adds at least one
 #      non-blank line to it.
 #
 # Environment (all optional except CHANGELOG_BASE):
 #   CHANGELOG_BASE      the ref to diff against, e.g. origin/main
 #   CHANGELOG_HEAD      the ref under test (default HEAD)
 #   NO_CHANGELOG_LABEL  "true" when the PR carries the no-changelog label
+#   PR_AUTHOR           the PR's author login; dependabot[bot] is exempt
 #   HEAD_BRANCH         the PR's head branch name
 #   SAME_REPO           "true" when the head branch lives in this repository
 #   EXEMPT_BRANCH       the pin bot's branch (unset: no branch is exempt)
@@ -64,6 +68,10 @@ is_exempt() {
 
 if [ "${NO_CHANGELOG_LABEL:-false}" = "true" ]; then
   pass "the PR carries the no-changelog label"
+fi
+
+if [ "${PR_AUTHOR:-}" = "dependabot[bot]" ]; then
+  pass "a Dependabot version bump (its release notes list it)"
 fi
 
 changed=$(git diff --name-only "$base...$head")
