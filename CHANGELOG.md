@@ -10,6 +10,17 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — dependency floors for the advisories that failed `audit:check` (2026-10-23, #533)
+
+`pnpm audit --audit-level=moderate` failed on `staging`'s lockfile, so it failed every pull request. Raised to the first patched release of each:
+
+- `next` 16.3.8 → 16.4.1 (exact pin kept): two critical remote-code-execution advisories (GHSA-2464-fhr4-w9xw, GHSA-673q-mjm6-r5xr) and a high denial of service (GHSA-p3m5-59mp-jv5r), all `>=16.0.0 <=16.4.0`.
+- `dompurify` `^3.4.17`, as the dependency and the override (was `^3.4.16` and `^3.4.0`): a critical and a high advisory (GHSA-cg2g-xh64-v4q7, GHSA-mrv2-3pqr-j5jr), `<=3.4.16`.
+- `vitest` `^5.0.3` (resolves 5.0.5), which brings `@vitest/mocker` 5.0.5: two moderate advisories (GHSA-qxg6-89mg-rqv8, GHSA-xp26-3454-mjgp), `<5.0.3`.
+- `ip-address` override `^10.7.4` (was `^10.7.1`; reached through `mongodb > socks`): a moderate advisory (GHSA-rxp7-6hxx-x8q5), `<=10.7.3`.
+
+After this, `pnpm audit` reports one low (`katex`, through `markdownlint-cli2`) and the one already-ignored high, and `audit:check` exits 0.
+
 ### Fixed — `mzizi-verified-badge` tier colours, `mzizi-place-card` gaps, the `mzizi-icons` install path and the old harness name (2026-10-21, #533)
 
 Found when Kweli vendored these for its place embed (mukoko-dev/kweli#225; tracked in #532).
