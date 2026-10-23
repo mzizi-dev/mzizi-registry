@@ -39,19 +39,44 @@ interface MziziPlaceCardProps {
    * interactive, so the link never nests another control.
    */
   href?: string
-  /** The link target, with `href`. `"_blank"` also sets `rel="noopener noreferrer"`. */
+  /**
+   * The link target, with `href`. Any target that opens another browsing context (anything but
+   * `_self`, `_top` and `_parent`, so `_blank` or a named window) also sets `rel="noopener noreferrer"`.
+   */
   target?: React.HTMLAttributeAnchorTarget
-  /** Called on activation, with or without `href`. Without `href` the card is focusable and answers Enter and Space. */
+  /**
+   * Called on activation, with or without `href`. Without `href` the card is `role="button"`, focusable,
+   * and answers Enter and Space. Clicks and keys that start on an interactive element inside the card
+   * (a button or link in `footer`, say) are left to that element and never reach this handler.
+   */
   onClick?: () => void
   /**
    * Rendered under the card's main row, inside the card. With `href` set it sits inside
    * the link, so it must hold static content only (text, a badge), never a link or button.
+   * Without `href` it may hold controls: their clicks and keys stay theirs and do not fire `onClick`.
    */
   footer?: React.ReactNode
   className?: string
 }
 
 const PORTAL = "https://mzizi.dev/components/mzizi-place-card"
+
+/** Targets that keep the link in the same browsing context, so it needs no `rel` guard. */
+const SAME_CONTEXT_TARGETS = new Set(["_self", "_top", "_parent"])
+
+const INTERACTIVE = "a,button,input,select,textarea,[role=button],[tabindex]"
+
+/**
+ * True when the event started on an interactive element inside the card (not the card itself),
+ * which then owns the click or key. The search stops at the card root.
+ */
+function fromInteractiveDescendant(e: React.SyntheticEvent<HTMLElement>): boolean {
+  const root = e.currentTarget
+  const target = e.target
+  if (target === root || !(target instanceof Element)) return false
+  const hit = target.closest(INTERACTIVE)
+  return hit != null && hit !== root && root.contains(hit)
+}
 
 const mineralColors: Record<string, string> = {
   malachite: "var(--color-malachite,#64FFDA)",
@@ -127,8 +152,8 @@ function MziziPlaceCard({
   const accent = mineralColors[mineral]
   const interactive = Boolean(href || onClick)
 
-  /* The root: a real link with `href`; otherwise an article, made focusable and
-     keyboard-operable when it has an `onClick`. */
+  /* The root: a real link with `href`; otherwise an article, or a focusable,
+     keyboard-operable button when it has an `onClick`. */
   const rootProps = {
     "data-slot": "mzizi-place-card",
     "data-portal": PORTAL,
@@ -140,7 +165,7 @@ function MziziPlaceCard({
         {...rootProps}
         href={href}
         target={target}
-        rel={target === "_blank" ? "noopener noreferrer" : undefined}
+        rel={target && !SAME_CONTEXT_TARGETS.has(target) ? "noopener noreferrer" : undefined}
         onClick={onClick}
         style={style}
         className={cn(cls, "no-underline", className)}
@@ -150,13 +175,20 @@ function MziziPlaceCard({
     ) : (
       <div
         {...rootProps}
-        role="article"
+        role={onClick ? "button" : "article"}
         aria-label={name}
         tabIndex={onClick ? 0 : undefined}
-        onClick={onClick}
+        onClick={
+          onClick
+            ? (e: React.MouseEvent<HTMLElement>) => {
+                if (!fromInteractiveDescendant(e)) onClick()
+              }
+            : undefined
+        }
         onKeyDown={
           onClick
-            ? (e: React.KeyboardEvent) => {
+            ? (e: React.KeyboardEvent<HTMLElement>) => {
+                if (fromInteractiveDescendant(e)) return
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault()
                   onClick()

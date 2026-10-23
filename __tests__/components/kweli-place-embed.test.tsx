@@ -4,8 +4,10 @@
  */
 import { readFileSync, readdirSync, statSync } from "node:fs"
 import path from "node:path"
+import { act } from "react"
+import { createRoot } from "react-dom/client"
 import { renderToStaticMarkup } from "react-dom/server"
-import { beforeAll, describe, expect, it } from "vitest"
+import { beforeAll, describe, expect, it, vi } from "vitest"
 
 import * as icons from "@/components/registry/n1-tokens/mzizi-icons"
 import { verificationTokens as n1VerificationTokens } from "@/components/registry/n1-tokens/mzizi-tokens-typescript"
@@ -147,14 +149,79 @@ describe("mzizi-place-card", () => {
     }
   })
 
-  it("target=_blank adds rel=noopener noreferrer", () => {
-    const html = renderToStaticMarkup(<MziziPlaceCard name="K" href="/p" target="_blank" />)
-    expect(html).toContain('rel="noopener noreferrer"')
+  it("any target that opens another context adds rel=noopener noreferrer", () => {
+    for (const target of ["_blank", "kweli-window"]) {
+      const html = renderToStaticMarkup(<MziziPlaceCard name="K" href="/p" target={target} />)
+      expect(html).toContain('rel="noopener noreferrer"')
+    }
+    for (const target of ["_self", "_top", "_parent", undefined]) {
+      const html = renderToStaticMarkup(<MziziPlaceCard name="K" href="/p" target={target} />)
+      expect(html).not.toContain("rel=")
+    }
   })
 
-  it("with onClick and no href, the card is focusable", () => {
+  it("with onClick and no href, the card is a focusable button", () => {
     const html = renderToStaticMarkup(<MziziPlaceCard name="Kariba" onClick={() => {}} />)
-    expect(html).toMatch(/^<div data-slot="mzizi-place-card"[^>]*role="article"[^>]*tabindex="0"/)
+    expect(html).toMatch(/^<div data-slot="mzizi-place-card"[^>]*role="button"[^>]*tabindex="0"/)
+  })
+
+  it("without onClick or href, the card stays an article", () => {
+    const html = renderToStaticMarkup(<MziziPlaceCard name="Kariba" />)
+    expect(html).toMatch(/^<div data-slot="mzizi-place-card"[^>]*role="article"/)
+    expect(html).not.toContain("tabindex")
+  })
+
+  it("Enter, Space and click on a footer button reach the button, not the card's onClick", async () => {
+    const container = document.createElement("div")
+    document.body.appendChild(container)
+    const root = createRoot(container)
+    const onCard = vi.fn()
+    const onButton = vi.fn()
+    await act(async () => {
+      root.render(
+        <MziziPlaceCard
+          name="Kariba"
+          onClick={onCard}
+          footer={
+            <button type="button" onClick={onButton}>
+              Directions
+            </button>
+          }
+        />
+      )
+    })
+    const button = container.querySelector("button")!
+    const card = container.querySelector<HTMLElement>('[data-slot="mzizi-place-card"]')!
+
+    for (const key of ["Enter", " "]) {
+      const ev = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true })
+      await act(async () => {
+        button.dispatchEvent(ev)
+      })
+      // The card must not cancel the button's own activation.
+      expect(ev.defaultPrevented).toBe(false)
+    }
+    await act(async () => {
+      button.click()
+    })
+    expect(onButton).toHaveBeenCalledTimes(1)
+    expect(onCard).not.toHaveBeenCalled()
+
+    // The card itself still answers click, Enter and Space.
+    await act(async () => {
+      card.click()
+      card.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }))
+      card.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true }))
+    })
+    expect(onCard).toHaveBeenCalledTimes(3)
+    // A click on static text inside the card is the card's.
+    await act(async () => {
+      container.querySelector<HTMLElement>("span")!.click()
+    })
+    expect(onCard).toHaveBeenCalledTimes(4)
+
+    await act(async () => root.unmount())
+    container.remove()
   })
 
   it("the card itself carries data-portal, not only its skeleton", () => {
