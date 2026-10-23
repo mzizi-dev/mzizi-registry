@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.11.0",
+    title:
+      "v4.11.0 — verified-badge tier colours, place-card link/footer/category, the lib/icons install path, and patched next, dompurify, vitest and ip-address",
+    description:
+      "Releases staging to main as the next minor above v4.10.x (nyuchi/.github#80). mzizi-verified-badge reads --tier-government for government (gold) and --tier-licensed for licensed (tanzanite), and the N1 verification tokens define them that way; anyone who set either variable themselves swaps their two values (Breaking). mzizi-place-card gains category on the row variant, a footer slot, href/target for a real link, a labelled tier badge and showTierLabel. mzizi-icons installs to lib/icons/index.tsx and re-exports every Lucide icon; imports of @/lib/mzizi-icons move to @/lib/icons (Breaking). mzizi-harness exports useNyuchiHarness as a deprecated alias of useMziziHarness (#533). next moves to 16.4.1, dompurify to ^3.4.17, vitest to ^5.0.3 and the ip-address override to ^10.7.4, clearing two critical and other advisories (#533). Dependabot targets staging (#508). No Mzizi Roots crate version changes. CHANGELOG.md section [4.11.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 11,
+    patch: 0,
+    release_kind: "minor",
+    breaking: true,
+    released_at: "2026-10-23T12:00:00.000+00:00",
+    created_at: "2026-10-23T12:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.10.0",
     title:
       "v4.10.0 — patched vite, markdown-it and sanitize-html; first-party packages by minimum version; required checks on the merge queue",

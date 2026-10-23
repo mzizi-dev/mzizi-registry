@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.11.0] - 2026-10-23
+
+Releases `staging` to `main` as the next minor above v4.10.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.11.0. It carries the `mzizi-verified-badge`, `mzizi-place-card`, `mzizi-icons` and `mzizi-harness` fixes Kweli needs for its place embed and the dependency floors for the `audit:check` advisories (#533), and Dependabot's move to `staging` (#508). Two changes are **Breaking**: the swapped `--tier-government` / `--tier-licensed` values, and the `mzizi-icons` install path (`@/lib/icons`). No Mzizi Roots crate version changes.
+
 ### Security — dependency floors for the advisories that failed `audit:check` (2026-10-23, #533)
 
 `pnpm audit --audit-level=moderate` failed on `staging`'s lockfile, so it failed every pull request. Raised to the first patched release of each:
