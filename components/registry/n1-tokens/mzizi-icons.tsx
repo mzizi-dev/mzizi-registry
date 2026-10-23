@@ -25,6 +25,13 @@ export const ICON_SIZES = {
 
 export type IconSize = keyof typeof ICON_SIZES
 
+// ── Every Lucide icon, under its own name ───────────────────────
+// This module installs to lib/icons/index.tsx, the `@/lib/icons` every
+// registry component imports from, so it must answer every name they
+// import. The named exports below take precedence over the star export.
+
+export * from "lucide-react"
+
 // ── Re-export Lucide icons with consistent naming ───────────────
 // Components import from here instead of lucide-react directly.
 // To swap an icon platform-wide, change the mapping here once.

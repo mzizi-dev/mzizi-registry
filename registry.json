@@ -12887,7 +12887,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "The Nyuchi component harness — the vertical infrastructure spine (useMziziHarness hook + MziziHarness wrapper) giving N3 brand, N4 safety, and N5 resilience components scoped logging, motion, and an accessible shared live region. Self-contained; adapt the console logger to your app observability layer.",
+      "description": "The Nyuchi component harness — the vertical infrastructure spine (useMziziHarness hook + MziziHarness wrapper) giving N3 brand, N4 safety, and N5 resilience components scoped logging, motion, and an accessible shared live region. Self-contained; adapt the console logger to your app observability layer. Also exports useNyuchiHarness, a deprecated alias of useMziziHarness from before the rename; a harness vendored before the rename exports only that name, so reinstall it (or alias useNyuchiHarness as useMziziHarness) before installing current components.",
       "docs": "Use it for: cn() classname composition across all layers, Shared utility functions for formatting, Tailwind class merging helpers, Common type predicates and guards, Universal helpers imported everywhere.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Semantic HTML.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-harness",
       "files": [
         {
@@ -13089,12 +13089,12 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["styling-libs", "tokens"],
       "dependencies": [],
-      "description": "Central icon registry for Mzizi. Maps semantic icon names to Lucide React icons. All components should import icons from this registry, not directly from lucide-react. Provides: consistent sizing (16/20/24/32), brand icon overrides, semantic naming (icon-success vs CheckCircle), tree-shaking optimization, and custom Nyuchi icons. N1 infrastructure — consumed by all layers above. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
+      "description": "Central icon registry for Mzizi. Installs to lib/icons/index.tsx, the `@/lib/icons` every registry component imports from, and re-exports every Lucide icon under its own name besides the semantic aliases. A project with a hand-written lib/icons/index.ts must delete it before installing: shadcn writes index.tsx beside it, and the bundler resolves the .ts file first, shadowing the registry module. Maps semantic icon names to Lucide React icons. All components should import icons from this registry, not directly from lucide-react. Provides: consistent sizing (16/20/24/32), brand icon overrides, semantic naming (icon-success vs CheckCircle), tree-shaking optimization, and custom Nyuchi icons. N1 infrastructure — consumed by all layers above. Design direction, not built: Astro renders the HTML on the server (natively at build time, or as WASM in the Cloudflare Worker during SSR), and WASM goes to the browser only for behaviour, attached to that markup through the component's data-slot root. Static components ship zero WASM. No Rust crate or WASM build of this component exists today.",
       "docs": "Use it for: Central icon registry for all components, Semantic icon naming (icon-success vs CheckCircle), Custom brand icons (MukokoLogo, MineralStrip), Size system: xs(16), sm(20), md(24), lg(32), xl(40).\nSizes: xs, sm, md, lg, xl.\nIncludes: 120+ Lucide re-exports, Semantic aliases, Icon component with name prop, MukokoLogo brand mark, MineralStrip color bar, Tree-shaking optimized.\nAccessibility: aria-hidden on decorative icons, role=img with aria-label on meaningful icons.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-icons",
       "files": [
         {
           "path": "components/registry/n1-tokens/mzizi-icons.tsx",
-          "target": "lib/mzizi-icons/index.tsx",
+          "target": "lib/icons/index.tsx",
           "type": "registry:lib"
         }
       ],
@@ -14301,8 +14301,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Place/location card extending mzizi-listing-card with map pin, verification badge, distance, rating, and opening hours. Maps to places.places (104 columns). Used in Mukoko Places, Shamwari location suggestions, hospitality listings, and any app that displays a physical location.",
-      "docs": "Use it for: Mukoko Places location listings, Shamwari hospitality suggestions, Nearby places discovery, Verified business directories, Location-based search results.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-place-card",
+      "description": "Place/location card with map pin, verification badge (mzizi-verified-badge), distance, rating and an open/closed flag. Two variants: row and compact. Pass href (and target=\"_top\" in an embed) to make the whole card a real link, with rel=\"noopener noreferrer\" for any target but _self, _top and _parent; or pass onClick for a role=\"button\" card that answers Enter and Space. A footer slot renders under the row; without href it may hold controls, whose clicks and keys never reach the card's onClick. Maps to places.places. Used in Mukoko Places, Kweli place embeds, Shamwari location suggestions and any app that displays a physical location.",
+      "docs": "Use it for: Mukoko Places location listings, Shamwari hospitality suggestions, Nearby places discovery, Verified business directories, Location-based search results.\nVariants: row, compact.\nIncludes: Verification badge from mzizi-verified-badge, with an optional tier label (\"Unverified\" at tier 0), Category under the name in both variants, Open/closed flag (no opening-hours schedule), href + target render the root as a real link, with rel=noopener noreferrer for any target but _self, _top and _parent, Footer slot under the row, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes on the card and its skeleton.\nAccessibility: With href the root is an <a>, with no nested interactive element, With onClick and no href the card is role=button, focusable, and answers Enter and Space, Clicks and keys on a control inside the card (a footer button) stay with that control and never fire the card's onClick, Focus-visible ring, Verification badge is role=img with an aria-label naming the tier, Decorative images and icons are hidden from assistive technology.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-place-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-place-card.tsx",
@@ -14312,16 +14312,24 @@
       ],
       "meta": {
         "a11y": [
-          "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
-          "ARIA role attribute"
+          "With href the root is an <a>, with no nested interactive element",
+          "With onClick and no href the card is role=button, focusable, and answers Enter and Space",
+          "Clicks and keys on a control inside the card (a footer button) stay with that control and never fire the card's onClick",
+          "Focus-visible ring",
+          "Verification badge is role=img with an aria-label naming the tier",
+          "Decorative images and icons are hidden from assistive technology"
         ],
         "collection": "brand",
         "features": [
+          "Verification badge from mzizi-verified-badge, with an optional tier label (\"Unverified\" at tier 0)",
+          "Category under the name in both variants",
+          "Open/closed flag (no opening-hours schedule)",
+          "href + target render the root as a real link, with rel=noopener noreferrer for any target but _self, _top and _parent",
+          "Footer slot under the row",
           "Harness integration (log, motion, LiveRegion)",
           "animStyle with prefersReduced motion check",
           "Mineral-colored accent via brand override",
-          "data-slot + data-portal DOM attributes"
+          "data-slot + data-portal DOM attributes on the card and its skeleton"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -14332,13 +14340,12 @@
           "Verified business directories",
           "Location-based search results"
         ],
-        "variants": ["default", "compact", "hero"]
+        "variants": ["row", "compact"]
       },
       "name": "mzizi-place-card",
       "registryDependencies": [
-        "https://api.mzizi.dev/v1/ui/mzizi-listing-card",
+        "https://api.mzizi.dev/v1/ui/mzizi-icons",
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
-        "https://api.mzizi.dev/v1/ui/rating",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
       "title": "mzizi Place Card",
@@ -16813,7 +16820,7 @@
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
       "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. Renders the appropriate mineral-colored badge for each tier — Terracotta (Community 0.10), Cobalt (OTP 0.20), Gold (Government 0.30), Tanzanite (Licensed 0.50). Suspended/ancestral accounts show a dimmed or memorial variant. Used inline next to names, on profile headers, listing cards, and anywhere trust needs to be communicated.",
-      "docs": "Use it for: Profile header verification display, Inline name verification, Listing card trust indicator, Search result trust signal.\nVariants: community (terracotta), otp (cobalt), government (gold), licensed (tanzanite), suspended (dimmed), ancestral (memorial).\nSizes: sm, md, lg.\nIncludes: Three-axis trust model: Status × Tier → Score, Mineral-colored per tier, Tooltip with tier explanation, Maps to system.verification_tier.\nAccessibility: aria-label describes verification tier, Tooltip accessible via focus, Screen reader announces trust level.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
+      "docs": "Use it for: Profile header verification display, Inline name verification, Listing card trust indicator, Search result trust signal.\nVariants: community (terracotta), otp (cobalt), government (gold), licensed (tanzanite), suspended (dimmed), ancestral (memorial).\nSizes: sm, md, lg.\nIncludes: Three-axis trust model: Status × Tier → Score, Mineral-colored per tier, Native title with the tier name and trust score (no tooltip component), Maps to system.verification_tier, Each tier reads its own --tier-* variable (government reads --tier-government).\nAccessibility: role=img with an aria-label naming the verification tier, Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-verified-badge.tsx",
@@ -16823,16 +16830,16 @@
       ],
       "meta": {
         "a11y": [
-          "aria-label describes verification tier",
-          "Tooltip accessible via focus",
-          "Screen reader announces trust level"
+          "role=img with an aria-label naming the verification tier",
+          "Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated"
         ],
         "collection": "brand",
         "features": [
           "Three-axis trust model: Status × Tier → Score",
           "Mineral-colored per tier",
-          "Tooltip with tier explanation",
-          "Maps to system.verification_tier"
+          "Native title with the tier name and trust score (no tooltip component)",
+          "Maps to system.verification_tier",
+          "Each tier reads its own --tier-* variable (government reads --tier-government)"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -16854,7 +16861,7 @@
       },
       "name": "mzizi-verified-badge",
       "registryDependencies": [
-        "https://api.mzizi.dev/v1/ui/tooltip",
+        "https://api.mzizi.dev/v1/ui/mzizi-icons",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
       "title": "mzizi Verified Badge",
@@ -17590,7 +17597,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["pages"],
       "dependencies": [],
-      "description": "Organization/business profile page. Logo, description, verification status, team members, location, hours, products/services tabs. For businesses, NGOs, government entities on the platform.",
+      "description": "Organization/business profile page. Logo, description, verification status, team members, location, hours, products/services tabs. For businesses, NGOs, government entities on the platform. The verified tick fills from --status-warning first, then --color-gold; it no longer reads --tier-licensed.",
       "docs": "Use it for: events, places, jobs, bushtrade.\nVariants: default, loading.\nIncludes: X-axis page composition, Pure composition — no inline UI, Semantic CSS vars only, Children/slots for content.\nAccessibility: role=main, aria-label, Loading state with skeleton, Focus management.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/org-profile-page",
       "files": [
         {
