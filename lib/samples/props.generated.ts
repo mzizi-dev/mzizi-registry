@@ -9121,6 +9121,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "showTierLabel",
+      "type": "boolean",
+      "required": false
+    },
+    {
       "name": "mineral",
       "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
       "required": false
@@ -9131,8 +9136,23 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "target",
+      "type": "React.HTMLAttributeAnchorTarget",
+      "required": false
+    },
+    {
       "name": "onClick",
       "type": "() => void",
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "React.ReactNode",
       "required": false
     }
   ],

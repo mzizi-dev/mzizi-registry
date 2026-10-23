@@ -10,6 +10,27 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — dependency floors for the advisories that failed `audit:check` (2026-10-23, #533)
+
+`pnpm audit --audit-level=moderate` failed on `staging`'s lockfile, so it failed every pull request. Raised to the first patched release of each:
+
+- `next` 16.3.8 → 16.4.1 (exact pin kept): two critical remote-code-execution advisories (GHSA-2464-fhr4-w9xw, GHSA-673q-mjm6-r5xr) and a high denial of service (GHSA-p3m5-59mp-jv5r), all `>=16.0.0 <=16.4.0`.
+- `dompurify` `^3.4.17`, as the dependency and the override (was `^3.4.16` and `^3.4.0`): a critical and a high advisory (GHSA-cg2g-xh64-v4q7, GHSA-mrv2-3pqr-j5jr), `<=3.4.16`.
+- `vitest` `^5.0.3` (resolves 5.0.5), which brings `@vitest/mocker` 5.0.5: two moderate advisories (GHSA-qxg6-89mg-rqv8, GHSA-xp26-3454-mjgp), `<5.0.3`.
+- `ip-address` override `^10.7.4` (was `^10.7.1`; reached through `mongodb > socks`): a moderate advisory (GHSA-rxp7-6hxx-x8q5), `<=10.7.3`.
+
+After this, `pnpm audit` reports one low (`katex`, through `markdownlint-cli2`) and the one already-ignored high, and `audit:check` exits 0.
+
+### Fixed — `mzizi-verified-badge` tier colours, `mzizi-place-card` gaps, the `mzizi-icons` install path and the old harness name (2026-10-21, #533)
+
+Found when Kweli vendored these for its place embed (mukoko-dev/kweli#225; tracked in #532).
+
+- **`mzizi-verified-badge`:** government (Gold) now reads `--tier-government` and licensed (Tanzanite) reads `--tier-licensed`. Before, each read the other's variable, so setting one recoloured the wrong tier. The N1 verification tokens (`lib/tokens`, `mzizi-tokens-typescript`) had the same swap. They now define `--tier-government` as gold and `--tier-licensed` as tanzanite, which is the Mukoko ladder. **Breaking for anyone who set `--tier-government` or `--tier-licensed` themselves:** swap your two values. Some components used these variables only as a way to get a colour: `mzizi-profile-block` and `mzizi-wallet-gate` (tanzanite), and `org-profile-page` and `permission-badge` (gold). They now read the mineral directly. `mzizi-profile-block`, `mzizi-wallet-gate` and `permission-badge` look the same as before. **`org-profile-page`'s verified tick now resolves `--status-warning` first, then `--color-gold`**: it used to read `--tier-licensed` first, so an app whose `--status-warning` is not gold sees the tick change colour. `mzizi-trust-gate`'s government-ID action now shows gold, as on the ladder. The badge is `role="img"`, so its `aria-label` is announced. Its docs no longer promise a "Tooltip with tier explanation": it only ever set a native `title`. The unused `tooltip` registry dependency is gone.
+- **`mzizi-place-card`:** the row variant shows `category` under the name, as compact does. New `footer` slot. New `href` and `target` props make the root a real `<a>` (use `target="_top"` in an embed). Any target but `_self`, `_top` and `_parent` (so `_blank` or a named window) adds `rel="noopener noreferrer"`, and nothing inside the link is interactive. `onClick` still works with or without `href`; without `href` the card is `role="button"`, focusable, and answers Enter and Space. A click or key that starts on a control inside the card (a button in `footer`, say) stays with that control: it does not fire the card's `onClick`, and Enter on it is not cancelled. The tier mark is now `mzizi-verified-badge` (labelled) instead of an unlabelled dot. New `showTierLabel` prints the tier name, with "Unverified" at tier 0. The card carries `data-portal`, not only its skeleton. Docs now match the code: variants are `row` and `compact` (no `hero`), and there is an open/closed flag, not opening hours. The unused `mzizi-listing-card` and `rating` dependencies are gone, and `mzizi-icons` is added.
+- **`mzizi-icons`** installs to `lib/icons/index.tsx`, the `@/lib/icons` that 151 registry components import from, instead of `lib/mzizi-icons/index.tsx`. It also re-exports every Lucide icon, because 51 names those components import were not in its curated list. **Breaking for anyone who imports `@/lib/mzizi-icons`:** import `@/lib/icons`. **Breaking for a project with a hand-written `lib/icons/index.ts`:** delete it before running `shadcn add`. shadcn writes `lib/icons/index.tsx` beside it, and the bundler resolves the `.ts` file first, so the registry module is shadowed and the names it adds go missing.
+- **`mzizi-harness`** exports `useNyuchiHarness` as a deprecated alias of `useMziziHarness`. A harness vendored before the rename exports only the old name, so current components cannot import from it. Reinstall the harness, or add `export { useNyuchiHarness as useMziziHarness }` to the old copy.
+- `__tests__/components/kweli-place-embed.test.tsx` covers each fix.
+
 ### Changed — Dependabot runs against `staging`, and its version bumps pass the changelog gate (2026-10-20, #508)
 
 - **`.github/dependabot.yml`.** Both update entries (npm and GitHub Actions) set `target-branch: "staging"`, so Dependabot opens its pull requests against `staging`, where this repository merges and releases, not against `main`. Pull requests already open against `main` are not retargeted by this change.
