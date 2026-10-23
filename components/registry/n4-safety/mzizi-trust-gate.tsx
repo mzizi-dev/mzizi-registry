@@ -26,7 +26,7 @@ const IMPROVEMENT_ACTIONS: TrustAction[] = [
   {
     label: "Verify your identity",
     description: "Upload a government ID for higher trust",
-    mineral: "var(--tier-government, var(--color-tanzanite, #B388FF))",
+    mineral: "var(--tier-government, var(--color-gold, #FFD740))",
   },
   {
     label: "Engage with the community",

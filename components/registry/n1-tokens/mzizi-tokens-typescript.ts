@@ -1384,15 +1384,15 @@ export const verificationTokens = {
     label: "OTP Verified",
   },
   government: {
-    value: `var(--tier-government, ${paletteVar("tanzanite")})`,
+    value: `var(--tier-government, ${paletteVar("gold")})`,
     css: "--tier-government",
-    mineral: "tanzanite",
+    mineral: "gold",
     label: "Government ID",
   },
   licensed: {
-    value: `var(--tier-licensed, ${paletteVar("gold")})`,
+    value: `var(--tier-licensed, ${paletteVar("tanzanite")})`,
     css: "--tier-licensed",
-    mineral: "gold",
+    mineral: "tanzanite",
     label: "Licensed",
   },
 } as const;
@@ -1515,8 +1515,8 @@ export function generateStatusCSS(): string {
   lines.push("  --tier-unverified: #6B7280;");
   lines.push(`  --tier-community: ${paletteVar("malachite")};`);
   lines.push(`  --tier-otp: ${paletteVar("cobalt")};`);
-  lines.push(`  --tier-government: ${paletteVar("tanzanite")};`);
-  lines.push(`  --tier-licensed: ${paletteVar("gold")};`);
+  lines.push(`  --tier-government: ${paletteVar("gold")};`);
+  lines.push(`  --tier-licensed: ${paletteVar("tanzanite")};`);
   lines.push("}");
   return lines.join("\n");
 }
