@@ -10,9 +10,40 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.11.0] - 2026-10-23
+
+Releases `staging` to `main` as the next minor above v4.10.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.11.0. It carries the `mzizi-verified-badge`, `mzizi-place-card`, `mzizi-icons` and `mzizi-harness` fixes Kweli needs for its place embed and the dependency floors for the `audit:check` advisories (#533), and Dependabot's move to `staging` (#508). Two changes are **Breaking**: the swapped `--tier-government` / `--tier-licensed` values, and the `mzizi-icons` install path (`@/lib/icons`). No Mzizi Roots crate version changes.
+
+### Security — dependency floors for the advisories that failed `audit:check` (2026-10-23, #533)
+
+`pnpm audit --audit-level=moderate` failed on `staging`'s lockfile, so it failed every pull request. Raised to the first patched release of each:
+
+- `next` 16.3.8 → 16.4.1 (exact pin kept): two critical remote-code-execution advisories (GHSA-2464-fhr4-w9xw, GHSA-673q-mjm6-r5xr) and a high denial of service (GHSA-p3m5-59mp-jv5r), all `>=16.0.0 <=16.4.0`.
+- `dompurify` `^3.4.17`, as the dependency and the override (was `^3.4.16` and `^3.4.0`): a critical and a high advisory (GHSA-cg2g-xh64-v4q7, GHSA-mrv2-3pqr-j5jr), `<=3.4.16`.
+- `vitest` `^5.0.3` (resolves 5.0.5), which brings `@vitest/mocker` 5.0.5: two moderate advisories (GHSA-qxg6-89mg-rqv8, GHSA-xp26-3454-mjgp), `<5.0.3`.
+- `ip-address` override `^10.7.4` (was `^10.7.1`; reached through `mongodb > socks`): a moderate advisory (GHSA-rxp7-6hxx-x8q5), `<=10.7.3`.
+
+After this, `pnpm audit` reports one low (`katex`, through `markdownlint-cli2`) and the one already-ignored high, and `audit:check` exits 0.
+
+### Fixed — `mzizi-verified-badge` tier colours, `mzizi-place-card` gaps, the `mzizi-icons` install path and the old harness name (2026-10-21, #533)
+
+Found when Kweli vendored these for its place embed (mukoko-dev/kweli#225; tracked in #532).
+
+- **`mzizi-verified-badge`:** government (Gold) now reads `--tier-government` and licensed (Tanzanite) reads `--tier-licensed`. Before, each read the other's variable, so setting one recoloured the wrong tier. The N1 verification tokens (`lib/tokens`, `mzizi-tokens-typescript`) had the same swap. They now define `--tier-government` as gold and `--tier-licensed` as tanzanite, which is the Mukoko ladder. **Breaking for anyone who set `--tier-government` or `--tier-licensed` themselves:** swap your two values. Some components used these variables only as a way to get a colour: `mzizi-profile-block` and `mzizi-wallet-gate` (tanzanite), and `org-profile-page` and `permission-badge` (gold). They now read the mineral directly. `mzizi-profile-block`, `mzizi-wallet-gate` and `permission-badge` look the same as before. **`org-profile-page`'s verified tick now resolves `--status-warning` first, then `--color-gold`**: it used to read `--tier-licensed` first, so an app whose `--status-warning` is not gold sees the tick change colour. `mzizi-trust-gate`'s government-ID action now shows gold, as on the ladder. The badge is `role="img"`, so its `aria-label` is announced. Its docs no longer promise a "Tooltip with tier explanation": it only ever set a native `title`. The unused `tooltip` registry dependency is gone.
+- **`mzizi-place-card`:** the row variant shows `category` under the name, as compact does. New `footer` slot. New `href` and `target` props make the root a real `<a>` (use `target="_top"` in an embed). Any target but `_self`, `_top` and `_parent` (so `_blank` or a named window) adds `rel="noopener noreferrer"`, and nothing inside the link is interactive. `onClick` still works with or without `href`; without `href` the card is `role="button"`, focusable, and answers Enter and Space. A click or key that starts on a control inside the card (a button in `footer`, say) stays with that control: it does not fire the card's `onClick`, and Enter on it is not cancelled. The tier mark is now `mzizi-verified-badge` (labelled) instead of an unlabelled dot. New `showTierLabel` prints the tier name, with "Unverified" at tier 0. The card carries `data-portal`, not only its skeleton. Docs now match the code: variants are `row` and `compact` (no `hero`), and there is an open/closed flag, not opening hours. The unused `mzizi-listing-card` and `rating` dependencies are gone, and `mzizi-icons` is added.
+- **`mzizi-icons`** installs to `lib/icons/index.tsx`, the `@/lib/icons` that 151 registry components import from, instead of `lib/mzizi-icons/index.tsx`. It also re-exports every Lucide icon, because 51 names those components import were not in its curated list. **Breaking for anyone who imports `@/lib/mzizi-icons`:** import `@/lib/icons`. **Breaking for a project with a hand-written `lib/icons/index.ts`:** delete it before running `shadcn add`. shadcn writes `lib/icons/index.tsx` beside it, and the bundler resolves the `.ts` file first, so the registry module is shadowed and the names it adds go missing.
+- **`mzizi-harness`** exports `useNyuchiHarness` as a deprecated alias of `useMziziHarness`. A harness vendored before the rename exports only the old name, so current components cannot import from it. Reinstall the harness, or add `export { useNyuchiHarness as useMziziHarness }` to the old copy.
+- `__tests__/components/kweli-place-embed.test.tsx` covers each fix.
+
+### Changed — Dependabot runs against `staging`, and its version bumps pass the changelog gate (2026-10-20, #508)
+
+- **`.github/dependabot.yml`.** Both update entries (npm and GitHub Actions) set `target-branch: "staging"`, so Dependabot opens its pull requests against `staging`, where this repository merges and releases, not against `main`. Pull requests already open against `main` are not retargeted by this change.
+- **Cooldown.** Both update entries set `cooldown: default-days: 7`, so Dependabot waits seven days before proposing a newly published version. Semgrep (`dependabot-missing-cooldown`) blocks a Dependabot configuration without one.
+- **`changelog / entry required` (`scripts/changelog-gate.sh`).** A pull request whose author is `dependabot[bot]` passes without a `CHANGELOG.md` entry, as it already does in `mzizi-dev/mzizi`. GitHub's generated release notes are the record of a version bump. The workflow passes the author login as `PR_AUTHOR`. Any other author still needs an entry. `scripts/changelog-gate.test.sh` gains two cases: a Dependabot bump with no entry passes, and the same change from another author fails.
+
 ## [4.10.0] - 2026-10-21
 
-Releases `staging` to `main` as the next minor above v4.9.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.10.0. The Mzizi Roots crates are unchanged (0.4.0). `staging` had lost `main`'s 4.6.0 to 4.9.0 release records (these section headings, their `releases.json` entries and the version, which read 4.5.0); they are carried forward here so the release does not take them off `main`.
+Releases `staging` to `main` as the next minor above v4.9.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` move to 4.10.0. It also carries the 2026-10-20 owner-decision docs pass (#513): repository names, the three build targets (Workers, containers, bare metal), the four gateways and the renderer in the doctrine, `README.md`, `AGENTS.md`, the Roots RFCs and the crate READMEs and keywords. The Mzizi Roots crates stay at 0.4.0; their READMEs and `Cargo.toml` metadata change, but no crate code or version does. `staging` had lost `main`'s 4.6.0 to 4.9.0 release records (these section headings, their `releases.json` entries and the version, which read 4.5.0); they are carried forward here so the release does not take them off `main`.
 
 ### Security — `vite` 8.3.3+, `markdown-it` 14.3.3+ and `sanitize-html` 2.18.0+ (2026-10-21, #525)
 
