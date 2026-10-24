@@ -4838,6 +4838,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "showClear",
       "type": "boolean",
       "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
     }
   ],
   "font-settings-panel": [

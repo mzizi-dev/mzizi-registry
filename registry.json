@@ -8307,8 +8307,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "A horizontal bar of toggleable filter chips with optional counts and a clear button.",
-      "docs": "Use it for: Search result filtering with active indicators, Marketplace listing filters, Inbox and feed filtering, Analytics dashboard filter bar, Content library category filters.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/filter-bar",
+      "description": "A horizontal bar of toggleable filter chips with optional counts and a clear button. Each chip is a real <button type=\"button\"> with aria-pressed, styled as a badge, in a role=\"group\" named by label (\"Filters\"), so the bar works fully from the keyboard and announces each chip's state.",
+      "docs": "Use it for: Search result filtering with active indicators, Marketplace listing filters, Inbox and feed filtering, Analytics dashboard filter bar, Content library category filters.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: role=group with an aria-label (label, \"Filters\" by default), Every chip is a <button type=\"button\"> with aria-pressed: in the tab order, operated with Enter and Space, Chips and Clear are at least 44px tall.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/filter-bar",
       "files": [
         {
           "path": "components/registry/n2-primitives/filter-bar.tsx",
@@ -8317,7 +8317,11 @@
         }
       ],
       "meta": {
-        "a11y": ["ARIA attributes", "Keyboard accessible"],
+        "a11y": [
+          "role=group with an aria-label (label, \"Filters\" by default)",
+          "Every chip is a <button type=\"button\"> with aria-pressed: in the tab order, operated with Enter and Space",
+          "Chips and Clear are at least 44px tall"
+        ],
         "collection": "primitives",
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
