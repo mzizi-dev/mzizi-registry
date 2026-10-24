@@ -147,6 +147,15 @@
       "rs": null
     },
     {
+      "name": "app/tier-status",
+      "title": "TierStatus",
+      "version": "1.0.0",
+      "file": "app/tier-status.contract.json",
+      "astro": "app-tier-status",
+      "tsx": "app-tier-status",
+      "rs": null
+    },
+    {
       "name": "app/filter-bar",
       "title": "FilterBar",
       "version": "1.1.0",

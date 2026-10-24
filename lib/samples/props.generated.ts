@@ -1329,6 +1329,53 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "app-tier-status": [
+    {
+      "name": "tier",
+      "type": "VerificationTier",
+      "required": true
+    },
+    {
+      "name": "attestations",
+      "type": "Attestation[]",
+      "required": false
+    },
+    {
+      "name": "requirements",
+      "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "{ label: string; href: string }",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "tierLabels",
+      "type": "Partial<Record<VerificationTier, string>>",
+      "required": false
+    },
+    {
+      "name": "copy",
+      "type": "TierStatusCopy",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "headingLevel",
+      "type": "2 | 3",
+      "required": false
+    }
+  ],
   "app-toast": [
     {
       "name": "flash",
