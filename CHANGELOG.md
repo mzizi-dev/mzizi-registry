@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Security — `mzizi-mongodb`: server error text dropped, cross-collection reads refused, a 64 KiB reply cap before login, secrets zeroised, a neutral driver name (2026-10-24, #PRNUM)
+### Security — `mzizi-mongodb`: server error text dropped, cross-collection reads refused, a 64 KiB reply cap before login, secrets zeroised, a neutral driver name (2026-10-24, #567)
 
 The six items left open by the security review on #502. Each fix has a regression test that fails without it (checked by reverting each fix with the tests in place). Server contract `mzizi-mongodb` 1.0.0 → 2.0.0.
 
