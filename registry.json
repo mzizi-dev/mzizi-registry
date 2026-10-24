@@ -126,6 +126,41 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
+      "description": "A Kweli address code as a chip: the code (NYU-7K2Q) in the mono face as a <code>, and a 44px link that opens the address, whose accessible name names the code. Without href the chip is the code alone. Semantic colour only, so a brand overlay (Kweli's malachite) colours the link. Astro and React builds under contract ui/address-code.",
+      "docs": "Use it for: Showing a Kweli address code on a place, ticket or venue card, Linking a code to its directions page.\nIncludes: Mono code, wide tracking, 44px link with a code-specific accessible name, Astro and React builds, one contract.\nAccessibility: The link's aria-label names the code it opens, Visually hidden label says what the code is.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-code",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/address-code.tsx",
+          "target": "components/ui/address-code.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The link's aria-label names the code it opens",
+          "Visually hidden label says what the code is"
+        ],
+        "collection": "primitives",
+        "features": [
+          "Mono code, wide tracking",
+          "44px link with a code-specific accessible name",
+          "Astro and React builds, one contract"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "Showing a Kweli address code on a place, ticket or venue card",
+          "Linking a code to its directions page"
+        ]
+      },
+      "name": "address-code",
+      "registryDependencies": [],
+      "title": "Address Code",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
       "description": "Structured address form with street, city, state, postal code, and country fields with African countries prioritized.",
       "docs": "Use it for: Checkout shipping address collection, User profile address fields, Business location registration, Event venue address input, Delivery address selection in BushTrade.\nVariants: default.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-input",
       "files": [
@@ -153,6 +188,115 @@
       "name": "address-input",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/input"],
       "title": "Address Input",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "One of the owner's private addresses in a list: a decorative lock, the name, the Kweli code in the mono face, who can open it (\"Private\" or \"Link only\") written out, an optional detail line, and a 44px manage link whose accessible name names the address. Astro and React builds under contract ui/address-private-row.",
+      "docs": "Use it for: The owner's list of private and link-only addresses, Address settings in Kweli and Mukoko ID.\nIncludes: Visibility as text and data-visibility, 44px manage link named for the address, Astro and React builds, one contract.\nAccessibility: The lock icon is aria-hidden; visibility is written out, The manage link's aria-label names the address.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-private-row",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/address-private-row.tsx",
+          "target": "components/ui/address-private-row.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The lock icon is aria-hidden; visibility is written out",
+          "The manage link's aria-label names the address"
+        ],
+        "collection": "primitives",
+        "features": [
+          "Visibility as text and data-visibility",
+          "44px manage link named for the address",
+          "Astro and React builds, one contract"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The owner's list of private and link-only addresses",
+          "Address settings in Kweli and Mukoko ID"
+        ]
+      },
+      "name": "address-private-row",
+      "registryDependencies": [],
+      "title": "Address Private Row",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "\"Deliver to\": a native radio group of the user's saved addresses in a fieldset with a legend. Each option is a whole-row 56px label with the name, a line and the Kweli code; private and link-only addresses say so in words; an empty list says so and offers the add link. No script; submits with its form. Astro and React builds under contract ui/address-selector.",
+      "docs": "Use it for: Choosing a delivery or pickup address at checkout, Choosing where an event ticket or rental is collected.\nIncludes: Native radios in a fieldset, Whole-row 56px options, Privacy written out, Astro and React builds, one contract.\nAccessibility: The legend names the group; each radio is named by its row, The choice is shown by the checked radio as well as the outline.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-selector",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/address-selector.tsx",
+          "target": "components/ui/address-selector.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The legend names the group; each radio is named by its row",
+          "The choice is shown by the checked radio as well as the outline"
+        ],
+        "collection": "primitives",
+        "features": [
+          "Native radios in a fieldset",
+          "Whole-row 56px options",
+          "Privacy written out",
+          "Astro and React builds, one contract"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "Choosing a delivery or pickup address at checkout",
+          "Choosing where an event ticket or rental is collected"
+        ]
+      },
+      "name": "address-selector",
+      "registryDependencies": [],
+      "title": "Address Selector",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["brand"],
+      "dependencies": ["uqr"],
+      "description": "An address to hand to someone: a QR code that opens the share link (drawn server-side as one SVG path in currentColor, no script, no image request), the address-code chip, the link written out, and the directions in words. Astro and React builds under contract ui/address-share-card.",
+      "docs": "Use it for: Sharing a Kweli address by QR, print or screenshot, Venue \"getting there\" cards on Mukoko Events.\nIncludes: Server-side QR (uqr) in currentColor, The link written out as well as encoded, Astro and React builds, one contract.\nAccessibility: The QR is role=\"img\" with an aria-label naming the link, The same link is in the text, for anyone who cannot scan.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-share-card",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/address-share-card.tsx",
+          "target": "components/ui/address-share-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The QR is role=\"img\" with an aria-label naming the link",
+          "The same link is in the text, for anyone who cannot scan"
+        ],
+        "collection": "brand",
+        "features": [
+          "Server-side QR (uqr) in currentColor",
+          "The link written out as well as encoded",
+          "Astro and React builds, one contract"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "Sharing a Kweli address by QR, print or screenshot",
+          "Venue \"getting there\" cards on Mukoko Events"
+        ]
+      },
+      "name": "address-share-card",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/address-code",
+        "https://api.mzizi.dev/v1/ui/qr-matrix"
+      ],
+      "title": "Address Share Card",
       "type": "registry:ui"
     },
     {
@@ -9032,6 +9176,110 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli favicon: the kweli mark (a shield with a tick) at 32px, mono in malachite, switching between the light-surface and dark-surface malachite with prefers-color-scheme. Kweli's own shipped favicon (mukoko-dev/kweli). Installs into public/favicon.svg; link it with <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\">.",
+      "docs": "Use it for: The kweli.mukoko.com browser tab icon, Bookmarks and pinned tabs.\nIncludes: 32px vector favicon, Follows prefers-color-scheme: malachite #004d40 on light, #64ffda on dark, The kweli mark, unchanged.\nAccessibility: Decorative: the page <title> names the site.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-favicon",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-favicon.svg",
+          "target": "public/favicon.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the page <title> names the site"],
+        "collection": "assets",
+        "features": [
+          "32px vector favicon",
+          "Follows prefers-color-scheme: malachite #004d40 on light, #64ffda on dark",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The kweli.mukoko.com browser tab icon",
+          "Bookmarks and pinned tabs"
+        ]
+      },
+      "name": "kweli-favicon",
+      "registryDependencies": [],
+      "title": "kweli Favicon",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli mark for dark grounds: a shield with a tick, for verified presence, drawn mono in malachite (kweli's mineral, #64ffda). Kweli's own shipped artwork (mukoko-dev/kweli), not redrawn. A vector SVG master; installs into public/brand/. Never recolour or redraw it.",
+      "docs": "Use it for: The kweli mark on dark grounds, App icons and lockups, Headers and footers on kweli.mukoko.com.\nIncludes: Vector SVG master, Malachite, kweli's mineral (mukoko mini-app variant), role=\"img\" with a <title>.\nAccessibility: role=\"img\" and aria-label=\"kweli\", Stroke clears 3:1 on its dark ground.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-mark-dark",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-mark-dark.svg",
+          "target": "public/brand/kweli-mark-dark.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"img\" and aria-label=\"kweli\"",
+          "Stroke clears 3:1 on its dark ground"
+        ],
+        "collection": "assets",
+        "features": [
+          "Vector SVG master",
+          "Malachite, kweli's mineral (mukoko mini-app variant)",
+          "role=\"img\" with a <title>"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The kweli mark on dark grounds",
+          "App icons and lockups",
+          "Headers and footers on kweli.mukoko.com"
+        ]
+      },
+      "name": "kweli-mark-dark",
+      "registryDependencies": [],
+      "title": "kweli Mark Dark",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli mark for light grounds (background, card): a shield with a tick, for verified presence, drawn mono in malachite (kweli's mineral, #004d40). Kweli's own shipped artwork (mukoko-dev/kweli), not redrawn. A vector SVG master; installs into public/brand/. Never recolour or redraw it.",
+      "docs": "Use it for: The kweli mark on light grounds (background, card), App icons and lockups, Headers and footers on kweli.mukoko.com.\nIncludes: Vector SVG master, Malachite, kweli's mineral (mukoko mini-app variant), role=\"img\" with a <title>.\nAccessibility: role=\"img\" and aria-label=\"kweli\", Stroke clears 3:1 on its light ground.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-mark-light",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-mark-light.svg",
+          "target": "public/brand/kweli-mark-light.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"img\" and aria-label=\"kweli\"",
+          "Stroke clears 3:1 on its light ground"
+        ],
+        "collection": "assets",
+        "features": [
+          "Vector SVG master",
+          "Malachite, kweli's mineral (mukoko mini-app variant)",
+          "role=\"img\" with a <title>"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The kweli mark on light grounds (background, card)",
+          "App icons and lockups",
+          "Headers and footers on kweli.mukoko.com"
+        ]
+      },
+      "name": "kweli-mark-light",
+      "registryDependencies": [],
+      "title": "kweli Mark Light",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["components", "primitives"],
       "dependencies": ["radix-ui"],
       "description": "Renders an accessible label associated with controls.",
@@ -16338,7 +16586,8 @@
           "radius-md": "calc(var(--radius-unit) + 5px)",
           "radius-sm": "var(--radius-unit)",
           "radius-unit": "7px",
-          "radius-xl": "calc(var(--radius-unit) + 10px)"
+          "radius-xl": "calc(var(--radius-unit) + 10px)",
+          "radius-xs": "calc(var(--radius-unit) - 3px)"
         }
       },
       "dependencies": [],
@@ -16645,8 +16894,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Full trust score visualization showing the three-signal breakdown: Verification Tier (are you real?), Platform Status (are you active?), and Ubuntu Contribution (are you helpful?). Displays the composite score as a meter bar with individual signal breakdowns. Used on profile detail pages, admin views, and trust audit screens. This is the expanded view of trust — the verified badge is the compact view.",
-      "docs": "Use it for: Full trust score breakdown on profiles, Trust audit screens in admin, Three-signal trust visualization, Trust detail views, Verification tier displays with context.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-meter",
+      "description": "Full trust score visualization showing the three-signal breakdown: Verification Tier (are you real?), Platform Status (are you active?), and Ubuntu Contribution (are you helpful?). Displays the composite score as a meter bar with individual signal breakdowns. Used on profile detail pages, admin views, and trust audit screens. This is the expanded view of trust — the verified badge is the compact view. Counted signals: pass `signals` ({ label, count, detail? }) and a `title` and the meter lists one row per signal with its count instead of the three-signal breakdown, for address, place and venue trust (Kweli's \"Address trust\": check-ins at the entrance, deliveries completed, neighbours who vouched). The meter exposes aria-valuenow/min/max.",
+      "docs": "Use it for: Full trust score breakdown on profiles, Trust audit screens in admin, Three-signal trust visualization, Trust detail views, Verification tier displays with context.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, Counted signal list (signals prop) for address and place trust.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-meter",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-trust-meter.tsx",
@@ -16666,7 +16915,8 @@
           "Harness integration (log, motion, LiveRegion)",
           "animStyle with prefersReduced motion check",
           "Mineral-colored accent via brand override",
-          "data-slot + data-portal DOM attributes"
+          "data-slot + data-portal DOM attributes",
+          "Counted signal list (signals prop) for address and place trust"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -18340,6 +18590,38 @@
       "registryDependencies": [],
       "title": "Pull To Refresh",
       "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": ["uqr"],
+      "description": "qrMatrix(text, ecc?): a QR code as one SVG path on a size×size grid (a square per dark module, a four-module quiet zone, error correction M by default), so a component draws it with fill=\"currentColor\" and no literal colour. Encoding is uqr (MIT, zero dependencies). Framework-free: Astro imports it flat (./qr-matrix), React as @/lib/qr-matrix.",
+      "docs": "Use it for: QR codes for share links, tickets and pairing, drawn server-side.\nIncludes: One SVG path per QR code, uqr encoding, ISO/IEC 18004 quiet zone.\nAccessibility: Non-visual helper: the caller gives the <svg> role=\"img\" and an aria-label naming what the code opens.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/qr-matrix",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/qr-matrix.ts",
+          "target": "lib/qr-matrix.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Non-visual helper: the caller gives the <svg> role=\"img\" and an aria-label naming what the code opens"
+        ],
+        "collection": "lib",
+        "features": [
+          "One SVG path per QR code",
+          "uqr encoding, ISO/IEC 18004 quiet zone"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "QR codes for share links, tickets and pairing, drawn server-side"
+        ]
+      },
+      "name": "qr-matrix",
+      "registryDependencies": [],
+      "title": "QR Matrix",
+      "type": "registry:lib"
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",

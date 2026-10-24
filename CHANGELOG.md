@@ -10,6 +10,43 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the Kweli Address primitives: address code, share card with QR, "deliver to" selector, private-address row; counted signals on `mzizi-trust-meter` (2026-10-24, #546)
+
+Gap 4 of #543, upstream before Kweli consumes them (Kweli Address RFC v0.1, mukoko-dev/kweli#195). Each is an Astro build and a React build under one contract in `contracts/ui/`. Both builds render every contract state in the suites. They are server-rendered with no script, and their colour is semantic only, so Kweli's brand overlay (malachite) colours the links and the selection.
+
+- **`address-code`** (`ui/address-code`, N2). The code (`NYU-7K2Q`) is a `<code>` in the mono face. With `href`, a 44px link follows it, and the link's accessible name names the code ("Open address NYU-7K2Q"). Without `href` the chip is the code alone.
+- **`address-share-card`** (`ui/address-share-card`, N3). A QR code that opens the share link, the code chip, the link written out, and the directions in words. The QR is drawn server-side as one SVG path in `currentColor` (`role="img"`, labelled with the link it opens).
+  - **New dependency `uqr`** (MIT, zero dependencies, encoding only). No registry primitive drew a QR code on `staging`: `booking-confirmation` has a placeholder and `mfa-setup` takes an image URL. The hand-written encoder in #475 is not merged.
+  - **New lib `qr-matrix`** (`qrMatrix(text, ecc?)`), shared by both builds.
+  - **Gap, in the contract:** in a dark theme the code is light on dark.
+- **`address-selector`** (`ui/address-selector`, N2). "Deliver to" as native radios in a `<fieldset>` with a `<legend>`. Each option is a 56px whole-row label with the address's name, a line and its code. "Private" and "Link only" addresses are marked in words. An empty list says so and offers the add link.
+- **`address-private-row`** (`ui/address-private-row`, N2). A row with a decorative lock, the name, the code, who can open the address written out (`data-visibility`), an optional detail line, and a 44px manage link named for the address.
+- **`mzizi-trust-meter`**, extended backward-compatibly. It did not cover a list of signals with counts. New `signals` (`{ label, count, detail? }[]`) and `title` props:
+  - With `signals`, the meter lists one 44px row per signal with its count, instead of the Verification / Status / Ubuntu breakdown. Kweli's "Address trust" panel is `<MziziTrustMeter title="Address trust" trustScore={…} signals={[…]} />`.
+  - Without `signals` it renders as before.
+  - The `role="meter"` now carries `aria-valuenow`, `aria-valuemin` and `aria-valuemax`, which it lacked.
+  - `__tests__/components/mzizi-trust-meter.test.tsx` covers both paths.
+- `contracts/ui/` grows from 12 to 16 contracts.
+
+### Added — the kweli brand entry (mark, favicon, lockup) and the `xs` radius rung (2026-10-24, #544)
+
+Two of the Kweli gaps tracked in #543.
+
+- **Kweli brand.** Kweli already had its canon row (`lib/tokens/brand.source.ts`, malachite, #404), so `--brand-*` and `@bundu/ui`'s `brand-kweli.css` were right; what was missing was the artwork, so `mzizi_search "kweli"` found nothing. Three new asset items: `kweli-mark-light` and `kweli-mark-dark` (the kweli mark, a shield with a tick, mono in malachite: `#004D40` on light grounds, `#64FFDA` on dark, both the registry's malachite values) and `kweli-favicon` (the same mark at 32px, switching with `prefers-color-scheme`). The artwork is Kweli's own, already live on kweli.mukoko.com (`mukoko-dev/kweli`, `workers/kweli-profiles` `Mark.astro` and `public/_kweli/favicon.svg`), copied, not redrawn. Kweli has no bundu-ecosystem-icons pair, so this is the one mark that is not from that set.
+- **`app-brand-mark` 1.2.0** (Astro and React). `brand="kweli"` shows the kweli pair (128px PNGs rendered from the SVG masters). New `tagline` prop: a muted line under the wordmark, for a mini-app lockup. Kweli's lockup is `<BrandMark brand="kweli" wordmark tagline="mukoko · Africa" />`, as in the Kweli Address design: lower-case serif `kweli` over `mukoko · Africa`. The tagline shows only with `wordmark`. Existing calls render the same markup as before. The contract (`contracts/app/brand-mark.contract.json`) adds the `kweli`, `kweli-lockup` and `tagline-without-wordmark` states and seven checks, run against both builds.
+- **`--radius-xs` (4px).** The radius ladder gains `xs`, the unit less 3 (`calc(var(--radius-unit) - 3px)` in `styles/globals.css`), for the smallest marks: legend swatches, kbd keys, inline tags. Before this a consumer's `rounded-xs` fell through to Tailwind's default (2px) because Mzizi defined no `xs`. `brandMeta.radii`, the role ladder, `lib/tokens`, every N1 platform file (`--r-xs` and `--radius-xs` in `mzizi-tokens-globals.css`, `Radius::XS` in Rust, and the Swift, Kotlin, ArkTS, Python and React Native scales) and `design-system/tokens.json` carry it; `/v1/brand` `.radii` gains `xs` and its `system` note now reads "Ecosystem numbers: 4, 7, 12, 14, 17". No registry component changes radius.
+- **`2xl` stays 17px.** The issue asked whether `radii.2xl` should be 24px, as an old `nyuchi-design` skill said. Canon says 17: `brandMeta.radii`, `styles/globals.css` (`--radius-2xl: calc(var(--radius-unit) + 10px)`), `design-system/README.md` and the current `mzizi-design` skill in `@nyuchi/mzizi-skills`, which dropped the 24px line in 0.8.0. Nothing changes for `2xl`; the stale copy is the pre-0.8.0 `nyuchi-design` skill, which is no longer published.
+
+### Security — zod 3 removed, and floors for the advisories that failed `audit` (2026-10-24, #545)
+
+GHSA-mrhx-c7xc-m3w5 (high) affects every zod 3 release and zod 4 below 4.6.6, and no 3.x is patched, so the org `audit` check failed every pull request (first seen on #544). zod 3.25.76 came in through `shadcn` 4.21 (which depends on `zod ^3.24.1`) and was shared by `@modelcontextprotocol/sdk` and `zod-to-json-schema`, whose peer ranges both accept zod 4.
+
+- `shadcn` `^4.22.1` (was `^4.21.0`), which depends on `zod ^4.2.0`. `shadcn build` still builds all 657 items.
+- `zod` `^4.6.7` (was `^4.6.2`), plus an override `"zod@<4.6.6": ">=4.6.6"`, so no zod below the fixed release can come back through a transitive range. The lockfile now resolves only zod 4.6.7.
+- New advisories that failed the same check, raised to the first patched release: `body-parser` override `^2.4.0` (GHSA-27r3-jxmh-p828, high), `undici` `^7.30.1` (GHSA-xjj6-f33q-929c high, GHSA-4qv8-2p9j-2685 and GHSA-f72v-6w45-q472 moderate), `fast-uri` `^3.1.9` (GHSA-w74x-v6f9-j3xg, GHSA-wjr9-j795-jxcr, moderate).
+
+After this, `pnpm audit:check` reports one low and exits 0; `typecheck`, `test` (1,251 + 481) and `lint` pass.
+
 ## [4.11.0] - 2026-10-23
 
 Releases `staging` to `main` as the next minor above v4.10.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.11.0. It carries the `mzizi-verified-badge`, `mzizi-place-card`, `mzizi-icons` and `mzizi-harness` fixes Kweli needs for its place embed and the dependency floors for the `audit:check` advisories (#533), and Dependabot's move to `staging` (#508). Two changes are **Breaking**: the swapped `--tier-government` / `--tier-licensed` values, and the `mzizi-icons` install path (`@/lib/icons`). No Mzizi Roots crate version changes.
