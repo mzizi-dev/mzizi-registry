@@ -1,50 +1,34 @@
-"use client"
-
-// ── INFRASTRUCTURE HARNESS (auto-wired) ──
-// Every brand component participates in observability, motion, a11y,
-// and health monitoring via the harness. Zero manual config.
-import { useMziziHarness } from "@/lib/harness"
-
-import * as React from "react"
-import { Shield, Activity, Heart, TrendingUp, Star } from "@/lib/icons"
+/**
+ * MziziTrustMeter — the expanded view of trust: the composite score as a meter, then either
+ * the three-signal breakdown (Verification, Status, Ubuntu) or, with `signals`, one row per
+ * counted signal for an address, a place or a venue.
+ *
+ * The React build of contract `ui/mzizi-trust-meter`, beside `mzizi-trust-meter.astro`: the
+ * same markup, held to the same contract. A server component (no "use client", no hooks): the
+ * bars are SVG geometry, never inline `style`, and colour is semantic (`--status-*`; the Ubuntu
+ * signal is tanzanite in every brand).
+ *
+ * MUKOKO TRUST MODEL — three signals:
+ *   Verification Tier (how real are you? identity ladder 0–4),
+ *   Platform Status (are you active? a lifecycle modifier),
+ *   Ubuntu Contribution (are you helpful? "I am because we are").
+ *
+ * SIGNAL COUNTS (#543). An address, a place or a venue earns trust from things that happened:
+ * check-ins at the entrance, deliveries completed, neighbours who vouched. Pass `signals`
+ * ({ label, count, detail? }) and the meter lists them under the bar, one 44px row each, in a
+ * <ul>, instead of the breakdown — Kweli's "Address trust" panel is
+ * <MziziTrustMeter title="Address trust" trustScore={…} signals={[…]} />.
+ */
+import { Icon } from "@/components/ui/site-icon"
 import { cn } from "@/lib/utils"
 
-/* ═══════════════════════════════════════════════════════════════
-   MUKOKO TRUST METER — Ubuntu Trust Visualization
-   
-   The full breakdown of the three-axis trust model:
-   
-   Signal 1: Verification Tier (weighted by subject type)
-     → How real are you? Identity ladder 0–4
-   Signal 2: Platform Status (lifecycle modifier)
-     → Are you active on the platform?
-   Signal 3: Ubuntu Contribution (community value)
-     → Are you helpful? "I am because we are"
-   
-   Each signal is shown as a labeled bar with its weighted
-   contribution to the composite score. The composite score
-   is the main meter at the top.
-   
-   Used on profile detail pages, admin dashboards, and
-   trust audit views. The verified badge is the compact
-   representation; this is the expanded view.
-
-   SIGNAL COUNTS (#543). An address, a place or a venue earns
-   trust from things that happened, not from a weighted axis:
-   check-ins at the entrance, deliveries completed, neighbours
-   who vouched. Pass `signals` ({ label, count, detail? }) and
-   the meter lists them under the bar, one row per signal with
-   its count, in a <ul> — Kweli's "Address trust" panel is
-   <MziziTrustMeter title="Address trust" trustScore={…}
-   signals={[…]} />. `title` names the meter (default
-   "Trust Score") and is its accessible name. With `signals`
-   the three-signal breakdown is replaced by the list; without
-   it nothing changes, so every existing call renders as before.
-   ═══════════════════════════════════════════════════════════════ */
-
+/**
+ * @deprecated Not used by the meter since it became a server component (#543); kept so
+ * existing type imports compile.
+ */
 interface TrustSignal {
   label: string
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+  icon: unknown
   value: number /* 0.0 – 1.0 normalized */
   color: string
   detail?: string
@@ -82,6 +66,25 @@ interface MziziTrustMeterProps {
   className?: string
 }
 
+const PORTAL = "https://mzizi.dev/components/mzizi-trust-meter"
+
+/** A 0–1 value as a bar width in a 0–100 viewBox, two decimals. */
+const width = (v: number) => String(Math.round(Math.min(Math.max(v, 0), 1) * 10000) / 100)
+
+type Level = "strong" | "growing" | "low" | "none"
+const SCORE_TEXT: Record<Level, string> = {
+  strong: "text-status-success",
+  growing: "text-status-warning",
+  low: "text-status-warning",
+  none: "text-status-neutral",
+}
+const SCORE_FILL: Record<Level, string> = {
+  strong: "fill-status-success",
+  growing: "fill-status-warning",
+  low: "fill-status-warning",
+  none: "fill-status-neutral",
+}
+
 function MziziTrustMeter({
   loading = false,
   trustScore,
@@ -96,30 +99,20 @@ function MziziTrustMeter({
   signals,
   className,
 }: MziziTrustMeterProps) {
-  const { motion } = useMziziHarness("trust-meter")
-  const animStyle = React.useMemo(
-    () =>
-      motion.prefersReduced
-        ? {}
-        : {
-            animation: `nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`,
-          },
-    [motion]
-  )
   if (loading)
     return (
       <div
         data-slot="mzizi-trust-meter"
-        data-portal="https://mzizi.dev/components/mzizi-trust-meter"
+        data-portal={PORTAL}
         data-loading
         role="meter"
         aria-label="Trust score"
-        className="animate-pulse space-y-3 rounded-[var(--radius-lg,14px)] bg-card p-4 ring-1 ring-foreground/10"
+        className="animate-pulse space-y-3 rounded-lg bg-card p-4 ring-1 ring-foreground/10"
       >
         <div className="h-3 w-20 rounded bg-muted" />
         <div className="h-2 rounded-full bg-muted" />
         <div className="flex justify-between">
-          {Array.from({ length: 4 }).map((_, i) => (
+          {[0, 1, 2, 3].map((i) => (
             <div key={i} className="space-y-1">
               <div className="h-2 w-8 rounded bg-muted" />
               <div className="h-1.5 w-6 rounded bg-muted" />
@@ -129,82 +122,81 @@ function MziziTrustMeter({
       </div>
     )
 
-  const percent = Math.round(trustScore * 100)
+  /* Score level: strong, growing, low, none. */
+  const level: Level =
+    trustScore >= 0.4 ? "strong" : trustScore >= 0.2 ? "growing" : trustScore >= 0.05 ? "low" : "none"
 
-  /* Score color thresholds */
-  const scoreColor =
-    trustScore >= 0.4
-      ? "var(--status-success, #4ADE80)" /* Green — strong */
-      : trustScore >= 0.2
-        ? "var(--status-warning, #FBBF24)" /* Amber — growing */
-        : trustScore >= 0.05
-          ? "var(--status-warning, #FB923C)" /* Orange — low */
-          : "var(--status-neutral, #6B6B66)" /* Grey — none */
-
-  const breakdown: TrustSignal[] = [
+  const breakdown = [
     {
+      key: "verification",
       label: "Verification",
-      icon: Shield,
+      icon: "shield",
       value: verificationScore,
-      color: "var(--status-warning, #F59E0B)",
+      text: "text-status-warning",
+      fill: "fill-status-warning",
       detail: tierLabel,
     },
     {
+      key: "status",
       label: "Status",
-      icon: Activity,
-      value: Math.max(
-        statusScore + 0.5,
-        0
-      ) /* Normalize: -0.05–0.0 → 0.45–0.50 range for display */,
-      color: statusScore >= 0 ? "var(--status-success, #4ADE80)" : "var(--status-error, #F87171)",
+      icon: "activity",
+      /* Normalise the -0.05 – 0.05 modifier to 0.45 – 0.55 for display. */
+      value: Math.max(statusScore + 0.5, 0),
+      text: statusScore >= 0 ? "text-status-success" : "text-status-error",
+      fill: statusScore >= 0 ? "fill-status-success" : "fill-status-error",
       detail: statusLabel,
     },
     {
+      key: "ubuntu",
       label: "Ubuntu",
-      icon: Heart,
+      icon: "heart",
       value: ubuntuScore,
-      color: "var(--color-tanzanite,#B388FF)",
+      text: "text-tanzanite",
+      fill: "fill-tanzanite",
       detail: ubuntuPoints != null ? `${ubuntuPoints.toLocaleString()} points` : undefined,
     },
-  ]
+  ] as const
 
   return (
     <div
       data-slot="mzizi-trust-meter"
-      style={animStyle}
+      data-portal={PORTAL}
+      data-level={level}
       role="meter"
       aria-label={title === "Trust Score" ? "Trust score" : title}
       aria-valuemin={0}
       aria-valuemax={1}
       aria-valuenow={trustScore}
-      className={cn(
-        "rounded-[var(--radius-card,14px)] bg-card p-4 ring-1 ring-foreground/10",
-        className
-      )}
+      className={cn("rounded-lg bg-card p-4 text-card-foreground ring-1 ring-foreground/10", className)}
     >
-      {/* ── Composite score header ────────────────────────── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <TrendingUp className="size-4 text-muted-foreground" />
-          <span className="text-sm font-medium text-foreground">{title}</span>
+          <Icon name="trending-up" className="size-4 text-muted-foreground" />
+          <span data-slot="trust-meter-title" className="text-sm font-medium text-foreground">
+            {title}
+          </span>
         </div>
         <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl font-bold" style={{ color: scoreColor }}>
+          <span data-slot="trust-meter-score" className={cn("text-2xl font-bold", SCORE_TEXT[level])}>
             {trustScore.toFixed(3)}
           </span>
           <span className="text-xs text-muted-foreground">/ 1.000</span>
         </div>
       </div>
 
-      {/* ── Main meter bar ────────────────────────────────── */}
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-foreground/[0.06]">
-        <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ width: `${percent}%`, backgroundColor: scoreColor }}
-        />
-      </div>
+      <span className="mt-3 block h-2 w-full overflow-hidden rounded-full bg-foreground/[0.06]">
+        <svg
+          data-slot="trust-meter-bar"
+          className="block h-2 w-full"
+          viewBox="0 0 100 2"
+          preserveAspectRatio="none"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <rect x="0" y="0" width={width(trustScore)} height="2" className={SCORE_FILL[level]} />
+        </svg>
+      </span>
 
-      {/* ── Counted signals (address / place trust) ─────── */}
       {!compact && signals && (
         <ul data-slot="trust-signal-list" className="mt-4 flex flex-col divide-y divide-border">
           {signals.map((s) => (
@@ -217,7 +209,10 @@ function MziziTrustMeter({
                 <span className="truncate text-sm text-foreground">{s.label}</span>
                 {s.detail && <span className="text-xs text-muted-foreground">{s.detail}</span>}
               </span>
-              <span data-slot="trust-signal-count" className="shrink-0 font-mono text-sm font-semibold text-foreground tabular-nums">
+              <span
+                data-slot="trust-signal-count"
+                className="shrink-0 font-mono text-sm font-semibold text-foreground tabular-nums"
+              >
                 {s.count.toLocaleString()}
               </span>
             </li>
@@ -225,50 +220,41 @@ function MziziTrustMeter({
         </ul>
       )}
 
-      {/* ── Signal breakdown (full mode) ──────────────────── */}
       {!compact && !signals && (
-        <div className="mt-4 flex flex-col gap-3">
-          {breakdown.map((signal) => {
-            const Icon = signal.icon
-            const signalPercent = Math.round(Math.min(signal.value, 1) * 100)
-            return (
-              <div key={signal.label}>
-                <div className="mb-1 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <Icon className="size-3.5" style={{ color: signal.color }} />
-                    <span className="text-xs font-medium text-muted-foreground">
-                      {signal.label}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {signal.detail && (
-                      <span className="text-[10px] text-muted-foreground">{signal.detail}</span>
-                    )}
-                    <span className="text-xs font-semibold" style={{ color: signal.color }}>
-                      {signal.value.toFixed(3)}
-                    </span>
-                  </div>
+        <div data-slot="trust-breakdown" className="mt-4 flex flex-col gap-3">
+          {breakdown.map((signal) => (
+            <div key={signal.key} data-slot="trust-breakdown-signal" data-signal={signal.key}>
+              <div className="mb-1 flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <Icon name={signal.icon} className={cn("size-3.5", signal.text)} />
+                  <span className="text-xs font-medium text-muted-foreground">{signal.label}</span>
                 </div>
-                <div className="h-1 w-full overflow-hidden rounded-full bg-foreground/[0.04]">
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{ width: `${signalPercent}%`, backgroundColor: signal.color }}
-                  />
+                <div className="flex items-center gap-2">
+                  {signal.detail && <span className="text-[10px] text-muted-foreground">{signal.detail}</span>}
+                  <span className={cn("text-xs font-semibold", signal.text)}>{signal.value.toFixed(3)}</span>
                 </div>
               </div>
-            )
-          })}
-
-          {/* Ubuntu points callout */}
-          {ubuntuPoints != null && (
-            <div className="mt-1 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
-              <Star
-                className="size-3"
-                style={{ color: "var(--color-gold, var(--status-warning, #F59E0B))" }}
-              />
-              <span>
-                {ubuntuPoints.toLocaleString()} Ubuntu Points earned through community contribution
+              <span className="block h-1 w-full overflow-hidden rounded-full bg-foreground/[0.04]">
+                <svg
+                  className="block h-1 w-full"
+                  viewBox="0 0 100 1"
+                  preserveAspectRatio="none"
+                  focusable="false"
+                  aria-hidden="true"
+                >
+                  <rect x="0" y="0" width={width(signal.value)} height="1" className={signal.fill} />
+                </svg>
               </span>
+            </div>
+          ))}
+
+          {ubuntuPoints != null && (
+            <div
+              data-slot="trust-ubuntu-points"
+              className="mt-1 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground"
+            >
+              <Icon name="star" className="size-3 text-status-warning" />
+              <span>{ubuntuPoints.toLocaleString()} Ubuntu Points earned through community contribution</span>
             </div>
           )}
         </div>
