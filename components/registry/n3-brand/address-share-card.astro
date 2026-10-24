@@ -1,0 +1,60 @@
+---
+/**
+ * AddressShareCard — an address to hand to someone: a QR code that opens it, the code in
+ * the mono face, the share link written out, and the directions in words.
+ *
+ * Kweli Address (RFC v0.1) resolves a code at a short link (`kweli.mukoko.com/a/<code>`)
+ * with no account; this card is that link in a form a phone camera, a printer or a
+ * WhatsApp screenshot can carry. The QR encodes `url` exactly. It is drawn server-side as
+ * one SVG path (`./qr-matrix`, on `uqr`) in `currentColor`, so it needs no script and no
+ * image request, and its colour is the card's foreground. The link is also written out,
+ * because a QR code is not readable by everyone: `aria-label` on the image names what it
+ * opens, and the visible link opens the same place.
+ *
+ * Colour is semantic only (`bg-card`, `--foreground`, `--primary`), so Kweli's overlay
+ * colours the link and nothing here names a mineral. The React build is
+ * `address-share-card.tsx`; both keep `contracts/ui/address-share-card`.
+ */
+import AddressCode from "./address-code.astro";
+import { qrMatrix } from "./qr-matrix";
+import { cn } from "./ui-utils";
+
+interface Props {
+  /** The address code, e.g. "NYU-7K2Q". */
+  code: string;
+  /** The share link the QR encodes, e.g. "https://kweli.mukoko.com/a/NYU-7K2Q". */
+  url: string;
+  /** Whose or which address: "Tendai's stall". */
+  title?: string;
+  /** How to find the entrance, in words. */
+  directions?: string;
+  class?: string;
+}
+
+const { code, url, title, directions, class: className } = Astro.props;
+const qr = qrMatrix(url);
+const shown = url.replace(/^https?:\/\//, "");
+---
+
+<article
+  data-slot="address-share-card"
+  data-portal="https://mzizi.dev/components/address-share-card"
+  class={cn("flex w-full max-w-sm flex-col items-center gap-4 rounded-lg border border-border bg-card p-6 text-center text-card-foreground", className)}
+>
+  {title && <h3 data-slot="address-share-card-title" class="font-serif text-h5 font-semibold text-foreground">{title}</h3>}
+  <svg
+    data-slot="address-qr"
+    role="img"
+    aria-label={`QR code that opens ${url}`}
+    viewBox={`0 0 ${qr.size} ${qr.size}`}
+    shape-rendering="crispEdges"
+    class="size-48 text-foreground"
+  ><path fill="currentColor" d={qr.d}></path></svg>
+  <AddressCode code={code} />
+  <a
+    href={url}
+    data-slot="address-share-card-link"
+    class="inline-flex min-h-11 max-w-full items-center rounded-full px-3 text-body-sm font-medium break-all text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+  >{shown}</a>
+  {directions && <p data-slot="address-share-card-directions" class="text-body-sm text-muted-foreground">{directions}</p>}
+</article>

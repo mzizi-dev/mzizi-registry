@@ -28,6 +28,18 @@ import { cn } from "@/lib/utils"
    Used on profile detail pages, admin dashboards, and
    trust audit views. The verified badge is the compact
    representation; this is the expanded view.
+
+   SIGNAL COUNTS (#543). An address, a place or a venue earns
+   trust from things that happened, not from a weighted axis:
+   check-ins at the entrance, deliveries completed, neighbours
+   who vouched. Pass `signals` ({ label, count, detail? }) and
+   the meter lists them under the bar, one row per signal with
+   its count, in a <ul> — Kweli's "Address trust" panel is
+   <MziziTrustMeter title="Address trust" trustScore={…}
+   signals={[…]} />. `title` names the meter (default
+   "Trust Score") and is its accessible name. With `signals`
+   the three-signal breakdown is replaced by the list; without
+   it nothing changes, so every existing call renders as before.
    ═══════════════════════════════════════════════════════════════ */
 
 interface TrustSignal {
@@ -35,6 +47,15 @@ interface TrustSignal {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
   value: number /* 0.0 – 1.0 normalized */
   color: string
+  detail?: string
+}
+
+/** One counted trust signal: "Check-ins at the entrance", 12. */
+interface TrustSignalCount {
+  label: string
+  /** How many times it happened. Never a percentage. */
+  count: number
+  /** A short qualifier: "last 90 days". */
   detail?: string
 }
 
@@ -54,6 +75,10 @@ interface MziziTrustMeterProps {
   statusLabel?: string
   /** Compact mode — just the meter bar, no signal breakdown */
   compact?: boolean
+  /** The meter's name, shown and used as its accessible name. */
+  title?: string
+  /** Counted signals (address, place or venue trust). Replaces the three-signal breakdown. */
+  signals?: TrustSignalCount[]
   className?: string
 }
 
@@ -67,6 +92,8 @@ function MziziTrustMeter({
   tierLabel,
   statusLabel,
   compact = false,
+  title = "Trust Score",
+  signals,
   className,
 }: MziziTrustMeterProps) {
   const { motion } = useMziziHarness("trust-meter")
@@ -114,7 +141,7 @@ function MziziTrustMeter({
           ? "var(--status-warning, #FB923C)" /* Orange — low */
           : "var(--status-neutral, #6B6B66)" /* Grey — none */
 
-  const signals: TrustSignal[] = [
+  const breakdown: TrustSignal[] = [
     {
       label: "Verification",
       icon: Shield,
@@ -146,7 +173,10 @@ function MziziTrustMeter({
       data-slot="mzizi-trust-meter"
       style={animStyle}
       role="meter"
-      aria-label="Trust score"
+      aria-label={title === "Trust Score" ? "Trust score" : title}
+      aria-valuemin={0}
+      aria-valuemax={1}
+      aria-valuenow={trustScore}
       className={cn(
         "rounded-[var(--radius-card,14px)] bg-card p-4 ring-1 ring-foreground/10",
         className
@@ -156,7 +186,7 @@ function MziziTrustMeter({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <TrendingUp className="size-4 text-muted-foreground" />
-          <span className="text-sm font-medium text-foreground">Trust Score</span>
+          <span className="text-sm font-medium text-foreground">{title}</span>
         </div>
         <div className="flex items-baseline gap-1.5">
           <span className="text-2xl font-bold" style={{ color: scoreColor }}>
@@ -174,10 +204,31 @@ function MziziTrustMeter({
         />
       </div>
 
+      {/* ── Counted signals (address / place trust) ─────── */}
+      {!compact && signals && (
+        <ul data-slot="trust-signal-list" className="mt-4 flex flex-col divide-y divide-border">
+          {signals.map((s) => (
+            <li
+              key={s.label}
+              data-slot="trust-signal"
+              className="flex min-h-11 items-center justify-between gap-3 py-2"
+            >
+              <span className="flex min-w-0 flex-col">
+                <span className="truncate text-sm text-foreground">{s.label}</span>
+                {s.detail && <span className="text-xs text-muted-foreground">{s.detail}</span>}
+              </span>
+              <span data-slot="trust-signal-count" className="shrink-0 font-mono text-sm font-semibold text-foreground tabular-nums">
+                {s.count.toLocaleString()}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
       {/* ── Signal breakdown (full mode) ──────────────────── */}
-      {!compact && (
+      {!compact && !signals && (
         <div className="mt-4 flex flex-col gap-3">
-          {signals.map((signal) => {
+          {breakdown.map((signal) => {
             const Icon = signal.icon
             const signalPercent = Math.round(Math.min(signal.value, 1) * 100)
             return (
@@ -227,4 +278,4 @@ function MziziTrustMeter({
 }
 
 export { MziziTrustMeter }
-export type { MziziTrustMeterProps, TrustSignal }
+export type { MziziTrustMeterProps, TrustSignal, TrustSignalCount }
