@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `app/data-table` 1.2: person cells and per-row actions that work without script (2026-10-24, #PRNUM)
+### Added — `app/data-table` 1.2: person cells and per-row actions that work without script (2026-10-24, #571)
 
 Gap 3 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): a team list could show members but not act on one.
 
