@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `app/confirm-action`: a destructive action that asks first, with no script (2026-10-24, #572)
+
+Gap 4 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)). The app family had no confirmation; `alert-dialog` is a legacy Radix component.
+
+- **New contract `app/confirm-action` 1.0.0** with Astro (`app-confirm-action.astro`, the default build) and React builds held to it: 4 states, 9 clauses, 19 checks, 5 density rows. The Dashboard Standard now has 32 app contracts.
+- A trigger (`popovertarget`, `aria-haspopup="dialog"`) opens a `role="dialog"` popover panel labelled by its heading and described by the description and the warning. Escape, a click outside and Cancel (`popovertargetaction="hide"`) close it. No script.
+- The panel is a `<form>` (POST unless `method: "get"`) to `action` with hidden `fields` and a required confirm step: a checkbox posting `confirm=yes`, or, with `confirmText`, a box whose `pattern` is exactly that text. The server must check `confirm` too.
+- The danger is written: "Warning: This cannot be undone." with a warning glyph, and the submit button names the action. Every word can be replaced for another language (`warningLabel`, `acknowledge`, `confirmPrompt`, `cancelLabel`).
+- **`ui-utils`** gains `exactPattern(text)`; **`site-icons`** gains `warning`.
+
 ### Added — `app/data-table` 1.2: person cells and per-row actions that work without script (2026-10-24, #571)
 
 Gap 3 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): a team list could show members but not act on one.

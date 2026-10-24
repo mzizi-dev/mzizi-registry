@@ -43,6 +43,7 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "app-button": "n2",
   "app-card": "n2",
   "app-command-palette": "n7",
+  "app-confirm-action": "n6",
   "app-data-table": "n6",
   "app-detail-panel": "n6",
   "app-empty-state": "n6",
