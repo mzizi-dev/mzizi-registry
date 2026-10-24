@@ -22,6 +22,24 @@ Item 10 of the Kweli phase-2 gaps, tracked in #543. Kweli had a vector favicon a
 - **`scripts/render-kweli-icons.mjs`** (new) renders all four from the mark with sharp, so they are reproducible when the mark changes. It reads the mark's paths and colour from the SVG rather than restating them. It is run by hand, not in CI.
 - **Known limit.** No brand shipped a raster icon set before, so there was no pattern to follow. The API inlines text sources only (`lib/registry-source.generated.json` skips binaries), so `npx shadcn add` of these four items gets the item without its bytes until `mzizi-api` serves binary `registry:file` content. A repo that vendors from this registry's files (`@bundu/ui`, a checkout) gets them as they are.
 
+### Fixed — `filter-bar` chips are real buttons with `aria-pressed`, so the bar works from the keyboard (2026-10-24, #559)
+
+Item 9 of the Kweli phase-2 gaps, tracked in #543.
+
+- **`filter-bar`.** Each chip ("All" and every option) was a `Badge` `<span>` with an `onClick`: no keyboard could reach it, and no screen reader could tell it was a control or whether it was on. Each is now a `<button type="button">` with `aria-pressed`, rendered through `Badge asChild` so it keeps the badge's look, in the tab order and operated with Enter and Space like any button. "All" is pressed when nothing is selected. Selection, `multiple`, `showAll`, `showClear` and `onSelectionChange` behave as before.
+- **Changed.** The root is `role="group"` instead of `role="toolbar"`: a toolbar promises arrow-key navigation between one tab stop, which the bar does not implement, while a group of ordinary buttons needs none. The new `label` prop names the group ("Filters" by default). Chips are 44px tall (`h-11`, `rounded-full`, the `discover-category-chip` height), and Clear is at least 44px tall with its icon `aria-hidden`.
+- **Tests.** New `__tests__/components/filter-bar.test.tsx`. The bar has no Astro build, so no contract file.
+
+### Changed — `mzizi-place-card` takes `tierLabel` and `linkLabel`; `address-share-card` takes `codeLabel` and draws its QR on a light plate (new `surface-qr` / `on-surface-qr` tokens); `app-brand-mark` loads lazily (2026-10-24, #558)
+
+Items 7, 8 and 11 of the Kweli phase-2 gaps, tracked in #543.
+
+- **`mzizi-place-card`.** New `tierLabel`: the tier's wording in the app's own words ("Identity verified" where the built-in name is "Contact Verified"). It is passed to the inner `mzizi-verified-badge` as its `label` (#550), so it is the badge's title and accessible name, and it is the text `showTierLabel` prints. New `linkLabel`: the accessible name of the card's link (with `href`) or button (with `onClick` alone). Without it the link is named by its content as before, and an article card keeps `name`.
+- **`address-share-card`, contract `ui/address-share-card` 1.1.0.** New `codeLabel`, passed to the `address-code` chip as its `label` ("Address" by default). In a dark theme the QR was light modules on a dark card, an inverted code some scanners cannot read (the gap the contract recorded). It now sits on a `surface-qr` plate in `on-surface-qr` ink, with padding for the quiet zone, in both builds. The contract gains the prop, a `labelled` state and three checks, lists the two tokens, and drops the gap.
+- **`--surface-qr` and `--on-surface-qr` (new canonical roles).** The plate behind a QR code and its modules, fixed in every theme: the canon's own white (`#FFFFFF`) and ink (`#0E0D0C`), the pair `onWhiteOrInk` already uses for foregrounds. `on-surface-qr` is gated at Lc 75 against `surface-qr`. Generated into `mzizi-tokens-globals.css` (`--color-surface-qr`, `--color-on-surface-qr` in `@theme`) and every platform target.
+- **`app-brand-mark`: Breaking (a default changes), contract `app/brand-mark` 1.3.0.** Both images now carry `loading="lazy"` by default, beside the `decoding="async"` they had; Lighthouse flagged an eager footer mark. A mark in the viewport (a header) still loads at once, and the theme's hidden image is never fetched. The new `loading` prop takes `"eager"` for a mark that is the page's LCP image. No component in the registry renders the mark above the fold by default, so none needed `"eager"`. Both builds change, and the contract gains the prop, an `eager` state and two checks.
+- **Tests.** New `__tests__/components/kweli-phase2-place-share-mark.test.tsx`; both contract runners run the updated contracts against both builds.
+
 ### Changed — `mzizi-event-card` gains price, description and share slots and all seven minerals; `mzizi-review-card` gains a headline, keeps line breaks, names its stars and shows the tier badge; a read-only `rating` is one named image (2026-10-24, #557)
 
 Items 4, 5 and 6 of the Kweli phase-2 gaps, tracked in #543.
