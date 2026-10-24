@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `/v1/brand` names shamwari as the third pillar; stale terracotta `#D4A574` fallbacks removed (2026-10-24, #PR)
+
+Two of the no-decision fixes on #543.
+
+- **Pillars.** The `bundu` ecosystem row said the three pillars were mukoko, nyuchi and "sister brands (specialist verticals)". That disagreed with the registry itself (shamwari has its own ecosystem row in its own pillar colour, sodalite) and with the `mzizi-design` skill's ecosystem section ("shamwari ai — the intelligence pillar"). It now names mukoko (tanzanite), nyuchi (gold) and shamwari (sodalite), with the sister brands as specialist verticals. This matches `nyuchi/workspace-tools`' brand registry, which follows Mzizi (nyuchi/workspace-tools#114 aligned shamwari's role to "intelligence"). `/v1/brand` serves the new text once `mzizi-api` moves its pin.
+- **Terracotta fallbacks.** 78 `var(--color-terracotta, #D4A574)` fallbacks in 62 components (alert banner, place card, calendar, timeline, charts, the Rust siblings and others) become `var(--color-terracotta)`. `#D4A574` is not terracotta (canon is `#A0522D` / `#E1B07E`); a page with the tokens never saw it, and one without them now gets no stale colour either.
+- **`mzizi-profile-block`.** Its tier map reads the `--tier-*` roles (#563), with `color-mix` backgrounds instead of five fixed `rgba()` values, as `mzizi-verified-badge` does.
+- **`mzizi-create-listing`.** The terracotta gradient reads `--color-terracotta-light` (defined since #563) without the `#8B4513` fallback. **`mzizi-footer`** drops a `#D4A574` fallback on `--status-error`.
+- **Not changed:** `color-picker` and `caption-editor` (colour data, exempt by `lint:colors`) and the contrast table in N1 `mzizi-a11y`, whose ratios would need re-measuring.
+
 ### Changed — Verification tiers are `--tier-*` roles defined once in N1, and every tier component reads them; light-mode `--color-<mineral>-light` tokens (2026-10-24, #563)
 
 The owner's tier-colour decision on #543 (2026-10-24): **Q1** keep the minerals, **Q2** community is terracotta, **Q3** the `mzizi-design` skill's swap is fixed (government gold, licensed tanzanite; a separate `mzizi-dev/agent-tools` change, since the skill is authored there), **Q4** tier 0 is a neutral grey token that already exists, **Q5** tier 2 is "Contact Verified". Heritage tones stay neutral and editorial, as `seven-minerals.mdx` says.

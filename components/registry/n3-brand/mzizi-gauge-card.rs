@@ -77,7 +77,7 @@ impl GaugeMineral {
             Self::Tanzanite => "var(--color-tanzanite, #B388FF)",
             Self::Malachite => "var(--color-malachite, #64FFDA)",
             Self::Gold => "var(--color-gold, #FFD740)",
-            Self::Terracotta => "var(--color-terracotta, #D4A574)",
+            Self::Terracotta => "var(--color-terracotta)",
         }
     }
 

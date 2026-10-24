@@ -95,7 +95,7 @@ export function MziziGroupCard({
       )}
     >
       <div
-        className="relative h-20 bg-gradient-to-br from-[var(--brand-accent,var(--color-terracotta,#D4A574))]/20 to-[var(--brand-accent,var(--color-terracotta,#D4A574))]/5"
+        className="relative h-20 bg-gradient-to-br from-[var(--brand-accent,var(--color-terracotta))]/20 to-[var(--brand-accent,var(--color-terracotta))]/5"
         style={
           coverUrl
             ? {
@@ -156,7 +156,7 @@ export function MziziGroupCard({
             {topics.slice(0, 3).map((t) => (
               <span
                 key={t}
-                className="rounded-full bg-[var(--brand-accent,var(--color-terracotta,#D4A574))]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--brand-accent,var(--color-terracotta,#D4A574))]"
+                className="rounded-full bg-[var(--brand-accent,var(--color-terracotta))]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--brand-accent,var(--color-terracotta))]"
               >
                 {t}
               </span>
@@ -173,7 +173,7 @@ export function MziziGroupCard({
               "flex h-12 w-full items-center justify-center rounded-full text-[13px] font-medium transition-opacity hover:opacity-80",
               joined
                 ? "border border-border bg-muted text-foreground"
-                : "bg-[var(--brand-accent,var(--color-terracotta,#D4A574))] text-[var(--brand-accent-foreground,#0A0A0A)]"
+                : "bg-[var(--brand-accent,var(--color-terracotta))] text-[var(--brand-accent-foreground,#0A0A0A)]"
             )}
           >
             {joined ? "Joined" : "Join Circle"}

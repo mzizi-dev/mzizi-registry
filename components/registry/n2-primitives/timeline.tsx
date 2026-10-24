@@ -44,7 +44,7 @@ const DOT_COLORS: Record<string, string> = {
   tanzanite: "bg-[var(--color-accent,var(--color-tanzanite,#B388FF))]",
   malachite: "bg-[var(--status-success,var(--color-malachite,#64FFDA))]",
   gold: "bg-[var(--status-warning,var(--color-gold,#FFD740))]",
-  terracotta: "bg-[var(--status-error,var(--color-terracotta,#D4A574))]",
+  terracotta: "bg-[var(--status-error,var(--color-terracotta))]",
   default: "bg-primary",
 }
 

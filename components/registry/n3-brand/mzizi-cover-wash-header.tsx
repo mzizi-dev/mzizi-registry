@@ -33,7 +33,7 @@ const mineralColors: Record<Mineral, string> = {
   tanzanite: "var(--color-tanzanite,#B388FF)",
   malachite: "var(--color-malachite,#64FFDA)",
   gold: "var(--color-gold,#FFD740)",
-  terracotta: "var(--color-terracotta,#D4A574)",
+  terracotta: "var(--color-terracotta)",
 }
 
 interface MziziCoverWashHeaderProps {
