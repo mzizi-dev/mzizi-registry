@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `mzizi-icons` is no longer a client module, so Server Components can import `@/lib/icons` (2026-10-24, #551)
+
+Gap 5 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
+
+- `lib/icons/index.tsx` (`components/registry/n1-tokens/mzizi-icons.tsx`) started with `"use client"` and does `export * from "lucide-react"`. Next's flight loader rejects `export *` inside a client boundary when a server module imports it, so any Server Component that imported `@/lib/icons` failed to build. The file only re-exports icons and defines stateless components (`Icon`, `MukokoLogo`, `MineralStrip`), so the directive is removed. Client components that import it are unaffected: they get client copies as before. Kweli's stopgap for this can go when it re-vendors.
+- The `registry.json` description says the module is server-safe. A test in `__tests__/components/kweli-place-embed.test.tsx` fails if `"use client"` returns, or if the file starts using a hook or a browser global. No doc, skill or MCP install note relied on the directive.
+
 ### Changed — `mzizi-verified-badge` takes `label` and `ariaLabel` and drops the trust score from its name by default; `mzizi-permission-gate`'s upgrade action uses the primary pair (2026-10-24, #550)
 
 Gaps 3 and 4 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
