@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Security — zod 3 removed, and floors for the advisories that failed `audit` (2026-10-24, #PRNUM)
+### Security — zod 3 removed, and floors for the advisories that failed `audit` (2026-10-24, #545)
 
 GHSA-mrhx-c7xc-m3w5 (high) affects every zod 3 release and zod 4 below 4.6.6, and no 3.x is patched, so the org `audit` check failed every pull request (first seen on #544). zod 3.25.76 came in through `shadcn` 4.21 (which depends on `zod ^3.24.1`) and was shared by `@modelcontextprotocol/sdk` and `zod-to-json-schema`, whose peer ranges both accept zod 4.
 
