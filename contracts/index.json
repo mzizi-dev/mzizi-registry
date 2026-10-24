@@ -640,6 +640,15 @@
       "astro": "address-share-card",
       "tsx": "address-share-card",
       "rs": null
+    },
+    {
+      "name": "ui/mzizi-trust-meter",
+      "title": "MziziTrustMeter",
+      "version": "1.0.0",
+      "file": "ui/mzizi-trust-meter.contract.json",
+      "astro": "mzizi-trust-meter",
+      "tsx": "mzizi-trust-meter",
+      "rs": null
     }
   ]
 }
