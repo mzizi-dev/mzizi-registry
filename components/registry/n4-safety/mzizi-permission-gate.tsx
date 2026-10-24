@@ -141,10 +141,16 @@ export function MziziPermissionGate({
           are currently <strong>{TIER_LABELS[userTier]}</strong>.
         </p>
       </div>
+      {/* The action is the brand's primary pair: `--primary-foreground` is "text and icons on
+          `primary`", held to body contrast by the role set in every theme and brand overlay
+          (18.4:1 light, 16.0:1 dark on the default pack). The white-on-cobalt it replaces was
+          2.4:1 on dark cobalt #00B0FF, under WCAG AA. */}
       {onUpgrade && (
         <button
           onClick={onUpgrade}
-          className="min-h-[48px] rounded-full bg-[var(--color-cobalt,#00B0FF)] px-6 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+          type="button"
+          data-slot="mzizi-permission-gate-upgrade"
+          className="min-h-[48px] rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           Upgrade Verification
         </button>
