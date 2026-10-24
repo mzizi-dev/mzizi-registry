@@ -480,6 +480,7 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "mzizi-transaction-row": "n3",
   "mzizi-trust-gate": "n4",
   "mzizi-trust-meter": "n3",
+  "mzizi-trust-tier-data": "n3",
   "mzizi-trust-tiers": "n3",
   "mzizi-update-prompt": "n7",
   "mzizi-user-card": "n3",

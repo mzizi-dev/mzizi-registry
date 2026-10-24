@@ -10,6 +10,17 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `ui/mzizi-verified-badge` contract with an Astro build, and the tier ladder as framework-free data (2026-10-24, #PRNUM)
+
+Gaps 5 and 7 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)).
+
+- **`contracts/ui/mzizi-verified-badge.contract.json` 1.0.0**: 12 states (each tier, score, label, ariaLabel, no title, suspended, ancestral, unverified, loading), 9 clauses, 15 checks. The Astro build is new (`mzizi-verified-badge.astro`, the default build) and the React build keeps the whole contract (`identity: "contract"`).
+- **`mzizi-trust-tier-data`** (new, `registry:lib`, installs to `lib/mzizi-trust-tier-data.ts`): `TIER_ORDER`, `TIER_DATA` (label, level, mineral, trust increments, the site-icons glyph, the `--tier-*` token names and complete literal classes per tier), `STATUS_OVERLAY`, `tierAt`, `nextTier` and `computeTrustScore`. No framework, no icon library and no `@/` import, so an Astro component imports it flat and `@bundu/ui` can ship it as a plain module.
+- **`mzizi-trust-tiers`** is now built from that module and adds only the Lucide icons and the `fg`/`bg` CSS values. `TIER_CONFIG`, `STATUS_OVERLAY`, `computeTrustScore` and the types keep their names and values, and `mzizi-verified-badge` still re-exports them.
+- **`site-icons`** gains `phone`, `award`, `ban` and `flower`.
+
+**Changed (visible):** the React badge is a server component with no `"use client"`, no `class-variance-authority` and no inline `style`. Each tier draws its fill and glyph from its own APCA-gated pair (`bg-tier-<tier>-container`, `text-tier-<tier>-on-container`) instead of the tier at 15% behind the tier colour, the glyphs are the design system's (`site-icon`) instead of Lucide, and a suspended or ancestral badge is no longer dimmed with opacity: the ban and flower glyphs and the name carry the status. The loading placeholder is `aria-hidden`. Names, titles, `data-*` attributes and props are unchanged; `size` gains nothing and loses nothing (`sm`, `md`, `lg`, `xl`).
+
 ## [4.15.0] - 2026-10-24
 
 Releases `staging` to `main` as the next minor above v4.14.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.15.0. It carries the owner's tier-colour decision on #543: verification tiers as `--tier-*` roles defined once in N1 and read by every tier component, light-mode `--color-<mineral>-light` tokens, and a `tier` prop on `mzizi-trust-meter` (contract 2.1.0) (#563); shamwari as the third pillar on `/v1/brand`, and 78 stale `#D4A574` terracotta fallbacks removed (#564); and three new Mzizi Roots crates, `mzizi-harness`, `mzizi-data` and `mzizi-mongodb`, with the data layer and the client write path in `mzizi-data` (#502, #509, #512). The new crates publish with the others at the workspace version (`publish-crates.yml`) and are wired into no app.
