@@ -675,6 +675,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "rowKey",
       "type": "string",
       "required": false
+    },
+    {
+      "name": "actions",
+      "type": "Record<string, RowAction[]>",
+      "required": false
     }
   ],
   "app-detail-panel": [
