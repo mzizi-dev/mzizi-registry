@@ -9,10 +9,21 @@
  * a string, or { text, href, badge, tone, mono, sub }. `tone` renders a
  * status pill in a fixed status colour (`statusToneClasses`); `badge` is the
  * registry badge's variants.
+ *
+ * 1.2: a `person` cell is an avatar (the image, or initials when there is
+ * none) beside the name (`text`, a link with `href`) and a secondary line
+ * (`sub`, an email or a role). `actions` gives rows their own actions, keyed by
+ * the row's `rowKey` text: one action is a button in the row, more are a
+ * <details> menu. Each action is a link or a small form (POST by default, with
+ * hidden `fields`), so it works with no script; `destructive` marks one that
+ * removes something (its label says what; it is drawn in the destructive
+ * colour and listed last; pair it with ConfirmAction).
  */
 import type { BadgeVariant, StatusTone } from "./ui-variants";
-import { statusToneClasses } from "./ui-variants";
+import { appButtonVariants, statusToneClasses } from "./ui-variants";
 import Badge from "./badge.astro";
+import Icon from "./site-icon.astro";
+import { cn, initialsOf } from "./ui-utils";
 
 export type { BadgeVariant, StatusTone };
 export interface CellObject {
@@ -24,6 +35,21 @@ export interface CellObject {
   mono?: boolean;
   sub?: string;
   current?: boolean;
+  /** A person: an avatar beside the name (`text`) and the secondary line (`sub`). */
+  person?: boolean;
+  /** The person's avatar URL; without one the avatar shows their initials. */
+  avatar?: string | null;
+}
+/** One action on a row: a link (`href`) or a form (`action`, POST unless `method` says GET). */
+export interface RowAction {
+  label: string;
+  href?: string;
+  action?: string;
+  method?: "post" | "get";
+  /** Hidden fields posted with the form (`{ id: "42" }`). */
+  fields?: Record<string, string>;
+  /** It removes or revokes something: written "destructive" in colour and kept last. */
+  destructive?: boolean;
 }
 export type Cell = string | number | null | undefined | CellObject;
 export interface Column {
@@ -41,8 +67,16 @@ interface Props {
   rows: Record<string, Cell>[];
   /** Key in each row that identifies it, for data-row. */
   rowKey?: string;
+  /** Each row's actions, keyed by its `rowKey` text. */
+  actions?: Record<string, RowAction[]>;
 }
-const { caption, showCaption = false, columns, rows, rowKey } = Astro.props;
+const { caption, showCaption = false, columns, rows, rowKey, actions = {} } = Astro.props;
+const hasActions = Object.values(actions).some((list) => list.length > 0);
+const itemClasses = (destructive?: boolean) =>
+  cn(
+    "flex min-h-8 w-full items-center rounded-sm px-2 text-start text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11",
+    destructive && "text-destructive",
+  );
 const asObject = (cell: Cell): CellObject | null => {
   if (cell === null || cell === undefined || cell === "") return null;
   if (typeof cell === "object") return cell;
@@ -62,6 +96,11 @@ const asObject = (cell: Cell): CellObject | null => {
             </th>
           ))
         }
+        {hasActions && (
+          <th scope="col" class="h-9 px-3 text-end">
+            <span class="sr-only">Actions</span>
+          </th>
+        )}
       </tr>
     </thead>
     <tbody class="divide-y divide-border">
@@ -88,6 +127,26 @@ const asObject = (cell: Cell): CellObject | null => {
                           <span aria-hidden="true">—</span>
                           <span class="sr-only">none</span>
                         </span>
+                      ) : cell.person ? (
+                        <span data-slot="person" class="inline-flex min-w-0 items-center gap-2.5 text-start">
+                          {cell.avatar ? (
+                            <img src={cell.avatar} alt="" width="32" height="32" loading="lazy" class="size-8 shrink-0 rounded-full bg-muted object-cover" />
+                          ) : (
+                            <span aria-hidden="true" class="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-caption font-medium text-muted-foreground">
+                              {initialsOf(cell.text)}
+                            </span>
+                          )}
+                          <span class="grid min-w-0">
+                            {cell.href ? (
+                              <a href={cell.href} class="truncate font-medium text-primary underline-offset-4 hover:underline" aria-current={cell.current ? "true" : undefined}>
+                                {cell.text}
+                              </a>
+                            ) : (
+                              <span class="truncate font-medium">{cell.text}</span>
+                            )}
+                            {cell.sub && <span class="truncate text-caption text-muted-foreground">{cell.sub}</span>}
+                          </span>
+                        </span>
                       ) : cell.tone ? (
                         <span data-slot="status" data-tone={cell.tone} class={statusToneClasses(cell.tone)}>
                           {cell.text}
@@ -101,11 +160,60 @@ const asObject = (cell: Cell): CellObject | null => {
                       ) : (
                         <span class={cell.mono ? "font-mono text-caption" : ""}>{cell.text}</span>
                       )}
-                      {cell?.sub && <span class="block text-caption text-muted-foreground">{cell.sub}</span>}
+                      {cell?.sub && !cell.person && <span class="block text-caption text-muted-foreground">{cell.sub}</span>}
                     </span>
                   </Tag>
                 );
               })}
+              {hasActions && (
+                <td data-slot="row-actions" class="flex justify-end py-1 md:table-cell md:h-10 md:px-3 md:py-2 md:text-end md:align-middle">
+                  {(() => {
+                    const list = [...(actions[id ?? ""] ?? [])].sort((a, b) => Number(!!a.destructive) - Number(!!b.destructive));
+                    const name = asObject(row[columns[0]?.key ?? ""])?.text ?? "";
+                    if (list.length === 0) return null;
+                    if (list.length === 1) {
+                      const a = list[0]!;
+                      const cls = appButtonVariants({ variant: a.destructive ? "destructive-outline" : "outline", size: "sm" });
+                      const text = (
+                        <>
+                          {a.label}
+                          <span class="sr-only">: {name}</span>
+                        </>
+                      );
+                      return a.href ? (
+                        <a data-slot="row-action" href={a.href} class={cls}>{text}</a>
+                      ) : (
+                        <form data-slot="row-action" method={a.method ?? "post"} action={a.action}>
+                          {Object.entries(a.fields ?? {}).map(([k, v]) => <input type="hidden" name={k} value={v} />)}
+                          <button type="submit" class={cls}>{text}</button>
+                        </form>
+                      );
+                    }
+                    return (
+                      <details data-slot="row-actions-menu" class="relative inline-block text-start">
+                        <summary class="inline-flex h-8 cursor-pointer list-none items-center justify-center gap-1.5 rounded-sm px-2.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
+                          <Icon name="more" class="h-4 w-4 shrink-0" />
+                          <span class="sr-only">Actions for {name}</span>
+                        </summary>
+                        <ul role="list" aria-label={`Actions for ${name}`} class="absolute end-0 z-40 mt-1 grid min-w-44 gap-0.5 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg">
+                          {list.map((a) => (
+                            <li>
+                              {a.href ? (
+                                <a data-slot="row-action" href={a.href} class={itemClasses(a.destructive)}>{a.label}</a>
+                              ) : (
+                                <form data-slot="row-action" method={a.method ?? "post"} action={a.action}>
+                                  {Object.entries(a.fields ?? {}).map(([k, v]) => <input type="hidden" name={k} value={v} />)}
+                                  <button type="submit" class={itemClasses(a.destructive)}>{a.label}</button>
+                                </form>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    );
+                  })()}
+                </td>
+              )}
             </tr>
           );
         })
