@@ -17,7 +17,7 @@ const levelConfig: Record<SuitabilityLevel, { color: string; label: string }> = 
   excellent: { color: "var(--color-malachite, #64FFDA)", label: "Excellent" },
   good: { color: "var(--color-cobalt, #00B0FF)", label: "Good" },
   fair: { color: "var(--color-gold, #FFD740)", label: "Fair" },
-  poor: { color: "var(--color-terracotta, #D4A574)", label: "Poor" },
+  poor: { color: "var(--color-terracotta)", label: "Poor" },
   unsuitable: { color: "var(--color-destructive, #FF5252)", label: "Unsuitable" },
 }
 

@@ -57,7 +57,7 @@ const categoryMinerals: Record<ResultCategory, string> = {
   events: "var(--color-malachite,#64FFDA)",
   products: "var(--color-gold,#FFD740)",
   articles: "var(--color-cobalt,#00B0FF)",
-  groups: "var(--color-terracotta,#D4A574)",
+  groups: "var(--color-terracotta)",
   jobs: "var(--color-gold,#FFD740)",
 }
 

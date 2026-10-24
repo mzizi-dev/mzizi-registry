@@ -1056,7 +1056,7 @@ export type PaletteFamily = "mineral" | "heritage" | "experimental";
  * The fallback exists for contexts where the custom property is not defined —
  * an email, a canvas, a consumer who installed this item without globals.css —
  * and it was written out by hand at every call site. That made every fallback a
- * private copy of a palette value: `var(--color-terracotta, #D4A574)` still
+ * private copy of a palette value: `var(--color-terracotta)` still
  * named terracotta's pre-Seven hex long after the palette said `#E1B07E`, so a
  * chart rendered without the stylesheet drew the wrong brand colour and nothing
  * could tell. Reading the fallback out of `primitives.color` — which is itself

@@ -21,7 +21,7 @@ const credibilityConfig: Record<
     label: "Verified Source",
   },
   community: {
-    color: "var(--color-terracotta,#D4A574)",
+    color: "var(--color-terracotta)",
     icon: CheckCircle,
     label: "Community Source",
   },
