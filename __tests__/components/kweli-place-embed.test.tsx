@@ -12,7 +12,7 @@ import { beforeAll, describe, expect, it, vi } from "vitest"
 import * as icons from "@/components/registry/n1-tokens/mzizi-icons"
 import { verificationTokens as n1VerificationTokens } from "@/components/registry/n1-tokens/mzizi-tokens-typescript"
 import { useMziziHarness, useNyuchiHarness } from "@/components/registry/n3-brand/mzizi-harness"
-import { MziziPlaceCard } from "@/components/registry/n3-brand/mzizi-place-card"
+import { MziziPlaceCard, type MziziPlaceCardLinkProps } from "@/components/registry/n3-brand/mzizi-place-card"
 import {
   MziziVerifiedBadge,
   TIER_CONFIG,
@@ -266,6 +266,75 @@ describe("mzizi-place-card", () => {
     container.remove()
   })
 
+  it("with linkComponent, the link is rendered by that component with the card's own attributes", () => {
+    const seen: Record<string, unknown>[] = []
+    function RouterLink({ href, className, children, ...rest }: MziziPlaceCardLinkProps) {
+      seen.push({ href, className, ...rest })
+      return (
+        <a data-router-link="" href={href} className={className} {...rest}>
+          {children}
+        </a>
+      )
+    }
+    for (const variant of ["row", "compact"] as const) {
+      seen.length = 0
+      const html = renderToStaticMarkup(
+        <MziziPlaceCard
+          name="Kariba"
+          variant={variant}
+          href="/place/1"
+          target="_blank"
+          linkComponent={RouterLink}
+        />
+      )
+      expect(seen).toHaveLength(1)
+      expect(seen[0]?.href).toBe("/place/1")
+      expect(seen[0]?.className).toContain("no-underline")
+      expect(seen[0]?.["data-slot"]).toBe("mzizi-place-card")
+      expect(seen[0]?.rel).toBe("noopener noreferrer")
+      expect(html).toMatch(/^<a data-router-link=""/)
+      expect(html.match(/<a[\s>]/g)).toHaveLength(1)
+      expect(html).toContain("Kariba")
+    }
+    // Same-context targets keep no rel, through the link component too.
+    seen.length = 0
+    renderToStaticMarkup(<MziziPlaceCard name="K" href="/p" target="_top" linkComponent={RouterLink} />)
+    expect(seen[0]?.rel).toBeUndefined()
+  })
+
+  it("linkComponent is ignored without href: onClick alone still makes a role=button card", () => {
+    const Never = () => {
+      throw new Error("linkComponent rendered without href")
+    }
+    const html = renderToStaticMarkup(<MziziPlaceCard name="K" onClick={() => {}} linkComponent={Never} />)
+    expect(html).toMatch(/^<div data-slot="mzizi-place-card"[^>]*role="button"/)
+  })
+
+  it("the cover image loads lazily and decodes asynchronously by default, in both variants", () => {
+    for (const variant of ["row", "compact"] as const) {
+      const html = renderToStaticMarkup(<MziziPlaceCard name="K" variant={variant} image="https://example.com/a.jpg" />)
+      const img = html.match(/<img [^>]*>/)?.[0] ?? ""
+      expect(img).toContain('loading="lazy"')
+      expect(img).toContain('decoding="async"')
+      expect(img).not.toMatch(/fetchpriority/i)
+      // A lazy image is not preloaded.
+      expect(html).not.toMatch(/<link [^>]*rel="preload"/)
+    }
+  })
+
+  it("priority loads the cover eagerly with fetchpriority=high", () => {
+    for (const variant of ["row", "compact"] as const) {
+      const html = renderToStaticMarkup(
+        <MziziPlaceCard name="K" variant={variant} image="https://example.com/a.jpg" priority />
+      )
+      const img = html.match(/<img [^>]*>/)?.[0] ?? ""
+      expect(img).toContain('loading="eager"')
+      // HTML attribute names are case-insensitive; React writes it as `fetchPriority`.
+      expect(img).toMatch(/ fetchpriority="high"/i)
+      expect(img).not.toContain('loading="lazy"')
+    }
+  })
+
   it("the card itself carries data-portal, not only its skeleton", () => {
     const html = renderToStaticMarkup(<MziziPlaceCard name="Kariba" />)
     expect(html).toContain('data-portal="https://mzizi.dev/components/mzizi-place-card"')
@@ -279,6 +348,15 @@ describe("mzizi-place-card", () => {
 describe("mzizi-icons answers @/lib/icons", () => {
   it("installs to lib/icons, the path every component imports", () => {
     expect(item("mzizi-icons").files[0].target).toBe("lib/icons/index.tsx")
+  })
+
+  it("is not a client module, so a Server Component can import it (#543)", () => {
+    const src = readFileSync(path.join(ROOT, "components/registry/n1-tokens/mzizi-icons.tsx"), "utf8")
+    // Next's flight loader rejects `export *` inside a client boundary imported by a server module.
+    expect(src).toMatch(/^export \* from "lucide-react"/m)
+    expect(src).not.toMatch(/^\s*["']use client["']/m)
+    // Nothing in it needs the client: no hooks, no effects, no browser globals.
+    expect(src).not.toMatch(/\buse(State|Effect|LayoutEffect|Ref|Context|Reducer)\b|\bwindow\.|\bdocument\./)
   })
 
   it("exports every name a registry component imports from @/lib/icons", () => {
