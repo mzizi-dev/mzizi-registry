@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — `mzizi-cover-header` draws its cover as an `<img>`, draws the avatar only when given and makes `role="banner"` opt-in; `discover-category-chip` takes a `linkComponent` (2026-10-24, #PRNUM)
+### Changed — `mzizi-cover-header` draws its cover as an `<img>`, draws the avatar only when given and makes `role="banner"` opt-in; `discover-category-chip` takes a `linkComponent` (2026-10-24, #556)
 
 Items 2 and 3 of the Kweli phase-2 gaps, tracked in #543. Kweli carries marked forks of both until this lands.
 
