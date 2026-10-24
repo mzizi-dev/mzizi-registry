@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — `filter-bar` chips are real buttons with `aria-pressed`, so the bar works from the keyboard (2026-10-24, #PRNUM)
+### Fixed — `filter-bar` chips are real buttons with `aria-pressed`, so the bar works from the keyboard (2026-10-24, #559)
 
 Item 9 of the Kweli phase-2 gaps, tracked in #543.
 
