@@ -3,11 +3,16 @@ updates:
   # npm / pnpm dependencies
   - package-ecosystem: "npm"
     directory: "/"
+    target-branch: "staging"
     schedule:
       interval: "weekly"
       day: "monday"
       time: "08:00"
       timezone: "Africa/Harare"
+    # Wait seven days before proposing a newly published version: a fresh
+    # release can be malicious or broken (Semgrep dependabot-missing-cooldown).
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 10
     reviewers:
       - "bryanfawcett"
@@ -50,11 +55,16 @@ updates:
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "staging"
     schedule:
       interval: "weekly"
       day: "monday"
       time: "08:00"
       timezone: "Africa/Harare"
+    # Wait seven days before proposing a newly published version: a fresh
+    # release can be malicious or broken (Semgrep dependabot-missing-cooldown).
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     reviewers:
       - "bryanfawcett"

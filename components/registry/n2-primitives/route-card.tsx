@@ -41,7 +41,7 @@ const modeColors: Record<TransportMode, string> = {
   bus: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt,#00B0FF)]",
   kombi: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]",
   train: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite,#64FFDA)]",
-  taxi: "bg-[var(--color-terracotta,#D4A574)]/15 text-[var(--color-terracotta,#D4A574)]",
+  taxi: "bg-[var(--color-terracotta)]/15 text-[var(--color-terracotta)]",
   walk: "bg-muted text-muted-foreground",
 }
 

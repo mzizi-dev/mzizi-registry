@@ -135,6 +135,12 @@ echo '{"ref":"abc"}' >scripts/registry-ref.json
 commit
 expect fail "a pin change by hand on another branch, no entry" "${bot[@]}" HEAD_BRANCH=other-branch SAME_REPO=true
 
+new_repo dependabot-bump dependabot/npm_and_yarn/zod-4.6.5
+echo '{"zod":"4.6.5"}' >scripts/registry-ref.json
+commit
+expect pass "a Dependabot bump, no entry" PR_AUTHOR=dependabot[bot] HEAD_BRANCH=dependabot/npm_and_yarn/zod-4.6.5 SAME_REPO=true
+expect fail "the same bump from a person, no entry" PR_AUTHOR=someone HEAD_BRANCH=dependabot/npm_and_yarn/zod-4.6.5 SAME_REPO=true
+
 echo
 echo "$passed passed, $failed failed"
 [ "$failed" -eq 0 ]

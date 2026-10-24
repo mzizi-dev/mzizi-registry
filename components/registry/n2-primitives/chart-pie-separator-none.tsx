@@ -23,7 +23,7 @@ const config = {
   mining: { label: "Mining", color: "var(--color-tanzanite, #B388FF)" },
   tourism: { label: "Tourism", color: "var(--color-malachite, #64FFDA)" },
   tech: { label: "Tech", color: "var(--color-gold, #FFD740)" },
-  trade: { label: "Trade", color: "var(--color-terracotta, #D4A574)" },
+  trade: { label: "Trade", color: "var(--color-terracotta)" },
 } satisfies ChartConfig
 
 export function ChartPieSeparatorNone({ loading = false }: { loading?: boolean } = {}) {

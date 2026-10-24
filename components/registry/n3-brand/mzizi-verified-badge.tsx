@@ -6,7 +6,14 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Users, Phone, ShieldCheck, Award, Ban, Flower2 } from "@/lib/icons"
+import { Ban, Flower2 } from "@/lib/icons"
+import {
+  TIER_CONFIG,
+  STATUS_OVERLAY,
+  computeTrustScore,
+  type VerificationTier,
+  type PlatformStatus,
+} from "@/lib/mzizi-trust-tiers"
 import { cn } from "@/lib/utils"
 
 /* ═══════════════════════════════════════════════════════════════
@@ -21,11 +28,15 @@ import { cn } from "@/lib/utils"
    
    AXIS 2 — VERIFICATION TIER (system.verification_tier)
      Identity ladder. How real are you?
-     Level 0: Unverified     — no badge
-     Level 1: Community      — Terracotta (var(--color-terracotta,#D4A574)) — +0.10
-     Level 2: OTP            — Cobalt (var(--tier-otp,var(--color-cobalt,#00B0FF)))     — +0.10 (cumulative 0.20)
-     Level 3: Government     — Gold (var(--tier-licensed,var(--color-gold,#FFD740)))       — +0.10 (cumulative 0.30)
-     Level 4: Licensed       — Tanzanite (var(--tier-government,var(--color-tanzanite,#B388FF)))  — +0.20 (cumulative 0.50)
+     Level 0: Unverified     — no badge (--tier-unverified, the neutral grey)
+     Level 1: Community      — Terracotta (var(--tier-community))  — +0.10
+     Level 2: OTP            — Cobalt (var(--tier-otp)), "Contact Verified" — +0.10 (cumulative 0.20)
+     Level 3: Government     — Gold (var(--tier-government))       — +0.10 (cumulative 0.30)
+     Level 4: Licensed       — Tanzanite (var(--tier-licensed))    — +0.20 (cumulative 0.50)
+
+   Each tier reads the --tier-* role named after IT (government reads
+   --tier-government), defined once in the N1 tokens (owner decision
+   2026-10-24, #543), so a consumer that sets one recolours that tier only.
    
    AXIS 3 — TRUST SCORE (computed output)
      trust = sum(tier_increments up to current level) + status_modifier
@@ -33,93 +44,11 @@ import { cn } from "@/lib/utils"
    
    The badge renders based on TIER (which mineral check you see)
    but respects STATUS (dimmed if suspended, memorial if ancestral).
+
+   The ladder (TIER_CONFIG, STATUS_OVERLAY, computeTrustScore and the
+   types) lives in the server-safe lib/mzizi-trust-tiers (#543); this
+   client module re-exports it so existing imports keep working.
    ═══════════════════════════════════════════════════════════════ */
-
-/** Verification tier codes from system.verification_tier.tier_code */
-type VerificationTier = "unverified" | "community" | "otp" | "government" | "licensed"
-
-/** Platform status from identity.person.mit_status */
-type PlatformStatus =
-  | "pre_verification"
-  | "living"
-  | "liveness_pending"
-  | "suspended"
-  | "presumed_ancestral"
-  | "verified_ancestral"
-
-/** Full tier configuration mapping to system.verification_tier */
-const TIER_CONFIG = {
-  unverified: {
-    level: 0,
-    mineral: null,
-    label: "Unverified",
-    trustIncrement: 0.0,
-    cumulativeTrust: 0.0,
-    fg: "transparent",
-    bg: "transparent",
-    fgLight: "transparent",
-    bgLight: "transparent",
-    icon: null,
-  },
-  community: {
-    level: 1,
-    mineral: "Terracotta",
-    label: "Community Verified",
-    trustIncrement: 0.1,
-    cumulativeTrust: 0.1,
-    fg: "var(--color-terracotta,#D4A574)",
-    bg: "rgba(212,165,116,0.15)",
-    fgLight: "var(--color-terracotta-light,#8B4513)",
-    bgLight: "rgba(139,69,19,0.12)",
-    icon: Users,
-  },
-  otp: {
-    level: 2,
-    mineral: "Cobalt",
-    label: "Contact Verified",
-    trustIncrement: 0.1,
-    cumulativeTrust: 0.2,
-    fg: "var(--tier-otp,var(--color-cobalt,#00B0FF))",
-    bg: "rgba(0,176,255,0.15)",
-    fgLight: "var(--color-cobalt-light,#0047AB)",
-    bgLight: "rgba(0,71,171,0.12)",
-    icon: Phone,
-  },
-  government: {
-    level: 3,
-    mineral: "Gold",
-    label: "Government Verified",
-    trustIncrement: 0.1,
-    cumulativeTrust: 0.3,
-    fg: "var(--tier-licensed,var(--color-gold,#FFD740))",
-    bg: "rgba(255,215,64,0.15)",
-    fgLight: "var(--color-gold-light,#5D4037)",
-    bgLight: "rgba(93,64,55,0.12)",
-    icon: ShieldCheck,
-  },
-  licensed: {
-    level: 4,
-    mineral: "Tanzanite",
-    label: "Licensed Professional",
-    trustIncrement: 0.2,
-    cumulativeTrust: 0.5,
-    fg: "var(--tier-government,var(--color-tanzanite,#B388FF))",
-    bg: "rgba(179,136,255,0.15)",
-    fgLight: "var(--color-tanzanite-light,#4B0082)",
-    bgLight: "rgba(75,0,130,0.12)",
-    icon: Award,
-  },
-} as const
-
-/** Status overlay configuration from system.platform_status_trust */
-const STATUS_OVERLAY = {
-  pre_verification: { modifier: 0.0, active: true, overlay: null },
-  living: { modifier: 0.0, active: true, overlay: null },
-  liveness_pending: { modifier: 0.0, active: true, overlay: null },
-  suspended: { modifier: -0.05, active: false, overlay: "suspended" as const },
-  presumed_ancestral: { modifier: 0.05, active: false, overlay: "ancestral" as const },
-  verified_ancestral: { modifier: 0.05, active: false, overlay: "ancestral" as const },
-} as const
 
 const badgeSizeVariants = cva(
   "inline-flex shrink-0 items-center justify-center rounded-full transition-opacity",
@@ -143,8 +72,21 @@ interface MziziVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants>
   tier: VerificationTier
   /** Platform status (identity.person.mit_status). Affects badge appearance. */
   status?: PlatformStatus
-  /** Show tooltip with tier name on hover */
+  /** Set the native `title` (the badge's name, shown on hover). There is no tooltip component. */
   showTooltip?: boolean
+  /**
+   * The wording, in place of the built-in name: the tier's label ("Contact Verified"), "Account
+   * Suspended", or "<tier> — Memorial". It is the `title` and, unless `ariaLabel` is set, the
+   * accessible name. Use it to localise the badge or to name the tier in the app's own words.
+   */
+  label?: string
+  /** The accessible name, when it should differ from `label` (or the built-in name). */
+  ariaLabel?: string
+  /**
+   * Add the tier's cumulative trust score ("· Trust 0.2") to the title and the accessible name.
+   * Off by default since #550: the raw score is a number for a trust audit, not for a reader.
+   */
+  showScore?: boolean
   /** Render skeleton placeholder while verification status is loading */
   loading?: boolean
   className?: string
@@ -155,6 +97,9 @@ function MziziVerifiedBadge({
   status = "living",
   size = "md",
   showTooltip = true,
+  label,
+  ariaLabel,
+  showScore = false,
   loading = false,
   className,
 }: MziziVerifiedBadgeProps) {
@@ -175,6 +120,12 @@ function MziziVerifiedBadge({
   /* Level 0 = no badge */
   if (!config.icon || tier === "unverified") return null
 
+  /* The name: the caller's wording or the built-in one, with the score only on request. */
+  const named = (builtIn: string) => {
+    const text = label ?? builtIn
+    return showScore ? `${text} · Trust ${config.cumulativeTrust}` : text
+  }
+
   /* Suspended: show ban overlay instead of tier icon */
   if (statusConfig.overlay === "suspended") {
     return (
@@ -182,16 +133,17 @@ function MziziVerifiedBadge({
         data-slot="mzizi-verified-badge"
         data-tier={tier}
         data-status="suspended"
-        aria-label="Account Suspended"
-        title={showTooltip ? "Account Suspended" : undefined}
+        role="img"
+        aria-label={ariaLabel ?? named("Account Suspended")}
+        title={showTooltip ? named("Account Suspended") : undefined}
         className={cn(badgeSizeVariants({ size }), "opacity-40", className)}
-        style={{ backgroundColor: "rgba(107,107,102,0.15)" }}
+        style={{ backgroundColor: "color-mix(in oklab,var(--status-neutral) 15%,transparent)" }}
       >
         <Ban
           width={iconSize}
           height={iconSize}
           strokeWidth={2.5}
-          color="var(--status-neutral, #6B6B66)"
+          color="var(--status-neutral)"
         />
       </span>
     )
@@ -204,8 +156,9 @@ function MziziVerifiedBadge({
         data-slot="mzizi-verified-badge"
         data-tier={tier}
         data-status={status}
-        aria-label={`${config.label} — Memorial`}
-        title={showTooltip ? `${config.label} — Memorial` : undefined}
+        role="img"
+        aria-label={ariaLabel ?? named(`${config.label} — Memorial`)}
+        title={showTooltip ? named(`${config.label} — Memorial`) : undefined}
         className={cn(badgeSizeVariants({ size }), "opacity-60", className)}
         style={{ backgroundColor: config.bg }}
       >
@@ -222,25 +175,15 @@ function MziziVerifiedBadge({
       data-tier={tier}
       data-level={config.level}
       data-trust={config.cumulativeTrust}
-      aria-label={config.label}
-      title={showTooltip ? `${config.label} · Trust ${config.cumulativeTrust}` : undefined}
+      role="img"
+      aria-label={ariaLabel ?? named(config.label)}
+      title={showTooltip ? named(config.label) : undefined}
       className={cn(badgeSizeVariants({ size }), className)}
       style={{ backgroundColor: config.bg }}
     >
       <Icon width={iconSize} height={iconSize} strokeWidth={2.5} style={{ color: config.fg }} />
     </span>
   )
-}
-
-/* ── Utility: compute trust score on the client ──────────────── */
-function computeTrustScore(tier: VerificationTier, status: PlatformStatus): number {
-  const statusConfig = STATUS_OVERLAY[status]
-
-  // Suspended/ancestral = fixed at modifier only
-  if (!statusConfig.active) return statusConfig.modifier
-
-  // Active = cumulative tier score + status modifier
-  return TIER_CONFIG[tier].cumulativeTrust + statusConfig.modifier
 }
 
 export { MziziVerifiedBadge, computeTrustScore, TIER_CONFIG, STATUS_OVERLAY }

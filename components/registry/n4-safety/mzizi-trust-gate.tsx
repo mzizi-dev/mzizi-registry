@@ -17,21 +17,28 @@ interface TrustAction {
   mineral: string
 }
 
+/*
+ * Each action is a rung of the verification ladder, so its dot is that tier's colour: contact
+ * (`--tier-otp`), government ID (`--tier-government`) and community (`--tier-community`). The
+ * `--tier-*` roles are defined once in the N1 tokens (#543). The upgrade button is the primary
+ * pair (`bg-primary text-primary-foreground`), as on the permission gate since #550: black text
+ * on light-mode gold (a dark brown) was unreadable.
+ */
 const IMPROVEMENT_ACTIONS: TrustAction[] = [
   {
     label: "Complete your profile",
     description: "Add a photo, bio, and verify your phone number",
-    mineral: "var(--status-info, #3B82F6)",
+    mineral: "var(--tier-otp)",
   },
   {
     label: "Verify your identity",
     description: "Upload a government ID for higher trust",
-    mineral: "var(--tier-government, var(--color-tanzanite, #B388FF))",
+    mineral: "var(--tier-government)",
   },
   {
     label: "Engage with the community",
     description: "Post, comment, and help others to build trust",
-    mineral: "var(--status-success, #22C55E)",
+    mineral: "var(--tier-community)",
   },
 ]
 
@@ -100,13 +107,13 @@ export function MziziTrustGate({
       )}
     >
       <div className="flex items-center gap-3">
-        <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-gold,#FFD740)]/15">
+        <div className="flex size-12 items-center justify-center rounded-full bg-tier-government/15">
           <svg
             width="24"
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="var(--color-gold, #FFD740)"
+            stroke="var(--tier-government)"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -139,7 +146,7 @@ export function MziziTrustGate({
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-muted">
           <div
-            className="h-full rounded-full bg-[var(--color-gold,#FFD740)] transition-all duration-500"
+            className="h-full rounded-full bg-tier-government transition-all duration-500"
             style={{ width: `${percent}%` }}
           />
         </div>
@@ -167,7 +174,7 @@ export function MziziTrustGate({
       {onImprove && (
         <button
           onClick={onImprove}
-          className="min-h-[48px] self-start rounded-full bg-[var(--color-gold,#FFD740)] px-6 text-sm font-medium text-black transition-colors hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+          className="min-h-[48px] self-start rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           Improve Trust Score
         </button>

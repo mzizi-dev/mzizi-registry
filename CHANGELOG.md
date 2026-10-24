@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — the client write path in `mzizi-data`: outbox, request-id mutations, status polling, read-your-own-writes (2026-10-20)
+### Added — the client write path in `mzizi-data`: outbox, request-id mutations, status polling, read-your-own-writes (2026-10-24, #512)
 
 - **`MziziData`**: `get` reads through the cascade with this client's unconfirmed writes applied on top (`QueryResult` with data, source, version, `as_of` in UTC, and pending count). `set`, `update` (requires `base_version`) and `delete` (requires `base_version`) write to the outbox first and return a `MutationHandle` (`status`, `on_settled`, `request_id`).
 - **Outbox.** `Outbox` is a trait the host implements (IndexedDB in the browser, SQLite natively). `MemoryOutbox` ships. Mutations flush in creation order and the flush stops at the first failure to reach the server. An entry leaves only on `applied` or a permanent refusal.
@@ -22,8 +22,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 - **Tests:** 15 write-path tests (`tests/writes.rs`): each cascade step; the same request id sent twice applies once; offline writes flush in order on reconnect; a stale `base_version` reverts and reports a conflict; an Unknown write is re-checked on restart and never re-sent; read-your-own-writes; a malformed id is refused.
 - **Consistency contract (draft).** Documented in `src/client.rs`. The 5-second apply figure is a TARGET TO BE CONFIRMED, not a measured fact. No speed claim is made.
 - **Server contract** moves to 1.2.0 (`mzizi-rs/contracts/server/mzizi-data.contract.json`).
-
-### Added — the data layer in `mzizi-data`: fetch cascade, sync reconciliation, tombstones, staleness, local-first writes with rollback, not wired into any app (2026-10-20, #505)
+### Added — the data layer in `mzizi-data`: fetch cascade, sync reconciliation, tombstones, staleness, local-first writes with rollback, not wired into any app (2026-10-24, #509)
 
 - **The data layer, in the crate the transport already lives in.** `mzizi-data` keeps its `io::Io` transport, `Error` and `Result`, and adds the data layer above them: `Cascade::fetch`, `reconcile`, `apply_optimistic`, `delete`, `Record`, `Layer`, `Clock`, `MemoryLayer`. It has no UI, no storage client and no dependencies beyond the transport's optional Worker features.
 - **`Cascade::fetch`** reads local first. A fresh local record answers alone within its time-to-live. A stale or missing one keeps the read going to edge and cloud, and returns the newest fresh record found, written back to the faster tiers. A stale local value is returned with `stale = true` when nothing fresher exists. A cloud miss is `Ok(None)`.
@@ -35,7 +34,34 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 - **Designed, not built:** storage adapters, a background timer (the host schedules `reconcile`), key enumeration for a full sync.
 - **First-party crates at a minimum version** (org rule, 2026-10-21). `mzizi-mongodb` depends on `mzizi-data` and `mzizi-harness` as `version = ">=0.4.0"` beside the path, with no upper bound, and the crates' READMEs show `>=0.4.0` install lines.
 
-### Added — `mzizi-harness`, `mzizi-data` and `mzizi-mongodb`: a MongoDB client for Cloudflare Workers (2026-10-19, #501)
+### Fixed — `/v1/brand` names shamwari as the third pillar; stale terracotta `#D4A574` fallbacks removed (2026-10-24, #564)
+
+Two of the no-decision fixes on #543.
+
+- **Pillars.** The `bundu` ecosystem row said the three pillars were mukoko, nyuchi and "sister brands (specialist verticals)". That disagreed with the registry itself (shamwari has its own ecosystem row in its own pillar colour, sodalite) and with the `mzizi-design` skill's ecosystem section ("shamwari ai — the intelligence pillar"). It now names mukoko (tanzanite), nyuchi (gold) and shamwari (sodalite), with the sister brands as specialist verticals. This matches `nyuchi/workspace-tools`' brand registry, which follows Mzizi (nyuchi/workspace-tools#114 aligned shamwari's role to "intelligence"). `/v1/brand` serves the new text once `mzizi-api` moves its pin.
+- **Terracotta fallbacks.** 78 `var(--color-terracotta, #D4A574)` fallbacks in 62 components (alert banner, place card, calendar, timeline, charts, the Rust siblings and others) become `var(--color-terracotta)`. `#D4A574` is not terracotta (canon is `#A0522D` / `#E1B07E`); a page with the tokens never saw it, and one without them now gets no stale colour either.
+- **`mzizi-profile-block`.** Its tier map reads the `--tier-*` roles (#563), with `color-mix` backgrounds instead of five fixed `rgba()` values, as `mzizi-verified-badge` does.
+- **`mzizi-create-listing`.** The terracotta gradient reads `--color-terracotta-light` (defined since #563) without the `#8B4513` fallback. **`mzizi-footer`** drops a `#D4A574` fallback on `--status-error`.
+- **Not changed:** `color-picker` and `caption-editor` (colour data, exempt by `lint:colors`) and the contrast table in N1 `mzizi-a11y`, whose ratios would need re-measuring.
+
+### Changed — Verification tiers are `--tier-*` roles defined once in N1, and every tier component reads them; light-mode `--color-<mineral>-light` tokens (2026-10-24, #563)
+
+The owner's tier-colour decision on #543 (2026-10-24): **Q1** keep the minerals, **Q2** community is terracotta, **Q3** the `mzizi-design` skill's swap is fixed (government gold, licensed tanzanite; a separate `mzizi-dev/agent-tools` change, since the skill is authored there), **Q4** tier 0 is a neutral grey token that already exists, **Q5** tier 2 is "Contact Verified". Heritage tones stay neutral and editorial, as `seven-minerals.mdx` says.
+
+**Breaking (defaults change):** `--tier-community` was malachite in `verificationTokens` and `generateStatusCSS` and is now terracotta; `--tier-unverified` was the off-palette `#6B7280` and is now `--status-neutral` (#55514B light, #A09C93 dark). The badge's community colour moves from the off-palette `#D4A574` / `#8B4513` to canonical terracotta. `verificationTokens` labels change to "Community Verified", "Contact Verified", "Government Verified" and "Licensed Professional". `mzizi-trust-gate`'s upgrade button is the primary pair instead of black on gold.
+
+- **Tier roles** (`lib/tokens/roles.source.ts`, new `tier` group, `TIERS` and `TIER_FAMILIES`). Each tier carries the four roles a status tone does: `--tier-<id>`, `--tier-<id>-container`, `--tier-<id>-on-container`, `--tier-<id>-text`, for `unverified` (`status-neutral`), `community` (terracotta), `otp` (cobalt), `government` (gold) and `licensed` (tanzanite). `pnpm tokens:sync` emits them, with light and dark values, to `mzizi-tokens-globals.css` and the Swift, Kotlin, ArkTS, Python, React Native, Rust and TypeScript packs, and registers `bg-tier-*` / `text-tier-*` / `fill-tier-*` utilities. The contrast gate measures them: 0 violations; `--tier-community-text` is walked to `#844425` in light to clear Lc 75 on base and surface.
+- **`--color-<mineral>-light`** (new, all seven minerals): each mineral's light-mode value in every theme, for a surface that stays light in a dark app. `mzizi-listing-card` and `mzizi-create-listing` already read these names, which were defined nowhere.
+- **`mzizi-trust-tiers` / `mzizi-verified-badge`.** `TIER_CONFIG` reads `var(--tier-<id>, var(--color-<family>))` with no hex; backgrounds are `color-mix(in oklab, <tier> 15%, transparent)` instead of fixed `rgba()`. `fgLight` / `bgLight` stay for existing callers and carry the same themed values (they named four undefined `--color-*-light` vars). The suspended overlay drops `#6B6B66` and `rgba(107,107,102,…)` for `--status-neutral`.
+- **`mzizi-trust-meter`** (contract `ui/mzizi-trust-meter` 2.1.0). New optional `tier` prop: the Verification signal takes that tier's role (`fill-tier-<id>`, `text-tier-<id>-text`). Without it the signal is `--status-warning`, as before.
+- **`mzizi-trust-gate`.** The suggested steps use `--tier-otp`, `--tier-government` and `--tier-community`; the shield and progress bar `--tier-government`; no hex fallbacks. The upgrade button is `bg-primary text-primary-foreground` (black on light-mode gold was unreadable), and its focus outline is `outline-ring`.
+- **`mzizi-permission-gate`.** Tier colours drop their hex fallbacks (`#6B6B66`, `#D4A574`, …); unverified falls back to `--status-neutral`. Labels: "Contact Verified", "Government Verified".
+- **`permission-badge`.** `editor` reads `--tier-otp`, `owner` `--tier-government`, with text on each `-text` role, instead of raw hex fallbacks.
+- **`individual-profile-page`.** The tier chip used community malachite with black text for every tier; it now uses each tier's container pair.
+- **Doctrine.** `semantic-tokens.mdx` gains a "Verification tiers" section with the ladder.
+- **Tests.** `kweli-place-embed.test.tsx` asserts the new `TIER_CONFIG` values.
+
+### Added — `mzizi-harness`, `mzizi-data` and `mzizi-mongodb`: a MongoDB client for Cloudflare Workers (2026-10-24, #502)
 
 - **Three new Mzizi Roots crates.** `mzizi-harness` is the shared harness (below). `mzizi-data` holds what every database client shares: the `io::Io` transport trait, the `Error` and `Result` types, and (feature `workers`, wasm32 only) `workers::SocketIo`, a Worker's outbound TLS socket. `mzizi-mongodb` is the first client on it. The official `mongodb` crate cannot be built for a Worker: its tokio `net` dependency pulls in `mio`, which refuses `wasm32-unknown-unknown`. `mzizi-mongodb` speaks the wire protocol itself: `OP_MSG`, SCRAM-SHA-256, a small BSON codec, and read-only `find`, `find_one` and `aggregate` (`$out` and `$merge` are refused). Its `workers` feature adds a pooled `workers::Mongo`.
 - **Sans-IO.** The protocol core is generic over `io::Io` and never opens a socket, so the handshake, the authentication and the cursor handling are covered by native tests (39 unit tests in `mzizi-mongodb`).
@@ -45,6 +71,201 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 - **Publishing.** `publish-crates.yml` lists `mzizi-harness`, `mzizi-data` then `mzizi-mongodb` in its publish order (it fails when the list and the workspace members disagree), so the next minor release publishes them with the other crates.
 - Ported from the `weather-mongo` crate in `mukoko-dev/mukoko-weather` (MIT there); this copy is Apache-2.0 like the rest of the workspace.
 - **Security review (2026-10-21).** `mzizi-mongodb` refuses `$where`, `$function` and `$accumulator` (server-side JavaScript) at any depth of a filter, projection or pipeline; the Worker client reuses a pooled connection only for the same user, password (compared in constant time), `authSource`, hosts and replica set, where it used to match on user and hosts alone; `find` never returns more than its limit and `aggregate` refuses more than `MAX_AGGREGATE_DOCS` even when a server sends them in one batch. Each has a test and a clause in `mzizi-mongodb.contract.json`.
+
+## [4.14.0] - 2026-10-24
+
+Releases `staging` to `main` as the next minor above v4.13.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.14.0. It carries the Kweli phase-2 fixes tracked in #543: `showScore`, a canonical `--status-error` and the server-safe `mzizi-trust-tiers` lib for `mzizi-trust-meter` (#555); an `<img>` cover, optional avatar and opt-in banner role on `mzizi-cover-header`, and `linkComponent` on `discover-category-chip` (#556); the event card, review card and read-only `rating` (#557); `tierLabel` / `linkLabel` on `mzizi-place-card`, `codeLabel` and a light QR plate on `address-share-card` (new `--surface-qr` / `--on-surface-qr` roles), and a `loading` prop on `app-brand-mark` (#558); keyboard-operable `filter-bar` chips (#559); and the Kweli PWA and Apple icons (#560). No Mzizi Roots crate version changes.
+
+**Breaking (defaults change):** three defaults change. `mzizi-trust-meter` writes no raw score unless `showScore` is set (#555). `mzizi-cover-header` no longer carries `role="banner"` unless `banner` is set (#556). `app-brand-mark`'s images load lazily unless `loading="eager"` is passed (#558). This is released as a minor, not a major: under the org versioning policy a major is only made by hand by the owner, and the release record marks the change `breaking: true`.
+
+### Added — Kweli app icons: PWA 192 and 512, maskable 512 and the 180px Apple touch icon (2026-10-24, #560)
+
+Item 10 of the Kweli phase-2 gaps, tracked in #543. Kweli had a vector favicon and marks but no raster app-icon set for a web app manifest or the iOS home screen.
+
+- **Four new asset items**, PNGs in `components/registry/assets/`, rendered from `kweli-mark-light.svg` (the shield with a tick, malachite `#004d40`), unchanged, centred on an opaque white plate (the canon's `#FFFFFF`; an app icon must be opaque, and iOS fills transparency with black):
+  - `kweli-icon-192` and `kweli-icon-512` (manifest `purpose: any`), installing into `public/icons/`; the mark's box spans 80% of the icon.
+  - `kweli-icon-maskable-512` (manifest `purpose: maskable`), installing into `public/icons/`; the mark spans 66%, so the whole shield stays inside the launcher's 80% safe-zone circle.
+  - `kweli-apple-touch-icon` (180px), installing into `public/apple-touch-icon.png`.
+- **Wiring.** Each item's description carries the manifest `icons` entries and the `<link rel="apple-touch-icon">` line.
+- **`scripts/render-kweli-icons.mjs`** (new) renders all four from the mark with sharp, so they are reproducible when the mark changes. It reads the mark's paths and colour from the SVG rather than restating them. It is run by hand, not in CI.
+- **Known limit.** No brand shipped a raster icon set before, so there was no pattern to follow. The API inlines text sources only (`lib/registry-source.generated.json` skips binaries), so `npx shadcn add` of these four items gets the item without its bytes until `mzizi-api` serves binary `registry:file` content. A repo that vendors from this registry's files (`@bundu/ui`, a checkout) gets them as they are.
+
+### Fixed — `filter-bar` chips are real buttons with `aria-pressed`, so the bar works from the keyboard (2026-10-24, #559)
+
+Item 9 of the Kweli phase-2 gaps, tracked in #543.
+
+- **`filter-bar`.** Each chip ("All" and every option) was a `Badge` `<span>` with an `onClick`: no keyboard could reach it, and no screen reader could tell it was a control or whether it was on. Each is now a `<button type="button">` with `aria-pressed`, rendered through `Badge asChild` so it keeps the badge's look, in the tab order and operated with Enter and Space like any button. "All" is pressed when nothing is selected. Selection, `multiple`, `showAll`, `showClear` and `onSelectionChange` behave as before.
+- **Changed.** The root is `role="group"` instead of `role="toolbar"`: a toolbar promises arrow-key navigation between one tab stop, which the bar does not implement, while a group of ordinary buttons needs none. The new `label` prop names the group ("Filters" by default). Chips are 44px tall (`h-11`, `rounded-full`, the `discover-category-chip` height), and Clear is at least 44px tall with its icon `aria-hidden`.
+- **Tests.** New `__tests__/components/filter-bar.test.tsx`. The bar has no Astro build, so no contract file.
+
+### Changed — `mzizi-place-card` takes `tierLabel` and `linkLabel`; `address-share-card` takes `codeLabel` and draws its QR on a light plate (new `surface-qr` / `on-surface-qr` tokens); `app-brand-mark` loads lazily (2026-10-24, #558)
+
+Items 7, 8 and 11 of the Kweli phase-2 gaps, tracked in #543.
+
+- **`mzizi-place-card`.** New `tierLabel`: the tier's wording in the app's own words ("Identity verified" where the built-in name is "Contact Verified"). It is passed to the inner `mzizi-verified-badge` as its `label` (#550), so it is the badge's title and accessible name, and it is the text `showTierLabel` prints. New `linkLabel`: the accessible name of the card's link (with `href`) or button (with `onClick` alone). Without it the link is named by its content as before, and an article card keeps `name`.
+- **`address-share-card`, contract `ui/address-share-card` 1.1.0.** New `codeLabel`, passed to the `address-code` chip as its `label` ("Address" by default). In a dark theme the QR was light modules on a dark card, an inverted code some scanners cannot read (the gap the contract recorded). It now sits on a `surface-qr` plate in `on-surface-qr` ink, with padding for the quiet zone, in both builds. The contract gains the prop, a `labelled` state and three checks, lists the two tokens, and drops the gap.
+- **`--surface-qr` and `--on-surface-qr` (new canonical roles).** The plate behind a QR code and its modules, fixed in every theme: the canon's own white (`#FFFFFF`) and ink (`#0E0D0C`), the pair `onWhiteOrInk` already uses for foregrounds. `on-surface-qr` is gated at Lc 75 against `surface-qr`. Generated into `mzizi-tokens-globals.css` (`--color-surface-qr`, `--color-on-surface-qr` in `@theme`) and every platform target.
+- **`app-brand-mark`: Breaking (a default changes), contract `app/brand-mark` 1.3.0.** Both images now carry `loading="lazy"` by default, beside the `decoding="async"` they had; Lighthouse flagged an eager footer mark. A mark in the viewport (a header) still loads at once, and the theme's hidden image is never fetched. The new `loading` prop takes `"eager"` for a mark that is the page's LCP image. No component in the registry renders the mark above the fold by default, so none needed `"eager"`. Both builds change, and the contract gains the prop, an `eager` state and two checks.
+- **Tests.** New `__tests__/components/kweli-phase2-place-share-mark.test.tsx`; both contract runners run the updated contracts against both builds.
+
+### Changed — `mzizi-event-card` gains price, description and share slots and all seven minerals; `mzizi-review-card` gains a headline, keeps line breaks, names its stars and shows the tier badge; a read-only `rating` is one named image (2026-10-24, #557)
+
+Items 4, 5 and 6 of the Kweli phase-2 gaps, tracked in #543.
+
+- **`mzizi-event-card`.** New optional `description` (two lines, `data-slot="event-card-description"`), `price` and `free` (`free` shows "Free", or `freeLabel`, in place of a price) and `share` (a button or share menu at the end of the footer) slots. The footer is drawn only when there is a price, `free` or `share`. `mineral` now takes all seven minerals: cobalt, tanzanite, malachite, gold, terracotta, sodalite and copper (sodalite and copper are new), each a literal `border-l-[var(--color-<mineral>)]` class. The clock and pin icons are `aria-hidden`. The new exported types are `EventCardProps` and `EventMineral`. The registry entry still marks the card deprecated in favour of `mzizi-ticket-card`; it stays maintained while Kweli uses it.
+- **`mzizi-review-card`.** New optional `headline` above the body (`data-slot="mzizi-review-card-headline"`). The body (`data-slot="mzizi-review-card-body"`) is `whitespace-pre-line`, so a reviewer's line breaks are kept. The five `★` glyphs, which had no accessible text, are now the read-only `rating` (one `role="img"` named "4 out of 5 stars"; it was already a registry dependency). The reviewer's tier marks were emoji (🟤🔵🟡🟣); they are now `mzizi-verified-badge` at size `sm`, named with the tier and coloured by the existing tier ladder, which this change does not touch.
+- **`rating`: Changed.** Read-only, it was a `role="radiogroup"` named "Rating" holding five disabled, unnamed buttons. It is now one `role="img"` named "<value> out of <max> stars" (to one decimal for a fractional value), with the stars and the optional value text `aria-hidden` and no buttons. The new `label` prop overrides the name in either mode. Interactive, a `radiogroup` holding plain buttons was not valid ARIA either, so the root is now `role="group"` (still named "Rating") and each star is a named toggle button ("3 stars", `aria-pressed`). Clicks and hover are unchanged.
+- **Tests.** New `__tests__/components/kweli-phase2-cards.test.tsx`. None of the three has an Astro build, so none has a contract file; the rules are in the tests and in `registry.json`.
+
+### Changed — `mzizi-cover-header` draws its cover as an `<img>`, draws the avatar only when given and makes `role="banner"` opt-in; `discover-category-chip` takes a `linkComponent` (2026-10-24, #556)
+
+Items 2 and 3 of the Kweli phase-2 gaps, tracked in #543. Kweli carries marked forks of both until this lands.
+
+- **`mzizi-cover-header`: Breaking (a default changes).** The root no longer has `role="banner"` by default. `banner` is the page's one site-wide header landmark, and the cover header usually sits inside `<main>` on a profile or place page, where a second banner duplicates the page's own and misleads landmark navigation. The new `banner` prop sets it, for a header that really is the page's top-level header outside `<main>`.
+- **Cover image.** The cover was an unquoted CSS `url(${coverImage})` on a `div`, so a URL with a space, a quote or a `)` broke the declaration, and the browser could not treat it as the LCP image. It is now a real `<img>` with `object-cover` in a `data-slot="mzizi-cover-header-cover"` box: `loading="lazy"` and `decoding="async"` by default, and with the new `priority` prop `loading="eager"` and `fetchpriority="high"` (the same pair as `mzizi-place-card`, #549). The new `coverAlt` prop is its alt text, empty by default because a cover is usually decoration under a named heading.
+- **Avatar.** The empty avatar box is gone: the avatar (`data-slot="mzizi-cover-header-avatar"`) is drawn only when `avatar` is given. Without one, `action` sits on its own row, right-aligned.
+- **Mzizi Roots (`mzizi-brand`).** The Rust sibling `mzizi-cover-header.rs` follows: new `banner`, `priority` and `cover_alt` props, the cover is an `<img>`, the avatar is optional, and `cover_style` (the quoted `background-image` it used to work around the `.tsx`) is removed. Its `CONTRACT` now reads `when banner role is "banner"`, the contract suite renders a `banner` state, `background-image` leaves the component's allowed inline styles, and the divergence test that waited for the `.tsx` to quote its URL is replaced by one that checks both builds draw the cover the same way.
+- **`discover-category-chip`.** New `linkComponent` prop, mirroring `mzizi-place-card`'s: the app's router link (Next `Link`, a React Router `Link`) renders the chip's link and receives `href`, `className`, `aria-current` and `children`. The new exported type `CategoryChipLinkProps` has the same shape as `MziziPlaceCardLinkProps`. Unset, the chip renders the plain `<a>` as before. The Astro build has no router to hand off to and keeps the plain `<a>`, so the prop is not a contract prop (the Astro build must declare every contract prop); contract `discover/category-chip` 1.0.1 records it in `gaps`.
+- **Tests.** New `__tests__/components/mzizi-cover-header.test.tsx` and `__tests__/components/discover-category-chip.test.tsx`; `cargo test -p mzizi-brand` covers the Rust build.
+
+### Changed — `mzizi-trust-meter` hides raw scores unless `showScore`; `--status-error` is a canonical token; the tier ladder is a server-safe module (2026-10-24, #555)
+
+Item 1 of the Kweli phase-2 gaps, tracked in #543.
+
+- **`mzizi-trust-meter`: Breaking (a default changes).** The meter used to write the composite score to three decimals over "/ 1.000" and each breakdown signal's value. Now, as on `mzizi-verified-badge` since #550, no raw number is written by default: the header names the level (Strong from 0.4, Growing from 0.2, Low from 0.05, None below) in the level colour, and the bars still show proportion. The root keeps `aria-valuenow` (`role="meter"` requires it) and adds `aria-valuetext` with the level. The new `showScore` prop brings back the numbers, for a trust audit view. Both builds (Astro and React) change together.
+- **`contracts/ui/mzizi-trust-meter.contract.json` 2.0.0.** It gains the `showScore` prop and a `score` state; the checks now say the default writes no score and names the level, and that `showScore` writes the composite and the three signal values (17 checks, from 13). The Astro build's `since` is corrected from `0.7.0` to `0.6.0`: `@bundu/ui` is at 0.5.0, so 0.6.0 is the first release that ships the meter.
+- **`--status-error` (new canonical role).** The meter and dozens of components use `text-status-error` / `var(--status-error, …)`, but only the site's own stylesheet defined it, so a consumer of the distributed tokens fell through to each component's hex fallback. It is now a role in `lib/tokens/roles.source.ts`, an alias of `destructive` (red, never the terracotta `status-danger`), and is generated into `mzizi-tokens-globals.css` (`--status-error` in both themes and `--color-status-error` in `@theme`) and every platform target: TypeScript, React Native, Rust (and the `mzizi-tokens` crate copy), Swift, Kotlin, ArkTS and Python.
+- **`mzizi-trust-tiers` (new, `registry:lib`, installs to `lib/mzizi-trust-tiers.ts`).** `TIER_CONFIG`, `STATUS_OVERLAY`, `computeTrustScore` and the `VerificationTier` / `PlatformStatus` types move out of the client badge module into a server-safe one, with no `"use client"`, hooks or browser globals, so a Server Component or an Astro page can read the tier ladder. `mzizi-verified-badge` imports them from there, re-exports them (existing imports keep working) and lists `mzizi-trust-tiers` in `registryDependencies`. The ladder's values are moved verbatim; the tier colours are not changed.
+- **Tests.** `__tests__/components/mzizi-trust-meter.test.tsx` covers the default (no number, the level as text and `aria-valuetext`), `showScore`, that `mzizi-trust-tiers` stays server-safe, and that the badge re-exports the same objects.
+
+## [4.13.0] - 2026-10-24
+
+Releases `staging` to `main` as the next minor above v4.12.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.13.0. It carries the fixes for the gaps in the Kweli review tracked in #543: an Astro build of `mzizi-trust-meter` with one contract for both builds (#552), `linkComponent` and lazy cover images on `mzizi-place-card` (#549), `label` / `ariaLabel` / `showScore` on `mzizi-verified-badge` and the `mzizi-permission-gate` contrast fix (#550), and `"use client"` dropped from `lib/icons` (#551); plus minimum-version dependencies (#534). No Mzizi Roots crate version changes.
+
+**Breaking (a default changes):** `mzizi-verified-badge` no longer shows the trust score in its title or accessible name. A consumer that wants the old "· Trust 0.x" wording passes `showScore` (#550). This is released as a minor, not a major: under the org versioning policy a major is only made by hand by the owner, and the release record marks the change `breaking: true`.
+
+### Added — an Astro build of `mzizi-trust-meter`, and one contract, `ui/mzizi-trust-meter`, that both builds keep (2026-10-24, #552)
+
+Gap 6 of the Kweli review (found during the 4.12.0 `@bundu/ui` sync), tracked in #543. The trust meter had only a React build, so `@bundu/ui` could not sync it.
+
+- **`mzizi-trust-meter.astro`** (N3, new). The same component as the React build, at parity, with every prop: `trustScore`, `verificationScore`, `statusScore`, `ubuntuScore`, `ubuntuPoints`, `tierLabel`, `statusLabel`, `compact`, `loading`, and the `signals` and `title` props from #546. The root is `role="meter"` with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`, named by the title. It is server-rendered with no script.
+- **`contracts/ui/mzizi-trust-meter.contract.json`** (new, 1.0.0), listed in `contracts/index.json` and the coverage table. It has 5 states (default, signals, compact, suspended, loading), 8 clauses, 13 checks and a 44px density row for the signal rows. The React build is `identity: "contract"`, so `__tests__/astro/contracts.test.ts` and `__tests__/contracts/tsx-contracts.test.tsx` both run the whole contract. `contracts/ui/` grows from 16 to 17 contracts.
+- **`mzizi-trust-meter.tsx`: Changed to the contract's markup.** The contract allows no inline style and no script, so the React build changes too:
+  - It is a server component now: no `"use client"`, no harness hook, and so no enter animation, which the contract's `gaps` records.
+  - Its bars are SVG `<rect>` widths in a 0–100 viewBox instead of `style` widths, and values are clamped to 0–1.
+  - Score and signal colours are the `--status-*` utility classes instead of `var(--status-*, #hex)` styles. The Ubuntu signal is tanzanite in every brand, the one mineral the contract declares.
+  - Icons come from the design system's `Icon` (`site-icon`) instead of Lucide.
+  - The main root now carries `data-portal`, `data-level` and `text-card-foreground`.
+  - Props are unchanged. The exported `TrustSignal` type is kept for existing imports but marked deprecated.
+  - `registryDependencies` is now `site-icon` alone. It was `card`, `progress`, `badge`, `mzizi-verified-badge` and `mzizi-harness`, none of which the meter used after this change.
+- **`site-icons`** gains two glyphs, `star` and `trending-up`, for the meter's Ubuntu-points line and its header.
+- **`mzizi-verified-badge`.** A doc comment and a test title dated the `showScore` default to "4.12", a release that does not carry it (#550 merged after 4.12.0). Both now name #550.
+- **`@bundu/ui`.** The sync needs a `scripts/registry-map.json` entry for `mzizi-trust-meter` in `mzizi-dev/packages-npm` when it bumps its registry pin.
+
+### Added — `mzizi-place-card` takes a `linkComponent` and loads its cover lazily, with a `priority` opt-out (2026-10-24, #549)
+
+Gaps 1 and 2 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
+
+- **`linkComponent`.** With `href`, the card's link can be rendered by the app's router link (Next `Link`, a React Router `Link`), so the app keeps client-side navigation and prefetch. The component receives `href`, `className` and `children`, plus the attributes the plain `<a>` would carry: `target`, `rel`, `onClick`, `style` and `data-slot` / `data-portal` / `data-variant`. The new exported type `MziziPlaceCardLinkProps` describes them. Unset, the card renders the plain `<a>` as before. The existing rules hold either way: `rel="noopener noreferrer"` for any `target` but `_self`, `_top` and `_parent`; with `onClick` and no `href` the card is `role="button"`, and `linkComponent` is not used; clicks and keys on a control in the footer stay with that control.
+- **Cover image loading.** The cover `<img>` (both variants) now has `loading="lazy"` and `decoding="async"` by default, so a long list costs neither LCP nor bandwidth, and React no longer hoists a preload `<link>` for it. The new `priority` prop loads it eagerly with `fetchpriority="high"`, for the first card above the fold.
+- `__tests__/components/kweli-place-embed.test.tsx` covers both, in both variants. The place card has no contract file (a contract needs an Astro build, and the place card has none yet), so the rules are in the tests and in `registry.json`.
+
+### Fixed — `mzizi-icons` is no longer a client module, so Server Components can import `@/lib/icons` (2026-10-24, #551)
+
+Gap 5 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
+
+- `lib/icons/index.tsx` (`components/registry/n1-tokens/mzizi-icons.tsx`) started with `"use client"` and does `export * from "lucide-react"`. Next's flight loader rejects `export *` inside a client boundary when a server module imports it, so any Server Component that imported `@/lib/icons` failed to build. The file only re-exports icons and defines stateless components (`Icon`, `MukokoLogo`, `MineralStrip`), so the directive is removed. Client components that import it are unaffected: they get client copies as before. Kweli's stopgap for this can go when it re-vendors.
+- The `registry.json` description says the module is server-safe. A test in `__tests__/components/kweli-place-embed.test.tsx` fails if `"use client"` returns, or if the file starts using a hook or a browser global. No doc, skill or MCP install note relied on the directive.
+
+### Changed — `mzizi-verified-badge` takes `label` and `ariaLabel` and drops the trust score from its name by default; `mzizi-permission-gate`'s upgrade action uses the primary pair (2026-10-24, #550)
+
+Gaps 3 and 4 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
+
+- **`mzizi-verified-badge`: Breaking (a default changes).** The `title` used to read "Contact Verified · Trust 0.2", so the raw trust score showed to every reader on hover and could not be changed. Now the title and the accessible name are the tier's name alone. The new `showScore` prop adds "· Trust 0.x" to both, for a trust audit view. A consumer that wants the old title passes `showScore`.
+- **`label` and `ariaLabel`** (new). `label` replaces the wording, the title and the accessible name in every state: the tier name, "Account Suspended", or "<tier> — Memorial". Use it to localise the badge or to name the tier in the app's own words. `ariaLabel` sets the accessible name alone, so the title keeps the label. `showTooltip={false}` still drops only the title. Neither prop changes the tier colour.
+- **`mzizi-permission-gate`.** The upgrade button was hard-coded `text-white` on `var(--color-cobalt,#00B0FF)`. On dark cobalt `#00B0FF` that is 2.4:1, which fails WCAG AA. The canon has no on-cobalt token: cobalt has only `-container` / `-on-container`. So the button now uses the brand's primary pair, `bg-primary text-primary-foreground`. In the role set, `--primary-foreground` is "text and icons on `primary`", held to body contrast. In `styles/globals.css` the pair measures 18.4:1 in light (`#141413` / `#FFFFFF`) and 16.0:1 in dark (`#F5F5F4` / `#1B1A17`). The button's focus outline is `--ring` instead of `var(--color-primary,#00B0FF)`. It is now `type="button"` with `data-slot="mzizi-permission-gate-upgrade"`. The required tier's mineral still colours the shield and the tier name.
+- **Tests and contracts.** The badge cases are in `__tests__/components/kweli-place-embed.test.tsx`. The new `__tests__/components/mzizi-permission-gate.test.tsx` checks that the button names no literal colour or mineral, and that the primary pair in every theme block of `styles/globals.css` is at least 4.5:1. Neither component has a contract file, since a contract needs an Astro build and neither has one yet. The badge's default change is recorded here, in its props' doc comments and in `registry.json`.
+
+### Changed — `package.json` is 4.12.2 on `staging` after the 4.12.0 sync-back (2026-10-24, #548)
+
+The release-version check allows only the next patch after `v4.12.1` (tagged when #534 merged) on `staging`, so the sync-back of 4.12.0 (#547) carries `package.json`, `README.md` and a 4.12.2 record in `content/changelog/releases.json` (and `lib/changelog.generated.ts`) instead of main's 4.12.0. The `[4.12.0]` section below is unchanged.
+
+### Changed — every dependency and override is a minimum version (2026-10-21, #534)
+
+- **`package.json`.** Every `dependencies`, `devDependencies` and `pnpm.overrides` entry is now `>=x.y.z` with no maximum, exact pins included (owner, 2026-10-21: "mark packages with minimum acceptable, latest shouldn't be a blocker on too old of a version"). Each floor is the version the lockfile already resolved, or the advisory floor `staging` already set where that is higher: `next` `>=16.4.1` (it was an exact pin), `dompurify` `>=3.4.17` as the dependency and the override, `vitest` `>=5.0.5` and the `ip-address` override `>=10.7.4` (4.11.0, #533), and `zod` `>=4.6.7`, `shadcn` `>=4.22.1`, `body-parser` `>=2.4.0`, `undici` `>=7.30.1` and `fast-uri` `>=3.1.9` (#545). The `zod@<4.6.6` override keeps its selector, and `auditConfig.ignoreGhsas` is unchanged. Four overrides for packages not in the tree (`@xmldom/xmldom`, `lodash-es`, `uuid`, `minimatch@8>brace-expansion`) keep their old floor.
+- **`pnpm-lock.yaml`.** Regenerated from `staging`'s lockfile with pnpm 10.33.0, direct dependencies resolved at their floors, so no direct dependency moves. Duplicate transitive copies of a few packages collapsed onto the newer copy already in the tree. With no upper bound, a resolve without the lockfile may cross majors (undici 8, fast-uri 4); the `micromatch>picomatch` and `minimatch@8>brace-expansion` overrides no longer hold their parent's major on such a resolve.
+
+## [4.12.0] - 2026-10-24
+
+Releases `staging` to `main` as the next minor above v4.11.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.12.0. It carries the Kweli design work tracked in #543: the four Kweli Address primitives (`address-code`, `address-share-card`, `address-selector`, `address-private-row`), the `qr-matrix` lib on `uqr`, and counted signals on `mzizi-trust-meter` (#546); the kweli brand entry and `--radius-xs` (#544); and zod 3 removed with new advisory floors (#545). Nothing is **Breaking**. No Mzizi Roots crate version changes.
+
+### Added — the Kweli Address primitives: address code, share card with QR, "deliver to" selector, private-address row; counted signals on `mzizi-trust-meter` (2026-10-24, #546)
+
+Gap 4 of #543, upstream before Kweli consumes them (Kweli Address RFC v0.1, mukoko-dev/kweli#195). Each is an Astro build and a React build under one contract in `contracts/ui/`. Both builds render every contract state in the suites. They are server-rendered with no script, and their colour is semantic only, so Kweli's brand overlay (malachite) colours the links and the selection.
+
+- **`address-code`** (`ui/address-code`, N2). The code (`NYU-7K2Q`) is a `<code>` in the mono face. With `href`, a 44px link follows it, and the link's accessible name names the code ("Open address NYU-7K2Q"). Without `href` the chip is the code alone.
+- **`address-share-card`** (`ui/address-share-card`, N3). A QR code that opens the share link, the code chip, the link written out, and the directions in words. The QR is drawn server-side as one SVG path in `currentColor` (`role="img"`, labelled with the link it opens).
+  - **New dependency `uqr`** (MIT, zero dependencies, encoding only). No registry primitive drew a QR code on `staging`: `booking-confirmation` has a placeholder and `mfa-setup` takes an image URL. The hand-written encoder in #475 is not merged.
+  - **New lib `qr-matrix`** (`qrMatrix(text, ecc?)`), shared by both builds.
+  - **Gap, in the contract:** in a dark theme the code is light on dark.
+- **`address-selector`** (`ui/address-selector`, N2). "Deliver to" as native radios in a `<fieldset>` with a `<legend>`. Each option is a 56px whole-row label with the address's name, a line and its code. "Private" and "Link only" addresses are marked in words. An empty list says so and offers the add link.
+- **`address-private-row`** (`ui/address-private-row`, N2). A row with a decorative lock, the name, the code, who can open the address written out (`data-visibility`), an optional detail line, and a 44px manage link named for the address.
+- **`mzizi-trust-meter`**, extended backward-compatibly. It did not cover a list of signals with counts. New `signals` (`{ label, count, detail? }[]`) and `title` props:
+  - With `signals`, the meter lists one 44px row per signal with its count, instead of the Verification / Status / Ubuntu breakdown. Kweli's "Address trust" panel is `<MziziTrustMeter title="Address trust" trustScore={…} signals={[…]} />`.
+  - Without `signals` it renders as before.
+  - The `role="meter"` now carries `aria-valuenow`, `aria-valuemin` and `aria-valuemax`, which it lacked.
+  - `__tests__/components/mzizi-trust-meter.test.tsx` covers both paths.
+- `contracts/ui/` grows from 12 to 16 contracts.
+
+### Added — the kweli brand entry (mark, favicon, lockup) and the `xs` radius rung (2026-10-24, #544)
+
+Two of the Kweli gaps tracked in #543.
+
+- **Kweli brand.** Kweli already had its canon row (`lib/tokens/brand.source.ts`, malachite, #404), so `--brand-*` and `@bundu/ui`'s `brand-kweli.css` were right; what was missing was the artwork, so `mzizi_search "kweli"` found nothing. Three new asset items: `kweli-mark-light` and `kweli-mark-dark` (the kweli mark, a shield with a tick, mono in malachite: `#004D40` on light grounds, `#64FFDA` on dark, both the registry's malachite values) and `kweli-favicon` (the same mark at 32px, switching with `prefers-color-scheme`). The artwork is Kweli's own, already live on kweli.mukoko.com (`mukoko-dev/kweli`, `workers/kweli-profiles` `Mark.astro` and `public/_kweli/favicon.svg`), copied, not redrawn. Kweli has no bundu-ecosystem-icons pair, so this is the one mark that is not from that set.
+- **`app-brand-mark` 1.2.0** (Astro and React). `brand="kweli"` shows the kweli pair (128px PNGs rendered from the SVG masters). New `tagline` prop: a muted line under the wordmark, for a mini-app lockup. Kweli's lockup is `<BrandMark brand="kweli" wordmark tagline="mukoko · Africa" />`, as in the Kweli Address design: lower-case serif `kweli` over `mukoko · Africa`. The tagline shows only with `wordmark`. Existing calls render the same markup as before. The contract (`contracts/app/brand-mark.contract.json`) adds the `kweli`, `kweli-lockup` and `tagline-without-wordmark` states and seven checks, run against both builds.
+- **`--radius-xs` (4px).** The radius ladder gains `xs`, the unit less 3 (`calc(var(--radius-unit) - 3px)` in `styles/globals.css`), for the smallest marks: legend swatches, kbd keys, inline tags. Before this a consumer's `rounded-xs` fell through to Tailwind's default (2px) because Mzizi defined no `xs`. `brandMeta.radii`, the role ladder, `lib/tokens`, every N1 platform file (`--r-xs` and `--radius-xs` in `mzizi-tokens-globals.css`, `Radius::XS` in Rust, and the Swift, Kotlin, ArkTS, Python and React Native scales) and `design-system/tokens.json` carry it; `/v1/brand` `.radii` gains `xs` and its `system` note now reads "Ecosystem numbers: 4, 7, 12, 14, 17". No registry component changes radius.
+- **`2xl` stays 17px.** The issue asked whether `radii.2xl` should be 24px, as an old `nyuchi-design` skill said. Canon says 17: `brandMeta.radii`, `styles/globals.css` (`--radius-2xl: calc(var(--radius-unit) + 10px)`), `design-system/README.md` and the current `mzizi-design` skill in `@nyuchi/mzizi-skills`, which dropped the 24px line in 0.8.0. Nothing changes for `2xl`; the stale copy is the pre-0.8.0 `nyuchi-design` skill, which is no longer published.
+
+### Security — zod 3 removed, and floors for the advisories that failed `audit` (2026-10-24, #545)
+
+GHSA-mrhx-c7xc-m3w5 (high) affects every zod 3 release and zod 4 below 4.6.6, and no 3.x is patched, so the org `audit` check failed every pull request (first seen on #544). zod 3.25.76 came in through `shadcn` 4.21 (which depends on `zod ^3.24.1`) and was shared by `@modelcontextprotocol/sdk` and `zod-to-json-schema`, whose peer ranges both accept zod 4.
+
+- `shadcn` `^4.22.1` (was `^4.21.0`), which depends on `zod ^4.2.0`. `shadcn build` still builds all 657 items.
+- `zod` `^4.6.7` (was `^4.6.2`), plus an override `"zod@<4.6.6": ">=4.6.6"`, so no zod below the fixed release can come back through a transitive range. The lockfile now resolves only zod 4.6.7.
+- New advisories that failed the same check, raised to the first patched release: `body-parser` override `^2.4.0` (GHSA-27r3-jxmh-p828, high), `undici` `^7.30.1` (GHSA-xjj6-f33q-929c high, GHSA-4qv8-2p9j-2685 and GHSA-f72v-6w45-q472 moderate), `fast-uri` `^3.1.9` (GHSA-w74x-v6f9-j3xg, GHSA-wjr9-j795-jxcr, moderate).
+
+After this, `pnpm audit:check` reports one low and exits 0; `typecheck`, `test` (1,251 + 481) and `lint` pass.
+
+## [4.11.0] - 2026-10-23
+
+Releases `staging` to `main` as the next minor above v4.10.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.11.0. It carries the `mzizi-verified-badge`, `mzizi-place-card`, `mzizi-icons` and `mzizi-harness` fixes Kweli needs for its place embed and the dependency floors for the `audit:check` advisories (#533), and Dependabot's move to `staging` (#508). Two changes are **Breaking**: the swapped `--tier-government` / `--tier-licensed` values, and the `mzizi-icons` install path (`@/lib/icons`). No Mzizi Roots crate version changes.
+
+### Security — dependency floors for the advisories that failed `audit:check` (2026-10-23, #533)
+
+`pnpm audit --audit-level=moderate` failed on `staging`'s lockfile, so it failed every pull request. Raised to the first patched release of each:
+
+- `next` 16.3.8 → 16.4.1 (exact pin kept): two critical remote-code-execution advisories (GHSA-2464-fhr4-w9xw, GHSA-673q-mjm6-r5xr) and a high denial of service (GHSA-p3m5-59mp-jv5r), all `>=16.0.0 <=16.4.0`.
+- `dompurify` `^3.4.17`, as the dependency and the override (was `^3.4.16` and `^3.4.0`): a critical and a high advisory (GHSA-cg2g-xh64-v4q7, GHSA-mrv2-3pqr-j5jr), `<=3.4.16`.
+- `vitest` `^5.0.3` (resolves 5.0.5), which brings `@vitest/mocker` 5.0.5: two moderate advisories (GHSA-qxg6-89mg-rqv8, GHSA-xp26-3454-mjgp), `<5.0.3`.
+- `ip-address` override `^10.7.4` (was `^10.7.1`; reached through `mongodb > socks`): a moderate advisory (GHSA-rxp7-6hxx-x8q5), `<=10.7.3`.
+
+After this, `pnpm audit` reports one low (`katex`, through `markdownlint-cli2`) and the one already-ignored high, and `audit:check` exits 0.
+
+### Fixed — `mzizi-verified-badge` tier colours, `mzizi-place-card` gaps, the `mzizi-icons` install path and the old harness name (2026-10-21, #533)
+
+Found when Kweli vendored these for its place embed (mukoko-dev/kweli#225; tracked in #532).
+
+- **`mzizi-verified-badge`:** government (Gold) now reads `--tier-government` and licensed (Tanzanite) reads `--tier-licensed`. Before, each read the other's variable, so setting one recoloured the wrong tier. The N1 verification tokens (`lib/tokens`, `mzizi-tokens-typescript`) had the same swap. They now define `--tier-government` as gold and `--tier-licensed` as tanzanite, which is the Mukoko ladder. **Breaking for anyone who set `--tier-government` or `--tier-licensed` themselves:** swap your two values. Some components used these variables only as a way to get a colour: `mzizi-profile-block` and `mzizi-wallet-gate` (tanzanite), and `org-profile-page` and `permission-badge` (gold). They now read the mineral directly. `mzizi-profile-block`, `mzizi-wallet-gate` and `permission-badge` look the same as before. **`org-profile-page`'s verified tick now resolves `--status-warning` first, then `--color-gold`**: it used to read `--tier-licensed` first, so an app whose `--status-warning` is not gold sees the tick change colour. `mzizi-trust-gate`'s government-ID action now shows gold, as on the ladder. The badge is `role="img"`, so its `aria-label` is announced. Its docs no longer promise a "Tooltip with tier explanation": it only ever set a native `title`. The unused `tooltip` registry dependency is gone.
+- **`mzizi-place-card`:** the row variant shows `category` under the name, as compact does. New `footer` slot. New `href` and `target` props make the root a real `<a>` (use `target="_top"` in an embed). Any target but `_self`, `_top` and `_parent` (so `_blank` or a named window) adds `rel="noopener noreferrer"`, and nothing inside the link is interactive. `onClick` still works with or without `href`; without `href` the card is `role="button"`, focusable, and answers Enter and Space. A click or key that starts on a control inside the card (a button in `footer`, say) stays with that control: it does not fire the card's `onClick`, and Enter on it is not cancelled. The tier mark is now `mzizi-verified-badge` (labelled) instead of an unlabelled dot. New `showTierLabel` prints the tier name, with "Unverified" at tier 0. The card carries `data-portal`, not only its skeleton. Docs now match the code: variants are `row` and `compact` (no `hero`), and there is an open/closed flag, not opening hours. The unused `mzizi-listing-card` and `rating` dependencies are gone, and `mzizi-icons` is added.
+- **`mzizi-icons`** installs to `lib/icons/index.tsx`, the `@/lib/icons` that 151 registry components import from, instead of `lib/mzizi-icons/index.tsx`. It also re-exports every Lucide icon, because 51 names those components import were not in its curated list. **Breaking for anyone who imports `@/lib/mzizi-icons`:** import `@/lib/icons`. **Breaking for a project with a hand-written `lib/icons/index.ts`:** delete it before running `shadcn add`. shadcn writes `lib/icons/index.tsx` beside it, and the bundler resolves the `.ts` file first, so the registry module is shadowed and the names it adds go missing.
+- **`mzizi-harness`** exports `useNyuchiHarness` as a deprecated alias of `useMziziHarness`. A harness vendored before the rename exports only the old name, so current components cannot import from it. Reinstall the harness, or add `export { useNyuchiHarness as useMziziHarness }` to the old copy.
+- `__tests__/components/kweli-place-embed.test.tsx` covers each fix.
+
+### Changed — Dependabot runs against `staging`, and its version bumps pass the changelog gate (2026-10-20, #508)
+
+- **`.github/dependabot.yml`.** Both update entries (npm and GitHub Actions) set `target-branch: "staging"`, so Dependabot opens its pull requests against `staging`, where this repository merges and releases, not against `main`. Pull requests already open against `main` are not retargeted by this change.
+- **Cooldown.** Both update entries set `cooldown: default-days: 7`, so Dependabot waits seven days before proposing a newly published version. Semgrep (`dependabot-missing-cooldown`) blocks a Dependabot configuration without one.
+- **`changelog / entry required` (`scripts/changelog-gate.sh`).** A pull request whose author is `dependabot[bot]` passes without a `CHANGELOG.md` entry, as it already does in `mzizi-dev/mzizi`. GitHub's generated release notes are the record of a version bump. The workflow passes the author login as `PR_AUTHOR`. Any other author still needs an entry. `scripts/changelog-gate.test.sh` gains two cases: a Dependabot bump with no entry passes, and the same change from another author fails.
 
 ## [4.10.0] - 2026-10-21
 

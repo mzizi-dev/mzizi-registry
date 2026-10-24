@@ -65,36 +65,43 @@
   --color-cobalt-on-container: var(--mineral-cobalt-on-container);
   --color-cobalt-aa: var(--mineral-cobalt-aa);
   --color-cobalt-text: var(--mineral-cobalt-text);
+  --color-cobalt-light: var(--mineral-cobalt-light);
   --color-tanzanite: var(--mineral-tanzanite);
   --color-tanzanite-container: var(--mineral-tanzanite-container);
   --color-tanzanite-on-container: var(--mineral-tanzanite-on-container);
   --color-tanzanite-aa: var(--mineral-tanzanite-aa);
   --color-tanzanite-text: var(--mineral-tanzanite-text);
+  --color-tanzanite-light: var(--mineral-tanzanite-light);
   --color-malachite: var(--mineral-malachite);
   --color-malachite-container: var(--mineral-malachite-container);
   --color-malachite-on-container: var(--mineral-malachite-on-container);
   --color-malachite-aa: var(--mineral-malachite-aa);
   --color-malachite-text: var(--mineral-malachite-text);
+  --color-malachite-light: var(--mineral-malachite-light);
   --color-gold: var(--mineral-gold);
   --color-gold-container: var(--mineral-gold-container);
   --color-gold-on-container: var(--mineral-gold-on-container);
   --color-gold-aa: var(--mineral-gold-aa);
   --color-gold-text: var(--mineral-gold-text);
+  --color-gold-light: var(--mineral-gold-light);
   --color-terracotta: var(--mineral-terracotta);
   --color-terracotta-container: var(--mineral-terracotta-container);
   --color-terracotta-on-container: var(--mineral-terracotta-on-container);
   --color-terracotta-aa: var(--mineral-terracotta-aa);
   --color-terracotta-text: var(--mineral-terracotta-text);
+  --color-terracotta-light: var(--mineral-terracotta-light);
   --color-sodalite: var(--mineral-sodalite);
   --color-sodalite-container: var(--mineral-sodalite-container);
   --color-sodalite-on-container: var(--mineral-sodalite-on-container);
   --color-sodalite-aa: var(--mineral-sodalite-aa);
   --color-sodalite-text: var(--mineral-sodalite-text);
+  --color-sodalite-light: var(--mineral-sodalite-light);
   --color-copper: var(--mineral-copper);
   --color-copper-container: var(--mineral-copper-container);
   --color-copper-on-container: var(--mineral-copper-on-container);
   --color-copper-aa: var(--mineral-copper-aa);
   --color-copper-text: var(--mineral-copper-text);
+  --color-copper-light: var(--mineral-copper-light);
   --color-indigo: var(--heritage-indigo);
   --color-indigo-aa: var(--heritage-indigo-aa);
   --color-indigo-text: var(--heritage-indigo-text);
@@ -177,6 +184,8 @@
   --color-scrim: var(--scrim);
   --color-wash: var(--wash);
   --color-muted: var(--muted);
+  --color-surface-qr: var(--surface-qr);
+  --color-on-surface-qr: var(--on-surface-qr);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
@@ -230,6 +239,26 @@
   --color-status-deprecated-container: var(--status-deprecated-container);
   --color-status-deprecated-on-container: var(--status-deprecated-on-container);
   --color-status-deprecated-text: var(--status-deprecated-text);
+  --color-tier-unverified: var(--tier-unverified);
+  --color-tier-unverified-container: var(--tier-unverified-container);
+  --color-tier-unverified-on-container: var(--tier-unverified-on-container);
+  --color-tier-unverified-text: var(--tier-unverified-text);
+  --color-tier-community: var(--tier-community);
+  --color-tier-community-container: var(--tier-community-container);
+  --color-tier-community-on-container: var(--tier-community-on-container);
+  --color-tier-community-text: var(--tier-community-text);
+  --color-tier-otp: var(--tier-otp);
+  --color-tier-otp-container: var(--tier-otp-container);
+  --color-tier-otp-on-container: var(--tier-otp-on-container);
+  --color-tier-otp-text: var(--tier-otp-text);
+  --color-tier-government: var(--tier-government);
+  --color-tier-government-container: var(--tier-government-container);
+  --color-tier-government-on-container: var(--tier-government-on-container);
+  --color-tier-government-text: var(--tier-government-text);
+  --color-tier-licensed: var(--tier-licensed);
+  --color-tier-licensed-container: var(--tier-licensed-container);
+  --color-tier-licensed-on-container: var(--tier-licensed-on-container);
+  --color-tier-licensed-text: var(--tier-licensed-text);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -258,6 +287,7 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-text: var(--destructive-text);
+  --color-status-error: var(--status-error);
   --color-overlay-foreground: var(--overlay-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
@@ -328,6 +358,7 @@
   --spacing-4xl: var(--space-4xl);
   --spacing-5xl: var(--space-5xl);
   --spacing-6xl: var(--space-6xl);
+  --radius-xs: var(--r-xs);
   --radius-sm: var(--r-sm);
   --radius-md: var(--r-md);
   --radius-base: var(--r-base);
@@ -389,42 +420,49 @@
   --mineral-cobalt-on-container: #002966; /* APCA Lc 90.9 on the container */
   --mineral-cobalt-aa: #0047ab; /* canonical value already clears the bar */
   --mineral-cobalt-text: #0047ab; /* APCA Lc 80.9 on --base — canonical value already clears the bar */
+  --mineral-cobalt-light: #0047ab; /* cobalt's light-mode value, fixed across themes */
   /* tanzanite — Identity. Premium, creativity, connection */
   --mineral-tanzanite: #4b0082;
   --mineral-tanzanite-container: #f3e5f5;
   --mineral-tanzanite-on-container: #2e004d; /* APCA Lc 90.1 on the container */
   --mineral-tanzanite-aa: #4b0082; /* canonical value already clears the bar */
   --mineral-tanzanite-text: #4b0082; /* APCA Lc 90 on --base — canonical value already clears the bar */
+  --mineral-tanzanite-light: #4b0082; /* tanzanite's light-mode value, fixed across themes */
   /* malachite — Growth. Growth, nature, success */
   --mineral-malachite: #004d40;
   --mineral-malachite-container: #e0f2f1;
   --mineral-malachite-on-container: #00332b; /* APCA Lc 90.3 on the container */
   --mineral-malachite-aa: #004d40; /* canonical value already clears the bar */
   --mineral-malachite-text: #004d40; /* APCA Lc 85.1 on --base — canonical value already clears the bar */
+  --mineral-malachite-light: #004d40; /* malachite's light-mode value, fixed across themes */
   /* gold — Value. Honey, rewards, warmth */
   --mineral-gold: #5d4037;
   --mineral-gold-container: #fff8e1;
   --mineral-gold-on-container: #3e2723; /* APCA Lc 96.1 on the container */
   --mineral-gold-aa: #5d4037; /* canonical value already clears the bar */
   --mineral-gold-text: #5d4037; /* APCA Lc 84.2 on --base — canonical value already clears the bar */
+  --mineral-gold-light: #5d4037; /* gold's light-mode value, fixed across themes */
   /* terracotta — Community. Earth, community, grounding */
   --mineral-terracotta: #a0522d;
   --mineral-terracotta-container: #f5e6d3;
   --mineral-terracotta-on-container: #5d2906; /* APCA Lc 82.9 on the container */
   --mineral-terracotta-aa: #a0522d; /* canonical value already clears the bar */
   --mineral-terracotta-text: #8e4928; /* APCA Lc 75.4 on --base. #A0522D measures 70.4 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --mineral-terracotta-light: #a0522d; /* terracotta's light-mode value, fixed across themes */
   /* sodalite — Intelligence. Intelligence, depth, reasoning */
   --mineral-sodalite: #283593;
   --mineral-sodalite-container: #e8eaf6;
   --mineral-sodalite-on-container: #141a5c; /* APCA Lc 90.1 on the container */
   --mineral-sodalite-aa: #283593; /* canonical value already clears the bar */
   --mineral-sodalite-text: #283593; /* APCA Lc 86.3 on --base — canonical value already clears the bar */
+  --mineral-sodalite-light: #283593; /* sodalite's light-mode value, fixed across themes */
   /* copper — Stewardship. Connection, foundation, stewardship */
   --mineral-copper: #bf5a36;
   --mineral-copper-container: #fbe4da;
   --mineral-copper-on-container: #5c2410; /* APCA Lc 84 on the container */
   --mineral-copper-aa: #b4532f; /* #BF5A36 measures 4.44 — WCAG 2.2 AA on #FFFFFF. bundu-labs/marketing/apps/bundu/src/styles/global.css:11 */
   --mineral-copper-text: #93452a; /* APCA Lc 75.4 on --base. #BF5A36 measures 63 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --mineral-copper-light: #bf5a36; /* copper's light-mode value, fixed across themes */
 
   /* ── SEVEN HERITAGE TONES ────────────────────────────────────────────────── */
   --heritage-indigo: #4527a0; /* Dusk, depth, the dyer's craft */
@@ -581,6 +619,8 @@
   /* ── ROLES — identity, status tones, lifecycle, destructive, categories (#484) ── */
   --app-accent: var(--brand-accent);
   --app-accent-foreground: var(--brand-accent-foreground);
+  --surface-qr: #ffffff;
+  --on-surface-qr: #0e0d0c;
   --status-success: var(--mineral-malachite);
   --status-success-container: var(--mineral-malachite-container);
   --status-success-on-container: var(--mineral-malachite-on-container);
@@ -621,6 +661,26 @@
   --status-deprecated-container: var(--status-danger-container);
   --status-deprecated-on-container: var(--status-danger-on-container);
   --status-deprecated-text: var(--status-danger-text);
+  --tier-unverified: var(--status-neutral);
+  --tier-unverified-container: var(--status-neutral-container);
+  --tier-unverified-on-container: var(--status-neutral-on-container);
+  --tier-unverified-text: var(--status-neutral-text);
+  --tier-community: var(--mineral-terracotta);
+  --tier-community-container: var(--mineral-terracotta-container);
+  --tier-community-on-container: var(--mineral-terracotta-on-container);
+  --tier-community-text: #844425; /* derived: #8E4928 measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
+  --tier-otp: var(--mineral-cobalt);
+  --tier-otp-container: var(--mineral-cobalt-container);
+  --tier-otp-on-container: var(--mineral-cobalt-on-container);
+  --tier-otp-text: var(--mineral-cobalt-text);
+  --tier-government: var(--mineral-gold);
+  --tier-government-container: var(--mineral-gold-container);
+  --tier-government-on-container: var(--mineral-gold-on-container);
+  --tier-government-text: var(--mineral-gold-text);
+  --tier-licensed: var(--mineral-tanzanite);
+  --tier-licensed-container: var(--mineral-tanzanite-container);
+  --tier-licensed-on-container: #2e004d; /* var(--mineral-tanzanite-on-container), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
+  --tier-licensed-text: var(--mineral-tanzanite-text);
   --category-1: var(--mineral-cobalt);
   --category-2: var(--mineral-tanzanite);
   --category-3: var(--mineral-malachite);
@@ -629,6 +689,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #9f221b; /* derived: #B3261E measures Lc 70.6 against base / surface; walked toward #000000 to Lc 75 */
+  --status-error: var(--destructive);
   --border-control: #787774; /* derived: #E7E5E0 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #000000 to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
@@ -754,6 +815,7 @@
 
   /* ── RADIUS — every rung derives from a 7px unit ─────────────────────────── */
   --radius-unit: 7px; /* CLAUDE.md §7.5. Apps running a 10px or 12px unit have the whole calc() scale wrong. */
+  --r-xs: 4px;
   --r-sm: 7px;
   --r-md: 12px;
   --r-base: 14px;
@@ -831,42 +893,49 @@
   --mineral-cobalt-on-container: #b3e5fc; /* APCA Lc -84.2 on the container */
   --mineral-cobalt-aa: #86dcff; /* #00B0FF measures -54.7 — APCA Silver on #0E0D0C. nyuchi/bushtrade/src/app/globals.css:171 (nudged from #80DAFF, Lc -77.0 — its comment claims 78) */
   --mineral-cobalt-text: #86dcff; /* APCA Lc -78.3 on --base. #00B0FF measures -54.7 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-cobalt-light: #0047ab; /* cobalt's light-mode value, fixed across themes */
   /* tanzanite — Identity. Premium, creativity, connection */
   --mineral-tanzanite: #b388ff;
   --mineral-tanzanite-container: #1a0033;
   --mineral-tanzanite-on-container: #e1bee7; /* APCA Lc -73.3 on the container */
   --mineral-tanzanite-aa: #dcc8ff; /* #B388FF measures -50 — APCA Silver on #0E0D0C. derived — canon darkHex toward #FFFFFF */
   --mineral-tanzanite-text: #dcc8ff; /* APCA Lc -78.4 on --base. #B388FF measures -50 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-tanzanite-light: #4b0082; /* tanzanite's light-mode value, fixed across themes */
   /* malachite — Growth. Growth, nature, success */
   --mineral-malachite: #64ffda;
   --mineral-malachite-container: #00251a;
   --mineral-malachite-on-container: #a7ffeb; /* APCA Lc -94.8 on the container */
   --mineral-malachite-aa: #64ffda; /* canonical value already clears the bar */
   --mineral-malachite-text: #64ffda; /* APCA Lc -91.9 on --base — canonical value already clears the bar */
+  --mineral-malachite-light: #004d40; /* malachite's light-mode value, fixed across themes */
   /* gold — Value. Honey, rewards, warmth */
   --mineral-gold: #ffd740;
   --mineral-gold-container: #332200;
   --mineral-gold-on-container: #ffecb3; /* APCA Lc -93 on the container */
   --mineral-gold-aa: #ffd740; /* canonical value already clears the bar */
   --mineral-gold-text: #ffd740; /* APCA Lc -84.2 on --base — canonical value already clears the bar */
+  --mineral-gold-light: #5d4037; /* gold's light-mode value, fixed across themes */
   /* terracotta — Community. Earth, community, grounding */
   --mineral-terracotta: #e1b07e;
   --mineral-terracotta-container: #3e2817;
   --mineral-terracotta-on-container: #f5e6d3; /* APCA Lc -88.4 on the container */
   --mineral-terracotta-aa: #ebcca3; /* #E1B07E measures -64.5 — APCA Silver on #0E0D0C. nyuchi/bushtrade/src/app/globals.css:166 (nudged from #EAC99E, Lc -76.7 — its comment claims 78) */
   --mineral-terracotta-text: #ebcca3; /* APCA Lc -78.2 on --base. #E1B07E measures -64.5 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-terracotta-light: #a0522d; /* terracotta's light-mode value, fixed across themes */
   /* sodalite — Intelligence. Intelligence, depth, reasoning */
   --mineral-sodalite: #3d5afe;
   --mineral-sodalite-container: #0d1442;
   --mineral-sodalite-on-container: #c5cae9; /* APCA Lc -73.9 on the container */
   --mineral-sodalite-aa: #c6cfff; /* #3D5AFE measures -26.9 — APCA Silver on #0E0D0C. shamwari-ai/docs/style.css:32 */
   --mineral-sodalite-text: #c6cfff; /* APCA Lc -78.5 on --base. #3D5AFE measures -26.9 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-sodalite-light: #283593; /* sodalite's light-mode value, fixed across themes */
   /* copper — Stewardship. Connection, foundation, stewardship */
   --mineral-copper: #ff8a65;
   --mineral-copper-container: #3a1a0e;
   --mineral-copper-on-container: #ffd3c2; /* APCA Lc -82.8 on the container */
   --mineral-copper-aa: #ffc3b0; /* #FF8A65 measures -56.6 — APCA Silver on #0E0D0C. derived — canon darkHex toward #FFFFFF */
   --mineral-copper-text: #ffc3b0; /* APCA Lc -78.2 on --base. #FF8A65 measures -56.6 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-copper-light: #bf5a36; /* copper's light-mode value, fixed across themes */
 
   /* ── SEVEN HERITAGE TONES ────────────────────────────────────────────────── */
   --heritage-indigo: #7986cb; /* Dusk, depth, the dyer's craft */
@@ -1063,6 +1132,26 @@
   --status-deprecated-container: var(--status-danger-container);
   --status-deprecated-on-container: var(--status-danger-on-container);
   --status-deprecated-text: var(--status-danger-text);
+  --tier-unverified: var(--status-neutral);
+  --tier-unverified-container: var(--status-neutral-container);
+  --tier-unverified-on-container: var(--status-neutral-on-container);
+  --tier-unverified-text: var(--status-neutral-text);
+  --tier-community: var(--mineral-terracotta);
+  --tier-community-container: var(--mineral-terracotta-container);
+  --tier-community-on-container: var(--mineral-terracotta-on-container);
+  --tier-community-text: #ebcca3; /* var(--mineral-terracotta-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
+  --tier-otp: var(--mineral-cobalt);
+  --tier-otp-container: var(--mineral-cobalt-container);
+  --tier-otp-on-container: var(--mineral-cobalt-on-container);
+  --tier-otp-text: var(--mineral-cobalt-text);
+  --tier-government: var(--mineral-gold);
+  --tier-government-container: var(--mineral-gold-container);
+  --tier-government-on-container: var(--mineral-gold-on-container);
+  --tier-government-text: var(--mineral-gold-text);
+  --tier-licensed: var(--mineral-tanzanite);
+  --tier-licensed-container: var(--mineral-tanzanite-container);
+  --tier-licensed-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against tier-licensed-container; walked toward #FFFFFF to Lc 75 */
+  --tier-licensed-text: var(--mineral-tanzanite-text);
   --category-1: var(--mineral-cobalt);
   --category-2: var(--mineral-tanzanite);
   --category-3: var(--mineral-malachite);
@@ -1071,6 +1160,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #f3c0bd; /* derived: #F2B8B5 measures Lc 71.6 against base / surface; walked toward #FFFFFF to Lc 75 */
+  --status-error: var(--destructive);
   --border-control: #818180; /* derived: #2A2927 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #FFFFFF to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */

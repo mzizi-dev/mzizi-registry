@@ -109,10 +109,11 @@ export const primitives = {
   },
 
   // ─── BORDER RADIUS (canonical) ──────────────
-  // Base unit: 7px (--radius-unit). Ecosystem numbers: 7, 12, 14, 17.
+  // Base unit: 7px (--radius-unit). Ecosystem numbers: 4, 7, 12, 14, 17.
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
     none: { value: "0px" },
+    xs: { value: "4px", description: "Unit less 3. The smallest marks: legend swatches, kbd keys, inline tags" },
     sm: { value: "7px", description: "Subtle rounding, checkboxes, small elements" },
     md: { value: "12px", description: "Cards, inputs, containers" },
     lg: { value: "14px", description: "Default radius, medium containers" },
@@ -1072,37 +1073,42 @@ export const connectionTokens = {
  * Verification tier tokens — these DO use minerals because they are BRAND identity.
  * Verification tiers are a Mukoko-specific concept, not a universal status.
  * The minerals communicate prestige and progression within the ecosystem.
+ *
+ * The ladder (owner decision 2026-10-24, #543): unverified → the neutral grey
+ * (`--status-neutral`), community → terracotta, otp ("Contact Verified") → cobalt,
+ * government → gold, licensed → tanzanite. The `--tier-*` roles themselves are defined once,
+ * in `lib/tokens/roles.source.ts`, and emitted by `pnpm tokens:sync`.
  */
 export const verificationTokens = {
   unverified: {
-    value: "var(--tier-unverified, #6B7280)",
+    value: "var(--tier-unverified, var(--status-neutral))",
     css: "--tier-unverified",
-    hex: "#6B7280",
+    role: "status-neutral",
     label: "Unverified",
   },
   community: {
-    value: "var(--tier-community, var(--color-malachite, #64FFDA))",
+    value: "var(--tier-community, var(--color-terracotta, #E1B07E))",
     css: "--tier-community",
-    mineral: "malachite",
-    label: "Community",
+    mineral: "terracotta",
+    label: "Community Verified",
   },
   otp: {
     value: "var(--tier-otp, var(--color-cobalt, #00B0FF))",
     css: "--tier-otp",
     mineral: "cobalt",
-    label: "OTP Verified",
+    label: "Contact Verified",
   },
   government: {
-    value: "var(--tier-government, var(--color-tanzanite, #B388FF))",
+    value: "var(--tier-government, var(--color-gold, #FFD740))",
     css: "--tier-government",
-    mineral: "tanzanite",
-    label: "Government ID",
+    mineral: "gold",
+    label: "Government Verified",
   },
   licensed: {
-    value: "var(--tier-licensed, var(--color-gold, #FFD740))",
+    value: "var(--tier-licensed, var(--color-tanzanite, #B388FF))",
     css: "--tier-licensed",
-    mineral: "gold",
-    label: "Licensed",
+    mineral: "tanzanite",
+    label: "Licensed Professional",
   },
 } as const
 
@@ -1217,12 +1223,12 @@ export function generateStatusCSS(): string {
       if ("css" in token && "hex" in token) lines.push(`  ${token.css}: ${token.hex};`)
     }
   }
-  lines.push("  /* Verification tiers — these use minerals (brand identity) */")
-  lines.push("  --tier-unverified: #6B7280;")
-  lines.push("  --tier-community: var(--color-malachite, #64FFDA);")
+  lines.push("  /* Verification tiers — the --tier-* roles (lib/tokens/roles.source.ts, #543) */")
+  lines.push("  --tier-unverified: var(--status-neutral);")
+  lines.push("  --tier-community: var(--color-terracotta, #E1B07E);")
   lines.push("  --tier-otp: var(--color-cobalt, #00B0FF);")
-  lines.push("  --tier-government: var(--color-tanzanite, #B388FF);")
-  lines.push("  --tier-licensed: var(--color-gold, #FFD740);")
+  lines.push("  --tier-government: var(--color-gold, #FFD740);")
+  lines.push("  --tier-licensed: var(--color-tanzanite, #B388FF);")
   lines.push("}")
   return lines.join("\n")
 }

@@ -419,10 +419,15 @@ export const primitives = {
   },
 
   // ─── BORDER RADIUS (Nyuchi Design canonical) ──────────────
-  // Base unit: 7px (--radius-unit). Ecosystem numbers: 7, 12, 14, 17.
+  // Base unit: 7px (--radius-unit). Ecosystem numbers: 4, 7, 12, 14, 17.
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
     none: { value: "0px" },
+    xs: {
+      value: "4px",
+      description:
+        "Unit less 3. The smallest marks: legend swatches, kbd keys, inline tags",
+    },
     sm: {
       value: "7px",
       description: "Subtle rounding, checkboxes, small elements",
@@ -1051,7 +1056,7 @@ export type PaletteFamily = "mineral" | "heritage" | "experimental";
  * The fallback exists for contexts where the custom property is not defined —
  * an email, a canvas, a consumer who installed this item without globals.css —
  * and it was written out by hand at every call site. That made every fallback a
- * private copy of a palette value: `var(--color-terracotta, #D4A574)` still
+ * private copy of a palette value: `var(--color-terracotta)` still
  * named terracotta's pre-Seven hex long after the palette said `#E1B07E`, so a
  * chart rendered without the stylesheet drew the wrong brand colour and nothing
  * could tell. Reading the fallback out of `primitives.color` — which is itself
@@ -1363,37 +1368,42 @@ export const connectionTokens = {
  * Verification tier tokens — these DO use minerals because they are BRAND identity.
  * Verification tiers are a Mukoko-specific concept, not a universal status.
  * The minerals communicate prestige and progression within the ecosystem.
+ *
+ * The ladder (owner decision 2026-10-24, #543): unverified → the neutral grey
+ * (`--status-neutral`), community → terracotta, otp ("Contact Verified") → cobalt,
+ * government → gold, licensed → tanzanite. The `--tier-*` roles themselves are defined once,
+ * in `lib/tokens/roles.source.ts`, and emitted by `pnpm tokens:sync`.
  */
 export const verificationTokens = {
   unverified: {
-    value: "var(--tier-unverified, #6B7280)",
+    value: "var(--tier-unverified, var(--status-neutral))",
     css: "--tier-unverified",
-    hex: "#6B7280",
+    role: "status-neutral",
     label: "Unverified",
   },
   community: {
-    value: `var(--tier-community, ${paletteVar("malachite")})`,
+    value: `var(--tier-community, ${paletteVar("terracotta")})`,
     css: "--tier-community",
-    mineral: "malachite",
-    label: "Community",
+    mineral: "terracotta",
+    label: "Community Verified",
   },
   otp: {
     value: `var(--tier-otp, ${paletteVar("cobalt")})`,
     css: "--tier-otp",
     mineral: "cobalt",
-    label: "OTP Verified",
+    label: "Contact Verified",
   },
   government: {
-    value: `var(--tier-government, ${paletteVar("tanzanite")})`,
+    value: `var(--tier-government, ${paletteVar("gold")})`,
     css: "--tier-government",
-    mineral: "tanzanite",
-    label: "Government ID",
+    mineral: "gold",
+    label: "Government Verified",
   },
   licensed: {
-    value: `var(--tier-licensed, ${paletteVar("gold")})`,
+    value: `var(--tier-licensed, ${paletteVar("tanzanite")})`,
     css: "--tier-licensed",
-    mineral: "gold",
-    label: "Licensed",
+    mineral: "tanzanite",
+    label: "Licensed Professional",
   },
 } as const;
 
@@ -1510,13 +1520,13 @@ export function generateStatusCSS(): string {
     }
   }
   lines.push(
-    "  /* Verification tiers — these use minerals (brand identity) */",
+    "  /* Verification tiers — the --tier-* roles (lib/tokens/roles.source.ts, #543) */",
   );
-  lines.push("  --tier-unverified: #6B7280;");
-  lines.push(`  --tier-community: ${paletteVar("malachite")};`);
+  lines.push("  --tier-unverified: var(--status-neutral);");
+  lines.push(`  --tier-community: ${paletteVar("terracotta")};`);
   lines.push(`  --tier-otp: ${paletteVar("cobalt")};`);
-  lines.push(`  --tier-government: ${paletteVar("tanzanite")};`);
-  lines.push(`  --tier-licensed: ${paletteVar("gold")};`);
+  lines.push(`  --tier-government: ${paletteVar("gold")};`);
+  lines.push(`  --tier-licensed: ${paletteVar("tanzanite")};`);
   lines.push("}");
   return lines.join("\n");
 }
@@ -1805,6 +1815,18 @@ export const roles = {
     cssVar: "--muted",
     light: "#FAF9F5",
     dark: "#050504",
+  },
+  "surface-qr": {
+    kind: "surface",
+    cssVar: "--surface-qr",
+    light: "#FFFFFF",
+    dark: "#FFFFFF",
+  },
+  "on-surface-qr": {
+    kind: "text",
+    cssVar: "--on-surface-qr",
+    light: "#0E0D0C",
+    dark: "#0E0D0C",
   },
   "text-primary": {
     kind: "text",
@@ -2114,6 +2136,126 @@ export const roles = {
     light: "#844425",
     dark: "#EBCCA3",
   },
+  "tier-unverified": {
+    kind: "ui",
+    cssVar: "--tier-unverified",
+    light: "#55514B",
+    dark: "#A09C93",
+  },
+  "tier-unverified-container": {
+    kind: "surface",
+    cssVar: "--tier-unverified-container",
+    light: "#E5E4E1",
+    dark: "#1E1D1A",
+  },
+  "tier-unverified-on-container": {
+    kind: "text",
+    cssVar: "--tier-unverified-on-container",
+    light: "#373635",
+    dark: "#E5E5E3",
+  },
+  "tier-unverified-text": {
+    kind: "text",
+    cssVar: "--tier-unverified-text",
+    light: "#575655",
+    dark: "#CCCCCA",
+  },
+  "tier-community": {
+    kind: "ui",
+    cssVar: "--tier-community",
+    light: "#A0522D",
+    dark: "#E1B07E",
+  },
+  "tier-community-container": {
+    kind: "surface",
+    cssVar: "--tier-community-container",
+    light: "#F5E6D3",
+    dark: "#3E2817",
+  },
+  "tier-community-on-container": {
+    kind: "text",
+    cssVar: "--tier-community-on-container",
+    light: "#5D2906",
+    dark: "#F5E6D3",
+  },
+  "tier-community-text": {
+    kind: "text",
+    cssVar: "--tier-community-text",
+    light: "#844425",
+    dark: "#EBCCA3",
+  },
+  "tier-otp": {
+    kind: "ui",
+    cssVar: "--tier-otp",
+    light: "#0047AB",
+    dark: "#00B0FF",
+  },
+  "tier-otp-container": {
+    kind: "surface",
+    cssVar: "--tier-otp-container",
+    light: "#E3F2FD",
+    dark: "#001F3F",
+  },
+  "tier-otp-on-container": {
+    kind: "text",
+    cssVar: "--tier-otp-on-container",
+    light: "#002966",
+    dark: "#B3E5FC",
+  },
+  "tier-otp-text": {
+    kind: "text",
+    cssVar: "--tier-otp-text",
+    light: "#0047AB",
+    dark: "#86DCFF",
+  },
+  "tier-government": {
+    kind: "ui",
+    cssVar: "--tier-government",
+    light: "#5D4037",
+    dark: "#FFD740",
+  },
+  "tier-government-container": {
+    kind: "surface",
+    cssVar: "--tier-government-container",
+    light: "#FFF8E1",
+    dark: "#332200",
+  },
+  "tier-government-on-container": {
+    kind: "text",
+    cssVar: "--tier-government-on-container",
+    light: "#3E2723",
+    dark: "#FFECB3",
+  },
+  "tier-government-text": {
+    kind: "text",
+    cssVar: "--tier-government-text",
+    light: "#5D4037",
+    dark: "#FFD740",
+  },
+  "tier-licensed": {
+    kind: "ui",
+    cssVar: "--tier-licensed",
+    light: "#4B0082",
+    dark: "#B388FF",
+  },
+  "tier-licensed-container": {
+    kind: "surface",
+    cssVar: "--tier-licensed-container",
+    light: "#F3E5F5",
+    dark: "#1A0033",
+  },
+  "tier-licensed-on-container": {
+    kind: "text",
+    cssVar: "--tier-licensed-on-container",
+    light: "#2E004D",
+    dark: "#E3C2E8",
+  },
+  "tier-licensed-text": {
+    kind: "text",
+    cssVar: "--tier-licensed-text",
+    light: "#4B0082",
+    dark: "#DCC8FF",
+  },
   "chart-1": {
     kind: "fill",
     cssVar: "--chart-1",
@@ -2281,6 +2423,12 @@ export const roles = {
     cssVar: "--destructive-text",
     light: "#9F221B",
     dark: "#F3C0BD",
+  },
+  "status-error": {
+    kind: "ui",
+    cssVar: "--status-error",
+    light: "#B3261E",
+    dark: "#F3BDBA",
   },
   "overlay-foreground": {
     kind: "text",

@@ -25,8 +25,16 @@ interface FilterBarProps {
   showAll?: boolean
   /** Show clear button when filters are active */
   showClear?: boolean
+  /** The group's accessible name ("Filters" by default). */
+  label?: string
   className?: string
 }
+
+/* Each chip is a real <button type="button"> with aria-pressed (#543): it is in the tab order,
+   answers Enter and Space, and announces whether it is on. It was a <span> with onClick, which
+   no keyboard could reach and no screen reader could name as a control. The chip keeps the
+   badge's look through `asChild`, at the 44px chip height `discover-category-chip` uses. */
+const CHIP = "h-11 cursor-pointer rounded-full px-4 text-sm select-none"
 
 function FilterBar({
   options,
@@ -35,6 +43,7 @@ function FilterBar({
   multiple = true,
   showAll = true,
   showClear = true,
+  label = "Filters",
   className,
 }: FilterBarProps) {
   const [internalSelected, setInternalSelected] = React.useState<string[]>([])
@@ -67,30 +76,30 @@ function FilterBar({
     <div
       data-slot="filter-bar"
       data-portal="https://mzizi.dev/components/filter-bar"
-      role="toolbar"
-      aria-label="Filters"
+      role="group"
+      aria-label={label}
       className={cn("flex flex-wrap items-center gap-2", className)}
     >
       {showAll && (
-        <Badge
-          variant={isAllSelected ? "default" : "outline"}
-          className="cursor-pointer transition-colors select-none"
-          onClick={() => setSelected([])}
-        >
-          All
+        <Badge asChild variant={isAllSelected ? "default" : "outline"} className={CHIP}>
+          <button type="button" data-filter-value="" aria-pressed={isAllSelected} onClick={() => setSelected([])}>
+            All
+          </button>
         </Badge>
       )}
       {options.map((option) => {
         const isActive = selected.includes(option.value)
         return (
-          <Badge
-            key={option.value}
-            variant={isActive ? "default" : "outline"}
-            className="cursor-pointer transition-colors select-none"
-            onClick={() => handleToggle(option.value)}
-          >
-            {option.label}
-            {option.count !== undefined && <span className="ml-1 opacity-60">{option.count}</span>}
+          <Badge key={option.value} asChild variant={isActive ? "default" : "outline"} className={CHIP}>
+            <button
+              type="button"
+              data-filter-value={option.value}
+              aria-pressed={isActive}
+              onClick={() => handleToggle(option.value)}
+            >
+              {option.label}
+              {option.count !== undefined && <span className="ml-1 opacity-60">{option.count}</span>}
+            </button>
           </Badge>
         )
       })}
@@ -98,10 +107,10 @@ function FilterBar({
         <Button
           variant="ghost"
           size="sm"
-          className="h-6 gap-1 px-2 text-xs text-muted-foreground"
+          className="min-h-11 gap-1 px-3 text-xs text-muted-foreground"
           onClick={() => setSelected([])}
         >
-          <X className="size-3" />
+          <X className="size-3" aria-hidden="true" />
           Clear
         </Button>
       )}

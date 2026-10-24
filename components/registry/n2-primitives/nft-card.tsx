@@ -17,7 +17,7 @@ const typeColors: Record<NftType, string> = {
   badge: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]",
   chapter: "bg-[var(--color-tanzanite,#B388FF)]/15 text-[var(--color-tanzanite,#B388FF)]",
   artwork: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt,#00B0FF)]",
-  collectible: "bg-[var(--color-terracotta,#D4A574)]/15 text-[var(--color-terracotta,#D4A574)]",
+  collectible: "bg-[var(--color-terracotta)]/15 text-[var(--color-terracotta)]",
 }
 
 function NftCard({
