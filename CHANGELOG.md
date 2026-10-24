@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `ui/mzizi-verified-badge` contract with an Astro build, and the tier ladder as framework-free data (2026-10-24, #PRNUM)
+### Added — `ui/mzizi-verified-badge` contract with an Astro build, and the tier ladder as framework-free data (2026-10-24, #568)
 
 Gaps 5 and 7 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)).
 
