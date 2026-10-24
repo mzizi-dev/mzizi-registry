@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.16.0",
+    title:
+      "v4.16.0 — the Kweli business-dashboard gaps (verified-badge contract and Astro build, form-field 1.2, data-table 1.2, confirm-action, tier-status), provider-neutral money and plan-summary, and the mzizi-mongodb security fixes (Breaking) with the Roots crates at 0.5.0",
+    description:
+      "Releases staging to main as the next minor above v4.15.x (nyuchi/.github#80). The Mzizi Roots crates move to 0.5.0 so the mzizi-mongodb security fixes publish to crates.io. BREAKING: mzizi-mongodb (server contract 2.0.0) refuses cross-collection $lookup/$graphLookup/$unionWith in aggregate (use aggregate_joining) and returns Zeroizing secrets; server error text is no longer kept; replies over 64 KiB before login are refused; the hello handshake names the driver mzizi-mongodb (#567). The React mzizi-verified-badge no longer dims suspended or ancestral badges (#568). Kept a minor release by owner policy. Added: ui/mzizi-verified-badge contract 1.0.0 with an Astro build and the framework-free mzizi-trust-tier-data lib (#568); app/form-field 1.2 with checkbox, switch and radio group (#570); app/data-table 1.2 with person cells and script-free row actions (#571); app/confirm-action (#572); app/tier-status (#573); the provider-neutral money lib, app/money and app/plan-summary, with no default currency, locale or provider (#574, #569). CHANGELOG.md section [4.16.0] is the narrative. Tracking: packages-npm#79, #569.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 16,
+    patch: 0,
+    release_kind: "minor",
+    breaking: true,
+    released_at: "2026-10-24T21:00:00.000+00:00",
+    created_at: "2026-10-24T21:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.15.0",
     title:
       "v4.15.0 — verification tiers as --tier-* roles (Breaking: community terracotta, unverified neutral), light-mode --color-<mineral>-light tokens, trust-meter tier prop, shamwari as the third pillar on /v1/brand, stale #D4A574 fallbacks removed, and the mzizi-harness, mzizi-data and mzizi-mongodb crates",
