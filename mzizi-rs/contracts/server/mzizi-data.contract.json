@@ -2,15 +2,15 @@
   "$schema": "../schema/server-contract.schema.json",
   "name": "server/mzizi-data",
   "title": "mzizi-data",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "kind": "server",
-  "node": null,
-  "summary": "What every Mzizi database client shares: the transport trait, the error type and (on a Worker) the TLS socket. Nothing database-specific. The server harness is the separate mzizi-harness crate.",
+  "node": "n5-resilience",
+  "summary": "The transport trait, error type and Worker socket every Mzizi database client shares, and the data layer above them: a local, edge and cloud fetch cascade, sync reconciliation, tombstones, staleness, and local-first writes that roll back. Nothing database-specific, and no UI. The server harness is the separate mzizi-harness crate. Publishes with the next registry release to main.",
   "implementations": {
     "rs": {
       "crate": "mzizi-data",
       "path": "crates/mzizi-data",
-      "features": ["workers"]
+      "features": ["workers", "test-util"]
     }
   },
   "surface": [
@@ -22,17 +22,160 @@
     {
       "item": "pub enum Error",
       "file": "src/lib.rs",
-      "summary": "Uri, Io, Timeout, Codec, Protocol, Auth, Server, Refused."
+      "summary": "Uri, Io, Timeout, Codec, Protocol, Auth, Server, Refused. The error every data tier and client reports."
     },
     {
       "item": "pub type Result",
       "file": "src/lib.rs",
       "summary": "Result with Error."
+    },
+    {
+      "item": "pub trait Layer",
+      "file": "src/layer.rs",
+      "summary": "One storage tier: get, put and delete. An adapter implements it; the cascade never names a concrete store."
+    },
+    {
+      "item": "pub struct Record",
+      "file": "src/layer.rs",
+      "summary": "A stored entry: value (None for a tombstone), version, updated_at, and pending. Built with live, tombstone or from_parts."
+    },
+    {
+      "item": "pub enum Source",
+      "file": "src/layer.rs",
+      "summary": "Which tier answered: Local, Edge or Cloud."
+    },
+    {
+      "item": "pub struct MemoryLayer",
+      "file": "src/layer.rs",
+      "summary": "The in-memory reference adapter. set_available and peek are behind the test-util feature."
+    },
+    {
+      "item": "pub trait Clock",
+      "file": "src/clock.rs",
+      "summary": "The time source the host supplies. The crate reads no wall clock."
+    },
+    {
+      "item": "pub struct ManualClock",
+      "file": "src/clock.rs",
+      "summary": "A clock the caller sets, for deterministic tests."
+    },
+    {
+      "item": "pub struct Cascade",
+      "file": "src/cascade.rs",
+      "summary": "fetch, reconcile, apply_optimistic and delete over three Layers and a Clock; set_ttl and with_default_ttl."
+    },
+    {
+      "item": "pub struct Fetched",
+      "file": "src/cascade.rs",
+      "summary": "A read result: value, source, version, updated_at, fetched_at, stale, and the tier failures skipped on the way."
+    },
+    {
+      "item": "pub struct CascadeError",
+      "file": "src/cascade.rs",
+      "summary": "A read in which no tier answered: each failed tier and its error."
+    },
+    {
+      "item": "pub struct SyncReport",
+      "file": "src/cascade.rs",
+      "summary": "What one reconcile found: the winner, the tiers written, and the tier errors."
+    },
+    {
+      "item": "pub struct WriteOutcome",
+      "file": "src/cascade.rs",
+      "summary": "A write that reached every tier: the confirmed record and any tier whose confirmation failed."
+    },
+    {
+      "item": "pub enum OptimisticError",
+      "file": "src/cascade.rs",
+      "summary": "A write that did not complete: a Tier failure (with whether the rollback completed) or VersionOverflow."
     }
   ],
   "limits": [],
-  "guarantees": [],
-  "refusals": [],
+  "guarantees": [
+    {
+      "id": "local-first-within-ttl",
+      "statement": "A fresh local record answers a read alone, without asking the edge or the cloud.",
+      "tests": [
+        "local_hit_answers_without_touching_the_lower_tiers",
+        "a_fresh_local_record_is_not_checked_against_the_edge"
+      ]
+    },
+    {
+      "id": "stale-local-refreshes",
+      "statement": "A stale local record keeps the read going to the edge and then the cloud; the newest fresh record wins. If none is fresh, the newest stale record is returned with stale set and the failures listed.",
+      "tests": [
+        "a_stale_local_record_consults_the_edge_and_takes_its_newer_fresh_record",
+        "a_stale_local_record_with_a_failing_edge_refreshes_from_the_cloud",
+        "a_stale_local_record_with_every_lower_tier_failing_is_returned_stale_with_the_failures"
+      ]
+    },
+    {
+      "id": "write-back-never-older",
+      "statement": "A write-back never replaces a record that sorts higher; each write re-reads its target first.",
+      "tests": ["write_back_never_replaces_a_newer_record_with_an_older_one"]
+    },
+    {
+      "id": "cloud-authoritative",
+      "statement": "A cloud miss is Ok(None), even when local or edge failed on the way; the read is an error only when no tier answered.",
+      "tests": [
+        "cloud_miss_is_an_authoritative_none_and_writes_nothing",
+        "a_cloud_miss_after_the_upper_tiers_failed_is_still_a_miss"
+      ]
+    },
+    {
+      "id": "rollback-exact",
+      "statement": "A failed write restores every tier it attempted, including the one that failed, to its own previous record, exactly; a tier with none is deleted.",
+      "tests": [
+        "b5_rollback_restores_each_tier_to_its_own_record",
+        "b6_a_put_that_errors_after_applying_is_still_restored"
+      ]
+    },
+    {
+      "id": "pending-never-wins",
+      "statement": "A pending record never wins reconciliation while a confirmed record exists, so a rejected write cannot win after recovery.",
+      "tests": ["a_rejected_pending_write_never_wins_after_recovery"]
+    },
+    {
+      "id": "tombstone-wins",
+      "statement": "A newer tombstone wins and propagates; an older live copy cannot bring the record back.",
+      "tests": [
+        "a_newer_tombstone_wins_and_propagates_and_an_older_live_copy_cannot_resurrect_it"
+      ]
+    },
+    {
+      "id": "whole-record-sync",
+      "statement": "A tier is in sync only when the whole record matches the winner, updated_at included.",
+      "tests": [
+        "a_tier_is_in_sync_only_when_the_whole_record_matches_including_updated_at"
+      ]
+    },
+    {
+      "id": "future-dated-is-stale",
+      "statement": "A record stamped after the clock's now is reported stale.",
+      "tests": ["a_record_stamped_after_the_clock_is_reported_stale"]
+    },
+    {
+      "id": "send-follows-adapters",
+      "statement": "The futures a Cascade returns are Send when its layers and clock are Send; the crate adds no Send bound of its own.",
+      "tests": [
+        "the_cascades_futures_are_send_when_the_adapters_and_clock_are_send"
+      ]
+    }
+  ],
+  "refusals": [
+    {
+      "id": "version-overflow",
+      "input": "An apply or delete at a key whose newest version is u64::MAX.",
+      "reason": "The next version cannot be represented, so the write is refused rather than wrapped or saturated. Nothing is written.",
+      "tests": ["a_version_at_the_top_of_the_range_is_an_error_not_a_wrap"]
+    },
+    {
+      "id": "unreadable-tier-never-written-blind",
+      "input": "A reconcile that would write a tier it could not read.",
+      "reason": "The tier's newer data, if any, would be lost, so the tier is skipped and reported.",
+      "tests": ["reconcile_skips_an_unreachable_tier_and_never_writes_it"]
+    }
+  ],
   "harness": {
     "default": "Noop",
     "removable": true,
@@ -42,6 +185,11 @@
   },
   "gaps": [
     "The Postgres and SQLite clients (mzizi-postgres, mzizi-sqlite) do not exist yet; nothing is stubbed.",
-    "workers::SocketIo is compiled only for wasm32 with the workers feature, so its contract is held by a type check and clippy for wasm32-unknown-unknown, not by a native test."
+    "workers::SocketIo is compiled only for wasm32 with the workers feature, so its contract is held by a type check and clippy for wasm32-unknown-unknown, not by a native test.",
+    "No storage adapter for the local (IndexedDB, SQLite), edge (D1, KV) or cloud (Supabase) tiers exists yet. The cascade is tested only over in-memory tiers.",
+    "No background timer: the host schedules reconcile.",
+    "Tombstones are retained; there is no garbage collection.",
+    "There is no key enumeration, so a full sync is not provided.",
+    "The data layer is not wired into any app. The WASM payload budget (owner decision 6.2) is still open and gates that."
   ]
 }
