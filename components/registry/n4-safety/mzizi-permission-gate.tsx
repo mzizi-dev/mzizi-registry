@@ -25,17 +25,17 @@ const TIER_ORDER: Record<VerificationTier, number> = {
 const TIER_LABELS: Record<VerificationTier, string> = {
   unverified: "Unverified",
   community: "Community Verified",
-  otp: "OTP Verified",
-  government: "Government ID Verified",
+  otp: "Contact Verified",
+  government: "Government Verified",
   licensed: "Licensed Professional",
 }
 
 const TIER_MINERALS: Record<VerificationTier, string> = {
-  unverified: "var(--tier-unverified, var(--color-muted-foreground, #6B6B66))",
-  community: "var(--tier-community, var(--color-terracotta, #D4A574))",
-  otp: "var(--tier-otp, var(--color-cobalt, #00B0FF))",
-  government: "var(--tier-government, var(--color-gold, #FFD740))",
-  licensed: "var(--tier-licensed, var(--color-tanzanite, #B388FF))",
+  unverified: "var(--tier-unverified, var(--status-neutral))",
+  community: "var(--tier-community, var(--color-terracotta))",
+  otp: "var(--tier-otp, var(--color-cobalt))",
+  government: "var(--tier-government, var(--color-gold))",
+  licensed: "var(--tier-licensed, var(--color-tanzanite))",
 }
 
 interface MziziPermissionGateProps {

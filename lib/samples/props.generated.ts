@@ -10729,6 +10729,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "tier",
+      "type": "\"unverified\" | \"community\" | \"otp\" | \"government\" | \"licensed\"",
+      "required": false
+    },
+    {
       "name": "statusLabel",
       "type": "string",
       "required": false

@@ -9,7 +9,8 @@
  * render the same markup and keep the same contract. Server-rendered with no script. The bars
  * are SVG geometry (a `<rect>`'s `width` in a 0–100 viewBox), never inline `style`, so a page's
  * Content-Security-Policy needs no `style-src-attr 'unsafe-inline'`. Colour is semantic: the
- * score and the Verification and Status signals use the `--status-*` tokens; the Ubuntu signal
+ * score and the Verification and Status signals use the `--status-*` tokens (the Verification
+ * signal takes the user's `--tier-*` role when `tier` is set); the Ubuntu signal
  * is tanzanite in every brand, because it names the Ubuntu axis, not the brand.
  *
  * Scores are hidden by default (#543, as on the verified badge since #550): the header names the
@@ -40,6 +41,11 @@ interface Props {
   ubuntuPoints?: number;
   /** The verification tier's name, beside the Verification signal. */
   tierLabel?: string;
+  /**
+   * The verification tier code (system.verification_tier): colours the Verification signal with
+   * that tier's `--tier-*` role. Without it the signal is `--status-warning`.
+   */
+  tier?: "unverified" | "community" | "otp" | "government" | "licensed";
   /** The platform status's name, beside the Status signal. */
   statusLabel?: string;
   /** The meter bar alone, with no breakdown or signal list. */
@@ -62,6 +68,7 @@ const {
   ubuntuScore = 0,
   ubuntuPoints,
   tierLabel,
+  tier,
   statusLabel,
   compact = false,
   title = "Trust Score",
@@ -72,6 +79,26 @@ const {
 } = Astro.props;
 
 const PORTAL = "https://mzizi.dev/components/mzizi-trust-meter";
+/**
+ * The Verification signal in the user's own tier colour (#543): the `--tier-*` roles, defined
+ * once in the N1 tokens. Literal class names so Tailwind generates them. Without `tier` the
+ * signal keeps `--status-warning`, as before.
+ */
+const TIER_TEXT = {
+  unverified: "text-tier-unverified-text",
+  community: "text-tier-community-text",
+  otp: "text-tier-otp-text",
+  government: "text-tier-government-text",
+  licensed: "text-tier-licensed-text",
+} as const;
+const TIER_FILL = {
+  unverified: "fill-tier-unverified",
+  community: "fill-tier-community",
+  otp: "fill-tier-otp",
+  government: "fill-tier-government",
+  licensed: "fill-tier-licensed",
+} as const;
+
 /** A 0–1 value as a bar width in a 0–100 viewBox, two decimals. */
 const width = (v: number) => String(Math.round(Math.min(Math.max(v, 0), 1) * 10000) / 100);
 
@@ -98,8 +125,8 @@ const breakdown = [
     label: "Verification",
     icon: "shield",
     value: verificationScore,
-    text: "text-status-warning",
-    fill: "fill-status-warning",
+    text: tier ? TIER_TEXT[tier] : "text-status-warning",
+    fill: tier ? TIER_FILL[tier] : "fill-status-warning",
     detail: tierLabel,
   },
   {

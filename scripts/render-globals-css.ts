@@ -1147,6 +1147,9 @@ export function renderGlobalsCss(
       out.push(`  --mineral-${m.name}-on-container: ${lo(oc)}; /* APCA Lc ${pick(measured.light, measured.dark)} on the container */`)
       out.push(`  --mineral-${m.name}-aa: ${lo(a.hex)}; /* ${a.note} */`)
       out.push(`  --mineral-${m.name}-text: ${lo(tx(m.name, mode).hex)}; /* ${tx(m.name, mode).note} */`)
+      // The light-mode value in EVERY theme (#543): for a surface that stays light in a dark
+      // app (a printed card, an email preview). The same in both blocks, so it never flips.
+      out.push(`  --mineral-${m.name}-light: ${lo(m.lightHex)}; /* ${m.name}'s light-mode value, fixed across themes */`)
     }
 
     out.push("")
@@ -1342,6 +1345,7 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
     out.push(`  --color-${m.name}-on-container: var(--mineral-${m.name}-on-container);`)
     out.push(`  --color-${m.name}-aa: var(--mineral-${m.name}-aa);`)
     out.push(`  --color-${m.name}-text: var(--mineral-${m.name}-text);`)
+    out.push(`  --color-${m.name}-light: var(--mineral-${m.name}-light);`)
   }
   for (const h of heritage) {
     out.push(`  --color-${h.name}: var(--heritage-${h.name});`)
