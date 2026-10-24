@@ -46,6 +46,7 @@ export const ICON_PATHS = {
   sliders: "M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1M15 4v4M9 10v4M17 16v4",
   help: "M12 21a9 9 0 100-18 9 9 0 000 18zM9.5 9a2.5 2.5 0 015 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01",
   info: "M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5M12 8h.01",
+  warning: "M12 3.5l9.5 16.5h-19L12 3.5zM12 10v4M12 17h.01",
   "panel-left": "M4 4h16v16H4zM9 4v16",
   "chevrons-up-down": "M8 9l4-4 4 4M8 15l4 4 4-4",
   "log-out": "M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10",

@@ -42,3 +42,12 @@ const twMerge = extendTailwindMerge({
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/**
+ * Text as an HTML `pattern` that matches exactly that text: regex syntax is
+ * escaped for the `v` flag browsers compile `pattern` with (a hyphen stays
+ * bare, since `\-` is an error there). For "type DELETE to confirm".
+ */
+export function exactPattern(text: string): string {
+  return text.replace(/[\\^$.*+?()[\]{}|/]/g, "\\$&")
+}

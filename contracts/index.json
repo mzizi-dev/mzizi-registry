@@ -138,6 +138,15 @@
       "rs": null
     },
     {
+      "name": "app/confirm-action",
+      "title": "ConfirmAction",
+      "version": "1.0.0",
+      "file": "app/confirm-action.contract.json",
+      "astro": "app-confirm-action",
+      "tsx": "app-confirm-action",
+      "rs": null
+    },
+    {
       "name": "app/filter-bar",
       "title": "FilterBar",
       "version": "1.1.0",
