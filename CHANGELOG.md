@@ -21,7 +21,7 @@ Two of the Kweli gaps tracked in #543.
 
 ### Security — dependency floors for the advisories that failed `audit:check` on `staging` (2026-10-24, #544)
 
-`pnpm audit --audit-level=moderate` failed on `staging`'s lockfile with four new advisories, so it failed every pull request. Raised to the first patched release: `undici` override `^7.30.1` (three advisories, through `astro > unifont`), `fast-uri` override `^3.1.9` (two, through `shadcn > … > ajv`), new `body-parser` override `^2.4.0` (through `shadcn > @modelcontextprotocol/sdk > express`), and `zod` `^4.6.7` as the dependency (GHSA-mrhx-c7xc-m3w5, `<4.6.6`). The same advisory also matches the `zod` 3.25.76 that the `shadcn` CLI pins (`zod ^3.24.1`); there is no patched 3.x, and the CLI is a devDependency that validates this repo's own registry files, so GHSA-mrhx-c7xc-m3w5 joins `pnpm.auditConfig.ignoreGhsas`. `audit:check` exits 0.
+`pnpm audit --audit-level=moderate` failed on `staging`'s lockfile with four new advisories, so it failed every pull request. Raised to the first patched release: `undici` override `^7.30.1` (three advisories, through `astro > unifont`), `fast-uri` override `^3.1.9` (two, through `shadcn > … > ajv`), new `body-parser` override `^2.4.0` (through `shadcn > @modelcontextprotocol/sdk > express`), and `zod` `^4.6.7` as the dependency (GHSA-mrhx-c7xc-m3w5, `<4.6.6`). The same advisory matched the `zod` 3.25.76 that the `shadcn` CLI pinned (`zod ^3.24.1`, no patched 3.x), so the `shadcn` devDependency moves to `^4.22.1`, the first release on `zod` 4. One `zod` (4.6.7) is left in the tree. `audit:check` exits 0.
 
 ## [4.11.0] - 2026-10-23
 
