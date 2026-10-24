@@ -10,6 +10,11 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — every dependency and override is a minimum version (2026-10-21, #534)
+
+- **`package.json`.** Every `dependencies`, `devDependencies` and `pnpm.overrides` entry is now `>=x.y.z` with no maximum, exact pins included (owner, 2026-10-21: "mark packages with minimum acceptable, latest shouldn't be a blocker on too old of a version"). Each floor is the version the lockfile already resolved, or the advisory floor `staging` already set where that is higher: `next` `>=16.4.1` (it was an exact pin), `dompurify` `>=3.4.17` as the dependency and the override, `vitest` `>=5.0.5` and the `ip-address` override `>=10.7.4` (4.11.0, #533), and `zod` `>=4.6.7`, `shadcn` `>=4.22.1`, `body-parser` `>=2.4.0`, `undici` `>=7.30.1` and `fast-uri` `>=3.1.9` (#545). The `zod@<4.6.6` override keeps its selector, and `auditConfig.ignoreGhsas` is unchanged. Four overrides for packages not in the tree (`@xmldom/xmldom`, `lodash-es`, `uuid`, `minimatch@8>brace-expansion`) keep their old floor.
+- **`pnpm-lock.yaml`.** Regenerated from `staging`'s lockfile with pnpm 10.33.0, direct dependencies resolved at their floors, so no direct dependency moves. Duplicate transitive copies of a few packages collapsed onto the newer copy already in the tree. With no upper bound, a resolve without the lockfile may cross majors (undici 8, fast-uri 4); the `micromatch>picomatch` and `minimatch@8>brace-expansion` overrides no longer hold their parent's major on such a resolve.
+
 ### Added — the Kweli Address primitives: address code, share card with QR, "deliver to" selector, private-address row; counted signals on `mzizi-trust-meter` (2026-10-24, #546)
 
 Gap 4 of #543, upstream before Kweli consumes them (Kweli Address RFC v0.1, mukoko-dev/kweli#195). Each is an Astro build and a React build under one contract in `contracts/ui/`. Both builds render every contract state in the suites. They are server-rendered with no script, and their colour is semantic only, so Kweli's brand overlay (malachite) colours the links and the selection.
