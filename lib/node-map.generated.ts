@@ -63,6 +63,7 @@ export const NODE_MAP: Readonly<Record<string, string>> = {
   "app-stat-tiles": "n6",
   "app-state-message": "n6",
   "app-switcher": "n7",
+  "app-tier-status": "n6",
   "app-toast": "n6",
   "app-toolbar": "n6",
   "app-toolbar-menu": "n6",
