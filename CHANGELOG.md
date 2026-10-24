@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `app/data-table` 1.2: person cells and per-row actions that work without script (2026-10-24, #PRNUM)
+
+Gap 3 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): a team list could show members but not act on one.
+
+- **`person` cells**: `{ text, sub, person: true, avatar? }` draws an avatar (the image with `alt=""`, or the person's initials, `aria-hidden`) beside the name (a link with `href`) and the secondary line (an email or a role).
+- **`actions`**, keyed by each row's `rowKey` text. An action is a link (`href`) or a small `<form>` (POST unless `method: "get"`, posting its hidden `fields`). One action is an outline button in the row whose accessible name ends with the row's name; several are a `<details>` menu named "Actions for <row>". `destructive` actions are drawn in the destructive colour and listed last. A visually hidden "Actions" column header is added only when some row has actions.
+- **`ui-utils`** gains `initialsOf(name)`; **`site-icons`** gains `more`.
+- Contract 1.1.0 → 1.2.0 (minor: a new prop and new cell fields, nothing removed): a `team` state, 2 new clauses, 15 new checks and 3 density rows (32px fine, 44px coarse). Both builds keep it with no script.
+
 ### Security — `mzizi-mongodb`: server error text dropped, cross-collection reads refused, a 64 KiB reply cap before login, secrets zeroised, a neutral driver name (2026-10-24, #567)
 
 The six items left open by the security review on #502. Each fix has a regression test that fails without it (checked by reverting each fix with the tests in place). Server contract `mzizi-mongodb` 1.0.0 → 2.0.0.
