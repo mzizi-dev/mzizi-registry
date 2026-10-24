@@ -75,7 +75,7 @@ const index = JSON.parse(read("index.json")) as {
  * pattern, `site/` the marketing-site components, `ui/` the Astro ports of
  * registry primitives.
  */
-const FAMILIES = { app: 34, discover: 16, site: 8, ui: 18 } as const
+const FAMILIES = { app: 35, discover: 16, site: 8, ui: 18 } as const
 // Keys are `<family>/<file>`, the path under contracts/.
 const files = Object.keys(FAMILIES)
   .flatMap((family) =>

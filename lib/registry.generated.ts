@@ -672,6 +672,8 @@ export const REGISTRY_FILES: readonly string[] = [
   "n6-pages/app-stat-tiles.tsx",
   "n6-pages/app-state-message.astro",
   "n6-pages/app-state-message.tsx",
+  "n6-pages/app-tier-status.astro",
+  "n6-pages/app-tier-status.tsx",
   "n6-pages/app-toast.astro",
   "n6-pages/app-toast.tsx",
   "n6-pages/app-toolbar-menu.astro",

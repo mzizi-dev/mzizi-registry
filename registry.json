@@ -1937,6 +1937,52 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "pages"],
       "dependencies": [],
+      "description": "Where an account stands on the verification ladder: the current rung, the ladder (Unverified, Community Verified, Contact Verified, Government Verified, Licensed Professional) as an ordered list with each rung's state in words, the attestations held as facts, and what the next rung needs with a link to submit evidence. It takes data and computes no access decision; colours are the --tier-* roles from mzizi-trust-tier-data.",
+      "docs": "Use it for: A business's verification screen in a dashboard, A person's verification status on their profile settings.\nIncludes: The five-rung ladder from mzizi-trust-tier-data, reached rungs on their --tier-* container pair, Attestations as facts, with an optional detail, The next rung's requirements and a link to submit evidence; \"This is the highest level.\" at the top, Takes data, computes no access decision (the server decides), Every word replaceable (tierLabels, copy, title).\nAccessibility: A section labelled by its heading; the ladder is a named ordered list., aria-current=\"step\" on the current rung; every rung's state is written (Done, Current, Next)., Glyphs and level numbers are aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-tier-status",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-tier-status.tsx",
+          "target": "components/ui/app-tier-status.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "A section labelled by its heading; the ladder is a named ordered list.",
+          "aria-current=\"step\" on the current rung; every rung's state is written (Done, Current, Next).",
+          "Glyphs and level numbers are aria-hidden."
+        ],
+        "collection": "app",
+        "contract": "app/tier-status",
+        "features": [
+          "The five-rung ladder from mzizi-trust-tier-data, reached rungs on their --tier-* container pair",
+          "Attestations as facts, with an optional detail",
+          "The next rung's requirements and a link to submit evidence; \"This is the highest level.\" at the top",
+          "Takes data, computes no access decision (the server decides)",
+          "Every word replaceable (tierLabels, copy, title)"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A business's verification screen in a dashboard",
+          "A person's verification status on their profile settings"
+        ]
+      },
+      "name": "app-tier-status",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/mzizi-trust-tier-data",
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Tier Status",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
       "description": "The result of the last action (saved, signed out), carried across Post/Redirect/Get as a flash, in a polite live region. It stays until dismissed; dismissing needs no script.",
       "docs": "Use it for: The result of the last action (saved, signed out), carried across Post/Redirect/Get as a flash, in a polite live region (Mzizi Dashboard Standard).\nIncludes: The live region is always rendered, so a message that arrives is announced., No timeout (WCAG 2.2.3)., Dismiss is a <label> for a hidden checkbox; checked, the toast hides..\nAccessibility: aria-live=\"polite\" region..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-toast",
       "files": [

@@ -21,6 +21,15 @@ Phase 1 of the payment framework ([#569](https://github.com/mzizi-dev/mzizi-regi
 - **Guard:** `__tests__/components/provider-neutral-billing.test.ts` fails if these files name a payment provider, a platform token (MXT, MIT, NST, NHC) or a brand, or default a currency or a locale.
 - The Dashboard Standard now has 35 app contracts. The older payment components keep their USD and MXT defaults for now: removing them is phase 2.
 
+### Added — `app/tier-status`: the verification ladder, what is held, and what the next rung needs (2026-10-24, #573)
+
+Gap 6 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)).
+
+- **New contract `app/tier-status` 1.0.0** with Astro (`app-tier-status.astro`, the default build) and React builds held to it: 4 states, 8 clauses, 21 checks, 2 density rows. The Dashboard Standard now has 33 app contracts.
+- The current rung beside the heading (its glyph on its `--tier-*` container pair, "Current level: <name>" in the tier's text colour), then the ladder as an `<ol>` of the five rungs (Unverified, Community Verified, Contact Verified, Government Verified, Licensed Professional) with each state in words ("Done", "Current" with `aria-current="step"`, "Next"), never colour alone.
+- "What you hold" lists `attestations` as facts; "Next: <name>" lists `requirements` with an optional evidence link; the top rung says "This is the highest level."
+- It takes data and computes no access decision or score: the server decides (api-gateway `assurance.py`). The ladder comes from `mzizi-trust-tier-data` (#568). Every word can be replaced (`tierLabels`, `copy`, `title`).
+
 ### Added — `app/confirm-action`: a destructive action that asks first, with no script (2026-10-24, #572)
 
 Gap 4 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)). The app family had no confirmation; `alert-dialog` is a legacy Radix component.
