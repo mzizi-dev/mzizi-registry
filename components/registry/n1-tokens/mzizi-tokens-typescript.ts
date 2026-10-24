@@ -1811,6 +1811,18 @@ export const roles = {
     light: "#FAF9F5",
     dark: "#050504",
   },
+  "surface-qr": {
+    kind: "surface",
+    cssVar: "--surface-qr",
+    light: "#FFFFFF",
+    dark: "#FFFFFF",
+  },
+  "on-surface-qr": {
+    kind: "text",
+    cssVar: "--on-surface-qr",
+    light: "#0E0D0C",
+    dark: "#0E0D0C",
+  },
   "text-primary": {
     kind: "text",
     cssVar: "--text-primary",
@@ -2286,6 +2298,12 @@ export const roles = {
     cssVar: "--destructive-text",
     light: "#9F221B",
     dark: "#F3C0BD",
+  },
+  "status-error": {
+    kind: "ui",
+    cssVar: "--status-error",
+    light: "#B3261E",
+    dark: "#F3BDBA",
   },
   "overlay-foreground": {
     kind: "text",

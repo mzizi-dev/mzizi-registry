@@ -265,8 +265,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": ["uqr"],
-      "description": "An address to hand to someone: a QR code that opens the share link (drawn server-side as one SVG path in currentColor, no script, no image request), the address-code chip, the link written out, and the directions in words. Astro and React builds under contract ui/address-share-card.",
-      "docs": "Use it for: Sharing a Kweli address by QR, print or screenshot, Venue \"getting there\" cards on Mukoko Events.\nIncludes: Server-side QR (uqr) in currentColor, The link written out as well as encoded, Astro and React builds, one contract.\nAccessibility: The QR is role=\"img\" with an aria-label naming the link, The same link is in the text, for anyone who cannot scan.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-share-card",
+      "description": "An address to hand to someone: a QR code that opens the share link (drawn server-side as one SVG path in currentColor, no script, no image request), the address-code chip, the link written out, and the directions in words. Astro and React builds under contract ui/address-share-card. The QR sits on a surface-qr plate in on-surface-qr ink (white and ink in every theme), so it is never inverted in a dark theme; codeLabel names the code chip for assistive technology.",
+      "docs": "Use it for: Sharing a Kweli address by QR, print or screenshot, Venue \"getting there\" cards on Mukoko Events.\nIncludes: Server-side QR (uqr) in currentColor, The link written out as well as encoded, Astro and React builds, one contract, QR on a light surface-qr plate in every theme, codeLabel names the code chip.\nAccessibility: The QR is role=\"img\" with an aria-label naming the link, The same link is in the text, for anyone who cannot scan.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-share-card",
       "files": [
         {
           "path": "components/registry/n3-brand/address-share-card.tsx",
@@ -283,7 +283,9 @@
         "features": [
           "Server-side QR (uqr) in currentColor",
           "The link written out as well as encoded",
-          "Astro and React builds, one contract"
+          "Astro and React builds, one contract",
+          "QR on a light surface-qr plate in every theme",
+          "codeLabel names the code chip"
         ],
         "owner": "mzizi",
         "useCases": [
@@ -914,8 +916,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "brand"],
       "dependencies": [],
-      "description": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
-      "docs": "Use it for: An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked (Mzizi Dashboard Standard).\nIncludes: The marks are the registry's canonical icon pair, never redrawn., Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script., The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"..\nAccessibility: alt is the brand name, or empty when text names it..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-brand-mark",
+      "description": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme. Both images load lazily (loading, default \"lazy\"; \"eager\" for an LCP mark) and decode asynchronously.",
+      "docs": "Use it for: An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked (Mzizi Dashboard Standard).\nIncludes: The marks are the registry's canonical icon pair, never redrawn., Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script., The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"., loading: lazy by default, eager on request; decoding=async.\nAccessibility: alt is the brand name, or empty when text names it..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-brand-mark",
       "files": [
         {
           "path": "components/registry/n3-brand/app-brand-mark.tsx",
@@ -930,7 +932,8 @@
         "features": [
           "The marks are the registry's canonical icon pair, never redrawn.",
           "Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script.",
-          "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"."
+          "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\".",
+          "loading: lazy by default, eager on request; decoding=async"
         ],
         "hasDemo": false,
         "owner": "mzizi",
@@ -7094,8 +7097,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["discover", "pages"],
       "dependencies": [],
-      "description": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button.",
-      "docs": "Use it for: One category link in a CategoryChips row: a 44px pill with the name and an optional count (Mzizi Discover Standard).\nIncludes: Renders its own <li>, so it can be repeated as a fragment., The current chip is filled (foreground on background) and has aria-current..\nAccessibility: aria-current=\"page\" on the current category; the state is never colour alone..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-category-chip",
+      "description": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button. linkComponent (React build) renders the link with the app's router link, as on mzizi-place-card.",
+      "docs": "Use it for: One category link in a CategoryChips row: a 44px pill with the name and an optional count (Mzizi Discover Standard).\nIncludes: Renders its own <li>, so it can be repeated as a fragment., The current chip is filled (foreground on background) and has aria-current., linkComponent renders the link with the app's router link (React build)..\nAccessibility: aria-current=\"page\" on the current category; the state is never colour alone..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-category-chip",
       "files": [
         {
           "path": "components/registry/n6-pages/discover-category-chip.tsx",
@@ -7111,7 +7114,8 @@
         "contract": "discover/category-chip",
         "features": [
           "Renders its own <li>, so it can be repeated as a fragment.",
-          "The current chip is filled (foreground on background) and has aria-current."
+          "The current chip is filled (foreground on background) and has aria-current.",
+          "linkComponent renders the link with the app's router link (React build)."
         ],
         "hasDemo": false,
         "owner": "mzizi",
@@ -8303,8 +8307,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "A horizontal bar of toggleable filter chips with optional counts and a clear button.",
-      "docs": "Use it for: Search result filtering with active indicators, Marketplace listing filters, Inbox and feed filtering, Analytics dashboard filter bar, Content library category filters.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/filter-bar",
+      "description": "A horizontal bar of toggleable filter chips with optional counts and a clear button. Each chip is a real <button type=\"button\"> with aria-pressed, styled as a badge, in a role=\"group\" named by label (\"Filters\"), so the bar works fully from the keyboard and announces each chip's state.",
+      "docs": "Use it for: Search result filtering with active indicators, Marketplace listing filters, Inbox and feed filtering, Analytics dashboard filter bar, Content library category filters.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: role=group with an aria-label (label, \"Filters\" by default), Every chip is a <button type=\"button\"> with aria-pressed: in the tab order, operated with Enter and Space, Chips and Clear are at least 44px tall.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/filter-bar",
       "files": [
         {
           "path": "components/registry/n2-primitives/filter-bar.tsx",
@@ -8313,7 +8317,11 @@
         }
       ],
       "meta": {
-        "a11y": ["ARIA attributes", "Keyboard accessible"],
+        "a11y": [
+          "role=group with an aria-label (label, \"Filters\" by default)",
+          "Every chip is a <button type=\"button\"> with aria-pressed: in the tab order, operated with Enter and Space",
+          "Chips and Clear are at least 44px tall"
+        ],
         "collection": "primitives",
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,
@@ -9178,6 +9186,37 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["assets"],
       "dependencies": [],
+      "description": "The kweli app icon, 180px Apple touch PNG: the Apple touch icon (iOS home screen); link it with <link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png\">. The kweli mark (a shield with a tick, malachite #004d40) from kweli-mark-light.svg, unchanged, centred on an opaque white plate, rendered by scripts/render-kweli-icons.mjs. Installs into public/apple-touch-icon.png. Manifest: \"icons\": [{ \"src\": \"/icons/kweli-icon-192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-maskable-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"maskable\" }].",
+      "docs": "Use it for: The Apple touch icon (iOS home screen); link it with <link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png\">.\nIncludes: 180px Apple touch PNG, Opaque white plate, The kweli mark, unchanged.\nAccessibility: Decorative: the app's name labels it on the home screen.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-apple-touch-icon",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-apple-touch-icon.png",
+          "target": "public/apple-touch-icon.png",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the app's name labels it on the home screen"],
+        "collection": "assets",
+        "features": [
+          "180px Apple touch PNG",
+          "Opaque white plate",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The Apple touch icon (iOS home screen); link it with <link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png\">"
+        ]
+      },
+      "name": "kweli-apple-touch-icon",
+      "registryDependencies": [],
+      "title": "kweli Apple Touch Icon",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
       "description": "The kweli favicon: the kweli mark (a shield with a tick) at 32px, mono in malachite, switching between the light-surface and dark-surface malachite with prefers-color-scheme. Kweli's own shipped favicon (mukoko-dev/kweli). Installs into public/favicon.svg; link it with <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\">.",
       "docs": "Use it for: The kweli.mukoko.com browser tab icon, Bookmarks and pinned tabs.\nIncludes: 32px vector favicon, Follows prefers-color-scheme: malachite #004d40 on light, #64ffda on dark, The kweli mark, unchanged.\nAccessibility: Decorative: the page <title> names the site.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-favicon",
       "files": [
@@ -9204,6 +9243,97 @@
       "name": "kweli-favicon",
       "registryDependencies": [],
       "title": "kweli Favicon",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli app icon, 192px PNG: the PWA manifest's 192x192 icon (purpose any). The kweli mark (a shield with a tick, malachite #004d40) from kweli-mark-light.svg, unchanged, centred on an opaque white plate, rendered by scripts/render-kweli-icons.mjs. Installs into public/icons/kweli-icon-192.png. Manifest: \"icons\": [{ \"src\": \"/icons/kweli-icon-192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-maskable-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"maskable\" }].",
+      "docs": "Use it for: The PWA manifest's 192x192 icon (purpose any).\nIncludes: 192px PNG, Opaque white plate, The kweli mark, unchanged.\nAccessibility: Decorative: the app's name labels it on the home screen.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-icon-192",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-icon-192.png",
+          "target": "public/icons/kweli-icon-192.png",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the app's name labels it on the home screen"],
+        "collection": "assets",
+        "features": [
+          "192px PNG",
+          "Opaque white plate",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": ["The PWA manifest's 192x192 icon (purpose any)"]
+      },
+      "name": "kweli-icon-192",
+      "registryDependencies": [],
+      "title": "kweli Icon 192",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli app icon, 512px PNG: the PWA manifest's 512x512 icon (purpose any), also the install splash. The kweli mark (a shield with a tick, malachite #004d40) from kweli-mark-light.svg, unchanged, centred on an opaque white plate, rendered by scripts/render-kweli-icons.mjs. Installs into public/icons/kweli-icon-512.png. Manifest: \"icons\": [{ \"src\": \"/icons/kweli-icon-192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-maskable-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"maskable\" }].",
+      "docs": "Use it for: The PWA manifest's 512x512 icon (purpose any), also the install splash.\nIncludes: 512px PNG, Opaque white plate, The kweli mark, unchanged.\nAccessibility: Decorative: the app's name labels it on the home screen.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-icon-512",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-icon-512.png",
+          "target": "public/icons/kweli-icon-512.png",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the app's name labels it on the home screen"],
+        "collection": "assets",
+        "features": [
+          "512px PNG",
+          "Opaque white plate",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The PWA manifest's 512x512 icon (purpose any), also the install splash"
+        ]
+      },
+      "name": "kweli-icon-512",
+      "registryDependencies": [],
+      "title": "kweli Icon 512",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli app icon, 512px maskable PNG: the PWA manifest's maskable icon (purpose maskable): the mark spans 66% so the whole shield stays inside the launcher's 80% safe-zone circle. The kweli mark (a shield with a tick, malachite #004d40) from kweli-mark-light.svg, unchanged, centred on an opaque white plate, rendered by scripts/render-kweli-icons.mjs. Installs into public/icons/kweli-icon-maskable-512.png. Manifest: \"icons\": [{ \"src\": \"/icons/kweli-icon-192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-maskable-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"maskable\" }].",
+      "docs": "Use it for: The PWA manifest's maskable icon (purpose maskable): the mark spans 66% so the whole shield stays inside the launcher's 80% safe-zone circle.\nIncludes: 512px maskable PNG, Opaque white plate, The kweli mark, unchanged.\nAccessibility: Decorative: the app's name labels it on the home screen.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-icon-maskable-512",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-icon-maskable-512.png",
+          "target": "public/icons/kweli-icon-maskable-512.png",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the app's name labels it on the home screen"],
+        "collection": "assets",
+        "features": [
+          "512px maskable PNG",
+          "Opaque white plate",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The PWA manifest's maskable icon (purpose maskable): the mark spans 66% so the whole shield stays inside the launcher's 80% safe-zone circle"
+        ]
+      },
+      "name": "kweli-icon-maskable-512",
+      "registryDependencies": [],
+      "title": "kweli Icon Maskable 512",
       "type": "registry:item"
     },
     {
@@ -11672,8 +11802,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Cover image header with overlapping avatar or logo. Used by individual and org profile pages. Branded with mineral accents and verification badge slot. Extracted from individual-profile-page and org-profile-page.",
-      "docs": "Use it for: pulse, jobs, campfire, bytes, circles.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-cover-header",
+      "description": "Cover image header with overlapping avatar or logo. Used by individual and org profile pages. Branded with mineral accents and verification badge slot. Extracted from individual-profile-page and org-profile-page. The cover is a real <img> (lazy and async by default; priority loads it eagerly with fetchpriority=\"high\" for LCP; coverAlt sets its alt, empty by default), the avatar box is drawn only when an avatar is given, and role=\"banner\" is opt-in (banner), because the header usually sits inside <main>, where a second banner landmark duplicates the page's own.",
+      "docs": "Use it for: pulse, jobs, campfire, bytes, circles.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, Cover drawn as an <img>: lazy by default, priority for LCP, coverAlt, Avatar box only with an avatar, role=\"banner\" opt-in via banner.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, role=\"banner\" only with banner (no duplicate banner landmark inside <main>).\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-cover-header",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-cover-header.tsx",
@@ -11685,14 +11815,17 @@
         "a11y": [
           "Focus-visible ring on interactive elements",
           "48px minimum touch targets",
-          "ARIA role attribute"
+          "role=\"banner\" only with banner (no duplicate banner landmark inside <main>)"
         ],
         "collection": "brand",
         "features": [
           "Harness integration (log, motion, LiveRegion)",
           "animStyle with prefersReduced motion check",
           "Mineral-colored accent via brand override",
-          "data-slot + data-portal DOM attributes"
+          "data-slot + data-portal DOM attributes",
+          "Cover drawn as an <img>: lazy by default, priority for LCP, coverAlt",
+          "Avatar box only with an avatar",
+          "role=\"banner\" opt-in via banner"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -12618,8 +12751,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": ["lucide-react"],
-      "description": "DEPRECATED: Use mzizi-ticket-card instead. This was an early pre-brand event card without harness, motion, or ARIA integration.",
-      "docs": "Use it for: Event listings in Mukoko Events (meetups, gatherings, ceremonies), Upcoming shows and performances, Calendar agenda items with location, RSVP-driven community events, Ticketed events with date and price.\nVariants: default, compact, hero, agenda-row.\nIncludes: Date and time display with locale formatting, Location with map link, RSVP button slot, Mineral accent per event category, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced.\nAccessibility: role=article, aria-label with event title and date, Focus-visible ring, 48px minimum touch target, Screen reader announces title, date, location, RSVP count, Time elements use datetime attribute for assistive tech.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-event-card",
+      "description": "DEPRECATED: Use mzizi-ticket-card instead. This was an early pre-brand event card without harness, motion, or ARIA integration. Kweli still uses it, so it takes optional price (or free, shown as \"Free\" or freeLabel), description (two lines) and share slots, and all seven minerals: cobalt, tanzanite, malachite, gold, terracotta, sodalite and copper.",
+      "docs": "Use it for: Event listings in Mukoko Events (meetups, gatherings, ceremonies), Upcoming shows and performances, Calendar agenda items with location, RSVP-driven community events, Ticketed events with date and price.\nVariants: default, compact, hero, agenda-row.\nIncludes: Date and time display with locale formatting, Location with map link, RSVP button slot, Mineral accent per event category, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced, price / free, description and share slots, All seven minerals (cobalt, tanzanite, malachite, gold, terracotta, sodalite, copper).\nAccessibility: role=article, aria-label with event title and date, Focus-visible ring, 48px minimum touch target, Screen reader announces title, date, location, RSVP count, Time elements use datetime attribute for assistive tech.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-event-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-event-card.tsx",
@@ -12643,7 +12776,9 @@
           "RSVP button slot",
           "Mineral accent per event category",
           "Harness integration (log, motion, LiveRegion)",
-          "animStyle with prefersReduced"
+          "animStyle with prefersReduced",
+          "price / free, description and share slots",
+          "All seven minerals (cobalt, tanzanite, malachite, gold, terracotta, sodalite, copper)"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -14549,8 +14684,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Place/location card with map pin, verification badge (mzizi-verified-badge), distance, rating and an open/closed flag. Two variants: row and compact. Pass href (and target=\"_top\" in an embed) to make the whole card a real link, with rel=\"noopener noreferrer\" for any target but _self, _top and _parent, and linkComponent (Next Link, a React Router Link) to render that link through the app's router for client-side navigation and prefetch; the cover image loads lazily and decodes asynchronously unless priority is set (eager, fetchpriority=\"high\", for the card above the fold); or pass onClick for a role=\"button\" card that answers Enter and Space. A footer slot renders under the row; without href it may hold controls, whose clicks and keys never reach the card's onClick. Maps to places.places. Used in Mukoko Places, Kweli place embeds, Shamwari location suggestions and any app that displays a physical location.",
-      "docs": "Use it for: Mukoko Places location listings, Shamwari hospitality suggestions, Nearby places discovery, Verified business directories, Location-based search results.\nVariants: row, compact.\nIncludes: Verification badge from mzizi-verified-badge, with an optional tier label (\"Unverified\" at tier 0), Category under the name in both variants, Open/closed flag (no opening-hours schedule), href + target render the root as a real link, with rel=noopener noreferrer for any target but _self, _top and _parent, linkComponent renders that link through the app's router (Next Link, React Router Link), with the same href, className, children and attributes, Cover image loads lazily and decodes asynchronously; priority loads it eagerly with fetchpriority=high, Footer slot under the row, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes on the card and its skeleton.\nAccessibility: With href the root is an <a>, with no nested interactive element, With onClick and no href the card is role=button, focusable, and answers Enter and Space, Clicks and keys on a control inside the card (a footer button) stay with that control and never fire the card's onClick, Focus-visible ring, Verification badge is role=img with an aria-label naming the tier, Decorative images and icons are hidden from assistive technology.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-place-card",
+      "description": "Place/location card with map pin, verification badge (mzizi-verified-badge), distance, rating and an open/closed flag. Two variants: row and compact. Pass href (and target=\"_top\" in an embed) to make the whole card a real link, with rel=\"noopener noreferrer\" for any target but _self, _top and _parent, and linkComponent (Next Link, a React Router Link) to render that link through the app's router for client-side navigation and prefetch; the cover image loads lazily and decodes asynchronously unless priority is set (eager, fetchpriority=\"high\", for the card above the fold); or pass onClick for a role=\"button\" card that answers Enter and Space. A footer slot renders under the row; without href it may hold controls, whose clicks and keys never reach the card's onClick. Maps to places.places. Used in Mukoko Places, Kweli place embeds, Shamwari location suggestions and any app that displays a physical location. tierLabel names the tier in the app's own words: it is the badge's label (its title and accessible name) and the text showTierLabel prints. linkLabel sets the accessible name of the card's link or button.",
+      "docs": "Use it for: Mukoko Places location listings, Shamwari hospitality suggestions, Nearby places discovery, Verified business directories, Location-based search results.\nVariants: row, compact.\nIncludes: Verification badge from mzizi-verified-badge, with an optional tier label (\"Unverified\" at tier 0), Category under the name in both variants, Open/closed flag (no opening-hours schedule), href + target render the root as a real link, with rel=noopener noreferrer for any target but _self, _top and _parent, linkComponent renders that link through the app's router (Next Link, React Router Link), with the same href, className, children and attributes, Cover image loads lazily and decodes asynchronously; priority loads it eagerly with fetchpriority=high, Footer slot under the row, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes on the card and its skeleton, tierLabel passed to the verified badge's label and the printed tier, linkLabel sets the link's (or button's) accessible name.\nAccessibility: With href the root is an <a>, with no nested interactive element, With onClick and no href the card is role=button, focusable, and answers Enter and Space, Clicks and keys on a control inside the card (a footer button) stay with that control and never fire the card's onClick, Focus-visible ring, Verification badge is role=img with an aria-label naming the tier, Decorative images and icons are hidden from assistive technology.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-place-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-place-card.tsx",
@@ -14579,7 +14714,9 @@
           "Harness integration (log, motion, LiveRegion)",
           "animStyle with prefersReduced motion check",
           "Mineral-colored accent via brand override",
-          "data-slot + data-portal DOM attributes on the card and its skeleton"
+          "data-slot + data-portal DOM attributes on the card and its skeleton",
+          "tierLabel passed to the verified badge's label and the printed tier",
+          "linkLabel sets the link's (or button's) accessible name"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -15247,8 +15384,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Universal branded review card with trust-verified reviewer badge, star rating, review text, and helpful vote. Used across all domains where user reviews exist: Places (business reviews), BushTrade (seller reviews), Novels (book reviews), Health (provider reviews), Mukoko Events (event reviews). The reviewer verification tier is always visible — Ubuntu principle: trust is earned and displayed.",
-      "docs": "Use it for: novels, events, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-review-card",
+      "description": "Universal branded review card with trust-verified reviewer badge, star rating, review text, and helpful vote. Used across all domains where user reviews exist: Places (business reviews), BushTrade (seller reviews), Novels (book reviews), Health (provider reviews), Mukoko Events (event reviews). The reviewer verification tier is always visible — Ubuntu principle: trust is earned and displayed. An optional headline sits above the body; the body keeps its line breaks (whitespace-pre-line); the stars are the read-only rating (one role=img named \"4 out of 5 stars\"); the reviewer's tier is the mzizi-verified-badge, not an emoji.",
+      "docs": "Use it for: novels, events, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, Optional headline, Body keeps line breaks (whitespace-pre-line), Stars are the read-only rating, named \"N out of 5 stars\", Reviewer tier shown with mzizi-verified-badge.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, Stars are one role=img with an aria-label (\"4 out of 5 stars\"), The reviewer's tier badge is role=img named with the tier.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-review-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-review-card.tsx",
@@ -15260,14 +15397,20 @@
         "a11y": [
           "Focus-visible ring on interactive elements",
           "48px minimum touch targets",
-          "ARIA role attribute"
+          "ARIA role attribute",
+          "Stars are one role=img with an aria-label (\"4 out of 5 stars\")",
+          "The reviewer's tier badge is role=img named with the tier"
         ],
         "collection": "brand",
         "features": [
           "Harness integration (log, motion, LiveRegion)",
           "animStyle with prefersReduced motion check",
           "Mineral-colored accent via brand override",
-          "data-slot + data-portal DOM attributes"
+          "data-slot + data-portal DOM attributes",
+          "Optional headline",
+          "Body keeps line breaks (whitespace-pre-line)",
+          "Stars are the read-only rating, named \"N out of 5 stars\"",
+          "Reviewer tier shown with mzizi-verified-badge"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -16896,8 +17039,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Full trust score visualization showing the three-signal breakdown: Verification Tier (are you real?), Platform Status (are you active?), and Ubuntu Contribution (are you helpful?). Displays the composite score as a meter bar with individual signal breakdowns. Used on profile detail pages, admin views, and trust audit screens. This is the expanded view of trust — the verified badge is the compact view. Counted signals: pass `signals` ({ label, count, detail? }) and a `title` and the meter lists one row per signal with its count instead of the three-signal breakdown, for address, place and venue trust (Kweli's \"Address trust\": check-ins at the entrance, deliveries completed, neighbours who vouched). The meter exposes aria-valuenow/min/max. Astro and React builds under contract ui/mzizi-trust-meter: server-rendered with no script, bars drawn as SVG geometry (no inline style), colour from the --status-* tokens (the Ubuntu signal is tanzanite in every brand).",
-      "docs": "Use it for: Full trust score breakdown on profiles, Trust audit screens in admin, Three-signal trust visualization, Trust detail views, Verification tier displays with context.\nVariants: default.\nIncludes: Astro and React builds, one contract (ui/mzizi-trust-meter), Server-rendered, no script, no inline style: bars are SVG rect widths, Score coloured by level from the --status-* tokens, data-slot + data-portal DOM attributes, Counted signal list (signals prop) for address and place trust.\nAccessibility: role=meter with aria-valuemin, aria-valuemax and aria-valuenow, aria-label is the title, Bars and icons are aria-hidden; every value is also written as text, Counted signal rows are at least 44px.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-meter",
+      "description": "Full trust score visualization showing the three-signal breakdown: Verification Tier (are you real?), Platform Status (are you active?), and Ubuntu Contribution (are you helpful?). Displays the composite score as a meter bar with individual signal breakdowns. Used on profile detail pages, admin views, and trust audit screens. This is the expanded view of trust — the verified badge is the compact view. Counted signals: pass `signals` ({ label, count, detail? }) and a `title` and the meter lists one row per signal with its count instead of the three-signal breakdown, for address, place and venue trust (Kweli's \"Address trust\": check-ins at the entrance, deliveries completed, neighbours who vouched). Raw scores are hidden by default: the header names the level (Strong, Growing, Low, None) and showScore writes the score to three decimals and each signal's value, matching the verified badge. The meter exposes aria-valuenow/min/max and, without showScore, aria-valuetext with the level. --status-error is a canonical token. Astro and React builds under contract ui/mzizi-trust-meter: server-rendered with no script, bars drawn as SVG geometry (no inline style), colour from the --status-* tokens (the Ubuntu signal is tanzanite in every brand).",
+      "docs": "Use it for: Full trust score breakdown on profiles, Trust audit screens in admin, Three-signal trust visualization, Trust detail views, Verification tier displays with context.\nVariants: default.\nIncludes: Astro and React builds, one contract (ui/mzizi-trust-meter), Server-rendered, no script, no inline style: bars are SVG rect widths, Score coloured by level from the --status-* tokens, data-slot + data-portal DOM attributes, Counted signal list (signals prop) for address and place trust, showScore writes the raw scores; off by default, the level is named instead.\nAccessibility: role=meter with aria-valuemin, aria-valuemax and aria-valuenow; aria-valuetext names the level when scores are hidden, aria-label is the title, Bars and icons are aria-hidden; the level (or every value, with showScore) is also written as text, Counted signal rows are at least 44px.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-meter",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-trust-meter.tsx",
@@ -16907,9 +17050,9 @@
       ],
       "meta": {
         "a11y": [
-          "role=meter with aria-valuemin, aria-valuemax and aria-valuenow",
+          "role=meter with aria-valuemin, aria-valuemax and aria-valuenow; aria-valuetext names the level when scores are hidden",
           "aria-label is the title",
-          "Bars and icons are aria-hidden; every value is also written as text",
+          "Bars and icons are aria-hidden; the level (or every value, with showScore) is also written as text",
           "Counted signal rows are at least 44px"
         ],
         "collection": "brand",
@@ -16918,7 +17061,8 @@
           "Server-rendered, no script, no inline style: bars are SVG rect widths",
           "Score coloured by level from the --status-* tokens",
           "data-slot + data-portal DOM attributes",
-          "Counted signal list (signals prop) for address and place trust"
+          "Counted signal list (signals prop) for address and place trust",
+          "showScore writes the raw scores; off by default, the level is named instead"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -16935,6 +17079,37 @@
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
       "title": "mzizi Trust Meter",
       "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["brand"],
+      "dependencies": [],
+      "description": "The Mukoko trust model's data, server-safe: the verification tier ladder (TIER_CONFIG), the platform-status overlay (STATUS_OVERLAY), the VerificationTier and PlatformStatus types and computeTrustScore. No \"use client\", hooks or browser globals, so Server Components, Astro pages and API routes can import it. mzizi-verified-badge reads it from here and re-exports it.",
+      "docs": "Use it for: Reading the tier ladder on the server, Computing a trust score outside a client component.\nIncludes: TIER_CONFIG, STATUS_OVERLAY and computeTrustScore, server-safe.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-tiers",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/mzizi-trust-tiers.ts",
+          "target": "lib/mzizi-trust-tiers.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "brand",
+        "features": [
+          "TIER_CONFIG, STATUS_OVERLAY and computeTrustScore, server-safe"
+        ],
+        "hasDemo": false,
+        "owner": "nyuchi",
+        "useCases": [
+          "Reading the tier ladder on the server",
+          "Computing a trust score outside a client component"
+        ]
+      },
+      "name": "mzizi-trust-tiers",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-icons"],
+      "title": "mzizi Trust Tiers",
+      "type": "registry:lib"
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
@@ -17065,7 +17240,7 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
-      "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. Renders the appropriate mineral-colored badge for each tier — Terracotta (Community 0.10), Cobalt (OTP 0.20), Gold (Government 0.30), Tanzanite (Licensed 0.50). Suspended/ancestral accounts show a dimmed or memorial variant. The title and accessible name are the tier name (label and ariaLabel override them); the trust score is added only with showScore. Used inline next to names, on profile headers, listing cards, and anywhere trust needs to be communicated.",
+      "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. Renders the appropriate mineral-colored badge for each tier — Terracotta (Community 0.10), Cobalt (OTP 0.20), Gold (Government 0.30), Tanzanite (Licensed 0.50). Suspended/ancestral accounts show a dimmed or memorial variant. The title and accessible name are the tier name (label and ariaLabel override them); the trust score is added only with showScore. The tier ladder (TIER_CONFIG, STATUS_OVERLAY, computeTrustScore) is the server-safe mzizi-trust-tiers module, which the badge re-exports. Used inline next to names, on profile headers, listing cards, and anywhere trust needs to be communicated.",
       "docs": "Use it for: Profile header verification display, Inline name verification, Listing card trust indicator, Search result trust signal.\nVariants: community (terracotta), otp (cobalt), government (gold), licensed (tanzanite), suspended (dimmed), ancestral (memorial).\nSizes: sm, md, lg.\nIncludes: Three-axis trust model: Status × Tier → Score, Mineral-colored per tier, Native title with the tier name; the trust score only with showScore (no tooltip component), label and ariaLabel override the wording and the accessible name (localise, or name the tier in the app's words), Maps to system.verification_tier, Each tier reads its own --tier-* variable (government reads --tier-government).\nAccessibility: role=img with an aria-label naming the verification tier (ariaLabel overrides it); the raw trust score is not in the accessible name unless showScore is set, Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
       "files": [
         {
@@ -17109,6 +17284,7 @@
       "name": "mzizi-verified-badge",
       "registryDependencies": [
         "https://api.mzizi.dev/v1/ui/mzizi-icons",
+        "https://api.mzizi.dev/v1/ui/mzizi-trust-tiers",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
       "title": "mzizi Verified Badge",
@@ -18721,8 +18897,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "An interactive star rating component with hover preview, read-only mode, and mineral gold accent.",
-      "docs": "Use it for: Product reviews in BushTrade commerce, Service quality ratings, Learning content difficulty rating, Restaurant and place reviews in Bundu, User feedback collection on features.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/rating",
+      "description": "An interactive star rating component with hover preview, read-only mode, and mineral gold accent. Read-only, it is one role=\"img\" named \"<value> out of <max> stars\" with the stars aria-hidden, not a group of disabled buttons; label overrides the name. Interactive, it is a named group of toggle buttons (\"3 stars\", aria-pressed).",
+      "docs": "Use it for: Product reviews in BushTrade commerce, Service quality ratings, Learning content difficulty rating, Restaurant and place reviews in Bundu, User feedback collection on features.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Read-only: role=img with aria-label \"<value> out of <max> stars\" (label overrides), Interactive: role=group named \"Rating\"; each star is a button named \"N stars\" with aria-pressed, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/rating",
       "files": [
         {
           "path": "components/registry/n2-primitives/rating.tsx",
@@ -18731,7 +18907,11 @@
         }
       ],
       "meta": {
-        "a11y": ["ARIA attributes", "Keyboard accessible"],
+        "a11y": [
+          "Read-only: role=img with aria-label \"<value> out of <max> stars\" (label overrides)",
+          "Interactive: role=group named \"Rating\"; each star is a button named \"N stars\" with aria-pressed",
+          "Keyboard accessible"
+        ],
         "collection": "primitives",
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,

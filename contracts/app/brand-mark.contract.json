@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/brand-mark",
   "title": "BrandMark",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "node": 3,
   "kind": "primitive",
   "summary": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, or, for a brand with no pair, its own shipped mark, never redrawn), with its lower-case serif wordmark and an optional tagline when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
@@ -63,6 +63,14 @@
       "description": "Empty alt text, when neighbouring text names the brand."
     },
     {
+      "name": "loading",
+      "type": "\"lazy\" | \"eager\"",
+      "required": false,
+      "default": "lazy",
+      "values": ["lazy", "eager"],
+      "description": "How the mark loads. Lazy by default (#543): a footer mark stays off the critical path and the theme's hidden image is never fetched; a mark in the viewport still loads at once. \"eager\" only where the mark is the page's LCP image."
+    },
+    {
       "name": "class",
       "type": "string",
       "required": false,
@@ -75,7 +83,8 @@
     "Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script.",
     "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\".",
     "A brand outside `values` (from untyped data, or one whose icon pair has not shipped) is an error at render that names it and the brands that ship; no other brand's mark is shown in its place.",
-    "With `tagline` and `wordmark`, the wordmark and the tagline stack in a `brand-lockup`; without `wordmark` the tagline is not shown."
+    "With `tagline` and `wordmark`, the wordmark and the tagline stack in a `brand-lockup`; without `wordmark` the tagline is not shown.",
+    "Both images carry `loading` (\"lazy\" by default, \"eager\" on request) and `decoding=\"async\"`."
   ],
   "states": {
     "default": {
@@ -116,6 +125,12 @@
       "props": {
         "brand": "kweli",
         "tagline": "mukoko · Africa"
+      }
+    },
+    "eager": {
+      "props": {
+        "brand": "nyuchi",
+        "loading": "eager"
       }
     }
   },
@@ -258,6 +273,25 @@
       "state": "tagline-without-wordmark",
       "select": "[data-slot=\"brand-tagline\"]",
       "count": 0
+    },
+    {
+      "say": "Both marks load lazily and decode asynchronously by default.",
+      "select": "img",
+      "count": 2,
+      "attr": {
+        "loading": "lazy",
+        "decoding": "async"
+      }
+    },
+    {
+      "say": "`loading=\"eager\"` loads both marks eagerly.",
+      "state": "eager",
+      "select": "img",
+      "count": 2,
+      "attr": {
+        "loading": "eager",
+        "decoding": "async"
+      }
     }
   ],
   "gaps": [
