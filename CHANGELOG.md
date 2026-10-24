@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — `/v1/brand` names shamwari as the third pillar; stale terracotta `#D4A574` fallbacks removed (2026-10-24, #PR)
+### Fixed — `/v1/brand` names shamwari as the third pillar; stale terracotta `#D4A574` fallbacks removed (2026-10-24, #564)
 
 Two of the no-decision fixes on #543.
 
