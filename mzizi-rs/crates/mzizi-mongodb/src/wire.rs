@@ -13,6 +13,10 @@ const HEADER_LEN: usize = 16;
 const CHECKSUM_PRESENT: u32 = 1;
 /// Larger replies than this are refused (the server's own limit is 48 MB).
 pub const MAX_MESSAGE: usize = 48_000_000;
+/// Larger replies than this are refused before the login has succeeded. `hello` and the SASL
+/// replies are well under a kilobyte, so a server that has not yet proved it knows the password
+/// cannot make the client allocate more than this.
+pub const MAX_PRE_AUTH_MESSAGE: usize = 65_536;
 
 /// A command as one `OP_MSG` frame.
 pub fn encode_request(request_id: i32, command: &Doc) -> Result<Vec<u8>> {
@@ -29,12 +33,19 @@ pub fn encode_request(request_id: i32, command: &Doc) -> Result<Vec<u8>> {
     Ok(out)
 }
 
-/// The message length from a 16-byte header, checked.
+/// The message length from a 16-byte header, checked against [`MAX_MESSAGE`].
 pub fn message_length(header: &[u8; HEADER_LEN]) -> Result<usize> {
+    message_length_within(header, MAX_MESSAGE)
+}
+
+/// The message length from a 16-byte header, refused when it is over `max` (and never more
+/// than [`MAX_MESSAGE`]), so the body is not read at all.
+pub fn message_length_within(header: &[u8; HEADER_LEN], max: usize) -> Result<usize> {
+    let max = max.min(MAX_MESSAGE);
     let len = i32::from_le_bytes(header[0..4].try_into().expect("4 bytes"));
     let len = usize::try_from(len)
         .ok()
-        .filter(|l| (HEADER_LEN + 5..=MAX_MESSAGE).contains(l))
+        .filter(|l| (HEADER_LEN + 5..=max).contains(l))
         .ok_or_else(|| Error::Protocol(format!("bad message length {len}")))?;
     let opcode = i32::from_le_bytes(header[12..16].try_into().expect("4 bytes"));
     if opcode != OP_MSG {
@@ -133,6 +144,9 @@ mod tests {
         assert!(message_length(&header).is_err());
         header[0..4].copy_from_slice(&(-5_i32).to_le_bytes());
         assert!(message_length(&header).is_err());
+        header[0..4].copy_from_slice(&(MAX_PRE_AUTH_MESSAGE as i32 + 1).to_le_bytes());
+        assert!(message_length(&header).is_ok());
+        assert!(message_length_within(&header, MAX_PRE_AUTH_MESSAGE).is_err());
         assert!(decode_reply(&[0, 0, 0, 0]).is_err());
         assert!(decode_reply(&[0, 0, 0, 0, 1, 5, 0, 0, 0, 0]).is_err()); // section kind 1
     }
