@@ -138,6 +138,15 @@
       "rs": null
     },
     {
+      "name": "app/plan-summary",
+      "title": "PlanSummary",
+      "version": "1.0.0",
+      "file": "app/plan-summary.contract.json",
+      "astro": "app-plan-summary",
+      "tsx": "app-plan-summary",
+      "rs": null
+    },
+    {
       "name": "app/confirm-action",
       "title": "ConfirmAction",
       "version": "1.0.0",
@@ -297,6 +306,15 @@
       "file": "app/skeleton.contract.json",
       "astro": "app-skeleton",
       "tsx": "app-skeleton",
+      "rs": null
+    },
+    {
+      "name": "app/money",
+      "title": "Money",
+      "version": "1.0.0",
+      "file": "app/money.contract.json",
+      "astro": "app-money",
+      "tsx": "app-money",
       "rs": null
     },
     {

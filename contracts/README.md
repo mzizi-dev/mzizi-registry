@@ -4,7 +4,7 @@ Owner decision, 2026-10-04: "the components should also be updated, same as the 
 
 Four families, all in one format. Astro is the default web UI, so every contract has an Astro build in this registry, and where builds disagree, the Astro design is the contract unless the owner decides otherwise. React and Rust builds are the same component for consumers that do not use Astro. Each contract's Astro build sits beside its React build (`components/registry/n<N>-*/<name>.astro` and `.tsx`), and some have a Rust build too:
 
-- `app/`: the 33 server-rendered app components. Together they are the **Mzizi Dashboard Standard**, the one dashboard design for every product in the Bundu ecosystem, with each brand's mineral as an overlay ([docs.mzizi.dev/patterns/dashboard-standard](https://docs.mzizi.dev/patterns/dashboard-standard)).
+- `app/`: the 35 server-rendered app components. Together they are the **Mzizi Dashboard Standard**, the one dashboard design for every product in the Bundu ecosystem, with each brand's mineral as an overlay ([docs.mzizi.dev/patterns/dashboard-standard](https://docs.mzizi.dev/patterns/dashboard-standard)).
 - `discover/`: the **Mzizi Discover Standard** ([below](#the-discover-standard-discover)), with its detail pattern.
 - `site/`: the marketing-site components (hero, sections, container, breadcrumb, icons, the mineral strip).
 - `ui/`: registry primitives in every format (button, card, input, label, alert, skeleton, status badge, native select, segmented control, toaster, safe-area frame, markdown renderer), and the Kweli Address primitives (address code, address share card with QR, the "deliver to" address selector, the private-address row) the trust meter (`mzizi-trust-meter`) and the verified badge (`mzizi-verified-badge`). Where a Dashboard Standard build of the same primitive exists, it is `app-<name>` (`app-button.astro` / `app-button.tsx`) and keeps `app/<name>`; the registry primitive `<name>` keeps `ui/<name>`, and each lists the other under `related`.
@@ -64,6 +64,7 @@ Every format that exists is tested against the contract, here:
 | `app/empty-state`        | EmptyState        | N6   | 1.0.0   | `app-empty-state`        | `app-empty-state` (contract)        | —                       |
 | `app/brand-mark`         | BrandMark         | N3   | 1.3.0   | `app-brand-mark`         | `app-brand-mark` (contract)         | —                       |
 | `app/data-table`         | DataTable         | N6   | 1.2.0   | `app-data-table`         | `app-data-table` (contract)         | —                       |
+| `app/plan-summary`       | PlanSummary       | N6   | 1.0.0   | `app-plan-summary`       | `app-plan-summary` (contract)       | —                       |
 | `app/tier-status`        | TierStatus        | N6   | 1.0.0   | `app-tier-status`        | `app-tier-status` (contract)        | —                       |
 | `app/confirm-action`     | ConfirmAction     | N6   | 1.0.0   | `app-confirm-action`     | `app-confirm-action` (contract)     | —                       |
 | `app/filter-bar`         | FilterBar         | N6   | 1.1.0   | `app-filter-bar`         | `app-filter-bar` (contract)         | —                       |
@@ -82,6 +83,7 @@ Every format that exists is tested against the contract, here:
 | `app/input`              | Input             | N2   | 1.0.0   | `app-input`              | `app-input` (contract)              | —                       |
 | `app/label`              | Label             | N2   | 1.0.0   | `app-label`              | `app-label` (contract)              | —                       |
 | `app/skeleton`           | Skeleton          | N2   | 1.0.0   | `app-skeleton`           | `app-skeleton` (contract)           | —                       |
+| `app/money`              | Money             | N2   | 1.0.0   | `app-money`              | `app-money` (contract)              | —                       |
 
 ### The Discover Standard (`discover/`)
 
