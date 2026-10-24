@@ -12618,8 +12618,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": ["lucide-react"],
-      "description": "DEPRECATED: Use mzizi-ticket-card instead. This was an early pre-brand event card without harness, motion, or ARIA integration.",
-      "docs": "Use it for: Event listings in Mukoko Events (meetups, gatherings, ceremonies), Upcoming shows and performances, Calendar agenda items with location, RSVP-driven community events, Ticketed events with date and price.\nVariants: default, compact, hero, agenda-row.\nIncludes: Date and time display with locale formatting, Location with map link, RSVP button slot, Mineral accent per event category, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced.\nAccessibility: role=article, aria-label with event title and date, Focus-visible ring, 48px minimum touch target, Screen reader announces title, date, location, RSVP count, Time elements use datetime attribute for assistive tech.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-event-card",
+      "description": "DEPRECATED: Use mzizi-ticket-card instead. This was an early pre-brand event card without harness, motion, or ARIA integration. Kweli still uses it, so it takes optional price (or free, shown as \"Free\" or freeLabel), description (two lines) and share slots, and all seven minerals: cobalt, tanzanite, malachite, gold, terracotta, sodalite and copper.",
+      "docs": "Use it for: Event listings in Mukoko Events (meetups, gatherings, ceremonies), Upcoming shows and performances, Calendar agenda items with location, RSVP-driven community events, Ticketed events with date and price.\nVariants: default, compact, hero, agenda-row.\nIncludes: Date and time display with locale formatting, Location with map link, RSVP button slot, Mineral accent per event category, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced, price / free, description and share slots, All seven minerals (cobalt, tanzanite, malachite, gold, terracotta, sodalite, copper).\nAccessibility: role=article, aria-label with event title and date, Focus-visible ring, 48px minimum touch target, Screen reader announces title, date, location, RSVP count, Time elements use datetime attribute for assistive tech.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-event-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-event-card.tsx",
@@ -12643,7 +12643,9 @@
           "RSVP button slot",
           "Mineral accent per event category",
           "Harness integration (log, motion, LiveRegion)",
-          "animStyle with prefersReduced"
+          "animStyle with prefersReduced",
+          "price / free, description and share slots",
+          "All seven minerals (cobalt, tanzanite, malachite, gold, terracotta, sodalite, copper)"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -15247,8 +15249,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Universal branded review card with trust-verified reviewer badge, star rating, review text, and helpful vote. Used across all domains where user reviews exist: Places (business reviews), BushTrade (seller reviews), Novels (book reviews), Health (provider reviews), Mukoko Events (event reviews). The reviewer verification tier is always visible — Ubuntu principle: trust is earned and displayed.",
-      "docs": "Use it for: novels, events, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-review-card",
+      "description": "Universal branded review card with trust-verified reviewer badge, star rating, review text, and helpful vote. Used across all domains where user reviews exist: Places (business reviews), BushTrade (seller reviews), Novels (book reviews), Health (provider reviews), Mukoko Events (event reviews). The reviewer verification tier is always visible — Ubuntu principle: trust is earned and displayed. An optional headline sits above the body; the body keeps its line breaks (whitespace-pre-line); the stars are the read-only rating (one role=img named \"4 out of 5 stars\"); the reviewer's tier is the mzizi-verified-badge, not an emoji.",
+      "docs": "Use it for: novels, events, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, Optional headline, Body keeps line breaks (whitespace-pre-line), Stars are the read-only rating, named \"N out of 5 stars\", Reviewer tier shown with mzizi-verified-badge.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, Stars are one role=img with an aria-label (\"4 out of 5 stars\"), The reviewer's tier badge is role=img named with the tier.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-review-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-review-card.tsx",
@@ -15260,14 +15262,20 @@
         "a11y": [
           "Focus-visible ring on interactive elements",
           "48px minimum touch targets",
-          "ARIA role attribute"
+          "ARIA role attribute",
+          "Stars are one role=img with an aria-label (\"4 out of 5 stars\")",
+          "The reviewer's tier badge is role=img named with the tier"
         ],
         "collection": "brand",
         "features": [
           "Harness integration (log, motion, LiveRegion)",
           "animStyle with prefersReduced motion check",
           "Mineral-colored accent via brand override",
-          "data-slot + data-portal DOM attributes"
+          "data-slot + data-portal DOM attributes",
+          "Optional headline",
+          "Body keeps line breaks (whitespace-pre-line)",
+          "Stars are the read-only rating, named \"N out of 5 stars\"",
+          "Reviewer tier shown with mzizi-verified-badge"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
@@ -18754,8 +18762,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "An interactive star rating component with hover preview, read-only mode, and mineral gold accent.",
-      "docs": "Use it for: Product reviews in BushTrade commerce, Service quality ratings, Learning content difficulty rating, Restaurant and place reviews in Bundu, User feedback collection on features.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/rating",
+      "description": "An interactive star rating component with hover preview, read-only mode, and mineral gold accent. Read-only, it is one role=\"img\" named \"<value> out of <max> stars\" with the stars aria-hidden, not a group of disabled buttons; label overrides the name. Interactive, it is a named group of toggle buttons (\"3 stars\", aria-pressed).",
+      "docs": "Use it for: Product reviews in BushTrade commerce, Service quality ratings, Learning content difficulty rating, Restaurant and place reviews in Bundu, User feedback collection on features.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: Read-only: role=img with aria-label \"<value> out of <max> stars\" (label overrides), Interactive: role=group named \"Rating\"; each star is a button named \"N stars\" with aria-pressed, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/rating",
       "files": [
         {
           "path": "components/registry/n2-primitives/rating.tsx",
@@ -18764,7 +18772,11 @@
         }
       ],
       "meta": {
-        "a11y": ["ARIA attributes", "Keyboard accessible"],
+        "a11y": [
+          "Read-only: role=img with aria-label \"<value> out of <max> stars\" (label overrides)",
+          "Interactive: role=group named \"Rating\"; each star is a button named \"N stars\" with aria-pressed",
+          "Keyboard accessible"
+        ],
         "collection": "primitives",
         "features": ["cn() for className composition", "data-slot attribute"],
         "hasDemo": true,

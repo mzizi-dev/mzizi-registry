@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — `mzizi-event-card` gains price, description and share slots and all seven minerals; `mzizi-review-card` gains a headline, keeps line breaks, names its stars and shows the tier badge; a read-only `rating` is one named image (2026-10-24, #PRNUM)
+
+Items 4, 5 and 6 of the Kweli phase-2 gaps, tracked in #543.
+
+- **`mzizi-event-card`.** New optional `description` (two lines, `data-slot="event-card-description"`), `price` and `free` (`free` shows "Free", or `freeLabel`, in place of a price) and `share` (a button or share menu at the end of the footer) slots. The footer is drawn only when there is a price, `free` or `share`. `mineral` now takes all seven minerals: cobalt, tanzanite, malachite, gold, terracotta, sodalite and copper (sodalite and copper are new), each a literal `border-l-[var(--color-<mineral>)]` class. The clock and pin icons are `aria-hidden`. The new exported types are `EventCardProps` and `EventMineral`. The registry entry still marks the card deprecated in favour of `mzizi-ticket-card`; it stays maintained while Kweli uses it.
+- **`mzizi-review-card`.** New optional `headline` above the body (`data-slot="mzizi-review-card-headline"`). The body (`data-slot="mzizi-review-card-body"`) is `whitespace-pre-line`, so a reviewer's line breaks are kept. The five `★` glyphs, which had no accessible text, are now the read-only `rating` (one `role="img"` named "4 out of 5 stars"; it was already a registry dependency). The reviewer's tier marks were emoji (🟤🔵🟡🟣); they are now `mzizi-verified-badge` at size `sm`, named with the tier and coloured by the existing tier ladder, which this change does not touch.
+- **`rating`: Changed.** Read-only, it was a `role="radiogroup"` named "Rating" holding five disabled, unnamed buttons. It is now one `role="img"` named "<value> out of <max> stars" (to one decimal for a fractional value), with the stars and the optional value text `aria-hidden` and no buttons. The new `label` prop overrides the name in either mode. Interactive, a `radiogroup` holding plain buttons was not valid ARIA either, so the root is now `role="group"` (still named "Rating") and each star is a named toggle button ("3 stars", `aria-pressed`). Clicks and hover are unchanged.
+- **Tests.** New `__tests__/components/kweli-phase2-cards.test.tsx`. None of the three has an Astro build, so none has a contract file; the rules are in the tests and in `registry.json`.
+
 ### Changed — `mzizi-trust-meter` hides raw scores unless `showScore`; `--status-error` is a canonical token; the tier ladder is a server-safe module (2026-10-24, #555)
 
 Item 1 of the Kweli phase-2 gaps, tracked in #543.
