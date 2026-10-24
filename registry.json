@@ -1211,8 +1211,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "pages"],
       "dependencies": [],
-      "description": "Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid. The control is an input, a textarea or a native select.",
-      "docs": "Use it for: Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid (Mzizi Dashboard Standard).\nIncludes: \"(required)\" is written in the label, not shown by an asterisk alone., aria-describedby lists the hint and then the error., aria-invalid=\"true\" only with an error., A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density., A select with `emptyOption` starts with an empty option, selected when there is no value., A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`..\nAccessibility: aria-describedby to hint and error., aria-invalid with an error..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-field",
+      "description": "Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid. The control is an input, a textarea, a native select, a checkbox, a switch or a radio group.",
+      "docs": "Use it for: Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid (Mzizi Dashboard Standard).\nIncludes: \"(required)\" is written in the label, not shown by an asterisk alone., aria-describedby lists the hint and then the error., aria-invalid=\"true\" only with an error., A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density., A select with `emptyOption` starts with an empty option, selected when there is no value., A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`., A checkbox or a switch (role=\"switch\", a pill track) is a native input inside its label, so the whole 36px row (48px on touch) is the hit area; it posts `value` (default \"on\") when checked., A radio group is a fieldset whose legend is the label, one native radio per option..\nAccessibility: aria-describedby to hint and error., aria-invalid with an error., role=\"switch\" announces on/off; a radio group is a fieldset named by its legend..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-field",
       "files": [
         {
           "path": "components/registry/n6-pages/app-form-field.tsx",
@@ -1223,7 +1223,8 @@
       "meta": {
         "a11y": [
           "aria-describedby to hint and error.",
-          "aria-invalid with an error."
+          "aria-invalid with an error.",
+          "role=\"switch\" announces on/off; a radio group is a fieldset named by its legend."
         ],
         "collection": "app",
         "contract": "app/form-field",
@@ -1233,7 +1234,9 @@
           "aria-invalid=\"true\" only with an error.",
           "A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density.",
           "A select with `emptyOption` starts with an empty option, selected when there is no value.",
-          "A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`."
+          "A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`.",
+          "A checkbox or a switch (role=\"switch\", a pill track) is a native input inside its label, so the whole 36px row (48px on touch) is the hit area; it posts `value` (default \"on\") when checked.",
+          "A radio group is a fieldset whose legend is the label, one native radio per option."
         ],
         "hasDemo": false,
         "owner": "mzizi",
