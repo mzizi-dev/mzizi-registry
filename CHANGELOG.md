@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — provider-neutral money: the `money` module, `app/money` and `app/plan-summary` (2026-10-24, #PRNUM)
+### Added — provider-neutral money: the `money` module, `app/money` and `app/plan-summary` (2026-10-24, #574)
 
 Phase 1 of the payment framework ([#569](https://github.com/mzizi-dev/mzizi-registry/issues/569), tracked in nyuchi/nyuchi-api#375); Kweli's first paid plan is the first consumer. Owner rule: "mzizi is not an internal architecture it's also public so mzizi should never limit to our providers."
 
