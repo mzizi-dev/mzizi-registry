@@ -2,7 +2,7 @@
   "$schema": "../schema/server-contract.schema.json",
   "name": "server/mzizi-mongodb",
   "title": "mzizi-mongodb",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "kind": "server",
   "node": null,
   "summary": "A read-only MongoDB client over the wire protocol (OP_MSG, SCRAM-SHA-256, a small BSON codec), sans-IO, for places the official driver cannot build, such as a Cloudflare Worker.",
@@ -32,7 +32,12 @@
     {
       "item": "pub async fn aggregate",
       "file": "src/conn.rs",
-      "summary": "A pipeline's results, at most MAX_AGGREGATE_DOCS; $out and $merge refused."
+      "summary": "A pipeline's results, at most MAX_AGGREGATE_DOCS; $out and $merge refused, and any stage reading another collection refused."
+    },
+    {
+      "item": "pub async fn aggregate_joining",
+      "file": "src/conn.rs",
+      "summary": "aggregate, where $lookup, $graphLookup and $unionWith may also read the collections the caller names, at any depth."
     },
     {
       "item": "pub async fn authenticate",
@@ -53,6 +58,16 @@
       "item": "pub fn with_harness",
       "file": "src/conn.rs",
       "summary": "Report each command and refusal to a server harness."
+    },
+    {
+      "item": "pub fn with_app_name",
+      "file": "src/conn.rs",
+      "summary": "Name the application in the hello handshake, cut to MAX_APP_NAME bytes."
+    },
+    {
+      "item": "pub fn server_message",
+      "file": "src/conn.rs",
+      "summary": "The fixed text a server error carries for its code; the server's own errmsg is never kept."
     },
     {
       "item": "pub struct FindOptions",
@@ -87,13 +102,34 @@
       "file": "src/conn.rs",
       "value": 5000,
       "summary": "The most documents one aggregation returns; more is an error, not a silent cut."
+    },
+    {
+      "const": "MAX_APP_NAME",
+      "file": "src/conn.rs",
+      "value": 128,
+      "summary": "The longest application name sent in the handshake (MongoDB's own limit)."
+    },
+    {
+      "const": "MAX_MESSAGE",
+      "file": "src/wire.rs",
+      "value": 48000000,
+      "summary": "The largest reply read after the login."
+    },
+    {
+      "const": "MAX_PRE_AUTH_MESSAGE",
+      "file": "src/wire.rs",
+      "value": 65536,
+      "summary": "The largest reply read before the login succeeds; a larger one is refused from its header, before the body is read."
     }
   ],
   "guarantees": [
     {
       "id": "read-only",
-      "statement": "There is no write path: the client offers find, find_one and aggregate, and aggregate refuses a pipeline containing $out or $merge before anything is sent.",
-      "tests": ["aggregate_refuses_writes_and_follows_the_cursor"]
+      "statement": "There is no write path: the client offers find, find_one and aggregate, and aggregate refuses a pipeline containing $out or $merge, at any depth, before anything is sent.",
+      "tests": [
+        "aggregate_refuses_writes_and_follows_the_cursor",
+        "a_nested_write_stage_is_refused"
+      ]
     },
     {
       "id": "bounded-reads",
@@ -131,8 +167,11 @@
     },
     {
       "id": "no-secrets-in-errors",
-      "statement": "The password never appears in a Debug string or an error message.",
-      "tests": ["the_password_never_appears_in_debug_or_errors"]
+      "statement": "The password never appears in a Debug string or an error message, and a server error keeps its code with a fixed text written by the client, never the server's errmsg (which can echo the query).",
+      "tests": [
+        "the_password_never_appears_in_debug_or_errors",
+        "a_server_error_keeps_its_code_and_never_the_servers_text"
+      ]
     },
     {
       "id": "pooled-login-matches",
@@ -153,6 +192,28 @@
       "id": "salt-computed-once",
       "statement": "The salted password is computed once per isolate and reused.",
       "tests": ["the_salted_password_is_computed_once_per_isolate"]
+    },
+    {
+      "id": "secrets-wiped",
+      "statement": "The password in a parsed Uri, the salted password, the SCRAM client and server keys, and both the password and the key in each SaltCache entry are wiped from memory when they are dropped (zeroize).",
+      "tests": [
+        "the_password_is_wiped_from_memory_when_dropped",
+        "the_salted_password_is_wiped_from_memory_when_dropped",
+        "the_salt_cache_wipes_the_password_and_the_key_it_holds"
+      ]
+    },
+    {
+      "id": "bounded-before-login",
+      "statement": "Until authenticate succeeds, a reply longer than MAX_PRE_AUTH_MESSAGE is refused from its 16-byte header, without reading or allocating its body; after it, replies up to MAX_MESSAGE are read.",
+      "tests": [
+        "a_large_reply_before_the_login_is_refused_without_being_read",
+        "after_the_login_a_large_reply_is_read"
+      ]
+    },
+    {
+      "id": "neutral-handshake",
+      "statement": "The hello handshake names the driver as mzizi-mongodb at the crate's version, plus the application only when the caller names one.",
+      "tests": ["hello_names_this_driver_and_the_app_and_nothing_else"]
     }
   ],
   "refusals": [
@@ -161,6 +222,14 @@
       "input": "an aggregation pipeline with a $out or $merge stage",
       "reason": "this client is read-only",
       "tests": ["aggregate_refuses_writes_and_follows_the_cursor"]
+    },
+    {
+      "id": "cross-collection",
+      "input": "a $lookup, $graphLookup or $unionWith, at any depth (sub-pipelines and $facet included), that reads a collection other than the aggregation's own and not listed in aggregate_joining's joins, or that names another database",
+      "reason": "a read of one collection must not reach another past the name check; the caller lists what a pipeline may join (none by default)",
+      "tests": [
+        "a_stage_that_reads_another_collection_is_refused_unless_the_caller_allows_it"
+      ]
     },
     {
       "id": "server-js",

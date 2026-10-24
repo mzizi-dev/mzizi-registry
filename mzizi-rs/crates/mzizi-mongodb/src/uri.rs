@@ -7,6 +7,8 @@
 //! TLS is always on. The password is percent-decoded and kept out of every
 //! `Debug` and error message.
 
+use zeroize::{Zeroize, Zeroizing};
+
 use crate::{Error, Result};
 
 /// A parsed seed-list connection string. `Debug` never prints the password.
@@ -14,8 +16,8 @@ use crate::{Error, Result};
 pub struct Uri {
     /// The user name, percent-decoded.
     pub user: String,
-    /// The password, percent-decoded.
-    pub password: String,
+    /// The password, percent-decoded, and wiped from memory when the `Uri` is dropped.
+    pub password: Zeroizing<String>,
     /// `(host, port)` in the order given.
     pub hosts: Vec<(String, u16)>,
     /// The default database in the path, if any.
@@ -34,6 +36,7 @@ impl std::fmt::Debug for Uri {
             .field("hosts", &self.hosts)
             .field("database", &self.database)
             .field("auth_source", &self.auth_source)
+            .field("replica_set", &self.replica_set)
             .finish()
     }
 }
@@ -75,7 +78,11 @@ fn percent_decode(s: &str) -> Result<String> {
             i += 1;
         }
     }
-    String::from_utf8(out).map_err(|_| bad("a %-escape is not UTF-8"))
+    // The buffer may hold the password, so it is wiped on the error path too.
+    String::from_utf8(out).map_err(|e| {
+        e.into_bytes().zeroize();
+        bad("a %-escape is not UTF-8")
+    })
 }
 
 fn host_port(h: &str) -> Result<(String, u16)> {
@@ -113,7 +120,10 @@ pub fn parse(uri: &str) -> Result<Uri> {
     let (user, password) = creds
         .split_once(':')
         .ok_or_else(|| bad("user and password are required"))?;
-    let (user, password) = (percent_decode(user)?, percent_decode(password)?);
+    let (user, password) = (
+        percent_decode(user)?,
+        Zeroizing::new(percent_decode(password)?),
+    );
     if user.is_empty() || password.is_empty() {
         return Err(bad("user and password are required"));
     }
@@ -167,7 +177,7 @@ mod tests {
         )
         .unwrap();
         assert_eq!(u.user, "app@x");
-        assert_eq!(u.password, "p:ss/w");
+        assert_eq!(u.password.as_str(), "p:ss/w");
         assert_eq!(
             u.hosts,
             vec![
@@ -208,14 +218,21 @@ mod tests {
         let a = parse("mongodb://u:p1@h1,h2/db?authSource=admin").unwrap();
         // The default database is not part of the login.
         assert!(a.same_login(&parse("mongodb://u:p1@h1,h2/other").unwrap()));
-        for other in [
+        for (i, other) in [
             "mongodb://u:p2@h1,h2/db?authSource=admin", // a rotated or wrong password
             "mongodb://u:p1@h1,h2/db?authSource=weather", // another user with the same name
             "mongodb://v:p1@h1,h2/db?authSource=admin",
             "mongodb://u:p1@h1/db?authSource=admin",
             "mongodb://u:p1@h1,h2/db?authSource=admin&replicaSet=rs",
-        ] {
-            assert!(!a.same_login(&parse(other).unwrap()), "{other}");
+        ]
+        .iter()
+        .enumerate()
+        {
+            // The message names the case by its index: the strings carry passwords.
+            assert!(
+                !a.same_login(&parse(other).unwrap()),
+                "case {i} shared a login"
+            );
         }
     }
 
@@ -225,5 +242,16 @@ mod tests {
         assert!(!format!("{u:?}").contains("sup3rsecret"));
         let e = parse("mongodb://user:sup3rsecret@h1:bad/db").unwrap_err();
         assert!(!e.to_string().contains("sup3rsecret"));
+    }
+
+    /// Compiles only for a type that wipes its memory when dropped.
+    fn wiped_on_drop<T: zeroize::ZeroizeOnDrop>(_: &T) {}
+
+    #[test]
+    fn the_password_is_wiped_from_memory_when_dropped() {
+        let u = parse("mongodb://user:sup3rsecret@h1/db").unwrap();
+        wiped_on_drop(&u.password);
+        // A clone is a second copy, and it is wiped too.
+        wiped_on_drop(&u.clone().password);
     }
 }

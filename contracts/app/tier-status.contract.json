@@ -1,0 +1,372 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/tier-status",
+  "title": "TierStatus",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "Where an account stands on the verification ladder: the current rung, the ladder as an ordered list with each rung's state in words, the attestations held as facts, and what the next rung needs with a link to submit evidence. It takes data and computes no access decision.",
+  "implementations": {
+    "astro": {
+      "registry": "app-tier-status",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/TierStatus.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "app-tier-status",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": [
+      "mzizi-verified-badge",
+      "mzizi-trust-meter",
+      "verification-page"
+    ]
+  },
+  "props": [
+    {
+      "name": "tier",
+      "type": "\"unverified\" | \"community\" | \"otp\" | \"government\" | \"licensed\"",
+      "required": true,
+      "description": "The current rung (system.verification_tier.tier_code).",
+      "values": ["unverified", "community", "otp", "government", "licensed"]
+    },
+    {
+      "name": "attestations",
+      "type": "{ label: string; detail?: string }[]",
+      "required": false,
+      "description": "Facts the account holds, in words (\"Business registration checked\"), with an optional detail (where or when).",
+      "default": []
+    },
+    {
+      "name": "requirements",
+      "type": "string[]",
+      "required": false,
+      "description": "What the next rung needs, in words, as the server decided it.",
+      "default": []
+    },
+    {
+      "name": "action",
+      "type": "{ label: string; href: string }",
+      "required": false,
+      "description": "A link to submit evidence for the next rung."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "The panel's heading.",
+      "default": "Verification"
+    },
+    {
+      "name": "tierLabels",
+      "type": "Partial<Record<\"unverified\" | \"community\" | \"otp\" | \"government\" | \"licensed\", string>>",
+      "required": false,
+      "description": "Rename tiers in the app's words or another language.",
+      "default": {}
+    },
+    {
+      "name": "copy",
+      "type": "{ current?: string; ladder?: string; held?: string; none?: string; next?: string; top?: string; done?: string; here?: string; upcoming?: string }",
+      "required": false,
+      "description": "The panel's other words, for another language: \"Current level:\", the ladder's name, \"What you hold\", \"No attestations yet.\", \"Next:\", \"This is the highest level.\", and the rung states \"Done\", \"Current\", \"Next\".",
+      "default": {}
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "The id the heading (`<id>-title`) is built from.",
+      "default": "tier-status"
+    },
+    {
+      "name": "headingLevel",
+      "type": "2 | 3",
+      "required": false,
+      "description": "The heading's level; the two sections take the next level.",
+      "default": 2,
+      "values": [2, 3]
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A <section> labelled by its heading. Beside the heading, the current rung's glyph on its --tier-* container pair (decorative), and \"Current level: <name>\" in the tier's text colour.",
+    "The ladder is an <ol> of the five rungs, lowest first, each with its level number (decorative), its name, and its state in words: \"Done\" below the current rung, \"Current\" on it (aria-current=\"step\", a muted fill), \"Next\" on the one above, nothing further up. Reached rungs wear their tier's container pair; the others an outline.",
+    "\"What you hold\" lists the attestations as facts with a check glyph, or says \"No attestations yet.\".",
+    "\"Next: <name>\" lists `requirements` and, with `action`, a link to submit evidence. At the top rung it says \"This is the highest level.\" instead.",
+    "It computes no access decision and no score: the tier, the attestations and the requirements are given by the server (api-gateway `assurance.py` decides access).",
+    "Every word can be replaced (`tierLabels`, `copy`, `title`)."
+  ],
+  "states": {
+    "default": {
+      "description": "A business at Contact Verified, working towards Government Verified.",
+      "props": {
+        "tier": "otp",
+        "attestations": [
+          {
+            "label": "Phone number confirmed",
+            "detail": "+263 77 *** 4410, 2 October 2026"
+          },
+          {
+            "label": "Domain ownership checked",
+            "detail": "kwelifoods.co.zw"
+          }
+        ],
+        "requirements": [
+          "A business registration certificate",
+          "A director's national ID"
+        ],
+        "action": {
+          "label": "Submit documents",
+          "href": "/verification/evidence"
+        }
+      }
+    },
+    "unverified": {
+      "description": "No rung reached and nothing held.",
+      "props": {
+        "tier": "unverified",
+        "headingLevel": 3
+      }
+    },
+    "top": {
+      "description": "The highest rung.",
+      "props": {
+        "tier": "licensed",
+        "attestations": [
+          {
+            "label": "Practising licence checked",
+            "detail": "Medical and Dental Practitioners Council"
+          }
+        ]
+      }
+    },
+    "localised": {
+      "description": "Every word replaced.",
+      "props": {
+        "tier": "community",
+        "title": "Uthibitisho",
+        "tierLabels": {
+          "community": "Imethibitishwa na jamii",
+          "otp": "Mawasiliano yamethibitishwa"
+        },
+        "copy": {
+          "current": "Kiwango cha sasa:",
+          "held": "Ulicho nacho",
+          "none": "Bado hakuna.",
+          "next": "Kinachofuata:",
+          "done": "Imekamilika",
+          "here": "Sasa",
+          "upcoming": "Kinachofuata"
+        }
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [
+      "region (section labelled by its heading)",
+      "list (the ordered ladder)"
+    ],
+    "keyboard": ["The evidence link, when there is one."],
+    "focus": ["`--ring` focus ring on the link."],
+    "aria": [
+      "aria-labelledby to the heading.",
+      "aria-current=\"step\" on the current rung.",
+      "The ladder is named (\"Verification levels\").",
+      "Glyphs and level numbers are aria-hidden; every state is also written."
+    ],
+    "wcag": ["1.3.1", "1.4.1", "2.4.6", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "ladder rung",
+      "select": "ol[data-slot=\"tier-ladder\"] > li",
+      "fine": 36,
+      "coarse": 44
+    },
+    {
+      "part": "evidence link",
+      "select": "[data-slot=\"tier-next\"] a",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--card-foreground",
+      "--foreground",
+      "--muted",
+      "--muted-foreground",
+      "--border",
+      "--primary",
+      "--app-accent",
+      "--ring",
+      "--status-success",
+      "--tier-unverified-container",
+      "--tier-unverified-on-container",
+      "--tier-unverified-text",
+      "--tier-community-container",
+      "--tier-community-on-container",
+      "--tier-community-text",
+      "--tier-otp-container",
+      "--tier-otp-on-container",
+      "--tier-otp-text",
+      "--tier-government-container",
+      "--tier-government-on-container",
+      "--tier-government-text",
+      "--tier-licensed-container",
+      "--tier-licensed-on-container",
+      "--tier-licensed-text"
+    ],
+    "brandOverlay": "The evidence link is the shell's primary action (`--app-accent`, else `--primary`). Tier colours are their --tier-* roles in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the panel is server-rendered."
+  },
+  "responsive": [
+    "Fills its container; rung names wrap rather than push their state out."
+  ],
+  "contract": "contract\n  slot is \"tier-status\"\n  when default shows strong \"Contact Verified\"\n  when default shows h2 \"Verification\"\n  when default shows h3 \"Next: Government Verified\"\n  when default shows a \"Submit documents\"\n  when unverified shows h3 \"Verification\"\n  when top shows p \"This is the highest level.\"\n  when localised shows strong \"Imethibitishwa na jamii\"\nend",
+  "checks": [
+    {
+      "say": "The panel is a section labelled by its heading.",
+      "select": "section[data-slot=\"tier-status\"]",
+      "count": 1,
+      "attr": {
+        "aria-labelledby": "tier-status-title",
+        "data-tier": "otp"
+      }
+    },
+    {
+      "say": "The ladder is an ordered list of five rungs, named.",
+      "select": "ol[data-slot=\"tier-ladder\"][aria-label=\"Verification levels\"] > li",
+      "count": 5
+    },
+    {
+      "say": "The current rung is marked as the current step.",
+      "select": "li[aria-current=\"step\"]",
+      "count": 1,
+      "attr": {
+        "data-tier": "otp",
+        "data-state": "current"
+      },
+      "text": "Contact Verified"
+    },
+    {
+      "say": "Each rung's state is written: two done, one current, one next.",
+      "select": "[data-slot=\"tier-rung-state\"]",
+      "count": 4
+    },
+    {
+      "say": "Rungs below are written Done.",
+      "select": "li[data-state=\"done\"] [data-slot=\"tier-rung-state\"]",
+      "count": 2,
+      "text": "Done"
+    },
+    {
+      "say": "The rung above is written Next.",
+      "select": "li[data-state=\"next\"]",
+      "count": 1,
+      "attr": {
+        "data-tier": "government"
+      },
+      "text": "Next"
+    },
+    {
+      "say": "A reached rung wears its tier's container pair.",
+      "select": "li[data-tier=\"community\"] .bg-tier-community-container.text-tier-community-on-container",
+      "count": 1
+    },
+    {
+      "say": "A rung not reached is an outline.",
+      "select": "li[data-tier=\"licensed\"] .border-border",
+      "count": 1
+    },
+    {
+      "say": "The current tier's glyph is on its container pair.",
+      "select": "section > div span.bg-tier-otp-container svg[data-icon=\"phone\"]",
+      "count": 1
+    },
+    {
+      "say": "The current level's name is in the tier's text colour.",
+      "select": "[data-slot=\"tier-current\"] strong.text-tier-otp-text",
+      "count": 1
+    },
+    {
+      "say": "Attestations are listed as facts.",
+      "select": "[data-slot=\"tier-attestations\"] li",
+      "count": 2
+    },
+    {
+      "say": "Requirements for the next rung are listed.",
+      "select": "[data-slot=\"tier-next\"] ul > li",
+      "count": 2
+    },
+    {
+      "say": "The evidence link.",
+      "select": "[data-slot=\"tier-next\"] a[href=\"/verification/evidence\"]",
+      "count": 1
+    },
+    {
+      "say": "Nothing held says so.",
+      "state": "unverified",
+      "select": "[data-slot=\"tier-attestations\"] p",
+      "count": 1,
+      "text": "No attestations yet."
+    },
+    {
+      "say": "Unverified has no rung reached: one current, one next, none done.",
+      "state": "unverified",
+      "select": "li[data-state=\"done\"]",
+      "absent": true
+    },
+    {
+      "say": "Unverified shows the shield on the neutral pair.",
+      "state": "unverified",
+      "select": "span.bg-tier-unverified-container svg[data-icon=\"shield\"]",
+      "count": 1
+    },
+    {
+      "say": "headingLevel 3 puts the sections at h4.",
+      "state": "unverified",
+      "select": "h4",
+      "count": 2
+    },
+    {
+      "say": "At the top there is no next rung and no link.",
+      "state": "top",
+      "select": "li[data-state=\"next\"], [data-slot=\"tier-next\"] a",
+      "absent": true
+    },
+    {
+      "say": "Rung states can be renamed.",
+      "state": "localised",
+      "select": "li[aria-current=\"step\"] [data-slot=\"tier-rung-state\"]",
+      "count": 1,
+      "text": "Sasa"
+    },
+    {
+      "say": "The next rung can be renamed.",
+      "state": "localised",
+      "select": "[data-slot=\"tier-next\"] h3",
+      "count": 1,
+      "text": "Kinachofuata: Mawasiliano yamethibitishwa"
+    },
+    {
+      "say": "No script.",
+      "state": "*",
+      "select": "script",
+      "absent": true
+    }
+  ]
+}

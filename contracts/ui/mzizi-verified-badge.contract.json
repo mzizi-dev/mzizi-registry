@@ -1,0 +1,295 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/mzizi-verified-badge",
+  "title": "MziziVerifiedBadge",
+  "version": "1.0.0",
+  "node": 3,
+  "kind": "primitive",
+  "summary": "The compact view of trust: a round mark in the verification tier's colour, named by the tier (\"Government Verified\"). Tier 0 renders nothing; a suspended account shows the ban glyph, an ancestral one the memorial flower. The trust score is in the name only with `showScore`. Server-rendered; colour from the tier's own --tier-* container pair.",
+  "implementations": {
+    "astro": {
+      "registry": "mzizi-verified-badge",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/MziziVerifiedBadge.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "mzizi-verified-badge",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": [
+      "mzizi-trust-meter",
+      "mzizi-trust-tiers",
+      "mzizi-trust-tier-data"
+    ]
+  },
+  "props": [
+    {
+      "name": "tier",
+      "type": "\"unverified\" | \"community\" | \"otp\" | \"government\" | \"licensed\"",
+      "required": true,
+      "values": ["unverified", "community", "otp", "government", "licensed"],
+      "description": "The verification tier code (system.verification_tier.tier_code). `unverified` renders nothing."
+    },
+    {
+      "name": "status",
+      "type": "\"pre_verification\" | \"living\" | \"liveness_pending\" | \"suspended\" | \"presumed_ancestral\" | \"verified_ancestral\"",
+      "required": false,
+      "default": "living",
+      "values": [
+        "pre_verification",
+        "living",
+        "liveness_pending",
+        "suspended",
+        "presumed_ancestral",
+        "verified_ancestral"
+      ],
+      "description": "The platform status (identity.person.mit_status). Suspended shows the ban glyph on the neutral pair; either ancestral status shows the memorial flower in the tier's colour."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\"",
+      "required": false,
+      "default": "md",
+      "values": ["sm", "md", "lg", "xl"],
+      "description": "14, 18, 24 or 32px: inline with text, cards and headers, profile pages, verification detail views."
+    },
+    {
+      "name": "showTooltip",
+      "type": "boolean",
+      "required": false,
+      "default": "true",
+      "description": "Set the native `title` to the badge's name. There is no tooltip component."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "The wording, in place of the built-in name (the tier's label, \"Account Suspended\" or \"<tier> — Memorial\"). It is the title and, unless `ariaLabel` is set, the accessible name."
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "The accessible name, when it should differ from `label`."
+    },
+    {
+      "name": "showScore",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Add the tier's cumulative trust score (\" · Trust 0.2\") to the title and the accessible name. Off by default (#550)."
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Render a muted, pulsing placeholder, hidden from assistive technology."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The badge is a <span role=\"img\"> whose aria-label is the name: `ariaLabel`, else `label`, else the built-in name. The glyph inside it is decorative (aria-hidden).",
+    "The built-in name is the tier's label (Community Verified, Contact Verified, Government Verified, Licensed Professional); \"Account Suspended\" when suspended; \"<tier label> — Memorial\" when ancestral.",
+    "With `showScore` the name ends \" · Trust <cumulative score>\"; without it no number is in the title or the name.",
+    "With `showTooltip` (the default) the title is the name, without `ariaLabel`'s override.",
+    "Each tier draws from its own pair: fill `bg-tier-<tier>-container` and glyph `text-tier-<tier>-on-container`. Suspended uses the unverified (neutral) pair. The glyphs are users, phone, shield-check and award; ban when suspended; flower when ancestral.",
+    "Tier 0 (`unverified`) renders nothing; a consumer that must state it names it in text.",
+    "`loading` renders a muted pulsing placeholder with aria-hidden, and no name."
+  ],
+  "states": {
+    "default": {
+      "props": { "tier": "government" }
+    },
+    "community": {
+      "props": { "tier": "community" }
+    },
+    "otp": {
+      "props": { "tier": "otp", "size": "sm" }
+    },
+    "licensed": {
+      "props": { "tier": "licensed", "size": "xl" }
+    },
+    "score": {
+      "description": "The cumulative score in the name, for a trust audit.",
+      "props": { "tier": "otp", "showScore": true }
+    },
+    "label": {
+      "description": "The app's own words for the tier.",
+      "props": { "tier": "licensed", "label": "Registered nurse" }
+    },
+    "aria": {
+      "description": "A short title and a fuller accessible name.",
+      "props": {
+        "tier": "government",
+        "label": "ID checked",
+        "ariaLabel": "Identity checked by government ID",
+        "showScore": true
+      }
+    },
+    "untitled": {
+      "props": { "tier": "community", "showTooltip": false }
+    },
+    "suspended": {
+      "props": { "tier": "otp", "status": "suspended" }
+    },
+    "ancestral": {
+      "props": { "tier": "otp", "status": "verified_ancestral" }
+    },
+    "unverified": {
+      "description": "Tier 0: nothing is rendered.",
+      "props": { "tier": "unverified" }
+    },
+    "loading": {
+      "props": { "tier": "government", "loading": true }
+    }
+  },
+  "accessibility": {
+    "roles": ["img"],
+    "keyboard": ["Nothing in it is interactive."],
+    "focus": ["Not focusable."],
+    "aria": [
+      "role=\"img\" named by aria-label (the tier's name, or `label` / `ariaLabel`); the score is in the name only with `showScore`.",
+      "The glyph is aria-hidden; the loading placeholder is aria-hidden."
+    ],
+    "wcag": ["1.1.1", "1.4.1", "1.4.11", "4.1.2"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [
+      "--muted",
+      "--tier-unverified-container",
+      "--tier-unverified-on-container",
+      "--tier-community-container",
+      "--tier-community-on-container",
+      "--tier-otp-container",
+      "--tier-otp-on-container",
+      "--tier-government-container",
+      "--tier-government-on-container",
+      "--tier-licensed-container",
+      "--tier-licensed-on-container"
+    ],
+    "brandOverlay": "None: a tier's colour is its --tier-* role (defined once in the N1 tokens, #543), the same in every brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the badge is rendered on the server."
+  },
+  "responsive": ["A fixed size per `size`; it never grows with its container."],
+  "contract": "contract\n  slot is \"mzizi-verified-badge\"\n  role is \"img\"\n  portal is \"https://mzizi.dev/components/mzizi-verified-badge\"\n  label is \"Government Verified\"\n  when score label is \"Contact Verified · Trust 0.2\"\n  when label label is \"Registered nurse\"\n  when suspended label is \"Account Suspended\"\n  when ancestral label is \"Contact Verified — Memorial\"\n  when licensed class contains \"size-8\"\nend",
+  "checks": [
+    {
+      "say": "The badge is a named image with its tier and level.",
+      "select": "[data-slot=\"mzizi-verified-badge\"][role=\"img\"]",
+      "count": 1,
+      "attr": {
+        "aria-label": "Government Verified",
+        "title": "Government Verified",
+        "data-tier": "government",
+        "data-level": "3",
+        "data-trust": "0.3"
+      }
+    },
+    {
+      "say": "The tier's fill and ink are its own container pair.",
+      "select": "[data-slot=\"mzizi-verified-badge\"].bg-tier-government-container.text-tier-government-on-container",
+      "count": 1
+    },
+    {
+      "say": "The glyph is decorative.",
+      "select": "svg[data-icon=\"shield-check\"][aria-hidden=\"true\"]",
+      "count": 1
+    },
+    {
+      "say": "Community wears terracotta's pair and the users glyph.",
+      "state": "community",
+      "select": ".bg-tier-community-container.text-tier-community-on-container svg[data-icon=\"users\"]",
+      "count": 1
+    },
+    {
+      "say": "Contact Verified wears cobalt's pair and the phone glyph, at the small size.",
+      "state": "otp",
+      "select": ".size-3\\.5.bg-tier-otp-container svg[data-icon=\"phone\"]",
+      "count": 1
+    },
+    {
+      "say": "Licensed wears tanzanite's pair and the award glyph.",
+      "state": "licensed",
+      "select": ".bg-tier-licensed-container.text-tier-licensed-on-container svg[data-icon=\"award\"]",
+      "count": 1
+    },
+    {
+      "say": "showScore adds the score to the title too.",
+      "state": "score",
+      "select": "[data-slot=\"mzizi-verified-badge\"]",
+      "count": 1,
+      "attr": { "title": "Contact Verified · Trust 0.2" }
+    },
+    {
+      "say": "label replaces the built-in wording everywhere.",
+      "state": "label",
+      "select": "[data-slot=\"mzizi-verified-badge\"]",
+      "count": 1,
+      "attr": { "title": "Registered nurse" }
+    },
+    {
+      "say": "ariaLabel sets the accessible name alone; the title keeps the label.",
+      "state": "aria",
+      "select": "[data-slot=\"mzizi-verified-badge\"]",
+      "count": 1,
+      "attr": {
+        "aria-label": "Identity checked by government ID",
+        "title": "ID checked · Trust 0.3"
+      }
+    },
+    {
+      "say": "showTooltip=false drops the title, not the name.",
+      "state": "untitled",
+      "select": "[data-slot=\"mzizi-verified-badge\"][title]",
+      "absent": true
+    },
+    {
+      "say": "showTooltip=false keeps the accessible name.",
+      "state": "untitled",
+      "select": "[data-slot=\"mzizi-verified-badge\"]",
+      "count": 1,
+      "attr": { "aria-label": "Community Verified" }
+    },
+    {
+      "say": "Suspended shows the ban glyph on the neutral pair.",
+      "state": "suspended",
+      "select": "[data-status=\"suspended\"].bg-tier-unverified-container.text-tier-unverified-on-container svg[data-icon=\"ban\"]",
+      "count": 1
+    },
+    {
+      "say": "Ancestral keeps the tier's pair with the memorial flower.",
+      "state": "ancestral",
+      "select": "[data-status=\"verified_ancestral\"].bg-tier-otp-container svg[data-icon=\"flower\"]",
+      "count": 1
+    },
+    {
+      "say": "Tier 0 renders nothing.",
+      "state": "unverified",
+      "select": "[data-slot=\"mzizi-verified-badge\"]",
+      "absent": true
+    },
+    {
+      "say": "The loading placeholder is hidden and unnamed.",
+      "state": "loading",
+      "select": "[data-slot=\"mzizi-verified-badge\"][data-loading][aria-hidden=\"true\"]:not([role])",
+      "count": 1
+    }
+  ],
+  "gaps": [
+    "Before this contract the React build was a client component that coloured the badge with an inline `style` (the tier at 15%) and dimmed suspended and ancestral badges with opacity. Both builds now use the tier's APCA-gated container pair, with no inline style, and do not dim: the ban and flower glyphs, and the name, carry the status."
+  ]
+}

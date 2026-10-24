@@ -19,8 +19,8 @@ workspace = true
 workers = ["mzizi-data/workers", "dep:worker", "dep:js-sys"]
 
 [dependencies]
-mzizi-data = { path = "../mzizi-data", version = ">=0.4.0" }
-mzizi-harness = { path = "../mzizi-harness", version = ">=0.4.0" }
+mzizi-data = { path = "../mzizi-data", version = ">=0.5.0" }
+mzizi-harness = { path = "../mzizi-harness", version = ">=0.5.0" }
 serde_json = "1"
 sha2 = "0.10"
 pbkdf2 = { version = "0.12", default-features = false, features = ["hmac"] }
@@ -28,6 +28,8 @@ hmac = "0.12"
 subtle = "2.6"
 hex = "0.4"
 base64 = "0.22"
+# Wipes the password and every key derived from it when they are dropped.
+zeroize = "1.8"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 worker = { version = "0.8", optional = true }
