@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — the Kweli Address primitives: address code, share card with QR, "deliver to" selector, private-address row; counted signals on `mzizi-trust-meter` (2026-10-24, #PRNUM)
+### Added — the Kweli Address primitives: address code, share card with QR, "deliver to" selector, private-address row; counted signals on `mzizi-trust-meter` (2026-10-24, #546)
 
 Gap 4 of #543, upstream before Kweli consumes them (Kweli Address RFC v0.1, mukoko-dev/kweli#195). Each is an Astro build and a React build under one contract in `contracts/ui/`. Both builds render every contract state in the suites. They are server-rendered with no script, and their colour is semantic only, so Kweli's brand overlay (malachite) colours the links and the selection.
 
