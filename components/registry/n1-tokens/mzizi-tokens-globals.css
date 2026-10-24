@@ -177,6 +177,8 @@
   --color-scrim: var(--scrim);
   --color-wash: var(--wash);
   --color-muted: var(--muted);
+  --color-surface-qr: var(--surface-qr);
+  --color-on-surface-qr: var(--on-surface-qr);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
@@ -258,6 +260,7 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-text: var(--destructive-text);
+  --color-status-error: var(--status-error);
   --color-overlay-foreground: var(--overlay-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
@@ -328,6 +331,7 @@
   --spacing-4xl: var(--space-4xl);
   --spacing-5xl: var(--space-5xl);
   --spacing-6xl: var(--space-6xl);
+  --radius-xs: var(--r-xs);
   --radius-sm: var(--r-sm);
   --radius-md: var(--r-md);
   --radius-base: var(--r-base);
@@ -581,6 +585,8 @@
   /* ── ROLES — identity, status tones, lifecycle, destructive, categories (#484) ── */
   --app-accent: var(--brand-accent);
   --app-accent-foreground: var(--brand-accent-foreground);
+  --surface-qr: #ffffff;
+  --on-surface-qr: #0e0d0c;
   --status-success: var(--mineral-malachite);
   --status-success-container: var(--mineral-malachite-container);
   --status-success-on-container: var(--mineral-malachite-on-container);
@@ -629,6 +635,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #9f221b; /* derived: #B3261E measures Lc 70.6 against base / surface; walked toward #000000 to Lc 75 */
+  --status-error: var(--destructive);
   --border-control: #787774; /* derived: #E7E5E0 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #000000 to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
@@ -754,6 +761,7 @@
 
   /* ── RADIUS — every rung derives from a 7px unit ─────────────────────────── */
   --radius-unit: 7px; /* CLAUDE.md §7.5. Apps running a 10px or 12px unit have the whole calc() scale wrong. */
+  --r-xs: 4px;
   --r-sm: 7px;
   --r-md: 12px;
   --r-base: 14px;
@@ -1071,6 +1079,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #f3c0bd; /* derived: #F2B8B5 measures Lc 71.6 against base / surface; walked toward #FFFFFF to Lc 75 */
+  --status-error: var(--destructive);
   --border-control: #818180; /* derived: #2A2927 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #FFFFFF to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */

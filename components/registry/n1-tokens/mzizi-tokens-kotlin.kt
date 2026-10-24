@@ -73,6 +73,7 @@ object MziziSpacing {
 }
 
 object MziziRadius {
+    val xs = 4.dp
     val sm = 7.dp
     val md = 12.dp
     val lg = 14.dp
@@ -107,6 +108,8 @@ object MziziRoles {
         val scrim = Color(0x66000000)
         val wash = Color(0xFFE3E5E4)
         val muted = Color(0xFFFAF9F5)
+        val surfaceQr = Color(0xFFFFFFFF)
+        val onSurfaceQr = Color(0xFF0E0D0C)
         val textPrimary = Color(0xFF373635)
         val textSecondary = Color(0xFF575655)
         val textTertiary = Color(0xFF6B6A69)
@@ -188,6 +191,7 @@ object MziziRoles {
         val destructive = Color(0xFFB3261E)
         val destructiveForeground = Color(0xFFFFFFFF)
         val destructiveText = Color(0xFF9F221B)
+        val statusError = Color(0xFFB3261E)
         val overlayForeground = Color(0xFF373635)
         val accent = Color(0xFFDFE2E2)
         val accentForeground = Color(0xFF373635)
@@ -222,6 +226,8 @@ object MziziRoles {
         val scrim = Color(0x99000000)
         val wash = Color(0xFF252524)
         val muted = Color(0xFF050504)
+        val surfaceQr = Color(0xFFFFFFFF)
+        val onSurfaceQr = Color(0xFF0E0D0C)
         val textPrimary = Color(0xFFE5E5E3)
         val textSecondary = Color(0xFFCCCCCA)
         val textTertiary = Color(0xFFB3B3B1)
@@ -303,6 +309,7 @@ object MziziRoles {
         val destructive = Color(0xFFF3BDBA)
         val destructiveForeground = Color(0xFF0E0D0C)
         val destructiveText = Color(0xFFF3C0BD)
+        val statusError = Color(0xFFF3BDBA)
         val overlayForeground = Color(0xFFE5E5E3)
         val accent = Color(0xFF20201F)
         val accentForeground = Color(0xFFE5E5E3)

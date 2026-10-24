@@ -70,6 +70,7 @@ public struct MziziSpacing {
 }
 
 public struct MziziRadius {
+    public static let xs: CGFloat = 4
     public static let sm: CGFloat = 7
     public static let md: CGFloat = 12
     public static let lg: CGFloat = 14
@@ -104,6 +105,8 @@ public struct MziziRoles {
         public static let scrim = Color.black.opacity(0.4)
         public static let wash = Color(hex: "#E3E5E4")
         public static let muted = Color(hex: "#FAF9F5")
+        public static let surfaceQr = Color(hex: "#FFFFFF")
+        public static let onSurfaceQr = Color(hex: "#0E0D0C")
         public static let textPrimary = Color(hex: "#373635")
         public static let textSecondary = Color(hex: "#575655")
         public static let textTertiary = Color(hex: "#6B6A69")
@@ -185,6 +188,7 @@ public struct MziziRoles {
         public static let destructive = Color(hex: "#B3261E")
         public static let destructiveForeground = Color(hex: "#FFFFFF")
         public static let destructiveText = Color(hex: "#9F221B")
+        public static let statusError = Color(hex: "#B3261E")
         public static let overlayForeground = Color(hex: "#373635")
         public static let accent = Color(hex: "#DFE2E2")
         public static let accentForeground = Color(hex: "#373635")
@@ -219,6 +223,8 @@ public struct MziziRoles {
         public static let scrim = Color.black.opacity(0.6)
         public static let wash = Color(hex: "#252524")
         public static let muted = Color(hex: "#050504")
+        public static let surfaceQr = Color(hex: "#FFFFFF")
+        public static let onSurfaceQr = Color(hex: "#0E0D0C")
         public static let textPrimary = Color(hex: "#E5E5E3")
         public static let textSecondary = Color(hex: "#CCCCCA")
         public static let textTertiary = Color(hex: "#B3B3B1")
@@ -300,6 +306,7 @@ public struct MziziRoles {
         public static let destructive = Color(hex: "#F3BDBA")
         public static let destructiveForeground = Color(hex: "#0E0D0C")
         public static let destructiveText = Color(hex: "#F3C0BD")
+        public static let statusError = Color(hex: "#F3BDBA")
         public static let overlayForeground = Color(hex: "#E5E5E3")
         public static let accent = Color(hex: "#20201F")
         public static let accentForeground = Color(hex: "#E5E5E3")

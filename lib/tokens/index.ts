@@ -109,10 +109,11 @@ export const primitives = {
   },
 
   // ─── BORDER RADIUS (canonical) ──────────────
-  // Base unit: 7px (--radius-unit). Ecosystem numbers: 7, 12, 14, 17.
+  // Base unit: 7px (--radius-unit). Ecosystem numbers: 4, 7, 12, 14, 17.
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
     none: { value: "0px" },
+    xs: { value: "4px", description: "Unit less 3. The smallest marks: legend swatches, kbd keys, inline tags" },
     sm: { value: "7px", description: "Subtle rounding, checkboxes, small elements" },
     md: { value: "12px", description: "Cards, inputs, containers" },
     lg: { value: "14px", description: "Default radius, medium containers" },
@@ -1093,15 +1094,15 @@ export const verificationTokens = {
     label: "OTP Verified",
   },
   government: {
-    value: "var(--tier-government, var(--color-tanzanite, #B388FF))",
+    value: "var(--tier-government, var(--color-gold, #FFD740))",
     css: "--tier-government",
-    mineral: "tanzanite",
+    mineral: "gold",
     label: "Government ID",
   },
   licensed: {
-    value: "var(--tier-licensed, var(--color-gold, #FFD740))",
+    value: "var(--tier-licensed, var(--color-tanzanite, #B388FF))",
     css: "--tier-licensed",
-    mineral: "gold",
+    mineral: "tanzanite",
     label: "Licensed",
   },
 } as const
@@ -1221,8 +1222,8 @@ export function generateStatusCSS(): string {
   lines.push("  --tier-unverified: #6B7280;")
   lines.push("  --tier-community: var(--color-malachite, #64FFDA);")
   lines.push("  --tier-otp: var(--color-cobalt, #00B0FF);")
-  lines.push("  --tier-government: var(--color-tanzanite, #B388FF);")
-  lines.push("  --tier-licensed: var(--color-gold, #FFD740);")
+  lines.push("  --tier-government: var(--color-gold, #FFD740);")
+  lines.push("  --tier-licensed: var(--color-tanzanite, #B388FF);")
   lines.push("}")
   return lines.join("\n")
 }

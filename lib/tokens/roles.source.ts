@@ -542,6 +542,31 @@ export const ROLES: readonly Role[] = [
     default: { background: "muted" },
     block: "ladder",
   },
+  /*
+   * The QR plate (#543). A QR code reads most reliably as dark modules on a light ground with
+   * a light quiet zone, and some scanners cannot read an inverted (light-on-dark) code. So the
+   * plate stays light in EVERY theme, and its ink stays dark. The values are the canon's own
+   * white and ink, the pair `onWhiteOrInk` already uses, fixed rather than themed.
+   */
+  {
+    name: "surface-qr",
+    group: "surface",
+    kind: "surface",
+    required: true,
+    description: "The plate behind a QR code: white in every theme, so the code is never inverted.",
+    default: { literal: "#FFFFFF" },
+    block: "roles",
+  },
+  {
+    name: "on-surface-qr",
+    group: "surface",
+    kind: "text",
+    required: true,
+    description: "A QR code's modules on `surface-qr`: the canon's ink in every theme.",
+    contrast: fg("surface-qr"),
+    default: { literal: "#0E0D0C" },
+    block: "roles",
+  },
 
   // ── Text ──
   {
@@ -706,6 +731,24 @@ export const ROLES: readonly Role[] = [
     contrast: { against: ON_PAGE, min: BODY },
     default: { role: "error" },
     derive: "text",
+    block: "roles",
+  },
+  {
+    /*
+     * `--status-error`: the name N1's `statusTokens` gives the error status and
+     * that components use (`text-status-error`, `var(--status-error, …)`) beside
+     * `--status-success` / `--status-warning`. It was defined only in the site's
+     * own stylesheet, so a consumer of the distributed tokens fell through to each
+     * component's hex fallback (#543). An alias of `destructive`: one decision for
+     * "error" (red, never the terracotta `status-danger`).
+     */
+    name: "status-error",
+    group: "destructive",
+    kind: "ui",
+    required: true,
+    description: "The error status (`text-status-error`, `fill-status-error`): an alias of `destructive`, red, never the terracotta `status-danger`.",
+    contrast: { against: ON_PAGE, min: UI },
+    default: { role: "destructive" },
     block: "roles",
   },
   { name: "overlay-foreground", group: "shadcn", kind: "text", required: true, description: "Text on `overlay`.", contrast: fg("overlay"), default: { role: "text-primary" }, block: "shadcn" },
@@ -887,11 +930,11 @@ export const STATUS: ReadonlyArray<readonly [string, string, string, string]> = 
 
 /**
  * The radius ladder, from `brandMeta.radii`, in ladder order. CLAUDE.md §7.5:
- * every radius derives from a 7px unit, giving the ecosystem numbers 7 / 12 /
- * 14 / 17. A `--radius` of 10px or 12px with a `calc()` scale hung off it puts
+ * every radius derives from a 7px unit, giving the ecosystem numbers 4 / 7 /
+ * 12 / 14 / 17 (xs is the unit less 3, for the smallest marks: swatches, kbd). A `--radius` of 10px or 12px with a `calc()` scale hung off it puts
  * every derived rung off the system.
  */
-export const RADIUS: ReadonlyArray<readonly [string, string]> = (["sm", "md", "base", "lg", "xl", "2xl", "full"] as const).map(
+export const RADIUS: ReadonlyArray<readonly [string, string]> = (["xs", "sm", "md", "base", "lg", "xl", "2xl", "full"] as const).map(
   (n) => {
     const v = brandMeta.radii[n]
     if (typeof v !== "string") throw new Error(`brand.source.ts radii has no "${n}"`)

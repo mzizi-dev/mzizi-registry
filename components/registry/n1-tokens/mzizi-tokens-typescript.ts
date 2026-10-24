@@ -419,10 +419,15 @@ export const primitives = {
   },
 
   // ─── BORDER RADIUS (Nyuchi Design canonical) ──────────────
-  // Base unit: 7px (--radius-unit). Ecosystem numbers: 7, 12, 14, 17.
+  // Base unit: 7px (--radius-unit). Ecosystem numbers: 4, 7, 12, 14, 17.
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
     none: { value: "0px" },
+    xs: {
+      value: "4px",
+      description:
+        "Unit less 3. The smallest marks: legend swatches, kbd keys, inline tags",
+    },
     sm: {
       value: "7px",
       description: "Subtle rounding, checkboxes, small elements",
@@ -1384,15 +1389,15 @@ export const verificationTokens = {
     label: "OTP Verified",
   },
   government: {
-    value: `var(--tier-government, ${paletteVar("tanzanite")})`,
+    value: `var(--tier-government, ${paletteVar("gold")})`,
     css: "--tier-government",
-    mineral: "tanzanite",
+    mineral: "gold",
     label: "Government ID",
   },
   licensed: {
-    value: `var(--tier-licensed, ${paletteVar("gold")})`,
+    value: `var(--tier-licensed, ${paletteVar("tanzanite")})`,
     css: "--tier-licensed",
-    mineral: "gold",
+    mineral: "tanzanite",
     label: "Licensed",
   },
 } as const;
@@ -1515,8 +1520,8 @@ export function generateStatusCSS(): string {
   lines.push("  --tier-unverified: #6B7280;");
   lines.push(`  --tier-community: ${paletteVar("malachite")};`);
   lines.push(`  --tier-otp: ${paletteVar("cobalt")};`);
-  lines.push(`  --tier-government: ${paletteVar("tanzanite")};`);
-  lines.push(`  --tier-licensed: ${paletteVar("gold")};`);
+  lines.push(`  --tier-government: ${paletteVar("gold")};`);
+  lines.push(`  --tier-licensed: ${paletteVar("tanzanite")};`);
   lines.push("}");
   return lines.join("\n");
 }
@@ -1805,6 +1810,18 @@ export const roles = {
     cssVar: "--muted",
     light: "#FAF9F5",
     dark: "#050504",
+  },
+  "surface-qr": {
+    kind: "surface",
+    cssVar: "--surface-qr",
+    light: "#FFFFFF",
+    dark: "#FFFFFF",
+  },
+  "on-surface-qr": {
+    kind: "text",
+    cssVar: "--on-surface-qr",
+    light: "#0E0D0C",
+    dark: "#0E0D0C",
   },
   "text-primary": {
     kind: "text",
@@ -2281,6 +2298,12 @@ export const roles = {
     cssVar: "--destructive-text",
     light: "#9F221B",
     dark: "#F3C0BD",
+  },
+  "status-error": {
+    kind: "ui",
+    cssVar: "--status-error",
+    light: "#B3261E",
+    dark: "#F3BDBA",
   },
   "overlay-foreground": {
     kind: "text",
