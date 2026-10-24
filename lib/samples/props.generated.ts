@@ -3878,6 +3878,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "current",
       "type": "boolean | string",
       "required": false
+    },
+    {
+      "name": "linkComponent",
+      "type": "React.ComponentType<CategoryChipLinkProps>",
+      "required": false
     }
   ],
   "discover-category-chips": [
@@ -6911,6 +6916,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "coverAlt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "priority",
+      "type": "boolean",
+      "required": false
+    },
+    {
       "name": "avatar",
       "type": "string",
       "required": false
@@ -6943,6 +6958,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "coverHeight",
       "type": "\"sm\" | \"md\" | \"lg\"",
+      "required": false
+    },
+    {
+      "name": "banner",
+      "type": "boolean",
       "required": false
     }
   ],
