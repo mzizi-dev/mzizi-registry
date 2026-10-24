@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import type { LucideProps } from "lucide-react"
 
@@ -11,6 +9,12 @@ import type { LucideProps } from "lucide-react"
      import { icons, Icon } from "@/lib/icons"
      <Icon name="success" size="md" />
      <icons.ArrowRight className="size-4" />
+
+   No "use client": the module only re-exports icons and defines
+   stateless components, so a Server Component may import it. Next's
+   flight loader rejects `export * from "lucide-react"` inside a client
+   boundary when a server module imports it (#543), and a client
+   component that imports this module still gets client copies.
    ═══════════════════════════════════════════════════════════════ */
 
 // ── Icon Size System ────────────────────────────────────────────
