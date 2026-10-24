@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.16.0] - 2026-10-24
+
+Releases `staging` to `main` as the next minor above v4.15.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.16.0, and the Mzizi Roots crates move to **0.5.0** (`[workspace.package] version` and the path-dependency versions; `mzizi-mongodb` now requires `mzizi-data` and `mzizi-harness` `>=0.5.0`), so `publish-crates.yml` publishes the `mzizi-mongodb` security fixes to crates.io instead of leaving 0.4.0 as the only version there. It carries the Kweli business-dashboard gaps ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): the `ui/mzizi-verified-badge` contract with an Astro build and the framework-free `mzizi-trust-tier-data` lib (#568), `app/form-field` 1.2 (#570), `app/data-table` 1.2 (#571), `app/confirm-action` (#572) and `app/tier-status` (#573); the provider-neutral `money` lib with `app/money` and `app/plan-summary` (#574, phase 1 of #569); and the `mzizi-mongodb` security fixes (#567).
+
+**Breaking:** `mzizi-mongodb` (server contract 2.0.0, crate 0.5.0) refuses cross-collection `$lookup` / `$graphLookup` / `$unionWith` in `aggregate` (use `aggregate_joining`), and `Uri::password` / `scram::salted_password` return `Zeroizing` wrappers (#567). The React `mzizi-verified-badge` no longer dims suspended or ancestral badges; the glyph and accessible name carry the status (#568). Released as a minor by owner policy (majors are owner-only, by manual dispatch); the release record carries `breaking: true`.
+
 ### Added — provider-neutral money: the `money` module, `app/money` and `app/plan-summary` (2026-10-24, #574)
 
 Phase 1 of the payment framework ([#569](https://github.com/mzizi-dev/mzizi-registry/issues/569), tracked in nyuchi/nyuchi-api#375); Kweli's first paid plan is the first consumer. Owner rule: "mzizi is not an internal architecture it's also public so mzizi should never limit to our providers."
