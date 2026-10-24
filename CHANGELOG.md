@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — the kweli brand entry (mark, favicon, lockup) and the `xs` radius rung (2026-10-24, #PRNUM)
+### Added — the kweli brand entry (mark, favicon, lockup) and the `xs` radius rung (2026-10-24, #544)
 
 Two of the Kweli gaps tracked in #543.
 
@@ -19,7 +19,7 @@ Two of the Kweli gaps tracked in #543.
 - **`--radius-xs` (4px).** The radius ladder gains `xs`, the unit less 3 (`calc(var(--radius-unit) - 3px)` in `styles/globals.css`), for the smallest marks: legend swatches, kbd keys, inline tags. Before this a consumer's `rounded-xs` fell through to Tailwind's default (2px) because Mzizi defined no `xs`. `brandMeta.radii`, the role ladder, `lib/tokens`, every N1 platform file (`--r-xs` and `--radius-xs` in `mzizi-tokens-globals.css`, `Radius::XS` in Rust, and the Swift, Kotlin, ArkTS, Python and React Native scales) and `design-system/tokens.json` carry it; `/v1/brand` `.radii` gains `xs` and its `system` note now reads "Ecosystem numbers: 4, 7, 12, 14, 17". No registry component changes radius.
 - **`2xl` stays 17px.** The issue asked whether `radii.2xl` should be 24px, as an old `nyuchi-design` skill said. Canon says 17: `brandMeta.radii`, `styles/globals.css` (`--radius-2xl: calc(var(--radius-unit) + 10px)`), `design-system/README.md` and the current `mzizi-design` skill in `@nyuchi/mzizi-skills`, which dropped the 24px line in 0.8.0. Nothing changes for `2xl`; the stale copy is the pre-0.8.0 `nyuchi-design` skill, which is no longer published.
 
-### Security — dependency floors for the advisories that failed `audit:check` on `staging` (2026-10-24, #PRNUM)
+### Security — dependency floors for the advisories that failed `audit:check` on `staging` (2026-10-24, #544)
 
 `pnpm audit --audit-level=moderate` failed on `staging`'s lockfile with four new advisories, so it failed every pull request. Raised to the first patched release: `undici` override `^7.30.1` (three advisories, through `astro > unifont`), `fast-uri` override `^3.1.9` (two, through `shadcn > … > ajv`), new `body-parser` override `^2.4.0` (through `shadcn > @modelcontextprotocol/sdk > express`), and `zod` `^4.6.7` as the dependency (GHSA-mrhx-c7xc-m3w5, `<4.6.6`). The same advisory also matches the `zod` 3.25.76 that the `shadcn` CLI pins (`zod ^3.24.1`); there is no patched 3.x, and the CLI is a devDependency that validates this repo's own registry files, so GHSA-mrhx-c7xc-m3w5 joins `pnpm.auditConfig.ignoreGhsas`. `audit:check` exits 0.
 
