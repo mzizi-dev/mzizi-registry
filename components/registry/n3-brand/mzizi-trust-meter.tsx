@@ -5,8 +5,8 @@
  *
  * The React build of contract `ui/mzizi-trust-meter`, beside `mzizi-trust-meter.astro`: the
  * same markup, held to the same contract. A server component (no "use client", no hooks): the
- * bars are SVG geometry, never inline `style`, and colour is semantic (`--status-*`; the Ubuntu
- * signal is tanzanite in every brand).
+ * bars are SVG geometry, never inline `style`, and colour is semantic (`--status-*`, and `--tier-*` for the
+ * Verification signal when `tier` is set; the Ubuntu signal is tanzanite in every brand).
  *
  * MUKOKO TRUST MODEL — three signals:
  *   Verification Tier (how real are you? identity ladder 0–4),
@@ -60,6 +60,11 @@ interface MziziTrustMeterProps {
   ubuntuPoints?: number
   /** Verification tier label */
   tierLabel?: string
+  /**
+   * The verification tier code (system.verification_tier): colours the Verification signal with
+   * that tier's `--tier-*` role. Without it the signal is `--status-warning`.
+   */
+  tier?: "unverified" | "community" | "otp" | "government" | "licensed"
   /** Platform status label */
   statusLabel?: string
   /** Compact mode — just the meter bar, no signal breakdown */
@@ -104,6 +109,26 @@ const SCORE_FILL: Record<Level, string> = {
   none: "fill-status-neutral",
 }
 
+/**
+ * The Verification signal in the user's own tier colour (#543): the `--tier-*` roles, defined
+ * once in the N1 tokens. Literal class names so Tailwind generates them. Without `tier` the
+ * signal keeps `--status-warning`, as before.
+ */
+const TIER_TEXT = {
+  unverified: "text-tier-unverified-text",
+  community: "text-tier-community-text",
+  otp: "text-tier-otp-text",
+  government: "text-tier-government-text",
+  licensed: "text-tier-licensed-text",
+} as const
+const TIER_FILL = {
+  unverified: "fill-tier-unverified",
+  community: "fill-tier-community",
+  otp: "fill-tier-otp",
+  government: "fill-tier-government",
+  licensed: "fill-tier-licensed",
+} as const
+
 function MziziTrustMeter({
   loading = false,
   trustScore,
@@ -112,6 +137,7 @@ function MziziTrustMeter({
   ubuntuScore = 0,
   ubuntuPoints,
   tierLabel,
+  tier,
   statusLabel,
   compact = false,
   title = "Trust Score",
@@ -152,8 +178,8 @@ function MziziTrustMeter({
       label: "Verification",
       icon: "shield",
       value: verificationScore,
-      text: "text-status-warning",
-      fill: "fill-status-warning",
+      text: tier ? TIER_TEXT[tier] : "text-status-warning",
+      fill: tier ? TIER_FILL[tier] : "fill-status-warning",
       detail: tierLabel,
     },
     {

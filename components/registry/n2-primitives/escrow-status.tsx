@@ -16,8 +16,8 @@ const stateConfig: Record<EscrowState, { label: string; color: string; step: num
   initiated: { label: "Initiated", color: "var(--color-cobalt,#00B0FF)", step: 1 },
   held: { label: "Funds Held", color: "var(--color-gold,#FFD740)", step: 2 },
   released: { label: "Released", color: "var(--color-malachite,#64FFDA)", step: 3 },
-  disputed: { label: "Disputed", color: "var(--color-terracotta,#D4A574)", step: 2 },
-  refunded: { label: "Refunded", color: "var(--color-terracotta,#D4A574)", step: 3 },
+  disputed: { label: "Disputed", color: "var(--color-terracotta)", step: 2 },
+  refunded: { label: "Refunded", color: "var(--color-terracotta)", step: 3 },
 }
 
 function EscrowStatus({

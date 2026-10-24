@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/mzizi-trust-meter",
   "title": "MziziTrustMeter",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "node": 3,
   "kind": "pattern",
   "summary": "The expanded view of trust: the composite score as a role=\"meter\" named by its level, then either the three-signal breakdown (Verification, Status, Ubuntu) or, with `signals`, one row per counted signal for an address, a place or a venue. Raw scores are written only with `showScore`. Server-rendered; the bars are SVG geometry.",
@@ -59,6 +59,12 @@
       "type": "string",
       "required": false,
       "description": "The verification tier's name, beside the Verification signal."
+    },
+    {
+      "name": "tier",
+      "type": "\"unverified\" | \"community\" | \"otp\" | \"government\" | \"licensed\"",
+      "required": false,
+      "description": "The verification tier code (system.verification_tier). Colours the Verification signal with that tier's `--tier-*` role (#543); without it the signal is `--status-warning`."
     },
     {
       "name": "statusLabel",
@@ -188,6 +194,15 @@
         "trustScore": 0.3,
         "loading": true
       }
+    },
+    "tier": {
+      "description": "The Verification signal in the user's tier colour.",
+      "props": {
+        "trustScore": 0.3,
+        "verificationScore": 0.3,
+        "tier": "government",
+        "tierLabel": "Government Verified"
+      }
     }
   },
   "accessibility": {
@@ -220,9 +235,19 @@
       "--status-success",
       "--status-warning",
       "--status-error",
-      "--status-neutral"
+      "--status-neutral",
+      "--tier-unverified",
+      "--tier-community",
+      "--tier-otp",
+      "--tier-government",
+      "--tier-licensed",
+      "--tier-unverified-text",
+      "--tier-community-text",
+      "--tier-otp-text",
+      "--tier-government-text",
+      "--tier-licensed-text"
     ],
-    "brandOverlay": "None: the score and the Verification and Status signals use the --status-* tokens, and the Ubuntu signal is tanzanite in every brand, because it names the Ubuntu axis, not the brand.",
+    "brandOverlay": "None: the score and the Status signal use the --status-* tokens; the Verification signal uses --status-warning, or the user's --tier-* role when `tier` is set (defined once in the N1 tokens, #543); and the Ubuntu signal is tanzanite in every brand, because it names the Ubuntu axis, not the brand.",
     "statusColours": ["tanzanite"]
   },
   "noJs": {
@@ -327,6 +352,12 @@
       "state": "compact",
       "select": "[data-slot=\"trust-signal-list\"], [data-slot=\"trust-breakdown\"]",
       "absent": true
+    },
+    {
+      "say": "With tier, the Verification signal takes that tier's role.",
+      "state": "tier",
+      "select": "[data-signal=\"verification\"] .fill-tier-government",
+      "min": 1
     },
     {
       "say": "A negative status modifier is in the error colour.",

@@ -55,7 +55,7 @@ const typeConfig: Record<
   verification: { icon: ShieldCheck, color: "var(--notification-warning, #F59E0B)" },
   trust: { icon: TrendingUp, color: "var(--status-success, #64FFDA)" },
   achievement: { icon: Star, color: "var(--notification-warning, #F59E0B)" },
-  alert: { icon: AlertTriangle, color: "var(--color-terracotta,#D4A574)" },
+  alert: { icon: AlertTriangle, color: "var(--color-terracotta)" },
   commerce: { icon: Package, color: "var(--color-cobalt,#00B0FF)" },
   news: { icon: Newspaper, color: "var(--color-tanzanite,#B388FF)" },
   place: { icon: MapPin, color: "var(--notification-success, #22C55E)" },

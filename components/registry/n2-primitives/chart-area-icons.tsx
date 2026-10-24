@@ -23,7 +23,7 @@ const DEFAULT_DATA = [
 
 const config = {
   farming: { label: "Farming", color: "var(--color-malachite, #64FFDA)", icon: Sprout },
-  mining: { label: "Mining", color: "var(--color-terracotta, #D4A574)", icon: Pickaxe },
+  mining: { label: "Mining", color: "var(--color-terracotta)", icon: Pickaxe },
 } satisfies ChartConfig
 
 export function ChartAreaIcons({ loading = false }: { loading?: boolean } = {}) {

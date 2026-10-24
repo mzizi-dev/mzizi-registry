@@ -27,7 +27,7 @@ const config = {
   mining: { label: "Mining", color: "var(--color-tanzanite, #B388FF)" },
   tourism: { label: "Tourism", color: "var(--color-malachite, #64FFDA)" },
   east: { label: "East Africa", color: "var(--color-gold, #FFD740)" },
-  west: { label: "West Africa", color: "var(--color-terracotta, #D4A574)" },
+  west: { label: "West Africa", color: "var(--color-terracotta)" },
   south: { label: "Southern Africa", color: "var(--color-cobalt, #00B0FF)" },
 } satisfies ChartConfig
 

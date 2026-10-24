@@ -415,6 +415,46 @@ pub struct RoleColors {
     pub status_deprecated_on_container: &'static str,
     /// Lifecycle `deprecated`: an alias of `status-danger-text`.
     pub status_deprecated_text: &'static str,
+    /// Verification tier `unverified` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-unverified/15`).
+    pub tier_unverified: &'static str,
+    /// Verification tier `unverified` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    pub tier_unverified_container: &'static str,
+    /// Verification tier `unverified` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — text and icons on `tier-unverified-container`.
+    pub tier_unverified_on_container: &'static str,
+    /// Verification tier `unverified` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — the tier's name as text on the page.
+    pub tier_unverified_text: &'static str,
+    /// Verification tier `community` ("Community Verified", terracotta in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-community/15`).
+    pub tier_community: &'static str,
+    /// Verification tier `community` ("Community Verified", terracotta in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    pub tier_community_container: &'static str,
+    /// Verification tier `community` ("Community Verified", terracotta in the Mzizi pack) — text and icons on `tier-community-container`.
+    pub tier_community_on_container: &'static str,
+    /// Verification tier `community` ("Community Verified", terracotta in the Mzizi pack) — the tier's name as text on the page.
+    pub tier_community_text: &'static str,
+    /// Verification tier `otp` ("Contact Verified", cobalt in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-otp/15`).
+    pub tier_otp: &'static str,
+    /// Verification tier `otp` ("Contact Verified", cobalt in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    pub tier_otp_container: &'static str,
+    /// Verification tier `otp` ("Contact Verified", cobalt in the Mzizi pack) — text and icons on `tier-otp-container`.
+    pub tier_otp_on_container: &'static str,
+    /// Verification tier `otp` ("Contact Verified", cobalt in the Mzizi pack) — the tier's name as text on the page.
+    pub tier_otp_text: &'static str,
+    /// Verification tier `government` ("Government Verified", gold in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-government/15`).
+    pub tier_government: &'static str,
+    /// Verification tier `government` ("Government Verified", gold in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    pub tier_government_container: &'static str,
+    /// Verification tier `government` ("Government Verified", gold in the Mzizi pack) — text and icons on `tier-government-container`.
+    pub tier_government_on_container: &'static str,
+    /// Verification tier `government` ("Government Verified", gold in the Mzizi pack) — the tier's name as text on the page.
+    pub tier_government_text: &'static str,
+    /// Verification tier `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-licensed/15`).
+    pub tier_licensed: &'static str,
+    /// Verification tier `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    pub tier_licensed_container: &'static str,
+    /// Verification tier `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — text and icons on `tier-licensed-container`.
+    pub tier_licensed_on_container: &'static str,
+    /// Verification tier `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — the tier's name as text on the page.
+    pub tier_licensed_text: &'static str,
     /// Chart series 1. Mzizi: cobalt.
     pub chart_1: &'static str,
     /// Chart series 2. Mzizi: tanzanite.
@@ -589,6 +629,26 @@ impl Roles {
                 status_deprecated_container: "#F5E6D3",
                 status_deprecated_on_container: "#5D2906",
                 status_deprecated_text: "#844425",
+                tier_unverified: "#55514B",
+                tier_unverified_container: "#E5E4E1",
+                tier_unverified_on_container: "#373635",
+                tier_unverified_text: "#575655",
+                tier_community: "#A0522D",
+                tier_community_container: "#F5E6D3",
+                tier_community_on_container: "#5D2906",
+                tier_community_text: "#844425",
+                tier_otp: "#0047AB",
+                tier_otp_container: "#E3F2FD",
+                tier_otp_on_container: "#002966",
+                tier_otp_text: "#0047AB",
+                tier_government: "#5D4037",
+                tier_government_container: "#FFF8E1",
+                tier_government_on_container: "#3E2723",
+                tier_government_text: "#5D4037",
+                tier_licensed: "#4B0082",
+                tier_licensed_container: "#F3E5F5",
+                tier_licensed_on_container: "#2E004D",
+                tier_licensed_text: "#4B0082",
                 chart_1: "#0047AB",
                 chart_2: "#4B0082",
                 chart_3: "#004D40",
@@ -706,6 +766,26 @@ impl Roles {
                 status_deprecated_container: "#3E2817",
                 status_deprecated_on_container: "#F5E6D3",
                 status_deprecated_text: "#EBCCA3",
+                tier_unverified: "#A09C93",
+                tier_unverified_container: "#1E1D1A",
+                tier_unverified_on_container: "#E5E5E3",
+                tier_unverified_text: "#CCCCCA",
+                tier_community: "#E1B07E",
+                tier_community_container: "#3E2817",
+                tier_community_on_container: "#F5E6D3",
+                tier_community_text: "#EBCCA3",
+                tier_otp: "#00B0FF",
+                tier_otp_container: "#001F3F",
+                tier_otp_on_container: "#B3E5FC",
+                tier_otp_text: "#86DCFF",
+                tier_government: "#FFD740",
+                tier_government_container: "#332200",
+                tier_government_on_container: "#FFECB3",
+                tier_government_text: "#FFD740",
+                tier_licensed: "#B388FF",
+                tier_licensed_container: "#1A0033",
+                tier_licensed_on_container: "#E3C2E8",
+                tier_licensed_text: "#DCC8FF",
                 chart_1: "#00B0FF",
                 chart_2: "#B388FF",
                 chart_3: "#64FFDA",

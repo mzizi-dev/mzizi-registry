@@ -108,7 +108,7 @@ function SymptomChecker({
           max={5}
           value={severity}
           onChange={(e) => setSeverity(parseInt(e.target.value) as Severity)}
-          className="mt-1 h-1 w-full accent-[var(--color-terracotta,#D4A574)]"
+          className="mt-1 h-1 w-full accent-[var(--color-terracotta)]"
         />
       </div>
 

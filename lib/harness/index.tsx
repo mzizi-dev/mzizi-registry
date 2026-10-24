@@ -477,8 +477,8 @@ class MziziHarnessBoundary extends React.Component<MziziHarnessProps, HarnessSta
         >
           {fallback || (
             <div className="flex flex-col items-center rounded-[var(--radius-card,14px)] bg-card px-6 py-6 text-center ring-1 ring-foreground/10">
-              <div className="mb-3 flex size-10 items-center justify-center rounded-full bg-[var(--color-terracotta,#D4A574)]/10">
-                <span className="text-lg text-[var(--color-terracotta,#D4A574)]">!</span>
+              <div className="mb-3 flex size-10 items-center justify-center rounded-full bg-[var(--color-terracotta)]/10">
+                <span className="text-lg text-[var(--color-terracotta)]">!</span>
               </div>
               <p className="text-sm font-medium text-foreground">{name} could not load</p>
               <p className="mt-1 text-xs text-muted-foreground">

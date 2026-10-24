@@ -22,7 +22,7 @@ const modeColors: Record<LegMode, string> = {
   bus: "var(--color-cobalt,#00B0FF)",
   kombi: "var(--color-gold,#FFD740)",
   train: "var(--color-malachite,#64FFDA)",
-  taxi: "var(--color-terracotta,#D4A574)",
+  taxi: "var(--color-terracotta)",
   walk: "var(--muted-foreground,#B2AFA8)",
   drive: "var(--muted-foreground,#B2AFA8)",
   flight: "var(--color-tanzanite,#B388FF)",

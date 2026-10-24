@@ -53,7 +53,7 @@ impl AlertSeverity {
     pub const fn mineral(self) -> &'static str {
         match self {
             Self::Watch => "var(--severity-cold, #3B82F6)",
-            Self::Moderate => "var(--severity-high,var(--color-terracotta,#D4A574))",
+            Self::Moderate => "var(--severity-high,var(--color-terracotta))",
             Self::Severe => "var(--severity-severe, #EF4444)",
         }
     }
@@ -63,7 +63,7 @@ impl AlertSeverity {
     pub const fn surface(self) -> &'static str {
         match self {
             Self::Watch => "var(--color-cobalt,#00B0FF)",
-            Self::Moderate => "var(--color-terracotta,#D4A574)",
+            Self::Moderate => "var(--color-terracotta)",
             Self::Severe => "var(--color-gold,#FFD740)",
         }
     }

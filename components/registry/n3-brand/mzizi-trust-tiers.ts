@@ -5,8 +5,15 @@
  * an Astro page or an API route can import it. `mzizi-verified-badge` (a client component)
  * reads it from here and re-exports it, so existing imports from the badge keep working.
  *
- * Installs to lib/mzizi-trust-tiers.ts. The tier colours are the badge's own and are not
- * changed by moving them here.
+ * Installs to lib/mzizi-trust-tiers.ts.
+ *
+ * TIER COLOURS (owner decision 2026-10-24, #543). Every tier reads its `--tier-*` role, defined
+ * once in the N1 tokens (`lib/tokens/roles.source.ts`): unverified → the neutral grey
+ * (`--status-neutral`), community → terracotta, otp ("Contact Verified") → cobalt,
+ * government → gold, licensed → tanzanite. The roles are themed, so `fg`/`bg` already follow
+ * light and dark; `fgLight`/`bgLight` are kept for existing callers and carry the same values.
+ * The fallbacks name the family, never a hex, so a consumer without the tier roles still gets
+ * the canonical mineral. A background is the tier at 15% (`color-mix`), not a fixed rgba.
  */
 import { Users, Phone, ShieldCheck, Award } from "@/lib/icons"
 
@@ -30,10 +37,10 @@ const TIER_CONFIG = {
     label: "Unverified",
     trustIncrement: 0.0,
     cumulativeTrust: 0.0,
-    fg: "transparent",
-    bg: "transparent",
-    fgLight: "transparent",
-    bgLight: "transparent",
+    fg: "var(--tier-unverified,var(--status-neutral))",
+    bg: "color-mix(in oklab,var(--tier-unverified,var(--status-neutral)) 15%,transparent)",
+    fgLight: "var(--tier-unverified,var(--status-neutral))",
+    bgLight: "color-mix(in oklab,var(--tier-unverified,var(--status-neutral)) 15%,transparent)",
     icon: null,
   },
   community: {
@@ -42,10 +49,10 @@ const TIER_CONFIG = {
     label: "Community Verified",
     trustIncrement: 0.1,
     cumulativeTrust: 0.1,
-    fg: "var(--color-terracotta,#D4A574)",
-    bg: "rgba(212,165,116,0.15)",
-    fgLight: "var(--color-terracotta-light,#8B4513)",
-    bgLight: "rgba(139,69,19,0.12)",
+    fg: "var(--tier-community,var(--color-terracotta))",
+    bg: "color-mix(in oklab,var(--tier-community,var(--color-terracotta)) 15%,transparent)",
+    fgLight: "var(--tier-community,var(--color-terracotta))",
+    bgLight: "color-mix(in oklab,var(--tier-community,var(--color-terracotta)) 15%,transparent)",
     icon: Users,
   },
   otp: {
@@ -54,10 +61,10 @@ const TIER_CONFIG = {
     label: "Contact Verified",
     trustIncrement: 0.1,
     cumulativeTrust: 0.2,
-    fg: "var(--tier-otp,var(--color-cobalt,#00B0FF))",
-    bg: "rgba(0,176,255,0.15)",
-    fgLight: "var(--color-cobalt-light,#0047AB)",
-    bgLight: "rgba(0,71,171,0.12)",
+    fg: "var(--tier-otp,var(--color-cobalt))",
+    bg: "color-mix(in oklab,var(--tier-otp,var(--color-cobalt)) 15%,transparent)",
+    fgLight: "var(--tier-otp,var(--color-cobalt))",
+    bgLight: "color-mix(in oklab,var(--tier-otp,var(--color-cobalt)) 15%,transparent)",
     icon: Phone,
   },
   government: {
@@ -66,10 +73,10 @@ const TIER_CONFIG = {
     label: "Government Verified",
     trustIncrement: 0.1,
     cumulativeTrust: 0.3,
-    fg: "var(--tier-government,var(--color-gold,#FFD740))",
-    bg: "rgba(255,215,64,0.15)",
-    fgLight: "var(--color-gold-light,#5D4037)",
-    bgLight: "rgba(93,64,55,0.12)",
+    fg: "var(--tier-government,var(--color-gold))",
+    bg: "color-mix(in oklab,var(--tier-government,var(--color-gold)) 15%,transparent)",
+    fgLight: "var(--tier-government,var(--color-gold))",
+    bgLight: "color-mix(in oklab,var(--tier-government,var(--color-gold)) 15%,transparent)",
     icon: ShieldCheck,
   },
   licensed: {
@@ -78,10 +85,10 @@ const TIER_CONFIG = {
     label: "Licensed Professional",
     trustIncrement: 0.2,
     cumulativeTrust: 0.5,
-    fg: "var(--tier-licensed,var(--color-tanzanite,#B388FF))",
-    bg: "rgba(179,136,255,0.15)",
-    fgLight: "var(--color-tanzanite-light,#4B0082)",
-    bgLight: "rgba(75,0,130,0.12)",
+    fg: "var(--tier-licensed,var(--color-tanzanite))",
+    bg: "color-mix(in oklab,var(--tier-licensed,var(--color-tanzanite)) 15%,transparent)",
+    fgLight: "var(--tier-licensed,var(--color-tanzanite))",
+    bgLight: "color-mix(in oklab,var(--tier-licensed,var(--color-tanzanite)) 15%,transparent)",
     icon: Award,
   },
 } as const

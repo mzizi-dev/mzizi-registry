@@ -235,7 +235,24 @@ describe("the contrast gate on the Mzizi pack", () => {
       "destructive:dark",
       "status-danger-text:light",
       "status-premium-on-container:dark",
+      // The tier roles take the same families as danger (terracotta) and premium (tanzanite),
+      // so they need the same two walks (#543).
+      "tier-community-text:light",
+      "tier-licensed-on-container:dark",
     ])
+  })
+
+  it("maps the verification tiers to the owner's ladder (#543, 2026-10-24)", () => {
+    expect(RESOLVED.get("tier-unverified")!.css.light).toBe("var(--status-neutral)")
+    expect(RESOLVED.get("tier-community")!.css.light).toBe("var(--mineral-terracotta)")
+    expect(RESOLVED.get("tier-otp")!.css.light).toBe("var(--mineral-cobalt)")
+    expect(RESOLVED.get("tier-government")!.css.light).toBe("var(--mineral-gold)")
+    expect(RESOLVED.get("tier-licensed")!.css.light).toBe("var(--mineral-tanzanite)")
+    for (const t of ["unverified", "community", "otp", "government", "licensed"]) {
+      for (const suffix of ["", "-container", "-on-container", "-text"]) {
+        expect(RESOLVED.has(`tier-${t}${suffix}`), `tier-${t}${suffix}`).toBe(true)
+      }
+    }
   })
 
   it("holds every text role to Lc 75 unless it is non-body (Lc 60), pending or exempt", () => {
