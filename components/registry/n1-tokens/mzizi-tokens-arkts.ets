@@ -68,6 +68,7 @@ export const MziziSpacing = {
 } as const
 
 export const MziziRadius = {
+    xs: 4,
     sm: 7,
     md: 12,
     lg: 14,
