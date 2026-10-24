@@ -143,7 +143,7 @@ Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Wher
 | `ui/address-private-row` | AddressPrivateRow | N2   | 1.0.0   | `address-private-row` | `address-private-row` (contract) | —                              |
 | `ui/address-selector`    | AddressSelector   | N2   | 1.0.0   | `address-selector`    | `address-selector` (contract)    | —                              |
 | `ui/address-share-card`  | AddressShareCard  | N3   | 1.0.0   | `address-share-card`  | `address-share-card` (contract)  | —                              |
-| `ui/mzizi-trust-meter`   | MziziTrustMeter   | N3   | 1.0.0   | `mzizi-trust-meter`   | `mzizi-trust-meter` (contract)   | —                              |
+| `ui/mzizi-trust-meter`   | MziziTrustMeter   | N3   | 2.0.0   | `mzizi-trust-meter`   | `mzizi-trust-meter` (contract)   | —                              |
 
 **Follow-ups.** Rust ports of the app, discover and site components ([#401](https://github.com/mzizi-dev/mzizi-registry/issues/401)); each is done when it passes its contract. `button`, `card` and `input` share only their slot with their `.tsx` and `.rs`, which keep the registry's own variants, parts or height (each divergence is listed in the contract).
 

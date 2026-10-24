@@ -467,6 +467,8 @@ pub struct RoleColors {
     pub destructive_foreground: &'static str,
     /// Error text on the page (form messages).
     pub destructive_text: &'static str,
+    /// The error status (`text-status-error`, `fill-status-error`): an alias of `destructive`, red, never the terracotta `status-danger`.
+    pub status_error: &'static str,
     /// Text on `overlay`.
     pub overlay_foreground: &'static str,
     /// Hover and selected fills: `primary` at 12% over `base`.
@@ -609,6 +611,7 @@ impl Roles {
                 destructive: "#B3261E",
                 destructive_foreground: "#FFFFFF",
                 destructive_text: "#9F221B",
+                status_error: "#B3261E",
                 overlay_foreground: "#373635",
                 accent: "#DFE2E2",
                 accent_foreground: "#373635",
@@ -723,6 +726,7 @@ impl Roles {
                 destructive: "#F3BDBA",
                 destructive_foreground: "#0E0D0C",
                 destructive_text: "#F3C0BD",
+                status_error: "#F3BDBA",
                 overlay_foreground: "#E5E5E3",
                 accent: "#20201F",
                 accent_foreground: "#E5E5E3",
