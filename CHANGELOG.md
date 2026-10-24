@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `filter-bar` chips are real buttons with `aria-pressed`, so the bar works from the keyboard (2026-10-24, #PRNUM)
+
+Item 9 of the Kweli phase-2 gaps, tracked in #543.
+
+- **`filter-bar`.** Each chip ("All" and every option) was a `Badge` `<span>` with an `onClick`: no keyboard could reach it, and no screen reader could tell it was a control or whether it was on. Each is now a `<button type="button">` with `aria-pressed`, rendered through `Badge asChild` so it keeps the badge's look, in the tab order and operated with Enter and Space like any button. "All" is pressed when nothing is selected. Selection, `multiple`, `showAll`, `showClear` and `onSelectionChange` behave as before.
+- **Changed.** The root is `role="group"` instead of `role="toolbar"`: a toolbar promises arrow-key navigation between one tab stop, which the bar does not implement, while a group of ordinary buttons needs none. The new `label` prop names the group ("Filters" by default). Chips are 44px tall (`h-11`, `rounded-full`, the `discover-category-chip` height), and Clear is at least 44px tall with its icon `aria-hidden`.
+- **Tests.** New `__tests__/components/filter-bar.test.tsx`. The bar has no Astro build, so no contract file.
+
 ### Changed — `mzizi-cover-header` draws its cover as an `<img>`, draws the avatar only when given and makes `role="banner"` opt-in; `discover-category-chip` takes a `linkComponent` (2026-10-24, #556)
 
 Items 2 and 3 of the Kweli phase-2 gaps, tracked in #543. Kweli carries marked forks of both until this lands.
