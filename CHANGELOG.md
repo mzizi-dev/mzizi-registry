@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — `mzizi-place-card` takes `tierLabel` and `linkLabel`; `address-share-card` takes `codeLabel` and draws its QR on a light plate (new `surface-qr` / `on-surface-qr` tokens); `app-brand-mark` loads lazily (2026-10-24, #PRNUM)
+### Changed — `mzizi-place-card` takes `tierLabel` and `linkLabel`; `address-share-card` takes `codeLabel` and draws its QR on a light plate (new `surface-qr` / `on-surface-qr` tokens); `app-brand-mark` loads lazily (2026-10-24, #558)
 
 Items 7, 8 and 11 of the Kweli phase-2 gaps, tracked in #543.
 
