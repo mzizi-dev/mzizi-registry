@@ -136,6 +136,7 @@ export type RoleGroup =
   | "status"
   | "status-legacy"
   | "lifecycle"
+  | "tier"
   | "destructive"
   | "categorical"
   | "size"
@@ -393,6 +394,106 @@ const LIFECYCLE_ROLES: Role[] = LIFECYCLE.flatMap(([stage, tone]) =>
   })
 )
 
+// ─── Verification tiers ──────────────────────────────────────────────────────
+
+/**
+ * The verification ladder (`system.verification_tier`, levels 0–4) → palette family.
+ * Owner decision 2026-10-24 (#543, Q1–Q4): the tiers keep the minerals — community
+ * terracotta, contact (otp) cobalt, government gold, licensed tanzanite — and tier 0 takes
+ * the neutral grey the system already has (`status-neutral`, the muted stone ladder), not a
+ * heritage tone and not a raw hex. Heritage stays neutral and editorial (seven-minerals.mdx).
+ *
+ * Every component that shows a tier (the verified badge, the trust meter, the trust gate,
+ * the permission gate) reads these `--tier-*` roles, so a pack recolours a tier here, once.
+ */
+export const TIER_FAMILIES = [
+  ["community", "terracotta"],
+  ["otp", "cobalt"],
+  ["government", "gold"],
+  ["licensed", "tanzanite"],
+] as const
+
+/** The five tiers in ladder order, with the label each one carries (Q5: tier 2 is "Contact Verified"). */
+export const TIERS = [
+  ["unverified", "Unverified"],
+  ["community", "Community Verified"],
+  ["otp", "Contact Verified"],
+  ["government", "Government Verified"],
+  ["licensed", "Licensed Professional"],
+] as const
+
+/** The four tiers every verification tier carries: the same shape as a status tone. */
+function tierRoles(tier: string, label: string, values: Record<"fill" | "container" | "on" | "text", ThemedValue>, family: string): Role[] {
+  const name = `tier-${tier}`
+  const what = `Verification tier \`${tier}\` ("${label}", ${family} in the Mzizi pack)`
+  return [
+    {
+      name,
+      group: "tier",
+      kind: "ui",
+      required: true,
+      description: `${what} — the tier itself: badge icons, meter bars, tinted fills (\`bg-${name}/15\`).`,
+      contrast: { against: ON_PAGE, min: UI },
+      default: values.fill,
+      block: "roles",
+    },
+    {
+      name: `${name}-container`,
+      group: "tier",
+      kind: "surface",
+      required: true,
+      description: `${what} — a soft fill behind tier content (a tier chip or banner).`,
+      default: values.container,
+      block: "roles",
+    },
+    {
+      name: `${name}-on-container`,
+      group: "tier",
+      kind: "text",
+      required: true,
+      description: `${what} — text and icons on \`${name}-container\`.`,
+      contrast: { against: [`${name}-container`], min: BODY },
+      default: values.on,
+      derive: "text",
+      block: "roles",
+    },
+    {
+      name: `${name}-text`,
+      group: "tier",
+      kind: "text",
+      required: true,
+      description: `${what} — the tier's name as text on the page.`,
+      contrast: { against: ON_PAGE, min: BODY },
+      default: values.text,
+      derive: "text",
+      block: "roles",
+    },
+  ]
+}
+
+const TIER_ROLES: Role[] = TIERS.flatMap(([tier, label]) => {
+  if (tier === "unverified") {
+    return tierRoles(
+      tier,
+      label,
+      {
+        fill: { role: "status-neutral" },
+        container: { role: "status-neutral-container" },
+        on: { role: "status-neutral-on-container" },
+        text: { role: "status-neutral-text" },
+      },
+      "the neutral grey, `status-neutral`,"
+    )
+  }
+  const family = TIER_FAMILIES.find(([t]) => t === tier)![1]
+  return tierRoles(
+    tier,
+    label,
+    { fill: fam(family, "base"), container: fam(family, "container"), on: fam(family, "on-container"), text: fam(family, "text") },
+    family
+  )
+})
+
 // ─── Legacy status colours — `/v1/brand` semanticColors, read from canon ─────
 
 /**
@@ -634,6 +735,7 @@ export const ROLES: readonly Role[] = [
   ...LEGACY_STATUS_ROLES,
   ...STATUS_ROLES,
   ...LIFECYCLE_ROLES,
+  ...TIER_ROLES,
 
   // ── Categorical ──
   ...minerals.map(

@@ -159,7 +159,7 @@ export function MziziFooter({
               "var(--color-primary, #00B0FF)",
               "var(--color-accent, #B388FF)",
               "var(--status-warning, #FFD740)",
-              "var(--status-error, #D4A574)",
+              "var(--status-error)",
             ].map((c, i) => (
               <div key={i} className="size-1.5 rounded-full" style={{ backgroundColor: c }} />
             ))}

@@ -644,7 +644,7 @@
     {
       "name": "ui/mzizi-trust-meter",
       "title": "MziziTrustMeter",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "file": "ui/mzizi-trust-meter.contract.json",
       "astro": "mzizi-trust-meter",
       "tsx": "mzizi-trust-meter",

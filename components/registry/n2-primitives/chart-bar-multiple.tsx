@@ -21,7 +21,7 @@ const MINERAL_COLORS = [
   "var(--color-tanzanite, #B388FF)",
   "var(--color-malachite, #64FFDA)",
   "var(--color-gold, #FFD740)",
-  "var(--color-terracotta, #D4A574)",
+  "var(--color-terracotta)",
 ]
 
 const DEFAULT_DATA = [

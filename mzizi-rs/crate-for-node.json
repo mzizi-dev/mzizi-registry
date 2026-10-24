@@ -6,5 +6,6 @@
   "n8-assurance": "mzizi-assurance",
   "n9-fundi": "mzizi-fundi",
   "n10-documentation": "mzizi-docs",
-  "n11-discovery": "mzizi-discovery"
+  "n11-discovery": "mzizi-discovery",
+  "n5-resilience": "mzizi-data"
 }
