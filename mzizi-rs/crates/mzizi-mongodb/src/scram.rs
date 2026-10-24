@@ -11,6 +11,7 @@ use base64::engine::general_purpose::STANDARD as B64;
 use hmac::{Hmac, Mac};
 use sha2::{Digest, Sha256};
 use subtle::ConstantTimeEq;
+use zeroize::Zeroizing;
 
 use crate::{Error, Result};
 
@@ -24,10 +25,12 @@ pub const MAX_ITERATIONS: u32 = 100_000;
 /// `n,,`: no channel binding, no authorization identity.
 const GS2_HEADER: &str = "n,,";
 
-fn hmac(key: &[u8], data: &[u8]) -> Vec<u8> {
+/// An HMAC, wiped from memory when dropped: the client and server keys are derived from the
+/// password and are as good as it for logging in.
+fn hmac(key: &[u8], data: &[u8]) -> Zeroizing<Vec<u8>> {
     let mut mac = HmacSha256::new_from_slice(key).expect("HMAC takes any key length");
     mac.update(data);
-    mac.finalize().into_bytes().to_vec()
+    Zeroizing::new(mac.finalize().into_bytes().to_vec())
 }
 
 /// The user name in a SCRAM message: `=` and `,` are escaped.
@@ -91,15 +94,20 @@ pub fn parse_server_first(msg: &str, client_nonce: &str) -> Result<ServerFirst> 
 }
 
 /// `PBKDF2-HMAC-SHA-256(password, salt, iterations)`: the slow step, which
-/// callers may cache per (user, salt, iterations).
-pub fn salted_password(password: &str, salt: &[u8], iterations: u32) -> Result<[u8; 32]> {
+/// callers may cache per (user, salt, iterations). The result logs in as well as the password
+/// does, so it is wiped from memory when dropped.
+pub fn salted_password(
+    password: &str,
+    salt: &[u8],
+    iterations: u32,
+) -> Result<Zeroizing<[u8; 32]>> {
     if !password.is_ascii() {
         return Err(Error::Auth(
             "the password must be ASCII (SASLprep of other text is not supported)".into(),
         ));
     }
-    let mut out = [0u8; 32];
-    pbkdf2::pbkdf2_hmac::<Sha256>(password.as_bytes(), salt, iterations, &mut out);
+    let mut out = Zeroizing::new([0u8; 32]);
+    pbkdf2::pbkdf2_hmac::<Sha256>(password.as_bytes(), salt, iterations, &mut *out);
     Ok(out)
 }
 
@@ -111,20 +119,20 @@ pub fn client_final(
     combined_nonce: &str,
 ) -> (String, Vec<u8>) {
     let client_key = hmac(salted, b"Client Key");
-    let stored_key = Sha256::digest(&client_key);
+    let stored_key = Zeroizing::new(Sha256::digest(&*client_key).to_vec());
     let without_proof = format!("c={},r={combined_nonce}", B64.encode(GS2_HEADER));
     let auth_message = format!("{client_first_bare},{server_first},{without_proof}");
     let client_signature = hmac(&stored_key, auth_message.as_bytes());
     let proof: Vec<u8> = client_key
         .iter()
-        .zip(&client_signature)
+        .zip(client_signature.iter())
         .map(|(a, b)| a ^ b)
         .collect();
     let server_key = hmac(salted, b"Server Key");
     let server_signature = hmac(&server_key, auth_message.as_bytes());
     (
         format!("{without_proof},p={}", B64.encode(proof)),
-        server_signature,
+        server_signature.to_vec(),
     )
 }
 
@@ -199,6 +207,22 @@ mod tests {
         assert!(parse_server_first(&format!("r={NONCE}x,i=4096"), NONCE).is_err());
         assert!(parse_server_first(&format!("r={NONCE}x,s=!!,i=4096"), NONCE).is_err());
         assert!(parse_server_first("e=invalid-proof", NONCE).is_err());
+    }
+
+    /// Compiles only for a type that wipes its memory when dropped.
+    fn wiped_on_drop<T: zeroize::ZeroizeOnDrop>(_: &T) {}
+
+    #[test]
+    fn the_salted_password_is_wiped_from_memory_when_dropped() {
+        let salt = crate::testdata::get("short_salt");
+        let salted = salted_password(
+            &crate::testdata::get("cache_password"),
+            salt.as_bytes(),
+            4096,
+        )
+        .unwrap();
+        wiped_on_drop(&salted);
+        wiped_on_drop(&hmac(&*salted, b"Client Key"));
     }
 
     #[test]

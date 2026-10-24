@@ -10,6 +10,77 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — provider-neutral money: the `money` module, `app/money` and `app/plan-summary` (2026-10-24, #574)
+
+Phase 1 of the payment framework ([#569](https://github.com/mzizi-dev/mzizi-registry/issues/569), tracked in nyuchi/nyuchi-api#375); Kweli's first paid plan is the first consumer. Owner rule: "mzizi is not an internal architecture it's also public so mzizi should never limit to our providers."
+
+- **`money`** (new `registry:lib`, installs to `lib/money.ts`, framework-free): `Money` (`{ amountMinor, currency }`), `isCurrencyCode`, `currencyDigits`, `moneyValue` (the exact decimal built from the integer, never through a float; `bigint` amounts too) and `formatMoney(money, locale, display)`. **No default currency and no default locale.** A code that is not three capital letters, or a non-integer amount, throws `RangeError`.
+- **New contract `app/money` 1.0.0** (N2) with Astro (default) and React builds: `<data data-slot="money" value="<exact decimal>" data-currency="<code>">` with the amount formatted for `locale`. 5 states (USD, JPY, KWD, a negative ZAR refund, ZWG), 6 checks.
+- **New contract `app/plan-summary` 1.0.0** (N6) with Astro (default) and React builds: the plan's name, its price as Money per interval ("per month"), a status pill in words (Active, Payment due, Cancelled, Expired, No plan), the renewal or end date in a `<time>` in the locale, its features and a primary and an outline action. It names no provider and no payment method and computes nothing about billing; pair a cancel action with ConfirmAction. 5 states (USD, ZAR, none, ZWG yearly, French for Senegal in XOF), 9 clauses, 19 checks. Every word can be replaced (`copy`).
+- **Doctrine:** `genetic-code-conventions/provider-neutral-money`, the rule in five points.
+- **Guard:** `__tests__/components/provider-neutral-billing.test.ts` fails if these files name a payment provider, a platform token (MXT, MIT, NST, NHC) or a brand, or default a currency or a locale.
+- The Dashboard Standard now has 35 app contracts. The older payment components keep their USD and MXT defaults for now: removing them is phase 2.
+
+### Added — `app/tier-status`: the verification ladder, what is held, and what the next rung needs (2026-10-24, #573)
+
+Gap 6 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)).
+
+- **New contract `app/tier-status` 1.0.0** with Astro (`app-tier-status.astro`, the default build) and React builds held to it: 4 states, 8 clauses, 21 checks, 2 density rows. The Dashboard Standard now has 33 app contracts.
+- The current rung beside the heading (its glyph on its `--tier-*` container pair, "Current level: <name>" in the tier's text colour), then the ladder as an `<ol>` of the five rungs (Unverified, Community Verified, Contact Verified, Government Verified, Licensed Professional) with each state in words ("Done", "Current" with `aria-current="step"`, "Next"), never colour alone.
+- "What you hold" lists `attestations` as facts; "Next: <name>" lists `requirements` with an optional evidence link; the top rung says "This is the highest level."
+- It takes data and computes no access decision or score: the server decides (api-gateway `assurance.py`). The ladder comes from `mzizi-trust-tier-data` (#568). Every word can be replaced (`tierLabels`, `copy`, `title`).
+
+### Added — `app/confirm-action`: a destructive action that asks first, with no script (2026-10-24, #572)
+
+Gap 4 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)). The app family had no confirmation; `alert-dialog` is a legacy Radix component.
+
+- **New contract `app/confirm-action` 1.0.0** with Astro (`app-confirm-action.astro`, the default build) and React builds held to it: 4 states, 9 clauses, 19 checks, 5 density rows. The Dashboard Standard now has 32 app contracts.
+- A trigger (`popovertarget`, `aria-haspopup="dialog"`) opens a `role="dialog"` popover panel labelled by its heading and described by the description and the warning. Escape, a click outside and Cancel (`popovertargetaction="hide"`) close it. No script.
+- The panel is a `<form>` (POST unless `method: "get"`) to `action` with hidden `fields` and a required confirm step: a checkbox posting `confirm=yes`, or, with `confirmText`, a box whose `pattern` is exactly that text. The server must check `confirm` too.
+- The danger is written: "Warning: This cannot be undone." with a warning glyph, and the submit button names the action. Every word can be replaced for another language (`warningLabel`, `acknowledge`, `confirmPrompt`, `cancelLabel`).
+- **`ui-utils`** gains `exactPattern(text)`; **`site-icons`** gains `warning`.
+
+### Added — `app/data-table` 1.2: person cells and per-row actions that work without script (2026-10-24, #571)
+
+Gap 3 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): a team list could show members but not act on one.
+
+- **`person` cells**: `{ text, sub, person: true, avatar? }` draws an avatar (the image with `alt=""`, or the person's initials, `aria-hidden`) beside the name (a link with `href`) and the secondary line (an email or a role).
+- **`actions`**, keyed by each row's `rowKey` text. An action is a link (`href`) or a small `<form>` (POST unless `method: "get"`, posting its hidden `fields`). One action is an outline button in the row whose accessible name ends with the row's name; several are a `<details>` menu named "Actions for <row>". `destructive` actions are drawn in the destructive colour and listed last. A visually hidden "Actions" column header is added only when some row has actions.
+- **`ui-utils`** gains `initialsOf(name)`; **`site-icons`** gains `more`.
+- Contract 1.1.0 → 1.2.0 (minor: a new prop and new cell fields, nothing removed): a `team` state, 2 new clauses, 15 new checks and 3 density rows (32px fine, 44px coarse). Both builds keep it with no script.
+
+### Added — `app/form-field` 1.2: checkbox, switch and radio-group controls (2026-10-24, #570)
+
+Gap 13 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): settings had no way to build an on/off preference.
+
+- **`as="checkbox"`** and **`as="switch"`**: a native `<input type="checkbox">` inside its `<label>`, so the whole row is the hit area (36px, 48px on touch). A switch adds `role="switch"` and is a pill track whose thumb moves to the end when on, so the state is never colour alone. New `checked` prop; `value` is what is posted when checked (default `"on"`).
+- **`as="radio-group"`**: a `<fieldset>` whose `<legend>` is the label, one native radio per `options` entry; the option whose value is `value` is checked.
+- Same wiring as the other controls: id, name, `required`, `aria-describedby` (hint, then error) and `aria-invalid`; `readonly` disables a choice control (it has no read-only state), as it does a select. Checked controls take the shell's accent (`--app-accent`, else `--primary`).
+- **`ui-variants`** gains `appChoiceRowClasses`, `appCheckClasses` and `appSwitchClasses`, shared by the Astro and React builds.
+- Contract 1.1.0 → 1.2.0 (minor: new values for `as`, a new prop, nothing removed): 4 new states, 5 new clauses, 11 new checks, 3 new density rows. Both builds keep it with no script.
+
+### Added — `ui/mzizi-verified-badge` contract with an Astro build, and the tier ladder as framework-free data (2026-10-24, #568)
+
+Gaps 5 and 7 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)).
+
+- **`contracts/ui/mzizi-verified-badge.contract.json` 1.0.0**: 12 states (each tier, score, label, ariaLabel, no title, suspended, ancestral, unverified, loading), 9 clauses, 15 checks. The Astro build is new (`mzizi-verified-badge.astro`, the default build) and the React build keeps the whole contract (`identity: "contract"`).
+- **`mzizi-trust-tier-data`** (new, `registry:lib`, installs to `lib/mzizi-trust-tier-data.ts`): `TIER_ORDER`, `TIER_DATA` (label, level, mineral, trust increments, the site-icons glyph, the `--tier-*` token names and complete literal classes per tier), `STATUS_OVERLAY`, `tierAt`, `nextTier` and `computeTrustScore`. No framework, no icon library and no `@/` import, so an Astro component imports it flat and `@bundu/ui` can ship it as a plain module.
+- **`mzizi-trust-tiers`** is now built from that module and adds only the Lucide icons and the `fg`/`bg` CSS values. `TIER_CONFIG`, `STATUS_OVERLAY`, `computeTrustScore` and the types keep their names and values, and `mzizi-verified-badge` still re-exports them.
+- **`site-icons`** gains `phone`, `award`, `ban` and `flower`.
+
+**Changed (visible):** the React badge is a server component with no `"use client"`, no `class-variance-authority` and no inline `style`. Each tier draws its fill and glyph from its own APCA-gated pair (`bg-tier-<tier>-container`, `text-tier-<tier>-on-container`) instead of the tier at 15% behind the tier colour, the glyphs are the design system's (`site-icon`) instead of Lucide, and a suspended or ancestral badge is no longer dimmed with opacity: the ban and flower glyphs and the name carry the status. The loading placeholder is `aria-hidden`. Names, titles, `data-*` attributes and props are unchanged; `size` gains nothing and loses nothing (`sm`, `md`, `lg`, `xl`).
+
+### Security — `mzizi-mongodb`: server error text dropped, cross-collection reads refused, a 64 KiB reply cap before login, secrets zeroised, a neutral driver name (2026-10-24, #567)
+
+The six items left open by the security review on #502. Each fix has a regression test that fails without it (checked by reverting each fix with the tests in place). Server contract `mzizi-mongodb` 1.0.0 → 2.0.0.
+
+- **Server error messages.** `Error::Server` keeps the server's `code` and a fixed text for it, written by the client (`conn::server_message`). MongoDB's own `errmsg`, which can echo part of the query or describe the cluster, is no longer kept in the error, its `Display` or its `Debug`. Test: `a_server_error_keeps_its_code_and_never_the_servers_text`.
+- **Cross-collection reads (Breaking).** `aggregate` now refuses any `$lookup`, `$graphLookup` or `$unionWith`, at any depth (sub-pipelines and `$facet` included), that reads a collection other than its own, and any `from` naming another database. The new `aggregate_joining(db, coll, pipeline, joins)` (on `Connection` and `workers::Mongo`) allows the collections in `joins`. A pipeline that joined another collection through `aggregate` must move to `aggregate_joining` and name it. The refusal is reported to the harness with reason `cross_collection`. `$out` and `$merge` are now refused at any depth too. Tests: `a_stage_that_reads_another_collection_is_refused_unless_the_caller_allows_it`, `a_nested_write_stage_is_refused`.
+- **Reply size before login.** Until `authenticate` succeeds, a reply over `wire::MAX_PRE_AUTH_MESSAGE` (64 KiB) is refused from its header, before the body is read or allocated; after it, the limit stays 48 MB. New `wire::message_length_within`. Tests: `a_large_reply_before_the_login_is_refused_without_being_read`, `after_the_login_a_large_reply_is_read`.
+- **Secrets in memory (Breaking).** The password in `Uri`, the salted password, the SCRAM client and server keys, and both the password and the key held in each `SaltCache` entry are wiped when dropped, with the `zeroize` crate (new dependency, 1.8). `Uri::password` is now `Zeroizing<String>` and `scram::salted_password` returns `Zeroizing<[u8; 32]>`; both dereference to the old types. `Uri`'s `Debug` still redacts the password. Tests: `the_password_is_wiped_from_memory_when_dropped`, `the_salted_password_is_wiped_from_memory_when_dropped`, `the_salt_cache_wipes_the_password_and_the_key_it_holds` (each compiles only when the value wipes itself on drop).
+- **Driver name.** The `hello` handshake names the driver `mzizi-mongodb` at the crate's version, not `mukoko-weather-edge` 0.1. `with_app_name` (on `Connection` and `workers::Mongo`) adds `client.application.name`, cut to 128 bytes. Test: `hello_names_this_driver_and_the_app_and_nothing_else`.
+- **Test messages (CodeQL alert 43).** The harness test and the login-equality test no longer format the checked values (an e-mail address, connection strings with passwords) into their assertion messages; they name the case by index.
+
 ## [4.15.0] - 2026-10-24
 
 Releases `staging` to `main` as the next minor above v4.14.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.15.0. It carries the owner's tier-colour decision on #543: verification tiers as `--tier-*` roles defined once in N1 and read by every tier component, light-mode `--color-<mineral>-light` tokens, and a `tier` prop on `mzizi-trust-meter` (contract 2.1.0) (#563); shamwari as the third pillar on `/v1/brand`, and 78 stale `#D4A574` terracotta fallbacks removed (#564); and three new Mzizi Roots crates, `mzizi-harness`, `mzizi-data` and `mzizi-mongodb`, with the data layer and the client write path in `mzizi-data` (#502, #509, #512). The new crates publish with the others at the workspace version (`publish-crates.yml`) and are wired into no app.

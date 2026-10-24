@@ -1,0 +1,183 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/money",
+  "title": "Money",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "An amount of money formatted for a locale, from integer minor units and an ISO 4217 code, inside a <data> element whose value is the exact decimal. No default currency and no default locale: the caller passes both.",
+  "implementations": {
+    "astro": {
+      "registry": "app-money",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/Money.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "app-money",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": ["money", "price-display", "currency-input"]
+  },
+  "props": [
+    {
+      "name": "amountMinor",
+      "type": "number",
+      "required": true,
+      "description": "The amount in the currency's minor unit, as an integer (1250 is 12.50 USD; 1235 is ¥1,235)."
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": true,
+      "description": "An ISO 4217 code, three capital letters (\"USD\", \"ZWG\", \"ZAR\", \"KES\"). Required: there is no default. Anything else is refused with a RangeError."
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": true,
+      "description": "A BCP 47 locale (\"en-ZW\", \"fr-SN\"). Required: there is no default."
+    },
+    {
+      "name": "display",
+      "type": "\"symbol\" | \"narrowSymbol\" | \"code\" | \"name\"",
+      "required": false,
+      "description": "How the currency is shown (Intl's currencyDisplay).",
+      "default": "symbol",
+      "values": ["symbol", "narrowSymbol", "code", "name"]
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The text is `Intl.NumberFormat(locale, { style: \"currency\", currency })` with the currency's own minor-unit digits (2 for USD, 0 for JPY, 3 for KWD).",
+    "The amount is placed from the integer as an exact decimal string, never through a float, so large amounts and negative amounts are exact.",
+    "The root is <data value=\"<exact decimal>\" data-currency=\"<code>\">, so a machine reads the amount without parsing the text.",
+    "There is no default currency and no default locale. A currency that is not three capital letters, or an amount that is not an integer, is refused (RangeError) rather than shown wrongly.",
+    "The formatting is `formatMoney` / `moneyValue` from the framework-free `money` module, which servers and other components share."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "amountMinor": 1250,
+        "currency": "USD",
+        "locale": "en-ZW"
+      }
+    },
+    "zero-digit": {
+      "description": "A currency with no minor unit.",
+      "props": {
+        "amountMinor": 1235,
+        "currency": "JPY",
+        "locale": "en-ZW"
+      }
+    },
+    "three-digit": {
+      "description": "A currency with three minor digits, shown by code.",
+      "props": {
+        "amountMinor": 1500,
+        "currency": "KWD",
+        "locale": "en-ZW",
+        "display": "code"
+      }
+    },
+    "negative": {
+      "description": "A refund: a negative amount, exact.",
+      "props": {
+        "amountMinor": -5,
+        "currency": "ZAR",
+        "locale": "en-ZA",
+        "display": "code"
+      }
+    },
+    "zwg": {
+      "description": "Zimbabwe Gold, by code.",
+      "props": {
+        "amountMinor": 150000,
+        "currency": "ZWG",
+        "locale": "en-ZW",
+        "display": "code"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["generic (<data>)"],
+    "keyboard": ["Nothing in it is interactive."],
+    "focus": ["Not focusable."],
+    "aria": ["The formatted text is the accessible text."],
+    "wcag": ["1.3.1"]
+  },
+  "density": [],
+  "theming": {
+    "tokens": [],
+    "brandOverlay": "None: it inherits its colour and size from where it is placed.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: formatted on the server."
+  },
+  "responsive": [
+    "Inline text; tabular figures so amounts line up in a column."
+  ],
+  "contract": "contract\n  slot is \"money\"\n  when default shows data \"12.50\"\n  when zero-digit shows data \"1,235\"\nend",
+  "checks": [
+    {
+      "say": "The exact decimal and the code are machine-readable.",
+      "select": "data[data-slot=\"money\"]",
+      "count": 1,
+      "attr": {
+        "value": "12.50",
+        "data-currency": "USD"
+      }
+    },
+    {
+      "say": "A zero-digit currency has no decimals.",
+      "state": "zero-digit",
+      "select": "data[value=\"1235\"][data-currency=\"JPY\"]",
+      "count": 1
+    },
+    {
+      "say": "A three-digit currency keeps three.",
+      "state": "three-digit",
+      "select": "data",
+      "count": 1,
+      "attr": {
+        "value": "1.500"
+      },
+      "text": "KWD"
+    },
+    {
+      "say": "A negative amount is exact.",
+      "state": "negative",
+      "select": "data",
+      "count": 1,
+      "attr": {
+        "value": "-0.05"
+      },
+      "text": "0,05"
+    },
+    {
+      "say": "Zimbabwe Gold is formatted by its code.",
+      "state": "zwg",
+      "select": "data",
+      "count": 1,
+      "attr": {
+        "value": "1500.00",
+        "data-currency": "ZWG"
+      },
+      "text": "ZWG"
+    },
+    {
+      "say": "Figures are tabular.",
+      "select": "data.tabular-nums",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+---
+_bodyField: "body"
+_schemaVersion: "v1"
+baseLayer: true
+currentVersion: 1
+dnaRole: "genetic-code"
+doctrineVersion: "4.1.0"
+kind: "convention"
+model: "mzizi-dna-helix"
+node: 0
+owner: "mzizi"
+slug: "provider-neutral-money"
+status: "active"
+strand: "genetic-code"
+title: "Provider-neutral money"
+version: "1.0.0"
+---
+
+# Provider-neutral money
+
+Recorded 2026-10-24 (mzizi-registry#569). Owner rule: "mzizi is not an internal
+architecture it's also public so mzizi should never limit to our providers."
+
+## The rule
+
+1. **Money is integer minor units plus an ISO 4217 code.** `{ amountMinor, currency }`:
+   1250 with `USD` is 12.50 US dollars, 1235 with `JPY` is ¥1,235. Never a float,
+   never a pre-formatted string.
+2. **There is no default currency and no default locale.** The caller passes both.
+   A component that formats money takes `currency` and `locale` as required props.
+3. **Format with the currency's own digits, for the reader's locale.** Use
+   `formatMoney(money, locale)` from the `money` module (`Intl.NumberFormat`, the
+   currency's minor-unit digits, the decimal placed from the integer). Put the exact
+   decimal in a machine-readable place (`<data value>`), as `app/money` does.
+4. **Refuse what is malformed.** A code that is not three capital letters, or an
+   amount that is not an integer, is an error, not something to show as best it can.
+5. **Name no provider, no payment method and no platform token.** Billing and payment
+   components take data and render it; a provider (a mobile-money operator, a card
+   processor, Nyuchi Pay) is one implementation that lives outside Mzizi.
+
+## Where it applies
+
+`money`, `app/money` and `app/plan-summary` follow it, and
+`__tests__/components/provider-neutral-billing.test.ts` scans them for provider names,
+platform tokens and currency or locale defaults. The older payment components
+(`price-display`, `currency-input`, `mobile-money-selector`, `wallet-card` and others)
+predate it and are brought to it in phase 2 of the payment framework.
