@@ -45,7 +45,7 @@ fn random_nonce() -> Result<String> {
     Ok(B64.encode(raw))
 }
 
-async fn connect_one(uri: &Uri, host: &str, port: u16) -> Result<Conn> {
+async fn connect_one(uri: &Uri, app: Option<&str>, host: &str, port: u16) -> Result<Conn> {
     let socket = Socket::builder()
         .secure_transport(worker::SecureTransport::On)
         .connect(host.to_owned(), port)
@@ -54,6 +54,9 @@ async fn connect_one(uri: &Uri, host: &str, port: u16) -> Result<Conn> {
         .await?
         .map_err(|e| Error::Io(e.to_string()))?;
     let mut conn = Connection::new(SocketIo::new(socket));
+    if let Some(app) = app {
+        conn = conn.with_app_name(app);
+    }
     conn.hello().await?;
     let nonce = random_nonce()?;
     // The salted password is cached for the isolate; take the cache out of
@@ -65,10 +68,10 @@ async fn connect_one(uri: &Uri, host: &str, port: u16) -> Result<Conn> {
     Ok(conn)
 }
 
-async fn connect(uri: &Uri) -> Result<Conn> {
+async fn connect(uri: &Uri, app: Option<&str>) -> Result<Conn> {
     let mut last = Error::Io("no host".into());
     for (host, port) in &uri.hosts {
-        match connect_one(uri, host, *port).await {
+        match connect_one(uri, app, host, *port).await {
             Ok(c) => return Ok(c),
             // A refused login will not improve on another member.
             Err(e @ Error::Auth(_)) => return Err(e),
@@ -81,14 +84,16 @@ async fn connect(uri: &Uri) -> Result<Conn> {
 enum Op<'a> {
     Ping(&'a str),
     Find(&'a str, &'a str, &'a FindOptions),
-    Aggregate(&'a str, &'a str, &'a [Value]),
+    Aggregate(&'a str, &'a str, &'a [Value], &'a [&'a str]),
 }
 
 async fn exec(conn: &mut Conn, op: &Op<'_>) -> Result<Vec<Value>> {
     match op {
         Op::Ping(db) => conn.ping(db).await.map(|()| Vec::new()),
         Op::Find(db, coll, opts) => conn.find(db, coll, opts).await,
-        Op::Aggregate(db, coll, pipeline) => conn.aggregate(db, coll, pipeline).await,
+        Op::Aggregate(db, coll, pipeline, joins) => {
+            conn.aggregate_joining(db, coll, pipeline, joins).await
+        }
     }
 }
 
@@ -100,6 +105,7 @@ fn connection_broke(e: &Error) -> bool {
 /// A read-only MongoDB client.
 pub struct Mongo {
     uri: Uri,
+    app: Option<String>,
 }
 
 impl Mongo {
@@ -107,7 +113,16 @@ impl Mongo {
     pub fn new(connection_string: &str) -> Result<Mongo> {
         Ok(Mongo {
             uri: uri::parse(connection_string)?,
+            app: None,
         })
+    }
+
+    /// Name the application in the handshake of each new connection
+    /// ([`Connection::with_app_name`]).
+    #[must_use]
+    pub fn with_app_name(mut self, name: &str) -> Mongo {
+        self.app = Some(name.to_owned());
+        self
     }
 
     /// The database named in the connection string, if any.
@@ -119,13 +134,13 @@ impl Mongo {
         let pooled = POOL.with(|p| p.borrow_mut().take());
         let (mut conn, reused) = match pooled {
             Some((login, c)) if login.same_login(&self.uri) => (c, true),
-            _ => (connect(&self.uri).await?, false),
+            _ => (connect(&self.uri, self.app.as_deref()).await?, false),
         };
         let first = exec(&mut conn, &op).await;
         let result = match first {
             Err(e) if reused && connection_broke(&e) => {
                 drop(conn);
-                conn = connect(&self.uri).await?;
+                conn = connect(&self.uri, self.app.as_deref()).await?;
                 exec(&mut conn, &op).await
             }
             other => other,
@@ -159,8 +174,21 @@ impl Mongo {
         Ok(self.find(db, coll, &opts).await?.into_iter().next())
     }
 
-    /// Run a read-only aggregation `pipeline` on `db.coll`; `$out` and `$merge` are refused.
+    /// Run a read-only aggregation `pipeline` on `db.coll`; `$out` and `$merge` are refused, and
+    /// so is a stage that reads another collection ([`Connection::aggregate`]).
     pub async fn aggregate(&self, db: &str, coll: &str, pipeline: &[Value]) -> Result<Vec<Value>> {
-        self.run(Op::Aggregate(db, coll, pipeline)).await
+        self.aggregate_joining(db, coll, pipeline, &[]).await
+    }
+
+    /// [`Mongo::aggregate`], where `$lookup`, `$graphLookup` and `$unionWith` may also read the
+    /// collections in `joins` ([`Connection::aggregate_joining`]).
+    pub async fn aggregate_joining(
+        &self,
+        db: &str,
+        coll: &str,
+        pipeline: &[Value],
+        joins: &[&str],
+    ) -> Result<Vec<Value>> {
+        self.run(Op::Aggregate(db, coll, pipeline, joins)).await
     }
 }

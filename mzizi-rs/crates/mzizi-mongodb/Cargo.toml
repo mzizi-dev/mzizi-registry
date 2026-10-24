@@ -28,6 +28,8 @@ hmac = "0.12"
 subtle = "2.6"
 hex = "0.4"
 base64 = "0.22"
+# Wipes the password and every key derived from it when they are dropped.
+zeroize = "1.8"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 worker = { version = "0.8", optional = true }
