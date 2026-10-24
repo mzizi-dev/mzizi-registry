@@ -9179,6 +9179,37 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["assets"],
       "dependencies": [],
+      "description": "The kweli app icon, 180px Apple touch PNG: the Apple touch icon (iOS home screen); link it with <link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png\">. The kweli mark (a shield with a tick, malachite #004d40) from kweli-mark-light.svg, unchanged, centred on an opaque white plate, rendered by scripts/render-kweli-icons.mjs. Installs into public/apple-touch-icon.png. Manifest: \"icons\": [{ \"src\": \"/icons/kweli-icon-192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-maskable-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"maskable\" }].",
+      "docs": "Use it for: The Apple touch icon (iOS home screen); link it with <link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png\">.\nIncludes: 180px Apple touch PNG, Opaque white plate, The kweli mark, unchanged.\nAccessibility: Decorative: the app's name labels it on the home screen.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-apple-touch-icon",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-apple-touch-icon.png",
+          "target": "public/apple-touch-icon.png",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the app's name labels it on the home screen"],
+        "collection": "assets",
+        "features": [
+          "180px Apple touch PNG",
+          "Opaque white plate",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The Apple touch icon (iOS home screen); link it with <link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png\">"
+        ]
+      },
+      "name": "kweli-apple-touch-icon",
+      "registryDependencies": [],
+      "title": "kweli Apple Touch Icon",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
       "description": "The kweli favicon: the kweli mark (a shield with a tick) at 32px, mono in malachite, switching between the light-surface and dark-surface malachite with prefers-color-scheme. Kweli's own shipped favicon (mukoko-dev/kweli). Installs into public/favicon.svg; link it with <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\">.",
       "docs": "Use it for: The kweli.mukoko.com browser tab icon, Bookmarks and pinned tabs.\nIncludes: 32px vector favicon, Follows prefers-color-scheme: malachite #004d40 on light, #64ffda on dark, The kweli mark, unchanged.\nAccessibility: Decorative: the page <title> names the site.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-favicon",
       "files": [
@@ -9205,6 +9236,97 @@
       "name": "kweli-favicon",
       "registryDependencies": [],
       "title": "kweli Favicon",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli app icon, 192px PNG: the PWA manifest's 192x192 icon (purpose any). The kweli mark (a shield with a tick, malachite #004d40) from kweli-mark-light.svg, unchanged, centred on an opaque white plate, rendered by scripts/render-kweli-icons.mjs. Installs into public/icons/kweli-icon-192.png. Manifest: \"icons\": [{ \"src\": \"/icons/kweli-icon-192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-maskable-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"maskable\" }].",
+      "docs": "Use it for: The PWA manifest's 192x192 icon (purpose any).\nIncludes: 192px PNG, Opaque white plate, The kweli mark, unchanged.\nAccessibility: Decorative: the app's name labels it on the home screen.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-icon-192",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-icon-192.png",
+          "target": "public/icons/kweli-icon-192.png",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the app's name labels it on the home screen"],
+        "collection": "assets",
+        "features": [
+          "192px PNG",
+          "Opaque white plate",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": ["The PWA manifest's 192x192 icon (purpose any)"]
+      },
+      "name": "kweli-icon-192",
+      "registryDependencies": [],
+      "title": "kweli Icon 192",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli app icon, 512px PNG: the PWA manifest's 512x512 icon (purpose any), also the install splash. The kweli mark (a shield with a tick, malachite #004d40) from kweli-mark-light.svg, unchanged, centred on an opaque white plate, rendered by scripts/render-kweli-icons.mjs. Installs into public/icons/kweli-icon-512.png. Manifest: \"icons\": [{ \"src\": \"/icons/kweli-icon-192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-maskable-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"maskable\" }].",
+      "docs": "Use it for: The PWA manifest's 512x512 icon (purpose any), also the install splash.\nIncludes: 512px PNG, Opaque white plate, The kweli mark, unchanged.\nAccessibility: Decorative: the app's name labels it on the home screen.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-icon-512",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-icon-512.png",
+          "target": "public/icons/kweli-icon-512.png",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the app's name labels it on the home screen"],
+        "collection": "assets",
+        "features": [
+          "512px PNG",
+          "Opaque white plate",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The PWA manifest's 512x512 icon (purpose any), also the install splash"
+        ]
+      },
+      "name": "kweli-icon-512",
+      "registryDependencies": [],
+      "title": "kweli Icon 512",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli app icon, 512px maskable PNG: the PWA manifest's maskable icon (purpose maskable): the mark spans 66% so the whole shield stays inside the launcher's 80% safe-zone circle. The kweli mark (a shield with a tick, malachite #004d40) from kweli-mark-light.svg, unchanged, centred on an opaque white plate, rendered by scripts/render-kweli-icons.mjs. Installs into public/icons/kweli-icon-maskable-512.png. Manifest: \"icons\": [{ \"src\": \"/icons/kweli-icon-192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\" }, { \"src\": \"/icons/kweli-icon-maskable-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"maskable\" }].",
+      "docs": "Use it for: The PWA manifest's maskable icon (purpose maskable): the mark spans 66% so the whole shield stays inside the launcher's 80% safe-zone circle.\nIncludes: 512px maskable PNG, Opaque white plate, The kweli mark, unchanged.\nAccessibility: Decorative: the app's name labels it on the home screen.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-icon-maskable-512",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-icon-maskable-512.png",
+          "target": "public/icons/kweli-icon-maskable-512.png",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the app's name labels it on the home screen"],
+        "collection": "assets",
+        "features": [
+          "512px maskable PNG",
+          "Opaque white plate",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The PWA manifest's maskable icon (purpose maskable): the mark spans 66% so the whole shield stays inside the launcher's 80% safe-zone circle"
+        ]
+      },
+      "name": "kweli-icon-maskable-512",
+      "registryDependencies": [],
+      "title": "kweli Icon Maskable 512",
       "type": "registry:item"
     },
     {

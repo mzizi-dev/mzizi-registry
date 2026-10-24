@@ -10,6 +10,18 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — Kweli app icons: PWA 192 and 512, maskable 512 and the 180px Apple touch icon (2026-10-24, #PRNUM)
+
+Item 10 of the Kweli phase-2 gaps, tracked in #543. Kweli had a vector favicon and marks but no raster app-icon set for a web app manifest or the iOS home screen.
+
+- **Four new asset items**, PNGs in `components/registry/assets/`, rendered from `kweli-mark-light.svg` (the shield with a tick, malachite `#004d40`), unchanged, centred on an opaque white plate (the canon's `#FFFFFF`; an app icon must be opaque, and iOS fills transparency with black):
+  - `kweli-icon-192` and `kweli-icon-512` (manifest `purpose: any`), installing into `public/icons/`; the mark's box spans 80% of the icon.
+  - `kweli-icon-maskable-512` (manifest `purpose: maskable`), installing into `public/icons/`; the mark spans 66%, so the whole shield stays inside the launcher's 80% safe-zone circle.
+  - `kweli-apple-touch-icon` (180px), installing into `public/apple-touch-icon.png`.
+- **Wiring.** Each item's description carries the manifest `icons` entries and the `<link rel="apple-touch-icon">` line.
+- **`scripts/render-kweli-icons.mjs`** (new) renders all four from the mark with sharp, so they are reproducible when the mark changes. It reads the mark's paths and colour from the SVG rather than restating them. It is run by hand, not in CI.
+- **Known limit.** No brand shipped a raster icon set before, so there was no pattern to follow. The API inlines text sources only (`lib/registry-source.generated.json` skips binaries), so `npx shadcn add` of these four items gets the item without its bytes until `mzizi-api` serves binary `registry:file` content. A repo that vendors from this registry's files (`@bundu/ui`, a checkout) gets them as they are.
+
 ### Changed — `mzizi-event-card` gains price, description and share slots and all seven minerals; `mzizi-review-card` gains a headline, keeps line breaks, names its stars and shows the tier badge; a read-only `rating` is one named image (2026-10-24, #557)
 
 Items 4, 5 and 6 of the Kweli phase-2 gaps, tracked in #543.
