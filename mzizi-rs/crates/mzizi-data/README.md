@@ -165,6 +165,14 @@ cargo build --release --target wasm32-unknown-unknown -p mzizi-data
 The workspace gates (`cargo fmt`, `cargo clippy -D warnings`, `cargo test --workspace`) run over this
 crate in CI, as they do for every member of `mzizi-rs/`.
 
+## The write path
+
+`MziziData` reads through the cascade and writes through an outbox. The host supplies the storage
+tiers, the `Transport` (its HTTP client), the `Outbox` (IndexedDB or SQLite; `MemoryOutbox` ships),
+the `Clock` (time and sleeps) and the `RandomSource` (request ids). `set`, `update` and `delete`
+return a `MutationHandle` as soon as the write is in the outbox. The contract is in
+`src/client.rs`.
+
 ## Licence
 
 Apache-2.0, like the rest of the registry.

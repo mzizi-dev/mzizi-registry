@@ -228,6 +228,11 @@ pub struct Cascade<V, L, E, C, K> {
 }
 
 impl<V, L, E, C, K> Cascade<V, L, E, C, K> {
+    /// The local tier. The write path keeps confirmed records here.
+    pub fn local(&self) -> &L {
+        &self.local
+    }
+
     /// A cascade over the three tiers, with a 30-second time-to-live for every key.
     pub fn new(local: L, edge: E, cloud: C, clock: K) -> Self {
         Self {
