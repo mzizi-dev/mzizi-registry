@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — `package.json` is 4.12.2 on `staging` after the 4.12.0 sync-back (2026-10-24, #548)
+
+The release-version check allows only the next patch after `v4.12.1` (tagged when #534 merged) on `staging`, so the sync-back of 4.12.0 (#547) carries `package.json`, `README.md` and a 4.12.2 record in `content/changelog/releases.json` (and `lib/changelog.generated.ts`) instead of main's 4.12.0. The `[4.12.0]` section below is unchanged.
+
 ### Changed — every dependency and override is a minimum version (2026-10-21, #534)
 
 - **`package.json`.** Every `dependencies`, `devDependencies` and `pnpm.overrides` entry is now `>=x.y.z` with no maximum, exact pins included (owner, 2026-10-21: "mark packages with minimum acceptable, latest shouldn't be a blocker on too old of a version"). Each floor is the version the lockfile already resolved, or the advisory floor `staging` already set where that is higher: `next` `>=16.4.1` (it was an exact pin), `dompurify` `>=3.4.17` as the dependency and the override, `vitest` `>=5.0.5` and the `ip-address` override `>=10.7.4` (4.11.0, #533), and `zod` `>=4.6.7`, `shadcn` `>=4.22.1`, `body-parser` `>=2.4.0`, `undici` `>=7.30.1` and `fast-uri` `>=3.1.9` (#545). The `zod@<4.6.6` override keeps its selector, and `auditConfig.ignoreGhsas` is unchanged. Four overrides for packages not in the tree (`@xmldom/xmldom`, `lodash-es`, `uuid`, `minimatch@8>brace-expansion`) keep their old floor.
