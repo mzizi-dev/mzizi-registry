@@ -708,6 +708,24 @@ export const ROLES: readonly Role[] = [
     derive: "text",
     block: "roles",
   },
+  {
+    /*
+     * `--status-error`: the name N1's `statusTokens` gives the error status and
+     * that components use (`text-status-error`, `var(--status-error, …)`) beside
+     * `--status-success` / `--status-warning`. It was defined only in the site's
+     * own stylesheet, so a consumer of the distributed tokens fell through to each
+     * component's hex fallback (#543). An alias of `destructive`: one decision for
+     * "error" (red, never the terracotta `status-danger`).
+     */
+    name: "status-error",
+    group: "destructive",
+    kind: "ui",
+    required: true,
+    description: "The error status (`text-status-error`, `fill-status-error`): an alias of `destructive`, red, never the terracotta `status-danger`.",
+    contrast: { against: ON_PAGE, min: UI },
+    default: { role: "destructive" },
+    block: "roles",
+  },
   { name: "overlay-foreground", group: "shadcn", kind: "text", required: true, description: "Text on `overlay`.", contrast: fg("overlay"), default: { role: "text-primary" }, block: "shadcn" },
   {
     name: "accent",
