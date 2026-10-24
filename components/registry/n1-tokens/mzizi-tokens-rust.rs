@@ -230,6 +230,8 @@ impl Spacing {
 pub struct Radius;
 
 impl Radius {
+    /// 4px.
+    pub const XS: u32 = 4;
     /// 7px.
     pub const SM: u32 = 7;
     /// 12px.

@@ -328,6 +328,7 @@
   --spacing-4xl: var(--space-4xl);
   --spacing-5xl: var(--space-5xl);
   --spacing-6xl: var(--space-6xl);
+  --radius-xs: var(--r-xs);
   --radius-sm: var(--r-sm);
   --radius-md: var(--r-md);
   --radius-base: var(--r-base);
@@ -754,6 +755,7 @@
 
   /* ── RADIUS — every rung derives from a 7px unit ─────────────────────────── */
   --radius-unit: 7px; /* CLAUDE.md §7.5. Apps running a 10px or 12px unit have the whole calc() scale wrong. */
+  --r-xs: 4px;
   --r-sm: 7px;
   --r-md: 12px;
   --r-base: 14px;

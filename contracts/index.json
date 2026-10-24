@@ -122,7 +122,7 @@
     {
       "name": "app/brand-mark",
       "title": "BrandMark",
-      "version": "1.1.1",
+      "version": "1.2.0",
       "file": "app/brand-mark.contract.json",
       "astro": "app-brand-mark",
       "tsx": "app-brand-mark",
@@ -604,6 +604,42 @@
       "astro": "markdown-renderer",
       "tsx": "markdown-renderer",
       "rs": "markdown-renderer"
+    },
+    {
+      "name": "ui/address-code",
+      "title": "AddressCode",
+      "version": "1.0.0",
+      "file": "ui/address-code.contract.json",
+      "astro": "address-code",
+      "tsx": "address-code",
+      "rs": null
+    },
+    {
+      "name": "ui/address-private-row",
+      "title": "AddressPrivateRow",
+      "version": "1.0.0",
+      "file": "ui/address-private-row.contract.json",
+      "astro": "address-private-row",
+      "tsx": "address-private-row",
+      "rs": null
+    },
+    {
+      "name": "ui/address-selector",
+      "title": "AddressSelector",
+      "version": "1.0.0",
+      "file": "ui/address-selector.contract.json",
+      "astro": "address-selector",
+      "tsx": "address-selector",
+      "rs": null
+    },
+    {
+      "name": "ui/address-share-card",
+      "title": "AddressShareCard",
+      "version": "1.0.0",
+      "file": "ui/address-share-card.contract.json",
+      "astro": "address-share-card",
+      "tsx": "address-share-card",
+      "rs": null
     }
   ]
 }

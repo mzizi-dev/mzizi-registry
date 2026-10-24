@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.12.0",
+    title:
+      "v4.12.0 — the Kweli Address primitives, counted signals on mzizi-trust-meter, the kweli brand entry and --radius-xs, and zod 3 removed",
+    description:
+      'Releases staging to main as the next minor above v4.11.x (nyuchi/.github#80). Four Kweli Address primitives, each an Astro and a React build under one contract in contracts/ui/: address-code (N2), address-share-card (N3, a server-drawn QR code), address-selector (N2, deliver-to radios) and address-private-row (N2); a new qr-matrix lib on the uqr dependency (MIT, encoding only) shared by both builds; mzizi-trust-meter gains backward-compatible signals and title props and its role=meter carries aria-valuenow/min/max (#546). The kweli brand entry: kweli-mark-light, kweli-mark-dark and kweli-favicon assets, app-brand-mark 1.2.0 with brand="kweli" and a tagline prop, and the --radius-xs (4px) rung (#544). zod 3 is removed (GHSA-mrhx-c7xc-m3w5) through shadcn ^4.22.1, zod ^4.6.7 and an override, with floors for body-parser, undici and fast-uri advisories (#545). No breaking changes. No Mzizi Roots crate version changes. CHANGELOG.md section [4.12.0] is the narrative. Tracking: #543.',
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 12,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-10-24T12:00:00.000+00:00",
+    created_at: "2026-10-24T12:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.11.0",
     title:
       "v4.11.0 — verified-badge tier colours, place-card link/footer/category, the lib/icons install path, and patched next, dompurify, vitest and ip-address",

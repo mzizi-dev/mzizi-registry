@@ -82,6 +82,7 @@ class MziziSpacing:
 @dataclass(frozen=True)
 class MziziRadius:
     """Radius scale, in pixels. Derived from the 7px unit."""
+    XS: int = 4
     SM: int = 7
     MD: int = 12
     LG: int = 14
