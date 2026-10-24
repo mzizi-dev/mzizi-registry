@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `app/form-field` 1.2: checkbox, switch and radio-group controls (2026-10-24, #570)
+
+Gap 13 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): settings had no way to build an on/off preference.
+
+- **`as="checkbox"`** and **`as="switch"`**: a native `<input type="checkbox">` inside its `<label>`, so the whole row is the hit area (36px, 48px on touch). A switch adds `role="switch"` and is a pill track whose thumb moves to the end when on, so the state is never colour alone. New `checked` prop; `value` is what is posted when checked (default `"on"`).
+- **`as="radio-group"`**: a `<fieldset>` whose `<legend>` is the label, one native radio per `options` entry; the option whose value is `value` is checked.
+- Same wiring as the other controls: id, name, `required`, `aria-describedby` (hint, then error) and `aria-invalid`; `readonly` disables a choice control (it has no read-only state), as it does a select. Checked controls take the shell's accent (`--app-accent`, else `--primary`).
+- **`ui-variants`** gains `appChoiceRowClasses`, `appCheckClasses` and `appSwitchClasses`, shared by the Astro and React builds.
+- Contract 1.1.0 → 1.2.0 (minor: new values for `as`, a new prop, nothing removed): 4 new states, 5 new clauses, 11 new checks, 3 new density rows. Both builds keep it with no script.
+
 ### Added — `ui/mzizi-verified-badge` contract with an Astro build, and the tier ladder as framework-free data (2026-10-24, #568)
 
 Gaps 5 and 7 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)).
