@@ -44,6 +44,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Text as an HTML `pattern` that matches exactly that text: regex syntax is
+ * escaped for the `v` flag browsers compile `pattern` with (a hyphen stays
+ * bare, since `\-` is an error there). For "type DELETE to confirm".
+ */
+export function exactPattern(text: string): string {
+  return text.replace(/[\\^$.*+?()[\]{}|/]/g, "\\$&")
+}
+
+/**
  * Up to two initials for a name ("Tendai Moyo" → "TM", "rudo" → "R"), for an
  * avatar with no image. Letters of any script; empty when the name has none.
  */

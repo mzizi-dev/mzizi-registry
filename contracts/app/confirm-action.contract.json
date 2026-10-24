@@ -1,0 +1,439 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/confirm-action",
+  "title": "ConfirmAction",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "A destructive action that asks before it acts. A trigger opens a confirmation panel through the Popover API (no script); the panel is a POST form with hidden fields and a required confirm step (a checkbox, or typing a given text), names the danger in words (\"Warning: …\"), and has Cancel and a destructive submit that names the action.",
+  "implementations": {
+    "astro": {
+      "registry": "app-confirm-action",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/ConfirmAction.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "app-confirm-action",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": ["alert-dialog", "data-table"]
+  },
+  "props": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "description": "A unique id on the page. The panel is `<id>-panel`; the title, description, warning and confirm input are `<id>-title`, `<id>-description`, `<id>-warning` and `<id>-confirm`."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "The trigger's text, naming the action (\"Remove member\")."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The panel's heading (\"Remove Rudo Chari from Kweli Foods?\")."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "What happens, in a sentence; the panel's first description."
+    },
+    {
+      "name": "warning",
+      "type": "string",
+      "required": false,
+      "description": "The warning after `warningLabel`.",
+      "default": "This cannot be undone."
+    },
+    {
+      "name": "warningLabel",
+      "type": "string",
+      "required": false,
+      "description": "The word that names the danger, for another language.",
+      "default": "Warning:"
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": true,
+      "description": "Where the form posts."
+    },
+    {
+      "name": "method",
+      "type": "\"post\" | \"get\"",
+      "required": false,
+      "description": "The form's method.",
+      "default": "post",
+      "values": ["post", "get"]
+    },
+    {
+      "name": "fields",
+      "type": "Record<string, string>",
+      "required": false,
+      "description": "Hidden fields posted with the form (`{ member: \"rudo\" }`).",
+      "default": {}
+    },
+    {
+      "name": "confirmLabel",
+      "type": "string",
+      "required": false,
+      "description": "The submit button's text; defaults to `label`."
+    },
+    {
+      "name": "cancelLabel",
+      "type": "string",
+      "required": false,
+      "description": "The cancel button's text.",
+      "default": "Cancel"
+    },
+    {
+      "name": "confirmText",
+      "type": "string",
+      "required": false,
+      "description": "Text the person must type to confirm (\"DELETE\", a listing's name). Without it they tick a checkbox."
+    },
+    {
+      "name": "confirmPrompt",
+      "type": "string",
+      "required": false,
+      "description": "The typed step's label, in place of \"Type <confirmText> to confirm\"."
+    },
+    {
+      "name": "acknowledge",
+      "type": "string",
+      "required": false,
+      "description": "The checkbox's label when there is no `confirmText`.",
+      "default": "I understand."
+    },
+    {
+      "name": "variant",
+      "type": "\"destructive-outline\" | \"destructive\"",
+      "required": false,
+      "description": "The trigger's look: an outline for an action among others, filled for the one irreversible action on a page.",
+      "default": "destructive-outline",
+      "values": ["destructive-outline", "destructive"]
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\"",
+      "required": false,
+      "description": "The trigger's size.",
+      "default": "md",
+      "values": ["sm", "md"]
+    },
+    {
+      "name": "headingLevel",
+      "type": "2 | 3",
+      "required": false,
+      "description": "The heading's level.",
+      "default": 2,
+      "values": [2, 3]
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The trigger is a <button type=\"button\" popovertarget=\"<id>-panel\" aria-haspopup=\"dialog\"> that names the action. It submits nothing.",
+    "The panel is <div popover=\"auto\" role=\"dialog\">, labelled by its heading and described by the description and the warning. The Popover API opens it from the trigger and closes it on Escape, a click outside, or Cancel (popovertargetaction=\"hide\"). No script.",
+    "The danger is written, not only coloured: the warning reads \"<warningLabel> <warning>\" (\"Warning: This cannot be undone.\") with a warning glyph, and the submit button names the action.",
+    "The panel is a <form> (POST unless `method` is \"get\") to `action`, posting its hidden `fields` and the confirm step as `confirm`.",
+    "Without `confirmText` the confirm step is a required checkbox (`confirm=yes`) labelled `acknowledge`. With it, a required text box labelled \"Type <confirmText> to confirm\" (or `confirmPrompt`) whose `pattern` matches exactly that text, regex syntax escaped. The browser blocks the submit until the step is done; the server must check `confirm` as well.",
+    "In a browser without the Popover API the panel shows in place under the trigger; it is still the form with the confirm step."
+  ],
+  "states": {
+    "default": {
+      "description": "Removing a team member, confirmed with a checkbox.",
+      "props": {
+        "id": "remove-rudo",
+        "label": "Remove member",
+        "title": "Remove Rudo Chari from Kweli Foods?",
+        "description": "Rudo loses access to this business straight away.",
+        "action": "/team/remove",
+        "fields": {
+          "member": "rudo"
+        },
+        "confirmLabel": "Remove Rudo"
+      }
+    },
+    "typed": {
+      "description": "Deleting a listing, confirmed by typing its name; filled trigger, small, h3.",
+      "props": {
+        "id": "delete-listing",
+        "label": "Delete listing",
+        "title": "Delete kweli-foods.co?",
+        "warning": "The listing, its photos and its reviews are deleted.",
+        "action": "/listings/delete",
+        "fields": {
+          "listing": "42"
+        },
+        "confirmText": "kweli-foods.co",
+        "variant": "destructive",
+        "size": "sm",
+        "headingLevel": 3
+      }
+    },
+    "localised": {
+      "description": "Every word replaced, for another language.",
+      "props": {
+        "id": "cancel-plan",
+        "label": "Futa mpango",
+        "title": "Futa mpango wako?",
+        "warning": "Huwezi kurudisha hatua hii.",
+        "warningLabel": "Tahadhari:",
+        "action": "/billing/cancel",
+        "method": "get",
+        "acknowledge": "Ninaelewa.",
+        "cancelLabel": "Ghairi"
+      }
+    },
+    "prompt": {
+      "description": "A typed step with its own prompt.",
+      "props": {
+        "id": "revoke",
+        "label": "Revoke key",
+        "title": "Revoke this API key?",
+        "action": "/keys/revoke",
+        "confirmText": "REVOKE",
+        "confirmPrompt": "Type REVOKE"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": [
+      "button (trigger)",
+      "dialog (the panel, named by its heading)",
+      "checkbox or textbox (the confirm step)"
+    ],
+    "keyboard": [
+      "Enter or Space on the trigger opens the panel.",
+      "Escape closes it (Popover API).",
+      "Tab moves through the confirm step, Cancel and the submit button."
+    ],
+    "focus": [
+      "`--ring` focus ring on every control.",
+      "The Popover API returns focus to the trigger when the panel closes."
+    ],
+    "aria": [
+      "aria-haspopup=\"dialog\" on the trigger.",
+      "The panel has role=\"dialog\", aria-labelledby (its heading) and aria-describedby (the description and the warning).",
+      "The confirm step has a visible label."
+    ],
+    "wcag": ["1.3.1", "1.4.1", "2.1.1", "2.4.3", "3.3.4", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "trigger (md)",
+      "select": "[data-slot=\"confirm-action\"] > button",
+      "fine": 36,
+      "coarse": 48
+    },
+    {
+      "part": "trigger (sm)",
+      "state": "typed",
+      "select": "[data-slot=\"confirm-action\"] > button",
+      "fine": 32,
+      "coarse": 44
+    },
+    {
+      "part": "submit",
+      "select": "button[data-slot=\"confirm-submit\"]",
+      "fine": 36,
+      "coarse": 48
+    },
+    {
+      "part": "checkbox row",
+      "select": "label[data-slot=\"confirm-step\"]",
+      "fine": 36,
+      "coarse": 48
+    },
+    {
+      "part": "typed confirm box",
+      "state": "typed",
+      "select": "input#delete-listing-confirm",
+      "fine": 36,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--popover",
+      "--popover-foreground",
+      "--foreground",
+      "--muted-foreground",
+      "--border",
+      "--card",
+      "--destructive",
+      "--destructive-foreground",
+      "--ring",
+      "--primary",
+      "--app-accent"
+    ],
+    "brandOverlay": "None that changes meaning: the danger is the destructive tokens in every brand; the confirm checkbox takes the shell's accent (`--app-accent`, else `--primary`) and focus rings `--ring`.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the Popover API opens and closes the panel, and the form posts with the browser's own validation of the confirm step."
+  },
+  "responsive": [
+    "The panel is at most 28rem wide and never wider than the viewport less 2rem; its buttons wrap."
+  ],
+  "contract": "contract\n  slot is \"confirm-action\"\n  uses confirm-panel\n  uses confirm-warning\n  when default shows button \"Remove member\"\n  when default shows strong \"Warning:\"\n  when default shows h2 \"Remove Rudo Chari from Kweli Foods?\"\n  when typed shows h3 \"Delete kweli-foods.co?\"\n  when localised shows strong \"Tahadhari:\"\nend",
+  "checks": [
+    {
+      "say": "The trigger opens the panel and posts nothing.",
+      "select": "[data-slot=\"confirm-action\"] > button[type=\"button\"]",
+      "count": 1,
+      "attr": {
+        "popovertarget": "remove-rudo-panel",
+        "aria-haspopup": "dialog"
+      },
+      "text": "Remove member"
+    },
+    {
+      "say": "The panel is a popover dialog, labelled and described.",
+      "select": "div#remove-rudo-panel[popover=\"auto\"][role=\"dialog\"]",
+      "count": 1,
+      "attr": {
+        "aria-labelledby": "remove-rudo-title",
+        "aria-describedby": "remove-rudo-description remove-rudo-warning"
+      }
+    },
+    {
+      "say": "Without a description, the warning alone describes it.",
+      "state": "typed",
+      "select": "[role=\"dialog\"]",
+      "count": 1,
+      "attr": {
+        "aria-describedby": "delete-listing-warning"
+      }
+    },
+    {
+      "say": "The danger is written out.",
+      "select": "p#remove-rudo-warning[data-slot=\"confirm-warning\"]",
+      "count": 1,
+      "text": "Warning: This cannot be undone."
+    },
+    {
+      "say": "The warning glyph is decorative.",
+      "select": "[data-slot=\"confirm-warning\"] svg[aria-hidden=\"true\"]",
+      "count": 1
+    },
+    {
+      "say": "The form posts to the action with its hidden fields.",
+      "select": "form[method=\"post\"][action=\"/team/remove\"] > input[type=\"hidden\"][name=\"member\"][value=\"rudo\"]",
+      "count": 1
+    },
+    {
+      "say": "The confirm step is a required checkbox posting confirm=yes.",
+      "select": "form input#remove-rudo-confirm[type=\"checkbox\"]",
+      "count": 1,
+      "attr": {
+        "name": "confirm",
+        "value": "yes",
+        "required": true
+      }
+    },
+    {
+      "say": "The checkbox is labelled.",
+      "select": "label[for=\"remove-rudo-confirm\"]",
+      "count": 1,
+      "text": "I understand."
+    },
+    {
+      "say": "Cancel closes the panel and posts nothing.",
+      "select": "form button[type=\"button\"]",
+      "count": 1,
+      "attr": {
+        "popovertarget": "remove-rudo-panel",
+        "popovertargetaction": "hide"
+      },
+      "text": "Cancel"
+    },
+    {
+      "say": "The submit names the action, in the destructive style.",
+      "select": "button[type=\"submit\"][data-slot=\"confirm-submit\"].bg-destructive",
+      "count": 1,
+      "text": "Remove Rudo"
+    },
+    {
+      "say": "Without confirmLabel the submit repeats the trigger.",
+      "state": "typed",
+      "select": "button[data-slot=\"confirm-submit\"]",
+      "count": 1,
+      "text": "Delete listing"
+    },
+    {
+      "say": "The typed step is a required box whose pattern is exactly the text, escaped.",
+      "state": "typed",
+      "select": "input#delete-listing-confirm[type=\"text\"]",
+      "count": 1,
+      "attr": {
+        "name": "confirm",
+        "required": true,
+        "autocomplete": "off",
+        "pattern": "kweli-foods\\.co"
+      }
+    },
+    {
+      "say": "The typed step says what to type.",
+      "state": "typed",
+      "select": "label[for=\"delete-listing-confirm\"]",
+      "count": 1,
+      "text": "Type kweli-foods.co to confirm"
+    },
+    {
+      "say": "A typed step has no checkbox.",
+      "state": "typed",
+      "select": "input[type=\"checkbox\"]",
+      "absent": true
+    },
+    {
+      "say": "The filled trigger is the destructive button.",
+      "state": "typed",
+      "select": "[data-slot=\"confirm-action\"] > button.bg-destructive",
+      "count": 1
+    },
+    {
+      "say": "Every word can be replaced.",
+      "state": "localised",
+      "select": "[data-slot=\"confirm-warning\"]",
+      "count": 1,
+      "text": "Tahadhari: Huwezi kurudisha hatua hii."
+    },
+    {
+      "say": "A GET form when asked.",
+      "state": "localised",
+      "select": "form[method=\"get\"][action=\"/billing/cancel\"]",
+      "count": 1
+    },
+    {
+      "say": "confirmPrompt replaces the typed step's label.",
+      "state": "prompt",
+      "select": "label[for=\"revoke-confirm\"]",
+      "count": 1,
+      "text": "Type REVOKE"
+    },
+    {
+      "say": "No script.",
+      "state": "*",
+      "select": "script",
+      "absent": true
+    }
+  ],
+  "gaps": [
+    "Focus does not move into the panel when it opens (the Popover API leaves it on the trigger); Tab reaches the panel next, since it follows the trigger in the DOM. A <dialog> opened with showModal() would move it, but needs script."
+  ]
+}
