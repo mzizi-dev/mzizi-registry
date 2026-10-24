@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — Kweli app icons: PWA 192 and 512, maskable 512 and the 180px Apple touch icon (2026-10-24, #PRNUM)
+### Added — Kweli app icons: PWA 192 and 512, maskable 512 and the 180px Apple touch icon (2026-10-24, #560)
 
 Item 10 of the Kweli phase-2 gaps, tracked in #543. Kweli had a vector favicon and marks but no raster app-icon set for a web app manifest or the iOS home screen.
 
