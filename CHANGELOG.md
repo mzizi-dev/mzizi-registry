@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Fixed — `mzizi-icons` is no longer a client module, so Server Components can import `@/lib/icons` (2026-10-24, #PRNUM)
+### Fixed — `mzizi-icons` is no longer a client module, so Server Components can import `@/lib/icons` (2026-10-24, #551)
 
 Gap 5 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
 
