@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — Verification tiers are `--tier-*` roles defined once in N1, and every tier component reads them; light-mode `--color-<mineral>-light` tokens (2026-10-24, #PR)
+### Changed — Verification tiers are `--tier-*` roles defined once in N1, and every tier component reads them; light-mode `--color-<mineral>-light` tokens (2026-10-24, #563)
 
 The owner's tier-colour decision on #543 (2026-10-24): **Q1** keep the minerals, **Q2** community is terracotta, **Q3** the `mzizi-design` skill's swap is fixed (government gold, licensed tanzanite; a separate `mzizi-dev/agent-tools` change, since the skill is authored there), **Q4** tier 0 is a neutral grey token that already exists, **Q5** tier 2 is "Contact Verified". Heritage tones stay neutral and editorial, as `seven-minerals.mdx` says.
 
