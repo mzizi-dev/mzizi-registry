@@ -10,6 +10,24 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the Kweli Address primitives: address code, share card with QR, "deliver to" selector, private-address row; counted signals on `mzizi-trust-meter` (2026-10-24, #PRNUM)
+
+Gap 4 of #543, upstream before Kweli consumes them (Kweli Address RFC v0.1, mukoko-dev/kweli#195). Each is an Astro build and a React build under one contract in `contracts/ui/`. Both builds render every contract state in the suites. They are server-rendered with no script, and their colour is semantic only, so Kweli's brand overlay (malachite) colours the links and the selection.
+
+- **`address-code`** (`ui/address-code`, N2). The code (`NYU-7K2Q`) is a `<code>` in the mono face. With `href`, a 44px link follows it, and the link's accessible name names the code ("Open address NYU-7K2Q"). Without `href` the chip is the code alone.
+- **`address-share-card`** (`ui/address-share-card`, N3). A QR code that opens the share link, the code chip, the link written out, and the directions in words. The QR is drawn server-side as one SVG path in `currentColor` (`role="img"`, labelled with the link it opens).
+  - **New dependency `uqr`** (MIT, zero dependencies, encoding only). No registry primitive drew a QR code on `staging`: `booking-confirmation` has a placeholder and `mfa-setup` takes an image URL. The hand-written encoder in #475 is not merged.
+  - **New lib `qr-matrix`** (`qrMatrix(text, ecc?)`), shared by both builds.
+  - **Gap, in the contract:** in a dark theme the code is light on dark.
+- **`address-selector`** (`ui/address-selector`, N2). "Deliver to" as native radios in a `<fieldset>` with a `<legend>`. Each option is a 56px whole-row label with the address's name, a line and its code. "Private" and "Link only" addresses are marked in words. An empty list says so and offers the add link.
+- **`address-private-row`** (`ui/address-private-row`, N2). A row with a decorative lock, the name, the code, who can open the address written out (`data-visibility`), an optional detail line, and a 44px manage link named for the address.
+- **`mzizi-trust-meter`**, extended backward-compatibly. It did not cover a list of signals with counts. New `signals` (`{ label, count, detail? }[]`) and `title` props:
+  - With `signals`, the meter lists one 44px row per signal with its count, instead of the Verification / Status / Ubuntu breakdown. Kweli's "Address trust" panel is `<MziziTrustMeter title="Address trust" trustScore={…} signals={[…]} />`.
+  - Without `signals` it renders as before.
+  - The `role="meter"` now carries `aria-valuenow`, `aria-valuemin` and `aria-valuemax`, which it lacked.
+  - `__tests__/components/mzizi-trust-meter.test.tsx` covers both paths.
+- `contracts/ui/` grows from 12 to 16 contracts.
+
 ### Added — the kweli brand entry (mark, favicon, lockup) and the `xs` radius rung (2026-10-24, #544)
 
 Two of the Kweli gaps tracked in #543.

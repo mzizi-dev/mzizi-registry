@@ -20,6 +20,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "address-code": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "linkLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    }
+  ],
   "address-input": [
     {
       "name": "value",
@@ -29,6 +51,92 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "onChange",
       "type": "(value: AddressValue) => void",
+      "required": false
+    }
+  ],
+  "address-private-row": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "code",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "visibility",
+      "type": "\"private\" | \"link\"",
+      "required": false
+    },
+    {
+      "name": "detail",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "linkLabel",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "address-selector": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "legend",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "addresses",
+      "type": "AddressOption[]",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "addHref",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "addLabel",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "address-share-card": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "directions",
+      "type": "string",
       "required": false
     }
   ],
@@ -10543,6 +10651,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "compact",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "signals",
+      "type": "TrustSignalCount[]",
       "required": false
     }
   ],
