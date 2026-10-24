@@ -7655,7 +7655,32 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "mineral",
-      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\"",
+      "type": "EventMineral",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "price",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "free",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "freeLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "share",
+      "type": "React.ReactNode",
       "required": false
     }
   ],
@@ -9886,6 +9911,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     },
     {
+      "name": "headline",
+      "type": "string",
+      "required": false
+    },
+    {
       "name": "text",
       "type": "string",
       "required": true
@@ -11826,6 +11856,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "showValue",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
       "required": false
     }
   ],
