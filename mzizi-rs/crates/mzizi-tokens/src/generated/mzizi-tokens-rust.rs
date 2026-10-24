@@ -305,6 +305,10 @@ pub struct RoleColors {
     pub wash: &'static str,
     /// Deepest fill — inset sections, metadata rows, maximum text contrast
     pub muted: &'static str,
+    /// The plate behind a QR code: white in every theme, so the code is never inverted.
+    pub surface_qr: &'static str,
+    /// A QR code's modules on `surface-qr`: the canon's ink in every theme.
+    pub on_surface_qr: &'static str,
     /// Body and heading text. APCA Lc 90 on `base`.
     pub text_primary: &'static str,
     /// Secondary text, descriptions. APCA Lc 75 on `base` and `surface` (#399).
@@ -530,6 +534,8 @@ impl Roles {
                 scrim: "rgba(0, 0, 0, 0.4)",
                 wash: "#E3E5E4",
                 muted: "#FAF9F5",
+                surface_qr: "#FFFFFF",
+                on_surface_qr: "#0E0D0C",
                 text_primary: "#373635",
                 text_secondary: "#575655",
                 text_tertiary: "#6B6A69",
@@ -645,6 +651,8 @@ impl Roles {
                 scrim: "rgba(0, 0, 0, 0.6)",
                 wash: "#252524",
                 muted: "#050504",
+                surface_qr: "#FFFFFF",
+                on_surface_qr: "#0E0D0C",
                 text_primary: "#E5E5E3",
                 text_secondary: "#CCCCCA",
                 text_tertiary: "#B3B3B1",

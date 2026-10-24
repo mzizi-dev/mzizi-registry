@@ -1811,6 +1811,18 @@ export const roles = {
     light: "#FAF9F5",
     dark: "#050504",
   },
+  "surface-qr": {
+    kind: "surface",
+    cssVar: "--surface-qr",
+    light: "#FFFFFF",
+    dark: "#FFFFFF",
+  },
+  "on-surface-qr": {
+    kind: "text",
+    cssVar: "--on-surface-qr",
+    light: "#0E0D0C",
+    dark: "#0E0D0C",
+  },
   "text-primary": {
     kind: "text",
     cssVar: "--text-primary",

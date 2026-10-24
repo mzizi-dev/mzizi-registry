@@ -265,8 +265,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": ["uqr"],
-      "description": "An address to hand to someone: a QR code that opens the share link (drawn server-side as one SVG path in currentColor, no script, no image request), the address-code chip, the link written out, and the directions in words. Astro and React builds under contract ui/address-share-card.",
-      "docs": "Use it for: Sharing a Kweli address by QR, print or screenshot, Venue \"getting there\" cards on Mukoko Events.\nIncludes: Server-side QR (uqr) in currentColor, The link written out as well as encoded, Astro and React builds, one contract.\nAccessibility: The QR is role=\"img\" with an aria-label naming the link, The same link is in the text, for anyone who cannot scan.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-share-card",
+      "description": "An address to hand to someone: a QR code that opens the share link (drawn server-side as one SVG path in currentColor, no script, no image request), the address-code chip, the link written out, and the directions in words. Astro and React builds under contract ui/address-share-card. The QR sits on a surface-qr plate in on-surface-qr ink (white and ink in every theme), so it is never inverted in a dark theme; codeLabel names the code chip for assistive technology.",
+      "docs": "Use it for: Sharing a Kweli address by QR, print or screenshot, Venue \"getting there\" cards on Mukoko Events.\nIncludes: Server-side QR (uqr) in currentColor, The link written out as well as encoded, Astro and React builds, one contract, QR on a light surface-qr plate in every theme, codeLabel names the code chip.\nAccessibility: The QR is role=\"img\" with an aria-label naming the link, The same link is in the text, for anyone who cannot scan.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-share-card",
       "files": [
         {
           "path": "components/registry/n3-brand/address-share-card.tsx",
@@ -283,7 +283,9 @@
         "features": [
           "Server-side QR (uqr) in currentColor",
           "The link written out as well as encoded",
-          "Astro and React builds, one contract"
+          "Astro and React builds, one contract",
+          "QR on a light surface-qr plate in every theme",
+          "codeLabel names the code chip"
         ],
         "owner": "mzizi",
         "useCases": [
@@ -914,8 +916,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "brand"],
       "dependencies": [],
-      "description": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
-      "docs": "Use it for: An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked (Mzizi Dashboard Standard).\nIncludes: The marks are the registry's canonical icon pair, never redrawn., Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script., The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"..\nAccessibility: alt is the brand name, or empty when text names it..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-brand-mark",
+      "description": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme. Both images load lazily (loading, default \"lazy\"; \"eager\" for an LCP mark) and decode asynchronously.",
+      "docs": "Use it for: An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked (Mzizi Dashboard Standard).\nIncludes: The marks are the registry's canonical icon pair, never redrawn., Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script., The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"., loading: lazy by default, eager on request; decoding=async.\nAccessibility: alt is the brand name, or empty when text names it..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-brand-mark",
       "files": [
         {
           "path": "components/registry/n3-brand/app-brand-mark.tsx",
@@ -930,7 +932,8 @@
         "features": [
           "The marks are the registry's canonical icon pair, never redrawn.",
           "Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script.",
-          "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\"."
+          "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\".",
+          "loading: lazy by default, eager on request; decoding=async"
         ],
         "hasDemo": false,
         "owner": "mzizi",
@@ -14553,8 +14556,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Place/location card with map pin, verification badge (mzizi-verified-badge), distance, rating and an open/closed flag. Two variants: row and compact. Pass href (and target=\"_top\" in an embed) to make the whole card a real link, with rel=\"noopener noreferrer\" for any target but _self, _top and _parent, and linkComponent (Next Link, a React Router Link) to render that link through the app's router for client-side navigation and prefetch; the cover image loads lazily and decodes asynchronously unless priority is set (eager, fetchpriority=\"high\", for the card above the fold); or pass onClick for a role=\"button\" card that answers Enter and Space. A footer slot renders under the row; without href it may hold controls, whose clicks and keys never reach the card's onClick. Maps to places.places. Used in Mukoko Places, Kweli place embeds, Shamwari location suggestions and any app that displays a physical location.",
-      "docs": "Use it for: Mukoko Places location listings, Shamwari hospitality suggestions, Nearby places discovery, Verified business directories, Location-based search results.\nVariants: row, compact.\nIncludes: Verification badge from mzizi-verified-badge, with an optional tier label (\"Unverified\" at tier 0), Category under the name in both variants, Open/closed flag (no opening-hours schedule), href + target render the root as a real link, with rel=noopener noreferrer for any target but _self, _top and _parent, linkComponent renders that link through the app's router (Next Link, React Router Link), with the same href, className, children and attributes, Cover image loads lazily and decodes asynchronously; priority loads it eagerly with fetchpriority=high, Footer slot under the row, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes on the card and its skeleton.\nAccessibility: With href the root is an <a>, with no nested interactive element, With onClick and no href the card is role=button, focusable, and answers Enter and Space, Clicks and keys on a control inside the card (a footer button) stay with that control and never fire the card's onClick, Focus-visible ring, Verification badge is role=img with an aria-label naming the tier, Decorative images and icons are hidden from assistive technology.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-place-card",
+      "description": "Place/location card with map pin, verification badge (mzizi-verified-badge), distance, rating and an open/closed flag. Two variants: row and compact. Pass href (and target=\"_top\" in an embed) to make the whole card a real link, with rel=\"noopener noreferrer\" for any target but _self, _top and _parent, and linkComponent (Next Link, a React Router Link) to render that link through the app's router for client-side navigation and prefetch; the cover image loads lazily and decodes asynchronously unless priority is set (eager, fetchpriority=\"high\", for the card above the fold); or pass onClick for a role=\"button\" card that answers Enter and Space. A footer slot renders under the row; without href it may hold controls, whose clicks and keys never reach the card's onClick. Maps to places.places. Used in Mukoko Places, Kweli place embeds, Shamwari location suggestions and any app that displays a physical location. tierLabel names the tier in the app's own words: it is the badge's label (its title and accessible name) and the text showTierLabel prints. linkLabel sets the accessible name of the card's link or button.",
+      "docs": "Use it for: Mukoko Places location listings, Shamwari hospitality suggestions, Nearby places discovery, Verified business directories, Location-based search results.\nVariants: row, compact.\nIncludes: Verification badge from mzizi-verified-badge, with an optional tier label (\"Unverified\" at tier 0), Category under the name in both variants, Open/closed flag (no opening-hours schedule), href + target render the root as a real link, with rel=noopener noreferrer for any target but _self, _top and _parent, linkComponent renders that link through the app's router (Next Link, React Router Link), with the same href, className, children and attributes, Cover image loads lazily and decodes asynchronously; priority loads it eagerly with fetchpriority=high, Footer slot under the row, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes on the card and its skeleton, tierLabel passed to the verified badge's label and the printed tier, linkLabel sets the link's (or button's) accessible name.\nAccessibility: With href the root is an <a>, with no nested interactive element, With onClick and no href the card is role=button, focusable, and answers Enter and Space, Clicks and keys on a control inside the card (a footer button) stay with that control and never fire the card's onClick, Focus-visible ring, Verification badge is role=img with an aria-label naming the tier, Decorative images and icons are hidden from assistive technology.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-place-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-place-card.tsx",
@@ -14583,7 +14586,9 @@
           "Harness integration (log, motion, LiveRegion)",
           "animStyle with prefersReduced motion check",
           "Mineral-colored accent via brand override",
-          "data-slot + data-portal DOM attributes on the card and its skeleton"
+          "data-slot + data-portal DOM attributes on the card and its skeleton",
+          "tierLabel passed to the verified badge's label and the printed tier",
+          "linkLabel sets the link's (or button's) accessible name"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
