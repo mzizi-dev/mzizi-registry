@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `app/form-field` 1.2: checkbox, switch and radio-group controls (2026-10-24, #PRNUM)
+
+Gap 13 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): settings had no way to build an on/off preference.
+
+- **`as="checkbox"`** and **`as="switch"`**: a native `<input type="checkbox">` inside its `<label>`, so the whole row is the hit area (36px, 48px on touch). A switch adds `role="switch"` and is a pill track whose thumb moves to the end when on, so the state is never colour alone. New `checked` prop; `value` is what is posted when checked (default `"on"`).
+- **`as="radio-group"`**: a `<fieldset>` whose `<legend>` is the label, one native radio per `options` entry; the option whose value is `value` is checked.
+- Same wiring as the other controls: id, name, `required`, `aria-describedby` (hint, then error) and `aria-invalid`; `readonly` disables a choice control (it has no read-only state), as it does a select. Checked controls take the shell's accent (`--app-accent`, else `--primary`).
+- **`ui-variants`** gains `appChoiceRowClasses`, `appCheckClasses` and `appSwitchClasses`, shared by the Astro and React builds.
+- Contract 1.1.0 → 1.2.0 (minor: new values for `as`, a new prop, nothing removed): 4 new states, 5 new clauses, 11 new checks, 3 new density rows. Both builds keep it with no script.
+
 ## [4.15.0] - 2026-10-24
 
 Releases `staging` to `main` as the next minor above v4.14.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.15.0. It carries the owner's tier-colour decision on #543: verification tiers as `--tier-*` roles defined once in N1 and read by every tier component, light-mode `--color-<mineral>-light` tokens, and a `tier` prop on `mzizi-trust-meter` (contract 2.1.0) (#563); shamwari as the third pillar on `/v1/brand`, and 78 stale `#D4A574` terracotta fallbacks removed (#564); and three new Mzizi Roots crates, `mzizi-harness`, `mzizi-data` and `mzizi-mongodb`, with the data layer and the client write path in `mzizi-data` (#502, #509, #512). The new crates publish with the others at the workspace version (`publish-crates.yml`) and are wired into no app.

@@ -68,7 +68,7 @@ Every format that exists is tested against the contract, here:
 | `app/pagination`         | Pagination        | N6   | 1.0.0   | `app-pagination`         | `app-pagination` (contract)         | —                       |
 | `app/detail-panel`       | DetailPanel       | N6   | 1.0.0   | `app-detail-panel`       | `app-detail-panel` (contract)       | —                       |
 | `app/form-layout`        | FormLayout        | N6   | 1.1.0   | `app-form-layout`        | `app-form-layout` (contract)        | —                       |
-| `app/form-field`         | FormField         | N6   | 1.1.0   | `app-form-field`         | `app-form-field` (contract)         | —                       |
+| `app/form-field`         | FormField         | N6   | 1.2.0   | `app-form-field`         | `app-form-field` (contract)         | —                       |
 | `app/state-message`      | StateMessage      | N6   | 1.0.0   | `app-state-message`      | `app-state-message` (contract)      | —                       |
 | `app/toast`              | Toast             | N6   | 1.0.0   | `app-toast`              | `app-toast` (contract)              | —                       |
 | `app/account-menu`       | AccountMenu       | N7   | 1.0.0   | `app-account-menu`       | `app-account-menu` (contract)       | —                       |
