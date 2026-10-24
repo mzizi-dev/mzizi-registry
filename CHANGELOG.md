@@ -10,6 +10,17 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — provider-neutral money: the `money` module, `app/money` and `app/plan-summary` (2026-10-24, #PRNUM)
+
+Phase 1 of the payment framework ([#569](https://github.com/mzizi-dev/mzizi-registry/issues/569), tracked in nyuchi/nyuchi-api#375); Kweli's first paid plan is the first consumer. Owner rule: "mzizi is not an internal architecture it's also public so mzizi should never limit to our providers."
+
+- **`money`** (new `registry:lib`, installs to `lib/money.ts`, framework-free): `Money` (`{ amountMinor, currency }`), `isCurrencyCode`, `currencyDigits`, `moneyValue` (the exact decimal built from the integer, never through a float; `bigint` amounts too) and `formatMoney(money, locale, display)`. **No default currency and no default locale.** A code that is not three capital letters, or a non-integer amount, throws `RangeError`.
+- **New contract `app/money` 1.0.0** (N2) with Astro (default) and React builds: `<data data-slot="money" value="<exact decimal>" data-currency="<code>">` with the amount formatted for `locale`. 5 states (USD, JPY, KWD, a negative ZAR refund, ZWG), 6 checks.
+- **New contract `app/plan-summary` 1.0.0** (N6) with Astro (default) and React builds: the plan's name, its price as Money per interval ("per month"), a status pill in words (Active, Payment due, Cancelled, Expired, No plan), the renewal or end date in a `<time>` in the locale, its features and a primary and an outline action. It names no provider and no payment method and computes nothing about billing; pair a cancel action with ConfirmAction. 5 states (USD, ZAR, none, ZWG yearly, French for Senegal in XOF), 9 clauses, 19 checks. Every word can be replaced (`copy`).
+- **Doctrine:** `genetic-code-conventions/provider-neutral-money`, the rule in five points.
+- **Guard:** `__tests__/components/provider-neutral-billing.test.ts` fails if these files name a payment provider, a platform token (MXT, MIT, NST, NHC) or a brand, or default a currency or a locale.
+- The Dashboard Standard now has 35 app contracts. The older payment components keep their USD and MXT defaults for now: removing them is phase 2.
+
 ### Added — `app/confirm-action`: a destructive action that asks first, with no script (2026-10-24, #572)
 
 Gap 4 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)). The app family had no confirmation; `alert-dialog` is a legacy Radix component.
