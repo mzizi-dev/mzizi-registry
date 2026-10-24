@@ -109,10 +109,11 @@ export const primitives = {
   },
 
   // ─── BORDER RADIUS (canonical) ──────────────
-  // Base unit: 7px (--radius-unit). Ecosystem numbers: 7, 12, 14, 17.
+  // Base unit: 7px (--radius-unit). Ecosystem numbers: 4, 7, 12, 14, 17.
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
     none: { value: "0px" },
+    xs: { value: "4px", description: "Unit less 3. The smallest marks: legend swatches, kbd keys, inline tags" },
     sm: { value: "7px", description: "Subtle rounding, checkboxes, small elements" },
     md: { value: "12px", description: "Cards, inputs, containers" },
     lg: { value: "14px", description: "Default radius, medium containers" },

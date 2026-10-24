@@ -106,7 +106,7 @@ const TOKENS_TS = join(N1, "mzizi-tokens-typescript.ts")
  * READ from the role manifest (`lib/tokens/roles.source.ts`), which reads them
  * from canon (`brandMeta.radii`, `typography`); this file used to carry its own
  * copies of both (CLAUDE.md §7.5: all radii derive from a 7px unit, giving
- * 7/12/14/17).
+ * 4/7/12/14/17).
  */
 const radiusPx = (n: string) => {
   const row = RADIUS.find(([k]) => k === n)
@@ -115,7 +115,7 @@ const radiusPx = (n: string) => {
 }
 const SCALE = {
   spacing: { xs: 4, sm: 8, md: 12, base: 16, lg: 24, xl: 32 },
-  radius: { sm: radiusPx("sm"), md: radiusPx("md"), lg: radiusPx("lg"), xl: radiusPx("xl"), full: radiusPx("full") },
+  radius: { xs: radiusPx("xs"), sm: radiusPx("sm"), md: radiusPx("md"), lg: radiusPx("lg"), xl: radiusPx("xl"), full: radiusPx("full") },
   fonts: FONTS,
 } as const
 

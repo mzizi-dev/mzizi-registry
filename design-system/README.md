@@ -66,7 +66,7 @@ There are three groups of seven, and each colour works in both themes.
 ### Shape
 
 - **Every button, input, switch and horizontal tab list is a pill** (`radius-full`). This is a brand identity decision.
-- Other radii come from a 7px unit, giving the ecosystem numbers 7 / 12 / 14 / 17: `radius-sm` for checkboxes, `radius-md` for inner corners, `radius-lg` for cards, `radius-xl` for dialogs and vertical tabs.
+- Other radii come from a 7px unit, giving the ecosystem numbers 4 / 7 / 12 / 14 / 17: `radius-xs` for the smallest marks (legend swatches, kbd keys), `radius-sm` for checkboxes, `radius-md` for inner corners, `radius-lg` for cards, `radius-xl` for dialogs and vertical tabs.
 - Media is square by default (`aspect-media`). Use `aspect-media-wide` only for footage that is really 16:9.
 
 ### Spacing and density
