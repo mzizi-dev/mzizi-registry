@@ -138,7 +138,8 @@ pub enum Error {
     Server {
         /// The server's error code.
         code: i64,
-        /// The server's message.
+        /// A fixed description of the code, written by the client. Never the server's own
+        /// message, which can echo part of the query.
         message: String,
     },
     /// The caller asked for something the read-only client refuses.
