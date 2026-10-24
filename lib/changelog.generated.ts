@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.15.0",
+    title:
+      "v4.15.0 — verification tiers as --tier-* roles (Breaking: community terracotta, unverified neutral), light-mode --color-<mineral>-light tokens, trust-meter tier prop, shamwari as the third pillar on /v1/brand, stale #D4A574 fallbacks removed, and the mzizi-harness, mzizi-data and mzizi-mongodb crates",
+    description:
+      'Releases staging to main as the next minor above v4.14.x (nyuchi/.github#80). BREAKING (defaults change): --tier-community moves from malachite to terracotta and --tier-unverified from the off-palette #6B7280 to --status-neutral; the verified badge\'s community colour moves from #D4A574 / #8B4513 to canonical terracotta; verificationTokens labels become "Community Verified", "Contact Verified", "Government Verified" and "Licensed Professional"; mzizi-trust-gate\'s upgrade button is the primary pair instead of black on gold (#563). Kept a minor release by owner policy (majors are owner-only, by manual dispatch). Verification tiers are --tier-* roles defined once in N1 (four roles per tier, every platform target, contrast-gated) and read by trust-tiers, verified-badge, trust-meter, trust-gate, permission-gate, permission-badge and individual-profile-page; --color-<mineral>-light tokens for all seven minerals; mzizi-trust-meter contract 2.1.0 adds a tier prop (#563). /v1/brand\'s bundu row names shamwari as the third pillar; 78 stale var(--color-terracotta, #D4A574) fallbacks in 62 components are removed; mzizi-profile-block reads the tier roles (#564). New Mzizi Roots crates mzizi-harness, mzizi-data and mzizi-mongodb (a MongoDB client for Cloudflare Workers), with the data layer and client write path in mzizi-data (#502, #509, #512); they publish at the workspace version with the other crates and are wired into no app. CHANGELOG.md section [4.15.0] is the narrative. Tracking: #543.',
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 15,
+    patch: 0,
+    release_kind: "minor",
+    breaking: true,
+    released_at: "2026-10-24T20:00:00.000+00:00",
+    created_at: "2026-10-24T20:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.14.0",
     title:
       "v4.14.0 — the Kweli phase-2 fixes: trust-meter showScore (Breaking default), canonical --status-error and server-safe trust tiers, cover-header <img> cover and opt-in banner (Breaking default), event/review cards and rating, place-card and share-card labels with a QR plate, lazy brand mark (Breaking default), keyboard filter bar, and Kweli app icons",

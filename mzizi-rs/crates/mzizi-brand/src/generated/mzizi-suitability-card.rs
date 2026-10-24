@@ -65,7 +65,7 @@ impl SuitabilityLevel {
             Self::Excellent => "var(--color-malachite, #64FFDA)",
             Self::Good => "var(--color-cobalt, #00B0FF)",
             Self::Fair => "var(--color-gold, #FFD740)",
-            Self::Poor => "var(--color-terracotta, #D4A574)",
+            Self::Poor => "var(--color-terracotta)",
             Self::Unsuitable => "var(--color-destructive, #FF5252)",
         }
     }

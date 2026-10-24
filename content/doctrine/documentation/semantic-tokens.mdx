@@ -59,6 +59,20 @@ Mzizi uses 8 categories of semantic tokens that flow from N1 through all nodes. 
 | Moderation     | --moderation-\*   | approved, pending, flagged, rejected             |
 | Service Health | --health-\*       | operational, degraded, outage, maintenance       |
 
+## Verification tiers
+
+The five tiers of `system.verification_tier` each have a `--tier-*` role, defined once in `lib/tokens/roles.source.ts` and emitted by `pnpm tokens:sync` with light and dark values (owner decision 2026-10-24, #543). Each tier carries the same four roles as a status tone: `--tier-<id>` (icons, bars, tinted fills), `--tier-<id>-container`, `--tier-<id>-on-container` and `--tier-<id>-text`.
+
+| Level | Id           | Label                 | Family                               |
+| ----- | ------------ | --------------------- | ------------------------------------ |
+| 0     | `unverified` | Unverified            | the neutral grey, `--status-neutral` |
+| 1     | `community`  | Community Verified    | terracotta                           |
+| 2     | `otp`        | Contact Verified      | cobalt                               |
+| 3     | `government` | Government Verified   | gold                                 |
+| 4     | `licensed`   | Licensed Professional | tanzanite                            |
+
+The tiers are minerals because they are brand identity; heritage tones stay neutral and editorial. Components that show a tier (`mzizi-verified-badge`, `mzizi-trust-meter`, `mzizi-trust-gate`, `mzizi-permission-gate`, `permission-badge`) read these roles and never a raw hex.
+
 ## Usage Pattern
 
 ```css

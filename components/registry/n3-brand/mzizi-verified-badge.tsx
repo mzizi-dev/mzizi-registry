@@ -28,14 +28,15 @@ import { cn } from "@/lib/utils"
    
    AXIS 2 — VERIFICATION TIER (system.verification_tier)
      Identity ladder. How real are you?
-     Level 0: Unverified     — no badge
-     Level 1: Community      — Terracotta (var(--color-terracotta,#D4A574)) — +0.10
-     Level 2: OTP            — Cobalt (var(--tier-otp,var(--color-cobalt,#00B0FF)))     — +0.10 (cumulative 0.20)
-     Level 3: Government     — Gold (var(--tier-government,var(--color-gold,#FFD740)))       — +0.10 (cumulative 0.30)
-     Level 4: Licensed       — Tanzanite (var(--tier-licensed,var(--color-tanzanite,#B388FF)))  — +0.20 (cumulative 0.50)
+     Level 0: Unverified     — no badge (--tier-unverified, the neutral grey)
+     Level 1: Community      — Terracotta (var(--tier-community))  — +0.10
+     Level 2: OTP            — Cobalt (var(--tier-otp)), "Contact Verified" — +0.10 (cumulative 0.20)
+     Level 3: Government     — Gold (var(--tier-government))       — +0.10 (cumulative 0.30)
+     Level 4: Licensed       — Tanzanite (var(--tier-licensed))    — +0.20 (cumulative 0.50)
 
-   Each tier reads the --tier-* variable named after IT (government reads
-   --tier-government), so a consumer that sets one recolours that tier only.
+   Each tier reads the --tier-* role named after IT (government reads
+   --tier-government), defined once in the N1 tokens (owner decision
+   2026-10-24, #543), so a consumer that sets one recolours that tier only.
    
    AXIS 3 — TRUST SCORE (computed output)
      trust = sum(tier_increments up to current level) + status_modifier
@@ -136,13 +137,13 @@ function MziziVerifiedBadge({
         aria-label={ariaLabel ?? named("Account Suspended")}
         title={showTooltip ? named("Account Suspended") : undefined}
         className={cn(badgeSizeVariants({ size }), "opacity-40", className)}
-        style={{ backgroundColor: "rgba(107,107,102,0.15)" }}
+        style={{ backgroundColor: "color-mix(in oklab,var(--status-neutral) 15%,transparent)" }}
       >
         <Ban
           width={iconSize}
           height={iconSize}
           strokeWidth={2.5}
-          color="var(--status-neutral, #6B6B66)"
+          color="var(--status-neutral)"
         />
       </span>
     )

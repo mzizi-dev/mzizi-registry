@@ -121,7 +121,7 @@ const mineralColors: Record<string, string> = {
   cobalt: "var(--color-cobalt,#00B0FF)",
   gold: "var(--color-gold,#FFD740)",
   tanzanite: "var(--color-tanzanite,#B388FF)",
-  terracotta: "var(--color-terracotta,#D4A574)",
+  terracotta: "var(--color-terracotta)",
 }
 
 function TierMark({ tier, showLabel, label }: { tier: PlaceVerification; showLabel: boolean; label?: string }) {

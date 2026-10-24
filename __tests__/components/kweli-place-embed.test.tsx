@@ -41,14 +41,16 @@ const item = (name: string) => registry.items.find((i) => i.name === name)!
 
 describe("mzizi-verified-badge tier colours (the Mukoko ladder: government Gold, licensed Tanzanite)", () => {
   it("each tier reads the --tier-* variable named after it", () => {
-    expect(TIER_CONFIG.government.fg).toBe("var(--tier-government,var(--color-gold,#FFD740))")
-    expect(TIER_CONFIG.licensed.fg).toBe("var(--tier-licensed,var(--color-tanzanite,#B388FF))")
+    expect(TIER_CONFIG.government.fg).toBe("var(--tier-government,var(--color-gold))")
+    expect(TIER_CONFIG.licensed.fg).toBe("var(--tier-licensed,var(--color-tanzanite))")
+    expect(TIER_CONFIG.community.fg).toBe("var(--tier-community,var(--color-terracotta))")
+    expect(TIER_CONFIG.unverified.fg).toBe("var(--tier-unverified,var(--status-neutral))")
     expect(TIER_CONFIG.otp.fg).toContain("--tier-otp")
   })
 
   it("each tier's background is its own mineral", () => {
-    expect(TIER_CONFIG.government.bg).toBe("rgba(255,215,64,0.15)")
-    expect(TIER_CONFIG.licensed.bg).toBe("rgba(179,136,255,0.15)")
+    expect(TIER_CONFIG.government.bg).toBe("color-mix(in oklab,var(--tier-government,var(--color-gold)) 15%,transparent)")
+    expect(TIER_CONFIG.licensed.bg).toBe("color-mix(in oklab,var(--tier-licensed,var(--color-tanzanite)) 15%,transparent)")
   })
 
   it.each([
