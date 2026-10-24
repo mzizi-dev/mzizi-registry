@@ -18,6 +18,13 @@ Gaps 1 and 2 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in
 - **Cover image loading.** The cover `<img>` (both variants) now has `loading="lazy"` and `decoding="async"` by default, so a long list costs neither LCP nor bandwidth, and React no longer hoists a preload `<link>` for it. The new `priority` prop loads it eagerly with `fetchpriority="high"`, for the first card above the fold.
 - `__tests__/components/kweli-place-embed.test.tsx` covers both, in both variants. The place card has no contract file (a contract needs an Astro build, and the place card has none yet), so the rules are in the tests and in `registry.json`.
 
+### Fixed — `mzizi-icons` is no longer a client module, so Server Components can import `@/lib/icons` (2026-10-24, #551)
+
+Gap 5 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
+
+- `lib/icons/index.tsx` (`components/registry/n1-tokens/mzizi-icons.tsx`) started with `"use client"` and does `export * from "lucide-react"`. Next's flight loader rejects `export *` inside a client boundary when a server module imports it, so any Server Component that imported `@/lib/icons` failed to build. The file only re-exports icons and defines stateless components (`Icon`, `MukokoLogo`, `MineralStrip`), so the directive is removed. Client components that import it are unaffected: they get client copies as before. Kweli's stopgap for this can go when it re-vendors.
+- The `registry.json` description says the module is server-safe. A test in `__tests__/components/kweli-place-embed.test.tsx` fails if `"use client"` returns, or if the file starts using a hook or a browser global. No doc, skill or MCP install note relied on the directive.
+
 ### Changed — `mzizi-verified-badge` takes `label` and `ariaLabel` and drops the trust score from its name by default; `mzizi-permission-gate`'s upgrade action uses the primary pair (2026-10-24, #550)
 
 Gaps 3 and 4 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.

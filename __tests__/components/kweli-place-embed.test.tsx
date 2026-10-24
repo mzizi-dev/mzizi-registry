@@ -350,6 +350,15 @@ describe("mzizi-icons answers @/lib/icons", () => {
     expect(item("mzizi-icons").files[0].target).toBe("lib/icons/index.tsx")
   })
 
+  it("is not a client module, so a Server Component can import it (#543)", () => {
+    const src = readFileSync(path.join(ROOT, "components/registry/n1-tokens/mzizi-icons.tsx"), "utf8")
+    // Next's flight loader rejects `export *` inside a client boundary imported by a server module.
+    expect(src).toMatch(/^export \* from "lucide-react"/m)
+    expect(src).not.toMatch(/^\s*["']use client["']/m)
+    // Nothing in it needs the client: no hooks, no effects, no browser globals.
+    expect(src).not.toMatch(/\buse(State|Effect|LayoutEffect|Ref|Context|Reducer)\b|\bwindow\.|\bdocument\./)
+  })
+
   it("exports every name a registry component imports from @/lib/icons", () => {
     const wanted = new Set<string>()
     const walk = (dir: string) => {
