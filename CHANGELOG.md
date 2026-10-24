@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — `mzizi-event-card` gains price, description and share slots and all seven minerals; `mzizi-review-card` gains a headline, keeps line breaks, names its stars and shows the tier badge; a read-only `rating` is one named image (2026-10-24, #PRNUM)
+### Changed — `mzizi-event-card` gains price, description and share slots and all seven minerals; `mzizi-review-card` gains a headline, keeps line breaks, names its stars and shows the tier badge; a read-only `rating` is one named image (2026-10-24, #557)
 
 Items 4, 5 and 6 of the Kweli phase-2 gaps, tracked in #543.
 
