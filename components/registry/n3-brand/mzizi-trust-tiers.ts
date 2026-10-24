@@ -2,10 +2,16 @@
  * The Mukoko trust model's data, server-safe (#543): the verification tier ladder
  * (`TIER_CONFIG`), the platform-status overlay (`STATUS_OVERLAY`), their types and
  * `computeTrustScore`. No "use client", no hooks and no browser globals, so a Server Component,
- * an Astro page or an API route can import it. `mzizi-verified-badge` (a client component)
- * reads it from here and re-exports it, so existing imports from the badge keep working.
+ * an Astro page or an API route can import it. `mzizi-verified-badge` re-exports it, so
+ * existing imports from the badge keep working.
  *
  * Installs to lib/mzizi-trust-tiers.ts.
+ *
+ * THE DATA LIVES IN `mzizi-trust-tier-data`, which has no framework and no icon library in it
+ * (labels, levels, minerals, trust increments, the `--tier-*` token names and the classes that
+ * read them). This module adds only what React needs on top of it: the Lucide icon for each
+ * tier, and the `fg`/`bg` CSS values the older React components put in a `style`. Read the
+ * data module where you can; this one stays so every existing import keeps working.
  *
  * TIER COLOURS (owner decision 2026-10-24, #543). Every tier reads its `--tier-*` role, defined
  * once in the N1 tokens (`lib/tokens/roles.source.ts`): unverified → the neutral grey
@@ -16,102 +22,45 @@
  * the canonical mineral. A background is the tier at 15% (`color-mix`), not a fixed rgba.
  */
 import { Users, Phone, ShieldCheck, Award } from "@/lib/icons"
+import {
+  STATUS_OVERLAY,
+  TIER_DATA,
+  computeTrustScore,
+  type PlatformStatus,
+  type TierData,
+  type VerificationTier,
+} from "@/lib/mzizi-trust-tier-data"
 
-/** Verification tier codes from system.verification_tier.tier_code */
-type VerificationTier = "unverified" | "community" | "otp" | "government" | "licensed"
+const ICONS = { unverified: null, community: Users, otp: Phone, government: ShieldCheck, licensed: Award } as const
 
-/** Platform status from identity.person.mit_status */
-type PlatformStatus =
-  | "pre_verification"
-  | "living"
-  | "liveness_pending"
-  | "suspended"
-  | "presumed_ancestral"
-  | "verified_ancestral"
+/** `var(--tier-<x>,<the family it falls back to>)`, and the tier at 15% for a background. */
+function colours(d: TierData) {
+  const fallback = d.mineral ? `var(--color-${d.mineral.toLowerCase()})` : "var(--status-neutral)"
+  const fg = `var(${d.tokens.tier},${fallback})`
+  const bg = `color-mix(in oklab,${fg} 15%,transparent)`
+  return { fg, bg, fgLight: fg, bgLight: bg }
+}
 
-/** Full tier configuration mapping to system.verification_tier */
+function entry<T extends VerificationTier>(tier: T) {
+  const d = TIER_DATA[tier]
+  return {
+    level: d.level,
+    mineral: d.mineral,
+    label: d.label,
+    trustIncrement: d.trustIncrement,
+    cumulativeTrust: d.cumulativeTrust,
+    ...colours(d),
+    icon: ICONS[tier],
+  }
+}
+
+/** Full tier configuration mapping to system.verification_tier, with each tier's Lucide icon. */
 const TIER_CONFIG = {
-  unverified: {
-    level: 0,
-    mineral: null,
-    label: "Unverified",
-    trustIncrement: 0.0,
-    cumulativeTrust: 0.0,
-    fg: "var(--tier-unverified,var(--status-neutral))",
-    bg: "color-mix(in oklab,var(--tier-unverified,var(--status-neutral)) 15%,transparent)",
-    fgLight: "var(--tier-unverified,var(--status-neutral))",
-    bgLight: "color-mix(in oklab,var(--tier-unverified,var(--status-neutral)) 15%,transparent)",
-    icon: null,
-  },
-  community: {
-    level: 1,
-    mineral: "Terracotta",
-    label: "Community Verified",
-    trustIncrement: 0.1,
-    cumulativeTrust: 0.1,
-    fg: "var(--tier-community,var(--color-terracotta))",
-    bg: "color-mix(in oklab,var(--tier-community,var(--color-terracotta)) 15%,transparent)",
-    fgLight: "var(--tier-community,var(--color-terracotta))",
-    bgLight: "color-mix(in oklab,var(--tier-community,var(--color-terracotta)) 15%,transparent)",
-    icon: Users,
-  },
-  otp: {
-    level: 2,
-    mineral: "Cobalt",
-    label: "Contact Verified",
-    trustIncrement: 0.1,
-    cumulativeTrust: 0.2,
-    fg: "var(--tier-otp,var(--color-cobalt))",
-    bg: "color-mix(in oklab,var(--tier-otp,var(--color-cobalt)) 15%,transparent)",
-    fgLight: "var(--tier-otp,var(--color-cobalt))",
-    bgLight: "color-mix(in oklab,var(--tier-otp,var(--color-cobalt)) 15%,transparent)",
-    icon: Phone,
-  },
-  government: {
-    level: 3,
-    mineral: "Gold",
-    label: "Government Verified",
-    trustIncrement: 0.1,
-    cumulativeTrust: 0.3,
-    fg: "var(--tier-government,var(--color-gold))",
-    bg: "color-mix(in oklab,var(--tier-government,var(--color-gold)) 15%,transparent)",
-    fgLight: "var(--tier-government,var(--color-gold))",
-    bgLight: "color-mix(in oklab,var(--tier-government,var(--color-gold)) 15%,transparent)",
-    icon: ShieldCheck,
-  },
-  licensed: {
-    level: 4,
-    mineral: "Tanzanite",
-    label: "Licensed Professional",
-    trustIncrement: 0.2,
-    cumulativeTrust: 0.5,
-    fg: "var(--tier-licensed,var(--color-tanzanite))",
-    bg: "color-mix(in oklab,var(--tier-licensed,var(--color-tanzanite)) 15%,transparent)",
-    fgLight: "var(--tier-licensed,var(--color-tanzanite))",
-    bgLight: "color-mix(in oklab,var(--tier-licensed,var(--color-tanzanite)) 15%,transparent)",
-    icon: Award,
-  },
-} as const
-
-/** Status overlay configuration from system.platform_status_trust */
-const STATUS_OVERLAY = {
-  pre_verification: { modifier: 0.0, active: true, overlay: null },
-  living: { modifier: 0.0, active: true, overlay: null },
-  liveness_pending: { modifier: 0.0, active: true, overlay: null },
-  suspended: { modifier: -0.05, active: false, overlay: "suspended" as const },
-  presumed_ancestral: { modifier: 0.05, active: false, overlay: "ancestral" as const },
-  verified_ancestral: { modifier: 0.05, active: false, overlay: "ancestral" as const },
-} as const
-
-/* ── Utility: compute trust score (server or client) ─────────── */
-function computeTrustScore(tier: VerificationTier, status: PlatformStatus): number {
-  const statusConfig = STATUS_OVERLAY[status]
-
-  // Suspended/ancestral = fixed at modifier only
-  if (!statusConfig.active) return statusConfig.modifier
-
-  // Active = cumulative tier score + status modifier
-  return TIER_CONFIG[tier].cumulativeTrust + statusConfig.modifier
+  unverified: entry("unverified"),
+  community: entry("community"),
+  otp: entry("otp"),
+  government: entry("government"),
+  licensed: entry("licensed"),
 }
 
 export { TIER_CONFIG, STATUS_OVERLAY, computeTrustScore }

@@ -796,12 +796,17 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "as",
-      "type": "\"input\" | \"textarea\" | \"select\"",
+      "type": "\"input\" | \"textarea\" | \"select\" | \"checkbox\" | \"switch\" | \"radio-group\"",
       "required": false
     },
     {
       "name": "options",
       "type": "FieldOption[]",
+      "required": false
+    },
+    {
+      "name": "checked",
+      "type": "boolean",
       "required": false
     },
     {
@@ -10859,6 +10864,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "status",
       "type": "PlatformStatus",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | null",
       "required": false
     },
     {

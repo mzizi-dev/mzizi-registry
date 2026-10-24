@@ -19,6 +19,27 @@ Gap 3 of the Kweli business-dashboard inventory ([packages-npm#79](https://githu
 - **`ui-utils`** gains `initialsOf(name)`; **`site-icons`** gains `more`.
 - Contract 1.1.0 → 1.2.0 (minor: a new prop and new cell fields, nothing removed): a `team` state, 2 new clauses, 15 new checks and 3 density rows (32px fine, 44px coarse). Both builds keep it with no script.
 
+### Added — `app/form-field` 1.2: checkbox, switch and radio-group controls (2026-10-24, #570)
+
+Gap 13 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): settings had no way to build an on/off preference.
+
+- **`as="checkbox"`** and **`as="switch"`**: a native `<input type="checkbox">` inside its `<label>`, so the whole row is the hit area (36px, 48px on touch). A switch adds `role="switch"` and is a pill track whose thumb moves to the end when on, so the state is never colour alone. New `checked` prop; `value` is what is posted when checked (default `"on"`).
+- **`as="radio-group"`**: a `<fieldset>` whose `<legend>` is the label, one native radio per `options` entry; the option whose value is `value` is checked.
+- Same wiring as the other controls: id, name, `required`, `aria-describedby` (hint, then error) and `aria-invalid`; `readonly` disables a choice control (it has no read-only state), as it does a select. Checked controls take the shell's accent (`--app-accent`, else `--primary`).
+- **`ui-variants`** gains `appChoiceRowClasses`, `appCheckClasses` and `appSwitchClasses`, shared by the Astro and React builds.
+- Contract 1.1.0 → 1.2.0 (minor: new values for `as`, a new prop, nothing removed): 4 new states, 5 new clauses, 11 new checks, 3 new density rows. Both builds keep it with no script.
+
+### Added — `ui/mzizi-verified-badge` contract with an Astro build, and the tier ladder as framework-free data (2026-10-24, #568)
+
+Gaps 5 and 7 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)).
+
+- **`contracts/ui/mzizi-verified-badge.contract.json` 1.0.0**: 12 states (each tier, score, label, ariaLabel, no title, suspended, ancestral, unverified, loading), 9 clauses, 15 checks. The Astro build is new (`mzizi-verified-badge.astro`, the default build) and the React build keeps the whole contract (`identity: "contract"`).
+- **`mzizi-trust-tier-data`** (new, `registry:lib`, installs to `lib/mzizi-trust-tier-data.ts`): `TIER_ORDER`, `TIER_DATA` (label, level, mineral, trust increments, the site-icons glyph, the `--tier-*` token names and complete literal classes per tier), `STATUS_OVERLAY`, `tierAt`, `nextTier` and `computeTrustScore`. No framework, no icon library and no `@/` import, so an Astro component imports it flat and `@bundu/ui` can ship it as a plain module.
+- **`mzizi-trust-tiers`** is now built from that module and adds only the Lucide icons and the `fg`/`bg` CSS values. `TIER_CONFIG`, `STATUS_OVERLAY`, `computeTrustScore` and the types keep their names and values, and `mzizi-verified-badge` still re-exports them.
+- **`site-icons`** gains `phone`, `award`, `ban` and `flower`.
+
+**Changed (visible):** the React badge is a server component with no `"use client"`, no `class-variance-authority` and no inline `style`. Each tier draws its fill and glyph from its own APCA-gated pair (`bg-tier-<tier>-container`, `text-tier-<tier>-on-container`) instead of the tier at 15% behind the tier colour, the glyphs are the design system's (`site-icon`) instead of Lucide, and a suspended or ancestral badge is no longer dimmed with opacity: the ban and flower glyphs and the name carry the status. The loading placeholder is `aria-hidden`. Names, titles, `data-*` attributes and props are unchanged; `size` gains nothing and loses nothing (`sm`, `md`, `lg`, `xl`).
+
 ### Security — `mzizi-mongodb`: server error text dropped, cross-collection reads refused, a 64 KiB reply cap before login, secrets zeroised, a neutral driver name (2026-10-24, #567)
 
 The six items left open by the security review on #502. Each fix has a regression test that fails without it (checked by reverting each fix with the tests in place). Server contract `mzizi-mongodb` 1.0.0 → 2.0.0.
