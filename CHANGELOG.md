@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `app/form-field` 1.2: checkbox, switch and radio-group controls (2026-10-24, #PRNUM)
+### Added — `app/form-field` 1.2: checkbox, switch and radio-group controls (2026-10-24, #570)
 
 Gap 13 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): settings had no way to build an on/off preference.
 
