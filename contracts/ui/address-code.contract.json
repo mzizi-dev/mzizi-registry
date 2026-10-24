@@ -1,0 +1,170 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/address-code",
+  "title": "AddressCode",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "A Kweli address code as a chip: the code in the mono face (a <code>), and a link that opens the address. Without `href` the chip is the code alone.",
+  "implementations": {
+    "astro": {
+      "registry": "address-code",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/AddressCode.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "address-code",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true,
+      "description": "The address code, e.g. \"NYU-7K2Q\"."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "Where the code resolves (\"https://kweli.mukoko.com/a/NYU-7K2Q\"). No link without it."
+    },
+    {
+      "name": "linkLabel",
+      "type": "string",
+      "required": false,
+      "default": "Open",
+      "description": "The link's visible text."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "default": "Address",
+      "description": "What the code is, for assistive technology; also names the link."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The code is a <code> in the mono face with wide tracking, so it can be copied by eye or read aloud.",
+    "With `href`, a 44px link follows the code; its accessible name is \"<linkLabel> <label> <code>\", so repeated chips never read as identical links.",
+    "Without `href`, there is no link and no empty control.",
+    "Colour is semantic: the chip is the card on its border; the link is --primary, so a brand overlay (Kweli's malachite) colours it."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "code": "NYU-7K2Q",
+        "href": "https://kweli.mukoko.com/a/NYU-7K2Q"
+      }
+    },
+    "code-only": {
+      "props": {
+        "code": "NYU-7K2Q"
+      }
+    },
+    "labelled": {
+      "props": {
+        "code": "HRE-2M9X",
+        "href": "https://kweli.mukoko.com/a/HRE-2M9X",
+        "linkLabel": "Directions",
+        "label": "Venue address"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["link"],
+    "keyboard": ["Tab to the link; Enter follows it."],
+    "focus": ["The --ring focus ring on the link."],
+    "aria": [
+      "A visually hidden label names what the code is; the link's aria-label names the code it opens."
+    ],
+    "wcag": ["1.3.1", "2.4.4", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "link",
+      "select": "a",
+      "fine": 44,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--border",
+      "--foreground",
+      "--muted-foreground",
+      "--primary",
+      "--ring",
+      "--muted"
+    ],
+    "brandOverlay": "Only --primary (the link) and --ring change with the brand; Kweli's overlay makes them malachite.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": [
+    "The code truncates in a narrow container; the link never shrinks."
+  ],
+  "contract": "contract\n  slot is \"address-code\"\n  portal is \"https://mzizi.dev/components/address-code\"\n  class has \"rounded-full\"\n  when default shows code \"NYU-7K2Q\"\n  a \"Open\" min_height 44\n  when labelled shows a \"Directions\"\nend",
+  "checks": [
+    {
+      "say": "The code is one <code>.",
+      "state": "*",
+      "select": "[data-slot=\"address-code-value\"]",
+      "count": 1
+    },
+    {
+      "say": "The code is in the mono face.",
+      "state": "*",
+      "select": "code.font-mono",
+      "count": 1
+    },
+    {
+      "say": "One link, to the address.",
+      "select": "a",
+      "count": 1,
+      "attr": {
+        "href": "https://kweli.mukoko.com/a/NYU-7K2Q",
+        "aria-label": "Open address NYU-7K2Q"
+      }
+    },
+    {
+      "say": "The link's name names the code.",
+      "state": "labelled",
+      "select": "a",
+      "count": 1,
+      "attr": {
+        "aria-label": "Directions venue address HRE-2M9X"
+      }
+    },
+    {
+      "say": "No href, no link.",
+      "state": "code-only",
+      "select": "a",
+      "absent": true
+    },
+    {
+      "say": "The label is there for assistive technology.",
+      "select": ".sr-only",
+      "count": 1,
+      "text": "Address"
+    }
+  ],
+  "gaps": [
+    "No copy-to-clipboard: the component has no script. An app that wants one adds it beside the chip; a copy action belongs in a separate enhancement, not this contract."
+  ]
+}
