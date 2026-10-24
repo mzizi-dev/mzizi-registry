@@ -649,6 +649,15 @@
       "astro": "mzizi-trust-meter",
       "tsx": "mzizi-trust-meter",
       "rs": null
+    },
+    {
+      "name": "ui/mzizi-verified-badge",
+      "title": "MziziVerifiedBadge",
+      "version": "1.0.0",
+      "file": "ui/mzizi-verified-badge.contract.json",
+      "astro": "mzizi-verified-badge",
+      "tsx": "mzizi-verified-badge",
+      "rs": null
     }
   ]
 }
