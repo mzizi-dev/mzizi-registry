@@ -258,6 +258,7 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-text: var(--destructive-text);
+  --color-status-error: var(--status-error);
   --color-overlay-foreground: var(--overlay-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
@@ -630,6 +631,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #9f221b; /* derived: #B3261E measures Lc 70.6 against base / surface; walked toward #000000 to Lc 75 */
+  --status-error: var(--destructive);
   --border-control: #787774; /* derived: #E7E5E0 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #000000 to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
@@ -1073,6 +1075,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #f3c0bd; /* derived: #F2B8B5 measures Lc 71.6 against base / surface; walked toward #FFFFFF to Lc 75 */
+  --status-error: var(--destructive);
   --border-control: #818180; /* derived: #2A2927 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #FFFFFF to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */

@@ -18,6 +18,11 @@
  * ({ label, count, detail? }) and the meter lists them under the bar, one 44px row each, in a
  * <ul>, instead of the breakdown — Kweli's "Address trust" panel is
  * <MziziTrustMeter title="Address trust" trustScore={…} signals={[…]} />.
+ *
+ * SCORES ARE HIDDEN BY DEFAULT (#543), as on the verified badge since #550: the header names
+ * the level ("Strong", "Growing", "Low", "None") and the bars show proportion, but no raw
+ * number is written unless `showScore` is set. The meter keeps `aria-valuenow` (role="meter"
+ * requires it) and adds `aria-valuetext` with the level, so assistive tech announces the word.
  */
 import { Icon } from "@/components/ui/site-icon"
 import { cn } from "@/lib/utils"
@@ -63,6 +68,13 @@ interface MziziTrustMeterProps {
   title?: string
   /** Counted signals (address, place or venue trust). Replaces the three-signal breakdown. */
   signals?: TrustSignalCount[]
+  /**
+   * Write the raw scores: the composite to three decimals over "/ 1.000" and each breakdown
+   * signal's value. Off by default (#543, matching the verified badge's `showScore` since #550):
+   * the level word is shown instead, because a raw score is a number for a trust audit, not
+   * for a reader.
+   */
+  showScore?: boolean
   className?: string
 }
 
@@ -72,6 +84,13 @@ const PORTAL = "https://mzizi.dev/components/mzizi-trust-meter"
 const width = (v: number) => String(Math.round(Math.min(Math.max(v, 0), 1) * 10000) / 100)
 
 type Level = "strong" | "growing" | "low" | "none"
+/** The level as words: the meter's text when scores are hidden, and its aria-valuetext. */
+const LEVEL_LABEL: Record<Level, string> = {
+  strong: "Strong",
+  growing: "Growing",
+  low: "Low",
+  none: "None",
+}
 const SCORE_TEXT: Record<Level, string> = {
   strong: "text-status-success",
   growing: "text-status-warning",
@@ -97,6 +116,7 @@ function MziziTrustMeter({
   compact = false,
   title = "Trust Score",
   signals,
+  showScore = false,
   className,
 }: MziziTrustMeterProps) {
   if (loading)
@@ -167,6 +187,7 @@ function MziziTrustMeter({
       aria-valuemin={0}
       aria-valuemax={1}
       aria-valuenow={trustScore}
+      aria-valuetext={showScore ? undefined : LEVEL_LABEL[level]}
       className={cn("rounded-lg bg-card p-4 text-card-foreground ring-1 ring-foreground/10", className)}
     >
       <div className="flex items-center justify-between">
@@ -176,12 +197,18 @@ function MziziTrustMeter({
             {title}
           </span>
         </div>
-        <div className="flex items-baseline gap-1.5">
-          <span data-slot="trust-meter-score" className={cn("text-2xl font-bold", SCORE_TEXT[level])}>
-            {trustScore.toFixed(3)}
+        {showScore ? (
+          <div className="flex items-baseline gap-1.5">
+            <span data-slot="trust-meter-score" className={cn("text-2xl font-bold", SCORE_TEXT[level])}>
+              {trustScore.toFixed(3)}
+            </span>
+            <span className="text-xs text-muted-foreground">/ 1.000</span>
+          </div>
+        ) : (
+          <span data-slot="trust-meter-level" className={cn("text-sm font-semibold", SCORE_TEXT[level])}>
+            {LEVEL_LABEL[level]}
           </span>
-          <span className="text-xs text-muted-foreground">/ 1.000</span>
-        </div>
+        )}
       </div>
 
       <span className="mt-3 block h-2 w-full overflow-hidden rounded-full bg-foreground/[0.06]">
@@ -231,7 +258,11 @@ function MziziTrustMeter({
                 </div>
                 <div className="flex items-center gap-2">
                   {signal.detail && <span className="text-[10px] text-muted-foreground">{signal.detail}</span>}
-                  <span className={cn("text-xs font-semibold", signal.text)}>{signal.value.toFixed(3)}</span>
+                  {showScore && (
+                    <span data-slot="trust-breakdown-value" className={cn("text-xs font-semibold", signal.text)}>
+                      {signal.value.toFixed(3)}
+                    </span>
+                  )}
                 </div>
               </div>
               <span className="block h-1 w-full overflow-hidden rounded-full bg-foreground/[0.04]">

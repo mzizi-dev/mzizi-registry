@@ -11,6 +11,10 @@
  * Content-Security-Policy needs no `style-src-attr 'unsafe-inline'`. Colour is semantic: the
  * score and the Verification and Status signals use the `--status-*` tokens; the Ubuntu signal
  * is tanzanite in every brand, because it names the Ubuntu axis, not the brand.
+ *
+ * Scores are hidden by default (#543, as on the verified badge since #550): the header names the
+ * level and no raw number is written unless `showScore` is set. `aria-valuenow` stays (role="meter"
+ * requires it) and `aria-valuetext` carries the level.
  */
 import Icon from "./site-icon.astro";
 import { cn } from "./ui-utils";
@@ -44,6 +48,8 @@ interface Props {
   title?: string;
   /** Counted signals (address, place or venue trust). Replaces the three-signal breakdown. */
   signals?: TrustSignalCount[];
+  /** Write the raw scores (composite to three decimals, each signal's value). Off by default: the level word is shown. */
+  showScore?: boolean;
   /** Render the skeleton. */
   loading?: boolean;
   class?: string;
@@ -60,6 +66,7 @@ const {
   compact = false,
   title = "Trust Score",
   signals,
+  showScore = false,
   loading = false,
   class: className,
 } = Astro.props;
@@ -70,6 +77,8 @@ const width = (v: number) => String(Math.round(Math.min(Math.max(v, 0), 1) * 100
 
 /* Score level: strong, growing, low, none. */
 const level = trustScore >= 0.4 ? "strong" : trustScore >= 0.2 ? "growing" : trustScore >= 0.05 ? "low" : "none";
+/** The level as words: the text when scores are hidden, and the meter's aria-valuetext. */
+const levelLabel = { strong: "Strong", growing: "Growing", low: "Low", none: "None" }[level];
 const scoreText = {
   strong: "text-status-success",
   growing: "text-status-warning",
@@ -148,6 +157,7 @@ const name = title === "Trust Score" ? "Trust score" : title;
       aria-valuemin="0"
       aria-valuemax="1"
       aria-valuenow={String(trustScore)}
+      aria-valuetext={showScore ? undefined : levelLabel}
       class={cn("rounded-lg bg-card p-4 text-card-foreground ring-1 ring-foreground/10", className)}
     >
       <div class="flex items-center justify-between">
@@ -155,10 +165,14 @@ const name = title === "Trust Score" ? "Trust score" : title;
           <Icon name="trending-up" class="size-4 text-muted-foreground" />
           <span data-slot="trust-meter-title" class="text-sm font-medium text-foreground">{title}</span>
         </div>
-        <div class="flex items-baseline gap-1.5">
-          <span data-slot="trust-meter-score" class={cn("text-2xl font-bold", scoreText)}>{trustScore.toFixed(3)}</span>
-          <span class="text-xs text-muted-foreground">/ 1.000</span>
-        </div>
+        {showScore ? (
+          <div class="flex items-baseline gap-1.5">
+            <span data-slot="trust-meter-score" class={cn("text-2xl font-bold", scoreText)}>{trustScore.toFixed(3)}</span>
+            <span class="text-xs text-muted-foreground">/ 1.000</span>
+          </div>
+        ) : (
+          <span data-slot="trust-meter-level" class={cn("text-sm font-semibold", scoreText)}>{levelLabel}</span>
+        )}
       </div>
 
       <span class="mt-3 block h-2 w-full overflow-hidden rounded-full bg-foreground/[0.06]">
@@ -194,7 +208,9 @@ const name = title === "Trust Score" ? "Trust score" : title;
                 </div>
                 <div class="flex items-center gap-2">
                   {signal.detail && <span class="text-[10px] text-muted-foreground">{signal.detail}</span>}
-                  <span class={cn("text-xs font-semibold", signal.text)}>{signal.value.toFixed(3)}</span>
+                  {showScore && (
+                    <span data-slot="trust-breakdown-value" class={cn("text-xs font-semibold", signal.text)}>{signal.value.toFixed(3)}</span>
+                  )}
                 </div>
               </div>
               <span class="block h-1 w-full overflow-hidden rounded-full bg-foreground/[0.04]">
