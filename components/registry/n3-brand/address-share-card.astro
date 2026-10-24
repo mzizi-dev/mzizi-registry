@@ -7,7 +7,8 @@
  * with no account; this card is that link in a form a phone camera, a printer or a
  * WhatsApp screenshot can carry. The QR encodes `url` exactly. It is drawn server-side as
  * one SVG path (`./qr-matrix`, on `uqr`) in `currentColor`, so it needs no script and no
- * image request, and its colour is the card's foreground. The link is also written out,
+ * image request. It sits on a `surface-qr` plate, white in every theme, in `on-surface-qr`
+ * ink, so the code is never inverted in a dark theme (#543). The link is also written out,
  * because a QR code is not readable by everyone: `aria-label` on the image names what it
  * opens, and the visible link opens the same place.
  *
@@ -28,10 +29,15 @@ interface Props {
   title?: string;
   /** How to find the entrance, in words. */
   directions?: string;
+  /**
+   * What the code is, for assistive technology: the address code chip's `label` ("Address" by
+   * default; "Delivery code", or the app's own language).
+   */
+  codeLabel?: string;
   class?: string;
 }
 
-const { code, url, title, directions, class: className } = Astro.props;
+const { code, url, title, directions, codeLabel, class: className } = Astro.props;
 const qr = qrMatrix(url);
 const shown = url.replace(/^https?:\/\//, "");
 ---
@@ -42,15 +48,17 @@ const shown = url.replace(/^https?:\/\//, "");
   class={cn("flex w-full max-w-sm flex-col items-center gap-4 rounded-lg border border-border bg-card p-6 text-center text-card-foreground", className)}
 >
   {title && <h3 data-slot="address-share-card-title" class="font-serif text-h5 font-semibold text-foreground">{title}</h3>}
-  <svg
-    data-slot="address-qr"
-    role="img"
-    aria-label={`QR code that opens ${url}`}
-    viewBox={`0 0 ${qr.size} ${qr.size}`}
-    shape-rendering="crispEdges"
-    class="size-48 text-foreground"
-  ><path fill="currentColor" d={qr.d}></path></svg>
-  <AddressCode code={code} />
+  <span data-slot="address-qr-plate" class="block rounded-md bg-surface-qr p-3 text-on-surface-qr">
+    <svg
+      data-slot="address-qr"
+      role="img"
+      aria-label={`QR code that opens ${url}`}
+      viewBox={`0 0 ${qr.size} ${qr.size}`}
+      shape-rendering="crispEdges"
+      class="block size-48"
+    ><path fill="currentColor" d={qr.d}></path></svg>
+  </span>
+  <AddressCode code={code} label={codeLabel} />
   <a
     href={url}
     data-slot="address-share-card-link"

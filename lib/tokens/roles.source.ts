@@ -542,6 +542,31 @@ export const ROLES: readonly Role[] = [
     default: { background: "muted" },
     block: "ladder",
   },
+  /*
+   * The QR plate (#543). A QR code reads most reliably as dark modules on a light ground with
+   * a light quiet zone, and some scanners cannot read an inverted (light-on-dark) code. So the
+   * plate stays light in EVERY theme, and its ink stays dark. The values are the canon's own
+   * white and ink, the pair `onWhiteOrInk` already uses, fixed rather than themed.
+   */
+  {
+    name: "surface-qr",
+    group: "surface",
+    kind: "surface",
+    required: true,
+    description: "The plate behind a QR code: white in every theme, so the code is never inverted.",
+    default: { literal: "#FFFFFF" },
+    block: "roles",
+  },
+  {
+    name: "on-surface-qr",
+    group: "surface",
+    kind: "text",
+    required: true,
+    description: "A QR code's modules on `surface-qr`: the canon's ink in every theme.",
+    contrast: fg("surface-qr"),
+    default: { literal: "#0E0D0C" },
+    block: "roles",
+  },
 
   // ── Text ──
   {
@@ -706,6 +731,24 @@ export const ROLES: readonly Role[] = [
     contrast: { against: ON_PAGE, min: BODY },
     default: { role: "error" },
     derive: "text",
+    block: "roles",
+  },
+  {
+    /*
+     * `--status-error`: the name N1's `statusTokens` gives the error status and
+     * that components use (`text-status-error`, `var(--status-error, …)`) beside
+     * `--status-success` / `--status-warning`. It was defined only in the site's
+     * own stylesheet, so a consumer of the distributed tokens fell through to each
+     * component's hex fallback (#543). An alias of `destructive`: one decision for
+     * "error" (red, never the terracotta `status-danger`).
+     */
+    name: "status-error",
+    group: "destructive",
+    kind: "ui",
+    required: true,
+    description: "The error status (`text-status-error`, `fill-status-error`): an alias of `destructive`, red, never the terracotta `status-danger`.",
+    contrast: { against: ON_PAGE, min: UI },
+    default: { role: "destructive" },
     block: "roles",
   },
   { name: "overlay-foreground", group: "shadcn", kind: "text", required: true, description: "Text on `overlay`.", contrast: fg("overlay"), default: { role: "text-primary" }, block: "shadcn" },

@@ -138,6 +138,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "directions",
       "type": "string",
       "required": false
+    },
+    {
+      "name": "codeLabel",
+      "type": "string",
+      "required": false
     }
   ],
   "admin-page": [
@@ -561,6 +566,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "decorative",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "\"lazy\" | \"eager\"",
       "required": false
     }
   ],
@@ -3878,6 +3888,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "current",
       "type": "boolean | string",
       "required": false
+    },
+    {
+      "name": "linkComponent",
+      "type": "React.ComponentType<CategoryChipLinkProps>",
+      "required": false
     }
   ],
   "discover-category-chips": [
@@ -4822,6 +4837,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "showClear",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
       "required": false
     }
   ],
@@ -6911,6 +6931,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "coverAlt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "priority",
+      "type": "boolean",
+      "required": false
+    },
+    {
       "name": "avatar",
       "type": "string",
       "required": false
@@ -6943,6 +6973,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "coverHeight",
       "type": "\"sm\" | \"md\" | \"lg\"",
+      "required": false
+    },
+    {
+      "name": "banner",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -7635,7 +7670,32 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "mineral",
-      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\"",
+      "type": "EventMineral",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "price",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "free",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "freeLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "share",
+      "type": "React.ReactNode",
       "required": false
     }
   ],
@@ -9239,6 +9299,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "tierLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "linkLabel",
+      "type": "string",
+      "required": false
+    },
+    {
       "name": "mineral",
       "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
       "required": false
@@ -9864,6 +9934,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "rating",
       "type": "number",
       "required": true
+    },
+    {
+      "name": "headline",
+      "type": "string",
+      "required": false
     },
     {
       "name": "text",
@@ -10671,6 +10746,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "signals",
       "type": "TrustSignalCount[]",
+      "required": false
+    },
+    {
+      "name": "showScore",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -11801,6 +11881,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "showValue",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
       "required": false
     }
   ],

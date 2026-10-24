@@ -87,3 +87,42 @@ describe("MziziTrustMeter signal counts", () => {
     expect(ubuntu?.getAttribute("width")).toBe("100")
   })
 })
+
+describe("MziziTrustMeter showScore (#543)", () => {
+  it("by default writes no raw score: the level is named, and is the meter's value text", () => {
+    const root = html(<MziziTrustMeter trustScore={0.3} verificationScore={0.4} ubuntuScore={0.1} />)
+    expect(root.querySelector('[data-slot="trust-meter-score"]')).toBeNull()
+    expect(root.querySelector('[data-slot="trust-breakdown-value"]')).toBeNull()
+    expect(root.querySelector('[data-slot="trust-meter-level"]')?.textContent).toBe("Growing")
+    expect(root.textContent).not.toMatch(/\d\.\d{3}/)
+    const meter = root.querySelector('[role="meter"]')
+    expect(meter?.getAttribute("aria-valuetext")).toBe("Growing")
+    expect(meter?.getAttribute("aria-valuenow")).toBe("0.3")
+  })
+
+  it("showScore writes the composite and each signal's value", () => {
+    const root = html(<MziziTrustMeter trustScore={0.3} verificationScore={0.4} showScore />)
+    expect(root.querySelector('[data-slot="trust-meter-score"]')?.textContent).toBe("0.300")
+    expect(root.querySelectorAll('[data-slot="trust-breakdown-value"]')).toHaveLength(3)
+    expect(root.querySelector('[data-slot="trust-meter-level"]')).toBeNull()
+    expect(root.querySelector('[role="meter"]')?.hasAttribute("aria-valuetext")).toBe(false)
+  })
+})
+
+describe("mzizi-trust-tiers (#543)", () => {
+  it("is server-safe: no \"use client\", no hooks, no browser globals", async () => {
+    const { readFileSync } = await import("node:fs")
+    const src = readFileSync("components/registry/n3-brand/mzizi-trust-tiers.ts", "utf8")
+    expect(src).not.toMatch(/^\s*["']use client["']/m)
+    expect(src).not.toMatch(/\buse(State|Effect|Ref|Memo|Callback|Context)\b/)
+    expect(src).not.toMatch(/\b(window|document|localStorage)\./)
+  })
+
+  it("is the badge's ladder: the badge re-exports the same objects", async () => {
+    const tiers = await import("@/lib/mzizi-trust-tiers")
+    const badge = await import("@/components/registry/n3-brand/mzizi-verified-badge")
+    expect(badge.TIER_CONFIG).toBe(tiers.TIER_CONFIG)
+    expect(badge.STATUS_OVERLAY).toBe(tiers.STATUS_OVERLAY)
+    expect(tiers.computeTrustScore("government", "living")).toBe(0.3)
+  })
+})
