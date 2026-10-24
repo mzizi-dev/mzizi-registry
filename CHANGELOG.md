@@ -37,9 +37,15 @@ Two of the Kweli gaps tracked in #543.
 - **`--radius-xs` (4px).** The radius ladder gains `xs`, the unit less 3 (`calc(var(--radius-unit) - 3px)` in `styles/globals.css`), for the smallest marks: legend swatches, kbd keys, inline tags. Before this a consumer's `rounded-xs` fell through to Tailwind's default (2px) because Mzizi defined no `xs`. `brandMeta.radii`, the role ladder, `lib/tokens`, every N1 platform file (`--r-xs` and `--radius-xs` in `mzizi-tokens-globals.css`, `Radius::XS` in Rust, and the Swift, Kotlin, ArkTS, Python and React Native scales) and `design-system/tokens.json` carry it; `/v1/brand` `.radii` gains `xs` and its `system` note now reads "Ecosystem numbers: 4, 7, 12, 14, 17". No registry component changes radius.
 - **`2xl` stays 17px.** The issue asked whether `radii.2xl` should be 24px, as an old `nyuchi-design` skill said. Canon says 17: `brandMeta.radii`, `styles/globals.css` (`--radius-2xl: calc(var(--radius-unit) + 10px)`), `design-system/README.md` and the current `mzizi-design` skill in `@nyuchi/mzizi-skills`, which dropped the 24px line in 0.8.0. Nothing changes for `2xl`; the stale copy is the pre-0.8.0 `nyuchi-design` skill, which is no longer published.
 
-### Security — dependency floors for the advisories that failed `audit:check` on `staging` (2026-10-24, #544)
+### Security — zod 3 removed, and floors for the advisories that failed `audit` (2026-10-24, #545)
 
-`pnpm audit --audit-level=moderate` failed on `staging`'s lockfile with four new advisories, so it failed every pull request. Raised to the first patched release: `undici` override `^7.30.1` (three advisories, through `astro > unifont`), `fast-uri` override `^3.1.9` (two, through `shadcn > … > ajv`), new `body-parser` override `^2.4.0` (through `shadcn > @modelcontextprotocol/sdk > express`), and `zod` `^4.6.7` as the dependency (GHSA-mrhx-c7xc-m3w5, `<4.6.6`). The same advisory matched the `zod` 3.25.76 that the `shadcn` CLI pinned (`zod ^3.24.1`, no patched 3.x), so the `shadcn` devDependency moves to `^4.22.1`, the first release on `zod` 4. One `zod` (4.6.7) is left in the tree. `audit:check` exits 0.
+GHSA-mrhx-c7xc-m3w5 (high) affects every zod 3 release and zod 4 below 4.6.6, and no 3.x is patched, so the org `audit` check failed every pull request (first seen on #544). zod 3.25.76 came in through `shadcn` 4.21 (which depends on `zod ^3.24.1`) and was shared by `@modelcontextprotocol/sdk` and `zod-to-json-schema`, whose peer ranges both accept zod 4.
+
+- `shadcn` `^4.22.1` (was `^4.21.0`), which depends on `zod ^4.2.0`. `shadcn build` still builds all 657 items.
+- `zod` `^4.6.7` (was `^4.6.2`), plus an override `"zod@<4.6.6": ">=4.6.6"`, so no zod below the fixed release can come back through a transitive range. The lockfile now resolves only zod 4.6.7.
+- New advisories that failed the same check, raised to the first patched release: `body-parser` override `^2.4.0` (GHSA-27r3-jxmh-p828, high), `undici` `^7.30.1` (GHSA-xjj6-f33q-929c high, GHSA-4qv8-2p9j-2685 and GHSA-f72v-6w45-q472 moderate), `fast-uri` `^3.1.9` (GHSA-w74x-v6f9-j3xg, GHSA-wjr9-j795-jxcr, moderate).
+
+After this, `pnpm audit:check` reports one low and exits 0; `typecheck`, `test` (1,251 + 481) and `lint` pass.
 
 ## [4.11.0] - 2026-10-23
 
