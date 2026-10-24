@@ -2287,6 +2287,12 @@ export const roles = {
     light: "#9F221B",
     dark: "#F3C0BD",
   },
+  "status-error": {
+    kind: "ui",
+    cssVar: "--status-error",
+    light: "#B3261E",
+    dark: "#F3BDBA",
+  },
   "overlay-foreground": {
     kind: "text",
     cssVar: "--overlay-foreground",

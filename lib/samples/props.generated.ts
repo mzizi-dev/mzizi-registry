@@ -10672,6 +10672,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "signals",
       "type": "TrustSignalCount[]",
       "required": false
+    },
+    {
+      "name": "showScore",
+      "type": "boolean",
+      "required": false
     }
   ],
   "mzizi-update-prompt": [
