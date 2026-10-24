@@ -18,7 +18,7 @@ interface ReminderCardProps extends React.ComponentProps<"div"> {
 const priorityColors = {
   low: "border-l-[var(--color-cobalt,#00B0FF)]",
   medium: "border-l-[var(--color-gold,#FFD740)]",
-  high: "border-l-[var(--color-terracotta,#D4A574)]",
+  high: "border-l-[var(--color-terracotta)]",
 }
 
 function ReminderCard({

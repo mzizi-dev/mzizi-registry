@@ -14,7 +14,7 @@ const DEFAULT_DATA = [
   { name: "Tanzanite", value: 200, fill: "var(--color-accent, var(--color-tanzanite, #B388FF))" },
   { name: "Malachite", value: 187, fill: "var(--status-success, var(--color-malachite, #64FFDA))" },
   { name: "Gold", value: 173, fill: "var(--status-warning, var(--color-gold, #FFD740))" },
-  { name: "Terracotta", value: 90, fill: "var(--status-error, var(--color-terracotta, #D4A574))" },
+  { name: "Terracotta", value: 90, fill: "var(--status-error, var(--color-terracotta))" },
 ]
 
 const config = {
@@ -23,7 +23,7 @@ const config = {
   tanzanite: { label: "Tanzanite", color: "var(--color-cobalt, #00B0FF)" },
   malachite: { label: "Malachite", color: "var(--color-malachite, #64FFDA)" },
   gold: { label: "Gold", color: "var(--color-gold, #FFD740)" },
-  terracotta: { label: "Terracotta", color: "var(--color-terracotta, #D4A574)" },
+  terracotta: { label: "Terracotta", color: "var(--color-terracotta)" },
 } satisfies ChartConfig
 
 export function ChartRadialShape({ loading = false }: { loading?: boolean } = {}) {

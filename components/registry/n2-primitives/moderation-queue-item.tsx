@@ -44,7 +44,7 @@ function ModerationQueueItem({
           </span>
           <span className="text-[10px] text-muted-foreground">{contentType}</span>
           {reportCount > 1 && (
-            <span className="text-[10px] font-medium text-[var(--color-terracotta,#D4A574)]">
+            <span className="text-[10px] font-medium text-[var(--color-terracotta)]">
               {reportCount} reports
             </span>
           )}
