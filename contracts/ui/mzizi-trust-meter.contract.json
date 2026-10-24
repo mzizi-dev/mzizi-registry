@@ -1,0 +1,291 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/mzizi-trust-meter",
+  "title": "MziziTrustMeter",
+  "version": "1.0.0",
+  "node": 3,
+  "kind": "pattern",
+  "summary": "The expanded view of trust: the composite score as a role=\"meter\" with its value, then either the three-signal breakdown (Verification, Status, Ubuntu) or, with `signals`, one row per counted signal for an address, a place or a venue. Server-rendered; the bars are SVG geometry.",
+  "implementations": {
+    "astro": {
+      "registry": "mzizi-trust-meter",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/MziziTrustMeter.astro",
+      "since": "0.7.0"
+    },
+    "tsx": {
+      "registry": "mzizi-trust-meter",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": ["mzizi-verified-badge"]
+  },
+  "props": [
+    {
+      "name": "trustScore",
+      "type": "number",
+      "required": true,
+      "description": "The composite trust score, 0.000 to 1.000. It is the meter's aria-valuenow and is shown to three decimals."
+    },
+    {
+      "name": "verificationScore",
+      "type": "number",
+      "required": false,
+      "default": "0",
+      "description": "The Verification signal, 0 to 1."
+    },
+    {
+      "name": "statusScore",
+      "type": "number",
+      "required": false,
+      "default": "0",
+      "description": "The platform status modifier (-0.05 to 0.05), shown normalised around 0.5. Negative reads as an error colour."
+    },
+    {
+      "name": "ubuntuScore",
+      "type": "number",
+      "required": false,
+      "default": "0",
+      "description": "The Ubuntu contribution signal, 0 to 1."
+    },
+    {
+      "name": "ubuntuPoints",
+      "type": "number",
+      "required": false,
+      "description": "Ubuntu points, a raw count, shown beside the Ubuntu signal and in a line under the breakdown."
+    },
+    {
+      "name": "tierLabel",
+      "type": "string",
+      "required": false,
+      "description": "The verification tier's name, beside the Verification signal."
+    },
+    {
+      "name": "statusLabel",
+      "type": "string",
+      "required": false,
+      "description": "The platform status's name, beside the Status signal."
+    },
+    {
+      "name": "compact",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "The header and the meter bar alone, with no breakdown and no signal list."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "default": "\"Trust Score\"",
+      "description": "The meter's name, shown and used as its accessible name (the default reads \"Trust score\")."
+    },
+    {
+      "name": "signals",
+      "type": "{ label: string; count: number; detail?: string }[]",
+      "required": false,
+      "description": "Counted signals (\"Check-ins at the entrance\", 12). With them the meter lists one row per signal instead of the three-signal breakdown."
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Render the skeleton."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The root is role=\"meter\" with aria-valuemin 0, aria-valuemax 1 and aria-valuenow the trust score, and its aria-label is the title (\"Trust score\" for the default title).",
+    "The score is shown to three decimals over \"/ 1.000\", and the bar's width is the score; both take the score's level colour: success from 0.4, warning from 0.05, neutral below.",
+    "Without `signals`, the Verification, Status and Ubuntu signals each show their value and a bar; the Status modifier is shown normalised around 0.5, in the error colour when negative. `ubuntuPoints` adds a line under the breakdown.",
+    "With `signals`, the breakdown is replaced by a <ul> with one 44px row per signal: its label, its optional detail and its count.",
+    "`compact` shows the header and the bar only.",
+    "Bars are SVG <rect> widths in a 0–100 viewBox, so the component needs no inline style and no script."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "trustScore": 0.3,
+        "verificationScore": 0.3,
+        "statusScore": 0,
+        "ubuntuScore": 0.12,
+        "ubuntuPoints": 1240,
+        "tierLabel": "Government",
+        "statusLabel": "Living"
+      }
+    },
+    "signals": {
+      "description": "Kweli's \"Address trust\" panel.",
+      "props": {
+        "title": "Address trust",
+        "trustScore": 0.62,
+        "signals": [
+          {
+            "label": "Check-ins at the entrance",
+            "count": 12,
+            "detail": "Mukoko Events"
+          },
+          { "label": "Deliveries completed", "count": 1204 },
+          { "label": "Neighbours who vouched", "count": 3 }
+        ]
+      }
+    },
+    "compact": {
+      "props": {
+        "trustScore": 0.5,
+        "compact": true,
+        "signals": [{ "label": "Deliveries completed", "count": 4 }]
+      }
+    },
+    "suspended": {
+      "description": "A negative status modifier and a score under 0.05.",
+      "props": {
+        "trustScore": 0,
+        "statusScore": -0.05
+      }
+    },
+    "loading": {
+      "props": {
+        "trustScore": 0.3,
+        "loading": true
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["meter"],
+    "keyboard": ["Nothing in it is interactive."],
+    "focus": ["Not focusable."],
+    "aria": [
+      "role=\"meter\" with aria-valuemin, aria-valuemax and aria-valuenow, named by aria-label (the title).",
+      "The bars and icons are aria-hidden; every value is also written as text."
+    ],
+    "wcag": ["1.1.1", "1.3.1", "1.4.1", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "signal",
+      "state": "signals",
+      "select": "[data-slot=\"trust-signal\"]",
+      "fine": 44,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--card-foreground",
+      "--foreground",
+      "--muted",
+      "--muted-foreground",
+      "--border",
+      "--status-success",
+      "--status-warning",
+      "--status-error",
+      "--status-neutral"
+    ],
+    "brandOverlay": "None: the score and the Verification and Status signals use the --status-* tokens, and the Ubuntu signal is tanzanite in every brand, because it names the Ubuntu axis, not the brand.",
+    "statusColours": ["tanzanite"]
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the meter is rendered on the server."
+  },
+  "responsive": [
+    "The meter fills its container; a signal's label truncates rather than pushing its count out."
+  ],
+  "contract": "contract\n  slot is \"mzizi-trust-meter\"\n  role is \"meter\"\n  portal is \"https://mzizi.dev/components/mzizi-trust-meter\"\n  label is \"Trust score\"\n  when default shows span \"Trust Score\"\n  when signals label is \"Address trust\"\n  when signals shows span \"Deliveries completed\"\n  when suspended class contains \"bg-card\"\nend",
+  "checks": [
+    {
+      "say": "The meter exposes its value and range.",
+      "select": "[data-slot=\"mzizi-trust-meter\"][role=\"meter\"]",
+      "count": 1,
+      "attr": {
+        "aria-valuenow": "0.3",
+        "aria-valuemin": "0",
+        "aria-valuemax": "1"
+      }
+    },
+    {
+      "say": "The signals meter is named by its title and carries its value.",
+      "state": "signals",
+      "select": "[role=\"meter\"]",
+      "count": 1,
+      "attr": { "aria-label": "Address trust", "aria-valuenow": "0.62" }
+    },
+    {
+      "say": "The score is written to three decimals.",
+      "select": "[data-slot=\"trust-meter-score\"]",
+      "count": 1,
+      "text": "0.300"
+    },
+    {
+      "say": "The bar is an SVG rect as wide as the score.",
+      "select": "svg[data-slot=\"trust-meter-bar\"] rect",
+      "count": 1,
+      "attr": { "width": "30" }
+    },
+    {
+      "say": "Without signals, the three-signal breakdown.",
+      "select": "[data-slot=\"trust-breakdown-signal\"]",
+      "count": 3
+    },
+    {
+      "say": "Ubuntu points are written out.",
+      "select": "[data-slot=\"trust-ubuntu-points\"]",
+      "count": 1
+    },
+    {
+      "say": "With signals, one row per signal and no breakdown.",
+      "state": "signals",
+      "select": "ul[data-slot=\"trust-signal-list\"] > li[data-slot=\"trust-signal\"]",
+      "count": 3
+    },
+    {
+      "say": "With signals, no breakdown.",
+      "state": "signals",
+      "select": "[data-slot=\"trust-breakdown\"]",
+      "absent": true
+    },
+    {
+      "say": "Each signal shows its count.",
+      "state": "signals",
+      "select": "[data-slot=\"trust-signal-count\"]",
+      "count": 3
+    },
+    {
+      "say": "Compact shows no list and no breakdown.",
+      "state": "compact",
+      "select": "[data-slot=\"trust-signal-list\"], [data-slot=\"trust-breakdown\"]",
+      "absent": true
+    },
+    {
+      "say": "A negative status modifier is in the error colour.",
+      "state": "suspended",
+      "select": "[data-signal=\"status\"] .text-status-error",
+      "min": 1
+    },
+    {
+      "say": "A score under 0.05 is in the neutral colour.",
+      "state": "suspended",
+      "select": "[data-slot=\"trust-meter-score\"].text-status-neutral",
+      "count": 1
+    },
+    {
+      "say": "The skeleton is a named meter with no value.",
+      "state": "loading",
+      "select": "[data-slot=\"mzizi-trust-meter\"][data-loading][role=\"meter\"]",
+      "count": 1,
+      "attr": { "aria-label": "Trust score" }
+    }
+  ],
+  "gaps": [
+    "Before #543 the React build was a client component with the harness's enter animation (an inline animation style). The contract forbids inline style and needs no script, so neither build animates in; a motion utility class would bring it back."
+  ]
+}

@@ -1,0 +1,218 @@
+---
+/**
+ * MziziTrustMeter — the expanded view of trust: the composite score as a meter, then either
+ * the three-signal breakdown (Verification, Status, Ubuntu) or, with `signals`, one row per
+ * counted signal ("Check-ins at the entrance", 12) for an address, a place or a venue. The
+ * verified badge is the compact view; this is the expanded one.
+ *
+ * The Astro build of contract `ui/mzizi-trust-meter`, beside `mzizi-trust-meter.tsx`; both
+ * render the same markup and keep the same contract. Server-rendered with no script. The bars
+ * are SVG geometry (a `<rect>`'s `width` in a 0–100 viewBox), never inline `style`, so a page's
+ * Content-Security-Policy needs no `style-src-attr 'unsafe-inline'`. Colour is semantic: the
+ * score and the Verification and Status signals use the `--status-*` tokens; the Ubuntu signal
+ * is tanzanite in every brand, because it names the Ubuntu axis, not the brand.
+ */
+import Icon from "./site-icon.astro";
+import { cn } from "./ui-utils";
+
+interface TrustSignalCount {
+  label: string;
+  /** How many times it happened. Never a percentage. */
+  count: number;
+  /** A short qualifier: "last 90 days". */
+  detail?: string;
+}
+
+interface Props {
+  /** Composite trust score, 0.000 – 1.000. */
+  trustScore: number;
+  /** Verification signal, 0 – 1. */
+  verificationScore?: number;
+  /** Platform status modifier (-0.05 – 0.05); shown normalised around 0.5. */
+  statusScore?: number;
+  /** Ubuntu contribution signal, 0 – 1. */
+  ubuntuScore?: number;
+  /** Ubuntu points, a raw count. */
+  ubuntuPoints?: number;
+  /** The verification tier's name, beside the Verification signal. */
+  tierLabel?: string;
+  /** The platform status's name, beside the Status signal. */
+  statusLabel?: string;
+  /** The meter bar alone, with no breakdown or signal list. */
+  compact?: boolean;
+  /** The meter's name, shown and used as its accessible name. */
+  title?: string;
+  /** Counted signals (address, place or venue trust). Replaces the three-signal breakdown. */
+  signals?: TrustSignalCount[];
+  /** Render the skeleton. */
+  loading?: boolean;
+  class?: string;
+}
+
+const {
+  trustScore,
+  verificationScore = 0,
+  statusScore = 0,
+  ubuntuScore = 0,
+  ubuntuPoints,
+  tierLabel,
+  statusLabel,
+  compact = false,
+  title = "Trust Score",
+  signals,
+  loading = false,
+  class: className,
+} = Astro.props;
+
+const PORTAL = "https://mzizi.dev/components/mzizi-trust-meter";
+/** A 0–1 value as a bar width in a 0–100 viewBox, two decimals. */
+const width = (v: number) => String(Math.round(Math.min(Math.max(v, 0), 1) * 10000) / 100);
+
+/* Score level: strong, growing, low, none. */
+const level = trustScore >= 0.4 ? "strong" : trustScore >= 0.2 ? "growing" : trustScore >= 0.05 ? "low" : "none";
+const scoreText = {
+  strong: "text-status-success",
+  growing: "text-status-warning",
+  low: "text-status-warning",
+  none: "text-status-neutral",
+}[level];
+const scoreFill = {
+  strong: "fill-status-success",
+  growing: "fill-status-warning",
+  low: "fill-status-warning",
+  none: "fill-status-neutral",
+}[level];
+
+const breakdown = [
+  {
+    key: "verification",
+    label: "Verification",
+    icon: "shield",
+    value: verificationScore,
+    text: "text-status-warning",
+    fill: "fill-status-warning",
+    detail: tierLabel,
+  },
+  {
+    key: "status",
+    label: "Status",
+    icon: "activity",
+    /* Normalise the -0.05 – 0.05 modifier to 0.45 – 0.55 for display. */
+    value: Math.max(statusScore + 0.5, 0),
+    text: statusScore >= 0 ? "text-status-success" : "text-status-error",
+    fill: statusScore >= 0 ? "fill-status-success" : "fill-status-error",
+    detail: statusLabel,
+  },
+  {
+    key: "ubuntu",
+    label: "Ubuntu",
+    icon: "heart",
+    value: ubuntuScore,
+    text: "text-tanzanite",
+    fill: "fill-tanzanite",
+    detail: ubuntuPoints != null ? `${ubuntuPoints.toLocaleString()} points` : undefined,
+  },
+] as const;
+
+const name = title === "Trust Score" ? "Trust score" : title;
+---
+
+{
+  loading ? (
+    <div
+      data-slot="mzizi-trust-meter"
+      data-portal={PORTAL}
+      data-loading
+      role="meter"
+      aria-label="Trust score"
+      class="animate-pulse space-y-3 rounded-lg bg-card p-4 ring-1 ring-foreground/10"
+    >
+      <div class="h-3 w-20 rounded bg-muted" />
+      <div class="h-2 rounded-full bg-muted" />
+      <div class="flex justify-between">
+        {[0, 1, 2, 3].map(() => (
+          <div class="space-y-1">
+            <div class="h-2 w-8 rounded bg-muted" />
+            <div class="h-1.5 w-6 rounded bg-muted" />
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div
+      data-slot="mzizi-trust-meter"
+      data-portal={PORTAL}
+      data-level={level}
+      role="meter"
+      aria-label={name}
+      aria-valuemin="0"
+      aria-valuemax="1"
+      aria-valuenow={String(trustScore)}
+      class={cn("rounded-lg bg-card p-4 text-card-foreground ring-1 ring-foreground/10", className)}
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <Icon name="trending-up" class="size-4 text-muted-foreground" />
+          <span data-slot="trust-meter-title" class="text-sm font-medium text-foreground">{title}</span>
+        </div>
+        <div class="flex items-baseline gap-1.5">
+          <span data-slot="trust-meter-score" class={cn("text-2xl font-bold", scoreText)}>{trustScore.toFixed(3)}</span>
+          <span class="text-xs text-muted-foreground">/ 1.000</span>
+        </div>
+      </div>
+
+      <span class="mt-3 block h-2 w-full overflow-hidden rounded-full bg-foreground/[0.06]">
+        <svg data-slot="trust-meter-bar" class="block h-2 w-full" viewBox="0 0 100 2" preserveAspectRatio="none" focusable="false" aria-hidden="true">
+          <rect x="0" y="0" width={width(trustScore)} height="2" class={scoreFill} />
+        </svg>
+      </span>
+
+      {!compact && signals && (
+        <ul data-slot="trust-signal-list" class="mt-4 flex flex-col divide-y divide-border">
+          {signals.map((s) => (
+            <li data-slot="trust-signal" class="flex min-h-11 items-center justify-between gap-3 py-2">
+              <span class="flex min-w-0 flex-col">
+                <span class="truncate text-sm text-foreground">{s.label}</span>
+                {s.detail && <span class="text-xs text-muted-foreground">{s.detail}</span>}
+              </span>
+              <span data-slot="trust-signal-count" class="shrink-0 font-mono text-sm font-semibold text-foreground tabular-nums">
+                {s.count.toLocaleString()}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {!compact && !signals && (
+        <div data-slot="trust-breakdown" class="mt-4 flex flex-col gap-3">
+          {breakdown.map((signal) => (
+            <div data-slot="trust-breakdown-signal" data-signal={signal.key}>
+              <div class="mb-1 flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <Icon name={signal.icon} class={cn("size-3.5", signal.text)} />
+                  <span class="text-xs font-medium text-muted-foreground">{signal.label}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  {signal.detail && <span class="text-[10px] text-muted-foreground">{signal.detail}</span>}
+                  <span class={cn("text-xs font-semibold", signal.text)}>{signal.value.toFixed(3)}</span>
+                </div>
+              </div>
+              <span class="block h-1 w-full overflow-hidden rounded-full bg-foreground/[0.04]">
+                <svg class="block h-1 w-full" viewBox="0 0 100 1" preserveAspectRatio="none" focusable="false" aria-hidden="true">
+                  <rect x="0" y="0" width={width(signal.value)} height="1" class={signal.fill} />
+                </svg>
+              </span>
+            </div>
+          ))}
+
+          {ubuntuPoints != null && (
+            <div data-slot="trust-ubuntu-points" class="mt-1 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+              <Icon name="star" class="size-3 text-status-warning" />
+              <span>{ubuntuPoints.toLocaleString()} Ubuntu Points earned through community contribution</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}

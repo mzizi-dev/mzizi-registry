@@ -158,7 +158,7 @@ interface MziziVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants>
   ariaLabel?: string
   /**
    * Add the tier's cumulative trust score ("· Trust 0.2") to the title and the accessible name.
-   * Off by default (4.12): the raw score is a number for a trust audit, not for a reader.
+   * Off by default since #550: the raw score is a number for a trust audit, not for a reader.
    */
   showScore?: boolean
   /** Render skeleton placeholder while verification status is loading */
