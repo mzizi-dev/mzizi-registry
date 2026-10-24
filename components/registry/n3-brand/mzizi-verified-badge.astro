@@ -1,0 +1,106 @@
+---
+/**
+ * MziziVerifiedBadge — the compact view of trust: a round mark in the verification tier's
+ * colour, named by the tier ("Government Verified"). The trust meter is the expanded view.
+ *
+ * The Astro build of contract `ui/mzizi-verified-badge`, beside `mzizi-verified-badge.tsx`;
+ * both render the same markup and keep the same contract. Server-rendered with no script and
+ * no inline style. The ladder (labels, levels, glyphs and the `--tier-*` classes) is the
+ * framework-free `mzizi-trust-tier-data`; every tier draws its fill and ink from the tier's
+ * own APCA-gated pair (`bg-tier-*-container` with `text-tier-*-on-container`).
+ *
+ * - Tier 0 (unverified) renders nothing: name it in the consumer if it must be stated.
+ * - A suspended account shows the ban glyph on the neutral pair, named "Account Suspended".
+ * - An ancestral account keeps its tier's colour with the memorial flower, named
+ *   "<tier> — Memorial".
+ * - The trust score is never in the name unless `showScore` is set (#550).
+ */
+import Icon from "./site-icon.astro";
+import { STATUS_OVERLAY, TIER_DATA, type PlatformStatus, type VerificationTier } from "./mzizi-trust-tier-data";
+import { cn } from "./ui-utils";
+
+interface Props {
+  /** Verification tier code (system.verification_tier.tier_code). */
+  tier: VerificationTier;
+  /** Platform status (identity.person.mit_status). */
+  status?: PlatformStatus;
+  /** sm (inline with text), md, lg (profile pages) or xl (verification detail views). */
+  size?: "sm" | "md" | "lg" | "xl";
+  /** Set the native `title` to the badge's name. */
+  showTooltip?: boolean;
+  /** The wording, in place of the built-in name. */
+  label?: string;
+  /** The accessible name, when it should differ from `label`. */
+  ariaLabel?: string;
+  /** Add the cumulative trust score ("· Trust 0.2") to the title and the accessible name. */
+  showScore?: boolean;
+  /** Render the placeholder while the tier is loading. */
+  loading?: boolean;
+  class?: string;
+}
+
+const {
+  tier,
+  status = "living",
+  size = "md",
+  showTooltip = true,
+  label,
+  ariaLabel,
+  showScore = false,
+  loading = false,
+  class: className,
+} = Astro.props;
+
+const PORTAL = "https://mzizi.dev/components/mzizi-verified-badge";
+const BOX = { sm: "size-3.5", md: "size-[18px]", lg: "size-6", xl: "size-8" } as const;
+/** The glyph is 1em, so the box's font size sizes it: 10, 12, 16 and 20px. */
+const GLYPH = { sm: "text-[10px]", md: "text-[12px]", lg: "text-[16px]", xl: "text-[20px]" } as const;
+
+const data = TIER_DATA[tier];
+const overlay = STATUS_OVERLAY[status].overlay;
+const named = (builtIn: string) => {
+  const text = label ?? builtIn;
+  return showScore ? `${text} · Trust ${data.cumulativeTrust}` : text;
+};
+const unverified = TIER_DATA.unverified;
+const view =
+  overlay === "suspended"
+    ? { name: named("Account Suspended"), glyph: "ban" as const, pair: unverified.classes }
+    : overlay === "ancestral"
+      ? { name: named(`${data.label} — Memorial`), glyph: "flower" as const, pair: data.classes }
+      : { name: named(data.label), glyph: data.glyph, pair: data.classes };
+---
+
+{
+  loading ? (
+    <span
+      data-slot="mzizi-verified-badge"
+      data-portal={PORTAL}
+      data-loading
+      aria-hidden="true"
+      class={cn("inline-flex size-4 shrink-0 animate-pulse rounded-full bg-muted", className)}
+    />
+  ) : tier === "unverified" || !view.glyph ? null : (
+    <span
+      data-slot="mzizi-verified-badge"
+      data-portal={PORTAL}
+      data-tier={tier}
+      data-level={data.level}
+      data-status={overlay ? status : undefined}
+      data-trust={overlay ? undefined : data.cumulativeTrust}
+      role="img"
+      aria-label={ariaLabel ?? view.name}
+      title={showTooltip ? view.name : undefined}
+      class={cn(
+        "inline-flex shrink-0 items-center justify-center rounded-full",
+        BOX[size],
+        GLYPH[size],
+        view.pair.container,
+        view.pair.onContainer,
+        className,
+      )}
+    >
+      <Icon name={view.glyph} />
+    </span>
+  )
+}

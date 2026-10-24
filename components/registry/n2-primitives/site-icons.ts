@@ -84,6 +84,13 @@ export const ICON_PATHS = {
   star: "M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3z",
   "trending-up": "M3 17l6-6 4 4 8-8M15 7h6v6",
   history: "M3 12a9 9 0 103-6.7M3 4v4h4M12 7v5l3 2",
+  // Trust glyphs: the verified badge's tiers and status overlays (mzizi-verified-badge).
+  phone:
+    "M5 4h3.5l1.5 4.5-2.2 1.4a11 11 0 006.3 6.3l1.4-2.2 4.5 1.5V19a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z",
+  award: "M12 15a6 6 0 100-12 6 6 0 000 12zM8.5 13.9L7 21l5-2.5 5 2.5-1.5-7.1",
+  ban: "M12 21a9 9 0 100-18 9 9 0 000 18zM5.6 5.6l12.8 12.8",
+  flower:
+    "M12 14.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM12 9.5a3 3 0 113-3c0 1.4-1.3 2.4-3 3zM12 9.5a3 3 0 10-3-3c0 1.4 1.3 2.4 3 3zM12 14.5a3 3 0 103 3c0-1.4-1.3-2.4-3-3zM12 14.5a3 3 0 11-3 3c0-1.4 1.3-2.4 3-3z",
 } as const;
 
 /** Every glyph name. */
