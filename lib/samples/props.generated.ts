@@ -9259,6 +9259,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "linkComponent",
+      "type": "React.ComponentType<MziziPlaceCardLinkProps>",
+      "required": false
+    },
+    {
+      "name": "priority",
+      "type": "boolean",
+      "required": false
+    },
+    {
       "name": "onClick",
       "type": "() => void",
       "required": false

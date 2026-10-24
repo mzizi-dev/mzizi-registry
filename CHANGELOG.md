@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `mzizi-place-card` takes a `linkComponent` and loads its cover lazily, with a `priority` opt-out (2026-10-24, #PRNUM)
+
+Gaps 1 and 2 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
+
+- **`linkComponent`.** With `href`, the card's link can be rendered by the app's router link (Next `Link`, a React Router `Link`), so the app keeps client-side navigation and prefetch. The component receives `href`, `className` and `children`, plus the attributes the plain `<a>` would carry: `target`, `rel`, `onClick`, `style` and `data-slot` / `data-portal` / `data-variant`. The new exported type `MziziPlaceCardLinkProps` describes them. Unset, the card renders the plain `<a>` as before. The existing rules hold either way: `rel="noopener noreferrer"` for any `target` but `_self`, `_top` and `_parent`; with `onClick` and no `href` the card is `role="button"`, and `linkComponent` is not used; clicks and keys on a control in the footer stay with that control.
+- **Cover image loading.** The cover `<img>` (both variants) now has `loading="lazy"` and `decoding="async"` by default, so a long list costs neither LCP nor bandwidth, and React no longer hoists a preload `<link>` for it. The new `priority` prop loads it eagerly with `fetchpriority="high"`, for the first card above the fold.
+- `__tests__/components/kweli-place-embed.test.tsx` covers both, in both variants. The place card has no contract file (a contract needs an Astro build, and the place card has none yet), so the rules are in the tests and in `registry.json`.
+
 ### Changed — every dependency and override is a minimum version (2026-10-21, #534)
 
 - **`package.json`.** Every `dependencies`, `devDependencies` and `pnpm.overrides` entry is now `>=x.y.z` with no maximum, exact pins included (owner, 2026-10-21: "mark packages with minimum acceptable, latest shouldn't be a blocker on too old of a version"). Each floor is the version the lockfile already resolved, or the advisory floor `staging` already set where that is higher: `next` `>=16.4.1` (it was an exact pin), `dompurify` `>=3.4.17` as the dependency and the override, `vitest` `>=5.0.5` and the `ip-address` override `>=10.7.4` (4.11.0, #533), and `zod` `>=4.6.7`, `shadcn` `>=4.22.1`, `body-parser` `>=2.4.0`, `undici` `>=7.30.1` and `fast-uri` `>=3.1.9` (#545). The `zod@<4.6.6` override keeps its selector, and `auditConfig.ignoreGhsas` is unchanged. Four overrides for packages not in the tree (`@xmldom/xmldom`, `lodash-es`, `uuid`, `minimatch@8>brace-expansion`) keep their old floor.
