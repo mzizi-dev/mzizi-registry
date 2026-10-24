@@ -138,6 +138,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "directions",
       "type": "string",
       "required": false
+    },
+    {
+      "name": "codeLabel",
+      "type": "string",
+      "required": false
     }
   ],
   "admin-page": [
@@ -561,6 +566,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "decorative",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "\"lazy\" | \"eager\"",
       "required": false
     }
   ],
@@ -7660,7 +7670,32 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "mineral",
-      "type": "\"cobalt\" | \"tanzanite\" | \"malachite\" | \"gold\" | \"terracotta\"",
+      "type": "EventMineral",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "price",
+      "type": "React.ReactNode",
+      "required": false
+    },
+    {
+      "name": "free",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "freeLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "share",
+      "type": "React.ReactNode",
       "required": false
     }
   ],
@@ -9264,6 +9299,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "tierLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "linkLabel",
+      "type": "string",
+      "required": false
+    },
+    {
       "name": "mineral",
       "type": "\"malachite\" | \"cobalt\" | \"gold\" | \"tanzanite\" | \"terracotta\"",
       "required": false
@@ -9889,6 +9934,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "rating",
       "type": "number",
       "required": true
+    },
+    {
+      "name": "headline",
+      "type": "string",
+      "required": false
     },
     {
       "name": "text",
@@ -11831,6 +11881,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "showValue",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
       "required": false
     }
   ],

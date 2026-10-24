@@ -3,6 +3,8 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { useMziziHarness } from "@/lib/harness"
+import { Rating } from "@/components/ui/rating"
+import { MziziVerifiedBadge, type VerificationTier } from "@/components/ui/mzizi-verified-badge"
 
 /* ═══════════════════════════════════════════════════════════════
    NYUCHI REVIEW CARD — Universal Brand Component (Pre-Wired)
@@ -10,6 +12,11 @@ import { useMziziHarness } from "@/lib/harness"
    Branded review display used across all domains with reviews.
    Reviewer verification tier is always visible — trust matters.
    Dynamic mineral accent via --brand-accent.
+
+   #543: an optional `headline`; the body keeps its line breaks
+   (whitespace-pre-line); the stars are the read-only Rating, one
+   role="img" named "4 out of 5 stars"; and the reviewer's tier is the
+   mzizi-verified-badge (named, mineral-coloured) instead of an emoji.
    ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
    ═══════════════════════════════════════════════════════════════ */
 
@@ -24,7 +31,9 @@ interface MziziReviewCardProps {
   verificationTier?: 0 | 1 | 2 | 3 | 4
   /** Star rating (1-5) */
   rating: number
-  /** Review text */
+  /** A short headline above the body, e.g. "Fast and friendly". */
+  headline?: string
+  /** Review text. Line breaks in it are kept. */
   text: string
   /** Review date */
   date?: string
@@ -39,7 +48,8 @@ interface MziziReviewCardProps {
   className?: string
 }
 
-const tierBadge = ["", "🟤", "🔵", "🟡", "🟣"] as const
+/** verificationTier (0-4) → the verified badge's tier; 0 draws nothing. */
+const TIER_BY_LEVEL: readonly VerificationTier[] = ["unverified", "community", "otp", "government", "licensed"]
 
 export function MziziReviewCard({
   loading = false,
@@ -47,6 +57,7 @@ export function MziziReviewCard({
   avatarUrl,
   verificationTier = 0,
   rating,
+  headline,
   text,
   date,
   helpfulCount,
@@ -114,30 +125,25 @@ export function MziziReviewCard({
           <div>
             <div className="flex items-center gap-1">
               <p className="text-sm font-medium text-foreground">{reviewer}</p>
-              {verificationTier > 0 && (
-                <span className="text-xs">{tierBadge[verificationTier]}</span>
-              )}
+              {verificationTier > 0 && <MziziVerifiedBadge tier={TIER_BY_LEVEL[verificationTier]} size="sm" />}
             </div>
             {date && <p className="text-[10px] text-muted-foreground">{date}</p>}
           </div>
         </div>
-        {/* Stars */}
-        <div className="flex items-center gap-0.5 text-sm">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <span
-              key={i}
-              className={
-                i < rating ? "text-[var(--color-gold,#FFD740)]" : "text-muted-foreground/20"
-              }
-            >
-              ★
-            </span>
-          ))}
-        </div>
+        {/* Stars: one role="img" named "4 out of 5 stars" */}
+        <Rating value={rating} max={5} readOnly size="sm" className="shrink-0" />
       </div>
 
-      {/* Review text */}
-      <p className="text-sm leading-relaxed text-foreground">{text}</p>
+      {headline && (
+        <p data-slot="mzizi-review-card-headline" className="text-sm font-semibold text-foreground">
+          {headline}
+        </p>
+      )}
+
+      {/* Review text: the reviewer's own line breaks are kept */}
+      <p data-slot="mzizi-review-card-body" className="text-sm leading-relaxed whitespace-pre-line text-foreground">
+        {text}
+      </p>
 
       {/* Actions */}
       <div className="flex items-center justify-between pt-1">
