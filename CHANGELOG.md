@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — an Astro build of `mzizi-trust-meter`, and one contract, `ui/mzizi-trust-meter`, that both builds keep (2026-10-24, #PRNUM)
+### Added — an Astro build of `mzizi-trust-meter`, and one contract, `ui/mzizi-trust-meter`, that both builds keep (2026-10-24, #552)
 
 Gap 6 of the Kweli review (found during the 4.12.0 `@bundu/ui` sync), tracked in #543. The trust meter had only a React build, so `@bundu/ui` could not sync it.
 
