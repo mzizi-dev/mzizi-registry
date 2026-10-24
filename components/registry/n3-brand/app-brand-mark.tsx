@@ -45,6 +45,13 @@ interface BrandMarkProps {
   /** A muted line under the wordmark (a mini-app lockup: "mukoko · Africa"). Needs `wordmark`. */
   tagline?: string
   decorative?: boolean
+  /**
+   * How the mark loads: "lazy" (the default since #543) or "eager". Lazy keeps a footer or
+   * below-the-fold mark off the critical path (Lighthouse flagged an eager footer mark), and
+   * the theme's hidden image is never fetched. A small mark in a header still loads at once,
+   * since it is in the viewport; pass "eager" only where the mark is the page's LCP image.
+   */
+  loading?: "lazy" | "eager"
   className?: string
 }
 
@@ -69,7 +76,7 @@ const CSS = `
 
 const src = (m: ImageImport) => (typeof m === "string" ? m : m.src)
 
-function BrandMark({ brand = "nyuchi", size = 28, wordmark = false, suffix, tagline, decorative = false, className }: BrandMarkProps) {
+function BrandMark({ brand = "nyuchi", size = 28, wordmark = false, suffix, tagline, decorative = false, loading = "lazy", className }: BrandMarkProps) {
   // An unknown brand (from untyped data, or one whose icon pair has not shipped) is an error
   // that names it, never another brand's mark in its place.
   if (!Object.prototype.hasOwnProperty.call(MARKS, brand))
@@ -87,8 +94,8 @@ function BrandMark({ brand = "nyuchi", size = 28, wordmark = false, suffix, tagl
       <style href="mzizi-app-brand-mark" precedence="default">
         {CSS}
       </style>
-      <img src={src(mark.light)} alt={alt} width={size} height={size} decoding="async" className="brand-mark-light block shrink-0" />
-      <img src={src(mark.dark)} alt={alt} width={size} height={size} decoding="async" className="brand-mark-dark hidden shrink-0" />
+      <img src={src(mark.light)} alt={alt} width={size} height={size} loading={loading} decoding="async" className="brand-mark-light block shrink-0" />
+      <img src={src(mark.dark)} alt={alt} width={size} height={size} loading={loading} decoding="async" className="brand-mark-dark hidden shrink-0" />
       {wordmark && !tagline && word}
       {wordmark && tagline && (
         <span data-slot="brand-lockup" className="flex min-w-0 flex-col gap-0.5 leading-none">

@@ -542,6 +542,31 @@ export const ROLES: readonly Role[] = [
     default: { background: "muted" },
     block: "ladder",
   },
+  /*
+   * The QR plate (#543). A QR code reads most reliably as dark modules on a light ground with
+   * a light quiet zone, and some scanners cannot read an inverted (light-on-dark) code. So the
+   * plate stays light in EVERY theme, and its ink stays dark. The values are the canon's own
+   * white and ink, the pair `onWhiteOrInk` already uses, fixed rather than themed.
+   */
+  {
+    name: "surface-qr",
+    group: "surface",
+    kind: "surface",
+    required: true,
+    description: "The plate behind a QR code: white in every theme, so the code is never inverted.",
+    default: { literal: "#FFFFFF" },
+    block: "roles",
+  },
+  {
+    name: "on-surface-qr",
+    group: "surface",
+    kind: "text",
+    required: true,
+    description: "A QR code's modules on `surface-qr`: the canon's ink in every theme.",
+    contrast: fg("surface-qr"),
+    default: { literal: "#0E0D0C" },
+    block: "roles",
+  },
 
   // ── Text ──
   {
