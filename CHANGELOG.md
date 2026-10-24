@@ -10,6 +10,18 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the data layer in `mzizi-data`: fetch cascade, sync reconciliation, tombstones, staleness, local-first writes with rollback, not wired into any app (2026-10-24, #509)
+
+- **The data layer, in the crate the transport already lives in.** `mzizi-data` keeps its `io::Io` transport, `Error` and `Result`, and adds the data layer above them: `Cascade::fetch`, `reconcile`, `apply_optimistic`, `delete`, `Record`, `Layer`, `Clock`, `MemoryLayer`. It has no UI, no storage client and no dependencies beyond the transport's optional Worker features.
+- **`Cascade::fetch`** reads local first. A fresh local record answers alone within its time-to-live. A stale or missing one keeps the read going to edge and cloud, and returns the newest fresh record found, written back to the faster tiers. A stale local value is returned with `stale = true` when nothing fresher exists. A cloud miss is `Ok(None)`.
+- **Tombstones.** `delete` writes a versioned tombstone through every tier. Tombstones are kept; there is no garbage collection yet.
+- **`reconcile`** brings every reachable tier to the winning record. A confirmed record beats a pending one; then the higher version; then the more authoritative tier. A tier is in sync only when the whole record matches.
+- **Local-first writes.** `apply_optimistic` and `delete` write pending copies local, then edge, then cloud, then confirm them. A failure restores every attempted tier to its own previous record, exactly. A rejected write that cannot be restored stays pending, and reconcile does not choose it while a confirmed record exists.
+- **Publishable, not wired into any app.** `mzizi-data`, `mzizi-harness` and `mzizi-mongodb` publish with the next registry release to main (owner, 2026-10-20). The WASM payload budget (owner decision 6.2) is still open and gates any app that uses this crate. Decisions 6.3 (production) and 6.4 (node N5) are recorded in `crate-for-node.json`.
+- **Tested on the host target** by 50 integration tests and one doctest, in `tests/cascade.rs`. The server contract (`mzizi-rs/contracts/server/mzizi-data.contract.json`) names the tests that prove each guarantee.
+- **Designed, not built:** storage adapters, a background timer (the host schedules `reconcile`), key enumeration for a full sync.
+- **First-party crates at a minimum version** (org rule, 2026-10-21). `mzizi-mongodb` depends on `mzizi-data` and `mzizi-harness` as `version = ">=0.4.0"` beside the path, with no upper bound, and the crates' READMEs show `>=0.4.0` install lines.
+
 ### Fixed — `/v1/brand` names shamwari as the third pillar; stale terracotta `#D4A574` fallbacks removed (2026-10-24, #564)
 
 Two of the no-decision fixes on #543.

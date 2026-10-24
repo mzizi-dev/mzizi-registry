@@ -1,6 +1,6 @@
 [package]
 name = "mzizi-data"
-description = "Mzizi data: the transport trait, error type and Cloudflare Workers socket shared by Mzizi's sans-IO database clients (mzizi-mongodb)."
+description = "Mzizi data: the transport trait, error type and Cloudflare Workers socket shared by Mzizi's sans-IO database clients (mzizi-mongodb), and the data layer above them (fetch cascade, sync, tombstones, local-first writes)."
 readme = "README.md"
 keywords = ["database", "cloudflare-workers", "wasm", "sans-io", "mzizi"]
 categories = ["database", "wasm"]
@@ -15,6 +15,8 @@ homepage.workspace = true
 workspace = true
 
 [features]
+# Exposes `MemoryLayer::set_available` and `MemoryLayer::peek`, for a host's own tests.
+test-util = []
 # The Cloudflare Workers host (a TLS socket as an `Io`). wasm32 only.
 workers = ["dep:worker", "dep:futures", "dep:tokio"]
 
