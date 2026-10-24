@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `mzizi-place-card` takes a `linkComponent` and loads its cover lazily, with a `priority` opt-out (2026-10-24, #PRNUM)
+### Added — `mzizi-place-card` takes a `linkComponent` and loads its cover lazily, with a `priority` opt-out (2026-10-24, #549)
 
 Gaps 1 and 2 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
 
