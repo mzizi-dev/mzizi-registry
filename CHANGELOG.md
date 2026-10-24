@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — `mzizi-verified-badge` takes `label` and `ariaLabel` and drops the trust score from its name by default; `mzizi-permission-gate`'s upgrade action uses the primary pair (2026-10-24, #PRNUM)
+### Changed — `mzizi-verified-badge` takes `label` and `ariaLabel` and drops the trust score from its name by default; `mzizi-permission-gate`'s upgrade action uses the primary pair (2026-10-24, #550)
 
 Gaps 3 and 4 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
 
