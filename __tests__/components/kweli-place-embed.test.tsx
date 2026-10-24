@@ -89,7 +89,7 @@ describe("mzizi-verified-badge tier colours (the Mukoko ladder: government Gold,
     expect(html).toContain("--tier-government")
   })
 
-  it("leaves the trust score out of the title and the accessible name by default (4.12)", () => {
+  it("leaves the trust score out of the title and the accessible name by default (#550)", () => {
     const html = renderToStaticMarkup(<MziziVerifiedBadge tier="otp" />)
     expect(html).toContain('aria-label="Contact Verified"')
     expect(html).toContain('title="Contact Verified"')
