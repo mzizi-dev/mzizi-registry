@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `app/confirm-action`: a destructive action that asks first, with no script (2026-10-24, #PRNUM)
+### Added — `app/confirm-action`: a destructive action that asks first, with no script (2026-10-24, #572)
 
 Gap 4 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)). The app family had no confirmation; `alert-dialog` is a legacy Radix component.
 
