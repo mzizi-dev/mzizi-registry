@@ -1026,6 +1026,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "app-money": [
+    {
+      "name": "amountMinor",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "display",
+      "type": "CurrencyDisplay",
+      "required": false
+    }
+  ],
   "app-page-header": [
     {
       "name": "title",
@@ -1092,6 +1114,68 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "noun",
       "type": "string",
+      "required": false
+    }
+  ],
+  "app-plan-summary": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "status",
+      "type": "PlanStatus",
+      "required": true
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "price",
+      "type": "{ amountMinor: number; currency: string } | null",
+      "required": false
+    },
+    {
+      "name": "interval",
+      "type": "PlanInterval",
+      "required": false
+    },
+    {
+      "name": "periodEnd",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "features",
+      "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "{ label: string; href: string }",
+      "required": false
+    },
+    {
+      "name": "secondaryAction",
+      "type": "{ label: string; href: string }",
+      "required": false
+    },
+    {
+      "name": "copy",
+      "type": "PlanSummaryCopy",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "headingLevel",
+      "type": "2 | 3",
       "required": false
     }
   ],
