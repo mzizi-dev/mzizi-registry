@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — `app/tier-status`: the verification ladder, what is held, and what the next rung needs (2026-10-24, #PRNUM)
+### Added — `app/tier-status`: the verification ladder, what is held, and what the next rung needs (2026-10-24, #573)
 
 Gap 6 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)).
 
