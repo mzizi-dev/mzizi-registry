@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — `mzizi-verified-badge` takes `label` and `ariaLabel` and drops the trust score from its name by default; `mzizi-permission-gate`'s upgrade action uses the primary pair (2026-10-24, #PRNUM)
+
+Gaps 3 and 4 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
+
+- **`mzizi-verified-badge`: Breaking (a default changes).** The `title` used to read "Contact Verified · Trust 0.2", so the raw trust score showed to every reader on hover and could not be changed. Now the title and the accessible name are the tier's name alone. The new `showScore` prop adds "· Trust 0.x" to both, for a trust audit view. A consumer that wants the old title passes `showScore`.
+- **`label` and `ariaLabel`** (new). `label` replaces the wording, the title and the accessible name in every state: the tier name, "Account Suspended", or "<tier> — Memorial". Use it to localise the badge or to name the tier in the app's own words. `ariaLabel` sets the accessible name alone, so the title keeps the label. `showTooltip={false}` still drops only the title. Neither prop changes the tier colour.
+- **`mzizi-permission-gate`.** The upgrade button was hard-coded `text-white` on `var(--color-cobalt,#00B0FF)`. On dark cobalt `#00B0FF` that is 2.4:1, which fails WCAG AA. The canon has no on-cobalt token: cobalt has only `-container` / `-on-container`. So the button now uses the brand's primary pair, `bg-primary text-primary-foreground`. In the role set, `--primary-foreground` is "text and icons on `primary`", held to body contrast. In `styles/globals.css` the pair measures 18.4:1 in light (`#141413` / `#FFFFFF`) and 16.0:1 in dark (`#F5F5F4` / `#1B1A17`). The button's focus outline is `--ring` instead of `var(--color-primary,#00B0FF)`. It is now `type="button"` with `data-slot="mzizi-permission-gate-upgrade"`. The required tier's mineral still colours the shield and the tier name.
+- **Tests and contracts.** The badge cases are in `__tests__/components/kweli-place-embed.test.tsx`. The new `__tests__/components/mzizi-permission-gate.test.tsx` checks that the button names no literal colour or mineral, and that the primary pair in every theme block of `styles/globals.css` is at least 4.5:1. Neither component has a contract file, since a contract needs an Astro build and neither has one yet. The badge's default change is recorded here, in its props' doc comments and in `registry.json`.
+
 ### Changed — `package.json` is 4.12.2 on `staging` after the 4.12.0 sync-back (2026-10-24, #548)
 
 The release-version check allows only the next patch after `v4.12.1` (tagged when #534 merged) on `staging`, so the sync-back of 4.12.0 (#547) carries `package.json`, `README.md` and a 4.12.2 record in `content/changelog/releases.json` (and `lib/changelog.generated.ts`) instead of main's 4.12.0. The `[4.12.0]` section below is unchanged.
