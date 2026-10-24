@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — `mzizi-trust-meter` hides raw scores unless `showScore`; `--status-error` is a canonical token; the tier ladder is a server-safe module (2026-10-24, #PRNUM)
+### Changed — `mzizi-trust-meter` hides raw scores unless `showScore`; `--status-error` is a canonical token; the tier ladder is a server-safe module (2026-10-24, #555)
 
 Item 1 of the Kweli phase-2 gaps, tracked in #543.
 
