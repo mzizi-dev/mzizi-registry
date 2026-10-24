@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.14.0",
+    title:
+      "v4.14.0 — the Kweli phase-2 fixes: trust-meter showScore (Breaking default), canonical --status-error and server-safe trust tiers, cover-header <img> cover and opt-in banner (Breaking default), event/review cards and rating, place-card and share-card labels with a QR plate, lazy brand mark (Breaking default), keyboard filter bar, and Kweli app icons",
+    description:
+      'Releases staging to main as the next minor above v4.13.x (nyuchi/.github#80). BREAKING (defaults change): mzizi-trust-meter writes no raw score unless showScore is set (#555); mzizi-cover-header no longer has role="banner" unless banner is set (#556); app-brand-mark images load lazily unless loading="eager" (#558). Kept a minor release by owner policy (majors are owner-only, by manual dispatch). --status-error becomes a canonical role, an alias of destructive, generated into every platform target; TIER_CONFIG and the trust ladder move to the server-safe mzizi-trust-tiers lib, re-exported by mzizi-verified-badge (#555). mzizi-cover-header draws its cover as an <img> with priority and coverAlt, draws the avatar only when given, and its Mzizi Roots sibling in mzizi-brand follows; discover-category-chip takes a linkComponent (#556). mzizi-event-card gains description, price/free and share slots and all seven minerals; mzizi-review-card gains a headline, keeps line breaks, names its stars and shows the tier badge; a read-only rating is one named image (#557). mzizi-place-card takes tierLabel and linkLabel; address-share-card takes codeLabel and draws its QR on a surface-qr plate (new --surface-qr / --on-surface-qr roles) (#558). filter-bar chips are real buttons with aria-pressed (#559). Kweli PWA 192/512, maskable 512 and Apple touch icons (#560). No Mzizi Roots crate version changes. CHANGELOG.md section [4.14.0] is the narrative. Tracking: #543.',
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 14,
+    patch: 0,
+    release_kind: "minor",
+    breaking: true,
+    released_at: "2026-10-24T18:00:00.000+00:00",
+    created_at: "2026-10-24T18:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.13.0",
     title:
       "v4.13.0 — an Astro build of mzizi-trust-meter, place-card linkComponent and lazy covers, verified-badge label/ariaLabel/showScore (Breaking default), server-safe icons, and minimum-version dependencies",
