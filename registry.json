@@ -7094,8 +7094,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["discover", "pages"],
       "dependencies": [],
-      "description": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button.",
-      "docs": "Use it for: One category link in a CategoryChips row: a 44px pill with the name and an optional count (Mzizi Discover Standard).\nIncludes: Renders its own <li>, so it can be repeated as a fragment., The current chip is filled (foreground on background) and has aria-current..\nAccessibility: aria-current=\"page\" on the current category; the state is never colour alone..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-category-chip",
+      "description": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button. linkComponent (React build) renders the link with the app's router link, as on mzizi-place-card.",
+      "docs": "Use it for: One category link in a CategoryChips row: a 44px pill with the name and an optional count (Mzizi Discover Standard).\nIncludes: Renders its own <li>, so it can be repeated as a fragment., The current chip is filled (foreground on background) and has aria-current., linkComponent renders the link with the app's router link (React build)..\nAccessibility: aria-current=\"page\" on the current category; the state is never colour alone..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-category-chip",
       "files": [
         {
           "path": "components/registry/n6-pages/discover-category-chip.tsx",
@@ -7111,7 +7111,8 @@
         "contract": "discover/category-chip",
         "features": [
           "Renders its own <li>, so it can be repeated as a fragment.",
-          "The current chip is filled (foreground on background) and has aria-current."
+          "The current chip is filled (foreground on background) and has aria-current.",
+          "linkComponent renders the link with the app's router link (React build)."
         ],
         "hasDemo": false,
         "owner": "mzizi",
@@ -11672,8 +11673,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "Cover image header with overlapping avatar or logo. Used by individual and org profile pages. Branded with mineral accents and verification badge slot. Extracted from individual-profile-page and org-profile-page.",
-      "docs": "Use it for: pulse, jobs, campfire, bytes, circles.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-cover-header",
+      "description": "Cover image header with overlapping avatar or logo. Used by individual and org profile pages. Branded with mineral accents and verification badge slot. Extracted from individual-profile-page and org-profile-page. The cover is a real <img> (lazy and async by default; priority loads it eagerly with fetchpriority=\"high\" for LCP; coverAlt sets its alt, empty by default), the avatar box is drawn only when an avatar is given, and role=\"banner\" is opt-in (banner), because the header usually sits inside <main>, where a second banner landmark duplicates the page's own.",
+      "docs": "Use it for: pulse, jobs, campfire, bytes, circles.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, Cover drawn as an <img>: lazy by default, priority for LCP, coverAlt, Avatar box only with an avatar, role=\"banner\" opt-in via banner.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, role=\"banner\" only with banner (no duplicate banner landmark inside <main>).\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-cover-header",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-cover-header.tsx",
@@ -11685,14 +11686,17 @@
         "a11y": [
           "Focus-visible ring on interactive elements",
           "48px minimum touch targets",
-          "ARIA role attribute"
+          "role=\"banner\" only with banner (no duplicate banner landmark inside <main>)"
         ],
         "collection": "brand",
         "features": [
           "Harness integration (log, motion, LiveRegion)",
           "animStyle with prefersReduced motion check",
           "Mineral-colored accent via brand override",
-          "data-slot + data-portal DOM attributes"
+          "data-slot + data-portal DOM attributes",
+          "Cover drawn as an <img>: lazy by default, priority for LCP, coverAlt",
+          "Avatar box only with an avatar",
+          "role=\"banner\" opt-in via banner"
         ],
         "hasDemo": true,
         "owner": "nyuchi",

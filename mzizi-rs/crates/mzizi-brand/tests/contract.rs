@@ -231,12 +231,20 @@ fn cover_header() -> Case {
     Case {
         name: "mzizi-cover-header",
         contract: mzizi_cover_header::CONTRACT,
-        states: vec![(
-            "default",
-            render(
-                || rsx! { MziziCoverHeader { name: "Tendai Moyo", cover_image: "https://x.test/c.jpg".to_string() } },
+        states: vec![
+            (
+                "default",
+                render(
+                    || rsx! { MziziCoverHeader { name: "Tendai Moyo", cover_image: "https://x.test/c.jpg".to_string() } },
+                ),
             ),
-        )],
+            (
+                "banner",
+                render(
+                    || rsx! { MziziCoverHeader { name: "Tendai Moyo", cover_image: "https://x.test/c.jpg".to_string(), banner: true } },
+                ),
+            ),
+        ],
         defaults: vec![],
         columns: vec![
             (
@@ -255,7 +263,7 @@ fn cover_header() -> Case {
             ),
         ],
         // A recorded CSP gap (#481): only these inline style properties.
-        allowed_styles: &["animation", "background-image", "font-family"],
+        allowed_styles: &["animation", "font-family"],
     }
 }
 
@@ -635,11 +643,59 @@ fn gauge_card_announces_a_clamped_value() {
 }
 
 #[test]
-fn cover_header_quotes_the_cover_url() {
+fn cover_header_draws_the_cover_as_an_img_like_the_tsx() {
+    // #543: both builds draw the cover as a lazy <img> (eager under `priority`), draw no
+    // avatar box without an avatar, and set role="banner" only on request.
     let ts = tsx("mzizi-cover-header");
     assert!(
-        ts.contains("url(${coverImage})"),
-        "the .tsx now quotes the cover URL — remove this divergence"
+        !ts.contains("url(${coverImage})"),
+        "the .tsx is back to a CSS url() cover"
+    );
+    assert!(
+        ts.contains("role={banner ? \"banner\" : undefined}"),
+        "the .tsx banner role is no longer opt-in"
+    );
+
+    let lazy = render(
+        || rsx! { MziziCoverHeader { name: "A", cover_image: "https://x.test/a b\").jpg".to_string() } },
+    );
+    let img = lazy
+        .elements()
+        .into_iter()
+        .find(|e| matches!(e, Node::Element { tag, .. } if tag == "img"))
+        .cloned()
+        .unwrap();
+    assert_eq!(img.attr("loading"), Some("lazy"));
+    assert_eq!(img.attr("decoding"), Some("async"));
+    assert_eq!(img.attr("alt"), Some(""));
+    assert!(lazy.elements().iter().all(|e| e.attr("role").is_none()));
+    assert!(
+        lazy.elements()
+            .iter()
+            .all(|e| e.attr("data-slot") != Some("mzizi-cover-header-avatar"))
+    );
+
+    let eager = render(
+        || rsx! { MziziCoverHeader { name: "A", cover_image: "https://x.test/c.jpg".to_string(), cover_alt: "The market at dawn", priority: true } },
+    );
+    let img = eager
+        .elements()
+        .into_iter()
+        .find(|e| matches!(e, Node::Element { tag, .. } if tag == "img"))
+        .cloned()
+        .unwrap();
+    assert_eq!(img.attr("loading"), Some("eager"));
+    assert_eq!(img.attr("fetchpriority"), Some("high"));
+    assert_eq!(img.attr("alt"), Some("The market at dawn"));
+
+    let with_avatar = render(
+        || rsx! { MziziCoverHeader { name: "A", avatar: "https://x.test/a.jpg".to_string() } },
+    );
+    assert!(
+        with_avatar
+            .elements()
+            .iter()
+            .any(|e| e.attr("data-slot") == Some("mzizi-cover-header-avatar"))
     );
 }
 
