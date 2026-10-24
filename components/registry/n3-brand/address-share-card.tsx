@@ -2,7 +2,8 @@
  * AddressShareCard — an address to hand to someone: a QR code that opens it, the code in
  * the mono face, the share link written out, and the directions in words. The React
  * build of contract `ui/address-share-card`, beside `address-share-card.astro`: the same
- * markup, the QR drawn server-side as one SVG path in `currentColor` (`@/lib/qr-matrix`).
+ * markup, the QR drawn server-side as one SVG path in `currentColor` (`@/lib/qr-matrix`), on a
+ * `surface-qr` plate that stays white in every theme, so the code is never inverted (#543).
  */
 import { AddressCode } from "@/components/ui/address-code"
 import { qrMatrix } from "@/lib/qr-matrix"
@@ -17,10 +18,15 @@ export interface AddressShareCardProps {
   title?: string
   /** How to find the entrance, in words. */
   directions?: string
+  /**
+   * What the code is, for assistive technology: the address code chip's `label` ("Address" by
+   * default; "Delivery code", or the app's own language).
+   */
+  codeLabel?: string
   className?: string
 }
 
-export function AddressShareCard({ code, url, title, directions, className }: AddressShareCardProps) {
+export function AddressShareCard({ code, url, title, directions, codeLabel, className }: AddressShareCardProps) {
   const qr = qrMatrix(url)
   const shown = url.replace(/^https?:\/\//, "")
   return (
@@ -37,17 +43,19 @@ export function AddressShareCard({ code, url, title, directions, className }: Ad
           {title}
         </h3>
       )}
-      <svg
-        data-slot="address-qr"
-        role="img"
-        aria-label={`QR code that opens ${url}`}
-        viewBox={`0 0 ${qr.size} ${qr.size}`}
-        shapeRendering="crispEdges"
-        className="size-48 text-foreground"
-      >
-        <path fill="currentColor" d={qr.d} />
-      </svg>
-      <AddressCode code={code} />
+      <span data-slot="address-qr-plate" className="block rounded-md bg-surface-qr p-3 text-on-surface-qr">
+        <svg
+          data-slot="address-qr"
+          role="img"
+          aria-label={`QR code that opens ${url}`}
+          viewBox={`0 0 ${qr.size} ${qr.size}`}
+          shapeRendering="crispEdges"
+          className="block size-48"
+        >
+          <path fill="currentColor" d={qr.d} />
+        </svg>
+      </span>
+      <AddressCode code={code} label={codeLabel} />
       <a
         href={url}
         data-slot="address-share-card-link"

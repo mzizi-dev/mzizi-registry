@@ -296,6 +296,10 @@ pub struct RoleColors {
     pub wash: &'static str,
     /// Deepest fill — inset sections, metadata rows, maximum text contrast
     pub muted: &'static str,
+    /// The plate behind a QR code: white in every theme, so the code is never inverted.
+    pub surface_qr: &'static str,
+    /// A QR code's modules on `surface-qr`: the canon's ink in every theme.
+    pub on_surface_qr: &'static str,
     /// Body and heading text. APCA Lc 90 on `base`.
     pub text_primary: &'static str,
     /// Secondary text, descriptions. APCA Lc 75 on `base` and `surface` (#399).
@@ -458,6 +462,8 @@ pub struct RoleColors {
     pub destructive_foreground: &'static str,
     /// Error text on the page (form messages).
     pub destructive_text: &'static str,
+    /// The error status (`text-status-error`, `fill-status-error`): an alias of `destructive`, red, never the terracotta `status-danger`.
+    pub status_error: &'static str,
     /// Text on `overlay`.
     pub overlay_foreground: &'static str,
     /// Hover and selected fills: `primary` at 12% over `base`.
@@ -519,6 +525,8 @@ impl Roles {
                 scrim: "rgba(0, 0, 0, 0.4)",
                 wash: "#E3E5E4",
                 muted: "#FAF9F5",
+                surface_qr: "#FFFFFF",
+                on_surface_qr: "#0E0D0C",
                 text_primary: "#373635",
                 text_secondary: "#575655",
                 text_tertiary: "#6B6A69",
@@ -600,6 +608,7 @@ impl Roles {
                 destructive: "#B3261E",
                 destructive_foreground: "#FFFFFF",
                 destructive_text: "#9F221B",
+                status_error: "#B3261E",
                 overlay_foreground: "#373635",
                 accent: "#DFE2E2",
                 accent_foreground: "#373635",
@@ -633,6 +642,8 @@ impl Roles {
                 scrim: "rgba(0, 0, 0, 0.6)",
                 wash: "#252524",
                 muted: "#050504",
+                surface_qr: "#FFFFFF",
+                on_surface_qr: "#0E0D0C",
                 text_primary: "#E5E5E3",
                 text_secondary: "#CCCCCA",
                 text_tertiary: "#B3B3B1",
@@ -714,6 +725,7 @@ impl Roles {
                 destructive: "#F3BDBA",
                 destructive_foreground: "#0E0D0C",
                 destructive_text: "#F3C0BD",
+                status_error: "#F3BDBA",
                 overlay_foreground: "#E5E5E3",
                 accent: "#20201F",
                 accent_foreground: "#E5E5E3",

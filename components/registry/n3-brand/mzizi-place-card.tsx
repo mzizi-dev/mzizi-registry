@@ -44,6 +44,18 @@ interface MziziPlaceCardProps {
   verificationTier?: PlaceVerification
   /** Print the tier's name beside the badge. Tier 0 reads "Unverified", where the badge itself draws nothing. */
   showTierLabel?: boolean
+  /**
+   * The tier's wording, in place of the built-in name ("Contact Verified"): passed to the
+   * badge as its `label` (its title and accessible name) and printed by `showTierLabel`. Use it
+   * to localise the tier or name it in the app's own words ("Identity verified").
+   */
+  tierLabel?: string
+  /**
+   * The accessible name of the card's link (with `href`) or button (with `onClick` alone). Without
+   * it the link is named by its content and the button by `name`. Set it when the content reads
+   * poorly as a link name, e.g. "Open Mbare Musika, 2 km away".
+   */
+  linkLabel?: string
   mineral?: "malachite" | "cobalt" | "gold" | "tanzanite" | "terracotta"
   variant?: "row" | "compact"
   /**
@@ -112,13 +124,13 @@ const mineralColors: Record<string, string> = {
   terracotta: "var(--color-terracotta,#D4A574)",
 }
 
-function TierMark({ tier, showLabel }: { tier: PlaceVerification; showLabel: boolean }) {
+function TierMark({ tier, showLabel, label }: { tier: PlaceVerification; showLabel: boolean; label?: string }) {
   return (
     <>
-      <MziziVerifiedBadge tier={tier} size="sm" />
+      <MziziVerifiedBadge tier={tier} size="sm" label={label} />
       {showLabel && (
         <span data-slot="mzizi-place-card-tier" className="shrink-0 text-xs text-muted-foreground">
-          {TIER_CONFIG[tier].label}
+          {label ?? TIER_CONFIG[tier].label}
         </span>
       )}
     </>
@@ -137,6 +149,8 @@ function MziziPlaceCard({
   openNow,
   verificationTier = "unverified",
   showTierLabel = false,
+  tierLabel,
+  linkLabel,
   mineral = "malachite",
   variant = "row",
   href,
@@ -196,6 +210,7 @@ function MziziPlaceCard({
         rel: target && !SAME_CONTEXT_TARGETS.has(target) ? "noopener noreferrer" : undefined,
         onClick,
         style,
+        "aria-label": linkLabel,
         className: cn(cls, "no-underline", className),
       }
       return LinkComponent ? <LinkComponent {...linkProps}>{body}</LinkComponent> : <a {...linkProps}>{body}</a>
@@ -204,7 +219,7 @@ function MziziPlaceCard({
       <div
         {...rootProps}
         role={onClick ? "button" : "article"}
-        aria-label={name}
+        aria-label={onClick ? (linkLabel ?? name) : name}
         tabIndex={onClick ? 0 : undefined}
         onClick={
           onClick
@@ -279,7 +294,7 @@ function MziziPlaceCard({
         <div className="p-3">
           <div className="flex items-center gap-1.5">
             <h4 className="line-clamp-1 text-sm font-medium text-foreground">{name}</h4>
-            <TierMark tier={verificationTier} showLabel={showTierLabel} />
+            <TierMark tier={verificationTier} showLabel={showTierLabel} label={tierLabel} />
           </div>
           {category && <span className="text-xs text-muted-foreground">{category}</span>}
           <div className="mt-1.5 flex items-center gap-3 text-xs text-muted-foreground">
@@ -325,7 +340,7 @@ function MziziPlaceCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <span className="line-clamp-1 text-sm font-medium text-foreground">{name}</span>
-            <TierMark tier={verificationTier} showLabel={showTierLabel} />
+            <TierMark tier={verificationTier} showLabel={showTierLabel} label={tierLabel} />
           </div>
           {category && (
             <span data-slot="mzizi-place-card-category" className="text-xs text-muted-foreground">

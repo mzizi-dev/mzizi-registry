@@ -53,9 +53,16 @@ interface Props {
   /** A muted line under the wordmark (a mini-app lockup: "mukoko · Africa"). Needs `wordmark`. */
   tagline?: string;
   decorative?: boolean;
+  /**
+   * How the mark loads: "lazy" (the default since #543) or "eager". Lazy keeps a footer or
+   * below-the-fold mark off the critical path (Lighthouse flagged an eager footer mark), and
+   * the theme's hidden image is never fetched. A small mark in a header still loads at once,
+   * since it is in the viewport; pass "eager" only where the mark is the page's LCP image.
+   */
+  loading?: "lazy" | "eager";
   class?: string;
 }
-const { brand = "nyuchi", size = 28, wordmark = false, suffix, tagline, decorative = false, class: extra } = Astro.props;
+const { brand = "nyuchi", size = 28, wordmark = false, suffix, tagline, decorative = false, loading = "lazy", class: extra } = Astro.props;
 // An unknown brand (from untyped data, or one whose icon pair has not shipped) is an error
 // that names it, never another brand's mark in its place.
 if (!Object.prototype.hasOwnProperty.call(MARKS, brand))
@@ -66,8 +73,8 @@ const alt = decorative || wordmark ? "" : mark.name;
 ---
 
 <span class={["inline-flex min-w-0 items-center gap-2", extra].filter(Boolean).join(" ")} data-slot="brand-mark" data-brand={brand}>
-  <img src={src(mark.light)} alt={alt} width={size} height={size} decoding="async" class="brand-mark-light block shrink-0" />
-  <img src={src(mark.dark)} alt={alt} width={size} height={size} decoding="async" class="brand-mark-dark hidden shrink-0" />
+  <img src={src(mark.light)} alt={alt} width={size} height={size} loading={loading} decoding="async" class="brand-mark-light block shrink-0" />
+  <img src={src(mark.dark)} alt={alt} width={size} height={size} loading={loading} decoding="async" class="brand-mark-dark hidden shrink-0" />
   {
     wordmark && !tagline && (
       <span data-slot="brand-wordmark" class="truncate font-serif text-body font-semibold tracking-tight lowercase">
