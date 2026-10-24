@@ -1448,6 +1448,41 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "primitives"],
+      "dependencies": [],
+      "description": "An amount of money formatted for a locale from integer minor units and an ISO 4217 code, inside <data value=\"<exact decimal>\" data-currency=\"<code>\">. No default currency and no default locale.",
+      "docs": "Use it for: A price, a balance or a refund in any currency.\nIncludes: Exact decimal in <data value>, the code in data-currency, Formatted with Intl for the given locale, No default currency or locale; a malformed code is refused.\nAccessibility: The formatted text is the accessible text; tabular figures..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-money",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/app-money.tsx",
+          "target": "components/ui/app-money.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["The formatted text is the accessible text; tabular figures."],
+        "collection": "app",
+        "contract": "app/money",
+        "features": [
+          "Exact decimal in <data value>, the code in data-currency",
+          "Formatted with Intl for the given locale",
+          "No default currency or locale; a malformed code is refused"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["A price, a balance or a refund in any currency"]
+      },
+      "name": "app-money",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/money",
+        "https://api.mzizi.dev/v1/ui/ui-utils"
+      ],
+      "title": "App Money",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["lib", "shell"],
       "dependencies": [],
       "description": "Typed navigation groups for the Dashboard Standard's app shell, side nav and command palette: flatten, group, search and current-page matching.",
@@ -1546,6 +1581,52 @@
       "name": "app-pagination",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/server-table"],
       "title": "App Pagination",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "The plan an account is on: its name, its price (Money) per interval, its status in words and a status pill (active, past_due, cancelled, expired, none), the date it renews or ends, what it includes, and its actions. Provider-neutral: no provider, no payment method, no default currency or locale.",
+      "docs": "Use it for: A billing page's current plan, A plan card in a business dashboard.\nIncludes: Price as Money for the given locale, with the interval in words, Status pill: Active, Payment due, Cancelled, Expired, No plan, The renewal or end date in a <time> in the locale, No provider, no payment method, no default currency or locale, Every word replaceable (copy).\nAccessibility: A section labelled by the plan's name., The status is a word in a pill, never colour alone., The features list is named..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-plan-summary",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-plan-summary.tsx",
+          "target": "components/ui/app-plan-summary.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "A section labelled by the plan's name.",
+          "The status is a word in a pill, never colour alone.",
+          "The features list is named."
+        ],
+        "collection": "app",
+        "contract": "app/plan-summary",
+        "features": [
+          "Price as Money for the given locale, with the interval in words",
+          "Status pill: Active, Payment due, Cancelled, Expired, No plan",
+          "The renewal or end date in a <time> in the locale",
+          "No provider, no payment method, no default currency or locale",
+          "Every word replaceable (copy)"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A billing page's current plan",
+          "A plan card in a business dashboard"
+        ]
+      },
+      "name": "app-plan-summary",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/app-money",
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Plan Summary",
       "type": "registry:ui"
     },
     {
@@ -10746,6 +10827,41 @@
       ],
       "title": "Moderation Queue Item",
       "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": [],
+      "description": "Money, provider-neutral: Money ({ amountMinor, currency }), isCurrencyCode, currencyDigits, moneyValue (the exact decimal, built from the integer, never a float) and formatMoney(money, locale, display). No default currency and no default locale: the caller passes an ISO 4217 code and a BCP 47 locale. Framework-free, so Astro, React and servers share it.",
+      "docs": "Use it for: Formatting a price or a balance for the reader's locale, The machine-readable value of an amount.\nIncludes: Integer minor units plus an ISO 4217 code, never floats, The currency's own minor-unit digits from Intl (0 for JPY and XOF, 3 for KWD), No default currency and no default locale, A malformed code or a non-integer amount is refused (RangeError).\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/money",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/money.ts",
+          "target": "lib/money.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Integer minor units plus an ISO 4217 code, never floats",
+          "The currency's own minor-unit digits from Intl (0 for JPY and XOF, 3 for KWD)",
+          "No default currency and no default locale",
+          "A malformed code or a non-integer amount is refused (RangeError)"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Formatting a price or a balance for the reader's locale",
+          "The machine-readable value of an amount"
+        ]
+      },
+      "name": "money",
+      "registryDependencies": [],
+      "title": "Money",
+      "type": "registry:lib"
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
