@@ -138,6 +138,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "name": "directions",
       "type": "string",
       "required": false
+    },
+    {
+      "name": "codeLabel",
+      "type": "string",
+      "required": false
     }
   ],
   "admin-page": [
@@ -561,6 +566,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "decorative",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "\"lazy\" | \"eager\"",
       "required": false
     }
   ],
@@ -9281,6 +9291,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "showTierLabel",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "tierLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "linkLabel",
+      "type": "string",
       "required": false
     },
     {
