@@ -14430,8 +14430,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["safety"],
       "dependencies": [],
-      "description": "Verification tier gate. Checks the user's verification tier against the required tier before rendering children. Shows a branded mineral-colored upgrade CTA if insufficient. Maps to system.verification_tier (5 tiers: unverified, community, OTP, government, licensed). Renders children when check passes, branded explanation when it doesn't.",
-      "docs": "Use it for: Gate features behind verification tier, Block posting for unverified users, Require government ID for selling, Restrict moderation to trusted users.\nIncludes: Renders children when check passes, Branded upgrade CTA when blocked, 5 verification tiers, Maps to system.verification_tier.\nAccessibility: aria-live announces gate state, Focus moves to CTA when blocked, Screen reader explains what is required.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-permission-gate",
+      "description": "Verification tier gate. Checks the user's verification tier against the required tier before rendering children. Shows an upgrade explanation in the required tier's mineral, with the upgrade action on the brand's primary pair (bg-primary, text-primary-foreground), if insufficient. Maps to system.verification_tier (5 tiers: unverified, community, OTP, government, licensed). Renders children when check passes, branded explanation when it doesn't.",
+      "docs": "Use it for: Gate features behind verification tier, Block posting for unverified users, Require government ID for selling, Restrict moderation to trusted users.\nIncludes: Renders children when check passes, Upgrade action on the primary pair (--primary / --primary-foreground, at least 4.5:1 in both themes), 5 verification tiers, Maps to system.verification_tier.\nAccessibility: aria-live announces gate state, Focus moves to CTA when blocked, Screen reader explains what is required.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-permission-gate",
       "files": [
         {
           "path": "components/registry/n4-safety/mzizi-permission-gate.tsx",
@@ -14448,7 +14448,7 @@
         "collection": "safety",
         "features": [
           "Renders children when check passes",
-          "Branded upgrade CTA when blocked",
+          "Upgrade action on the primary pair (--primary / --primary-foreground, at least 4.5:1 in both themes)",
           "5 verification tiers",
           "Maps to system.verification_tier"
         ],
@@ -17069,8 +17069,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
-      "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. Renders the appropriate mineral-colored badge for each tier — Terracotta (Community 0.10), Cobalt (OTP 0.20), Gold (Government 0.30), Tanzanite (Licensed 0.50). Suspended/ancestral accounts show a dimmed or memorial variant. Used inline next to names, on profile headers, listing cards, and anywhere trust needs to be communicated.",
-      "docs": "Use it for: Profile header verification display, Inline name verification, Listing card trust indicator, Search result trust signal.\nVariants: community (terracotta), otp (cobalt), government (gold), licensed (tanzanite), suspended (dimmed), ancestral (memorial).\nSizes: sm, md, lg.\nIncludes: Three-axis trust model: Status × Tier → Score, Mineral-colored per tier, Native title with the tier name and trust score (no tooltip component), Maps to system.verification_tier, Each tier reads its own --tier-* variable (government reads --tier-government).\nAccessibility: role=img with an aria-label naming the verification tier, Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
+      "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. Renders the appropriate mineral-colored badge for each tier — Terracotta (Community 0.10), Cobalt (OTP 0.20), Gold (Government 0.30), Tanzanite (Licensed 0.50). Suspended/ancestral accounts show a dimmed or memorial variant. The title and accessible name are the tier name (label and ariaLabel override them); the trust score is added only with showScore. Used inline next to names, on profile headers, listing cards, and anywhere trust needs to be communicated.",
+      "docs": "Use it for: Profile header verification display, Inline name verification, Listing card trust indicator, Search result trust signal.\nVariants: community (terracotta), otp (cobalt), government (gold), licensed (tanzanite), suspended (dimmed), ancestral (memorial).\nSizes: sm, md, lg.\nIncludes: Three-axis trust model: Status × Tier → Score, Mineral-colored per tier, Native title with the tier name; the trust score only with showScore (no tooltip component), label and ariaLabel override the wording and the accessible name (localise, or name the tier in the app's words), Maps to system.verification_tier, Each tier reads its own --tier-* variable (government reads --tier-government).\nAccessibility: role=img with an aria-label naming the verification tier (ariaLabel overrides it); the raw trust score is not in the accessible name unless showScore is set, Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-verified-badge.tsx",
@@ -17080,14 +17080,15 @@
       ],
       "meta": {
         "a11y": [
-          "role=img with an aria-label naming the verification tier",
+          "role=img with an aria-label naming the verification tier (ariaLabel overrides it); the raw trust score is not in the accessible name unless showScore is set",
           "Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated"
         ],
         "collection": "brand",
         "features": [
           "Three-axis trust model: Status × Tier → Score",
           "Mineral-colored per tier",
-          "Native title with the tier name and trust score (no tooltip component)",
+          "Native title with the tier name; the trust score only with showScore (no tooltip component)",
+          "label and ariaLabel override the wording and the accessible name (localise, or name the tier in the app's words)",
           "Maps to system.verification_tier",
           "Each tier reads its own --tier-* variable (government reads --tier-government)"
         ],
