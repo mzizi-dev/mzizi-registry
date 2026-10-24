@@ -1109,8 +1109,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "pages"],
       "dependencies": [],
-      "description": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup.",
-      "docs": "Use it for: A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways (Mzizi Dashboard Standard).\nIncludes: Cell text is escaped: a row cannot inject markup., An empty cell shows a dash to the eye and \"none\" to a screen reader., A cell with `current` marks its row aria-current=\"true\"., A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`., Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination..\nAccessibility: <caption> always present., Phone card labels are aria-hidden duplicates of the headers., aria-current=\"true\" on the current row..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-data-table",
+      "description": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup; a cell can be a person (avatar, name, secondary line), and rows can carry their own actions (links or small POST forms, one inline or several in a <details> menu) that work without script.",
+      "docs": "Use it for: A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways (Mzizi Dashboard Standard).\nIncludes: Cell text is escaped: a row cannot inject markup., An empty cell shows a dash to the eye and \"none\" to a screen reader., A cell with `current` marks its row aria-current=\"true\"., A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`., Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination., A `person` cell: an avatar (image, or initials) beside the name and a secondary line., `actions` per row, keyed by rowKey: one action is a button in the row, more are a <details> menu; each is a link or a small form, so it works with no script. Destructive actions are listed last..\nAccessibility: <caption> always present., Phone card labels are aria-hidden duplicates of the headers., aria-current=\"true\" on the current row., Row actions are named for their row (\"Actions for Tendai Moyo\")..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-data-table",
       "files": [
         {
           "path": "components/registry/n6-pages/app-data-table.tsx",
@@ -1122,7 +1122,8 @@
         "a11y": [
           "<caption> always present.",
           "Phone card labels are aria-hidden duplicates of the headers.",
-          "aria-current=\"true\" on the current row."
+          "aria-current=\"true\" on the current row.",
+          "Row actions are named for their row (\"Actions for Tendai Moyo\")."
         ],
         "collection": "app",
         "contract": "app/data-table",
@@ -1131,7 +1132,9 @@
           "An empty cell shows a dash to the eye and \"none\" to a screen reader.",
           "A cell with `current` marks its row aria-current=\"true\".",
           "A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`.",
-          "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination."
+          "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination.",
+          "A `person` cell: an avatar (image, or initials) beside the name and a secondary line.",
+          "`actions` per row, keyed by rowKey: one action is a button in the row, more are a <details> menu; each is a link or a small form, so it works with no script. Destructive actions are listed last."
         ],
         "hasDemo": false,
         "owner": "mzizi",
@@ -1141,7 +1144,11 @@
         ]
       },
       "name": "app-data-table",
-      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-variants"],
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
       "title": "App Data Table",
       "type": "registry:ui"
     },

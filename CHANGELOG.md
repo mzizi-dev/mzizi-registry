@@ -20,6 +20,15 @@ Gap 4 of the Kweli business-dashboard inventory ([packages-npm#79](https://githu
 - The danger is written: "Warning: This cannot be undone." with a warning glyph, and the submit button names the action. Every word can be replaced for another language (`warningLabel`, `acknowledge`, `confirmPrompt`, `cancelLabel`).
 - **`ui-utils`** gains `exactPattern(text)`; **`site-icons`** gains `warning`.
 
+### Added — `app/data-table` 1.2: person cells and per-row actions that work without script (2026-10-24, #571)
+
+Gap 3 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): a team list could show members but not act on one.
+
+- **`person` cells**: `{ text, sub, person: true, avatar? }` draws an avatar (the image with `alt=""`, or the person's initials, `aria-hidden`) beside the name (a link with `href`) and the secondary line (an email or a role).
+- **`actions`**, keyed by each row's `rowKey` text. An action is a link (`href`) or a small `<form>` (POST unless `method: "get"`, posting its hidden `fields`). One action is an outline button in the row whose accessible name ends with the row's name; several are a `<details>` menu named "Actions for <row>". `destructive` actions are drawn in the destructive colour and listed last. A visually hidden "Actions" column header is added only when some row has actions.
+- **`ui-utils`** gains `initialsOf(name)`; **`site-icons`** gains `more`.
+- Contract 1.1.0 → 1.2.0 (minor: a new prop and new cell fields, nothing removed): a `team` state, 2 new clauses, 15 new checks and 3 density rows (32px fine, 44px coarse). Both builds keep it with no script.
+
 ### Added — `app/form-field` 1.2: checkbox, switch and radio-group controls (2026-10-24, #570)
 
 Gap 13 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): settings had no way to build an on/off preference.

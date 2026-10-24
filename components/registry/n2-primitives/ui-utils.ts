@@ -50,4 +50,16 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function exactPattern(text: string): string {
   return text.replace(/[\\^$.*+?()[\]{}|/]/g, "\\$&")
+ * Up to two initials for a name ("Tendai Moyo" → "TM", "rudo" → "R"), for an
+ * avatar with no image. Letters of any script; empty when the name has none.
+ */
+export function initialsOf(name: string): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => Array.from(w)[0] ?? "")
+    .join("")
+    .toLocaleUpperCase()
 }
