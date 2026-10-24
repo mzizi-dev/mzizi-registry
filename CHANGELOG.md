@@ -22,6 +22,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 - **Tests:** 15 write-path tests (`tests/writes.rs`): each cascade step; the same request id sent twice applies once; offline writes flush in order on reconnect; a stale `base_version` reverts and reports a conflict; an Unknown write is re-checked on restart and never re-sent; read-your-own-writes; a malformed id is refused.
 - **Consistency contract (draft).** Documented in `src/client.rs`. The 5-second apply figure is a TARGET TO BE CONFIRMED, not a measured fact. No speed claim is made.
 - **Server contract** moves to 1.2.0 (`mzizi-rs/contracts/server/mzizi-data.contract.json`).
+
 ### Added — the data layer in `mzizi-data`: fetch cascade, sync reconciliation, tombstones, staleness, local-first writes with rollback, not wired into any app (2026-10-24, #509)
 
 - **The data layer, in the crate the transport already lives in.** `mzizi-data` keeps its `io::Io` transport, `Error` and `Result`, and adds the data layer above them: `Cascade::fetch`, `reconcile`, `apply_optimistic`, `delete`, `Record`, `Layer`, `Clock`, `MemoryLayer`. It has no UI, no storage client and no dependencies beyond the transport's optional Worker features.
