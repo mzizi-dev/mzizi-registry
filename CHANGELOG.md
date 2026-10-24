@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.13.0] - 2026-10-24
+
+Releases `staging` to `main` as the next minor above v4.12.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.13.0. It carries the fixes for the gaps in the Kweli review tracked in #543: an Astro build of `mzizi-trust-meter` with one contract for both builds (#552), `linkComponent` and lazy cover images on `mzizi-place-card` (#549), `label` / `ariaLabel` / `showScore` on `mzizi-verified-badge` and the `mzizi-permission-gate` contrast fix (#550), and `"use client"` dropped from `lib/icons` (#551); plus minimum-version dependencies (#534). No Mzizi Roots crate version changes.
+
+**Breaking (a default changes):** `mzizi-verified-badge` no longer shows the trust score in its title or accessible name. A consumer that wants the old "· Trust 0.x" wording passes `showScore` (#550). This is released as a minor, not a major: under the org versioning policy a major is only made by hand by the owner, and the release record marks the change `breaking: true`.
+
 ### Added — an Astro build of `mzizi-trust-meter`, and one contract, `ui/mzizi-trust-meter`, that both builds keep (2026-10-24, #552)
 
 Gap 6 of the Kweli review (found during the 4.12.0 `@bundu/ui` sync), tracked in #543. The trust meter had only a React build, so `@bundu/ui` could not sync it.
