@@ -801,7 +801,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "Shona",
     sortOrder: 0,
     description:
-      "The complete ecosystem built by Nyuchi Africa. Three pillars — mukoko (consumer super app), nyuchi (enterprise layer), and sister brands (specialist verticals) — all connected through one identity, one design system, and one open data commons.",
+      "The complete ecosystem built by Nyuchi Africa. Three pillars — mukoko (consumer super app, tanzanite), nyuchi (infrastructure and enterprise, gold), and shamwari (sovereign AI, the intelligence pillar, sodalite) — with the sister brands as specialist verticals, all connected through one identity, one design system, and one open data commons.",
     adopterType: "ecosystem_brand",
   },
   {
