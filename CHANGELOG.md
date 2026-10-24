@@ -10,6 +10,11 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — every dependency and override is a minimum version (2026-10-21, #534)
+
+- **`package.json`.** Every `dependencies`, `devDependencies` and `pnpm.overrides` entry is now `>=x.y.z` with no maximum, exact pins included (owner, 2026-10-21: "mark packages with minimum acceptable, latest shouldn't be a blocker on too old of a version"). Each floor is the version the lockfile already resolved, or the advisory floor `staging` already set where that is higher: `next` `>=16.4.1` (it was an exact pin), `dompurify` `>=3.4.17` as the dependency and the override, `vitest` `>=5.0.5` and the `ip-address` override `>=10.7.4` (4.11.0, #533), and `zod` `>=4.6.7`, `shadcn` `>=4.22.1`, `body-parser` `>=2.4.0`, `undici` `>=7.30.1` and `fast-uri` `>=3.1.9` (#545). The `zod@<4.6.6` override keeps its selector, and `auditConfig.ignoreGhsas` is unchanged. Four overrides for packages not in the tree (`@xmldom/xmldom`, `lodash-es`, `uuid`, `minimatch@8>brace-expansion`) keep their old floor.
+- **`pnpm-lock.yaml`.** Regenerated from `staging`'s lockfile with pnpm 10.33.0, direct dependencies resolved at their floors, so no direct dependency moves. Duplicate transitive copies of a few packages collapsed onto the newer copy already in the tree. With no upper bound, a resolve without the lockfile may cross majors (undici 8, fast-uri 4); the `micromatch>picomatch` and `minimatch@8>brace-expansion` overrides no longer hold their parent's major on such a resolve.
+
 ## [4.12.0] - 2026-10-24
 
 Releases `staging` to `main` as the next minor above v4.11.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.12.0. It carries the Kweli design work tracked in #543: the four Kweli Address primitives (`address-code`, `address-share-card`, `address-selector`, `address-private-row`), the `qr-matrix` lib on `uqr`, and counted signals on `mzizi-trust-meter` (#546); the kweli brand entry and `--radius-xs` (#544); and zod 3 removed with new advisory floors (#545). Nothing is **Breaking**. No Mzizi Roots crate version changes.
