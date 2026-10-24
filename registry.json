@@ -9032,6 +9032,110 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli favicon: the kweli mark (a shield with a tick) at 32px, mono in malachite, switching between the light-surface and dark-surface malachite with prefers-color-scheme. Kweli's own shipped favicon (mukoko-dev/kweli). Installs into public/favicon.svg; link it with <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\">.",
+      "docs": "Use it for: The kweli.mukoko.com browser tab icon, Bookmarks and pinned tabs.\nIncludes: 32px vector favicon, Follows prefers-color-scheme: malachite #004d40 on light, #64ffda on dark, The kweli mark, unchanged.\nAccessibility: Decorative: the page <title> names the site.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-favicon",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-favicon.svg",
+          "target": "public/favicon.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": ["Decorative: the page <title> names the site"],
+        "collection": "assets",
+        "features": [
+          "32px vector favicon",
+          "Follows prefers-color-scheme: malachite #004d40 on light, #64ffda on dark",
+          "The kweli mark, unchanged"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The kweli.mukoko.com browser tab icon",
+          "Bookmarks and pinned tabs"
+        ]
+      },
+      "name": "kweli-favicon",
+      "registryDependencies": [],
+      "title": "kweli Favicon",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli mark for dark grounds: a shield with a tick, for verified presence, drawn mono in malachite (kweli's mineral, #64ffda). Kweli's own shipped artwork (mukoko-dev/kweli), not redrawn. A vector SVG master; installs into public/brand/. Never recolour or redraw it.",
+      "docs": "Use it for: The kweli mark on dark grounds, App icons and lockups, Headers and footers on kweli.mukoko.com.\nIncludes: Vector SVG master, Malachite, kweli's mineral (mukoko mini-app variant), role=\"img\" with a <title>.\nAccessibility: role=\"img\" and aria-label=\"kweli\", Stroke clears 3:1 on its dark ground.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-mark-dark",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-mark-dark.svg",
+          "target": "public/brand/kweli-mark-dark.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"img\" and aria-label=\"kweli\"",
+          "Stroke clears 3:1 on its dark ground"
+        ],
+        "collection": "assets",
+        "features": [
+          "Vector SVG master",
+          "Malachite, kweli's mineral (mukoko mini-app variant)",
+          "role=\"img\" with a <title>"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The kweli mark on dark grounds",
+          "App icons and lockups",
+          "Headers and footers on kweli.mukoko.com"
+        ]
+      },
+      "name": "kweli-mark-dark",
+      "registryDependencies": [],
+      "title": "kweli Mark Dark",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["assets"],
+      "dependencies": [],
+      "description": "The kweli mark for light grounds (background, card): a shield with a tick, for verified presence, drawn mono in malachite (kweli's mineral, #004d40). Kweli's own shipped artwork (mukoko-dev/kweli), not redrawn. A vector SVG master; installs into public/brand/. Never recolour or redraw it.",
+      "docs": "Use it for: The kweli mark on light grounds (background, card), App icons and lockups, Headers and footers on kweli.mukoko.com.\nIncludes: Vector SVG master, Malachite, kweli's mineral (mukoko mini-app variant), role=\"img\" with a <title>.\nAccessibility: role=\"img\" and aria-label=\"kweli\", Stroke clears 3:1 on its light ground.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/kweli-mark-light",
+      "files": [
+        {
+          "path": "components/registry/assets/kweli-mark-light.svg",
+          "target": "public/brand/kweli-mark-light.svg",
+          "type": "registry:file"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"img\" and aria-label=\"kweli\"",
+          "Stroke clears 3:1 on its light ground"
+        ],
+        "collection": "assets",
+        "features": [
+          "Vector SVG master",
+          "Malachite, kweli's mineral (mukoko mini-app variant)",
+          "role=\"img\" with a <title>"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "The kweli mark on light grounds (background, card)",
+          "App icons and lockups",
+          "Headers and footers on kweli.mukoko.com"
+        ]
+      },
+      "name": "kweli-mark-light",
+      "registryDependencies": [],
+      "title": "kweli Mark Light",
+      "type": "registry:item"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["components", "primitives"],
       "dependencies": ["radix-ui"],
       "description": "Renders an accessible label associated with controls.",
@@ -16338,7 +16442,8 @@
           "radius-md": "calc(var(--radius-unit) + 5px)",
           "radius-sm": "var(--radius-unit)",
           "radius-unit": "7px",
-          "radius-xl": "calc(var(--radius-unit) + 10px)"
+          "radius-xl": "calc(var(--radius-unit) + 10px)",
+          "radius-xs": "calc(var(--radius-unit) - 3px)"
         }
       },
       "dependencies": [],

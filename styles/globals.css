@@ -72,9 +72,10 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   /* Radius system — derived from --radius-unit (7px)
-   sm: 1×unit (7),  md: 1×unit + 5 (12),  lg: 2×unit (14),  xl: 1×unit + 10 (17)
+   xs: 1×unit − 3 (4),  sm: 1×unit (7),  md: 1×unit + 5 (12),  lg: 2×unit (14),  xl: 1×unit + 10 (17)
    Buttons are always pill (9999px) — brand identity decision */
   --radius-unit: 7px;
+  --radius-xs: calc(var(--radius-unit) - 3px);
   --radius-sm: var(--radius-unit);
   --radius-md: calc(var(--radius-unit) + 5px);
   --radius-lg: calc(var(--radius-unit) * 2);
