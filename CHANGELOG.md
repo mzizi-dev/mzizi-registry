@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.14.0] - 2026-10-24
+
+Releases `staging` to `main` as the next minor above v4.13.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.14.0. It carries the Kweli phase-2 fixes tracked in #543: `showScore`, a canonical `--status-error` and the server-safe `mzizi-trust-tiers` lib for `mzizi-trust-meter` (#555); an `<img>` cover, optional avatar and opt-in banner role on `mzizi-cover-header`, and `linkComponent` on `discover-category-chip` (#556); the event card, review card and read-only `rating` (#557); `tierLabel` / `linkLabel` on `mzizi-place-card`, `codeLabel` and a light QR plate on `address-share-card` (new `--surface-qr` / `--on-surface-qr` roles), and a `loading` prop on `app-brand-mark` (#558); keyboard-operable `filter-bar` chips (#559); and the Kweli PWA and Apple icons (#560). No Mzizi Roots crate version changes.
+
+**Breaking (defaults change):** three defaults change. `mzizi-trust-meter` writes no raw score unless `showScore` is set (#555). `mzizi-cover-header` no longer carries `role="banner"` unless `banner` is set (#556). `app-brand-mark`'s images load lazily unless `loading="eager"` is passed (#558). This is released as a minor, not a major: under the org versioning policy a major is only made by hand by the owner, and the release record marks the change `breaking: true`.
+
 ### Added — Kweli app icons: PWA 192 and 512, maskable 512 and the 180px Apple touch icon (2026-10-24, #560)
 
 Item 10 of the Kweli phase-2 gaps, tracked in #543. Kweli had a vector favicon and marks but no raster app-icon set for a web app manifest or the iOS home screen.
