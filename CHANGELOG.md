@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.12.0] - 2026-10-24
+
+Releases `staging` to `main` as the next minor above v4.11.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.12.0. It carries the Kweli design work tracked in #543: the four Kweli Address primitives (`address-code`, `address-share-card`, `address-selector`, `address-private-row`), the `qr-matrix` lib on `uqr`, and counted signals on `mzizi-trust-meter` (#546); the kweli brand entry and `--radius-xs` (#544); and zod 3 removed with new advisory floors (#545). Nothing is **Breaking**. No Mzizi Roots crate version changes.
+
 ### Added — the Kweli Address primitives: address code, share card with QR, "deliver to" selector, private-address row; counted signals on `mzizi-trust-meter` (2026-10-24, #546)
 
 Gap 4 of #543, upstream before Kweli consumes them (Kweli Address RFC v0.1, mukoko-dev/kweli#195). Each is an Astro build and a React build under one contract in `contracts/ui/`. Both builds render every contract state in the suites. They are server-rendered with no script, and their colour is semantic only, so Kweli's brand overlay (malachite) colours the links and the selection.
