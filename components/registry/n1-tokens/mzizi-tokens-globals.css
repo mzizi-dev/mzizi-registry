@@ -177,6 +177,8 @@
   --color-scrim: var(--scrim);
   --color-wash: var(--wash);
   --color-muted: var(--muted);
+  --color-surface-qr: var(--surface-qr);
+  --color-on-surface-qr: var(--on-surface-qr);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
@@ -583,6 +585,8 @@
   /* ── ROLES — identity, status tones, lifecycle, destructive, categories (#484) ── */
   --app-accent: var(--brand-accent);
   --app-accent-foreground: var(--brand-accent-foreground);
+  --surface-qr: #ffffff;
+  --on-surface-qr: #0e0d0c;
   --status-success: var(--mineral-malachite);
   --status-success-container: var(--mineral-malachite-container);
   --status-success-on-container: var(--mineral-malachite-on-container);
