@@ -14,10 +14,20 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 Gap 6 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)).
 
-- **New contract `app/tier-status` 1.0.0** with Astro (`app-tier-status.astro`, the default build) and React builds held to it: 4 states, 8 clauses, 21 checks, 2 density rows.
+- **New contract `app/tier-status` 1.0.0** with Astro (`app-tier-status.astro`, the default build) and React builds held to it: 4 states, 8 clauses, 21 checks, 2 density rows. The Dashboard Standard now has 33 app contracts.
 - The current rung beside the heading (its glyph on its `--tier-*` container pair, "Current level: <name>" in the tier's text colour), then the ladder as an `<ol>` of the five rungs (Unverified, Community Verified, Contact Verified, Government Verified, Licensed Professional) with each state in words ("Done", "Current" with `aria-current="step"`, "Next"), never colour alone.
 - "What you hold" lists `attestations` as facts; "Next: <name>" lists `requirements` with an optional evidence link; the top rung says "This is the highest level."
 - It takes data and computes no access decision or score: the server decides (api-gateway `assurance.py`). The ladder comes from `mzizi-trust-tier-data` (#568). Every word can be replaced (`tierLabels`, `copy`, `title`).
+
+### Added — `app/confirm-action`: a destructive action that asks first, with no script (2026-10-24, #572)
+
+Gap 4 of the Kweli business-dashboard inventory ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)). The app family had no confirmation; `alert-dialog` is a legacy Radix component.
+
+- **New contract `app/confirm-action` 1.0.0** with Astro (`app-confirm-action.astro`, the default build) and React builds held to it: 4 states, 9 clauses, 19 checks, 5 density rows. The Dashboard Standard now has 32 app contracts.
+- A trigger (`popovertarget`, `aria-haspopup="dialog"`) opens a `role="dialog"` popover panel labelled by its heading and described by the description and the warning. Escape, a click outside and Cancel (`popovertargetaction="hide"`) close it. No script.
+- The panel is a `<form>` (POST unless `method: "get"`) to `action` with hidden `fields` and a required confirm step: a checkbox posting `confirm=yes`, or, with `confirmText`, a box whose `pattern` is exactly that text. The server must check `confirm` too.
+- The danger is written: "Warning: This cannot be undone." with a warning glyph, and the submit button names the action. Every word can be replaced for another language (`warningLabel`, `acknowledge`, `confirmPrompt`, `cancelLabel`).
+- **`ui-utils`** gains `exactPattern(text)`; **`site-icons`** gains `warning`.
 
 ### Added — `app/data-table` 1.2: person cells and per-row actions that work without script (2026-10-24, #571)
 
