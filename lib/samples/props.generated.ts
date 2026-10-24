@@ -650,6 +650,93 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "app-confirm-action": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "warning",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "warningLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "method",
+      "type": "\"post\" | \"get\"",
+      "required": false
+    },
+    {
+      "name": "fields",
+      "type": "Record<string, string>",
+      "required": false
+    },
+    {
+      "name": "confirmLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "cancelLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "confirmText",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "confirmPrompt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "acknowledge",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"destructive-outline\" | \"destructive\"",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\"",
+      "required": false
+    },
+    {
+      "name": "headingLevel",
+      "type": "2 | 3",
+      "required": false
+    }
+  ],
   "app-data-table": [
     {
       "name": "caption",

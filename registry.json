@@ -1063,6 +1063,52 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "pages"],
       "dependencies": [],
+      "description": "A destructive action that asks before it acts: a trigger opens a confirmation panel through the Popover API (no script), and the panel is a POST form with hidden fields and a required confirm step (a checkbox, or typing a given text). The danger is written (\"Warning: …\"), never colour alone. For removing a member, revoking an invite, cancelling a plan and the settings danger zone.",
+      "docs": "Use it for: Removing a team member or revoking an invite, Cancelling a plan, A settings danger zone (deleting a listing or an account).\nIncludes: Works with no script: the Popover API opens and closes the panel, and the form posts., A required confirm step: a checkbox (confirm=yes), or typing confirmText (an exact, escaped pattern). The server must check `confirm` too., The danger in words: \"Warning: This cannot be undone.\", and a submit that names the action., Every word replaceable (warningLabel, acknowledge, confirmPrompt, cancelLabel) for another language., In a browser with no Popover API the panel shows in place, still a form with the confirm step..\nAccessibility: The panel is role=dialog, labelled by its heading and described by the description and the warning., aria-haspopup=dialog on the trigger; Escape closes the panel (Popover API)., The confirm step has a visible label..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-confirm-action",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-confirm-action.tsx",
+          "target": "components/ui/app-confirm-action.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The panel is role=dialog, labelled by its heading and described by the description and the warning.",
+          "aria-haspopup=dialog on the trigger; Escape closes the panel (Popover API).",
+          "The confirm step has a visible label."
+        ],
+        "collection": "app",
+        "contract": "app/confirm-action",
+        "features": [
+          "Works with no script: the Popover API opens and closes the panel, and the form posts.",
+          "A required confirm step: a checkbox (confirm=yes), or typing confirmText (an exact, escaped pattern). The server must check `confirm` too.",
+          "The danger in words: \"Warning: This cannot be undone.\", and a submit that names the action.",
+          "Every word replaceable (warningLabel, acknowledge, confirmPrompt, cancelLabel) for another language.",
+          "In a browser with no Popover API the panel shows in place, still a form with the confirm step."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Removing a team member or revoking an invite",
+          "Cancelling a plan",
+          "A settings danger zone (deleting a listing or an account)"
+        ]
+      },
+      "name": "app-confirm-action",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Confirm Action",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
       "description": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup; a cell can be a person (avatar, name, secondary line), and rows can carry their own actions (links or small POST forms, one inline or several in a <details> menu) that work without script.",
       "docs": "Use it for: A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways (Mzizi Dashboard Standard).\nIncludes: Cell text is escaped: a row cannot inject markup., An empty cell shows a dash to the eye and \"none\" to a screen reader., A cell with `current` marks its row aria-current=\"true\"., A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`., Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination., A `person` cell: an avatar (image, or initials) beside the name and a secondary line., `actions` per row, keyed by rowKey: one action is a button in the row, more are a <details> menu; each is a link or a small form, so it works with no script. Destructive actions are listed last..\nAccessibility: <caption> always present., Phone card labels are aria-hidden duplicates of the headers., aria-current=\"true\" on the current row., Row actions are named for their row (\"Actions for Tendai Moyo\")..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-data-table",
       "files": [
