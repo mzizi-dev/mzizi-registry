@@ -73,6 +73,7 @@ object MziziSpacing {
 }
 
 object MziziRadius {
+    val xs = 4.dp
     val sm = 7.dp
     val md = 12.dp
     val lg = 14.dp

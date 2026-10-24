@@ -887,11 +887,11 @@ export const STATUS: ReadonlyArray<readonly [string, string, string, string]> = 
 
 /**
  * The radius ladder, from `brandMeta.radii`, in ladder order. CLAUDE.md §7.5:
- * every radius derives from a 7px unit, giving the ecosystem numbers 7 / 12 /
- * 14 / 17. A `--radius` of 10px or 12px with a `calc()` scale hung off it puts
+ * every radius derives from a 7px unit, giving the ecosystem numbers 4 / 7 /
+ * 12 / 14 / 17 (xs is the unit less 3, for the smallest marks: swatches, kbd). A `--radius` of 10px or 12px with a `calc()` scale hung off it puts
  * every derived rung off the system.
  */
-export const RADIUS: ReadonlyArray<readonly [string, string]> = (["sm", "md", "base", "lg", "xl", "2xl", "full"] as const).map(
+export const RADIUS: ReadonlyArray<readonly [string, string]> = (["xs", "sm", "md", "base", "lg", "xl", "2xl", "full"] as const).map(
   (n) => {
     const v = brandMeta.radii[n]
     if (typeof v !== "string") throw new Error(`brand.source.ts radii has no "${n}"`)

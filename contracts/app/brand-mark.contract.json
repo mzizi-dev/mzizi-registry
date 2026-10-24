@@ -2,10 +2,10 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/brand-mark",
   "title": "BrandMark",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "node": 3,
   "kind": "primitive",
-  "summary": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, never redrawn), with its lower-case serif wordmark when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
+  "summary": "An ecosystem brand's official mark (the bundu-ecosystem-icons pair, or, for a brand with no pair, its own shipped mark, never redrawn), with its lower-case serif wordmark and an optional tagline when asked. Both the light-surface and dark-surface marks are in the page; CSS shows the one that fits the theme.",
   "implementations": {
     "astro": {
       "registry": "app-brand-mark",
@@ -26,8 +26,8 @@
       "type": "BrandName",
       "required": false,
       "default": "nyuchi",
-      "values": ["nyuchi", "mukoko"],
-      "description": "Which brand. The set grows by adding the registry's icon pair."
+      "values": ["nyuchi", "mukoko", "kweli"],
+      "description": "Which brand. The set grows by adding the brand's mark pair (128px PNG, light and dark surface)."
     },
     {
       "name": "size",
@@ -50,6 +50,12 @@
       "description": "A muted word after the wordmark (\"console\")."
     },
     {
+      "name": "tagline",
+      "type": "string",
+      "required": false,
+      "description": "A muted line under the wordmark, for a mini-app's lockup (Kweli: \"mukoko · Africa\"). Shown only with `wordmark`."
+    },
+    {
       "name": "decorative",
       "type": "boolean",
       "required": false,
@@ -65,10 +71,11 @@
   ],
   "slots": [],
   "behaviour": [
-    "The marks are the registry's canonical icon pair, never redrawn.",
+    "The marks are the registry's canonical pair, never redrawn: the bundu-ecosystem-icons pair for nyuchi and mukoko, and Kweli's own shipped mark (a shield with a tick, mono in malachite) for kweli.",
     "Theme switching is CSS ([data-theme], .dark, prefers-color-scheme), no script.",
     "The mark alone carries the brand name as alt text; with the wordmark, or `decorative`, the images are alt=\"\".",
-    "A brand outside `values` (from untyped data, or one whose icon pair has not shipped) is an error at render that names it and the brands that ship; no other brand's mark is shown in its place."
+    "A brand outside `values` (from untyped data, or one whose icon pair has not shipped) is an error at render that names it and the brands that ship; no other brand's mark is shown in its place.",
+    "With `tagline` and `wordmark`, the wordmark and the tagline stack in a `brand-lockup`; without `wordmark` the tagline is not shown."
   ],
   "states": {
     "default": {
@@ -91,6 +98,24 @@
       "props": {
         "brand": "mukoko",
         "wordmark": true
+      }
+    },
+    "kweli": {
+      "props": {
+        "brand": "kweli"
+      }
+    },
+    "kweli-lockup": {
+      "props": {
+        "brand": "kweli",
+        "wordmark": true,
+        "tagline": "mukoko · Africa"
+      }
+    },
+    "tagline-without-wordmark": {
+      "props": {
+        "brand": "kweli",
+        "tagline": "mukoko · Africa"
       }
     }
   },
@@ -183,9 +208,59 @@
       "select": "[data-slot=\"brand-wordmark\"]",
       "count": 1,
       "text": "mukoko"
+    },
+    {
+      "say": "Kweli shows the Kweli pair, named.",
+      "state": "kweli",
+      "select": "img",
+      "count": 2,
+      "attr": {
+        "alt": "kweli"
+      }
+    },
+    {
+      "say": "Kweli's light-surface image is the kweli mark.",
+      "state": "kweli",
+      "select": "img.brand-mark-light[src*=\"kweli-mark-light\"]",
+      "count": 1
+    },
+    {
+      "say": "Kweli's dark-surface image is the kweli mark.",
+      "state": "kweli",
+      "select": "img.brand-mark-dark[src*=\"kweli-mark-dark\"]",
+      "count": 1
+    },
+    {
+      "say": "The Kweli lockup's wordmark is the brand name.",
+      "state": "kweli-lockup",
+      "select": "[data-slot=\"brand-wordmark\"]",
+      "count": 1,
+      "text": "kweli"
+    },
+    {
+      "say": "The Kweli lockup carries its tagline.",
+      "state": "kweli-lockup",
+      "select": "[data-slot=\"brand-tagline\"]",
+      "count": 1,
+      "text": "mukoko · Africa"
+    },
+    {
+      "say": "In the lockup the images are decorative.",
+      "state": "kweli-lockup",
+      "select": "img",
+      "count": 2,
+      "attr": {
+        "alt": ""
+      }
+    },
+    {
+      "say": "No tagline without the wordmark.",
+      "state": "tagline-without-wordmark",
+      "select": "[data-slot=\"brand-tagline\"]",
+      "count": 0
     }
   ],
   "gaps": [
-    "Nyuchi and Mukoko ship. Bundu, Mzizi and the sub-brands need their bundu-ecosystem-icons pair added (scaled to 128px, never redrawn) before their dashboards can adopt the standard."
+    "Nyuchi, Mukoko and Kweli ship. Bundu, Mzizi and the other sub-brands need their mark pair added (scaled to 128px, never redrawn) before their dashboards can adopt the standard."
   ]
 }

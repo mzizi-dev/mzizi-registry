@@ -446,6 +446,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "tagline",
+      "type": "string",
+      "required": false
+    },
+    {
       "name": "decorative",
       "type": "boolean",
       "required": false
