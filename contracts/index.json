@@ -329,7 +329,7 @@
     {
       "name": "discover/category-chip",
       "title": "CategoryChip",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "file": "discover/category-chip.contract.json",
       "astro": "discover-category-chip",
       "tsx": "discover-category-chip",

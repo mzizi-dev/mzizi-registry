@@ -92,7 +92,7 @@ One design for every public discover and browse page in the Mukoko family (circl
 | `discover/discover-hero`    | DiscoverHero       | N6   | 1.0.0   | `discover-hero`           | `discover-hero` (contract)           | —          |
 | `discover/discover-search`  | DiscoverSearch     | N6   | 1.0.0   | `discover-search`         | `discover-search` (contract)         | —          |
 | `discover/category-chips`   | CategoryChips      | N6   | 1.0.0   | `discover-category-chips` | `discover-category-chips` (contract) | —          |
-| `discover/category-chip`    | CategoryChip       | N6   | 1.0.0   | `discover-category-chip`  | `discover-category-chip` (contract)  | —          |
+| `discover/category-chip`    | CategoryChip       | N6   | 1.0.1   | `discover-category-chip`  | `discover-category-chip` (contract)  | —          |
 | `discover/discover-section` | DiscoverSection    | N6   | 1.0.0   | `discover-section`        | `discover-section` (contract)        | —          |
 | `discover/result-grid`      | ResultGrid         | N6   | 1.1.0   | `discover-result-grid`    | `discover-result-grid` (contract)    | —          |
 | `discover/discover-card`    | DiscoverCard       | N6   | 1.0.0   | `discover-card`           | `discover-card` (contract)           | —          |
