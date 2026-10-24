@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — `mzizi-icons` is no longer a client module, so Server Components can import `@/lib/icons` (2026-10-24, #PRNUM)
+
+Gap 5 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.
+
+- `lib/icons/index.tsx` (`components/registry/n1-tokens/mzizi-icons.tsx`) started with `"use client"` and does `export * from "lucide-react"`. Next's flight loader rejects `export *` inside a client boundary when a server module imports it, so any Server Component that imported `@/lib/icons` failed to build. The file only re-exports icons and defines stateless components (`Icon`, `MukokoLogo`, `MineralStrip`), so the directive is removed. Client components that import it are unaffected: they get client copies as before. Kweli's stopgap for this can go when it re-vendors.
+- The `registry.json` description says the module is server-safe. A test in `__tests__/components/kweli-place-embed.test.tsx` fails if `"use client"` returns, or if the file starts using a hook or a browser global. No doc, skill or MCP install note relied on the directive.
+
 ### Changed — `package.json` is 4.12.2 on `staging` after the 4.12.0 sync-back (2026-10-24, #548)
 
 The release-version check allows only the next patch after `v4.12.1` (tagged when #534 merged) on `staging`, so the sync-back of 4.12.0 (#547) carries `package.json`, `README.md` and a 4.12.2 record in `content/changelog/releases.json` (and `lib/changelog.generated.ts`) instead of main's 4.12.0. The `[4.12.0]` section below is unchanged.
