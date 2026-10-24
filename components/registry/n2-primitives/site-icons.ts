@@ -19,6 +19,7 @@ export const ICON_PATHS = {
   menu: "M4 6h16M4 12h16M4 18h16",
   plus: "M12 5v14M5 12h14",
   minus: "M5 12h14",
+  more: "M5 12h.01M12 12h.01M19 12h.01",
   search: "M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z",
   code: "M16 18l6-6-6-6M8 6l-6 6 6 6",
   terminal: "M4 17l6-5-6-5M12 19h8",

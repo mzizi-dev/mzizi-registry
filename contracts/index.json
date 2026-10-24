@@ -131,7 +131,7 @@
     {
       "name": "app/data-table",
       "title": "DataTable",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "file": "app/data-table.contract.json",
       "astro": "app-data-table",
       "tsx": "app-data-table",
