@@ -146,8 +146,21 @@ interface MziziVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants>
   tier: VerificationTier
   /** Platform status (identity.person.mit_status). Affects badge appearance. */
   status?: PlatformStatus
-  /** Set the native `title` (tier name and trust score, shown on hover). There is no tooltip component. */
+  /** Set the native `title` (the badge's name, shown on hover). There is no tooltip component. */
   showTooltip?: boolean
+  /**
+   * The wording, in place of the built-in name: the tier's label ("Contact Verified"), "Account
+   * Suspended", or "<tier> — Memorial". It is the `title` and, unless `ariaLabel` is set, the
+   * accessible name. Use it to localise the badge or to name the tier in the app's own words.
+   */
+  label?: string
+  /** The accessible name, when it should differ from `label` (or the built-in name). */
+  ariaLabel?: string
+  /**
+   * Add the tier's cumulative trust score ("· Trust 0.2") to the title and the accessible name.
+   * Off by default since #550: the raw score is a number for a trust audit, not for a reader.
+   */
+  showScore?: boolean
   /** Render skeleton placeholder while verification status is loading */
   loading?: boolean
   className?: string
@@ -158,6 +171,9 @@ function MziziVerifiedBadge({
   status = "living",
   size = "md",
   showTooltip = true,
+  label,
+  ariaLabel,
+  showScore = false,
   loading = false,
   className,
 }: MziziVerifiedBadgeProps) {
@@ -178,6 +194,12 @@ function MziziVerifiedBadge({
   /* Level 0 = no badge */
   if (!config.icon || tier === "unverified") return null
 
+  /* The name: the caller's wording or the built-in one, with the score only on request. */
+  const named = (builtIn: string) => {
+    const text = label ?? builtIn
+    return showScore ? `${text} · Trust ${config.cumulativeTrust}` : text
+  }
+
   /* Suspended: show ban overlay instead of tier icon */
   if (statusConfig.overlay === "suspended") {
     return (
@@ -186,8 +208,8 @@ function MziziVerifiedBadge({
         data-tier={tier}
         data-status="suspended"
         role="img"
-        aria-label="Account Suspended"
-        title={showTooltip ? "Account Suspended" : undefined}
+        aria-label={ariaLabel ?? named("Account Suspended")}
+        title={showTooltip ? named("Account Suspended") : undefined}
         className={cn(badgeSizeVariants({ size }), "opacity-40", className)}
         style={{ backgroundColor: "rgba(107,107,102,0.15)" }}
       >
@@ -209,8 +231,8 @@ function MziziVerifiedBadge({
         data-tier={tier}
         data-status={status}
         role="img"
-        aria-label={`${config.label} — Memorial`}
-        title={showTooltip ? `${config.label} — Memorial` : undefined}
+        aria-label={ariaLabel ?? named(`${config.label} — Memorial`)}
+        title={showTooltip ? named(`${config.label} — Memorial`) : undefined}
         className={cn(badgeSizeVariants({ size }), "opacity-60", className)}
         style={{ backgroundColor: config.bg }}
       >
@@ -228,8 +250,8 @@ function MziziVerifiedBadge({
       data-level={config.level}
       data-trust={config.cumulativeTrust}
       role="img"
-      aria-label={config.label}
-      title={showTooltip ? `${config.label} · Trust ${config.cumulativeTrust}` : undefined}
+      aria-label={ariaLabel ?? named(config.label)}
+      title={showTooltip ? named(config.label) : undefined}
       className={cn(badgeSizeVariants({ size }), className)}
       style={{ backgroundColor: config.bg }}
     >

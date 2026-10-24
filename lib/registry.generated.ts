@@ -581,6 +581,7 @@ export const REGISTRY_FILES: readonly string[] = [
   "n3-brand/mzizi-ticket-card.tsx",
   "n3-brand/mzizi-timeline.tsx",
   "n3-brand/mzizi-transaction-row.tsx",
+  "n3-brand/mzizi-trust-meter.astro",
   "n3-brand/mzizi-trust-meter.tsx",
   "n3-brand/mzizi-user-card.rs",
   "n3-brand/mzizi-user-card.tsx",

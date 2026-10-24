@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.12.2",
+    title:
+      "v4.12.2 — staging carries the 4.12.0 release and #534's minimum-version dependencies",
+    description:
+      "The staging patch that brings main's 4.12.0 release (#547) back into staging (#548) on top of #534, which staging-version tagged v4.12.1: every dependency and override in package.json is a minimum version (>=x.y.z), and pnpm-lock.yaml is regenerated with direct dependencies at their floors. package.json moves to 4.12.2 because the release-version check allows only the next patch after v4.12.1 on staging. No component, API or crate changes.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 12,
+    patch: 2,
+    release_kind: "patch",
+    breaking: false,
+    released_at: "2026-10-24T12:00:00.000+00:00",
+    created_at: "2026-10-24T12:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.12.0",
     title:
       "v4.12.0 — the Kweli Address primitives, counted signals on mzizi-trust-meter, the kweli brand entry and --radius-xs, and zod 3 removed",

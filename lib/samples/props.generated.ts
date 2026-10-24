@@ -9259,6 +9259,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "linkComponent",
+      "type": "React.ComponentType<MziziPlaceCardLinkProps>",
+      "required": false
+    },
+    {
+      "name": "priority",
+      "type": "boolean",
+      "required": false
+    },
+    {
       "name": "onClick",
       "type": "() => void",
       "required": false
@@ -10763,6 +10773,21 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "showTooltip",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "showScore",
       "type": "boolean",
       "required": false
     },
