@@ -650,6 +650,93 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "app-confirm-action": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "warning",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "warningLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "method",
+      "type": "\"post\" | \"get\"",
+      "required": false
+    },
+    {
+      "name": "fields",
+      "type": "Record<string, string>",
+      "required": false
+    },
+    {
+      "name": "confirmLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "cancelLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "confirmText",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "confirmPrompt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "acknowledge",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"destructive-outline\" | \"destructive\"",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\"",
+      "required": false
+    },
+    {
+      "name": "headingLevel",
+      "type": "2 | 3",
+      "required": false
+    }
+  ],
   "app-data-table": [
     {
       "name": "caption",
@@ -674,6 +761,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "rowKey",
       "type": "string",
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "Record<string, RowAction[]>",
       "required": false
     }
   ],
@@ -791,12 +883,17 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     },
     {
       "name": "as",
-      "type": "\"input\" | \"textarea\" | \"select\"",
+      "type": "\"input\" | \"textarea\" | \"select\" | \"checkbox\" | \"switch\" | \"radio-group\"",
       "required": false
     },
     {
       "name": "options",
       "type": "FieldOption[]",
+      "required": false
+    },
+    {
+      "name": "checked",
+      "type": "boolean",
       "required": false
     },
     {
@@ -929,6 +1026,28 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": true
     }
   ],
+  "app-money": [
+    {
+      "name": "amountMinor",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "display",
+      "type": "CurrencyDisplay",
+      "required": false
+    }
+  ],
   "app-page-header": [
     {
       "name": "title",
@@ -995,6 +1114,68 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "noun",
       "type": "string",
+      "required": false
+    }
+  ],
+  "app-plan-summary": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "status",
+      "type": "PlanStatus",
+      "required": true
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "price",
+      "type": "{ amountMinor: number; currency: string } | null",
+      "required": false
+    },
+    {
+      "name": "interval",
+      "type": "PlanInterval",
+      "required": false
+    },
+    {
+      "name": "periodEnd",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "features",
+      "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "{ label: string; href: string }",
+      "required": false
+    },
+    {
+      "name": "secondaryAction",
+      "type": "{ label: string; href: string }",
+      "required": false
+    },
+    {
+      "name": "copy",
+      "type": "PlanSummaryCopy",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "headingLevel",
+      "type": "2 | 3",
       "required": false
     }
   ],
@@ -1229,6 +1410,53 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "currentApp",
       "type": "string",
+      "required": false
+    }
+  ],
+  "app-tier-status": [
+    {
+      "name": "tier",
+      "type": "VerificationTier",
+      "required": true
+    },
+    {
+      "name": "attestations",
+      "type": "Attestation[]",
+      "required": false
+    },
+    {
+      "name": "requirements",
+      "type": "string[]",
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "{ label: string; href: string }",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "tierLabels",
+      "type": "Partial<Record<VerificationTier, string>>",
+      "required": false
+    },
+    {
+      "name": "copy",
+      "type": "TierStatusCopy",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "headingLevel",
+      "type": "2 | 3",
       "required": false
     }
   ],
@@ -10854,6 +11082,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "status",
       "type": "PlatformStatus",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | null",
       "required": false
     },
     {

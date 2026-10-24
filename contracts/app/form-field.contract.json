@@ -2,10 +2,10 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/form-field",
   "title": "FormField",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "node": 6,
   "kind": "pattern",
-  "summary": "Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid. The control is an input, a textarea or a native select.",
+  "summary": "Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid. The control is an input, a textarea, a native select, a checkbox, a switch or a radio group.",
   "implementations": {
     "astro": {
       "registry": "app-form-field",
@@ -13,7 +13,10 @@
       "export": "@bundu/ui/app/FormField.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "app-form-field", "identity": "contract" },
+    "tsx": {
+      "registry": "app-form-field",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["form"]
   },
@@ -34,7 +37,7 @@
       "name": "value",
       "type": "string | null",
       "required": false,
-      "description": "The current value."
+      "description": "The current value. For a checkbox or a switch it is the value posted when checked (default \"on\"); for a radio group, the option that is checked."
     },
     {
       "name": "type",
@@ -55,18 +58,32 @@
     },
     {
       "name": "as",
-      "type": "\"input\" | \"textarea\" | \"select\"",
+      "type": "\"input\" | \"textarea\" | \"select\" | \"checkbox\" | \"switch\" | \"radio-group\"",
       "required": false,
       "default": "input",
-      "values": ["input", "textarea", "select"],
-      "description": "The control: an input, a textarea or a native select."
+      "values": [
+        "input",
+        "textarea",
+        "select",
+        "checkbox",
+        "switch",
+        "radio-group"
+      ],
+      "description": "The control: an input, a textarea, a native select, a checkbox, a switch (a checkbox with role=\"switch\") or a radio group (a fieldset of native radios from `options`)."
     },
     {
       "name": "options",
       "type": "{ value: string; label: string }[]",
       "required": false,
       "default": [],
-      "description": "A select's options; the one whose value is `value` is selected."
+      "description": "A select's or a radio group's options; the one whose value is `value` is selected (checked)."
+    },
+    {
+      "name": "checked",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "A checkbox or a switch that starts checked."
     },
     {
       "name": "emptyOption",
@@ -136,14 +153,14 @@
       "type": "boolean",
       "required": false,
       "default": false,
-      "description": "Marks the label \"(required)\" and the input required."
+      "description": "Marks the label (or the legend) \"(required)\" and the control required. A required checkbox must be checked; a required radio group must have one choice."
     },
     {
       "name": "readonly",
       "type": "boolean",
       "required": false,
       "default": false,
-      "description": "Read-only, on a muted fill. A select is disabled instead (a select has no read-only state), so it is not posted."
+      "description": "Read-only, on a muted fill. A select, a checkbox, a switch and a radio group are disabled instead (they have no read-only state), so they are not posted."
     },
     {
       "name": "autocomplete",
@@ -172,7 +189,10 @@
     "aria-invalid=\"true\" only with an error.",
     "A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density.",
     "A select with `emptyOption` starts with an empty option, selected when there is no value.",
-    "A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`."
+    "A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`.",
+    "A checkbox and a switch are a native <input type=\"checkbox\"> inside their <label>, before the label text, so the whole row is the hit area; a switch adds role=\"switch\" and is drawn as a pill track whose thumb moves to the end when on (the position says the state, not colour alone). They get the same id, name, required, aria-describedby and aria-invalid as an input, and post `value` (default \"on\") when checked.",
+    "A radio group is a <fieldset> whose <legend> is the label (with \"(required)\"), one native <input type=\"radio\"> per option inside its own <label>; the option whose value is `value` is checked. The fieldset carries aria-describedby; each radio carries required and aria-invalid.",
+    "A choice row is 36px tall on a fine pointer and 48px on touch; checked controls use the shell's accent (`--app-accent`, else `--primary`)."
   ],
   "states": {
     "default": {
@@ -213,8 +233,14 @@
         "as": "select",
         "emptyOption": "Choose a type",
         "options": [
-          { "value": "article", "label": "Article" },
-          { "value": "event", "label": "Event" }
+          {
+            "value": "article",
+            "label": "Article"
+          },
+          {
+            "value": "event",
+            "label": "Event"
+          }
         ],
         "hint": "What you are adding.",
         "required": true
@@ -229,8 +255,14 @@
         "value": "event",
         "readonly": true,
         "options": [
-          { "value": "article", "label": "Article" },
-          { "value": "event", "label": "Event" }
+          {
+            "value": "article",
+            "label": "Article"
+          },
+          {
+            "value": "event",
+            "label": "Event"
+          }
         ]
       }
     },
@@ -259,17 +291,86 @@
         "step": 1,
         "inputmode": "numeric"
       }
+    },
+    "checkbox": {
+      "description": "A required checkbox with a hint and an error.",
+      "props": {
+        "name": "terms",
+        "label": "I accept the listing terms",
+        "as": "checkbox",
+        "hint": "You can withdraw at any time.",
+        "error": "Accept the terms to publish.",
+        "required": true
+      }
+    },
+    "switch": {
+      "description": "A switch that starts on, posting \"yes\".",
+      "props": {
+        "name": "notify",
+        "label": "Email me about new reviews",
+        "as": "switch",
+        "value": "yes",
+        "checked": true,
+        "hint": "At most one email a day."
+      }
+    },
+    "radio-group": {
+      "description": "A required radio group with a value.",
+      "props": {
+        "name": "role",
+        "label": "Role",
+        "as": "radio-group",
+        "value": "editor",
+        "required": true,
+        "hint": "What this person can change.",
+        "options": [
+          {
+            "value": "viewer",
+            "label": "Viewer"
+          },
+          {
+            "value": "editor",
+            "label": "Editor"
+          },
+          {
+            "value": "owner",
+            "label": "Owner"
+          }
+        ],
+        "wide": true
+      }
+    },
+    "choice-readonly": {
+      "description": "A read-only switch: disabled, still checked.",
+      "props": {
+        "name": "public",
+        "label": "Listed publicly",
+        "as": "switch",
+        "checked": true,
+        "readonly": true
+      }
     }
   },
   "accessibility": {
-    "roles": ["textbox", "combobox (select)"],
-    "keyboard": ["Native input, textarea and select."],
+    "roles": [
+      "textbox",
+      "combobox (select)",
+      "checkbox",
+      "switch",
+      "group (fieldset)",
+      "radio"
+    ],
+    "keyboard": [
+      "Native input, textarea, select, checkbox and radio: Space toggles a checkbox or switch, arrow keys move between radios."
+    ],
     "focus": ["`--ring` focus ring."],
     "aria": [
       "aria-describedby to hint and error.",
-      "aria-invalid with an error."
+      "aria-invalid with an error.",
+      "role=\"switch\" on a switch, which announces on/off.",
+      "A radio group is a fieldset named by its legend."
     ],
-    "wcag": ["1.3.1", "3.3.1", "3.3.2", "4.1.2"]
+    "wcag": ["1.3.1", "1.4.1", "2.5.8", "3.3.1", "3.3.2", "4.1.2"]
   },
   "density": [
     {
@@ -291,6 +392,27 @@
       "select": "textarea",
       "fine": 80,
       "coarse": 96
+    },
+    {
+      "part": "checkbox row (its label)",
+      "state": "checkbox",
+      "select": "label[for=\"field-terms\"]",
+      "fine": 36,
+      "coarse": 48
+    },
+    {
+      "part": "switch row (its label)",
+      "state": "switch",
+      "select": "label[for=\"field-notify\"]",
+      "fine": 36,
+      "coarse": 48
+    },
+    {
+      "part": "radio row (its label)",
+      "state": "radio-group",
+      "select": "fieldset label",
+      "fine": 36,
+      "coarse": 48
     }
   ],
   "theming": {
@@ -303,9 +425,13 @@
       "--ring",
       "--card",
       "--card-foreground",
-      "--destructive"
+      "--destructive",
+      "--primary",
+      "--primary-foreground",
+      "--app-accent",
+      "--app-accent-foreground"
     ],
-    "brandOverlay": "The focus ring follows the brand's `--ring`. Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
+    "brandOverlay": "The focus ring follows the brand's `--ring`, and a checked checkbox, switch or radio takes the shell's accent (`--app-accent`, else `--primary`). Nothing else changes: layout, spacing, type and every other colour are the same in every brand.",
     "statusColours": []
   },
   "noJs": {
@@ -316,7 +442,7 @@
     "Fills its column; 16px text on touch so iOS never zooms.",
     "`wide` spans both columns of FormLayout's container grid from @xl."
   ],
-  "contract": "contract\n  slot is \"form-field\"\n  uses label\n  uses input\n  when default shows label \"(required)\"\n  when textarea class contains \"@xl:col-span-2\"\n  when file class contains \"@xl:col-span-2\"\nend",
+  "contract": "contract\n  slot is \"form-field\"\n  uses label\n  uses input\n  when default shows label \"(required)\"\n  when textarea class contains \"@xl:col-span-2\"\n  when file class contains \"@xl:col-span-2\"\n  when checkbox shows label \"I accept the listing terms\"\n  when switch shows label \"Email me about new reviews\"\n  when radio-group shows legend \"Role\"\n  when radio-group class contains \"@xl:col-span-2\"\nend",
   "checks": [
     {
       "say": "The input is described by hint and error.",
@@ -419,6 +545,93 @@
         "inputmode": "numeric",
         "value": "12"
       }
+    },
+    {
+      "say": "A checkbox is a native checkbox inside its label, wired as an input is.",
+      "state": "checkbox",
+      "select": "label[for=\"field-terms\"] > input#field-terms[type=\"checkbox\"][data-slot=\"checkbox\"]",
+      "count": 1,
+      "attr": {
+        "name": "terms",
+        "value": "on",
+        "aria-describedby": "field-terms-hint field-terms-error",
+        "aria-invalid": "true",
+        "required": true,
+        "checked": false
+      }
+    },
+    {
+      "say": "The checkbox's label says it is required.",
+      "state": "checkbox",
+      "select": "label[for=\"field-terms\"] > span",
+      "text": "I accept the listing terms (required)",
+      "count": 1
+    },
+    {
+      "say": "A switch is a checkbox with role=switch, checked, posting its value.",
+      "state": "switch",
+      "select": "input#field-notify[type=\"checkbox\"][role=\"switch\"][data-slot=\"switch\"]",
+      "count": 1,
+      "attr": {
+        "value": "yes",
+        "checked": true,
+        "aria-describedby": "field-notify-hint"
+      }
+    },
+    {
+      "say": "A switch is a pill.",
+      "state": "switch",
+      "select": "input[role=\"switch\"].rounded-full.appearance-none",
+      "count": 1
+    },
+    {
+      "say": "A checkbox field has no other control.",
+      "state": "checkbox",
+      "select": "select, textarea, input:not([type=\"checkbox\"])",
+      "absent": true
+    },
+    {
+      "say": "A radio group is a fieldset described by its hint.",
+      "state": "radio-group",
+      "select": "fieldset#field-role[data-slot=\"radio-group\"]",
+      "count": 1,
+      "attr": {
+        "aria-describedby": "field-role-hint"
+      }
+    },
+    {
+      "say": "The legend is the label and says it is required.",
+      "state": "radio-group",
+      "select": "fieldset > legend",
+      "count": 1,
+      "text": "Role (required)"
+    },
+    {
+      "say": "One native radio per option, each in its label.",
+      "state": "radio-group",
+      "select": "fieldset label > input[type=\"radio\"][name=\"role\"][required]",
+      "count": 3
+    },
+    {
+      "say": "The value's option is checked.",
+      "state": "radio-group",
+      "select": "input#field-role-editor[type=\"radio\"][checked]",
+      "count": 1,
+      "attr": {
+        "value": "editor"
+      }
+    },
+    {
+      "say": "Only one option is checked.",
+      "state": "radio-group",
+      "select": "input[type=\"radio\"][checked]",
+      "count": 1
+    },
+    {
+      "say": "A read-only switch is disabled and keeps its state.",
+      "state": "choice-readonly",
+      "select": "input[role=\"switch\"][disabled][checked]",
+      "count": 1
     }
   ]
 }

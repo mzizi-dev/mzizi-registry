@@ -1063,8 +1063,54 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "pages"],
       "dependencies": [],
-      "description": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup.",
-      "docs": "Use it for: A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways (Mzizi Dashboard Standard).\nIncludes: Cell text is escaped: a row cannot inject markup., An empty cell shows a dash to the eye and \"none\" to a screen reader., A cell with `current` marks its row aria-current=\"true\"., A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`., Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination..\nAccessibility: <caption> always present., Phone card labels are aria-hidden duplicates of the headers., aria-current=\"true\" on the current row..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-data-table",
+      "description": "A destructive action that asks before it acts: a trigger opens a confirmation panel through the Popover API (no script), and the panel is a POST form with hidden fields and a required confirm step (a checkbox, or typing a given text). The danger is written (\"Warning: …\"), never colour alone. For removing a member, revoking an invite, cancelling a plan and the settings danger zone.",
+      "docs": "Use it for: Removing a team member or revoking an invite, Cancelling a plan, A settings danger zone (deleting a listing or an account).\nIncludes: Works with no script: the Popover API opens and closes the panel, and the form posts., A required confirm step: a checkbox (confirm=yes), or typing confirmText (an exact, escaped pattern). The server must check `confirm` too., The danger in words: \"Warning: This cannot be undone.\", and a submit that names the action., Every word replaceable (warningLabel, acknowledge, confirmPrompt, cancelLabel) for another language., In a browser with no Popover API the panel shows in place, still a form with the confirm step..\nAccessibility: The panel is role=dialog, labelled by its heading and described by the description and the warning., aria-haspopup=dialog on the trigger; Escape closes the panel (Popover API)., The confirm step has a visible label..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-confirm-action",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-confirm-action.tsx",
+          "target": "components/ui/app-confirm-action.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "The panel is role=dialog, labelled by its heading and described by the description and the warning.",
+          "aria-haspopup=dialog on the trigger; Escape closes the panel (Popover API).",
+          "The confirm step has a visible label."
+        ],
+        "collection": "app",
+        "contract": "app/confirm-action",
+        "features": [
+          "Works with no script: the Popover API opens and closes the panel, and the form posts.",
+          "A required confirm step: a checkbox (confirm=yes), or typing confirmText (an exact, escaped pattern). The server must check `confirm` too.",
+          "The danger in words: \"Warning: This cannot be undone.\", and a submit that names the action.",
+          "Every word replaceable (warningLabel, acknowledge, confirmPrompt, cancelLabel) for another language.",
+          "In a browser with no Popover API the panel shows in place, still a form with the confirm step."
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Removing a team member or revoking an invite",
+          "Cancelling a plan",
+          "A settings danger zone (deleting a listing or an account)"
+        ]
+      },
+      "name": "app-confirm-action",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Confirm Action",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup; a cell can be a person (avatar, name, secondary line), and rows can carry their own actions (links or small POST forms, one inline or several in a <details> menu) that work without script.",
+      "docs": "Use it for: A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways (Mzizi Dashboard Standard).\nIncludes: Cell text is escaped: a row cannot inject markup., An empty cell shows a dash to the eye and \"none\" to a screen reader., A cell with `current` marks its row aria-current=\"true\"., A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`., Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination., A `person` cell: an avatar (image, or initials) beside the name and a secondary line., `actions` per row, keyed by rowKey: one action is a button in the row, more are a <details> menu; each is a link or a small form, so it works with no script. Destructive actions are listed last..\nAccessibility: <caption> always present., Phone card labels are aria-hidden duplicates of the headers., aria-current=\"true\" on the current row., Row actions are named for their row (\"Actions for Tendai Moyo\")..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-data-table",
       "files": [
         {
           "path": "components/registry/n6-pages/app-data-table.tsx",
@@ -1076,7 +1122,8 @@
         "a11y": [
           "<caption> always present.",
           "Phone card labels are aria-hidden duplicates of the headers.",
-          "aria-current=\"true\" on the current row."
+          "aria-current=\"true\" on the current row.",
+          "Row actions are named for their row (\"Actions for Tendai Moyo\")."
         ],
         "collection": "app",
         "contract": "app/data-table",
@@ -1085,7 +1132,9 @@
           "An empty cell shows a dash to the eye and \"none\" to a screen reader.",
           "A cell with `current` marks its row aria-current=\"true\".",
           "A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`.",
-          "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination."
+          "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination.",
+          "A `person` cell: an avatar (image, or initials) beside the name and a secondary line.",
+          "`actions` per row, keyed by rowKey: one action is a button in the row, more are a <details> menu; each is a link or a small form, so it works with no script. Destructive actions are listed last."
         ],
         "hasDemo": false,
         "owner": "mzizi",
@@ -1095,7 +1144,11 @@
         ]
       },
       "name": "app-data-table",
-      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-variants"],
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
       "title": "App Data Table",
       "type": "registry:ui"
     },
@@ -1211,8 +1264,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "pages"],
       "dependencies": [],
-      "description": "Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid. The control is an input, a textarea or a native select.",
-      "docs": "Use it for: Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid (Mzizi Dashboard Standard).\nIncludes: \"(required)\" is written in the label, not shown by an asterisk alone., aria-describedby lists the hint and then the error., aria-invalid=\"true\" only with an error., A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density., A select with `emptyOption` starts with an empty option, selected when there is no value., A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`..\nAccessibility: aria-describedby to hint and error., aria-invalid with an error..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-field",
+      "description": "Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid. The control is an input, a textarea, a native select, a checkbox, a switch or a radio group.",
+      "docs": "Use it for: Label, control, hint and error wired together: the label is always visible, the hint and error are the control's description, and an error sets aria-invalid (Mzizi Dashboard Standard).\nIncludes: \"(required)\" is written in the label, not shown by an asterisk alone., aria-describedby lists the hint and then the error., aria-invalid=\"true\" only with an error., A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density., A select with `emptyOption` starts with an empty option, selected when there is no value., A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`., A checkbox or a switch (role=\"switch\", a pill track) is a native input inside its label, so the whole 36px row (48px on touch) is the hit area; it posts `value` (default \"on\") when checked., A radio group is a fieldset whose legend is the label, one native radio per option..\nAccessibility: aria-describedby to hint and error., aria-invalid with an error., role=\"switch\" announces on/off; a radio group is a fieldset named by its legend..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-form-field",
       "files": [
         {
           "path": "components/registry/n6-pages/app-form-field.tsx",
@@ -1223,7 +1276,8 @@
       "meta": {
         "a11y": [
           "aria-describedby to hint and error.",
-          "aria-invalid with an error."
+          "aria-invalid with an error.",
+          "role=\"switch\" announces on/off; a radio group is a fieldset named by its legend."
         ],
         "collection": "app",
         "contract": "app/form-field",
@@ -1233,7 +1287,9 @@
           "aria-invalid=\"true\" only with an error.",
           "A textarea and a select get the same id, name, required, aria-describedby and aria-invalid as an input, at the same app density.",
           "A select with `emptyOption` starts with an empty option, selected when there is no value.",
-          "A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`."
+          "A file input never carries a value; its file-selector button is a muted pill. With a file field, FormLayout needs `enctype=\"multipart/form-data\"`.",
+          "A checkbox or a switch (role=\"switch\", a pill track) is a native input inside its label, so the whole 36px row (48px on touch) is the hit area; it posts `value` (default \"on\") when checked.",
+          "A radio group is a fieldset whose legend is the label, one native radio per option."
         ],
         "hasDemo": false,
         "owner": "mzizi",
@@ -1392,6 +1448,41 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "primitives"],
+      "dependencies": [],
+      "description": "An amount of money formatted for a locale from integer minor units and an ISO 4217 code, inside <data value=\"<exact decimal>\" data-currency=\"<code>\">. No default currency and no default locale.",
+      "docs": "Use it for: A price, a balance or a refund in any currency.\nIncludes: Exact decimal in <data value>, the code in data-currency, Formatted with Intl for the given locale, No default currency or locale; a malformed code is refused.\nAccessibility: The formatted text is the accessible text; tabular figures..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-money",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/app-money.tsx",
+          "target": "components/ui/app-money.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["The formatted text is the accessible text; tabular figures."],
+        "collection": "app",
+        "contract": "app/money",
+        "features": [
+          "Exact decimal in <data value>, the code in data-currency",
+          "Formatted with Intl for the given locale",
+          "No default currency or locale; a malformed code is refused"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": ["A price, a balance or a refund in any currency"]
+      },
+      "name": "app-money",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/money",
+        "https://api.mzizi.dev/v1/ui/ui-utils"
+      ],
+      "title": "App Money",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["lib", "shell"],
       "dependencies": [],
       "description": "Typed navigation groups for the Dashboard Standard's app shell, side nav and command palette: flatten, group, search and current-page matching.",
@@ -1490,6 +1581,52 @@
       "name": "app-pagination",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/server-table"],
       "title": "App Pagination",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "The plan an account is on: its name, its price (Money) per interval, its status in words and a status pill (active, past_due, cancelled, expired, none), the date it renews or ends, what it includes, and its actions. Provider-neutral: no provider, no payment method, no default currency or locale.",
+      "docs": "Use it for: A billing page's current plan, A plan card in a business dashboard.\nIncludes: Price as Money for the given locale, with the interval in words, Status pill: Active, Payment due, Cancelled, Expired, No plan, The renewal or end date in a <time> in the locale, No provider, no payment method, no default currency or locale, Every word replaceable (copy).\nAccessibility: A section labelled by the plan's name., The status is a word in a pill, never colour alone., The features list is named..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-plan-summary",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-plan-summary.tsx",
+          "target": "components/ui/app-plan-summary.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "A section labelled by the plan's name.",
+          "The status is a word in a pill, never colour alone.",
+          "The features list is named."
+        ],
+        "collection": "app",
+        "contract": "app/plan-summary",
+        "features": [
+          "Price as Money for the given locale, with the interval in words",
+          "Status pill: Active, Payment due, Cancelled, Expired, No plan",
+          "The renewal or end date in a <time> in the locale",
+          "No provider, no payment method, no default currency or locale",
+          "Every word replaceable (copy)"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A billing page's current plan",
+          "A plan card in a business dashboard"
+        ]
+      },
+      "name": "app-plan-summary",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/app-money",
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Plan Summary",
       "type": "registry:ui"
     },
     {
@@ -1794,6 +1931,52 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
       "title": "App Switcher",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["app", "pages"],
+      "dependencies": [],
+      "description": "Where an account stands on the verification ladder: the current rung, the ladder (Unverified, Community Verified, Contact Verified, Government Verified, Licensed Professional) as an ordered list with each rung's state in words, the attestations held as facts, and what the next rung needs with a link to submit evidence. It takes data and computes no access decision; colours are the --tier-* roles from mzizi-trust-tier-data.",
+      "docs": "Use it for: A business's verification screen in a dashboard, A person's verification status on their profile settings.\nIncludes: The five-rung ladder from mzizi-trust-tier-data, reached rungs on their --tier-* container pair, Attestations as facts, with an optional detail, The next rung's requirements and a link to submit evidence; \"This is the highest level.\" at the top, Takes data, computes no access decision (the server decides), Every word replaceable (tierLabels, copy, title).\nAccessibility: A section labelled by its heading; the ladder is a named ordered list., aria-current=\"step\" on the current rung; every rung's state is written (Done, Current, Next)., Glyphs and level numbers are aria-hidden..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-tier-status",
+      "files": [
+        {
+          "path": "components/registry/n6-pages/app-tier-status.tsx",
+          "target": "components/ui/app-tier-status.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "A section labelled by its heading; the ladder is a named ordered list.",
+          "aria-current=\"step\" on the current rung; every rung's state is written (Done, Current, Next).",
+          "Glyphs and level numbers are aria-hidden."
+        ],
+        "collection": "app",
+        "contract": "app/tier-status",
+        "features": [
+          "The five-rung ladder from mzizi-trust-tier-data, reached rungs on their --tier-* container pair",
+          "Attestations as facts, with an optional detail",
+          "The next rung's requirements and a link to submit evidence; \"This is the highest level.\" at the top",
+          "Takes data, computes no access decision (the server decides)",
+          "Every word replaceable (tierLabels, copy, title)"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "A business's verification screen in a dashboard",
+          "A person's verification status on their profile settings"
+        ]
+      },
+      "name": "app-tier-status",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/mzizi-trust-tier-data",
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "App Tier Status",
       "type": "registry:ui"
     },
     {
@@ -10647,6 +10830,41 @@
     },
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": [],
+      "description": "Money, provider-neutral: Money ({ amountMinor, currency }), isCurrencyCode, currencyDigits, moneyValue (the exact decimal, built from the integer, never a float) and formatMoney(money, locale, display). No default currency and no default locale: the caller passes an ISO 4217 code and a BCP 47 locale. Framework-free, so Astro, React and servers share it.",
+      "docs": "Use it for: Formatting a price or a balance for the reader's locale, The machine-readable value of an amount.\nIncludes: Integer minor units plus an ISO 4217 code, never floats, The currency's own minor-unit digits from Intl (0 for JPY and XOF, 3 for KWD), No default currency and no default locale, A malformed code or a non-integer amount is refused (RangeError).\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/money",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/money.ts",
+          "target": "lib/money.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "lib",
+        "features": [
+          "Integer minor units plus an ISO 4217 code, never floats",
+          "The currency's own minor-unit digits from Intl (0 for JPY and XOF, 3 for KWD)",
+          "No default currency and no default locale",
+          "A malformed code or a non-integer amount is refused (RangeError)"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Formatting a price or a balance for the reader's locale",
+          "The machine-readable value of an amount"
+        ]
+      },
+      "name": "money",
+      "registryDependencies": [],
+      "title": "Money",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Audio track browser and selector for video creation. Search, preview, and attach music tracks to Bytes content. Shows track name, artist, duration, and waveform preview. Used in Bytes post-capture editing.",
@@ -17084,7 +17302,42 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "The Mukoko trust model's data, server-safe: the verification tier ladder (TIER_CONFIG), the platform-status overlay (STATUS_OVERLAY), the VerificationTier and PlatformStatus types and computeTrustScore. No \"use client\", hooks or browser globals, so Server Components, Astro pages and API routes can import it. mzizi-verified-badge reads it from here and re-exports it.",
+      "description": "The verification tier ladder as framework-free data: TIER_ORDER, TIER_DATA (label, level, mineral, trust increments, site-icons glyph, the --tier-* token names and the literal Tailwind classes that read them), STATUS_OVERLAY, tierAt, nextTier and computeTrustScore. No React, no icon library and no @/ import, so Astro components import it flat and a package can ship it as a plain module.",
+      "docs": "Use it for: Reading the tier ladder in an Astro component, Mapping tier colours without a framework or an icon library.\nIncludes: Tier labels, levels, minerals and trust increments, once, The --tier-* token names and complete literal classes per tier (container, on-container, text, fill, border), tierAt, nextTier and computeTrustScore, Framework-free: importable from Astro, React, a server or a package.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-tier-data",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/mzizi-trust-tier-data.ts",
+          "target": "lib/mzizi-trust-tier-data.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "brand",
+        "features": [
+          "Tier labels, levels, minerals and trust increments, once",
+          "The --tier-* token names and complete literal classes per tier (container, on-container, text, fill, border)",
+          "tierAt, nextTier and computeTrustScore",
+          "Framework-free: importable from Astro, React, a server or a package"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Reading the tier ladder in an Astro component",
+          "Mapping tier colours without a framework or an icon library"
+        ]
+      },
+      "name": "mzizi-trust-tier-data",
+      "registryDependencies": [],
+      "title": "mzizi Trust Tier Data",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["brand"],
+      "dependencies": [],
+      "description": "The Mukoko trust model for React, server-safe: TIER_CONFIG (the ladder with each tier's Lucide icon and fg/bg CSS values), STATUS_OVERLAY, the VerificationTier and PlatformStatus types and computeTrustScore. Built from the framework-free mzizi-trust-tier-data, which holds the labels, levels and --tier-* tokens once. No \"use client\", hooks or browser globals. mzizi-verified-badge re-exports it.",
       "docs": "Use it for: Reading the tier ladder on the server, Computing a trust score outside a client component.\nIncludes: TIER_CONFIG, STATUS_OVERLAY and computeTrustScore, server-safe.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-tiers",
       "files": [
         {
@@ -17107,7 +17360,10 @@
         ]
       },
       "name": "mzizi-trust-tiers",
-      "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-icons"],
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/mzizi-icons",
+        "https://api.mzizi.dev/v1/ui/mzizi-trust-tier-data"
+      ],
       "title": "mzizi Trust Tiers",
       "type": "registry:lib"
     },
@@ -17239,9 +17495,9 @@
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
-      "dependencies": ["class-variance-authority"],
-      "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. Renders the appropriate mineral-colored badge for each tier — Terracotta (Community 0.10), Cobalt (OTP 0.20), Gold (Government 0.30), Tanzanite (Licensed 0.50). Suspended/ancestral accounts show a dimmed or memorial variant. The title and accessible name are the tier name (label and ariaLabel override them); the trust score is added only with showScore. The tier ladder (TIER_CONFIG, STATUS_OVERLAY, computeTrustScore) is the server-safe mzizi-trust-tiers module, which the badge re-exports. Used inline next to names, on profile headers, listing cards, and anywhere trust needs to be communicated. Every tier reads its --tier-* role, defined once in the N1 tokens (owner decision 2026-10-24): unverified the neutral grey (--status-neutral), community terracotta, otp (\"Contact Verified\") cobalt, government gold, licensed tanzanite; backgrounds are the tier at 15% (color-mix), with no raw hex.",
-      "docs": "Use it for: Profile header verification display, Inline name verification, Listing card trust indicator, Search result trust signal.\nVariants: community (terracotta), otp (cobalt), government (gold), licensed (tanzanite), suspended (dimmed), ancestral (memorial).\nSizes: sm, md, lg.\nIncludes: Three-axis trust model: Status × Tier → Score, Mineral-colored per tier, Native title with the tier name; the trust score only with showScore (no tooltip component), label and ariaLabel override the wording and the accessible name (localise, or name the tier in the app's words), Maps to system.verification_tier, Each tier reads its own --tier-* variable (government reads --tier-government).\nAccessibility: role=img with an aria-label naming the verification tier (ariaLabel overrides it); the raw trust score is not in the accessible name unless showScore is set, Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
+      "dependencies": [],
+      "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. A round mark in the tier's colour — terracotta (Community), cobalt (Contact Verified), gold (Government), tanzanite (Licensed) — named by the tier; tier 0 renders nothing. Suspended accounts show the ban glyph on the neutral pair, ancestral ones the memorial flower. The title and accessible name are the tier name (label and ariaLabel override them); the trust score is added only with showScore. Astro (default) and React builds under contract ui/mzizi-verified-badge: server-rendered, no script, no inline style; each tier draws from its own APCA-gated --tier-* container pair (bg-tier-*-container, text-tier-*-on-container). The ladder is the framework-free mzizi-trust-tier-data; TIER_CONFIG, STATUS_OVERLAY and computeTrustScore are re-exported from mzizi-trust-tiers so existing imports keep working.",
+      "docs": "Use it for: Profile header verification display, Inline name verification, Listing card trust indicator, Search result trust signal.\nVariants: community (terracotta), otp (cobalt), government (gold), licensed (tanzanite), suspended (ban glyph), ancestral (memorial flower).\nSizes: sm, md, lg, xl.\nIncludes: Astro and React builds, one contract (ui/mzizi-verified-badge), Server-rendered, no script, no inline style, Three-axis trust model: Status × Tier → Score, Each tier draws from its own --tier-* container pair (government reads --tier-government-container), Native title with the tier name; the trust score only with showScore (no tooltip component), label and ariaLabel override the wording and the accessible name (localise, or name the tier in the app's words), Maps to system.verification_tier.\nAccessibility: role=img with an aria-label naming the verification tier (ariaLabel overrides it); the raw trust score is not in the accessible name unless showScore is set, Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-verified-badge.tsx",
@@ -17255,17 +17511,20 @@
           "Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated"
         ],
         "collection": "brand",
+        "contract": "ui/mzizi-verified-badge",
         "features": [
+          "Astro and React builds, one contract (ui/mzizi-verified-badge)",
+          "Server-rendered, no script, no inline style",
           "Three-axis trust model: Status × Tier → Score",
-          "Mineral-colored per tier",
+          "Each tier draws from its own --tier-* container pair (government reads --tier-government-container)",
           "Native title with the tier name; the trust score only with showScore (no tooltip component)",
           "label and ariaLabel override the wording and the accessible name (localise, or name the tier in the app's words)",
-          "Maps to system.verification_tier",
-          "Each tier reads its own --tier-* variable (government reads --tier-government)"
+          "Maps to system.verification_tier"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "sizes": ["sm", "md", "lg"],
+        "sizes": ["sm", "md", "lg", "xl"],
+        "targets": ["astro", "tsx"],
         "useCases": [
           "Profile header verification display",
           "Inline name verification",
@@ -17277,15 +17536,16 @@
           "otp (cobalt)",
           "government (gold)",
           "licensed (tanzanite)",
-          "suspended (dimmed)",
-          "ancestral (memorial)"
+          "suspended (ban glyph)",
+          "ancestral (memorial flower)"
         ]
       },
       "name": "mzizi-verified-badge",
       "registryDependencies": [
-        "https://api.mzizi.dev/v1/ui/mzizi-icons",
+        "https://api.mzizi.dev/v1/ui/mzizi-trust-tier-data",
         "https://api.mzizi.dev/v1/ui/mzizi-trust-tiers",
-        "https://api.mzizi.dev/v1/ui/mzizi-harness"
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils"
       ],
       "title": "mzizi Verified Badge",
       "type": "registry:ui"

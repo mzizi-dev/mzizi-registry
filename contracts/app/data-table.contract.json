@@ -2,10 +2,10 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/data-table",
   "title": "DataTable",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "node": 6,
   "kind": "pattern",
-  "summary": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup.",
+  "summary": "A real <table> with a caption and scoped headers, that becomes one card per row on narrow screens so a phone never scrolls sideways. Cells are data, never markup; a cell can be a person (avatar, name, secondary line), and each row can carry its own actions (links or small forms) that work without script.",
   "implementations": {
     "astro": {
       "registry": "app-data-table",
@@ -13,7 +13,10 @@
       "export": "@bundu/ui/app/DataTable.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "app-data-table", "identity": "contract" },
+    "tsx": {
+      "registry": "app-data-table",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["data-table", "table"]
   },
@@ -41,13 +44,20 @@
       "name": "rows",
       "type": "Record<string, Cell>[]",
       "required": true,
-      "description": "Cell = string | number | null | undefined | { text, href?, badge?, tone?, mono?, sub?, current? }. `badge` is a registry badge variant (default, secondary, destructive, outline, ghost, link); `tone` is a status pill: \"neutral\" | \"success\" | \"warning\" | \"info\" | \"accent\" | \"premium\"."
+      "description": "Cell = string | number | null | undefined | { text, href?, badge?, tone?, mono?, sub?, current?, person?, avatar? }. `badge` is a registry badge variant (default, secondary, destructive, outline, ghost, link); `tone` is a status pill: \"neutral\" | \"success\" | \"warning\" | \"info\" | \"accent\" | \"premium\". `person` draws an avatar (the `avatar` URL, or initials) beside the name and `sub`."
     },
     {
       "name": "rowKey",
       "type": "string",
       "required": false,
-      "description": "Key whose text becomes each row's data-row."
+      "description": "Key whose text becomes each row's data-row, and the key `actions` is looked up by."
+    },
+    {
+      "name": "actions",
+      "type": "Record<string, { label: string; href?: string; action?: string; method?: \"post\" | \"get\"; fields?: Record<string, string>; destructive?: boolean }[]>",
+      "required": false,
+      "default": {},
+      "description": "Each row's actions, keyed by the row's `rowKey` text. An action is a link (`href`) or a form (`action`, POST unless `method` is \"get\", with hidden `fields`). One action is a button in the row; more are a <details> menu."
     }
   ],
   "slots": [],
@@ -56,7 +66,11 @@
     "An empty cell shows a dash to the eye and \"none\" to a screen reader.",
     "A cell with `current` marks its row aria-current=\"true\".",
     "A cell with `tone` is a status pill (data-slot=\"status\", data-tone) in a fixed status colour: success malachite, warning gold, info cobalt, accent terracotta, premium tanzanite, neutral muted. Its text is escaped like any cell's. `tone` wins over `badge`.",
-    "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination."
+    "Filtering and paging are server-side (`@bundu/ui/lib/table`); pair with FilterBar or Toolbar and Pagination.",
+    "A cell with `person` is an avatar beside the name and, from `sub`, a secondary line (an email or a role). The avatar is the `avatar` image with alt=\"\" (the name is beside it), or the person's initials, aria-hidden. With `href` the name is the link.",
+    "With `actions`, the table gains a last column headed \"Actions\" (visually hidden). A row with one action shows it as a small outline button whose accessible name ends with the row's name (\"Change role: Tendai Moyo\"); a row with more shows a <details> menu named \"Actions for <row>\", a list of links and buttons. A row with none has an empty cell.",
+    "An action with `href` is a link; any other is a <form> (POST unless `method` is \"get\") posting its hidden `fields`, with one submit button. Nothing needs script: the menu is a <details> disclosure.",
+    "A `destructive` action is drawn in the destructive colour and listed last; its label must say what it removes (\"Remove member\"), and it should lead to ConfirmAction rather than act at once."
   ],
   "states": {
     "default": {
@@ -165,20 +179,133 @@
           }
         ]
       }
+    },
+    "team": {
+      "description": "People with avatars or initials, and row actions: none, a menu of three, and one inline.",
+      "props": {
+        "caption": "Team, 3 members",
+        "columns": [
+          {
+            "key": "name",
+            "label": "Member"
+          },
+          {
+            "key": "role",
+            "label": "Role"
+          }
+        ],
+        "rowKey": "name",
+        "rows": [
+          {
+            "name": {
+              "text": "Tendai Moyo",
+              "sub": "tendai@example.com",
+              "person": true,
+              "avatar": "https://example.com/tendai.jpg",
+              "href": "/team/tendai"
+            },
+            "role": {
+              "text": "Owner",
+              "tone": "premium"
+            }
+          },
+          {
+            "name": {
+              "text": "Rudo Chari",
+              "sub": "rudo@example.com",
+              "person": true
+            },
+            "role": "Editor"
+          },
+          {
+            "name": {
+              "text": "Farai",
+              "person": true
+            },
+            "role": "Viewer"
+          }
+        ],
+        "actions": {
+          "Rudo Chari": [
+            {
+              "label": "Remove member",
+              "action": "/team/remove",
+              "fields": {
+                "member": "rudo"
+              },
+              "destructive": true
+            },
+            {
+              "label": "View activity",
+              "href": "/team/rudo/activity"
+            },
+            {
+              "label": "Change role",
+              "action": "/team/role",
+              "fields": {
+                "member": "rudo"
+              }
+            }
+          ],
+          "Farai": [
+            {
+              "label": "Resend invite",
+              "action": "/team/invite",
+              "fields": {
+                "member": "farai"
+              }
+            }
+          ]
+        }
+      }
     }
   },
   "accessibility": {
-    "roles": ["table", "columnheader (scope=col)", "rowheader (scope=row)"],
-    "keyboard": ["Links in cells."],
-    "focus": ["Through cell links."],
+    "roles": [
+      "table",
+      "columnheader (scope=col)",
+      "rowheader (scope=row)",
+      "group (details)",
+      "list (row actions)"
+    ],
+    "keyboard": [
+      "Links in cells.",
+      "Row actions: Tab to the menu's summary, Enter or Space opens it, then Tab through its links and buttons."
+    ],
+    "focus": ["Through cell links and row actions; `--ring` focus ring."],
     "aria": [
       "<caption> always present.",
       "Phone card labels are aria-hidden duplicates of the headers.",
-      "aria-current=\"true\" on the current row."
+      "aria-current=\"true\" on the current row.",
+      "The Actions column header is visually hidden text.",
+      "An inline row action's name ends with the row's name; a menu is named \"Actions for <row>\".",
+      "An avatar image has alt=\"\" and initials are aria-hidden: the name is written beside them."
     ],
-    "wcag": ["1.3.1", "1.3.2", "1.4.10"]
+    "wcag": ["1.1.1", "1.3.1", "1.3.2", "1.4.1", "1.4.10", "2.4.6", "2.5.8"]
   },
-  "density": [],
+  "density": [
+    {
+      "part": "row actions menu button",
+      "state": "team",
+      "select": "details[data-slot=\"row-actions-menu\"] > summary",
+      "fine": 32,
+      "coarse": 44
+    },
+    {
+      "part": "menu item",
+      "state": "team",
+      "select": "details[data-slot=\"row-actions-menu\"] li button, details[data-slot=\"row-actions-menu\"] li a",
+      "fine": 32,
+      "coarse": 44
+    },
+    {
+      "part": "inline row action",
+      "state": "team",
+      "select": "td[data-slot=\"row-actions\"] > form > button",
+      "fine": 32,
+      "coarse": 44
+    }
+  ],
   "theming": {
     "tokens": [
       "--background",
@@ -190,9 +317,13 @@
       "--card",
       "--card-foreground",
       "--surface-muted",
-      "--primary"
+      "--primary",
+      "--popover",
+      "--popover-foreground",
+      "--destructive",
+      "--destructive-foreground"
     ],
-    "brandOverlay": "Cell links are `--primary`. Rows and spacing are the same in every brand. Status pills (`tone`) are fixed status colours, the same in every brand.",
+    "brandOverlay": "Cell links are `--primary` and focus rings `--ring`. Rows and spacing are the same in every brand. Status pills (`tone`) are fixed status colours, the same in every brand; destructive actions use the destructive tokens in every brand.",
     "statusColours": ["malachite", "gold", "cobalt", "terracotta", "tanzanite"]
   },
   "noJs": {
@@ -202,7 +333,7 @@
   "responsive": [
     "Below md each row is a card and each cell shows its column name; from md it is a table with a header row and ~40px rows."
   ],
-  "contract": "contract\n  slot is \"data-table\"\n  when default shows a \"Tendai\"\n  uses badge\n  when hostile slot is \"data-table\"\nend",
+  "contract": "contract\n  slot is \"data-table\"\n  when default shows a \"Tendai\"\n  uses badge\n  when hostile slot is \"data-table\"\n  when team shows summary \"Actions for Rudo Chari\"\n  when team shows button \"Resend invite\"\nend",
   "checks": [
     {
       "say": "A captioned table.",
@@ -269,6 +400,104 @@
       "say": "Phone labels are hidden from screen readers.",
       "select": "td > span[aria-hidden=\"true\"]",
       "min": 1
+    },
+    {
+      "say": "A person cell is an avatar beside the name and the secondary line.",
+      "state": "team",
+      "select": "th [data-slot=\"person\"]",
+      "count": 3
+    },
+    {
+      "say": "An avatar image is decorative: the name is beside it.",
+      "state": "team",
+      "select": "[data-slot=\"person\"] img[alt=\"\"]",
+      "count": 1,
+      "attr": {
+        "src": "https://example.com/tendai.jpg"
+      }
+    },
+    {
+      "say": "Without an image the avatar is the initials, hidden from screen readers.",
+      "state": "team",
+      "select": "[data-slot=\"person\"] > span[aria-hidden=\"true\"]",
+      "count": 2
+    },
+    {
+      "say": "Initials are up to two letters.",
+      "state": "team",
+      "select": "tr[data-row=\"Rudo Chari\"] [data-slot=\"person\"] > span[aria-hidden=\"true\"]",
+      "count": 1,
+      "text": "RC"
+    },
+    {
+      "say": "A person with href links the name.",
+      "state": "team",
+      "select": "[data-slot=\"person\"] a[href=\"/team/tendai\"]",
+      "count": 1,
+      "text": "Tendai Moyo"
+    },
+    {
+      "say": "The secondary line is shown once, inside the person.",
+      "state": "team",
+      "select": "tr[data-row=\"Tendai Moyo\"] [data-slot=\"person\"] .text-muted-foreground",
+      "text": "tendai@example.com",
+      "count": 1
+    },
+    {
+      "say": "Row actions add a visually hidden Actions column.",
+      "state": "team",
+      "select": "thead th[scope=\"col\"]:last-child .sr-only",
+      "count": 1,
+      "text": "Actions"
+    },
+    {
+      "say": "Every row has an actions cell, empty when it has none.",
+      "state": "team",
+      "select": "tbody td[data-slot=\"row-actions\"]",
+      "count": 3
+    },
+    {
+      "say": "Several actions are a details menu named for the row.",
+      "state": "team",
+      "select": "tr[data-row=\"Rudo Chari\"] details[data-slot=\"row-actions-menu\"] ul[aria-label=\"Actions for Rudo Chari\"] > li",
+      "count": 3
+    },
+    {
+      "say": "A link action is a link.",
+      "state": "team",
+      "select": "details a[data-slot=\"row-action\"][href=\"/team/rudo/activity\"]",
+      "count": 1
+    },
+    {
+      "say": "A form action posts its hidden fields.",
+      "state": "team",
+      "select": "details form[data-slot=\"row-action\"][method=\"post\"][action=\"/team/role\"] > input[type=\"hidden\"][name=\"member\"][value=\"rudo\"]",
+      "count": 1
+    },
+    {
+      "say": "The destructive action is listed last, in the destructive colour.",
+      "state": "team",
+      "select": "details li:last-child button.text-destructive",
+      "count": 1,
+      "text": "Remove member"
+    },
+    {
+      "say": "One action is a button in the row, named with the row.",
+      "state": "team",
+      "select": "tr[data-row=\"Farai\"] td[data-slot=\"row-actions\"] > form[action=\"/team/invite\"] > button[type=\"submit\"] .sr-only",
+      "count": 1,
+      "text": ": Farai"
+    },
+    {
+      "say": "A row with no actions has none.",
+      "state": "team",
+      "select": "tr[data-row=\"Tendai Moyo\"] [data-slot=\"row-action\"], tr[data-row=\"Tendai Moyo\"] details",
+      "absent": true
+    },
+    {
+      "say": "Without actions there is no Actions column.",
+      "select": "[data-slot=\"row-actions\"]",
+      "absent": true
     }
   ]
 }

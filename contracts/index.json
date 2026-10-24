@@ -131,10 +131,37 @@
     {
       "name": "app/data-table",
       "title": "DataTable",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "file": "app/data-table.contract.json",
       "astro": "app-data-table",
       "tsx": "app-data-table",
+      "rs": null
+    },
+    {
+      "name": "app/plan-summary",
+      "title": "PlanSummary",
+      "version": "1.0.0",
+      "file": "app/plan-summary.contract.json",
+      "astro": "app-plan-summary",
+      "tsx": "app-plan-summary",
+      "rs": null
+    },
+    {
+      "name": "app/confirm-action",
+      "title": "ConfirmAction",
+      "version": "1.0.0",
+      "file": "app/confirm-action.contract.json",
+      "astro": "app-confirm-action",
+      "tsx": "app-confirm-action",
+      "rs": null
+    },
+    {
+      "name": "app/tier-status",
+      "title": "TierStatus",
+      "version": "1.0.0",
+      "file": "app/tier-status.contract.json",
+      "astro": "app-tier-status",
+      "tsx": "app-tier-status",
       "rs": null
     },
     {
@@ -176,7 +203,7 @@
     {
       "name": "app/form-field",
       "title": "FormField",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "file": "app/form-field.contract.json",
       "astro": "app-form-field",
       "tsx": "app-form-field",
@@ -279,6 +306,15 @@
       "file": "app/skeleton.contract.json",
       "astro": "app-skeleton",
       "tsx": "app-skeleton",
+      "rs": null
+    },
+    {
+      "name": "app/money",
+      "title": "Money",
+      "version": "1.0.0",
+      "file": "app/money.contract.json",
+      "astro": "app-money",
+      "tsx": "app-money",
       "rs": null
     },
     {
@@ -648,6 +684,15 @@
       "file": "ui/mzizi-trust-meter.contract.json",
       "astro": "mzizi-trust-meter",
       "tsx": "mzizi-trust-meter",
+      "rs": null
+    },
+    {
+      "name": "ui/mzizi-verified-badge",
+      "title": "MziziVerifiedBadge",
+      "version": "1.0.0",
+      "file": "ui/mzizi-verified-badge.contract.json",
+      "astro": "mzizi-verified-badge",
+      "tsx": "mzizi-verified-badge",
       "rs": null
     }
   ]

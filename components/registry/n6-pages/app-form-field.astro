@@ -8,13 +8,27 @@
  * file), a textarea (`as="textarea"`) or a native select (`as="select"`
  * with `options`), all at app density with the same wiring. `wide` spans
  * both of FormLayout's columns.
+ *
+ * From 1.2 it can also be a choice: a checkbox (`as="checkbox"`), a switch
+ * (`as="switch"`, a native checkbox with role="switch" drawn as a pill) or a
+ * radio group (`as="radio-group"` with `options`, a fieldset whose legend is
+ * the label). Each is a native input inside its own label, so the whole row is
+ * the hit area (36px, 48px on touch), and each posts with its form, no script.
  */
 import type { HTMLAttributes } from "astro/types";
 
 import Input from "./app-input.astro";
 import Label from "./app-label.astro";
 import { cn } from "./ui-utils";
-import { appFileInputClasses, appInputClasses, appTextareaClasses } from "./ui-variants";
+import {
+  appCheckClasses,
+  appChoiceRowClasses,
+  appFileInputClasses,
+  appInputClasses,
+  appSwitchClasses,
+  appTextareaClasses,
+  labelClasses,
+} from "./ui-variants";
 
 export interface FieldOption {
   value: string;
@@ -25,8 +39,9 @@ interface Props {
   label: string;
   value?: string | null;
   type?: "text" | "email" | "tel" | "url" | "search" | "number" | "date" | "file";
-  as?: "input" | "textarea" | "select";
+  as?: "input" | "textarea" | "select" | "checkbox" | "switch" | "radio-group";
   options?: FieldOption[];
+  checked?: boolean;
   emptyOption?: string;
   rows?: number;
   accept?: string;
@@ -50,6 +65,7 @@ const {
   type = "text",
   as = "input",
   options = [],
+  checked = false,
   emptyOption,
   rows = 5,
   accept,
@@ -70,15 +86,67 @@ const id = `field-${name}`;
 const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-error` : null].filter(Boolean).join(" ") || undefined;
 const invalid = error ? "true" : undefined;
 const file = type === "file";
+const toggle = as === "checkbox" || as === "switch";
 ---
 
 <div class={cn("grid content-start gap-1.5", wide && "@xl:col-span-2")} data-slot="form-field">
-  <Label for={id}>
-    {label}
-    {required && <span class="text-muted-foreground"> (required)</span>}
-  </Label>
   {
-    as === "textarea" ? (
+    toggle ? (
+      <label data-slot="label" for={id} class={appChoiceRowClasses}>
+        <input
+          data-slot={as}
+          class={as === "switch" ? appSwitchClasses : appCheckClasses}
+          type="checkbox"
+          role={as === "switch" ? "switch" : undefined}
+          id={id}
+          name={name}
+          value={value ?? "on"}
+          checked={checked}
+          required={required}
+          disabled={readonly}
+          aria-describedby={describedBy}
+          aria-invalid={invalid}
+        />
+        <span>
+          {label}
+          {required && <span class="text-muted-foreground"> (required)</span>}
+        </span>
+      </label>
+    ) : as === "radio-group" ? (
+      <fieldset data-slot="radio-group" id={id} class="grid content-start" aria-describedby={describedBy}>
+        <legend data-slot="label" class={cn(labelClasses, "mb-1")}>
+          {label}
+          {required && <span class="text-muted-foreground"> (required)</span>}
+        </legend>
+        {
+          options.map((o) => (
+            <label class={appChoiceRowClasses}>
+              <input
+                data-slot="radio"
+                class={appCheckClasses}
+                type="radio"
+                id={`${id}-${o.value}`}
+                name={name}
+                value={o.value}
+                checked={o.value === value}
+                required={required}
+                disabled={readonly}
+                aria-invalid={invalid}
+              />
+              <span>{o.label}</span>
+            </label>
+          ))
+        }
+      </fieldset>
+    ) : (
+      <Label for={id}>
+        {label}
+        {required && <span class="text-muted-foreground"> (required)</span>}
+      </Label>
+    )
+  }
+  {
+    toggle || as === "radio-group" ? null : as === "textarea" ? (
       <textarea
         data-slot="textarea"
         class={cn(appTextareaClasses, readonly && "bg-muted")}

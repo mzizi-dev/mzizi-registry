@@ -6,7 +6,8 @@
 //! run natively.
 //!
 //! The helpers are read-only on purpose: `find`, `find_one` and `aggregate`
-//! (which refuses `$out` and `$merge`). They send read preference
+//! (which refuses `$out` and `$merge`, and reads another collection only when
+//! the caller names it). They send read preference
 //! `secondaryPreferred` and a server-side time limit, cap the number of
 //! documents returned, and validate database and collection names.
 
@@ -14,6 +15,7 @@ use std::collections::HashMap;
 
 use serde_json::Value;
 use subtle::ConstantTimeEq;
+use zeroize::Zeroizing;
 
 use crate::bson::{Bson, Doc};
 use crate::scram;
@@ -29,10 +31,16 @@ pub const MAX_FIND_DOCS: usize = 1_000;
 pub const MAX_AGGREGATE_DOCS: usize = 5_000;
 /// The server stops a command after this long.
 const MAX_TIME_MS: i32 = 8_000;
+/// MongoDB's own limit on `client.application.name` in the handshake.
+pub const MAX_APP_NAME: usize = 128;
 const BATCH: i32 = 1_000;
 
 /// (user, salt, iterations).
 type SaltKey = (String, Vec<u8>, u32);
+
+/// The password an entry was derived from, and the salted password, both wiped from memory when
+/// the entry is dropped (replaced, cleared, or with the cache).
+type SaltEntry = (Zeroizing<Vec<u8>>, Zeroizing<[u8; 32]>);
 
 /// PBKDF2 results kept per isolate, so a reconnect does not pay 4096
 /// iterations again. The entry is keyed by user, salt and iterations and
@@ -40,7 +48,7 @@ type SaltKey = (String, Vec<u8>, u32);
 /// same key (a rotated secret) is compared in constant time, misses, and is
 /// recomputed. The password is never hashed to build a key.
 #[derive(Default)]
-pub struct SaltCache(HashMap<SaltKey, (Vec<u8>, [u8; 32])>);
+pub struct SaltCache(HashMap<SaltKey, SaltEntry>);
 
 impl SaltCache {
     /// An empty cache.
@@ -54,25 +62,27 @@ impl SaltCache {
         password: &str,
         salt: &[u8],
         iterations: u32,
-    ) -> Result<[u8; 32]> {
+    ) -> Result<Zeroizing<[u8; 32]>> {
         let key = (user.to_owned(), salt.to_vec(), iterations);
         if let Some((derived_for, v)) = self.0.get(&key) {
             if derived_for.len() == password.len()
                 && bool::from(derived_for.as_slice().ct_eq(password.as_bytes()))
             {
-                return Ok(*v);
+                return Ok(v.clone());
             }
         }
         let v = scram::salted_password(password, salt, iterations)?;
         if self.0.len() > 8 {
             self.0.clear();
         }
-        self.0.insert(key, (password.as_bytes().to_vec(), v));
+        self.0.insert(
+            key,
+            (Zeroizing::new(password.as_bytes().to_vec()), v.clone()),
+        );
         Ok(v)
     }
 }
 
-/// What `hello` says about the member we reached.
 /// What a server says about itself in reply to `hello`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Hello {
@@ -113,6 +123,79 @@ fn runs_server_js(v: &Value) -> bool {
     }
 }
 
+/// Whether a collection named in a cross-collection stage may be read: the aggregation's own
+/// collection, or one the caller listed.
+fn may_read(from: &Value, coll: &str, allowed: &[&str]) -> bool {
+    // `from: {db, coll}` (another database) is never allowed; only a plain name is.
+    from.as_str()
+        .is_some_and(|f| f == coll || allowed.contains(&f))
+}
+
+/// Whether every `$lookup`, `$graphLookup` and `$unionWith` in `v`, at any depth (sub-pipelines
+/// and `$facet` included), reads only `coll` or a collection in `allowed`.
+fn reads_only(v: &Value, coll: &str, allowed: &[&str]) -> bool {
+    match v {
+        Value::Object(m) => m.iter().all(|(k, v)| {
+            let stage_ok = match k.as_str() {
+                // `$lookup` without `from` runs its pipeline on `$documents`, not a collection.
+                "$lookup" => v
+                    .as_object()
+                    .is_some_and(|o| o.get("from").is_none_or(|f| may_read(f, coll, allowed))),
+                "$graphLookup" => v
+                    .as_object()
+                    .and_then(|o| o.get("from"))
+                    .is_some_and(|f| may_read(f, coll, allowed)),
+                // `{$unionWith: "c"}` or `{$unionWith: {coll: "c", pipeline}}`; without `coll`
+                // the pipeline starts from `$documents`.
+                "$unionWith" => match v {
+                    Value::String(_) => may_read(v, coll, allowed),
+                    Value::Object(o) => o.get("coll").is_none_or(|f| may_read(f, coll, allowed)),
+                    _ => false,
+                },
+                _ => true,
+            };
+            stage_ok && reads_only(v, coll, allowed)
+        }),
+        Value::Array(a) => a.iter().all(|v| reads_only(v, coll, allowed)),
+        _ => true,
+    }
+}
+
+/// Whether `v` holds a `$out` or `$merge` stage at any depth.
+fn writes(v: &Value) -> bool {
+    match v {
+        Value::Object(m) => m
+            .iter()
+            .any(|(k, v)| k == "$out" || k == "$merge" || writes(v)),
+        Value::Array(a) => a.iter().any(writes),
+        _ => false,
+    }
+}
+
+/// The text an [`Error::Server`] carries: a fixed description of the code, written here. The
+/// server's own `errmsg` is never kept, because it can echo part of the query (an operator, a
+/// field name, a value) or describe the cluster's internals.
+pub fn server_message(code: i64) -> &'static str {
+    match code {
+        2 => "bad value",
+        9 => "the command could not be parsed",
+        11 => "the user was not found",
+        13 => "not authorized",
+        18 => "authentication failed",
+        26 => "the namespace does not exist",
+        40 | 168 => "an invalid pipeline stage or operator",
+        43 => "the cursor was not found",
+        50 => "the operation exceeded its time limit",
+        59 => "command not found",
+        91 | 11600 | 11602 => "the server is shutting down",
+        189 => "the primary stepped down",
+        262 => "the operation exceeded its time limit",
+        292 => "the query exceeded its memory limit",
+        10107 | 13435 => "the member is not primary",
+        _ => "the command failed",
+    }
+}
+
 fn name_ok(name: &str) -> bool {
     !name.is_empty()
         && name.len() <= 120
@@ -126,6 +209,10 @@ pub struct Connection<T: Io> {
     io: T,
     next_id: i32,
     harness: Shared,
+    /// Set once [`Connection::authenticate`] succeeds; until then replies are capped at
+    /// [`wire::MAX_PRE_AUTH_MESSAGE`].
+    authenticated: bool,
+    app_name: Option<String>,
 }
 
 impl<T: Io> Connection<T> {
@@ -136,7 +223,22 @@ impl<T: Io> Connection<T> {
             io,
             next_id: 1,
             harness: harness::noop(),
+            authenticated: false,
+            app_name: None,
         }
+    }
+
+    /// Name the application in the `hello` handshake (`client.application.name`), which the
+    /// server shows in its logs and `currentOp`. Cut to [`MAX_APP_NAME`] bytes, MongoDB's limit.
+    /// Without one, only the driver is named.
+    #[must_use]
+    pub fn with_app_name(mut self, name: &str) -> Self {
+        let mut end = name.len().min(MAX_APP_NAME);
+        while !name.is_char_boundary(end) {
+            end -= 1;
+        }
+        self.app_name = (end > 0).then(|| name[..end].to_owned());
+        self
     }
 
     /// Report each command and refusal to `harness`. Without one, nothing is reported.
@@ -190,7 +292,14 @@ impl<T: Io> Connection<T> {
             .await?
             .try_into()
             .map_err(|_| Error::Protocol("short header".into()))?;
-        let len = wire::message_length(&header)?;
+        // Until the login succeeds the server has not proved it knows the password, so a large
+        // reply is refused from its header, before the body is read or allocated.
+        let max = if self.authenticated {
+            wire::MAX_MESSAGE
+        } else {
+            wire::MAX_PRE_AUTH_MESSAGE
+        };
+        let len = wire::message_length_within(&header, max)?;
         if wire::response_to(&header) != id {
             return Err(Error::Protocol("a reply to another request".into()));
         }
@@ -200,33 +309,34 @@ impl<T: Io> Connection<T> {
             Some(1) => Ok(reply),
             _ => {
                 let code = get(&reply, "code").and_then(as_i64).unwrap_or(0);
-                let message = match get(&reply, "errmsg") {
-                    Some(Bson::Str(s)) => s.clone(),
-                    _ => "the command failed".to_owned(),
-                };
-                Err(Error::Server { code, message })
+                Err(Error::Server {
+                    code,
+                    message: server_message(code).to_owned(),
+                })
             }
         }
     }
 
     /// The handshake: ask the server who it is and which protocol it speaks.
     pub async fn hello(&mut self) -> Result<Hello> {
+        let mut client: Doc = Vec::new();
+        if let Some(app) = &self.app_name {
+            client.push(("application".into(), Bson::doc([("name", Bson::str(app))])));
+        }
+        client.push((
+            "driver".into(),
+            Bson::doc([
+                ("name", Bson::str("mzizi-mongodb")),
+                ("version", Bson::str(env!("CARGO_PKG_VERSION"))),
+            ]),
+        ));
         let r = self
             .command(
                 "admin",
                 vec![
                     ("hello".into(), Bson::Int32(1)),
                     ("helloOk".into(), Bson::Bool(true)),
-                    (
-                        "client".into(),
-                        Bson::doc([(
-                            "driver",
-                            Bson::doc([
-                                ("name", Bson::str("mukoko-weather-edge")),
-                                ("version", Bson::str("0.1")),
-                            ]),
-                        )]),
-                    ),
+                    ("client".into(), Bson::Doc(client)),
                 ],
             )
             .await?;
@@ -254,6 +364,13 @@ impl<T: Io> Connection<T> {
         nonce: &str,
         cache: &mut SaltCache,
     ) -> Result<()> {
+        self.authenticated = false;
+        self.login(uri, nonce, cache).await?;
+        self.authenticated = true;
+        Ok(())
+    }
+
+    async fn login(&mut self, uri: &Uri, nonce: &str, cache: &mut SaltCache) -> Result<()> {
         let (first, bare) = scram::client_first(&uri.user, nonce);
         let start = self
             .command(
@@ -387,23 +504,39 @@ impl<T: Io> Connection<T> {
     }
 
     /// An aggregation pipeline's results (at most [`MAX_AGGREGATE_DOCS`]; more
-    /// is an error, not a silent cut). `$out` and `$merge` are refused.
+    /// is an error, not a silent cut). `$out` and `$merge` are refused, and so is any
+    /// `$lookup`, `$graphLookup` or `$unionWith` that reads a collection other than `coll`:
+    /// use [`Connection::aggregate_joining`] to name the ones a pipeline may read.
     pub async fn aggregate(
         &mut self,
         db: &str,
         coll: &str,
         pipeline: &[Value],
     ) -> Result<Vec<Value>> {
+        self.aggregate_joining(db, coll, pipeline, &[]).await
+    }
+
+    /// [`Connection::aggregate`], where `$lookup`, `$graphLookup` and `$unionWith` may also read
+    /// the collections in `joins` (in `db`), at any depth. Any other collection, or another
+    /// database, is refused before anything is sent.
+    pub async fn aggregate_joining(
+        &mut self,
+        db: &str,
+        coll: &str,
+        pipeline: &[Value],
+        joins: &[&str],
+    ) -> Result<Vec<Value>> {
         if !name_ok(db) || !name_ok(coll) {
             return Err(self.refuse("bad_name", "bad database or collection name"));
         }
-        for stage in pipeline {
-            let writes = stage
-                .as_object()
-                .is_some_and(|o| o.contains_key("$out") || o.contains_key("$merge"));
-            if writes {
-                return Err(self.refuse("read_only", "this client is read-only"));
-            }
+        if pipeline.iter().any(writes) {
+            return Err(self.refuse("read_only", "this client is read-only"));
+        }
+        if !pipeline.iter().all(|s| reads_only(s, coll, joins)) {
+            return Err(self.refuse(
+                "cross_collection",
+                "a stage reads a collection the caller did not allow",
+            ));
         }
         if pipeline.iter().any(runs_server_js) {
             return Err(self.refuse("server_js", "server-side JavaScript is refused"));
@@ -546,6 +679,8 @@ mod tests {
         handler: Box<dyn FnMut(&Doc) -> Doc>,
         /// Answer with this `responseTo` instead of the request id.
         wrong_response_to: bool,
+        /// The size of every `read_exact` the client asked for.
+        reads: Rc<RefCell<Vec<usize>>>,
     }
 
     impl Mock {
@@ -558,6 +693,7 @@ mod tests {
                     seen: seen.clone(),
                     handler: Box::new(handler),
                     wrong_response_to: false,
+                    reads: Rc::new(RefCell::new(Vec::new())),
                 },
                 seen,
             )
@@ -580,6 +716,7 @@ mod tests {
         }
 
         async fn read_exact(&mut self, n: usize) -> Result<Vec<u8>> {
+            self.reads.borrow_mut().push(n);
             if self.queue.len() < n {
                 return Err(Error::Io("closed".into()));
             }
@@ -659,9 +796,123 @@ mod tests {
             block_on(c.ping("x")).unwrap_err(),
             Error::Server {
                 code: 59,
-                message: "no such command".into()
+                message: "command not found".into()
             }
         );
+    }
+
+    #[test]
+    fn a_server_error_keeps_its_code_and_never_the_servers_text() {
+        // A parse error that echoes the query, as MongoDB's do.
+        let echoed = "unknown operator: $eq in {email: \"private@example.com\"} on shard-07";
+        for code in [2, 9, 12345] {
+            let (mock, _) = Mock::new(move |_| {
+                vec![
+                    ("ok".into(), Bson::Double(0.0)),
+                    ("errmsg".into(), Bson::str(echoed)),
+                    ("code".into(), Bson::Int32(code)),
+                ]
+            });
+            let mut c = Connection::new(mock);
+            let e = block_on(c.find("weather", "x", &FindOptions::default())).unwrap_err();
+            let Error::Server { code: got, message } = &e else {
+                panic!("not a server error");
+            };
+            assert_eq!(*got, i64::from(code));
+            assert_eq!(message, server_message(i64::from(code)));
+            for text in [format!("{e}"), format!("{e:?}")] {
+                for part in ["private@example.com", "shard-07", "unknown operator"] {
+                    assert!(
+                        !text.contains(part),
+                        "code {code}: the server's text leaked"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn hello_names_this_driver_and_the_app_and_nothing_else() {
+        let (mock, seen) = Mock::new(|_| ok());
+        let mut c = Connection::new(mock).with_app_name("weather-worker");
+        block_on(c.hello()).unwrap();
+        let (mock, seen_plain) = Mock::new(|_| ok());
+        let mut plain = Connection::new(mock).with_app_name(&"x".repeat(MAX_APP_NAME + 10));
+        block_on(plain.hello()).unwrap();
+        let driver = Bson::doc([
+            ("name", Bson::str("mzizi-mongodb")),
+            ("version", Bson::str(env!("CARGO_PKG_VERSION"))),
+        ]);
+        assert_eq!(
+            get(&seen.borrow()[0], "client"),
+            Some(&Bson::Doc(vec![
+                (
+                    "application".into(),
+                    Bson::doc([("name", Bson::str("weather-worker"))])
+                ),
+                ("driver".into(), driver.clone()),
+            ]))
+        );
+        let sent = seen_plain.borrow();
+        let Some(Bson::Doc(client)) = get(&sent[0], "client") else {
+            panic!("no client document");
+        };
+        assert_eq!(
+            get(client, "application"),
+            Some(&Bson::doc([("name", Bson::str(&"x".repeat(MAX_APP_NAME)))]))
+        );
+        let (mock, seen_none) = Mock::new(|_| ok());
+        block_on(Connection::new(mock).hello()).unwrap();
+        assert_eq!(
+            get(&seen_none.borrow()[0], "client"),
+            Some(&Bson::Doc(vec![("driver".into(), driver)]))
+        );
+        let encoded = format!("{:?}", seen.borrow()[0]);
+        assert!(!encoded.contains("mukoko"), "another app's name is sent");
+    }
+
+    /// A reply carrying a string of `n` bytes.
+    fn big_reply(n: usize) -> Doc {
+        with(ok(), "pad", Bson::str(&"a".repeat(n)))
+    }
+
+    #[test]
+    fn a_large_reply_before_the_login_is_refused_without_being_read() {
+        let (mock, _) = Mock::new(|_| big_reply(wire::MAX_PRE_AUTH_MESSAGE));
+        let reads = mock.reads.clone();
+        let mut c = Connection::new(mock);
+        assert!(matches!(block_on(c.hello()), Err(Error::Protocol(_))));
+        // Only the 16-byte header was read; the body was neither read nor allocated.
+        assert_eq!(*reads.borrow(), vec![16]);
+        // A reply just under the cap is fine.
+        let (mock, _) = Mock::new(|_| big_reply(wire::MAX_PRE_AUTH_MESSAGE - 100));
+        assert!(block_on(Connection::new(mock).hello()).is_ok());
+    }
+
+    #[test]
+    fn after_the_login_a_large_reply_is_read() {
+        let mut scram = scram_server("weather", testdata::get("good_password"), false);
+        let (mock, _) = Mock::new(move |req| match name(req).as_str() {
+            "ping" => big_reply(wire::MAX_PRE_AUTH_MESSAGE * 2),
+            _ => scram(req),
+        });
+        let mut c = Connection::new(mock);
+        assert!(matches!(block_on(c.ping("x")), Err(Error::Protocol(_))));
+        let (mock, _) = Mock::new({
+            let mut scram = scram_server("weather", testdata::get("good_password"), false);
+            move |req| match name(req).as_str() {
+                "ping" => big_reply(wire::MAX_PRE_AUTH_MESSAGE * 2),
+                _ => scram(req),
+            }
+        });
+        let mut c = Connection::new(mock);
+        block_on(c.authenticate(
+            &uri(&testdata::get("good_password")),
+            &testdata::get("client_nonce"),
+            &mut SaltCache::new(),
+        ))
+        .unwrap();
+        assert!(block_on(c.ping("x")).is_ok());
     }
 
     #[test]
@@ -777,9 +1028,13 @@ mod tests {
         assert!(events[0].1.contains("\"find\""), "{events:?}");
         assert_eq!(events[1].0, "mongodb.refused");
         assert!(events[1].1.contains("read_only"), "{events:?}");
-        for (_, fields) in events.iter() {
-            for secret in ["secret@example.com", "personsPrivate", "weather"] {
-                assert!(!fields.contains(secret), "{secret} leaked: {fields}");
+        // The messages name the event and the value by index, never the value itself.
+        for (e, (_, fields)) in events.iter().enumerate() {
+            for (i, value) in ["secret@example.com", "personsPrivate", "weather"]
+                .iter()
+                .enumerate()
+            {
+                assert!(!fields.contains(value), "event {e} carried value {i}");
             }
         }
     }
@@ -883,6 +1138,86 @@ mod tests {
             ..FindOptions::default()
         };
         assert!(block_on(c.find("weather", "x", &opts)).is_ok());
+    }
+
+    #[test]
+    fn a_stage_that_reads_another_collection_is_refused_unless_the_caller_allows_it() {
+        use serde_json::json;
+        let (mock, seen) = Mock::new(|_| cursor(0, "firstBatch", vec![]));
+        let rec = Rc::new(Recorder(RefCell::new(Vec::new())));
+        let mut c = Connection::new(mock).with_harness(rec.clone());
+        let reaching = [
+            json!({"$lookup": {"from": "persons", "localField": "a", "foreignField": "b", "as": "p"}}),
+            json!({"$graphLookup": {"from": "persons", "startWith": "$a", "connectFromField": "a",
+                "connectToField": "b", "as": "p"}}),
+            json!({"$unionWith": "persons"}),
+            json!({"$unionWith": {"coll": "persons", "pipeline": []}}),
+            // Another database is never allowed, even by name.
+            json!({"$lookup": {"from": {"db": "admin", "coll": "system.users"}, "as": "p"}}),
+            // Nested: inside a lookup's own pipeline, a $facet and a $unionWith pipeline.
+            json!({"$lookup": {"from": "observations", "as": "p",
+                "pipeline": [{"$lookup": {"from": "persons", "as": "q", "pipeline": []}}]}}),
+            json!({"$facet": {"a": [{"$unionWith": "persons"}]}}),
+            json!({"$unionWith": {"coll": "observations",
+                "pipeline": [{"$graphLookup": {"from": "persons", "as": "p"}}]}}),
+            json!({"$lookup": "persons"}),
+        ];
+        for (i, stage) in reaching.iter().enumerate() {
+            let r = block_on(c.aggregate("weather", "observations", std::slice::from_ref(stage)));
+            assert!(matches!(r, Err(Error::Refused(_))), "stage {i} was sent");
+        }
+        assert!(seen.borrow().is_empty());
+        assert!(
+            rec.0
+                .borrow()
+                .iter()
+                .all(|(n, f)| n == "mongodb.refused" && f.contains("cross_collection"))
+        );
+        // Allowed: the aggregation's own collection, a `$documents` pipeline, and a collection
+        // the caller names (at any depth).
+        for stage in [
+            json!({"$lookup": {"from": "observations", "as": "p", "localField": "a",
+                "foreignField": "b"}}),
+            json!({"$lookup": {"as": "p", "pipeline": [{"$documents": [{"a": 1}]}]}}),
+            json!({"$unionWith": {"pipeline": [{"$documents": [{"a": 1}]}]}}),
+        ] {
+            assert!(block_on(c.aggregate("weather", "observations", &[stage])).is_ok());
+        }
+        for stage in &reaching[..4] {
+            let r = block_on(c.aggregate_joining(
+                "weather",
+                "observations",
+                &[json!({"$facet": {"a": [stage.clone()]}})],
+                &["persons"],
+            ));
+            assert!(r.is_ok(), "{r:?}");
+        }
+        // Naming one collection does not open another, nor another database.
+        for (i, stage) in [json!({"$unionWith": "sessions"}), reaching[4].clone()]
+            .iter()
+            .enumerate()
+        {
+            let r = block_on(c.aggregate_joining(
+                "weather",
+                "observations",
+                std::slice::from_ref(stage),
+                &["persons"],
+            ));
+            assert!(matches!(r, Err(Error::Refused(_))), "stage {i} was sent");
+        }
+    }
+
+    #[test]
+    fn a_nested_write_stage_is_refused() {
+        let (mock, seen) = Mock::new(|_| cursor(0, "firstBatch", vec![]));
+        let mut c = Connection::new(mock);
+        let r = block_on(c.aggregate(
+            "weather",
+            "observations",
+            &[serde_json::json!({"$facet": {"a": [{"$merge": "x"}]}})],
+        ));
+        assert!(matches!(r, Err(Error::Refused(_))));
+        assert!(seen.borrow().is_empty());
     }
 
     #[test]
@@ -1060,6 +1395,22 @@ mod tests {
             matches!(r, Err(Error::Auth(_))),
             "authentication was not refused"
         );
+    }
+
+    /// Compiles only for a type that wipes its memory when dropped.
+    fn wiped_on_drop<T: zeroize::ZeroizeOnDrop>(_: &T) {}
+
+    #[test]
+    fn the_salt_cache_wipes_the_password_and_the_key_it_holds() {
+        let mut cache = SaltCache::new();
+        let salt = testdata::get("short_salt").into_bytes();
+        let returned = cache
+            .get_or_compute("u", &testdata::get("cache_password"), &salt, 4096)
+            .unwrap();
+        wiped_on_drop(&returned);
+        let (password, key) = cache.0.values().next().unwrap();
+        wiped_on_drop(password);
+        wiped_on_drop(key);
     }
 
     #[test]
