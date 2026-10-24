@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — zod 3 removed, and floors for the advisories that failed `audit` (2026-10-24, #PRNUM)
+
+GHSA-mrhx-c7xc-m3w5 (high) affects every zod 3 release and zod 4 below 4.6.6, and no 3.x is patched, so the org `audit` check failed every pull request (first seen on #544). zod 3.25.76 came in through `shadcn` 4.21 (which depends on `zod ^3.24.1`) and was shared by `@modelcontextprotocol/sdk` and `zod-to-json-schema`, whose peer ranges both accept zod 4.
+
+- `shadcn` `^4.22.1` (was `^4.21.0`), which depends on `zod ^4.2.0`. `shadcn build` still builds all 657 items.
+- `zod` `^4.6.7` (was `^4.6.2`), plus an override `"zod@<4.6.6": ">=4.6.6"`, so no zod below the fixed release can come back through a transitive range. The lockfile now resolves only zod 4.6.7.
+- New advisories that failed the same check, raised to the first patched release: `body-parser` override `^2.4.0` (GHSA-27r3-jxmh-p828, high), `undici` `^7.30.1` (GHSA-xjj6-f33q-929c high, GHSA-4qv8-2p9j-2685 and GHSA-f72v-6w45-q472 moderate), `fast-uri` `^3.1.9` (GHSA-w74x-v6f9-j3xg, GHSA-wjr9-j795-jxcr, moderate).
+
+After this, `pnpm audit:check` reports one low and exits 0; `typecheck`, `test` (1,251 + 481) and `lint` pass.
+
 ## [4.11.0] - 2026-10-23
 
 Releases `staging` to `main` as the next minor above v4.10.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.11.0. It carries the `mzizi-verified-badge`, `mzizi-place-card`, `mzizi-icons` and `mzizi-harness` fixes Kweli needs for its place embed and the dependency floors for the `audit:check` advisories (#533), and Dependabot's move to `staging` (#508). Two changes are **Breaking**: the swapped `--tier-government` / `--tier-licensed` values, and the `mzizi-icons` install path (`@/lib/icons`). No Mzizi Roots crate version changes.
