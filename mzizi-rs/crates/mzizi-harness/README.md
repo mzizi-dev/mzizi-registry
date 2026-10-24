@@ -6,7 +6,7 @@ The UI harness (`useMziziHarness`) gives a component three things: a scoped `log
 
 ```toml
 [dependencies]
-mzizi-harness = "0.4"
+mzizi-harness = ">=0.4.0"
 ```
 
 | Item             | What it is                                                               |
