@@ -10777,6 +10777,21 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "label",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "showScore",
+      "type": "boolean",
+      "required": false
+    },
+    {
       "name": "loading",
       "type": "boolean",
       "required": false
