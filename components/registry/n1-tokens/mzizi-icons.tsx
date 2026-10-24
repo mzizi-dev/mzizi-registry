@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import type { LucideProps } from "lucide-react"
 
@@ -11,6 +9,12 @@ import type { LucideProps } from "lucide-react"
      import { icons, Icon } from "@/lib/icons"
      <Icon name="success" size="md" />
      <icons.ArrowRight className="size-4" />
+
+   No "use client": the module only re-exports icons and defines
+   stateless components, so a Server Component may import it. Next's
+   flight loader rejects `export * from "lucide-react"` inside a client
+   boundary when a server module imports it (#543), and a client
+   component that imports this module still gets client copies.
    ═══════════════════════════════════════════════════════════════ */
 
 // ── Icon Size System ────────────────────────────────────────────
@@ -24,6 +28,13 @@ export const ICON_SIZES = {
 } as const
 
 export type IconSize = keyof typeof ICON_SIZES
+
+// ── Every Lucide icon, under its own name ───────────────────────
+// This module installs to lib/icons/index.tsx, the `@/lib/icons` every
+// registry component imports from, so it must answer every name they
+// import. The named exports below take precedence over the star export.
+
+export * from "lucide-react"
 
 // ── Re-export Lucide icons with consistent naming ───────────────
 // Components import from here instead of lucide-react directly.

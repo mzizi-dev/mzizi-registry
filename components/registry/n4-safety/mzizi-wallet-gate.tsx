@@ -21,7 +21,7 @@ interface MziziWalletGateProps {
 const TOKEN_INFO: Record<TokenType, { label: string; color: string; desc: string }> = {
   MIT: {
     label: "MIT (Identity)",
-    color: "var(--tier-government, var(--color-tanzanite, #B388FF))",
+    color: "var(--color-tanzanite, #B388FF)",
     desc: "Soulbound identity token — non-transferable",
   },
   MXT: {
@@ -102,7 +102,7 @@ export function MziziWalletGate({
           height="28"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="var(--tier-government, var(--color-tanzanite, #B388FF))"
+          stroke="var(--color-tanzanite, #B388FF)"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

@@ -1,0 +1,228 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/address-selector",
+  "title": "AddressSelector",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "\"Deliver to\": a radio group of the user's saved addresses in a fieldset with a legend. Each option is a whole-row label with the name, a line and the Kweli code; private addresses say so in words.",
+  "implementations": {
+    "astro": {
+      "registry": "address-selector",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/AddressSelector.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "address-selector",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "default": "address",
+      "description": "The form field name."
+    },
+    {
+      "name": "legend",
+      "type": "string",
+      "required": false,
+      "default": "Deliver to",
+      "description": "The group's name."
+    },
+    {
+      "name": "addresses",
+      "type": "AddressOption[]",
+      "required": true,
+      "description": "{ id, label, line?, code?, visibility? } per saved address."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "description": "The id of the chosen address."
+    },
+    {
+      "name": "addHref",
+      "type": "string",
+      "required": false,
+      "description": "Where \"Add an address\" goes. No link without it."
+    },
+    {
+      "name": "addLabel",
+      "type": "string",
+      "required": false,
+      "default": "Add an address",
+      "description": "The add link's text."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A real radio group: one <input type=\"radio\"> per address with the same name, inside a <fieldset> with a <legend>, so it works and submits with no script.",
+    "Each option is a whole-row <label> at least 56px tall.",
+    "The chosen option is checked and outlined in --primary, so the choice is never colour alone.",
+    "A private or link-only address is marked \"Private\" or \"Link only\" in words; a public one is not marked.",
+    "With no addresses the group says \"No saved addresses yet.\" and shows only the add link."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "addresses": [
+          {
+            "id": "home",
+            "label": "Home",
+            "line": "12 Moyo Rd, Strathaven, Harare",
+            "code": "NYU-7K2Q",
+            "visibility": "private"
+          },
+          {
+            "id": "shop",
+            "label": "Shop",
+            "line": "Stall 4, Mbare Musika",
+            "code": "HRE-2M9X",
+            "visibility": "public"
+          }
+        ],
+        "value": "home",
+        "addHref": "/addresses/new"
+      }
+    },
+    "empty": {
+      "props": {
+        "addresses": [],
+        "addHref": "/addresses/new"
+      }
+    },
+    "named": {
+      "props": {
+        "name": "pickup",
+        "legend": "Pick up from",
+        "addresses": [
+          {
+            "id": "venue",
+            "label": "Venue",
+            "code": "MUT-4F8C",
+            "visibility": "link"
+          }
+        ]
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["group", "radio"],
+    "keyboard": [
+      "Tab into the group; arrow keys move between addresses; Space selects."
+    ],
+    "focus": ["The --ring focus ring on the row whose radio has focus."],
+    "aria": [
+      "The legend names the group; each radio is named by its whole row; privacy is written out."
+    ],
+    "wcag": ["1.3.1", "1.4.1", "2.5.8", "3.3.2"]
+  },
+  "density": [
+    {
+      "part": "option",
+      "select": "label",
+      "fine": 56,
+      "coarse": 56
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--border",
+      "--foreground",
+      "--muted-foreground",
+      "--primary",
+      "--ring",
+      "--muted"
+    ],
+    "brandOverlay": "Only --primary (the chosen outline, the radio's accent, the add link) and --ring change with the brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: native radios in a form."
+  },
+  "responsive": [
+    "Rows fill the container; the name and line truncate before the code is squeezed."
+  ],
+  "contract": "contract\n  slot is \"address-selector\"\n  portal is \"https://mzizi.dev/components/address-selector\"\n  when default shows legend \"Deliver to\"\n  label \"Home\" min_height 56\n  when empty shows p \"No saved addresses yet.\"\n  when named shows legend \"Pick up from\"\nend",
+  "checks": [
+    {
+      "say": "The root is a fieldset.",
+      "state": "*",
+      "select": "fieldset[data-slot=\"address-selector\"]",
+      "count": 1
+    },
+    {
+      "say": "One radio per address, same name.",
+      "select": "input[type=\"radio\"][name=\"address\"]",
+      "count": 2
+    },
+    {
+      "say": "The chosen address is checked.",
+      "select": "input[value=\"home\"][checked]",
+      "count": 1
+    },
+    {
+      "say": "Only one is checked.",
+      "select": "input[checked]",
+      "count": 1
+    },
+    {
+      "say": "A private address says so.",
+      "select": "[data-slot=\"address-option-privacy\"]",
+      "count": 1,
+      "text": "Private"
+    },
+    {
+      "say": "Codes are in the mono face.",
+      "select": "code.font-mono",
+      "count": 2
+    },
+    {
+      "say": "The add link.",
+      "select": "a[href=\"/addresses/new\"]",
+      "count": 1,
+      "text": "Add an address"
+    },
+    {
+      "say": "No options when empty.",
+      "state": "empty",
+      "select": "input",
+      "absent": true
+    },
+    {
+      "say": "A link-only address says so.",
+      "state": "named",
+      "select": "[data-slot=\"address-option-privacy\"]",
+      "count": 1,
+      "text": "Link only"
+    },
+    {
+      "say": "The field name is the caller's.",
+      "state": "named",
+      "select": "input[name=\"pickup\"]",
+      "count": 1
+    },
+    {
+      "say": "No add link without addHref.",
+      "state": "named",
+      "select": "a",
+      "absent": true
+    }
+  ],
+  "gaps": []
+}
