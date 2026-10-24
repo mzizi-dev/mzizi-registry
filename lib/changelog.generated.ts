@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.13.0",
+    title:
+      "v4.13.0 — an Astro build of mzizi-trust-meter, place-card linkComponent and lazy covers, verified-badge label/ariaLabel/showScore (Breaking default), server-safe icons, and minimum-version dependencies",
+    description:
+      'Releases staging to main as the next minor above v4.12.x (nyuchi/.github#80). BREAKING (a default changes): mzizi-verified-badge no longer puts the trust score in its title or accessible name; pass showScore to restore "· Trust 0.x". Kept a minor release by owner policy (majors are owner-only, by manual dispatch). mzizi-trust-meter gains an Astro build at parity and one contract, ui/mzizi-trust-meter, kept by both builds; the React build becomes a server component with SVG bars, --status-* classes and site-icon glyphs, props unchanged (#552). mzizi-place-card takes a linkComponent for router links and loads its cover lazily with a priority opt-out (#549). mzizi-verified-badge takes label and ariaLabel; mzizi-permission-gate\'s upgrade action uses the primary pair, fixing a 2.4:1 contrast failure (#550). lib/icons drops "use client" so Server Components can import it (#551). Every dependency and override is a minimum version (#534). No Mzizi Roots crate version changes. CHANGELOG.md section [4.13.0] is the narrative. Tracking: #543.',
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 13,
+    patch: 0,
+    release_kind: "minor",
+    breaking: true,
+    released_at: "2026-10-24T12:00:00.000+00:00",
+    created_at: "2026-10-24T12:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.12.2",
     title:
       "v4.12.2 — staging carries the 4.12.0 release and #534's minimum-version dependencies",
