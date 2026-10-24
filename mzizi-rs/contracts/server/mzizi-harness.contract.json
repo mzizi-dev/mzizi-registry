@@ -1,0 +1,94 @@
+{
+  "$schema": "../schema/server-contract.schema.json",
+  "name": "server/mzizi-harness",
+  "title": "mzizi-harness",
+  "version": "1.0.0",
+  "kind": "server",
+  "node": null,
+  "summary": "The Mzizi harness: one scoped log, motion and announce interface, the same for the UI, the language and every server component. Every server component plugs into it.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-harness",
+      "path": "crates/mzizi-harness",
+      "features": []
+    }
+  },
+  "surface": [
+    {
+      "item": "pub trait Harness",
+      "file": "src/lib.rs",
+      "summary": "What a component needs from its host: event (log), motion, announce."
+    },
+    {
+      "item": "pub struct Event",
+      "file": "src/lib.rs",
+      "summary": "One thing that happened: a static name, a level, static-keyed fields."
+    },
+    {
+      "item": "pub enum Value",
+      "file": "src/lib.rs",
+      "summary": "A field value: a static string, an integer or a flag. Never a runtime string."
+    },
+    {
+      "item": "pub enum Level",
+      "file": "src/lib.rs",
+      "summary": "Debug, Info, Warn."
+    },
+    {
+      "item": "pub struct Motion",
+      "file": "src/lib.rs",
+      "summary": "Reduced flag and enter and exit durations. STILL and STANDARD."
+    },
+    {
+      "item": "pub enum Politeness",
+      "file": "src/lib.rs",
+      "summary": "How urgently a screen reader reads an announcement."
+    },
+    {
+      "item": "pub struct Noop",
+      "file": "src/lib.rs",
+      "summary": "The harness that does nothing; the default."
+    },
+    {
+      "item": "pub type Shared",
+      "file": "src/lib.rs",
+      "summary": "A shared harness, as a component holds it."
+    },
+    {
+      "item": "pub fn noop",
+      "file": "src/lib.rs",
+      "summary": "The shared default harness."
+    }
+  ],
+  "limits": [],
+  "guarantees": [
+    {
+      "id": "harness-receives-events",
+      "statement": "A harness handed to a component receives its events; the default harness ignores them.",
+      "tests": ["a_harness_receives_events_and_the_default_ignores_them"]
+    },
+    {
+      "id": "no-screen-no-motion",
+      "statement": "A host with no screen has no motion and announces nothing: the defaults are Motion::STILL and a no-op announce.",
+      "tests": ["a_host_with_no_screen_has_no_motion_and_announces_nothing"]
+    },
+    {
+      "id": "ui-can-override",
+      "statement": "A UI host can override motion and announce; the log path is the same.",
+      "tests": ["a_ui_host_can_override_motion_and_announce"]
+    }
+  ],
+  "refusals": [],
+  "harness": {
+    "default": "Noop",
+    "removable": true,
+    "pluggedInto": "mzizi-harness",
+    "events": [],
+    "secrets": "An Event's name and field keys are &'static str, and a string field value is a &'static str, so no connection string, password, collection name or document can be formatted into one. Only integers and flags vary. announce takes a runtime string because a live region reads prose; server components never call it."
+  },
+  "gaps": [
+    "No Rust UI component takes a Shared harness yet: the Roots UI crates take props such as prefers_reduced_motion, and adopting this trait there is a follow-up.",
+    "The TypeScript harness (useMziziHarness) and the Mzizi language's harness are separate implementations of the same three capabilities; this crate does not generate or share code with them, so their agreement is by contract, not by construction.",
+    "Only mzizi-mongodb plugs into it so far; mzizi-assurance, mzizi-fundi, mzizi-docs, mzizi-discovery and mzizi-activitypub do not yet."
+  ]
+}

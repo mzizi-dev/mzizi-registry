@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/server-contract.schema.json",
+  "name": "server/mzizi-data",
+  "title": "mzizi-data",
+  "version": "1.0.0",
+  "kind": "server",
+  "node": null,
+  "summary": "What every Mzizi database client shares: the transport trait, the error type and (on a Worker) the TLS socket. Nothing database-specific. The server harness is the separate mzizi-harness crate.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-data",
+      "path": "crates/mzizi-data",
+      "features": ["workers"]
+    }
+  },
+  "surface": [
+    {
+      "item": "pub trait Io",
+      "file": "src/io.rs",
+      "summary": "The byte transport: write_all and read_exact. A protocol core is generic over it and never opens a socket."
+    },
+    {
+      "item": "pub enum Error",
+      "file": "src/lib.rs",
+      "summary": "Uri, Io, Timeout, Codec, Protocol, Auth, Server, Refused."
+    },
+    {
+      "item": "pub type Result",
+      "file": "src/lib.rs",
+      "summary": "Result with Error."
+    }
+  ],
+  "limits": [],
+  "guarantees": [],
+  "refusals": [],
+  "harness": {
+    "default": "Noop",
+    "removable": true,
+    "pluggedInto": "mzizi-harness",
+    "events": [],
+    "secrets": "mzizi-data emits no events. It holds no state a harness could see."
+  },
+  "gaps": [
+    "The Postgres and SQLite clients (mzizi-postgres, mzizi-sqlite) do not exist yet; nothing is stubbed.",
+    "workers::SocketIo is compiled only for wasm32 with the workers feature, so its contract is held by a type check and clippy for wasm32-unknown-unknown, not by a native test."
+  ]
+}
