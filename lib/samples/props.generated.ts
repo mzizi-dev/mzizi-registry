@@ -10862,6 +10862,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | null",
+      "required": false
+    },
+    {
       "name": "showTooltip",
       "type": "boolean",
       "required": false

@@ -1,77 +1,56 @@
-"use client"
-
-// ── INFRASTRUCTURE HARNESS (auto-wired) ──
-// Every brand component participates in observability, motion, a11y,
-// and health monitoring via the harness. Zero manual config.
-
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Ban, Flower2 } from "@/lib/icons"
+import { Icon } from "@/components/ui/site-icon"
 import {
-  TIER_CONFIG,
   STATUS_OVERLAY,
-  computeTrustScore,
-  type VerificationTier,
+  TIER_DATA,
   type PlatformStatus,
-} from "@/lib/mzizi-trust-tiers"
-import { cn } from "@/lib/utils"
+  type VerificationTier,
+} from "@/lib/mzizi-trust-tier-data"
+import { TIER_CONFIG, computeTrustScore } from "@/lib/mzizi-trust-tiers"
+import { cn } from "@/lib/ui-utils"
 
 /* ═══════════════════════════════════════════════════════════════
-   MUKOKO VERIFIED BADGE — Brand Identity Component
-   
+   MUKOKO VERIFIED BADGE — the compact view of trust
+
+   The React build of contract `ui/mzizi-verified-badge`, beside
+   `mzizi-verified-badge.astro` (the default build): the same markup and
+   classes, a server component with no script and no inline style.
+
    Three-axis trust model (nyuchi_platform_db):
-   
+
    AXIS 1 — STATUS (identity.person.mit_status)
-     Platform lifecycle. Independent of verification.
      pre_verification | living | liveness_pending |
      suspended | presumed_ancestral | verified_ancestral
-   
+
    AXIS 2 — VERIFICATION TIER (system.verification_tier)
-     Identity ladder. How real are you?
-     Level 0: Unverified     — no badge (--tier-unverified, the neutral grey)
-     Level 1: Community      — Terracotta (var(--tier-community))  — +0.10
-     Level 2: OTP            — Cobalt (var(--tier-otp)), "Contact Verified" — +0.10 (cumulative 0.20)
-     Level 3: Government     — Gold (var(--tier-government))       — +0.10 (cumulative 0.30)
-     Level 4: Licensed       — Tanzanite (var(--tier-licensed))    — +0.20 (cumulative 0.50)
+     Level 0: Unverified     — no badge
+     Level 1: Community      — terracotta (--tier-community)   +0.10
+     Level 2: OTP            — cobalt (--tier-otp), "Contact Verified" (cumulative 0.20)
+     Level 3: Government     — gold (--tier-government)        (cumulative 0.30)
+     Level 4: Licensed       — tanzanite (--tier-licensed)     (cumulative 0.50)
 
-   Each tier reads the --tier-* role named after IT (government reads
-   --tier-government), defined once in the N1 tokens (owner decision
-   2026-10-24, #543), so a consumer that sets one recolours that tier only.
-   
-   AXIS 3 — TRUST SCORE (computed output)
-     trust = sum(tier_increments up to current level) + status_modifier
-     Suspended/ancestral = fixed at status modifier (trust frozen)
-   
-   The badge renders based on TIER (which mineral check you see)
-   but respects STATUS (dimmed if suspended, memorial if ancestral).
+   AXIS 3 — TRUST SCORE (computed): the tier's cumulative trust plus
+     the status modifier; suspended/ancestral is frozen at the modifier.
 
-   The ladder (TIER_CONFIG, STATUS_OVERLAY, computeTrustScore and the
-   types) lives in the server-safe lib/mzizi-trust-tiers (#543); this
-   client module re-exports it so existing imports keep working.
+   Each tier draws its fill and ink from its own APCA-gated --tier-*
+   pair (`bg-tier-*-container`, `text-tier-*-on-container`), defined
+   once in the N1 tokens (owner decision 2026-10-24, #543). The ladder
+   is the framework-free lib/mzizi-trust-tier-data; TIER_CONFIG (with
+   the Lucide icons older components read) is re-exported from
+   lib/mzizi-trust-tiers so existing imports keep working.
    ═══════════════════════════════════════════════════════════════ */
 
-const badgeSizeVariants = cva(
-  "inline-flex shrink-0 items-center justify-center rounded-full transition-opacity",
-  {
-    variants: {
-      size: {
-        sm: "size-3.5" /* Inline with text — next to names */,
-        md: "size-[18px]" /* Default — cards, headers */,
-        lg: "size-6" /* Profile pages */,
-        xl: "size-8" /* Verification detail views */,
-      },
-    },
-    defaultVariants: { size: "md" },
-  }
-)
+const PORTAL = "https://mzizi.dev/components/mzizi-verified-badge"
+const BOX = { sm: "size-3.5", md: "size-[18px]", lg: "size-6", xl: "size-8" } as const
+/** The glyph is 1em, so the box's font size sizes it: 10, 12, 16 and 20px. */
+const GLYPH = { sm: "text-[10px]", md: "text-[12px]", lg: "text-[16px]", xl: "text-[20px]" } as const
 
-const iconSizeMap = { sm: 10, md: 12, lg: 16, xl: 20 } as const
-
-interface MziziVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants> {
+interface MziziVerifiedBadgeProps {
   /** Verification tier code (system.verification_tier.tier_code) */
   tier: VerificationTier
   /** Platform status (identity.person.mit_status). Affects badge appearance. */
   status?: PlatformStatus
+  /** sm (inline with text), md, lg (profile pages) or xl (verification detail views). */
+  size?: "sm" | "md" | "lg" | "xl" | null
   /** Set the native `title` (the badge's name, shown on hover). There is no tooltip component. */
   showTooltip?: boolean
   /**
@@ -87,7 +66,7 @@ interface MziziVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants>
    * Off by default since #550: the raw score is a number for a trust audit, not for a reader.
    */
   showScore?: boolean
-  /** Render skeleton placeholder while verification status is loading */
+  /** Render the placeholder while verification status is loading */
   loading?: boolean
   className?: string
 }
@@ -95,7 +74,7 @@ interface MziziVerifiedBadgeProps extends VariantProps<typeof badgeSizeVariants>
 function MziziVerifiedBadge({
   tier,
   status = "living",
-  size = "md",
+  size,
   showTooltip = true,
   label,
   ariaLabel,
@@ -107,81 +86,51 @@ function MziziVerifiedBadge({
     return (
       <span
         data-slot="mzizi-verified-badge"
-        data-portal="https://mzizi.dev/components/mzizi-verified-badge"
-        data-loading
-        className="inline-flex size-4 animate-pulse rounded-full bg-muted"
+        data-portal={PORTAL}
+        data-loading=""
+        aria-hidden="true"
+        className={cn("inline-flex size-4 shrink-0 animate-pulse rounded-full bg-muted", className)}
       />
     )
 
-  const config = TIER_CONFIG[tier]
-  const statusConfig = STATUS_OVERLAY[status]
-  const iconSize = iconSizeMap[size || "md"]
-
-  /* Level 0 = no badge */
-  if (!config.icon || tier === "unverified") return null
-
-  /* The name: the caller's wording or the built-in one, with the score only on request. */
+  const box = size ?? "md"
+  const data = TIER_DATA[tier]
+  const overlay = STATUS_OVERLAY[status].overlay
   const named = (builtIn: string) => {
     const text = label ?? builtIn
-    return showScore ? `${text} · Trust ${config.cumulativeTrust}` : text
+    return showScore ? `${text} · Trust ${data.cumulativeTrust}` : text
   }
+  const view =
+    overlay === "suspended"
+      ? { name: named("Account Suspended"), glyph: "ban" as const, pair: TIER_DATA.unverified.classes }
+      : overlay === "ancestral"
+        ? { name: named(`${data.label} — Memorial`), glyph: "flower" as const, pair: data.classes }
+        : { name: named(data.label), glyph: data.glyph, pair: data.classes }
 
-  /* Suspended: show ban overlay instead of tier icon */
-  if (statusConfig.overlay === "suspended") {
-    return (
-      <span
-        data-slot="mzizi-verified-badge"
-        data-tier={tier}
-        data-status="suspended"
-        role="img"
-        aria-label={ariaLabel ?? named("Account Suspended")}
-        title={showTooltip ? named("Account Suspended") : undefined}
-        className={cn(badgeSizeVariants({ size }), "opacity-40", className)}
-        style={{ backgroundColor: "color-mix(in oklab,var(--status-neutral) 15%,transparent)" }}
-      >
-        <Ban
-          width={iconSize}
-          height={iconSize}
-          strokeWidth={2.5}
-          color="var(--status-neutral)"
-        />
-      </span>
-    )
-  }
+  /* Level 0 = no badge */
+  if (tier === "unverified" || !view.glyph) return null
 
-  /* Ancestral: show memorial flower with dimmed tier color */
-  if (statusConfig.overlay === "ancestral") {
-    return (
-      <span
-        data-slot="mzizi-verified-badge"
-        data-tier={tier}
-        data-status={status}
-        role="img"
-        aria-label={ariaLabel ?? named(`${config.label} — Memorial`)}
-        title={showTooltip ? named(`${config.label} — Memorial`) : undefined}
-        className={cn(badgeSizeVariants({ size }), "opacity-60", className)}
-        style={{ backgroundColor: config.bg }}
-      >
-        <Flower2 width={iconSize} height={iconSize} strokeWidth={2} style={{ color: config.fg }} />
-      </span>
-    )
-  }
-
-  /* Active: show full tier badge */
-  const Icon = config.icon
   return (
     <span
       data-slot="mzizi-verified-badge"
+      data-portal={PORTAL}
       data-tier={tier}
-      data-level={config.level}
-      data-trust={config.cumulativeTrust}
+      data-level={data.level}
+      data-status={overlay ? status : undefined}
+      data-trust={overlay ? undefined : data.cumulativeTrust}
       role="img"
-      aria-label={ariaLabel ?? named(config.label)}
-      title={showTooltip ? named(config.label) : undefined}
-      className={cn(badgeSizeVariants({ size }), className)}
-      style={{ backgroundColor: config.bg }}
+      aria-label={ariaLabel ?? view.name}
+      title={showTooltip ? view.name : undefined}
+      className={cn(
+        "inline-flex shrink-0 items-center justify-center rounded-full",
+        BOX[box],
+        GLYPH[box],
+        view.pair.container,
+        view.pair.onContainer,
+        className,
+      )}
     >
-      <Icon width={iconSize} height={iconSize} strokeWidth={2.5} style={{ color: config.fg }} />
+      <Icon name={view.glyph} />
     </span>
   )
 }

@@ -17087,7 +17087,42 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
       "dependencies": [],
-      "description": "The Mukoko trust model's data, server-safe: the verification tier ladder (TIER_CONFIG), the platform-status overlay (STATUS_OVERLAY), the VerificationTier and PlatformStatus types and computeTrustScore. No \"use client\", hooks or browser globals, so Server Components, Astro pages and API routes can import it. mzizi-verified-badge reads it from here and re-exports it.",
+      "description": "The verification tier ladder as framework-free data: TIER_ORDER, TIER_DATA (label, level, mineral, trust increments, site-icons glyph, the --tier-* token names and the literal Tailwind classes that read them), STATUS_OVERLAY, tierAt, nextTier and computeTrustScore. No React, no icon library and no @/ import, so Astro components import it flat and a package can ship it as a plain module.",
+      "docs": "Use it for: Reading the tier ladder in an Astro component, Mapping tier colours without a framework or an icon library.\nIncludes: Tier labels, levels, minerals and trust increments, once, The --tier-* token names and complete literal classes per tier (container, on-container, text, fill, border), tierAt, nextTier and computeTrustScore, Framework-free: importable from Astro, React, a server or a package.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-tier-data",
+      "files": [
+        {
+          "path": "components/registry/n3-brand/mzizi-trust-tier-data.ts",
+          "target": "lib/mzizi-trust-tier-data.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": ["Non-visual helper - no direct a11y requirements"],
+        "collection": "brand",
+        "features": [
+          "Tier labels, levels, minerals and trust increments, once",
+          "The --tier-* token names and complete literal classes per tier (container, on-container, text, fill, border)",
+          "tierAt, nextTier and computeTrustScore",
+          "Framework-free: importable from Astro, React, a server or a package"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["astro", "tsx"],
+        "useCases": [
+          "Reading the tier ladder in an Astro component",
+          "Mapping tier colours without a framework or an icon library"
+        ]
+      },
+      "name": "mzizi-trust-tier-data",
+      "registryDependencies": [],
+      "title": "mzizi Trust Tier Data",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["brand"],
+      "dependencies": [],
+      "description": "The Mukoko trust model for React, server-safe: TIER_CONFIG (the ladder with each tier's Lucide icon and fg/bg CSS values), STATUS_OVERLAY, the VerificationTier and PlatformStatus types and computeTrustScore. Built from the framework-free mzizi-trust-tier-data, which holds the labels, levels and --tier-* tokens once. No \"use client\", hooks or browser globals. mzizi-verified-badge re-exports it.",
       "docs": "Use it for: Reading the tier ladder on the server, Computing a trust score outside a client component.\nIncludes: TIER_CONFIG, STATUS_OVERLAY and computeTrustScore, server-safe.\nAccessibility: Non-visual helper - no direct a11y requirements.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-tiers",
       "files": [
         {
@@ -17110,7 +17145,10 @@
         ]
       },
       "name": "mzizi-trust-tiers",
-      "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-icons"],
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/mzizi-icons",
+        "https://api.mzizi.dev/v1/ui/mzizi-trust-tier-data"
+      ],
       "title": "mzizi Trust Tiers",
       "type": "registry:lib"
     },
@@ -17242,9 +17280,9 @@
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["brand"],
-      "dependencies": ["class-variance-authority"],
-      "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. Renders the appropriate mineral-colored badge for each tier — Terracotta (Community 0.10), Cobalt (OTP 0.20), Gold (Government 0.30), Tanzanite (Licensed 0.50). Suspended/ancestral accounts show a dimmed or memorial variant. The title and accessible name are the tier name (label and ariaLabel override them); the trust score is added only with showScore. The tier ladder (TIER_CONFIG, STATUS_OVERLAY, computeTrustScore) is the server-safe mzizi-trust-tiers module, which the badge re-exports. Used inline next to names, on profile headers, listing cards, and anywhere trust needs to be communicated. Every tier reads its --tier-* role, defined once in the N1 tokens (owner decision 2026-10-24): unverified the neutral grey (--status-neutral), community terracotta, otp (\"Contact Verified\") cobalt, government gold, licensed tanzanite; backgrounds are the tier at 15% (color-mix), with no raw hex.",
-      "docs": "Use it for: Profile header verification display, Inline name verification, Listing card trust indicator, Search result trust signal.\nVariants: community (terracotta), otp (cobalt), government (gold), licensed (tanzanite), suspended (dimmed), ancestral (memorial).\nSizes: sm, md, lg.\nIncludes: Three-axis trust model: Status × Tier → Score, Mineral-colored per tier, Native title with the tier name; the trust score only with showScore (no tooltip component), label and ariaLabel override the wording and the accessible name (localise, or name the tier in the app's words), Maps to system.verification_tier, Each tier reads its own --tier-* variable (government reads --tier-government).\nAccessibility: role=img with an aria-label naming the verification tier (ariaLabel overrides it); the raw trust score is not in the accessible name unless showScore is set, Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
+      "dependencies": [],
+      "description": "Verification badge tied to the three-axis Mukoko trust model: Status (platform lifecycle) × Verification Tier (identity ladder) → Trust Score. A round mark in the tier's colour — terracotta (Community), cobalt (Contact Verified), gold (Government), tanzanite (Licensed) — named by the tier; tier 0 renders nothing. Suspended accounts show the ban glyph on the neutral pair, ancestral ones the memorial flower. The title and accessible name are the tier name (label and ariaLabel override them); the trust score is added only with showScore. Astro (default) and React builds under contract ui/mzizi-verified-badge: server-rendered, no script, no inline style; each tier draws from its own APCA-gated --tier-* container pair (bg-tier-*-container, text-tier-*-on-container). The ladder is the framework-free mzizi-trust-tier-data; TIER_CONFIG, STATUS_OVERLAY and computeTrustScore are re-exported from mzizi-trust-tiers so existing imports keep working.",
+      "docs": "Use it for: Profile header verification display, Inline name verification, Listing card trust indicator, Search result trust signal.\nVariants: community (terracotta), otp (cobalt), government (gold), licensed (tanzanite), suspended (ban glyph), ancestral (memorial flower).\nSizes: sm, md, lg, xl.\nIncludes: Astro and React builds, one contract (ui/mzizi-verified-badge), Server-rendered, no script, no inline style, Three-axis trust model: Status × Tier → Score, Each tier draws from its own --tier-* container pair (government reads --tier-government-container), Native title with the tier name; the trust score only with showScore (no tooltip component), label and ariaLabel override the wording and the accessible name (localise, or name the tier in the app's words), Maps to system.verification_tier.\nAccessibility: role=img with an aria-label naming the verification tier (ariaLabel overrides it); the raw trust score is not in the accessible name unless showScore is set, Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-verified-badge.tsx",
@@ -17258,17 +17296,20 @@
           "Tier 0 (unverified) renders nothing; label it in the consumer if it must be stated"
         ],
         "collection": "brand",
+        "contract": "ui/mzizi-verified-badge",
         "features": [
+          "Astro and React builds, one contract (ui/mzizi-verified-badge)",
+          "Server-rendered, no script, no inline style",
           "Three-axis trust model: Status × Tier → Score",
-          "Mineral-colored per tier",
+          "Each tier draws from its own --tier-* container pair (government reads --tier-government-container)",
           "Native title with the tier name; the trust score only with showScore (no tooltip component)",
           "label and ariaLabel override the wording and the accessible name (localise, or name the tier in the app's words)",
-          "Maps to system.verification_tier",
-          "Each tier reads its own --tier-* variable (government reads --tier-government)"
+          "Maps to system.verification_tier"
         ],
         "hasDemo": true,
         "owner": "nyuchi",
-        "sizes": ["sm", "md", "lg"],
+        "sizes": ["sm", "md", "lg", "xl"],
+        "targets": ["astro", "tsx"],
         "useCases": [
           "Profile header verification display",
           "Inline name verification",
@@ -17280,15 +17321,16 @@
           "otp (cobalt)",
           "government (gold)",
           "licensed (tanzanite)",
-          "suspended (dimmed)",
-          "ancestral (memorial)"
+          "suspended (ban glyph)",
+          "ancestral (memorial flower)"
         ]
       },
       "name": "mzizi-verified-badge",
       "registryDependencies": [
-        "https://api.mzizi.dev/v1/ui/mzizi-icons",
+        "https://api.mzizi.dev/v1/ui/mzizi-trust-tier-data",
         "https://api.mzizi.dev/v1/ui/mzizi-trust-tiers",
-        "https://api.mzizi.dev/v1/ui/mzizi-harness"
+        "https://api.mzizi.dev/v1/ui/site-icon",
+        "https://api.mzizi.dev/v1/ui/ui-utils"
       ],
       "title": "mzizi Verified Badge",
       "type": "registry:ui"
