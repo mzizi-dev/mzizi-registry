@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.15.0] - 2026-10-24
+
+Releases `staging` to `main` as the next minor above v4.14.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.15.0. It carries the owner's tier-colour decision on #543: verification tiers as `--tier-*` roles defined once in N1 and read by every tier component, light-mode `--color-<mineral>-light` tokens, and a `tier` prop on `mzizi-trust-meter` (contract 2.1.0) (#563); shamwari as the third pillar on `/v1/brand`, and 78 stale `#D4A574` terracotta fallbacks removed (#564); and three new Mzizi Roots crates, `mzizi-harness`, `mzizi-data` and `mzizi-mongodb`, with the data layer and the client write path in `mzizi-data` (#502, #509, #512). The new crates publish with the others at the workspace version (`publish-crates.yml`) and are wired into no app.
+
+**Breaking (defaults change):** the tier colours move. `--tier-community` was malachite and is now terracotta; `--tier-unverified` was the off-palette `#6B7280` and is now `--status-neutral` (`#55514B` light, `#A09C93` dark). The verified badge's community colour moves from the off-palette `#D4A574` / `#8B4513` to canonical terracotta. `verificationTokens` labels change to "Community Verified", "Contact Verified", "Government Verified" and "Licensed Professional". `mzizi-trust-gate`'s upgrade button is the primary pair instead of black on gold (all #563). This is released as a minor, not a major: under the org versioning policy a major is only made by hand by the owner, and the release record marks the change `breaking: true`.
+
 ### Added — the client write path in `mzizi-data`: outbox, request-id mutations, status polling, read-your-own-writes (2026-10-24, #512)
 
 - **`MziziData`**: `get` reads through the cascade with this client's unconfirmed writes applied on top (`QueryResult` with data, source, version, `as_of` in UTC, and pending count). `set`, `update` (requires `base_version`) and `delete` (requires `base_version`) write to the outbox first and return a `MutationHandle` (`status`, `on_settled`, `request_id`).
