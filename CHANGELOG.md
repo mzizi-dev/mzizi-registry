@@ -10,6 +10,24 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — an Astro build of `mzizi-trust-meter`, and one contract, `ui/mzizi-trust-meter`, that both builds keep (2026-10-24, #552)
+
+Gap 6 of the Kweli review (found during the 4.12.0 `@bundu/ui` sync), tracked in #543. The trust meter had only a React build, so `@bundu/ui` could not sync it.
+
+- **`mzizi-trust-meter.astro`** (N3, new). The same component as the React build, at parity, with every prop: `trustScore`, `verificationScore`, `statusScore`, `ubuntuScore`, `ubuntuPoints`, `tierLabel`, `statusLabel`, `compact`, `loading`, and the `signals` and `title` props from #546. The root is `role="meter"` with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`, named by the title. It is server-rendered with no script.
+- **`contracts/ui/mzizi-trust-meter.contract.json`** (new, 1.0.0), listed in `contracts/index.json` and the coverage table. It has 5 states (default, signals, compact, suspended, loading), 8 clauses, 13 checks and a 44px density row for the signal rows. The React build is `identity: "contract"`, so `__tests__/astro/contracts.test.ts` and `__tests__/contracts/tsx-contracts.test.tsx` both run the whole contract. `contracts/ui/` grows from 16 to 17 contracts.
+- **`mzizi-trust-meter.tsx`: Changed to the contract's markup.** The contract allows no inline style and no script, so the React build changes too:
+  - It is a server component now: no `"use client"`, no harness hook, and so no enter animation, which the contract's `gaps` records.
+  - Its bars are SVG `<rect>` widths in a 0–100 viewBox instead of `style` widths, and values are clamped to 0–1.
+  - Score and signal colours are the `--status-*` utility classes instead of `var(--status-*, #hex)` styles. The Ubuntu signal is tanzanite in every brand, the one mineral the contract declares.
+  - Icons come from the design system's `Icon` (`site-icon`) instead of Lucide.
+  - The main root now carries `data-portal`, `data-level` and `text-card-foreground`.
+  - Props are unchanged. The exported `TrustSignal` type is kept for existing imports but marked deprecated.
+  - `registryDependencies` is now `site-icon` alone. It was `card`, `progress`, `badge`, `mzizi-verified-badge` and `mzizi-harness`, none of which the meter used after this change.
+- **`site-icons`** gains two glyphs, `star` and `trending-up`, for the meter's Ubuntu-points line and its header.
+- **`mzizi-verified-badge`.** A doc comment and a test title dated the `showScore` default to "4.12", a release that does not carry it (#550 merged after 4.12.0). Both now name #550.
+- **`@bundu/ui`.** The sync needs a `scripts/registry-map.json` entry for `mzizi-trust-meter` in `mzizi-dev/packages-npm` when it bumps its registry pin.
+
 ### Added — `mzizi-place-card` takes a `linkComponent` and loads its cover lazily, with a `priority` opt-out (2026-10-24, #549)
 
 Gaps 1 and 2 of the Kweli review of kweli#228 (the 4.11.0 re-vendor), tracked in #543.

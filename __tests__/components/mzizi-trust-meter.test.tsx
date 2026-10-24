@@ -77,4 +77,13 @@ describe("MziziTrustMeter signal counts", () => {
     expect(root.querySelector('[data-slot="trust-signal-list"]')).toBeNull()
     for (const s of ["Trust Score", "Verification", "Status", "Ubuntu"]) expect(root.textContent).toContain(s)
   })
+
+  it("is a server component with no inline style: the bars are SVG rect widths", () => {
+    const root = html(<MziziTrustMeter trustScore={0.62} verificationScore={0.5} ubuntuScore={1.4} />)
+    expect(root.querySelector("[style]")).toBeNull()
+    expect(root.querySelector('svg[data-slot="trust-meter-bar"] rect')?.getAttribute("width")).toBe("62")
+    // Values over 1 are clamped to the full bar, never past it.
+    const ubuntu = root.querySelector('[data-signal="ubuntu"] rect')
+    expect(ubuntu?.getAttribute("width")).toBe("100")
+  })
 })
