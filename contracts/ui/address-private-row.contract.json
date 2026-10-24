@@ -1,0 +1,187 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/address-private-row",
+  "title": "AddressPrivateRow",
+  "version": "1.0.0",
+  "node": 2,
+  "kind": "primitive",
+  "summary": "One of the owner's private addresses in a list: a lock, the name, the Kweli code in the mono face, who can open it (\"Private\" or \"Link only\") in words, and a manage link.",
+  "implementations": {
+    "astro": {
+      "registry": "address-private-row",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/AddressPrivateRow.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "address-private-row",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "\"Home\", \"Mum's place\"."
+    },
+    {
+      "name": "code",
+      "type": "string",
+      "required": true,
+      "description": "The Kweli address code."
+    },
+    {
+      "name": "visibility",
+      "type": "AddressVisibility",
+      "required": false,
+      "default": "private",
+      "values": ["private", "link"],
+      "description": "private: no one but the owner; link: whoever holds the share link, never indexed."
+    },
+    {
+      "name": "detail",
+      "type": "string",
+      "required": false,
+      "description": "A line under the code: \"Opened 3 times this week\"."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "Where the owner manages it. No link without it."
+    },
+    {
+      "name": "linkLabel",
+      "type": "string",
+      "required": false,
+      "default": "Manage",
+      "description": "The link's visible text."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "data-visibility names the visibility, the default included.",
+    "Who can open the address is written out (\"Private\", \"Link only\"); the lock icon is decorative.",
+    "The manage link is 44px and its accessible name names the address."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "label": "Home",
+        "code": "NYU-7K2Q",
+        "href": "/addresses/home"
+      }
+    },
+    "link": {
+      "props": {
+        "label": "Mum's place",
+        "code": "MUT-4F8C",
+        "visibility": "link",
+        "detail": "Opened 3 times this week",
+        "href": "/addresses/mum"
+      }
+    },
+    "bare": {
+      "props": {
+        "label": "Home",
+        "code": "NYU-7K2Q"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["link"],
+    "keyboard": ["Tab to the link; Enter follows it."],
+    "focus": ["The --ring focus ring on the link."],
+    "aria": ["The lock icon is aria-hidden; visibility is text."],
+    "wcag": ["1.1.1", "1.4.1", "2.4.4", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "row",
+      "select": "div",
+      "fine": 56,
+      "coarse": 56
+    },
+    {
+      "part": "link",
+      "select": "a",
+      "fine": 44,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--border",
+      "--foreground",
+      "--muted-foreground",
+      "--primary",
+      "--ring",
+      "--muted"
+    ],
+    "brandOverlay": "Only --primary (the link) and --ring change with the brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the component is server-rendered HTML with no script."
+  },
+  "responsive": ["The name, code and detail truncate; the link never shrinks."],
+  "contract": "contract\n  slot is \"address-private-row\"\n  portal is \"https://mzizi.dev/components/address-private-row\"\n  when default shows code \"NYU-7K2Q\"\n  a \"Manage\" min_height 44\n  when default shows span \"Private\"\n  when link shows span \"Link only\"\n  when link shows span \"Opened 3 times this week\"\nend",
+  "checks": [
+    {
+      "say": "data-visibility names the default.",
+      "select": "[data-slot=\"address-private-row\"]",
+      "count": 1,
+      "attr": {
+        "data-visibility": "private"
+      }
+    },
+    {
+      "say": "data-visibility names link.",
+      "state": "link",
+      "select": "[data-slot=\"address-private-row\"]",
+      "count": 1,
+      "attr": {
+        "data-visibility": "link"
+      }
+    },
+    {
+      "say": "The lock is decorative.",
+      "state": "*",
+      "select": "svg[aria-hidden=\"true\"]",
+      "count": 1
+    },
+    {
+      "say": "The code is in the mono face.",
+      "state": "*",
+      "select": "code.font-mono",
+      "count": 1
+    },
+    {
+      "say": "The manage link names the address.",
+      "select": "a",
+      "count": 1,
+      "attr": {
+        "href": "/addresses/home",
+        "aria-label": "Manage Home"
+      }
+    },
+    {
+      "say": "No href, no link.",
+      "state": "bare",
+      "select": "a",
+      "absent": true
+    }
+  ],
+  "gaps": []
+}

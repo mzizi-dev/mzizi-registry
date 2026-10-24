@@ -70,6 +70,7 @@ public struct MziziSpacing {
 }
 
 public struct MziziRadius {
+    public static let xs: CGFloat = 4
     public static let sm: CGFloat = 7
     public static let md: CGFloat = 12
     public static let lg: CGFloat = 14
