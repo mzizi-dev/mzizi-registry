@@ -89,6 +89,48 @@ describe("mzizi-verified-badge tier colours (the Mukoko ladder: government Gold,
     expect(html).toContain("--tier-government")
   })
 
+  it("leaves the trust score out of the title and the accessible name by default (4.12)", () => {
+    const html = renderToStaticMarkup(<MziziVerifiedBadge tier="otp" />)
+    expect(html).toContain('aria-label="Contact Verified"')
+    expect(html).toContain('title="Contact Verified"')
+    expect(html).not.toContain("Trust")
+  })
+
+  it("showScore adds the cumulative score to the title and the accessible name", () => {
+    const html = renderToStaticMarkup(<MziziVerifiedBadge tier="otp" showScore />)
+    expect(html).toContain('aria-label="Contact Verified · Trust 0.2"')
+    expect(html).toContain('title="Contact Verified · Trust 0.2"')
+  })
+
+  it("label replaces the wording in the title and the accessible name, in every state", () => {
+    const active = renderToStaticMarkup(<MziziVerifiedBadge tier="licensed" label="Registered nurse" />)
+    expect(active).toContain('aria-label="Registered nurse"')
+    expect(active).toContain('title="Registered nurse"')
+    expect(active).not.toContain("Licensed Professional")
+    const suspended = renderToStaticMarkup(
+      <MziziVerifiedBadge tier="otp" status="suspended" label="Akaunti yakamiswa" />
+    )
+    expect(suspended).toContain('aria-label="Akaunti yakamiswa"')
+    const memorial = renderToStaticMarkup(
+      <MziziVerifiedBadge tier="otp" status="verified_ancestral" label="In memory" />
+    )
+    expect(memorial).toContain('aria-label="In memory"')
+  })
+
+  it("ariaLabel sets the accessible name alone; the title keeps the label", () => {
+    const html = renderToStaticMarkup(
+      <MziziVerifiedBadge tier="government" label="ID checked" ariaLabel="Identity checked by government ID" showScore />
+    )
+    expect(html).toContain('aria-label="Identity checked by government ID"')
+    expect(html).toContain('title="ID checked · Trust 0.3"')
+  })
+
+  it("showTooltip={false} drops the title, not the accessible name", () => {
+    const html = renderToStaticMarkup(<MziziVerifiedBadge tier="community" showTooltip={false} />)
+    expect(html).not.toContain("title=")
+    expect(html).toContain('aria-label="Community Verified"')
+  })
+
   it("does not claim a tooltip component it never uses", () => {
     const badge = registry.items.find((i) => i.name === "mzizi-verified-badge") as unknown as {
       registryDependencies: string[]
