@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — the trust model in the components: assurance levels, attestation chips, `legacyTierToAssurance` (2026-10-25, #PR2)
+### Added — the trust model in the components: assurance levels, attestation chips, `legacyTierToAssurance` (2026-10-25, #579)
 
 The components side of [#577](https://github.com/mzizi-dev/mzizi-registry/issues/577), on the roles from #578. Community is shown as an attestation beside the level, never as a rung below otp.
 
