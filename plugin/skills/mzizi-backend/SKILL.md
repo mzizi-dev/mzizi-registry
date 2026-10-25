@@ -1,10 +1,10 @@
 ---
 name: mzizi-backend
-description: Use this skill when building or changing a Mzizi backend service on Cloudflare Workers — a Rust Worker with workers-rs or an MCP server in TypeScript. Covers where the backend stands today (every live Mzizi Worker is TypeScript; the Mzizi language has a backend `service` slice, RFC-0011, that `mz contract` runs in process and `mz build` lowers to a local Rust + axum package, with no Workers target and nothing deployed), the live endpoint map (api.mzizi.dev, mcp.mzizi.dev, docs.mzizi.dev/mcp), the sans-IO core plus thin host that Mzizi Roots server components use, wrangler config, cron and queues, storage through Workers bindings (no database client), MCP transport, one-factory/many-entrypoints, a code-defined tool catalogue over data bundled at a pinned commit, federation, tool naming and annotations, the free-except-Fundi access rule, logging, publishing to npm and the MCP Registry, and deploy.
+description: Use this skill when building or changing a Mzizi backend service — on Cloudflare Workers today (a Rust Worker with workers-rs, or an MCP server in TypeScript), with containers and bare metal as decided direction, not built. Covers where the backend stands today (every live Mzizi Worker is TypeScript; the Mzizi language has a backend `service` slice, RFC-0011, that `mz contract` runs in process and `mz build` lowers to a local Rust + axum package, with no Workers target and nothing deployed), the live endpoint map (api.mzizi.dev, mcp.mzizi.dev, docs.mzizi.dev/mcp), the sans-IO core plus thin host that Mzizi Roots server components use, wrangler config, cron and queues, storage through Workers bindings (no database client), MCP transport, one-factory/many-entrypoints, a code-defined tool catalogue over data bundled at a pinned commit, federation, tool naming and annotations, the free-except-Fundi access rule, logging, publishing to npm and the MCP Registry, and deploy.
 user-invocable: true
 ---
 
-# Mzizi backend on Cloudflare Workers
+# Mzizi backend
 
 This skill replaces two 0.7.0 skills: `cloudflare-worker-rust` (now "A Rust Worker") and
 `mcp-server-cloudflare` (now "An MCP server"). The rules they shared (access, logging, deploy)
@@ -17,8 +17,8 @@ are stated once, at the end.
 the end, to be built in the Mzizi language itself (`CHARTER.md` v0.4, §1). Neither is the
 state today, and a skill that implied otherwise would mislead you:
 
-- **Every Worker Mzizi runs is TypeScript.** `api.mzizi.dev` is `mzizi-dev/mzizi-api-gateway`,
-  a Hono Worker. `mzizi-dev/agent-tools` holds `mzizi-mcp` (mcp.mzizi.dev), `mzizi-fundi` and
+- **Every Worker Mzizi runs is TypeScript.** `api.mzizi.dev` is `mzizi-dev/mzizi-api` (formerly
+  `mzizi-api-gateway`), a Hono Worker. `mzizi-dev/agent-tools` holds `mzizi-mcp` (mcp.mzizi.dev), `mzizi-fundi` and
   `bushtrade-mcp`, all TypeScript, because the MCP SDK, `hono` and `agents` are TypeScript.
 - **The Rust building blocks exist.** Mzizi Roots server components (the `mzizi-roots-server`
   crate: `mzizi-assurance`, `mzizi-fundi`, `mzizi-docs`, `mzizi-discovery`) are sans-IO cores
@@ -35,6 +35,32 @@ state today, and a skill that implied otherwise would mislead you:
   backend episode has run. Check `LANGUAGE-TRACKER.md` in the language repo before claiming
   any capability. "A Mzizi service" below shows the slice.
 
+## Three build targets (decided, not built)
+
+Owner direction, 2026-10-20: the Mzizi build-out covers three targets, not Workers alone.
+
+- **Cloudflare Workers** (`wasm32-unknown-unknown`) is the only target a Mzizi backend runs on
+  today. The Rust Worker pattern below is the Rust route to it.
+- **Containers**, as a standard OCI image (built with Docker by default, run by any OCI runtime,
+  for example on Fly machines), are designed and not built: the work waits for the Phase 0 gate.
+  The language has no container image target today.
+- **Bare metal**, as a native Linux binary, is designed and not built, and waits for the Phase 0
+  gate.
+
+The language's RFC-0016 (`mzizi-dev/mzizi#123`) designs the three targets; the owner approved it
+as design only on 2026-10-21, and every build wave waits for the Phase 0 gate.
+
+Built today: every Rust crate builds and tests natively, and `mz build` emits a native axum
+service (it binds `127.0.0.1` today) and a native program. There is no container image and no
+Workers target in the language. `mzizi-data` and `mzizi-mongodb` have only a Workers socket
+transport today; a native transport is designed and waits for the Phase 0 gate.
+
+A backend sits behind a trait with an adapter per side, so Cloudflare-hosted stores (D1, KV, R2,
+Queues) and Fly-hosted stores (MongoDB, the self-hosted Postgres ledger, Redpanda) are reachable
+from either target. Fly apps are not Johannesburg-only: stateless services are decided to run in
+`jnb`, `cdg` (Paris, with `mad` second) and `sin`, while stateful data services stay in `jnb` until
+a replication design exists. These are routing decisions, and no latency figure is claimed.
+
 So: write a new production service's logic in Rust as a sans-IO core. Use TypeScript where
 the work leans on the MCP SDK or `agents` (see "An MCP server" below). Port nothing that
 works without a reason; when a service is ported, its existing tests and parity script are the
@@ -45,14 +71,14 @@ contract the port must meet.
 Read this before inventing a hostname. Each MCP has its own host, and the old umbrella
 `mcp.nyuchi.dev/{service}` path scheme is **not** how these are deployed:
 
-| Endpoint                   | Worker / source                           | Serves                                                                                              |
-| -------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `api.mzizi.dev`            | `mzizi-api-gateway` (Hono, TypeScript)    | The registry API: the registry's files at a pinned commit; no origin, no database                   |
-| `mcp.mzizi.dev/mcp`        | `mzizi-mcp` (`mzizi-dev/agent-tools`)     | The Mzizi registry, tokens, architecture, doctrine and skills (`mzizi_*`), plus the docs (`docs_*`) |
-| `mcp.mzizi.dev/mcp/signin` | the same Worker                           | The same MCP, answering 401 until you sign in: the URL for the Fundi tools                          |
-| `docs.mzizi.dev/mcp`       | Mintlify (`mzizi-dev/mzizi-docs`)         | The Mzizi docs; `mzizi-mcp` federates these as `docs_*`                                             |
-| (Worker, no public route)  | `bushtrade-mcp` (`mzizi-dev/agent-tools`) | Agentic commerce: task-driven UCP/AP2 verbs (Nyuchi)                                                |
-| `docs.nyuchi.com/mcp`      | `nyuchi-docs-mcp` (`nyuchi/nyuchi-docs`)  | Nyuchi's own docs corpus, not Mzizi's                                                               |
+| Endpoint                   | Worker / source                                            | Serves                                                                                              |
+| -------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `api.mzizi.dev`            | `mzizi-api` (Worker `mzizi-api-gateway`, Hono, TypeScript) | The registry API: the registry's files at a pinned commit; no origin, no database                   |
+| `mcp.mzizi.dev/mcp`        | `mzizi-mcp` (`mzizi-dev/agent-tools`)                      | The Mzizi registry, tokens, architecture, doctrine and skills (`mzizi_*`), plus the docs (`docs_*`) |
+| `mcp.mzizi.dev/mcp/signin` | the same Worker                                            | The same MCP, answering 401 until you sign in: the URL for the Fundi tools                          |
+| `docs.mzizi.dev/mcp`       | Mintlify (`mzizi-dev/mzizi-docs`)                          | The Mzizi docs; `mzizi-mcp` federates these as `docs_*`                                             |
+| (Worker, no public route)  | `bushtrade-mcp` (`mzizi-dev/agent-tools`)                  | Agentic commerce: task-driven UCP/AP2 verbs (Nyuchi)                                                |
+| `docs.nyuchi.com/mcp`      | `nyuchi-docs-mcp` (`nyuchi/nyuchi-docs`)                   | Nyuchi's own docs corpus, not Mzizi's                                                               |
 
 `design.nyuchi.com` is a 308 permanent redirect to `mzizi.dev`. Never reference it in new code
 or docs. `mzizi.dev/mcp` 308-redirects to `mcp.mzizi.dev/mcp` (method and body preserved), so
@@ -208,7 +234,12 @@ A Mzizi service holds **no database client**. Its data is files bundled at build
 `api.mzizi.dev` and `mcp.mzizi.dev` serve the registry at a pinned commit) or Workers bindings:
 KV, R2, D1, Durable Objects. Put each behind a trait in the core so the core never imports
 `worker`. Only the Mzizi console (`app.mzizi.dev`, operated by Nyuchi) uses Supabase, and
-nothing else in the estate should talk to it.
+nothing else in the estate should talk to it. The console's rebuild is decided to move its store
+to Cloudflare D1, not Supabase (not built).
+
+**In review, not merged:** `mzizi-mongodb` and `mzizi-data` would give a service a MongoDB client
+and a data-layer client behind these same traits. Both are in review (open pull requests), so until
+they merge, the statement above that a Mzizi service holds no database client stands.
 
 ### Queue consumers
 
