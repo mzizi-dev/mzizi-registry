@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.17.0] - 2026-10-25
+
+Releases `staging` to `main` as the next minor above v4.16.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.17.0, and the Mzizi Roots crates move to **0.6.0** (`[workspace.package] version` and the path-dependency versions; `mzizi-mongodb` now requires `mzizi-data` and `mzizi-harness` `>=0.6.0`), because the generated Rust token pack in `mzizi-tokens` carries the new roles. It carries the Bundu trust model ([#577](https://github.com/mzizi-dev/mzizi-registry/issues/577), from nyuchi-api `gateway/lib/assurance.py`): the `--assurance-*` levels and `--attestation-*` roles in N1, with `--tier-*` kept as aliases (#578), and the trust components on that model: `mzizi-trust-tier-data`, `app/tier-status` 1.1.0, `ui/mzizi-verified-badge` 1.1.0 and `ui/mzizi-trust-meter` 2.2.0 (#579).
+
+**Breaking (defaults change):** `app/tier-status` with `tier="community"` now renders level Unverified plus a "Community Vouched" attestation chip instead of a Community rung, because community is an attestation held beside the level, not a rung below otp; the ladder's classes move from `--tier-*` to `--assurance-*` (#579). Every `--tier-*` token still paints what it did, and `ui/mzizi-verified-badge` renders `tier` exactly as before. Released as a minor by owner policy (majors are owner-only, by manual dispatch); the release record carries `breaking: true`.
+
 ### Added — the trust model in the components: assurance levels, attestation chips, `legacyTierToAssurance` (2026-10-25, #579)
 
 The components side of [#577](https://github.com/mzizi-dev/mzizi-registry/issues/577), on the roles from #578. Community is shown as an attestation beside the level, never as a rung below otp.

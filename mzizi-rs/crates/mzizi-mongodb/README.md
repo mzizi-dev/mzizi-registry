@@ -6,8 +6,8 @@ purpose. The transport trait, `Error` and `Result` come from [`mzizi-data`](../m
 
 ```toml
 [dependencies]
-mzizi-mongodb = ">=0.5.0"                                     # the protocol core
-mzizi-mongodb = { version = ">=0.5.0", features = ["workers"] }  # plus the pooled Worker client (wasm32)
+mzizi-mongodb = ">=0.6.0"                                     # the protocol core
+mzizi-mongodb = { version = ">=0.6.0", features = ["workers"] }  # plus the pooled Worker client (wasm32)
 ```
 
 ## What is here
