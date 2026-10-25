@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — assurance levels and attestations as N1 roles; `--tier-*` become aliases (2026-10-25, #PR1)
+### Added — assurance levels and attestations as N1 roles; `--tier-*` become aliases (2026-10-25, #578)
 
 The Bundu trust model from `nyuchi/nyuchi-api` `gateway/lib/assurance.py` ([#577](https://github.com/mzizi-dev/mzizi-registry/issues/577)): assurance levels are ordered (0 none, 1 otp, 2 documented, 3 government, 4 licensed), and attestations are unordered and held beside the level (community, business, domain). Community is an attestation, not a rung below otp.
 
