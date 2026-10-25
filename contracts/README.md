@@ -65,7 +65,7 @@ Every format that exists is tested against the contract, here:
 | `app/brand-mark`         | BrandMark         | N3   | 1.3.0   | `app-brand-mark`         | `app-brand-mark` (contract)         | —                       |
 | `app/data-table`         | DataTable         | N6   | 1.2.0   | `app-data-table`         | `app-data-table` (contract)         | —                       |
 | `app/plan-summary`       | PlanSummary       | N6   | 1.0.0   | `app-plan-summary`       | `app-plan-summary` (contract)       | —                       |
-| `app/tier-status`        | TierStatus        | N6   | 1.0.0   | `app-tier-status`        | `app-tier-status` (contract)        | —                       |
+| `app/tier-status`        | TierStatus        | N6   | 1.1.0   | `app-tier-status`        | `app-tier-status` (contract)        | —                       |
 | `app/confirm-action`     | ConfirmAction     | N6   | 1.0.0   | `app-confirm-action`     | `app-confirm-action` (contract)     | —                       |
 | `app/filter-bar`         | FilterBar         | N6   | 1.1.0   | `app-filter-bar`         | `app-filter-bar` (contract)         | —                       |
 | `app/pagination`         | Pagination        | N6   | 1.0.0   | `app-pagination`         | `app-pagination` (contract)         | —                       |
@@ -147,8 +147,8 @@ Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Wher
 | `ui/address-private-row`  | AddressPrivateRow  | N2   | 1.0.0   | `address-private-row`  | `address-private-row` (contract)  | —                              |
 | `ui/address-selector`     | AddressSelector    | N2   | 1.0.0   | `address-selector`     | `address-selector` (contract)     | —                              |
 | `ui/address-share-card`   | AddressShareCard   | N3   | 1.1.0   | `address-share-card`   | `address-share-card` (contract)   | —                              |
-| `ui/mzizi-trust-meter`    | MziziTrustMeter    | N3   | 2.1.0   | `mzizi-trust-meter`    | `mzizi-trust-meter` (contract)    | —                              |
-| `ui/mzizi-verified-badge` | MziziVerifiedBadge | N3   | 1.0.0   | `mzizi-verified-badge` | `mzizi-verified-badge` (contract) | —                              |
+| `ui/mzizi-trust-meter`    | MziziTrustMeter    | N3   | 2.2.0   | `mzizi-trust-meter`    | `mzizi-trust-meter` (contract)    | —                              |
+| `ui/mzizi-verified-badge` | MziziVerifiedBadge | N3   | 1.1.0   | `mzizi-verified-badge` | `mzizi-verified-badge` (contract) | —                              |
 
 **Follow-ups.** Rust ports of the app, discover and site components ([#401](https://github.com/mzizi-dev/mzizi-registry/issues/401)); each is done when it passes its contract. `button`, `card` and `input` share only their slot with their `.tsx` and `.rs`, which keep the registry's own variants, parts or height (each divergence is listed in the contract).
 

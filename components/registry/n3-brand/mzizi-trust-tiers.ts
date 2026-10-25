@@ -20,21 +20,37 @@
  * light and dark; `fgLight`/`bgLight` are kept for existing callers and carry the same values.
  * The fallbacks name the family, never a hex, so a consumer without the tier roles still gets
  * the canonical mineral. A background is the tier at 15% (`color-mix`), not a fixed rgba.
+ *
+ * THE TRUST MODEL (#577, nyuchi/nyuchi-api `gateway/lib/assurance.py`). `TIER_CONFIG` is the
+ * legacy five-rung projection (`bundu.verificationTier`) and stays for existing callers.
+ * `ASSURANCE_CONFIG` (ordered levels: none, otp, documented, government, licensed) and
+ * `ATTESTATION_CONFIG` (unordered: community, business, domain) are the model itself, in the
+ * same shape, reading the `--assurance-*` / `--attestation-*` roles. Community is an
+ * attestation beside the level, never a rung below otp. `legacyTierToAssurance` reads an old
+ * tier into the model.
  */
-import { Users, Phone, ShieldCheck, Award } from "@/lib/icons"
+import { Users, Phone, ShieldCheck, Award, FileCheck, Building2, Globe } from "@/lib/icons"
 import {
+  ASSURANCE_DATA,
+  ATTESTATION_DATA,
   STATUS_OVERLAY,
   TIER_DATA,
   computeTrustScore,
+  legacyTier,
+  legacyTierToAssurance,
+  normalizeAttestations,
+  type Assurance,
+  type AssuranceLevel,
+  type AttestationType,
   type PlatformStatus,
-  type TierData,
+  type TrustPartStyle,
   type VerificationTier,
 } from "@/lib/mzizi-trust-tier-data"
 
 const ICONS = { unverified: null, community: Users, otp: Phone, government: ShieldCheck, licensed: Award } as const
 
 /** `var(--tier-<x>,<the family it falls back to>)`, and the tier at 15% for a background. */
-function colours(d: TierData) {
+function colours(d: { mineral: string | null } & TrustPartStyle) {
   const fallback = d.mineral ? `var(--color-${d.mineral.toLowerCase()})` : "var(--status-neutral)"
   const fg = `var(${d.tokens.tier},${fallback})`
   const bg = `color-mix(in oklab,${fg} 15%,transparent)`
@@ -63,5 +79,43 @@ const TIER_CONFIG = {
   licensed: entry("licensed"),
 }
 
-export { TIER_CONFIG, STATUS_OVERLAY, computeTrustScore }
-export type { VerificationTier, PlatformStatus }
+const LEVEL_ICONS = { none: null, otp: Phone, documented: FileCheck, government: ShieldCheck, licensed: Award } as const
+const ATTESTATION_ICONS = { community: Users, business: Building2, domain: Globe } as const
+
+function level<T extends AssuranceLevel>(name: T) {
+  const d = ASSURANCE_DATA[name]
+  return { rank: d.rank, mineral: d.mineral, label: d.label, ...colours(d), icon: LEVEL_ICONS[name] }
+}
+
+function attestation<T extends AttestationType>(type: T) {
+  const d = ATTESTATION_DATA[type]
+  return { mineral: d.mineral, label: d.label, ...colours(d), icon: ATTESTATION_ICONS[type] }
+}
+
+/** The assurance levels (ordered), each with its Lucide icon and `--assurance-*` colours. */
+const ASSURANCE_CONFIG = {
+  none: level("none"),
+  otp: level("otp"),
+  documented: level("documented"),
+  government: level("government"),
+  licensed: level("licensed"),
+}
+
+/** The attestations (unordered), each with its Lucide icon and `--attestation-*` colours. */
+const ATTESTATION_CONFIG = {
+  community: attestation("community"),
+  business: attestation("business"),
+  domain: attestation("domain"),
+}
+
+export {
+  TIER_CONFIG,
+  STATUS_OVERLAY,
+  computeTrustScore,
+  ASSURANCE_CONFIG,
+  ATTESTATION_CONFIG,
+  legacyTierToAssurance,
+  legacyTier,
+  normalizeAttestations,
+}
+export type { VerificationTier, PlatformStatus, Assurance, AssuranceLevel, AttestationType }

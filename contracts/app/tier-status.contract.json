@@ -2,10 +2,10 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/tier-status",
   "title": "TierStatus",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 6,
   "kind": "pattern",
-  "summary": "Where an account stands on the verification ladder: the current rung, the ladder as an ordered list with each rung's state in words, the attestations held as facts, and what the next rung needs with a link to submit evidence. It takes data and computes no access decision.",
+  "summary": "Where an account stands in the Bundu trust model (assurance.py): the current assurance level, the attestations held beside it as separate chips, the five levels as an ordered list with each level's state in words, the facts held, and what the next level needs with a link to submit evidence. Community is an attestation, never a rung below otp. It takes data and computes no access decision.",
   "implementations": {
     "astro": {
       "registry": "app-tier-status",
@@ -26,10 +26,24 @@
   },
   "props": [
     {
+      "name": "assurance",
+      "type": "\"none\" | \"otp\" | \"documented\" | \"government\" | \"licensed\"",
+      "required": false,
+      "description": "The current assurance level (nyuchi/nyuchi-api `gateway/lib/assurance.py`), ordered 0–4. Takes precedence over `tier`. With neither, the level is `none`.",
+      "values": ["none", "otp", "documented", "government", "licensed"]
+    },
+    {
+      "name": "attestationTypes",
+      "type": "(\"community\" | \"business\" | \"domain\" | { type: string; revokedAt?: string | null })[]",
+      "required": false,
+      "description": "The attestations in force beside the level, as type names or the stored records. Revoked and unknown ones are dropped, as `normalize_attestations` does. Each is shown as its own chip in its `--attestation-*` pair.",
+      "default": []
+    },
+    {
       "name": "tier",
       "type": "\"unverified\" | \"community\" | \"otp\" | \"government\" | \"licensed\"",
-      "required": true,
-      "description": "The current rung (system.verification_tier.tier_code).",
+      "required": false,
+      "description": "Legacy: a `bundu.verificationTier` code, read into the model when `assurance` is not set, as assurance.py's fallback does. `community` becomes level `none` plus a community chip, never a rung.",
       "values": ["unverified", "community", "otp", "government", "licensed"]
     },
     {
@@ -60,17 +74,31 @@
       "default": "Verification"
     },
     {
+      "name": "levelLabels",
+      "type": "Partial<Record<\"none\" | \"otp\" | \"documented\" | \"government\" | \"licensed\", string>>",
+      "required": false,
+      "description": "Rename levels in the app's words or another language.",
+      "default": {}
+    },
+    {
+      "name": "attestationLabels",
+      "type": "Partial<Record<\"community\" | \"business\" | \"domain\", string>>",
+      "required": false,
+      "description": "Rename attestations in the app's words or another language.",
+      "default": {}
+    },
+    {
       "name": "tierLabels",
       "type": "Partial<Record<\"unverified\" | \"community\" | \"otp\" | \"government\" | \"licensed\", string>>",
       "required": false,
-      "description": "Rename tiers in the app's words or another language.",
+      "description": "Legacy: rename by tier code. `unverified`, `otp`, `government` and `licensed` name their levels; `community` names the community chip. `levelLabels` and `attestationLabels` win.",
       "default": {}
     },
     {
       "name": "copy",
-      "type": "{ current?: string; ladder?: string; held?: string; none?: string; next?: string; top?: string; done?: string; here?: string; upcoming?: string }",
+      "type": "{ current?: string; ladder?: string; attested?: string; held?: string; none?: string; next?: string; top?: string; done?: string; here?: string; upcoming?: string }",
       "required": false,
-      "description": "The panel's other words, for another language: \"Current level:\", the ladder's name, \"What you hold\", \"No attestations yet.\", \"Next:\", \"This is the highest level.\", and the rung states \"Done\", \"Current\", \"Next\".",
+      "description": "The panel's other words, for another language: \"Current level:\", the ladder's name, the chips' name (\"Attestations\"), \"What you hold\", \"No attestations yet.\", \"Next:\", \"This is the highest level.\", and the rung states \"Done\", \"Current\", \"Next\".",
       "default": {}
     },
     {
@@ -97,18 +125,20 @@
   ],
   "slots": [],
   "behaviour": [
-    "A <section> labelled by its heading. Beside the heading, the current rung's glyph on its --tier-* container pair (decorative), and \"Current level: <name>\" in the tier's text colour.",
-    "The ladder is an <ol> of the five rungs, lowest first, each with its level number (decorative), its name, and its state in words: \"Done\" below the current rung, \"Current\" on it (aria-current=\"step\", a muted fill), \"Next\" on the one above, nothing further up. Reached rungs wear their tier's container pair; the others an outline.",
-    "\"What you hold\" lists the attestations as facts with a check glyph, or says \"No attestations yet.\".",
-    "\"Next: <name>\" lists `requirements` and, with `action`, a link to submit evidence. At the top rung it says \"This is the highest level.\" instead.",
-    "It computes no access decision and no score: the tier, the attestations and the requirements are given by the server (api-gateway `assurance.py` decides access).",
-    "Every word can be replaced (`tierLabels`, `copy`, `title`)."
+    "A <section> labelled by its heading, carrying `data-assurance` (the level) and `data-tier` (its legacy projection, `legacy_tier()`). Beside the heading, the level's glyph on its --assurance-* container pair (decorative), and \"Current level: <name>\" in the level's text colour.",
+    "The attestations in force are a named <ul> of chips under the current level, one per attestation (Community Vouched, Registered Business, Domain Verified), each its glyph and its name on its --attestation-* container pair. They carry no rank and are never placed on the ladder.",
+    "The ladder is an <ol> of the five assurance levels, lowest first (Unverified, Contact Verified, Documents Checked, Government Verified, Licensed Professional), each with its rank (decorative), its name, and its state in words: \"Done\" below the current level, \"Current\" on it (aria-current=\"step\", a muted fill), \"Next\" on the one above, nothing further up. Reached levels wear their --assurance-* container pair; the others an outline.",
+    "\"What you hold\" lists the facts held with a check glyph, or says \"No attestations yet.\".",
+    "\"Next: <name>\" lists `requirements` and, with `action`, a link to submit evidence. At the top level it says \"This is the highest level.\" instead.",
+    "It computes no access decision and no score: the level, the attestations and the requirements are given by the server (nyuchi-api `assurance.py` decides access).",
+    "Every word can be replaced (`levelLabels`, `attestationLabels`, `tierLabels`, `copy`, `title`)."
   ],
   "states": {
     "default": {
-      "description": "A business at Contact Verified, working towards Government Verified.",
+      "description": "A business at Contact Verified with its domain attested, working towards Documents Checked.",
       "props": {
-        "tier": "otp",
+        "assurance": "otp",
+        "attestationTypes": ["domain"],
         "attestations": [
           {
             "label": "Phone number confirmed",
@@ -121,7 +151,7 @@
         ],
         "requirements": [
           "A business registration certificate",
-          "A director's national ID"
+          "A utility bill in the business's name"
         ],
         "action": {
           "label": "Submit documents",
@@ -139,7 +169,8 @@
     "top": {
       "description": "The highest rung.",
       "props": {
-        "tier": "licensed",
+        "assurance": "licensed",
+        "attestationTypes": ["business"],
         "attestations": [
           {
             "label": "Practising licence checked",
@@ -149,11 +180,12 @@
       }
     },
     "localised": {
-      "description": "Every word replaced.",
+      "description": "Every word replaced; the legacy community tier is read as level none plus the community chip.",
       "props": {
         "tier": "community",
         "title": "Uthibitisho",
         "tierLabels": {
+          "unverified": "Haijathibitishwa",
           "community": "Imethibitishwa na jamii",
           "otp": "Mawasiliano yamethibitishwa"
         },
@@ -164,23 +196,66 @@
           "next": "Kinachofuata:",
           "done": "Imekamilika",
           "here": "Sasa",
-          "upcoming": "Kinachofuata"
+          "upcoming": "Kinachofuata",
+          "attested": "Uthibitisho wa wengine"
         }
+      }
+    },
+    "community": {
+      "description": "Legacy tier community: no level proven, the community attestation as a chip, and no community rung on the ladder.",
+      "props": {
+        "tier": "community"
+      }
+    },
+    "tuckshop": {
+      "description": "A tuck shop: Contact Verified and vouched for by its street. Neither ranks above the other.",
+      "props": {
+        "assurance": "otp",
+        "attestationTypes": ["community"]
+      }
+    },
+    "firm": {
+      "description": "A registered firm at Government Verified with business and domain attestations; a revoked community record is dropped.",
+      "props": {
+        "assurance": "government",
+        "attestationTypes": [
+          "business",
+          {
+            "type": "community",
+            "revokedAt": "2026-09-01T00:00:00Z"
+          },
+          "domain",
+          "business"
+        ]
+      }
+    },
+    "documented": {
+      "description": "Documents Checked, the level that sits between Contact Verified and Government Verified.",
+      "props": {
+        "assurance": "documented",
+        "levelLabels": {
+          "documented": "Papers checked"
+        },
+        "attestationLabels": {
+          "business": "Registered company"
+        },
+        "attestationTypes": ["business"]
       }
     }
   },
   "accessibility": {
     "roles": [
       "region (section labelled by its heading)",
+      "list (the attestation chips, named)",
       "list (the ordered ladder)"
     ],
     "keyboard": ["The evidence link, when there is one."],
     "focus": ["`--ring` focus ring on the link."],
     "aria": [
       "aria-labelledby to the heading.",
-      "aria-current=\"step\" on the current rung.",
-      "The ladder is named (\"Verification levels\").",
-      "Glyphs and level numbers are aria-hidden; every state is also written."
+      "aria-current=\"step\" on the current level.",
+      "The ladder is named (\"Verification levels\") and so are the chips (\"Attestations\").",
+      "Glyphs and ranks are aria-hidden; every state and every attestation is also written."
     ],
     "wcag": ["1.3.1", "1.4.1", "2.4.6", "4.1.2"]
   },
@@ -210,23 +285,29 @@
       "--app-accent",
       "--ring",
       "--status-success",
-      "--tier-unverified-container",
-      "--tier-unverified-on-container",
-      "--tier-unverified-text",
-      "--tier-community-container",
-      "--tier-community-on-container",
-      "--tier-community-text",
-      "--tier-otp-container",
-      "--tier-otp-on-container",
-      "--tier-otp-text",
-      "--tier-government-container",
-      "--tier-government-on-container",
-      "--tier-government-text",
-      "--tier-licensed-container",
-      "--tier-licensed-on-container",
-      "--tier-licensed-text"
+      "--assurance-none-container",
+      "--assurance-none-on-container",
+      "--assurance-none-text",
+      "--assurance-otp-container",
+      "--assurance-otp-on-container",
+      "--assurance-otp-text",
+      "--assurance-documented-container",
+      "--assurance-documented-on-container",
+      "--assurance-documented-text",
+      "--assurance-government-container",
+      "--assurance-government-on-container",
+      "--assurance-government-text",
+      "--assurance-licensed-container",
+      "--assurance-licensed-on-container",
+      "--assurance-licensed-text",
+      "--attestation-community-container",
+      "--attestation-community-on-container",
+      "--attestation-business-container",
+      "--attestation-business-on-container",
+      "--attestation-domain-container",
+      "--attestation-domain-on-container"
     ],
-    "brandOverlay": "The evidence link is the shell's primary action (`--app-accent`, else `--primary`). Tier colours are their --tier-* roles in every brand.",
+    "brandOverlay": "The evidence link is the shell's primary action (`--app-accent`, else `--primary`). Levels and attestations are their --assurance-* / --attestation-* roles in every brand (the legacy --tier-* roles alias them).",
     "statusColours": []
   },
   "noJs": {
@@ -236,79 +317,100 @@
   "responsive": [
     "Fills its container; rung names wrap rather than push their state out."
   ],
-  "contract": "contract\n  slot is \"tier-status\"\n  when default shows strong \"Contact Verified\"\n  when default shows h2 \"Verification\"\n  when default shows h3 \"Next: Government Verified\"\n  when default shows a \"Submit documents\"\n  when unverified shows h3 \"Verification\"\n  when top shows p \"This is the highest level.\"\n  when localised shows strong \"Imethibitishwa na jamii\"\nend",
+  "contract": "contract\n  slot is \"tier-status\"\n  when default shows strong \"Contact Verified\"\n  when default shows h2 \"Verification\"\n  when default shows h3 \"Next: Documents Checked\"\n  when default shows a \"Submit documents\"\n  when default shows li \"Domain Verified\"\n  when unverified shows h3 \"Verification\"\n  when top shows p \"This is the highest level.\"\n  when localised shows strong \"Haijathibitishwa\"\n  when localised shows li \"Imethibitishwa na jamii\"\n  when community shows strong \"Unverified\"\n  when community shows li \"Community Vouched\"\n  when tuckshop shows li \"Community Vouched\"\n  when firm shows li \"Registered Business\"\n  when documented shows strong \"Papers checked\"\nend",
   "checks": [
     {
-      "say": "The panel is a section labelled by its heading.",
+      "say": "The panel is a section labelled by its heading, with the level and its legacy projection.",
       "select": "section[data-slot=\"tier-status\"]",
       "count": 1,
       "attr": {
         "aria-labelledby": "tier-status-title",
+        "data-assurance": "otp",
         "data-tier": "otp"
       }
     },
     {
-      "say": "The ladder is an ordered list of five rungs, named.",
+      "say": "The ladder is an ordered list of the five assurance levels, named.",
       "select": "ol[data-slot=\"tier-ladder\"][aria-label=\"Verification levels\"] > li",
       "count": 5
     },
     {
-      "say": "The current rung is marked as the current step.",
+      "say": "Community is never a rung.",
+      "state": "*",
+      "select": "ol[data-slot=\"tier-ladder\"] li[data-level=\"community\"], ol[data-slot=\"tier-ladder\"] li[data-tier]",
+      "absent": true
+    },
+    {
+      "say": "The current level is marked as the current step.",
       "select": "li[aria-current=\"step\"]",
       "count": 1,
       "attr": {
-        "data-tier": "otp",
+        "data-level": "otp",
         "data-state": "current"
       },
       "text": "Contact Verified"
     },
     {
-      "say": "Each rung's state is written: two done, one current, one next.",
+      "say": "Each level's state is written: one done, one current, one next.",
       "select": "[data-slot=\"tier-rung-state\"]",
-      "count": 4
+      "count": 3
     },
     {
-      "say": "Rungs below are written Done.",
+      "say": "Levels below are written Done.",
       "select": "li[data-state=\"done\"] [data-slot=\"tier-rung-state\"]",
-      "count": 2,
+      "count": 1,
       "text": "Done"
     },
     {
-      "say": "The rung above is written Next.",
+      "say": "The level above is written Next.",
       "select": "li[data-state=\"next\"]",
       "count": 1,
       "attr": {
-        "data-tier": "government"
+        "data-level": "documented"
       },
       "text": "Next"
     },
     {
-      "say": "A reached rung wears its tier's container pair.",
-      "select": "li[data-tier=\"community\"] .bg-tier-community-container.text-tier-community-on-container",
+      "say": "A reached level wears its --assurance-* container pair.",
+      "select": "li[data-level=\"none\"] .bg-assurance-none-container.text-assurance-none-on-container",
       "count": 1
     },
     {
-      "say": "A rung not reached is an outline.",
-      "select": "li[data-tier=\"licensed\"] .border-border",
+      "say": "A level not reached is an outline.",
+      "select": "li[data-level=\"licensed\"] .border-border",
       "count": 1
     },
     {
-      "say": "The current tier's glyph is on its container pair.",
-      "select": "section > div span.bg-tier-otp-container svg[data-icon=\"phone\"]",
+      "say": "The current level's glyph is on its container pair.",
+      "select": "section > div span.bg-assurance-otp-container svg[data-icon=\"phone\"]",
       "count": 1
     },
     {
-      "say": "The current level's name is in the tier's text colour.",
-      "select": "[data-slot=\"tier-current\"] strong.text-tier-otp-text",
+      "say": "The current level's name is in its text colour.",
+      "select": "[data-slot=\"tier-current\"] strong.text-assurance-otp-text",
       "count": 1
     },
     {
-      "say": "Attestations are listed as facts.",
+      "say": "Attestations are chips, named, beside the level.",
+      "select": "ul[data-slot=\"tier-attested\"][aria-label=\"Attestations\"] > li",
+      "count": 1,
+      "attr": {
+        "data-attestation": "domain"
+      },
+      "text": "Domain Verified"
+    },
+    {
+      "say": "An attestation chip wears its --attestation-* pair and glyph.",
+      "select": "li[data-attestation=\"domain\"].bg-attestation-domain-container.text-attestation-domain-on-container svg[data-icon=\"globe\"]",
+      "count": 1
+    },
+    {
+      "say": "The facts held are listed.",
       "select": "[data-slot=\"tier-attestations\"] li",
       "count": 2
     },
     {
-      "say": "Requirements for the next rung are listed.",
+      "say": "Requirements for the next level are listed.",
       "select": "[data-slot=\"tier-next\"] ul > li",
       "count": 2
     },
@@ -325,7 +427,13 @@
       "text": "No attestations yet."
     },
     {
-      "say": "Unverified has no rung reached: one current, one next, none done.",
+      "say": "No attestation, no chips.",
+      "state": "unverified",
+      "select": "[data-slot=\"tier-attested\"]",
+      "absent": true
+    },
+    {
+      "say": "Unverified has no level reached: one current, one next, none done.",
       "state": "unverified",
       "select": "li[data-state=\"done\"]",
       "absent": true
@@ -333,7 +441,7 @@
     {
       "say": "Unverified shows the shield on the neutral pair.",
       "state": "unverified",
-      "select": "span.bg-tier-unverified-container svg[data-icon=\"shield\"]",
+      "select": "span.bg-assurance-none-container svg[data-icon=\"shield\"]",
       "count": 1
     },
     {
@@ -343,7 +451,7 @@
       "count": 2
     },
     {
-      "say": "At the top there is no next rung and no link.",
+      "say": "At the top there is no next level and no link.",
       "state": "top",
       "select": "li[data-state=\"next\"], [data-slot=\"tier-next\"] a",
       "absent": true
@@ -356,11 +464,66 @@
       "text": "Sasa"
     },
     {
-      "say": "The next rung can be renamed.",
+      "say": "The next level can be renamed by its legacy tier code.",
       "state": "localised",
       "select": "[data-slot=\"tier-next\"] h3",
       "count": 1,
       "text": "Kinachofuata: Mawasiliano yamethibitishwa"
+    },
+    {
+      "say": "The chips' name can be replaced.",
+      "state": "localised",
+      "select": "ul[data-slot=\"tier-attested\"][aria-label=\"Uthibitisho wa wengine\"]",
+      "count": 1
+    },
+    {
+      "say": "Legacy community is level none, current, with the community chip.",
+      "state": "community",
+      "select": "section[data-assurance=\"none\"][data-tier=\"community\"] li[aria-current=\"step\"][data-level=\"none\"]",
+      "count": 1
+    },
+    {
+      "say": "Legacy community shows the community chip in terracotta's pair.",
+      "state": "community",
+      "select": "li[data-attestation=\"community\"].bg-attestation-community-container svg[data-icon=\"users\"]",
+      "count": 1
+    },
+    {
+      "say": "A tuck shop is Contact Verified with the community chip; otp is the current level.",
+      "state": "tuckshop",
+      "select": "section[data-assurance=\"otp\"][data-tier=\"otp\"] li[data-attestation=\"community\"]",
+      "count": 1
+    },
+    {
+      "say": "Revoked and repeated attestations are dropped: business and domain, once each.",
+      "state": "firm",
+      "select": "ul[data-slot=\"tier-attested\"] > li",
+      "count": 2
+    },
+    {
+      "say": "Chips keep the order given.",
+      "state": "firm",
+      "select": "ul[data-slot=\"tier-attested\"] > li:first-child[data-attestation=\"business\"].bg-attestation-business-container svg[data-icon=\"building\"]",
+      "count": 1
+    },
+    {
+      "say": "Government is current; three levels below are done.",
+      "state": "firm",
+      "select": "li[data-state=\"done\"]",
+      "count": 3
+    },
+    {
+      "say": "Documents Checked wears sodalite's role and the file glyph.",
+      "state": "documented",
+      "select": "section > div span.bg-assurance-documented-container svg[data-icon=\"file\"]",
+      "count": 1
+    },
+    {
+      "say": "Attestations can be renamed.",
+      "state": "documented",
+      "select": "li[data-attestation=\"business\"]",
+      "count": 1,
+      "text": "Registered company"
     },
     {
       "say": "No script.",
