@@ -1,20 +1,40 @@
 ---
 /**
- * TierStatus — where a business or a person stands on the verification
- * ladder: the current rung, the whole ladder as an ordered list (Unverified,
- * Community Verified, Contact Verified, Government Verified, Licensed
- * Professional), the attestations held, written as facts ("Domain ownership
- * checked"), and what the next rung needs, with a link to submit evidence.
+ * TierStatus — where a business or a person stands in the Bundu trust model
+ * (nyuchi/nyuchi-api `gateway/lib/assurance.py`, #577): the current assurance
+ * level, the attestations held beside it as separate chips (Community Vouched,
+ * Registered Business, Domain Verified), the five levels as an ordered list
+ * (Unverified, Contact Verified, Documents Checked, Government Verified,
+ * Licensed Professional), the facts held, and what the next level needs, with
+ * a link to submit evidence.
+ *
+ * Community is an attestation, never a rung below otp: a tuck shop vouched
+ * for by its street is "Contact Verified" plus a "Community Vouched" chip, and
+ * nothing ranks one above the other. A legacy `tier` is read into the model the
+ * way assurance.py's fallback does (`legacyTierToAssurance`), so `tier="community"`
+ * shows the community chip, not a rung.
  *
  * It takes data and computes nothing about access: whether someone may do
- * something is decided on the server (api-gateway `assurance.py`), never
- * here. The ladder's labels, levels, glyphs and `--tier-*` classes come from
+ * something is decided on the server (`assurance.py`), never here. Labels,
+ * glyphs and the `--assurance-*` / `--attestation-*` classes come from
  * `mzizi-trust-tier-data`. Every state is written in words ("Done",
  * "Current", "Next"), so colour is never the only cue. Server-rendered, no
  * script.
  */
 import Icon from "./site-icon.astro";
-import { TIER_DATA, TIER_ORDER, nextTier, type VerificationTier } from "./mzizi-trust-tier-data";
+import {
+  ASSURANCE_DATA,
+  ASSURANCE_ORDER,
+  ATTESTATION_DATA,
+  legacyTier,
+  legacyTierToAssurance,
+  nextAssurance,
+  normalizeAttestations,
+  type AssuranceLevel,
+  type AttestationInput,
+  type AttestationType,
+  type VerificationTier,
+} from "./mzizi-trust-tier-data";
 import { cn } from "./ui-utils";
 import { appButtonVariants } from "./ui-variants";
 
@@ -29,9 +49,11 @@ export interface TierStatusCopy {
   current?: string;
   /** The ladder's accessible name. */
   ladder?: string;
-  /** The attestations' heading. */
+  /** The attestation chips' accessible name. */
+  attested?: string;
+  /** The facts' heading. */
   held?: string;
-  /** When there are no attestations. */
+  /** When there are no facts. */
   none?: string;
   /** Before the next level's name. */
   next?: string;
@@ -43,17 +65,25 @@ export interface TierStatusCopy {
   upcoming?: string;
 }
 interface Props {
-  /** The current rung (system.verification_tier.tier_code). */
-  tier: VerificationTier;
+  /** The current assurance level (assurance.py). Takes precedence over `tier`. */
+  assurance?: AssuranceLevel;
+  /** The attestations in force, as type names or stored records; revoked ones are dropped. */
+  attestationTypes?: AttestationInput[];
+  /** Legacy: a `bundu.verificationTier` code, read into the model when `assurance` is not set. */
+  tier?: VerificationTier;
   /** Facts the account holds. */
   attestations?: Attestation[];
-  /** What the next rung needs, in words, as the server decided it. */
+  /** What the next level needs, in words, as the server decided it. */
   requirements?: string[];
-  /** Where to submit evidence for the next rung. */
+  /** Where to submit evidence for the next level. */
   action?: { label: string; href: string };
   /** The panel's heading. */
   title?: string;
-  /** Rename tiers in the app's words or another language. */
+  /** Rename levels in the app's words or another language. */
+  levelLabels?: Partial<Record<AssuranceLevel, string>>;
+  /** Rename attestations in the app's words or another language. */
+  attestationLabels?: Partial<Record<AttestationType, string>>;
+  /** Legacy: rename by tier code; `community` names the community chip. */
   tierLabels?: Partial<Record<VerificationTier, string>>;
   /** The panel's other words, for another language. */
   copy?: TierStatusCopy;
@@ -65,11 +95,15 @@ interface Props {
 }
 
 const {
+  assurance,
+  attestationTypes = [],
   tier,
   attestations = [],
   requirements = [],
   action,
   title = "Verification",
+  levelLabels = {},
+  attestationLabels = {},
   tierLabels = {},
   copy = {},
   id = "tier-status",
@@ -80,6 +114,7 @@ const {
 const words = {
   current: "Current level:",
   ladder: "Verification levels",
+  attested: "Attestations",
   held: "What you hold",
   none: "No attestations yet.",
   next: "Next:",
@@ -89,16 +124,38 @@ const words = {
   upcoming: "Next",
   ...copy,
 };
-const nameOf = (t: VerificationTier) => tierLabels[t] ?? TIER_DATA[t].label;
-const data = TIER_DATA[tier];
-const next = nextTier(tier);
+/** The legacy tier code that names a level, for `tierLabels`. */
+const LEGACY_NAME: Record<AssuranceLevel, VerificationTier | null> = {
+  none: "unverified",
+  otp: "otp",
+  documented: null,
+  government: "government",
+  licensed: "licensed",
+};
+const legacy = legacyTierToAssurance(tier);
+const level: AssuranceLevel = assurance && assurance in ASSURANCE_DATA ? assurance : legacy.level;
+const chips = normalizeAttestations([...(assurance ? [] : legacy.attestations), ...attestationTypes]);
+const nameOf = (l: AssuranceLevel) => {
+  const old = LEGACY_NAME[l];
+  return levelLabels[l] ?? (old ? tierLabels[old] : undefined) ?? ASSURANCE_DATA[l].label;
+};
+const chipName = (t: AttestationType) =>
+  attestationLabels[t] ?? (t === "community" ? tierLabels.community : undefined) ?? ATTESTATION_DATA[t].label;
+const data = ASSURANCE_DATA[level];
+const next = nextAssurance(level);
 const H = headingLevel === 3 ? "h3" : "h2";
 const Sub = headingLevel === 3 ? "h4" : "h3";
-const stateOf = (level: number) =>
-  level < data.level ? "done" : level === data.level ? "current" : level === data.level + 1 ? "next" : "ahead";
+const stateOf = (rank: number) =>
+  rank < data.rank ? "done" : rank === data.rank ? "current" : rank === data.rank + 1 ? "next" : "ahead";
 ---
 
-<section data-slot="tier-status" data-tier={tier} aria-labelledby={`${id}-title`} class={cn("rounded-md border border-border bg-card p-5 text-card-foreground", className)}>
+<section
+  data-slot="tier-status"
+  data-assurance={level}
+  data-tier={legacyTier(level, chips)}
+  aria-labelledby={`${id}-title`}
+  class={cn("rounded-md border border-border bg-card p-5 text-card-foreground", className)}
+>
   <div class="flex items-start gap-3">
     <span aria-hidden="true" class={cn("inline-flex size-10 shrink-0 items-center justify-center rounded-full text-[20px]", data.classes.container, data.classes.onContainer)}>
       <Icon name={data.glyph ?? "shield"} />
@@ -107,20 +164,42 @@ const stateOf = (level: number) =>
       <H id={`${id}-title`} class="text-body font-semibold text-foreground">{title}</H>
       <p data-slot="tier-current" class="text-body-sm">
         <span class="text-muted-foreground">{words.current}</span>{" "}
-        <strong class={cn("font-semibold", data.classes.text)}>{nameOf(tier)}</strong>
+        <strong class={cn("font-semibold", data.classes.text)}>{nameOf(level)}</strong>
       </p>
+      {
+        chips.length > 0 && (
+          <ul data-slot="tier-attested" aria-label={words.attested} class="mt-2 flex flex-wrap gap-1.5">
+            {chips.map((t) => {
+              const a = ATTESTATION_DATA[t];
+              return (
+                <li
+                  data-attestation={t}
+                  class={cn(
+                    "inline-flex min-h-7 items-center gap-1.5 rounded-full px-2.5 text-caption font-medium",
+                    a.classes.container,
+                    a.classes.onContainer,
+                  )}
+                >
+                  <Icon name={a.glyph} />
+                  {chipName(t)}
+                </li>
+              );
+            })}
+          </ul>
+        )
+      }
     </div>
   </div>
 
   <ol data-slot="tier-ladder" aria-label={words.ladder} class="mt-4 grid gap-0.5">
     {
-      TIER_ORDER.map((t) => {
-        const rung = TIER_DATA[t];
-        const state = stateOf(rung.level);
+      ASSURANCE_ORDER.map((l) => {
+        const rung = ASSURANCE_DATA[l];
+        const state = stateOf(rung.rank);
         const reached = state === "done" || state === "current";
         return (
           <li
-            data-tier={t}
+            data-level={l}
             data-state={state}
             aria-current={state === "current" ? "step" : undefined}
             class={cn("flex min-h-9 items-center gap-3 rounded-sm px-2 text-body-sm pointer-coarse:min-h-11", state === "current" && "bg-muted font-medium")}
@@ -132,9 +211,9 @@ const stateOf = (level: number) =>
                 reached ? [rung.classes.container, rung.classes.onContainer] : "border border-border text-muted-foreground",
               )}
             >
-              {rung.level}
+              {rung.rank}
             </span>
-            <span class="min-w-0 flex-1">{nameOf(t)}</span>
+            <span class="min-w-0 flex-1">{nameOf(l)}</span>
             {state !== "ahead" && (
               <span data-slot="tier-rung-state" class="text-caption text-muted-foreground">
                 {state === "done" ? words.done : state === "current" ? words.here : words.upcoming}
@@ -172,7 +251,7 @@ const stateOf = (level: number) =>
       next ? (
         <>
           <Sub class="text-body-sm font-semibold text-foreground">
-            {`${words.next} ${nameOf(next.tier)}`}
+            {`${words.next} ${nameOf(next.level)}`}
           </Sub>
           {requirements.length > 0 && (
             <ul class="grid list-disc gap-1 ps-5 text-body-sm text-muted-foreground">

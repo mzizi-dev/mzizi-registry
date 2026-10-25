@@ -1,7 +1,13 @@
-import { Icon } from "@/components/ui/site-icon"
+import { Icon, type IconName } from "@/components/ui/site-icon"
 import {
+  ASSURANCE_DATA,
+  ATTESTATION_DATA,
   STATUS_OVERLAY,
   TIER_DATA,
+  legacyTier,
+  normalizeAttestations,
+  type AssuranceLevel,
+  type AttestationInput,
   type PlatformStatus,
   type VerificationTier,
 } from "@/lib/mzizi-trust-tier-data"
@@ -37,6 +43,14 @@ import { cn } from "@/lib/ui-utils"
    is the framework-free lib/mzizi-trust-tier-data; TIER_CONFIG (with
    the Lucide icons older components read) is re-exported from
    lib/mzizi-trust-tiers so existing imports keep working.
+
+   THE TRUST MODEL (#577, nyuchi-api assurance.py). Pass `assurance`
+   (none, otp, documented, government, licensed) and `attestations`
+   (community, business, domain) instead of `tier`: the level is one
+   badge in its --assurance-* pair, and each attestation is its own
+   badge in its --attestation-* pair beside it, never a rung. With more
+   than one badge they sit in a named group. `tier` is the legacy
+   projection and renders as it always has.
    ═══════════════════════════════════════════════════════════════ */
 
 const PORTAL = "https://mzizi.dev/components/mzizi-verified-badge"
@@ -45,8 +59,14 @@ const BOX = { sm: "size-3.5", md: "size-[18px]", lg: "size-6", xl: "size-8" } as
 const GLYPH = { sm: "text-[10px]", md: "text-[12px]", lg: "text-[16px]", xl: "text-[20px]" } as const
 
 interface MziziVerifiedBadgeProps {
-  /** Verification tier code (system.verification_tier.tier_code) */
-  tier: VerificationTier
+  /** Legacy: the verification tier code (bundu.verificationTier). Ignored when `assurance` is set. */
+  tier?: VerificationTier
+  /** The assurance level (assurance.py). With it, `attestations` show as badges of their own. */
+  assurance?: AssuranceLevel
+  /** The attestations in force, as type names or stored records; revoked ones are dropped. */
+  attestations?: AttestationInput[]
+  /** The group's accessible name when more than one badge shows; defaults to the names joined. */
+  groupLabel?: string
   /** Platform status (identity.person.mit_status). Affects badge appearance. */
   status?: PlatformStatus
   /** sm (inline with text), md, lg (profile pages) or xl (verification detail views). */
@@ -71,8 +91,19 @@ interface MziziVerifiedBadgeProps {
   className?: string
 }
 
+type Mark = {
+  key: string
+  name: string
+  glyph: IconName
+  pair: { container: string; onContainer: string }
+  data: Record<string, string | number | undefined>
+}
+
 function MziziVerifiedBadge({
-  tier,
+  tier = "unverified",
+  assurance,
+  attestations,
+  groupLabel,
   status = "living",
   size,
   showTooltip = true,
@@ -94,43 +125,83 @@ function MziziVerifiedBadge({
     )
 
   const box = size ?? "md"
-  const data = TIER_DATA[tier]
   const overlay = STATUS_OVERLAY[status].overlay
+  const model = assurance !== undefined && assurance in ASSURANCE_DATA
+  const chips = model ? normalizeAttestations(attestations) : []
+  const level = model ? ASSURANCE_DATA[assurance as AssuranceLevel] : null
+  const projected = level ? legacyTier(level.level, chips) : tier
+  const data = TIER_DATA[projected]
   const named = (builtIn: string) => {
     const text = label ?? builtIn
     return showScore ? `${text} · Trust ${data.cumulativeTrust}` : text
   }
-  const view =
-    overlay === "suspended"
-      ? { name: named("Account Suspended"), glyph: "ban" as const, pair: TIER_DATA.unverified.classes }
-      : overlay === "ancestral"
-        ? { name: named(`${data.label} — Memorial`), glyph: "flower" as const, pair: data.classes }
-        : { name: named(data.label), glyph: data.glyph, pair: data.classes }
+  const own = level
+    ? { label: level.label, glyph: level.glyph, pair: level.classes, rank: level.rank }
+    : { label: data.label, glyph: data.glyph, pair: data.classes, rank: undefined }
+  const none = level ? ASSURANCE_DATA.none.classes : TIER_DATA.unverified.classes
+  const marks: Mark[] = []
+  const levelData = {
+    "data-tier": projected,
+    "data-level": data.level,
+    "data-assurance": level?.level,
+    "data-rank": own.rank,
+    "data-status": overlay ? status : undefined,
+    "data-trust": overlay ? undefined : data.cumulativeTrust,
+  }
+  if (overlay === "suspended") {
+    /* A suspended account is one badge, whatever it holds. */
+    marks.push({ key: "level", name: named("Account Suspended"), glyph: "ban", pair: none, data: levelData })
+  } else {
+    if (own.glyph && (level ? level.level !== "none" : tier !== "unverified"))
+      marks.push({
+        key: "level",
+        name: overlay === "ancestral" ? named(`${own.label} — Memorial`) : named(own.label),
+        glyph: overlay === "ancestral" ? "flower" : own.glyph,
+        pair: own.pair,
+        data: levelData,
+      })
+    for (const t of chips) {
+      const a = ATTESTATION_DATA[t]
+      marks.push({ key: t, name: a.label, glyph: a.glyph, pair: a.classes, data: { "data-attestation": t } })
+    }
+  }
 
-  /* Level 0 = no badge */
-  if (tier === "unverified" || !view.glyph) return null
+  /* Level 0 with nothing attested = no badge */
+  if (marks.length === 0) return null
 
-  return (
+  const badge = (m: Mark, root: boolean) => (
     <span
+      key={m.key}
       data-slot="mzizi-verified-badge"
       data-portal={PORTAL}
-      data-tier={tier}
-      data-level={data.level}
-      data-status={overlay ? status : undefined}
-      data-trust={overlay ? undefined : data.cumulativeTrust}
+      {...m.data}
       role="img"
-      aria-label={ariaLabel ?? view.name}
-      title={showTooltip ? view.name : undefined}
+      aria-label={m.key === "level" ? (ariaLabel ?? m.name) : m.name}
+      title={showTooltip ? m.name : undefined}
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-full",
         BOX[box],
         GLYPH[box],
-        view.pair.container,
-        view.pair.onContainer,
-        className,
+        m.pair.container,
+        m.pair.onContainer,
+        root && className,
       )}
     >
-      <Icon name={view.glyph} />
+      <Icon name={m.glyph} />
+    </span>
+  )
+
+  if (marks.length === 1) return badge(marks[0]!, true)
+
+  return (
+    <span
+      data-slot="mzizi-verified-badge-group"
+      data-portal={PORTAL}
+      role="group"
+      aria-label={groupLabel ?? marks.map((m) => (m.key === "level" ? (ariaLabel ?? m.name) : m.name)).join(", ")}
+      className={cn("inline-flex shrink-0 items-center gap-0.5", className)}
+    >
+      {marks.map((m) => badge(m, false))}
     </span>
   )
 }

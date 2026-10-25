@@ -49,7 +49,9 @@ function rule(css: string, cls: string): string {
   // Tailwind escapes `\`, `/` and `.` in a class name with a backslash; match that escaped form literally.
   const esc = escapeRegExp(cls.replace(/[\\/.]/g, "\\$&"))
   const m = css.match(new RegExp(`\\n\\s*\\.${esc} \\{([^}]*)\\}`))
-  return m?.[1] ?? ""
+  // Prettier wraps a long `var(--…)` over three lines in the stylesheet, and Tailwind carries the
+  // break into the utility; fold it back so `var(\n  --a\n)` reads as `var(--a)`.
+  return (m?.[1] ?? "").replace(/\(\s+/g, "(").replace(/\s+\)/g, ")")
 }
 
 /** `--name: value` for every declaration in one top-level block of the stylesheet. */
@@ -228,6 +230,15 @@ describe("the contrast gate on the Mzizi pack", () => {
       .flatMap((r) => Object.keys(r.derived).map((m) => `${r.role.name}:${m}`))
       .sort()
     expect(derived).toEqual([
+      // Licensed and community take the same families as premium (tanzanite) and danger
+      // (terracotta), so they need the same two walks (#543). Sodalite's dark base and its
+      // on-container ink, and copper's light text, are walked for the new assurance and
+      // attestation roles; the legacy `--tier-*` names alias these and derive nothing.
+      "assurance-documented-on-container:dark",
+      "assurance-documented:dark",
+      "assurance-licensed-on-container:dark",
+      "attestation-community-text:light",
+      "attestation-domain-text:light",
       "border-control:dark",
       "border-control:light",
       "destructive-text:dark",
@@ -235,24 +246,59 @@ describe("the contrast gate on the Mzizi pack", () => {
       "destructive:dark",
       "status-danger-text:light",
       "status-premium-on-container:dark",
-      // The tier roles take the same families as danger (terracotta) and premium (tanzanite),
-      // so they need the same two walks (#543).
-      "tier-community-text:light",
-      "tier-licensed-on-container:dark",
     ])
   })
 
-  it("maps the verification tiers to the owner's ladder (#543, 2026-10-24)", () => {
-    expect(RESOLVED.get("tier-unverified")!.css.light).toBe("var(--status-neutral)")
-    expect(RESOLVED.get("tier-community")!.css.light).toBe("var(--mineral-terracotta)")
-    expect(RESOLVED.get("tier-otp")!.css.light).toBe("var(--mineral-cobalt)")
-    expect(RESOLVED.get("tier-government")!.css.light).toBe("var(--mineral-gold)")
-    expect(RESOLVED.get("tier-licensed")!.css.light).toBe("var(--mineral-tanzanite)")
-    for (const t of ["unverified", "community", "otp", "government", "licensed"]) {
+  it("maps the assurance levels and attestations to their minerals (assurance.py)", () => {
+    expect(RESOLVED.get("assurance-none")!.css.light).toBe("var(--status-neutral)")
+    expect(RESOLVED.get("assurance-otp")!.css.light).toBe("var(--mineral-cobalt)")
+    // Sodalite's dark base is derived, so the role is a literal in both themes: its light base.
+    expect(RESOLVED.get("assurance-documented")!.value.light).toBe("#283593")
+    expect(RESOLVED.get("assurance-documented-container")!.css.light).toBe("var(--mineral-sodalite-container)")
+    expect(RESOLVED.get("assurance-government")!.css.light).toBe("var(--mineral-gold)")
+    expect(RESOLVED.get("assurance-licensed")!.css.light).toBe("var(--mineral-tanzanite)")
+    expect(RESOLVED.get("attestation-community")!.css.light).toBe("var(--mineral-terracotta)")
+    expect(RESOLVED.get("attestation-business")!.css.light).toBe("var(--mineral-malachite)")
+    expect(RESOLVED.get("attestation-domain")!.css.light).toBe("var(--mineral-copper)")
+    for (const name of [
+      ...["none", "otp", "documented", "government", "licensed"].map((l) => `assurance-${l}`),
+      ...["community", "business", "domain"].map((a) => `attestation-${a}`),
+    ]) {
       for (const suffix of ["", "-container", "-on-container", "-text"]) {
-        expect(RESOLVED.has(`tier-${t}${suffix}`), `tier-${t}${suffix}`).toBe(true)
+        const r = RESOLVED.get(`${name}${suffix}`)
+        expect(r, `${name}${suffix}`).toBeDefined()
+        expect(r!.role.required, `${name}${suffix}`).toBe(true)
       }
     }
+  })
+
+  it("passes every assurance and attestation role through the contrast gate in both themes", () => {
+    const rows = roleGate(RESOLVED).results.filter((r) => /^(assurance|attestation)-/.test(r.role))
+    // Fill on base and surface, on-container on its container, text on base and surface: 5 per part, 2 themes.
+    expect(rows.length).toBe(8 * 5 * 2)
+    expect(rows.filter((r) => !r.pass)).toEqual([])
+  })
+
+  it("keeps the legacy --tier-* names as aliases of the new roles (bundu.verificationTier)", () => {
+    const alias = {
+      unverified: "assurance-none",
+      community: "attestation-community",
+      otp: "assurance-otp",
+      government: "assurance-government",
+      licensed: "assurance-licensed",
+    }
+    for (const [tier, target] of Object.entries(alias)) {
+      for (const suffix of ["", "-container", "-on-container", "-text"]) {
+        const r = RESOLVED.get(`tier-${tier}${suffix}`)!
+        expect(r.css.light, `tier-${tier}${suffix}`).toBe(`var(--${target}${suffix})`)
+        expect(r.css.dark, `tier-${tier}${suffix}`).toBe(`var(--${target}${suffix})`)
+        // The alias paints exactly what its target paints, in both themes.
+        expect(r.value, `tier-${tier}${suffix}`).toEqual(RESOLVED.get(`${target}${suffix}`)!.value)
+      }
+    }
+    // The owner's ladder (#543, 2026-10-24) still reaches the same minerals through the alias.
+    expect(RESOLVED.get("assurance-otp")!.css.dark).toBe("var(--mineral-cobalt)")
+    expect(RESOLVED.get("attestation-community")!.css.dark).toBe("var(--mineral-terracotta)")
   })
 
   it("holds every text role to Lc 75 unless it is non-body (Lc 60), pending or exempt", () => {

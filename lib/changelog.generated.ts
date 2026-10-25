@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.17.0",
+    title:
+      'v4.17.0 — the Bundu trust model in tokens and components: --assurance-* levels and --attestation-* chips as N1 roles (--tier-* kept as aliases), tier-status 1.1, verified-badge 1.1 and trust-meter 2.2 on assurance and attestations (Breaking: tier="community" now renders Unverified plus a Community Vouched chip), with the Roots crates at 0.6.0',
+    description:
+      'Releases staging to main as the next minor above v4.16.x (nyuchi/.github#80). Tracking: #577. The Mzizi Roots crates move to 0.6.0 because the generated Rust token pack (mzizi-tokens) carries the new roles. Added: the assurance levels (--assurance-none, -otp cobalt, -documented sodalite, -government gold, -licensed tanzanite) and attestations (--attestation-community terracotta, -business malachite, -domain copper) as N1 roles in the stylesheet and every platform pack, each with its container, on-container and text parts, from nyuchi-api gateway/lib/assurance.py; --tier-* stay as aliases and paint exactly what they did; assuranceTokens and attestationTokens in lib/tokens (#578). mzizi-trust-tier-data gains ASSURANCE_DATA, ATTESTATION_DATA, legacyTierToAssurance and legacyTier; app/tier-status 1.1.0, ui/mzizi-verified-badge 1.1.0 and ui/mzizi-trust-meter 2.2.0 take assurance and attestations (#579). BREAKING (defaults change): app/tier-status with tier="community" now shows level Unverified plus a Community Vouched chip instead of a Community rung, and the ladder\'s classes move from --tier-* to --assurance-*. Kept a minor release by owner policy. CHANGELOG.md section [4.17.0] is the narrative.',
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 17,
+    patch: 0,
+    release_kind: "minor",
+    breaking: true,
+    released_at: "2026-10-25T21:00:00.000+00:00",
+    created_at: "2026-10-25T21:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.16.0",
     title:
       "v4.16.0 — the Kweli business-dashboard gaps (verified-badge contract and Astro build, form-field 1.2, data-table 1.2, confirm-action, tier-status), provider-neutral money and plan-summary, and the mzizi-mongodb security fixes (Breaking) with the Roots crates at 0.5.0",
