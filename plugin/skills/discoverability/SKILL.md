@@ -1,6 +1,6 @@
 ---
 name: discoverability
-description: Use this skill whenever a Mzizi-ecosystem site or app needs to be found and correctly rendered by machines — social/messaging link previews (OpenGraph), search engines, and AI agents. Covers the doctrine ("if the machine can't see it, it doesn't exist"), the brand-agnostic Mzizi "hive" OG-image template (dynamic per page, carrying each page's title + description + site icon), the static-Astro implementation (the standard), the Next.js reference template in mzizi-registry, APCA-checked text colours, and a pre-ship checklist. Reach for it when a shared link renders no preview, when adding a new route/site, or when wiring SEO/AIO (llms.txt, structured data, agent-readiness). For tokens and brand use mzizi-design; for components use mzizi-roots.
+description: Use this skill whenever a Mzizi-ecosystem site or app needs to be found and correctly rendered by machines — social/messaging link previews (OpenGraph), search engines, and AI agents. Covers the doctrine ("if the machine can't see it, it doesn't exist"), the brand-agnostic Mzizi "hive" OG-image template (dynamic per page, carrying each page's title + description + site icon), the static-Astro implementation (the standard), the rules for a surface already on Next.js (next >= 16.3.6, no request input in an ImageResponse), APCA-checked text colours, and a pre-ship checklist. Reach for it when a shared link renders no preview, when adding a new route/site, or when wiring SEO/AIO (llms.txt, structured data, agent-readiness). For tokens and brand use mzizi-design; for components use mzizi-roots.
 user-invocable: true
 ---
 
@@ -90,34 +90,26 @@ Mzizi Roots components, they arrive as static HTML from `dioxus-ssr` and change 
 **Docs on Mintlify** (docs.mzizi.dev) get their preview images from Mintlify. Check them with a
 scraper like any other surface; do not hand-wire `og:image` there.
 
-## Reference template — Next.js (App Router)
+## A surface already on Next.js (App Router)
 
-`mzizi-registry` is a Next.js app and still carries the reference template at
-`lib/og/mzizi-og.tsx` (`renderMziziOg({ title, eyebrow, description, iconPath, domain })`),
-wired through `app/opengraph-image.tsx`. It no longer serves mzizi.dev. Do not start a new
-surface on Next.js; use this only for a surface that is already on it:
+Do not start a new surface on Next.js; the standard is the static Astro build above. There is
+no Next.js reference template to copy any more: `mzizi-registry` is not a Next.js app, and its
+`next/og` template (`lib/og/`) and OG routes were removed on 2026-10-02 over a critical RCE
+exposure (GHSA-vcvr-r3jv-pc5j, `next` >= 16.2.0 < 16.3.6): a route put the URL slug into a
+Node `ImageResponse`. Build the hive card from the design above. For a surface that is already
+on Next.js:
 
-```tsx
-// app/opengraph-image.tsx  (root)  — and app/<section>/[slug]/opengraph-image.tsx
-import { renderMziziOg, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og/mzizi-og"
-export const runtime = "nodejs"          // reads the icon PNG off disk
-export const size = OG_SIZE
-export const contentType = OG_CONTENT_TYPE
-export default function Image() {
-  return renderMziziOg({ title: "Mzizi" })   // per page: pass that page's title + description
-}
-```
-
-```ts
-// app/layout.tsx  — set metadataBase, DO NOT set openGraph.images / twitter.images
-export const metadata = {
-  metadataBase: new URL("https://example.org"),
-  openGraph: { type: "website", siteName: "Mzizi", title: "Mzizi", description: "…" },
-  twitter:   { card: "summary_large_image", title: "Mzizi", description: "…" },
-  // No `images` — the opengraph-image.tsx route supplies an absolute, hashed URL,
-  // and the twitter card falls back to it.
-}
-```
+- **Require `next` >= 16.3.6** (the patched line). Check the lockfile, not only the range.
+- **Never put request input into an `ImageResponse`.** No route param, slug, search param,
+  header or cookie goes into the image, as text or as a path. Look the slug up in the site's
+  own content and render only that entry's own title and description; an unknown slug is a
+  404 (`notFound()`), never a fallback that echoes it.
+- **Generate the images at build time.** Give each dynamic segment's `opengraph-image.tsx`
+  `generateStaticParams()` over the site's own content and `export const dynamicParams = false`,
+  so no OG image renders per request and an unknown path is a 404.
+- **Set `metadataBase` and never `openGraph.images` / `twitter.images`** in the layout's
+  `metadata`. The `opengraph-image.tsx` file convention supplies an absolute, hashed URL, and
+  the Twitter card falls back to it.
 
 ## Beyond the image — the rest of the convention
 
