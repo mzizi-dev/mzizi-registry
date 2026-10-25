@@ -1078,6 +1078,10 @@ export const connectionTokens = {
  * (`--status-neutral`), community → terracotta, otp ("Contact Verified") → cobalt,
  * government → gold, licensed → tanzanite. The `--tier-*` roles themselves are defined once,
  * in `lib/tokens/roles.source.ts`, and emitted by `pnpm tokens:sync`.
+ *
+ * LEGACY: this is the `bundu.verificationTier` projection (`legacy_tier()` in assurance.py).
+ * Each `--tier-*` role now aliases an assurance level or an attestation (`assuranceTokens`,
+ * `attestationTokens` below); read those in new code. Community is not a rung there.
  */
 export const verificationTokens = {
   unverified: {
@@ -1109,6 +1113,76 @@ export const verificationTokens = {
     css: "--tier-licensed",
     mineral: "tanzanite",
     label: "Licensed Professional",
+  },
+} as const
+
+/**
+ * Assurance levels — the Bundu trust model (nyuchi/nyuchi-api `gateway/lib/assurance.py`).
+ * Ordered 0–4, so `>=` is meaningful: how strongly an identity is proven. Each level reads its
+ * `--assurance-*` role (`lib/tokens/roles.source.ts`). `documented` → sodalite is new; the
+ * other minerals are the owner's ladder of 2026-10-24 (#543).
+ */
+export const assuranceTokens = {
+  none: {
+    value: "var(--assurance-none, var(--status-neutral))",
+    css: "--assurance-none",
+    level: 0,
+    role: "status-neutral",
+    label: "Unverified",
+  },
+  otp: {
+    value: "var(--assurance-otp, var(--color-cobalt, #00B0FF))",
+    css: "--assurance-otp",
+    level: 1,
+    mineral: "cobalt",
+    label: "Contact Verified",
+  },
+  documented: {
+    value: "var(--assurance-documented, var(--color-sodalite, #3D5AFE))",
+    css: "--assurance-documented",
+    level: 2,
+    mineral: "sodalite",
+    label: "Documents Checked",
+  },
+  government: {
+    value: "var(--assurance-government, var(--color-gold, #FFD740))",
+    css: "--assurance-government",
+    level: 3,
+    mineral: "gold",
+    label: "Government Verified",
+  },
+  licensed: {
+    value: "var(--assurance-licensed, var(--color-tanzanite, #B388FF))",
+    css: "--assurance-licensed",
+    level: 4,
+    mineral: "tanzanite",
+    label: "Licensed Professional",
+  },
+} as const
+
+/**
+ * Attestations — unordered, held alongside the assurance level: who vouches for the subject.
+ * Community is an attestation, never a rung below otp (assurance.py). Each reads its
+ * `--attestation-*` role; `business` → malachite and `domain` → copper are new.
+ */
+export const attestationTokens = {
+  community: {
+    value: "var(--attestation-community, var(--color-terracotta, #E1B07E))",
+    css: "--attestation-community",
+    mineral: "terracotta",
+    label: "Community Vouched",
+  },
+  business: {
+    value: "var(--attestation-business, var(--color-malachite, #64FFDA))",
+    css: "--attestation-business",
+    mineral: "malachite",
+    label: "Registered Business",
+  },
+  domain: {
+    value: "var(--attestation-domain, var(--color-copper, #FF8A65))",
+    css: "--attestation-domain",
+    mineral: "copper",
+    label: "Domain Verified",
   },
 } as const
 
@@ -1223,12 +1297,21 @@ export function generateStatusCSS(): string {
       if ("css" in token && "hex" in token) lines.push(`  ${token.css}: ${token.hex};`)
     }
   }
-  lines.push("  /* Verification tiers — the --tier-* roles (lib/tokens/roles.source.ts, #543) */")
-  lines.push("  --tier-unverified: var(--status-neutral);")
-  lines.push("  --tier-community: var(--color-terracotta, #E1B07E);")
-  lines.push("  --tier-otp: var(--color-cobalt, #00B0FF);")
-  lines.push("  --tier-government: var(--color-gold, #FFD740);")
-  lines.push("  --tier-licensed: var(--color-tanzanite, #B388FF);")
+  lines.push("  /* Assurance levels and attestations — the --assurance-* / --attestation-* roles (assurance.py) */")
+  lines.push("  --assurance-none: var(--status-neutral);")
+  lines.push("  --assurance-otp: var(--color-cobalt, #00B0FF);")
+  lines.push("  --assurance-documented: var(--color-sodalite, #3D5AFE);")
+  lines.push("  --assurance-government: var(--color-gold, #FFD740);")
+  lines.push("  --assurance-licensed: var(--color-tanzanite, #B388FF);")
+  lines.push("  --attestation-community: var(--color-terracotta, #E1B07E);")
+  lines.push("  --attestation-business: var(--color-malachite, #64FFDA);")
+  lines.push("  --attestation-domain: var(--color-copper, #FF8A65);")
+  lines.push("  /* Verification tiers — legacy aliases of the roles above (bundu.verificationTier) */")
+  lines.push("  --tier-unverified: var(--assurance-none);")
+  lines.push("  --tier-community: var(--attestation-community);")
+  lines.push("  --tier-otp: var(--assurance-otp);")
+  lines.push("  --tier-government: var(--assurance-government);")
+  lines.push("  --tier-licensed: var(--assurance-licensed);")
   lines.push("}")
   return lines.join("\n")
 }
@@ -1399,6 +1482,8 @@ export function generateTokensJSON(): string {
       notifications: notificationTokens,
       connection: connectionTokens,
       verification: verificationTokens,
+      assurance: assuranceTokens,
+      attestation: attestationTokens,
       crypto: cryptoTokens,
       moderation: moderationTokens,
       serviceHealth: serviceHealthTokens,

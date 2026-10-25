@@ -415,45 +415,109 @@ pub struct RoleColors {
     pub status_deprecated_on_container: &'static str,
     /// Lifecycle `deprecated`: an alias of `status-danger-text`.
     pub status_deprecated_text: &'static str,
-    /// Verification tier `unverified` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-unverified/15`).
+    /// Assurance level 0 `none` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — the part itself: badge icons, meter bars, tinted fills (`bg-assurance-none/15`).
+    pub assurance_none: &'static str,
+    /// Assurance level 0 `none` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — a soft fill behind its content (a chip or banner).
+    pub assurance_none_container: &'static str,
+    /// Assurance level 0 `none` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — text and icons on `assurance-none-container`.
+    pub assurance_none_on_container: &'static str,
+    /// Assurance level 0 `none` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — its name as text on the page.
+    pub assurance_none_text: &'static str,
+    /// Assurance level 1 `otp` ("Contact Verified", cobalt in the Mzizi pack) — the part itself: badge icons, meter bars, tinted fills (`bg-assurance-otp/15`).
+    pub assurance_otp: &'static str,
+    /// Assurance level 1 `otp` ("Contact Verified", cobalt in the Mzizi pack) — a soft fill behind its content (a chip or banner).
+    pub assurance_otp_container: &'static str,
+    /// Assurance level 1 `otp` ("Contact Verified", cobalt in the Mzizi pack) — text and icons on `assurance-otp-container`.
+    pub assurance_otp_on_container: &'static str,
+    /// Assurance level 1 `otp` ("Contact Verified", cobalt in the Mzizi pack) — its name as text on the page.
+    pub assurance_otp_text: &'static str,
+    /// Assurance level 2 `documented` ("Documents Checked", sodalite in the Mzizi pack) — the part itself: badge icons, meter bars, tinted fills (`bg-assurance-documented/15`).
+    pub assurance_documented: &'static str,
+    /// Assurance level 2 `documented` ("Documents Checked", sodalite in the Mzizi pack) — a soft fill behind its content (a chip or banner).
+    pub assurance_documented_container: &'static str,
+    /// Assurance level 2 `documented` ("Documents Checked", sodalite in the Mzizi pack) — text and icons on `assurance-documented-container`.
+    pub assurance_documented_on_container: &'static str,
+    /// Assurance level 2 `documented` ("Documents Checked", sodalite in the Mzizi pack) — its name as text on the page.
+    pub assurance_documented_text: &'static str,
+    /// Assurance level 3 `government` ("Government Verified", gold in the Mzizi pack) — the part itself: badge icons, meter bars, tinted fills (`bg-assurance-government/15`).
+    pub assurance_government: &'static str,
+    /// Assurance level 3 `government` ("Government Verified", gold in the Mzizi pack) — a soft fill behind its content (a chip or banner).
+    pub assurance_government_container: &'static str,
+    /// Assurance level 3 `government` ("Government Verified", gold in the Mzizi pack) — text and icons on `assurance-government-container`.
+    pub assurance_government_on_container: &'static str,
+    /// Assurance level 3 `government` ("Government Verified", gold in the Mzizi pack) — its name as text on the page.
+    pub assurance_government_text: &'static str,
+    /// Assurance level 4 `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — the part itself: badge icons, meter bars, tinted fills (`bg-assurance-licensed/15`).
+    pub assurance_licensed: &'static str,
+    /// Assurance level 4 `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — a soft fill behind its content (a chip or banner).
+    pub assurance_licensed_container: &'static str,
+    /// Assurance level 4 `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — text and icons on `assurance-licensed-container`.
+    pub assurance_licensed_on_container: &'static str,
+    /// Assurance level 4 `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — its name as text on the page.
+    pub assurance_licensed_text: &'static str,
+    /// Attestation `community` ("Community Vouched", terracotta in the Mzizi pack) — the part itself: badge icons, meter bars, tinted fills (`bg-attestation-community/15`).
+    pub attestation_community: &'static str,
+    /// Attestation `community` ("Community Vouched", terracotta in the Mzizi pack) — a soft fill behind its content (a chip or banner).
+    pub attestation_community_container: &'static str,
+    /// Attestation `community` ("Community Vouched", terracotta in the Mzizi pack) — text and icons on `attestation-community-container`.
+    pub attestation_community_on_container: &'static str,
+    /// Attestation `community` ("Community Vouched", terracotta in the Mzizi pack) — its name as text on the page.
+    pub attestation_community_text: &'static str,
+    /// Attestation `business` ("Registered Business", malachite in the Mzizi pack) — the part itself: badge icons, meter bars, tinted fills (`bg-attestation-business/15`).
+    pub attestation_business: &'static str,
+    /// Attestation `business` ("Registered Business", malachite in the Mzizi pack) — a soft fill behind its content (a chip or banner).
+    pub attestation_business_container: &'static str,
+    /// Attestation `business` ("Registered Business", malachite in the Mzizi pack) — text and icons on `attestation-business-container`.
+    pub attestation_business_on_container: &'static str,
+    /// Attestation `business` ("Registered Business", malachite in the Mzizi pack) — its name as text on the page.
+    pub attestation_business_text: &'static str,
+    /// Attestation `domain` ("Domain Verified", copper in the Mzizi pack) — the part itself: badge icons, meter bars, tinted fills (`bg-attestation-domain/15`).
+    pub attestation_domain: &'static str,
+    /// Attestation `domain` ("Domain Verified", copper in the Mzizi pack) — a soft fill behind its content (a chip or banner).
+    pub attestation_domain_container: &'static str,
+    /// Attestation `domain` ("Domain Verified", copper in the Mzizi pack) — text and icons on `attestation-domain-container`.
+    pub attestation_domain_on_container: &'static str,
+    /// Attestation `domain` ("Domain Verified", copper in the Mzizi pack) — its name as text on the page.
+    pub attestation_domain_text: &'static str,
+    /// Legacy verification tier `unverified` (`bundu.verificationTier`): an alias of `assurance-none`. Read the assurance and attestation roles in new code.
     pub tier_unverified: &'static str,
-    /// Verification tier `unverified` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    /// Legacy verification tier `unverified` (`bundu.verificationTier`): an alias of `assurance-none-container`. Read the assurance and attestation roles in new code.
     pub tier_unverified_container: &'static str,
-    /// Verification tier `unverified` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — text and icons on `tier-unverified-container`.
+    /// Legacy verification tier `unverified` (`bundu.verificationTier`): an alias of `assurance-none-on-container`. Read the assurance and attestation roles in new code.
     pub tier_unverified_on_container: &'static str,
-    /// Verification tier `unverified` ("Unverified", the neutral grey, `status-neutral`, in the Mzizi pack) — the tier's name as text on the page.
+    /// Legacy verification tier `unverified` (`bundu.verificationTier`): an alias of `assurance-none-text`. Read the assurance and attestation roles in new code.
     pub tier_unverified_text: &'static str,
-    /// Verification tier `community` ("Community Verified", terracotta in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-community/15`).
+    /// Legacy verification tier `community` (`bundu.verificationTier`): an alias of `attestation-community`. Read the assurance and attestation roles in new code.
     pub tier_community: &'static str,
-    /// Verification tier `community` ("Community Verified", terracotta in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    /// Legacy verification tier `community` (`bundu.verificationTier`): an alias of `attestation-community-container`. Read the assurance and attestation roles in new code.
     pub tier_community_container: &'static str,
-    /// Verification tier `community` ("Community Verified", terracotta in the Mzizi pack) — text and icons on `tier-community-container`.
+    /// Legacy verification tier `community` (`bundu.verificationTier`): an alias of `attestation-community-on-container`. Read the assurance and attestation roles in new code.
     pub tier_community_on_container: &'static str,
-    /// Verification tier `community` ("Community Verified", terracotta in the Mzizi pack) — the tier's name as text on the page.
+    /// Legacy verification tier `community` (`bundu.verificationTier`): an alias of `attestation-community-text`. Read the assurance and attestation roles in new code.
     pub tier_community_text: &'static str,
-    /// Verification tier `otp` ("Contact Verified", cobalt in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-otp/15`).
+    /// Legacy verification tier `otp` (`bundu.verificationTier`): an alias of `assurance-otp`. Read the assurance and attestation roles in new code.
     pub tier_otp: &'static str,
-    /// Verification tier `otp` ("Contact Verified", cobalt in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    /// Legacy verification tier `otp` (`bundu.verificationTier`): an alias of `assurance-otp-container`. Read the assurance and attestation roles in new code.
     pub tier_otp_container: &'static str,
-    /// Verification tier `otp` ("Contact Verified", cobalt in the Mzizi pack) — text and icons on `tier-otp-container`.
+    /// Legacy verification tier `otp` (`bundu.verificationTier`): an alias of `assurance-otp-on-container`. Read the assurance and attestation roles in new code.
     pub tier_otp_on_container: &'static str,
-    /// Verification tier `otp` ("Contact Verified", cobalt in the Mzizi pack) — the tier's name as text on the page.
+    /// Legacy verification tier `otp` (`bundu.verificationTier`): an alias of `assurance-otp-text`. Read the assurance and attestation roles in new code.
     pub tier_otp_text: &'static str,
-    /// Verification tier `government` ("Government Verified", gold in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-government/15`).
+    /// Legacy verification tier `government` (`bundu.verificationTier`): an alias of `assurance-government`. Read the assurance and attestation roles in new code.
     pub tier_government: &'static str,
-    /// Verification tier `government` ("Government Verified", gold in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    /// Legacy verification tier `government` (`bundu.verificationTier`): an alias of `assurance-government-container`. Read the assurance and attestation roles in new code.
     pub tier_government_container: &'static str,
-    /// Verification tier `government` ("Government Verified", gold in the Mzizi pack) — text and icons on `tier-government-container`.
+    /// Legacy verification tier `government` (`bundu.verificationTier`): an alias of `assurance-government-on-container`. Read the assurance and attestation roles in new code.
     pub tier_government_on_container: &'static str,
-    /// Verification tier `government` ("Government Verified", gold in the Mzizi pack) — the tier's name as text on the page.
+    /// Legacy verification tier `government` (`bundu.verificationTier`): an alias of `assurance-government-text`. Read the assurance and attestation roles in new code.
     pub tier_government_text: &'static str,
-    /// Verification tier `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — the tier itself: badge icons, meter bars, tinted fills (`bg-tier-licensed/15`).
+    /// Legacy verification tier `licensed` (`bundu.verificationTier`): an alias of `assurance-licensed`. Read the assurance and attestation roles in new code.
     pub tier_licensed: &'static str,
-    /// Verification tier `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — a soft fill behind tier content (a tier chip or banner).
+    /// Legacy verification tier `licensed` (`bundu.verificationTier`): an alias of `assurance-licensed-container`. Read the assurance and attestation roles in new code.
     pub tier_licensed_container: &'static str,
-    /// Verification tier `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — text and icons on `tier-licensed-container`.
+    /// Legacy verification tier `licensed` (`bundu.verificationTier`): an alias of `assurance-licensed-on-container`. Read the assurance and attestation roles in new code.
     pub tier_licensed_on_container: &'static str,
-    /// Verification tier `licensed` ("Licensed Professional", tanzanite in the Mzizi pack) — the tier's name as text on the page.
+    /// Legacy verification tier `licensed` (`bundu.verificationTier`): an alias of `assurance-licensed-text`. Read the assurance and attestation roles in new code.
     pub tier_licensed_text: &'static str,
     /// Chart series 1. Mzizi: cobalt.
     pub chart_1: &'static str,
@@ -629,6 +693,38 @@ impl Roles {
                 status_deprecated_container: "#F5E6D3",
                 status_deprecated_on_container: "#5D2906",
                 status_deprecated_text: "#844425",
+                assurance_none: "#55514B",
+                assurance_none_container: "#E5E4E1",
+                assurance_none_on_container: "#373635",
+                assurance_none_text: "#575655",
+                assurance_otp: "#0047AB",
+                assurance_otp_container: "#E3F2FD",
+                assurance_otp_on_container: "#002966",
+                assurance_otp_text: "#0047AB",
+                assurance_documented: "#283593",
+                assurance_documented_container: "#E8EAF6",
+                assurance_documented_on_container: "#141A5C",
+                assurance_documented_text: "#283593",
+                assurance_government: "#5D4037",
+                assurance_government_container: "#FFF8E1",
+                assurance_government_on_container: "#3E2723",
+                assurance_government_text: "#5D4037",
+                assurance_licensed: "#4B0082",
+                assurance_licensed_container: "#F3E5F5",
+                assurance_licensed_on_container: "#2E004D",
+                assurance_licensed_text: "#4B0082",
+                attestation_community: "#A0522D",
+                attestation_community_container: "#F5E6D3",
+                attestation_community_on_container: "#5D2906",
+                attestation_community_text: "#844425",
+                attestation_business: "#004D40",
+                attestation_business_container: "#E0F2F1",
+                attestation_business_on_container: "#00332B",
+                attestation_business_text: "#004D40",
+                attestation_domain: "#BF5A36",
+                attestation_domain_container: "#FBE4DA",
+                attestation_domain_on_container: "#5C2410",
+                attestation_domain_text: "#894027",
                 tier_unverified: "#55514B",
                 tier_unverified_container: "#E5E4E1",
                 tier_unverified_on_container: "#373635",
@@ -766,6 +862,38 @@ impl Roles {
                 status_deprecated_container: "#3E2817",
                 status_deprecated_on_container: "#F5E6D3",
                 status_deprecated_text: "#EBCCA3",
+                assurance_none: "#A09C93",
+                assurance_none_container: "#1E1D1A",
+                assurance_none_on_container: "#E5E5E3",
+                assurance_none_text: "#CCCCCA",
+                assurance_otp: "#00B0FF",
+                assurance_otp_container: "#001F3F",
+                assurance_otp_on_container: "#B3E5FC",
+                assurance_otp_text: "#86DCFF",
+                assurance_documented: "#4B66FE",
+                assurance_documented_container: "#0D1442",
+                assurance_documented_on_container: "#C7CCEA",
+                assurance_documented_text: "#C6CFFF",
+                assurance_government: "#FFD740",
+                assurance_government_container: "#332200",
+                assurance_government_on_container: "#FFECB3",
+                assurance_government_text: "#FFD740",
+                assurance_licensed: "#B388FF",
+                assurance_licensed_container: "#1A0033",
+                assurance_licensed_on_container: "#E3C2E8",
+                assurance_licensed_text: "#DCC8FF",
+                attestation_community: "#E1B07E",
+                attestation_community_container: "#3E2817",
+                attestation_community_on_container: "#F5E6D3",
+                attestation_community_text: "#EBCCA3",
+                attestation_business: "#64FFDA",
+                attestation_business_container: "#00251A",
+                attestation_business_on_container: "#A7FFEB",
+                attestation_business_text: "#64FFDA",
+                attestation_domain: "#FF8A65",
+                attestation_domain_container: "#3A1A0E",
+                attestation_domain_on_container: "#FFD3C2",
+                attestation_domain_text: "#FFC3B0",
                 tier_unverified: "#A09C93",
                 tier_unverified_container: "#1E1D1A",
                 tier_unverified_on_container: "#E5E5E3",
