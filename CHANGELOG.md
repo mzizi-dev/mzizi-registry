@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the trust model in the components: assurance levels, attestation chips, `legacyTierToAssurance` (2026-10-25, #PR2)
+
+The components side of [#577](https://github.com/mzizi-dev/mzizi-registry/issues/577), on the roles from #578. Community is shown as an attestation beside the level, never as a rung below otp.
+
+- **`mzizi-trust-tier-data`** gains the model from nyuchi-api `assurance.py`: `ASSURANCE_ORDER` / `ASSURANCE_DATA` (none "Unverified", otp "Contact Verified", documented "Documents Checked", government "Government Verified", licensed "Licensed Professional") and `ATTESTATION_ORDER` / `ATTESTATION_DATA` ("Community Vouched", "Registered Business", "Domain Verified"), each with its mineral, a `site-icons` glyph (phone, file, shield-check, award; users, building, globe), its token names and complete literal classes; and `assuranceAt`, `nextAssurance`, `normalizeAttestations` (revoked and unknown dropped, as `normalize_attestations` does), `legacyTierToAssurance` (community becomes level none plus a community attestation, as `assurance_from_document` reads it) and `legacyTier` (the `legacy_tier()` projection). `TIER_ORDER`, `TIER_DATA` and every other export are unchanged.
+- **`mzizi-trust-tiers`** adds `ASSURANCE_CONFIG` and `ATTESTATION_CONFIG` (Lucide icons, `fg`/`bg` in `TIER_CONFIG`'s shape) and re-exports the helpers. `TIER_CONFIG` is unchanged.
+- **`app/tier-status` 1.1.0** (Astro and React): new `assurance`, `attestationTypes`, `levelLabels` and `attestationLabels` props, and `copy.attested`. The ladder is the five assurance levels (`li[data-level]`), with the attestations as a named list of chips in their `--attestation-*` pairs under the current level. `tier` is still accepted and read into the model, so **`tier="community"` now shows level Unverified plus a "Community Vouched" chip instead of a Community rung**, and the ladder's classes move from `--tier-*` to `--assurance-*`. 4 new states (community, tuckshop, firm, documented): 8 states, 15 clauses, 34 checks.
+- **`ui/mzizi-verified-badge` 1.1.0** (Astro and React): new `assurance`, `attestations` and `groupLabel` props. The level is one badge in its `--assurance-*` pair and each attestation its own badge; more than one sit in a named `role="group"` (`data-slot="mzizi-verified-badge-group"`). `tier` renders exactly as before. 5 new states.
+- **`ui/mzizi-trust-meter` 2.2.0**: `assurance` colours the Verification signal with its `--assurance-*` role, ahead of `tier`.
+
 ### Added — assurance levels and attestations as N1 roles; `--tier-*` become aliases (2026-10-25, #578)
 
 The Bundu trust model from `nyuchi/nyuchi-api` `gateway/lib/assurance.py` ([#577](https://github.com/mzizi-dev/mzizi-registry/issues/577)): assurance levels are ordered (0 none, 1 otp, 2 documented, 3 government, 4 licensed), and attestations are unordered and held beside the level (community, business, domain). Community is an attestation, not a rung below otp.

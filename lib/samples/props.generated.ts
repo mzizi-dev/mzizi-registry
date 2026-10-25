@@ -1415,9 +1415,19 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
   ],
   "app-tier-status": [
     {
+      "name": "assurance",
+      "type": "AssuranceLevel",
+      "required": false
+    },
+    {
+      "name": "attestationTypes",
+      "type": "AttestationInput[]",
+      "required": false
+    },
+    {
       "name": "tier",
       "type": "VerificationTier",
-      "required": true
+      "required": false
     },
     {
       "name": "attestations",
@@ -1437,6 +1447,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "title",
       "type": "string",
+      "required": false
+    },
+    {
+      "name": "levelLabels",
+      "type": "Partial<Record<AssuranceLevel, string>>",
+      "required": false
+    },
+    {
+      "name": "attestationLabels",
+      "type": "Partial<Record<AttestationType, string>>",
       "required": false
     },
     {
@@ -10962,6 +10982,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "assurance",
+      "type": "\"none\" | \"otp\" | \"documented\" | \"government\" | \"licensed\"",
+      "required": false
+    },
+    {
       "name": "statusLabel",
       "type": "string",
       "required": false
@@ -11077,7 +11102,22 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "tier",
       "type": "VerificationTier",
-      "required": true
+      "required": false
+    },
+    {
+      "name": "assurance",
+      "type": "AssuranceLevel",
+      "required": false
+    },
+    {
+      "name": "attestations",
+      "type": "AttestationInput[]",
+      "required": false
+    },
+    {
+      "name": "groupLabel",
+      "type": "string",
+      "required": false
     },
     {
       "name": "status",

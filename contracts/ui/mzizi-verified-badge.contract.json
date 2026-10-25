@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/mzizi-verified-badge",
   "title": "MziziVerifiedBadge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "node": 3,
   "kind": "primitive",
   "summary": "The compact view of trust: a round mark in the verification tier's colour, named by the tier (\"Government Verified\"). Tier 0 renders nothing; a suspended account shows the ban glyph, an ancestral one the memorial flower. The trust score is in the name only with `showScore`. Server-rendered; colour from the tier's own --tier-* container pair.",
@@ -28,9 +28,30 @@
     {
       "name": "tier",
       "type": "\"unverified\" | \"community\" | \"otp\" | \"government\" | \"licensed\"",
-      "required": true,
+      "required": false,
       "values": ["unverified", "community", "otp", "government", "licensed"],
-      "description": "The verification tier code (system.verification_tier.tier_code). `unverified` renders nothing."
+      "description": "Legacy: the verification tier code (bundu.verificationTier, the projection `legacy_tier()` in assurance.py). Ignored when `assurance` is set. `unverified` renders nothing.",
+      "default": "unverified"
+    },
+    {
+      "name": "assurance",
+      "type": "\"none\" | \"otp\" | \"documented\" | \"government\" | \"licensed\"",
+      "required": false,
+      "values": ["none", "otp", "documented", "government", "licensed"],
+      "description": "The assurance level (nyuchi/nyuchi-api `gateway/lib/assurance.py`). With it the level is one badge in its --assurance-* pair, and `attestations` show as badges of their own beside it. `none` renders no level badge."
+    },
+    {
+      "name": "attestations",
+      "type": "(\"community\" | \"business\" | \"domain\" | { type: string; revokedAt?: string | null })[]",
+      "required": false,
+      "default": [],
+      "description": "With `assurance`: the attestations in force, as type names or stored records. Revoked and unknown ones are dropped. Each is its own badge in its --attestation-* pair (Community Vouched, Registered Business, Domain Verified), never a rung."
+    },
+    {
+      "name": "groupLabel",
+      "type": "string",
+      "required": false,
+      "description": "The accessible name of the group when more than one badge shows. Defaults to the badges' names, joined."
     },
     {
       "name": "status",
@@ -103,28 +124,47 @@
     "With `showTooltip` (the default) the title is the name, without `ariaLabel`'s override.",
     "Each tier draws from its own pair: fill `bg-tier-<tier>-container` and glyph `text-tier-<tier>-on-container`. Suspended uses the unverified (neutral) pair. The glyphs are users, phone, shield-check and award; ban when suspended; flower when ancestral.",
     "Tier 0 (`unverified`) renders nothing; a consumer that must state it names it in text.",
-    "`loading` renders a muted pulsing placeholder with aria-hidden, and no name."
+    "`loading` renders a muted pulsing placeholder with aria-hidden, and no name.",
+    "With `assurance` (the trust model, #577): the level is a badge in its own pair (`bg-assurance-<level>-container`, `text-assurance-<level>-on-container`; glyphs phone, file, shield-check, award) named by the level's label (Contact Verified, Documents Checked, Government Verified, Licensed Professional). Each attestation is a further badge in `bg-attestation-<type>-container` / `text-attestation-<type>-on-container` (glyphs users, building, globe). `none` with nothing attested renders nothing.",
+    "One badge renders alone, as with `tier`. More than one sit in a `<span role=\"group\">` (`data-slot=\"mzizi-verified-badge-group\"`) named by `groupLabel`, else by the badges' names joined. Community is never shown as a rung below otp; it is an attestation badge beside the level.",
+    "A suspended account is one ban badge on the neutral pair whatever it holds. The score, `data-tier` and `data-level` come from the legacy projection (`legacy_tier()`); the level badge also carries `data-assurance` and `data-rank`, and each attestation badge `data-attestation`."
   ],
   "states": {
     "default": {
-      "props": { "tier": "government" }
+      "props": {
+        "tier": "government"
+      }
     },
     "community": {
-      "props": { "tier": "community" }
+      "props": {
+        "tier": "community"
+      }
     },
     "otp": {
-      "props": { "tier": "otp", "size": "sm" }
+      "props": {
+        "tier": "otp",
+        "size": "sm"
+      }
     },
     "licensed": {
-      "props": { "tier": "licensed", "size": "xl" }
+      "props": {
+        "tier": "licensed",
+        "size": "xl"
+      }
     },
     "score": {
       "description": "The cumulative score in the name, for a trust audit.",
-      "props": { "tier": "otp", "showScore": true }
+      "props": {
+        "tier": "otp",
+        "showScore": true
+      }
     },
     "label": {
       "description": "The app's own words for the tier.",
-      "props": { "tier": "licensed", "label": "Registered nurse" }
+      "props": {
+        "tier": "licensed",
+        "label": "Registered nurse"
+      }
     },
     "aria": {
       "description": "A short title and a fuller accessible name.",
@@ -136,29 +176,89 @@
       }
     },
     "untitled": {
-      "props": { "tier": "community", "showTooltip": false }
+      "props": {
+        "tier": "community",
+        "showTooltip": false
+      }
     },
     "suspended": {
-      "props": { "tier": "otp", "status": "suspended" }
+      "props": {
+        "tier": "otp",
+        "status": "suspended"
+      }
     },
     "ancestral": {
-      "props": { "tier": "otp", "status": "verified_ancestral" }
+      "props": {
+        "tier": "otp",
+        "status": "verified_ancestral"
+      }
     },
     "unverified": {
       "description": "Tier 0: nothing is rendered.",
-      "props": { "tier": "unverified" }
+      "props": {
+        "tier": "unverified"
+      }
     },
     "loading": {
-      "props": { "tier": "government", "loading": true }
+      "props": {
+        "tier": "government",
+        "loading": true
+      }
+    },
+    "assurance": {
+      "description": "The trust model: Documents Checked alone.",
+      "props": {
+        "assurance": "documented"
+      }
+    },
+    "tuckshop": {
+      "description": "A tuck shop: Contact Verified and vouched for by its street, as two badges in a named group.",
+      "props": {
+        "assurance": "otp",
+        "attestations": ["community"]
+      }
+    },
+    "firm": {
+      "description": "A registered firm: Government Verified with business and domain; a revoked attestation is dropped.",
+      "props": {
+        "assurance": "government",
+        "attestations": [
+          "business",
+          {
+            "type": "domain",
+            "revokedAt": null
+          },
+          {
+            "type": "community",
+            "revokedAt": "2026-09-01T00:00:00Z"
+          }
+        ],
+        "groupLabel": "Kweli Foods verification",
+        "size": "lg"
+      }
+    },
+    "vouched": {
+      "description": "No level proven, community attested: one community badge, no level badge.",
+      "props": {
+        "assurance": "none",
+        "attestations": ["community"]
+      }
+    },
+    "none": {
+      "description": "No level and nothing attested: nothing is rendered.",
+      "props": {
+        "assurance": "none"
+      }
     }
   },
   "accessibility": {
-    "roles": ["img"],
+    "roles": ["img", "group (when more than one badge shows)"],
     "keyboard": ["Nothing in it is interactive."],
     "focus": ["Not focusable."],
     "aria": [
       "role=\"img\" named by aria-label (the tier's name, or `label` / `ariaLabel`); the score is in the name only with `showScore`.",
-      "The glyph is aria-hidden; the loading placeholder is aria-hidden."
+      "The glyph is aria-hidden; the loading placeholder is aria-hidden.",
+      "With more than one badge, a role=\"group\" named by `groupLabel` (or the names joined) holds one role=\"img\" per badge, each named by its own label."
     ],
     "wcag": ["1.1.1", "1.4.1", "1.4.11", "4.1.2"]
   },
@@ -175,9 +275,25 @@
       "--tier-government-container",
       "--tier-government-on-container",
       "--tier-licensed-container",
-      "--tier-licensed-on-container"
+      "--tier-licensed-on-container",
+      "--assurance-none-container",
+      "--assurance-none-on-container",
+      "--assurance-otp-container",
+      "--assurance-otp-on-container",
+      "--assurance-documented-container",
+      "--assurance-documented-on-container",
+      "--assurance-government-container",
+      "--assurance-government-on-container",
+      "--assurance-licensed-container",
+      "--assurance-licensed-on-container",
+      "--attestation-community-container",
+      "--attestation-community-on-container",
+      "--attestation-business-container",
+      "--attestation-business-on-container",
+      "--attestation-domain-container",
+      "--attestation-domain-on-container"
     ],
-    "brandOverlay": "None: a tier's colour is its --tier-* role (defined once in the N1 tokens, #543), the same in every brand.",
+    "brandOverlay": "None: a tier's colour is its --tier-* role, a level's its --assurance-* role and an attestation's its --attestation-* role (defined once in the N1 tokens, #543, #577; --tier-* alias the new roles), the same in every brand.",
     "statusColours": []
   },
   "noJs": {
@@ -185,7 +301,7 @@
     "without": "Everything: the badge is rendered on the server."
   },
   "responsive": ["A fixed size per `size`; it never grows with its container."],
-  "contract": "contract\n  slot is \"mzizi-verified-badge\"\n  role is \"img\"\n  portal is \"https://mzizi.dev/components/mzizi-verified-badge\"\n  label is \"Government Verified\"\n  when score label is \"Contact Verified · Trust 0.2\"\n  when label label is \"Registered nurse\"\n  when suspended label is \"Account Suspended\"\n  when ancestral label is \"Contact Verified — Memorial\"\n  when licensed class contains \"size-8\"\nend",
+  "contract": "contract\n  slot is \"mzizi-verified-badge\"\n  role is \"img\"\n  portal is \"https://mzizi.dev/components/mzizi-verified-badge\"\n  label is \"Government Verified\"\n  when score label is \"Contact Verified · Trust 0.2\"\n  when label label is \"Registered nurse\"\n  when suspended label is \"Account Suspended\"\n  when ancestral label is \"Contact Verified — Memorial\"\n  when licensed class contains \"size-8\"\n  when assurance label is \"Documents Checked\"\n  when tuckshop role is \"group\"\n  when tuckshop label is \"Contact Verified, Community Vouched\"\n  when firm label is \"Kweli Foods verification\"\n  when vouched label is \"Community Vouched\"\nend",
   "checks": [
     {
       "say": "The badge is a named image with its tier and level.",
@@ -232,14 +348,18 @@
       "state": "score",
       "select": "[data-slot=\"mzizi-verified-badge\"]",
       "count": 1,
-      "attr": { "title": "Contact Verified · Trust 0.2" }
+      "attr": {
+        "title": "Contact Verified · Trust 0.2"
+      }
     },
     {
       "say": "label replaces the built-in wording everywhere.",
       "state": "label",
       "select": "[data-slot=\"mzizi-verified-badge\"]",
       "count": 1,
-      "attr": { "title": "Registered nurse" }
+      "attr": {
+        "title": "Registered nurse"
+      }
     },
     {
       "say": "ariaLabel sets the accessible name alone; the title keeps the label.",
@@ -262,7 +382,9 @@
       "state": "untitled",
       "select": "[data-slot=\"mzizi-verified-badge\"]",
       "count": 1,
-      "attr": { "aria-label": "Community Verified" }
+      "attr": {
+        "aria-label": "Community Verified"
+      }
     },
     {
       "say": "Suspended shows the ban glyph on the neutral pair.",
@@ -280,6 +402,76 @@
       "say": "Tier 0 renders nothing.",
       "state": "unverified",
       "select": "[data-slot=\"mzizi-verified-badge\"]",
+      "absent": true
+    },
+    {
+      "say": "An assurance level wears its own --assurance-* pair and glyph.",
+      "state": "assurance",
+      "select": "[data-slot=\"mzizi-verified-badge\"][role=\"img\"][data-assurance=\"documented\"][data-rank=\"2\"].bg-assurance-documented-container.text-assurance-documented-on-container svg[data-icon=\"file\"]",
+      "count": 1
+    },
+    {
+      "say": "Documents Checked projects to the legacy otp tier.",
+      "state": "assurance",
+      "select": "[data-slot=\"mzizi-verified-badge\"]",
+      "count": 1,
+      "attr": {
+        "data-tier": "otp",
+        "aria-label": "Documents Checked"
+      }
+    },
+    {
+      "say": "Level and attestation are separate badges in a group.",
+      "state": "tuckshop",
+      "select": "[data-slot=\"mzizi-verified-badge-group\"][role=\"group\"] > [data-slot=\"mzizi-verified-badge\"][role=\"img\"]",
+      "count": 2
+    },
+    {
+      "say": "The level comes first, in cobalt's pair; community is its own badge beside it.",
+      "state": "tuckshop",
+      "select": "[data-slot=\"mzizi-verified-badge-group\"] > :first-child.bg-assurance-otp-container + [data-attestation=\"community\"].bg-attestation-community-container.text-attestation-community-on-container svg[data-icon=\"users\"]",
+      "count": 1
+    },
+    {
+      "say": "Community is never ranked: the level badge stays otp.",
+      "state": "tuckshop",
+      "select": "[data-assurance=\"otp\"][data-tier=\"otp\"]",
+      "count": 1
+    },
+    {
+      "say": "Business and domain wear malachite's and copper's pairs; the revoked community is dropped.",
+      "state": "firm",
+      "select": "[data-attestation=\"business\"].bg-attestation-business-container svg[data-icon=\"building\"], [data-attestation=\"domain\"].bg-attestation-domain-container svg[data-icon=\"globe\"]",
+      "count": 2
+    },
+    {
+      "say": "The revoked attestation is not shown.",
+      "state": "firm",
+      "select": "[data-attestation=\"community\"]",
+      "absent": true
+    },
+    {
+      "say": "Every badge in the group takes the size.",
+      "state": "firm",
+      "select": "[data-slot=\"mzizi-verified-badge\"].size-6",
+      "count": 3
+    },
+    {
+      "say": "No level proven, community attested: one badge, the community one.",
+      "state": "vouched",
+      "select": "[data-slot=\"mzizi-verified-badge\"][data-attestation=\"community\"]",
+      "count": 1
+    },
+    {
+      "say": "No level badge for none.",
+      "state": "vouched",
+      "select": "[data-assurance]",
+      "absent": true
+    },
+    {
+      "say": "No level and nothing attested renders nothing.",
+      "state": "none",
+      "select": "[data-slot]",
       "absent": true
     },
     {
