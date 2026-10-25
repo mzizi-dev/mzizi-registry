@@ -65,6 +65,11 @@ interface MziziTrustMeterProps {
    * that tier's `--tier-*` role. Without it the signal is `--status-warning`.
    */
   tier?: "unverified" | "community" | "otp" | "government" | "licensed"
+  /**
+   * The assurance level (nyuchi-api `assurance.py`, #577): colours the Verification signal with
+   * that level's `--assurance-*` role. Takes precedence over `tier`.
+   */
+  assurance?: "none" | "otp" | "documented" | "government" | "licensed"
   /** Platform status label */
   statusLabel?: string
   /** Compact mode — just the meter bar, no signal breakdown */
@@ -128,6 +133,21 @@ const TIER_FILL = {
   government: "fill-tier-government",
   licensed: "fill-tier-licensed",
 } as const
+/** The same, by assurance level (#577): the `--assurance-*` roles. */
+const ASSURANCE_TEXT = {
+  none: "text-assurance-none-text",
+  otp: "text-assurance-otp-text",
+  documented: "text-assurance-documented-text",
+  government: "text-assurance-government-text",
+  licensed: "text-assurance-licensed-text",
+} as const
+const ASSURANCE_FILL = {
+  none: "fill-assurance-none",
+  otp: "fill-assurance-otp",
+  documented: "fill-assurance-documented",
+  government: "fill-assurance-government",
+  licensed: "fill-assurance-licensed",
+} as const
 
 function MziziTrustMeter({
   loading = false,
@@ -138,6 +158,7 @@ function MziziTrustMeter({
   ubuntuPoints,
   tierLabel,
   tier,
+  assurance,
   statusLabel,
   compact = false,
   title = "Trust Score",
@@ -178,8 +199,8 @@ function MziziTrustMeter({
       label: "Verification",
       icon: "shield",
       value: verificationScore,
-      text: tier ? TIER_TEXT[tier] : "text-status-warning",
-      fill: tier ? TIER_FILL[tier] : "fill-status-warning",
+      text: assurance ? ASSURANCE_TEXT[assurance] : tier ? TIER_TEXT[tier] : "text-status-warning",
+      fill: assurance ? ASSURANCE_FILL[assurance] : tier ? TIER_FILL[tier] : "fill-status-warning",
       detail: tierLabel,
     },
     {
