@@ -10,6 +10,11 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the Claude Code plugin carries `@nyuchi/mzizi-skills` 0.13.0 (2026-10-25)
+
+- **`@nyuchi/mzizi-skills` is required at `>=0.13.0`** (from `>=0.8.5`), `pnpm skills:generate` regenerates `lib/skills.generated.ts` (what `/v1/skills` and the MCP serve from) from it, and `pnpm plugin:skills` regenerates `plugin/skills/`: 7 skills, 14 files. The copy had stayed at 0.8.5, so the plugin still taught verification as one five-rung `--tier-*` ladder. Now `mzizi-design` teaches assurance levels (`--assurance-*`) plus attestations (`--attestation-*`), matching the 4.17.0 roles (agent-tools #274). `mzizi-roots` names the Roots crates at 0.6.0 (`version = "0.6"`). The `dev` skills `digital-hygiene` and `progress-report` are added to the plugin, and `mzizi-language`, `mzizi-backend` and `discoverability` move to their 0.13.0 text.
+- **The public Claude Code plugin is 1.3.0** (`plugin/.claude-plugin/plugin.json`, minor, because it adds two skills). Its description and the marketplace entry now name seven skills and skills 0.13.0.
+
 ## [4.17.0] - 2026-10-25
 
 Releases `staging` to `main` as the next minor above v4.16.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.17.0, and the Mzizi Roots crates move to **0.6.0** (`[workspace.package] version` and the path-dependency versions; `mzizi-mongodb` now requires `mzizi-data` and `mzizi-harness` `>=0.6.0`), because the generated Rust token pack in `mzizi-tokens` carries the new roles. It carries the Bundu trust model ([#577](https://github.com/mzizi-dev/mzizi-registry/issues/577), from nyuchi-api `gateway/lib/assurance.py`): the `--assurance-*` levels and `--attestation-*` roles in N1, with `--tier-*` kept as aliases (#578), and the trust components on that model: `mzizi-trust-tier-data`, `app/tier-status` 1.1.0, `ui/mzizi-verified-badge` 1.1.0 and `ui/mzizi-trust-meter` 2.2.0 (#579).

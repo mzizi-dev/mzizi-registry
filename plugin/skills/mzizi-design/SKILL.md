@@ -1,6 +1,6 @@
 ---
 name: mzizi-design
-description: Use this skill for the Mzizi design system and brand — generating well-branded interfaces (production or prototype), design tokens, and ecosystem-level work. Contains the canonical 21-family Mzizi palette (seven African Minerals + seven Heritage tones + the Experimental Seven) with generated stylesheets (tokens/palette.css, tokens-update.css), the radius scale, Noto Sans/Serif + JetBrains Mono type, pill buttons and the 48px touch floor, status and surface tokens, the verified brand constellation (every brand's mineral, voice, meaning, URL; Mzizi's own is hematite, a Heritage tone), the ecosystem identity (copper), the five Ubuntu pillars + five principles, what is and isn't an ecosystem app, and the wordmarks.
+description: Use this skill for the Mzizi design system and brand — generating well-branded interfaces (production or prototype), design tokens, and ecosystem-level work. Contains the canonical 21-family Mzizi palette (seven African Minerals + seven Heritage tones + the Experimental Seven) with generated stylesheets (tokens/palette.css, tokens-update.css), the radius scale, Noto Sans/Serif + JetBrains Mono type, pill buttons and the 48px touch floor, status and surface tokens, the Mzizi Dashboard Standard's and Discover Standard's brand overlays (colour and mark only; status colours never follow the brand; Discover controls are 44–48px on every pointer), the verified brand constellation (every brand's mineral, voice, meaning, URL; Mzizi's own is hematite, a Heritage tone), the ecosystem identity (copper), the five Ubuntu pillars + five principles, what is and isn't an ecosystem app, and the wordmarks.
 user-invocable: true
 ---
 
@@ -31,8 +31,8 @@ All generated from `palette.canonical.json` at the package root by
 toolchain, the design language, the component registry and the open doctrine every brand builds
 on. Everything revenue-generating (the
 Mzizi console, fundi, paid plans, billing) is Nyuchi's. Three pillars: **mukoko** (consumer super app), **nyuchi** (infrastructure &
-enterprise), and the **sister brands** (specialist verticals) — one identity, one design system, one
-open data commons.
+enterprise), and **shamwari ai** (the intelligence pillar), with the **sister brands** as specialist
+verticals — one identity, one design system, one open data commons.
 
 Doctrine **v4.1.0**. **The repo is the source of truth, and there is no database.** Colour
 comes from `palette.canonical.json` at the root of this package — 21 families, vendored from
@@ -75,7 +75,7 @@ and register — never default everything to tanzanite.
 | **mukoko**   | Africa's super app                          | tanzanite  | Beehive    | welcoming, structured, protective      |
 | **shamwari** | Sovereign AI companion                      | sodalite   | Friend     | helpful, warm, intelligent             |
 | **Mzizi**    | The root: language, registry, design system | hematite ¹ | Root       | precise, honest, grounded              |
-| nhimbe       | Events & gatherings                         | malachite  | Gathering  | celebratory, communal, vibrant         |
+| events       | Events & gatherings (Mukoko Events)         | malachite  | Gathering  | celebratory, communal, vibrant         |
 | bushtrade    | Marketplace                                 | gold       | Bush trade | practical, trustworthy, local          |
 | lingo        | Language learning                           | cobalt     | Language   | encouraging, cultural, playful         |
 | campfire     | Platform messaging anchor                   | malachite  | Campfire   | direct, warm, always present           |
@@ -88,9 +88,22 @@ and register — never default everything to tanzanite.
 | pulse        | Feed & Mukoko Home                          | tanzanite  | Pulse      | personal, adaptive, ambient            |
 | health       | Wellness & telemedicine                     | malachite  | Health     | caring, accurate, private              |
 | circles      | Community messaging                         | terracotta | Circles    | inclusive, moderated, community-driven |
+| kweli        | Trust and verification                      | malachite  | Truth      | honest, rigorous, reassuring           |
+| learning     | Education (Nyuchi Learning)                 | gold       | Learning   | patient, practical, encouraging        |
+| news         | News and journalism                         | cobalt     | News       | clear, credible, balanced              |
+| weather      | Weather and alerts                          | cobalt     | Weather    | calm, precise, timely                  |
 
 The `bundu` row is the ecosystem layer as `/v1/brand` serves it today; the table mirrors the
-registry, so it changes when mzizi-registry renames the entry.
+registry, so it changes when mzizi-registry renames the entry. The last four rows joined canon
+on 2026-10-04 (owner decisions, mzizi-registry #409): kweli is malachite (it used to borrow
+Mukoko's tanzanite), news and weather are cobalt, and **learning is gold** because every Nyuchi
+brand is gold. The education industry category follows it: education is gold, not cobalt.
+
+The `events` row is **Mukoko Events**, at `events.mukoko.com` (owner decision,
+2026-10-04). The _nhimbe_ brand is retired. `nhimbe` survives only as a deprecated alias of
+`events`: canon still resolves it, and `brand-nhimbe.css` re-exports `brand-events.css`, so
+nothing that names it breaks. New work names `events` and writes "Mukoko Events" in copy. The
+mineral is unchanged: malachite.
 
 ¹ **Mzizi's brand colour is hematite, and hematite is a Heritage tone, not one of the seven
 minerals** (owner decision, 2026-09-30). `/v1/brand` serves it in `.ecosystem` as
@@ -129,7 +142,7 @@ when the feature or message genuinely embodies it.
 ### Rules for ecosystem-level work
 
 - **Wordmarks:** `Mzizi` is capitalised. Every other wordmark is lowercase: `nyuchi`, `mukoko`,
-  `shamwari`, `bundu`, `nhimbe` and every sister brand.
+  `shamwari`, `bundu` and every sister brand.
 - **Copper accents** signal "this is the ecosystem speaking" (parent-level pages, governance,
   commons, manifesto-register material).
 - **Cross-brand layouts:** lead with the brand that owns the message; bring in the constellation
@@ -162,9 +175,17 @@ when the feature or message genuinely embodies it.
 > confirm the rest with `mzizi_get_tokens` (`typography`, `spacing`, `radii`, `semantic`,
 > `componentSpecs`) if precision matters.
 
+**The published design system.** The brand book, the tokens as data, the marks and static
+previews of the components (Badge, Button, Card, Checkbox, Input, StatusBadge, Switch, Tabs and
+more) are published as the Design System artifact at
+<https://claude.ai/artifact/G8CCtAbZ8w717uQ3R5itCc>. Its source of truth is the `design-system/`
+folder in `mzizi-dev/mzizi-registry` (arriving with mzizi-registry#418), which the artifact is
+built from file for file. To change the design system, change that folder, never the artifact
+page: the artifact is republished from registry `main` after a merge that touches it.
+
 ### Rules that are non-negotiable
 
-- **Wordmarks** — `Mzizi` is capitalised. `mukoko`, `nyuchi`, `bundu`, `shamwari`, `nhimbe`, `bushtrade` are lowercase, always.
+- **Wordmarks** — `Mzizi` is capitalised. `mukoko`, `nyuchi`, `bundu`, `shamwari`, `bushtrade` are lowercase, always. (Product names such as Mukoko Events are written as names, not wordmarks.)
 - **The palette is 21 families: seven Minerals + seven Heritage + the Experimental Seven.** Any interface that uses only the minerals is using a third of the system. Do not describe it as "the seven-colour palette".
 - **Seven African Minerals** (geological, the core palette). The custom properties are `--color-<mineral>`, `--color-<mineral>-container`, `--color-<mineral>-on-container` — those are the names the design system defines. (`--container-<mineral>` / `--on-container-<mineral>` appeared in earlier revisions of this skill and are defined nowhere upstream; `tokens-update.css` now ships them as aliases so existing work keeps rendering, but do not reach for them in new code.)
   - `cobalt` — primary blue, links, CTAs · digital future, trust
@@ -176,15 +197,21 @@ when the feature or message genuinely embodies it.
   - `copper` — **Bundu ecosystem identity, the commons** · connection, stewardship _(added v4.1.0)_
 - **Seven Heritage tones** (atmospheric anchors — mini-app surfaces, backgrounds, moods; no family or role, with one exception: `hematite` is Mzizi's brand colour): `indigo` (dusk, the dyer's craft) · `savanna` (sun-dried grass, the dry season) · `baobab` (the tree of life, bark, shelter) · `sunset` (day's end, the gathering hour) · `river` (flow, the journey) · `hematite` (the neutral anchor, the substrate) · `kalahari` (the light anchor, openness). Reach for them via `--color-<name>` (aliasing `--heritage-<name>`); values are in `palette.canonical.json`. _(Two earlier framings are withdrawn: the ten-colour one from before the palette settled, and the two-anchor one that survived into v0.5.1 of this bundle. **There are seven.** A skill that named two produced two-tone output in projects that had never seen each other.)_
 - **The Experimental Seven** — a computed heptagon (hues offset 17°, prime saturations, foregrounds solved to P7), each tone carrying a `heptagonIndex` 0–6 that fixes its place on the wheel: `ember` · `acacia` · `fern` · `lagoon` · `storm` · `dusk` · `protea`. Four tiers each: `--exp-<name>`, `--exp-<name>-container`, `--exp-<name>-on`, `--exp-<name>-ui`. Use them for generated/wheel-derived surfaces and categorical sets where the minerals would have to be stretched past their meanings.
-- **Each brand owns a mineral** (the ecosystem map, verified v4.1.0 and served at `/v1/brand` as `.ecosystem`): bundu→**copper**, nyuchi→**gold**, mukoko→**tanzanite**, shamwari→**sodalite**, Mzizi→**hematite** (a Heritage tone, not a mineral: the one brand whose colour comes from the Heritage set), nhimbe/campfire/novels/health→malachite, lingo/planner→cobalt, bushtrade/places/transport/wallet→gold, bytes/pulse→tanzanite, circles→terracotta. Theme a surface in its brand's colour — never default everything to tanzanite, and never give a Mzizi surface gold, tanzanite or copper as its primary.
-- **Buttons are ALWAYS pill** (`rounded-full` → `--radius-full`, 9999px). Inputs match buttons visually.
-- **Nothing tappable goes below 48px.** Buttons are `h-14` (56px) default and large, `h-12` (48px) small; icon buttons `size-14` / `size-12`. Inputs are 56px default, 48px small. That is what `button.tsx`, the Roots `button.rs` and the language's `primitives/button.mz` all ship, and what `/v1/brand` `.componentSpecs` serves (`minTouchTarget: 48`). (0.7.0 of this skill said controls were dense, 32/36/40px, with 56px only for hero CTAs. The shipped primitives do not do that, so that rule described a system that does not exist.) Badges are 20px tall and are not touch targets; a small element that becomes one gets `min-h-[48px]`.
-- **Radius scale** (px), every step from a 7px unit: `sm` 7 · `md` 12 · `lg` 14 (**DEFAULT** cards/panels) · `xl` 17 · `2xl` 17 · `full` 9999 (pills). That is `mzizi-registry/app/globals.css`, the Rust `mzizi-tokens` `Radius`, and `/v1/brand` `.radii` ("ecosystem numbers: 7, 12, 14, 17"). Checkboxes use `sm`, inputs and small cards `md`, cards and panels `lg`, modals, sheets, dialogs and tabs `xl`. Reference via `--radius-<name>`. (Until 0.8.0 this skill also listed `none` 0, `xs` 4 and `2xl` 24; none of those is defined upstream.)
+- **Each brand owns a mineral** (the ecosystem map, verified v4.1.0 and served at `/v1/brand` as `.ecosystem`): bundu→**copper**, nyuchi→**gold**, mukoko→**tanzanite**, shamwari→**sodalite**, Mzizi→**hematite** (a Heritage tone, not a mineral: the one brand whose colour comes from the Heritage set), events (Mukoko Events)/campfire/novels/health/kweli→malachite, lingo/planner/news/weather→cobalt, bushtrade/places/transport/wallet/learning→gold (learning, and with it the education category, is gold because every Nyuchi brand is), bytes/pulse→tanzanite, circles→terracotta. Theme a surface in its brand's colour — never default everything to tanzanite, and never give a Mzizi surface gold, tanzanite or copper as its primary.
+- **Buttons are ALWAYS pill** (`rounded-full` → `--radius-full`, 9999px). Inputs match buttons visually. The exception is the Mzizi Dashboard Standard (below): its app Button and controls use the small radius, as their contracts state.
+- **Nothing tappable goes below 48px.** Buttons are `h-14` (56px) default and large, `h-12` (48px) small; icon buttons `size-14` / `size-12`. Inputs are 56px default, 48px small. That is what `button.tsx`, the Roots `button.rs` and the language's `primitives/button.mz` all ship, and what `/v1/brand` `.componentSpecs` serves (`minTouchTarget: 48`). (0.7.0 of this skill said controls were dense, 32/36/40px, with 56px only for hero CTAs. The shipped primitives do not do that, so that rule described a system that does not exist.) Badges are 20px tall and are not touch targets; a small element that becomes one gets `min-h-[48px]`. Dashboards are the exception: the Dashboard Standard's app components are dense on a fine pointer (most controls 32–40px) and 44–48px on touch, each as its contract's `density` states. The Discover Standard's components are the same size on every pointer: 48px for the search field and button, "See all", "Load more" and "Open in Mukoko", 44px for category chips, navigation links and the home link.
+- **Radius scale** (px), every step from a 7px unit: `xs` 4 (unit − 3) · `sm` 7 · `md` 12 · `lg` 14 (**DEFAULT** cards/panels) · `xl` 17 · `2xl` 17 · `full` 9999 (pills). That is `mzizi-registry/styles/globals.css`, the Rust `mzizi-tokens` `Radius`, and `/v1/brand` `.radii` ("ecosystem numbers: 4, 7, 12, 14, 17"; `xs` joined in mzizi-registry#544). Legend swatches, kbd keys and inline tags use `xs`, checkboxes `sm`, inputs and small cards `md`, cards and panels `lg`, modals, sheets, dialogs and tabs `xl`. Reference via `--radius-<name>`. `2xl` is 17px, never 24. (Until 0.8.0 this skill listed `none` 0 and `2xl` 24, which were never upstream values.)
 - **H1–H3 are Noto Serif. H4+ and body are Noto Sans. Code is JetBrains Mono.**
 - **Rings over shadows.** Cards get `ring-1` of `--border`, not a drop shadow.
-- **No gradients, no glassmorphism** except sticky chrome (`backdrop-blur`).
+- **No gradients, no glassmorphism** except sticky chrome (`backdrop-blur`) and the Discover Standard's hero wash (DiscoverHero's `gradient-showcase`, which mixes `--primary` into the background, as its contract declares).
 - **Emoji only as mini-app identifiers**, never as chrome or body decoration.
-- **Status has its own names: `--status-success` / `--status-warning` / `--status-error` / `--status-info` / `--status-neutral`.** Use those names and do not hardcode a hex. Upstream they alias `--success` / `--warning` / `--destructive` / `--info` / `--neutral`, so there is one decision per status — which means the resolved values are mineral-derived in the shipped theme (success reads as malachite, info as cobalt), not the standalone #22C55E/#F59E0B/#EF4444/#3B82F6 set an earlier revision of this skill listed. Those hexes are the per-component `var(--token, #hex)` fallback for an app that has not defined the properties; they are not the theme. Severity scale (`--severity-low/moderate/high/severe/extreme/cold`) and connection (`--connection-online/syncing/cached/offline`) follow the same logic. Verification tiers are the only place minerals carry status meaning (community→malachite, otp→cobalt, government→tanzanite, licensed→gold).
+- **Status has its own names: `--status-success` / `--status-warning` / `--status-error` / `--status-info` / `--status-neutral`.** Use those names and do not hardcode a hex. Upstream they alias `--success` / `--warning` / `--destructive` / `--info` / `--neutral`, so there is one decision per status — which means the resolved values are mineral-derived in the shipped theme (success reads as malachite, info as cobalt), not the standalone #22C55E/#F59E0B/#EF4444/#3B82F6 set an earlier revision of this skill listed. Those hexes are the per-component `var(--token, #hex)` fallback for an app that has not defined the properties; they are not the theme. Severity scale (`--severity-low/moderate/high/severe/extreme/cold`) and connection (`--connection-online/syncing/cached/offline`) follow the same logic. Verification is the only place minerals carry status meaning; it has its own rule, next.
+- **Verification is two things, not one ladder: assurance levels and attestations** (mzizi-registry#577; the source is `gateway/lib/assurance.py` in `nyuchi/nyuchi-api`, the one access decision every surface derives from — read that, never re-derive it). Read the roles, never a hex; each has `-container`, `-on-container` and `-text`, and passes APCA in both themes.
+  - **Assurance levels** are ordered (`>=` is meaningful): how strongly an identity is proven. 0 `none` "Unverified" → `--assurance-none` (the neutral grey, `--status-neutral`) · 1 `otp` "Contact Verified" → `--assurance-otp` (cobalt) · 2 `documented` "Documents Checked" → `--assurance-documented` (sodalite) · 3 `government` "Government Verified" → `--assurance-government` (gold) · 4 `licensed` "Licensed Professional" → `--assurance-licensed` (tanzanite).
+  - **Attestations** are unordered and held beside the level: who vouches for the subject. `community` "Community Vouched" → `--attestation-community` (terracotta) · `business` "Registered Business" → `--attestation-business` (malachite) · `domain` "Domain Verified" → `--attestation-domain` (copper). Show each as its own chip next to the level (the `app/tier-status`, `ui/mzizi-verified-badge` and `ui/mzizi-trust-meter` components do this, from registry v4.17.0).
+  - **Community is not a rung.** The old ladder put `community` at 1, below `otp`, which ranked a trader vouched for by their whole street below anyone who clicked a link in an email. Mukoko serves the informal economy: a tuck shop is level `otp` plus community, a registered firm is `government` plus business, and neither outranks the other. So never draw community on the level scale and never below otp; `tier="community"` now renders as level Unverified plus a "Community Vouched" chip.
+  - **`--tier-*` are legacy aliases**, kept while `bundu.verificationTier` (the `legacy_tier()` projection in assurance.py) still has readers: `--tier-unverified` → `--assurance-none`, `--tier-community` → `--attestation-community`, `--tier-otp` → `--assurance-otp`, `--tier-government` → `--assurance-government`, `--tier-licensed` → `--assurance-licensed`. They paint what they always did. New code reads `--assurance-*` and `--attestation-*`. (Earlier revisions of this skill listed a five-rung tier ladder, first as community→malachite, government→tanzanite, licensed→gold, then, after mzizi-registry#543, with community as terracotta; both treated community as a rung.)
+  - Colour is never the only cue: every level and attestation carries its label and glyph. Heritage tones never carry a level or an attestation.
 - **Surfaces (April 2026 AAA refresh):** light mode — `--background` warm paper, `--card` pure white, `--muted` cream, `--overlay` white. Dark mode — `--background` warm stone L10%, `--card` L6% (darker than bg), `--muted` L2% (deepest), `--overlay` L14% (lighter than bg, scrim creates pop).
 - **Icons:** in the React build, Lucide through `@/lib/icons`, never `lucide-react` directly; in Mzizi Roots, an icon is an `Element` slot the host renders. For an HTML prototype, the Lucide CDN build is fine.
 - **APCA 3.0 AAA contrast** on both primary and secondary text on every surface.
@@ -201,7 +228,46 @@ Use the registry's components, never hand-rolled copies. **Rust first:** Mzizi R
 npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>
 ```
 
-Take CSS variables from `tokens-update.css` or `tokens/palette.css` in this skill — it is generated from `palette.canonical.json` and carries all 21 families. The upstream equivalent is `mzizi-registry/app/globals.css`, which is generated from the same canon. There is no database to refresh from.
+Take CSS variables from `tokens-update.css` or `tokens/palette.css` in this skill — it is generated from `palette.canonical.json` and carries all 21 families. The upstream equivalent is `mzizi-registry/styles/globals.css`, which is generated from the same canon. There is no database to refresh from.
+
+### Dashboards: brand overlays only
+
+An admin or operator dashboard uses the **Mzizi Dashboard Standard**: the app components of
+`@bundu/ui` (`@bundu/ui/app/*`), one design for every product in the Bundu ecosystem, each
+with a versioned contract in `mzizi-registry/contracts/app/` (see `mzizi-roots`). A brand
+changes colour and mark, and nothing else:
+
+- **A brand overlay changes `--primary`, `--ring`, AppShell's `--app-accent` and the brand
+  mark.** Layout, spacing, type and size never vary by brand. The overlay is one stylesheet
+  imported after the tokens (`@bundu/ui/styles/brand-<brand>.css`). AppShell's `accent`
+  takes one of the seven minerals and fills primary actions and the current nav indicator
+  with its brand fill (`--color-<mineral>-brand`, text `--color-<mineral>-on-brand`); text
+  links and the focus ring keep `--primary` and `--ring`.
+- **Status colours do not follow the brand.** Success is malachite, warning gold, error
+  terracotta, info cobalt, in every brand. A component names a mineral only as one of its
+  contract's `theming.statusColours`; any other mineral class, or a literal colour value,
+  fails its contract test.
+- **Mzizi's hematite** is a Heritage tone, so AppShell's `accent` does not apply to it;
+  `brand-mzizi.css` sets `--primary`.
+
+### Discover pages: the same overlay, touch-first
+
+A public discover or browse page in the Mukoko family (circles, news, events, weather, and the
+super-app on the web) uses the **Mzizi Discover Standard**: the Discover components of
+`@bundu/ui` (`@bundu/ui/discover/*`), each with a versioned contract in
+`mzizi-registry/contracts/discover/` (see `mzizi-roots`). The brand-overlay rule is the
+Dashboard Standard's, with two differences the contracts state:
+
+- **No `--app-accent`.** A brand shows in DiscoverShell's `brand` slot (its mark) and in the
+  primary action its `action` slot holds; the frame, header, navigation and footer are
+  identical in every brand. `--primary` reaches only DiscoverHero's wash, DiscoverCard's
+  monogram and `brand` badge tone, and OpenInApp's `primary` variant. Category chips, sections,
+  search and "Load more" are neutral (search follows the brand only in its `--ring` focus
+  ring). DiscoverCard is the one Discover component with status colours (`cobalt`,
+  `malachite`, `gold`, `terracotta`), for its badge tones, and they do not follow the brand.
+- **The same size on every pointer.** Discover pages are not dense on a mouse: every density
+  row in `contracts/discover/` gives the same height for a fine and a coarse pointer (48px or
+  44px, as above).
 
 ## What belongs in the ecosystem
 
@@ -231,7 +297,7 @@ sit three pillars and the platform:
   tools, storage)
 - **shamwari ai** — the intelligence pillar, sovereign by nature (on-device inference,
   pod-resident context, no third-party AI vendor)
-- **nhimbe** — cooperative economic features
+- **Mukoko Events** (formerly nhimbe) — community events and gatherings
 
 Mzizi is not an app and not a layer in a stack; it is the open, non-revenue foundation the
 ecosystem builds on and the doctrine that governs it. mukoko and shamwari ai are pillars inside Nyuchi Africa, not separate companies.
@@ -248,7 +314,7 @@ don't brand it as ecosystem.
 ## If invoked with no other guidance
 
 Ask what the work is: (a) an interface or prototype (which surface: mobile, desktop, print,
-slide; which brand voice: Mzizi, nyuchi, mukoko, shamwari, nhimbe), (b) parent-brand material
+slide; which brand voice: Mzizi, nyuchi, mukoko, shamwari, Mukoko Events), (b) parent-brand material
 (ecosystem page, manifesto, deck), (c) a cross-brand piece, or (d) a voice or mineral decision
 for one brand. Then apply the constellation table, the voice rules and the design system, and
 output HTML artifacts or production code as the need requires.
