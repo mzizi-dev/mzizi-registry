@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/mzizi-trust-meter",
   "title": "MziziTrustMeter",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "node": 3,
   "kind": "pattern",
   "summary": "The expanded view of trust: the composite score as a role=\"meter\" named by its level, then either the three-signal breakdown (Verification, Status, Ubuntu) or, with `signals`, one row per counted signal for an address, a place or a venue. Raw scores are written only with `showScore`. Server-rendered; the bars are SVG geometry.",
@@ -65,6 +65,13 @@
       "type": "\"unverified\" | \"community\" | \"otp\" | \"government\" | \"licensed\"",
       "required": false,
       "description": "The verification tier code (system.verification_tier). Colours the Verification signal with that tier's `--tier-*` role (#543); without it the signal is `--status-warning`."
+    },
+    {
+      "name": "assurance",
+      "type": "\"none\" | \"otp\" | \"documented\" | \"government\" | \"licensed\"",
+      "required": false,
+      "values": ["none", "otp", "documented", "government", "licensed"],
+      "description": "The assurance level (nyuchi/nyuchi-api `assurance.py`, #577): colours the Verification signal with that level's `--assurance-*` role. Takes precedence over `tier`, the legacy projection."
     },
     {
       "name": "statusLabel",
@@ -203,6 +210,15 @@
         "tier": "government",
         "tierLabel": "Government Verified"
       }
+    },
+    "assurance": {
+      "description": "The Verification signal in the subject's assurance level colour (Documents Checked, sodalite).",
+      "props": {
+        "trustScore": 0.2,
+        "verificationScore": 0.2,
+        "assurance": "documented",
+        "tierLabel": "Documents Checked"
+      }
     }
   },
   "accessibility": {
@@ -245,7 +261,17 @@
       "--tier-community-text",
       "--tier-otp-text",
       "--tier-government-text",
-      "--tier-licensed-text"
+      "--tier-licensed-text",
+      "--assurance-none",
+      "--assurance-otp",
+      "--assurance-documented",
+      "--assurance-government",
+      "--assurance-licensed",
+      "--assurance-none-text",
+      "--assurance-otp-text",
+      "--assurance-documented-text",
+      "--assurance-government-text",
+      "--assurance-licensed-text"
     ],
     "brandOverlay": "None: the score and the Status signal use the --status-* tokens; the Verification signal uses --status-warning, or the user's --tier-* role when `tier` is set (defined once in the N1 tokens, #543); and the Ubuntu signal is tanzanite in every brand, because it names the Ubuntu axis, not the brand.",
     "statusColours": ["tanzanite"]
@@ -357,6 +383,12 @@
       "say": "With tier, the Verification signal takes that tier's role.",
       "state": "tier",
       "select": "[data-signal=\"verification\"] .fill-tier-government",
+      "min": 1
+    },
+    {
+      "say": "With assurance, the Verification signal takes that level's role.",
+      "state": "assurance",
+      "select": "[data-signal=\"verification\"] .fill-assurance-documented",
       "min": 1
     },
     {
