@@ -239,6 +239,52 @@
   --color-status-deprecated-container: var(--status-deprecated-container);
   --color-status-deprecated-on-container: var(--status-deprecated-on-container);
   --color-status-deprecated-text: var(--status-deprecated-text);
+  --color-assurance-none: var(--assurance-none);
+  --color-assurance-none-container: var(--assurance-none-container);
+  --color-assurance-none-on-container: var(--assurance-none-on-container);
+  --color-assurance-none-text: var(--assurance-none-text);
+  --color-assurance-otp: var(--assurance-otp);
+  --color-assurance-otp-container: var(--assurance-otp-container);
+  --color-assurance-otp-on-container: var(--assurance-otp-on-container);
+  --color-assurance-otp-text: var(--assurance-otp-text);
+  --color-assurance-documented: var(--assurance-documented);
+  --color-assurance-documented-container: var(--assurance-documented-container);
+  --color-assurance-documented-on-container: var(
+    --assurance-documented-on-container
+  );
+  --color-assurance-documented-text: var(--assurance-documented-text);
+  --color-assurance-government: var(--assurance-government);
+  --color-assurance-government-container: var(--assurance-government-container);
+  --color-assurance-government-on-container: var(
+    --assurance-government-on-container
+  );
+  --color-assurance-government-text: var(--assurance-government-text);
+  --color-assurance-licensed: var(--assurance-licensed);
+  --color-assurance-licensed-container: var(--assurance-licensed-container);
+  --color-assurance-licensed-on-container: var(
+    --assurance-licensed-on-container
+  );
+  --color-assurance-licensed-text: var(--assurance-licensed-text);
+  --color-attestation-community: var(--attestation-community);
+  --color-attestation-community-container: var(
+    --attestation-community-container
+  );
+  --color-attestation-community-on-container: var(
+    --attestation-community-on-container
+  );
+  --color-attestation-community-text: var(--attestation-community-text);
+  --color-attestation-business: var(--attestation-business);
+  --color-attestation-business-container: var(--attestation-business-container);
+  --color-attestation-business-on-container: var(
+    --attestation-business-on-container
+  );
+  --color-attestation-business-text: var(--attestation-business-text);
+  --color-attestation-domain: var(--attestation-domain);
+  --color-attestation-domain-container: var(--attestation-domain-container);
+  --color-attestation-domain-on-container: var(
+    --attestation-domain-on-container
+  );
+  --color-attestation-domain-text: var(--attestation-domain-text);
   --color-tier-unverified: var(--tier-unverified);
   --color-tier-unverified-container: var(--tier-unverified-container);
   --color-tier-unverified-on-container: var(--tier-unverified-on-container);
@@ -661,26 +707,58 @@
   --status-deprecated-container: var(--status-danger-container);
   --status-deprecated-on-container: var(--status-danger-on-container);
   --status-deprecated-text: var(--status-danger-text);
-  --tier-unverified: var(--status-neutral);
-  --tier-unverified-container: var(--status-neutral-container);
-  --tier-unverified-on-container: var(--status-neutral-on-container);
-  --tier-unverified-text: var(--status-neutral-text);
-  --tier-community: var(--mineral-terracotta);
-  --tier-community-container: var(--mineral-terracotta-container);
-  --tier-community-on-container: var(--mineral-terracotta-on-container);
-  --tier-community-text: #844425; /* derived: #8E4928 measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
-  --tier-otp: var(--mineral-cobalt);
-  --tier-otp-container: var(--mineral-cobalt-container);
-  --tier-otp-on-container: var(--mineral-cobalt-on-container);
-  --tier-otp-text: var(--mineral-cobalt-text);
-  --tier-government: var(--mineral-gold);
-  --tier-government-container: var(--mineral-gold-container);
-  --tier-government-on-container: var(--mineral-gold-on-container);
-  --tier-government-text: var(--mineral-gold-text);
-  --tier-licensed: var(--mineral-tanzanite);
-  --tier-licensed-container: var(--mineral-tanzanite-container);
-  --tier-licensed-on-container: #2e004d; /* var(--mineral-tanzanite-on-container), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
-  --tier-licensed-text: var(--mineral-tanzanite-text);
+  --assurance-none: var(--status-neutral);
+  --assurance-none-container: var(--status-neutral-container);
+  --assurance-none-on-container: var(--status-neutral-on-container);
+  --assurance-none-text: var(--status-neutral-text);
+  --assurance-otp: var(--mineral-cobalt);
+  --assurance-otp-container: var(--mineral-cobalt-container);
+  --assurance-otp-on-container: var(--mineral-cobalt-on-container);
+  --assurance-otp-text: var(--mineral-cobalt-text);
+  --assurance-documented: #283593; /* var(--mineral-sodalite), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
+  --assurance-documented-container: var(--mineral-sodalite-container);
+  --assurance-documented-on-container: #141a5c; /* var(--mineral-sodalite-on-container), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
+  --assurance-documented-text: var(--mineral-sodalite-text);
+  --assurance-government: var(--mineral-gold);
+  --assurance-government-container: var(--mineral-gold-container);
+  --assurance-government-on-container: var(--mineral-gold-on-container);
+  --assurance-government-text: var(--mineral-gold-text);
+  --assurance-licensed: var(--mineral-tanzanite);
+  --assurance-licensed-container: var(--mineral-tanzanite-container);
+  --assurance-licensed-on-container: #2e004d; /* var(--mineral-tanzanite-on-container), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
+  --assurance-licensed-text: var(--mineral-tanzanite-text);
+  --attestation-community: var(--mineral-terracotta);
+  --attestation-community-container: var(--mineral-terracotta-container);
+  --attestation-community-on-container: var(--mineral-terracotta-on-container);
+  --attestation-community-text: #844425; /* derived: #8E4928 measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
+  --attestation-business: var(--mineral-malachite);
+  --attestation-business-container: var(--mineral-malachite-container);
+  --attestation-business-on-container: var(--mineral-malachite-on-container);
+  --attestation-business-text: var(--mineral-malachite-text);
+  --attestation-domain: var(--mineral-copper);
+  --attestation-domain-container: var(--mineral-copper-container);
+  --attestation-domain-on-container: var(--mineral-copper-on-container);
+  --attestation-domain-text: #894027; /* derived: #93452A measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
+  --tier-unverified: var(--assurance-none);
+  --tier-unverified-container: var(--assurance-none-container);
+  --tier-unverified-on-container: var(--assurance-none-on-container);
+  --tier-unverified-text: var(--assurance-none-text);
+  --tier-community: var(--attestation-community);
+  --tier-community-container: var(--attestation-community-container);
+  --tier-community-on-container: var(--attestation-community-on-container);
+  --tier-community-text: var(--attestation-community-text);
+  --tier-otp: var(--assurance-otp);
+  --tier-otp-container: var(--assurance-otp-container);
+  --tier-otp-on-container: var(--assurance-otp-on-container);
+  --tier-otp-text: var(--assurance-otp-text);
+  --tier-government: var(--assurance-government);
+  --tier-government-container: var(--assurance-government-container);
+  --tier-government-on-container: var(--assurance-government-on-container);
+  --tier-government-text: var(--assurance-government-text);
+  --tier-licensed: var(--assurance-licensed);
+  --tier-licensed-container: var(--assurance-licensed-container);
+  --tier-licensed-on-container: var(--assurance-licensed-on-container);
+  --tier-licensed-text: var(--assurance-licensed-text);
   --category-1: var(--mineral-cobalt);
   --category-2: var(--mineral-tanzanite);
   --category-3: var(--mineral-malachite);
@@ -1132,26 +1210,58 @@
   --status-deprecated-container: var(--status-danger-container);
   --status-deprecated-on-container: var(--status-danger-on-container);
   --status-deprecated-text: var(--status-danger-text);
-  --tier-unverified: var(--status-neutral);
-  --tier-unverified-container: var(--status-neutral-container);
-  --tier-unverified-on-container: var(--status-neutral-on-container);
-  --tier-unverified-text: var(--status-neutral-text);
-  --tier-community: var(--mineral-terracotta);
-  --tier-community-container: var(--mineral-terracotta-container);
-  --tier-community-on-container: var(--mineral-terracotta-on-container);
-  --tier-community-text: #ebcca3; /* var(--mineral-terracotta-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
-  --tier-otp: var(--mineral-cobalt);
-  --tier-otp-container: var(--mineral-cobalt-container);
-  --tier-otp-on-container: var(--mineral-cobalt-on-container);
-  --tier-otp-text: var(--mineral-cobalt-text);
-  --tier-government: var(--mineral-gold);
-  --tier-government-container: var(--mineral-gold-container);
-  --tier-government-on-container: var(--mineral-gold-on-container);
-  --tier-government-text: var(--mineral-gold-text);
-  --tier-licensed: var(--mineral-tanzanite);
-  --tier-licensed-container: var(--mineral-tanzanite-container);
-  --tier-licensed-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against tier-licensed-container; walked toward #FFFFFF to Lc 75 */
-  --tier-licensed-text: var(--mineral-tanzanite-text);
+  --assurance-none: var(--status-neutral);
+  --assurance-none-container: var(--status-neutral-container);
+  --assurance-none-on-container: var(--status-neutral-on-container);
+  --assurance-none-text: var(--status-neutral-text);
+  --assurance-otp: var(--mineral-cobalt);
+  --assurance-otp-container: var(--mineral-cobalt-container);
+  --assurance-otp-on-container: var(--mineral-cobalt-on-container);
+  --assurance-otp-text: var(--mineral-cobalt-text);
+  --assurance-documented: #4b66fe; /* derived: #3D5AFE measures Lc 26.6 against base / surface; walked toward #FFFFFF to Lc 30 */
+  --assurance-documented-container: var(--mineral-sodalite-container);
+  --assurance-documented-on-container: #c7ccea; /* derived: #C5CAE9 measures Lc 73.9 against assurance-documented-container; walked toward #FFFFFF to Lc 75 */
+  --assurance-documented-text: var(--mineral-sodalite-text);
+  --assurance-government: var(--mineral-gold);
+  --assurance-government-container: var(--mineral-gold-container);
+  --assurance-government-on-container: var(--mineral-gold-on-container);
+  --assurance-government-text: var(--mineral-gold-text);
+  --assurance-licensed: var(--mineral-tanzanite);
+  --assurance-licensed-container: var(--mineral-tanzanite-container);
+  --assurance-licensed-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against assurance-licensed-container; walked toward #FFFFFF to Lc 75 */
+  --assurance-licensed-text: var(--mineral-tanzanite-text);
+  --attestation-community: var(--mineral-terracotta);
+  --attestation-community-container: var(--mineral-terracotta-container);
+  --attestation-community-on-container: var(--mineral-terracotta-on-container);
+  --attestation-community-text: #ebcca3; /* var(--mineral-terracotta-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
+  --attestation-business: var(--mineral-malachite);
+  --attestation-business-container: var(--mineral-malachite-container);
+  --attestation-business-on-container: var(--mineral-malachite-on-container);
+  --attestation-business-text: var(--mineral-malachite-text);
+  --attestation-domain: var(--mineral-copper);
+  --attestation-domain-container: var(--mineral-copper-container);
+  --attestation-domain-on-container: var(--mineral-copper-on-container);
+  --attestation-domain-text: #ffc3b0; /* var(--mineral-copper-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
+  --tier-unverified: var(--assurance-none);
+  --tier-unverified-container: var(--assurance-none-container);
+  --tier-unverified-on-container: var(--assurance-none-on-container);
+  --tier-unverified-text: var(--assurance-none-text);
+  --tier-community: var(--attestation-community);
+  --tier-community-container: var(--attestation-community-container);
+  --tier-community-on-container: var(--attestation-community-on-container);
+  --tier-community-text: var(--attestation-community-text);
+  --tier-otp: var(--assurance-otp);
+  --tier-otp-container: var(--assurance-otp-container);
+  --tier-otp-on-container: var(--assurance-otp-on-container);
+  --tier-otp-text: var(--assurance-otp-text);
+  --tier-government: var(--assurance-government);
+  --tier-government-container: var(--assurance-government-container);
+  --tier-government-on-container: var(--assurance-government-on-container);
+  --tier-government-text: var(--assurance-government-text);
+  --tier-licensed: var(--assurance-licensed);
+  --tier-licensed-container: var(--assurance-licensed-container);
+  --tier-licensed-on-container: var(--assurance-licensed-on-container);
+  --tier-licensed-text: var(--assurance-licensed-text);
   --category-1: var(--mineral-cobalt);
   --category-2: var(--mineral-tanzanite);
   --category-3: var(--mineral-malachite);

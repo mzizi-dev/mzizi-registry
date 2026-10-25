@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — assurance levels and attestations as N1 roles; `--tier-*` become aliases (2026-10-25, #578)
+
+The Bundu trust model from `nyuchi/nyuchi-api` `gateway/lib/assurance.py` ([#577](https://github.com/mzizi-dev/mzizi-registry/issues/577)): assurance levels are ordered (0 none, 1 otp, 2 documented, 3 government, 4 licensed), and attestations are unordered and held beside the level (community, business, domain). Community is an attestation, not a rung below otp.
+
+- **New roles** in `lib/tokens/roles.source.ts`, emitted by `pnpm tokens:sync` to the stylesheet and every platform pack, each with the four parts a status tone has (`--<name>`, `-container`, `-on-container`, `-text`), all passing the APCA gate in both themes: `--assurance-none` (the neutral grey), `--assurance-otp` (cobalt), `--assurance-documented` (**sodalite**, new), `--assurance-government` (gold), `--assurance-licensed` (tanzanite), `--attestation-community` (terracotta), `--attestation-business` (**malachite**, new) and `--attestation-domain` (**copper**, new). Sodalite's dark base measures Lc 26.9 on the dark page, so `--assurance-documented` carries a walked value there (`#4B66FE`), as the `-aa` tier is made.
+- **`--tier-*` stay, as aliases**: `tier-unverified` → `assurance-none`, `tier-community` → `attestation-community`, `tier-otp` → `assurance-otp`, `tier-government` → `assurance-government`, `tier-licensed` → `assurance-licensed`. Every tier paints exactly what it painted before.
+- **`assuranceTokens` and `attestationTokens`** in `lib/tokens` and the N1 TypeScript tokens, beside `verificationTokens` (kept, now marked legacy); `generateStatusCSS()` emits the new roles and the tier aliases.
+- **Doctrine:** `semantic-tokens.mdx` gains "Verification: assurance levels and attestations", with why community is not a rung and why each mineral.
+
 ## [4.16.0] - 2026-10-24
 
 Releases `staging` to `main` as the next minor above v4.15.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.16.0, and the Mzizi Roots crates move to **0.5.0** (`[workspace.package] version` and the path-dependency versions; `mzizi-mongodb` now requires `mzizi-data` and `mzizi-harness` `>=0.5.0`), so `publish-crates.yml` publishes the `mzizi-mongodb` security fixes to crates.io instead of leaving 0.4.0 as the only version there. It carries the Kweli business-dashboard gaps ([packages-npm#79](https://github.com/mzizi-dev/packages-npm/issues/79)): the `ui/mzizi-verified-badge` contract with an Astro build and the framework-free `mzizi-trust-tier-data` lib (#568), `app/form-field` 1.2 (#570), `app/data-table` 1.2 (#571), `app/confirm-action` (#572) and `app/tier-status` (#573); the provider-neutral `money` lib with `app/money` and `app/plan-summary` (#574, phase 1 of #569); and the `mzizi-mongodb` security fixes (#567).
