@@ -5,7 +5,7 @@ author: "nyuchi-team"
 category: "architecture"
 createdAt: "2026-04-14T04:33:18.859813+00:00"
 currentVersion: 3
-description: "The 8 semantic status token categories and how they flow through every node."
+description: "The 10 semantic status token categories and how they flow through every node."
 dnaRole: "documentation"
 doctrineVersion: "4.1.7"
 keywords:
@@ -38,13 +38,13 @@ status: "published"
 strand: "transcription"
 subcategory: "tokens"
 title: "Semantic Status Token System"
-updatedAt: "2026-10-07T00:00:00.000+00:00"
+updatedAt: "2026-10-25T00:00:00.000+00:00"
 version: "4.0.34-reviewed"
 ---
 
 # Semantic Status Token System
 
-Mzizi uses 8 categories of semantic tokens that flow from N1 through all nodes. These replace raw color values with meaningful, theme-adaptive tokens.
+Mzizi uses 10 categories of semantic tokens that flow from N1 through all nodes. These replace raw color values with meaningful, theme-adaptive tokens.
 
 ## Token Categories
 
@@ -54,24 +54,86 @@ Mzizi uses 8 categories of semantic tokens that flow from N1 through all nodes. 
 | Severity       | --severity-\*     | low, moderate, high, severe, extreme, cold       |
 | Notification   | --notification-\* | success, warning, error, info                    |
 | Connection     | --connection-\*   | online, syncing, cached, offline                 |
+| Assurance      | --assurance-\*    | none, otp, documented, government, licensed      |
+| Attestation    | --attestation-\*  | community, business, domain                      |
 | Verification   | --tier-\*         | unverified, community, otp, government, licensed |
 | Crypto         | --crypto-\*       | quantumSafe, classical, weak, none               |
 | Moderation     | --moderation-\*   | approved, pending, flagged, rejected             |
 | Service Health | --health-\*       | operational, degraded, outage, maintenance       |
 
-## Verification tiers
+## Verification: assurance levels and attestations
 
-The five tiers of `system.verification_tier` each have a `--tier-*` role, defined once in `lib/tokens/roles.source.ts` and emitted by `pnpm tokens:sync` with light and dark values (owner decision 2026-10-24, #543). Each tier carries the same four roles as a status tone: `--tier-<id>` (icons, bars, tinted fills), `--tier-<id>-container`, `--tier-<id>-on-container` and `--tier-<id>-text`.
+The Bundu trust model is two independent things, deliberately not one number. Its source is
+`gateway/lib/assurance.py` in `nyuchi/nyuchi-api`, the one access decision every surface derives
+from:
 
-| Level | Id           | Label                 | Family                               |
-| ----- | ------------ | --------------------- | ------------------------------------ |
-| 0     | `unverified` | Unverified            | the neutral grey, `--status-neutral` |
-| 1     | `community`  | Community Verified    | terracotta                           |
-| 2     | `otp`        | Contact Verified      | cobalt                               |
-| 3     | `government` | Government Verified   | gold                                 |
-| 4     | `licensed`   | Licensed Professional | tanzanite                            |
+- **Assurance levels** are ordered, so `>=` is meaningful: how strongly an identity is proven.
+- **Attestations** are unordered and held alongside the level: who vouches for the subject.
 
-The tiers are minerals because they are brand identity; heritage tones stay neutral and editorial. Components that show a tier (`mzizi-verified-badge`, `mzizi-trust-meter`, `mzizi-trust-gate`, `mzizi-permission-gate`, `permission-badge`) read these roles and never a raw hex.
+Each level and each attestation has a role defined once in `lib/tokens/roles.source.ts` and
+emitted by `pnpm tokens:sync` with light and dark values. Each carries the same four parts as a
+status tone: `--<name>` (icons, bars, tinted fills), `--<name>-container`,
+`--<name>-on-container` and `--<name>-text`. All of them pass the APCA contrast gate in both
+themes; where a family's own value misses its bar (sodalite's dark base, Lc 26.9 on the dark
+page), the role carries a measured, walked value instead.
+
+| Level | Role                     | Label                 | Family                               |
+| ----- | ------------------------ | --------------------- | ------------------------------------ |
+| 0     | `--assurance-none`       | Unverified            | the neutral grey, `--status-neutral` |
+| 1     | `--assurance-otp`        | Contact Verified      | cobalt                               |
+| 2     | `--assurance-documented` | Documents Checked     | sodalite                             |
+| 3     | `--assurance-government` | Government Verified   | gold                                 |
+| 4     | `--assurance-licensed`   | Licensed Professional | tanzanite                            |
+
+| Attestation               | Label               | Family     |
+| ------------------------- | ------------------- | ---------- |
+| `--attestation-community` | Community Vouched   | terracotta |
+| `--attestation-business`  | Registered Business | malachite  |
+| `--attestation-domain`    | Domain Verified     | copper     |
+
+### Why community is not a rung
+
+The legacy ladder placed `community` at 1 and `otp` at 2, which ranked a trader vouched for by
+their whole street below anyone who clicked a link in an email. Mukoko serves the informal
+economy: a tuck shop is level 1 plus community, a registered firm is level 3 plus business, and
+neither outranks the other. So community is an attestation, shown as its own chip beside the
+level, never placed on the level scale and never drawn below otp.
+
+### Why these minerals
+
+Each mineral is a role contract (`seven-minerals`). Cobalt, gold, tanzanite and terracotta keep
+the owner's ladder of 2026-10-24 (#543). The three parts that had no colour take the three
+minerals the ladder did not already use, so no two parts share a family:
+
+- `documented` → **sodalite** (Intelligence): a document was examined and reasoned about. It
+  sits between otp (cobalt) and government (gold), and sodalite is cobalt's deep-earth
+  neighbour, so the first two proven levels read as one blue growing deeper.
+- `business` → **malachite** (Growth): an enterprise that is registered and building. Gold
+  (Value, commerce) is already government's, and a registration check is not a payment.
+- `domain` → **copper** (Stewardship): control of a name on the commons, held and kept.
+
+Heritage tones stay environment, not contract, so none carries a level or an attestation.
+Colour is never the only cue: every level and attestation is shown with its label and glyph.
+
+### The legacy `--tier-*` names
+
+`bundu.verificationTier` (0 unverified, 1 community, 2 otp, 3 government, 4 licensed) is a
+derived projection, `legacy_tier()` in assurance.py, kept until every reader has moved. Its
+`--tier-*` roles stay as aliases of the new ones, so existing consumers keep working and a pack
+that remaps a level moves its tier too:
+
+| Tier         | Alias of                  |
+| ------------ | ------------------------- |
+| `unverified` | `--assurance-none`        |
+| `community`  | `--attestation-community` |
+| `otp`        | `--assurance-otp`         |
+| `government` | `--assurance-government`  |
+| `licensed`   | `--assurance-licensed`    |
+
+`documented` projects to the old otp rung, and `business` and `domain` project to no rung at
+all. Components that show trust (`mzizi-verified-badge`, `mzizi-trust-meter`, `app/tier-status`,
+`mzizi-trust-gate`, `mzizi-permission-gate`, `permission-badge`) read these roles and never a
+raw hex; new code reads `--assurance-*` and `--attestation-*`.
 
 ## Usage Pattern
 

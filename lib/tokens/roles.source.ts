@@ -136,6 +136,8 @@ export type RoleGroup =
   | "status"
   | "status-legacy"
   | "lifecycle"
+  | "assurance"
+  | "attestation"
   | "tier"
   | "destructive"
   | "categorical"
@@ -394,18 +396,64 @@ const LIFECYCLE_ROLES: Role[] = LIFECYCLE.flatMap(([stage, tone]) =>
   })
 )
 
-// ─── Verification tiers ──────────────────────────────────────────────────────
+// ─── Verification: assurance levels and attestations ────────────────────────
 
 /**
- * The verification ladder (`system.verification_tier`, levels 0–4) → palette family.
- * Owner decision 2026-10-24 (#543, Q1–Q4): the tiers keep the minerals — community
- * terracotta, contact (otp) cobalt, government gold, licensed tanzanite — and tier 0 takes
- * the neutral grey the system already has (`status-neutral`, the muted stone ladder), not a
- * heritage tone and not a raw hex. Heritage stays neutral and editorial (seven-minerals.mdx).
+ * The Bundu trust model, as nyuchi/nyuchi-api `gateway/lib/assurance.py` defines it: two
+ * independent things, deliberately not one number.
  *
- * Every component that shows a tier (the verified badge, the trust meter, the trust gate,
- * the permission gate) reads these `--tier-*` roles, so a pack recolours a tier here, once.
+ *   - ASSURANCE LEVELS are ordered (0 none, 1 otp, 2 documented, 3 government, 4 licensed):
+ *     how strongly an identity is proven. `>=` is meaningful.
+ *   - ATTESTATIONS are unordered and held alongside the level (community, business, domain):
+ *     who vouches for the subject. A tuck shop is level 1 + community; a registered firm is
+ *     level 3 + business; neither outranks the other.
+ *
+ * Community is NOT a rung. The legacy ladder put it at 1, below otp, which ranked a trader
+ * vouched for by their whole street below anyone who clicked a link in an email. It is a
+ * parallel route to trust, so it is an attestation here and never sits on the level scale.
+ *
+ * Mineral per part (each is a role contract, seven-minerals.mdx):
+ *   - none → the neutral grey (`status-neutral`): nothing is proven, so nothing is claimed.
+ *   - otp → cobalt, government → gold, licensed → tanzanite, community → terracotta: the
+ *     owner's ladder of 2026-10-24 (#543), unchanged.
+ *   - documented → sodalite (Intelligence: a document was examined and reasoned about). It
+ *     sits between otp (cobalt) and government (gold), and sodalite is cobalt's deep-earth
+ *     neighbour, so the first two levels read as one blue family growing deeper.
+ *   - business → malachite (Growth: an enterprise that is registered and building). Gold
+ *     (commerce) is government's, and a registration check is not a payment.
+ *   - domain → copper (Stewardship: control of a name on the commons, held and kept).
+ * The three new families are the only minerals the ladder did not already use, so no part
+ * shares a mineral with another; heritage tones stay environment, not contract.
  */
+export const ASSURANCE_LEVELS = [
+  ["none", "Unverified", null],
+  ["otp", "Contact Verified", "cobalt"],
+  ["documented", "Documents Checked", "sodalite"],
+  ["government", "Government Verified", "gold"],
+  ["licensed", "Licensed Professional", "tanzanite"],
+] as const
+
+/** The attestations, unordered: each one is held or not, alongside the level. */
+export const ATTESTATIONS = [
+  ["community", "Community Vouched", "terracotta"],
+  ["business", "Registered Business", "malachite"],
+  ["domain", "Domain Verified", "copper"],
+] as const
+
+/**
+ * The legacy ladder (`bundu.verificationTier`, 0 unverified … 4 licensed) and the part of the
+ * new model each `--tier-*` role now aliases. `legacy_tier()` in assurance.py is the derived
+ * projection; these names stay until every reader has moved (Kweli, `@bundu/ui`).
+ */
+export const TIER_ALIASES = [
+  ["unverified", "assurance-none"],
+  ["community", "attestation-community"],
+  ["otp", "assurance-otp"],
+  ["government", "assurance-government"],
+  ["licensed", "assurance-licensed"],
+] as const
+
+/** Kept for existing readers: the legacy tier → palette family it resolves to. */
 export const TIER_FAMILIES = [
   ["community", "terracotta"],
   ["otp", "cobalt"],
@@ -413,7 +461,7 @@ export const TIER_FAMILIES = [
   ["licensed", "tanzanite"],
 ] as const
 
-/** The five tiers in ladder order, with the label each one carries (Q5: tier 2 is "Contact Verified"). */
+/** The five legacy tiers in ladder order, with the label each one carries. */
 export const TIERS = [
   ["unverified", "Unverified"],
   ["community", "Community Verified"],
@@ -422,33 +470,39 @@ export const TIERS = [
   ["licensed", "Licensed Professional"],
 ] as const
 
-/** The four tiers every verification tier carries: the same shape as a status tone. */
-function tierRoles(tier: string, label: string, values: Record<"fill" | "container" | "on" | "text", ThemedValue>, family: string): Role[] {
-  const name = `tier-${tier}`
-  const what = `Verification tier \`${tier}\` ("${label}", ${family} in the Mzizi pack)`
+/** The four parts every level, attestation and tier carries: the same shape as a status tone. */
+function trustRoles(
+  name: string,
+  group: "assurance" | "attestation",
+  what: string,
+  values: Record<"fill" | "container" | "on" | "text", ThemedValue>
+): Role[] {
   return [
     {
       name,
-      group: "tier",
+      group,
       kind: "ui",
       required: true,
-      description: `${what} — the tier itself: badge icons, meter bars, tinted fills (\`bg-${name}/15\`).`,
+      description: `${what} — the part itself: badge icons, meter bars, tinted fills (\`bg-${name}/15\`).`,
       contrast: { against: ON_PAGE, min: UI },
       default: values.fill,
+      // Sodalite's dark base (#3D5AFE) measures Lc 26.9 on the dark page, under the ui bar:
+      // the fill walks to clear it, the way the -aa tier is made, and only where it misses.
+      derive: "text",
       block: "roles",
     },
     {
       name: `${name}-container`,
-      group: "tier",
+      group,
       kind: "surface",
       required: true,
-      description: `${what} — a soft fill behind tier content (a tier chip or banner).`,
+      description: `${what} — a soft fill behind its content (a chip or banner).`,
       default: values.container,
       block: "roles",
     },
     {
       name: `${name}-on-container`,
-      group: "tier",
+      group,
       kind: "text",
       required: true,
       description: `${what} — text and icons on \`${name}-container\`.`,
@@ -459,10 +513,10 @@ function tierRoles(tier: string, label: string, values: Record<"fill" | "contain
     },
     {
       name: `${name}-text`,
-      group: "tier",
+      group,
       kind: "text",
       required: true,
-      description: `${what} — the tier's name as text on the page.`,
+      description: `${what} — its name as text on the page.`,
       contrast: { against: ON_PAGE, min: BODY },
       default: values.text,
       derive: "text",
@@ -471,28 +525,51 @@ function tierRoles(tier: string, label: string, values: Record<"fill" | "contain
   ]
 }
 
-const TIER_ROLES: Role[] = TIERS.flatMap(([tier, label]) => {
-  if (tier === "unverified") {
-    return tierRoles(
-      tier,
-      label,
-      {
-        fill: { role: "status-neutral" },
-        container: { role: "status-neutral-container" },
-        on: { role: "status-neutral-on-container" },
-        text: { role: "status-neutral-text" },
-      },
-      "the neutral grey, `status-neutral`,"
-    )
-  }
-  const family = TIER_FAMILIES.find(([t]) => t === tier)![1]
-  return tierRoles(
-    tier,
-    label,
-    { fill: fam(family, "base"), container: fam(family, "container"), on: fam(family, "on-container"), text: fam(family, "text") },
-    family
-  )
+const familyValues = (family: string) => ({
+  fill: fam(family, "base"),
+  container: fam(family, "container"),
+  on: fam(family, "on-container"),
+  text: fam(family, "text"),
 })
+
+const ASSURANCE_ROLES: Role[] = ASSURANCE_LEVELS.flatMap(([level, label, family], i) =>
+  trustRoles(
+    `assurance-${level}`,
+    "assurance",
+    `Assurance level ${i} \`${level}\` ("${label}", ${family ?? "the neutral grey, `status-neutral`,"} in the Mzizi pack)`,
+    family
+      ? familyValues(family)
+      : {
+          fill: { role: "status-neutral" },
+          container: { role: "status-neutral-container" },
+          on: { role: "status-neutral-on-container" },
+          text: { role: "status-neutral-text" },
+        }
+  )
+)
+
+const ATTESTATION_ROLES: Role[] = ATTESTATIONS.flatMap(([type, label, family]) =>
+  trustRoles(`attestation-${type}`, "attestation", `Attestation \`${type}\` ("${label}", ${family} in the Mzizi pack)`, familyValues(family))
+)
+
+/** `--tier-*`: aliases of the new roles, so a pack that remaps a level moves its legacy tier too. */
+const TIER_ROLES: Role[] = TIER_ALIASES.flatMap(([tier, target]) =>
+  ["", "-container", "-on-container", "-text"].map((suffix): Role => {
+    const of = [...ASSURANCE_ROLES, ...ATTESTATION_ROLES].find((r) => r.name === `${target}${suffix}`)!
+    const contrast: ContrastRule | undefined =
+      suffix === "-on-container" ? { against: [`tier-${tier}-container`], min: BODY } : of.contrast
+    return {
+      name: `tier-${tier}${suffix}`,
+      group: "tier",
+      kind: of.kind,
+      required: true,
+      description: `Legacy verification tier \`${tier}\` (\`bundu.verificationTier\`): an alias of \`${target}${suffix}\`. Read the assurance and attestation roles in new code.`,
+      contrast,
+      default: { role: `${target}${suffix}` },
+      block: "roles",
+    }
+  })
+)
 
 // ─── Legacy status colours — `/v1/brand` semanticColors, read from canon ─────
 
@@ -735,6 +812,8 @@ export const ROLES: readonly Role[] = [
   ...LEGACY_STATUS_ROLES,
   ...STATUS_ROLES,
   ...LIFECYCLE_ROLES,
+  ...ASSURANCE_ROLES,
+  ...ATTESTATION_ROLES,
   ...TIER_ROLES,
 
   // ── Categorical ──
