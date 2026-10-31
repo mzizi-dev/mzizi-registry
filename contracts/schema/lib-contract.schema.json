@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Library contract",
+  "description": "A contract for a non-visual library (N5 resilience, N8 assurance): config, operations, named invariants each held by a test, and the shared vectors. The visual component contracts use component-contract.schema.json.",
+  "type": "object",
+  "required": [
+    "name",
+    "title",
+    "version",
+    "node",
+    "kind",
+    "summary",
+    "implementations",
+    "operations",
+    "invariants",
+    "fixtures",
+    "gaps"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^lib/[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "node": {
+      "type": "integer"
+    },
+    "kind": {
+      "const": "lib"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "implementations": {
+      "type": "object",
+      "required": ["rs", "ts", "py"],
+      "properties": {
+        "rs": {
+          "type": ["object", "null"],
+          "required": ["crate", "module"]
+        },
+        "ts": {
+          "type": ["object", "null"]
+        },
+        "py": {
+          "type": ["object", "null"]
+        }
+      }
+    },
+    "config": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "description"]
+      }
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["signature", "returns", "description"]
+      }
+    },
+    "invariants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "test"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "test": {
+            "type": "string",
+            "description": "The name of the test function in the implementation that holds this invariant."
+          }
+        }
+      }
+    },
+    "fixtures": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "A file in __tests__/fixtures/resilience/."
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

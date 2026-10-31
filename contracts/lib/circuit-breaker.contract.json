@@ -1,0 +1,116 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/circuit-breaker",
+  "title": "Circuit breaker",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "lib",
+  "summary": "Decides whether a call may go to a failing dependency: closed, open, half-open. Sans-IO: the host passes the time in milliseconds.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-resilience",
+      "module": "breaker"
+    },
+    "ts": null,
+    "py": null
+  },
+  "config": [
+    {
+      "name": "failure_threshold",
+      "type": "u32",
+      "min": 1,
+      "description": "Failures inside window_ms that open the circuit."
+    },
+    {
+      "name": "window_ms",
+      "type": "u64",
+      "min": 1,
+      "description": "Failures older than this are forgotten."
+    },
+    {
+      "name": "cooldown_ms",
+      "type": "u64",
+      "min": 1,
+      "description": "How long the circuit stays open before one probe."
+    }
+  ],
+  "operations": [
+    {
+      "signature": "new(config)",
+      "returns": "Result<Breaker, ConfigError>",
+      "description": "A closed breaker, or the reason the settings are invalid."
+    },
+    {
+      "signature": "acquire(now)",
+      "returns": "Admission",
+      "description": "Allowed(Permit), Open{retry_after_ms} or ProbeInFlight."
+    },
+    {
+      "signature": "success(permit)",
+      "returns": "()",
+      "description": "The call succeeded."
+    },
+    {
+      "signature": "failure(now, permit)",
+      "returns": "()",
+      "description": "The call failed in a way that counts."
+    },
+    {
+      "signature": "release(permit)",
+      "returns": "()",
+      "description": "The call says nothing about the dependency (cancelled, a caller error)."
+    },
+    {
+      "signature": "state(now)",
+      "returns": "State",
+      "description": "Closed, Open or HalfOpen at now."
+    }
+  ],
+  "invariants": [
+    {
+      "id": "invalid-settings",
+      "text": "A zero threshold, window or cooldown is refused at construction.",
+      "test": "rejects_invalid_settings"
+    },
+    {
+      "id": "opens-on-failing-call",
+      "text": "The circuit opens on the failing call, not on the next one.",
+      "test": "opens_on_the_failing_call_not_the_next"
+    },
+    {
+      "id": "window",
+      "text": "Failures older than window_ms are forgotten.",
+      "test": "old_failures_leave_the_window"
+    },
+    {
+      "id": "one-probe",
+      "text": "Half-open admits exactly one probe; its success closes the circuit.",
+      "test": "half_open_admits_exactly_one_probe"
+    },
+    {
+      "id": "failed-probe",
+      "text": "A failed probe reopens for a full cooldown.",
+      "test": "a_failed_probe_reopens_for_a_full_cooldown"
+    },
+    {
+      "id": "released-probe",
+      "text": "A released probe frees the slot without judging the dependency.",
+      "test": "a_released_probe_frees_the_slot_without_judging_the_dependency"
+    },
+    {
+      "id": "late-outcome",
+      "text": "An outcome from a call admitted before the circuit opened is ignored.",
+      "test": "a_late_outcome_from_before_opening_changes_nothing"
+    },
+    {
+      "id": "clock-steps-back",
+      "text": "A clock that steps back never panics or underflows.",
+      "test": "a_clock_that_steps_back_does_not_panic"
+    }
+  ],
+  "fixtures": ["breaker.json"],
+  "gaps": [
+    "No TypeScript or Python build yet (mzizi-registry#472, phases 1 and 2): until they exist this contract is held by the Rust crate only.",
+    "No registry entry yet: the TypeScript original of the same name is not held to this contract."
+  ]
+}

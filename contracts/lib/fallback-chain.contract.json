@@ -1,0 +1,52 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/fallback-chain",
+  "title": "Fallback chain",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "lib",
+  "summary": "Try stages in order and serve the first that works, saying whether the answer is degraded.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-resilience",
+      "module": "chain"
+    },
+    "ts": null,
+    "py": null
+  },
+  "config": [],
+  "operations": [
+    {
+      "signature": "run(stages)",
+      "returns": "Result<Served<T>, AllFailed>",
+      "description": "The first working stage, its index and whether it is degraded."
+    }
+  ],
+  "invariants": [
+    {
+      "id": "first-working",
+      "text": "The first working stage serves.",
+      "test": "the_first_working_stage_serves"
+    },
+    {
+      "id": "preferred-not-degraded",
+      "text": "Only a stage after the first is degraded.",
+      "test": "the_preferred_stage_is_not_degraded"
+    },
+    {
+      "id": "no-error-text",
+      "text": "A total failure carries counts, never error text.",
+      "test": "a_total_failure_carries_no_error_text"
+    },
+    {
+      "id": "no-stages",
+      "text": "No stages is a failure of zero stages.",
+      "test": "no_stages_is_a_failure_of_zero_stages"
+    }
+  ],
+  "fixtures": [],
+  "gaps": [
+    "No TypeScript or Python build yet (mzizi-registry#472, phases 1 and 2): until they exist this contract is held by the Rust crate only.",
+    "No registry entry yet: the TypeScript original of the same name is not held to this contract."
+  ]
+}
