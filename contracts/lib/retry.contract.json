@@ -1,0 +1,91 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/retry",
+  "title": "Retry backoff",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "lib",
+  "summary": "How long to wait before retry n: exponential, capped, jittered; the random draw is passed in.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-resilience",
+      "module": "retry"
+    },
+    "ts": null,
+    "py": null
+  },
+  "config": [
+    {
+      "name": "base_ms",
+      "type": "u64",
+      "min": 1,
+      "description": "The delay before the first retry."
+    },
+    {
+      "name": "factor",
+      "type": "u32",
+      "min": 1,
+      "description": "Growth per retry."
+    },
+    {
+      "name": "max_ms",
+      "type": "u64",
+      "min": 1,
+      "description": "The longest delay; at least base_ms."
+    },
+    {
+      "name": "jitter",
+      "type": "none|full|equal",
+      "description": "The randomisation."
+    }
+  ],
+  "operations": [
+    {
+      "signature": "Backoff::new(base_ms, factor, max_ms, jitter)",
+      "returns": "Result<Backoff, ConfigError>",
+      "description": "The settings, or why they are invalid."
+    },
+    {
+      "signature": "delay_ms(retry, unit)",
+      "returns": "u64",
+      "description": "The wait before retry number retry (1 is the first), given a draw in [0, 1)."
+    },
+    {
+      "signature": "max_attempts(n)",
+      "returns": "Result<u32, ConfigError>",
+      "description": "Zero attempts is refused."
+    }
+  ],
+  "invariants": [
+    {
+      "id": "grows-and-caps",
+      "text": "The delay grows by factor and stops at max_ms.",
+      "test": "grows_and_caps"
+    },
+    {
+      "id": "jitter-under-cap",
+      "text": "Jitter never makes a delay exceed max_ms, for any draw (NaN and out-of-range included).",
+      "test": "jitter_never_exceeds_the_cap"
+    },
+    {
+      "id": "equal-jitter",
+      "text": "Equal jitter never waits less than half the delay.",
+      "test": "equal_jitter_never_waits_less_than_half"
+    },
+    {
+      "id": "no-overflow",
+      "text": "Huge retry counts do not overflow.",
+      "test": "huge_retry_counts_do_not_overflow"
+    },
+    {
+      "id": "invalid",
+      "text": "Invalid settings and zero attempts are refused.",
+      "test": "invalid_settings_and_zero_attempts_are_refused"
+    }
+  ],
+  "fixtures": ["backoff.json"],
+  "gaps": [
+    "No TypeScript or Python build yet (mzizi-registry#472, phases 1 and 2): until they exist this contract is held by the Rust crate only.",
+    "No registry entry yet: the TypeScript original of the same name is not held to this contract."
+  ]
+}
