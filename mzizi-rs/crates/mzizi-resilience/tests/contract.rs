@@ -37,8 +37,11 @@ fn every_lib_contract_is_held_by_real_tests_and_fixtures() {
         if !path.to_string_lossy().ends_with(".contract.json") {
             continue;
         }
-        seen += 1;
         let c: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+        if c["implementations"]["rs"]["crate"] != "mzizi-resilience" {
+            continue; // another crate's contract; that crate holds it
+        }
+        seen += 1;
         let name = c["name"].as_str().unwrap();
         assert_eq!(c["node"], 5, "{name}: this crate is N5");
         assert_eq!(

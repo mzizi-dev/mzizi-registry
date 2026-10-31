@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `mzizi-chaos-engine`, the N8 seeded chaos engine (2026-10-31, [#472](https://github.com/mzizi-dev/mzizi-registry/issues/472))
+
+- **New crate `mzizi-rs/crates/mzizi-chaos-engine`**: a seeded, deterministic fault schedule (nothing, latency, a 5xx, a timeout, unreachable) for chaos tests. Sans-IO, no dependencies: it decides, the host injects. Same plan and seed give the same faults in every build (SplitMix64, a draw is the top 53 bits over 2^53); `Engine::new` refuses production and any environment that is not plainly a test one, with no override; rates, the latency range and the status list are validated at construction.
+- **Shared vectors** `__tests__/fixtures/chaos/seeded.json`, produced by an independent Python implementation of the same rule, which the Rust build matches to the last fault. TypeScript and Python builds are held to the same file.
+- **A contract** `contracts/lib/chaos-engine.contract.json` (N8; eight invariants, each naming its test, checked by the crate's `tests/contract.rs`). The `mzizi-resilience` contract suite now checks only its own crate's contracts.
+- Both new crates compile for `wasm32-unknown-unknown`.
+- **Not in this change**: the TypeScript and Python builds, the registry entry, and `mzizi chaos run` in the CLI ([mzizi-dev/agent-tools#285](https://github.com/mzizi-dev/agent-tools/issues/285)). `mzizi-assurance`'s `mzizi-chaos` (blast-radius diagnostics) is a different thing and is untouched.
+
 ### Fixed — dependency advisories: `pnpm audit` is clean at moderate and above (2026-10-31)
 
 - **Overrides raised** (all transitive, through `shadcn`, `@modelcontextprotocol/sdk` and `eslint`): `systeminformation` `>=5.33.16` (a high Windows command injection and a prototype pollution, GHSA-3f7j-7jwc-fxfj and GHSA-7648-jmwf-vw7j), `@hono/node-server` `>=2.1.3` (GHSA-rmxm-3fg6-px4f), `qs` `>=6.16.1` (GHSA-6pq8-jhm2-2vcw), `minimatch` `>=11.0.1` (GHSA-g3hv-75wg-m249) and `katex` `>=0.18.2`. The `Security Audit` job had been red on every PR since these were published, and it fails the build, so a green dependency PR could not be told from a broken one.
