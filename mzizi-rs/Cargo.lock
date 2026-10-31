@@ -879,6 +879,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "mzizi-resilience"
+version = "0.6.0"
+dependencies = [
+ "serde_json",
+]
+
+[[package]]
 name = "mzizi-roots"
 version = "0.6.0"
 dependencies = [

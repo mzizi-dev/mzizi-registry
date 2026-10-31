@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `mzizi-resilience`, the N5 Rust core, phase 1 (2026-10-31, [#472](https://github.com/mzizi-dev/mzizi-registry/issues/472))
+
+- **New crate `mzizi-rs/crates/mzizi-resilience`**: circuit breaker, retry backoff, bulkhead, token-bucket rate limiter, fallback chain and deadline, each a sans-IO state machine (the host passes the time in milliseconds and a random draw in `[0, 1)`), so it runs unchanged on Workers (`wasm32`), in containers and on bare metal. No dependencies; `#![forbid(unsafe_code)]` through the workspace lints.
+- **Fixes the defects #472 audited in the TypeScript primitives, each with a test**: half-open admits exactly one probe; the circuit opens on the failing call; a late outcome from before opening is ignored; the host decides what counts as a failure (`failure` or `release`); jitter never exceeds the cap; zero attempts and zero capacity are refused at construction; the rate limiter's sustained rate is exactly `limit` per window whatever the burst, and `retry_after` counts the part of a token already refilled; a bulkhead wait that gives up is not a rejection; a fallback chain's total failure carries counts, never error text.
+- **Shared vectors** in `__tests__/fixtures/resilience/` (`breaker.json`, `rate-limit.json`, `backoff.json`), run by the crate's `tests/fixtures.rs` and meant to be run by the TypeScript and Python builds too.
+- **Not in this change**: the TypeScript rewrite, the Astro shells for the 14 N5 UI components, the Python build, the registry entries and contracts, and the `crate-for-node.json` mapping (`n5-resilience` still names `mzizi-data`). They follow in their own changes under #472.
+
 ### Changed — the Claude Code plugin carries `@nyuchi/mzizi-skills` 0.13.0 (2026-10-25)
 
 - **`@nyuchi/mzizi-skills` is required at `>=0.13.0`** (from `>=0.8.5`), `pnpm skills:generate` regenerates `lib/skills.generated.ts` (what `/v1/skills` and the MCP serve from) from it, and `pnpm plugin:skills` regenerates `plugin/skills/`: 7 skills, 14 files. The copy had stayed at 0.8.5, so the plugin still taught verification as one five-rung `--tier-*` ladder. Now `mzizi-design` teaches assurance levels (`--assurance-*`) plus attestations (`--attestation-*`), matching the 4.17.0 roles (agent-tools #274). `mzizi-roots` names the Roots crates at 0.6.0 (`version = "0.6"`). The `dev` skills `digital-hygiene` and `progress-report` are added to the plugin, and `mzizi-language`, `mzizi-backend` and `discoverability` move to their 0.13.0 text.
