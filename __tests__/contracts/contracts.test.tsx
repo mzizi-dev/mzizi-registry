@@ -169,7 +169,7 @@ describe("contracts are well formed", () => {
 
   test("no directory under contracts/ is a family the tests do not read", () => {
     const dirs = readdirSync(DIR, { withFileTypes: true })
-      .filter((d) => d.isDirectory() && d.name !== "schema")
+      .filter((d) => d.isDirectory() && d.name !== "schema" && d.name !== "lib") // lib/ has its own schema, held by mzizi-resilience
       .map((d) => d.name)
       .sort()
     expect(dirs).toEqual(Object.keys(FAMILIES).sort())
