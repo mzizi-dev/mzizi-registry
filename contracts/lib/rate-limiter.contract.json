@@ -1,0 +1,86 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/rate-limiter",
+  "title": "Rate limiter",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "lib",
+  "summary": "A token bucket whose sustained rate is exactly limit per window; the burst is a one-time allowance.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-resilience",
+      "module": "rate_limit"
+    },
+    "ts": null,
+    "py": null
+  },
+  "config": [
+    {
+      "name": "limit",
+      "type": "u32",
+      "min": 1,
+      "description": "Requests per window, sustained."
+    },
+    {
+      "name": "window_ms",
+      "type": "u64",
+      "min": 1,
+      "description": "The window."
+    },
+    {
+      "name": "burst",
+      "type": "u32",
+      "min": 0,
+      "description": "Extra tokens the bucket may hold."
+    }
+  ],
+  "operations": [
+    {
+      "signature": "new(config, now)",
+      "returns": "Result<RateLimiter, ConfigError>",
+      "description": "A full bucket."
+    },
+    {
+      "signature": "try_acquire(now, n)",
+      "returns": "Decision",
+      "description": "Allowed, Denied{retry_after_ms} or Impossible."
+    },
+    {
+      "signature": "available(now)",
+      "returns": "u32",
+      "description": "Whole tokens available."
+    }
+  ],
+  "invariants": [
+    {
+      "id": "invalid",
+      "text": "Invalid settings are refused.",
+      "test": "invalid_settings_are_refused"
+    },
+    {
+      "id": "sustained-rate",
+      "text": "The sustained rate is limit per window whatever the burst.",
+      "test": "the_sustained_rate_is_limit_per_window_even_with_a_burst"
+    },
+    {
+      "id": "partial-refill",
+      "text": "A denial counts the part of a token already refilled.",
+      "test": "a_denial_counts_the_part_of_a_token_already_refilled"
+    },
+    {
+      "id": "impossible",
+      "text": "Asking for more than the bucket holds is Impossible, not Denied.",
+      "test": "asking_for_more_than_the_bucket_holds_is_impossible"
+    },
+    {
+      "id": "available",
+      "text": "available agrees with try_acquire.",
+      "test": "available_agrees_with_try_acquire"
+    }
+  ],
+  "fixtures": ["rate-limit.json"],
+  "gaps": [
+    "No TypeScript or Python build yet (mzizi-registry#472, phases 1 and 2): until they exist this contract is held by the Rust crate only.",
+    "No registry entry yet: the TypeScript original of the same name is not held to this contract."
+  ]
+}
