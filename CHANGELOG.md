@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — dependency advisories: `pnpm audit` is clean at moderate and above (2026-10-31)
+
+- **Overrides raised** (all transitive, through `shadcn`, `@modelcontextprotocol/sdk` and `eslint`): `systeminformation` `>=5.33.16` (a high Windows command injection and a prototype pollution, GHSA-3f7j-7jwc-fxfj and GHSA-7648-jmwf-vw7j), `@hono/node-server` `>=2.1.3` (GHSA-rmxm-3fg6-px4f), `qs` `>=6.16.1` (GHSA-6pq8-jhm2-2vcw), `minimatch` `>=11.0.1` (GHSA-g3hv-75wg-m249) and `katex` `>=0.18.2`. The `Security Audit` job had been red on every PR since these were published, and it fails the build, so a green dependency PR could not be told from a broken one.
+- **Left**: one low advisory in `deepmerge` that has no patched version. The audit gate is at moderate.
+- Checked: the full vitest run (1413 and 551 tests), eslint (with minimatch 11), both typechecks and prettier pass.
+
 ### Added — `mzizi-resilience`, the N5 Rust core, phase 1 (2026-10-31, [#472](https://github.com/mzizi-dev/mzizi-registry/issues/472))
 
 - **New crate `mzizi-rs/crates/mzizi-resilience`**: circuit breaker, retry backoff, bulkhead, token-bucket rate limiter, fallback chain and deadline, each a sans-IO state machine (the host passes the time in milliseconds and a random draw in `[0, 1)`), so it runs unchanged on Workers (`wasm32`), in containers and on bare metal. No dependencies; `#![forbid(unsafe_code)]` through the workspace lints.
