@@ -1,0 +1,13 @@
+{
+  "name": "rate-limit",
+  "note": "A token bucket: 10 per second sustained, 5 extra for a burst. Time in ms.",
+  "config": { "limit": 10, "window_ms": 1000, "burst": 5 },
+  "start": 0,
+  "steps": [
+    { "at": 0, "take": 15, "expect": "allowed" },
+    { "at": 0, "take": 1, "expect": "denied", "retry_after_ms": 100 },
+    { "at": 60, "take": 1, "expect": "denied", "retry_after_ms": 40 },
+    { "at": 100, "take": 1, "expect": "allowed" },
+    { "at": 100, "take": 16, "expect": "impossible" }
+  ]
+}

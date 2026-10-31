@@ -1,0 +1,36 @@
+{
+  "name": "breaker",
+  "note": "A scripted run of the circuit breaker. Time is in ms. Each step is applied in order; 'acquire' names the permit it may produce so a later step can report an outcome for it. Rust, TypeScript and Python builds all run this file (mzizi-registry#472).",
+  "config": { "failure_threshold": 3, "window_ms": 1000, "cooldown_ms": 500 },
+  "steps": [
+    { "at": 0, "do": "acquire", "as": "a", "expect": "allowed" },
+    { "at": 0, "do": "failure", "permit": "a", "state": "closed" },
+    { "at": 10, "do": "acquire", "as": "b", "expect": "allowed" },
+    { "at": 10, "do": "failure", "permit": "b", "state": "closed" },
+    { "at": 20, "do": "acquire", "as": "slow", "expect": "allowed" },
+    { "at": 21, "do": "acquire", "as": "c", "expect": "allowed" },
+    { "at": 21, "do": "failure", "permit": "c", "state": "open" },
+    { "at": 22, "do": "acquire", "expect": "open", "retry_after_ms": 499 },
+    { "at": 23, "do": "success", "permit": "slow", "state": "open" },
+    { "at": 24, "do": "failure", "permit": "slow", "state": "open" },
+    {
+      "at": 521,
+      "do": "acquire",
+      "as": "probe",
+      "expect": "allowed",
+      "probe": true
+    },
+    { "at": 521, "do": "acquire", "expect": "probe_in_flight" },
+    { "at": 530, "do": "failure", "permit": "probe", "state": "open" },
+    { "at": 531, "do": "acquire", "expect": "open", "retry_after_ms": 499 },
+    {
+      "at": 1100,
+      "do": "acquire",
+      "as": "probe2",
+      "expect": "allowed",
+      "probe": true
+    },
+    { "at": 1110, "do": "success", "permit": "probe2", "state": "closed" },
+    { "at": 1111, "do": "acquire", "expect": "allowed" }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "backoff",
+  "note": "delay_ms(retry, unit) for base 100, factor 2, cap 1000. Jitter never exceeds the cap.",
+  "config": { "base_ms": 100, "factor": 2, "max_ms": 1000 },
+  "cases": [
+    { "jitter": "none", "retry": 1, "unit": 0.5, "delay_ms": 100 },
+    { "jitter": "none", "retry": 5, "unit": 0.5, "delay_ms": 1000 },
+    { "jitter": "none", "retry": 30, "unit": 0.5, "delay_ms": 1000 },
+    { "jitter": "full", "retry": 3, "unit": 0.0, "delay_ms": 0 },
+    { "jitter": "full", "retry": 3, "unit": 0.5, "delay_ms": 200 },
+    { "jitter": "full", "retry": 30, "unit": 0.999999, "delay_ms": 999 },
+    { "jitter": "equal", "retry": 3, "unit": 0.0, "delay_ms": 200 },
+    { "jitter": "equal", "retry": 3, "unit": 1.0, "delay_ms": 400 },
+    { "jitter": "equal", "retry": 30, "unit": 1.0, "delay_ms": 1000 }
+  ]
+}
