@@ -21,7 +21,9 @@ export type ContractFile = Contract & { node: number }
 /** Every contract file, sorted by path (contracts.test.tsx keeps index.json in step). */
 export function loadContracts(): ContractFile[] {
   return readdirSync(CONTRACTS, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && d.name !== "schema")
+    // `lib/` holds non-visual library contracts (their own schema, held by the crates); these
+    // renderers only read component contracts.
+    .filter((d) => d.isDirectory() && d.name !== "schema" && d.name !== "lib")
     .flatMap((d) =>
       readdirSync(path.join(CONTRACTS, d.name))
         .filter((f) => f.endsWith(".contract.json"))
