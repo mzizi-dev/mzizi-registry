@@ -1,0 +1,23 @@
+[package]
+name = "mzizi-resilience"
+description = "Mzizi N5 resilience: the shared core. Circuit breaker, retry backoff, bulkhead, rate limiter, fallback chain and deadline as sans-IO state machines."
+readme = "README.md"
+keywords = ["resilience", "circuit-breaker", "retry", "rate-limiter", "mzizi"]
+categories = ["algorithms", "asynchronous", "wasm"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+# The fixture suite reads shared vectors from `__tests__/fixtures/resilience/`, three
+# levels above this crate, which can never be in the tarball (the same reason as
+# `mzizi-assurance`). It is a registry gate; CI runs it in the repo.
+exclude = ["tests/"]
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+serde_json = "1"
