@@ -39,6 +39,7 @@ members = [
   "crates/mzizi-ui",
   "crates/mzizi-brand",
   "crates/mzizi-assurance",
+  "crates/mzizi-resilience",
   "crates/mzizi-fundi",
   "crates/mzizi-discovery",
   "crates/mzizi-activitypub",
