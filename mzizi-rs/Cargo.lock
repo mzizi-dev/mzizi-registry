@@ -828,6 +828,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "mzizi-chaos-engine"
+version = "0.6.0"
+dependencies = [
+ "serde_json",
+]
+
+[[package]]
 name = "mzizi-data"
 version = "0.6.0"
 dependencies = [
@@ -876,6 +883,13 @@ dependencies = [
  "subtle",
  "worker",
  "zeroize",
+]
+
+[[package]]
+name = "mzizi-resilience"
+version = "0.6.0"
+dependencies = [
+ "serde_json",
 ]
 
 [[package]]

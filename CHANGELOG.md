@@ -10,6 +10,33 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `mzizi-chaos-engine`, the N8 seeded chaos engine (2026-10-31, [#472](https://github.com/mzizi-dev/mzizi-registry/issues/472))
+
+- **New crate `mzizi-rs/crates/mzizi-chaos-engine`**: a seeded, deterministic fault schedule (nothing, latency, a 5xx, a timeout, unreachable) for chaos tests. Sans-IO, no dependencies: it decides, the host injects. Same plan and seed give the same faults in every build (SplitMix64, a draw is the top 53 bits over 2^53); `Engine::new` refuses production and any environment that is not plainly a test one, with no override; rates, the latency range and the status list are validated at construction.
+- **Shared vectors** `__tests__/fixtures/chaos/seeded.json`, produced by an independent Python implementation of the same rule, which the Rust build matches to the last fault. TypeScript and Python builds are held to the same file.
+- **A contract** `contracts/lib/chaos-engine.contract.json` (N8; eight invariants, each naming its test, checked by the crate's `tests/contract.rs`). The `mzizi-resilience` contract suite now checks only its own crate's contracts.
+- Both new crates compile for `wasm32-unknown-unknown`.
+- **Not in this change**: the TypeScript and Python builds, the registry entry, and `mzizi chaos run` in the CLI ([mzizi-dev/agent-tools#285](https://github.com/mzizi-dev/agent-tools/issues/285)). `mzizi-assurance`'s `mzizi-chaos` (blast-radius diagnostics) is a different thing and is untouched.
+
+### Fixed — dependency advisories: `pnpm audit` is clean at moderate and above (2026-10-31)
+
+- **Overrides raised** (all transitive, through `shadcn`, `@modelcontextprotocol/sdk` and `eslint`): `systeminformation` `>=5.33.16` (a high Windows command injection and a prototype pollution, GHSA-3f7j-7jwc-fxfj and GHSA-7648-jmwf-vw7j), `@hono/node-server` `>=2.1.3` (GHSA-rmxm-3fg6-px4f), `qs` `>=6.16.1` (GHSA-6pq8-jhm2-2vcw), `minimatch` `>=11.0.1` (GHSA-g3hv-75wg-m249) and `katex` `>=0.18.2`. The `Security Audit` job had been red on every PR since these were published, and it fails the build, so a green dependency PR could not be told from a broken one.
+- **Left**: one low advisory in `deepmerge` that has no patched version. The audit gate is at moderate.
+- Checked: the full vitest run (1413 and 551 tests), eslint (with minimatch 11), both typechecks and prettier pass.
+
+### Added — `mzizi-resilience`, the N5 Rust core, phase 1 (2026-10-31, [#472](https://github.com/mzizi-dev/mzizi-registry/issues/472))
+
+- **New crate `mzizi-rs/crates/mzizi-resilience`**: circuit breaker, retry backoff, bulkhead, token-bucket rate limiter, fallback chain and deadline, each a sans-IO state machine (the host passes the time in milliseconds and a random draw in `[0, 1)`), so it runs unchanged on Workers (`wasm32`), in containers and on bare metal. No dependencies; `#![forbid(unsafe_code)]` through the workspace lints.
+- **Fixes the defects #472 audited in the TypeScript primitives, each with a test**: half-open admits exactly one probe; the circuit opens on the failing call; a late outcome from before opening is ignored; the host decides what counts as a failure (`failure` or `release`); jitter never exceeds the cap; zero attempts and zero capacity are refused at construction; the rate limiter's sustained rate is exactly `limit` per window whatever the burst, and `retry_after` counts the part of a token already refilled; a bulkhead wait that gives up is not a rejection; a fallback chain's total failure carries counts, never error text.
+- **Shared vectors** in `__tests__/fixtures/resilience/` (`breaker.json`, `rate-limit.json`, `backoff.json`), run by the crate's `tests/fixtures.rs` and meant to be run by the TypeScript and Python builds too.
+- **A contract for each of the six** in the new `contracts/lib/` family (`schema/lib-contract.schema.json`): config, operations and 30 named invariants, each naming the test that holds it; `tests/contract.rs` fails on a contract that names a test or fixture that does not exist. Every new build starts from its contract (owner, 2026-10-31).
+- **Not in this change**: the TypeScript rewrite, the Astro shells for the 14 N5 UI components, the Python build, the registry entries and contracts, and the `crate-for-node.json` mapping (`n5-resilience` still names `mzizi-data`). They follow in their own changes under #472.
+
+### Changed — the Claude Code plugin carries `@nyuchi/mzizi-skills` 0.13.0 (2026-10-25)
+
+- **`@nyuchi/mzizi-skills` is required at `>=0.13.0`** (from `>=0.8.5`), `pnpm skills:generate` regenerates `lib/skills.generated.ts` (what `/v1/skills` and the MCP serve from) from it, and `pnpm plugin:skills` regenerates `plugin/skills/`: 7 skills, 14 files. The copy had stayed at 0.8.5, so the plugin still taught verification as one five-rung `--tier-*` ladder. Now `mzizi-design` teaches assurance levels (`--assurance-*`) plus attestations (`--attestation-*`), matching the 4.17.0 roles (agent-tools #274). `mzizi-roots` names the Roots crates at 0.6.0 (`version = "0.6"`). The `dev` skills `digital-hygiene` and `progress-report` are added to the plugin, and `mzizi-language`, `mzizi-backend` and `discoverability` move to their 0.13.0 text.
+- **The public Claude Code plugin is 1.3.0** (`plugin/.claude-plugin/plugin.json`, minor, because it adds two skills). Its description and the marketplace entry now name seven skills and skills 0.13.0.
+
 ## [4.17.0] - 2026-10-25
 
 Releases `staging` to `main` as the next minor above v4.16.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.17.0, and the Mzizi Roots crates move to **0.6.0** (`[workspace.package] version` and the path-dependency versions; `mzizi-mongodb` now requires `mzizi-data` and `mzizi-harness` `>=0.6.0`), because the generated Rust token pack in `mzizi-tokens` carries the new roles. It carries the Bundu trust model ([#577](https://github.com/mzizi-dev/mzizi-registry/issues/577), from nyuchi-api `gateway/lib/assurance.py`): the `--assurance-*` levels and `--attestation-*` roles in N1, with `--tier-*` kept as aliases (#578), and the trust components on that model: `mzizi-trust-tier-data`, `app/tier-status` 1.1.0, `ui/mzizi-verified-badge` 1.1.0 and `ui/mzizi-trust-meter` 2.2.0 (#579).
