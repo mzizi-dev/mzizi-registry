@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.18.0] - 2026-11-01
+
+Releases `staging` to `main` as the next minor above v4.17.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.18.0, and the Mzizi Roots crates move to **0.7.0** (`[workspace.package] version` and the path-dependency versions; `mzizi-mongodb` now requires `mzizi-data` and `mzizi-harness` `>=0.7.0`), because two new crates join the workspace. It carries the first two Rust builds of [#472](https://github.com/mzizi-dev/mzizi-registry/issues/472): `mzizi-resilience`, the N5 core, with a `contracts/lib/` contract for each of its six primitives (#584, #585), and `mzizi-chaos-engine`, the N8 seeded chaos engine (#586); the dependency-advisory fixes that make `pnpm audit` clean at moderate and above (#587); and the Claude Code plugin at 1.3.0 carrying `@nyuchi/mzizi-skills` 0.13.0, seven skills (#582). `publish-crates.yml`'s publish order now names `mzizi-resilience` and `mzizi-chaos-engine`; without that its member check fails and nothing is published. Nothing breaks.
+
 ### Added — `mzizi-chaos-engine`, the N8 seeded chaos engine (2026-10-31, [#472](https://github.com/mzizi-dev/mzizi-registry/issues/472))
 
 - **New crate `mzizi-rs/crates/mzizi-chaos-engine`**: a seeded, deterministic fault schedule (nothing, latency, a 5xx, a timeout, unreachable) for chaos tests. Sans-IO, no dependencies: it decides, the host injects. Same plan and seed give the same faults in every build (SplitMix64, a draw is the top 53 bits over 2^53); `Engine::new` refuses production and any environment that is not plainly a test one, with no override; rates, the latency range and the status list are validated at construction.
