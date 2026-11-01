@@ -20,6 +20,12 @@
  * level is one badge in its `--assurance-*` pair, and each attestation is its own badge in its
  * `--attestation-*` pair beside it, never a rung. With more than one badge they sit in a named
  * group (`role="group"`). `tier` is the legacy projection and renders as it always has.
+ *
+ * PROVENANCE. A stored attestation may say where it came from and when it was checked
+ * (`{ type: "community", source: "osm", checkedAt: "2026-03-14" }`). The badge keeps its
+ * canonical name; "via OpenStreetMap · checked 14 Mar 2026" is its `aria-description` and the
+ * second line of its title. No `checkedAt`, no date: a date is never invented. An unknown
+ * source id shows as the id.
  */
 import Icon from "./site-icon.astro";
 import type { IconName } from "./site-icons";
@@ -28,11 +34,13 @@ import {
   ATTESTATION_DATA,
   STATUS_OVERLAY,
   TIER_DATA,
+  attestationProvenance,
   legacyTier,
-  normalizeAttestations,
+  normalizeAttestationRecords,
   type AssuranceLevel,
   type AttestationInput,
   type PlatformStatus,
+  type ProvenanceWords,
   type VerificationTier,
 } from "./mzizi-trust-tier-data";
 import { cn } from "./ui-utils";
@@ -42,8 +50,19 @@ interface Props {
   tier?: VerificationTier;
   /** The assurance level (assurance.py). With it, `attestations` show as badges of their own. */
   assurance?: AssuranceLevel;
-  /** The attestations in force, as type names or stored records; revoked ones are dropped. */
+  /**
+   * The attestations in force, as type names or stored records; revoked ones are dropped. A
+   * record may carry provenance (`source`, `sourceRef`, `checkedAt`): the badge keeps its
+   * canonical name, and "via OpenStreetMap · checked 14 Mar 2026" becomes its accessible
+   * description and the second line of its title.
+   */
   attestations?: AttestationInput[];
+  /** A BCP 47 locale for an attestation's check date. Default `en-GB` ("14 Mar 2026"). */
+  locale?: string;
+  /** Display names for attestation source ids, ahead of the built-in ones (osm → OpenStreetMap). */
+  sourceNames?: Record<string, string>;
+  /** The words around a provenance line ("via", "checked"), for another language. */
+  provenanceWords?: ProvenanceWords;
   /** The group's accessible name when more than one badge shows; defaults to the names joined. */
   groupLabel?: string;
   /** Platform status (identity.person.mit_status). */
@@ -67,6 +86,9 @@ const {
   tier = "unverified",
   assurance,
   attestations,
+  locale,
+  sourceNames,
+  provenanceWords,
   groupLabel,
   status = "living",
   size = "md",
@@ -89,11 +111,13 @@ type Mark = {
   glyph: IconName;
   pair: { container: string; onContainer: string };
   data: Record<string, string | number | undefined>;
+  /** The provenance line: the badge's accessible description and its title's second line. */
+  description?: string;
 };
 
 const overlay = STATUS_OVERLAY[status].overlay;
 const model = assurance !== undefined && assurance in ASSURANCE_DATA;
-const chips = model ? normalizeAttestations(attestations) : [];
+const chips = model ? normalizeAttestationRecords(attestations) : [];
 const level = model ? ASSURANCE_DATA[assurance as AssuranceLevel] : null;
 const projected = level ? legacyTier(level.level, chips) : tier;
 const data = TIER_DATA[projected];
@@ -126,11 +150,21 @@ if (overlay === "suspended") {
       pair: own.pair,
       data: levelData,
     });
-  for (const t of chips) {
-    const a = ATTESTATION_DATA[t];
-    marks.push({ key: t, name: a.label, glyph: a.glyph, pair: a.classes, data: { "data-attestation": t } });
+  for (const r of chips) {
+    const a = ATTESTATION_DATA[r.type];
+    const p = attestationProvenance(r, { locale, sourceNames, words: provenanceWords });
+    marks.push({
+      key: r.type,
+      name: a.label,
+      glyph: a.glyph,
+      pair: a.classes,
+      data: { "data-attestation": r.type, "data-source": p?.source, "data-checked-at": p?.checkedAt },
+      description: p?.text,
+    });
   }
 }
+/** The title: the name, and the provenance on a second line when there is one. */
+const titleOf = (m: Mark) => (m.description ? `${m.name}\n${m.description}` : m.name);
 const nameOf = (m: Mark) => (m.key === "level" ? (ariaLabel ?? m.name) : m.name);
 const badgeClass = (m: Mark, root: boolean) =>
   cn("inline-flex shrink-0 items-center justify-center rounded-full", BOX[size], GLYPH[size], m.pair.container, m.pair.onContainer, root && className);
@@ -153,7 +187,8 @@ const single = marks.length === 1 ? marks[0] : undefined;
       {...single.data}
       role="img"
       aria-label={nameOf(single)}
-      title={showTooltip ? single.name : undefined}
+      aria-description={single.description}
+      title={showTooltip ? titleOf(single) : undefined}
       class={badgeClass(single, true)}
     >
       <Icon name={single.glyph} />
@@ -173,7 +208,8 @@ const single = marks.length === 1 ? marks[0] : undefined;
           {...m.data}
           role="img"
           aria-label={nameOf(m)}
-          title={showTooltip ? m.name : undefined}
+          aria-description={m.description}
+          title={showTooltip ? titleOf(m) : undefined}
           class={badgeClass(m, false)}
         >
           <Icon name={m.glyph} />

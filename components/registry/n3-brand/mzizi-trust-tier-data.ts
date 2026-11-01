@@ -31,6 +31,11 @@
  * Community is an attestation, never a rung below otp: show it as its own chip beside the
  * level. Each part reads its `--assurance-*` / `--attestation-*` role.
  *
+ * PROVENANCE. An attestation may say where it came from (`source`, `sourceRef`) and when it
+ * was last checked (`checkedAt`): `normalizeAttestationRecords` keeps those, and
+ * `attestationProvenance` writes the line a chip shows beside its canonical label ("via
+ * OpenStreetMap · checked 14 Mar 2026"). The labels and the closed set of three do not change.
+ *
  * The five-rung `TIER_*` ladder below is the LEGACY projection, `bundu.verificationTier`
  * (`legacy_tier()` in assurance.py). It stays, unchanged, until every reader has moved; its
  * `--tier-*` roles alias the new ones. `legacyTierToAssurance` reads a legacy tier into the new
@@ -488,30 +493,199 @@ export function nextAssurance(level: AssuranceLevel): AssuranceData | null {
   return next ? ASSURANCE_DATA[next] : null
 }
 
-/** An attestation as stored (`{ type, revokedAt }`) or already normalised (its type name). */
-export type AttestationInput = AttestationType | { type?: unknown; revokedAt?: unknown } | null | undefined
+/**
+ * An attestation as stored (`{ type, revokedAt, source, sourceRef, checkedAt }`) or already
+ * normalised (its type name). The provenance fields are optional (see `AttestationRecord`).
+ */
+export type AttestationInput =
+  | AttestationType
+  | { type?: unknown; revokedAt?: unknown; source?: unknown; sourceRef?: unknown; checkedAt?: unknown }
+  | null
+  | undefined
+
+/**
+ * One attestation in force, with where it came from when that is known (#577). Kweli imports
+ * OpenStreetMap verifications (`check_date`, survey tags) as `community` attestations with
+ * `source: "osm"`: the attestation is still "Community Vouched", never a level, and the
+ * provenance is a detail beside it. Every field but `type` is optional.
+ */
+export interface AttestationRecord {
+  type: AttestationType
+  /** Where the attestation came from, as a short source id ("osm"). Named by `ATTESTATION_SOURCES`. */
+  source?: string
+  /** The source's own reference for it ("node/123456"), kept for the consumer; never shown. */
+  sourceRef?: string
+  /** When the source last checked it, as an ISO date (`YYYY-MM-DD`). Absent means not known. */
+  checkedAt?: string
+}
+
+/**
+ * The display names of known attestation sources, by source id. A source id that is not here
+ * is shown as the id itself (escaped by the renderer, like any text); a consumer can name more
+ * with the components' `sourceNames`.
+ */
+export const ATTESTATION_SOURCES: Readonly<Record<string, string>> = Object.freeze({
+  osm: "OpenStreetMap",
+})
+
+/** The longest source id or reference kept; anything longer is cut, never trusted to fit. */
+const MAX_SOURCE_LENGTH = 64
+
+/** Whether `key` is an own property of `obj` (never one inherited, such as `toString`). */
+const own = (obj: object, key: string) => Object.prototype.hasOwnProperty.call(obj, key)
+
+/** A trimmed, non-empty, bounded string, or undefined. */
+function cleanString(value: unknown, max = MAX_SOURCE_LENGTH): string | undefined {
+  if (typeof value !== "string") return undefined
+  const trimmed = value.trim().slice(0, max)
+  return trimmed === "" ? undefined : trimmed
+}
+
+/**
+ * A check date as an ISO date (`YYYY-MM-DD`), or undefined when it is missing or not a real
+ * date. Takes an ISO date or an ISO date-time (read in UTC). A date is never invented: a value
+ * that does not parse, or names a day that does not exist (2026-02-30), is dropped.
+ */
+export function parseCheckedAt(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined
+  const v = value.trim()
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v)
+  if (dateOnly) {
+    const [, y, m, d] = dateOnly
+    const at = new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)))
+    return at.getUTCFullYear() === Number(y) && at.getUTCMonth() === Number(m) - 1 && at.getUTCDate() === Number(d)
+      ? v
+      : undefined
+  }
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})$/.test(v)) return undefined
+  const at = new Date(v)
+  if (Number.isNaN(at.getTime())) return undefined
+  // A date-time whose calendar part does not exist (2026-02-30T…) is rejected, not rolled over.
+  if (parseCheckedAt(v.slice(0, 10)) === undefined) return undefined
+  return at.toISOString().slice(0, 10)
+}
+
+/**
+ * The attestations in force with their provenance, as `normalize_attestations` in assurance.py
+ * reads them: revoked ones (a non-null `revokedAt`) and unknown types are dropped, duplicates
+ * collapse onto the first seen (its provenance wins), and the first-seen order is kept.
+ * Idempotent. Display only; access is decided on the server, never here.
+ */
+export function normalizeAttestationRecords(raw: readonly AttestationInput[] | null | undefined): AttestationRecord[] {
+  if (!Array.isArray(raw)) return []
+  const live: AttestationRecord[] = []
+  for (const item of raw as readonly AttestationInput[]) {
+    let kind: unknown
+    let revoked = false
+    let record: Omit<AttestationRecord, "type"> = {}
+    if (typeof item === "string") kind = item
+    else if (item && typeof item === "object") {
+      kind = item.type
+      revoked = item.revokedAt !== undefined && item.revokedAt !== null
+      const source = cleanString(item.source)
+      const sourceRef = cleanString(item.sourceRef, 256)
+      const checkedAt = parseCheckedAt(item.checkedAt)
+      record = {
+        ...(source !== undefined && { source }),
+        ...(sourceRef !== undefined && { sourceRef }),
+        ...(checkedAt !== undefined && { checkedAt }),
+      }
+    } else continue
+    if (revoked || typeof kind !== "string" || !own(ATTESTATION_DATA, kind)) continue
+    if (live.some((r) => r.type === kind)) continue
+    live.push({ type: kind as AttestationType, ...record })
+  }
+  return live
+}
 
 /**
  * The attestations in force, as `normalize_attestations` in assurance.py reads them: revoked
  * ones (a non-null `revokedAt`) and unknown types are dropped, duplicates collapse, and the
  * first-seen order is kept. Idempotent. This is for display only; access is decided on the
- * server, never here.
+ * server, never here. `normalizeAttestationRecords` keeps the provenance as well.
  */
 export function normalizeAttestations(raw: readonly AttestationInput[] | null | undefined): AttestationType[] {
-  if (!Array.isArray(raw)) return []
-  const live: AttestationType[] = []
-  for (const item of raw) {
-    let kind: unknown
-    let revoked = false
-    if (typeof item === "string") kind = item
-    else if (item && typeof item === "object") {
-      kind = item.type
-      revoked = item.revokedAt !== undefined && item.revokedAt !== null
-    } else continue
-    if (revoked || typeof kind !== "string" || !(kind in ATTESTATION_DATA)) continue
-    if (!live.includes(kind as AttestationType)) live.push(kind as AttestationType)
+  return normalizeAttestationRecords(raw).map((r) => r.type)
+}
+
+/** The words around a provenance line, for another language. */
+export interface ProvenanceWords {
+  /** Before the source's name: "via". */
+  via?: string
+  /** Before the check date: "checked". */
+  checked?: string
+}
+
+/** Options for `attestationProvenance`. */
+export interface ProvenanceOptions {
+  /** A BCP 47 locale for the check date. Default `en-GB` ("14 Mar 2026"). */
+  locale?: string
+  /** Source display names beside, and ahead of, `ATTESTATION_SOURCES`. */
+  sourceNames?: Readonly<Record<string, string>>
+  /** The words around the line. */
+  words?: ProvenanceWords
+}
+
+/** An attestation's provenance, ready to render. */
+export interface AttestationProvenance {
+  /** The source id, when one is known. */
+  source?: string
+  /** The source's display name: the mapped name, else the raw id. */
+  sourceName?: string
+  /** The source's own reference, when one is known. */
+  sourceRef?: string
+  /** The check date, ISO (`YYYY-MM-DD`): a `<time datetime>` value. */
+  checkedAt?: string
+  /** The check date in the locale's words ("14 Mar 2026"). */
+  checkedLabel?: string
+  /** The line itself: "via OpenStreetMap · checked 14 Mar 2026". The chip's detail and description. */
+  text: string
+}
+
+/** The display name of a source id: a consumer's name, then `ATTESTATION_SOURCES`, else the id. */
+export function attestationSourceName(source: string, sourceNames: Readonly<Record<string, string>> = {}): string {
+  const named = own(sourceNames, source) ? cleanString(sourceNames[source]) : undefined
+  return named ?? (own(ATTESTATION_SOURCES, source) ? ATTESTATION_SOURCES[source]! : source)
+}
+
+/** An ISO date in the locale's words, in UTC so the day never shifts. Falls back to the ISO date. */
+export function formatCheckedAt(isoDate: string, locale = "en-GB"): string {
+  try {
+    return new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(
+      new Date(`${isoDate}T00:00:00Z`)
+    )
+  } catch {
+    return isoDate
   }
-  return live
+}
+
+/**
+ * The provenance line for one attestation, or null when it carries none: "via OpenStreetMap ·
+ * checked 14 Mar 2026"; "via OpenStreetMap" with no date (a date is never invented); "checked
+ * 14 Mar 2026" with a date and no source. The chip label stays the attestation's own.
+ */
+export function attestationProvenance(
+  record: AttestationRecord,
+  { locale = "en-GB", sourceNames = {}, words = {} }: ProvenanceOptions = {}
+): AttestationProvenance | null {
+  const source = cleanString(record.source)
+  const checkedAt = parseCheckedAt(record.checkedAt)
+  if (source === undefined && checkedAt === undefined) return null
+  const via = words.via ?? "via"
+  const checked = words.checked ?? "checked"
+  const sourceName = source === undefined ? undefined : attestationSourceName(source, sourceNames)
+  const checkedLabel = checkedAt === undefined ? undefined : formatCheckedAt(checkedAt, locale)
+  const parts = [
+    ...(sourceName !== undefined ? [`${via} ${sourceName}`] : []),
+    ...(checkedLabel !== undefined ? [`${checked} ${checkedLabel}`] : []),
+  ]
+  const sourceRef = cleanString(record.sourceRef, 256)
+  return {
+    ...(source !== undefined && { source, sourceName }),
+    ...(sourceRef !== undefined && { sourceRef }),
+    ...(checkedAt !== undefined && { checkedAt, checkedLabel }),
+    text: parts.join(" · "),
+  }
 }
 
 /** A subject in the trust model: a level, and the attestations held beside it. */
