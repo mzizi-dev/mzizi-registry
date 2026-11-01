@@ -10,6 +10,31 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the Claude Code plugin is 1.4.0: `@nyuchi/mzizi-skills` 0.14.0 and the house-rules hooks (2026-11-01, [#589](https://github.com/mzizi-dev/mzizi-registry/issues/589))
+
+- **`@nyuchi/mzizi-skills` is required at `>=0.14.0`** (it was `>=0.13.0`). `pnpm skills:generate` regenerates `lib/skills.generated.ts`, which `/v1/skills` serves, and `pnpm plugin:skills` regenerates `plugin/skills/`, now 8 skills in 15 files.
+  - **New skill: `mzizi-architecture`.** The helix, read live; the shell installed first (AppShell or DiscoverShell from `@bundu/ui`), with a check that every page uses it; and the system architecture.
+  - **`mzizi-design`** adds Apple's HIG as the baseline, with where Mzizi overrides it, and attestation provenance (#593).
+  - **`mzizi-language`** now says that programs exist (C1–C10).
+  - **`mzizi-roots`** names the 0.7.0 crates and the contract counts.
+  - **`digital-hygiene`** carries the hardened `hygiene.sh` (agent-tools#279).
+- **`plugin/hooks/`, the Mzizi house rules, as a Claude Code hooks module (`hooks.json` → `register.ts`).**
+  - It attaches the rules as `prompt.submit` context on each typed prompt.
+  - It refuses a raw hex colour that a `Write` or `Edit` introduces into a styled file. Token, palette, brand, minerals, generated and fixture paths, SVG, JSON and Markdown are exempt, and so is a file marked `mzizi-allow-hex`.
+  - It adds a `/mzizi` command.
+  - `prompt.submit` was chosen because a plugin that answers `prompt.compose` and `prompt.context` first, and never calls `next`, skipped both live. `plugin/README.md` says why.
+  - `claude plugin validate plugin/` passes, and `claude plugin test plugin/` passes 5 of 5 (`hooks/register.test.ts`).
+  - The root `tsconfig.json` and ESLint config leave `plugin/hooks/` out, because the module is typed against Claude Code's own API.
+- **`plugin.json` 1.4.0** (minor: a skill, two commands, an agent and the hooks are added). Its description and the marketplace entry now name the eight skills, the commands, the agent and the hooks. `plugin/README.md` is new and lists every part.
+
+### Added — the Claude Code plugin's `/mzizi:component` and `/mzizi:scaffold` commands and the `fundi` agent, restored and brought current (2026-11-01, [#589](https://github.com/mzizi-dev/mzizi-registry/issues/589))
+
+- **`plugin/commands/component.md` (`/mzizi:component <name>`)** fetches a component through `mzizi_get_component`, Rust first. It shows the crate, the `cargo add` line and the contract, then `mzizi add <name> --target astro`, then the React build by its full `https://api.mzizi.dev/v1/ui/<name>` URL.
+- **`plugin/commands/scaffold.md` (`/mzizi:scaffold <goal>`)** explores the project, **checks that the app shell is installed** (AppShell or DiscoverShell from `@bundu/ui`, in one layout every page uses), and proposes the smallest set of edits for review. The shell comes first when it is missing.
+- **`plugin/agents/fundi.md`**, the architecture agent: it loads the skills, uses only the MCP tools that exist today (`mzizi_search`, `mzizi_get_component`, `mzizi_get_architecture`, `mzizi_get_tokens`, `mzizi_get_doctrine`, `mzizi_get_skills`, `mzizi_check_accessibility` and the docs tools), and puts the shell first and the upstream change ahead of any local fork.
+- These lived in the private plugin that was retired on 2026-09-30 (agent-tools `6ea5799`), whose copies named tools that no longer exist (`mzizi_read_documents`, `get_brand_tokens`) and a model by name. `__tests__/plugin-manifest.test.ts` now checks the commands and the agent: each has a description, none names a retired tool, a retired host or a model, and every `npx shadcn add` uses the full API URL.
+- `plugin/.claude-plugin/plugin.json` names its JSON Schema (`$schema`).
+
 ### Changed — GitHub releases carry the CHANGELOG entries they ship (2026-11-01)
 
 - Owner, 2026-11-01: a release is not done until its tag and its GitHub release, with notes from `CHANGELOG.md`, exist on the merge commit on `main`. `release.yml` gains a `notes` job that, after the tag job, rewrites the release body: every `CHANGELOG.md` entry added since the previous `vX.Y.0` tag (`.github/scripts/release_notes.py`, the same script as `mzizi-dev/mzizi-site` and `mzizi-dev/mzizi-benchmarks`, adapted from `mzizi-dev/mzizi`), then GitHub's list of merged pull requests. Before, the notes were the pull-request list alone (v4.18.0's are). The tag job is `nyuchi/.github`'s reusable workflow, so the notes are a separate job here rather than a change there.
