@@ -1425,6 +1425,16 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "locale",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "sourceNames",
+      "type": "Record<string, string>",
+      "required": false
+    },
+    {
       "name": "tier",
       "type": "VerificationTier",
       "required": false
@@ -11112,6 +11122,21 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
     {
       "name": "attestations",
       "type": "AttestationInput[]",
+      "required": false
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "sourceNames",
+      "type": "Record<string, string>",
+      "required": false
+    },
+    {
+      "name": "provenanceWords",
+      "type": "ProvenanceWords",
       "required": false
     },
     {

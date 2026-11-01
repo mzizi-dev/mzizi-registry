@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — attestation provenance: "via OpenStreetMap · checked 14 Mar 2026" (2026-11-01, [#577](https://github.com/mzizi-dev/mzizi-registry/issues/577))
+
+- **An attestation can say where it came from and when it was checked.** A stored record now takes optional `source` (a short id, `"osm"`), `sourceRef` (the source's own reference, kept, never shown) and `checkedAt` (an ISO date or date-time). Kweli imports OpenStreetMap verifications (`check_date`, survey tags) this way, as `community` attestations: the chip is still "Community Vouched", never a level, and the vocabulary is still the closed set of three.
+- **`mzizi-trust-tier-data`**: `AttestationRecord`, `normalizeAttestationRecords` (keeps the provenance; first seen wins), `ATTESTATION_SOURCES` (`osm` → "OpenStreetMap"), `attestationSourceName`, `parseCheckedAt`, `formatCheckedAt` and `attestationProvenance`. A date is never invented: no `checkedAt`, or one that does not parse or names a day that does not exist, gives "via OpenStreetMap" with no date. An unknown source id is shown as the id, escaped like any text. The date comes from the locale (default `en-GB`), in UTC so the day never shifts. `normalizeAttestations` is unchanged for every input it accepted, except that an inherited property name (`"toString"`) is no longer taken for an attestation type.
+- **`ui/mzizi-verified-badge` 1.2.0** (Astro and React): an attestation badge with provenance keeps its canonical name as its `aria-label`; the line is its `aria-description` and the second line of its `title`, with `data-source` and `data-checked-at`. New props `locale`, `sourceNames`, `provenanceWords`.
+- **`app/tier-status` 1.2.0** (Astro and React): the chip adds a second line (`data-slot="tier-attested-provenance"`) read with its name, the date as a `<time datetime>`. New props `locale`, `sourceNames`; `copy` takes `via` and `checked`.
+- **Contrast**: the line uses the chip's own APCA-gated on-container pair. Measured |Lc|: community 82.9 / 88.4, business 90.3 / 94.8, domain 84.0 / 82.8 (light / dark), all over the body bar (75) the caption needs only 60 of.
+- **No provenance, no change**: snapshots taken from the builds before this change hold the markup byte for byte. `ui/mzizi-trust-meter` renders no attestation chips and is unchanged (2.2.0). No Rust build exists for these components.
+
 ### Added — `mzizi-chaos-engine`, the N8 seeded chaos engine (2026-10-31, [#472](https://github.com/mzizi-dev/mzizi-registry/issues/472))
 
 - **New crate `mzizi-rs/crates/mzizi-chaos-engine`**: a seeded, deterministic fault schedule (nothing, latency, a 5xx, a timeout, unreachable) for chaos tests. Sans-IO, no dependencies: it decides, the host injects. Same plan and seed give the same faults in every build (SplitMix64, a draw is the top 53 bits over 2^53); `Engine::new` refuses production and any environment that is not plainly a test one, with no override; rates, the latency range and the status list are validated at construction.

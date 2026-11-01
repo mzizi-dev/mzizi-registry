@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/tier-status",
   "title": "TierStatus",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "node": 6,
   "kind": "pattern",
   "summary": "Where an account stands in the Bundu trust model (assurance.py): the current assurance level, the attestations held beside it as separate chips, the five levels as an ordered list with each level's state in words, the facts held, and what the next level needs with a link to submit evidence. Community is an attestation, never a rung below otp. It takes data and computes no access decision.",
@@ -34,10 +34,24 @@
     },
     {
       "name": "attestationTypes",
-      "type": "(\"community\" | \"business\" | \"domain\" | { type: string; revokedAt?: string | null })[]",
+      "type": "(\"community\" | \"business\" | \"domain\" | { type: string; revokedAt?: string | null; source?: string; sourceRef?: string; checkedAt?: string })[]",
       "required": false,
-      "description": "The attestations in force beside the level, as type names or the stored records. Revoked and unknown ones are dropped, as `normalize_attestations` does. Each is shown as its own chip in its `--attestation-*` pair.",
+      "description": "The attestations in force beside the level, as type names or the stored records. Revoked and unknown ones are dropped, as `normalize_attestations` does. Each is shown as its own chip in its `--attestation-*` pair. A stored record may carry provenance (`source`, `sourceRef`, `checkedAt`, an ISO date): the chip keeps its canonical name and adds a second line, \"via OpenStreetMap · checked 14 Mar 2026\". `sourceRef` is kept, never shown.",
       "default": []
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false,
+      "default": "en-GB",
+      "description": "A BCP 47 locale for an attestation's check date, formatted day, short month and year in UTC (`en-GB`: \"14 Mar 2026\"; `en-US`: \"Mar 14, 2026\"). An invalid locale falls back to the ISO date."
+    },
+    {
+      "name": "sourceNames",
+      "type": "Record<string, string>",
+      "required": false,
+      "default": {},
+      "description": "Display names for attestation source ids, ahead of the built-in `ATTESTATION_SOURCES` (`osm` → \"OpenStreetMap\"). A source id named nowhere is shown as the id itself, escaped like any text."
     },
     {
       "name": "tier",
@@ -96,9 +110,9 @@
     },
     {
       "name": "copy",
-      "type": "{ current?: string; ladder?: string; attested?: string; held?: string; none?: string; next?: string; top?: string; done?: string; here?: string; upcoming?: string }",
+      "type": "{ current?: string; ladder?: string; attested?: string; held?: string; none?: string; next?: string; top?: string; done?: string; here?: string; upcoming?: string; via?: string; checked?: string }",
       "required": false,
-      "description": "The panel's other words, for another language: \"Current level:\", the ladder's name, the chips' name (\"Attestations\"), \"What you hold\", \"No attestations yet.\", \"Next:\", \"This is the highest level.\", and the rung states \"Done\", \"Current\", \"Next\".",
+      "description": "The panel's other words, for another language: \"Current level:\", the ladder's name, the chips' name (\"Attestations\"), \"What you hold\", \"No attestations yet.\", \"Next:\", \"This is the highest level.\", and the rung states \"Done\", \"Current\", \"Next\", and the provenance words \"via\" and \"checked\".",
       "default": {}
     },
     {
@@ -127,6 +141,7 @@
   "behaviour": [
     "A <section> labelled by its heading, carrying `data-assurance` (the level) and `data-tier` (its legacy projection, `legacy_tier()`). Beside the heading, the level's glyph on its --assurance-* container pair (decorative), and \"Current level: <name>\" in the level's text colour.",
     "The attestations in force are a named <ul> of chips under the current level, one per attestation (Community Vouched, Registered Business, Domain Verified), each its glyph and its name on its --attestation-* container pair. They carry no rank and are never placed on the ladder.",
+    "An attestation with provenance (`source` and/or `checkedAt`) keeps its canonical name and adds a second line in its chip (`data-slot=\"tier-attested-provenance\"`), read with the name: \"via <source name> · checked <date>\". The source's name comes from `sourceNames`, then `ATTESTATION_SOURCES` (osm → OpenStreetMap), else the raw id; the date is a `<time datetime>` in `locale`. Without `checkedAt` the line is \"via <source name>\" alone: a date is never invented, and one that does not parse is dropped. The chip carries `data-source` and `data-checked-at` (ISO), and its ink is the chip's own APCA-gated on-container pair. Without provenance the chip is unchanged.",
     "The ladder is an <ol> of the five assurance levels, lowest first (Unverified, Contact Verified, Documents Checked, Government Verified, Licensed Professional), each with its rank (decorative), its name, and its state in words: \"Done\" below the current level, \"Current\" on it (aria-current=\"step\", a muted fill), \"Next\" on the one above, nothing further up. Reached levels wear their --assurance-* container pair; the others an outline.",
     "\"What you hold\" lists the facts held with a check glyph, or says \"No attestations yet.\".",
     "\"Next: <name>\" lists `requirements` and, with `action`, a link to submit evidence. At the top level it says \"This is the highest level.\" instead.",
@@ -241,6 +256,43 @@
         },
         "attestationTypes": ["business"]
       }
+    },
+    "osm": {
+      "description": "A tuck shop vouched for on OpenStreetMap, checked on 14 March 2026.",
+      "props": {
+        "assurance": "otp",
+        "attestationTypes": [
+          {
+            "type": "community",
+            "source": "osm",
+            "sourceRef": "node/4815162342",
+            "checkedAt": "2026-03-14"
+          },
+          "domain"
+        ]
+      }
+    },
+    "undated": {
+      "description": "From OpenStreetMap with no check date, and an unknown source in another locale's words.",
+      "props": {
+        "assurance": "none",
+        "attestationTypes": [
+          {
+            "type": "community",
+            "source": "osm"
+          },
+          {
+            "type": "business",
+            "source": "zimra",
+            "checkedAt": "2026-03-14"
+          }
+        ],
+        "locale": "en-US",
+        "copy": {
+          "via": "kupitia",
+          "checked": "imeangaliwa"
+        }
+      }
     }
   },
   "accessibility": {
@@ -255,7 +307,8 @@
       "aria-labelledby to the heading.",
       "aria-current=\"step\" on the current level.",
       "The ladder is named (\"Verification levels\") and so are the chips (\"Attestations\").",
-      "Glyphs and ranks are aria-hidden; every state and every attestation is also written."
+      "Glyphs and ranks are aria-hidden; every state and every attestation is also written.",
+      "An attestation's provenance is written in its chip, so it is read with the chip's name; the check date is a <time datetime>."
     ],
     "wcag": ["1.3.1", "1.4.1", "2.4.6", "4.1.2"]
   },
@@ -317,7 +370,7 @@
   "responsive": [
     "Fills its container; rung names wrap rather than push their state out."
   ],
-  "contract": "contract\n  slot is \"tier-status\"\n  when default shows strong \"Contact Verified\"\n  when default shows h2 \"Verification\"\n  when default shows h3 \"Next: Documents Checked\"\n  when default shows a \"Submit documents\"\n  when default shows li \"Domain Verified\"\n  when unverified shows h3 \"Verification\"\n  when top shows p \"This is the highest level.\"\n  when localised shows strong \"Haijathibitishwa\"\n  when localised shows li \"Imethibitishwa na jamii\"\n  when community shows strong \"Unverified\"\n  when community shows li \"Community Vouched\"\n  when tuckshop shows li \"Community Vouched\"\n  when firm shows li \"Registered Business\"\n  when documented shows strong \"Papers checked\"\nend",
+  "contract": "contract\n  slot is \"tier-status\"\n  when default shows strong \"Contact Verified\"\n  when default shows h2 \"Verification\"\n  when default shows h3 \"Next: Documents Checked\"\n  when default shows a \"Submit documents\"\n  when default shows li \"Domain Verified\"\n  when unverified shows h3 \"Verification\"\n  when top shows p \"This is the highest level.\"\n  when localised shows strong \"Haijathibitishwa\"\n  when localised shows li \"Imethibitishwa na jamii\"\n  when community shows strong \"Unverified\"\n  when community shows li \"Community Vouched\"\n  when tuckshop shows li \"Community Vouched\"\n  when firm shows li \"Registered Business\"\n  when documented shows strong \"Papers checked\"\n  when osm shows li \"via OpenStreetMap · checked 14 Mar 2026\"\n  when undated shows li \"kupitia OpenStreetMap\"\nend",
   "checks": [
     {
       "say": "The panel is a section labelled by its heading, with the level and its legacy projection.",
@@ -403,6 +456,52 @@
       "say": "An attestation chip wears its --attestation-* pair and glyph.",
       "select": "li[data-attestation=\"domain\"].bg-attestation-domain-container.text-attestation-domain-on-container svg[data-icon=\"globe\"]",
       "count": 1
+    },
+    {
+      "say": "A chip with provenance keeps its name and adds the line, read with it.",
+      "state": "osm",
+      "select": "li[data-attestation=\"community\"][data-source=\"osm\"][data-checked-at=\"2026-03-14\"].bg-attestation-community-container.text-attestation-community-on-container",
+      "count": 1,
+      "text": "Community Vouched via OpenStreetMap · checked 14 Mar 2026"
+    },
+    {
+      "say": "The check date is machine-readable.",
+      "state": "osm",
+      "select": "li[data-attestation=\"community\"] [data-slot=\"tier-attested-provenance\"] time[datetime=\"2026-03-14\"]",
+      "count": 1,
+      "text": "14 Mar 2026"
+    },
+    {
+      "say": "A chip without provenance has no second line.",
+      "state": "osm",
+      "select": "li[data-attestation=\"domain\"] [data-slot=\"tier-attested-provenance\"], li[data-attestation=\"domain\"][data-source]",
+      "absent": true
+    },
+    {
+      "say": "No check date, no date and no time element.",
+      "state": "undated",
+      "select": "li[data-attestation=\"community\"] [data-slot=\"tier-attested-provenance\"]",
+      "count": 1,
+      "text": "kupitia OpenStreetMap"
+    },
+    {
+      "say": "No check date, no time element.",
+      "state": "undated",
+      "select": "li[data-attestation=\"community\"] time",
+      "absent": true
+    },
+    {
+      "say": "An unknown source shows its id; the date follows the locale and the words are replaced.",
+      "state": "undated",
+      "select": "li[data-attestation=\"business\"] [data-slot=\"tier-attested-provenance\"]",
+      "count": 1,
+      "text": "kupitia zimra · imeangaliwa Mar 14, 2026"
+    },
+    {
+      "say": "Without provenance no chip has a second line.",
+      "state": "tuckshop",
+      "select": "[data-slot=\"tier-attested-provenance\"]",
+      "absent": true
     },
     {
       "say": "The facts held are listed.",

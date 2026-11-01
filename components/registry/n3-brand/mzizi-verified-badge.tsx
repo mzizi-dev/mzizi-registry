@@ -5,9 +5,11 @@ import {
   STATUS_OVERLAY,
   TIER_DATA,
   legacyTier,
-  normalizeAttestations,
+  attestationProvenance,
+  normalizeAttestationRecords,
   type AssuranceLevel,
   type AttestationInput,
+  type ProvenanceWords,
   type PlatformStatus,
   type VerificationTier,
 } from "@/lib/mzizi-trust-tier-data"
@@ -51,6 +53,13 @@ import { cn } from "@/lib/ui-utils"
    badge in its --attestation-* pair beside it, never a rung. With more
    than one badge they sit in a named group. `tier` is the legacy
    projection and renders as it always has.
+
+   PROVENANCE. A stored attestation may say where it came from and
+   when it was checked ({ type: "community", source: "osm",
+   checkedAt: "2026-03-14" }). The badge keeps its canonical name;
+   "via OpenStreetMap · checked 14 Mar 2026" is its aria-description
+   and the second line of its title. No `checkedAt`, no date: a date
+   is never invented. An unknown source id shows as the id.
    ═══════════════════════════════════════════════════════════════ */
 
 const PORTAL = "https://mzizi.dev/components/mzizi-verified-badge"
@@ -63,8 +72,19 @@ interface MziziVerifiedBadgeProps {
   tier?: VerificationTier
   /** The assurance level (assurance.py). With it, `attestations` show as badges of their own. */
   assurance?: AssuranceLevel
-  /** The attestations in force, as type names or stored records; revoked ones are dropped. */
+  /**
+   * The attestations in force, as type names or stored records; revoked ones are dropped. A
+   * record may carry provenance (`source`, `sourceRef`, `checkedAt`): the badge keeps its
+   * canonical name, and "via OpenStreetMap · checked 14 Mar 2026" becomes its accessible
+   * description and the second line of its title.
+   */
   attestations?: AttestationInput[]
+  /** A BCP 47 locale for an attestation's check date. Default `en-GB` ("14 Mar 2026"). */
+  locale?: string
+  /** Display names for attestation source ids, ahead of the built-in ones (osm → OpenStreetMap). */
+  sourceNames?: Record<string, string>
+  /** The words around a provenance line ("via", "checked"), for another language. */
+  provenanceWords?: ProvenanceWords
   /** The group's accessible name when more than one badge shows; defaults to the names joined. */
   groupLabel?: string
   /** Platform status (identity.person.mit_status). Affects badge appearance. */
@@ -97,12 +117,17 @@ type Mark = {
   glyph: IconName
   pair: { container: string; onContainer: string }
   data: Record<string, string | number | undefined>
+  /** The provenance line: the badge's accessible description and its title's second line. */
+  description?: string
 }
 
 function MziziVerifiedBadge({
   tier = "unverified",
   assurance,
   attestations,
+  locale,
+  sourceNames,
+  provenanceWords,
   groupLabel,
   status = "living",
   size,
@@ -127,7 +152,7 @@ function MziziVerifiedBadge({
   const box = size ?? "md"
   const overlay = STATUS_OVERLAY[status].overlay
   const model = assurance !== undefined && assurance in ASSURANCE_DATA
-  const chips = model ? normalizeAttestations(attestations) : []
+  const chips = model ? normalizeAttestationRecords(attestations) : []
   const level = model ? ASSURANCE_DATA[assurance as AssuranceLevel] : null
   const projected = level ? legacyTier(level.level, chips) : tier
   const data = TIER_DATA[projected]
@@ -160,9 +185,17 @@ function MziziVerifiedBadge({
         pair: own.pair,
         data: levelData,
       })
-    for (const t of chips) {
-      const a = ATTESTATION_DATA[t]
-      marks.push({ key: t, name: a.label, glyph: a.glyph, pair: a.classes, data: { "data-attestation": t } })
+    for (const r of chips) {
+      const a = ATTESTATION_DATA[r.type]
+      const p = attestationProvenance(r, { locale, sourceNames, words: provenanceWords })
+      marks.push({
+        key: r.type,
+        name: a.label,
+        glyph: a.glyph,
+        pair: a.classes,
+        data: { "data-attestation": r.type, "data-source": p?.source, "data-checked-at": p?.checkedAt },
+        description: p?.text,
+      })
     }
   }
 
@@ -177,7 +210,8 @@ function MziziVerifiedBadge({
       {...m.data}
       role="img"
       aria-label={m.key === "level" ? (ariaLabel ?? m.name) : m.name}
-      title={showTooltip ? m.name : undefined}
+      aria-description={m.description}
+      title={showTooltip ? (m.description ? `${m.name}\n${m.description}` : m.name) : undefined}
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-full",
         BOX[box],
