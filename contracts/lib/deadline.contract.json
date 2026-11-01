@@ -1,0 +1,64 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/deadline",
+  "title": "Deadline",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "lib",
+  "summary": "How much of a time budget is left, so the remaining budget can be passed down instead of a fresh timeout at every layer.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-resilience",
+      "module": "deadline"
+    },
+    "ts": null,
+    "py": null
+  },
+  "config": [
+    {
+      "name": "budget_ms",
+      "type": "u64",
+      "min": 1,
+      "description": "The budget."
+    }
+  ],
+  "operations": [
+    {
+      "signature": "new(now, budget_ms)",
+      "returns": "Result<Deadline, ConfigError>",
+      "description": "A budget starting at now."
+    },
+    {
+      "signature": "remaining_ms(now)",
+      "returns": "u64",
+      "description": "Time left, never negative."
+    },
+    {
+      "signature": "expired(now)",
+      "returns": "bool",
+      "description": "Whether the budget is spent."
+    }
+  ],
+  "invariants": [
+    {
+      "id": "counts-down",
+      "text": "The budget counts down and expires.",
+      "test": "counts_down_and_expires"
+    },
+    {
+      "id": "clock-steps-back",
+      "text": "A clock that steps back keeps the full budget.",
+      "test": "a_clock_that_steps_back_keeps_the_full_budget"
+    },
+    {
+      "id": "zero-budget",
+      "text": "A zero budget is refused.",
+      "test": "a_zero_budget_is_refused"
+    }
+  ],
+  "fixtures": [],
+  "gaps": [
+    "No TypeScript or Python build yet (mzizi-registry#472, phases 1 and 2): until they exist this contract is held by the Rust crate only.",
+    "No registry entry yet: the TypeScript original of the same name is not held to this contract."
+  ]
+}

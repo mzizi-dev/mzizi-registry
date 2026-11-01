@@ -623,7 +623,8 @@ Two real outputs, from pilot-2 candidates written by the 7B model and re-checked
   per call. Its `lowering` job runs `mz build` on `examples/registry.mz`, then `cargo test` and
   one request over a socket against the package, and `mzprobe verify` of task B1. `AGENTS.md`
   in the repo has the exact script.
-- Pull requests are rebase-merged. State what you measured in the commit message.
+- Pull requests are squash-merged through the merge queue, and the squash commit keeps every
+  commit message. State what you measured in the commit message.
 - The repo consumes nothing else in the org: no build step, test or script may reach into
   `mzizi-registry` or `agent-tools`.
 
