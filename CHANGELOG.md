@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.19.0] - 2026-11-01
+
+Releases `staging` to `main` as the next minor above v4.18.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.19.0. It carries the Claude Code plugin at **1.4.0** with `@nyuchi/mzizi-skills` 0.14.0 (eight skills, including the new `mzizi-architecture`), the `/mzizi:component` and `/mzizi:scaffold` commands, the `fundi` agent and the house-rules hooks (#596); attestation provenance in `ui/mzizi-verified-badge` and `app/tier-status` 1.2.0 (#593); and GitHub release notes from this file on every `main` release (#594, #595). The Mzizi Roots crates are unchanged at 0.7.0. Nothing breaks.
+
 ### Changed — the Claude Code plugin is 1.4.0: `@nyuchi/mzizi-skills` 0.14.0 and the house-rules hooks (2026-11-01, [#589](https://github.com/mzizi-dev/mzizi-registry/issues/589))
 
 - **`@nyuchi/mzizi-skills` is required at `>=0.14.0`** (it was `>=0.13.0`). `pnpm skills:generate` regenerates `lib/skills.generated.ts`, which `/v1/skills` serves, and `pnpm plugin:skills` regenerates `plugin/skills/`, now 8 skills in 15 files.
