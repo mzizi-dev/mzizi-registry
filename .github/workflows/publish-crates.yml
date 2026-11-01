@@ -123,9 +123,10 @@ jobs:
           # Dependencies first. mzizi-ui depends on mzizi-tokens; mzizi-mongodb on mzizi-data and
           # mzizi-harness; the other node crates stand alone (mzizi-activitypub, mzizi-harness and
           # mzizi-data are not node crates). The two umbrellas re-export node crates, so they go last.
+          # mzizi-resilience (N5) and mzizi-chaos-engine (N8) have no workspace dependencies.
           order=(
             mzizi-tokens mzizi-ui mzizi-brand mzizi-shell
-            mzizi-assurance mzizi-fundi mzizi-docs mzizi-discovery
+            mzizi-assurance mzizi-resilience mzizi-chaos-engine mzizi-fundi mzizi-docs mzizi-discovery
             mzizi-activitypub mzizi-harness mzizi-data mzizi-mongodb mzizi-roots mzizi-roots-server
           )
 
