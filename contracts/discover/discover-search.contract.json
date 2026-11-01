@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "node": 6,
   "kind": "pattern",
-  "summary": "The one search box of a Discover page: a GET form, so every search is a URL that works with no JavaScript. 48px on every pointer.",
+  "summary": "The one search box of a Discover page: a GET form, so every search is a URL that works with no JavaScript. 44px on touch and 36px at desktop density (the size roles; this supersedes the earlier same-size-on-every-pointer rule, an owner call flagged in #597).",
   "implementations": {
     "astro": {
       "registry": "discover-search",
