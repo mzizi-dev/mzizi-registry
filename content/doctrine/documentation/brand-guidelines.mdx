@@ -133,6 +133,47 @@ Lowercase wordmarks (mukoko, nyuchi, shamwari, bundu) are reserved for special i
 
 ## Touch Targets
 
+Mzizi follows Apple's Human Interface Guidelines on touch devices (owner decision, 2026-11-01). The Buttons page says "a button needs a hit region of at least 44x44 pt"; the Accessibility page gives iOS and iPadOS a default control size of 44x44 pt and a minimum of 28x28 pt; the Typography page gives iOS and iPadOS a default text size of 17 pt and a minimum of 11 pt (all read 2026-11-01 at developer.apple.com/design/human-interface-guidelines).
+
+- **Coarse pointer (phones, tablets):** targets are 44px (the `--target-floor`), the large control is 48px, body text is 17px on a phone and 16px on a tablet. The gaps between targets stay generous: spacing tokens are untouched.
+- **Desktop density (fine pointer, hover, 64rem and up):** targets step down to 28-40px, body text to 15px. Floors that never move: targets 24px (WCAG 2.2 SC 2.5.8), body text 14px.
+- Density is about visual size only. It is never a guess about the network: laptops and iPads are usually on wifi, and the performance budgets do not change with it.
+
+The 48px and 56px sizes consumers pinned before 2026-11-01 come back with `data-mzizi-sizes="legacy"` on the root element, until the app has migrated. The older tiers in `styling-touch-targets` (48 accessible, 56 comfortable) are superseded by this section.
+
+## Density tokens
+
+- `styling-density` — three tiers (compact for desktop dashboards, comfortable as the Nyuchi default for mobile/tablet, spacious for hero and landing surfaces). Each tier references other token tables by name (spacing_component, touch_target, icon_size, body_type, heading_type, radius_card) rather than hardcoding numeric values
+- `styling-density-breakpoints` — viewport-to-default-density mapping that determines which tier loads at which screen size
+
+### Accessibility validation
+
+- `styling-accessibility-checks` — WCAG contrast ratios and color-blindness safety flags for every critical semantic-color pair, in both light and dark modes. Each row carries the contrast ratio, WCAG AA/AAA compliance booleans, and protanopia/deuteranopia/tritanopia/achromatopsia safety flags
+
+Three SQL functions support contrast validation directly in the database:
+
+- `hex_to_rgb(hex)` — hex → (r, g, b) tuple
+- `relative_luminance(hex)` — WCAG relative luminance for a hex color
+- `calculate_contrast_ratio(fg_hex, bg_hex)` — WCAG 2.1 contrast ratio between two hex colors. WCAG AA requires 4.5 for normal text (3.0 for large), AAA requires 7.0 (4.5 for large)
+
+A summary report is available via `SELECT * FROM get_accessibility_summary()`.
+
+This page deliberately does not duplicate the values from these tables, because two sources of truth inevitably drift. To see current token values, query the relevant table or use `get_token_counts()` for a summary.
+
+## Typography
+
+Three font families, chosen for complete coverage of African scripts including Latin, Arabic, Ethiopic, Tifinagh, and Bamum:
+
+- **Noto Serif** — page titles, hero text, display headings. Editorial feel with full language coverage.
+- **Noto Sans** — body text, UI labels. Neutral, highly legible, same coverage as Noto Serif.
+- **JetBrains Mono** — code blocks, terminal output, technical content. Purpose-built for developer readability.
+
+The type scale runs from Display (72px serif) through Display Small (60px serif), H1-H6 (48-16px mixing serif and sans), Body Large/Body/Body Small (18-14px sans), Caption (12px sans), and Code (14px mono). Display sizes carry `fluid_min_px`/`fluid_max_px` so they scale responsively rather than breaking to one word per line on phones. Display through H4 carry negative letter-spacing for typographic refinement; Caption carries small positive tracking; Code carries `tabular-nums` so numbers align in tables.
+
+Lowercase wordmarks (mukoko, nyuchi, shamwari, bundu) are reserved for special instances — the brand wordmark lockup itself: logos, splash marks, and standalone brand marks. In site names, product names, and running text, Bundu and Nyuchi take capitals: Bundu Docs, Nyuchi Docs, Nyuchi Platform. Mukoko is the exception — it only uses lowercase, in every context. This is a brand decision, not a typography accident.
+
+## Touch Targets
+
 Minimum 44px is the WCAG 2.5.5 absolute floor. 48px is the Material Design and Android default. The Nyuchi default is the **comfortable** tier in `styling-touch-targets` — 48px minimum with 56px on primary CTAs. The **generous** tier (56-64px) is used for hero surfaces and major mobile actions. Never go below the **minimum** tier (44px).
 
 ## Density

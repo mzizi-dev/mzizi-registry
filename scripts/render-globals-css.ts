@@ -43,6 +43,14 @@ import type { ExperimentalToken, HeritageToken, MineralToken } from "../lib/toke
 import { backgroundColors as BACKGROUNDS, ecosystem, ecosystemAliases, semanticColors as SEMANTIC } from "../lib/tokens/brand.source"
 import {
   BODY,
+  BODY_FLOOR_FINE_PX,
+  DENSITY_DESKTOP_QUERY,
+  DENSITY_TABLET_QUERY,
+  DESKTOP_SIZES,
+  FLOOR_COARSE_PX,
+  FLOOR_FINE_PX,
+  LEGACY_FLOOR_PX,
+  LEGACY_SIZES,
   colorKey,
   contrastFloor,
   contrastMin,
@@ -238,20 +246,50 @@ export const SPACING = [
 
 /** Type scale — 13 sizes, `/v1/brand` `typography.scale`. */
 export const TYPE = [
-  ["display", "4.5rem", 72, "1.1", 700, "serif"],
-  ["display-sm", "3.75rem", 60, "1.1", 700, "serif"],
-  ["h1", "3rem", 48, "1.15", 700, "serif"],
-  ["h2", "2.25rem", 36, "1.2", 600, "serif"],
-  ["h3", "1.875rem", 30, "1.25", 600, "serif"],
-  ["h4", "1.5rem", 24, "1.3", 600, "sans"],
-  ["h5", "1.25rem", 20, "1.4", 600, "sans"],
-  ["h6", "1rem", 16, "1.4", 600, "sans"],
-  ["body-lg", "1.125rem", 18, "1.6", 400, "sans"],
-  ["body", "1rem", 16, "1.6", 400, "sans"],
-  ["small", "0.875rem", 14, "1.5", 400, "sans"],
-  ["caption", "0.75rem", 12, "1.5", 400, "sans"],
+  // Phone / coarse pointer: Apple HIG Typography, iOS/iPadOS "Large (default)" text styles
+  // (developer.apple.com/design/human-interface-guidelines/typography, read 2026-11-01).
+  ["display", "2.5rem", 40, "1.15", 700, "serif"],
+  ["display-sm", "2.125rem", 34, "1.15", 700, "serif"],
+  ["h1", "2.125rem", 34, "1.2", 700, "serif"], // Large Title 34/41
+  ["h2", "1.75rem", 28, "1.2", 600, "serif"], // Title 1 28/34
+  ["h3", "1.375rem", 22, "1.25", 600, "serif"], // Title 2 22/28
+  ["h4", "1.25rem", 20, "1.25", 600, "sans"], // Title 3 20/25
+  ["h5", "1.0625rem", 17, "1.3", 600, "sans"], // Headline 17/22
+  ["h6", "1rem", 16, "1.3", 600, "sans"], // Callout 16/21
+  ["body-lg", "1.125rem", 18, "1.6", 400, "sans"], // no Apple style between Body 17 and Title 3 20; unchanged
+  ["body", "1.0625rem", 17, "1.5", 400, "sans"], // Body 17/22
+  ["small", "0.9375rem", 15, "1.4", 400, "sans"], // Subhead 15/20
+  ["caption", "0.75rem", 12, "1.4", 400, "sans"], // Caption 1 12/16 (Apple minimum is 11)
   ["code", "0.875rem", 14, "1.6", 400, "mono"],
 ] as const
+
+/**
+ * Type under density: only the sizes that move are listed, `[rem, px]`.
+ * Tablet (min-width 48rem, any pointer) steps body down to the web default;
+ * desktop (fine pointer + hover + min-width 64rem) steps down again, never under
+ * 14px for body text or 12px for captions (Apple macOS minimum is 10 pt; our floor is higher).
+ */
+export const TYPE_STEPS = {
+  tablet: {
+    display: ["3rem", 48],
+    "display-sm": ["2.5rem", 40],
+    body: ["1rem", 16],
+    small: ["0.875rem", 14],
+  },
+  desktop: {
+    display: ["3rem", 48],
+    "display-sm": ["2.5rem", 40],
+    h1: ["2rem", 32],
+    h2: ["1.5rem", 24],
+    h3: ["1.25rem", 20],
+    h4: ["1.125rem", 18],
+    h5: ["1rem", 16],
+    h6: ["0.9375rem", 15],
+    "body-lg": ["1.0625rem", 17],
+    body: ["0.9375rem", 15],
+    small: ["0.875rem", 14],
+  },
+} as const satisfies Record<string, Record<string, readonly [string, number]>>
 
 /**
  * Utility names for a size in TYPE under another name — not new sizes.
@@ -1252,8 +1290,62 @@ export function renderGlobalsCss(
     rootBlock(vars("light"), defaultPrimary, resolved),
     darkBlock(vars("dark"), defaultPrimary),
     containerUtilities(),
+    densityLayer(),
     brandSection(heritage, experimental),
   ].join("\n\n")
+}
+
+/**
+ * DENSITY — sizes step DOWN as screens grow (owner decision 2026-11-01).
+ *
+ * Defined once, here, as media queries on the size and type variables. A
+ * component never branches on screen size. Density is about visual size only:
+ * it is not a network-quality signal, because laptops and iPads are usually on wifi.
+ *
+ *   phone / coarse pointer   the :root values: Apple HIG (44pt targets, 17pt body)
+ *   tablet (>= 48rem)        type steps down; targets stay 44px (an iPad is still touched)
+ *   desktop                  fine pointer + hover + >= 64rem: targets 28-40px, floor 24px
+ *
+ * Floors that hold in every layer: targets >= 24px (WCAG 2.2 SC 2.5.8), desktop
+ * body text >= 14px, zoom and prefers-reduced-motion untouched. Gaps between
+ * targets are spacing tokens, which density does not change.
+ *
+ * \`:root[data-mzizi-sizes="legacy"]\` restores the pre-2026-11-01 values for a consumer
+ * that has not migrated; it outranks every media block above it.
+ */
+function densityLayer(): string {
+  const typeLines = (steps: Record<string, readonly [string, number]>) =>
+    Object.entries(steps).map(([n, [rem, px]]) => `    --fs-${n}: ${rem}; /* ${px}px */`)
+  const sizeLines = (sizes: Readonly<Record<string, number>>) =>
+    Object.entries(sizes).map(([n, px]) => `    --${n.replace(/^spacing-/, "size-")}: ${px / 16}rem; /* ${px}px */`)
+  const legacyTypeBase = {
+    display: ["4.5rem", 72], "display-sm": ["3.75rem", 60], h1: ["3rem", 48], h2: ["2.25rem", 36], h3: ["1.875rem", 30],
+    h4: ["1.5rem", 24], h5: ["1.25rem", 20], h6: ["1rem", 16], "body-lg": ["1.125rem", 18], body: ["1rem", 16],
+    small: ["0.875rem", 14], caption: ["0.75rem", 12],
+  } as const
+  return `/* ════════════════════════════════════════════════════════════════════════════
+ * DENSITY — sizes step down as screens grow (2026-11-01). See densityLayer().
+ * ════════════════════════════════════════════════════════════════════════════ */
+@media ${DENSITY_TABLET_QUERY} {
+  :root {
+${typeLines(TYPE_STEPS.tablet).join("\n")}
+  }
+}
+
+@media ${DENSITY_DESKTOP_QUERY} {
+  :root {
+    --target-floor: ${FLOOR_FINE_PX / 16}rem; /* ${FLOOR_FINE_PX}px — WCAG 2.2 SC 2.5.8 */
+${sizeLines(DESKTOP_SIZES).join("\n")}
+${typeLines(TYPE_STEPS.desktop).join("\n")}
+  }
+}
+
+/* Opt out until you have migrated: the sizes consumers pinned before 2026-11-01. */
+:root[data-mzizi-sizes="legacy"] {
+  --target-floor: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
+${sizeLines(LEGACY_SIZES).join("\n")}
+${Object.entries(legacyTypeBase).map(([n, [rem, px]]) => `  --fs-${n}: ${rem}; /* ${px}px */`).join("\n")}
+}`
 }
 
 function header(): string {
@@ -1385,23 +1477,26 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
  *
  *   - `fixed`: the role's OWN value, as a literal no brand can override;
  *   - `floor`: `max(var(--size-<name>), <floor>)`, where the floor is
- *     `spacing-touch-min`'s literal, so a brand that lowers the bare var still
- *     paints at least 48px;
+ *     `--target-floor`, so a brand that lowers the bare var still
+ *     paints at least the floor (44px coarse, 24px desktop density);
  *   - otherwise: `var(--size-<name>)`, which a brand moves freely
  *     (`spacing-control-dense`, fine pointer only).
  */
 export function sizeRoleTheme(roles: readonly Role[], resolved: Map<string, ResolvedRole>): string[] {
   const touchMin = resolved.get("spacing-touch-min")
   if (!touchMin?.role.fixed) throw new Error(`"spacing-touch-min" must be a fixed size role: it is the touch floor`)
-  const floor = touchMin.css.light
+  // The floor is a variable, not a literal: `--target-floor` is 44px on a coarse pointer and
+  // 24px under desktop density (see `densityLayer()`). It is declared in :root's invariants,
+  // not in a brand block, so a brand pack that moves a size role cannot lower it.
+  const floor = "var(--target-floor)"
   return roles
     .filter((r) => r.kind === "size")
     .map((r) => {
       const own = resolved.get(r.name)
       if (!own) throw new Error(`size role "${r.name}" was not resolved`)
       if (r.fixed) {
-        const why = r.name === touchMin.role.name ? "the touch floor no brand can lower" : "fixed, no brand can move it"
-        return `  --${r.name}: ${own.css.light}; /* a literal: ${why} */`
+        if (r.name === touchMin.role.name) return `  --${r.name}: ${floor}; /* the touch floor: 44px coarse pointer, 24px desktop density; no brand can lower it */`
+        return `  --${r.name}: ${own.css.light}; /* a literal: fixed, no brand can move it */`
       }
       if (r.floor) return `  --${r.name}: max(var(${roleVar(r)}), ${floor}); /* never under the touch floor */`
       return `  --${r.name}: var(${roleVar(r)});`
@@ -1519,9 +1614,11 @@ function invariants(resolved: Map<string, ResolvedRole>): string {
   out.push("")
   out.push(box("TOUCH TARGETS AND CONTROL HEIGHTS"))
   for (const [n, v, why] of SIZING) out.push(`  --${n}: ${v}; /* ${why} */`)
+  out.push(`  --target-floor: ${FLOOR_COARSE_PX / 16}rem; /* ${FLOOR_COARSE_PX}px — Apple HIG Buttons: a hit region of at least 44x44 pt. Density lowers it to ${FLOOR_FINE_PX}px on a fine pointer. */`)
   out.push(`  /* Size roles (#484) — \`h-touch\`, \`min-h-touch-min\`, \`h-control\`… The touch floor is`)
-  out.push(`     fixed in @theme; moving --size-touch-min does not lower min-h-touch-min, and every`)
-  out.push(`     floored role (touch, control, field) is clamped there to max(var(--size-*), 3rem). */`)
+  out.push(`     --target-floor, set here and by the density layer only; moving --size-touch-min does not`)
+  out.push(`     lower min-h-touch-min, and every floored role (touch, control, field) is clamped in`)
+  out.push(`     @theme to max(var(--size-*), var(--target-floor)). */`)
   for (const r of ROLES.filter((x) => x.kind === "size")) out.push(`${decl(r)}`)
 
   out.push("")
@@ -1815,6 +1912,22 @@ export function renderGlobalsJson(
         stagger: Object.fromEntries(STAGGER),
       },
       sizing: Object.fromEntries(SIZING.map(([n, v, why]) => [n, { value: v, usage: why }])),
+      density: {
+        $comment:
+          "Sizes step down as screens grow (owner decision 2026-11-01). Visual size only: never a network-quality signal. " +
+          "Phone / coarse pointer is the role defaults (Apple HIG); tablet steps type down; desktop is a fine pointer with hover.",
+        queries: { tablet: DENSITY_TABLET_QUERY, desktop: DENSITY_DESKTOP_QUERY },
+        floorPx: { coarse: FLOOR_COARSE_PX, fine: FLOOR_FINE_PX, bodyFine: BODY_FLOOR_FINE_PX },
+        desktopPx: { ...DESKTOP_SIZES },
+        legacyPx: { ...LEGACY_SIZES, floor: LEGACY_FLOOR_PX },
+        typeSteps: TYPE_STEPS,
+        apple: {
+          buttons: "https://developer.apple.com/design/human-interface-guidelines/buttons: a hit region of at least 44x44 pt",
+          accessibility: "https://developer.apple.com/design/human-interface-guidelines/accessibility: iOS and iPadOS control size, default 44x44 pt, minimum 28x28 pt",
+          typography: "https://developer.apple.com/design/human-interface-guidelines/typography: iOS and iPadOS default 17 pt, minimum 11 pt; Large (default) text styles",
+          readOn: "2026-11-01",
+        },
+      },
       zIndex: Object.fromEntries(ZINDEX),
       fonts: { ...FONTS },
     },

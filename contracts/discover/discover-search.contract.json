@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/DiscoverSearch.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-search", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-search",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["app/filter-bar"]
   },
@@ -122,8 +125,8 @@
     {
       "part": "submit",
       "select": "button[type=\"submit\"]",
-      "fine": 48,
-      "coarse": 48
+      "fine": 36,
+      "coarse": 44
     }
   ],
   "theming": {
@@ -145,7 +148,7 @@
   "responsive": [
     "Full width up to 36rem; the button sits beside the field and wraps under it only when the field would be narrower than 14rem."
   ],
-  "contract": "contract\n  slot is \"discover-search\"\n  role is \"search\"\n  label is \"Search circles\"\n  button \"Search\" min_height 48\n  when default shows label \"Search circles\"\n  when idle label is \"Search\"\nend",
+  "contract": "contract\n  slot is \"discover-search\"\n  role is \"search\"\n  label is \"Search circles\"\n  button \"Search\" min_height 44\n  when default shows label \"Search circles\"\n  when idle label is \"Search\"\nend",
   "checks": [
     {
       "say": "A GET form to /search.",

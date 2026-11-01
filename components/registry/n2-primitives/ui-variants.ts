@@ -33,9 +33,9 @@ export const buttonVariants = cva(
           "border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground",
       },
       size: {
-        sm: "h-12 px-4 text-body-sm",
-        md: "h-12 px-6 text-body",
-        lg: "h-14 px-8 text-body-lg",
+        sm: "h-control-sm px-4 text-body-sm",
+        md: "h-control px-6 text-body",
+        lg: "h-control-lg px-8 text-body-lg",
       },
       fullWidth: {
         true: "w-full",
@@ -85,7 +85,7 @@ export const alertVariants = cva(
 );
 
 export const inputClasses =
-  "flex h-12 w-full rounded-lg border border-border bg-background px-4 text-body text-foreground transition-colors placeholder:text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed";
+  "flex h-field w-full rounded-lg border border-border bg-background px-4 text-body text-foreground transition-colors placeholder:text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed";
 
 export const labelClasses = "text-body-sm font-medium text-foreground";
 
