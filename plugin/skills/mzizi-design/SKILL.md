@@ -8,9 +8,9 @@ user-invocable: true
 
 This skill replaces three 0.7.0 skills: `nyuchi-design` (UI and tokens, now "The design
 system" below), the Ubuntu and ownership half of `ecosystem-app-setup` (now "What belongs in
-the ecosystem"), and the tokens of `mukoko-design`, which moved here. The mukoko brand assets
-(the Swarm mark, logos, icons) are no longer in this package; they move to a Nyuchi-owned
-bundle.
+the ecosystem"), and the tokens of `mukoko-design`, which moved here. mukoko's brand files (the
+Swarm mark, the app icon, favicons, the lockup and backgrounds) are in the `mukoko-design` skill,
+restored in 0.15.0.
 
 ## Files this skill ships
 
@@ -57,7 +57,7 @@ Do not "fix" them to seven to match the colour families.
 - **Wordmark:** `Mzizi`, capitalised, Noto Serif 600. (The other wordmarks stay lowercase.)
 - **No standalone ecosystem-level logo mark is registered in the registry yet** — that's an open identity
   item. Until one exists, ecosystem-level materials use the wordmark in copper, optionally with
-  Mukoko's Swarm mark (a Nyuchi asset, not in this package) when the subject is the product family. Don't invent an ecosystem mark ad hoc.
+  Mukoko's Swarm mark (the `mukoko-design` skill) when the subject is the product family. Don't invent an ecosystem mark ad hoc.
 - **Copper is the ecosystem layer, not Mzizi's own surfaces.** mzizi.dev, docs.mzizi.dev, the
   registry and the language are the `mzizi` row of the constellation below: theme them in
   **hematite** (owner decision, 2026-09-30). Keep copper for material where the ecosystem as a
@@ -151,7 +151,7 @@ when the feature or message genuinely embodies it.
   on mukoko.com becomes welcoming/structured/protective. Don't copy-paste tone across brands.
 - Cultural specificity is non-negotiable: Shona vocabulary and Zimbabwean grounding are structural.
 - All UI tokens (radius, type, spacing, surfaces, status colours) are under "The design system"
-  below. Mukoko's logo and assets are Nyuchi's and are not in this package.
+  below. Mukoko's logo and assets are in the `mukoko-design` skill.
 - **Every brand owns a mineral, but the palette is not only minerals.** A cross-brand piece has 21
   families to draw on — seven minerals, seven Heritage tones, the Experimental Seven. Use the
   minerals to say _who is speaking_ (and hematite when Mzizi is); use Heritage for atmosphere and surface, and the Experimental
