@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the Claude Code plugin's `/mzizi:component` and `/mzizi:scaffold` commands and the `fundi` agent, restored and brought current (2026-11-01, [#589](https://github.com/mzizi-dev/mzizi-registry/issues/589))
+
+- **`plugin/commands/component.md` (`/mzizi:component <name>`)** fetches a component through `mzizi_get_component`, Rust first. It shows the crate, the `cargo add` line and the contract, then `mzizi add <name> --target astro`, then the React build by its full `https://api.mzizi.dev/v1/ui/<name>` URL.
+- **`plugin/commands/scaffold.md` (`/mzizi:scaffold <goal>`)** explores the project, **checks that the app shell is installed** (AppShell or DiscoverShell from `@bundu/ui`, in one layout every page uses), and proposes the smallest set of edits for review. The shell comes first when it is missing.
+- **`plugin/agents/fundi.md`**, the architecture agent: it loads the skills, uses only the MCP tools that exist today (`mzizi_search`, `mzizi_get_component`, `mzizi_get_architecture`, `mzizi_get_tokens`, `mzizi_get_doctrine`, `mzizi_get_skills`, `mzizi_check_accessibility` and the docs tools), and puts the shell first and the upstream change ahead of any local fork.
+- These lived in the private plugin that was retired on 2026-09-30 (agent-tools `6ea5799`), whose copies named tools that no longer exist (`mzizi_read_documents`, `get_brand_tokens`) and a model by name. `__tests__/plugin-manifest.test.ts` now checks the commands and the agent: each has a description, none names a retired tool, a retired host or a model, and every `npx shadcn add` uses the full API URL.
+- `plugin/.claude-plugin/plugin.json` names its JSON Schema (`$schema`).
 ### Changed — GitHub releases carry the CHANGELOG entries they ship (2026-11-01)
 
 - Owner, 2026-11-01: a release is not done until its tag and its GitHub release, with notes from `CHANGELOG.md`, exist on the merge commit on `main`. `release.yml` gains a `notes` job that, after the tag job, rewrites the release body: every `CHANGELOG.md` entry added since the previous `vX.Y.0` tag (`.github/scripts/release_notes.py`, the same script as `mzizi-dev/mzizi-site` and `mzizi-dev/mzizi-benchmarks`, adapted from `mzizi-dev/mzizi`), then GitHub's list of merged pull requests. Before, the notes were the pull-request list alone (v4.18.0's are). The tag job is `nyuchi/.github`'s reusable workflow, so the notes are a separate job here rather than a change there.
