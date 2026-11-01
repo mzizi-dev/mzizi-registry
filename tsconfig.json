@@ -63,6 +63,7 @@
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": [
     "node_modules",
-    "components/registry/n10-documentation/mzizi-docs-api.ts"
+    "components/registry/n10-documentation/mzizi-docs-api.ts",
+    "plugin/hooks"
   ]
 }
