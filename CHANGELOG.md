@@ -10,6 +10,20 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.20.0] - 2026-11-01
+
+Releases `staging` to `main` as the next minor above v4.19.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.20.0. It carries the Claude Code plugin at **1.5.0** with `@nyuchi/mzizi-skills` 0.15.0, which brings back `mukoko-design` (nine skills, #601). The Mzizi Roots crates are unchanged at 0.7.0. Nothing breaks.
+
+### Changed — the Claude Code plugin is 1.5.0: `@nyuchi/mzizi-skills` 0.15.0 brings back `mukoko-design` (2026-11-01, [#589](https://github.com/mzizi-dev/mzizi-registry/issues/589))
+
+- **`@nyuchi/mzizi-skills` is required at `>=0.15.0`** (it was `>=0.14.0`). `pnpm skills:generate` regenerates `lib/skills.generated.ts`, which `/v1/skills` serves once the API pin moves, and `pnpm plugin:skills` regenerates `plugin/skills/`, now 9 skills in 33 files.
+- **`mukoko-design` is back** (agent-tools#297), restored from the bundle 0.8.0 dropped and updated to today's sources.
+  - The mark, lockup, app icon and favicon files are copied byte for byte from `mukoko-dev/mukoko-news` `public/`, and `SOURCES.md` records each file's source and SHA-256.
+  - It follows the current mark doctrine: the full-palette Seed of Life at every size, with no mono reduction; the app icon on deep tanzanite `#1A0033`; and a lowercase `mukoko` wordmark.
+  - Its mineral values and meanings come from `mzizi_get_tokens`.
+- **`mzizi-design`** now points to `mukoko-design` for Mukoko's brand files.
+- `plugin/.claude-plugin/plugin.json` is 1.5.0, and its description and the marketplace's name nine skills.
+
 ## [4.19.0] - 2026-11-01
 
 Releases `staging` to `main` as the next minor above v4.18.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.19.0. It carries the Claude Code plugin at **1.4.0** with `@nyuchi/mzizi-skills` 0.14.0 (eight skills, including the new `mzizi-architecture`), the `/mzizi:component` and `/mzizi:scaffold` commands, the `fundi` agent and the house-rules hooks (#596); attestation provenance in `ui/mzizi-verified-badge` and `app/tier-status` 1.2.0 (#593); and GitHub release notes from this file on every `main` release (#594, #595). The Mzizi Roots crates are unchanged at 0.7.0. Nothing breaks.
