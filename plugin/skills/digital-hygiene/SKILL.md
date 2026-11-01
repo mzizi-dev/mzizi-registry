@@ -52,6 +52,7 @@ read.
 ```bash
 H="${TMPDIR:-/tmp}/hygiene.sh"   # or one of the paths above
 export HYGIENE_AGENT_ID="$(od -An -N3 -tx1 /dev/urandom | tr -d ' \n')"  # once per agent
+export HYGIENE_ROOT="${TMPDIR:-/tmp}"  # name the root: --apply refuses a shared fallback root
 bash "$H" check                      # free disk; exits 1 below 50 GB (cloud: 25% of the allowance)
 D="$(bash "$H" clone <org>/<repo> --task <task>)"  # ${TMPDIR:-/tmp}/<task>-<repo>-<agent-id>
 W="$(bash "$H" worktree <clone> --task <task> --branch <b>)"  # or a worktree: …-<agent-id>-wt-<b>
@@ -63,7 +64,8 @@ bash "$H" close "$D" --apply         # close your own clone (or worktree: git wo
 bash "$H" sweep --exclude "$D"       # prune + tmp + delete clean idle clones (dry run)
 ```
 
-Options: `--root DIR` (default `$HYGIENE_ROOT`, else `$TMPDIR`, else `/tmp`), `--tmp DIR` (for
+Options: `--root DIR` (default `$HYGIENE_ROOT`, else `$TMPDIR`, else `/tmp`; a deleting command
+refuses that fallback unless only you can write in it, so name it), `--tmp DIR` (for
 `tmp`; default `$TMPDIR`, else `/tmp`), `--agent ID` (default `$HYGIENE_AGENT_ID`), `--task NAME`
 and `--branch B` (for `clone` and `worktree`), `--from REF` (where a new worktree branch or a
 detached worktree starts), `--force-new` and `--shared` (see "Worktrees"), `--older-than MIN`
@@ -510,6 +512,23 @@ reason.
 - **Never delete `staging`,** neither the branch on the remote nor a release PR's head branch.
   A clone is deleted locally; branches on the remote are the repository's business, not the
   sweep's.
+- **Delete only under a root you named, and never through a symlink.** In a temp folder other
+  users can write in (`/tmp`, and often `$TMPDIR`), a path checked now and deleted later can be
+  redirected: another user swaps a folder for a symlink in between. So `prune`, `close` and
+  `sweep` with `--apply` refuse the fallback root unless it is a folder only you can write in;
+  set `HYGIENE_ROOT` (or pass `--root`) to the folder your clones live in, which in a cloud
+  session is `export HYGIENE_ROOT="${TMPDIR:-/tmp}"`. Every deletion checks that each folder
+  from the root down is a real folder you own, not a symlink, then deletes from inside the
+  parent it entered with `cd -P` (agent-tools#279).
+- **Run nothing a repository's config names.** In a root other users can write in, a checkout
+  is trusted only when `clone` or `worktree` marked it (`hygiene-owner`) and the marker, the
+  checkout and its git dir are yours and writable by nobody else; anyone can plant a repository
+  there, marker included. Trusted or not, no git runs in a checkout until every key in its
+  config is inert (no `credential.helper`, `uploadpack`, `sshCommand`, `hooksPath` or filter)
+  and its `hooks/` holds nothing but git's `*.sample` files: a checkout that fails is kept for
+  a human. The remote calls reset
+  `credential.helper` to your own helpers and turn the file transport off; set
+  `HYGIENE_FILE_REMOTES=1` only for a local mirror you trust (agent-tools#279).
 - **Dry run first, then `--apply`.** Read what would go before anything goes.
 - **Report what was freed,** in GB, with the number of folders and clones and every clone that
   was kept and why. "Cleaned up" is not a report.
