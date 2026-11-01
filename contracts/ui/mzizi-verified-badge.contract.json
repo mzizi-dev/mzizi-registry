@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "ui/mzizi-verified-badge",
   "title": "MziziVerifiedBadge",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "node": 3,
   "kind": "primitive",
   "summary": "The compact view of trust: a round mark in the verification tier's colour, named by the tier (\"Government Verified\"). Tier 0 renders nothing; a suspended account shows the ban glyph, an ancestral one the memorial flower. The trust score is in the name only with `showScore`. Server-rendered; colour from the tier's own --tier-* container pair.",
@@ -42,10 +42,31 @@
     },
     {
       "name": "attestations",
-      "type": "(\"community\" | \"business\" | \"domain\" | { type: string; revokedAt?: string | null })[]",
+      "type": "(\"community\" | \"business\" | \"domain\" | { type: string; revokedAt?: string | null; source?: string; sourceRef?: string; checkedAt?: string })[]",
       "required": false,
       "default": [],
-      "description": "With `assurance`: the attestations in force, as type names or stored records. Revoked and unknown ones are dropped. Each is its own badge in its --attestation-* pair (Community Vouched, Registered Business, Domain Verified), never a rung."
+      "description": "With `assurance`: the attestations in force, as type names or stored records. Revoked and unknown ones are dropped. Each is its own badge in its --attestation-* pair (Community Vouched, Registered Business, Domain Verified), never a rung. A stored record may carry provenance (`source`, `sourceRef`, `checkedAt`, an ISO date): the badge keeps its canonical name, and the provenance line (\"via OpenStreetMap · checked 14 Mar 2026\") is its `aria-description` and the second line of its title. `sourceRef` is kept, never shown."
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false,
+      "default": "en-GB",
+      "description": "A BCP 47 locale for an attestation's check date, formatted day, short month and year in UTC (`en-GB`: \"14 Mar 2026\"; `en-US`: \"Mar 14, 2026\"). An invalid locale falls back to the ISO date."
+    },
+    {
+      "name": "sourceNames",
+      "type": "Record<string, string>",
+      "required": false,
+      "default": {},
+      "description": "Display names for attestation source ids, ahead of the built-in `ATTESTATION_SOURCES` (`osm` → \"OpenStreetMap\"). A source id named nowhere is shown as the id itself, escaped like any text."
+    },
+    {
+      "name": "provenanceWords",
+      "type": "{ via?: string; checked?: string }",
+      "required": false,
+      "default": {},
+      "description": "The words around a provenance line, for another language: \"via\" before the source's name and \"checked\" before the date."
     },
     {
       "name": "groupLabel",
@@ -127,7 +148,8 @@
     "`loading` renders a muted pulsing placeholder with aria-hidden, and no name.",
     "With `assurance` (the trust model, #577): the level is a badge in its own pair (`bg-assurance-<level>-container`, `text-assurance-<level>-on-container`; glyphs phone, file, shield-check, award) named by the level's label (Contact Verified, Documents Checked, Government Verified, Licensed Professional). Each attestation is a further badge in `bg-attestation-<type>-container` / `text-attestation-<type>-on-container` (glyphs users, building, globe). `none` with nothing attested renders nothing.",
     "One badge renders alone, as with `tier`. More than one sit in a `<span role=\"group\">` (`data-slot=\"mzizi-verified-badge-group\"`) named by `groupLabel`, else by the badges' names joined. Community is never shown as a rung below otp; it is an attestation badge beside the level.",
-    "A suspended account is one ban badge on the neutral pair whatever it holds. The score, `data-tier` and `data-level` come from the legacy projection (`legacy_tier()`); the level badge also carries `data-assurance` and `data-rank`, and each attestation badge `data-attestation`."
+    "A suspended account is one ban badge on the neutral pair whatever it holds. The score, `data-tier` and `data-level` come from the legacy projection (`legacy_tier()`); the level badge also carries `data-assurance` and `data-rank`, and each attestation badge `data-attestation`.",
+    "An attestation with provenance (`source` and/or `checkedAt`) keeps its canonical name (Community Vouched, Registered Business, Domain Verified) as its aria-label. The provenance line is \"via <source name> · checked <date>\": the source's name from `sourceNames`, then `ATTESTATION_SOURCES` (osm → OpenStreetMap), else the raw id; the date from `checkedAt` in `locale`. Without `checkedAt` it is \"via <source name>\" alone: a date is never invented, and one that does not parse is dropped. The line is the badge's `aria-description` and, with `showTooltip`, the title's second line (\"<name>\\n<line>\"); the badge also carries `data-source` and `data-checked-at` (ISO). The level badge never takes it. Without provenance the markup is unchanged."
   ],
   "states": {
     "default": {
@@ -249,6 +271,46 @@
       "props": {
         "assurance": "none"
       }
+    },
+    "osm": {
+      "description": "A community attestation imported from OpenStreetMap, checked on 14 March 2026.",
+      "props": {
+        "assurance": "none",
+        "attestations": [
+          {
+            "type": "community",
+            "source": "osm",
+            "sourceRef": "node/4815162342",
+            "checkedAt": "2026-03-14"
+          }
+        ]
+      }
+    },
+    "undated": {
+      "description": "From OpenStreetMap with no check date: no date is shown.",
+      "props": {
+        "assurance": "otp",
+        "attestations": [
+          {
+            "type": "community",
+            "source": "osm"
+          }
+        ]
+      }
+    },
+    "unknownsource": {
+      "description": "A source the registry does not name: its id is shown as given.",
+      "props": {
+        "assurance": "none",
+        "attestations": [
+          {
+            "type": "community",
+            "source": "street-survey",
+            "checkedAt": "2026-03-14T09:30:00Z"
+          }
+        ],
+        "locale": "en-US"
+      }
     }
   },
   "accessibility": {
@@ -258,7 +320,8 @@
     "aria": [
       "role=\"img\" named by aria-label (the tier's name, or `label` / `ariaLabel`); the score is in the name only with `showScore`.",
       "The glyph is aria-hidden; the loading placeholder is aria-hidden.",
-      "With more than one badge, a role=\"group\" named by `groupLabel` (or the names joined) holds one role=\"img\" per badge, each named by its own label."
+      "With more than one badge, a role=\"group\" named by `groupLabel` (or the names joined) holds one role=\"img\" per badge, each named by its own label.",
+      "An attestation with provenance keeps its name as its aria-label and carries the provenance line as aria-description (and as the title's second line)."
     ],
     "wcag": ["1.1.1", "1.4.1", "1.4.11", "4.1.2"]
   },
@@ -301,7 +364,7 @@
     "without": "Everything: the badge is rendered on the server."
   },
   "responsive": ["A fixed size per `size`; it never grows with its container."],
-  "contract": "contract\n  slot is \"mzizi-verified-badge\"\n  role is \"img\"\n  portal is \"https://mzizi.dev/components/mzizi-verified-badge\"\n  label is \"Government Verified\"\n  when score label is \"Contact Verified · Trust 0.2\"\n  when label label is \"Registered nurse\"\n  when suspended label is \"Account Suspended\"\n  when ancestral label is \"Contact Verified — Memorial\"\n  when licensed class contains \"size-8\"\n  when assurance label is \"Documents Checked\"\n  when tuckshop role is \"group\"\n  when tuckshop label is \"Contact Verified, Community Vouched\"\n  when firm label is \"Kweli Foods verification\"\n  when vouched label is \"Community Vouched\"\nend",
+  "contract": "contract\n  slot is \"mzizi-verified-badge\"\n  role is \"img\"\n  portal is \"https://mzizi.dev/components/mzizi-verified-badge\"\n  label is \"Government Verified\"\n  when score label is \"Contact Verified · Trust 0.2\"\n  when label label is \"Registered nurse\"\n  when suspended label is \"Account Suspended\"\n  when ancestral label is \"Contact Verified — Memorial\"\n  when licensed class contains \"size-8\"\n  when assurance label is \"Documents Checked\"\n  when tuckshop role is \"group\"\n  when tuckshop label is \"Contact Verified, Community Vouched\"\n  when firm label is \"Kweli Foods verification\"\n  when vouched label is \"Community Vouched\"\n  when osm label is \"Community Vouched\"\n  when undated role is \"group\"\n  when unknownsource label is \"Community Vouched\"\nend",
   "checks": [
     {
       "say": "The badge is a named image with its tier and level.",
@@ -472,6 +535,57 @@
       "say": "No level and nothing attested renders nothing.",
       "state": "none",
       "select": "[data-slot]",
+      "absent": true
+    },
+    {
+      "say": "Provenance is the badge's description and its title's second line; the name stays canonical.",
+      "state": "osm",
+      "select": "[data-slot=\"mzizi-verified-badge\"][data-attestation=\"community\"]",
+      "count": 1,
+      "attr": {
+        "aria-label": "Community Vouched",
+        "aria-description": "via OpenStreetMap · checked 14 Mar 2026",
+        "title": "Community Vouched\nvia OpenStreetMap · checked 14 Mar 2026",
+        "data-source": "osm",
+        "data-checked-at": "2026-03-14"
+      }
+    },
+    {
+      "say": "No check date, no date: the line is the source alone.",
+      "state": "undated",
+      "select": "[data-attestation=\"community\"]",
+      "count": 1,
+      "attr": {
+        "aria-description": "via OpenStreetMap",
+        "title": "Community Vouched\nvia OpenStreetMap",
+        "data-checked-at": false
+      }
+    },
+    {
+      "say": "The level badge never takes an attestation's provenance.",
+      "state": "undated",
+      "select": "[data-assurance=\"otp\"]",
+      "count": 1,
+      "attr": {
+        "aria-description": false,
+        "title": "Contact Verified"
+      }
+    },
+    {
+      "say": "An unknown source shows its id; the date follows the locale.",
+      "state": "unknownsource",
+      "select": "[data-attestation=\"community\"]",
+      "count": 1,
+      "attr": {
+        "aria-description": "via street-survey · checked Mar 14, 2026",
+        "data-source": "street-survey",
+        "data-checked-at": "2026-03-14"
+      }
+    },
+    {
+      "say": "Without provenance there is no description.",
+      "state": "tuckshop",
+      "select": "[aria-description], [data-source], [data-checked-at]",
       "absent": true
     },
     {

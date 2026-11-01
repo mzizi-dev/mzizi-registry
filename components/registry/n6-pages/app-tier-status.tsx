@@ -6,7 +6,8 @@ import {
   legacyTier,
   legacyTierToAssurance,
   nextAssurance,
-  normalizeAttestations,
+  attestationProvenance,
+  normalizeAttestationRecords,
   type AssuranceLevel,
   type AttestationInput,
   type AttestationType,
@@ -36,6 +37,11 @@ import { appButtonVariants } from "@/lib/ui-variants";
  * `mzizi-trust-tier-data`. Every state is written in words ("Done",
  * "Current", "Next"), so colour is never the only cue.
  *
+ * An attestation may carry provenance (`source`, `sourceRef`, `checkedAt`):
+ * its chip keeps the canonical name and adds a second line, "via
+ * OpenStreetMap · checked 14 Mar 2026", read with the name. No `checkedAt`,
+ * no date (a date is never invented); an unknown source id shows as the id.
+ *
  * The React build of contract `app/tier-status`, beside
  * `app-tier-status.astro` (the default build): the same markup and classes,
  * a server component.
@@ -58,13 +64,25 @@ interface TierStatusCopy {
   done?: string;
   here?: string;
   upcoming?: string;
+  /** Before an attestation's source: "via". */
+  via?: string;
+  /** Before an attestation's check date: "checked". */
+  checked?: string;
 }
 
 interface TierStatusProps {
   /** The current assurance level (assurance.py). Takes precedence over `tier`. */
   assurance?: AssuranceLevel;
-  /** The attestations in force, as type names or stored records; revoked ones are dropped. */
+  /**
+   * The attestations in force, as type names or stored records; revoked ones are dropped. A
+   * record may carry provenance (`source`, `sourceRef`, `checkedAt`), shown as a second line
+   * in its chip: "via OpenStreetMap · checked 14 Mar 2026".
+   */
   attestationTypes?: AttestationInput[];
+  /** A BCP 47 locale for an attestation's check date. Default `en-GB` ("14 Mar 2026"). */
+  locale?: string;
+  /** Display names for attestation source ids, ahead of the built-in ones (osm → OpenStreetMap). */
+  sourceNames?: Record<string, string>;
   /** Legacy: a `bundu.verificationTier` code, read into the model when `assurance` is not set. */
   tier?: VerificationTier;
   /** Facts the account holds. */
@@ -102,6 +120,8 @@ const LEGACY_NAME: Record<AssuranceLevel, VerificationTier | null> = {
 function TierStatus({
   assurance,
   attestationTypes = [],
+  locale,
+  sourceNames,
   tier,
   attestations = [],
   requirements = [],
@@ -131,10 +151,16 @@ function TierStatus({
   const legacy = legacyTierToAssurance(tier);
   const level: AssuranceLevel =
     assurance && assurance in ASSURANCE_DATA ? assurance : legacy.level;
-  const chips = normalizeAttestations([
+  const chips = normalizeAttestationRecords([
     ...(assurance ? [] : legacy.attestations),
     ...attestationTypes,
   ]);
+  const provenanceOf = (r: (typeof chips)[number]) =>
+    attestationProvenance(r, {
+      locale,
+      sourceNames,
+      words: { via: words.via, checked: words.checked },
+    });
   const nameOf = (l: AssuranceLevel) => {
     const old = LEGACY_NAME[l];
     return (
@@ -201,20 +227,42 @@ function TierStatus({
               aria-label={words.attested}
               className="mt-2 flex flex-wrap gap-1.5"
             >
-              {chips.map((t) => {
+              {chips.map((r) => {
+                const t = r.type;
                 const a = ATTESTATION_DATA[t];
+                const p = provenanceOf(r);
                 return (
                   <li
                     key={t}
                     data-attestation={t}
+                    data-source={p?.source}
+                    data-checked-at={p?.checkedAt}
                     className={cn(
                       "inline-flex min-h-7 items-center gap-1.5 rounded-full px-2.5 text-caption font-medium",
+                      p && "py-1",
                       a.classes.container,
                       a.classes.onContainer,
                     )}
                   >
                     <Icon name={a.glyph} />
-                    {chipName(t)}
+                    {p ? (
+                      <span className="flex min-w-0 flex-col">
+                        <span>{chipName(t)}</span>{" "}
+                        <span
+                          data-slot="tier-attested-provenance"
+                          className="font-normal"
+                        >
+                          {p.checkedLabel
+                            ? p.text.slice(0, -p.checkedLabel.length)
+                            : p.text}
+                          {p.checkedLabel && (
+                            <time dateTime={p.checkedAt}>{p.checkedLabel}</time>
+                          )}
+                        </span>
+                      </span>
+                    ) : (
+                      chipName(t)
+                    )}
                   </li>
                 );
               })}

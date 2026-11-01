@@ -1,8 +1,8 @@
 // @vitest-environment node
 // Reads the manifest off disk — must run in Node.
-import { describe, it, expect } from "vitest"
-import fs from "node:fs"
-import path from "node:path"
+import { describe, it, expect } from "vitest";
+import fs from "node:fs";
+import path from "node:path";
 
 /**
  * The plugin manifest is a PROMISE about a running endpoint, and nothing was
@@ -31,55 +31,55 @@ import path from "node:path"
  * published for exactly this and is deliberately NOT fetched from a unit test.
  */
 
-const root = process.cwd()
+const root = process.cwd();
 const manifest = () =>
   JSON.parse(
     fs.readFileSync(
       path.join(root, "plugin/.claude-plugin/plugin.json"),
       "utf-8",
     ),
-  )
+  );
 
 describe("the plugin's MCP entry describes the server that exists", () => {
   it("points at the one Mzizi MCP", () => {
     // Not `mzizi.dev/mcp`. That route still answers — as a 308 — so a client
     // configured against it keeps working, but a manifest shipped today should
     // name the endpoint rather than the forwarder.
-    expect(manifest().mcpServers.mzizi.url).toBe("https://mcp.mzizi.dev/mcp")
-  })
+    expect(manifest().mcpServers.mzizi.url).toBe("https://mcp.mzizi.dev/mcp");
+  });
 
   it("registers exactly one MCP server", () => {
     // The whole point of the consolidation. A second entry here would put the
     // choice back in front of every agent that installs this plugin.
-    expect(Object.keys(manifest().mcpServers)).toEqual(["mzizi"])
-  })
+    expect(Object.keys(manifest().mcpServers)).toEqual(["mzizi"]);
+  });
 
   it("does not name the retired axis model", () => {
-    const description: string = manifest().description
+    const description: string = manifest().description;
     // "3D", "X/Y/Z-axis" and "layers across ... axes" are the retired
     // vocabulary. Unlike llms.txt, this field has no legitimate reason to cite
     // it in order to disown it — it is one sentence of advertising copy. The
     // server entry carries no description of its own (an MCP server config is
     // `type` + `url`), so this checks the plugin's.
-    expect(description).not.toMatch(/\b3D\b/i)
-    expect(description).not.toMatch(/\baxes\b|\b[XYZ]-axis\b/i)
-  })
+    expect(description).not.toMatch(/\b3D\b/i);
+    expect(description).not.toMatch(/\baxes\b|\b[XYZ]-axis\b/i);
+  });
 
   it("declares the server as Streamable HTTP", () => {
     // Claude Code reads an entry with a `url` and no `type` as a stdio server
     // and skips it. 1.1.0 and earlier said `"type": "url"`, which
     // `claude plugin validate` rejects, so the MCP never loaded.
-    expect(manifest().mcpServers.mzizi.type).toBe("http")
-  })
+    expect(manifest().mcpServers.mzizi.type).toBe("http");
+  });
 
   it("ships no MCP config but its own", () => {
     // Claude Code always loads `.mcp.json` at a plugin's root and merges the
     // manifest's `mcpServers` into it; the manifest cannot exclude it. The
     // plugin is rooted at `plugin/` so the repo root's developer `.mcp.json`
     // (the shadcn MCP) never reaches a user who installs it.
-    expect(fs.existsSync(path.join(root, "plugin/.mcp.json"))).toBe(false)
-  })
-})
+    expect(fs.existsSync(path.join(root, "plugin/.mcp.json"))).toBe(false);
+  });
+});
 
 /**
  * The public plugin carries the skills. Claude Code installs a plugin from git,
@@ -94,28 +94,28 @@ describe("the public plugin carries the published skills", () => {
       path.join(root, "node_modules/@nyuchi/mzizi-skills/index.json"),
       "utf-8",
     ),
-  ) as { version: string; skills: { name: string; file: string }[] }
+  ) as { version: string; skills: { name: string; file: string }[] };
 
   it("ships one skills/<name>/SKILL.md per skill in the package, and no others", () => {
     const onDisk = fs
       .readdirSync(path.join(root, "plugin/skills"), { withFileTypes: true })
       .filter((d) => d.isDirectory())
       .map((d) => d.name)
-      .sort()
-    expect(onDisk).toEqual(bundle.skills.map((s) => s.name).sort())
+      .sort();
+    expect(onDisk).toEqual(bundle.skills.map((s) => s.name).sort());
     for (const s of bundle.skills) {
       expect(
         fs.existsSync(path.join(root, "plugin/skills", s.name, "SKILL.md")),
         s.name,
-      ).toBe(true)
+      ).toBe(true);
     }
-  })
+  });
 
   it("names the skills version it carries", () => {
     expect(manifest().description).toContain(
       `@nyuchi/mzizi-skills ${bundle.version}`,
-    )
-  })
+    );
+  });
 
   it("is installable from this repository's marketplace", () => {
     const market = JSON.parse(
@@ -123,21 +123,80 @@ describe("the public plugin carries the published skills", () => {
         path.join(root, ".claude-plugin/marketplace.json"),
         "utf-8",
       ),
-    )
-    expect(market.plugins).toHaveLength(1)
-    expect(market.plugins[0].name).toBe(manifest().name)
-    expect(market.plugins[0].source).toBe("./plugin")
-  })
+    );
+    expect(market.plugins).toHaveLength(1);
+    expect(market.plugins[0].name).toBe(manifest().name);
+    expect(market.plugins[0].source).toBe("./plugin");
+  });
 
   it("names the project's contact, not a person's", () => {
     // Owner, 2026-09-30: the general contact is support@bundu.org.
-    expect(manifest().author.email).toBe("support@bundu.org")
+    expect(manifest().author.email).toBe("support@bundu.org");
     const market = JSON.parse(
       fs.readFileSync(
         path.join(root, ".claude-plugin/marketplace.json"),
         "utf-8",
       ),
-    )
-    expect(market.owner.email).toBe("support@bundu.org")
-  })
-})
+    );
+    expect(market.owner.email).toBe("support@bundu.org");
+  });
+});
+
+/**
+ * The plugin's commands and agent (restored for mzizi-registry#589). The retired private
+ * plugin's copies named tools that no longer exist (`mzizi_read_documents`,
+ * `get_brand_tokens`, `mcp_describe`) and a model by name, so these pin the shape a user
+ * installs and keep those out.
+ */
+describe("the public plugin's commands and agent", () => {
+  const dir = (d: string) => path.join(root, "plugin", d);
+  const front = (file: string) => {
+    const raw = fs.readFileSync(file, "utf-8");
+    const m = /^---\n([\s\S]*?)\n---\n/.exec(raw);
+    return { meta: m ? m[1] : "", body: raw };
+  };
+  const files = ["commands", "agents"].flatMap((d) =>
+    fs.readdirSync(dir(d)).map((f) => path.join(dir(d), f)),
+  );
+
+  it("ships /mzizi:component, /mzizi:scaffold and the fundi agent", () => {
+    expect(fs.readdirSync(dir("commands")).sort()).toEqual([
+      "component.md",
+      "scaffold.md",
+    ]);
+    expect(fs.readdirSync(dir("agents"))).toEqual(["fundi.md"]);
+    expect(front(path.join(dir("agents"), "fundi.md")).meta).toMatch(
+      /^name: fundi$/m,
+    );
+  });
+
+  it("gives every command and agent a description", () => {
+    for (const f of files)
+      expect(front(f).meta, f).toMatch(/^description: \S/m);
+  });
+
+  it("names no retired tool, no retired host and no model", () => {
+    for (const f of files) {
+      const { meta, body } = front(f);
+      expect(body, f).not.toMatch(
+        /mzizi_read_documents|mzizi_list_collections|get_brand_tokens|mzizi_get_node_documents|\bmcp_describe\b|mzizi\.dev\/api\/v1/,
+      );
+      expect(meta, f).not.toMatch(/^model:/m);
+    }
+  });
+
+  it("installs from the API host with the full URL, never a bare shadcn name", () => {
+    for (const f of files) {
+      // A line that names the bare form only to warn against it ("a bare `npx shadcn add`")
+      // is allowed; an instruction to run it is not.
+      const lines = front(f)
+        .body.split("\n")
+        .filter((l) => !/\bbare\b/.test(l));
+      for (const line of lines) {
+        expect(line, f).not.toMatch(
+          /npx shadcn(@latest)? add (?!https:\/\/api\.mzizi\.dev\/v1\/ui\/)[a-z<$]/,
+        );
+      }
+    }
+  });
+});
