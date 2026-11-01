@@ -10,6 +10,51 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.19.0] - 2026-11-01
+
+Releases `staging` to `main` as the next minor above v4.18.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.19.0. It carries the Claude Code plugin at **1.4.0** with `@nyuchi/mzizi-skills` 0.14.0 (eight skills, including the new `mzizi-architecture`), the `/mzizi:component` and `/mzizi:scaffold` commands, the `fundi` agent and the house-rules hooks (#596); attestation provenance in `ui/mzizi-verified-badge` and `app/tier-status` 1.2.0 (#593); and GitHub release notes from this file on every `main` release (#594, #595). The Mzizi Roots crates are unchanged at 0.7.0. Nothing breaks.
+
+### Changed — the Claude Code plugin is 1.4.0: `@nyuchi/mzizi-skills` 0.14.0 and the house-rules hooks (2026-11-01, [#589](https://github.com/mzizi-dev/mzizi-registry/issues/589))
+
+- **`@nyuchi/mzizi-skills` is required at `>=0.14.0`** (it was `>=0.13.0`). `pnpm skills:generate` regenerates `lib/skills.generated.ts`, which `/v1/skills` serves, and `pnpm plugin:skills` regenerates `plugin/skills/`, now 8 skills in 15 files.
+  - **New skill: `mzizi-architecture`.** The helix, read live; the shell installed first (AppShell or DiscoverShell from `@bundu/ui`), with a check that every page uses it; and the system architecture.
+  - **`mzizi-design`** adds Apple's HIG as the baseline, with where Mzizi overrides it, and attestation provenance (#593).
+  - **`mzizi-language`** now says that programs exist (C1–C10).
+  - **`mzizi-roots`** names the 0.7.0 crates and the contract counts.
+  - **`digital-hygiene`** carries the hardened `hygiene.sh` (agent-tools#279).
+- **`plugin/hooks/`, the Mzizi house rules, as a Claude Code hooks module (`hooks.json` → `register.ts`).**
+  - It attaches the rules as `prompt.submit` context on each typed prompt.
+  - It refuses a raw hex colour that a `Write` or `Edit` introduces into a styled file. Token, palette, brand, minerals, generated and fixture paths, SVG, JSON and Markdown are exempt, and so is a file marked `mzizi-allow-hex`.
+  - It adds a `/mzizi` command.
+  - `prompt.submit` was chosen because a plugin that answers `prompt.compose` and `prompt.context` first, and never calls `next`, skipped both live. `plugin/README.md` says why.
+  - `claude plugin validate plugin/` passes, and `claude plugin test plugin/` passes 5 of 5 (`hooks/register.test.ts`).
+  - The root `tsconfig.json` and ESLint config leave `plugin/hooks/` out, because the module is typed against Claude Code's own API.
+- **`plugin.json` 1.4.0** (minor: a skill, two commands, an agent and the hooks are added). Its description and the marketplace entry now name the eight skills, the commands, the agent and the hooks. `plugin/README.md` is new and lists every part.
+
+### Added — the Claude Code plugin's `/mzizi:component` and `/mzizi:scaffold` commands and the `fundi` agent, restored and brought current (2026-11-01, [#589](https://github.com/mzizi-dev/mzizi-registry/issues/589))
+
+- **`plugin/commands/component.md` (`/mzizi:component <name>`)** fetches a component through `mzizi_get_component`, Rust first. It shows the crate, the `cargo add` line and the contract, then `mzizi add <name> --target astro`, then the React build by its full `https://api.mzizi.dev/v1/ui/<name>` URL.
+- **`plugin/commands/scaffold.md` (`/mzizi:scaffold <goal>`)** explores the project, **checks that the app shell is installed** (AppShell or DiscoverShell from `@bundu/ui`, in one layout every page uses), and proposes the smallest set of edits for review. The shell comes first when it is missing.
+- **`plugin/agents/fundi.md`**, the architecture agent: it loads the skills, uses only the MCP tools that exist today (`mzizi_search`, `mzizi_get_component`, `mzizi_get_architecture`, `mzizi_get_tokens`, `mzizi_get_doctrine`, `mzizi_get_skills`, `mzizi_check_accessibility` and the docs tools), and puts the shell first and the upstream change ahead of any local fork.
+- These lived in the private plugin that was retired on 2026-09-30 (agent-tools `6ea5799`), whose copies named tools that no longer exist (`mzizi_read_documents`, `get_brand_tokens`) and a model by name. `__tests__/plugin-manifest.test.ts` now checks the commands and the agent: each has a description, none names a retired tool, a retired host or a model, and every `npx shadcn add` uses the full API URL.
+- `plugin/.claude-plugin/plugin.json` names its JSON Schema (`$schema`).
+
+### Changed — GitHub releases carry the CHANGELOG entries they ship (2026-11-01)
+
+- Owner, 2026-11-01: a release is not done until its tag and its GitHub release, with notes from `CHANGELOG.md`, exist on the merge commit on `main`. `release.yml` gains a `notes` job that, after the tag job, rewrites the release body: every `CHANGELOG.md` entry added since the previous `vX.Y.0` tag (`.github/scripts/release_notes.py`, the same script as `mzizi-dev/mzizi-site` and `mzizi-dev/mzizi-benchmarks`, adapted from `mzizi-dev/mzizi`), then GitHub's list of merged pull requests. Before, the notes were the pull-request list alone (v4.18.0's are). The tag job is `nyuchi/.github`'s reusable workflow, so the notes are a separate job here rather than a change there.
+- **The job checks out trusted `main`, never the triggering run's commit**, and reads that commit only as data, by SHA (`git show <sha>:package.json` and `:CHANGELOG.md`); it runs only after CI passed on a push to `main`, or by hand. Semgrep's `scan` flagged the first version, which checked out `workflow_run.head_sha`.
+- It acts only when `v<package.json version>` points at the commit, so a doc-only merge leaves the release alone. A manual run on a released commit rewrites that release's notes, so v4.18.0 can be corrected once this is on `main`.
+- Checked: `actionlint` and `yamllint` pass, and the script over `v4.17.0..v4.18.0` prints the four 4.18.0 entries.
+
+### Added — attestation provenance: "via OpenStreetMap · checked 14 Mar 2026" (2026-11-01, [#577](https://github.com/mzizi-dev/mzizi-registry/issues/577))
+
+- **An attestation can say where it came from and when it was checked.** A stored record now takes optional `source` (a short id, `"osm"`), `sourceRef` (the source's own reference, kept, never shown) and `checkedAt` (an ISO date or date-time). Kweli imports OpenStreetMap verifications (`check_date`, survey tags) this way, as `community` attestations: the chip is still "Community Vouched", never a level, and the vocabulary is still the closed set of three.
+- **`mzizi-trust-tier-data`**: `AttestationRecord`, `normalizeAttestationRecords` (keeps the provenance; first seen wins), `ATTESTATION_SOURCES` (`osm` → "OpenStreetMap"), `attestationSourceName`, `parseCheckedAt`, `formatCheckedAt` and `attestationProvenance`. A date is never invented: no `checkedAt`, or one that does not parse or names a day that does not exist, gives "via OpenStreetMap" with no date. An unknown source id is shown as the id, escaped like any text. The date comes from the locale (default `en-GB`), in UTC so the day never shifts. `normalizeAttestations` is unchanged for every input it accepted, except that an inherited property name (`"toString"`) is no longer taken for an attestation type.
+- **`ui/mzizi-verified-badge` 1.2.0** (Astro and React): an attestation badge with provenance keeps its canonical name as its `aria-label`; the line is its `aria-description` and the second line of its `title`, with `data-source` and `data-checked-at`. New props `locale`, `sourceNames`, `provenanceWords`.
+- **`app/tier-status` 1.2.0** (Astro and React): the chip adds a second line (`data-slot="tier-attested-provenance"`) read with its name, the date as a `<time datetime>`. New props `locale`, `sourceNames`; `copy` takes `via` and `checked`.
+- **Contrast**: the line uses the chip's own APCA-gated on-container pair. Measured |Lc|: community 82.9 / 88.4, business 90.3 / 94.8, domain 84.0 / 82.8 (light / dark), all over the body bar (75) the caption needs only 60 of.
+- **No provenance, no change**: snapshots taken from the builds before this change hold the markup byte for byte. `ui/mzizi-trust-meter` renders no attestation chips and is unchanged (2.2.0). No Rust build exists for these components.
+
 ## [4.18.0] - 2026-11-01
 
 Releases `staging` to `main` as the next minor above v4.17.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.18.0, and the Mzizi Roots crates move to **0.7.0** (`[workspace.package] version` and the path-dependency versions; `mzizi-mongodb` now requires `mzizi-data` and `mzizi-harness` `>=0.7.0`), because two new crates join the workspace. It carries the first two Rust builds of [#472](https://github.com/mzizi-dev/mzizi-registry/issues/472): `mzizi-resilience`, the N5 core, with a `contracts/lib/` contract for each of its six primitives (#584, #585), and `mzizi-chaos-engine`, the N8 seeded chaos engine (#586); the dependency-advisory fixes that make `pnpm audit` clean at moderate and above (#587); and the Claude Code plugin at 1.3.0 carrying `@nyuchi/mzizi-skills` 0.13.0, seven skills (#582). `publish-crates.yml`'s publish order now names `mzizi-resilience` and `mzizi-chaos-engine`; without that its member check fails and nothing is published. Nothing breaks.

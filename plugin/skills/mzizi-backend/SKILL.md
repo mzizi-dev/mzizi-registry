@@ -26,11 +26,13 @@ state today, and a skill that implied otherwise would mislead you:
   and has not landed, so today the Worker writes its own few lines of adapter.
 - **The Mzizi language has one backend slice, and it serves nothing live.** A `service` with
   HTTP routes and handlers (`when`, `header`, `respond`) exists on the language's `main`
-  (RFC-0011; `mzizi-dev/mzizi` at `62a0f32`). `mz check` checks it, `mz contract` runs it in
+  (RFC-0011; `mzizi-dev/mzizi` `main` at `cf3a44e`, 2026-11-01). `mz check` checks it, `mz contract` runs it in
   process against its `example` and `ensure` clauses, and `mz build` lowers it to a local
   Rust + axum Cargo package that serves `127.0.0.1:$PORT`. That is all: no Workers,
   WebAssembly or Containers target, no deployment, no Workers bindings or storage, no request bodies,
-  no state, and no expressions, functions, loops or modules in a handler. No component lowers.
+  no state, and no modules. The core language (functions, loops, collections, `result` with
+  `try`) exists in a `program` (RFC-0013, run by `mz run`), not yet inside a handler. No
+  component lowers.
   Its first job is the Phase 0 backend measurement (task B1, the `mzizi-be` arm), and no
   backend episode has run. Check `LANGUAGE-TRACKER.md` in the language repo before claiming
   any capability. "A Mzizi service" below shows the slice.

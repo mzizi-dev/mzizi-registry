@@ -1,6 +1,6 @@
 ---
 name: mzizi-roots
-description: Use this skill for anything involving Mzizi's components — using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (UI components written with Dioxus today and moving to Mzizi's own render(props); host-agnostic server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what `mzizi_get_component` returns (Rust first), the node-to-crate map, `pub const CONTRACT` checked against `dioxus-ssr` markup, the component contracts in the registry's `contracts/` for the Mzizi Dashboard Standard (`app/`, 31 components) and the Mzizi Discover Standard (`discover/`, 16 components with the detail pattern and the canonical Open in Mukoko link; public discover pages, no script, the same size on every pointer, server-filled shells): read one before building or changing a `@bundu/ui` component; no-JS fallback, density and brand-overlay rules, the frontend paths (pure `.astro` from the registry via `mzizi add --target astro`, Astro with Roots, or pure Rust; Next.js adopts through the registry's `.tsx`) and app setup, reuse before build, adding a component to the registry (the node, the `.rs` and `.tsx`, `registry.json`, the per-node checklists, the 48px floor, `pnpm check` and the cargo gates), and the React/TSX build as the deprioritised secondary. Files are the data layer: there is no database.
+description: Use this skill for anything involving Mzizi's components — using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (UI components written with Dioxus today and moving to Mzizi's own render(props); host-agnostic server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what `mzizi_get_component` returns (Rust first), the node-to-crate map, `pub const CONTRACT` checked against `dioxus-ssr` markup, the component contracts in the registry's `contracts/` for the Mzizi Dashboard Standard (`app/`, 35 components) and the Mzizi Discover Standard (`discover/`, 16 components with the detail pattern and the canonical Open in Mukoko link; public discover pages, no script, the same size on every pointer, server-filled shells): read one before building or changing a `@bundu/ui` component; no-JS fallback, density and brand-overlay rules, the frontend paths (pure `.astro` from the registry via `mzizi add --target astro`, Astro with Roots, or pure Rust; Next.js adopts through the registry's `.tsx`) and app setup, reuse before build, adding a component to the registry (the node, the `.rs` and `.tsx`, `registry.json`, the per-node checklists, the 48px floor, `pnpm check` and the cargo gates), and the React/TSX build as the deprioritised secondary. Files are the data layer: there is no database.
 user-invocable: true
 ---
 
@@ -19,12 +19,12 @@ the crates in its `mzizi-rs/` workspace. The plan is `docs/roots/RFC-roots.md` t
 components are **the React build**: they keep working for existing React apps, and they are
 deprioritised, so no new work goes into them.
 
-This skill describes registry `main` at `f70703d` (2026-10-07) and its `contracts/` at
-`b17bafc` (2026-10-04: the Dashboard Standard from #406, the Discover Standard from #415, and
-every `since` at `@bundu/ui` 0.3.0 from #419), the crates at **0.6.0** (tag `mzizi-rs-v0.6.0`,
-registry v4.17.0, on crates.io since 2026-10-25; 0.6.0 carries the `--assurance-*` and
-`--attestation-*` roles in the generated `mzizi-tokens` pack, from mzizi-registry #578, and
-0.5.0 before it the `mzizi-mongodb` security fixes from mzizi-registry #567; the UI crates
+This skill describes registry `main` at v4.18.0 (`0d17818`, 2026-11-01) and its `contracts/`
+(77 component contracts in four families, and the `lib/` family), the crates at **0.7.0**
+(registry v4.18.0, on crates.io since 2026-11-01; 0.7.0 adds two crates, `mzizi-resilience`,
+the N5 core, and `mzizi-chaos-engine`, the N8 seeded chaos engine, from registry PRs #584
+and #586; 0.6.0 before it carried the `--assurance-*` and `--attestation-*` roles in the generated
+`mzizi-tokens` pack, from mzizi-registry #578, and 0.5.0 the `mzizi-mongodb` security fixes from mzizi-registry #567; the UI crates
 otherwise match 0.4.0, on crates.io since 2026-10-20 with `markdown-renderer` 1.2.0 and 1.2.1
 from mzizi-registry #483 and #517), and `mzizi-mcp` 0.13.0. It replaces three 0.7.0 skills:
 `scaffold-component` (now "Contributing a component"), `simplify` (now "Reuse before build")
@@ -44,7 +44,7 @@ Take only what you use:
 
 ```toml
 [dependencies]
-mzizi-roots = { version = "0.6", default-features = false, features = ["brand"] }
+mzizi-roots = { version = "0.7", default-features = false, features = ["brand"] }
 ```
 
 To follow `main`, or pin a commit, install from git. Cargo finds a crate by name anywhere in the
@@ -104,8 +104,12 @@ One crate per registry node that has Rust. The map is `mzizi-rs/crate-for-node.j
 | `n10-documentation` | `mzizi-docs`      | `mzizi-roots-server` (`docs`)      | the docs API and routing, AI context, the changelog and docs renderers (brings in `dioxus`)                                                                                                    |
 | `n11-discovery`     | `mzizi-discovery` | `mzizi-roots-server` (`discovery`) | page metadata and Schema.org JSON-LD                                                                                                                                                           |
 
-N4 safety, N5 resilience and N6 pages have no crate yet. When they do (`mzizi-safety`,
-`mzizi-resilience`, `mzizi-pages`), they join `mzizi-roots` as features. A Workers adapter
+N5 resilience has a crate since 0.7.0: `mzizi-resilience` (circuit breaker, retry backoff,
+bulkhead, rate limiter, fallback chain and deadline, each a sans-IO state machine with a
+`contracts/lib/` contract). Depend on it directly; no umbrella re-exports it yet, and
+`crate-for-node.json` still maps `n5-resilience` to `mzizi-data`. `mzizi-chaos-engine` (N8, a
+seeded deterministic fault schedule for chaos tests that refuses to run in production) is the
+same. N4 safety and N6 pages have no crate (N6 never will: a page implements nothing). A Workers adapter
 (`mzizi-worker`) is planned for `mzizi-roots-server` and has not landed.
 
 The registry has 577 items and 55 `.rs` files. Cite `GET https://api.mzizi.dev/v1/ui` or
@@ -132,12 +136,12 @@ Mzizi components are built in-house in Rust, not borrowed from another framework
 
 ## Using a UI component
 
-This compiles against `mzizi-roots` 0.6.0 from crates.io and renders the component to a static
+This compiles against `mzizi-roots` 0.7.0 from crates.io and renders the component to a static
 HTML fragment with `dioxus-ssr`:
 
 ```toml
 [dependencies]
-mzizi-roots = { version = "0.6", default-features = false, features = ["brand"] }
+mzizi-roots = { version = "0.7", default-features = false, features = ["brand"] }
 dioxus = { version = "0.7", default-features = false, features = ["macro", "signals", "hooks", "html"] }
 dioxus-ssr = "0.7"
 ```
@@ -219,6 +223,13 @@ fork, restyle or wrap the shell or a component; fix it upstream in the registry 
 
 ## Starting an app
 
+**Install the shell first.** Before the first page, mount the app's one shell: `AppShell` for a
+signed-in app or console, `DiscoverShell` for a public discover site, both from `@bundu/ui`.
+Then check that every page renders inside it. The `mzizi-architecture` skill has the choice, the
+install and the check. Apps built page by page without a shell are the failure it exists to
+stop. Neither shell has a Rust build yet (`rs: null`), so a Rust or Astro-with-Roots app still
+takes the shell from `@bundu/ui`.
+
 For a new Mzizi-ecosystem app, or any app that consumes the design system. Pick the path
 first (above); these steps are the Astro one, with the pure-Rust differences noted.
 
@@ -251,7 +262,7 @@ constellation in `mzizi-design`).
 ### 3. Add the Roots components
 
 ```bash
-cargo add mzizi-roots        # tokens, primitives, brand components, app shell
+cargo add mzizi-roots        # tokens, primitives, brand components, shell parts (no AppShell yet)
 ```
 
 For Astro, a small Rust crate (a build step, or a `workers-rs` Worker for request-time
@@ -394,12 +405,12 @@ machine-readable, versioned contract for every component of `@bundu/ui` (built i
 
 - **`app/`, the Mzizi Dashboard Standard** (since registry `a298a4e`, 2026-10-04,
   mzizi-registry #404): the one dashboard design for every product in the Bundu ecosystem,
-  with each brand's mineral as an overlay (docs.mzizi.dev/patterns/dashboard-standard). Its 31
+  with each brand's mineral as an overlay (docs.mzizi.dev/patterns/dashboard-standard). Its 35
   contracts are the server-rendered app components (`@bundu/ui/app/*.astro`): the shell, the
   page and data patterns, and seven primitives.
 - **`discover/`, the Mzizi Discover Standard** (since registry `0bea10c`, 2026-10-04,
   mzizi-registry #415, tracking issue #413): one design for every public discover and browse
-  page in the Mukoko family (docs.mzizi.dev/patterns/discover-standard). Its 11 contracts are
+  page in the Mukoko family (docs.mzizi.dev/patterns/discover-standard). Its 16 contracts are
   the Discover components (`@bundu/ui/discover/*.astro`). "The Discover Standard" below says
   what is different.
 
@@ -410,7 +421,7 @@ machine-readable, versioned contract for every component of `@bundu/ui` (built i
 | `contracts/discover/<name>.contract.json`         | one Discover Standard component's contract                                         |
 | `contracts/site/<name>.contract.json`             | one marketing-site component's contract                                            |
 | `contracts/ui/<name>.contract.json`               | one Astro port of a registry primitive (native select, segmented control, …)       |
-| `contracts/index.json`                            | all 59 contracts with their version and their `.astro`, `.tsx` and `.rs` items     |
+| `contracts/index.json`                            | all 77 component contracts with their version and `.astro`, `.tsx`, `.rs` items    |
 | `contracts/README.md`                             | the coverage tables, the recorded gaps, the shared rules, how to change a contract |
 
 **Read the contract before you build or change a `@bundu/ui` component, in any language.** It is
@@ -422,9 +433,18 @@ block and `checks` (selector assertions on the rendered markup). `implementation
 Astro export and the `.tsx` and `.rs` siblings, with what they share (`identity`: `slot`,
 `slot+role` or `slot+variants`) and their `divergences`; items under `related` look similar
 and have a different contract, so they are not implementations. `implementations.astro`
-gives the package, the export and `since`, which is `@bundu/ui` **0.3.0 for every contract in
-both families** (mzizi-registry #419): the next `@bundu/ui` release, one minor above 0.2.0 on
-npm. `gaps` records where the current build falls short.
+gives the package, the export and `since`: the `@bundu/ui` release that first shipped it, 0.3.0
+for the original two families (mzizi-registry #419) and 0.6.0 for the components added since
+(money, plan summary, tier status, confirm action, the markdown renderer, and the trust and
+address primitives).
+`@bundu/ui` is 0.7.0 on npm. `gaps` records where the current build falls short.
+
+**Every new build starts from its contract, library or component** (owner, 2026-10-31). Write or
+change the contract first, then the builds. A fifth family, `lib/`, holds
+contracts for non-visual libraries: the N5 resilience primitives (circuit breaker, retry,
+bulkhead, rate limiter, fallback chain, deadline) and the N8 chaos engine, in their own format
+(`schema/lib-contract.schema.json`), each invariant held by a test in the implementing crate
+(mzizi-registry #585, released in v4.18.0).
 
 Four fields are requirements. packages-npm's contract test evaluates the first three on the
 rendered Astro build; the responsive rules are prose. The values below are the Dashboard

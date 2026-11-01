@@ -138,6 +138,20 @@ harden_git() {
   export GIT_NO_LAZY_FETCH=1
 }
 harden_git
+# The pins for every git this script runs that talks to a remote with a
+# checkout's own config (remote_cache, fetch_checkout), agent-tools#279:
+#   - credential.helper is reset, then your own helpers (system and global
+#     config, never a repository's) are added back, so a private remote still
+#     authenticates and a helper a repository names never runs;
+#   - the file transport is off: `git ls-remote /path` runs upload-pack in
+#     another repository. HYGIENE_FILE_REMOTES=1 allows it for a local mirror
+#     you trust (the tests' remotes are local paths).
+CRED_PINS=(-c credential.helper=)
+while IFS= read -r h; do
+  [ -z "$h" ] || CRED_PINS+=(-c "credential.helper=$h")
+done < <(cd / && unset GIT_DIR GIT_WORK_TREE && GIT_CEILING_DIRECTORIES=/ GIT_CONFIG_COUNT=0 \
+  git config --get-all credential.helper 2>/dev/null)
+if [ "${HYGIENE_FILE_REMOTES:-0}" = 1 ]; then FILE_PROTO=always; else FILE_PROTO=never; fi
 # git with the caller's own config, hooks included: only for writes to a
 # clone you own and name (`worktree add`, close's and sweep's fetch of a
 # trusted checkout), never on a git dir found by scanning.
@@ -173,6 +187,53 @@ resolve_dir() {
   (cd "$1" 2>/dev/null && pwd -P)
 }
 
+MY_UID="$(id -u)"
+# owned_dir DIR: DIR is a real folder (not a symlink) owned by you.
+owned_dir() {
+  [ -d "$1" ] && [ ! -L "$1" ] || return 1
+  [ -n "$(find "$1" -maxdepth 0 -user "$MY_UID" -print 2>/dev/null)" ]
+}
+# private_dir DIR: owned_dir, and no one else may write in it.
+private_dir() {
+  owned_dir "$1" || return 1
+  [ -z "$(find "$1" -maxdepth 0 \( -perm -0020 -o -perm -0002 \) -print 2>/dev/null)" ]
+}
+
+# safe_rm BASE DIR: rm -rf DIR, a folder inside BASE (a resolved root),
+# without following a symlink anyone swaps in (agent-tools#279). A path
+# checked and then deleted later is a race in a shared folder: another user
+# can replace a component with a symlink in between, and rm -rf on the path
+# would then delete wherever it points. So:
+#   - every component below BASE, down to DIR itself, must be a real folder
+#     owned by you, never a symlink;
+#   - DIR must still resolve to itself;
+#   - the delete runs from inside DIR's parent, entered with cd -P and
+#     checked with pwd -P. The shell then holds the real folder, so a
+#     component swapped after the check cannot redirect the delete, and
+#     rm -rf on a symlink swapped in for DIR removes only the link.
+safe_rm() {
+  local base="$1" d="$2" rest part c parent name
+  case "$d" in "$base"/?*) ;; *) note "refusing to delete $d: not inside $base"; return 1 ;; esac
+  rest="${d#"$base"/}"
+  c="$base"
+  while [ -n "$rest" ]; do
+    part="${rest%%/*}"
+    if [ "$part" = "$rest" ]; then rest=""; else rest="${rest#*/}"; fi
+    case "$part" in '' | . | ..) note "refusing to delete $d: not a plain path"; return 1 ;; esac
+    c="$c/$part"
+    owned_dir "$c" || { note "refusing to delete $d: $c is a symlink or not your folder"; return 1; }
+  done
+  [ "$(resolve_dir "$d")" = "$d" ] || { note "refusing to delete $d: it no longer resolves to itself"; return 1; }
+  parent="${d%/*}"
+  name="${d##*/}"
+  (
+    cd -P -- "$parent" 2>/dev/null || exit 1
+    [ "$(pwd -P)" = "$parent" ] || exit 1
+    [ -d "$name" ] && [ ! -L "$name" ] || exit 1
+    rm -rf -- "./$name"
+  ) || { note "refusing to delete $d: its folder changed while it was checked"; return 1; }
+}
+
 human_kb() {
   awk -v k="$1" 'BEGIN {
     if (k >= 1048576) printf "%.1f GB", k / 1048576
@@ -186,6 +247,10 @@ size_kb() { du -sk "$1" 2>/dev/null | awk '{print $1+0}'; }
 CMD="${1:-}"
 [ -n "$CMD" ] && shift
 ROOT_ARG="${HYGIENE_ROOT:-${TMPDIR:-/tmp}}"
+# 1 when the root was named (HYGIENE_ROOT or --root), 0 when it is the
+# $TMPDIR or /tmp fallback (require_safe_root).
+ROOT_EXPLICIT=0
+[ -z "${HYGIENE_ROOT:-}" ] || ROOT_EXPLICIT=1
 TMP_ARG="${TMPDIR:-/tmp}"
 MIN_GB=""
 MIN_PCT=""
@@ -205,7 +270,7 @@ GH="${HYGIENE_GH:-gh}"
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --root) ROOT_ARG="${2:?--root needs a directory}"; shift 2 ;;
+    --root) ROOT_ARG="${2:?--root needs a directory}"; ROOT_EXPLICIT=1; shift 2 ;;
     --min-gb) MIN_GB="${2:?--min-gb needs a number}"; shift 2 ;;
     --min-pct) MIN_PCT="${2:?--min-pct needs a percentage}"; shift 2 ;;
     --tmp) TMP_ARG="${2:?--tmp needs a directory}"; shift 2 ;;
@@ -423,6 +488,17 @@ set_root() {
   [ "${1:-}" != create ] || [ -d "$ROOT_ARG" ] || make_root
   ROOT="$(resolve_dir "$ROOT_ARG")" || die "root does not exist: $ROOT_ARG"
   validate_root ROOT
+}
+
+# Before a command deletes (--apply): the root must be named (HYGIENE_ROOT or
+# --root), or be a folder only you can write in. The fallback root, $TMPDIR
+# or /tmp, is often shared (agent-tools#279), and deleting under a folder
+# another user can write in is how a swapped-in symlink redirects a delete.
+require_safe_root() {
+  [ "$APPLY" -eq 1 ] || return 0
+  [ "$ROOT_EXPLICIT" -eq 0 ] || return 0
+  private_dir "$ROOT" && return 0
+  die "refusing to delete under $ROOT: it is the default root (\$TMPDIR, else /tmp) and other users can write in it; set HYGIENE_ROOT or pass --root to name the folder your clones live in"
 }
 
 rand_hex() {
@@ -724,6 +800,7 @@ cmd_check() {
 # ------------------------------------------------------------------- prune
 cmd_prune() {
   set_root
+  require_safe_root
   total=0
   count=0
   # One walk. A matching folder is never descended into (-prune), so nothing
@@ -732,7 +809,7 @@ cmd_prune() {
   names=""
   for name in $REGENERABLE; do names="$names -o -name $name"; done
   # shellcheck disable=SC2086 # $names is a fixed list of plain words
-  find "$ROOT" -name .git -prune -o -type d \( -false $names \) -prune \( -mmin "+$OLDER" -print -o -true \) 2>/dev/null |
+  find "$ROOT" -name .git -prune -o -type d \( -false $names \) -prune \( -mmin "+$OLDER" -user "$MY_UID" -print -o -true \) 2>/dev/null |
     while IFS= read -r d; do
     [ -n "$d" ] || continue
     parent="${d%/*}"
@@ -755,7 +832,7 @@ cmd_prune() {
     recently_active "$parent" && { say "skip (active): $d"; continue; }
     kb="$(size_kb "$d")"
     if [ "$APPLY" -eq 1 ]; then
-      rm -rf -- "$d" && say "pruned $(human_kb "$kb"): $d"
+      safe_rm "$ROOT" "$d" && say "pruned $(human_kb "$kb"): $d"
     else
       say "would prune $(human_kb "$kb"): $d"
     fi
@@ -861,7 +938,7 @@ cmd_tmp() {
     fi
     kb="$(size_kb "$d")"
     if [ "$APPLY" -eq 1 ]; then
-      rm -rf -- "$d" && say "removed $(human_kb "$kb") ($kind): $d"
+      safe_rm "$TMPROOT" "$d" && say "removed $(human_kb "$kb") ($kind): $d"
     else
       say "would remove $(human_kb "$kb") ($kind): $d"
     fi
@@ -1042,6 +1119,31 @@ in_build_folder() {
   done
   return 1
 }
+# marked_by_me DIR: the checkout at DIR carries an owner marker (marker_file)
+# that only you could have written: the marker is a regular file you own,
+# and the checkout, its git dir and the folder holding the marker are folders
+# you own that nobody else can write in. A marker alone proves nothing in a
+# shared root: anyone can write one into a repository they plant there.
+marked_by_me() {
+  local d="$1" f gd
+  f="$(marker_file "$d")"
+  [ -n "$f" ] && [ -f "$f" ] && [ ! -L "$f" ] || return 1
+  [ -n "$(find "$f" -maxdepth 0 -type f -user "$MY_UID" -print 2>/dev/null)" ] || return 1
+  private_dir "$d" || return 1
+  private_dir "$(dirname -- "$f")" || return 1
+  gd="$(git_dir_of "$d")" && [ -n "$gd" ] || return 1
+  gd="$(resolve_dir "$gd")" || return 1
+  private_dir "$gd"
+}
+
+# root_private: private_dir ROOT, asked once per run.
+ROOT_PRIV=""
+root_private() {
+  if [ -z "$ROOT_PRIV" ]; then
+    if private_dir "$ROOT"; then ROOT_PRIV=1; else ROOT_PRIV=0; fi
+  fi
+  [ "$ROOT_PRIV" -eq 1 ]
+}
 checkout_trust() {
   local d="$1" p top=""
   TRUSTED=1
@@ -1054,6 +1156,16 @@ checkout_trust() {
   done
   case "$d/" in "$ROOT"/*) in_build_folder "${d#"$ROOT"/}" && TRUSTED=0 ;; esac
   [ -z "$top" ] || TRUSTED=0
+  # In a root other users can write in ($TMPDIR or /tmp is often shared), a
+  # checkout is trusted only when clone or worktree marked it (hygiene-owner,
+  # marker_file): being a top-level folder there proves nothing, since anyone
+  # can plant a repository whose config runs commands (agent-tools#279). In a
+  # root only you can write in (private_dir), nobody else can have put it
+  # there. Either way its config must still hold only inert keys before git
+  # runs with it (remote_cache, fetch_checkout). Read from files: no git here.
+  if [ "$TRUSTED" -eq 1 ] && ! root_private && ! marked_by_me "$d"; then
+    TRUSTED=0
+  fi
   if [ "$TRUSTED" -eq 0 ] && [ -n "$top" ] && ! in_build_folder "${top#"$ROOT"/}"; then
     TRUST_ANCHOR="$(common_git_dir "$top")" || TRUST_ANCHOR=""
   fi
@@ -1191,6 +1303,14 @@ config_safe() {
     CFG_WHY="$g/objects/info/alternates"
     return 1
   fi
+  # A hook git would run (anything in hooks/ but git's own *.sample files):
+  # git_user commands run with the caller's config, so hooksPath alone does
+  # not keep a planted hook from running (agent-tools#279).
+  if [ -d "$g/hooks" ]; then
+    local hook
+    hook="$(find "$g/hooks" -mindepth 1 ! -name '*.sample' ! -type d -print 2>/dev/null | head -n 1)"
+    [ -z "$hook" ] || { CFG_WHY="a hook in $g/hooks: $hook"; return 1; }
+  fi
   while IFS= read -r f; do
     [ -n "$f" ] && [ -f "$f" ] || continue
     keys="$(cfg_file "$f" --name-only --list 2>/dev/null)" ||
@@ -1291,19 +1411,36 @@ safe_ls_remote() {
 # A remote that cannot be reached vouches for nothing, so work that only it
 # would cover is kept. Never prompts: no terminal, ssh in batch mode.
 remote_cache() {
-  local gd="$1" f r url
+  local gd="$1" f r url safe=1 co
   f="$REMOTE_DIR/$(printf '%s' "$gd" | cksum | tr ' ' '-')"
   if [ ! -f "$f.done" ]; then
     : >"$f.all"
     : >"$f.urls"
     : >"$f.bad"
+    # Trusted or not, no git runs with a config holding a key that could run
+    # something (config_safe, agent-tools#279): its remotes then vouch for
+    # nothing, so its work is kept.
+    # A clone's git dir is <checkout>/.git: a submodule's core.worktree may
+    # name a folder inside that checkout, as git writes it.
+    # A submodule's git dir is <checkout>/.git/modules/<name>, and its
+    # core.worktree names a folder inside that same checkout.
+    case "$gd" in
+      */.git/modules/*) co="${gd%%/.git/modules/*}" ;;
+      */.git) co="${gd%/.git}" ;;
+      *) co="" ;;
+    esac
+    if ! config_safe "$gd" "$co"; then
+      safe=0
+      note "not asking the remotes of $gd: $CFG_WHY"
+    fi
     while IFS= read -r r; do
       [ -n "$r" ] || continue
       # A remote named like an option is never passed to git.
       case "$r" in -*) printf '%s\n' "$r" >>"$f.bad"; continue ;; esac
-      if GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -o BatchMode=yes}" \
-        git --git-dir="$gd" -c protocol.file.allow=always -c protocol.https.allow=always \
+      if [ "$safe" -eq 1 ] && GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -o BatchMode=yes}" \
+        git --git-dir="$gd" -c protocol.file.allow="$FILE_PROTO" -c protocol.https.allow=always \
           -c protocol.http.allow=always -c protocol.ssh.allow=always -c protocol.git.allow=always \
+          -c "remote.$r.uploadpack=git-upload-pack" "${CRED_PINS[@]}" \
           ls-remote -- "$r" >"$f.ls" 2>/dev/null; then
         awk '{ print $1 }' "$f.ls" >>"$f.all"
         url="$(git --git-dir="$gd" ls-remote --get-url -- "$r" 2>/dev/null)" && [ -n "$url" ] &&
@@ -1312,12 +1449,18 @@ remote_cache() {
         printf '%s\n' "$r" >>"$f.bad"
       fi
     done <<EOF
-$(git --git-dir="$gd" remote 2>/dev/null)
+$(cfg_file "$gd/config" --get-regexp '^remote\..*\.url$' 2>/dev/null | awk '{ k = $1; sub(/^remote\./, "", k); sub(/\.url$/, "", k); print k }' | sort -u)
 EOF
     # Only what this clone holds as a commit can be named to rev-list.
-    awk '/^[0-9a-f]+$/' "$f.all" | sort -u |
-      git --git-dir="$gd" cat-file --batch-check='%(objectname) %(objecttype)' 2>/dev/null |
-      awk '$2 == "commit" { print $1 }' >"$f.shas"
+    # No git at all with a config that failed config_safe, cat-file included.
+    if [ "$safe" -eq 1 ]; then
+      awk '/^[0-9a-f]+$/' "$f.all" | sort -u |
+        git --git-dir="$gd" cat-file --batch-check='%(objectname) %(objecttype)' 2>/dev/null |
+        awk '$2 == "commit" { print $1 }' >"$f.shas"
+    else
+      : >"$f.all"
+      : >"$f.shas"
+    fi
     : >"$f.done"
   fi
   printf '%s\n' "$f"
@@ -1756,7 +1899,9 @@ audit_clone() {
   # every checkout inside it (git status recurses into submodules).
   unsafe=""
   checkout_trust "$repo"
-  if [ "$TRUSTED" -eq 0 ] && { ! scan_ok "$repo" || ! config_safe_tree "$repo"; }; then
+  # Trusted or not (agent-tools#279): every git dir in it must hold only
+  # inert config before git status runs there.
+  if ! scan_ok "$repo" || ! config_safe_tree "$repo"; then
     unsafe="$CFG_WHY"
   fi
   [ -n "$unsafe" ] || ! is_linked_worktree "$repo" || linked=1
@@ -1771,7 +1916,7 @@ audit_clone() {
   # does not recognise, a git dir that is gone) is kept for a human.
   if [ -n "$unsafe" ]; then
     # Not one git command runs there: its config could make it run anything.
-    add "untrusted git config ($unsafe): it was found inside another checkout or a build folder, so nothing is run there; inspect it by hand"
+    add "untrusted git config ($unsafe): a key, hook or path in it could run a command, so nothing is run there; inspect it by hand"
   elif own_checkout "$repo"; then
     audit_checks
   else
@@ -2088,7 +2233,7 @@ remove_clone() {
     return
   fi
   if [ "$APPLY" -eq 1 ]; then
-    rm -rf -- "$repo" || return 1
+    safe_rm "$ROOT" "$repo" || return 1
     say "  deleted $(human_kb "$kb"): $repo"
     # Remove the task folder too when the clone was its last content.
     parent="${repo%/*}"
@@ -2107,8 +2252,18 @@ remove_clone() {
 # still asked of each remote (remote_cache), fetched or not.
 fetch_checkout() {
   local rc=0
+  # Your own config runs this fetch, so the checkout's must hold only inert
+  # keys first, its clone's included (config_safe, agent-tools#279).
+  if ! { [ -n "$CK_GD" ] && config_safe "$CK_GD" "$1" && config_safe "$CK_CD" "$1" &&
+    config_safe_tree "$1"; }; then
+    say "not fetching $1: ${CFG_WHY:-git cannot read its git dir}"
+    return 1
+  fi
   GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -o BatchMode=yes}" \
-    git_user -C "$1" fetch --quiet --prune origin 2>/dev/null || rc=1
+    git_user -C "$1" -c core.hooksPath=/dev/null -c core.fsmonitor=false -c gc.auto=0 \
+      -c maintenance.auto=false -c protocol.file.allow="$FILE_PROTO" -c protocol.ext.allow=never \
+      -c protocol.fd.allow=never -c remote.origin.uploadpack=git-upload-pack "${CRED_PINS[@]}" \
+      fetch --quiet --prune origin 2>/dev/null || rc=1
   [ -z "$CK_CD" ] || remote_cache_drop "$CK_CD"
   return "$rc"
 }
@@ -2135,6 +2290,7 @@ cmd_close() {
   # Closing your own finished clone: the activity window does not apply.
   OLDER=0
   set_root
+  require_safe_root
   deletable "$repo" || die "refusing: $repo is outside $ROOT, under ~/GitHub, or excluded"
   # Ownership before anything touches the clone, the fetch included.
   owner="$(owner_above "$repo")"
@@ -2151,7 +2307,9 @@ cmd_close() {
   HOLDERS=""
   checkout_trust "$repo"
   if [ "$TRUSTED" -eq 0 ]; then
-    say "not fetching: $repo is inside another checkout or a build folder, so its config is not trusted"
+    say "not fetching: $repo is unmarked in a root other users can write in, or is inside another checkout or a build folder, so its config is not trusted"
+  elif ! config_safe_tree "$repo"; then
+    say "not fetching $repo: $CFG_WHY"
   elif ! own_checkout "$repo"; then
     say "warning: git cannot read $repo as its own repository; not fetching"
   else
@@ -2388,6 +2546,7 @@ cmd_sweep() {
   cmd_prune
   cmd_tmp
   set_root
+  require_safe_root
   say "sweep of clones under $ROOT"
   touch -- "$SWEEP_STAMP" && SWEEP_SINCE="$SWEEP_STAMP"
   clones="$(list_clones)"
@@ -2400,6 +2559,7 @@ cmd_sweep() {
     owner_ok "$(owner_above "$repo")" || continue
     checkout_trust "$repo"
     [ "$TRUSTED" -eq 1 ] || continue
+    config_safe_tree "$repo" || continue
     own_checkout "$repo" || continue
     checkout_writable "$repo" || continue
     [ -z "$(submodule_parent "$repo")" ] || continue
