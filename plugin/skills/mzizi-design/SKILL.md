@@ -1,6 +1,6 @@
 ---
 name: mzizi-design
-description: Use this skill for the Mzizi design system and brand — generating well-branded interfaces (production or prototype), design tokens, and ecosystem-level work. Contains the canonical 21-family Mzizi palette (seven African Minerals + seven Heritage tones + the Experimental Seven) with generated stylesheets (tokens/palette.css, tokens-update.css), the radius scale, Noto Sans/Serif + JetBrains Mono type, pill buttons and the 48px touch floor, status and surface tokens, the Mzizi Dashboard Standard's and Discover Standard's brand overlays (colour and mark only; status colours never follow the brand; Discover controls are 44–48px on every pointer), the verified brand constellation (every brand's mineral, voice, meaning, URL; Mzizi's own is hematite, a Heritage tone), the ecosystem identity (copper), the five Ubuntu pillars + five principles, what is and isn't an ecosystem app, and the wordmarks.
+description: Use this skill for the Mzizi design system and brand — generating well-branded interfaces (production or prototype), design tokens, and ecosystem-level work. Contains the canonical 21-family Mzizi palette (seven African Minerals + seven Heritage tones + the Experimental Seven) with generated stylesheets (tokens/palette.css, tokens-update.css), the radius scale, Noto Sans/Serif + JetBrains Mono type, pill buttons and the 48px touch floor, status and surface tokens, the Mzizi Dashboard Standard's and Discover Standard's brand overlays (colour and mark only; status colours never follow the brand; Discover controls are 44–48px on every pointer), the verified brand constellation (every brand's mineral, voice, meaning, URL; Mzizi's own is hematite, a Heritage tone), the ecosystem identity (copper), the five Ubuntu pillars + five principles, what is and isn't an ecosystem app, and the wordmarks. It also covers Apple's Human Interface Guidelines as the baseline (the eight design principles, layout, adaptivity, accessibility) and where Mzizi is the authority over them across all apps: touch targets, spacing, the type scale, colour, pill geometry, materials, density and the shell.
 user-invocable: true
 ---
 
@@ -208,7 +208,9 @@ page: the artifact is republished from registry `main` after a merge that touche
 - **Status has its own names: `--status-success` / `--status-warning` / `--status-error` / `--status-info` / `--status-neutral`.** Use those names and do not hardcode a hex. Upstream they alias `--success` / `--warning` / `--destructive` / `--info` / `--neutral`, so there is one decision per status — which means the resolved values are mineral-derived in the shipped theme (success reads as malachite, info as cobalt), not the standalone #22C55E/#F59E0B/#EF4444/#3B82F6 set an earlier revision of this skill listed. Those hexes are the per-component `var(--token, #hex)` fallback for an app that has not defined the properties; they are not the theme. Severity scale (`--severity-low/moderate/high/severe/extreme/cold`) and connection (`--connection-online/syncing/cached/offline`) follow the same logic. Verification is the only place minerals carry status meaning; it has its own rule, next.
 - **Verification is two things, not one ladder: assurance levels and attestations** (mzizi-registry#577; the source is `gateway/lib/assurance.py` in `nyuchi/nyuchi-api`, the one access decision every surface derives from — read that, never re-derive it). Read the roles, never a hex; each has `-container`, `-on-container` and `-text`, and passes APCA in both themes.
   - **Assurance levels** are ordered (`>=` is meaningful): how strongly an identity is proven. 0 `none` "Unverified" → `--assurance-none` (the neutral grey, `--status-neutral`) · 1 `otp` "Contact Verified" → `--assurance-otp` (cobalt) · 2 `documented` "Documents Checked" → `--assurance-documented` (sodalite) · 3 `government` "Government Verified" → `--assurance-government` (gold) · 4 `licensed` "Licensed Professional" → `--assurance-licensed` (tanzanite).
-  - **Attestations** are unordered and held beside the level: who vouches for the subject. `community` "Community Vouched" → `--attestation-community` (terracotta) · `business` "Registered Business" → `--attestation-business` (malachite) · `domain` "Domain Verified" → `--attestation-domain` (copper). Show each as its own chip next to the level (the `app/tier-status`, `ui/mzizi-verified-badge` and `ui/mzizi-trust-meter` components do this, from registry v4.17.0).
+  - **A level can expire.** A `government` check holds for five years and a `licensed` one for a year (`LEVEL_VALIDITY_YEARS` in assurance.py, nyuchi-api#375). When the term runs out the level is withdrawn, so show the level a person holds now and never cache it as permanent.
+  - **Attestations** are unordered and held beside the level: who vouches for the subject. `community` "Community Vouched" → `--attestation-community` (terracotta) · `business` "Registered Business" → `--attestation-business` (malachite) · `domain` "Domain Verified" → `--attestation-domain` (copper). Show each as its own chip next to the level (`app/tier-status` and `ui/mzizi-verified-badge` do this, from registry v4.17.0; `ui/mzizi-trust-meter` shows the level and renders no attestation chips).
+  - **Provenance: where an attestation came from, and when it was checked** (mzizi-registry#593, on registry `staging`, released with the next registry version: `ui/mzizi-verified-badge` 1.2.0 and `app/tier-status` 1.2.0). A stored attestation record may carry `source` (a short id such as `"osm"`), `sourceRef` (the source's own reference, kept and never shown) and `checkedAt` (an ISO date or date-time). The chip label stays the canonical one ("Community Vouched"), and an optional second line reads "via <Source> · checked <date>", for example "via OpenStreetMap · checked 14 Mar 2026". Source names come from `ATTESTATION_SOURCES` in `mzizi-trust-tier-data` (`osm` → "OpenStreetMap"), and the line is built by `attestationProvenance`. Two rules: **never invent a check date.** With no `checkedAt`, or one that does not parse or names a day that does not exist, the line is "via OpenStreetMap" with no date. And **never a per-source label**: a source changes the second line only, never the chip's name, its colour or the closed set of three attestations (an OpenStreetMap verification is a `community` attestation, never a level). The date is formatted in UTC from the locale (`en-GB` by default) so the day never shifts. The chip's `aria-label` stays the canonical name and the line is its `aria-description` (badge) or is read with the name (tier status, the date as `<time datetime>`).
   - **Community is not a rung.** The old ladder put `community` at 1, below `otp`, which ranked a trader vouched for by their whole street below anyone who clicked a link in an email. Mukoko serves the informal economy: a tuck shop is level `otp` plus community, a registered firm is `government` plus business, and neither outranks the other. So never draw community on the level scale and never below otp; `tier="community"` now renders as level Unverified plus a "Community Vouched" chip.
   - **`--tier-*` are legacy aliases**, kept while `bundu.verificationTier` (the `legacy_tier()` projection in assurance.py) still has readers: `--tier-unverified` → `--assurance-none`, `--tier-community` → `--attestation-community`, `--tier-otp` → `--assurance-otp`, `--tier-government` → `--assurance-government`, `--tier-licensed` → `--assurance-licensed`. They paint what they always did. New code reads `--assurance-*` and `--attestation-*`. (Earlier revisions of this skill listed a five-rung tier ladder, first as community→malachite, government→tanzanite, licensed→gold, then, after mzizi-registry#543, with community as terracotta; both treated community as a rung.)
   - Colour is never the only cue: every level and attestation carries its label and glyph. Heritage tones never carry a level or an attestation.
@@ -229,6 +231,67 @@ npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>
 ```
 
 Take CSS variables from `tokens-update.css` or `tokens/palette.css` in this skill — it is generated from `palette.canonical.json` and carries all 21 families. The upstream equivalent is `mzizi-registry/styles/globals.css`, which is generated from the same canon. There is no database to refresh from.
+
+### Apple HIG: the baseline, and where Mzizi overrides it
+
+Mzizi designs on Apple's Human Interface Guidelines
+(<https://developer.apple.com/design/human-interface-guidelines>). It applies them to **every**
+Mzizi surface (web, native and console) and not only to Apple platforms. The HIG is the
+baseline wherever Mzizi says nothing. Where Mzizi has a token, a registry component or a
+contract, **Mzizi is the authority, across all apps**, and the HIG value does not apply. Read
+the HIG pages live, because Apple revises them: the design principles were reintroduced on
+8 June 2026, Layout was updated on 9 September 2026, and Liquid Glass guidance arrived on
+9 June 2025.
+
+**The eight HIG design principles** (Design principles, June 2026) are the questions to ask of
+every screen:
+
+| Principle      | In Apple's words                     | In Mzizi terms                                                                        |
+| -------------- | ------------------------------------ | ------------------------------------------------------------------------------------- |
+| Purpose        | Make something meaningful.           | Build what the person came for, and drop features nobody asked for.                   |
+| Agency         | Let people do things their own way.  | No locked flows, an escape from every guided step, undo before confirm.               |
+| Responsibility | Act in people's best interest.       | Say what is collected and why. Collect only what the product needs (Ubuntu: dignity). |
+| Familiarity    | Build on what people know.           | One shell and one set of patterns across every app (`mzizi-architecture`).            |
+| Flexibility    | Adapt to diverse contexts and needs. | Accessibility from the start, and every input (touch, keyboard, voice, pointer).      |
+| Simplicity     | Be clear and direct.                 | Every element earns its place. Hierarchy first, concise labels.                       |
+| Craft          | Care about every detail.             | The contract's checks pass, every state renders, motion is purposeful.                |
+| Delight        | Make it human.                       | Delight is never decoration. The minerals carry meaning, not ornament.                |
+
+**Where Mzizi is the authority** (the HIG value is replaced, not blended):
+
+| Concern                 | HIG says                                                      | Mzizi rule (wins)                                                                                                                                                      |
+| ----------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Touch targets           | 44×44 pt default, 28×28 pt minimum on iOS/iPadOS              | **48px floor** for anything tappable (56px default buttons and inputs). Dashboards: each contract's `density`, 44–48px on touch                                        |
+| Spacing and layout grid | system margins, layout guides                                 | the Mzizi spacing tokens and each component contract's `responsive` rules, from 320px up                                                                               |
+| Type scale and families | San Francisco, Dynamic Type sizes (17 pt default body on iOS) | Noto Serif H1–H3, Noto Sans H4 and body, JetBrains Mono for code, at the Mzizi type scale. **Text still scales with the user's setting** (rem units, no fixed px caps) |
+| Colour                  | system colours, dynamic colours                               | the 21 families and the semantic tokens only, through `var(--…)`. A brand overlay changes colour and mark only                                                         |
+| Contrast                | 4.5:1 up to 17 pt, 3:1 at 18 pt or bold (WCAG)                | APCA in both themes (the palette is solved for it), never weaker than the HIG/WCAG floor                                                                               |
+| Shape                   | system control shapes, capsules in Liquid Glass               | **pill buttons and inputs** (`--radius-full`), the radius scale above, and the Dashboard Standard's small radius where its contracts say so                            |
+| Materials               | Liquid Glass for controls over content                        | solid surfaces and rings; blur only on sticky chrome. No glass panels on web surfaces                                                                                  |
+| Density                 | per-platform defaults                                         | comfortable by default, dense only where a Standard's contract says so                                                                                                 |
+| App chrome              | tab bars, sidebars, toolbars per platform                     | **the shell**: AppShell or DiscoverShell from `@bundu/ui`, mounted once (`mzizi-architecture`)                                                                         |
+
+**Where the HIG applies as written** (Mzizi is silent, so follow Apple):
+
+- **Hierarchy and layout.** Order content by importance (top and leading side first), align to
+  make it scannable, group related items with space, containers or separators, and use
+  progressive disclosure instead of showing every choice at once (Layout).
+- **Adaptivity.** Lay out by the space available, never by device type. Keep functionality
+  the same as the size changes, and respect safe areas (the registry's `safe-area-frame`
+  primitive does this on the web).
+- **Accessibility.** VoiceOver and screen-reader labels, Reduce Motion (stop auto-playing,
+  zooming and parallax motion; Mzizi's harness exposes `prefers-reduced-motion`), Increase
+  Contrast, keyboard and switch access, and never colour alone.
+- **Feedback and recovery.** Show state changes, confirm destructive actions, and make
+  reversal cheap.
+- **Writing.** Be concise, use the exact words a control needs, and say what will happen.
+- **Native apps** (SwiftUI and other native platforms) use the system components and
+  materials, Liquid Glass included, themed through the generated Swift and Kotlin tokens, while
+  the Mzizi floor, type and colour rules still hold.
+
+When a HIG update conflicts with a Mzizi rule, the Mzizi rule stands until the registry changes
+it. Raise the conflict upstream in `mzizi-dev/mzizi-registry` and do not patch around it in an
+app.
 
 ### Dashboards: brand overlays only
 
