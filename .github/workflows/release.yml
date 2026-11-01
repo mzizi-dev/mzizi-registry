@@ -27,7 +27,13 @@ name: Release
 # The lint, type check, tests and build that used to run inside this job
 # are CI's jobs on the same commit; the tag waits for CI to pass.
 #
-# The logic is nyuchi/.github's reusable-auto-tag.yml.
+# The logic is nyuchi/.github's reusable-auto-tag.yml. Its release notes are
+# GitHub's merged-PR list, so the `notes` job then rewrites the release body:
+# every CHANGELOG.md entry added since the previous vX.Y.0 tag
+# (.github/scripts/release_notes.py, the same script as mzizi-dev/mzizi-site
+# and mzizi-dev/mzizi-benchmarks), followed by that PR list. It acts only when
+# the version's tag points at this commit, so a doc-only merge leaves the
+# release alone; a manual run on a released commit rewrites its notes.
 
 on:
   workflow_run:
@@ -63,3 +69,49 @@ jobs:
       create-release: true
     secrets:
       token: ${{ secrets.RELEASE_BUMP_TOKEN }}
+
+  notes:
+    name: Release notes from CHANGELOG.md
+    needs: release
+    # A manual run rewrites a released commit's notes even when the tag job
+    # has nothing to do or refuses the bump; the tag check below still guards.
+    if: >-
+      always() &&
+      (needs.release.result == 'success' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          # The notes compare CHANGELOG.md with the previous release's tag.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Rewrite the release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          head="$(git rev-parse HEAD)"
+          tag="v$(node -p "require('./package.json').version")"
+          if ! tagged="$(git rev-parse --verify --quiet "refs/tags/${tag}^{commit}")" || [ "$tagged" != "$head" ]; then
+            echo "$tag is not on $head; nothing to rewrite."
+            exit 0
+          fi
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::$tag is tagged on $head but has no GitHub release."
+            exit 1
+          fi
+          prev="$(git tag -l 'v*.*.0' --merged "$head" --sort=-v:refname | grep -Fvx "$tag" | head -n 1 || true)"
+          CHANGELOG_URL="https://github.com/${GH_REPO}/blob/${tag}/CHANGELOG.md" \
+            python3 .github/scripts/release_notes.py "$prev" "$head" > "$RUNNER_TEMP/notes.md"
+          start=()
+          if [ -n "$prev" ]; then start=(-f "previous_tag_name=$prev"); fi
+          gh api "repos/${GH_REPO}/releases/generate-notes" -f "tag_name=$tag" "${start[@]}" \
+            --jq .body >> "$RUNNER_TEMP/notes.md"
+          gh release edit "$tag" --notes-file "$RUNNER_TEMP/notes.md"
+          echo "Wrote the notes of $tag from CHANGELOG.md." | tee -a "$GITHUB_STEP_SUMMARY"

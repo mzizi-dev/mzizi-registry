@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — GitHub releases carry the CHANGELOG entries they ship (2026-11-01)
+
+- Owner, 2026-11-01: a release is not done until its tag and its GitHub release, with notes from `CHANGELOG.md`, exist on the merge commit on `main`. `release.yml` gains a `notes` job that, after the tag job, rewrites the release body: every `CHANGELOG.md` entry added since the previous `vX.Y.0` tag (`.github/scripts/release_notes.py`, the same script as `mzizi-dev/mzizi-site` and `mzizi-dev/mzizi-benchmarks`, adapted from `mzizi-dev/mzizi`), then GitHub's list of merged pull requests. Before, the notes were the pull-request list alone (v4.18.0's are). The tag job is `nyuchi/.github`'s reusable workflow, so the notes are a separate job here rather than a change there.
+- It acts only when `v<package.json version>` points at the commit, so a doc-only merge leaves the release alone. A manual run on a released commit rewrites that release's notes, so v4.18.0 can be corrected once this is on `main`.
+- Checked: `actionlint` and `yamllint` pass, and the script over `v4.17.0..v4.18.0` prints the four 4.18.0 entries.
+
 ### Added — attestation provenance: "via OpenStreetMap · checked 14 Mar 2026" (2026-11-01, [#577](https://github.com/mzizi-dev/mzizi-registry/issues/577))
 
 - **An attestation can say where it came from and when it was checked.** A stored record now takes optional `source` (a short id, `"osm"`), `sourceRef` (the source's own reference, kept, never shown) and `checkedAt` (an ISO date or date-time). Kweli imports OpenStreetMap verifications (`check_date`, survey tags) this way, as `community` attestations: the chip is still "Community Vouched", never a level, and the vocabulary is still the closed set of three.
