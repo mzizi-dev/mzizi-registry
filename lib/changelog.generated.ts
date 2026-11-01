@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.18.0",
+    title:
+      "v4.18.0 — mzizi-resilience, the N5 Rust core, with a lib/ contract for each primitive, mzizi-chaos-engine, the N8 seeded chaos engine, a clean pnpm audit, and the Claude Code plugin at 1.3.0 with skills 0.13.0, with the Roots crates at 0.7.0",
+    description:
+      "Releases staging to main as the next minor above v4.17.x (nyuchi/.github#80). The Mzizi Roots crates move to 0.7.0 because two crates join the workspace. Added: mzizi-resilience, the N5 Rust core (circuit breaker, retry backoff, bulkhead, rate limiter, fallback chain, deadline as sans-IO state machines), fixing the defects #472 audited in the TypeScript primitives, with shared vectors in __tests__/fixtures/resilience/ (#584); the contracts/lib/ family, a contract for each resilience primitive with 30 named invariants (#585); mzizi-chaos-engine, a seeded deterministic fault schedule that refuses production (#586). Fixed: dependency advisories, pnpm audit clean at moderate and above (#587). Changed: @nyuchi/mzizi-skills required at >=0.13.0, the Claude Code plugin at 1.3.0 with seven skills (#582). Nothing breaks. CHANGELOG.md section [4.18.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 18,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-01T12:00:00.000+00:00",
+    created_at: "2026-11-01T12:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: 0,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.17.0",
     title:
       'v4.17.0 — the Bundu trust model in tokens and components: --assurance-* levels and --attestation-* chips as N1 roles (--tier-* kept as aliases), tier-status 1.1, verified-badge 1.1 and trust-meter 2.2 on assurance and attestations (Breaking: tier="community" now renders Unverified plus a Community Vouched chip), with the Roots crates at 0.6.0',
