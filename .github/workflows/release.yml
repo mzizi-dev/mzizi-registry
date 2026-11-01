@@ -77,16 +77,21 @@ jobs:
     # has nothing to do or refuses the bump; the tag check below still guards.
     if: >-
       always() &&
-      (needs.release.result == 'success' || github.event_name == 'workflow_dispatch')
+      (github.event_name == 'workflow_dispatch' ||
+       (needs.release.result == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
     steps:
+      # Check out trusted main (the default ref of a workflow_run or a manual
+      # run), never the triggering run's commit. That commit is only read as
+      # data below, by SHA: its package.json and CHANGELOG.md through git show.
+      # fetch-depth 0 makes it and the previous tag present.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-          # The notes compare CHANGELOG.md with the previous release's tag.
           fetch-depth: 0
           persist-credentials: false
 
@@ -94,10 +99,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
           set -euo pipefail
-          head="$(git rev-parse HEAD)"
-          tag="v$(node -p "require('./package.json').version")"
+          head="$(git rev-parse --verify "${SHA}^{commit}")"
+          version="$(git show "${head}:package.json" | python3 -c 'import json, sys; print(json.load(sys.stdin)["version"])')"
+          tag="v${version}"
           if ! tagged="$(git rev-parse --verify --quiet "refs/tags/${tag}^{commit}")" || [ "$tagged" != "$head" ]; then
             echo "$tag is not on $head; nothing to rewrite."
             exit 0

@@ -13,6 +13,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 ### Changed — GitHub releases carry the CHANGELOG entries they ship (2026-11-01)
 
 - Owner, 2026-11-01: a release is not done until its tag and its GitHub release, with notes from `CHANGELOG.md`, exist on the merge commit on `main`. `release.yml` gains a `notes` job that, after the tag job, rewrites the release body: every `CHANGELOG.md` entry added since the previous `vX.Y.0` tag (`.github/scripts/release_notes.py`, the same script as `mzizi-dev/mzizi-site` and `mzizi-dev/mzizi-benchmarks`, adapted from `mzizi-dev/mzizi`), then GitHub's list of merged pull requests. Before, the notes were the pull-request list alone (v4.18.0's are). The tag job is `nyuchi/.github`'s reusable workflow, so the notes are a separate job here rather than a change there.
+- **The job checks out trusted `main`, never the triggering run's commit**, and reads that commit only as data, by SHA (`git show <sha>:package.json` and `:CHANGELOG.md`); it runs only after CI passed on a push to `main`, or by hand. Semgrep's `scan` flagged the first version, which checked out `workflow_run.head_sha`.
 - It acts only when `v<package.json version>` points at the commit, so a doc-only merge leaves the release alone. A manual run on a released commit rewrites that release's notes, so v4.18.0 can be corrected once this is on `main`.
 - Checked: `actionlint` and `yamllint` pass, and the script over `v4.17.0..v4.18.0` prints the four 4.18.0 entries.
 
