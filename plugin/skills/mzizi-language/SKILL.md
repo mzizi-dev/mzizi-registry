@@ -1,6 +1,6 @@
 ---
 name: mzizi-language
-description: Use this skill when writing, checking or fixing Mzizi language source (`.mz` files) — LANGUAGE-TRACKER.md as the one list of what Mzizi can and cannot do, the component syntax (enum tables, props, the view tree, `when` / `for each`, records, `use motion`), the backend `service` (routes, handlers with `when` / `header` / `respond`, `example` and `ensure` contracts; RFC-0011), the `mz check --agent` loop and its NDJSON diagnostics, `mz fix` for every `exact` fix, `mz contract` (a component's contract, or a service run in process), `mz build` (a service to a local Rust + axum package), the diagnostic codes you will meet (MZ0101, MZ0106, MZ0312, MZ0313, MZ0406–MZ0409, MZ0602, MZ0603, MZ0605, MZ0606, MZ0611–MZ0613, MZ07xx, MZ08xx), programs (RFC-0013: `fn main`, `let` / `var`, functions, `when` / `match`, loops, `int` / `float`, text, `list` / `map` / `set`, records, enums, `result` with `try`) checked by `mz check` and run by `mz run`, the language harness (`mz harness`), and exactly what is not built yet (modules, a standard library, component lowering, Rust interop, I/O, concurrency, generics, `mz test`, a release).
+description: Use this skill when writing, checking or fixing Mzizi language source (.mz files): LANGUAGE-TRACKER.md as the one list of what Mzizi can and cannot do, the component syntax (enum tables, props, the view tree, when / for each, records, use motion), the backend service (routes, handlers with when / header / respond, example and ensure contracts; RFC-0011), the `mz check --agent` loop and its NDJSON diagnostics, `mz fix` for every exact fix, `mz contract`, `mz build` (a service to a local Rust + axum package), the diagnostic codes you will meet (MZ0101, MZ0106, MZ0312, MZ0313, MZ0406-MZ0409, MZ0602-MZ0613, MZ07xx, MZ08xx), programs (RFC-0013: fn main, let / var, functions, when / match, loops, int / float, text, list / map / set, records, enums, result with try) checked by `mz check` and run by `mz run`, the language harness, and exactly what is not built yet (modules, a standard library, component lowering, Rust interop, I/O, concurrency, generics, mz test, a release).
 user-invocable: true
 ---
 
@@ -80,8 +80,9 @@ package management and a published release (`mzizi-lang-compiler` 0.0.0, `publis
 Errors are not yet mapped back to `.mz` lines (P5, designed). Do not write Mzizi that needs
 any of these, and do not tell anyone it exists.
 
-Two pilots have run and neither showed an advantage for Mzizi. The run that tests the
-charter's kill criterion has not happened, so never write that Mzizi is faster or better.
+Four pilots have run (two on 2026-09-27, two on 2026-10-29) and none showed an advantage for
+Mzizi. The run that tests the charter's kill criterion has not happened, so never write that
+Mzizi is faster or better.
 
 ## What exists, and what does not
 
@@ -222,8 +223,8 @@ ready"; say it is designed to lower to Rust, and that only a service does so tod
   another component's enum (`button_variant.ghost`) is warning `MZ0502`, because it cannot be
   checked until modules exist.
 
-**Results, as they fell.** Two Phase 0 pilots ran on 2026-09-27 and neither showed an
-advantage for Mzizi. On the frontier model the Mzizi and Dioxus arms tied, with Mzizi about 8%
+**Results, as they fell.** The first two Phase 0 pilots ran on 2026-09-27 and neither showed an
+advantage for Mzizi (two more ran on 2026-10-29, also with no advantage). On the frontier model the Mzizi and Dioxus arms tied, with Mzizi about 8%
 fewer transcript tokens. On the ~7B open-weight model, the design target, Mzizi did worse on
 all three metrics. Neither pilot is the kill-criterion run (RFC-0009 §6), and that run has not
 happened. The pilots were tests inside Phase 0 on a few registry UI components against
