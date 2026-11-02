@@ -25,7 +25,8 @@ use serde_json::Value;
 #[path = "../../../contract-eval/contract_eval.rs"]
 mod contract_eval;
 use contract_eval::{
-    Case, Rendered, declared_height, holds, inline_styles, render, select, tokens,
+    Case, Rendered, declared_height, declared_height_at, holds, inline_styles, render, select,
+    tokens,
 };
 
 fn repo() -> PathBuf {
@@ -492,7 +493,9 @@ fn coarse_height(classes: &str, fine: Option<u32>) -> Option<u32> {
         .filter_map(|c| c.strip_prefix("pointer-coarse:"))
         .collect::<Vec<_>>()
         .join(" ");
-    declared_height(&coarse).or(fine)
+    declared_height_at(&coarse, true)
+        .or_else(|| declared_height_at(classes, true))
+        .or(fine)
 }
 
 fn run_density(name: &str, case: &Case, row: &Value) {

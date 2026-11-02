@@ -36,7 +36,7 @@
 //! [`Roles::mzizi`], with the size, radius and font roles as associated consts. It is generated
 //! from `lib/tokens/roles.source.ts` beside the palette.
 //!
-//! The 48px touch floor is checked at compile time, in the generated file: every size role the
+//! The 44px touch floor is checked at compile time, in the generated file: every size role the
 //! manifest marks `floor` gets a `const _: () = assert!(Roles::X >= Roles::SPACING_TOUCH_MIN);`
 //! item outside any test, so a build of this crate (or of a copy of the registry file) fails if a
 //! floored size undercuts it.

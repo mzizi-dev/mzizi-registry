@@ -163,8 +163,44 @@ export function heightOf(classes: string, prefix = ""): number | null {
     const m = /^(?:min-h|h|size)-(\d+)$/.exec(t);
     if (m) return Number(m[1]) * 4;
   }
+  // A size role (`h-control`, `h-field-sm`, `min-h-touch-min`…): the token layer sets it, so the
+  // answer depends on the pointer. `prefix === "pointer-coarse:"` is a touch device; none is
+  // desktop density (fine pointer, hover, >= 64rem).
+  for (const t of own) {
+    const m = /^(?:min-h|h|size)-([a-z-]+)$/.exec(t);
+    const row = m ? ROLE_HEIGHTS[m[1] ?? ""] : undefined;
+    if (row) return prefix === "pointer-coarse:" ? row[0] : row[1];
+  }
+  // A role utility with no `pointer-coarse:` variant still has a touch value: the token layer
+  // gives it one. So on a coarse pointer an unprefixed role answers with its coarse height.
+  if (prefix === "pointer-coarse:") {
+    for (const t of tokens.filter((x) => !x.includes(":"))) {
+      const m = /^(?:min-h|h|size)-([a-z-]+)$/.exec(t);
+      const row = m ? ROLE_HEIGHTS[m[1] ?? ""] : undefined;
+      if (row) return row[0];
+    }
+  }
   return null;
 }
+
+/**
+ * The size roles' heights in px, `[coarse pointer, desktop density]`, by utility suffix
+ * (`h-control` is `--spacing-control`). A copy of `lib/tokens/roles.source.ts` (the roles'
+ * defaults and `DESKTOP_SIZES`) so this file stays free of imports; `__tests__/density.test.ts`
+ * fails when the two disagree, and mzizi-rs/contract-eval holds the same table.
+ */
+export const ROLE_HEIGHTS: Readonly<Record<string, readonly [number, number]>> =
+  {
+    touch: [44, 36],
+    "touch-min": [44, 24],
+    control: [44, 36],
+    "control-sm": [44, 32],
+    "control-lg": [48, 40],
+    "control-icon": [44, 36],
+    "control-dense": [32, 28],
+    field: [44, 36],
+    "field-sm": [44, 32],
+  };
 
 type Outcome = { ok: true } | { ok: false; say: string };
 const pass: Outcome = { ok: true };
@@ -351,7 +387,10 @@ function evaluateClause(clause: string, rendered: Rendered): Outcome {
       for (const el of elements(doc(h))) {
         if (el.name !== tag || !carries(el, want ?? "")) continue;
         seen += 1;
-        const px = heightOf(el.attribs.class ?? "");
+        // The touch floor (Apple HIG: 44x44 pt) is judged on a coarse pointer; a fine pointer's
+        // 24px floor (WCAG 2.2 SC 2.5.8) is held by the density rows and __tests__/density.test.ts.
+        const cls = el.attribs.class ?? "";
+        const px = heightOf(cls, "pointer-coarse:") ?? heightOf(cls);
         if (px === null)
           return fail(
             `<${tag}> "${want}" in "${name}" declares no height a runner can read`,

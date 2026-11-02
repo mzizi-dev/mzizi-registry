@@ -35,7 +35,7 @@ When generating code in this repository:
 3. Use CSS vars from N1 tokens: var(--color-cobalt), var(--radius-lg), etc.
 4. Never use raw Tailwind colors (bg-red-500). Use semantic tokens.
 5. Brand components (N3) must use useMziziHarness hook
-6. All interactive elements need focus-visible:outline-2 and min-h-[48px] (48px is the minimum touch target; 56px is the default)
+6. All interactive elements need focus-visible:outline-2 and min-h-touch-min (44px on a coarse pointer, Apple HIG; 24px on a fine pointer at desktop density)
 7. Add data-slot="component-name" to the root element
 8. Add data-portal="https://mzizi.dev/components/{name}" next to data-slot
 9. Status colors: var(--status-success), var(--status-error), var(--status-warning)
@@ -46,7 +46,7 @@ When generating code in this repository:
 Tokens are files in the registry: lib/tokens/palette.source.ts (the 21 colour families) and lib/tokens/brand.source.ts (semantic colours, typography, spacing). Never copy a value; reference the generated CSS variable.
 
 11. Icons: size them with the mzizi-icons presets (`ICON_SIZES`, through `<Icon size="…">`): xs 12px, sm 16px, md 20px (the default), lg 24px, xl 32px. There are no `--icon-*` CSS variables
-12. Touch targets: 56px by default, never below 48px (the accessibility block of brandMeta in lib/tokens/brand.source.ts)
+12. Touch targets: 44px on touch, 36px at desktop density, never below 24px; use the size roles (h-control, h-field), never h-12 or h-14 (the accessibility block of brandMeta in lib/tokens/brand.source.ts)
 13. Spacing: the 17-step spacing scale in brand.source.ts. Default component padding is base (16px), not md (12px, which is compact)
 14. Density: density-aware components follow the density in their contract — do not hardcode tier behaviour
 15. High contrast: when an HC theme is active, components use the semantic colours' hcLightValue/hcDarkValue overrides in brand.source.ts (null where none is defined)
