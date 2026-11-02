@@ -5,9 +5,13 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { parseDocument } from "htmlparser2";
+import { isTag, type Element } from "domhandler";
 import {
   HIT_AREA_GAPS,
   HIT_AREA_PX,
+  hitRegion,
+  hitViolations,
   ROLE_HEIGHTS,
   VISIBLE_FINE_MIN_PX,
 } from "../contracts/runner";
@@ -186,6 +190,10 @@ describe("one definition, every copy agrees", () => {
       visibleFine: 28,
       body: 17,
       caption: 14,
+      // deprecated aliases of the 4.21.0 keys, kept for one release
+      coarse: 49,
+      fine: 49,
+      bodyFine: 17,
     });
     expect(j.scale.density.bunduFloor).toEqual(BUNDU_FLOOR);
     expect(j.scale.density.desktopPx).toEqual(DESKTOP_SIZES);
@@ -241,6 +249,37 @@ describe("the runner and the Rust evaluator hold the Bundu floor too", () => {
         g,
       ).toBe(true);
     }
+  });
+});
+
+describe("hit-region rules: the runner and the Rust evaluator answer the same cases", () => {
+  const cases = JSON.parse(
+    readFileSync(join(ROOT, "contracts/hit-region-cases.json"), "utf8"),
+  ).cases as {
+    name: string;
+    html: string;
+    fine: number | null;
+    coarse: number | null;
+    violations: number;
+  }[];
+  const first = (html: string) =>
+    parseDocument(html).children.find((n) => isTag(n)) as Element;
+  for (const c of cases)
+    it(c.name, () => {
+      expect(hitViolations(first(c.html), c.fine, c.coarse)).toHaveLength(
+        c.violations,
+      );
+    });
+  it("a covered button is raised to the floor, a link is its drawn box", () => {
+    expect(hitRegion(first('<button class="h-9">x</button>'), 36)).toBe(49);
+    expect(hitRegion(first('<a href="/" class="h-9">x</a>'), 36)).toBe(36);
+  });
+  it("the Rust evaluator's table is this file", () => {
+    const rs = readFileSync(
+      join(ROOT, "mzizi-rs/crates/mzizi-ui/tests/contracts_json.rs"),
+      "utf8",
+    );
+    expect(rs).toContain("hit-region-cases.json");
   });
 });
 

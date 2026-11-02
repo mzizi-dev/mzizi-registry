@@ -339,6 +339,19 @@ function fontFamily(name: "sans" | "serif" | "mono"): string {
   return row.family
 }
 
+/**
+ * Canon's type scale (`/v1/brand` typography, `design-system/tokens.json`) is held to the Bundu floor at load, like
+ * `access()` holds the hit area: Body and every heading and display step >= `bodyPx`, Body Small, Caption and Code
+ * >= `captionPx`. A canon row under its floor fails the build rather than serving a stale size.
+ */
+for (const t of typography) {
+  if (t.entryType !== "scale" || typeof t.sizePx !== "number") continue
+  const floor = ["Body Small", "Caption", "Code"].includes(t.name) ? BUNDU_FLOOR.captionPx : BUNDU_FLOOR.bodyPx
+  if (t.sizePx < floor) {
+    throw new Error(`brand.source.ts typography "${t.name}" is ${t.sizePx}px, under the Bundu floor of ${floor}px`)
+  }
+}
+
 /** The mzizi row's family: hematite, by owner decision (2026-09-30). */
 export const DEFAULT_PRIMARY_FAMILY: string = (() => {
   const row = ecosystem.find((e) => e.name === "mzizi")

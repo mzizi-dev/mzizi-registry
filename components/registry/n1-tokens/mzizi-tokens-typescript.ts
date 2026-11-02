@@ -466,14 +466,18 @@ export const primitives = {
   // Type scale (Nyuchi Design canonical)
   fontSize: {
     caption: {
-      value: "12px",
-      description: "0.75rem — Labels, metadata, timestamps",
+      value: "14px",
+      description:
+        "0.875rem — Labels, metadata, timestamps: the Bundu caption floor",
     },
     bodySmall: {
       value: "14px",
       description: "0.875rem — Secondary text, descriptions",
     },
-    body: { value: "16px", description: "1rem — Default body text" },
+    body: {
+      value: "17px",
+      description: "1.0625rem — Default body text: the Bundu body floor",
+    },
     bodyLarge: { value: "18px", description: "1.125rem — Lead paragraphs" },
     h5: {
       value: "20px",
@@ -507,10 +511,13 @@ export const primitives = {
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
     default: {
-      value: "56px",
-      description: "Default interactive element height",
+      value: "49px",
+      description: "Default interactive element height: the Bundu hit area",
     },
-    sm: { value: "48px", description: "Minimum — NEVER below this" },
+    sm: {
+      value: "49px",
+      description: "Minimum hit region on every device — NEVER below this",
+    },
   },
 
   // ─── MOTION (Nyuchi Design canonical) ─────────────────────
@@ -1002,9 +1009,9 @@ export const componentTokens = {
   bottomNav: { height: "80px", fabSize: "52px", fabRise: "24px" },
   sidebar: { width: "256px", collapsedWidth: "64px" },
   avatar: { sm: "32px", md: "40px", lg: "64px", xl: "80px", xxl: "120px" },
-  badge: { height: "20px", padding: "0 8px", fontSize: "10px" },
-  input: { height: "48px" },
-  button: { height: "56px", heightSm: "48px", heightLg: "56px" },
+  badge: { height: "24px", padding: "0 8px", fontSize: "14px" },
+  input: { height: "49px" },
+  button: { height: "49px", heightSm: "49px", heightLg: "56px" },
   card: { padding: "16px", gap: "14px" },
   page: { maxWidth: "1280px", margin: "20px" },
   focusRing: { width: "2px", offset: "2px", color: "var(--ring)" },

@@ -1357,15 +1357,23 @@ function densityLayer(): string {
  * DENSITY — sizes step down as screens grow (2026-11-01). See densityLayer().
  * ════════════════════════════════════════════════════════════════════════════ */
 /* The ${FLOOR_COARSE_PX}px hit region (BUNDU_FLOOR.hitAreaPx): a transparent pseudo-element grows the click and
-   touch region of every button-like control to the floor, so a control drawn at ${FLOOR_VISIBLE_FINE_PX}px on a
+   touch region of a button-like control to the floor, so a control drawn at ${FLOOR_VISIBLE_FINE_PX}px on a
    desktop is still ${FLOOR_COARSE_PX}px to hit. It is in the base layer, so a utility on the element (absolute,
-   after:*) wins, and it is a no-op where the control is already drawn at the floor or larger. Inline links in
-   running text are exempt, as in WCAG 2.5.8; add \`hit-area\` to any other target. */
+   inset-*) wins, and it is a no-op where the control is already drawn at the floor or larger.
+   It steps aside, by design, for:
+   - an element that draws its own after: pseudo-element (checkbox, switch, radio, the tabs line): it keeps its
+     own, because a utility only overrides the properties it sets and the rest of this rule would mix in;
+   - composite widgets, where a ${FLOOR_COARSE_PX}px overlay on a row ${FLOOR_VISIBLE_FINE_PX} to 36px tall would
+     overlap its neighbours and the later sibling would steal the click: menu and listbox rows take
+     min-height instead (below), and a calendar day ([data-day]) is a grid cell, left as drawn;
+   - an element that clips its overflow (overflow-hidden), which would clip the pseudo-element too: add
+     the wrapper-level hit-area, or size it at the floor.
+   Inline links in running text are exempt, as in WCAG 2.5.8; add \`hit-area\` to any other target. */
 @layer base {
-  :where(button, [role="button"], [role="tab"], [role="switch"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], summary, .hit-area) {
+  :where(button, [role="button"], [role="tab"], [role="switch"], summary, .hit-area):not([class*="after:"], [data-day]) {
     position: relative;
   }
-  :where(button, [role="button"], [role="tab"], [role="switch"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], summary, .hit-area)::after {
+  :where(button, [role="button"], [role="tab"], [role="switch"], summary, .hit-area):not([class*="after:"], [data-day])::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -1373,6 +1381,9 @@ function densityLayer(): string {
     width: max(100%, var(--target-floor));
     height: max(100%, var(--target-floor));
     transform: translate(-50%, -50%);
+  }
+  :where([role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"]) {
+    min-height: var(--target-floor);
   }
 }
 
@@ -1993,7 +2004,17 @@ export function renderGlobalsJson(
           "Phone / coarse pointer is the role defaults (Apple HIG); tablet steps type down; desktop is a fine pointer with hover.",
         queries: { tablet: DENSITY_TABLET_QUERY, desktop: DENSITY_DESKTOP_QUERY },
         bunduFloor: BUNDU_FLOOR,
-        floorPx: { hitArea: FLOOR_COARSE_PX, visibleFine: FLOOR_VISIBLE_FINE_PX, body: BODY_FLOOR_PX, caption: CAPTION_FLOOR_PX },
+        floorPx: {
+          hitArea: FLOOR_COARSE_PX,
+          visibleFine: FLOOR_VISIBLE_FINE_PX,
+          body: BODY_FLOOR_PX,
+          caption: CAPTION_FLOOR_PX,
+          // Deprecated aliases of the 4.21.0 keys, for one release, carrying the Bundu floor's values
+          // (the hit area is 49px on both pointers; body is 17px on every device). Read the keys above.
+          coarse: FLOOR_COARSE_PX,
+          fine: FLOOR_COARSE_PX,
+          bodyFine: BODY_FLOOR_PX,
+        },
         desktopPx: { ...DESKTOP_SIZES },
         legacyPx: { ...LEGACY_SIZES, floor: LEGACY_FLOOR_PX },
         typeSteps: TYPE_STEPS,

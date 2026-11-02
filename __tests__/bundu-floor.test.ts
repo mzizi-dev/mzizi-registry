@@ -7,7 +7,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { ROLE_HEIGHTS } from "../contracts/runner";
-import { brandMeta } from "../lib/tokens/brand.source";
+import { brandMeta, typography } from "../lib/tokens/brand.source";
 import {
   BODY,
   BUNDU_FLOOR,
@@ -251,5 +251,116 @@ describe("components: no arbitrary text size under the caption floor", () => {
           bad.push(`${f}: ${m[0]}`);
     }
     expect(bad).toEqual([]);
+  });
+});
+
+describe("the hit-area rule steps aside where it would collide", () => {
+  const rule = CSS.replace(/\s+/g, " ");
+  const selectors = '[role="button"], [role="tab"], [role="switch"], summary, .hit-area )';
+  it("excludes elements that draw their own after: pseudo-element, and calendar days", () => {
+    expect(rule).toContain(':not([class*="after:"], [data-day])');
+    expect(rule).toContain(selectors.replace(/ \)$/, ""));
+  });
+  it("covers neither menu rows nor listbox options with a pseudo-element; they take min-height", () => {
+    expect(rule).not.toMatch(/\[role="(menuitem|option)"\][^{]*::after/);
+    expect(rule).toMatch(
+      /\[role="menuitem"\], \[role="menuitemcheckbox"\], \[role="menuitemradio"\], \[role="option"\] \) \{ min-height: var\( ?--target-floor ?\);/,
+    );
+  });
+  it("the components that draw their own after: still do, so the rule must not apply to them", () => {
+    for (const f of ["checkbox", "switch", "radio-group", "tabs"]) {
+      const src = readFileSync(
+        join(ROOT, `components/registry/n2-primitives/${f}.tsx`),
+        "utf8",
+      );
+      expect(src, f).toMatch(/after:/);
+    }
+  });
+});
+
+describe("components: no 14px+ text in a box under 24px", () => {
+  const SMALL = new Set(["size-3", "size-4", "size-5", "h-3", "h-4", "h-5"]);
+  const TEXT = new Set(["text-sm", "text-base", "text-lg", "text-xs", "text-body", "text-body-sm"]);
+  const files: string[] = [];
+  (function walk(dir: string) {
+    for (const f of readdirSync(dir)) {
+      const p = join(dir, f);
+      if (statSync(p).isDirectory()) walk(p);
+      else if (/\.(tsx|astro|rs)$/.test(f)) files.push(p);
+    }
+  })(join(ROOT, "components/registry"));
+  const plain = (cls: string) =>
+    cls.split(/\s+/).filter((t) => t && !t.includes(":") && !t.startsWith("["));
+  it("no class string sets a size-3..5 or h-3..5 box and a text size together", () => {
+    const bad: string[] = [];
+    for (const f of files) {
+      const src = readFileSync(f, "utf8");
+      for (const m of src.matchAll(/"([^"\n]*)"/g)) {
+        const t = plain(m[1]!);
+        if (t.some((x) => SMALL.has(x)) && t.some((x) => TEXT.has(x)))
+          bad.push(`${f}: ${m[1]!.slice(0, 80)}`);
+      }
+      // An element with such a box that holds text directly (an unread count, an initial).
+      for (const m of src.matchAll(/<(\w+)\b[^<>]*?className="([^"]*)"[^<>]*>([^<]*)<\/\1>/g)) {
+        const body = m[3]!.trim();
+        if (plain(m[2]!).some((x) => SMALL.has(x)) && /[A-Za-z0-9+]/.test(body) && !/icon/i.test(body))
+          bad.push(`${f}: ${m[2]!.slice(0, 60)} holds ${body.slice(0, 30)}`);
+      }
+    }
+    expect(bad).toEqual([]);
+  });
+});
+
+describe("canon and the hand-kept token files carry the floor", () => {
+  it("canon's type scale (/v1/brand typography) meets it", () => {
+    const rows = typography.filter((t) => t.entryType === "scale");
+    expect(rows.length).toBeGreaterThan(8);
+    for (const t of rows)
+      expect(t.sizePx, t.name).toBeGreaterThanOrEqual(
+        ["Body Small", "Caption", "Code"].includes(t.name)
+          ? BUNDU_FLOOR.captionPx
+          : BUNDU_FLOOR.bodyPx,
+      );
+    const by = Object.fromEntries(rows.map((t) => [t.name, t.sizePx]));
+    expect(by.Body).toBe(BUNDU_FLOOR.bodyPx);
+    expect(by.Caption).toBe(BUNDU_FLOOR.captionPx);
+  });
+  it("design-system/tokens.json carries the same type scale", () => {
+    const j = JSON.parse(
+      readFileSync(join(ROOT, "design-system/tokens.json"), "utf8"),
+    ) as { type: { groups: { styles: { name?: string; fontSize: string }[] }[] } };
+    const sizes = j.type.groups.flatMap((g) => g.styles.map((x) => parseFloat(x.fontSize)));
+    expect(sizes.length).toBeGreaterThan(10);
+    for (const n of sizes) expect(n).toBeGreaterThanOrEqual(BUNDU_FLOOR.captionPx);
+    expect(sizes.filter((n) => n < BUNDU_FLOOR.bodyPx).length).toBeLessThanOrEqual(4);
+  });
+  it("mzizi-tokens-typescript.ts (the copy a consumer installs) meets it", () => {
+    const src = readFileSync(
+      join(ROOT, "components/registry/n1-tokens/mzizi-tokens-typescript.ts"),
+      "utf8",
+    ).replace(/\s+/g, " ");
+    const size = (k: string) =>
+      Number(new RegExp(`${k}: \\{ value: "(\\d+)px"`).exec(src)?.[1]);
+    expect(size("caption")).toBeGreaterThanOrEqual(BUNDU_FLOOR.captionPx);
+    expect(size("bodySmall")).toBeGreaterThanOrEqual(BUNDU_FLOOR.captionPx);
+    expect(size("body")).toBeGreaterThanOrEqual(BUNDU_FLOOR.bodyPx);
+    expect(src).toMatch(new RegExp(`default: \\{ value: "${BUNDU_FLOOR.hitAreaPx}px"`));
+    expect(src).toMatch(new RegExp(`sm: \\{ value: "${BUNDU_FLOOR.hitAreaPx}px"`));
+    expect(src).toContain(`input: { height: "${BUNDU_FLOOR.hitAreaPx}px" }`);
+    expect(src).toContain(
+      `button: { height: "${BUNDU_FLOOR.hitAreaPx}px", heightSm: "${BUNDU_FLOOR.hitAreaPx}px"`,
+    );
+    expect(src).toContain(`fontSize: "${BUNDU_FLOOR.captionPx}px" }`);
+  });
+  it("the platform files carry the 49px roles", () => {
+    for (const f of ["swift.swift", "kotlin.kt", "python.py", "react-native.ts", "arkts.ets", "rust.rs"]) {
+      const src = readFileSync(
+        join(ROOT, `components/registry/n1-tokens/mzizi-tokens-${f}`),
+        "utf8",
+      );
+      expect(src, f).toMatch(
+        new RegExp(`spacing_?touch_?min\\W+(?:[A-Za-z0-9]+\\W+)?${BUNDU_FLOOR.hitAreaPx}\\b`, "i"),
+      );
+    }
   });
 });

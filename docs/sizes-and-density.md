@@ -18,13 +18,19 @@ The Bundu Order draws on biblical mathematical patterns and prime numbers (owner
 
 ### How the hit region works at desktop density
 
-A desktop control may be drawn smaller (28 to 40px) but keeps a 49px hit region. The token layer's `hit-area` rule (`@layer base`, in `mzizi-tokens-globals.css`) gives every `button`, `summary`, button-like role (`tab`, `switch`, `menuitem`, `option`...) and any `.hit-area` element a transparent `::after` of `max(100%, var(--target-floor))`. `--target-floor` is 49px and no density layer lowers it. Consequences to know:
+A desktop control may be drawn smaller (28 to 40px) but keeps a 49px hit region. The token layer's `hit-area` rule (`@layer base`, in `mzizi-tokens-globals.css`) gives every `button`, `summary`, `[role="button"]`, `[role="tab"]`, `[role="switch"]` and any `.hit-area` element a transparent `::after` of `max(100%, var(--target-floor))`. `--target-floor` is 49px and no density layer lowers it. The rule **steps aside, on purpose**, for:
+
+- **An element that draws its own `after:` pseudo-element** (`:not([class*="after:"])`): checkbox, switch, radio-group and the tabs line variant keep theirs. A Tailwind `after:` utility overrides only the properties it sets, so the rule's `top`, `left` and `transform` would otherwise mix in. Their hit region is their own box plus their own `after:` inset; the runner counts it as the drawn box.
+- **Composite widgets.** Overlaying 49px on rows 28 to 36px apart would make each row's overlay cover its neighbours, and the later sibling steals the click. Menu and listbox rows (`menuitem`, `menuitemcheckbox`, `menuitemradio`, `option`) instead take `min-height: var(--target-floor)` in the same layer (a `min-h-*` utility on the row overrides it, and then the row counts as its drawn box). A calendar day (`[data-day]`) is a grid cell and is left as drawn (owner call: its size comes from `--cell-size`).
+- **An element with `overflow: hidden` or `clip`**, which would clip the pseudo-element. Size it at the floor, or put `hit-area` on a wrapper that does not clip.
+
+Other consequences to know:
 
 - A native `input`, `select` or `textarea` cannot carry a pseudo-element, so the field roles (`h-field`, `h-field-sm`) stay 49px drawn at desktop.
 - A link is not covered (an inline link in text is exempt, as in WCAG 2.5.8). A standalone link that is a target (nav, breadcrumb, card link) is drawn at 49px, or takes the `hit-area` class. The contracts' known gaps are pinned (see "What fails the build").
-- The pseudo-element overlaps its neighbours where controls sit closer than 49px apart; the later sibling wins the overlap. Keep gaps from the spacing tokens.
-- An element with `overflow: hidden` clips its own pseudo-element; add `hit-area` to a wrapper instead.
-- The rule is in the base layer, so a utility on the element (`absolute`, `after:*`) wins.
+- Where two covered controls sit closer than 49px apart, their overlays overlap and the later sibling wins the overlap. Keep gaps from the spacing tokens.
+- The rule is in the base layer, so a utility on the element (`absolute`, `inset-*`) wins.
+- The contract runner and the Rust evaluator count a control's hit region as 49px only where the rule provably applies (a button-like element with no own `after:` utility and no overflow clipping; a composite row with no `min-h-*`). Otherwise they use the drawn height. They cannot see static positioning or a page that never loaded the stylesheet, so they assume the stylesheet is there. `contracts/hit-region-cases.json` is the shared table both are tested against.
 
 ## Apple references (read 2026-11-01)
 

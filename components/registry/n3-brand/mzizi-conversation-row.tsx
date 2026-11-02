@@ -126,7 +126,7 @@ function MziziConversationRow({
               {lastMessage}
             </span>
             {hasUnread && (
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-malachite)] text-sm font-bold text-background">
+              <span className="flex h-6 min-w-6 px-1 shrink-0 items-center justify-center rounded-full bg-[var(--color-malachite)] text-sm font-bold text-background leading-none">
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}

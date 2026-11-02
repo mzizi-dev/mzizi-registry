@@ -1343,37 +1343,37 @@
  * DENSITY — sizes step down as screens grow (2026-11-01). See densityLayer().
  * ════════════════════════════════════════════════════════════════════════════ */
 /* The 49px hit region (BUNDU_FLOOR.hitAreaPx): a transparent pseudo-element grows the click and
-   touch region of every button-like control to the floor, so a control drawn at 28px on a
+   touch region of a button-like control to the floor, so a control drawn at 28px on a
    desktop is still 49px to hit. It is in the base layer, so a utility on the element (absolute,
-   after:*) wins, and it is a no-op where the control is already drawn at the floor or larger. Inline links in
-   running text are exempt, as in WCAG 2.5.8; add `hit-area` to any other target. */
+   inset-*) wins, and it is a no-op where the control is already drawn at the floor or larger.
+   It steps aside, by design, for:
+   - an element that draws its own after: pseudo-element (checkbox, switch, radio, the tabs line): it keeps its
+     own, because a utility only overrides the properties it sets and the rest of this rule would mix in;
+   - composite widgets, where a 49px overlay on a row 28 to 36px tall would
+     overlap its neighbours and the later sibling would steal the click: menu and listbox rows take
+     min-height instead (below), and a calendar day ([data-day]) is a grid cell, left as drawn;
+   - an element that clips its overflow (overflow-hidden), which would clip the pseudo-element too: add
+     the wrapper-level hit-area, or size it at the floor.
+   Inline links in running text are exempt, as in WCAG 2.5.8; add `hit-area` to any other target. */
 @layer base {
   :where(
     button,
     [role="button"],
     [role="tab"],
     [role="switch"],
-    [role="menuitem"],
-    [role="menuitemcheckbox"],
-    [role="menuitemradio"],
-    [role="option"],
     summary,
     .hit-area
-  ) {
+  ):not([class*="after:"], [data-day]) {
     position: relative;
   }
   :where(
-    button,
-    [role="button"],
-    [role="tab"],
-    [role="switch"],
-    [role="menuitem"],
-    [role="menuitemcheckbox"],
-    [role="menuitemradio"],
-    [role="option"],
-    summary,
-    .hit-area
-  )::after {
+      button,
+      [role="button"],
+      [role="tab"],
+      [role="switch"],
+      summary,
+      .hit-area
+    ):not([class*="after:"], [data-day])::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -1381,6 +1381,14 @@
     width: max(100%, var(--target-floor));
     height: max(100%, var(--target-floor));
     transform: translate(-50%, -50%);
+  }
+  :where(
+    [role="menuitem"],
+    [role="menuitemcheckbox"],
+    [role="menuitemradio"],
+    [role="option"]
+  ) {
+    min-height: var(--target-floor);
   }
 }
 

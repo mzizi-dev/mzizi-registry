@@ -53,7 +53,7 @@ function NotificationBell({
         >
           <Bell className="size-4" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-sm font-medium text-destructive-foreground">
+            <span className="absolute -top-0.5 -right-0.5 flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-destructive text-sm font-medium text-destructive-foreground leading-none">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}

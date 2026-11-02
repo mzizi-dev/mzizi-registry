@@ -156,7 +156,7 @@ export function MziziHealthDashboard({
             <div key={i} className="flex items-center gap-3">
               <div
                 className={cn(
-                  "flex size-5 items-center justify-center rounded-full border-2 text-sm",
+                  "flex h-6 min-w-6 px-1 items-center justify-center rounded-full border-2 text-sm leading-none",
                   m.taken
                     ? "border-[var(--status-success,#22C55E)] bg-[var(--status-success,#22C55E)]/20 text-[var(--status-success,#22C55E)]"
                     : "border-border text-transparent"

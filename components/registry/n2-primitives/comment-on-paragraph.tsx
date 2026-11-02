@@ -121,7 +121,7 @@ function CommentOnParagraph({
       {/* Close */}
       <button
         onClick={() => onOpenChange?.(false)}
-        className="absolute -top-2 -right-2 flex size-5 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground shadow hover:text-foreground"
+        className="absolute -top-2 -right-2 flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground shadow hover:text-foreground leading-none"
       >
         ×
       </button>

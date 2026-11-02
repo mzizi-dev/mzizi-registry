@@ -76,7 +76,7 @@ function DaoProposalCard({
       )}
 
       <div className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
-        <div className="flex size-5 items-center justify-center rounded-full bg-muted text-sm font-medium">
+        <div className="flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-muted text-sm font-medium leading-none">
           {proposerAvatar ? (
             <img src={proposerAvatar} alt="" className="size-full rounded-full object-cover" />
           ) : (

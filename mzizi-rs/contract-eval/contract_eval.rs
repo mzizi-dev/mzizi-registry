@@ -334,39 +334,74 @@ pub const HIT_AREA_PX: u32 = 49;
 /// The smallest a control is DRAWN at desktop density, in px (the Bundu floor again).
 pub const VISIBLE_FINE_MIN_PX: u32 = 28;
 
-/// Whether the token layer's `hit-area` rule covers a node: a button, a `summary`, a button-like role, or a
-/// `.hit-area` element. Such a control keeps `HIT_AREA_PX` however small it is drawn.
+fn class_of(node: &Node) -> &str {
+    node.attr("class").unwrap_or("")
+}
+
+/// An element that draws its own `after:` pseudo-element: the hit-area rule steps aside.
+fn has_own_after(node: &Node) -> bool {
+    class_of(node).contains("after:")
+}
+
+/// An element that clips its overflow also clips a pseudo-element extending past its box.
+fn clips(node: &Node) -> bool {
+    class_of(node).split_whitespace().any(|c| {
+        let c = c.rsplit(':').next().unwrap_or(c);
+        matches!(
+            c,
+            "overflow-hidden"
+                | "overflow-clip"
+                | "overflow-x-hidden"
+                | "overflow-y-hidden"
+                | "overflow-x-clip"
+                | "overflow-y-clip"
+        )
+    })
+}
+
+/// A composite row whose token-layer `min-height` is overridden by its own `min-h-*` utility.
+fn own_min_height(node: &Node) -> bool {
+    class_of(node)
+        .split_whitespace()
+        .any(|c| c.rsplit(':').next().unwrap_or(c).starts_with("min-h-"))
+}
+
+/// Whether the token layer's `hit-area` rule covers a node with a pseudo-element: a button, a `summary`, a
+/// button-like role, or a `.hit-area` element, with no `after:` utility of its own and not a calendar day
+/// (`[data-day]`). A copy of `carriesHitArea` in `contracts/runner.ts`.
 pub fn carries_hit_area(node: &Node) -> bool {
+    if has_own_after(node) || node.attr("data-day").is_some() {
+        return false;
+    }
     let tag = node.tag();
     if tag == "button" || tag == "summary" {
         return true;
     }
-    let role = node.attr("role").unwrap_or("");
-    if [
-        "button",
-        "tab",
-        "switch",
-        "menuitem",
-        "menuitemcheckbox",
-        "menuitemradio",
-        "option",
-    ]
-    .contains(&role)
-    {
+    if ["button", "tab", "switch"].contains(&node.attr("role").unwrap_or("")) {
         return true;
     }
-    node.attr("class")
-        .unwrap_or("")
-        .split_whitespace()
-        .any(|c| c == "hit-area")
+    class_of(node).split_whitespace().any(|c| c == "hit-area")
+}
+
+/// A composite row: the token layer gives it `min-height` at the hit area instead of a pseudo-element.
+pub fn is_composite_row(node: &Node) -> bool {
+    ["menuitem", "menuitemcheckbox", "menuitemradio", "option"]
+        .contains(&node.attr("role").unwrap_or(""))
 }
 
 /// Whether a node is an interactive control the Bundu hit-area floor applies to.
 pub fn is_interactive(node: &Node) -> bool {
-    if carries_hit_area(node) {
+    if carries_hit_area(node) || is_composite_row(node) {
         return true;
     }
-    match node.tag() {
+    let tag = node.tag();
+    if tag == "button" || tag == "summary" {
+        return true;
+    }
+    if ["button", "tab", "switch"].contains(&node.attr("role").unwrap_or("")) {
+        return true;
+    }
+    match tag {
         "a" => node.attr("href").is_some(),
         "input" => node.attr("type") != Some("hidden"),
         "select" | "textarea" => true,
@@ -374,14 +409,51 @@ pub fn is_interactive(node: &Node) -> bool {
     }
 }
 
-/// The hit region, in px, of an interactive node drawn `drawn` px tall: a button-like control keeps at
-/// least `HIT_AREA_PX` through the pseudo-element, a native field or a link has only its box.
+/// The hit region, in px, of an interactive node drawn `drawn` px tall: raised to `HIT_AREA_PX` only where the
+/// token layer's rule provably does it (see `hitRegion` in `contracts/runner.ts`); otherwise its drawn box.
 pub fn hit_region(node: &Node, drawn: u32) -> u32 {
-    if carries_hit_area(node) {
-        drawn.max(HIT_AREA_PX)
-    } else {
-        drawn
+    if is_composite_row(node) {
+        return if own_min_height(node) {
+            drawn
+        } else {
+            drawn.max(HIT_AREA_PX)
+        };
     }
+    if carries_hit_area(node) && !clips(node) {
+        return drawn.max(HIT_AREA_PX);
+    }
+    drawn
+}
+
+/// What a density row's control violates of the Bundu floor, as sentences; empty for a row the evaluator cannot
+/// read (`fine` is `None`), exactly as `hitViolations` in `contracts/runner.ts`.
+pub fn hit_violations(node: &Node, fine: Option<u32>, coarse: Option<u32>) -> Vec<String> {
+    let Some(fine) = fine else {
+        return Vec::new();
+    };
+    if !is_interactive(node) {
+        return Vec::new();
+    }
+    let at = coarse.unwrap_or(fine);
+    let mut under = Vec::new();
+    if hit_region(node, fine) < HIT_AREA_PX {
+        under.push(format!(
+            "hit region is {}px on a fine pointer, below the {HIT_AREA_PX}px Bundu floor",
+            hit_region(node, fine)
+        ));
+    }
+    if hit_region(node, at) < HIT_AREA_PX {
+        under.push(format!(
+            "hit region is {}px on a coarse pointer, below the {HIT_AREA_PX}px Bundu floor",
+            hit_region(node, at)
+        ));
+    }
+    if carries_hit_area(node) && !clips(node) && fine < VISIBLE_FINE_MIN_PX {
+        under.push(format!(
+            "drawn at {fine}px on a fine pointer, below the {VISIBLE_FINE_MIN_PX}px smallest a control is drawn"
+        ));
+    }
+    under
 }
 
 /// Density rows pinned as known gaps against the Bundu floor, `<contract name>:<row part>`. A copy of
