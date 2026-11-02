@@ -5,7 +5,7 @@ currentVersion: 2
 description: "The primary interface is a mobile device with constrained resources."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
-implementation: "Astro + Capacitor as a thin native shell. 48px minimum touch targets. Progressive loading. Lazy sections with memory pressure monitoring."
+implementation: "Astro + Capacitor as a thin native shell. 44px touch targets on a coarse pointer (Apple HIG), stepping down to 36px on a desktop with a fine pointer. Progressive loading. Lazy sections with memory pressure monitoring."
 kind: "architecture"
 model: "mzizi-dna-helix"
 name: "mobile-first"
@@ -17,3 +17,15 @@ title: "Mobile-First"
 ---
 
 Architecture is designed for small screens, limited battery, constrained data plans, and the hardware reality of the African smartphone market — including Android, iOS, and critically, Huawei HarmonyOS devices.
+
+## Sizes follow Apple on touch and step down as screens grow
+
+Owner decision, 2026-11-01: mobile stays the design centre, but a laptop or an iPad is not a phone. Touch sizes follow Apple's Human Interface Guidelines (a 44x44 pt hit region; 17 pt body), and a density layer in the token layer lowers them for a fine pointer on a wide screen. It is defined once as media queries on the size variables; a component never branches on screen size. Density is visual only: a wide screen is not evidence of a fast network, so loading strategy, lazy sections and memory-pressure behaviour above do not change with it.
+
+| Layer        | Query                                               | Control                   | Body |
+| ------------ | --------------------------------------------------- | ------------------------- | ---- |
+| Phone, touch | the defaults                                        | 44px (large 48px)         | 17px |
+| Tablet       | `min-width: 48rem`                                  | 44px (touched)            | 16px |
+| Desktop      | `min-width: 64rem`, `pointer: fine`, `hover: hover` | 36px (32 small, 40 large) | 15px |
+
+Floors in every layer: targets 24px (WCAG 2.2 SC 2.5.8), desktop body text 14px, zoom and `prefers-reduced-motion` respected.
