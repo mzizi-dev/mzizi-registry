@@ -27,6 +27,9 @@ export default tseslint.config(
       "mzizi-mcp/node_modules/**",
       "mzizi-mcp/dist/**",
       "scripts/**",
+      // The plugin's hooks module: typed against Claude Code's own API
+      // ('claude-code'), checked by `claude plugin validate plugin/`.
+      "plugin/hooks/**",
       "*.config.*",
       "vitest.setup.ts",
     ],

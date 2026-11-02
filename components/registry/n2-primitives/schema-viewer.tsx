@@ -26,7 +26,7 @@ function TypeBadge({ type }: { type: string }) {
     boolean:
       "bg-[var(--color-accent,var(--color-tanzanite,#B388FF))]/15 text-[var(--color-accent,var(--color-tanzanite,#B388FF))]",
     object:
-      "bg-[var(--status-error,var(--color-terracotta,#D4A574))]/15 text-[var(--status-error,var(--color-terracotta,#D4A574))]",
+      "bg-[var(--status-error,var(--color-terracotta))]/15 text-[var(--status-error,var(--color-terracotta))]",
     array:
       "bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 text-[var(--status-success,var(--color-malachite,#64FFDA))]",
   }

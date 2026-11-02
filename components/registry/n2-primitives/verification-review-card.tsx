@@ -17,7 +17,7 @@ interface VerificationReviewCardProps extends React.ComponentProps<"div"> {
 const tierNames = ["Unverified", "Community", "OTP", "Government", "Licensed"]
 const tierColors = [
   "",
-  "var(--color-terracotta,#D4A574)",
+  "var(--color-terracotta)",
   "var(--color-cobalt,#00B0FF)",
   "var(--color-gold,#FFD740)",
   "var(--color-tanzanite,#B388FF)",

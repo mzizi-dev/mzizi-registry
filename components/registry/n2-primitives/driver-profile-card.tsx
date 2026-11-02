@@ -15,7 +15,7 @@ interface DriverProfileCardProps extends React.ComponentProps<"div"> {
 const tierLabels = ["Unverified", "Community", "OTP", "Government", "Licensed"]
 const tierColors = [
   "text-muted-foreground",
-  "text-[var(--color-terracotta,#D4A574)]",
+  "text-[var(--color-terracotta)]",
   "text-[var(--color-cobalt,#00B0FF)]",
   "text-[var(--color-gold,#FFD740)]",
   "text-[var(--color-tanzanite,#B388FF)]",

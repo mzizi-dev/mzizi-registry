@@ -1,0 +1,414 @@
+{
+  "$schema": "../schema/server-contract.schema.json",
+  "name": "server/mzizi-data",
+  "title": "mzizi-data",
+  "version": "1.2.0",
+  "kind": "server",
+  "node": "n5-resilience",
+  "summary": "The transport trait, error type and Worker socket every Mzizi database client shares; the data layer above them (a local, edge and cloud fetch cascade, sync reconciliation, tombstones, staleness, local-first writes that roll back); and the client write path (outbox, request-id mutations, status polling, read-your-own-writes). Nothing database-specific, and no UI. The server harness is the separate mzizi-harness crate. Publishes with the next registry release to main.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-data",
+      "path": "crates/mzizi-data",
+      "features": ["workers", "test-util"]
+    }
+  },
+  "surface": [
+    {
+      "item": "pub trait Io",
+      "file": "src/io.rs",
+      "summary": "The byte transport: write_all and read_exact. A protocol core is generic over it and never opens a socket."
+    },
+    {
+      "item": "pub enum Error",
+      "file": "src/lib.rs",
+      "summary": "Uri, Io, Timeout, Codec, Protocol, Auth, Server, Refused. The error every data tier and client reports."
+    },
+    {
+      "item": "pub type Result",
+      "file": "src/lib.rs",
+      "summary": "Result with Error."
+    },
+    {
+      "item": "pub trait Layer",
+      "file": "src/layer.rs",
+      "summary": "One storage tier: get, put and delete. An adapter implements it; the cascade never names a concrete store."
+    },
+    {
+      "item": "pub struct Record",
+      "file": "src/layer.rs",
+      "summary": "A stored entry: value (None for a tombstone), version, updated_at, and pending. Built with live, tombstone or from_parts."
+    },
+    {
+      "item": "pub enum Source",
+      "file": "src/layer.rs",
+      "summary": "Which tier answered: Local, Edge or Cloud."
+    },
+    {
+      "item": "pub struct MemoryLayer",
+      "file": "src/layer.rs",
+      "summary": "The in-memory reference adapter. set_available and peek are behind the test-util feature."
+    },
+    {
+      "item": "pub trait Clock",
+      "file": "src/clock.rs",
+      "summary": "The time source the host supplies. The crate reads no wall clock."
+    },
+    {
+      "item": "pub struct ManualClock",
+      "file": "src/clock.rs",
+      "summary": "A clock the caller sets, for deterministic tests."
+    },
+    {
+      "item": "pub struct Cascade",
+      "file": "src/cascade.rs",
+      "summary": "fetch, reconcile, apply_optimistic and delete over three Layers and a Clock; set_ttl and with_default_ttl."
+    },
+    {
+      "item": "pub struct Fetched",
+      "file": "src/cascade.rs",
+      "summary": "A read result: value, source, version, updated_at, fetched_at, stale, and the tier failures skipped on the way."
+    },
+    {
+      "item": "pub struct CascadeError",
+      "file": "src/cascade.rs",
+      "summary": "A read in which no tier answered: each failed tier and its error."
+    },
+    {
+      "item": "pub struct SyncReport",
+      "file": "src/cascade.rs",
+      "summary": "What one reconcile found: the winner, the tiers written, and the tier errors."
+    },
+    {
+      "item": "pub struct WriteOutcome",
+      "file": "src/cascade.rs",
+      "summary": "A write that reached every tier: the confirmed record and any tier whose confirmation failed."
+    },
+    {
+      "item": "pub enum OptimisticError",
+      "file": "src/cascade.rs",
+      "summary": "A write that did not complete: a Tier failure (with whether the rollback completed) or VersionOverflow."
+    },
+    {
+      "item": "pub trait Clock",
+      "file": "src/clock.rs",
+      "summary": "now_ms and sleep. The only place the crate waits; a host implements both."
+    },
+    {
+      "item": "pub trait RandomSource",
+      "file": "src/request_id.rs",
+      "summary": "Random bytes for request ids; the host supplies a cryptographic generator."
+    },
+    {
+      "item": "pub struct SeededRandom",
+      "file": "src/request_id.rs",
+      "summary": "A deterministic generator for tests only."
+    },
+    {
+      "item": "pub struct RequestId",
+      "file": "src/request_id.rs",
+      "summary": "A UUIDv7 request id: v7, from_bytes, as_bytes, is_v7, unix_ms, Display."
+    },
+    {
+      "item": "pub enum Op",
+      "file": "src/mutation.rs",
+      "summary": "Set, Update or Delete."
+    },
+    {
+      "item": "pub enum FailReason",
+      "file": "src/mutation.rs",
+      "summary": "Conflict, Invalid or Forbidden."
+    },
+    {
+      "item": "pub enum MutationStatus",
+      "file": "src/mutation.rs",
+      "summary": "QueuedLocal, Accepted, Applied, Failed, Unknown; is_settled."
+    },
+    {
+      "item": "pub struct Mutation",
+      "file": "src/mutation.rs",
+      "summary": "One write: request_id, collection, doc_id, op, payload, base_version (required for Update and Delete at the call site), client_ts."
+    },
+    {
+      "item": "pub trait Patch",
+      "file": "src/mutation.rs",
+      "summary": "How an Update merges into the document."
+    },
+    {
+      "item": "pub struct Entry",
+      "file": "src/outbox.rs",
+      "summary": "An outbox entry: seq, mutation, state."
+    },
+    {
+      "item": "pub enum EntryState",
+      "file": "src/outbox.rs",
+      "summary": "Queued, Accepted or Unknown."
+    },
+    {
+      "item": "pub trait Outbox",
+      "file": "src/outbox.rs",
+      "summary": "Durable, ordered storage for unsettled mutations: push, list, put, remove."
+    },
+    {
+      "item": "pub struct MemoryOutbox",
+      "file": "src/outbox.rs",
+      "summary": "The in-memory outbox. It does not survive a page reload."
+    },
+    {
+      "item": "pub enum Submitted",
+      "file": "src/transport.rs",
+      "summary": "Accepted, or Rejected with a reason."
+    },
+    {
+      "item": "pub enum StatusReply",
+      "file": "src/transport.rs",
+      "summary": "Pending, Applied with the server's record, or Failed."
+    },
+    {
+      "item": "pub trait Transport",
+      "file": "src/transport.rs",
+      "summary": "submit and status: the host maps them to the HTTP endpoints. An Err is a failure to reach the server."
+    },
+    {
+      "item": "pub struct UtcTime",
+      "file": "src/query.rs",
+      "summary": "A UTC instant; to_rfc3339."
+    },
+    {
+      "item": "pub struct QueryResult",
+      "file": "src/query.rs",
+      "summary": "A read: data, source, version, as_of (UTC), pending."
+    },
+    {
+      "item": "pub struct Config",
+      "file": "src/client.rs",
+      "summary": "Everything a client is built from: the three tiers, transport, outbox, clock and random source."
+    },
+    {
+      "item": "pub struct MziziData",
+      "file": "src/client.rs",
+      "summary": "The client: get, set, update, delete, flush, sync, resume, track and status."
+    },
+    {
+      "item": "pub struct MutationHandle",
+      "file": "src/client.rs",
+      "summary": "A write's handle: request_id, status, on_settled."
+    },
+    {
+      "item": "pub enum ReadError",
+      "file": "src/client.rs",
+      "summary": "Tiers (no tier answered) or Outbox (the pending writes are unknown)."
+    },
+    {
+      "item": "pub struct FlushReport",
+      "file": "src/client.rs",
+      "summary": "What one flush sent, rejected, and whether it stopped on a network failure."
+    }
+  ],
+  "limits": [
+    {
+      "const": "MAX_STATUS_BATCH",
+      "file": "src/transport.rs",
+      "value": 50,
+      "summary": "The most ids one status request carries."
+    },
+    {
+      "const": "FIRST_POLL_MS",
+      "file": "src/client.rs",
+      "value": 1000,
+      "summary": "The first status check after acceptance, in milliseconds."
+    },
+    {
+      "const": "MAX_POLL_INTERVAL_MS",
+      "file": "src/client.rs",
+      "value": 8000,
+      "summary": "The longest wait between status checks."
+    },
+    {
+      "const": "SETTLE_TIMEOUT_MS",
+      "file": "src/client.rs",
+      "value": 60000,
+      "summary": "After this, a write not settled is Unknown: re-checked on restart, never re-sent."
+    }
+  ],
+  "guarantees": [
+    {
+      "id": "local-first-within-ttl",
+      "statement": "A fresh local record answers a read alone, without asking the edge or the cloud.",
+      "tests": [
+        "local_hit_answers_without_touching_the_lower_tiers",
+        "a_fresh_local_record_is_not_checked_against_the_edge"
+      ]
+    },
+    {
+      "id": "stale-local-refreshes",
+      "statement": "A stale local record keeps the read going to the edge and then the cloud; the newest fresh record wins. If none is fresh, the newest stale record is returned with stale set and the failures listed.",
+      "tests": [
+        "a_stale_local_record_consults_the_edge_and_takes_its_newer_fresh_record",
+        "a_stale_local_record_with_a_failing_edge_refreshes_from_the_cloud",
+        "a_stale_local_record_with_every_lower_tier_failing_is_returned_stale_with_the_failures"
+      ]
+    },
+    {
+      "id": "write-back-never-older",
+      "statement": "A write-back never replaces a record that sorts higher; each write re-reads its target first.",
+      "tests": ["write_back_never_replaces_a_newer_record_with_an_older_one"]
+    },
+    {
+      "id": "cloud-authoritative",
+      "statement": "A cloud miss is Ok(None), even when local or edge failed on the way; the read is an error only when no tier answered.",
+      "tests": [
+        "cloud_miss_is_an_authoritative_none_and_writes_nothing",
+        "a_cloud_miss_after_the_upper_tiers_failed_is_still_a_miss"
+      ]
+    },
+    {
+      "id": "rollback-exact",
+      "statement": "A failed write restores every tier it attempted, including the one that failed, to its own previous record, exactly; a tier with none is deleted.",
+      "tests": [
+        "b5_rollback_restores_each_tier_to_its_own_record",
+        "b6_a_put_that_errors_after_applying_is_still_restored"
+      ]
+    },
+    {
+      "id": "pending-never-wins",
+      "statement": "A pending record never wins reconciliation while a confirmed record exists, so a rejected write cannot win after recovery.",
+      "tests": ["a_rejected_pending_write_never_wins_after_recovery"]
+    },
+    {
+      "id": "tombstone-wins",
+      "statement": "A newer tombstone wins and propagates; an older live copy cannot bring the record back.",
+      "tests": [
+        "a_newer_tombstone_wins_and_propagates_and_an_older_live_copy_cannot_resurrect_it"
+      ]
+    },
+    {
+      "id": "whole-record-sync",
+      "statement": "A tier is in sync only when the whole record matches the winner, updated_at included.",
+      "tests": [
+        "a_tier_is_in_sync_only_when_the_whole_record_matches_including_updated_at"
+      ]
+    },
+    {
+      "id": "future-dated-is-stale",
+      "statement": "A record stamped after the clock's now is reported stale.",
+      "tests": ["a_record_stamped_after_the_clock_is_reported_stale"]
+    },
+    {
+      "id": "send-follows-adapters",
+      "statement": "The futures a Cascade returns are Send when its layers and clock are Send; the crate adds no Send bound of its own.",
+      "tests": [
+        "the_cascades_futures_are_send_when_the_adapters_and_clock_are_send"
+      ]
+    },
+    {
+      "id": "write-in-outbox-before-send",
+      "statement": "A write is in the outbox before the call returns and before anything is sent; a crash after that cannot lose it.",
+      "tests": [
+        "a_write_is_visible_to_this_client_before_it_is_sent",
+        "a_queued_write_survives_a_restart_and_is_sent_once"
+      ]
+    },
+    {
+      "id": "same-request-id-applies-once",
+      "statement": "A mutation sent twice with the same request id is applied by the server once.",
+      "tests": ["the_same_request_id_sent_twice_applies_once"]
+    },
+    {
+      "id": "flush-in-creation-order",
+      "statement": "Queued writes flush in creation order and stop at the first failure to reach the server; the server receives them in that order.",
+      "tests": ["offline_mutations_flush_in_creation_order_on_reconnect"]
+    },
+    {
+      "id": "stale-base-version-conflicts",
+      "statement": "A stale base_version is refused as a conflict, and the optimistic change is reverted to the last confirmed record.",
+      "tests": [
+        "a_stale_base_version_reverts_the_change_and_reports_a_conflict"
+      ]
+    },
+    {
+      "id": "refusal-reverts-with-reason",
+      "statement": "A write the server refuses at submit is reverted and reports its reason.",
+      "tests": ["a_server_refusal_at_submit_reverts_the_change_with_the_reason"]
+    },
+    {
+      "id": "unknown-never-resent",
+      "statement": "A write not settled within the timeout becomes Unknown, is checked again on restart, and is never sent again.",
+      "tests": ["an_unknown_mutation_is_rechecked_on_restart_and_never_resent"]
+    },
+    {
+      "id": "read-your-own-writes",
+      "statement": "A read applies this client's unconfirmed writes on top of the confirmed record.",
+      "tests": ["a_write_is_visible_to_this_client_before_it_is_sent"]
+    },
+    {
+      "id": "cascade-steps",
+      "statement": "A read answers from the first tier with a fresh record; a miss goes on to the next tier; when every tier fails the read is an error that names each tier.",
+      "tests": [
+        "a_fresh_local_hit_answers_without_the_edge_or_the_cloud",
+        "an_edge_hit_answers_when_local_has_nothing",
+        "a_cloud_fallback_answers_when_local_and_edge_have_nothing",
+        "a_read_fails_when_all_three_tiers_fail"
+      ]
+    },
+    {
+      "id": "settled-once-callbacks",
+      "statement": "An on_settled callback fires once, when the write is applied or refused.",
+      "tests": ["on_settled_fires_once_when_the_write_is_applied"]
+    },
+    {
+      "id": "request-id-is-uuid-v7",
+      "statement": "A request id is a UUIDv7 carrying its creation time in milliseconds.",
+      "tests": [
+        "a_request_id_is_a_uuid_v7_with_its_time_and_unique_random_bits"
+      ]
+    },
+    {
+      "id": "utc-rfc3339",
+      "statement": "Read timestamps format as RFC 3339 in UTC, with milliseconds.",
+      "tests": ["utc_times_format_as_rfc_3339_in_utc"]
+    }
+  ],
+  "refusals": [
+    {
+      "id": "version-overflow",
+      "input": "An apply or delete at a key whose newest version is u64::MAX.",
+      "reason": "The next version cannot be represented, so the write is refused rather than wrapped or saturated. Nothing is written.",
+      "tests": ["a_version_at_the_top_of_the_range_is_an_error_not_a_wrap"]
+    },
+    {
+      "id": "unreadable-tier-never-written-blind",
+      "input": "A reconcile that would write a tier it could not read.",
+      "reason": "The tier's newer data, if any, would be lost, so the tier is skipped and reported.",
+      "tests": ["reconcile_skips_an_unreachable_tier_and_never_writes_it"]
+    },
+    {
+      "id": "malformed-ids",
+      "input": "A collection or document id that is empty or contains '/'.",
+      "reason": "The key would be ambiguous, so the write is refused and nothing is queued.",
+      "tests": ["a_malformed_collection_or_id_is_refused_and_nothing_is_queued"]
+    }
+  ],
+  "harness": {
+    "default": "Noop",
+    "removable": true,
+    "pluggedInto": "mzizi-harness",
+    "events": [],
+    "secrets": "mzizi-data emits no events. It holds no state a harness could see."
+  },
+  "gaps": [
+    "The Postgres and SQLite clients (mzizi-postgres, mzizi-sqlite) do not exist yet; nothing is stubbed.",
+    "workers::SocketIo is compiled only for wasm32 with the workers feature, so its contract is held by a type check and clippy for wasm32-unknown-unknown, not by a native test.",
+    "No storage adapter for the local (IndexedDB, SQLite), edge (D1, KV) or cloud (Supabase) tiers exists yet. The cascade is tested only over in-memory tiers.",
+    "No background timer: the host schedules reconcile.",
+    "Tombstones are retained; there is no garbage collection.",
+    "There is no key enumeration, so a full sync is not provided.",
+    "The data layer is not wired into any app. The WASM payload budget (owner decision 6.2) is still open and gates that.",
+    "No durable outbox adapter ships: only MemoryOutbox, which does not survive a page reload. IndexedDB (browser) and SQLite (native) are later adapters.",
+    "The write path is tested over a fake server and in-memory tiers only; no HTTP transport adapter exists.",
+    "The server's changes to documents the client did not write reach it only through the edge or cloud tier; there is no push or SSE, by design.",
+    "No storage adapter for the local, edge or cloud tiers exists yet beyond the reference MemoryLayer.",
+    "The settled-write status table is kept in memory for the session and is not pruned.",
+    "The 5-second apply target is a draft target to be confirmed, not a measured fact."
+  ]
+}
