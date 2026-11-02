@@ -2695,7 +2695,7 @@ export const roles = {
   destructive: {
     kind: "fill",
     cssVar: "--destructive",
-    light: "#AA241D",
+    light: "#B3261E",
     dark: "#F3BDBA",
   },
   "destructive-foreground": {
@@ -2713,7 +2713,7 @@ export const roles = {
   "status-error": {
     kind: "ui",
     cssVar: "--status-error",
-    light: "#AA241D",
+    light: "#B3261E",
     dark: "#F3BDBA",
   },
   "overlay-foreground": {

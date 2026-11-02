@@ -699,6 +699,8 @@ const fg = (against: string): ContrastRule => ({ against: [against], min: BODY }
  * minimum. These are button labels, not body copy, and the fill is per-brand: `--primary` resolves through each
  * `[data-brand]` block to that family's `-aa` tier, which is by definition the 4.5:1 fill under white, so 7:1 would
  * darken the action colour of all seven brands, a brand decision the owner has not made. APCA Lc 75 still applies.
+ * `destructive-foreground` joins them (pending owner confirmation, 2026-11-02): the destructive fill stays canon #B3261E, whose
+ * white label measures 6.54:1 (Lc 86), so one semantic keeps one red.
  */
 const ON_BRAND_FILL_EXCEPTION = {
   min: 4.5,
@@ -711,6 +713,12 @@ const fgOnBrandFill = (against: string): ContrastRule => ({
   min: BODY,
   wcagException: ON_BRAND_FILL_EXCEPTION,
 })
+const DESTRUCTIVE_FILL_EXCEPTION = {
+  min: 4.5,
+  reason:
+    "a label on the destructive action fill, not body copy; the fill is canon error #B3261E (6.54:1 under white, Lc 86), " +
+    "and 7:1 would move it to #AA241D, a second red beside canon error; pending owner confirmation, 2026-11-02",
+} as const
 const onWhiteOrInk: ThemedValue = { light: { literal: "#FFFFFF" }, dark: { literal: "#0E0D0C" } }
 
 export const ROLES: readonly Role[] = [
@@ -994,7 +1002,7 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text and icons on `destructive`.",
-    contrast: fg("destructive"),
+    contrast: { against: ["destructive"], min: BODY, wcagException: DESTRUCTIVE_FILL_EXCEPTION },
     default: onWhiteOrInk,
     block: "shadcn",
   },

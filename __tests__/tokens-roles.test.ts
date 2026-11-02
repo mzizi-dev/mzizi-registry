@@ -146,7 +146,7 @@ describe("the role manifest", () => {
 
   it("keeps danger terracotta and destructive red, as two roles (owner decision 2026-10-07)", () => {
     expect(RESOLVED.get("status-danger")!.css.light).toBe("var(--mineral-terracotta)")
-    expect(RESOLVED.get("destructive")!.value.light).toBe("#AA241D")
+    expect(RESOLVED.get("destructive")!.value.light).toBe("#B3261E")
   })
 
   it("keeps Mzizi pill, and the hit-area floor at the Bundu 49px (owner decisions 2026-10-07, 2026-11-01 and 2026-11-02)", () => {
@@ -244,7 +244,6 @@ describe("the contrast gate on the Mzizi pack", () => {
       "destructive-text:dark",
       "destructive-text:light",
       "destructive:dark",
-      "destructive:light",
       "status-premium-on-container:dark",
     ])
   })

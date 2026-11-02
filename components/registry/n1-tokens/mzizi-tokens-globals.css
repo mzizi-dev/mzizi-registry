@@ -659,7 +659,7 @@
   --popover-foreground: var(--text-primary);
   --secondary: var(--container);
   --secondary-foreground: var(--text-primary);
-  --destructive: #aa241d; /* derived: destructive-foreground measures Lc 86.0 on #B3261E; fill walked toward #000000 to Lc 75 and 7:1 */
+  --destructive: #b3261e; /* var(--error), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
   --destructive-foreground: #ffffff;
   --overlay-foreground: var(--text-primary);
   --accent-foreground: var(--text-primary);
@@ -1167,7 +1167,7 @@
   --popover-foreground: var(--text-primary);
   --secondary: var(--container);
   --secondary-foreground: var(--text-primary);
-  --destructive: #f3bdba; /* derived: destructive-foreground measures Lc 72.9 on #F2B8B5; fill walked toward #FFFFFF to Lc 75 and 7:1 */
+  --destructive: #f3bdba; /* derived: destructive-foreground measures Lc 72.9 on #F2B8B5; fill walked toward #FFFFFF to Lc 75 and 4.5:1 */
   --destructive-foreground: #0e0d0c;
   --overlay-foreground: var(--text-primary);
   --accent-foreground: var(--text-primary);

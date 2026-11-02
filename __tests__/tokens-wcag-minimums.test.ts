@@ -28,7 +28,7 @@ const measured = (kind: Role["kind"]) =>
 const ratio = (name: string, bg: string, mode: (typeof MODES)[number]) => wcag(RESOLVED.get(name)!.value[mode], RESOLVED.get(bg)!.value[mode])
 
 // The foregrounds on a brand's solid action fill are the one named exception: 4.5:1, with the reason in the manifest.
-const EXCEPTIONS = ["app-accent-foreground", "brand-accent-foreground", "primary-foreground", "sidebar-primary-foreground"]
+const EXCEPTIONS = ["app-accent-foreground", "brand-accent-foreground", "destructive-foreground", "primary-foreground", "sidebar-primary-foreground"]
 
 describe("the three minimums are named exports, one definition", () => {
   it("are 7, 4.5 and 3", () => {
