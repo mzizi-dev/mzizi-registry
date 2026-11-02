@@ -33,8 +33,8 @@
  *   fine pointer (no prefix) and a coarse one (`pointer-coarse:`).
  */
 import { selectAll } from "css-select";
-import type { AnyNode, Document, Element } from "domhandler";
-import { getChildren, isTag, textContent } from "domutils";
+import { isTag, type AnyNode, type Document, type Element } from "domhandler";
+import { getChildren, textContent } from "domutils";
 import { parseDocument } from "htmlparser2";
 
 export interface Contract {

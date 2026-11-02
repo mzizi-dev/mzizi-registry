@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.22.0",
+    title: "v4.22.0 — the Claude Code plugin at 1.6.0 with skills 0.16.0",
+    description:
+      "Releases staging to main as the next minor above v4.21.x (nyuchi/.github#80). Changed: the Claude Code plugin is 1.6.0, requiring @nyuchi/mzizi-skills >=0.16.0, which teaches the Apple-aligned sizes and size roles, fits six skill descriptions inside claude.ai's 1024-character limit and says four pilots have run (lib/skills.generated.ts and plugin/skills/ regenerated, #611). domutils 4 for the contract runner (dev only, #494). Nothing breaks. CHANGELOG.md section [4.22.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 22,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-02T10:00:00.000+00:00",
+    created_at: "2026-11-02T10:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.21.0",
     title: "v4.21.0 — Apple-aligned touch sizes and a desktop density layer",
     description:
