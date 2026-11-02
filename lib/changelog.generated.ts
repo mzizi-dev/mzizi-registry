@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.20.0",
+    title:
+      "v4.20.0 — the Claude Code plugin at 1.5.0 with skills 0.15.0 and mukoko-design restored",
+    description:
+      "Releases staging to main as the next minor above v4.19.x (nyuchi/.github#80). Changed: the Claude Code plugin is 1.5.0, requiring @nyuchi/mzizi-skills >=0.15.0, which brings back mukoko-design (nine skills in 33 files; lib/skills.generated.ts and plugin/skills/ regenerated), and mzizi-design points to it for Mukoko's brand files (#601). The Roots crates are unchanged at 0.7.0. Nothing breaks. CHANGELOG.md section [4.20.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 20,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-01T23:00:00.000+00:00",
+    created_at: "2026-11-01T23:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.19.0",
     title:
       "v4.19.0 — the Claude Code plugin at 1.4.0 with skills 0.14.0, its commands, the fundi agent and the house-rules hooks, attestation provenance, and release notes from CHANGELOG.md",
