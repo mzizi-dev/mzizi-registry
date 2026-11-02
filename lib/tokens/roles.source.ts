@@ -136,6 +136,9 @@ export type RoleGroup =
   | "status"
   | "status-legacy"
   | "lifecycle"
+  | "assurance"
+  | "attestation"
+  | "tier"
   | "destructive"
   | "categorical"
   | "size"
@@ -393,6 +396,181 @@ const LIFECYCLE_ROLES: Role[] = LIFECYCLE.flatMap(([stage, tone]) =>
   })
 )
 
+// ─── Verification: assurance levels and attestations ────────────────────────
+
+/**
+ * The Bundu trust model, as nyuchi/nyuchi-api `gateway/lib/assurance.py` defines it: two
+ * independent things, deliberately not one number.
+ *
+ *   - ASSURANCE LEVELS are ordered (0 none, 1 otp, 2 documented, 3 government, 4 licensed):
+ *     how strongly an identity is proven. `>=` is meaningful.
+ *   - ATTESTATIONS are unordered and held alongside the level (community, business, domain):
+ *     who vouches for the subject. A tuck shop is level 1 + community; a registered firm is
+ *     level 3 + business; neither outranks the other.
+ *
+ * Community is NOT a rung. The legacy ladder put it at 1, below otp, which ranked a trader
+ * vouched for by their whole street below anyone who clicked a link in an email. It is a
+ * parallel route to trust, so it is an attestation here and never sits on the level scale.
+ *
+ * Mineral per part (each is a role contract, seven-minerals.mdx):
+ *   - none → the neutral grey (`status-neutral`): nothing is proven, so nothing is claimed.
+ *   - otp → cobalt, government → gold, licensed → tanzanite, community → terracotta: the
+ *     owner's ladder of 2026-10-24 (#543), unchanged.
+ *   - documented → sodalite (Intelligence: a document was examined and reasoned about). It
+ *     sits between otp (cobalt) and government (gold), and sodalite is cobalt's deep-earth
+ *     neighbour, so the first two levels read as one blue family growing deeper.
+ *   - business → malachite (Growth: an enterprise that is registered and building). Gold
+ *     (commerce) is government's, and a registration check is not a payment.
+ *   - domain → copper (Stewardship: control of a name on the commons, held and kept).
+ * The three new families are the only minerals the ladder did not already use, so no part
+ * shares a mineral with another; heritage tones stay environment, not contract.
+ */
+export const ASSURANCE_LEVELS = [
+  ["none", "Unverified", null],
+  ["otp", "Contact Verified", "cobalt"],
+  ["documented", "Documents Checked", "sodalite"],
+  ["government", "Government Verified", "gold"],
+  ["licensed", "Licensed Professional", "tanzanite"],
+] as const
+
+/** The attestations, unordered: each one is held or not, alongside the level. */
+export const ATTESTATIONS = [
+  ["community", "Community Vouched", "terracotta"],
+  ["business", "Registered Business", "malachite"],
+  ["domain", "Domain Verified", "copper"],
+] as const
+
+/**
+ * The legacy ladder (`bundu.verificationTier`, 0 unverified … 4 licensed) and the part of the
+ * new model each `--tier-*` role now aliases. `legacy_tier()` in assurance.py is the derived
+ * projection; these names stay until every reader has moved (Kweli, `@bundu/ui`).
+ */
+export const TIER_ALIASES = [
+  ["unverified", "assurance-none"],
+  ["community", "attestation-community"],
+  ["otp", "assurance-otp"],
+  ["government", "assurance-government"],
+  ["licensed", "assurance-licensed"],
+] as const
+
+/** Kept for existing readers: the legacy tier → palette family it resolves to. */
+export const TIER_FAMILIES = [
+  ["community", "terracotta"],
+  ["otp", "cobalt"],
+  ["government", "gold"],
+  ["licensed", "tanzanite"],
+] as const
+
+/** The five legacy tiers in ladder order, with the label each one carries. */
+export const TIERS = [
+  ["unverified", "Unverified"],
+  ["community", "Community Verified"],
+  ["otp", "Contact Verified"],
+  ["government", "Government Verified"],
+  ["licensed", "Licensed Professional"],
+] as const
+
+/** The four parts every level, attestation and tier carries: the same shape as a status tone. */
+function trustRoles(
+  name: string,
+  group: "assurance" | "attestation",
+  what: string,
+  values: Record<"fill" | "container" | "on" | "text", ThemedValue>
+): Role[] {
+  return [
+    {
+      name,
+      group,
+      kind: "ui",
+      required: true,
+      description: `${what} — the part itself: badge icons, meter bars, tinted fills (\`bg-${name}/15\`).`,
+      contrast: { against: ON_PAGE, min: UI },
+      default: values.fill,
+      // Sodalite's dark base (#3D5AFE) measures Lc 26.9 on the dark page, under the ui bar:
+      // the fill walks to clear it, the way the -aa tier is made, and only where it misses.
+      derive: "text",
+      block: "roles",
+    },
+    {
+      name: `${name}-container`,
+      group,
+      kind: "surface",
+      required: true,
+      description: `${what} — a soft fill behind its content (a chip or banner).`,
+      default: values.container,
+      block: "roles",
+    },
+    {
+      name: `${name}-on-container`,
+      group,
+      kind: "text",
+      required: true,
+      description: `${what} — text and icons on \`${name}-container\`.`,
+      contrast: { against: [`${name}-container`], min: BODY },
+      default: values.on,
+      derive: "text",
+      block: "roles",
+    },
+    {
+      name: `${name}-text`,
+      group,
+      kind: "text",
+      required: true,
+      description: `${what} — its name as text on the page.`,
+      contrast: { against: ON_PAGE, min: BODY },
+      default: values.text,
+      derive: "text",
+      block: "roles",
+    },
+  ]
+}
+
+const familyValues = (family: string) => ({
+  fill: fam(family, "base"),
+  container: fam(family, "container"),
+  on: fam(family, "on-container"),
+  text: fam(family, "text"),
+})
+
+const ASSURANCE_ROLES: Role[] = ASSURANCE_LEVELS.flatMap(([level, label, family], i) =>
+  trustRoles(
+    `assurance-${level}`,
+    "assurance",
+    `Assurance level ${i} \`${level}\` ("${label}", ${family ?? "the neutral grey, `status-neutral`,"} in the Mzizi pack)`,
+    family
+      ? familyValues(family)
+      : {
+          fill: { role: "status-neutral" },
+          container: { role: "status-neutral-container" },
+          on: { role: "status-neutral-on-container" },
+          text: { role: "status-neutral-text" },
+        }
+  )
+)
+
+const ATTESTATION_ROLES: Role[] = ATTESTATIONS.flatMap(([type, label, family]) =>
+  trustRoles(`attestation-${type}`, "attestation", `Attestation \`${type}\` ("${label}", ${family} in the Mzizi pack)`, familyValues(family))
+)
+
+/** `--tier-*`: aliases of the new roles, so a pack that remaps a level moves its legacy tier too. */
+const TIER_ROLES: Role[] = TIER_ALIASES.flatMap(([tier, target]) =>
+  ["", "-container", "-on-container", "-text"].map((suffix): Role => {
+    const of = [...ASSURANCE_ROLES, ...ATTESTATION_ROLES].find((r) => r.name === `${target}${suffix}`)!
+    const contrast: ContrastRule | undefined =
+      suffix === "-on-container" ? { against: [`tier-${tier}-container`], min: BODY } : of.contrast
+    return {
+      name: `tier-${tier}${suffix}`,
+      group: "tier",
+      kind: of.kind,
+      required: true,
+      description: `Legacy verification tier \`${tier}\` (\`bundu.verificationTier\`): an alias of \`${target}${suffix}\`. Read the assurance and attestation roles in new code.`,
+      contrast,
+      default: { role: `${target}${suffix}` },
+      block: "roles",
+    }
+  })
+)
+
 // ─── Legacy status colours — `/v1/brand` semanticColors, read from canon ─────
 
 /**
@@ -542,6 +720,31 @@ export const ROLES: readonly Role[] = [
     default: { background: "muted" },
     block: "ladder",
   },
+  /*
+   * The QR plate (#543). A QR code reads most reliably as dark modules on a light ground with
+   * a light quiet zone, and some scanners cannot read an inverted (light-on-dark) code. So the
+   * plate stays light in EVERY theme, and its ink stays dark. The values are the canon's own
+   * white and ink, the pair `onWhiteOrInk` already uses, fixed rather than themed.
+   */
+  {
+    name: "surface-qr",
+    group: "surface",
+    kind: "surface",
+    required: true,
+    description: "The plate behind a QR code: white in every theme, so the code is never inverted.",
+    default: { literal: "#FFFFFF" },
+    block: "roles",
+  },
+  {
+    name: "on-surface-qr",
+    group: "surface",
+    kind: "text",
+    required: true,
+    description: "A QR code's modules on `surface-qr`: the canon's ink in every theme.",
+    contrast: fg("surface-qr"),
+    default: { literal: "#0E0D0C" },
+    block: "roles",
+  },
 
   // ── Text ──
   {
@@ -609,6 +812,9 @@ export const ROLES: readonly Role[] = [
   ...LEGACY_STATUS_ROLES,
   ...STATUS_ROLES,
   ...LIFECYCLE_ROLES,
+  ...ASSURANCE_ROLES,
+  ...ATTESTATION_ROLES,
+  ...TIER_ROLES,
 
   // ── Categorical ──
   ...minerals.map(
@@ -706,6 +912,24 @@ export const ROLES: readonly Role[] = [
     contrast: { against: ON_PAGE, min: BODY },
     default: { role: "error" },
     derive: "text",
+    block: "roles",
+  },
+  {
+    /*
+     * `--status-error`: the name N1's `statusTokens` gives the error status and
+     * that components use (`text-status-error`, `var(--status-error, …)`) beside
+     * `--status-success` / `--status-warning`. It was defined only in the site's
+     * own stylesheet, so a consumer of the distributed tokens fell through to each
+     * component's hex fallback (#543). An alias of `destructive`: one decision for
+     * "error" (red, never the terracotta `status-danger`).
+     */
+    name: "status-error",
+    group: "destructive",
+    kind: "ui",
+    required: true,
+    description: "The error status (`text-status-error`, `fill-status-error`): an alias of `destructive`, red, never the terracotta `status-danger`.",
+    contrast: { against: ON_PAGE, min: UI },
+    default: { role: "destructive" },
     block: "roles",
   },
   { name: "overlay-foreground", group: "shadcn", kind: "text", required: true, description: "Text on `overlay`.", contrast: fg("overlay"), default: { role: "text-primary" }, block: "shadcn" },
@@ -887,11 +1111,11 @@ export const STATUS: ReadonlyArray<readonly [string, string, string, string]> = 
 
 /**
  * The radius ladder, from `brandMeta.radii`, in ladder order. CLAUDE.md §7.5:
- * every radius derives from a 7px unit, giving the ecosystem numbers 7 / 12 /
- * 14 / 17. A `--radius` of 10px or 12px with a `calc()` scale hung off it puts
+ * every radius derives from a 7px unit, giving the ecosystem numbers 4 / 7 /
+ * 12 / 14 / 17 (xs is the unit less 3, for the smallest marks: swatches, kbd). A `--radius` of 10px or 12px with a `calc()` scale hung off it puts
  * every derived rung off the system.
  */
-export const RADIUS: ReadonlyArray<readonly [string, string]> = (["sm", "md", "base", "lg", "xl", "2xl", "full"] as const).map(
+export const RADIUS: ReadonlyArray<readonly [string, string]> = (["xs", "sm", "md", "base", "lg", "xl", "2xl", "full"] as const).map(
   (n) => {
     const v = brandMeta.radii[n]
     if (typeof v !== "string") throw new Error(`brand.source.ts radii has no "${n}"`)

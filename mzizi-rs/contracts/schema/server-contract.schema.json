@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mzizi.dev/contracts/schema/server-contract.schema.json",
+  "title": "Mzizi server-component contract",
+  "description": "The contract of a server-side Mzizi component (a host-agnostic library that renders no markup). The UI contract format (component-contract.schema.json) describes rendered markup, states and density; none of that applies to a server component, so this one describes what it exports, what it refuses, the limits it enforces, what it reports to the server harness, and which test proves each guarantee. Every guarantee names a test that exists; the crate's tests/contract.rs fails when one does not.",
+  "type": "object",
+  "required": [
+    "$schema",
+    "name",
+    "title",
+    "version",
+    "kind",
+    "node",
+    "summary",
+    "implementations",
+    "surface",
+    "limits",
+    "guarantees",
+    "refusals",
+    "harness",
+    "gaps"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^server/[a-z][a-z0-9-]*$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "kind": {
+      "const": "server"
+    },
+    "node": {
+      "type": ["string", "null"],
+      "description": "The helix node (n8-assurance \u2026), or null for a library crate that belongs to none."
+    },
+    "summary": {
+      "type": "string"
+    },
+    "implementations": {
+      "type": "object",
+      "required": ["rs"],
+      "additionalProperties": false,
+      "properties": {
+        "rs": {
+          "type": "object",
+          "required": ["crate", "path", "features"],
+          "additionalProperties": false,
+          "properties": {
+            "crate": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "features": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "surface": {
+      "type": "array",
+      "description": "Every public item a caller may depend on. A change that removes or narrows one is a major version.",
+      "items": {
+        "type": "object",
+        "required": ["item", "file", "summary"],
+        "additionalProperties": false,
+        "properties": {
+          "item": {
+            "type": "string",
+            "description": "The exact source text that declares it, e.g. `pub async fn find`."
+          },
+          "file": {
+            "type": "string",
+            "description": "Path from the crate root."
+          },
+          "summary": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "limits": {
+      "type": "array",
+      "description": "Numbers the component enforces. Each is a `pub const` the test reads back from the source.",
+      "items": {
+        "type": "object",
+        "required": ["const", "file", "value", "summary"],
+        "additionalProperties": false,
+        "properties": {
+          "const": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "value": {
+            "type": "integer"
+          },
+          "summary": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "guarantees": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement", "tests"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "tests": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "description": "`#[test]` function names that prove it."
+          }
+        }
+      }
+    },
+    "refusals": {
+      "type": "array",
+      "description": "Inputs the component refuses, rather than handles.",
+      "items": {
+        "type": "object",
+        "required": ["id", "input", "reason", "tests"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "input": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "tests": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "harness": {
+      "type": "object",
+      "required": ["default", "removable", "events", "secrets"],
+      "additionalProperties": false,
+      "properties": {
+        "default": {
+          "type": "string",
+          "description": "What runs when no harness is given."
+        },
+        "removable": {
+          "type": "boolean"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "level", "fields"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "level": {
+                "enum": ["Debug", "Info", "Warn"]
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "secrets": {
+          "type": "string",
+          "description": "How the type system keeps secrets out of an event."
+        },
+        "pluggedInto": {
+          "type": "string",
+          "description": "The harness crate this component takes its harness from: always mzizi-harness."
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "description": "Where the build falls short of the standard, recorded rather than hidden.",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

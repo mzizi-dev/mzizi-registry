@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "discover/category-chip",
   "title": "CategoryChip",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "node": 6,
   "kind": "pattern",
   "summary": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button.",
@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/CategoryChip.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-category-chip", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-category-chip",
+      "identity": "contract"
+    },
     "rs": null,
     "related": []
   },
@@ -140,5 +143,8 @@
       "count": 1,
       "text": "12"
     }
+  ],
+  "gaps": [
+    "The React build also takes `linkComponent` (#543), the app's router link (Next `Link`, a React Router `Link`), which renders the same <a> markup with the same href, classes and aria-current. It is not a contract prop: the Astro build has no client router to hand the link to and always renders the plain <a>."
   ]
 }

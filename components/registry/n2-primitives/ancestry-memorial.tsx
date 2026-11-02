@@ -46,7 +46,7 @@ function AncestryMemorial({
             )}
           </div>
           {/* Memorial ring */}
-          <div className="absolute -inset-0.5 rounded-full border-2 border-[var(--color-terracotta,#D4A574)]/40" />
+          <div className="absolute -inset-0.5 rounded-full border-2 border-[var(--color-terracotta)]/40" />
         </div>
         <div>
           <div className="text-sm font-semibold" style={{ fontFamily: "var(--font-serif, serif)" }}>
@@ -54,7 +54,7 @@ function AncestryMemorial({
           </div>
           <div className="text-xs text-muted-foreground">Age {fixedAge} · Ancestral</div>
           {communityRole && (
-            <div className="text-[10px] text-[var(--color-terracotta,#D4A574)]">
+            <div className="text-[10px] text-[var(--color-terracotta)]">
               {communityRole}
             </div>
           )}
