@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.20.0] - 2026-11-01
+
+Releases `staging` to `main` as the next minor above v4.19.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.20.0. It carries the Claude Code plugin at **1.5.0** with `@nyuchi/mzizi-skills` 0.15.0, which brings back `mukoko-design` (nine skills, #601). The Mzizi Roots crates are unchanged at 0.7.0. Nothing breaks.
+
 ### Changed — the Claude Code plugin is 1.5.0: `@nyuchi/mzizi-skills` 0.15.0 brings back `mukoko-design` (2026-11-01, [#589](https://github.com/mzizi-dev/mzizi-registry/issues/589))
 
 - **`@nyuchi/mzizi-skills` is required at `>=0.15.0`** (it was `>=0.14.0`). `pnpm skills:generate` regenerates `lib/skills.generated.ts`, which `/v1/skills` serves once the API pin moves, and `pnpm plugin:skills` regenerates `plugin/skills/`, now 9 skills in 33 files.
