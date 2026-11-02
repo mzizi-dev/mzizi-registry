@@ -60,7 +60,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' &&
        github.event.workflow_run.event == 'push')
-    uses: nyuchi/.github/.github/workflows/reusable-auto-tag.yml@32eabdb685947bd040ad8141b5fa3d8cc2e83725 # main, 2026-10-19
+    uses: nyuchi/.github/.github/workflows/reusable-auto-tag.yml@c2e2506a4eadf67fbf824b41720aa220c539fc21 # main, 2026-10-19
     with:
       version-command: node -p "require('./package.json').version"
       channel: main
