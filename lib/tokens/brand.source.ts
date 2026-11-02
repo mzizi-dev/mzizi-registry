@@ -801,7 +801,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "Shona",
     sortOrder: 0,
     description:
-      "The complete ecosystem built by Nyuchi Africa. Three pillars — mukoko (consumer super app), nyuchi (enterprise layer), and sister brands (specialist verticals) — all connected through one identity, one design system, and one open data commons.",
+      "The complete ecosystem built by Nyuchi Africa. Three pillars — mukoko (consumer super app, tanzanite), nyuchi (infrastructure and enterprise, gold), and shamwari (sovereign AI, the intelligence pillar, sodalite) — with the sister brands as specialist verticals, all connected through one identity, one design system, and one open data commons.",
     adopterType: "ecosystem_brand",
   },
   {
@@ -1121,6 +1121,7 @@ export const brandMeta: BrandMeta = {
   lastUpdated: "2026-07-13",
   homepage: "https://mzizi.dev/brand",
   radii: {
+    xs: "4px",
     lg: "14px",
     md: "12px",
     sm: "7px",
@@ -1128,7 +1129,7 @@ export const brandMeta: BrandMeta = {
     "2xl": "17px",
     base: "14px",
     full: "9999px",
-    system: "Ecosystem numbers: 7, 12, 14, 17. Buttons are always pill (rounded-full).",
+    system: "Ecosystem numbers: 4, 7, 12, 14, 17, each from the 7px unit (xs is unit - 3). Buttons are always pill (rounded-full).",
   },
   philosophy: {
     name: "Ubuntu",

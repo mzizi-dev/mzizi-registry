@@ -78,7 +78,7 @@ export function MziziProviderCard({
     )
   const tierMineral = [
     "muted-foreground",
-    "var(--color-terracotta,#D4A574)",
+    "var(--color-terracotta)",
     "var(--color-cobalt,#00B0FF)",
     "var(--color-gold,#FFD740)",
     "var(--color-tanzanite,#B388FF)",
