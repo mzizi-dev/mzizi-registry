@@ -18,7 +18,7 @@ const DEFAULT_DATA = [
 ]
 
 const config = {
-  value: { label: "Score", color: "var(--color-terracotta, #D4A574)" },
+  value: { label: "Score", color: "var(--color-terracotta)" },
 } satisfies ChartConfig
 
 export function ChartRadarGridCustom({ loading = false }: { loading?: boolean } = {}) {

@@ -32,8 +32,8 @@ const severityConfig = {
     label: "Watch",
   },
   moderate: {
-    mineral: "var(--severity-high,var(--color-terracotta,#D4A574))",
-    bg: "var(--color-terracotta,#D4A574)",
+    mineral: "var(--severity-high,var(--color-terracotta))",
+    bg: "var(--color-terracotta)",
     icon: "⚠️",
     label: "Moderate",
   },

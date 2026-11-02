@@ -10,7 +10,7 @@
 //! MZIZI COVER HEADER — N3 brand, Dioxus. A Mzizi Roots component.
 //!
 //! The Rust sibling of `mzizi-cover-header.tsx`: a cover image with an overlapping avatar,
-//! a serif name, an optional badge and a trailing action. Same `data-slot`, same
+//! a serif name, an optional badge and a trailing action. Same `data-slot`, same opt-in
 //! `role="banner"`, same three cover heights and two avatar shapes.
 //!
 //! # The harness's motion preference is a prop
@@ -18,11 +18,14 @@
 //! [`MziziCoverHeaderProps::prefers_reduced_motion`] replaces `useMziziHarness`'s
 //! `motion.prefersReduced`, as `mzizi-update-prompt.rs` does in N7.
 //!
-//! # The cover URL is quoted
+//! # The cover is an `<img>`, the avatar is optional, the banner role is opt-in (#543)
 //!
-//! The `.tsx` writes `url(${coverImage})` unquoted, so a URL containing a space or a `)`
-//! breaks the declaration. [`cover_style`] quotes it and escapes the characters that would end
-//! the string. **The `.tsx` sibling still writes it unquoted.**
+//! Both builds draw the cover as a real `<img>` (lazy and async by default, eager with
+//! `fetchpriority="high"` under [`MziziCoverHeaderProps::priority`], alt text from
+//! [`MziziCoverHeaderProps::cover_alt`]), so no URL can break a CSS declaration and the browser
+//! can prioritise it as the LCP image. The avatar box is drawn only when there is an avatar.
+//! `role="banner"` is set only with [`MziziCoverHeaderProps::banner`]: the header usually sits
+//! inside `<main>`, where a second banner landmark duplicates the page's own.
 
 use dioxus::prelude::*;
 
@@ -33,7 +36,7 @@ use dioxus::prelude::*;
 pub const CONTRACT: &str = r#"contract
   slot is "mzizi-cover-header"
   portal is "https://mzizi.dev/components/mzizi-cover-header"
-  role is "banner"
+  when banner role is "banner"
   cover_height.md class is "h-32 sm:h-48"
   every avatar_shape class contains "rounded-"
 end"#;
@@ -108,21 +111,6 @@ impl AvatarShape {
     }
 }
 
-/// The cover's inline style: a quoted, escaped `background-image`, or nothing.
-#[must_use]
-pub fn cover_style(cover_image: Option<&str>) -> String {
-    match cover_image {
-        None => String::new(),
-        Some(url) => {
-            let escaped = url
-                .replace('\\', "\\\\")
-                .replace('"', "\\\"")
-                .replace('\n', "");
-            format!("background-image: url(\"{escaped}\");")
-        }
-    }
-}
-
 /// The entrance animation, empty when motion is reduced — the `.tsx`'s `animStyle`, with the
 /// harness's 200ms decelerate curve.
 #[must_use]
@@ -137,9 +125,15 @@ pub fn entrance_style(prefers_reduced_motion: bool) -> &'static str {
 /// Props for [`MziziCoverHeader`].
 #[derive(Props, Clone, PartialEq)]
 pub struct MziziCoverHeaderProps {
-    /// Cover image URL.
+    /// Cover image URL, drawn as an `<img>`.
     #[props(default)]
     pub cover_image: Option<String>,
+    /// The cover's alt text; empty (decorative) by default.
+    #[props(default)]
+    pub cover_alt: String,
+    /// Load the cover eagerly with `fetchpriority="high"` (the page's LCP image).
+    #[props(default)]
+    pub priority: bool,
     /// Avatar image URL.
     #[props(default)]
     pub avatar: Option<String>,
@@ -161,6 +155,9 @@ pub struct MziziCoverHeaderProps {
     /// Cover height.
     #[props(default)]
     pub cover_height: CoverHeight,
+    /// Give the root `role="banner"`; off by default (see the module docs).
+    #[props(default)]
+    pub banner: bool,
     /// Replaces the harness's `motion.prefersReduced`.
     #[props(default)]
     pub prefers_reduced_motion: bool,
@@ -177,27 +174,46 @@ pub fn MziziCoverHeader(props: MziziCoverHeaderProps) -> Element {
     } else {
         format!("relative {}", props.class)
     };
+    let (loading, decoding, fetchpriority) = if props.priority {
+        ("eager", None, Some("high"))
+    } else {
+        ("lazy", Some("async"), None)
+    };
     rsx! {
         div {
             "data-slot": "mzizi-cover-header",
             "data-portal": "https://mzizi.dev/components/mzizi-cover-header",
-            role: "banner",
+            role: if props.banner { Some("banner") } else { None },
             style: entrance_style(props.prefers_reduced_motion),
             class: "{root}",
             div {
-                class: "{props.cover_height.classes()} bg-muted bg-cover bg-center",
-                style: cover_style(props.cover_image.as_deref()),
+                "data-slot": "mzizi-cover-header-cover",
+                class: "{props.cover_height.classes()} overflow-hidden bg-muted",
+                if let Some(cover) = &props.cover_image {
+                    img {
+                        src: "{cover}",
+                        alt: "{props.cover_alt}",
+                        loading,
+                        "decoding": decoding,
+                        "fetchpriority": fetchpriority,
+                        class: "size-full object-cover",
+                    }
+                }
             }
             div { class: "px-4 pb-4",
-                div { class: "-mt-10 flex items-end justify-between",
-                    div { class: "size-20 overflow-hidden border-4 border-background bg-muted {props.avatar_shape.classes()}",
-                        if let Some(avatar) = &props.avatar {
-                            img { src: "{avatar}", alt: "", class: "size-full object-cover", loading: "lazy" }
+                if let Some(avatar) = &props.avatar {
+                    div { class: "-mt-10 flex items-end justify-between",
+                        div {
+                            "data-slot": "mzizi-cover-header-avatar",
+                            class: "size-20 overflow-hidden border-4 border-background bg-muted {props.avatar_shape.classes()}",
+                            img { src: "{avatar}", alt: "", class: "size-full object-cover", loading: "lazy", decoding: "async" }
+                        }
+                        if let Some(action) = &props.action {
+                            {action}
                         }
                     }
-                    if let Some(action) = &props.action {
-                        {action}
-                    }
+                } else if let Some(action) = &props.action {
+                    div { class: "mt-3 flex justify-end", {action} }
                 }
                 div { class: "mt-3",
                     div { class: "flex items-center gap-2",
@@ -214,31 +230,5 @@ pub fn MziziCoverHeader(props: MziziCoverHeaderProps) -> Element {
                 }
             }
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn no_cover_means_no_style() {
-        assert_eq!(cover_style(None), "");
-    }
-
-    #[test]
-    fn a_cover_url_is_quoted() {
-        assert_eq!(
-            cover_style(Some("https://x.test/a b.jpg")),
-            "background-image: url(\"https://x.test/a b.jpg\");"
-        );
-    }
-
-    #[test]
-    fn a_quote_in_the_url_cannot_end_the_string() {
-        assert_eq!(
-            cover_style(Some("x\").y")),
-            "background-image: url(\"x\\\").y\");"
-        );
     }
 }

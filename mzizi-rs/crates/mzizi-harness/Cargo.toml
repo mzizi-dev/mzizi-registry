@@ -1,0 +1,18 @@
+[package]
+name = "mzizi-harness"
+description = "The Mzizi harness: one scoped log, motion and announce interface, the same for the UI, the language and every server component."
+readme = "README.md"
+keywords = ["mzizi", "harness", "observability", "logging", "wasm"]
+categories = ["development-tools::debugging", "wasm"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+serde_json = "1"

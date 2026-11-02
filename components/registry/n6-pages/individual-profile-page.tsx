@@ -25,6 +25,18 @@ interface ProfileUser {
   stats?: { label: string; value: string | number }[]
   coverImage?: string
 }
+/*
+ * The tier chip: each verification tier's container pair (#543), defined once in the N1 tokens.
+ * It used to paint every tier as community malachite with black text.
+ */
+const TIER_CHIP: Record<string, string> = {
+  unverified: "bg-tier-unverified-container text-tier-unverified-on-container",
+  community: "bg-tier-community-container text-tier-community-on-container",
+  otp: "bg-tier-otp-container text-tier-otp-on-container",
+  government: "bg-tier-government-container text-tier-government-on-container",
+  licensed: "bg-tier-licensed-container text-tier-licensed-on-container",
+}
+
 interface IndividualProfilePageProps {
   user?: ProfileUser
   tabs?: { key: string; label: string; count?: number }[]
@@ -109,13 +121,11 @@ export function IndividualProfilePage({
           {user?.bio && <p className="mt-2 text-sm text-foreground">{user.bio}</p>}
           {user?.verificationTier && (
             <span
-              className="mt-2 inline-block rounded-full px-2 py-0.5 text-xs font-medium"
-              style={{
-                backgroundColor:
-                  "var(--tier-community, var(--status-success, var(--color-malachite, #64FFDA)))",
-                color: "black",
-                opacity: 0.9,
-              }}
+              data-tier={user.verificationTier}
+              className={cn(
+                "mt-2 inline-block rounded-full px-2 py-0.5 text-xs font-medium",
+                TIER_CHIP[user.verificationTier] ?? TIER_CHIP.unverified
+              )}
             >
               {user.verificationTier}
             </span>

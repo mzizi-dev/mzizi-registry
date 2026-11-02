@@ -22,7 +22,7 @@ const DEFAULT_DATA = [
 
 const config = {
   farming: { label: "Farming", color: "var(--color-malachite, #64FFDA)" },
-  mining: { label: "Mining", color: "var(--color-terracotta, #D4A574)" },
+  mining: { label: "Mining", color: "var(--color-terracotta)" },
 } satisfies ChartConfig
 
 export function ChartAreaLegend({ loading = false }: { loading?: boolean } = {}) {

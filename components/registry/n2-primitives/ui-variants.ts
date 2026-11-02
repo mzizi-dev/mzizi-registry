@@ -230,3 +230,23 @@ export function statusToneClasses(
     .filter(Boolean)
     .join(" ");
 }
+
+/**
+ * FormField's choice controls (app/form-field 1.2): a checkbox, a switch and a
+ * radio group, each a native input inside its label, so the whole row is the
+ * hit area: 36px on a fine pointer, 48px on touch.
+ */
+export const appChoiceRowClasses =
+  "flex min-h-9 w-fit cursor-pointer items-center gap-2.5 text-body-sm text-foreground has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 pointer-coarse:min-h-12 pointer-coarse:text-body";
+
+/** A native checkbox or radio: 16px (20px on touch), the shell's accent when checked, the `--ring` focus ring. */
+export const appCheckClasses =
+  "size-4 shrink-0 cursor-pointer accent-[var(--app-accent,var(--primary))] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed pointer-coarse:size-5";
+
+/**
+ * A switch: a native checkbox with role="switch", drawn as a pill track with a
+ * round thumb that moves to the end when on. The thumb's position says the
+ * state, so colour is never the only cue.
+ */
+export const appSwitchClasses =
+  "relative h-6 w-10 shrink-0 cursor-pointer appearance-none rounded-full border border-border bg-muted transition-colors outline-none before:absolute before:top-0.5 before:start-0.5 before:size-4 before:rounded-full before:bg-muted-foreground before:transition-transform checked:border-transparent checked:bg-[var(--app-accent,var(--primary))] checked:before:translate-x-4 checked:before:bg-[var(--app-accent-foreground,var(--primary-foreground))] rtl:checked:before:-translate-x-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed";
