@@ -22,7 +22,7 @@ const priorityDots: Record<TaskPriority, string> = {
   none: "bg-transparent",
   low: "bg-[var(--color-cobalt,#00B0FF)]",
   medium: "bg-[var(--color-gold,#FFD740)]",
-  high: "bg-[var(--color-terracotta,#D4A574)]",
+  high: "bg-[var(--color-terracotta)]",
   urgent: "bg-destructive",
 }
 

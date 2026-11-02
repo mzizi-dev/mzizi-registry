@@ -419,10 +419,15 @@ export const primitives = {
   },
 
   // ─── BORDER RADIUS (Nyuchi Design canonical) ──────────────
-  // Base unit: 7px (--radius-unit). Ecosystem numbers: 7, 12, 14, 17.
+  // Base unit: 7px (--radius-unit). Ecosystem numbers: 4, 7, 12, 14, 17.
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
     none: { value: "0px" },
+    xs: {
+      value: "4px",
+      description:
+        "Unit less 3. The smallest marks: legend swatches, kbd keys, inline tags",
+    },
     sm: {
       value: "7px",
       description: "Subtle rounding, checkboxes, small elements",
@@ -1051,7 +1056,7 @@ export type PaletteFamily = "mineral" | "heritage" | "experimental";
  * The fallback exists for contexts where the custom property is not defined —
  * an email, a canvas, a consumer who installed this item without globals.css —
  * and it was written out by hand at every call site. That made every fallback a
- * private copy of a palette value: `var(--color-terracotta, #D4A574)` still
+ * private copy of a palette value: `var(--color-terracotta)` still
  * named terracotta's pre-Seven hex long after the palette said `#E1B07E`, so a
  * chart rendered without the stylesheet drew the wrong brand colour and nothing
  * could tell. Reading the fallback out of `primitives.color` — which is itself
@@ -1363,37 +1368,116 @@ export const connectionTokens = {
  * Verification tier tokens — these DO use minerals because they are BRAND identity.
  * Verification tiers are a Mukoko-specific concept, not a universal status.
  * The minerals communicate prestige and progression within the ecosystem.
+ *
+ * The ladder (owner decision 2026-10-24, #543): unverified → the neutral grey
+ * (`--status-neutral`), community → terracotta, otp ("Contact Verified") → cobalt,
+ * government → gold, licensed → tanzanite. The `--tier-*` roles themselves are defined once,
+ * in `lib/tokens/roles.source.ts`, and emitted by `pnpm tokens:sync`.
+ *
+ * LEGACY: this is the `bundu.verificationTier` projection (`legacy_tier()` in assurance.py).
+ * Each `--tier-*` role now aliases an assurance level or an attestation (`assuranceTokens`,
+ * `attestationTokens` below); read those in new code. Community is not a rung there.
  */
 export const verificationTokens = {
   unverified: {
-    value: "var(--tier-unverified, #6B7280)",
+    value: "var(--tier-unverified, var(--status-neutral))",
     css: "--tier-unverified",
-    hex: "#6B7280",
+    role: "status-neutral",
     label: "Unverified",
   },
   community: {
-    value: `var(--tier-community, ${paletteVar("malachite")})`,
+    value: `var(--tier-community, ${paletteVar("terracotta")})`,
     css: "--tier-community",
-    mineral: "malachite",
-    label: "Community",
+    mineral: "terracotta",
+    label: "Community Verified",
   },
   otp: {
     value: `var(--tier-otp, ${paletteVar("cobalt")})`,
     css: "--tier-otp",
     mineral: "cobalt",
-    label: "OTP Verified",
+    label: "Contact Verified",
   },
   government: {
-    value: `var(--tier-government, ${paletteVar("tanzanite")})`,
+    value: `var(--tier-government, ${paletteVar("gold")})`,
     css: "--tier-government",
-    mineral: "tanzanite",
-    label: "Government ID",
+    mineral: "gold",
+    label: "Government Verified",
   },
   licensed: {
-    value: `var(--tier-licensed, ${paletteVar("gold")})`,
+    value: `var(--tier-licensed, ${paletteVar("tanzanite")})`,
     css: "--tier-licensed",
+    mineral: "tanzanite",
+    label: "Licensed Professional",
+  },
+} as const;
+
+/**
+ * Assurance levels — the Bundu trust model (nyuchi/nyuchi-api `gateway/lib/assurance.py`).
+ * Ordered 0–4, so `>=` is meaningful: how strongly an identity is proven. Each level reads its
+ * `--assurance-*` role (`lib/tokens/roles.source.ts`). `documented` → sodalite is new; the
+ * other minerals are the owner's ladder of 2026-10-24 (#543).
+ */
+export const assuranceTokens = {
+  none: {
+    value: "var(--assurance-none, var(--status-neutral))",
+    css: "--assurance-none",
+    level: 0,
+    role: "status-neutral",
+    label: "Unverified",
+  },
+  otp: {
+    value: `var(--assurance-otp, ${paletteVar("cobalt")})`,
+    css: "--assurance-otp",
+    level: 1,
+    mineral: "cobalt",
+    label: "Contact Verified",
+  },
+  documented: {
+    value: `var(--assurance-documented, ${paletteVar("sodalite")})`,
+    css: "--assurance-documented",
+    level: 2,
+    mineral: "sodalite",
+    label: "Documents Checked",
+  },
+  government: {
+    value: `var(--assurance-government, ${paletteVar("gold")})`,
+    css: "--assurance-government",
+    level: 3,
     mineral: "gold",
-    label: "Licensed",
+    label: "Government Verified",
+  },
+  licensed: {
+    value: `var(--assurance-licensed, ${paletteVar("tanzanite")})`,
+    css: "--assurance-licensed",
+    level: 4,
+    mineral: "tanzanite",
+    label: "Licensed Professional",
+  },
+} as const;
+
+/**
+ * Attestations — unordered, held alongside the assurance level: who vouches for the subject.
+ * Community is an attestation, never a rung below otp (assurance.py). Each reads its
+ * `--attestation-*` role; `business` → malachite and `domain` → copper are new.
+ */
+export const attestationTokens = {
+  community: {
+    value: `var(--attestation-community, ${paletteVar("terracotta")})`,
+    css: "--attestation-community",
+    mineral: "terracotta",
+    label: "Community Vouched",
+  },
+  business: {
+    value: `var(--attestation-business, ${paletteVar("malachite")})`,
+    css: "--attestation-business",
+    mineral: "malachite",
+    label: "Registered Business",
+  },
+  domain: {
+    value: `var(--attestation-domain, ${paletteVar("copper")})`,
+    css: "--attestation-domain",
+    mineral: "copper",
+    label: "Domain Verified",
   },
 } as const;
 
@@ -1510,13 +1594,24 @@ export function generateStatusCSS(): string {
     }
   }
   lines.push(
-    "  /* Verification tiers — these use minerals (brand identity) */",
+    "  /* Assurance levels and attestations — the --assurance-* / --attestation-* roles (assurance.py) */",
   );
-  lines.push("  --tier-unverified: #6B7280;");
-  lines.push(`  --tier-community: ${paletteVar("malachite")};`);
-  lines.push(`  --tier-otp: ${paletteVar("cobalt")};`);
-  lines.push(`  --tier-government: ${paletteVar("tanzanite")};`);
-  lines.push(`  --tier-licensed: ${paletteVar("gold")};`);
+  lines.push("  --assurance-none: var(--status-neutral);");
+  lines.push(`  --assurance-otp: ${paletteVar("cobalt")};`);
+  lines.push(`  --assurance-documented: ${paletteVar("sodalite")};`);
+  lines.push(`  --assurance-government: ${paletteVar("gold")};`);
+  lines.push(`  --assurance-licensed: ${paletteVar("tanzanite")};`);
+  lines.push(`  --attestation-community: ${paletteVar("terracotta")};`);
+  lines.push(`  --attestation-business: ${paletteVar("malachite")};`);
+  lines.push(`  --attestation-domain: ${paletteVar("copper")};`);
+  lines.push(
+    "  /* Verification tiers — legacy aliases of the roles above (bundu.verificationTier) */",
+  );
+  lines.push("  --tier-unverified: var(--assurance-none);");
+  lines.push("  --tier-community: var(--attestation-community);");
+  lines.push("  --tier-otp: var(--assurance-otp);");
+  lines.push("  --tier-government: var(--assurance-government);");
+  lines.push("  --tier-licensed: var(--assurance-licensed);");
   lines.push("}");
   return lines.join("\n");
 }
@@ -1676,6 +1771,8 @@ export function generateTokensJSON(): string {
       notifications: notificationTokens,
       connection: connectionTokens,
       verification: verificationTokens,
+      assurance: assuranceTokens,
+      attestation: attestationTokens,
       crypto: cryptoTokens,
       moderation: moderationTokens,
       serviceHealth: serviceHealthTokens,
@@ -1805,6 +1902,18 @@ export const roles = {
     cssVar: "--muted",
     light: "#FAF9F5",
     dark: "#050504",
+  },
+  "surface-qr": {
+    kind: "surface",
+    cssVar: "--surface-qr",
+    light: "#FFFFFF",
+    dark: "#FFFFFF",
+  },
+  "on-surface-qr": {
+    kind: "text",
+    cssVar: "--on-surface-qr",
+    light: "#0E0D0C",
+    dark: "#0E0D0C",
   },
   "text-primary": {
     kind: "text",
@@ -2114,6 +2223,318 @@ export const roles = {
     light: "#844425",
     dark: "#EBCCA3",
   },
+  "assurance-none": {
+    kind: "ui",
+    cssVar: "--assurance-none",
+    light: "#55514B",
+    dark: "#A09C93",
+  },
+  "assurance-none-container": {
+    kind: "surface",
+    cssVar: "--assurance-none-container",
+    light: "#E5E4E1",
+    dark: "#1E1D1A",
+  },
+  "assurance-none-on-container": {
+    kind: "text",
+    cssVar: "--assurance-none-on-container",
+    light: "#373635",
+    dark: "#E5E5E3",
+  },
+  "assurance-none-text": {
+    kind: "text",
+    cssVar: "--assurance-none-text",
+    light: "#575655",
+    dark: "#CCCCCA",
+  },
+  "assurance-otp": {
+    kind: "ui",
+    cssVar: "--assurance-otp",
+    light: "#0047AB",
+    dark: "#00B0FF",
+  },
+  "assurance-otp-container": {
+    kind: "surface",
+    cssVar: "--assurance-otp-container",
+    light: "#E3F2FD",
+    dark: "#001F3F",
+  },
+  "assurance-otp-on-container": {
+    kind: "text",
+    cssVar: "--assurance-otp-on-container",
+    light: "#002966",
+    dark: "#B3E5FC",
+  },
+  "assurance-otp-text": {
+    kind: "text",
+    cssVar: "--assurance-otp-text",
+    light: "#0047AB",
+    dark: "#86DCFF",
+  },
+  "assurance-documented": {
+    kind: "ui",
+    cssVar: "--assurance-documented",
+    light: "#283593",
+    dark: "#4B66FE",
+  },
+  "assurance-documented-container": {
+    kind: "surface",
+    cssVar: "--assurance-documented-container",
+    light: "#E8EAF6",
+    dark: "#0D1442",
+  },
+  "assurance-documented-on-container": {
+    kind: "text",
+    cssVar: "--assurance-documented-on-container",
+    light: "#141A5C",
+    dark: "#C7CCEA",
+  },
+  "assurance-documented-text": {
+    kind: "text",
+    cssVar: "--assurance-documented-text",
+    light: "#283593",
+    dark: "#C6CFFF",
+  },
+  "assurance-government": {
+    kind: "ui",
+    cssVar: "--assurance-government",
+    light: "#5D4037",
+    dark: "#FFD740",
+  },
+  "assurance-government-container": {
+    kind: "surface",
+    cssVar: "--assurance-government-container",
+    light: "#FFF8E1",
+    dark: "#332200",
+  },
+  "assurance-government-on-container": {
+    kind: "text",
+    cssVar: "--assurance-government-on-container",
+    light: "#3E2723",
+    dark: "#FFECB3",
+  },
+  "assurance-government-text": {
+    kind: "text",
+    cssVar: "--assurance-government-text",
+    light: "#5D4037",
+    dark: "#FFD740",
+  },
+  "assurance-licensed": {
+    kind: "ui",
+    cssVar: "--assurance-licensed",
+    light: "#4B0082",
+    dark: "#B388FF",
+  },
+  "assurance-licensed-container": {
+    kind: "surface",
+    cssVar: "--assurance-licensed-container",
+    light: "#F3E5F5",
+    dark: "#1A0033",
+  },
+  "assurance-licensed-on-container": {
+    kind: "text",
+    cssVar: "--assurance-licensed-on-container",
+    light: "#2E004D",
+    dark: "#E3C2E8",
+  },
+  "assurance-licensed-text": {
+    kind: "text",
+    cssVar: "--assurance-licensed-text",
+    light: "#4B0082",
+    dark: "#DCC8FF",
+  },
+  "attestation-community": {
+    kind: "ui",
+    cssVar: "--attestation-community",
+    light: "#A0522D",
+    dark: "#E1B07E",
+  },
+  "attestation-community-container": {
+    kind: "surface",
+    cssVar: "--attestation-community-container",
+    light: "#F5E6D3",
+    dark: "#3E2817",
+  },
+  "attestation-community-on-container": {
+    kind: "text",
+    cssVar: "--attestation-community-on-container",
+    light: "#5D2906",
+    dark: "#F5E6D3",
+  },
+  "attestation-community-text": {
+    kind: "text",
+    cssVar: "--attestation-community-text",
+    light: "#844425",
+    dark: "#EBCCA3",
+  },
+  "attestation-business": {
+    kind: "ui",
+    cssVar: "--attestation-business",
+    light: "#004D40",
+    dark: "#64FFDA",
+  },
+  "attestation-business-container": {
+    kind: "surface",
+    cssVar: "--attestation-business-container",
+    light: "#E0F2F1",
+    dark: "#00251A",
+  },
+  "attestation-business-on-container": {
+    kind: "text",
+    cssVar: "--attestation-business-on-container",
+    light: "#00332B",
+    dark: "#A7FFEB",
+  },
+  "attestation-business-text": {
+    kind: "text",
+    cssVar: "--attestation-business-text",
+    light: "#004D40",
+    dark: "#64FFDA",
+  },
+  "attestation-domain": {
+    kind: "ui",
+    cssVar: "--attestation-domain",
+    light: "#BF5A36",
+    dark: "#FF8A65",
+  },
+  "attestation-domain-container": {
+    kind: "surface",
+    cssVar: "--attestation-domain-container",
+    light: "#FBE4DA",
+    dark: "#3A1A0E",
+  },
+  "attestation-domain-on-container": {
+    kind: "text",
+    cssVar: "--attestation-domain-on-container",
+    light: "#5C2410",
+    dark: "#FFD3C2",
+  },
+  "attestation-domain-text": {
+    kind: "text",
+    cssVar: "--attestation-domain-text",
+    light: "#894027",
+    dark: "#FFC3B0",
+  },
+  "tier-unverified": {
+    kind: "ui",
+    cssVar: "--tier-unverified",
+    light: "#55514B",
+    dark: "#A09C93",
+  },
+  "tier-unverified-container": {
+    kind: "surface",
+    cssVar: "--tier-unverified-container",
+    light: "#E5E4E1",
+    dark: "#1E1D1A",
+  },
+  "tier-unverified-on-container": {
+    kind: "text",
+    cssVar: "--tier-unverified-on-container",
+    light: "#373635",
+    dark: "#E5E5E3",
+  },
+  "tier-unverified-text": {
+    kind: "text",
+    cssVar: "--tier-unverified-text",
+    light: "#575655",
+    dark: "#CCCCCA",
+  },
+  "tier-community": {
+    kind: "ui",
+    cssVar: "--tier-community",
+    light: "#A0522D",
+    dark: "#E1B07E",
+  },
+  "tier-community-container": {
+    kind: "surface",
+    cssVar: "--tier-community-container",
+    light: "#F5E6D3",
+    dark: "#3E2817",
+  },
+  "tier-community-on-container": {
+    kind: "text",
+    cssVar: "--tier-community-on-container",
+    light: "#5D2906",
+    dark: "#F5E6D3",
+  },
+  "tier-community-text": {
+    kind: "text",
+    cssVar: "--tier-community-text",
+    light: "#844425",
+    dark: "#EBCCA3",
+  },
+  "tier-otp": {
+    kind: "ui",
+    cssVar: "--tier-otp",
+    light: "#0047AB",
+    dark: "#00B0FF",
+  },
+  "tier-otp-container": {
+    kind: "surface",
+    cssVar: "--tier-otp-container",
+    light: "#E3F2FD",
+    dark: "#001F3F",
+  },
+  "tier-otp-on-container": {
+    kind: "text",
+    cssVar: "--tier-otp-on-container",
+    light: "#002966",
+    dark: "#B3E5FC",
+  },
+  "tier-otp-text": {
+    kind: "text",
+    cssVar: "--tier-otp-text",
+    light: "#0047AB",
+    dark: "#86DCFF",
+  },
+  "tier-government": {
+    kind: "ui",
+    cssVar: "--tier-government",
+    light: "#5D4037",
+    dark: "#FFD740",
+  },
+  "tier-government-container": {
+    kind: "surface",
+    cssVar: "--tier-government-container",
+    light: "#FFF8E1",
+    dark: "#332200",
+  },
+  "tier-government-on-container": {
+    kind: "text",
+    cssVar: "--tier-government-on-container",
+    light: "#3E2723",
+    dark: "#FFECB3",
+  },
+  "tier-government-text": {
+    kind: "text",
+    cssVar: "--tier-government-text",
+    light: "#5D4037",
+    dark: "#FFD740",
+  },
+  "tier-licensed": {
+    kind: "ui",
+    cssVar: "--tier-licensed",
+    light: "#4B0082",
+    dark: "#B388FF",
+  },
+  "tier-licensed-container": {
+    kind: "surface",
+    cssVar: "--tier-licensed-container",
+    light: "#F3E5F5",
+    dark: "#1A0033",
+  },
+  "tier-licensed-on-container": {
+    kind: "text",
+    cssVar: "--tier-licensed-on-container",
+    light: "#2E004D",
+    dark: "#E3C2E8",
+  },
+  "tier-licensed-text": {
+    kind: "text",
+    cssVar: "--tier-licensed-text",
+    light: "#4B0082",
+    dark: "#DCC8FF",
+  },
   "chart-1": {
     kind: "fill",
     cssVar: "--chart-1",
@@ -2281,6 +2702,12 @@ export const roles = {
     cssVar: "--destructive-text",
     light: "#9F221B",
     dark: "#F3C0BD",
+  },
+  "status-error": {
+    kind: "ui",
+    cssVar: "--status-error",
+    light: "#B3261E",
+    dark: "#F3BDBA",
   },
   "overlay-foreground": {
     kind: "text",

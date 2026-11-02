@@ -23,7 +23,7 @@ const config = {
   nairobi: { label: "Nairobi", color: "var(--color-tanzanite, #B388FF)" },
   lagos: { label: "Lagos", color: "var(--color-malachite, #64FFDA)" },
   accra: { label: "Accra", color: "var(--color-gold, #FFD740)" },
-  kigali: { label: "Kigali", color: "var(--color-terracotta, #D4A574)" },
+  kigali: { label: "Kigali", color: "var(--color-terracotta)" },
 } satisfies ChartConfig
 
 export function ChartPieLabelList({ loading = false }: { loading?: boolean } = {}) {

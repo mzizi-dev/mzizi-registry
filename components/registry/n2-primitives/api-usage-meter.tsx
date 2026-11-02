@@ -24,7 +24,7 @@ function ApiUsageMeter({
   const barColor = throttled
     ? "bg-destructive"
     : pct > 90
-      ? "bg-[var(--color-terracotta,#D4A574)]"
+      ? "bg-[var(--color-terracotta)]"
       : pct > 75
         ? "bg-[var(--color-gold,#FFD740)]"
         : "bg-[var(--color-malachite,#64FFDA)]"
