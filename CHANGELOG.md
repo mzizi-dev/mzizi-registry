@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — `domutils` 3.2.2 to 4.0.2 for the contract runner (2026-11-02, [#494](https://github.com/mzizi-dev/mzizi-registry/pull/494))
+
+`domutils` 4 no longer exports `isTag`, so `contracts/runner.ts` imports it from `domhandler`, where it lives. `css-select` 6 keeps its own `domutils` 3.2.2, so selector evaluation is unchanged. Dev-only; no component, contract or published package changes.
+
 ### Changed — `@bundu/ui` takes a minor bump for the Apple-aligned sizes (2026-11-02, [#597](https://github.com/mzizi-dev/mzizi-registry/issues/597))
 
 Owner, 2026-11-02: `@bundu/ui` gets a minor bump, not a major. `docs/sizes-and-density.md` and the entry under 4.18.0 no longer recommend a major. Because a minor can reach apps on a caret range, an app that is not ready sets `data-mzizi-sizes="legacy"` before it takes the version. Documentation only; nothing is published here.
