@@ -17,6 +17,8 @@
  *
  * THE CONTRAST GATE (owner rule, #484 §2b) runs on every `pnpm tokens:sync` and
  * `pnpm tokens:verify`, and fails the build on a violation:
+ *   - MINIMUMS (owner decision 2026-11-02, #399), enforced as well as the APCA bars, from `WCAG_BODY`,
+ *     `WCAG_NON_BODY` and `WCAG_UI` below: body text >= WCAG 7:1, `nonBody` text >= 4.5:1, ui >= 3:1
  *   - `kind: text` roles: |APCA Lc| >= 75 on `base` and `surface`, both themes
  *   - a `kind: text` role whose rule names `nonBody` (text that is never body copy:
  *     captions, timestamps, metadata): >= 60, APCA's minimum for non-body text; `nonBody`
@@ -99,6 +101,12 @@ interface MeasuredBase {
   wcag?: number
   /** Set only where the default misses its bar and the fix is an owner decision. */
   pending?: string
+  /**
+   * A named, listed exception to the WCAG text minimum (`wcagFloor()`), never silent: this rule's WCAG bar is
+   * `min` instead, for `reason`. The APCA bar still applies in full. The gate prints every one and
+   * `__tests__/tokens-wcag-minimums.test.ts` pins the exact set, so it cannot grow quietly.
+   */
+  wcagException?: { min: number; reason: string }
 }
 
 /** A rule that measures the role. `contrastMin()` reads its bar. */
@@ -197,6 +205,17 @@ export const BODY = 75
 export const NON_BODY = 60
 /** APCA Lc 30: the parts of a control or focus indicator a user has to see. The gate's ui floor. */
 export const UI = 30
+/**
+ * WCAG 2 contrast MINIMUMS, enforced next to the APCA bars (owner decision 2026-11-02, #399: "adopt a WCAG 7:1
+ * floor for body text. We should have minimums set"). One definition; the gate, `textRamp()`, the derive walks
+ * and the tests all read these.
+ */
+/** WCAG 2 ratio 7:1 (the AAA level of 1.4.6): body text, and a foreground on its fill. */
+export const WCAG_BODY = 7
+/** WCAG 2 ratio 4.5:1 (1.4.3): non-body text, the `nonBody` rule: captions, timestamps, metadata. */
+export const WCAG_NON_BODY = 4.5
+/** WCAG 2 ratio 3:1 (1.4.11, non-text contrast): the `UI` rule, focus rings and control edges. */
+export const WCAG_UI = 3
 const ON_PAGE = ["base", "surface"] as const
 
 /**
@@ -226,6 +245,18 @@ export const CONTROL_SURFACES = [
 export function contrastFloor(kind: RoleKind, rule?: ContrastRule): number {
   if (kind === "text") return rule && "against" in rule && rule.nonBody ? NON_BODY : BODY
   return kind === "ui" ? UI : 0
+}
+
+/** The WCAG 2 ratio floor the gate holds a kind to: 7 for body text, 4.5 for `nonBody` text, 3 for ui, none otherwise. */
+export function wcagFloor(kind: RoleKind, rule?: ContrastRule): number {
+  if (kind === "text") return rule && "against" in rule && rule.nonBody ? WCAG_NON_BODY : WCAG_BODY
+  return kind === "ui" ? WCAG_UI : 0
+}
+
+/** The WCAG ratio a measured rule asks for: its own `wcag` where that is higher, else the kind's floor. 0 = none. */
+export function wcagMin(kind: RoleKind, rule: MeasuredRule): number {
+  if (rule.wcagException) return Math.max(rule.wcag ?? 0, rule.wcagException.min)
+  return Math.max(rule.wcag ?? 0, wcagFloor(kind, rule))
 }
 
 /** The |Lc| a measured rule asks for: its `min`, or for `nonBody` text, `NON_BODY`. */
@@ -616,6 +647,24 @@ function background(name: string) {
 }
 
 const fg = (against: string): ContrastRule => ({ against: [against], min: BODY })
+
+/**
+ * The label on a brand's solid action fill (`primary` and what follows it) holds WCAG 4.5:1 (1.4.3), not the 7:1 body
+ * minimum. These are button labels, not body copy, and the fill is per-brand: `--primary` resolves through each
+ * `[data-brand]` block to that family's `-aa` tier, which is by definition the 4.5:1 fill under white, so 7:1 would
+ * darken the action colour of all seven brands, a brand decision the owner has not made. APCA Lc 75 still applies.
+ */
+const ON_BRAND_FILL_EXCEPTION = {
+  min: 4.5,
+  reason:
+    "a label on the brand's solid action fill, not body copy; the fill is each brand's -aa tier (4.5:1 under white) " +
+    "and 7:1 would darken every brand's action colour, an owner decision",
+} as const
+const fgOnBrandFill = (against: string): ContrastRule => ({
+  against: [against],
+  min: BODY,
+  wcagException: ON_BRAND_FILL_EXCEPTION,
+})
 const onWhiteOrInk: ThemedValue = { light: { literal: "#FFFFFF" }, dark: { literal: "#0E0D0C" } }
 
 export const ROLES: readonly Role[] = [
@@ -635,7 +684,7 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text and icons on `primary`.",
-    contrast: fg("primary"),
+    contrast: fgOnBrandFill("primary"),
     default: onWhiteOrInk,
     block: "shadcn",
   },
@@ -664,7 +713,7 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text and icons on `brand-accent`.",
-    contrast: fg("brand-accent"),
+    contrast: fgOnBrandFill("brand-accent"),
     default: onWhiteOrInk,
     block: "shadcn",
   },
@@ -683,7 +732,7 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text and icons on `app-accent`.",
-    contrast: fg("app-accent"),
+    contrast: fgOnBrandFill("app-accent"),
     default: { role: "brand-accent-foreground" },
     block: "roles",
   },
@@ -1002,7 +1051,7 @@ export const ROLES: readonly Role[] = [
   { name: "sidebar", group: "sidebar", kind: "surface", required: true, description: "Sidebar surface.", default: { role: "surface" }, block: "sidebar" },
   { name: "sidebar-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar`.", contrast: fg("sidebar"), default: { role: "text-primary" }, block: "sidebar" },
   { name: "sidebar-primary", group: "sidebar", kind: "fill", required: true, description: "The sidebar's active item fill.", default: { role: "primary" }, block: "sidebar" },
-  { name: "sidebar-primary-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar-primary`.", contrast: fg("sidebar-primary"), default: { role: "primary-foreground" }, block: "sidebar" },
+  { name: "sidebar-primary-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar-primary`.", contrast: fgOnBrandFill("sidebar-primary"), default: { role: "primary-foreground" }, block: "sidebar" },
   { name: "sidebar-accent", group: "sidebar", kind: "surface", required: true, description: "The sidebar's hover fill.", default: { role: "container" }, block: "sidebar" },
   { name: "sidebar-accent-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar-accent`.", contrast: fg("sidebar-accent"), default: { role: "text-primary" }, block: "sidebar" },
   {

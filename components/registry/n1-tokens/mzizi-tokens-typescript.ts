@@ -1924,7 +1924,7 @@ export const roles = {
   "text-secondary": {
     kind: "text",
     cssVar: "--text-secondary",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   "text-tertiary": {
@@ -1942,7 +1942,7 @@ export const roles = {
   "muted-foreground": {
     kind: "text",
     cssVar: "--muted-foreground",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   success: {
@@ -2076,7 +2076,7 @@ export const roles = {
   "status-danger-text": {
     kind: "text",
     cssVar: "--status-danger-text",
-    light: "#844425",
+    light: "#7B3F23",
     dark: "#EBCCA3",
   },
   "status-premium": {
@@ -2124,7 +2124,7 @@ export const roles = {
   "status-neutral-text": {
     kind: "text",
     cssVar: "--status-neutral-text",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   "status-stable": {
@@ -2220,7 +2220,7 @@ export const roles = {
   "status-deprecated-text": {
     kind: "text",
     cssVar: "--status-deprecated-text",
-    light: "#844425",
+    light: "#7B3F23",
     dark: "#EBCCA3",
   },
   "assurance-none": {
@@ -2244,7 +2244,7 @@ export const roles = {
   "assurance-none-text": {
     kind: "text",
     cssVar: "--assurance-none-text",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   "assurance-otp": {
@@ -2364,7 +2364,7 @@ export const roles = {
   "attestation-community-text": {
     kind: "text",
     cssVar: "--attestation-community-text",
-    light: "#844425",
+    light: "#7B3F23",
     dark: "#EBCCA3",
   },
   "attestation-business": {
@@ -2412,7 +2412,7 @@ export const roles = {
   "attestation-domain-text": {
     kind: "text",
     cssVar: "--attestation-domain-text",
-    light: "#894027",
+    light: "#7E3B24",
     dark: "#FFC3B0",
   },
   "tier-unverified": {
@@ -2436,7 +2436,7 @@ export const roles = {
   "tier-unverified-text": {
     kind: "text",
     cssVar: "--tier-unverified-text",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   "tier-community": {
@@ -2460,7 +2460,7 @@ export const roles = {
   "tier-community-text": {
     kind: "text",
     cssVar: "--tier-community-text",
-    light: "#844425",
+    light: "#7B3F23",
     dark: "#EBCCA3",
   },
   "tier-otp": {
@@ -2688,7 +2688,7 @@ export const roles = {
   destructive: {
     kind: "fill",
     cssVar: "--destructive",
-    light: "#B3261E",
+    light: "#AA241D",
     dark: "#F3BDBA",
   },
   "destructive-foreground": {
@@ -2700,13 +2700,13 @@ export const roles = {
   "destructive-text": {
     kind: "text",
     cssVar: "--destructive-text",
-    light: "#9F221B",
+    light: "#98201A",
     dark: "#F3C0BD",
   },
   "status-error": {
     kind: "ui",
     cssVar: "--status-error",
-    light: "#B3261E",
+    light: "#AA241D",
     dark: "#F3BDBA",
   },
   "overlay-foreground": {

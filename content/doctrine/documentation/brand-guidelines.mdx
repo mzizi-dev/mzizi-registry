@@ -131,6 +131,18 @@ The type scale runs from Display (40px serif on a phone, 48px on tablet and desk
 
 Lowercase wordmarks (mukoko, nyuchi, shamwari, bundu) are reserved for special instances — the brand wordmark lockup itself: logos, splash marks, and standalone brand marks. In site names, product names, and running text, Bundu and Nyuchi take capitals: Bundu Docs, Nyuchi Docs, Nyuchi Platform. Mukoko is the exception — it only uses lowercase, in every context. This is a brand decision, not a typography accident.
 
+## Contrast Minimums
+
+The contrast standard is APCA 3.0 AAA with explicit WCAG 2 minimums beside it (owner decision, 2026-11-02, mzizi-registry#399). Both are enforced: `pnpm tokens:sync` and `pnpm tokens:verify` fail when a default role is under its minimum. The three numbers are the named exports `WCAG_BODY`, `WCAG_NON_BODY` and `WCAG_UI` in `lib/tokens/roles.source.ts`, beside the APCA bars `BODY`, `NON_BODY` and `UI`.
+
+| Part                                                                 | APCA  | WCAG 2 minimum |
+| -------------------------------------------------------------------- | ----- | -------------- |
+| Body text, on `base` and `surface`, both themes                      | Lc 75 | 7:1            |
+| Non-body text: captions, timestamps, metadata                        | Lc 60 | 4.5:1          |
+| UI parts that must be seen: focus rings, control edges (WCAG 1.4.11) | Lc 30 | 3:1            |
+
+The label on a brand's solid action fill (`primary-foreground` and the roles that follow `primary`) is held to 4.5:1 rather than 7:1. It is a button label, not body copy, and the fill is each brand's `-aa` tier; 7:1 would darken every brand's action colour. The gate prints that exception and the role tests pin it.
+
 ## Touch Targets
 
 Mzizi follows Apple's Human Interface Guidelines on touch devices (owner decision, 2026-11-01). The Buttons page says "a button needs a hit region of at least 44x44 pt"; the Accessibility page gives iOS and iPadOS a default control size of 44x44 pt and a minimum of 28x28 pt; the Typography page gives iOS and iPadOS a default text size of 17 pt and a minimum of 11 pt (all read 2026-11-01 at developer.apple.com/design/human-interface-guidelines).

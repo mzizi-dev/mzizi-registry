@@ -1266,14 +1266,15 @@ export const brandMeta: BrandMeta = {
     ],
   },
   accessibility: {
-    standard: "APCA 3.0 AAA",
+    standard:
+      "APCA 3.0 AAA, with WCAG 2 minimums: body text 7:1, non-body text 4.5:1, UI parts 3:1",
     screenReaders: "Semantic HTML with ARIA attributes where needed",
     focusIndicator: "2px ring with ring-offset-2, using --ring token",
     minTouchTarget: 44,
     defaultTouchTarget: 44,
     keyboardNavigation: "Full keyboard support via Radix UI primitives",
     contrastDescription:
-      "Advanced Perceptual Contrast Algorithm for superior readability across all mineral colors",
+      "Advanced Perceptual Contrast Algorithm for superior readability across all mineral colors, held to WCAG 2 minimums as well: 7:1 for body text, 4.5:1 for non-body text, 3:1 for UI parts",
   },
   componentSpecs: [
     {

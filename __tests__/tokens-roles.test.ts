@@ -146,7 +146,7 @@ describe("the role manifest", () => {
 
   it("keeps danger terracotta and destructive red, as two roles (owner decision 2026-10-07)", () => {
     expect(RESOLVED.get("status-danger")!.css.light).toBe("var(--mineral-terracotta)")
-    expect(RESOLVED.get("destructive")!.value.light).toBe("#B3261E")
+    expect(RESOLVED.get("destructive")!.value.light).toBe("#AA241D")
   })
 
   it("keeps Mzizi pill, and the touch floor at Apple's 44px (owner decisions 2026-10-07 and 2026-11-01)", () => {
@@ -238,14 +238,12 @@ describe("the contrast gate on the Mzizi pack", () => {
       "assurance-documented-on-container:dark",
       "assurance-documented:dark",
       "assurance-licensed-on-container:dark",
-      "attestation-community-text:light",
-      "attestation-domain-text:light",
       "border-control:dark",
       "border-control:light",
       "destructive-text:dark",
       "destructive-text:light",
       "destructive:dark",
-      "status-danger-text:light",
+      "destructive:light",
       "status-premium-on-container:dark",
     ])
   })
@@ -491,7 +489,7 @@ describe("alias chains: overriding a source moves a role in both themes or in ne
     // --destructive was var(--error) in light and a literal in dark; overriding --error moves it in neither now.
     for (const mode of ["light", "dark"] as const) {
       expect(computed("--destructive", mode, { "--error": "#123456" }), mode).toBe(computed("--destructive", mode))
-      expect(computed("--status-danger-text", mode, { "--mineral-terracotta-text": "#123456" }), mode).toBe(computed("--status-danger-text", mode))
+      expect(computed("--destructive-text", mode, { "--error": "#123456" }), mode).toBe(computed("--destructive-text", mode))
     }
     expect(CSS).toMatch(/ALIAS CHAINS/)
   })
@@ -547,7 +545,7 @@ describe("derivation", () => {
     expect(map.get("test-fill")!.value).toEqual({ light: "#808080", dark: "#808080" })
     const { violations } = roleGate(map)
     for (const mode of ["light", "dark"]) {
-      expect(violations.some((v) => v.startsWith(`test-fill (${mode}): derive "fill" found no fill`) && v.includes("test-white (needs Lc 75)") && v.includes("test-black (needs Lc 75)"))).toBe(true)
+      expect(violations.some((v) => v.startsWith(`test-fill (${mode}): derive "fill" found no fill`) && v.includes("test-white (needs Lc 75 and 7:1)") && v.includes("test-black (needs Lc 75 and 7:1)"))).toBe(true)
     }
   })
 
@@ -558,7 +556,7 @@ describe("derivation", () => {
     ])
     const map = resolveWith(roles)
     expect(map.get("test-text")!.value.light).toBe("#777777")
-    expect(roleGate(map).violations).toContain(`test-text (light): derive "text" found no value between #000000 and #FFFFFF from #777777 that clears Lc 106 against test-bg (Lc ${Math.abs(apca("#777777", "#808080")).toFixed(1)} now)`)
+    expect(roleGate(map).violations).toContain(`test-text (light): derive "text" found no value between #000000 and #FFFFFF from #777777 that clears Lc 106 and 7:1 against test-bg (Lc ${Math.abs(apca("#777777", "#808080")).toFixed(1)} now)`)
   })
 })
 
@@ -640,7 +638,7 @@ describe("the gate's non-body floor and decorative exemption cannot loosen anyth
   it("lets nonBody imply Lc 60, and fails body text declared at 60 without nonBody", () => {
     expect(contrastMin("text", { against: ["base"], nonBody: "test" })).toBe(NON_BODY)
     expect(gateWith({ "text-tertiary": { contrast: { against: ["base", "surface"], min: 60 } } })).toEqual(
-      expect.arrayContaining(["text-tertiary: declares Lc 60, under the text bar of 75", expect.stringMatching(/^text-tertiary \(light\): Lc 6\d\.\d on base, needs 75$/)])
+      expect.arrayContaining(["text-tertiary: declares Lc 60, under the text bar of 75", expect.stringMatching(/^text-tertiary \(light\): Lc 6\d\.\d on base, needs 75/)])
     )
   })
 

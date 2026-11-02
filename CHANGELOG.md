@@ -10,6 +10,42 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — body text meets WCAG 7:1; contrast minimums are enforced (2026-11-02, [#399](https://github.com/mzizi-dev/mzizi-registry/issues/399))
+
+Owner, 2026-11-02: "adopt a WCAG 7:1 floor for body text. We should have minimums set". The token role gate now enforces three WCAG 2 minimums beside the APCA bars, and `pnpm tokens:sync` and `pnpm tokens:verify` fail when a default role is under its minimum.
+
+- **The three minimums** are named exports next to `BODY`, `NON_BODY` and `UI` in `lib/tokens/roles.source.ts`: `WCAG_BODY = 7` (body text, on `base` and `surface`, both themes), `WCAG_NON_BODY = 4.5` (the `nonBody` rule: captions, timestamps, metadata) and `WCAG_UI = 3` (the `UI` rule, WCAG 1.4.11: focus rings, control edges). `wcagFloor()` and `wcagMin()` read them. A rule's own `wcag` can only raise its bar, and a rule that declares a lower one is a violation. `roleGate()` reports the minimum in every result.
+- **Light secondary text got darker.** `--text-secondary`, and `--muted-foreground` with it, was `#575655` (6.59:1 on `base`, 6.30:1 on `surface`) and is now `#504F4E` (7.36:1 and 7.04:1). `textRamp()` in `scripts/render-globals-css.ts` walks it. Dark was already above 7:1 and does not move, nor does `--text-primary` or `--text-tertiary` (4.86:1 and 4.65:1 in light, over 4.5:1).
+- **The `-text` tier is measured at 7:1 too.** `textOnBaseTier()` walks each family's text variant until it clears Lc 75 and 7:1 on `base` and `surface`. Fourteen light `-text` values moved, and six status and attestation text roles that were derived from them now alias them. Dark values did not move.
+- **`--destructive`** (the fill under white `--destructive-foreground`) moved in light because the foreground is body text on it.
+- **One named exception.** `primary-foreground`, `brand-accent-foreground`, `app-accent-foreground` and `sidebar-primary-foreground` hold 4.5:1 on their fill instead of 7:1 (APCA Lc 75 still applies; they measure 5.40:1). They are button labels, and the fill is each brand's `-aa` tier, which is 4.5:1 under white by definition, so 7:1 would darken every brand's action colour: an owner decision. The gate prints the exception and `__tests__/tokens-wcag-minimums.test.ts` pins the set.
+
+Light values that moved (old to new; WCAG and APCA are measured on `base` / `surface`; the last row is the fill under white):
+
+| Token                                               | Old     | WCAG old    | APCA Lc old | New     | WCAG new    | APCA Lc new |
+| --------------------------------------------------- | ------- | ----------- | ----------- | ------- | ----------- | ----------- |
+| `--text-secondary / --muted-foreground`             | #575655 | 6.59 / 6.30 | 78.2 / 75.3 | #504F4E | 7.36 / 7.04 | 81.1 / 78.1 |
+| `--mineral-terracotta-text`                         | #8E4928 | 6.03 / 5.77 | 75.4 / 72.5 | #7B3F23 | 7.33 / 7.01 | 80.6 / 77.6 |
+| `--mineral-copper-text`                             | #93452A | 6.05 / 5.78 | 75.4 / 72.5 | #7E3B24 | 7.45 / 7.12 | 80.9 / 77.9 |
+| `--heritage-savanna-text`                           | #725915 | 5.99 / 5.73 | 75.5 / 72.6 | #614C12 | 7.41 / 7.09 | 81.1 / 78.2 |
+| `--heritage-sunset-text`                            | #A43310 | 6.18 / 5.91 | 75.4 / 72.4 | #8F2C0E | 7.46 / 7.13 | 80.3 / 77.4 |
+| `--heritage-river-text`                             | #006064 | 6.62 / 6.33 | 77.8 / 74.8 | #00585C | 7.41 / 7.09 | 80.7 / 77.8 |
+| `--heritage-hematite-text`                          | #4A616B | 5.88 / 5.63 | 75.1 / 72.2 | #3E515A | 7.47 / 7.15 | 81.4 / 78.5 |
+| `--heritage-kalahari-text`                          | #675C46 | 5.91 / 5.66 | 75.3 / 72.4 | #564E3B | 7.42 / 7.09 | 81.2 / 78.3 |
+| `--exp-ember-text`                                  | #843D20 | 7.08 / 6.77 | 79.6 / 76.6 | #803B1F | 7.37 / 7.05 | 80.6 / 77.7 |
+| `--exp-acacia-text`                                 | #4D5615 | 7.11 / 6.80 | 80.1 / 77.1 | #4B5415 | 7.33 / 7.01 | 80.9 / 77.9 |
+| `--exp-fern-text`                                   | #175E17 | 7.13 / 6.82 | 79.8 / 76.9 | #175C17 | 7.33 / 7.01 | 80.5 / 77.6 |
+| `--exp-lagoon-text`                                 | #165B51 | 7.13 / 6.82 | 80.0 / 77.0 | #16594F | 7.34 / 7.02 | 80.7 / 77.7 |
+| `--exp-storm-text`                                  | #284CA6 | 7.07 / 6.76 | 79.6 / 76.6 | #274AA1 | 7.32 / 7.01 | 80.5 / 77.5 |
+| `--exp-dusk-text`                                   | #742AAD | 7.06 / 6.75 | 79.0 / 76.1 | #6F28A6 | 7.47 / 7.14 | 80.5 / 77.5 |
+| `--exp-protea-text`                                 | #932464 | 7.06 / 6.75 | 78.9 / 75.9 | #8F2361 | 7.32 / 7.00 | 79.8 / 76.9 |
+| `--status-danger-text / attestation-community-text` | #844425 | 6.67 / 6.38 | 78.1 / 75.2 | #7B3F23 | 7.33 / 7.01 | 80.6 / 77.6 |
+| `--attestation-domain-text`                         | #894027 | 6.69 / 6.40 | 78.1 / 75.2 | #7E3B24 | 7.45 / 7.12 | 80.9 / 77.9 |
+| `--destructive-text`                                | #9F221B | 6.95 / 6.65 | 78.1 / 75.2 | #98201A | 7.39 / 7.07 | 79.7 / 76.8 |
+| `--destructive` (fill under #FFFFFF)                | #B3261E | NaN         | NaN         | #AA241D | NaN         | NaN         |
+
+`--status-danger-text`, `--attestation-community-text` and `--attestation-domain-text` now alias `--mineral-terracotta-text` and `--mineral-copper-text` in both themes (the same dark values as before). The doctrine text (`brand-guidelines.mdx`, `semantic-tokens.mdx`, `CONTRIBUTING.md`, `design-system/README.md`, `mzizi-tokens` README) and `accessibility.standard` in `brand.source.ts` state the minimums. The platform token files regenerate.
+
 ## [4.22.0] - 2026-11-02
 
 Releases `staging` to `main` as the next minor above v4.21.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) carry 4.22.0. The headline is `@nyuchi/mzizi-skills` 0.16.0 in the Claude Code plugin (1.6.0), which brings six skill descriptions inside claude.ai's 1024-character limit.
