@@ -71,7 +71,7 @@ It restores every value in the "Old" column (including the 48px floor), and outr
 
 ## Semver
 
-Recommended bump for the registry: a minor under the org policy (a release to `main` is the next minor), because the legacy attribute keeps old sizes available. Recommended bump for `@bundu/ui`, which ships these values to apps: a **major**, because a pinned app that takes the new version changes size without editing a line. Publishing is an owner step.
+Owner decision, 2026-11-02: `@bundu/ui` takes a **minor** bump, not a major, "we not a major bump yet". The registry release is also a minor under the org policy (a release to `main` is the next minor). Because a minor lets an app on a caret range pick the new sizes up without editing a line, the compatibility alias is the safety net: an app that is not ready sets `<html data-mzizi-sizes="legacy">` before it takes the version, and removes it when it has migrated. Publishing is an owner step.
 
 ## Not in this change
 

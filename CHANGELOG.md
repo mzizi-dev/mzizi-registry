@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — `@bundu/ui` takes a minor bump for the Apple-aligned sizes (2026-11-02, [#597](https://github.com/mzizi-dev/mzizi-registry/issues/597))
+
+Owner, 2026-11-02: `@bundu/ui` gets a minor bump, not a major. `docs/sizes-and-density.md` and the entry under 4.18.0 no longer recommend a major. Because a minor can reach apps on a caret range, an app that is not ready sets `data-mzizi-sizes="legacy"` before it takes the version. Documentation only; nothing is published here.
+
 ### Fixed — the public plugin manifest drops the unrecognised `$schema` key (2026-11-02)
 
 The Claude plugin sync warned that `plugin/.claude-plugin/plugin.json` has an unrecognised top-level key `$schema` and stripped it. The key is removed so the manifest is exactly what the sync keeps. Nothing else in the plugin changes.
@@ -81,7 +85,7 @@ Releases `staging` to `main` as the next minor above v4.18.x ([nyuchi/.github#80
 - **Compatibility alias:** `<html data-mzizi-sizes="legacy">` restores every pre-2026-11-01 size, including the 48px floor. Migration table: `docs/sizes-and-density.md`.
 - **Components:** `button`, `input` and `ui-variants` (`buttonVariants`, `inputClasses`) take their heights from the size roles (`h-control`, `h-control-sm`, `h-control-lg`, `h-field`) in `.tsx`, `.astro` and `.rs`, instead of `h-12`/`h-14`. The contract runner and `mzizi-rs/contract-eval` read the roles; `min_height` is judged on a coarse pointer (44). Contracts `ui/button`, `ui/input` and eight Discover and site contracts carry the new density rows.
 - **Platform files** (Swift, Kotlin, ArkTS, React Native, Python, Rust, TypeScript) and `/v1/tokens` carry the new values. **Not changed here:** `.mz` files, the app-density components (already 44 to 48px on touch), and the 130-odd marketing components that hard-code `h-12`/`h-14`.
-- **Semver:** the registry release is a minor under the org policy; `@bundu/ui` should take a **major**. Publishing is not part of this change.
+- **Semver:** the registry release is a minor under the org policy. Owner decision 2026-11-02: `@bundu/ui` takes a **minor** bump, not a major; apps that are not ready use `data-mzizi-sizes="legacy"`. (The first draft of this entry recommended a major.) Publishing is not part of this change.
 - **Site/docs/skills impact:** mzizi.dev token and doctrine pages, docs.mzizi.dev brand-guidelines and touch-target pages, and the `mzizi-design`, `mzizi-architecture`, `mzizi-roots` and `mzizi-language` skills that say 48px/56px.
 
 ## [4.18.0] - 2026-11-01
