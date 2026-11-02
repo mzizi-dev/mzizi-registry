@@ -143,7 +143,7 @@
     "without": "Everything: the component is server-rendered HTML with no script."
   },
   "responsive": ["Fills its container's width at every size from 320px."],
-  "contract": "contract\n  slot is \"native-select-wrapper\"\n  portal is \"https://mzizi.dev/components/native-select-wrapper\"\n  select \"Zimbabwe\" min_height 48\n  when default shows option \"South Africa\"\n  when named slot is \"native-select-wrapper\"\n  when named class contains \"max-w-xs\"\nend",
+  "contract": "contract\n  slot is \"native-select-wrapper\"\n  portal is \"https://mzizi.dev/components/native-select-wrapper\"\n  select \"Zimbabwe\" min_height 44\n  when default shows option \"South Africa\"\n  when named slot is \"native-select-wrapper\"\n  when named class contains \"max-w-xs\"\nend",
   "checks": [
     {
       "say": "One native select, its name defaulting to its id.",

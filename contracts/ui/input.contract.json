@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "node": 2,
   "kind": "primitive",
-  "summary": "The registry input: a native <input> with the pill radius and a 48px target on every pointer. Every attribute except class passes through.",
+  "summary": "The registry input: a native <input> with the pill radius and a size-role height: 44px on touch, 36px at desktop density. Every attribute except class passes through.",
   "implementations": {
     "astro": {
       "registry": "input",
@@ -59,8 +59,8 @@
     {
       "part": "input",
       "select": "input",
-      "fine": 48,
-      "coarse": 48
+      "fine": 36,
+      "coarse": 44
     }
   ],
   "theming": {
