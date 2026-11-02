@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — the public plugin manifest drops the unrecognised `$schema` key (2026-11-02)
+
+The Claude plugin sync warned that `plugin/.claude-plugin/plugin.json` has an unrecognised top-level key `$schema` and stripped it. The key is removed so the manifest is exactly what the sync keeps. Nothing else in the plugin changes.
+
 ## [4.20.0] - 2026-11-01
 
 Releases `staging` to `main` as the next minor above v4.19.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.20.0. It carries the Claude Code plugin at **1.5.0** with `@nyuchi/mzizi-skills` 0.15.0, which brings back `mukoko-design` (nine skills, #601). The Mzizi Roots crates are unchanged at 0.7.0. Nothing breaks.
